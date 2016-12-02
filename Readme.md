@@ -1,4 +1,4 @@
-# Electron + Angular 2.0 + Typescript 2.0 + Less + Webpack Template
+# BatchLabs
 
 ## Getting started
 
@@ -28,7 +28,7 @@ npm run dev-electron
 | Run the test for the browser environment | `npm run test-browser` | `npm run test-browser-watch` |
 | Run the test for the node environemnt    | `npm run test-client`  | `npm run test-client-watch`  |
 | Run all the tests                        | `npm run test`         |                              |
-| Run the lint                             | `npm run lint`         |                              |   
+| Run the lint                             | `npm run lint`         |                              |
 
 ## Editor
 
