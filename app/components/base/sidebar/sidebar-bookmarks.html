@@ -1,0 +1,18 @@
+<div (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()">
+	<div class="sidebar-bookmarks-btn" (click)="onClick()" [ngClass]="{'active': showBookmarks}">
+		<i class="fa fa-wpforms"></i>
+		<span class="count" *ngIf="references.length > 0">{{references.length}}</span>
+	</div>
+	<div *ngIf="showBookmarks" class="bookmarks-container">
+		<div *ngFor="let reference of references">
+			<div class="bookmark" (click)="selectBookmark(reference)">
+				<span>{{reference.id}}</span>
+				<i class="fa fa-times"  (click)="destroyBookmark(reference)"></i>
+			</div>
+		</div>
+
+        <div *ngIf="references.length === 0" class="no-bookmarks">
+           <div> No forms in progress</div>
+        </div>
+	</div>
+</div>

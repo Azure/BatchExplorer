@@ -1,0 +1,56 @@
+<bex-loading [status]="data.newDataStatus | async">
+    <div *ngIf="job">
+        <md-card class="overview">
+            <md-card-title-group style="margin: 0px;">
+                <div style="align-items:center;">
+                    <bex-refresh-btn [refresh]="refresh"></bex-refresh-btn>
+                </div>
+                <div style="margin-left:12px; margin-right:auto;">
+                    <md-card-title>{{decorator.id}}</md-card-title>
+                    <md-card-subtitle><i class="fa" [ngClass]="decorator.stateIcon"></i> {{decorator.state}}</md-card-subtitle>
+                </div>
+            </md-card-title-group>
+            <md-card-content>
+                <p>Pool: {{decorator.executionInfo.poolId}}</p>
+                <p>Start time: {{decorator.executionInfo.startTime}}</p>
+                <p>End time: {{decorator.executionInfo.endTime}}</p>
+            </md-card-content>
+            <md-card-actions layout="row" layout-align="end center">
+                <bex-add-button (click)="addJob()"></bex-add-button>
+                <bex-add-button title="Add task" (click)="addTask()"></bex-add-button>
+                <bex-terminate-button [entity]="job" (click)="terminateJob()"></bex-terminate-button>
+                <bex-delete-button [entity]="job" (click)="deleteJob()"></bex-delete-button>
+                <bex-disable-button [job]="job" (click)="disableJob()"></bex-disable-button>
+                <bex-enable-button [job]="job" (click)="enableJob()"></bex-enable-button>
+            </md-card-actions>
+        </md-card>
+        <md-card class="details">
+            <md-tab-group>
+                <md-tab>
+                    <template md-tab-label>Properties</template>
+                    <div class="tab-padding">
+                        <bex-job-properties [job]="job"></bex-job-properties>
+                    </div>
+                </md-tab>
+                <md-tab>
+                    <template md-tab-label>Environment Settings</template>
+                    <div class="tab-padding">
+                        <bex-job-environment-settings [job]="job"></bex-job-environment-settings>
+                    </div>
+                </md-tab>
+                <md-tab>
+                    <template md-tab-label>Metadata</template>
+                    <div class="tab-padding">
+                        <bex-job-metadata [job]="job"></bex-job-metadata>
+                    </div>
+                </md-tab>
+                <md-tab>
+                    <template md-tab-label>Tasks</template>
+                    <bex-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/jobs', job.id, 'tasks']" [loadMore]="list.loadMore">
+                        <bex-task-list [jobId]="job.id" [filter]="listWrapper.filter" [quickList]="false" #list [manualLoading]="true"></bex-task-list>
+                    </bex-entity-details-list>
+                </md-tab>
+            </md-tab-group>
+        </md-card>
+    </div>
+</bex-loading>

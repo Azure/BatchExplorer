@@ -1,0 +1,174 @@
+.quicksearch {
+    padding: 15px 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    input {
+        flex: 1 0 auto;
+        padding: 5px;
+        color: $emperorGray;
+        font-size: 1.1em;
+
+        background-color: $athensGrey;
+        border: none;
+
+        &:focus {
+            outline: none;
+        }
+
+    }
+
+    i.fa-filter {
+        color: $scorpion;
+        cursor: pointer;
+        margin-left: 5px;
+
+        &:hover {
+            color: $dustyGray;
+        }
+    }
+}
+
+bex-quick-list {
+    display: block;
+    width: 100%;
+
+    .quick-list-item {
+        cursor: pointer;
+        display: flex;
+        width: 100%;
+        white-space: nowrap;
+
+        &.selected {
+            background-color: map-get($md-prussian-blue, 100);
+
+            p {
+                color: $mineShaftGray;
+            }
+        }
+
+        &.focused {
+            background-color: map-get($md-prussian-blue, 200);
+        }
+
+        &:hover:not(.selected) {
+            background-color: $altoGray;
+        }
+
+        .quick-list-details {
+            flex: 1 1 auto;
+            overflow: hidden;
+            padding: 5px;
+            text-overflow: ellipsis;
+            min-width: 0;
+
+            [bex-quick-list-item-title], [bex-quick-list-item-field] {
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+
+        [bex-quick-list-item-preview] {
+            padding: 5px;
+
+            .fa-hourglass-half {
+                margin-right: 12px;
+                color: map-get($md-prussian-blue, 400);
+            }
+        }
+
+        bex-quick-list-item-status {
+            position: relative;
+            color: $blue-light;
+            flex: 0 0 8px;
+            display: flex;
+            align-items: stretch;
+            > .status-badge {
+                width: 100%;
+
+                &.warning {
+                    background-color: $red;
+                }
+
+                &.lightaccent {
+                    background: map-get($md-prussian-blue, 100);
+
+                }
+
+                &.accent {
+                    background: map-get($md-prussian-blue, 300);
+                }
+
+                &.important {
+                    background: repeating-linear-gradient(
+                        45deg,
+                        transparent,
+                        transparent 5px,
+                        $concreteGray 5px,
+                        $concreteGray 10px
+                    ), map-get($md-prussian-blue, 500);
+                }
+            }
+        }
+
+        .select-item-container {
+            width: 17px;
+            padding: 7px 0 0 3px;
+        }
+
+        .quick-list-details {
+            flex: 1 1 auto;
+            overflow: hidden;
+            padding: 3px;
+            text-overflow: ellipsis;
+            min-width: 0;
+
+            [bex-quick-list-item-title], [bex-quick-list-item-field] {
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+
+        [bex-quick-list-item-preview] {
+            padding: 3px 10px 0 0;
+        }
+
+        .quick-list-other {
+            .select-item-checkbox {
+                position: absolute;
+                right: 0;
+
+            }
+
+            // Disabled checkbox animations otherwise it does some flickering on select
+            .md-checkbox-mixedmark, .md-checkbox-checkmark-path, .md-checkbox-background {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+    }
+}
+
+
+bex-no-item {
+    > .no-item-message {
+        height: 300px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+
+        .fa {
+            font-size: 8em;
+            margin-bottom: 20px;
+            color: $silverGray;
+        }
+
+        [no-filter], [with-filter] {
+            font-size: 2em;
+            color: $silverGray;
+        }
+    }
+}

@@ -1,0 +1,3 @@
+<bex-sub-task-display-list [class.item-selected]="selectedTask"  [jobId]="jobId" [taskId]="taskId" [subTasks]="data.items | async" [status]="status | async" [quickList]="true"></bex-sub-task-display-list>
+<bex-sub-task-properties [task]="selectedTask" *ngIf="selectedTask"></bex-sub-task-properties>
+<bex-list-loading [data]="data"></bex-list-loading>

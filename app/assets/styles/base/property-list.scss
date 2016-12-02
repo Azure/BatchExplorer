@@ -1,0 +1,130 @@
+bex-property-group {
+    $group-width: 750px;
+    $group-padding: 10px;
+    $property-width: $group-width - 2 * $group-padding;
+    $label-width: 200px;
+    $label-value-margin: 5px;
+    $clipboard-width: 30px;
+    $value-width: $property-width - $label-width - $label-value-margin - $clipboard-width;
+
+    display: block;
+    position: relative;
+    padding: $group-padding;
+    width: $group-width;
+
+    > .warning-message {
+        color: $yellow;
+        margin-bottom: 10px;
+
+        > .fa {
+            color: $yellow;
+        }
+    }
+
+    legend {
+        width: 100%;
+        display: block;
+        padding: 0;
+        padding-bottom: 5px;
+        border: 0;
+    }
+
+    section {
+        width: $property-width;
+        padding: 0;
+        margin: 0 0 0.7em;
+        display: flex;
+
+        &.one-line {
+            height: 34px;
+            align-items: center;
+        }
+
+        label, > table td.label {
+            color: $genericGray;
+            font-size: 13px;
+            width: $label-width !important;
+            padding: 6px 0;
+            margin-bottom: 0;
+            margin-right: $label-value-margin;
+            font-weight: bold;
+            height: 34px;
+        }
+
+        .value {
+            color: $mineShaftGray;
+            background-color: $whiteSmoke-darker;
+            padding: 8px;
+            width: $value-width;
+            height: 34px;
+            margin: 0;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+
+            .fa {
+                font-size: 16px !important;
+            }
+
+            &.link {
+                color: map-get($md-prussian-blue, 400);
+                i {
+                    padding-left: 4px;
+                }
+                &:hover {
+                    font-weight: 500;
+                    background-color: $mercuryGray;
+                    cursor: pointer;
+                }
+
+                &:active {
+                    background-color: $athensGrey;
+                }
+            }
+        }
+
+        .clipboard {
+            font-size: 1.5em;
+            color: $genericGray;
+            cursor: pointer;
+            margin-left: 10px;
+
+            &:hover {
+                color: $dustyGray;
+            }
+
+            &:active {
+                color: map-get($md-prussian-blue, 200);
+            }
+        }
+
+        > table {
+            width: $property-width;
+
+            [tp-column], [tp-cell] {
+                display: table-cell;
+                color: $mineShaftGray;
+                background-color: $whiteSmoke-darker;
+                padding: 8px;
+            }
+
+            [tp-column] {
+                font-weight: bold;
+            }
+
+            .row {
+                > td.label {
+                    padding-left: 20px;
+                }
+            }
+        }
+    }
+
+    &.wide {
+        section {
+            label {
+                width: 200px !important;
+            }
+        }
+    }
+}

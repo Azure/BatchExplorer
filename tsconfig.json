@@ -1,0 +1,42 @@
+{
+  "compilerOptions": {
+    "target": "ES6",
+    "module": "commonjs",
+    "removeComments": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "moduleResolution": "node",
+    "listEmittedFiles": true, // debug option
+    "listFiles": true, // debug option
+    "outDir": "build/client",
+    // Base Url only applies to typescript compilation so tsc knows where the modules are.
+    // This means absolute path only works in the browser environment you need to use relative import for the code in side the client folder
+    // Node.js doesn't support custom load path yet
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "*",
+        "app/scripts/*"
+      ]
+    },
+    "types": [
+      "node",
+      "electron",
+      "jasmine",
+      "hammerjs",
+      "immutable",
+      "moment-duration-format"
+    ]
+  },
+  "files": [
+    "./definitions/index.d.ts"
+  ],
+  // This is not actually used for building but to let the editor know what files use this config
+  "include": [
+    "./client/**/*.ts",
+    "./app/**/*.ts",
+    "./test/**/*.ts"
+  ]
+}

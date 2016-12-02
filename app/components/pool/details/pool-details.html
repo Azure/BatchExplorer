@@ -1,0 +1,71 @@
+<bex-loading [status]="data.newDataStatus | async">
+    <div *ngIf="pool">
+        <md-card class="overview">
+            <md-card-title-group style="margin: 0px;">
+                <div style="align-items:center;">
+                    <bex-refresh-btn [refresh]="refreshPool"></bex-refresh-btn>
+                </div>
+                <div style="margin-left:12px; margin-right:auto;">
+                    <md-card-title>{{pool.id}}</md-card-title>
+                    <md-card-subtitle>{{pool.vmSize}}, {{pool.allocationState}}</md-card-subtitle>
+                </div>
+                <div>
+                    <!--
+                        Want to add this but there is some recursive call or something going
+                        on in the getTooltip method causing stack overflows.
+                        Once we fix that, use the nodes-preview component instead
+
+                        This is tracked at https://github.com/angular/material2/issues/1157
+                        <bex-pool-nodes-preview [pool]="pool"></bex-pool-nodes-preview>
+                    -->
+                    <h4>{{pool.currentDedicated}} / {{pool.targetDedicated}}</h4>
+                    <h5>Nodes</h5>
+                </div>
+            </md-card-title-group>
+            <md-card-content>
+                <!-- TODO: Use Moment for date formatting -->
+                <p>Last resized {{lastResize}}</p>
+                <p><i class="fa fa-{{poolOsIcon}}" aria-hidden="true"></i> {{poolOs}}</p>
+            </md-card-content>
+            <md-card-actions layout="row" layout-align="end center">
+                <bex-add-button (click)="addPool()"></bex-add-button>
+                <bex-add-button title="Add job" (click)="addJob()"></bex-add-button>
+                <bex-resize-button (click)="resizePool()"></bex-resize-button>
+                <bex-clone-button (click)="clonePool()"></bex-clone-button>
+                <bex-delete-button [entity]="pool" (click)="deletePool()"></bex-delete-button>
+            </md-card-actions>
+        </md-card>
+        <bex-banner *ngIf="pool.resizeError" fixMessage="Rescale" [fix]="fixStopResizeError">
+            <div code>{{pool.resizeError.code}}</div>
+            <div message>{{pool.resizeError.message}}</div>
+            <div details *ngIf="pool.resizeError.vals.size !== 0">
+                <div *ngFor="let entry of pool.resizeError.vals">
+                    <div>{{entry.key}}: {{entry.value}}</div>
+                </div>
+            </div>
+        </bex-banner>
+        <md-card class="details">
+            <md-tab-group>
+                <md-tab>
+                    <template md-tab-label>Nodes</template>
+                    <bex-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/pools', poolId, 'nodes']">
+                        <bex-node-list  #list [poolId]="poolId" [filter]="listWrapper.filter" [quickList]="false" [manualLoading]="true"></bex-node-list>
+                    </bex-entity-details-list>
+                </md-tab>
+                <md-tab>
+                    <template md-tab-label>Start Task</template>
+                    <div class="tab-padding">
+                        <h3>Update your start task here</h3>
+                        <p>...</p>
+                    </div>
+                </md-tab>
+                <md-tab>
+                    <template md-tab-label>Properties</template>
+                    <div class="tab-padding">
+                        <bex-pool-properties [pool]="pool"></bex-pool-properties>
+                    </div>
+                </md-tab>
+            </md-tab-group>
+        </md-card>
+    </div>
+</bex-loading>

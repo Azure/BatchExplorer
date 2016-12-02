@@ -1,0 +1,63 @@
+<bex-loading [status]="data.newDataStatus | async">
+    <div *ngIf="task && job">
+        <md-card class="overview">
+            <md-card-title-group style="margin: 0px;">
+                <div style="align-items:center;">
+                    <bex-refresh-btn [refresh]="refresh"></bex-refresh-btn>
+                </div>
+                <div style="margin-left:12px; margin-right:auto;">
+                    <md-card-title>{{task.id}} <span *ngIf="!!task.displayName"> - {{task.displayName}}</span> </md-card-title>
+                    <md-card-subtitle><i class="fa" [ngClass]="decorator.stateIcon"></i> {{task.state}}</md-card-subtitle>
+                </div>
+            </md-card-title-group>
+            <md-card-content>
+                <p>Job: {{jobId}}</p>
+            </md-card-content>
+            <md-card-actions layout="row" layout-align="end center">
+                <bex-add-button (click)="addTask()"></bex-add-button>
+                <bex-terminate-button [entity]="task" (click)="terminateTask()"></bex-terminate-button>
+                <bex-delete-button [entity]="task" (click)="deleteTask()"></bex-delete-button>
+            </md-card-actions>
+        </md-card>
+        <md-card class="details">
+            <md-tab-group>
+                <md-tab>
+                    <template md-tab-label>Properties</template>
+                    <div class="tab-padding">
+                        <bex-task-properties [job]="job" [task]="task"></bex-task-properties>
+                    </div>
+                </md-tab>
+                <md-tab>
+                    <template md-tab-label>Environment Settings</template>
+                    <div class="tab-padding">
+                        <bex-task-environment-settings [task]="task"></bex-task-environment-settings>
+                    </div>
+                </md-tab>
+                <md-tab>
+                    <template md-tab-label>Application packages</template>
+                    <div class="tab-padding">
+                        <bex-task-app-packages [task]="task"></bex-task-app-packages>
+                    </div>
+                </md-tab>
+                <md-tab>
+                    <template md-tab-label>Resource files</template>
+                    <div class="tab-padding">
+                        <bex-task-resource-files [task]="task"></bex-task-resource-files>
+                    </div>
+                </md-tab>
+                <md-tab [disabled]="!hasMultiInstanceSettings">
+                    <template md-tab-label>Sub Tasks</template>
+                    <div class="tab-padding">
+                        <bex-task-sub-tasks-tab [jobId]="job.id" [taskId]="task.id"></bex-task-sub-tasks-tab>
+                    </div>
+                </md-tab>
+                <md-tab [disabled]="!hasDependencies">
+                    <template md-tab-label>Dependencies</template>
+                    <div class="tab-padding">
+                        Task dependencies
+                    </div>
+                </md-tab>
+            </md-tab-group>
+        </md-card>
+    </div>
+</bex-loading>

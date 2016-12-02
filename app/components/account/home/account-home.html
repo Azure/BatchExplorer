@@ -1,0 +1,13 @@
+<bex-list-and-show-layout>
+    <div bex-list-buttons>
+        <button md-mini-fab color="primary" title="Add an account" (click)="addAccount()">
+            <i class="fa fa-plus"></i>
+        </button>
+    </div>
+    <div bex-list-content>
+        <bex-account-list [filter]="filter"></bex-account-list>
+    </div>
+    <div bex-show-content>
+        <router-outlet></router-outlet>
+    </div>
+</bex-list-and-show-layout>

@@ -1,0 +1,13 @@
+<div #scrollable class="scrollable-container">
+    <div class="simplebar-track horizontal" #trackX (mouseenter)="flashScrollbar(orientations.Horizontal)" [class.dragging]="dragging">
+        <div class="simplebar-scrollbar" #scrollbarX [class.visible]="scrollbarVisible[orientations.Horizontal]" (mousedown)="startDrag($event, orientations.Horizontal)"></div>
+    </div>
+    <div class="simplebar-track vertical" #trackY (mouseenter)="flashScrollbar(orientations.Vertical)" [class.dragging]="dragging">
+        <div class="simplebar-scrollbar" #scrollbarY [class.visible]="scrollbarVisible[orientations.Vertical]" (mousedown)="startDrag($event, orientations.Vertical)"></div>
+    </div>
+    <div #scrollContent class="simplebar-scroll-content" (scroll)="onScroll()">
+        <div class="simplebar-content" #content>
+            <ng-content></ng-content>
+        </div>
+    </div>
+</div>

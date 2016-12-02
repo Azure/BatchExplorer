@@ -1,0 +1,28 @@
+<bex-property-list>
+    <bex-property-group label="General" class="wide">
+        <bex-text-property label="Id" [value]="decorator.id"></bex-text-property>
+        <bex-text-property label="Start time" [value]="decorator.startTime"></bex-text-property>
+        <bex-text-property label="End time" [value]="decorator.endTime"></bex-text-property>
+        <bex-text-property label="Exit code" [value]="decorator.exitCode"></bex-text-property>
+        <bex-text-property label="State" [value]="decorator.state"></bex-text-property>
+        <bex-text-property label="State transition time" [value]="decorator.stateTransitionTime"></bex-text-property>
+        <bex-text-property label="Previous State" [value]="decorator.previousState"></bex-text-property>
+        <bex-text-property label="Previous state transition time" [value]="decorator.previousStateTransitionTime"></bex-text-property>
+    </bex-property-group>
+
+    <bex-property-group label="Compute node" class="wide">
+        <bex-text-property label="Pool" [value]="nodeInfo.poolId"></bex-text-property>
+        <bex-text-property label="Compute node ID" [value]="nodeInfo.nodeId"></bex-text-property>
+        <bex-text-property label="Node URL" [value]="nodeInfo.nodeUrl"></bex-text-property>
+        <bex-text-property label="Affinity ID" [value]="nodeInfo.affinityId"></bex-text-property>
+        <bex-text-property label="Task root directory" [value]="nodeInfo.taskRootDirectory"></bex-text-property>
+        <bex-text-property label="Task root directory URL" [value]="nodeInfo.taskRootDirectoryUrl"></bex-text-property>
+    </bex-property-group>
+
+    <bex-property-group label="Scheduling Error" class="wide" *ngIf="schedulingError.exists">
+        <bex-text-property label="Category" [value]="schedulingError.category"></bex-text-property>
+        <bex-text-property label="Code" [value]="schedulingError.code"></bex-text-property>
+        <bex-text-property label="Message" [value]="schedulingError.message"></bex-text-property>
+        <bex-text-property label="Detals" [value]="schedulingError.details"></bex-text-property>
+    </bex-property-group>
+</bex-property-list>

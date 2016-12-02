@@ -1,0 +1,18 @@
+<div class="error-banner" *ngIf="error">
+    <h4>{{error.code}}</h4>
+    <p>{{errorMessage}}</p>
+
+    <div class="details" *ngIf="error.values">
+        <div *ngFor="let detail of error.values">{{detail.key}}: {{detail.value}}</div>
+    </div>
+</div>
+<div class="content">
+    <ng-content></ng-content>
+    <div class="loading-overlay" *ngIf="loading"></div>
+</div>
+
+<div class="button-bar">
+    <bex-submit-btn [submit]="add" [multiSubmit]="true" [disabled]="!formGroup.valid">Add</bex-submit-btn>
+    <bex-submit-btn [submit]="addAndClose" [multiSubmit]="true" [disabled]="!formGroup.valid" *ngIf="sidebarRef">Add and close</bex-submit-btn>
+    <button type="button" [disabled]="isSaving" (click)="close()" class="" md-raised-button>Close</button>
+</div>

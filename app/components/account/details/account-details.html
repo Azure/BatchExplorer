@@ -1,0 +1,26 @@
+<bex-scrollable class="block" *ngIf="account">
+	<md-card class="overview">
+		<md-card-title-group style="margin: 0px;">
+			<div style="margin-left:0px; margin-right:auto;">
+				<md-card-title>{{account.name}}</md-card-title>
+				<md-card-subtitle><i class="fa fa-link"></i> {{account.url}}</md-card-subtitle>
+			</div>
+		</md-card-title-group>
+		<md-card-content>
+		</md-card-content>
+		<md-card-actions layout="row" layout-align="end center">
+			<bex-delete-button [entity]="account" (click)="deleteAccount()"></bex-delete-button>
+		</md-card-actions>
+	</md-card>
+	<div class="account-links">
+		<md-card class="link" routerLink="/jobs" (click)="selectAccount(account)">
+			<i class="fa fa-tasks fa-lg"></i>
+			<div>Jobs</div>
+		</md-card>
+
+		<md-card class="link" routerLink="/pools" (click)="selectAccount(account)">
+			<i class="fa fa-database fa-lg"></i>
+			<div>Pools</div>
+		</md-card>
+	</div>
+</bex-scrollable>

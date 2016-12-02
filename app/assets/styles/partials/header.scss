@@ -1,0 +1,127 @@
+
+#header {
+    .logo-banner-bar {
+        float: left;
+        height: 31px;
+
+        a {
+            position: relative;
+            display: inline-block;
+        }
+
+        a:after {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+        }
+
+        .logo {
+            margin-top: 5px;
+            margin-left: 7px;
+            float: left;
+        }
+    }
+}
+
+.account-dropdown {
+    $account-dropdown-width: 240px;
+    [bex-dropdown-btn] {
+        width: $account-dropdown-width;
+        border-left: 1px solid $navigation-background;
+        border-right: 1px solid $navigation-background;
+
+        &.invalid {
+            color: $fuzzyWuzzyBrown;
+        }
+
+        i {
+            margin: 0 5px;
+            font-weight: bold;
+        }
+    }
+
+    [bex-dropdown-content] {
+        width: $account-dropdown-width;
+
+        .url {
+            font-size: 0.6em;
+            text-overflow: ellipsis;
+        }
+
+        i.fa {
+            margin-right: 5px;
+        }
+
+        .selected {
+            cursor: not-allowed;
+
+            .main {
+                opacity: 0.3;
+            }
+            &:hover {
+                background-color: $navigation-background;
+            }
+        }
+    }
+}
+
+.bookmarks-container {
+    position: fixed;
+    z-index: 1000;
+    right: 0;
+    top: $header-height;
+    background-color: $navigation-background;
+    color: $whiteSmoke;
+
+    .no-bookmarks {
+        padding: 10px 5px;
+    }
+
+    .bookmark {
+        position: relative;
+        min-width: 100px;
+        cursor: pointer;
+        padding: 10px 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:not(:last-child) {
+            border-bottom: 1px solid $navigation-hover;
+        }
+
+        &:hover {
+            background-color: $navigation-hover;
+        }
+
+        span {
+            flex: 1 0 auto;
+            margin-right: 5px;
+        }
+
+        i.fa {
+            flex: 0 0 20px;
+            background-color: white;
+            color: #3f51b5;
+            border-radius: 10px;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 20px;
+            cursor: pointer;
+
+            &:hover {
+                color: white;
+                background-color: $crail;
+            }
+
+            &:active {
+                background-color: $buttonBrown;
+            }
+        }
+    }
+}

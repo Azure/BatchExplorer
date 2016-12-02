@@ -1,0 +1,32 @@
+<bex-focus-section>
+    <bex-quick-list *ngIf="quickList">
+        <bex-quick-list-item *ngFor="let node of nodes" [routerLink]="['/pools', poolId, 'nodes', node.id]" [key]="node.id">
+            <h4 bex-quick-list-item-title>{{node.id}}</h4>
+            <p bex-quick-list-item-field>{{node.state}}</p>
+        </bex-quick-list-item>
+    </bex-quick-list>
+
+    <bex-table *ngIf="!quickList">
+        <bex-thead>
+            <bex-column>Id</bex-column>
+            <bex-column>State</bex-column>
+            <bex-column>Scheduling State</bex-column>
+            <bex-column>VmSize</bex-column>
+            <bex-column>Total task run</bex-column>
+        </bex-thead>
+
+        <bex-row *ngFor="let node of nodes" [routerLink]="['/pools', poolId, 'nodes', node.id]" [key]="node.id">
+            <bex-cell>{{node.id}}</bex-cell>
+            <bex-cell>{{node.state}}</bex-cell>
+            <bex-cell>{{node.schedulingState}}</bex-cell>
+            <bex-cell>{{node.vmSize}}</bex-cell>
+            <bex-cell>{{node.totalTasksRun}}</bex-cell>
+        </bex-row>
+    </bex-table>
+
+    <bex-no-item [itemCount]="nodes.size" [filter]="filter" [status]="status | async">
+        <i icon class="fa fa-tv"></i>
+        <span no-filter>No nodes</span>
+        <span with-filter>No node match this filter</span>
+    </bex-no-item>
+</bex-focus-section>

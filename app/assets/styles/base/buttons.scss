@@ -1,0 +1,53 @@
+bex-submit-btn {
+    button {
+        height: 36px;
+        .fa {
+            font-size: 20px;
+        }
+
+        .fa-check {
+            color: $green-dark;
+            overflow: hidden;
+        }
+
+        .success-container {
+            width: 20px;
+            text-align: left;
+            display: inline-block;
+        }
+    }
+}
+
+bex-loading-button {
+    button {
+        height: 36px;
+        .fa {
+            font-size: 20px;
+        }
+    }
+}
+
+[md-mini-fab]:hover {
+    .spin-hover {
+        animation: fa-spin 0.2s ease-in-out;
+    }
+
+    .shake-hover {
+        animation: spin-left-then-right 0.2s linear;
+    }
+}
+
+@keyframes spin-left-then-right {
+    0% {
+        transform: rotate(0);
+    }
+    25% {
+        transform: rotate(-60deg);
+    }
+    75% {
+        transform: rotate(60deg);
+    }
+    100% {
+        transform: rotate(0);
+    }
+}

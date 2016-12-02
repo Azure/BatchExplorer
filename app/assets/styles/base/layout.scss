@@ -1,0 +1,320 @@
+﻿
+@import "../theme/variables";
+@import "../theme/mixins";
+
+/*--------------------------------------------------------------------------------------
+-------------------------			MAIN LAYOUT  				------------------------
+--------------------------------------------------------------------------------------*/
+* {
+    box-sizing: border-box;
+}
+
+body {
+    overflow: hidden;
+    background-color: $body-background;
+    /* The html and body elements cannot have any padding or margin. */
+}
+
+#container {
+    position: relative;
+    /* needed for footer positioning*/
+    margin: 0 auto;
+    /* center, not in IE5 */
+    background: $body-background;
+    height: 100vh;
+    width: 100vw;
+}
+
+#header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: $header-height;
+    min-width: 100%;
+    margin-bottom: 0;
+    background-color: $header-background;
+}
+
+nav {
+    position: absolute;
+    top: $header-height;
+    left: 0;
+    bottom: $footer-height;
+    width: $navigationbar-width;
+    background-color: $navigation-background;
+    text-align: center;
+}
+
+#content {
+    position: absolute;
+    top: $content-top-position;
+    left: $navigationbar-width;
+    right: 0;
+    bottom: $footer-height;
+    width: calc(100vw - #{$navigationbar-width});
+    height: calc(100vh - #{$content-top-position});
+    overflow: hidden;
+
+    > #content-inner {
+        position: relative;
+        width: 100%;
+        height: 100%;
+    }
+}
+
+footer {
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    height: $footer-height;
+    background-color: $footer-background;
+}
+
+.flex-fill {
+    display: flex;
+    flex: 1;
+    flex-wrap: nowrap;
+    width: 100%;
+}
+
+/*--------------------------------------------------------------------------------------
+-------------------------			OTHER LAYOUTs  				------------------------
+--------------------------------------------------------------------------------------*/
+
+.any-cols {
+    display: table;
+    .col {
+        display: table-cell;
+        padding-left: 15px;
+    }
+}
+
+.fifty-fifty {
+    display: table;
+    width: 100%;
+    .col1 {
+        width: 48%;
+        float: left;
+    }
+    .col2 {
+        width: 50%;
+        float: right;
+        padding-left: 10px;
+    }
+}
+
+.twothirds-onethird {
+    display: table;
+    width: 100%;
+    padding: 0;
+    .col1 {
+        display: table-cell;
+        width: 65%;
+        float: left;
+    }
+    .col2 {
+        display: table-cell;
+        width: 35%;
+        float: left;
+    }
+}
+
+.twothirds-onethird-reverse {
+    display: table;
+    width: 100%;
+    .col1 {
+        width: 34%;
+        float: left;
+    }
+    .col2 {
+        width: 64%;
+        float: left;
+        padding-left: 15px;
+    }
+}
+
+.third-third-third {
+    display: table;
+    width: 100%;
+    padding: 0;
+    .col1 {
+        display: table-cell;
+        width: 32.5%;
+        float: left;
+    }
+    .col2 {
+        display: table-cell;
+        width: 32.5%;
+        float: left;
+    }
+    .col3 {
+        display: table-cell;
+        width: 35%;
+        float: left;
+    }
+}
+
+/*--------------------------------------------------------------------------------------
+-------------------------			FLOATS      	     		------------------------
+--------------------------------------------------------------------------------------*/
+
+.left {
+    float: left;
+}
+
+.right {
+    float: right;
+}
+
+.right-sidebar-content {
+    display: block;
+    overflow: hidden;
+    padding: 24px;
+}
+
+.nopadding {
+    padding: 0;
+}
+
+// Cancel the padding of tabs for 1 content(Used for lists and tables)
+.tab-padding {
+    padding: 18px;
+}
+
+.sidebar-bookmarks-btn {
+    position: relative;
+    color: white;
+    height: $header-height;
+    width: $header-height;
+    display: flex;
+    float: right;
+    text-align: center;
+    font-size: 1.5em;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background-color: $navigation-hover;
+
+    &:hover, &.active {
+        background-color: $navigation-background;
+    }
+
+    .count {
+        font-size: 0.7em;
+        position: absolute;
+        left: 0;
+        top: 0;
+        background-color: $fuzzyWuzzyBrown;
+        border-radius: 10px;
+        width: 18px;
+        height: 18px;
+    }
+}
+
+.context-button-bar {
+    position: relative !important;
+    margin-top: -34px !important;
+    margin-right: 10px !important;
+    float: right;
+
+    button {
+        margin-left: 5px;
+    }
+}
+
+.no-entity-home {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    .fa {
+        font-size: 8em;
+        margin-bottom: 20px;
+        color: $silverGray;
+    }
+
+    p {
+        font-size: 2em;
+        color: $silverGray;
+    }
+}
+
+.noselect {
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.no-userinteract {
+    pointer-events: none;
+}
+
+.route-home {
+    display: block;
+    width: 100%;
+    position: absolute;
+    transform: translateX(-100%);
+    overflow: hidden;
+
+    &.animate-left-to-right {
+        animation-duration: 2s;
+        animation-name: animateLeftToRight;
+        transform: translateX(0%);
+    }
+
+
+    &.animate-right-to-left {
+        animation-duration: 2s;
+        animation-name: animateRightToLeft;
+        transform: translateX(0%);
+    }
+}
+
+@keyframes animateRightToLeft {
+    from {
+        transform: translateX(100%);
+    }
+}
+
+@keyframes animateLeftToRight {
+    from {
+        transform: translateX(-100%);
+    }
+}
+
+ul.list-point {
+    margin: 0 25px;
+    list-style-type: initial;
+}
+
+.no-account {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    > md-card {
+        width: 300px;
+        height: 250px;
+        font-size: 2em;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: map-get($md-prussian-blue, 400);
+        cursor: pointer;
+
+        &:hover {
+            background: $whiteSmoke-darker;
+        }
+
+        i {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+    }
+}

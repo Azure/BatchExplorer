@@ -1,0 +1,8 @@
+<span [class.resize-error]="pool.resizeError" md-tooltip="{{tooltipMessage}}" tooltip-position="after">
+    <i class="fa fa-tv"></i>
+    <span>{{pool.currentDedicated}}</span>
+    <span *ngIf="pool.currentDedicated !== pool.targetDedicated">
+        <span >⇾</span>
+        <span>{{pool.targetDedicated}}</span>
+    </span>
+</span>

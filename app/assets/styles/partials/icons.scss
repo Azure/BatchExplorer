@@ -1,0 +1,47 @@
+@import "../theme/variables";
+
+.fa-refresh {
+    color: map-get($md-prussian-blue, 300);
+}
+
+.fa-cog, .fa-gear {
+    color: map-get($md-prussian-blue, 300);
+}
+
+.fa-ban, .fa-times, .fa-warning, .fa-times-circle {
+    color: $red;
+}
+
+.fa-check, .fa-check-circle-o, .fa-check-circle {
+    color: $green-dark;
+}
+
+.fa-question-circle-o {
+    color: $green-dark;
+}
+
+button {
+    &[md-button] {
+        i {
+            font-size: 16px;
+        }
+
+        i.fa-play, i.fa-pause, .fa-expand, .fa-clone {
+            font-size: 14px;
+        }
+
+        &[disabled] {
+            i {
+                color: rgba(0, 0, 0, 0.38);
+            }
+        }
+    }
+}
+
+.fa-2 {
+    font-size: 1.5em;
+}
+
+.fa-3 {
+    font-size: 2em;
+}

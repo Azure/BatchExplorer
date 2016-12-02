@@ -1,0 +1,37 @@
+<bex-quick-list *ngIf="quickList">
+    <!--<bex-quick-list-item *ngFor="let node of nodes" [routerLink]="['/pools', poolId, 'nodes', node.id]" routerLinkActive="selected">-->
+    <!--<bex-quick-list-item *ngFor="let node of nodes" [routerLink]="['/pools', poolId, 'nodes', node.id]" routerLinkActive="selected">
+        <h4 bex-quick-list-item-title>{{node.id}}</h4>
+        <p bex-quick-list-item-field>{{node.state}}</p>
+    </bex-quick-list-item>-->
+    <h1>TODO: Implement quicklist</h1>
+</bex-quick-list>
+
+<bex-table *ngIf="!quickList">
+    <bex-thead>
+        <bex-column>Name</bex-column>
+        <bex-column>Content Length</bex-column>
+        <!--<bex-column>State</bex-column>
+        <bex-column>Scheduling State</bex-column>
+        <bex-column>VmSize</bex-column>
+        <bex-column>Total task run</bex-column>-->
+    </bex-thead>
+
+    <!--<bex-row *ngFor="let file of files" [routerLink]="['/pools/', poolId, 'nodes', node.id,]" routerLinkActive="selected">-->
+    <bex-row *ngFor="let file of files | fileDirectoryFilter">
+        <bex-cell>{{file.name}}</bex-cell>
+        <bex-cell>{{file.properties.contentLength}}</bex-cell>
+        <!--<bex-cell>{{file.name}}</bex-cell>-->
+        <!--<bex-cell>{{file.name}}</bex-cell>-->
+        <!--<bex-cell>{{node.state}}</bex-cell>
+            <bex-cell>{{node.schedulingState}}</bex-cell>
+            <bex-cell>{{node.vmSize}}</bex-cell>
+            <bex-cell>{{node.totalTasksRun}}</bex-cell>-->
+    </bex-row>
+</bex-table>
+
+<bex-no-item [itemCount]="files.size" [filter]="filter" [status]="status | async">
+    <i icon class="fa fa-tv"></i>
+    <span no-filter>No files</span>
+    <span with-filter>No files match this filter</span>
+</bex-no-item>

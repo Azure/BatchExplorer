@@ -1,0 +1,32 @@
+<div  class="slideout-form content-wrapper">
+    <h1>Create task</h1>
+    <p>Adds a task to the selected job</p>
+
+    <bex-create-form [formGroup]="createTaskForm" [submit]="submit" [sidebarRef]="sidebarRef">
+        <form novalidate [formGroup]="createTaskForm">
+            <div class="form-element">
+                <md-input formControlName="id" placeholder="Id"></md-input>
+                <div *ngIf="createTaskForm.hasError('required', ['id'])" class="required-alert">Id is a required field</div>
+                <div *ngIf="createTaskForm.hasError('maxlength', ['id'])" class="required-alert">Id has a maximum length of 64 characters</div>
+                <div *ngIf="createTaskForm.hasError('pattern', ['id'])" class="required-alert">Id can contain any combination of alphanumeric characters including hyphens and underscores.</div>
+            </div>
+
+            <div class="form-element">
+                <md-input formControlName="displayName" placeholder="Display name"></md-input>
+                <div *ngIf="createTaskForm.hasError('maxlength', ['displayName'])" class="required-alert">Display name has a maximum length of 1024 characters</div>
+            </div>
+
+            <div class="form-element">
+                <md-input formControlName="commandLine" placeholder="Command line"></md-input>
+                <div *ngIf="createTaskForm.hasError('required', ['commandLine'])" class="required-alert">Command line is a required field</div>
+            </div>
+
+            <div formGroupName="constraints">
+                <div class="form-element">
+                    <md-input formControlName="maxTaskRetryCount" placeholder="Max retry count" type="number"></md-input>
+                    <div *ngIf="constraintsGroup.hasError('validateRange', ['maxTaskRetryCount'])" class="required-alert">Retry count values can range from -1 to 100</div>
+                </div>
+            </div>
+        </form>
+    </bex-create-form>
+</div>

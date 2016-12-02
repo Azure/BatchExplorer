@@ -1,0 +1,93 @@
+
+@import "../theme/variables";
+@import "../theme/mixins";
+
+html, body {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    height: 100%;
+    font-family: "Roboto", Helvetica, Arial, sans-serif;
+}
+
+.center_this {
+    @include center();
+}
+
+.text-left           { text-align: left; }
+.text-right          { text-align: right; }
+.text-center         { text-align: center; }
+
+// Lists
+// --------------------------------------------------
+ul, ol {
+    padding: 0;
+    list-style-type: none;
+}
+
+ul ul,
+ul ol,
+ol ol,
+ol ul {
+    margin-bottom: 0;
+}
+
+// Horizontal rules
+hr {
+    margin: $baseLineHeight 0;
+    border: 0;
+    border-top: 1px solid $athensGrey;
+    border-bottom: 1px solid $white;
+}
+
+// Blockquotes
+blockquote {
+    padding: 0 0 0 15px;
+    margin: 0 0 $baseLineHeight;
+    border-left: 5px solid $athensGrey;
+
+    p {
+        margin-bottom: 0;
+        font-size: $baseFontSize * 1.25;
+        font-weight: 300;
+        line-height: 1.25;
+    }
+
+    small {
+        display: block;
+        line-height: $baseLineHeight;
+        color: $silverGray;
+
+        &:before {
+            content: "\2014 \00A0";
+        }
+    }
+
+    // Float right with text-align: right
+    &.pull-right {
+        float: right;
+        padding-right: 15px;
+        padding-left: 0;
+        border-right: 5px solid $athensGrey;
+        border-left: 0;
+
+        p, small {
+            text-align: right;
+        }
+
+        small {
+            &:before {
+                content: "";
+            }
+
+            &:after {
+                content: "\00A0 \2014";
+            }
+        }
+    }
+}
+
+// Quotes
+blockquote:before, blockquote:after {
+    content: "";
+}

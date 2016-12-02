@@ -1,0 +1,42 @@
+{
+  // See https://go.microsoft.com/fwlink/?LinkId=733558
+  // for the documentation about the tasks.json format
+  "version": "0.1.0",
+  "command": "npm",
+  "isShellCommand": true,
+  "args": [
+    "run"
+  ],
+  "tasks": [
+    {
+      "taskName": "build-node-ts",
+      "args": [],
+      "isBuildCommand": true
+    },
+    {
+      "taskName": "stylelint",
+      "args": ["-s"],
+      "isBuildCommand": false
+    },
+    {
+      "taskName": "tslint",
+      "args": ["-s"],
+      "isBuildCommand": false,
+      "problemMatcher": {
+        "owner": "tslint",
+        "fileLocation": [
+          "relative",
+          "${workspaceRoot}"
+        ],
+        "severity": "warning",
+        "pattern": {
+          "regexp": "(.*)\\[(\\d+)\\, (\\d+)\\]:(.*)$",
+          "file": 1,
+          "line": 2,
+          "column": 3,
+          "message": 4
+        }
+      }
+    }
+  ]
+}

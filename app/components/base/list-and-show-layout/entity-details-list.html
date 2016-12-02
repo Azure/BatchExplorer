@@ -1,0 +1,16 @@
+<div class="quicksearch">
+    <input [formControl]="searchQuery" placeholder="Filter by task id" />
+    <i class="fa fa-filter fa-2x" [routerLink]="baseLink" [queryParams]="{filter: true}"></i>
+</div>
+<hr />
+<div class="context-button-bar">
+    <button md-mini-fab color="primary" [routerLink]="baseLink">
+        <i class="fa fa-expand"></i>
+    </button>
+    <bex-refresh-btn [refresh]="refresh"></bex-refresh-btn>
+    <button md-mini-fab color="primary" title="Add a task">
+        <i class="fa fa-plus"></i>
+    </button>
+</div>
+<ng-content></ng-content>
+

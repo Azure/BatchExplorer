@@ -1,0 +1,19 @@
+<bex-list-and-show-layout #layout (listScrolledToBottom)="jobList.onScrollToBottom()" [list]="jobList">
+    <div bex-list-buttons>
+        <button md-mini-fab color="primary" title="Add a job" (click)="addJob()">
+            <i class="fa fa-plus spin-hover"></i>
+        </button>
+    </div>
+    <div bex-list-content>
+        <bex-focus-section>
+            <bex-job-list #jobList [filter]="layout.filter" [quickList]="!(layout.showAdvancedFilter | async)"></bex-job-list>
+        </bex-focus-section>
+    </div>
+    <div bex-show-content>
+        <router-outlet></router-outlet>
+    </div>
+    <div bex-show-advanced-filter>
+        <bex-job-advanced-filter (change)="layout.advancedFilterChanged($event)">
+        </bex-job-advanced-filter>
+    </div>
+</bex-list-and-show-layout>

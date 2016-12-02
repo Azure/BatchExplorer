@@ -1,0 +1,32 @@
+<bex-quick-list *ngIf="quickList">
+    <bex-quick-list-item *ngFor="let job of data.items | async" [routerLink]="['/jobs/', job.id]" [key]="job.id">
+        <bex-quick-list-item-status [status]="jobStatus(job)" [tooltip]="jobStatusText(job)">
+        </bex-quick-list-item-status>
+
+        <h4 bex-quick-list-item-title>{{job.id}}</h4>
+        <p bex-quick-list-item-field>{{job.state}}</p>
+        <div bex-quick-list-item-preview>
+            <bex-job-stats-preview [job]="job"></bex-job-stats-preview>
+        </div>
+    </bex-quick-list-item>
+</bex-quick-list>
+
+<bex-table *ngIf="!quickList">
+    <bex-thead>
+        <bex-column>Id</bex-column>
+        <bex-column>State</bex-column>
+        <bex-column>Pool</bex-column>
+    </bex-thead>
+
+    <bex-row *ngFor="let job of data.items | async" [routerLink]="['/jobs/', job.id]" [key]="job.id">
+        <bex-cell>{{job.id}}</bex-cell>
+        <bex-cell>{{job.state}}</bex-cell>
+        <bex-cell>{{job.poolInfo?.poolId}}</bex-cell>
+    </bex-row>
+</bex-table>
+<bex-no-item [itemCount]="(data.items | async).size" [filter]="filter" [status]="status | async">
+    <i icon class="fa fa-tasks"></i>
+    <span no-filter>No jobs</span>
+    <span with-filter>No job match this filter</span>
+</bex-no-item>
+<bex-loading [status]="status | async" *ngIf="data.hasMore | async"></bex-loading>

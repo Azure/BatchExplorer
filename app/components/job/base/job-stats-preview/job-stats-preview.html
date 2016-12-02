@@ -1,0 +1,12 @@
+<!-- Disabled for now until the count API comes in -->
+<div *ngIf="false">
+	<span class="task-success" md-tooltip="{{tooltipMessages.taskCompleted}}" tooltip-position="below">
+        <i class="fa fa-check"></i>
+        <span>{{completitionPercent}} %</span>
+	</span>
+	<span class="task-failed" md-tooltip="{{tooltipMessages.taskFailed}}" tooltip-position="below" *ngIf="stats.failed > 0">
+        <i class="fa fa-times"></i>
+        <span>{{stats.failed}}</span>
+	</span>
+</div>
+    

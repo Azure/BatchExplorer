@@ -1,0 +1,36 @@
+<div id="container" [hidden]="!(settingsService.hasSettingsLoaded | async)">
+    <header id="header" [class.no-userinteract]="!(hasAccount | async)" class="noselect">
+        <div class="logo-banner-bar">
+            <a class="logo" href="#" [routerLink]="['']" title="Batch explorer - Home">
+                <img src="./assets/images/header/batchexplorer.png" height="19" alt="Batch explorer logo">
+            </a>
+        </div>
+        <bex-sidebar-bookmarks></bex-sidebar-bookmarks>
+        <bex-account-dropdown></bex-account-dropdown>
+        <bex-background-task-tracker></bex-background-task-tracker>
+    </header>
+    <nav [class.no-userinteract]="!(hasAccount | async)" class="noselect">
+        <bex-app-nav></bex-app-nav>
+    </nav>
+    <section id="content">
+        <div id="content-inner">
+            <md-sidenav-layout>
+                <md-sidenav #rightSidebar align="end">
+                    <bex-sidebar-content #sidebarContent [sidebar]="rightSidebar"></bex-sidebar-content>
+                </md-sidenav>
+                <div [hidden]="!(hasAccount | async)">
+                    <router-outlet></router-outlet>
+                </div>
+                <div *ngIf="!(hasAccount | async)" class="no-account">
+                    <md-card (click)="addAccount()">
+                        <i class="fa fa-user fa-lg"></i>
+                        <div>Add a batch account</div>
+                    </md-card>
+                </div>
+            </md-sidenav-layout>
+        </div>
+    </section>
+    <footer>
+        <!-- set to 0px for now as are not using it -->
+    </footer>
+</div>

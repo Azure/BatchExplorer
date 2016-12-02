@@ -1,0 +1,37 @@
+<bex-quick-list *ngIf="quickList">
+    <bex-quick-list-item *ngFor="let task of tasks" [routerLink]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id">
+        <bex-quick-list-item-status [status]="taskStatus(task)" [tooltip]="taskStatusText(task)">
+        </bex-quick-list-item-status>
+
+        <h4 bex-quick-list-item-title>{{task.id}} {{task.displayName}}</h4>
+        <p bex-quick-list-item-field>{{task.state}}</p>
+        <div bex-quick-list-item-preview>
+            <bex-task-preview [task]="task"></bex-task-preview>
+        </div>
+    </bex-quick-list-item>
+</bex-quick-list>
+
+<bex-table *ngIf="!quickList">
+    <bex-thead>
+        <bex-column>Id</bex-column>
+        <bex-column>State</bex-column>
+        <bex-column>Created</bex-column>
+        <bex-column>Started</bex-column>
+        <bex-column>Completed</bex-column>
+        <bex-column>Exit code</bex-column>
+    </bex-thead>
+
+    <bex-row *ngFor="let task of tasks" [routerLink]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id">
+        <bex-cell>{{task.id}}</bex-cell>
+        <bex-cell>{{task.state}}</bex-cell>
+        <bex-cell>{{formatDate(task.creationTime)}}</bex-cell>
+        <bex-cell>{{formatDate(task.executionInfo.startTime)}}</bex-cell>
+        <bex-cell>{{formatDate(task.executionInfo.endTime)}}</bex-cell>
+        <bex-cell>{{task.executionInfo.exitCode}}</bex-cell>
+    </bex-row>
+</bex-table>
+<bex-no-item [itemCount]="tasks.size" [filter]="filter" [status]="status">
+    <i icon class="fa fa-tasks"></i>
+    <span no-filter>No tasks</span>
+    <span with-filter>No task match this filter</span>
+</bex-no-item>

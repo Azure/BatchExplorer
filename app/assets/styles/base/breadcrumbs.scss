@@ -1,0 +1,74 @@
+
+bex-breadcrumbs {
+    $separation: 3px;
+    $height: 30px;
+    $half-height: $height / 2;
+    $color: lighten($blue-lighter, 5%);
+    $hover-color: $blue-light;
+
+    ul {
+        display: flex;
+        margin: 0;
+    }
+
+    ul > li {
+        height: $height;
+        background: $color;
+        padding: 0 5px;
+        position: relative;
+        margin: 0 ($half-height + $separation) 0 0;
+        text-decoration: none;
+        min-width: 40px;
+        max-width: 90px;
+        cursor: pointer;
+
+        &:after {
+            content: "";
+            border-top: $half-height solid transparent;
+            border-bottom: $half-height solid transparent;
+            border-left: $half-height solid $color;
+            position: absolute;
+            right: -$half-height;
+            top: 0;
+        }
+
+        &:before {
+            content: "";
+            position: absolute;
+            border-width: $half-height 0 $half-height $half-height;
+            border-style: solid;
+            border-color: $color $color $color transparent;
+            left: -$half-height;
+        }
+
+        &:hover {
+            background: $hover-color;
+
+            &:after {
+                border-left: $half-height solid $hover-color;
+            }
+
+            &:before {
+                border-color: $hover-color $hover-color $hover-color transparent;
+            }
+        }
+
+        > div.crumb-content {
+            text-align: left;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            word-break: break-all;
+            white-space: nowrap;
+            color: $whiteSmoke;
+        }
+
+        > div.crumb-label {
+            color: $whiteSmoke-darker;
+            font-style: italic;
+            text-align: right;
+            line-height: 0.7em;
+            font-size: 0.7em;
+            margin-top: 3px;
+        }
+    }
+}

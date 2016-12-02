@@ -1,0 +1,83 @@
+$padding-first-and-last: 15px;
+$table-heading-height: 48px;
+$table-row-height: 40px;
+
+bex-table {
+    display: block;
+    width: 100%;
+
+    table {
+        width: 100%;
+        border-spacing: 0;
+        overflow: hidden;
+    }
+
+    bex-thead {
+        display: table-header-group;
+        color: $genericGray;
+
+        > tr {
+            height: $table-heading-height;
+        }
+    }
+
+    tbody {
+        > tr {
+            cursor:pointer;
+            height: $table-row-height;
+
+            &.selected {
+                background-color: map-get($md-prussian-blue, 100);
+
+                p {
+                    color: $mineShaftGray;
+                }
+            }
+
+            &.focused {
+                background-color: map-get($md-prussian-blue, 200);
+            }
+
+            &:hover:not(.selected) {
+                background-color: $altoGray;
+            }
+        }
+    }
+
+    bex-cell,
+    bex-column {
+        vertical-align: middle;
+        text-align: left;
+        padding: 0 5px;
+
+        &:first-child {
+            padding: 0 0 0 $padding-first-and-last;
+        }
+
+        &:last-child {
+            padding: 0 $padding-first-and-last 0 0;
+        }
+        &[numericField] {
+            text-align: right;
+        }
+    }
+
+    bex-column {
+        display: table-cell;
+        font-size: 0.9em;
+        font-weight: bold;
+        white-space: nowrap;
+    }
+
+    bex-cell {
+        display: table-cell;
+        font-size: 1em;
+        border-top: 1px $athensGrey solid;
+    }
+
+    bex-row:last-child {
+        bex-cell {
+            border-bottom: 1px $athensGrey solid;
+        }
+    }
+}

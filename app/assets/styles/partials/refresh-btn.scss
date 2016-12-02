@@ -1,0 +1,24 @@
+bex-refresh-btn {
+    .fa-refresh {
+        color: map-get($md-prussian-blue, 300);
+    }
+
+    .fa-check {
+        color: $green-dark;
+        // overflow: hidden;
+    }
+
+    .fa-warning {
+        color: $red;
+    }
+
+    .success-container {
+        width: 1em;
+        text-align: left;
+        display: inline-block;
+    }
+}
+
+.fa-ban {
+    color: $errorText;
+}

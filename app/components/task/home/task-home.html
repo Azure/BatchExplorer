@@ -1,0 +1,22 @@
+<bex-list-and-show-layout #layout (listScrolledToBottom)="taskList.loadMore()" [list]="taskList">
+    <bex-breadcrumbs>
+        <bex-crumb [routerLink]="['/jobs', jobId]" label="Job">{{jobId}}</bex-crumb>
+    </bex-breadcrumbs>
+    <div bex-list-buttons>
+        <button md-mini-fab color="primary" title="Add a task" (click)="addTask()">
+            <i class="fa fa-plus spin-hover"></i>
+        </button>
+    </div>
+    <div bex-list-content>
+        <bex-focus-section>
+            <bex-task-list #taskList [jobId]="jobId" [filter]="layout.filter" [quickList]="!(layout.showAdvancedFilter | async)"></bex-task-list>
+        </bex-focus-section>
+    </div>
+    <div bex-show-content>
+        <router-outlet></router-outlet>
+    </div>
+    <div bex-show-advanced-filter>
+        <bex-task-advanced-filter (change)="layout.advancedFilterChanged($event)">
+        </bex-task-advanced-filter>
+    </div>
+</bex-list-and-show-layout>

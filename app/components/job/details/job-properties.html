@@ -1,0 +1,33 @@
+<bex-property-list>
+    <bex-property-group label="General" class="wide">
+        <bex-text-property label="Id" [value]="decorator.id"></bex-text-property>
+        <bex-text-property label="Display name" [value]="decorator.displayName"></bex-text-property>
+        <bex-void-link-property *ngIf="jobManagerTask.id" label="Job manager task" [value]="jobManagerTask.id"></bex-void-link-property>
+        <bex-link-property label="Pool" [value]="executionInfo.poolId" [link]="['/pools/', executionInfo.poolId]"></bex-link-property>
+        <bex-text-property label="State" [value]="decorator.state"></bex-text-property>
+        <bex-text-property label="State transition time" [value]="decorator.stateTransitionTime"></bex-text-property>
+        <bex-text-property label="Creation time" [value]="decorator.creationTime"></bex-text-property>
+        <bex-text-property label="Last modified" [value]="decorator.lastModified"></bex-text-property>
+        <bex-text-property label="Previous state" [value]="decorator.previousState"></bex-text-property>
+        <bex-text-property label="Previous transition time" [value]="decorator.previousStateTransitionTime"></bex-text-property>
+        <bex-text-property label="Priority" [value]="decorator.priority"></bex-text-property>
+        <bex-bool-property label="Task dependencies" [value]="decorator.usesTaskDependencies"></bex-bool-property>
+        <bex-text-property label="When all tasks complete" [value]="decorator.onAllTasksComplete"></bex-text-property>
+        <bex-text-property label="When a task fails" [value]="decorator.onTaskFailure"></bex-text-property>
+    </bex-property-group>
+</bex-property-list>
+
+<bex-property-list>
+    <bex-property-group label="Execution information" class="wide">
+        <bex-text-property label="Start time" [value]="executionInfo.startTime"></bex-text-property>
+        <bex-text-property label="End time" [value]="executionInfo.endTime"></bex-text-property>
+        <bex-text-property label="Termination reason" [value]="executionInfo.terminateReason"></bex-text-property>
+    </bex-property-group>
+</bex-property-list>
+
+<bex-property-list>
+    <bex-property-group label="Constraints" class="wide">
+        <bex-text-property label="Max task retry count" [value]="constraints.maxTaskRetryCount"></bex-text-property>
+        <bex-text-property label="Max wall-clock time" [value]="constraints.maxWallClockTime"></bex-text-property>
+    </bex-property-group>
+</bex-property-list>

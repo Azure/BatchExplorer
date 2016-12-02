@@ -1,0 +1,15 @@
+<bex-quick-list>
+    <bex-quick-list-item *ngFor="let task of subTasks" [key]="task.id">
+        <bex-quick-list-item-status [status]="taskStatus(task)" [tooltip]="taskStatusText(task)">
+        </bex-quick-list-item-status>
+
+        <h4 bex-quick-list-item-title>{{task.id}}</h4>
+        <p bex-quick-list-item-field>{{task.state}}</p>
+        <div bex-quick-list-item-preview>
+            <bex-task-preview [task]="task"></bex-task-preview>
+        </div>
+    </bex-quick-list-item>
+</bex-quick-list>
+<bex-no-item [itemCount]="subTasks.size" [status]="status">
+    <span no-filter>There are no sub tasks associated with this task</span>
+</bex-no-item>

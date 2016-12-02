@@ -1,0 +1,45 @@
+<div class="layout-container" [class.filtering]="showAdvancedFilter | async">
+    <section class="list-view">
+        <div class="left-pane">
+            <div class="bex-breadcrumbs">
+                <ng-content select="bex-breadcrumbs"></ng-content>
+            </div>
+            <div class="bex-quick-filter-content">
+                <div class="quicksearch">
+                    <input [formControl]="quickSearchQuery" placeholder="Search" #quickSearchInput (keydown)="handleKeyPressedInQuickSearch($event)"
+                    />
+                    <i class="fa fa-filter fa-2x" (click)="toggleFilter()"></i>
+                </div>
+                <hr />
+                <div class="context-button-bar left">
+                    <button md-mini-fab color="warn" *ngIf="list?.isAnyItemSelected() && list?.deleteSelected" (click)="deleteSelectedItems()">
+                        <i class="fa fa-trash"></i>
+                    </button>
+                </div>
+                <div class="context-button-bar right">
+                    <bex-refresh-btn [refresh]="refresh" *ngIf="refresh"></bex-refresh-btn>
+                    <ng-content select="[bex-list-buttons]"></ng-content>
+                </div>
+            </div>
+            <div #listContent class="bex-list-content">
+                <bex-scrollable (scrollBottom)="listScrolledToBottom.emit($event)">
+                    <ng-content select="[bex-list-content]"></ng-content>
+                </bex-scrollable>
+            </div>
+        </div>
+    </section>
+
+    <section class="content-view">
+        <bex-scrollable class="block">
+            <div class="content-wrapper">
+                <div style="position:relative">
+                    <ng-content select="[bex-show-content]"></ng-content>
+                    <div class="advanced-filter-content" *ngIf="showAdvancedFilter | async" [@slideIn]="showAdvancedFilter" class="advanced-filter-content">
+                        <ng-content select="[bex-show-advanced-filter]"></ng-content>
+                    </div>
+                </div>
+            </div>
+        </bex-scrollable>
+    </section>
+
+</div>

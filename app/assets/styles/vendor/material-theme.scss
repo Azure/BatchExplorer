@@ -1,0 +1,145 @@
+@import "../theme/variables";
+@import "~@angular/material/core/theming/all-theme";
+// Plus imports for other components in your app.
+
+// Include the base styles for Angular Material core. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+@include md-core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue.
+$primary: md-palette($md-prussian-blue);
+$accent:  md-palette($md-grey, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$warn:    md-palette($md-red);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$theme: md-light-theme($primary, $accent, $warn);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($theme);
+
+// TODO: can we pull in the material scss classes into the project?
+// really want to be able to override the styles more easily.
+
+// overrides
+md-list, md-nav-list {
+    padding-top: 0 !important;
+
+    md-list-item {
+        .md-list-item {
+            height: auto !important;
+            font-family: $baseFontFamily !important;
+            margin-bottom: 10px !important;
+            padding: 0 !important;
+
+            .md-list-text {
+                padding-left: 8px;
+                padding-right: 0;
+
+                a {
+                    text-overflow: ellipsis;
+                }
+
+                h4 {
+                    font-size: $h4FontSize;
+                }
+
+                p {
+                    font-size: $baseFontSize !important;
+                }
+            }
+        }
+    }
+}
+
+[md-mini-fab] {
+    width: 30px !important;
+    height: 30px !important;
+}
+
+[md-list-avatar] {
+    width: auto !important;
+    height: auto !important;
+    margin-top: -25px;
+}
+
+md-tab-group {
+    .md-tab-label {
+        opacity: 0.8 !important;
+        border-right: 1px solid #ddd;
+
+        &.md-tab-active {
+            background-color: map-get($md-prussian-blue, 100);
+            color: white;
+        }
+
+        &.md-tab-disabled {
+            color: #bbb;
+        }
+
+        &:focus {
+            opacity: 0.8 !important;
+        }
+    }
+}
+
+[md-mini-fab] i, [md-mini-fab] md-icon {
+    overflow: hidden;
+    padding: 0 !important;
+}
+
+md-card {
+    transition: none !important;
+    box-shadow: 1px 1px 5px 0 #d5d5d5 !important;
+
+    &.overview {
+        padding: 18px !important;
+
+        md-card-actions {
+            margin-left: -10px !important;
+            margin-right: -10px !important;
+            padding-top: 4px !important;
+        }
+
+        md-card-actions:last-child {
+            margin-bottom: -10px !important;
+            padding-bottom: 0 !important;
+        }
+    }
+
+    &.details {
+        margin-top:8px !important;
+        padding:0 !important;
+    }
+}
+
+md-radio-button {
+    margin-right: 15px;
+
+    &.md-radio-checked {
+        .md-radio-outer-circle {
+            border-color: map-get($md-prussian-blue, 400);
+        }
+
+        .md-radio-inner-circle {
+            background: map-get($md-prussian-blue, 400);
+        }
+    }
+}
+
+[md-raised-button].md-primary.md-button-focus {
+    background: map-get($md-prussian-blue, 700);
+}
+
+
+md-checkbox[small] {
+    .md-checkbox-inner-container {
+        width: 14px;
+        height: 14px;
+    }
+}

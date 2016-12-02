@@ -1,0 +1,16 @@
+<div [ngSwitch]="task.state">
+	<div *ngSwitchCase="taskStates.running">
+		<i class="fa fa-clock-o" aria-hidden="true"></i>
+        <bex-elapsed-time [startTime]="startTime"></bex-elapsed-time>
+
+	</div>
+
+	<div *ngSwitchCase="taskStates.completed" [class.success]="exitCode === 0" [class.failure]="exitCode !== 0">
+		<i class="fa fa-check-square-o" aria-hidden="true"></i>
+        <span>{{exitCode}}</span>
+	</div>
+
+	<div *ngSwitchDefault>
+		<i class="fa fa-hourglass-half" aria-hidden="true"></i>
+	</div>
+</div>

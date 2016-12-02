@@ -1,0 +1,117 @@
+
+// Vertical align ANYTHING! 
+// ----------------------------------
+@mixin vertical-align() {
+    position: relative;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+}
+
+// Center-align a block level element
+// ----------------------------------
+@mixin center-block() {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@mixin center() {
+    text-align: center;
+    margin-left:auto;
+    margin-right:auto;
+}
+
+// For clearing floats
+@mixin clearfix() {
+    *zoom: 1;
+    &:before,
+    &:after {
+        display: table;
+        content: "";
+        // Fixes Opera/contenteditable bug:
+        // http://nicolasgallagher.com/micro-clearfix-hack/#comment-36952
+        line-height: 0;
+    }
+  
+    &:after {
+        clear: both;
+    }
+}
+
+// IE7 inline-block
+// ----------------------------------
+@mixin ie7-inline-block() {
+    *display: inline; /* IE7 inline-block hack */
+    *zoom: 1;
+}
+
+// IE7 likes to collapse whitespace on either side of the inline-block elements.
+// Ems because we"re attempting to match the width of a space character. Left
+// version is for form buttons, which typically come after other elements, and
+// right version is for icons, which come before. Applying both is ok, but it will
+// mean that space between those elements will be .6em (~2 space characters) in IE7,
+// instead of the 1 space in other browsers.
+@mixin ie7-restore-left-whitespace() {
+    *margin-left: 0.3em;
+
+    &:first-child {
+        *margin-left: 0;
+    }
+}
+
+@mixin ie7-restore-right-whitespace() {
+    *margin-right: 0.3em;
+}
+
+// Placeholder text
+// ----------------------------------
+@mixin placeholder($color: $placeholderText) {
+    &::-webkit-input-placeholder {
+        color: $color;
+    }
+
+    &:-moz-placeholder { /* Firefox 18- */
+        color: $color;
+    }
+
+    &::-moz-placeholder {  /* Firefox 19+ */
+        color: $color;
+    }
+
+    &:-ms-input-placeholder {
+        color: $color;
+    }
+}
+
+// Text overflow
+// ----------------------------------
+// Requires inline-block or block for proper styling
+@mixin text-overflow() {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+// Fonts
+// ----------------------------------
+@mixin font-weight($fontWeight) {
+    @if $fontWeight == "bold" {
+        font-family: $segoiUiFontFamilyBold;
+        font-weight: normal;
+    }
+    @else if $fontWeight == "semibold" {
+        font-family: $segoiUiFontFamilySemibold;
+        font-weight: normal;
+    }
+    @else if $fontWeight == "light" or $fontWeight == "semilight" {
+        font-family: $segoiUiFontFamilySemilight;
+        font-weight: normal;
+    }
+    @else {
+        font-family: $segoeUiFontFamily;
+        font-weight: normal;
+    }
+}

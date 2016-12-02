@@ -1,0 +1,61 @@
+.dropdown {
+    position: relative;
+    float: right;
+}
+
+[bex-dropdown-btn] {
+    position: relative;
+    padding: 0 5px;
+    color: white;
+    height: $header-height;
+    display: flex;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.bex-dropdown-btn-container {
+    background-color: $navigation-hover;
+    cursor: pointer;
+    
+    &:hover, &.active {
+        background-color: $navigation-background;
+    }
+}
+
+[bex-dropdown-content] {
+    position: absolute;
+    z-index: 1000;
+    right: 0;
+    top: $header-height;
+    background-color: $navigation-background;
+    color: $whiteSmoke;
+    
+    .no-items {
+        padding: 10px 5px;
+    }
+
+    .dropdown-item {
+        position: relative;
+        min-width: 100px;
+        cursor: pointer;
+        padding: 5px 10px;
+        display: flex;
+        align-items: center;
+        // justify-content: center;
+
+        border-top: 1px solid $navigation-hover;
+
+        &:hover, &.active {
+            background-color: $navigation-hover;
+        }
+        
+        .main {
+            flex: 1 0 auto;
+        }
+
+        .extra {
+            flex: 0 0 auto;
+        }
+    }
+}

@@ -1,0 +1,8 @@
+<div class="status-icon">
+    <div *ngIf="!(task.done | async)">
+        <md-progress-circle mode="indeterminate" color="primary" *ngIf="(task.progress | async) === -1"></md-progress-circle>
+        <md-progress-circle mode="determinate" [value]="task.progress | async" *ngIf="(task.progress | async) !== -1"></md-progress-circle>
+    </div>
+    <i class="fa fa-check" *ngIf="task.done | async"></i>
+</div>
+<span class="name">{{task.name | async}}</span>

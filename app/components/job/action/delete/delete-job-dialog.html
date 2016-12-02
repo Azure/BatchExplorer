@@ -1,0 +1,20 @@
+<div class="confirmation-dialog">
+	<div class="message">
+        Delete job
+		<p>Do you want to delete the job: '<b>{{jobId}}</b>'?</p>
+        <p>
+            Warning! Deleting job '<b>{{jobId}}</b>' is irreversible. The action you're about to take can't be undone.
+            Clicking OK will delete this job, its tasks, and any related resources permanently.
+        </p>
+	</div>
+	<div class="buttons">
+        <bex-submit-btn [submit]="destroyJob" color="warn">
+            Yes
+        </bex-submit-btn>
+		<button md-raised-button type="primary" (click)="dialogRef.close()">No</button>
+        <i *ngIf="processing" class="fa fa-gear fa-2 fa-spin"></i>
+	</div>
+    <div [hidden]="!hasError()" class="error">
+        <p>{{errorText()}}</p>
+    </div>
+</div>

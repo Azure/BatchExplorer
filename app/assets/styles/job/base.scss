@@ -1,0 +1,53 @@
+bex-job-stats-preview {
+    .task-success {
+        display: inline-block;
+        color: $green-dark;
+        margin-right: 5px;
+    }
+
+    .task-failed {
+        display: inline-block;
+        color: $red;
+    }
+}
+
+bex-task-preview {
+    .success {
+        color: $green;
+    }
+
+    .failure {
+        color: $red;
+    }
+}
+
+md-tab-group {
+    .md-tab-body {
+        // set to same height as a tab with the .no-item-message
+        min-height: 400px;
+
+        bex-sub-task-display-list {
+            &.item-selected {
+                bex-quick-list {
+                    width: 270px !important;
+                }
+            }
+
+            bex-quick-list {
+                float: left;
+                margin-top: 10px;
+                margin-bottom: 20px;
+            }
+        }
+
+        bex-sub-task-properties {
+            float: right;
+            border-left: 1px solid #ddd;
+            margin-bottom: 10px;
+
+            bex-property-group {
+                // todo: override property group css
+            }
+        }
+    }
+}

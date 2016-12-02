@@ -1,0 +1,6 @@
+bex-focus-section {
+    display: block;
+    &:focus {
+        outline: none;
+    }
+}

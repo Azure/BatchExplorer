@@ -1,0 +1,48 @@
+{
+  "extends": "tslint:recommended",
+  "rulesDirectory": [
+    "node_modules/codelyzer"
+  ],
+  "rules": {
+    // TSLint override
+    "no-inferrable-types": true,
+    "interface-name": [ true,  "never-prefix" ],
+    "no-string-literal": false,
+    "variable-name": [false, "ban-keywords", "check-format", "allow-leading-underscore"], // https://github.com/palantir/tslint/issues/1489
+    "whitespace": [true,
+        "check-branch",
+        "check-decl",
+        "check-operator",
+        "check-separator",
+        "check-type"
+    ],
+    "ordered-imports": [true, {
+        "import-sources-order": "case-insensitive",
+        "named-imports-order": "lowercase-last"
+    }],
+    "object-literal-sort-keys": false,
+
+    // Codelyzer rules(Angular2)
+    "directive-selector-name": [false, "camelCase"],
+    "component-selector-name": [true, "kebab-case"],
+    "directive-selector-type": [true, "attribute"],
+    "component-selector-type": [true, "element"],
+    "directive-selector-prefix": [true, "bex"],
+    "component-selector-prefix": [true, "bex"],
+    "use-input-property-decorator": true,
+    "use-output-property-decorator": true,
+    "use-host-property-decorator": true,
+    "no-attribute-parameter-decorator": true,
+    "no-input-rename": true,
+    "no-output-rename": true,
+    "no-forward-ref": true,
+    "use-life-cycle-interface": true,
+    "use-pipe-transform-interface": true,
+    "pipe-naming": [false, "camelCase", "bex"],
+    "component-class-suffix": true,
+    "directive-class-suffix": true,
+    "import-destructuring-spacing": true,
+    "templates-use-public": true,
+    "invoke-injectable": true
+  }
+}

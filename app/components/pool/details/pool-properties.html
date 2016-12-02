@@ -1,0 +1,44 @@
+<div *ngIf="decorator">
+	<bex-property-list>
+		<bex-property-group label="General" class="wide">
+			<bex-text-property label="Id" [value]="decorator.id"></bex-text-property>
+			<bex-text-property label="VM size" [value]="decorator.vmSize"></bex-text-property>
+			<bex-text-property label="Current dedicated" [value]="decorator.currentDedicated"></bex-text-property>
+			<bex-text-property label="Target dedicated" [value]="decorator.targetDedicated"></bex-text-property>
+			<bex-text-property label="State" [value]="decorator.state"></bex-text-property>
+			<bex-text-property label="State transistion Time" [value]="decorator.stateTransitionTime"></bex-text-property>
+			<bex-text-property label="Allocation state" [value]="decorator.allocationState"></bex-text-property>
+			<bex-text-property label="Allocation state transition time" [value]="decorator.allocationStateTransitionTime"></bex-text-property>
+            <bex-text-property label="Creation time" [value]="decorator.creationTime"></bex-text-property>
+            <bex-text-property label="Dispaly name" [value]="decorator.displayName"></bex-text-property>
+            <bex-text-property label="Enable autoscale" [value]="decorator.enableAutoscale"></bex-text-property>
+            <bex-text-property label="Enable inter-node communication" [value]="decorator.enableInterNodeCommunication"></bex-text-property>
+            <bex-text-property label="Last modified" [value]="decorator.lastModified"></bex-text-property>
+            <bex-text-property label="Max tasks per node" [value]="decorator.maxTasksPerNode"></bex-text-property>
+            <!--<bex-text-property label="Resize error" [value]="decorator"></bex-text-property>-->
+            <bex-text-property label="Resize timeout" [value]="decorator.resizeTimeout"></bex-text-property>
+            <bex-text-property label="Task scheduling policy" [value]="decorator.taskSchedulingPolicy.nodeFillType"></bex-text-property>
+            <bex-text-property label="Url" [value]="decorator.url"></bex-text-property>
+		</bex-property-group>
+	</bex-property-list>
+
+	<bex-property-list *ngIf="pool.cloudServiceConfiguration">
+		<bex-property-group label="Cloud service configuration" class="wide">
+			<bex-text-property label="OS family" [value]="decorator.cloudServiceConfiguration.osFamily"></bex-text-property>
+			<bex-text-property label="Curent OS version" [value]="decorator.cloudServiceConfiguration.currentOSVersion"></bex-text-property>
+			<bex-text-property label="Target OS version" [value]="decorator.cloudServiceConfiguration.targetOSVersion"></bex-text-property>
+		</bex-property-group>
+	</bex-property-list>
+
+	<bex-property-list *ngIf="pool.virtualMachineConfiguration">
+		<bex-property-group label="Virtual machine configuration" class="wide">
+			<bex-text-property label="Publisher" [value]="decorator.virtualMachineConfiguration.imageReference.publisher"></bex-text-property>
+			<bex-text-property label="Offer" [value]="decorator.virtualMachineConfiguration.imageReference.offer"></bex-text-property>
+            <bex-text-property label="Sku" [value]="decorator.virtualMachineConfiguration.imageReference.sku"></bex-text-property>
+            <bex-text-property label="Version" [value]="decorator.virtualMachineConfiguration.imageReference.version"></bex-text-property>
+            <bex-text-property label="Node agent sku id" [value]="decorator.virtualMachineConfiguration.nodeAgentSKUId"></bex-text-property>
+            <bex-text-property *ngIf="decorator.virtualMachineConfiguration.windowsConfiguration"
+                label="Enable automatic updates" [value]="decorator.virtualMachineConfiguration.windowsConfiguration.enableAutomaticUpdates"></bex-text-property>
+		</bex-property-group>
+	</bex-property-list>
+</div>

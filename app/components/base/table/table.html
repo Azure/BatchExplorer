@@ -1,0 +1,6 @@
+<table>
+    <ng-content select="bex-thead"></ng-content>
+    <tbody>
+        <template [ngTemplateOutlet]="item.content" *ngFor="let item of items"></template>
+    </tbody>
+</table>

@@ -1,0 +1,36 @@
+nav {
+    ul {
+        margin: 0;
+ 
+        li {
+            padding: 0;
+
+            i.fa {
+                display: block;
+                margin: 0 auto;
+            }
+            
+            a {
+                display: block;
+                padding: 18px 0;
+            }
+
+            a.active {
+                background-color: lighten($navigation-hover, 4%);
+                color: $white;
+            }
+        }
+
+        li:hover {
+            background-color: $navigation-hover;
+        }
+    }
+
+    a {
+        color: $navigation-text;
+    }
+
+    a:hover {
+        color: $white;
+    }
+}

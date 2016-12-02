@@ -1,0 +1,23 @@
+@import "../theme/mixins";
+
+.content-wrapper {
+    position: relative;
+
+    .loading-indicator {
+        position: absolute;
+        visibility: hidden;
+        margin: 25px auto;
+        left: 0;
+        right: 0;
+        top: 100px;
+        
+        &.loading {
+            visibility: visible;
+            display: block;
+        }
+    }
+
+    form.loading, md-list.loading, fieldset.loading {
+        opacity: 0.25;
+    }
+}

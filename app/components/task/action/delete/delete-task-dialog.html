@@ -1,0 +1,19 @@
+<div class="confirmation-dialog">
+	<div class="message">
+        Delete task
+		<p>Do you want to delete task: '<b>{{taskId}}</b>'?</p>
+        <p>
+            All of the task's files in the directory on the compute node where it ran will also be deleted.
+        </p>
+	</div>
+	<div class="buttons">
+        <bex-submit-btn [submit]="destroyTask" color="warn">
+            Yes
+        </bex-submit-btn>
+		<button md-raised-button type="primary" (click)="dialogRef.close()">No</button>
+        <i *ngIf="processing" class="fa fa-gear fa-2 fa-spin"></i>
+	</div>
+    <div [hidden]="!hasError()" class="error">
+        <p>{{errorText()}}</p>
+    </div>
+</div>
