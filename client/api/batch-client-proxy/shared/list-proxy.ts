@@ -30,13 +30,18 @@ export class ListProxy {
     }
 
     public fetchNext(id: string): Promise<BatchResult> {
+        console.log("Fetching next");
         if (this.currentPromise) {
+            console.log("Current promise");
             return this.currentPromise;
         } else if (!this.hasMoreItems()) {
+            console.log("No more items");
             return Promise.resolve({
                 data: [],
             });
         } else {
+            console.log("More items");
+
             if (this.nextLink) {
                 this.currentPromise = this._listNext();
             } else {
