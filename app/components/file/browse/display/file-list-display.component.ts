@@ -29,7 +29,7 @@ export class FileListDisplayComponent {
     @Input()
     public status: LoadingStatus;
 
-    private _files: List<File>;
+    // private _files: List<File>;
 
     public isErrorState(file: any) {
         // if (node.state === "startTaskFailed") {

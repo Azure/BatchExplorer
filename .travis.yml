@@ -11,6 +11,6 @@ before_script:
   - sleep 3
 
 script:
-  - npm run build
-  - npm run test
-  - npm run lint
+  - npm run build -s
+  - npm run test -s
+  - npm run lint -s
