@@ -2,7 +2,7 @@ import { Record } from "immutable";
 
 import { JobStats } from "./";
 import { JobAction, TaskFailureAction } from "./jobAction";
-import { JobConstraints } from "./JobConstraints";
+import { JobConstraints } from "./jobConstraints";
 import { JobExecutionInformation } from "./jobExecutionInformation";
 import { NameValuePair } from "./nameValuePair";
 

@@ -1,6 +1,6 @@
 import { Record } from "immutable";
 
-import { FileProperties } from "./FileProperties";
+import { FileProperties } from "./fileProperties";
 
 // tslint:disable:variable-name object-literal-sort-keys
 const FileRecord = Record({
