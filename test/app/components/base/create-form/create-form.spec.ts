@@ -6,7 +6,7 @@ import { By } from "@angular/platform-browser";
 import { autobind } from "core-decorators";
 import { AsyncSubject } from "rxjs";
 
-import { ButtonsModule, SubmitButtonComponent } from "app/components/base/buttons";
+import { SubmitButtonComponent } from "app/components/base/buttons";
 import { CreateFormComponent } from "app/components/base/create-form";
 
 @Component({
@@ -43,7 +43,7 @@ export class FormTestComponent {
         this.submitSpy();
         const sub = new AsyncSubject();
         if (this.form.value.id === "error") {
-            sub.error({ code: "IdExists", message: { value: "Id already exists" } })
+            sub.error({ code: "IdExists", message: { value: "Id already exists" } });
         } else {
             sub.next(true);
             sub.complete();
@@ -125,7 +125,6 @@ describe("CreateFormComponent", () => {
         tick(1000); // For the timeout to close
         expect(fixture.componentInstance.sidebarRef.destroy).toHaveBeenCalledTimes(1);
     }));
-
 
     it("should not close the sidebar when clicking add", fakeAsync(() => {
         fixture.componentInstance.form.patchValue({
