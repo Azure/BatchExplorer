@@ -6,16 +6,15 @@ import { Observable } from "rxjs";
 import { SidebarRef } from "../../../base/sidebar";
 import { RangeValidatorDirective } from "app/components/base/validation";
 import { Pool } from "app/models";
-import { createJobFormToJsonData } from "app/models/forms";
+import { createJobFormToJsonData, jobToFormModel } from "app/models/forms";
 import { JobService, PoolService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Constants } from "app/utils";
 
 @Component({
     selector: "bex-job-create-basic-dialog",
-    template: require("./job-create-basic-dialog.html"),
+    templateUrl: "job-create-basic-dialog.html",
 })
-
 export class JobCreateBasicDialogComponent implements OnInit {
     public poolsData: RxListProxy<{}, Pool>;
     public createJobForm: FormGroup;
@@ -65,6 +64,10 @@ export class JobCreateBasicDialogComponent implements OnInit {
         });
     }
 
+    public setValue(pool: any) {
+        this.createJobForm.patchValue(jobToFormModel(pool));
+    }
+
     @autobind()
     public submit(): Observable<any> {
         const jsonData = createJobFormToJsonData(this.createJobForm.value);
@@ -78,6 +81,6 @@ export class JobCreateBasicDialogComponent implements OnInit {
     }
 
     public preSelectPool(poolId: string) {
-        this.createJobForm.patchValue({ poolInfo: { poolId:  poolId }});
+        this.createJobForm.patchValue({ poolInfo: { poolId: poolId } });
     }
 }

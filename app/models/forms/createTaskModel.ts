@@ -1,3 +1,4 @@
+import { Task } from "app/models";
 
 export interface TaskConstraintsModel {
     maxWallClockTime: string;
@@ -43,4 +44,25 @@ export function createTaskFormToJsonData(formData: CreateTaskModel): any {
     };
 
     return data;
+}
+
+export function taskToFormModel(task: Task): CreateTaskModel {
+    return {
+        id: task.id,
+        displayName: task.displayName,
+        commandLine: task.commandLine,
+        exitConditions: task.exitConditions,
+        resourceFiles: task.resourceFiles,
+        environmentSettings: task.environmentSettings,
+        affinityInfo: task.affinityInfo,
+        constraints: {
+            maxWallClockTime: task.constraints.maxWallClockTime.toISOString(),
+            maxTaskRetryCount: task.constraints.maxTaskRetryCount,
+            retentionTime: task.constraints.retentionTime.toISOString(),
+        },
+        runElevated: task.runElevated,
+        multiInstanceSettings: task.multiInstanceSettings,
+        applicationPackageReferences: task.applicationPackageReferences,
+        dependsOn: task.dependsOn,
+    }
 }

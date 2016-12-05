@@ -17,6 +17,7 @@
                 <bex-add-button (click)="addTask()"></bex-add-button>
                 <bex-terminate-button [entity]="task" (click)="terminateTask()"></bex-terminate-button>
                 <bex-delete-button [entity]="task" (click)="deleteTask()"></bex-delete-button>
+                <bex-clone-button (click)="cloneTask()"></bex-clone-button>
             </md-card-actions>
         </md-card>
         <md-card class="details">

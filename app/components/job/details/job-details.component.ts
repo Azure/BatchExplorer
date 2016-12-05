@@ -6,10 +6,12 @@ import { Subscription } from "rxjs/Subscription";
 
 import { SidebarManager } from "../../base/sidebar";
 import { TaskCreateBasicDialogComponent } from "../../task/action";
+import { JobCreateBasicDialogComponent } from "../action";
 import { Job } from "app/models";
 import { JobDecorator } from "app/models/decorators";
 import { JobParams, JobService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
+
 
 import {
     DeleteJobDialogComponent,
@@ -22,7 +24,6 @@ import {
     selector: "bex-job-details",
     templateUrl: "./job-details.html",
 })
-
 export class JobDetailsComponent implements OnInit, OnDestroy {
     public jobId: string;
     public job: Job;
@@ -104,6 +105,11 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
         dialogRef.afterClosed().subscribe((obj) => {
             this.refresh();
         });
+    }
+
+    public cloneJob() {
+        const ref = this.sidebarManager.open("add-basic-pool", JobCreateBasicDialogComponent);
+        ref.component.setValue(this.job);
     }
 
     public enableJob() {
