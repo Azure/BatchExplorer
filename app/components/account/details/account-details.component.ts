@@ -1,24 +1,27 @@
 import { Component, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
 import { MdDialog, MdDialogConfig } from "@angular/material";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 
 import { DeleteAccountDialogComponent } from "../action/delete-account-dialog.component";
 import { Account } from "app/models";
 import { AccountService } from "app/services";
 
-// put this template into a separate template file.
-
 @Component({
     selector: "bex-account-details",
-    template: require("./account-details.html"),
+    templateUrl: "account-details.html",
 })
 export class AccountDetailsComponent implements OnInit, OnDestroy {
     public account: Account;
 
     public set accountName(name: string) {
         this._accountName = name;
-        this.accountService.get(name).subscribe((account) => this.account = account);
+        this.accountService.get(name).subscribe((account) => {
+            this.account = account;
+            if (account) {
+                this.accountService.selectAccount(account);
+            }
+        });
     }
 
     public get accountName() {
@@ -30,6 +33,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
     constructor(
         private dialog: MdDialog,
+        private router: Router,
         private activatedRoute: ActivatedRoute,
         private accountService: AccountService,
         private viewContainerRef: ViewContainerRef) {
@@ -50,6 +54,9 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
         const dialogRef = this.dialog.open(DeleteAccountDialogComponent, config);
         dialogRef.componentInstance.accountName = this.accountName;
+        dialogRef.afterClosed().subscribe(() => {
+            this.router.navigate(["/accounts"]);
+        });
     }
 
     public selectAccount(account: Account): void {

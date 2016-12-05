@@ -55,7 +55,9 @@ export class AccountService {
     }
 
     public selectAccount(account: Account) {
-        this._currentAccount.next(account);
+        if (this._currentAccount.getValue() !== account) {
+            this._currentAccount.next(account);
+        }
     }
 
     public listNodeAgentSkus(initialOptions: any) {
@@ -73,7 +75,7 @@ export class AccountService {
         obs.subscribe(res => {
             this._accounts.next(this._accounts.getValue().push(account));
             if (!this._currentAccount.getValue()) {
-                this._currentAccount.next(this._accounts.getValue()[0]);
+                this._currentAccount.next(this._accounts.getValue().first());
             }
         });
 
@@ -87,6 +89,10 @@ export class AccountService {
                 let accounts: List<Account> = this._accounts.getValue();
                 let index = accounts.findIndex((account) => account.name === accountName);
                 this._accounts.next(accounts.delete(index));
+                const current = this._currentAccount.getValue();
+                if (current && current.name === accountName) {
+                    this._currentAccount.next(this._accounts.getValue().first());
+                }
             }
         );
 

@@ -24,7 +24,7 @@ export class AppComponent implements AfterViewInit {
         private settingsService: SettingsService,
         private commandService: CommandService,
         private accountService: AccountService) {
-        this.hasAccount = accountService.accounts.map((x) => x.size > 0);
+        this.hasAccount = accountService.currentAccount.map((x) => { return Boolean(x); });
     }
 
     public ngAfterViewInit() {
