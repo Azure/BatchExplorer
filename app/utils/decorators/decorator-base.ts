@@ -18,8 +18,12 @@ export class DecoratorBase<TEntity> {
             : returnEmptyStringForNullOrUndefined ? "" : "n/a";
     }
 
+    protected numberField(value: number | any, returnEmptyStringForNullOrUndefined = false): string {
+        return value !== null && value !== undefined ? <string>value : returnEmptyStringForNullOrUndefined ? "" : "n/a";
+    }
+
     protected stringField(value: string | any, returnEmptyStringForNullOrUndefined = false): string {
-        return value !== null || value !== undefined ? <string>value : returnEmptyStringForNullOrUndefined ? "" : "n/a";
+        return value !== null && value !== undefined ? <string>value : returnEmptyStringForNullOrUndefined ? "" : "n/a";
     }
 
     protected timespanField(value?: Duration, returnEmptyStringForNullOrUndefined = false): string {

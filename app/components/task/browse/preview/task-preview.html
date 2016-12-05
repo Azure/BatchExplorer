@@ -6,8 +6,8 @@
 	</div>
 
 	<div *ngSwitchCase="taskStates.completed" [class.success]="exitCode === 0" [class.failure]="exitCode !== 0">
-		<i class="fa fa-check-square-o" aria-hidden="true"></i>
-        <span>{{exitCode}}</span>
+		<span>{{exitCode}}</span>
+        <i class="fa fa-check-square-o" aria-hidden="true"></i>
 	</div>
 
 	<div *ngSwitchDefault>

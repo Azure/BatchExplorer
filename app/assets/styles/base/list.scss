@@ -72,8 +72,11 @@ bex-quick-list {
         [bex-quick-list-item-preview] {
             padding: 5px;
 
+            i {
+                padding-left: 4px;
+            }
+
             .fa-hourglass-half {
-                margin-right: 12px;
                 color: map-get($md-prussian-blue, 400);
             }
         }
