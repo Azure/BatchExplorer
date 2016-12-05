@@ -1,4 +1,4 @@
-<div id="container" [hidden]="!(settingsService.hasSettingsLoaded | async)">
+<div id="container" [hidden]="!(isAppReady | async)">
     <header id="header" [class.no-userinteract]="!(hasAccount | async)" class="noselect">
         <div class="logo-banner-bar">
             <a class="logo" href="#" [routerLink]="['']" title="Batch explorer - Home">

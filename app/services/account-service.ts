@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, NgZone } from "@angular/core";
 import * as storage from "electron-json-storage";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
@@ -18,15 +18,19 @@ export enum AccountStatus {
 
 @Injectable()
 export class AccountService {
+    public accountLoaded: Observable<boolean>;
+
     private accountJsonFileName: string = "accounts";
 
     private _accounts: BehaviorSubject<List<Account>> = new BehaviorSubject(List([]));
     private _currentAccount: BehaviorSubject<Account> = new BehaviorSubject(null);
     private _currentAccountValid: BehaviorSubject<AccountStatus> = new BehaviorSubject(AccountStatus.Invalid);
+    private _accountLoaded = new BehaviorSubject<boolean>(false);
     private _cache = new DataCache<any>();
 
-    constructor() {
+    constructor(private zone: NgZone) {
         this.loadInitialData();
+        this.accountLoaded = this._accountLoaded.asObservable();
 
         this.currentAccount.subscribe((account) => {
             if (account) {
@@ -116,19 +120,22 @@ export class AccountService {
 
     private loadInitialData() {
         this._listAccounts().subscribe((accounts) => {
-            accounts = this._checkAccountHaveId(accounts);
-            this._accounts.next(accounts);
-            const selectedAccountId = sessionStorage.getItem(lastSelectedAccountStorageKey);
-            if (selectedAccountId) {
-                const account = accounts.filter(x => x.id === selectedAccountId).first();
-                if (account) {
-                    return this._currentAccount.next(account);
+            this.zone.run(() => {
+                accounts = this._checkAccountHaveId(accounts);
+                this._accounts.next(accounts);
+                const selectedAccountId = sessionStorage.getItem(lastSelectedAccountStorageKey);
+                if (selectedAccountId) {
+                    const account = accounts.filter(x => x.id === selectedAccountId).first();
+                    if (account) {
+                        this._currentAccount.next(account);
+                    }
                 }
-            }
-            // Using the first account as default now TODO change
-            if (accounts.size > 0) {
-                this._currentAccount.next(accounts.first());
-            }
+                // Using the first account as default now TODO change
+                if (!this._currentAccount.getValue() && accounts.size > 0) {
+                    this._currentAccount.next(accounts.first());
+                }
+                this._accountLoaded.next(true);
+            });
         });
     }
 
