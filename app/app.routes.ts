@@ -24,7 +24,7 @@ export const routes: Routes = [
         path: "accounts",
         children: [
             { path: "", component: AccountDetailsHomeComponent }, // accounts/
-            { path: ":name", component: AccountDetailsComponent }, // accounts/{account.name}
+            { path: ":id", component: AccountDetailsComponent }, // accounts/{account.id}
         ],
     },
     {

@@ -8,20 +8,20 @@ import { AccountService, AccountStatus } from "app/services";
     selector: "bex-account-dropdown",
     template: `
         <bex-dropdown class="account-dropdown">
-            <div bex-dropdown-btn 
+            <div bex-dropdown-btn
                 [routerLink]="['/accounts/', (accountService.currentAccount | async)?.name]"
                 [class.invalid]="(accountService.currentAccountValid | async) === status.Invalid">
                 {{selectedAccountAlias}}
 
-                <i *ngIf="(accountService.currentAccountValid | async) === status.Invalid" 
+                <i *ngIf="(accountService.currentAccountValid | async) === status.Invalid"
                     class="fa fa-warning"></i>
-                
-                <i *ngIf="(accountService.currentAccountValid | async) === status.Loading" 
+
+                <i *ngIf="(accountService.currentAccountValid | async) === status.Loading"
                     class="fa fa-spinner fa-spin"></i>
             </div>
             <div bex-dropdown-content>
                 <div *ngFor="let account of accountService.accounts | async" class="dropdown-item"
-                        [routerLink]="['/accounts/', account.name]"
+                        [routerLink]="['/accounts', account.id]"
                         (click)="selectAccount(account)" [class.selected]="account === selected">
                     <div class="main">
                         <div class="alias">{{account.alias}}</div>
@@ -64,7 +64,7 @@ export default class AccountDropDownComponent {
         });
     }
 
-    // todo: where do i hold the selected account now that we are binding to the server observable data? 
+    // todo: where do i hold the selected account now that we are binding to the server observable data?
     public selectAccount(account: Account): void {
         this.accountService.selectAccount(account);
     }

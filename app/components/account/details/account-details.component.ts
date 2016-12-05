@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
+import { Component, NgZone, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
 import { MdDialog, MdDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
@@ -14,21 +14,23 @@ import { AccountService } from "app/services";
 export class AccountDetailsComponent implements OnInit, OnDestroy {
     public account: Account;
 
-    public set accountName(name: string) {
-        this._accountName = name;
-        this.accountService.get(name).subscribe((account) => {
+    public set accountId(id: string) {
+        this._accountId = id;
+        this.accountService.get(id).subscribe((account) => {
             this.account = account;
             if (account) {
-                this.accountService.selectAccount(account);
+                this.zone.run(() => {
+                    this.accountService.selectAccount(account);
+                });
             }
         });
     }
 
-    public get accountName() {
-        return this._accountName;
+    public get accountId() {
+        return this._accountId;
     }
 
-    private _accountName: string;
+    private _accountId: string;
     private _paramsSubscriber: Subscription;
 
     constructor(
@@ -36,12 +38,13 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         private router: Router,
         private activatedRoute: ActivatedRoute,
         private accountService: AccountService,
+        private zone: NgZone,
         private viewContainerRef: ViewContainerRef) {
 
     }
 
     public ngOnInit() {
-        this._paramsSubscriber = this.activatedRoute.params.subscribe(params => this.accountName = params["name"]);
+        this._paramsSubscriber = this.activatedRoute.params.subscribe(params => this.accountId = params["id"]);
     }
 
     public ngOnDestroy() {
@@ -49,11 +52,15 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     }
 
     public deleteAccount() {
+        if (!this.account) {
+            return;
+        }
         let config = new MdDialogConfig();
         config.viewContainerRef = this.viewContainerRef;
 
         const dialogRef = this.dialog.open(DeleteAccountDialogComponent, config);
-        dialogRef.componentInstance.accountName = this.accountName;
+        dialogRef.componentInstance.accountId = this.accountId;
+        dialogRef.componentInstance.accountName = this.account.name;
         dialogRef.afterClosed().subscribe(() => {
             this.router.navigate(["/accounts"]);
         });
