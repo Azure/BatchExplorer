@@ -10,7 +10,6 @@ import { AccountService } from "app/services";
     selector: "bex-account-create-dialog",
     templateUrl: "account-create-dialog.html",
 })
-
 export default class AccountCreateDialogComponent implements OnInit {
     public account: Account;
     public isSaving: boolean = false;
@@ -35,7 +34,7 @@ export default class AccountCreateDialogComponent implements OnInit {
             () => {
                 this.isSaving = false;
                 this.sidebarRef.destroy();
-                this.router.navigate(["/accounts", account.name]);
+                this.router.navigate(["/accounts", account.id]);
             }
         );
     }

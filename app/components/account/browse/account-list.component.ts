@@ -16,7 +16,6 @@ import { Property } from "app/utils/filter-builder";
     template: require("./account-list.html"),
 })
 export class AccountListComponent {
-    public selectedAccountName = "";
     public searchQuery = new FormControl();
     public displayedAccounts: List<Account>;
     public status = LoadingStatus.Loading;

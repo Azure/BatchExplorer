@@ -9,9 +9,6 @@ import { renderLogger } from "./logger";
 
 app.setPath("userData", path.join(app.getPath("appData"), "batch-explorer"));
 
-// TODO move to the browser env
-import StorageClientProxy from "./api/storage-client-proxy/storage-client-proxy";
-
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow: any;
@@ -33,7 +30,6 @@ function createWindow() {
     // When we build app this file get move into build/client/main.js
     mainWindow.loadURL(`file://${__dirname}/../../app/index.html`);
     mainWindow.batchClient = new BatchClientProxy();
-    mainWindow.storageClient = new StorageClientProxy();
     mainWindow.logger = renderLogger;
 
     // Open the DevTools.

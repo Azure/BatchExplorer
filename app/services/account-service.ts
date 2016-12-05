@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
+import { Injectable, NgZone } from "@angular/core";
+import * as storage from "electron-json-storage";
 import { List } from "immutable";
-import { BehaviorSubject, Observable } from "rxjs";
+import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import BatchClient from "../api/batch/batch-client";
-import StorageClient from "../api/utils/storage-client";
 import { DataCache, DataCacheTracker, RxListProxy } from "./core";
 import { Account, NodeAgentSku } from "app/models";
 import { SecureUtils } from "app/utils";
@@ -18,17 +18,23 @@ export enum AccountStatus {
 
 @Injectable()
 export class AccountService {
+    public accountLoaded: Observable<boolean>;
+
+    private accountJsonFileName: string = "accounts";
+
     private _accounts: BehaviorSubject<List<Account>> = new BehaviorSubject(List([]));
     private _currentAccount: BehaviorSubject<Account> = new BehaviorSubject(null);
     private _currentAccountValid: BehaviorSubject<AccountStatus> = new BehaviorSubject(AccountStatus.Invalid);
+    private _accountLoaded = new BehaviorSubject<boolean>(false);
     private _cache = new DataCache<any>();
 
-    constructor() {
+    constructor(private zone: NgZone) {
         this.loadInitialData();
+        this.accountLoaded = this._accountLoaded.asObservable();
 
         this.currentAccount.subscribe((account) => {
             if (account) {
-                sessionStorage.setItem(lastSelectedAccountStorageKey, account.name);
+                sessionStorage.setItem(lastSelectedAccountStorageKey, account.id);
                 BatchClient.setOptions({
                     account: account.name,
                     key: account.key,
@@ -70,44 +76,32 @@ export class AccountService {
 
     public add(account: Account): Observable<void> {
         account.id = SecureUtils.uuid();
-
-        let obs: Observable<void> = Observable.fromPromise<void>(StorageClient.accounts.store(account));
-        obs.subscribe(res => {
-            this._accounts.next(this._accounts.getValue().push(account));
-            if (!this._currentAccount.getValue()) {
-                this._currentAccount.next(this._accounts.getValue().first());
-            }
-        });
-
-        return obs;
+        this._accounts.next(this._accounts.getValue().push(account));
+        if (!this._currentAccount.getValue()) {
+            this._currentAccount.next(this._accounts.getValue().first());
+        }
+        return this._saveAccounts();
     }
 
-    public delete(accountName: string): Observable<void> {
-        let obs: Observable<void> = Observable.fromPromise<void>(StorageClient.accounts.delete(accountName));
-        obs.subscribe(
-            res => {
-                let accounts: List<Account> = this._accounts.getValue();
-                let index = accounts.findIndex((account) => account.name === accountName);
-                this._accounts.next(accounts.delete(index));
-                const current = this._currentAccount.getValue();
-                if (current && current.name === accountName) {
-                    this._currentAccount.next(this._accounts.getValue().first());
-                }
-            }
-        );
+    public delete(accountId: string): Observable<void> {
+        const accounts = this._accounts.getValue();
+        this._accounts.next(List<Account>(accounts.filter(x => x.id !== accountId)));
+        const current = this._currentAccount.getValue();
+        if (current && current.id === accountId) {
+            this._currentAccount.next(this._accounts.getValue().first());
+        }
 
-        return obs;
+        return this._saveAccounts();
     }
 
-    public get(accountName: string): Observable<Account> {
-        let obs: Observable<Account> = Observable.fromPromise<Account>(StorageClient.accounts.get(accountName));
-        obs.subscribe({
-            error: (error) => {
-                console.error("Error getting account: ", accountName);
-            },
+    public get(accountId: string): Observable<Account> {
+        return this._listAccounts().map((accounts) => {
+            const account = accounts.filter(x => x.id === accountId).first();
+            if (!account) {
+                throw Error("Account now found");
+            }
+            return account;
         });
-
-        return obs;
     }
 
     public validateCurrentAccount() {
@@ -125,24 +119,69 @@ export class AccountService {
     }
 
     private loadInitialData() {
-        Observable.fromPromise<Account[]>(StorageClient.accounts.list()).subscribe(
-            (accounts) => {
-                this._accounts.next(List(accounts));
-                const selectedAccountName = sessionStorage.getItem(lastSelectedAccountStorageKey);
-                if (selectedAccountName) {
-                    const account = accounts.filter(x => x.name === selectedAccountName)[0];
+        this._listAccounts().subscribe((accounts) => {
+            this.zone.run(() => {
+                accounts = this._checkAccountHaveId(accounts);
+                this._accounts.next(accounts);
+                const selectedAccountId = sessionStorage.getItem(lastSelectedAccountStorageKey);
+                if (selectedAccountId) {
+                    const account = accounts.filter(x => x.id === selectedAccountId).first();
                     if (account) {
-                        return this._currentAccount.next(account);
+                        this._currentAccount.next(account);
                     }
                 }
                 // Using the first account as default now TODO change
-                if (accounts.length > 0) {
-                    this._currentAccount.next(accounts[0]);
+                if (!this._currentAccount.getValue() && accounts.size > 0) {
+                    this._currentAccount.next(accounts.first());
                 }
-            },
-            (err) => {
+                this._accountLoaded.next(true);
+            });
+        });
+    }
+
+    private _listAccounts(): Observable<List<Account>> {
+        let sub = new AsyncSubject();
+        storage.get(this.accountJsonFileName, (error, data) => {
+            if (error) {
                 console.error("Error retrieving accounts");
+                sub.error(error);
             }
-        );
+            if (Array.isArray(data)) {
+                sub.next(List(data));
+            } else {
+                sub.next(List([]));
+            }
+            sub.complete();
+        });
+        return sub;
+    }
+
+    private _saveAccounts(accounts: List<Account> = null): Observable<any> {
+        let sub = new AsyncSubject();
+
+        accounts = accounts === null ? this._accounts.getValue() : accounts;
+        storage.set(this.accountJsonFileName, accounts.toJS(), (error) => {
+            if (error) {
+                console.error("Error saving accounts", error);
+                sub.error(error);
+            }
+            sub.next(true);
+            sub.complete();
+        });
+        return sub;
+    }
+
+    /**
+     * Account created before we added the Id don't have any. Just make sure we don't break.
+     */
+    private _checkAccountHaveId(accounts: List<Account>): List<Account> {
+        const updatedAccounts = List<Account>(accounts.map((x) => {
+            if (!x.id) {
+                x.id = SecureUtils.uuid();
+            }
+            return x;
+        }));
+        this._saveAccounts(updatedAccounts);
+        return updatedAccounts;
     }
 }

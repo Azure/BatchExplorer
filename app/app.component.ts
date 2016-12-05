@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ViewChild } from "@angular/core";
 import { MdSidenav } from "@angular/material";
-import { Observable } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 
 import AccountCreateDialogComponent from "./components/account/add/account-create-dialog.component";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
@@ -12,6 +12,7 @@ import { AccountService, CommandService, SettingsService } from "app/services";
 })
 export class AppComponent implements AfterViewInit {
     public hasAccount: Observable<boolean>;
+    public isAppReady = new BehaviorSubject<boolean>(false);
 
     @ViewChild("rightSidebar")
     private sidebar: MdSidenav;
@@ -25,6 +26,12 @@ export class AppComponent implements AfterViewInit {
         private commandService: CommandService,
         private accountService: AccountService) {
         this.hasAccount = accountService.currentAccount.map((x) => { return Boolean(x); });
+
+        Observable
+            .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)
+            .subscribe((loadedArray) => {
+                this.isAppReady.next(loadedArray[0] && loadedArray[1]);
+            });
     }
 
     public ngAfterViewInit() {

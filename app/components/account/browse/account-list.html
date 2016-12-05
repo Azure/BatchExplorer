@@ -1,6 +1,6 @@
 <bex-loading [status]="status">
     <bex-quick-list>
-        <bex-quick-list-item *ngFor="let account of displayedAccounts" [routerLink]="['/accounts/', account.name]" [key]="account.url">
+        <bex-quick-list-item *ngFor="let account of displayedAccounts" [routerLink]="['/accounts', account.id]" [key]="account.id">
             <bex-quick-list-item-status>
             </bex-quick-list-item-status>
 
