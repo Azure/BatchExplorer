@@ -1,6 +1,9 @@
 <bex-focus-section>
     <bex-quick-list *ngIf="quickList">
         <bex-quick-list-item *ngFor="let node of nodes" [routerLink]="['/pools', poolId, 'nodes', node.id]" [key]="node.id">
+            <bex-quick-list-item-status [status]="" [tooltip]="">
+            </bex-quick-list-item-status>
+
             <h4 bex-quick-list-item-title>{{node.id}}</h4>
             <p bex-quick-list-item-field>{{node.state}}</p>
         </bex-quick-list-item>
