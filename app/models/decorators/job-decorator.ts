@@ -35,10 +35,7 @@ export class JobDecorator extends DecoratorBase<Job> {
         this.displayName = this.stringField(job.displayName);
         this.previousState = this.stateField(job.previousState);
         this.previousStateTransitionTime = this.dateField(job.previousStateTransitionTime);
-        // todo: pretty sure this is the cause of Dave's bug.
-        // change to this.numberField(job.priority);
-        // this.priority = job.priority !== undefined && job.priority !== null ? job.priority.toString() : "";
-        this.priority = job.priority.toString();
+        this.priority = this.numberField(job.priority);
         this.usesTaskDependencies = job.usesTaskDependencies;
         this.onAllTasksComplete = this._translateAutoComplete(job.onAllTasksComplete);
         this.onTaskFailure = this._translateAutoComplete(job.onTaskFailure);
