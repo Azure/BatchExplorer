@@ -15,7 +15,6 @@ import {
     DeleteJobDialogComponent,
     DisableJobDialogComponent,
     EnableJobDialogComponent,
-    JobCreateBasicDialogComponent,
     TerminateJobDialogComponent,
 } from "../action";
 
@@ -72,10 +71,6 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
         return this.data.refresh();
     }
 
-    public addJob() {
-        this.sidebarManager.open("add-basic-job", JobCreateBasicDialogComponent);
-    }
-
     public addTask() {
         const createRef = this.sidebarManager.open("add-basic-task", TaskCreateBasicDialogComponent);
         createRef.component.jobId = this.job.id;
@@ -98,11 +93,6 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
 
         const dialogRef = this.dialog.open(DeleteJobDialogComponent, config);
         dialogRef.componentInstance.jobId = this.job.id;
-        dialogRef.afterClosed().subscribe((jobId) => {
-            // if (this.job.id === jobId) {
-            //     this.router.navigate(["/jobs"]);
-            // }
-        });
     }
 
     public disableJob() {
