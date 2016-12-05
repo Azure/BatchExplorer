@@ -1,8 +1,8 @@
 <div id="container" [hidden]="!(settingsService.hasSettingsLoaded | async)">
     <header id="header" [class.no-userinteract]="!(hasAccount | async)" class="noselect">
         <div class="logo-banner-bar">
-            <a class="logo" href="#" [routerLink]="['']" title="Batch explorer - Home">
-                <img src="./assets/images/header/batchexplorer.png" height="19" alt="Batch explorer logo">
+            <a class="logo" href="#" [routerLink]="['']" title="Batch labs - Home">
+                <img src="./assets/images/header/batchlabs.png" height="19" alt="Batch labs logo">
             </a>
         </div>
         <bex-sidebar-bookmarks></bex-sidebar-bookmarks>

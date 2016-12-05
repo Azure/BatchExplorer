@@ -7,7 +7,7 @@ import * as FilterBuilder from "app/utils/filter-builder";
 
 @Component({
     selector: "bex-account-home",
-    template: require("./account-home.html"),
+    templateUrl: "account-home.html",
 })
 export class AccountHomeComponent {
     public quickSearchQuery = new FormControl();

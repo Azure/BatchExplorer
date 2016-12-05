@@ -1,5 +1,8 @@
 # BatchLabs
 [![Build Status](https://travis-ci.org/Azure/BatchLabs.svg?branch=master)](https://travis-ci.org/Azure/BatchLabs)
+
+**Note: this is in early development and there is no production build available.**
+
 ## Getting started
 
 Install the dependencies
