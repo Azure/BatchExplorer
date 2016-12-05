@@ -35,7 +35,7 @@ export class JobDecorator extends DecoratorBase<Job> {
         this.displayName = this.stringField(job.displayName);
         this.previousState = this.stateField(job.previousState);
         this.previousStateTransitionTime = this.dateField(job.previousStateTransitionTime);
-        this.priority = job.priority.toString();
+        this.priority = this.numberField(job.priority);
         this.usesTaskDependencies = job.usesTaskDependencies;
         this.onAllTasksComplete = this._translateAutoComplete(job.onAllTasksComplete);
         this.onTaskFailure = this._translateAutoComplete(job.onTaskFailure);
