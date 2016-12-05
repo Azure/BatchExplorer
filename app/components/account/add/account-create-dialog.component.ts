@@ -1,5 +1,6 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
+import { Router } from "@angular/router";
 
 import { SidebarRef } from "../../base/sidebar";
 import { Account } from "app/models";
@@ -17,7 +18,8 @@ export default class AccountCreateDialogComponent implements OnInit {
     constructor(
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<AccountCreateDialogComponent>,
-        private accountService: AccountService) {
+        private accountService: AccountService,
+        private router: Router) {
     }
 
     public ngOnInit() {
@@ -26,12 +28,14 @@ export default class AccountCreateDialogComponent implements OnInit {
 
     public onSubmit() {
         this.isSaving = true;
-        this.accountService.add(this.account).subscribe(
+        const account  = Object.assign({}, this.account);
+        this.accountService.add(account).subscribe(
             (val) => { this.resetForm(); },
             (error) => { console.error("storeAccount() :: error: ", error); },
             () => {
                 this.isSaving = false;
                 this.sidebarRef.destroy();
+                this.router.navigate(["/accounts", account.name]);
             }
         );
     }
