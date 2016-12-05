@@ -61,10 +61,6 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         return this.data.refresh();
     }
 
-    public addPool() {
-        this.sidebarManager.open("add-basic-pool", PoolCreateBasicDialogComponent);
-    }
-
     public addJob() {
         const createRef = this.sidebarManager.open("add-basic-job", JobCreateBasicDialogComponent);
         createRef.component.preSelectPool(this.pool.id);
@@ -140,6 +136,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         obs.subscribe(() => {
             this.refreshPool();
         });
+
         return obs;
     }
 }
