@@ -21,6 +21,7 @@
                 <bex-delete-button [entity]="job" (click)="deleteJob()"></bex-delete-button>
                 <bex-disable-button [job]="job" (click)="disableJob()"></bex-disable-button>
                 <bex-enable-button [job]="job" (click)="enableJob()"></bex-enable-button>
+                <bex-clone-button (click)="cloneJob()"></bex-clone-button>
             </md-card-actions>
         </md-card>
         <md-card class="details">

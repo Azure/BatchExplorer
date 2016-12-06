@@ -1,3 +1,4 @@
+import { Job } from "app/models";
 
 export interface JobConstraintsModel {
     maxWallClockTime: string;
@@ -49,4 +50,25 @@ export function createJobFormToJsonData(formData: CreateJobModel): any {
     };
 
     return data;
+}
+
+export function jobToFormModel(job: Job): CreateJobModel {
+    return {
+        id: job.id,
+        displayName: job.displayName,
+        priority: job.priority,
+        constraints: {
+            maxWallClockTime: job.constraints.maxWallClockTime.toISOString(),
+            maxTaskRetryCount: job.constraints.maxTaskRetryCount,
+        },
+        jobManagerTask: job.jobManagerTask,
+        jobPreparationTask: job.jobPreparationTask,
+        jobReleaseTask: job.jobReleaseTask,
+        commonEnvironmentSettings: job.commonEnvironmentSettings,
+        poolInfo: job.poolInfo,
+        onAllTasksComplete: job.onAllTasksComplete,
+        onTaskFailure: job.onTaskFailure,
+        metadata: job.metadata,
+        usesTaskDependencies: job.usesTaskDependencies,
+    };
 }

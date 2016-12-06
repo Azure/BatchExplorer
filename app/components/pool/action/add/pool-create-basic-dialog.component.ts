@@ -4,6 +4,7 @@ import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
 import { SidebarRef } from "app/components/base/sidebar";
+import { Pool } from "app/models";
 import { createPoolToData, poolToFormModel } from "app/models/forms";
 import { PoolService } from "app/services";
 
@@ -11,8 +12,7 @@ import { PoolService } from "app/services";
     selector: "bex-pool-create-basic-dialog",
     templateUrl: "pool-create-basic-dialog.html",
 })
-
-export class PoolCreateBasicDialogComponent  {
+export class PoolCreateBasicDialogComponent {
     public selectedOsConfiguration: string;
     public createPoolForm: FormGroup;
 
@@ -56,7 +56,7 @@ export class PoolCreateBasicDialogComponent  {
         return this.getVmSizes();
     }
 
-    public setValue(pool: any) {
+    public setValue(pool: Pool) {
         this.createPoolForm.patchValue(poolToFormModel(pool));
     }
 

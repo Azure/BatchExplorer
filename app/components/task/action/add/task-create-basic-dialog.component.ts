@@ -1,11 +1,12 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
 import { SidebarRef } from "../../../base/sidebar";
 import { RangeValidatorDirective } from "app/components/base/validation";
-import { createTaskFormToJsonData } from "app/models/forms";
+import { Task } from "app/models";
+import { createTaskFormToJsonData, taskToFormModel } from "app/models/forms";
 import { TaskService } from "app/services";
 import { Constants } from "app/utils";
 
@@ -13,8 +14,7 @@ import { Constants } from "app/utils";
     selector: "bex-task-create-basic-dialog",
     template: require("./task-create-basic-dialog.html"),
 })
-
-export class TaskCreateBasicDialogComponent implements OnInit {
+export class TaskCreateBasicDialogComponent {
     public jobId: string;
     public createTaskForm: FormGroup;
     public constraintsGroup: FormGroup;
@@ -23,9 +23,7 @@ export class TaskCreateBasicDialogComponent implements OnInit {
         private formBuilder: FormBuilder,
         private sidebarRef: SidebarRef<TaskCreateBasicDialogComponent>,
         private taskService: TaskService) {
-    }
 
-    public ngOnInit() {
         const validation = Constants.forms.validation;
         this.constraintsGroup = this.formBuilder.group({
             maxTaskRetryCount: [
@@ -45,6 +43,10 @@ export class TaskCreateBasicDialogComponent implements OnInit {
             constraints: this.constraintsGroup,
             runElevated: ["0"],
         });
+    }
+
+    public setValue(task: Task) {
+        this.createTaskForm.patchValue(taskToFormModel(task));
     }
 
     @autobind()
