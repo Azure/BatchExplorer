@@ -7,7 +7,7 @@
         <h3>Task options</h3>
         <hr />
         <p>Specifies what to do with active tasks associated with the job:</p>
-        <md-radio-group [(ngModel)]="taskAction" [ngModelOptions]="{standalone: true}" (change)="onChange($event.value)">
+        <md-radio-group [(ngModel)]="taskAction" [ngModelOptions]="{standalone: true}">
             <md-radio-button value="requeue" checked="true">Requeue</md-radio-button>
             <md-radio-button value="terminate">Terminate</md-radio-button>
             <md-radio-button value="wait">Wait</md-radio-button>
