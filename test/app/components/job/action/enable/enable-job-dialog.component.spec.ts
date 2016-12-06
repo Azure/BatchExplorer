@@ -5,13 +5,13 @@ import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
 import { AppModule } from "app/app.module";
-import { DisableJobDialogComponent } from "app/components/job/action";
+import { EnableJobDialogComponent } from "app/components/job/action";
 import { BatchError } from "app/models";
 import { JobService } from "app/services";
 
-describe("DisableJobDialogComponent ", () => {
-    let fixture: ComponentFixture<DisableJobDialogComponent>;
-    let component: DisableJobDialogComponent;
+describe("EnableJobDialogComponent ", () => {
+    let fixture: ComponentFixture<EnableJobDialogComponent>;
+    let component: EnableJobDialogComponent;
     let dialogRefSpy: any;
     let jobServiceSpy: any;
     let de: DebugElement;
@@ -22,11 +22,11 @@ describe("DisableJobDialogComponent ", () => {
         };
 
         jobServiceSpy = {
-            disable: jasmine.createSpy("DisableJob").and.callFake((jobid, ...args) => {
+            enable: jasmine.createSpy("EnableJob").and.callFake((jobid, ...args) => {
                 if (jobid === "bad-job-id") {
                     return Observable.throw(<BatchError>{
                         code: "RandomTestErrorCode",
-                        message: { value: "Some random test error happened disabling job" },
+                        message: { value: "Some random test error happened enabling job" },
                     });
                 }
 
@@ -43,7 +43,7 @@ describe("DisableJobDialogComponent ", () => {
             ],
         });
 
-        fixture = TestBed.createComponent(DisableJobDialogComponent);
+        fixture = TestBed.createComponent(EnableJobDialogComponent);
         component = fixture.componentInstance;
         component.jobId = "job-1";
         de = fixture.debugElement;
@@ -51,40 +51,17 @@ describe("DisableJobDialogComponent ", () => {
     });
 
     it("Should show title and job id", () => {
-        expect(de.nativeElement.textContent).toContain("Disable job");
+        expect(de.nativeElement.textContent).toContain("Enable job");
         expect(de.nativeElement.textContent).toContain("job-1");
     });
 
-    it("should update the model task action when changing radio options", () => {
-        expect(component.taskAction).toEqual("requeue", "requeue by default");
-
-        const terminateOption = de.query(By.css("md-radio-group > md-radio-button[value=terminate]"));
-        expect(terminateOption).not.toBeNull();
-
-        const label = terminateOption.query(By.css("label")).nativeElement;
-
-        label.click();
-        fixture.detectChanges();
-        expect(fixture.componentInstance.taskAction).toEqual("terminate");
-    });
-
-    it("updating the task action should update the task action description", () => {
-        const description = de.query(By.css("bex-info-box")).nativeElement;
-        expect(description.textContent).toContain("Terminate running tasks and requeue them.");
-
-        component.taskAction = "terminate";
-        fixture.detectChanges();
-        expect(description.textContent).toContain("Terminate running tasks. The tasks will not run again.");
-    });
-
     it("Submit should call service and close the dialog", () => {
-        component.taskAction = "terminate";
         fixture.detectChanges();
         const submitBtn = de.query(By.css("button[color=warn]")).nativeElement;
         submitBtn.click();
 
-        expect(jobServiceSpy.disable).toHaveBeenCalledTimes(1);
-        expect(jobServiceSpy.disable).toHaveBeenCalledWith("job-1", "terminate", {});
+        expect(jobServiceSpy.enable).toHaveBeenCalledTimes(1);
+        expect(jobServiceSpy.enable).toHaveBeenCalledWith("job-1", {});
         expect(dialogRefSpy.close).toHaveBeenCalledTimes(1);
     });
 
@@ -94,14 +71,14 @@ describe("DisableJobDialogComponent ", () => {
         const submitBtn = de.query(By.css("button[color=warn]")).nativeElement;
         submitBtn.click();
 
-        expect(jobServiceSpy.disable).toHaveBeenCalledTimes(1);
-        expect(jobServiceSpy.disable).toHaveBeenCalledWith("bad-job-id", "requeue", {});
+        expect(jobServiceSpy.enable).toHaveBeenCalledTimes(1);
+        expect(jobServiceSpy.enable).toHaveBeenCalledWith("bad-job-id", {});
         expect(dialogRefSpy.close).not.toHaveBeenCalled();
 
         fixture.detectChanges();
         expect(component.hasError()).toBe(true);
         const errorEl = de.query(By.css(".error")).nativeElement;
 
-        expect(errorEl.textContent).toContain("Some random test error happened disabling job");
+        expect(errorEl.textContent).toContain("Some random test error happened enabling job");
     });
 });

@@ -3,7 +3,6 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
-import { SidebarRef } from "../../../base/sidebar";
 import { RangeValidatorDirective } from "app/components/base/validation";
 import { Job, Pool } from "app/models";
 import { createJobFormToJsonData, jobToFormModel } from "app/models/forms";
@@ -23,7 +22,6 @@ export class JobCreateBasicDialogComponent implements OnInit {
 
     constructor(
         private formBuilder: FormBuilder,
-        public sidebarRef: SidebarRef<JobCreateBasicDialogComponent>,
         private jobService: JobService,
         private poolService: PoolService) {
 
