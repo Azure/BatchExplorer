@@ -1,34 +1,40 @@
-import { JobService } from "../../../../services";
 import { Component } from "@angular/core";
 import { MdDialogRef } from "@angular/material";
 
+import { JobService } from "app/services";
+
 @Component({
     selector: "bex-disable-job-dialog",
-    template: require("./disable-job-dialog.html"),
+    templateUrl: "disable-job-dialog.html",
 })
-
 export class DisableJobDialogComponent {
     public jobId: string;
     public processing: boolean = false;
-    public taskAction: string = "requeue";
     public actionDescription: string = "";
+
+    public set taskAction(action: string) {
+        this.onChange(action);
+        this._taskAction = action;
+    }
+    public get taskAction() { return this._taskAction; };
 
     private _hasError: boolean = false;
     private _errorText: string;
+    private _taskAction: string = "requeue";
 
     constructor(
         public dialogRef: MdDialogRef<DisableJobDialogComponent>,
         private jobService: JobService) {
         this.onChange(this.taskAction);
+        this.taskAction = "requeue";
     }
 
     public ok() {
         let options: any = {};
         this.processing = true;
 
-        this.jobService.disable(this.jobId, this.taskAction, options).subscribe(
-            null,
-            (error) => {
+        this.jobService.disable(this.jobId, this.taskAction, options).subscribe({
+            error: (error) => {
                 const errJson = JSON.stringify(error);
                 console.error("error disabling job: ", errJson);
 
@@ -38,11 +44,11 @@ export class DisableJobDialogComponent {
                     ? error.message.value.replace("\n", " ")
                     : "unknown error occurred while disabling the job";
             },
-            () => {
+            complete: () => {
                 this.processing = false;
                 this.dialogRef.close();
-            }
-        );
+            },
+        });
     }
 
     public hasError(): boolean {
