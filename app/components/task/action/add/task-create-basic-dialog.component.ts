@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
@@ -14,7 +14,6 @@ import { Constants } from "app/utils";
     selector: "bex-task-create-basic-dialog",
     template: require("./task-create-basic-dialog.html"),
 })
-
 export class TaskCreateBasicDialogComponent {
     public jobId: string;
     public createTaskForm: FormGroup;

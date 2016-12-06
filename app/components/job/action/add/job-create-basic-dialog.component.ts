@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 
 import { SidebarRef } from "../../../base/sidebar";
 import { RangeValidatorDirective } from "app/components/base/validation";
-import { Pool } from "app/models";
+import { Job, Pool } from "app/models";
 import { createJobFormToJsonData, jobToFormModel } from "app/models/forms";
 import { JobService, PoolService } from "app/services";
 import { RxListProxy } from "app/services/core";
@@ -64,8 +64,8 @@ export class JobCreateBasicDialogComponent implements OnInit {
         });
     }
 
-    public setValue(pool: any) {
-        this.createJobForm.patchValue(jobToFormModel(pool));
+    public setValue(job: Job) {
+        this.createJobForm.patchValue(jobToFormModel(job));
     }
 
     @autobind()

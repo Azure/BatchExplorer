@@ -12,7 +12,6 @@ import { JobDecorator } from "app/models/decorators";
 import { JobParams, JobService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
 
-
 import {
     DeleteJobDialogComponent,
     DisableJobDialogComponent,

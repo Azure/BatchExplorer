@@ -64,5 +64,5 @@ export function taskToFormModel(task: Task): CreateTaskModel {
         multiInstanceSettings: task.multiInstanceSettings,
         applicationPackageReferences: task.applicationPackageReferences,
         dependsOn: task.dependsOn,
-    }
+    };
 }
