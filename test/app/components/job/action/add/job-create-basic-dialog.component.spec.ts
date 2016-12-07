@@ -1,7 +1,7 @@
 import { DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { MdDialogRef, MdInput } from "@angular/material";
+import { FormBuilder, FormGroup } from "@angular/forms";
+import { MdInput } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
@@ -11,6 +11,7 @@ import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { BatchError, Pool } from "app/models";
 import { JobService, PoolService } from "app/services";
 import { DataCache, RxListProxy } from "app/services/core";
+import { Constants } from "app/utils";
 
 // just making test work for now. Need Tim's input
 export class FakeListProxy {
@@ -32,23 +33,18 @@ export class FakeListProxy {
 fdescribe("JobCreateBasicDialogComponent ", () => {
     let fixture: ComponentFixture<JobCreateBasicDialogComponent>;
     let component: JobCreateBasicDialogComponent;
-    // let formBuilderSpy: any;
     let sidebarRefSpy: any;
     let jobServiceSpy: any;
     let poolServiceSpy: any;
     let de: DebugElement;
+    let baseForm: any;
+    let constraintsForm: any;
+    let poolForm: any;
+
+    const fieldNames = Constants.forms.fieldNames;
+    const validators = Constants.forms.validators;
 
     beforeEach(() => {
-        // formBuilderSpy = {
-        //     // todo: unsure how this needs to work
-        //     // update: might not even need it now ...
-        //     group: jasmine.createSpy("FormGroup").and.callFake((controls: { [key: string]: any; }) => {
-        //         // this doesnt work as it needs to set up the controls internally
-        //         // https://github.com/angular/angular/blob/2.3.0-beta.0/modules/%40angular/forms/src/form_builder.ts
-        //         return new FormGroup(controls);
-        //     }),
-        // };
-
         sidebarRefSpy = {
             close: jasmine.createSpy("SidebarClose"),
         };
@@ -92,6 +88,10 @@ fdescribe("JobCreateBasicDialogComponent ", () => {
         component = fixture.componentInstance;
         de = fixture.debugElement;
         fixture.detectChanges();
+
+        baseForm = component.createJobForm;
+        constraintsForm = component.constraintsGroup;
+        poolForm = component.poolInfoGroup;
     });
 
     it("Should show title and description", () => {
@@ -99,28 +99,94 @@ fdescribe("JobCreateBasicDialogComponent ", () => {
         expect(de.nativeElement.textContent).toContain("Adds a job to the selected account");
     });
 
-    it("JobId validation works as expected", () => {
-        let input = de.query(By.css("md-input[formControlName=id]")).componentInstance as MdInput;
-        input.value = "";
-        fixture.detectChanges();
-        let hasError = fixture.componentInstance.createJobForm.hasError("required", ["id"]);
-        expect(hasError).toBe(true);
-
-        input.value = "invalid job id";
-        fixture.detectChanges();
-        hasError = fixture.componentInstance.createJobForm.hasError("pattern", ["id"]);
-        expect(hasError).toBe(true);
-
-        input.value = "valid-id";
-        fixture.detectChanges();
-        hasError = fixture.componentInstance.createJobForm.hasError("pattern", ["id"]);
-        expect(hasError).toBe(false);
+    it("JobId is initialized", () => {
+        let control = baseForm.controls[fieldNames.id];
+        expect(control).not.toBeNull();
+        expect(control.validator).not.toBeNull();
     });
+
+    it("JobId has required, pattern, and maxLength validation", () => {
+        const controlName = fieldNames.id;
+        const input = de.query(By.css("md-input[formControlName=id]")).componentInstance as MdInput;
+        expectValidation(baseForm, input, controlName, "", validators.required, true);
+        expectValidation(baseForm, input, controlName, "invalid job id", validators.pattern, true);
+        expectValidation(baseForm, input, controlName, "a".repeat(65), validators.maxlength, true);
+        expectValidation(baseForm, input, controlName, "valid-id", validators.pattern, false);
+    });
+
+    it("DisplayName is initialized", () => {
+        let control = baseForm.controls[fieldNames.displayName];
+        expect(control).not.toBeNull();
+        expect(control.validator).not.toBeNull();
+    });
+
+    it("DisplayName has maxLength validation only", () => {
+        const controlName = fieldNames.displayName;
+        const input = de.query(By.css("md-input[formControlName=displayName]")).componentInstance as MdInput;
+        expectValidation(baseForm, input, controlName, "a".repeat(1025), validators.maxlength, true);
+        expectValidation(baseForm, input, controlName, null, validators.required, false);
+    });
+
+    it("Priority is initialized", () => {
+        const control = baseForm.controls[fieldNames.priority];
+        expect(control).not.toBeNull();
+        expect(control.validator).not.toBeNull();
+    });
+
+    it("Priority has range validation only", () => {
+        const controlName = fieldNames.priority;
+        const input = de.query(By.css("md-input[formControlName=priority]")).componentInstance as MdInput;
+        expectValidation(baseForm, input, controlName, null, validators.required, false);
+        expectValidation(baseForm, input, controlName, -1001, validators.range, true);
+        expectValidation(baseForm, input, controlName, 1001, validators.range, true);
+        expectValidation(baseForm, input, controlName, 500, validators.range, false);
+    });
+
+    it("MaxRetryCount is initialized", () => {
+        const control = constraintsForm.controls[fieldNames.maxTaskRetryCount];
+        expect(control).not.toBeNull();
+        expect(control.validator).not.toBeNull();
+    });
+
+    it("MaxRetryCount has range validation only", () => {
+        const controlName = fieldNames.maxTaskRetryCount;
+        const input = de.query(By.css("md-input[formControlName=maxTaskRetryCount]")).componentInstance as MdInput;
+        expectValidation(constraintsForm, input, controlName, null, validators.required, false);
+        expectValidation(constraintsForm, input, controlName, -2, validators.range, true);
+        expectValidation(constraintsForm, input, controlName, 101, validators.range, true);
+        expectValidation(constraintsForm, input, controlName, 1, validators.range, false);
+    });
+
+    it("PoolId is initialized", () => {
+        const control = poolForm.controls[fieldNames.poolId];
+        expect(control).not.toBeNull();
+        expect(control.validator).not.toBeNull();
+    });
+
+    it("PoolId has required validation only", () => {
+        poolForm.patchValue({ poolId: "my-pool" });
+        expect(poolForm.hasError(validators.required, [fieldNames.poolId])).toBe(false);
+
+        poolForm.patchValue({ poolId: "" });
+        expect(poolForm.hasError(validators.required, [fieldNames.poolId])).toBe(true);
+    });
+
+    function expectValidation(
+        formGroup: FormGroup,
+        input: MdInput,
+        name: string,
+        value: any,
+        validator: string,
+        expected: boolean) {
+
+        input.value = value;
+        fixture.detectChanges();
+        expect(formGroup.hasError(validator, [name])).toBe(expected);
+    }
 
     /**
      * tests
      * =====
-     * check that validation works
      * check i can create a job
      * check i can create a job with a pre-populated pool
      * check i can clone a job
