@@ -20,7 +20,6 @@ export class FormErrorComponent {
     @Input()
     public code: string = null;
 
-
     constructor(private formGroup: FormGroupDirective, private parent: ControlContainer) {
     }
 

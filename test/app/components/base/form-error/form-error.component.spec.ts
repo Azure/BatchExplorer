@@ -70,7 +70,6 @@ fdescribe("FormErrorComponent", () => {
         expect(fixture.nativeElement.textContent).not.toContain("Id is max 5 char long");
     });
 
-
     it("Should show error for control at the root of a control group with a different error", () => {
         component.form.patchValue({ id: "waytoolong" });
         fixture.detectChanges();
