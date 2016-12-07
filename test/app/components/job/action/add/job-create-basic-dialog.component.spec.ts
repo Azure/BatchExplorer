@@ -7,22 +7,45 @@ import { Observable } from "rxjs";
 
 import { AppModule } from "app/app.module";
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
-import { BatchError } from "app/models";
+import { BatchError, Pool } from "app/models";
 import { JobService, PoolService } from "app/services";
-import { RxListProxy } from "app/services/core";
+import { DataCache, RxListProxy } from "app/services/core";
+
+// just making test work for now. Need Tim's input
+export class FakeListProxy {
+    public hasMoreItems(): boolean {
+        return false;
+    }
+
+    public fetchNext(): Promise<any> {
+        return Promise.resolve({
+            data: [],
+        });
+    }
+
+    public clone(): FakeListProxy {
+        return null;
+    }
+}
 
 fdescribe("JobCreateBasicDialogComponent ", () => {
     let fixture: ComponentFixture<JobCreateBasicDialogComponent>;
     let component: JobCreateBasicDialogComponent;
-    let formBuilderSpy: any;
+    // let formBuilderSpy: any;
     let jobServiceSpy: any;
     let poolServiceSpy: any;
     let de: DebugElement;
 
     beforeEach(() => {
-        formBuilderSpy = {
-            close: jasmine.createSpy("DialogClose"),
-        };
+        // formBuilderSpy = {
+        //     // todo: unsure how this needs to work
+        //     // update: might not even need it now ...
+        //     group: jasmine.createSpy("FormGroup").and.callFake((controls: { [key: string]: any; }) => {
+        //         // this doesnt work as it needs to set up the controls internally
+        //         // https://github.com/angular/angular/blob/2.3.0-beta.0/modules/%40angular/forms/src/form_builder.ts
+        //         return new FormGroup(controls);
+        //     }),
+        // };
 
         jobServiceSpy = {
             add: jasmine.createSpy("CreateJob").and.callFake((newJobJson, ...args) => {
@@ -35,15 +58,23 @@ fdescribe("JobCreateBasicDialogComponent ", () => {
         };
 
         poolServiceSpy = {
+            // todo: actually return some pools
             list: jasmine.createSpy("ListPools").and.callFake((...args) => {
-                return  Observable.of(List<Pool>());
+                const cache = new DataCache<Pool>();
+                const proxy = new RxListProxy<{}, Pool>(Pool, {
+                    cache: (params) => cache,
+                    proxyConstructor: (params, options) => new FakeListProxy(),
+                    initialOptions: {},
+                });
+
+                return proxy;
             }),
         };
 
         TestBed.configureTestingModule({
             imports: [AppModule],
             providers: [
-                { provide: FormBuilder, useValue: formBuilderSpy },
+                { provide: FormBuilder, useValue: new FormBuilder() },
                 { provide: JobService, useValue: jobServiceSpy },
                 { provide: PoolService, useValue: poolServiceSpy },
 
@@ -61,53 +92,43 @@ fdescribe("JobCreateBasicDialogComponent ", () => {
         expect(de.nativeElement.textContent).toContain("Adds a job to the selected account");
     });
 
-    // it("should update the model task action when changing radio options", () => {
-    //     expect(component.taskAction).toEqual("requeue", "requeue by default");
+    it("JobId validation works as expected", () => {
+        let input = de.query(By.css("#id-input")).nativeElement;
+        input.value = "";
+        fixture.detectChanges();
+        let hasError = fixture.componentInstance.createJobForm.hasError("required", ["id"]);
+        expect(hasError).toBe(true);
 
-    //     const terminateOption = de.query(By.css("md-radio-group > md-radio-button[value=terminate]"));
-    //     expect(terminateOption).not.toBeNull();
+        console.log("FIRST :: ", fixture.componentInstance.createJobForm.errors);
 
-    //     const label = terminateOption.query(By.css("label")).nativeElement;
+        // input.value = "invalid job id";
+        // fixture.detectChanges();
+        // hasError = fixture.componentInstance.createJobForm.hasError("pattern", ["id"]);
+        // expect(hasError).toBe(true);
 
-    //     label.click();
-    //     fixture.detectChanges();
-    //     expect(fixture.componentInstance.taskAction).toEqual("terminate");
-    // });
+        // input.value = "valid-id";
+        // fixture.detectChanges();
+        // hasError = fixture.componentInstance.createJobForm.hasError("pattern", ["id"]);
+        // expect(hasError).toBe(false);
+    });
 
-    // it("updating the task action should update the task action description", () => {
-    //     const description = de.query(By.css("bex-info-box")).nativeElement;
-    //     expect(description.textContent).toContain("Terminate running tasks and requeue them.");
+    it("JobId b validation works as expected", () => {
+        let input = de.query(By.css("#id-input")).nativeElement;
+        input.value = "invalid job id";
+        fixture.detectChanges();
+        let hasError = fixture.componentInstance.createJobForm.hasError("pattern", ["id"]);
+        expect(hasError).toBe(true);
+    });
 
-    //     component.taskAction = "terminate";
-    //     fixture.detectChanges();
-    //     expect(description.textContent).toContain("Terminate running tasks. The tasks will not run again.");
-    // });
-
-    // it("Submit should call service and close the dialog", () => {
-    //     component.taskAction = "terminate";
-    //     fixture.detectChanges();
-    //     const submitBtn = de.query(By.css("button[color=warn]")).nativeElement;
-    //     submitBtn.click();
-
-    //     expect(jobServiceSpy.disable).toHaveBeenCalledTimes(1);
-    //     expect(jobServiceSpy.disable).toHaveBeenCalledWith("job-1", "terminate", {});
-    //     expect(dialogRefSpy.close).toHaveBeenCalledTimes(1);
-    // });
-
-    // it("Submit should call service and show error if fail", () => {
-    //     component.jobId = "bad-job-id";
-    //     fixture.detectChanges();
-    //     const submitBtn = de.query(By.css("button[color=warn]")).nativeElement;
-    //     submitBtn.click();
-
-    //     expect(jobServiceSpy.disable).toHaveBeenCalledTimes(1);
-    //     expect(jobServiceSpy.disable).toHaveBeenCalledWith("bad-job-id", "requeue", {});
-    //     expect(dialogRefSpy.close).not.toHaveBeenCalled();
-
-    //     fixture.detectChanges();
-    //     expect(component.hasError()).toBe(true);
-    //     const errorEl = de.query(By.css(".error")).nativeElement;
-
-    //     expect(errorEl.textContent).toContain("Some random test error happened disabling job");
-    // });
+    /**
+     * tests
+     * =====
+     * check that validation works
+     * check i can create a job
+     * check i can create a job with a pre-populated pool
+     * check i can clone a job
+     * check we handle and display any errors to the user
+     * check that add and close closes the slideout
+     * check that add doesnt close the form
+     */
 });
