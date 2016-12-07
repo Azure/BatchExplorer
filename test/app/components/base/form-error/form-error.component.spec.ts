@@ -41,7 +41,7 @@ export class FormErrorTestComponent {
 
 }
 
-fdescribe("FormErrorComponent", () => {
+describe("FormErrorComponent", () => {
     let fixture: ComponentFixture<FormErrorTestComponent>;
     let component: FormErrorTestComponent;
 
@@ -60,7 +60,7 @@ fdescribe("FormErrorComponent", () => {
         component = fixture.componentInstance;
     });
 
-    fit("Should show error for control at the root of a control group", () => {
+    it("Should show error for control at the root of a control group", () => {
         component.form.patchValue({ id: "" });
         fixture.detectChanges();
         expect(component.idRequiredError.hasError).toBe(true);

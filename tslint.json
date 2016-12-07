@@ -1,7 +1,8 @@
 {
   "extends": "tslint:recommended",
   "rulesDirectory": [
-    "node_modules/codelyzer"
+    "node_modules/codelyzer",
+    "node_modules/vrsource-tslint-rules/rules"
   ],
   "rules": {
     // TSLint override
@@ -42,6 +43,9 @@
     "component-class-suffix": true,
     "directive-class-suffix": true,
     "import-destructuring-spacing": true,
-    "invoke-injectable": true
+    "invoke-injectable": true,
+
+    // vrsource-tslint-rules https://github.com/vrsource/vrsource-tslint-rules
+    "no-jasmine-focus": true
   }
 }
