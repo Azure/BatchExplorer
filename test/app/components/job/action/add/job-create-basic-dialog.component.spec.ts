@@ -1,7 +1,7 @@
 import { DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { MdDialogRef } from "@angular/material";
+import { MdDialogRef, MdInput } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
@@ -100,23 +100,21 @@ fdescribe("JobCreateBasicDialogComponent ", () => {
     });
 
     it("JobId validation works as expected", () => {
-        let input = de.query(By.css("md-input[formControlName=id]")).nativeElement;
+        let input = de.query(By.css("md-input[formControlName=id]")).componentInstance as MdInput;
         input.value = "";
         fixture.detectChanges();
         let hasError = fixture.componentInstance.createJobForm.hasError("required", ["id"]);
         expect(hasError).toBe(true);
-
-        // console.log("Errors :: ", fixture.componentInstance.createJobForm.errors);
 
         input.value = "invalid job id";
         fixture.detectChanges();
         hasError = fixture.componentInstance.createJobForm.hasError("pattern", ["id"]);
         expect(hasError).toBe(true);
 
-        // input.value = "valid-id";
-        // fixture.detectChanges();
-        // hasError = fixture.componentInstance.createJobForm.hasError("pattern", ["id"]);
-        // expect(hasError).toBe(false);
+        input.value = "valid-id";
+        fixture.detectChanges();
+        hasError = fixture.componentInstance.createJobForm.hasError("pattern", ["id"]);
+        expect(hasError).toBe(false);
     });
 
     /**
