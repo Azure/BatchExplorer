@@ -1,5 +1,5 @@
-import { DecoratorBase } from "../../utils/decorators";
 import { Node } from "app/models";
+import { DecoratorBase } from "../../utils/decorators";
 
 export class NodeDecorator extends DecoratorBase<Node> {
     public url: string;

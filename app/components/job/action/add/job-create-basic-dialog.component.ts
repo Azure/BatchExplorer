@@ -3,13 +3,13 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
-import { SidebarRef } from "app/components/base/sidebar";
 import { RangeValidatorDirective } from "app/components/base/validation";
 import { Job, Pool } from "app/models";
 import { createJobFormToJsonData, jobToFormModel } from "app/models/forms";
 import { JobService, PoolService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Constants } from "app/utils";
+import { SidebarRef } from "../../../base/sidebar";
 
 @Component({
     selector: "bex-job-create-basic-dialog",
@@ -81,6 +81,6 @@ export class JobCreateBasicDialogComponent implements OnInit {
     }
 
     public preSelectPool(poolId: string) {
-        this.createJobForm.patchValue({ poolInfo: { poolId: poolId } });
+        this.createJobForm.patchValue({ poolInfo: { poolId } });
     }
 }

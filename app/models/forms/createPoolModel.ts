@@ -16,7 +16,7 @@ export interface PoolOSPickerModel {
             publisher: string,
             offer: string,
             sku: string,
-        }
+        },
     };
 }
 

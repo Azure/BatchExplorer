@@ -31,7 +31,7 @@ export function slideInAndOutAnimation(name: string, options: SlideInAndOutOptio
         state("*",
             style({
                 transform: "translateX(0)",
-            })
+            }),
         ),
         transition(":enter", [
             style({

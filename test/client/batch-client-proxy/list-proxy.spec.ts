@@ -6,7 +6,7 @@ describe("ListProxy", () => {
     describe("#fetchNext()", () => {
         let entitySpy;
 
-        beforeEach(function () {
+        beforeEach(() => {
 
             entitySpy = {
                 list: jasmine.createSpy("list").and.callFake((options, callback) => {

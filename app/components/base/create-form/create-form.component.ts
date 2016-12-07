@@ -3,8 +3,8 @@ import { FormGroup } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
-import { SidebarRef } from "../sidebar";
 import { BatchError } from "app/models";
+import { SidebarRef } from "../sidebar";
 
 @Component({
     selector: "bex-create-form",

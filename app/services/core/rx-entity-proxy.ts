@@ -1,9 +1,9 @@
 import { Type } from "@angular/core";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
+import { HttpCode } from "app/utils/constants";
 import { DataCache } from "./data-cache";
 import { RxProxyBase } from "./rx-proxy-base";
-import { HttpCode } from "app/utils/constants";
 
 export interface RxEntityProxyConfig<TParams, TEntity> {
     /**

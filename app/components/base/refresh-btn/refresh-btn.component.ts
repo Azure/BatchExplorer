@@ -43,7 +43,7 @@ export class RefreshButtonComponent {
                 setTimeout(() => {
                     this.status = RefreshStatus.Idle;
                 }, 1000);
-            }
+            },
         );
     }
 }

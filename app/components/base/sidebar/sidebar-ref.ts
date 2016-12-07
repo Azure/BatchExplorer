@@ -1,6 +1,7 @@
+import { Observable, Subject } from "rxjs";
+
 import { SidebarManager } from "./sidebar-manager";
 import { SidebarPageComponent } from "./sidebar-page";
-import { Observable, Subject } from "rxjs";
 
 export class SidebarRef<T> {
     public component: T;

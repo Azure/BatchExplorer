@@ -54,13 +54,13 @@ export abstract class LongRunningAction {
      * @param progressIncrease If specified this will increase the progress by n points.
      *          After each action is done it will increase it slightly
      */
-    protected performMultiple(funcs: (() => Observable<any>)[], progressIncrease = 0): Observable<any> {
+    protected performMultiple(funcs: Array<(() => Observable<any>)>, progressIncrease = 0): Observable<any> {
         const startingProgress = this.progress.getValue();
         return this._performMultiple(funcs, 0, startingProgress, progressIncrease);
     }
 
     private _performMultiple(
-        funcs: (() => Observable<any>)[],
+        funcs: Array<(() => Observable<any>)>,
         index: number,
         startingProgress: number,
         progressIncrease: number) {

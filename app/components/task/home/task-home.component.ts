@@ -3,9 +3,9 @@ import { FormBuilder, FormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
 
+import { Filter, FilterBuilder } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
 import { TaskCreateBasicDialogComponent } from "../action";
-import { Filter, FilterBuilder } from "app/utils/filter-builder";
 
 @Component({
     selector: "bex-task-home",

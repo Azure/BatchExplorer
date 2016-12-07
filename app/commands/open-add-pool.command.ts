@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 
-import { CommandBase } from "./core";
 import { SidebarManager } from "app/components/base/sidebar";
 import { PoolCreateBasicDialogComponent } from "app/components/pool/action";
+import { CommandBase } from "./core";
 
 @Injectable()
 export class OpenAddPoolCommand extends CommandBase {

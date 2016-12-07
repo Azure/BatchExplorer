@@ -5,13 +5,13 @@ import { autobind } from "core-decorators";
 import * as Moment from "moment";
 import { Subscription } from "rxjs";
 
-import { SidebarManager } from "../../base/sidebar";
-import { DeletePoolDialogComponent, PoolResizeDialogComponent } from "../action";
-import { PoolCreateBasicDialogComponent } from "../action";
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { Pool } from "app/models";
 import { PoolParams, PoolService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
+import { SidebarManager } from "../../base/sidebar";
+import { DeletePoolDialogComponent, PoolResizeDialogComponent } from "../action";
+import { PoolCreateBasicDialogComponent } from "../action";
 
 @Component({
     selector: "bex-pool-details",

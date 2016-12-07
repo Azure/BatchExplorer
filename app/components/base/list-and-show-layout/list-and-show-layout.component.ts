@@ -8,10 +8,10 @@ import { MdDialog, MdDialogConfig } from "@angular/material";
 import { ActivatedRoute } from "@angular/router";
 import { BehaviorSubject } from "rxjs";
 
-import { DeletePoolDialogComponent } from "./delete-selected-items-dialog.component";
 import { FocusSectionComponent } from "app/components/base/focus-section";
 import { SelectableList } from "app/components/base/selectable-list";
 import { Filter, FilterBuilder } from "app/utils/filter-builder";
+import { DeletePoolDialogComponent } from "./delete-selected-items-dialog.component";
 
 @Component({
     selector: "bex-list-and-show-layout",

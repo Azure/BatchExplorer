@@ -1,12 +1,12 @@
-import { JobService } from "../../../../services";
 import { Component } from "@angular/core";
 import { MdDialogRef } from "@angular/material";
+
+import { JobService } from "app/services";
 
 @Component({
     selector: "bex-enable-job-dialog",
     template: require("./enable-job-dialog.html"),
 })
-
 export class EnableJobDialogComponent {
     public jobId: string;
     public processing: boolean = false;
@@ -38,7 +38,7 @@ export class EnableJobDialogComponent {
             () => {
                 this.processing = false;
                 this.dialogRef.close();
-            }
+            },
         );
     }
 

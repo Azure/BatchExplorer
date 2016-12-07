@@ -1,6 +1,7 @@
-import { AccountService } from "../../../services";
 import { Component } from "@angular/core";
 import { MdDialogRef } from "@angular/material";
+
+import { AccountService } from "app/services";
 
 @Component({
     selector: "bex-delete-account-dialog",

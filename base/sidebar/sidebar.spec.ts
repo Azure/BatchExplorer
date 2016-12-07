@@ -1,8 +1,8 @@
 import { DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed, inject } from "@angular/core/testing";
 
-import { AppTestComponent, FakeComponent, setupSidebarTest } from "./sidebar-spec-helper";
 import { SidebarManager } from "app/components/base/sidebar";
+import { AppTestComponent, FakeComponent, setupSidebarTest } from "./sidebar-spec-helper";
 
 describe("SidebarPageComponent", () => {
     let component: AppTestComponent;

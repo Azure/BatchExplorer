@@ -3,10 +3,10 @@ import * as storage from "electron-json-storage";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import BatchClient from "../api/batch/batch-client";
-import { DataCache, DataCacheTracker, RxListProxy } from "./core";
 import { Account, NodeAgentSku } from "app/models";
 import { SecureUtils } from "app/utils";
+import BatchClient from "../api/batch/batch-client";
+import { DataCache, DataCacheTracker, RxListProxy } from "./core";
 
 const lastSelectedAccountStorageKey = "last-account-selected-name";
 
