@@ -5,7 +5,7 @@
     <bex-create-form [formGroup]="createJobForm" [submit]="submit" [sidebarRef]="sidebarRef">
         <form novalidate [formGroup]="createJobForm">
             <div class="form-element">
-                <md-input id="id" formControlName="id" placeholder="Id"></md-input>
+                <md-input formControlName="id" placeholder="Id"></md-input>
                 <div *ngIf="createJobForm.hasError('required', ['id'])" class="required-alert">Id is a required field</div>
                 <div *ngIf="createJobForm.hasError('maxlength', ['id'])" class="required-alert">Id has a maximum length of 64 characters</div>
                 <div *ngIf="createJobForm.hasError('pattern', ['id'])" class="required-alert">Id can contain any combination of alphanumeric characters including hyphens and underscores.</div>

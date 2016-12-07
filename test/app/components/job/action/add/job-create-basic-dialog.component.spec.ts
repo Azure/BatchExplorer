@@ -6,6 +6,7 @@ import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
 import { AppModule } from "app/app.module";
+import { SidebarRef } from "app/components/base/sidebar";
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { BatchError, Pool } from "app/models";
 import { JobService, PoolService } from "app/services";
@@ -32,6 +33,7 @@ fdescribe("JobCreateBasicDialogComponent ", () => {
     let fixture: ComponentFixture<JobCreateBasicDialogComponent>;
     let component: JobCreateBasicDialogComponent;
     // let formBuilderSpy: any;
+    let sidebarRefSpy: any;
     let jobServiceSpy: any;
     let poolServiceSpy: any;
     let de: DebugElement;
@@ -46,6 +48,10 @@ fdescribe("JobCreateBasicDialogComponent ", () => {
         //         return new FormGroup(controls);
         //     }),
         // };
+
+        sidebarRefSpy = {
+            close: jasmine.createSpy("SidebarClose"),
+        };
 
         jobServiceSpy = {
             add: jasmine.createSpy("CreateJob").and.callFake((newJobJson, ...args) => {
@@ -75,6 +81,7 @@ fdescribe("JobCreateBasicDialogComponent ", () => {
             imports: [AppModule],
             providers: [
                 { provide: FormBuilder, useValue: new FormBuilder() },
+                { provide: SidebarRef, useValue: sidebarRefSpy },
                 { provide: JobService, useValue: jobServiceSpy },
                 { provide: PoolService, useValue: poolServiceSpy },
 
@@ -93,31 +100,23 @@ fdescribe("JobCreateBasicDialogComponent ", () => {
     });
 
     it("JobId validation works as expected", () => {
-        let input = de.query(By.css("#id-input")).nativeElement;
+        let input = de.query(By.css("md-input[formControlName=id]")).nativeElement;
         input.value = "";
         fixture.detectChanges();
         let hasError = fixture.componentInstance.createJobForm.hasError("required", ["id"]);
         expect(hasError).toBe(true);
 
-        console.log("FIRST :: ", fixture.componentInstance.createJobForm.errors);
+        // console.log("Errors :: ", fixture.componentInstance.createJobForm.errors);
 
-        // input.value = "invalid job id";
-        // fixture.detectChanges();
-        // hasError = fixture.componentInstance.createJobForm.hasError("pattern", ["id"]);
-        // expect(hasError).toBe(true);
+        input.value = "invalid job id";
+        fixture.detectChanges();
+        hasError = fixture.componentInstance.createJobForm.hasError("pattern", ["id"]);
+        expect(hasError).toBe(true);
 
         // input.value = "valid-id";
         // fixture.detectChanges();
         // hasError = fixture.componentInstance.createJobForm.hasError("pattern", ["id"]);
         // expect(hasError).toBe(false);
-    });
-
-    it("JobId b validation works as expected", () => {
-        let input = de.query(By.css("#id-input")).nativeElement;
-        input.value = "invalid job id";
-        fixture.detectChanges();
-        let hasError = fixture.componentInstance.createJobForm.hasError("pattern", ["id"]);
-        expect(hasError).toBe(true);
     });
 
     /**
