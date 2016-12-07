@@ -5,9 +5,9 @@
         <form novalidate [formGroup]="createPoolForm">
             <div class="form-element">
                 <md-input formControlName="id" placeholder="Id"></md-input>
-                <div *ngIf="createPoolForm.hasError('required', ['id'])" class="required-alert">Id is a required field</div>
-                <div *ngIf="createPoolForm.hasError('maxlength', ['id'])" class="required-alert">Id has a maximum length of 64 characters</div>
-                <div *ngIf="createPoolForm.hasError('pattern', ['id'])" class="required-alert">Id can contain any combination of alphanumeric characters including hyphens and underscores.</div>
+                <bex-error controlName="id" code="required">Id is a required field</bex-error>
+                <bex-error controlName="id" code="maxlength">Id has a maximum length of 64 characters</bex-error>
+                <bex-error controlName="id" code="pattern">Id can contain any combination of alphanumeric characters including hyphens and underscores.</bex-error>
             </div>
 
             <div class="form-element">
@@ -16,15 +16,15 @@
 
             <div class="form-element">
                 <md-input formControlName="targetDedicated" placeholder="Number of virtual machines in pool" type="number"></md-input>
-                <div *ngIf="createPoolForm.hasError('required', ['targetDedicated'])" class="required-alert">Target size is a required field</div>
+                <bex-error controlName="targetDedicated" code="required">Target size is a required field</bex-error>
             </div>
 
             <div class="form-element">
                 <h4>Select a vm size for the worker nodes</h4>
                 <select formControlName="vmSize">
-                <option *ngFor="let vmSize of vmSizes" value="{{vmSize}}">{{vmSize}}</option>
-            </select>
-                <div *ngIf="createPoolForm.hasError('required', ['vmSize'])" class="required-alert">You must select a VM size</div>
+                    <option *ngFor="let vmSize of vmSizes" value="{{vmSize}}">{{vmSize}}</option>
+                </select>
+                <bex-error controlName="vmSize" code="required">You must select a VM size</bex-error>
             </div>
 
             <div class="form-element">

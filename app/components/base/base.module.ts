@@ -15,6 +15,7 @@ import { CreateFormComponent } from "./create-form";
 import { DropdownModule } from "./dropdown";
 import { ElapsedTimeComponent } from "./elapsed-time";
 import { FocusSectionModule } from "./focus-section";
+import { FormErrorComponent } from "./form-error";
 import { InfoBoxModule } from "./info-box";
 import {
     DeletePoolDialogComponent, EntityDetailsListComponent, ListAndShowLayoutComponent, ListLoadingComponent,
@@ -49,6 +50,7 @@ const components = [
     CreateFormComponent,
     ElapsedTimeComponent,
     EntityDetailsListComponent,
+    FormErrorComponent,
     ListAndShowLayoutComponent,
     LoadingComponent,
     ScrollableComponent,
