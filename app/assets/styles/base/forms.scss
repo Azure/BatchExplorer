@@ -2,7 +2,7 @@
 @import "../theme/variables";
 @import "../theme/mixins";
 
-.required-alert {
+.required-alert, bex-error {
     color: $validation-error-color;
 }
 
