@@ -53,6 +53,9 @@ module.exports = function (config) {
         },
         webpack: webpackConfig,
 
-        singleRun: false
+        singleRun: false,
+        mochaReporter: {
+            output: "autowatch",
+        },
     })
 };
