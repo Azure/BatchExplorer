@@ -6,7 +6,7 @@ var merge = require('webpack-merge');
 const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 
 const host = 'localhost';
-const port = 8080;
+const port = 3178;
 
 module.exports = merge(config, {
     devtool: 'cheap-module-source-map',

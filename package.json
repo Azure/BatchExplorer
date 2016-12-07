@@ -1,5 +1,9 @@
 {
-  "name": "batch-explorer",
+  "name": "batch-labs",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Azure/BatchLabs"
+  },
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
@@ -21,6 +25,9 @@
     "lint": "npm run tslint && npm run stylelint"
   },
   "license": "MIT",
+  "engines": {
+    "node": ">=6.0.0"
+  },
   "devDependencies": {
     "@types/bunyan": "0.0.32",
     "@types/core-decorators": "^0.10.30",
