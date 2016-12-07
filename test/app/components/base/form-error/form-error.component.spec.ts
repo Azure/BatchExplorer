@@ -9,11 +9,11 @@ import { FormErrorComponent } from "app/components/base/form-error";
         <form [formGroup]="form">
             <input formControlName="id">
             <bex-error #idRequiredError controlName="id" code="required">Id is required</bex-error>
-            <bex-error #idMaxLengthError controlName="id" code="maxLength">Id is max 5 char long</bex-error>
+            <bex-error #idMaxLengthError controlName="id" code="maxlength">Id is max 5 char long</bex-error>
 
             <div formGroupName="os">
                 <input formControlName="name">
-                <bex-error #osNameError controlName="id" code="required">Name of os is required</bex-error>
+                <bex-error #osNameError controlName="name" code="required">Name of os is required</bex-error>
             </div>
         </form>
     `,
@@ -32,7 +32,7 @@ export class FormErrorTestComponent {
 
     constructor(formBuilder: FormBuilder) {
         this.form = formBuilder.group({
-            id: ["", Validators.required, Validators.maxLength(5)],
+            id: ["", [Validators.required, Validators.maxLength(5)]],
             os: formBuilder.group({
                 name: ["", Validators.required],
             }),
@@ -73,7 +73,6 @@ describe("FormErrorComponent", () => {
     it("Should show error for control at the root of a control group with a different error", () => {
         component.form.patchValue({ id: "waytoolong" });
         fixture.detectChanges();
-
         expect(component.idRequiredError.hasError).toBe(false);
         expect(component.idMaxLengthError.hasError).toBe(true);
 
@@ -86,7 +85,6 @@ describe("FormErrorComponent", () => {
         fixture.detectChanges();
 
         expect(component.osNameError.hasError).toBe(true);
-
         expect(fixture.nativeElement.textContent).toContain("Name of os is required");
     });
 
@@ -95,7 +93,6 @@ describe("FormErrorComponent", () => {
         fixture.detectChanges();
 
         expect(component.osNameError.hasError).toBe(false);
-
         expect(fixture.nativeElement.textContent).not.toContain("Name of os is required");
     });
 });
