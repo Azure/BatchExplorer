@@ -3,16 +3,16 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
-import { SidebarRef } from "../../../base/sidebar";
 import { RangeValidatorDirective } from "app/components/base/validation";
 import { Task } from "app/models";
 import { createTaskFormToJsonData, taskToFormModel } from "app/models/forms";
 import { TaskService } from "app/services";
 import { Constants } from "app/utils";
+import { SidebarRef } from "../../../base/sidebar";
 
 @Component({
     selector: "bex-task-create-basic-dialog",
-    template: require("./task-create-basic-dialog.html"),
+    templateUrl: "task-create-basic-dialog.html",
 })
 export class TaskCreateBasicDialogComponent {
     public jobId: string;

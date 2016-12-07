@@ -1,9 +1,9 @@
-import { DataCache, RxEntityProxy, RxListProxy, TargetedDataCache, getOnceProxy } from "./core";
 import { Injectable } from "@angular/core";
-import { SubtaskInformation, Task } from "app/models";
 import { Observable, Subject } from "rxjs";
 
+import { SubtaskInformation, Task } from "app/models";
 import BatchClient from "../api/batch/batch-client";
+import { DataCache, RxEntityProxy, RxListProxy, TargetedDataCache, getOnceProxy } from "./core";
 import ServiceBase from "./service-base";
 
 export interface TaskListParams {

@@ -1,6 +1,7 @@
-import { JobService } from "../../../../services";
 import { Component } from "@angular/core";
 import { MdDialogRef } from "@angular/material";
+
+import { JobService } from "app/services";
 
 @Component({
     selector: "bex-terminate-job-dialog",
@@ -38,7 +39,7 @@ export class TerminateJobDialogComponent {
             () => {
                 this.processing = false;
                 this.dialogRef.close();
-            }
+            },
         );
     }
 

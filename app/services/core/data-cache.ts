@@ -1,8 +1,8 @@
 import { Map } from "immutable";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 
-import { QueryCache } from "./query-cache";
 import { ObjectUtils, SecureUtils } from "app/utils";
+import { QueryCache } from "./query-cache";
 
 export class DataCacheTracker {
 

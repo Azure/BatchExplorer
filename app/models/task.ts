@@ -1,5 +1,5 @@
-import { NameValuePair } from "./nameValuePair";
 import { Record } from "immutable";
+import { NameValuePair } from "./nameValuePair";
 
 import { AffinityInformation }  from "./affinityInformation";
 import { ApplicationPackageReference }  from "./applicationPackageReference";

@@ -37,8 +37,8 @@ const PoolRecord = Record({
 export class Pool extends PoolRecord {
     public allocationState: string;
     public allocationStateTransitionTime: Date;
-    public applicationPackageReferences: Array<any>;
-    public certificateReferences: Array<any>;
+    public applicationPackageReferences: any[];
+    public certificateReferences: any[];
     public cloudServiceConfiguration: CloudServiceConfiguration;
     public creationTime: Date;
     public currentDedicated: number;

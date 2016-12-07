@@ -4,13 +4,13 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs/Subscription";
 
-import { SidebarManager } from "../../base/sidebar";
-import { TaskCreateBasicDialogComponent } from "../../task/action";
-import { JobCreateBasicDialogComponent } from "../action";
 import { Job } from "app/models";
 import { JobDecorator } from "app/models/decorators";
 import { JobParams, JobService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
+import { SidebarManager } from "../../base/sidebar";
+import { TaskCreateBasicDialogComponent } from "../../task/action";
+import { JobCreateBasicDialogComponent } from "../action";
 
 import {
     DeleteJobDialogComponent,

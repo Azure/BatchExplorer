@@ -4,8 +4,9 @@ import {
 } from "@angular/core/testing";
 import { List } from "immutable";
 
-import { FakeModel } from "./fake-model";
 import { DataCache, RxListProxy } from "app/services/core";
+import { FakeModel } from "./fake-model";
+
 const data = [
     [
         { id: "1", state: "active", name: "Fake1" },

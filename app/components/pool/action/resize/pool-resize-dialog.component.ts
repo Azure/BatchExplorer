@@ -1,15 +1,14 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 
-import { SidebarRef } from "../../../base/sidebar";
 import { Pool } from "app/models";
 import { PoolService } from "app/services";
+import { SidebarRef } from "../../../base/sidebar";
 
 @Component({
     selector: "bex-pool-resize-dialog",
-    template: require("./pool-resize-dialog.html"),
+    templateUrl: "pool-resize-dialog.html",
 })
-
 export class PoolResizeDialogComponent implements OnInit {
     @Input()
     public set pool(value: Pool) {
@@ -42,7 +41,7 @@ export class PoolResizeDialogComponent implements OnInit {
             () => {
                 this.isSaving = false;
                 this.sidebarRef.destroy();
-            }
+            },
         );
     }
 }

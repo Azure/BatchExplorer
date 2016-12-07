@@ -5,7 +5,11 @@
   ],
   "rules": {
     // TSLint override
-    "no-inferrable-types": true,
+    "object-literal-shorthand": false,
+    "adjacent-overload-signatures": false,
+    "max-classes-per-file": [false],
+    "arrow-parens": false,
+    "no-inferrable-types": [false],
     "interface-name": [ true,  "never-prefix" ],
     "no-string-literal": false,
     "variable-name": [false, "ban-keywords", "check-format", "allow-leading-underscore"], // https://github.com/palantir/tslint/issues/1489
@@ -23,12 +27,8 @@
     "object-literal-sort-keys": false,
 
     // Codelyzer rules(Angular2)
-    "directive-selector-name": [false, "camelCase"],
-    "component-selector-name": [true, "kebab-case"],
-    "directive-selector-type": [true, "attribute"],
-    "component-selector-type": [true, "element"],
-    "directive-selector-prefix": [true, "bex"],
-    "component-selector-prefix": [true, "bex"],
+    "directive-selector": [true, "attribute", "bex", "camelCase"],
+    "component-selector": [true, "element", "bex", "kebab-case"],
     "use-input-property-decorator": true,
     "use-output-property-decorator": true,
     "use-host-property-decorator": true,
@@ -42,7 +42,6 @@
     "component-class-suffix": true,
     "directive-class-suffix": true,
     "import-destructuring-spacing": true,
-    "templates-use-public": true,
     "invoke-injectable": true
   }
 }

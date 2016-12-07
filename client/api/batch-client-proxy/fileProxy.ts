@@ -1,5 +1,5 @@
 import { BatchRequestOptions } from "./models";
-import { GetProxy, ListProxy }  from "./shared";
+import { GetProxy, ListProxy } from "./shared";
 
 export default class FileProxy {
     private _getProxy: GetProxy;
@@ -13,7 +13,7 @@ export default class FileProxy {
     }
 
     public getTaskFile(jobId: string, taskId: string, filename: string, options?: BatchRequestOptions) {
-        return this._getProxy.execute([jobId, taskId],  { taskFileGetOptions: options });
+        return this._getProxy.execute([jobId, taskId], { taskFileGetOptions: options });
     }
 
     /**
@@ -49,6 +49,6 @@ export default class FileProxy {
 
         return new ListProxy(entity,
             [poolId, nodeId],
-            { recursive: recursive, fileListFromComputeNodeOptions: options });
+            { recursive, fileListFromComputeNodeOptions: options });
     }
 }

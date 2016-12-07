@@ -3,8 +3,8 @@ import {
     tick,
 } from "@angular/core/testing";
 
-import { FakeModel } from "./fake-model";
 import { DataCache, RxEntityProxy } from "app/services/core";
+import { FakeModel } from "./fake-model";
 
 const data = [
     { id: "1", state: "active", name: "Fake1" },

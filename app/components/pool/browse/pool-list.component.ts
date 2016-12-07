@@ -5,7 +5,6 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Observable, Subscription } from "rxjs";
 
-import { DeletePoolTask } from "../action/delete";
 import { BackgroundTaskManager } from "app/components/base/background-task";
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListComponent, QuickListItemStatus } from "app/components/base/quick-list";
@@ -15,6 +14,7 @@ import { Pool } from "app/models";
 import { PoolService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
+import { DeletePoolTask } from "../action/delete";
 
 @Component({
     selector: "bex-pool-list",

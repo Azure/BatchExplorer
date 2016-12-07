@@ -4,12 +4,12 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs";
 
-import { SidebarManager } from "../../base/sidebar";
-import { DeleteTaskDialogComponent, TaskCreateBasicDialogComponent, TerminateTaskDialogComponent } from "../action";
 import { Job, Task } from "app/models";
 import { TaskDecorator } from "app/models/decorators";
 import { JobParams, JobService, TaskParams, TaskService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
+import { SidebarManager } from "../../base/sidebar";
+import { DeleteTaskDialogComponent, TaskCreateBasicDialogComponent, TerminateTaskDialogComponent } from "../action";
 
 @Component({
     selector: "bex-task-details",
