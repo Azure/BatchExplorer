@@ -5,10 +5,10 @@ import {
     Type,
 } from "@angular/core";
 import { MdSidenav } from "@angular/material";
+import { BehaviorSubject, Observable } from "rxjs";
 
 import { SidebarContentComponent } from "./sidebar-content";
 import { SidebarRef } from "./sidebar-ref";
-import { BehaviorSubject, Observable } from "rxjs";
 
 @Injectable()
 export class SidebarManager {
@@ -99,7 +99,7 @@ export class SidebarManager {
         this.referencesSubject.next(references);
     }
 
-    private computeReferenceList(): SidebarRef<any>[] {
+    private computeReferenceList(): Array<SidebarRef<any>> {
         return Object.keys(this.referenceMap).map(x => this.referenceMap[x]);
     }
 }

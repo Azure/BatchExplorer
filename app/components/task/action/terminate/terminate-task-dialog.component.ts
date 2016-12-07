@@ -1,12 +1,12 @@
-import { TaskService } from "../../../../services";
 import { Component } from "@angular/core";
 import { MdDialogRef } from "@angular/material";
 
+import { TaskService } from "app/services";
+
 @Component({
     selector: "bex-terminate-task-dialog",
-    template: require("./terminate-task-dialog.html"),
+    templateUrl: "terminate-task-dialog.html",
 })
-
 export class TerminateTaskDialogComponent {
     public jobId: string;
     public taskId: string;
@@ -39,7 +39,7 @@ export class TerminateTaskDialogComponent {
             () => {
                 this.processing = false;
                 this.dialogRef.close();
-            }
+            },
         );
     }
 

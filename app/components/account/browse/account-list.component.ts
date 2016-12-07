@@ -1,13 +1,13 @@
-import { AccountService } from "../../../services";
 import { Component, Input } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
 import { List } from "immutable";
 
-import { SidebarManager } from "../../base/sidebar";
 import { LoadingStatus } from "app/components/base/loading";
 import { Account } from "app/models";
+import { AccountService } from "app/services";
 import { Property } from "app/utils/filter-builder";
+import { SidebarManager } from "../../base/sidebar";
 
 // todo: can move the loading indicator to the common template when we can fire an event to turn it on and off
 

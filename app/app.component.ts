@@ -2,9 +2,9 @@ import { AfterViewInit, Component, ViewChild } from "@angular/core";
 import { MdSidenav } from "@angular/material";
 import { BehaviorSubject, Observable } from "rxjs";
 
+import { AccountService, CommandService, SettingsService } from "app/services";
 import AccountCreateDialogComponent from "./components/account/add/account-create-dialog.component";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
-import { AccountService, CommandService, SettingsService } from "app/services";
 
 @Component({
     selector: "bex-app",

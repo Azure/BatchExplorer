@@ -4,7 +4,6 @@ import { Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Observable, Subscription } from "rxjs";
 
-import { DeleteJobAction } from "../action";
 import { BackgroundTaskManager } from "app/components/base/background-task";
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListComponent, QuickListItemStatus } from "app/components/base/quick-list";
@@ -15,6 +14,7 @@ import { SchedulingErrorDecorator } from "app/models/decorators";
 import { JobService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
+import { DeleteJobAction } from "../action";
 
 @Component({
     selector: "bex-job-list",

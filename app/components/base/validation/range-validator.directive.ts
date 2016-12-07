@@ -12,14 +12,14 @@ export class RangeValidatorDirective {
     public validator: Function;
 
     constructor(rangeStart: number, rangeEnd: number) {
-        this.validator = (function(control: FormControl) {
+        this.validator = ((control: FormControl) => {
             return control.value && (control.value < rangeStart || control.value > rangeEnd)
-            ? {
-                validateRange: {
-                    valid: false,
-                },
-            }
-            : null;
+                ? {
+                    validateRange: {
+                        valid: false,
+                    },
+                }
+                : null;
         });
     }
 }

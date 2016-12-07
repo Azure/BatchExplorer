@@ -1,7 +1,7 @@
-import { routes } from "../../../app.routes";
 import { ModuleWithProviders, NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 
+import { routes } from "app/app.routes";
 import { InfoBoxComponent } from "./info-box.component";
 
 const components = [

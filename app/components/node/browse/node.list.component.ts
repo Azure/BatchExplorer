@@ -2,13 +2,13 @@ import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
-import { NodeListDisplayComponent } from "./display";
 import { LoadingStatus } from "app/components/base/loading";
 import { SelectableList } from "app/components/base/selectable-list";
 import { Node } from "app/models";
 import { NodeListParams, NodeService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
+import { NodeListDisplayComponent } from "./display";
 
 @Component({
     selector: "bex-node-list",

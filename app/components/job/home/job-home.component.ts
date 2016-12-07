@@ -1,9 +1,9 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormControl } from "@angular/forms";
 
+import { Filter, FilterBuilder } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
 import { JobCreateBasicDialogComponent } from "../action";
-import { Filter, FilterBuilder } from "app/utils/filter-builder";
 
 @Component({
     selector: "bex-job-home",

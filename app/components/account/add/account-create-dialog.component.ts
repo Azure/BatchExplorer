@@ -2,9 +2,9 @@ import { Component, OnInit } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { Router } from "@angular/router";
 
-import { SidebarRef } from "../../base/sidebar";
 import { Account } from "app/models";
 import { AccountService } from "app/services";
+import { SidebarRef } from "../../base/sidebar";
 
 @Component({
     selector: "bex-account-create-dialog",
@@ -35,7 +35,7 @@ export default class AccountCreateDialogComponent implements OnInit {
                 this.isSaving = false;
                 this.sidebarRef.destroy();
                 this.router.navigate(["/accounts", account.id]);
-            }
+            },
         );
     }
 

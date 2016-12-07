@@ -1,9 +1,9 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormControl } from "@angular/forms";
 
+import * as FilterBuilder from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
 import AccountCreateDialogComponent from "../add/account-create-dialog.component";
-import * as FilterBuilder from "app/utils/filter-builder";
 
 @Component({
     selector: "bex-account-home",

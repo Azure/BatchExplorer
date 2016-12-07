@@ -1,9 +1,9 @@
 import { Type } from "@angular/core";
 import { BehaviorSubject, Observable, Subject, Subscription } from "rxjs";
 
-import { DataCache } from "./data-cache";
 import { LoadingStatus } from "app/components/base/loading";
 import { log } from "app/utils";
+import { DataCache } from "./data-cache";
 
 export interface FetchDataOptions {
     getData: () => Observable<any>;

@@ -1,7 +1,7 @@
 import { ViewChild } from "@angular/core";
 
-import { SelectableList } from "./selectable-list";
 import { TableComponent } from "app/components/base/table";
+import { SelectableList } from "./selectable-list";
 
 export class ListOrTableBase extends SelectableList {
     @ViewChild(TableComponent)

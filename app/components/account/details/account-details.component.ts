@@ -3,9 +3,9 @@ import { MdDialog, MdDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 
-import { DeleteAccountDialogComponent } from "../action/delete-account-dialog.component";
 import { Account } from "app/models";
 import { AccountService } from "app/services";
+import { DeleteAccountDialogComponent } from "../action/delete-account-dialog.component";
 
 @Component({
     selector: "bex-account-details",

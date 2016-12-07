@@ -1,14 +1,14 @@
+import { Pool } from "app/models";
 import { DecoratorBase } from "../../utils/decorators";
 import { CloudServiceConfigurationDecorator } from "./cloud-service-configuration-decorator";
 import { TaskSchedulingPolicyDecorator } from "./task-scheduling-policy-decorator";
 import { VirtualMachineConfigurationDecorator } from "./virtual-machine-configuration-decorator";
-import { Pool } from "app/models";
 
 export class PoolDecorator extends DecoratorBase<Pool> {
     public allocationState: string;
     public allocationStateTransitionTime: string;
-    public applicationPackageReferences: Array<any>;
-    public certificateReferences: Array<any>;
+    public applicationPackageReferences: any[];
+    public certificateReferences: any[];
     public cloudServiceConfiguration: CloudServiceConfigurationDecorator;
     public creationTime: string;
     public currentDedicated: string;
