@@ -13,6 +13,8 @@ import { JobService, PoolService } from "app/services";
 import { DataCache, RxListProxy } from "app/services/core";
 import { Constants } from "app/utils";
 
+import * as Fixtures from "test/fixture";
+
 // just making test work for now. Need Tim's input
 export class FakeListProxy {
     public hasMoreItems(): boolean {
@@ -20,8 +22,13 @@ export class FakeListProxy {
     }
 
     public fetchNext(): Promise<any> {
+        // todo: this could be wrong ... ask Tim
         return Promise.resolve({
-            data: [],
+            data: [
+                Fixtures.pool.create({ id: "pool-001" }).data,
+                Fixtures.pool.create({ id: "pool-002" }).data,
+                Fixtures.pool.create({ id: "pool-003" }).data,
+            ],
         });
     }
 
@@ -30,7 +37,7 @@ export class FakeListProxy {
     }
 }
 
-fdescribe("JobCreateBasicDialogComponent ", () => {
+describe("JobCreateBasicDialogComponent ", () => {
     let fixture: ComponentFixture<JobCreateBasicDialogComponent>;
     let component: JobCreateBasicDialogComponent;
     let sidebarRefSpy: any;
@@ -171,6 +178,19 @@ fdescribe("JobCreateBasicDialogComponent ", () => {
         expect(poolForm.hasError(validators.required, [fieldNames.poolId])).toBe(true);
     });
 
+    it("Can patch poolId directly", () => {
+        component.preSelectPool("pool-002");
+        expect(poolForm.controls[fieldNames.poolId].value).toEqual("pool-002");
+    });
+
+    // it("Can clone job into form", () => {
+    //     const job = Fixtures.job.create({ id: "job-001" });
+    //     component.setValue(job.toJS());
+
+    //     expect(baseForm.controls[fieldNames.id].value).toEqual("job-001");
+    //     expect(poolForm.controls[fieldNames.poolId].value).toEqual("pool-1");
+    // });
+
     function expectValidation(
         formGroup: FormGroup,
         input: MdInput,
@@ -188,7 +208,6 @@ fdescribe("JobCreateBasicDialogComponent ", () => {
      * tests
      * =====
      * check i can create a job
-     * check i can create a job with a pre-populated pool
      * check i can clone a job
      * check we handle and display any errors to the user
      * check that add and close closes the slideout

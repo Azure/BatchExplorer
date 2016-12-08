@@ -6,25 +6,25 @@
         <form novalidate [formGroup]="createJobForm">
             <div class="form-element">
                 <md-input formControlName="id" placeholder="Id"></md-input>
-                <div *ngIf="createJobForm.hasError('required', ['id'])" class="required-alert">Id is a required field</div>
-                <div *ngIf="createJobForm.hasError('maxlength', ['id'])" class="required-alert">Id has a maximum length of 64 characters</div>
-                <div *ngIf="createJobForm.hasError('pattern', ['id'])" class="required-alert">Id can contain any combination of alphanumeric characters including hyphens and underscores.</div>
+                <bex-error controlName="id" code="required">Id is a required field</bex-error>
+                <bex-error controlName="id" code="maxlength">Id has a maximum length of 64 characters</bex-error>
+                <bex-error controlName="id" code="pattern">Id can contain any combination of alphanumeric characters including hyphens and underscores</bex-error>
             </div>
 
             <div class="form-element">
                 <md-input formControlName="displayName" placeholder="Display name"></md-input>
-                <div *ngIf="createJobForm.hasError('maxlength', ['displayName'])" class="required-alert">Display name has a maximum length of 1024 characters</div>
+                <bex-error controlName="displayName" code="maxlength">Display name has a maximum length of 1024 characters</bex-error>
             </div>
 
             <div class="form-element">
                 <md-input formControlName="priority" placeholder="Priority" type="number"></md-input>
-                <div *ngIf="createJobForm.hasError('validateRange', ['priority'])" class="required-alert">Priority values can range from -1000 to 1000</div>
+                <bex-error controlName="priority" code="validateRange">Priority values can range from -1000 to 1000</bex-error>
             </div>
 
             <div formGroupName="constraints">
                 <div class="form-element">
                     <md-input formControlName="maxTaskRetryCount" placeholder="Max retry count" type="number"></md-input>
-                    <div *ngIf="constraintsGroup.hasError('validateRange', ['maxTaskRetryCount'])" class="required-alert">Retry count values can range from -1 to 100</div>
+                    <bex-error controlName="maxTaskRetryCount" code="validateRange">Retry count values can range from -1 to 100</bex-error>
                 </div>
             </div>
 
@@ -34,7 +34,7 @@
                     <select formControlName="poolId">
                         <option *ngFor="let pool of poolsData.items | async" value="{{pool.id}}">{{pool.id}}</option>
                     </select>
-                    <div *ngIf="poolInfoGroup.hasError('required', ['poolId'])" class="required-alert">You must select a pool for this job to run on</div>
+                    <bex-error controlName="poolId" code="required">You must select a pool for this job to run on</bex-error>
                 </div>
             </div>
         </form>
