@@ -25,7 +25,6 @@ export class ServerErrorComponent {
 
     private _error: BatchError = null;
 
-
     public parseErrorData(): ErrorData {
         if (!this.error || !this.error.message) {
             return null;
