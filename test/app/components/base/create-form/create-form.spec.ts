@@ -43,7 +43,8 @@ export class FormTestComponent {
         this.submitSpy();
         const sub = new AsyncSubject();
         if (this.form.value.id === "error") {
-            sub.error({ code: "IdExists", message: { value: "Id already exists" } });
+            const value = "Id already exists\nRequestId:abc-def\ntime:2016-12-08T18";
+            sub.error({ code: "IdExists", message: { value } });
         } else {
             sub.next(true);
             sub.complete();
@@ -139,18 +140,37 @@ describe("CreateFormComponent", () => {
         expect(fixture.componentInstance.sidebarRef.destroy).not.toHaveBeenCalled();
     }));
 
-    it("should show an error when submit return error", () => {
-        fixture.componentInstance.form.patchValue({
-            id: "error",
+    describe("when form return an error", () => {
+        beforeEach(() => {
+            fixture.componentInstance.form.patchValue({
+                id: "error",
+            });
+            fixture.detectChanges();
+            addButtonComponent.onClick();
+            fixture.detectChanges();
         });
-        fixture.detectChanges();
-        addButtonComponent.onClick();
-        fixture.detectChanges();
 
-        expect(fixture.componentInstance.sidebarRef.destroy).not.toHaveBeenCalled();
-        const error = getErrorElement();
-        expect(error).not.toBe(null);
-        expect(error.nativeElement.textContent).toContain("IdExists");
-        expect(error.nativeElement.textContent).toContain("Id already exists");
+        it("should show an error when submit return error", () => {
+            expect(fixture.componentInstance.sidebarRef.destroy).not.toHaveBeenCalled();
+            const error = getErrorElement();
+            expect(error).not.toBe(null);
+            expect(error.nativeElement.textContent).toContain("IdExists");
+            expect(error.nativeElement.textContent).toContain("Id already exists");
+
+        });
+
+        it("should show the troubleshoot details when clickin on the bug button", () => {
+            const error = getErrorElement();
+            expect(error).not.toBe(null);
+
+            expect(error.nativeElement.textContent).not.toContain("abc-def");
+            expect(error.nativeElement.textContent).not.toContain("2016-12-08T18");
+
+            error.query(By.css("i.fa-bug")).nativeElement.click();
+            fixture.detectChanges();
+            expect(error.nativeElement.textContent).toContain("abc-def");
+            expect(error.nativeElement.textContent).toContain("2016-12-08T18");
+            expect(true).toBe(true);
+        });
     });
 });

@@ -187,9 +187,43 @@ bex-create-form {
         color: $whiteSmoke;
         padding: 10px;
         border-radius: 4px;
+        display: flex;
 
-        > h4, p {
-            color: $whiteSmoke;
+        > .content {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            padding-right: 10px;
+            display: flex;
+
+            h4, p, table {
+                color: $whiteSmoke;
+                font-size: 1em;
+            }
+
+            h4 {
+                font-weight: 500;
+            }
+
+            td {
+                padding: 0 5px;
+            }
+
+        }
+
+        > .troubleshoot-btn {
+            font-size: 1.5em;
+            cursor: pointer;
+            z-index: 10;
+
+            i {
+                border: 1px solid $red-dark;
+                border-radius: 3px;
+                padding: 3px;
+                &:hover {
+                    background-color: $red-dark;
+                }
+            }
         }
     }
 }

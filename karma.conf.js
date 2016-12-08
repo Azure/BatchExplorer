@@ -8,7 +8,7 @@ module.exports = function (config) {
         frameworks: ["jasmine"],
         files: [
             { pattern: "app/polyfills.browser.ts", watched: false },
-            "test/app/spec-bundle.ts",
+            { pattern: "test/app/spec-bundle.ts", watched: false },
             { pattern: "./config/karma.shim.js", watched: false },
         ],
 
@@ -22,7 +22,8 @@ module.exports = function (config) {
 
         colors: true,
 
-        autoWatch: true,
+        autoWatch: false,
+        autoWatchBatchDelay: 1000,
 
         browsers: ["Electron"],
 
@@ -35,21 +36,19 @@ module.exports = function (config) {
             "karma-mocha-reporter",
             "karma-electron",
             "karma-electron-launcher",
-            "karma-webpack"
+            "karma-webpack",
         ],
 
         // Coverage reporter generates the coverage
-        reporters: ["mocha", "kjhtml"],
+        reporters: ["mocha"],
 
-        // Source files that you wanna generate coverage for.
-        // Do not include tests or libraries (these files will be instrumented by Istanbul)
         preprocessors: {
+            "app/polyfills.browser.ts": ["webpack", "sourcemap", "electron"],
+            "test/app/spec-bundle.ts": ["webpack", "sourcemap", "electron"],
             "config/karma.shim.js": ["webpack", "sourcemap", "electron"],
-            "app/**/*.{ts,js}": ["webpack", "sourcemap", "electron"],
-            "test/app/**/*.{ts,js}": ["webpack", "sourcemap", "electron"],
         },
         client: {
-            useIframe: false
+            useIframe: false,
         },
         webpack: webpackConfig,
 
