@@ -5,7 +5,7 @@ import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
 import { BatchError } from "app/models";
-import { SidebarRef } from "../sidebar";
+import { SidebarRef } from "../../sidebar";
 
 interface ErrorData {
     message: string;
