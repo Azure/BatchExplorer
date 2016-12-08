@@ -7,7 +7,8 @@ import { autobind } from "core-decorators";
 import { AsyncSubject } from "rxjs";
 
 import { SubmitButtonComponent } from "app/components/base/buttons";
-import { CreateFormComponent } from "app/components/base/create-form";
+import { CreateFormComponent } from "app/components/base/form/create-form";
+import { ServerErrorComponent } from "app/components/base/form/server-error";
 
 @Component({
     template: `
@@ -71,6 +72,7 @@ describe("CreateFormComponent", () => {
             declarations: [
                 SubmitButtonComponent,
                 FormTestComponent,
+                ServerErrorComponent,
                 CreateFormComponent,
             ],
         });

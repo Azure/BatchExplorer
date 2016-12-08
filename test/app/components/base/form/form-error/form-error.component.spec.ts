@@ -2,7 +2,7 @@ import { Component, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
 
-import { FormErrorComponent } from "app/components/base/form-error";
+import { FormErrorComponent } from "app/components/base/form/form-error";
 
 @Component({
     template: `
