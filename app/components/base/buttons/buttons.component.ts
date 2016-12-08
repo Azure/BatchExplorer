@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 
-import { Job } from "app/models";
+import { Job, JobState } from "app/models";
 
 @Component({
     selector: "bex-loading-button",
@@ -67,9 +67,11 @@ export class AddTaskButtonComponent {
 
     public get enabled() {
         return this.job
-            && this.job.state !== <any>"completed"
-            && this.job.state !== <any>"terminating"
-            && this.job.state !== <any>"deleting";
+            && this.job.state !== JobState.completed
+            && this.job.state !== JobState.deleting
+            && this.job.state !== JobState.disabled
+            && this.job.state !== JobState.disabling
+            && this.job.state !== JobState.terminating;
     }
 
     private _title: string;
@@ -85,9 +87,9 @@ export class TerminateButtonComponent {
 
     public get enabled() {
         return this.entity
-            && this.entity.state !== <any>"completed"
-            && this.entity.state !== <any>"terminating"
-            && this.entity.state !== <any>"deleting";
+            && this.entity.state !== JobState.completed
+            && this.entity.state !== JobState.terminating
+            && this.entity.state !== JobState.deleting;
     }
 }
 
@@ -102,8 +104,8 @@ export class DeleteButtonComponent {
     public get enabled() {
         if (this.entity instanceof Job) {
             return this.entity
-                && this.entity.state !== <any>"deleting"
-                && this.entity.state !== <any>"terminating";
+                && this.entity.state !== JobState.deleting
+                && this.entity.state !== JobState.terminating;
         } else {
             return true;
         }
@@ -120,13 +122,13 @@ export class DisableButtonComponent {
 
     public get enabled() {
         return this.job
-            && this.job.state === <any>"active";
+            && this.job.state === JobState.active;
     }
 
     public get visible() {
         return this.job
-            && this.job.state !== <any>"disabling"
-            && this.job.state !== <any>"disabled";
+            && this.job.state !== JobState.disabling
+            && this.job.state !== JobState.disabled;
     }
 }
 
@@ -139,7 +141,7 @@ export class EnableButtonComponent {
     public job: Job;
 
     public get enabled() {
-        return this.job && this.job.state === <any>"disabled";
+        return this.job && this.job.state === JobState.disabled;
     }
 
     public get visible() {
