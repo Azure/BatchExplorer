@@ -25,9 +25,9 @@ export class FakeListProxy {
         // todo: this could be wrong ... ask Tim
         return Promise.resolve({
             data: [
-                Fixtures.pool.create({ id: "pool-001" }).data,
-                Fixtures.pool.create({ id: "pool-002" }).data,
-                Fixtures.pool.create({ id: "pool-003" }).data,
+                Fixtures.pool.create({ id: "pool-001" }),
+                Fixtures.pool.create({ id: "pool-002" }),
+                Fixtures.pool.create({ id: "pool-003" }),
             ],
         });
     }

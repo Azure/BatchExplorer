@@ -1,44 +1,21 @@
+import { Type } from "@angular/core";
 
 import { Job, Node, Pool, SubtaskInformation, Task } from "app/models";
 
-export class Fixture<T> {
-    private _data: T;
-
-    constructor(data: any) {
-        this._data = data;
+export class FixtureFactory<TEntity> {
+    constructor(private type: Type<TEntity>, private defaultData: any) {
     }
 
     /**
      * Create a new fixture entity
      * @param attributes List of attribute you want to override
      */
-    public create(attributes: any = {}): FixtureEntity<T> {
-        const newData = this._fromJS(Object.assign(this._data, attributes));
-        return new FixtureEntity(newData);
-    }
-
-    private _fromJS(data: any): T {
-        return data;
+    public create(attributes: any = {}): TEntity {
+        return new this.type(Object.assign(this.defaultData, attributes));
     }
 }
 
-export class FixtureEntity<T> {
-    public data: T;
-
-    constructor(data: T) {
-        this.data = data;
-    }
-
-    public toJS(): any {
-        return (<any>this.data).toJS();
-    }
-
-    public toJSON(): any {
-        return this.data;
-    }
-}
-
-export const job = new Fixture<Job>({
+export const job = new FixtureFactory<Job>(Job, {
     id: "job-id-1",
     displayName: "displayName",
     creationTime: new Date(2015, 5, 1, 10, 4, 31),
@@ -97,10 +74,10 @@ export const job = new Fixture<Job>({
     usesTaskDependencies: false,
 });
 
-export const task = new Fixture<Task>({
+export const task = new FixtureFactory<Task>(Task, {
     id: "task-3",
     url: new Date().getTime().toString(),
-    creationTime: new Date(2015, 5, 21, 0, 0 , 0),
+    creationTime: new Date(2015, 5, 21, 0, 0, 0),
     lastModified: new Date(2015, 5, 21, 0, 0, 0),
     displayName: "displayName",
     nonRetryableExitCodes: [1, 2],
@@ -138,7 +115,7 @@ export const task = new Fixture<Task>({
     },
 });
 
-export const pool = new Fixture<Pool>({
+export const pool = new FixtureFactory<Pool>(Pool, {
     id: "mypool1",
     url: "https://myaccount.myregion.batch.azure.com/pools/mypool1",
     eTag: "#################",
@@ -166,7 +143,7 @@ export const pool = new Fixture<Pool>({
 });
 
 // todo: make model for me
-export const jobPreparationAndReleaseTask = new Fixture<any>({
+export const jobPreparationAndReleaseTask = new FixtureFactory<any>(Object, {
     poolId: "pool-1",
     nodeId: "node-1",
     nodeUrl: "https://fake-api/pools/mypool1/nodes/node-1",
@@ -176,7 +153,7 @@ export const jobPreparationAndReleaseTask = new Fixture<any>({
         endTime: new Date(2015, 5, 1, 20, 12, 42),
         taskRootDirectory: "tasks/myjob/job-1/myjobpreptask",
         taskRootDirectoryUrl: "https://myaccount.myregion.batch.azure.com/pools/mypool1/nodes/"
-            + "tvm-2167304207_1-20140905t174658z/files/tasks/myjob/job-1/myjobpreptask",
+        + "tvm-2167304207_1-20140905t174658z/files/tasks/myjob/job-1/myjobpreptask",
         exitCode: 0,
         retryCount: 0,
     },
@@ -186,13 +163,13 @@ export const jobPreparationAndReleaseTask = new Fixture<any>({
         endTime: new Date(2015, 5, 2, 18, 12, 38),
         taskRootDirectory: "tasks/myjob/job-1/myjobreleasetask",
         taskRootDirectoryUrl: "https://myaccount.myregion.batch.azure.com/pools/mypool1/nodes/"
-            + "tvm-2167304207_1-20140905t174658z/files/tasks/myjob/job-1/myjobreleasetask",
+        + "tvm-2167304207_1-20140905t174658z/files/tasks/myjob/job-1/myjobreleasetask",
         exitCode: 0,
         retryCount: 0,
     },
 });
 
-export const subTask = new Fixture<SubtaskInformation>({
+export const subTask = new FixtureFactory<SubtaskInformation>(SubtaskInformation, {
     id: "1",
     startTime: new Date(2015, 5, 2, 11, 20, 32),
     endTime: new Date(2015, 5, 2, 18, 12, 43),
@@ -204,16 +181,16 @@ export const subTask = new Fixture<SubtaskInformation>({
     nodeInfo: {
         affinityId: "TVM:tvm-2167304207_3-20140918t045746z",
         nodeUrl: "https://myaccount.batch.core.windows.net/pools/"
-            + "mypool_3FA95161-1349-44F6-86FC-52FC13BDAAE4/tvms/tvm-2167304207_3-20140918t045746z",
+        + "mypool_3FA95161-1349-44F6-86FC-52FC13BDAAE4/tvms/tvm-2167304207_3-20140918t045746z",
         poolId: "pool-1",
         nodeId: "node-1",
         taskRootDirectory: "tasks/myjob/job-1/mytask1/1/wd",
         taskRootDirectoryUrl: " https://myaccount.myregion.batch.azure.com/pools/pool-1/nodes/node-1/"
-            + "files/tasks/myjob/job-1/mytask1/1/wd",
+        + "files/tasks/myjob/job-1/mytask1/1/wd",
     },
 });
 
-export const node = new Fixture<Node>({
+export const node = new FixtureFactory<Node>(Node, {
     id: "node-1",
     displayName: "MyImaginaryNode",
     state: "running",
