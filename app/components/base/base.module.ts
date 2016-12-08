@@ -11,11 +11,10 @@ import { BackgroundTaskModule } from "./background-task";
 import { BannerComponent } from "./banner";
 import { BreadcrumbsComponent, CrumbComponent } from "./breadcrumbs";
 import { ButtonsModule } from "./buttons";
-import { CreateFormComponent } from "./create-form";
 import { DropdownModule } from "./dropdown";
 import { ElapsedTimeComponent } from "./elapsed-time";
 import { FocusSectionModule } from "./focus-section";
-import { FormErrorComponent } from "./form-error";
+import { FormModule } from "./form";
 import { InfoBoxModule } from "./info-box";
 import {
     DeletePoolDialogComponent, EntityDetailsListComponent, ListAndShowLayoutComponent, ListLoadingComponent,
@@ -40,6 +39,7 @@ const modules = [
     QuickListModule,
     SidebarModule,
     TableModule,
+    FormModule,
 ];
 
 // Add subcomponnent not in a module here
@@ -47,10 +47,8 @@ const components = [
     BannerComponent,
     BreadcrumbsComponent,
     CrumbComponent,
-    CreateFormComponent,
     ElapsedTimeComponent,
     EntityDetailsListComponent,
-    FormErrorComponent,
     ListAndShowLayoutComponent,
     LoadingComponent,
     ScrollableComponent,
