@@ -7,6 +7,7 @@ import { RouterModule } from "@angular/router";
 import { ButtonsModule } from "../buttons";
 import { CreateFormComponent } from "./create-form";
 import { FormErrorComponent } from "./form-error";
+import { ServerErrorComponent } from "./server-error";
 
 // components
 // Add submodules there
@@ -17,6 +18,7 @@ const modules = [
 const components = [
     CreateFormComponent,
     FormErrorComponent,
+    ServerErrorComponent,
 ];
 
 @NgModule({

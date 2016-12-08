@@ -1,29 +1,4 @@
-<div class="error-banner" *ngIf="error">
-    <div class="content">
-        <div class="main-info" *ngIf="!showErrorTroubleshoot">
-            <h4>{{error.code}}</h4>
-            <p>{{errorData.message}}</p>
-            <div class="details" *ngIf="error.values">
-                <div *ngFor="let detail of error.values">{{detail.key}}: {{detail.value}}</div>
-            </div>
-        </div>
-        <div class="troubleshoot-info" *ngIf="showErrorTroubleshoot">
-            <table>
-                <tr>
-                    <td><b>RequestId</b></td>
-                    <td>{{errorData.requestId}}</td>
-                </tr>
-                <tr>
-                    <td><b>Time</b> </td>
-                    <td>{{errorData.time}}</td>
-                </tr>
-            </table>
-        </div>
-    </div>
-    <div class="troubleshoot-btn">
-        <i class="fa fa-bug" (click)="showErrorTroubleshoot = !showErrorTroubleshoot" title="Troubleshoot details"></i>
-    </div>
-</div>
+<bex-server-error [error]="error"></bex-server-error>
 <div class="content">
     <ng-content></ng-content>
     <div class="loading-overlay" *ngIf="loading"></div>
