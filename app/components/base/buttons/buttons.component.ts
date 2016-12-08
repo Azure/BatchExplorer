@@ -50,6 +50,32 @@ export class AddButtonComponent {
 }
 
 @Component({
+    selector: "bex-add-task-button",
+    template: `<button md-button [disabled]="!enabled"><i class="fa fa-plus"></i> {{title}}</button>`,
+})
+export class AddTaskButtonComponent {
+    @Input()
+    public job: Job;
+
+    @Input()
+    public set title(value: string) {
+        this._title = value;
+    }
+    public get title() {
+        return this._title ? this._title : "Add";
+    }
+
+    public get enabled() {
+        return this.job
+            && this.job.state !== <any>"completed"
+            && this.job.state !== <any>"terminating"
+            && this.job.state !== <any>"deleting";
+    }
+
+    private _title: string;
+}
+
+@Component({
     selector: "bex-terminate-button",
     template: `<button md-button [disabled]="!enabled"><i class="fa fa-times"></i> Terminate</button>`,
 })

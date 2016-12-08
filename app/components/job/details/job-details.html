@@ -16,7 +16,7 @@
                 <p>End time: {{decorator.executionInfo.endTime}}</p>
             </md-card-content>
             <md-card-actions layout="row" layout-align="end center">
-                <bex-add-button title="Add task" (click)="addTask()"></bex-add-button>
+                <bex-add-task-button title="Add task" [job]="job" (click)="addTask()"></bex-add-task-button>
                 <bex-terminate-button [entity]="job" (click)="terminateJob()"></bex-terminate-button>
                 <bex-delete-button [entity]="job" (click)="deleteJob()"></bex-delete-button>
                 <bex-disable-button [job]="job" (click)="disableJob()"></bex-disable-button>

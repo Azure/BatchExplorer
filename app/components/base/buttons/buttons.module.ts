@@ -8,6 +8,7 @@ import { SubmitButtonComponent } from "./submit-btn.component";
 
 import {
     AddButtonComponent,
+    AddTaskButtonComponent,
     ClearListSelectionButtonComponent,
     CloneButtonComponent,
     DeleteButtonComponent,
@@ -20,6 +21,7 @@ import {
 
 const components = [
     AddButtonComponent,
+    AddTaskButtonComponent,
     ClearListSelectionButtonComponent,
     CloneButtonComponent,
     DeleteButtonComponent,
