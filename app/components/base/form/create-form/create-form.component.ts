@@ -1,10 +1,11 @@
 import { Component, Input } from "@angular/core";
+import { animate, state, style, transition, trigger } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
 import { BatchError } from "app/models";
-import { SidebarRef } from "../sidebar";
+import { SidebarRef } from "../../sidebar";
 
 @Component({
     selector: "bex-create-form",
@@ -29,7 +30,10 @@ export class CreateFormComponent {
 
     public loading = false;
 
+    public showErrorTroubleshoot = false;
+
     public error: BatchError = null;
+
     @autobind()
     public add(): Observable<any> {
         this.loading = true;
@@ -62,15 +66,5 @@ export class CreateFormComponent {
         if (this.sidebarRef) {
             this.sidebarRef.destroy();
         }
-    }
-
-    public get errorMessage() {
-        if (!this.error || !this.error.message) {
-            return null;
-        }
-        const message = this.error.message.value;
-        // Remove the request id from the the message
-        const val = message.split("\n");
-        return val.length > 0 ? val[0] : null;
     }
 }

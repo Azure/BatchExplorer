@@ -1,11 +1,4 @@
-<div class="error-banner" *ngIf="error">
-    <h4>{{error.code}}</h4>
-    <p>{{errorMessage}}</p>
-
-    <div class="details" *ngIf="error.values">
-        <div *ngFor="let detail of error.values">{{detail.key}}: {{detail.value}}</div>
-    </div>
-</div>
+<bex-server-error [error]="error"></bex-server-error>
 <div class="content">
     <ng-content></ng-content>
     <div class="loading-overlay" *ngIf="loading"></div>
