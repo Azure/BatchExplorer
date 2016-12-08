@@ -183,12 +183,23 @@ describe("JobCreateBasicDialogComponent ", () => {
         expect(poolForm.controls[fieldNames.poolId].value).toEqual("pool-002");
     });
 
-    // it("Can clone job into form", () => {
-    //     const job = Fixtures.job.create({ id: "job-001" });
-    //     component.setValue(job.toJS());
+    it("Can clone job into form", () => {
+        const job = Fixtures.job.create({ id: "job-001", poolInfo: { poolId: "pool-002" } });
+        component.setValue(job);
 
-    //     expect(baseForm.controls[fieldNames.id].value).toEqual("job-001");
-    //     expect(poolForm.controls[fieldNames.poolId].value).toEqual("pool-1");
+        expect(baseForm.controls[fieldNames.id].value).toEqual("job-001");
+        expect(baseForm.controls[fieldNames.displayName].value).toEqual("display name");
+        expect(baseForm.controls[fieldNames.priority].value).toEqual(1);
+        expect(constraintsForm.controls[fieldNames.maxTaskRetryCount].value).toEqual(3);
+        expect(poolForm.controls[fieldNames.poolId].value).toEqual("pool-002");
+    });
+
+    // it("Can cancel job form", () => {
+    //     const button = de.query(By.css("button[class=close]")).nativeElement;
+    //     button.click();
+
+    //     expect(jobServiceSpy.add).toHaveBeenCalledTimes(0);
+    //     expect(sidebarRefSpy.close).toHaveBeenCalledTimes(1);
     // });
 
     function expectValidation(
@@ -208,7 +219,6 @@ describe("JobCreateBasicDialogComponent ", () => {
      * tests
      * =====
      * check i can create a job
-     * check i can clone a job
      * check we handle and display any errors to the user
      * check that add and close closes the slideout
      * check that add doesnt close the form

@@ -1,4 +1,5 @@
 import { Type } from "@angular/core";
+import * as moment from "moment";
 
 import { Job, Node, Pool, SubtaskInformation, Task } from "app/models";
 
@@ -17,7 +18,7 @@ export class FixtureFactory<TEntity> {
 
 export const job = new FixtureFactory<Job>(Job, {
     id: "job-id-1",
-    displayName: "displayName",
+    displayName: "display name",
     creationTime: new Date(2015, 5, 1, 10, 4, 31),
     lastModified: new Date(2015, 5, 1, 10, 4, 31),
     state: "active",
@@ -26,7 +27,7 @@ export const job = new FixtureFactory<Job>(Job, {
     previousStateTransitionTime: new Date(2015, 5, 1, 10, 4, 31),
     priority: 1,
     constraints: {
-        maxWallClockTime: "PT2H",
+        maxWallClockTime: moment.duration("PT2H"),
         maxTaskRetryCount: 3,
     },
     jobManagerTask: {
@@ -103,9 +104,9 @@ export const task = new FixtureFactory<Task>(Task, {
         },
     },
     constraints: {
-        maxWallClockTime: "PT2H",
+        maxWallClockTime: moment.duration("PT2H"),
         maxTaskRetryCount: 3,
-        retentionTime: "PT6H",
+        retentionTime: moment.duration("PT6H"),
     },
     nodeInfo: {
         affinityId: "affinityId",
@@ -131,7 +132,7 @@ export const pool = new FixtureFactory<Pool>(Pool, {
         targetOSVersion: "WA-GUEST-OS-2.28_201409-01",
         currentOSVersion: "WA-GUEST-OS-2.28_201409-01",
     },
-    resizeTimeout: "PT15M",
+    resizeTimeout: moment.duration("PT15M"),
     currentDedicated: 5,
     targetDedicated: 5,
     enableAutoScale: false,
@@ -142,7 +143,7 @@ export const pool = new FixtureFactory<Pool>(Pool, {
     },
 });
 
-// todo: make model for me
+// todo: make model for this
 export const jobPreparationAndReleaseTask = new FixtureFactory<any>(Object, {
     poolId: "pool-1",
     nodeId: "node-1",
