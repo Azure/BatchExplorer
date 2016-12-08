@@ -1,7 +1,7 @@
 install:
     - ps: Install-Product node 6.9.1 x64
     - npm install -g npm --silent
-    - npm install
+    - npm install --force
 
 build_script:
     - npm run build
