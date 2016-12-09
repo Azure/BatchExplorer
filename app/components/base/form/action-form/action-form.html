@@ -1,0 +1,10 @@
+<bex-server-error [error]="error"></bex-server-error>
+<div class="content">
+    <ng-content></ng-content>
+    <div class="loading-overlay" *ngIf="loading"></div>
+</div>
+
+<div class="button-bar">
+    <bex-submit-btn [submit]="action" [multiSubmit]="true" [disabled]="!submitEnabled" class="submit">{{submitText}}</bex-submit-btn>
+    <button type="button" [disabled]="loading" (click)="cancel()" class="cancel" md-raised-button>{{cancelText}}</button>
+</div>

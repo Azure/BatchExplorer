@@ -27,7 +27,11 @@ export class ServerErrorComponent {
 
     public parseErrorData(): ErrorData {
         if (!this.error || !this.error.message) {
-            return null;
+            return {
+                message: null,
+                requestId: null,
+                time: null,
+            };
         }
         const value = this.error.message.value;
         // Remove the request id from the the message
