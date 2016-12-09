@@ -44,9 +44,10 @@ export class ServerErrorComponent {
     }
 
     private _parseRequestDetails(value: string): string {
-        const data = value.split(":", 2);
+        const data = value.split(":");
+        data.shift();
         if (data.length > 1) {
-            return data[1];
+            return data.join(":");
         } else {
             return data[0];
         }
