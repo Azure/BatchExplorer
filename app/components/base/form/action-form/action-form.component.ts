@@ -51,16 +51,16 @@ export class ActionFormComponent {
     @autobind()
     public action(): Observable<any> {
         this.loading = true;
-        console.log("Submiting...");
         const obs = this.submit();
         obs.subscribe({
             next: () => {
-                console.log("NExt is")
                 this.loading = false;
                 this.error = null;
+                setTimeout(() => {
+                    this.cancel();
+                }, 1000);
             },
             error: (e: BatchError) => {
-                console.log("Got error", e);
                 this.loading = false;
                 this.error = e;
             },
