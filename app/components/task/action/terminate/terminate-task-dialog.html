@@ -1,16 +1,8 @@
-<div class="confirmation-dialog">
-	<div class="message">
-		Terminate task
+<div class="dialog-form">
+    <h2>Terminate task</h2>
+    <bex-action-form [submit]="ok" [dialogRef]="dialogRef">
         <p>
             Do you want to terminate task '<b>{{taskId}}</b>'? The task status will be set to complete.
         </p>
-	</div>
-	<div class="buttons">
-		<button md-raised-button color="warn" type="button" (click)="ok()">Yes</button>
-		<button md-raised-button type="primary" (click)="dialogRef.close()">No</button>
-        <i *ngIf="processing" class="fa fa-gear fa-2 fa-spin"></i>
-	</div>
-    <div [hidden]="!hasError()" class="error">
-        <p>{{errorText()}}</p>
-    </div>
+    </bex-action-form>
 </div>

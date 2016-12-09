@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { MdDialogRef } from "@angular/material";
-import {autobind} from "core-decorators";
+import { autobind } from "core-decorators";
 
 import { JobService } from "app/services";
 
@@ -10,7 +10,6 @@ import { JobService } from "app/services";
 })
 export class DisableJobDialogComponent {
     public jobId: string;
-    public processing: boolean = false;
     public actionDescription: string = "";
 
     public set taskAction(action: string) {
@@ -19,8 +18,6 @@ export class DisableJobDialogComponent {
     }
     public get taskAction() { return this._taskAction; };
 
-    private _hasError: boolean = false;
-    private _errorText: string;
     private _taskAction: string = "requeue";
 
     constructor(
@@ -33,17 +30,7 @@ export class DisableJobDialogComponent {
     @autobind()
     public ok() {
         let options: any = {};
-        this.processing = true;
-
         return this.jobService.disable(this.jobId, this.taskAction, options);
-    }
-
-    public hasError(): boolean {
-        return this._hasError;
-    }
-
-    public errorText(): string {
-        return this._errorText;
     }
 
     public onChange(action) {

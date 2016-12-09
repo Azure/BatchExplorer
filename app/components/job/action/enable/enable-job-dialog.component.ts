@@ -10,10 +10,6 @@ import { JobService } from "app/services";
 })
 export class EnableJobDialogComponent {
     public jobId: string;
-    public processing: boolean = false;
-
-    private _hasError: boolean = false;
-    private _errorText: string;
 
     constructor(
         public dialogRef: MdDialogRef<EnableJobDialogComponent>,
@@ -25,13 +21,5 @@ export class EnableJobDialogComponent {
         let options: any = {};
 
         return this.jobService.enable(this.jobId, options);
-    }
-
-    public hasError(): boolean {
-        return this._hasError;
-    }
-
-    public errorText(): string {
-        return this._errorText;
     }
 }

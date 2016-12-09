@@ -61,7 +61,7 @@ export class ActionFormComponent {
                 this.error = null;
                 setTimeout(() => {
                     this.cancel();
-                }, 500);
+                }, 1000);
             },
             error: (e: BatchError) => {
                 this.loading = false;
