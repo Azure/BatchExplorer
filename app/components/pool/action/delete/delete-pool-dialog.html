@@ -1,11 +1,8 @@
-<div class="confirmation-dialog">
-    <div class="message">
-        Are you sure you want to delete pool '{{poolName}}'? This is a non-reversible action.
-    </div>
-    <div class="buttons">
-        <bex-submit-btn [submit]="destroyPool" color="warn">
-            Yes
-        </bex-submit-btn>
-        <button md-raised-button type="primary" (click)="dialogRef.close()">No</button>
-    </div>
+<div class="dialog-form">
+    <h2>Delete pool</h2>
+    <bex-action-form [submit]="destroyPool" [dialogRef]="dialogRef">
+        <div class="message">
+            Are you sure you want to delete pool '{{poolName}}'? This is a non-reversible action.
+        </div>
+    </bex-action-form>
 </div>

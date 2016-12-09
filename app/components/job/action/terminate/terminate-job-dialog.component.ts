@@ -1,13 +1,13 @@
 import { Component } from "@angular/core";
 import { MdDialogRef } from "@angular/material";
+import { autobind } from "core-decorators";
 
 import { JobService } from "app/services";
 
 @Component({
     selector: "bex-terminate-job-dialog",
-    template: require("./terminate-job-dialog.html"),
+    templateUrl: "terminate-job-dialog.html",
 })
-
 export class TerminateJobDialogComponent {
     public jobId: string;
     public processing: boolean = false;
@@ -20,27 +20,12 @@ export class TerminateJobDialogComponent {
         private jobService: JobService) {
     }
 
+    @autobind()
     public ok() {
         let options: any = {};
         this.processing = true;
 
-        this.jobService.terminate(this.jobId, options).subscribe(
-            null,
-            (error) => {
-                const errJson = JSON.stringify(error);
-                console.error("error terminating job: ", errJson);
-
-                this._hasError = true;
-                this.processing = false;
-                this._errorText = error.message && error.message.value
-                    ? error.message.value.replace("\n", " ")
-                    : "unknown error occurred while terminating the job";
-            },
-            () => {
-                this.processing = false;
-                this.dialogRef.close();
-            },
-        );
+        return this.jobService.terminate(this.jobId, options);
     }
 
     public hasError(): boolean {

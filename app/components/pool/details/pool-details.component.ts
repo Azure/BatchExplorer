@@ -72,9 +72,6 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
 
         const dialogRef = this.dialog.open(DeletePoolDialogComponent, config);
         dialogRef.componentInstance.poolId = this.poolId;
-        dialogRef.afterClosed().subscribe((obj) => {
-            this.refreshPool();
-        });
     }
 
     public clonePool() {

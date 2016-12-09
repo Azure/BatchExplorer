@@ -40,7 +40,7 @@ export class SubmitButtonComponent {
     public onClick() {
         this.status = SubmitStatus.Submitting;
         this.submit().subscribe({
-            next: () => {
+            complete: () => {
                 this.status = SubmitStatus.Succeeded;
                 this.done();
             },

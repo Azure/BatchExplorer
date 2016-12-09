@@ -8,9 +8,8 @@ import { DeletePoolTask } from "./delete-pool-task";
 
 @Component({
     selector: "bex-delete-pool-dialog",
-    templateUrl: "./delete-pool-dialog.html",
+    templateUrl: "delete-pool-dialog.html",
 })
-
 export class DeletePoolDialogComponent {
     public poolId: string;
 
@@ -24,14 +23,6 @@ export class DeletePoolDialogComponent {
     public destroyPool() {
         const task = new DeletePoolTask(this.poolService, [this.poolId]);
         task.startAndWaitAsync(this.taskManager);
-        task.actionDone.subscribe({
-            complete: () => {
-                // Close after 500ms so we can see the animation
-                setTimeout(() => {
-                    this.dialogRef.close();
-                }, 500);
-            },
-        });
         return task.actionDone;
     }
 }
