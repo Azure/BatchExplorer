@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
 import { MdDialogRef } from "@angular/material";
+import {autobind} from "core-decorators";
 
 import { JobService } from "app/services";
 
@@ -29,26 +30,12 @@ export class DisableJobDialogComponent {
         this.taskAction = "requeue";
     }
 
+    @autobind()
     public ok() {
         let options: any = {};
         this.processing = true;
 
-        this.jobService.disable(this.jobId, this.taskAction, options).subscribe({
-            error: (error) => {
-                const errJson = JSON.stringify(error);
-                console.error("error disabling job: ", errJson);
-
-                this._hasError = true;
-                this.processing = false;
-                this._errorText = error.message && error.message.value
-                    ? error.message.value.replace("\n", " ")
-                    : "unknown error occurred while disabling the job";
-            },
-            complete: () => {
-                this.processing = false;
-                this.dialogRef.close();
-            },
-        });
+        return this.jobService.disable(this.jobId, this.taskAction, options);
     }
 
     public hasError(): boolean {

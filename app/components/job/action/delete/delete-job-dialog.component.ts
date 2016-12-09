@@ -25,17 +25,8 @@ export class DeleteJobDialogComponent {
 
     @autobind()
     public destroyJob() {
-        const task = new DeleteJobAction(this.jobService, [this.jobId + "iw"]);
+        const task = new DeleteJobAction(this.jobService, [this.jobId]);
         task.startAndWaitAsync(this.taskManager);
-        task.actionDone.subscribe({
-            error: (error) => null,
-            complete: () => {
-                // Close after 500ms so we can see the animation
-                setTimeout(() => {
-                    this.dialogRef.close(this.jobId);
-                }, 500);
-            },
-        });
         return task.actionDone;
     }
 

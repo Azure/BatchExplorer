@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, NgZone } from "@angular/core";
 import { animate, state, style, transition, trigger } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { MdDialogRef } from "@angular/material";
@@ -41,6 +41,9 @@ export class ActionFormComponent {
 
     public error: BatchError = null;
 
+    constructor(private zone: NgZone) {
+
+    }
     /**
      * Enabled if the formGroup is valid or there is no formGroup
      */
@@ -53,12 +56,12 @@ export class ActionFormComponent {
         this.loading = true;
         const obs = this.submit();
         obs.subscribe({
-            next: () => {
+            complete: () => {
                 this.loading = false;
                 this.error = null;
                 setTimeout(() => {
                     this.cancel();
-                }, 1000);
+                }, 500);
             },
             error: (e: BatchError) => {
                 this.loading = false;
@@ -70,7 +73,9 @@ export class ActionFormComponent {
 
     public cancel() {
         if (this.dialogRef) {
-            this.dialogRef.close();
+            this.zone.run(() => {
+                this.dialogRef.close();
+            });
         }
     }
 }
