@@ -30,6 +30,7 @@ export class CreateFormComponent {
     public loading = false;
 
     public error: BatchError = null;
+
     @autobind()
     public add(): Observable<any> {
         this.loading = true;
@@ -40,10 +41,12 @@ export class CreateFormComponent {
                 this.error = null;
             },
             error: (e: BatchError) => {
+                console.log("CAUGHT ERROR :: ", e);
                 this.loading = false;
                 this.error = e;
             },
         });
+
         return obs;
     }
 
@@ -55,6 +58,7 @@ export class CreateFormComponent {
                 this.close();
             }, 1000);
         });
+
         return obs;
     }
 
@@ -68,9 +72,11 @@ export class CreateFormComponent {
         if (!this.error || !this.error.message) {
             return null;
         }
+
         const message = this.error.message.value;
         // Remove the request id from the the message
         const val = message.split("\n");
+
         return val.length > 0 ? val[0] : null;
     }
 }

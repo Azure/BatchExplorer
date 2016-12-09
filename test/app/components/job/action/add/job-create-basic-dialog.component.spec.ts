@@ -3,9 +3,10 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { MdInput } from "@angular/material";
 import { By } from "@angular/platform-browser";
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
 
 import { AppModule } from "app/app.module";
+import { CreateFormComponent } from "app/components/base/create-form";
 import { SidebarRef } from "app/components/base/sidebar";
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { BatchError, Pool } from "app/models";
@@ -58,12 +59,16 @@ describe("JobCreateBasicDialogComponent ", () => {
 
         jobServiceSpy = {
             add: jasmine.createSpy("CreateJob").and.callFake((newJobJson, ...args) => {
+                if (newJobJson.id === "bad-job-id") {
+                    return Observable.throw(<BatchError>{
+                        code: "RandomTestErrorCode",
+                        message: { value: "error, error, error" },
+                    });
+                }
+
                 return Observable.of({});
             }),
-            onJobAdded: jasmine.createSpy("OnJobAdded").and.callFake((newJobid) => {
-                // and error condition ...
-                return Observable.of({});
-            }),
+            onJobAdded: new Subject(),
         };
 
         poolServiceSpy = {
@@ -194,12 +199,48 @@ describe("JobCreateBasicDialogComponent ", () => {
         expect(poolForm.controls[fieldNames.poolId].value).toEqual("pool-002");
     });
 
-    // it("Can cancel job form", () => {
-    //     const button = de.query(By.css("button[class=close]")).nativeElement;
-    //     button.click();
+    it("Clicking add creates job and doesnt close form", () => {
+        const job = Fixtures.job.create({ id: "job-001", poolInfo: { poolId: "pool-002" } });
+        component.setValue(job);
 
-    //     expect(jobServiceSpy.add).toHaveBeenCalledTimes(0);
-    //     expect(sidebarRefSpy.close).toHaveBeenCalledTimes(1);
+        const createForm = de.query(By.css("bex-create-form")).componentInstance as CreateFormComponent;
+        createForm.add();
+
+        expect(jobServiceSpy.add).toHaveBeenCalledTimes(1);
+        expect(sidebarRefSpy.close).toHaveBeenCalledTimes(0);
+
+        let jobAddedCalled = false;
+        jobServiceSpy.onJobAdded.subscribe({
+            next: (newJobId) => {
+                expect(newJobId).toEqual("job-001");
+                jobAddedCalled = true;
+            },
+            complete: () => {
+                expect(jobAddedCalled).toBe(true);
+            },
+        });
+    });
+
+    // it("If create job throws we handle the error", () => {
+    //     const job = Fixtures.job.create({ id: "bad-job-id", poolInfo: { poolId: "pool-002" } });
+    //     component.setValue(job);
+
+    //     const createForm = de.query(By.css("bex-create-form")).componentInstance as CreateFormComponent;
+    //     createForm.add();
+
+    //     // expect(createForm.error).not.toBeNull();
+    //     // expect(createForm.error.code).toEqual("RandomTestErrorCode");
+    //     // expect(createForm.errorMessage).toEqual("error, error, error");
+
+    //     // let jobAddedCalled = false;
+    //     // jobServiceSpy.onJobAdded.subscribe({
+    //     //     next: (newJobId) => {
+    //     //         jobAddedCalled = true;
+    //     //     },
+    //     //     complete: () => {
+    //     //         expect(jobAddedCalled).toBe(false);
+    //     //     },
+    //     // });
     // });
 
     function expectValidation(
@@ -218,9 +259,6 @@ describe("JobCreateBasicDialogComponent ", () => {
     /**
      * tests
      * =====
-     * check i can create a job
      * check we handle and display any errors to the user
-     * check that add and close closes the slideout
-     * check that add doesnt close the form
      */
 });
