@@ -16,7 +16,7 @@ export class QuickListItemComponent extends SelectableListItemBase implements On
     }
 
     // tslint:disable:no-forward-ref
-    constructor( @Inject(forwardRef(() => QuickListComponent)) list: QuickListComponent, router: Router) {
+    constructor(@Inject(forwardRef(() => QuickListComponent)) list: QuickListComponent, router: Router) {
         super(list, router);
     }
 }

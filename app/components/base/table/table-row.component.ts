@@ -25,7 +25,7 @@ export class TableRowComponent extends SelectableListItemBase {
     }
 
     // tslint:disable:no-forward-ref
-    constructor( @Inject(forwardRef(() => TableComponent)) list: TableComponent, router: Router) {
+    constructor(@Inject(forwardRef(() => TableComponent)) list: TableComponent, router: Router) {
         super(list, router);
     }
 }
