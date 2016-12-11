@@ -6,7 +6,7 @@ import { By } from "@angular/platform-browser";
 import { Observable, Subject } from "rxjs";
 
 import { AppModule } from "app/app.module";
-import { CreateFormComponent } from "app/components/base/create-form";
+import { CreateFormComponent } from "app/components/base/form/create-form";
 import { SidebarRef } from "app/components/base/sidebar";
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { BatchError, Pool } from "app/models";
@@ -14,6 +14,7 @@ import { JobService, PoolService } from "app/services";
 import { DataCache, RxListProxy } from "app/services/core";
 import { Constants } from "app/utils";
 
+import { ComponentTestHelper } from "test/app/components/component-test-helper";
 import * as Fixtures from "test/fixture";
 
 // just making test work for now. Need Tim's input
@@ -40,6 +41,7 @@ export class FakeListProxy {
 
 describe("JobCreateBasicDialogComponent ", () => {
     let fixture: ComponentFixture<JobCreateBasicDialogComponent>;
+    let helper: ComponentTestHelper<JobCreateBasicDialogComponent>;
     let component: JobCreateBasicDialogComponent;
     let sidebarRefSpy: any;
     let jobServiceSpy: any;
@@ -97,6 +99,7 @@ describe("JobCreateBasicDialogComponent ", () => {
         });
 
         fixture = TestBed.createComponent(JobCreateBasicDialogComponent);
+        helper = new ComponentTestHelper<JobCreateBasicDialogComponent>(fixture);
         component = fixture.componentInstance;
         de = fixture.debugElement;
         fixture.detectChanges();
@@ -120,10 +123,10 @@ describe("JobCreateBasicDialogComponent ", () => {
     it("JobId has required, pattern, and maxLength validation", () => {
         const controlName = fieldNames.id;
         const input = de.query(By.css("md-input[formControlName=id]")).componentInstance as MdInput;
-        expectValidation(baseForm, input, controlName, "", validators.required, true);
-        expectValidation(baseForm, input, controlName, "invalid job id", validators.pattern, true);
-        expectValidation(baseForm, input, controlName, "a".repeat(65), validators.maxlength, true);
-        expectValidation(baseForm, input, controlName, "valid-id", validators.pattern, false);
+        helper.expectValidation(baseForm, input, controlName, "", validators.required, true);
+        helper.expectValidation(baseForm, input, controlName, "invalid job id", validators.pattern, true);
+        helper.expectValidation(baseForm, input, controlName, "a".repeat(65), validators.maxlength, true);
+        helper.expectValidation(baseForm, input, controlName, "valid-id", validators.pattern, false);
     });
 
     it("DisplayName is initialized", () => {
@@ -135,8 +138,8 @@ describe("JobCreateBasicDialogComponent ", () => {
     it("DisplayName has maxLength validation only", () => {
         const controlName = fieldNames.displayName;
         const input = de.query(By.css("md-input[formControlName=displayName]")).componentInstance as MdInput;
-        expectValidation(baseForm, input, controlName, "a".repeat(1025), validators.maxlength, true);
-        expectValidation(baseForm, input, controlName, null, validators.required, false);
+        helper.expectValidation(baseForm, input, controlName, "a".repeat(1025), validators.maxlength, true);
+        helper.expectValidation(baseForm, input, controlName, null, validators.required, false);
     });
 
     it("Priority is initialized", () => {
@@ -148,10 +151,10 @@ describe("JobCreateBasicDialogComponent ", () => {
     it("Priority has range validation only", () => {
         const controlName = fieldNames.priority;
         const input = de.query(By.css("md-input[formControlName=priority]")).componentInstance as MdInput;
-        expectValidation(baseForm, input, controlName, null, validators.required, false);
-        expectValidation(baseForm, input, controlName, -1001, validators.range, true);
-        expectValidation(baseForm, input, controlName, 1001, validators.range, true);
-        expectValidation(baseForm, input, controlName, 500, validators.range, false);
+        helper.expectValidation(baseForm, input, controlName, null, validators.required, false);
+        helper.expectValidation(baseForm, input, controlName, -1001, validators.range, true);
+        helper.expectValidation(baseForm, input, controlName, 1001, validators.range, true);
+        helper.expectValidation(baseForm, input, controlName, 500, validators.range, false);
     });
 
     it("MaxRetryCount is initialized", () => {
@@ -163,10 +166,10 @@ describe("JobCreateBasicDialogComponent ", () => {
     it("MaxRetryCount has range validation only", () => {
         const controlName = fieldNames.maxTaskRetryCount;
         const input = de.query(By.css("md-input[formControlName=maxTaskRetryCount]")).componentInstance as MdInput;
-        expectValidation(constraintsForm, input, controlName, null, validators.required, false);
-        expectValidation(constraintsForm, input, controlName, -2, validators.range, true);
-        expectValidation(constraintsForm, input, controlName, 101, validators.range, true);
-        expectValidation(constraintsForm, input, controlName, 1, validators.range, false);
+        helper.expectValidation(constraintsForm, input, controlName, null, validators.required, false);
+        helper.expectValidation(constraintsForm, input, controlName, -2, validators.range, true);
+        helper.expectValidation(constraintsForm, input, controlName, 101, validators.range, true);
+        helper.expectValidation(constraintsForm, input, controlName, 1, validators.range, false);
     });
 
     it("PoolId is initialized", () => {
@@ -221,44 +224,25 @@ describe("JobCreateBasicDialogComponent ", () => {
         });
     });
 
-    // it("If create job throws we handle the error", () => {
-    //     const job = Fixtures.job.create({ id: "bad-job-id", poolInfo: { poolId: "pool-002" } });
-    //     component.setValue(job);
+    it("If create job throws we handle the error", () => {
+        const job = Fixtures.job.create({ id: "bad-job-id", poolInfo: { poolId: "pool-002" } });
+        component.setValue(job);
 
-    //     const createForm = de.query(By.css("bex-create-form")).componentInstance as CreateFormComponent;
-    //     createForm.add();
+        const createForm = de.query(By.css("bex-create-form")).componentInstance as CreateFormComponent;
+        createForm.add();
 
-    //     // expect(createForm.error).not.toBeNull();
-    //     // expect(createForm.error.code).toEqual("RandomTestErrorCode");
-    //     // expect(createForm.errorMessage).toEqual("error, error, error");
+        expect(createForm.error).not.toBeNull();
+        expect(createForm.error.code).toEqual("RandomTestErrorCode");
+        expect(createForm.error.message.value).toEqual("error, error, error");
 
-    //     // let jobAddedCalled = false;
-    //     // jobServiceSpy.onJobAdded.subscribe({
-    //     //     next: (newJobId) => {
-    //     //         jobAddedCalled = true;
-    //     //     },
-    //     //     complete: () => {
-    //     //         expect(jobAddedCalled).toBe(false);
-    //     //     },
-    //     // });
-    // });
-
-    function expectValidation(
-        formGroup: FormGroup,
-        input: MdInput,
-        name: string,
-        value: any,
-        validator: string,
-        expected: boolean) {
-
-        input.value = value;
-        fixture.detectChanges();
-        expect(formGroup.hasError(validator, [name])).toBe(expected);
-    }
-
-    /**
-     * tests
-     * =====
-     * check we handle and display any errors to the user
-     */
+        let jobAddedCalled = false;
+        jobServiceSpy.onJobAdded.subscribe({
+            next: (newJobId) => {
+                jobAddedCalled = true;
+            },
+            complete: () => {
+                expect(jobAddedCalled).toBe(false);
+            },
+        });
+    });
 });

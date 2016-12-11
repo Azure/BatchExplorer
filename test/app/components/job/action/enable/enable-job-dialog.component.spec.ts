@@ -5,6 +5,7 @@ import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
 import { AppModule } from "app/app.module";
+import { ActionFormComponent } from "app/components/base/form/action-form";
 import { EnableJobDialogComponent } from "app/components/job/action";
 import { BatchError } from "app/models";
 import { JobService } from "app/services";
@@ -15,6 +16,7 @@ describe("EnableJobDialogComponent ", () => {
     let dialogRefSpy: any;
     let jobServiceSpy: any;
     let de: DebugElement;
+    let actionForm: ActionFormComponent;
 
     beforeEach(() => {
         dialogRefSpy = {
@@ -47,6 +49,7 @@ describe("EnableJobDialogComponent ", () => {
         component = fixture.componentInstance;
         component.jobId = "job-1";
         de = fixture.debugElement;
+        actionForm = de.query(By.css("bex-action-form")).componentInstance;
         fixture.detectChanges();
     });
 
@@ -56,29 +59,23 @@ describe("EnableJobDialogComponent ", () => {
     });
 
     it("Submit should call service and close the dialog", () => {
-        fixture.detectChanges();
-        const submitBtn = de.query(By.css("button[color=warn]")).nativeElement;
-        submitBtn.click();
+        actionForm.action();
 
         expect(jobServiceSpy.enable).toHaveBeenCalledTimes(1);
         expect(jobServiceSpy.enable).toHaveBeenCalledWith("job-1", {});
-        expect(dialogRefSpy.close).toHaveBeenCalledTimes(1);
     });
 
     it("Submit should call service and show error if fail", () => {
         component.jobId = "bad-job-id";
         fixture.detectChanges();
-        const submitBtn = de.query(By.css("button[color=warn]")).nativeElement;
-        submitBtn.click();
+        actionForm.action();
 
         expect(jobServiceSpy.enable).toHaveBeenCalledTimes(1);
         expect(jobServiceSpy.enable).toHaveBeenCalledWith("bad-job-id", {});
-        expect(dialogRefSpy.close).not.toHaveBeenCalled();
 
         fixture.detectChanges();
-        expect(component.hasError()).toBe(true);
-        const errorEl = de.query(By.css(".error")).nativeElement;
 
-        expect(errorEl.textContent).toContain("Some random test error happened enabling job");
+        expect(actionForm.error).not.toBeNull();
+        expect(actionForm.error.message.value).toContain("Some random test error happened enabling job");
     });
 });
