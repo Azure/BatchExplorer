@@ -7,8 +7,7 @@ import { SelectableListBase } from "./selectable-list-base";
 
 /**
  * Usage: Needs to be used with a SelectableListBase
- * 1. Inject the component inheriting SelectableListBase in the construtor using @Inject
- * 2. Redefine key, routerLink with the decorator
+ * 1. Inject the component inheriting SelectableListBase in the construtor using @Inject and forwardRef
  * 3. Call handle click in html (click)="handleClick($event)"
  */
 export class SelectableListItemBase implements OnInit {
@@ -70,7 +69,7 @@ export class SelectableListItemBase implements OnInit {
 
     public handleClick(event: MouseEvent) {
         const shiftKey = event.shiftKey;
-        const ctrlKey = event.ctrlKey;
+        const ctrlKey = event.ctrlKey || event.metaKey;
 
         // Prevent the routerlink from being activated if we have shift or ctrl
         if (shiftKey || ctrlKey) {
@@ -82,8 +81,8 @@ export class SelectableListItemBase implements OnInit {
             if (shiftKey) {
                 this.list.selectTo(this.key);
             } else if (ctrlKey) {
-                this.selected = true;
-                this.list.onSelectedChange(this.key, true);
+                this.selected = !this.selected;
+                this.list.onSelectedChange(this.key, this.selected);
             }
             event.stopPropagation();
             return false;

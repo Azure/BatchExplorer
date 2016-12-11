@@ -1,25 +1,19 @@
-<div class="confirmation-dialog">
-	<div class="message">
-		Disable job
-        <p>Do you want to disable the job '<b>{{jobId}}</b>'?</p>
-	</div>
-    <div class="options">
-        <h3>Task options</h3>
-        <hr />
-        <p>Specifies what to do with active tasks associated with the job:</p>
-        <md-radio-group [(ngModel)]="taskAction" [ngModelOptions]="{standalone: true}">
-            <md-radio-button value="requeue" checked="true">Requeue</md-radio-button>
-            <md-radio-button value="terminate">Terminate</md-radio-button>
-            <md-radio-button value="wait">Wait</md-radio-button>
-        </md-radio-group>
-        <bex-info-box [message]="actionDescription"></bex-info-box>
-    </div>
-	<div class="buttons">
-		<button md-raised-button color="warn" type="button" (click)="ok()">Yes</button>
-		<button md-raised-button type="primary" (click)="dialogRef.close()">No</button>
-        <i *ngIf="processing" class="fa fa-gear fa-2 fa-spin"></i>
-	</div>
-    <div [hidden]="!hasError()" class="error">
-        <p>{{errorText()}}</p>
-    </div>
+<div class="dialog-form">
+    <h2>Disable job</h2>
+    <bex-action-form [submit]="ok" [dialogRef]="dialogRef">
+        <div class="message">
+            <p>Do you want to disable the job '<b>{{jobId}}</b>'?</p>
+        </div>
+        <div class="options">
+            <h3>Task options</h3>
+            <hr />
+            <p>Specifies what to do with active tasks associated with the job:</p>
+            <md-radio-group [(ngModel)]="taskAction" [ngModelOptions]="{standalone: true}">
+                <md-radio-button value="requeue" checked="true">Requeue</md-radio-button>
+                <md-radio-button value="terminate">Terminate</md-radio-button>
+                <md-radio-button value="wait">Wait</md-radio-button>
+            </md-radio-group>
+            <bex-info-box [message]="actionDescription"></bex-info-box>
+        </div>
+    </bex-action-form>
 </div>

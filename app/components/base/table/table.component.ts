@@ -10,18 +10,6 @@ import { TableRowComponent } from "./table-row.component";
 export class TableComponent extends SelectableListBase {
     @ContentChildren(TableRowComponent)
     public items: QueryList<TableRowComponent>;
-
-    @Output()
-    public selectedItemsChange = new EventEmitter<string[]>();
-
-    /**
-     * Event when the activated item(With the route) change. Send the item key.
-     */
-    @Output()
-    public activatedItemChange = new EventEmitter<ActivatedItemChangeEvent>();
-
-    @Input()
-    public selectedItems: string[];
 }
 
 @Component({

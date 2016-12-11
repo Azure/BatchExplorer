@@ -26,19 +26,21 @@ export abstract class LongRunningAction {
         this.progress = task.progress;
         this.name = task.name;
 
-        this.action().subscribe(() => {
-            this._actionDone.complete();
-            this.wait();
-        });
+        this.startAndWaitAsync();
     }
 
     /**
      * Will run the waiting action as a background task
      */
     public startAndWaitAsync(taskManager?: BackgroundTaskManager) {
-        this.action().subscribe(() => {
-            this._actionDone.complete();
-            this.wait(taskManager);
+        this.action().subscribe({
+            next: () => {
+                this._actionDone.complete();
+                this.wait();
+            },
+            error: (e) => {
+                this._actionDone.error(e);
+            },
         });
     }
 
@@ -70,12 +72,22 @@ export abstract class LongRunningAction {
         }
         const current = funcs[index];
         const obs = new AsyncSubject();
-        current().subscribe(() => {
-            this.progress.next(startingProgress + (progressIncrease * (index + 1) / funcs.length));
-            this._performMultiple(funcs, index + 1, startingProgress, progressIncrease).subscribe(() => {
-                obs.next(true);
-                obs.complete();
-            });
+        current().subscribe({
+            next: () => {
+                this.progress.next(startingProgress + (progressIncrease * (index + 1) / funcs.length));
+                this._performMultiple(funcs, index + 1, startingProgress, progressIncrease).subscribe({
+                    next: () => {
+                        obs.next(true);
+                        obs.complete();
+                    },
+                    error: (x) => {
+                        obs.error(x);
+                    },
+                });
+            },
+            error: (x) => {
+                obs.error(x);
+            },
         });
         return obs;
     }

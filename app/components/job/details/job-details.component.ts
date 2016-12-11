@@ -90,7 +90,6 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     public deleteJob() {
         let config = new MdDialogConfig();
         config.viewContainerRef = this.viewContainerRef;
-
         const dialogRef = this.dialog.open(DeleteJobDialogComponent, config);
         dialogRef.componentInstance.jobId = this.job.id;
     }

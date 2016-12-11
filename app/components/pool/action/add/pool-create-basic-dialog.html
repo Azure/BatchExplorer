@@ -1,10 +1,12 @@
 <div class="slideout-form content-wrapper">
     <h1>Add a pool to the account</h1>
-    <p>Pools allow you to provision worker nodes to do work</p>
+    <p>Pools allow you to provision compute nodes to do work</p>
     <bex-create-form [formGroup]="createPoolForm" [submit]="submit" [sidebarRef]="sidebarRef">
         <form novalidate [formGroup]="createPoolForm">
             <div class="form-element">
-                <md-input formControlName="id" placeholder="Id"></md-input>
+                <md-input #idInput formControlName="id" placeholder="Id" maxlength="64">
+                     <md-hint align="end">{{idInput.characterCount}} / 64</md-hint>
+                </md-input>
                 <bex-error controlName="id" code="required">Id is a required field</bex-error>
                 <bex-error controlName="id" code="maxlength">Id has a maximum length of 64 characters</bex-error>
                 <bex-error controlName="id" code="pattern">Id can contain any combination of alphanumeric characters including hyphens and underscores.</bex-error>

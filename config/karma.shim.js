@@ -1,7 +1,7 @@
 Error.stackTraceLimit = Infinity;
 
-const testing = require('@angular/core/testing');
-const browser = require('@angular/platform-browser-dynamic/testing');
+const testing = require("@angular/core/testing");
+const browser = require("@angular/platform-browser-dynamic/testing");
 
 testing.TestBed.initTestEnvironment(
   browser.BrowserDynamicTestingModule,
@@ -18,7 +18,7 @@ testing.TestBed.initTestEnvironment(
  * any file that ends with spec.ts and get its path. By passing in true
  * we say do this recursively
  */
-const testContext = require.context('../test/app', true, /\.spec\.ts/);
+const testContext = require.context("../test/app", true, /\.spec\.ts/);
 
 /*
  * get all the files, for each file, call the context function
