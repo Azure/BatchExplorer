@@ -17,14 +17,13 @@ import { Constants } from "app/utils";
 import { ComponentTestHelper } from "test/app/components/component-test-helper";
 import * as Fixtures from "test/fixture";
 
-// just making test work for now. Need Tim's input
+// Just making test work for now. Need Tim's input to come up with a strategy for testing with proxy data.
 export class FakeListProxy {
     public hasMoreItems(): boolean {
         return false;
     }
 
     public fetchNext(): Promise<any> {
-        // todo: this could be wrong ... ask Tim
         return Promise.resolve({
             data: [
                 Fixtures.pool.create({ id: "pool-001" }),
@@ -74,7 +73,6 @@ describe("JobCreateBasicDialogComponent ", () => {
         };
 
         poolServiceSpy = {
-            // todo: actually return some pools
             list: jasmine.createSpy("ListPools").and.callFake((...args) => {
                 const cache = new DataCache<Pool>();
                 const proxy = new RxListProxy<{}, Pool>(Pool, {
