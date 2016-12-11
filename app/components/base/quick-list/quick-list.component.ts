@@ -16,18 +16,6 @@ export class QuickListComponent extends SelectableListBase {
     @ContentChildren(QuickListItemComponent)
     public items: QueryList<QuickListItemComponent>;
 
-    @Output()
-    public selectedItemsChange = new EventEmitter<string[]>();
-
-    /**
-     * Event when the activated item(With the route) change. Send the item key.
-     */
-    @Output()
-    public activatedItemChange = new EventEmitter<ActivatedItemChangeEvent>();
-
-    @Input()
-    public selectedItems: string[];
-
     constructor(@Optional() focusSection: FocusSectionComponent) {
         super(focusSection);
     }
