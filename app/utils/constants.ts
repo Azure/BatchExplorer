@@ -37,11 +37,4 @@ export const forms = {
         range: "validateRange",
         pattern: "pattern",
     },
-    fieldNames: {
-        id: "id",
-        displayName: "displayName",
-        priority: "priority",
-        maxTaskRetryCount: "maxTaskRetryCount",
-        poolId: "poolId",
-    },
 };

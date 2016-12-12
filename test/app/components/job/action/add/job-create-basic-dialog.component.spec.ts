@@ -50,7 +50,6 @@ describe("JobCreateBasicDialogComponent ", () => {
     let constraintsForm: any;
     let poolForm: any;
 
-    const fieldNames = Constants.forms.fieldNames;
     const validators = Constants.forms.validators;
 
     beforeEach(() => {
@@ -113,13 +112,13 @@ describe("JobCreateBasicDialogComponent ", () => {
     });
 
     it("JobId is initialized", () => {
-        let control = baseForm.controls[fieldNames.id];
+        let control = baseForm.controls.id;
         expect(control).not.toBeNull();
         expect(control.validator).not.toBeNull();
     });
 
     it("JobId has required, pattern, and maxLength validation", () => {
-        const controlName = fieldNames.id;
+        const controlName = "id";
         const input = de.query(By.css("md-input[formControlName=id]")).componentInstance as MdInput;
         helper.expectValidation(baseForm, input, controlName, "", validators.required, true);
         helper.expectValidation(baseForm, input, controlName, "invalid job id", validators.pattern, true);
@@ -128,26 +127,26 @@ describe("JobCreateBasicDialogComponent ", () => {
     });
 
     it("DisplayName is initialized", () => {
-        let control = baseForm.controls[fieldNames.displayName];
+        let control = baseForm.controls.displayName;
         expect(control).not.toBeNull();
         expect(control.validator).not.toBeNull();
     });
 
     it("DisplayName has maxLength validation only", () => {
-        const controlName = fieldNames.displayName;
+        const controlName = "displayName";
         const input = de.query(By.css("md-input[formControlName=displayName]")).componentInstance as MdInput;
         helper.expectValidation(baseForm, input, controlName, "a".repeat(1025), validators.maxlength, true);
         helper.expectValidation(baseForm, input, controlName, null, validators.required, false);
     });
 
     it("Priority is initialized", () => {
-        const control = baseForm.controls[fieldNames.priority];
+        const control = baseForm.controls.priority;
         expect(control).not.toBeNull();
         expect(control.validator).not.toBeNull();
     });
 
     it("Priority has range validation only", () => {
-        const controlName = fieldNames.priority;
+        const controlName = "priority";
         const input = de.query(By.css("md-input[formControlName=priority]")).componentInstance as MdInput;
         helper.expectValidation(baseForm, input, controlName, null, validators.required, false);
         helper.expectValidation(baseForm, input, controlName, -1001, validators.range, true);
@@ -156,13 +155,13 @@ describe("JobCreateBasicDialogComponent ", () => {
     });
 
     it("MaxRetryCount is initialized", () => {
-        const control = constraintsForm.controls[fieldNames.maxTaskRetryCount];
+        const control = constraintsForm.controls.maxTaskRetryCount;
         expect(control).not.toBeNull();
         expect(control.validator).not.toBeNull();
     });
 
     it("MaxRetryCount has range validation only", () => {
-        const controlName = fieldNames.maxTaskRetryCount;
+        const controlName = "maxTaskRetryCount";
         const input = de.query(By.css("md-input[formControlName=maxTaskRetryCount]")).componentInstance as MdInput;
         helper.expectValidation(constraintsForm, input, controlName, null, validators.required, false);
         helper.expectValidation(constraintsForm, input, controlName, -2, validators.range, true);
@@ -171,33 +170,33 @@ describe("JobCreateBasicDialogComponent ", () => {
     });
 
     it("PoolId is initialized", () => {
-        const control = poolForm.controls[fieldNames.poolId];
+        const control = poolForm.controls.poolId;
         expect(control).not.toBeNull();
         expect(control.validator).not.toBeNull();
     });
 
     it("PoolId has required validation only", () => {
         poolForm.patchValue({ poolId: "my-pool" });
-        expect(poolForm.hasError(validators.required, [fieldNames.poolId])).toBe(false);
+        expect(poolForm.hasError(validators.required, ["poolId"])).toBe(false);
 
         poolForm.patchValue({ poolId: "" });
-        expect(poolForm.hasError(validators.required, [fieldNames.poolId])).toBe(true);
+        expect(poolForm.hasError(validators.required, ["poolId"])).toBe(true);
     });
 
     it("Can patch poolId directly", () => {
         component.preSelectPool("pool-002");
-        expect(poolForm.controls[fieldNames.poolId].value).toEqual("pool-002");
+        expect(poolForm.controls["poolId"].value).toEqual("pool-002");
     });
 
     it("Can clone job into form", () => {
         const job = Fixtures.job.create({ id: "job-001", poolInfo: { poolId: "pool-002" } });
         component.setValue(job);
 
-        expect(baseForm.controls[fieldNames.id].value).toEqual("job-001");
-        expect(baseForm.controls[fieldNames.displayName].value).toEqual("display name");
-        expect(baseForm.controls[fieldNames.priority].value).toEqual(1);
-        expect(constraintsForm.controls[fieldNames.maxTaskRetryCount].value).toEqual(3);
-        expect(poolForm.controls[fieldNames.poolId].value).toEqual("pool-002");
+        expect(baseForm.controls.id.value).toEqual("job-001");
+        expect(baseForm.controls.displayName.value).toEqual("display name");
+        expect(baseForm.controls.priority.value).toEqual(1);
+        expect(constraintsForm.controls.maxTaskRetryCount.value).toEqual(3);
+        expect(poolForm.controls.poolId.value).toEqual("pool-002");
     });
 
     it("Clicking add creates job and doesnt close form", () => {
