@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
+import { NotificationManager } from "app/components/base/notifications";
 import { RangeValidatorDirective } from "app/components/base/validation";
 import { Task } from "app/models";
 import { createTaskFormToJsonData, taskToFormModel } from "app/models/forms";
@@ -22,7 +23,8 @@ export class TaskCreateBasicDialogComponent {
     constructor(
         private formBuilder: FormBuilder,
         private sidebarRef: SidebarRef<TaskCreateBasicDialogComponent>,
-        private taskService: TaskService) {
+        private taskService: TaskService,
+        private notificationManager: NotificationManager) {
 
         const validation = Constants.forms.validation;
         this.constraintsGroup = this.formBuilder.group({
@@ -51,11 +53,15 @@ export class TaskCreateBasicDialogComponent {
 
     @autobind()
     public submit(): Observable<any> {
+        const id = this.createTaskForm.value.id;
         const jsonData = createTaskFormToJsonData(this.createTaskForm.value);
-        const onAddedParams = { jobId: this.jobId, id: this.createTaskForm.value.id };
+        const onAddedParams = { jobId: this.jobId, id };
         const observable = this.taskService.add(this.jobId, jsonData, {});
         observable.subscribe({
-            next: () => { this.taskService.onTaskAdded.next(onAddedParams); },
+            next: () => {
+                this.notificationManager.success("Pool added!", `Pool '${id}' was created successfully!`);
+                this.taskService.onTaskAdded.next(onAddedParams);
+            },
             error: (error) => { console.error("taskService.add() :: error: ", JSON.stringify(error)); },
         });
 
