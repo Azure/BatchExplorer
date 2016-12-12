@@ -40,7 +40,11 @@ export class FileListComponent implements OnInit {
         if (filter.isEmpty()) {
             this.data.setOptions({});
         } else {
-            this.data.setOptions({ filter: filter.toOData() });
+            console.log("raw filter:");
+            console.log(filter);
+            console.log("filter:");
+            console.log(filter.toODataWithName());
+            this.data.setOptions({ filter: filter.toODataWithName() });
         }
 
         this.data.fetchNext();
