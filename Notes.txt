@@ -1,5 +1,4 @@
 
---------------------
 Handy Notes
 --------------------
 Shift + Alt + F (format code)
@@ -8,13 +7,6 @@ https://github.com/angular/material2/tree/master/src/demo-app (big Angular proje
 Azure-Batch node.js
 --------------------
 http://azure.github.io/azure-sdk-for-node/azure-batch/latest/
-
-Routing:
---------------------
-https://www.barbarianmeetscoding.com/blog/2016/03/28/getting-started-with-angular-2-step-by-step-4-routing/
-https://auth0.com/blog/angular-2-series-part-4-component-router-in-depth/
-https://scotch.io/tutorials/routing-angular-2-single-page-apps-with-the-component-router
-http://blog.thoughtram.io/angular/2016/06/14/routing-in-angular-2-revisited.html
 
 Font Awesome Icons
 --------------------
@@ -31,23 +23,13 @@ https://github.com/angular/material2
 https://www.npmjs.com/~angular2-material
 http://blog.thoughtram.io/angular/2016/06/22/model-driven-forms-in-angular-2.html
 
+Testing
 --------------------
-Eventing
---------------------
-https://github.com/reactjs/redux.
-https://github.com/angular-redux/ng2-redux
+https://angular.io/docs/ts/latest/guide/testing.html
 
-Actually it seems like angular already has a system included for that
-http://blog.angular-university.io/how-to-build-angular2-apps-using-rxjs-observable-data-services-pitfalls-to-avoid/
-https://github.com/jhades/angular2-rxjs-observable-data-services (demo app)
-https://github.com/Reactive-Extensions/RxJS
-
-
---------------------
 Handy
 --------------------
 ** Find out who added a file and when along with the commit hash **
 git config --global alias.whatadded "log --diff-filter=A"
 git whatadded -- "*filename.ts"
-
 
