@@ -1,0 +1,151 @@
+@keyframes animScale {
+    0% {
+        opacity: 0;
+        transform: translate3d(0, 40px, 0) scale3d(0.1, 0.6, 1);
+    }
+    100% {
+        opacity: 1;
+        transform: translate3d(0, 0, 0) scale3d(1, 1, 1);
+    }
+}
+
+bex-notification-container {
+    margin: 30px 10px;
+    width: 320px;
+    position: fixed;
+    z-index: 9998;
+
+    &.tl {
+        top: 0;
+        bottom: auto;
+        left: 0;
+        right: auto;
+    }
+
+    &.tr {
+        top: 0;
+        bottom: auto;
+        left: auto;
+        right: 0;
+    }
+
+    &.tc {
+        top: 0;
+        bottom: auto;
+        left: 50%;
+        margin: 0 auto 0 -(defaultWidth / 2);
+    }
+
+    &.bl {
+        top: auto;
+        bottom: 0;
+        left: 0;
+        right: auto;
+    }
+
+    &.br {
+        top: auto;
+        bottom: 0;
+        left: auto;
+        right: 0;
+    }
+
+    &.bc {
+        top: auto;
+        bottom: 0;
+        left: 50%;
+        margin: 0 auto 0 -(defaultWidth / 2);
+    }
+}
+
+bex-notification {
+    position: relative;
+    display: flex;
+    width: 100%;
+    cursor: pointer;
+    border-radius: 2px;
+    font-size: 13px;
+    margin: 10px 0 0;
+    padding: 10px;
+    transition: 0.3s ease-in-out;
+    opacity: 0.9;
+    background-color: #e5e5e5;
+    color: rgba(250, 251, 255, 0.95);
+
+    animation-name: animScale;
+    animation-duration: 0.25s;
+    box-shadow: 1px 1px 50px 0 $alto;
+
+    a {
+        font-weight: bold;
+        &:hover {
+            opacity: 0.5;
+        }
+    }
+
+    &.success {
+        background-color: $green;
+        a {
+            color: $green-dark;
+        }
+    }
+
+    &.error {
+        background-color: $red-light;
+        a {
+            color: $red;
+        }
+    }
+
+    &.info {
+        color: $orient;
+        background-color: white;
+    }
+
+    &.notification-hidden {
+        opacity: 0;
+    }
+
+    .notification-title {
+        font-size: 14px;
+        margin: 0 0 5px;
+        padding: 0;
+        font-weight: bold;
+    }
+
+    .dismiss-btn {
+        width: 20px;
+        height: 20px;
+        position: absolute;
+        right: 4px;
+        top: 4px;
+        overflow: hidden;
+        text-indent: 100%;
+        cursor: pointer;
+        backface-visibility: hidden;
+
+        &:before,
+        &:after {
+            content: "";
+            position: absolute;
+            width: 3px;
+            height: 60%;
+            top: 50%;
+            left: 50%;
+            background: #6e6e6e;
+        }
+
+        &:before {
+            transform: translate(-50%, -50%) rotate(45deg);
+        }
+
+        &:after {
+            transform: translate(-50%, -50%) rotate(-45deg);
+        }
+
+        &:hover:before,
+        &:hover:after {
+            background: white;
+        }
+    }
+}
