@@ -76,11 +76,12 @@ export class JobCreateBasicDialogComponent implements OnInit {
         const observable = this.jobService.add(jsonData, {});
         observable.subscribe({
             next: () => {
+                this.jobService.onJobAdded.next(this.createJobForm.value.id);
                 const id = this.createJobForm.value.id;
                 this.jobService.onJobAdded.next(id);
                 this.notificationManager.success("Pool added!", `Pool '${id}' was created successfully!`);
             },
-            error: (error) => { console.error("jobService.add() :: error: ", JSON.stringify(error)); },
+            error: () => null,
         });
 
         return observable;

@@ -1,5 +1,5 @@
 import {
-    AfterViewInit, EventEmitter, OnDestroy, Output, QueryList,
+    AfterViewInit, ContentChildren, EventEmitter, OnDestroy, Output, QueryList,
 } from "@angular/core";
 import { autobind } from "core-decorators";
 import { BehaviorSubject, Subscription } from "rxjs";
@@ -16,11 +16,10 @@ export interface ActivatedItemChangeEvent {
  *
  * Usage:
  * 1. Extend class
- * 2. Redefine selectedItemsChange, and activatedItemChange as @Output
- * 3. Define items with @ContentChildren
+ * 2. Refefine items with @ContentChildren and the class that inherit SelectableListItemBase
  */
 export class SelectableListBase implements AfterViewInit, OnDestroy {
-    // e.g. @ContentChildren(QuickListItemComponent)
+    @ContentChildren(SelectableListItemBase)
     public items: QueryList<SelectableListItemBase>;
 
     /**
