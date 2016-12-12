@@ -86,6 +86,10 @@ md-tab-group {
             opacity: 0.8 !important;
         }
     }
+
+    .md-tab-body-content {
+        min-height: 443px;
+    }
 }
 
 [md-mini-fab] i, [md-mini-fab] md-icon {
