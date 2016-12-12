@@ -4,8 +4,8 @@ import { BehaviorSubject, Observable } from "rxjs";
 
 import { AccountService, CommandService, SettingsService } from "app/services";
 import AccountCreateDialogComponent from "./components/account/add/account-create-dialog.component";
-import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 import { NotificationManager } from "./components/base/notifications";
+import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
 @Component({
     selector: "bex-app",

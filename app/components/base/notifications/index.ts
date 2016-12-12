@@ -1,3 +1,4 @@
+export * from "./notification";
 export * from "./notification-manager";
 export * from "./notification.component";
 export * from "./notification.module";

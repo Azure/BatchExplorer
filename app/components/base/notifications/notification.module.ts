@@ -24,7 +24,7 @@ const components = [
     ],
     providers: [
         NotificationManager,
-    ]
+    ],
 })
 export class NotificationModule {
     public static forRoot(): ModuleWithProviders {
