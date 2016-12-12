@@ -13,9 +13,9 @@ import { BatchError, Pool } from "app/models";
 import { JobService, PoolService } from "app/services";
 import { DataCache, RxListProxy } from "app/services/core";
 import { Constants } from "app/utils";
-
 import { ComponentTestHelper } from "test/app/components/component-test-helper";
 import * as Fixtures from "test/fixture";
+import * as TestConstants from "test/test-constants";
 
 // Just making test work for now. Need Tim's input to come up with a strategy for testing with proxy data.
 export class FakeListProxy {
@@ -50,7 +50,7 @@ describe("JobCreateBasicDialogComponent ", () => {
     let constraintsForm: any;
     let poolForm: any;
 
-    const validators = Constants.forms.validators;
+    const validators = TestConstants.validators;
 
     beforeEach(() => {
         sidebarRefSpy = {

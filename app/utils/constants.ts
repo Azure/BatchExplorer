@@ -31,10 +31,4 @@ export const forms = {
             priority: { min: -1000, max: 1000 },
         },
     },
-    validators: {
-        required: "required",
-        maxlength: "maxlength",
-        range: "validateRange",
-        pattern: "pattern",
-    },
 };
