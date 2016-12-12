@@ -59,7 +59,7 @@ export class NodeListComponent extends SelectableList implements OnInit {
     }
 
     public ngOnInit() {
-        return;
+        this.data.fetchNext();
     }
 
     @autobind()
@@ -70,7 +70,8 @@ export class NodeListComponent extends SelectableList implements OnInit {
         return this.data.fetchNext(true);
     }
 
-    public onScrollToBottom(x) {
-        this.data.fetchNext();
+    @autobind()
+    public loadMore(): Observable<any> {
+        return this.data.fetchNext();
     }
 }
