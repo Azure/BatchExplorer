@@ -57,7 +57,7 @@ describe("Notification", () => {
             expect(notification.level).toEqual(NotificationLevel.success);
             expect(notification.title).toEqual("FakeNotification");
             expect(notification.message).toEqual("Something happend!");
-            expect(notification.config.autoDismiss).toBe(3);
+            expect(notification.config.autoDismiss).toBe(1000);
         });
 
         it("notificationContainer should display the notification", () => {
