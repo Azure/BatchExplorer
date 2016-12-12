@@ -4,7 +4,6 @@ import { BehaviorSubject, Observable } from "rxjs";
 
 import { AccountService, CommandService, SettingsService } from "app/services";
 import AccountCreateDialogComponent from "./components/account/add/account-create-dialog.component";
-import { NotificationManager } from "./components/base/notifications";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
 @Component({
@@ -25,8 +24,7 @@ export class AppComponent implements AfterViewInit {
         private sidebarManager: SidebarManager,
         private settingsService: SettingsService,
         private commandService: CommandService,
-        private accountService: AccountService,
-        private notificationManager: NotificationManager) {
+        private accountService: AccountService) {
         this.hasAccount = accountService.currentAccount.map((x) => { return Boolean(x); });
 
         Observable
@@ -40,9 +38,6 @@ export class AppComponent implements AfterViewInit {
         // Give the reference to the sidebar to the sidebar manager
         this.sidebarManager.sidebar = this.sidebar;
         this.sidebarManager.sidebarContent = this.sidebarContent;
-        this.notificationManager.info("Something happend!", "Letting you know that something happend.");
-        this.notificationManager.error("An error occured!", "Seems like something broke");
-        this.notificationManager.success("Great success!", "Thing completed success fullyy");
     }
 
     public open() {

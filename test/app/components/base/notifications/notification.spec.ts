@@ -46,7 +46,7 @@ describe("Notification", () => {
     describe("when a notification is sent", () => {
         beforeEach(() => {
             notificationManager.notify(NotificationLevel.success, "FakeNotification", "Something happend!", {
-                autoDismiss: 3,
+                autoDismiss: 1000,
             });
             fixture.detectChanges();
         });
@@ -74,14 +74,14 @@ describe("Notification", () => {
             expect(messageEl.nativeElement.textContent).toContain("Something happend!");
         });
 
-        it("should dismiss automatically after 3s", (done) => {
+        it("should dismiss automatically after 1s", (done) => {
             expect(currentNotifications.size).not.toBe(0);
             setTimeout(() => {
                 fixture.detectChanges();
                 expect(currentNotifications.size).toBe(0);
                 expect(de.query(By.css("bex-notification"))).toBeNull();
                 done();
-            }, 3000);
+            }, 1000);
         });
 
         it("clicking dimiss should dismiss", () => {

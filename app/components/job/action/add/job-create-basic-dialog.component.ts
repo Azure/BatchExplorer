@@ -3,13 +3,14 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
+import { NotificationManager } from "app/components/base/notifications";
+import { SidebarRef } from "app/components/base/sidebar";
 import { RangeValidatorDirective } from "app/components/base/validation";
 import { Job, Pool } from "app/models";
 import { createJobFormToJsonData, jobToFormModel } from "app/models/forms";
 import { JobService, PoolService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Constants } from "app/utils";
-import { SidebarRef } from "../../../base/sidebar";
 
 @Component({
     selector: "bex-job-create-basic-dialog",
@@ -25,7 +26,8 @@ export class JobCreateBasicDialogComponent implements OnInit {
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<JobCreateBasicDialogComponent>,
         private jobService: JobService,
-        private poolService: PoolService) {
+        private poolService: PoolService,
+        private notificationManager: NotificationManager) {
 
         this.poolsData = this.poolService.list();
         const validation = Constants.forms.validation;
@@ -73,7 +75,11 @@ export class JobCreateBasicDialogComponent implements OnInit {
         const jsonData = createJobFormToJsonData(this.createJobForm.value);
         const observable = this.jobService.add(jsonData, {});
         observable.subscribe({
-            next: () => { this.jobService.onJobAdded.next(this.createJobForm.value.id); },
+            next: () => {
+                const id = this.createJobForm.value.id;
+                this.jobService.onJobAdded.next(id);
+                this.notificationManager.success("Pool added!", `Pool '${id}' was created successfully!`);
+            },
             error: (error) => { console.error("jobService.add() :: error: ", JSON.stringify(error)); },
         });
 

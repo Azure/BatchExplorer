@@ -9,9 +9,9 @@ export const NotificationLevel = {
 
 export interface NotificationConfig {
     /**
-     * Time(in seconds) it take for the notification to disapear automatically.
+     * Time(in milliseconds) it take for the notification to disapear automatically.
      * This is independent from the persist setting.
-     * @default 5 seconds
+     * @default 2500ms
      */
     autoDismiss?: number;
     /**
@@ -27,7 +27,7 @@ export interface NotificationConfig {
 }
 
 const defaultConfig: NotificationConfig = {
-    autoDismiss: 5,
+    autoDismiss: 2500,
     persist: false,
     action: null,
 };

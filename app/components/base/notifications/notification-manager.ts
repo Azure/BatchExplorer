@@ -59,6 +59,6 @@ export class NotificationManager {
     private _registerForDismiss(notification: Notification) {
         this._dimissTimeouts[notification.id] = setTimeout(() => {
             this.dismiss(notification, true);
-        }, notification.config.autoDismiss * 1000);
+        }, notification.config.autoDismiss);
     }
 }
