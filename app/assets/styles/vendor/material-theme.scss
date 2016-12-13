@@ -73,9 +73,8 @@ md-tab-group {
         opacity: 0.8 !important;
         border-right: 1px solid #ddd;
 
-        &.md-tab-active {
+        &.md-tab-label-active {
             background-color: map-get($md-prussian-blue, 100);
-            color: white;
         }
 
         &.md-tab-disabled {
@@ -85,6 +84,10 @@ md-tab-group {
         &:focus {
             opacity: 0.8 !important;
         }
+    }
+
+    .md-tab-body-content {
+        min-height: 443px;
     }
 }
 
