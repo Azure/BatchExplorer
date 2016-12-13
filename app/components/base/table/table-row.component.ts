@@ -1,5 +1,5 @@
 import {
-    Component, Inject, Input, TemplateRef, ViewChild, forwardRef,
+    Component, Inject, TemplateRef, ViewChild, forwardRef,
 } from "@angular/core";
 import { Router } from "@angular/router";
 

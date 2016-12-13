@@ -1,5 +1,4 @@
 import { Component, Input } from "@angular/core";
-import { animate, state, style, transition, trigger } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";

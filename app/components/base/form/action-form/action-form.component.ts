@@ -1,12 +1,10 @@
 import { Component, Input, NgZone } from "@angular/core";
-import { animate, state, style, transition, trigger } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { MdDialogRef } from "@angular/material";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
 import { BatchError } from "app/models";
-import { SidebarRef } from "../../sidebar";
 
 @Component({
     selector: "bex-action-form",
