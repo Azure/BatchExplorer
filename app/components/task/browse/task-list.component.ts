@@ -4,12 +4,14 @@ import { Observable, Subscription } from "rxjs";
 
 import { TaskListDisplayComponent } from "./display";
 
+import { BackgroundTaskManager } from "app/components/base/background-task";
 import { LoadingStatus } from "app/components/base/loading";
 import { SelectableList } from "app/components/base/selectable-list";
 import { Task } from "app/models";
 import { TaskListParams, TaskParams, TaskService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
+import { DeleteTaskAction } from "../action";
 
 @Component({
     selector: "bex-task-list",
@@ -59,7 +61,8 @@ export class TaskListComponent extends SelectableList implements OnInit {
 
     constructor(
         private taskService: TaskService,
-        private changeDetectorRef: ChangeDetectorRef) {
+        private changeDetectorRef: ChangeDetectorRef,
+        private taskManager: BackgroundTaskManager) {
         super();
 
         this._onTaskAddedSub = taskService.onTaskAdded.subscribe((item: TaskParams) => {
@@ -84,5 +87,13 @@ export class TaskListComponent extends SelectableList implements OnInit {
     @autobind()
     public loadMore(): Observable<any> {
         return this.data.fetchNext();
+    }
+
+    public deleteSelected() {
+        this.taskManager.startTask("", (backgroundTask) => {
+            const task = new DeleteTaskAction(this.taskService, this.jobId, this.selectedItems);
+            task.start(backgroundTask);
+            return task.waitingDone;
+        });
     }
 }
