@@ -20,8 +20,8 @@
     </bex-property-group>
 
     <bex-property-group label="Exit conditions" [warningMessage]="exitConditionWarningMessage">
-        <bex-text-property label="Do nothing" [value]="exitConditionData.noAction.join(', ')"></bex-text-property>
-        <bex-text-property label="Terminate Job" [value]="exitConditionData.terminateJob.join(', ')"></bex-text-property>
+        <bex-text-property label="Exit codes that do nothing" [value]="exitConditionData.noAction.join(', ')"></bex-text-property>
+        <bex-text-property label="Exit codes that terminate the job" [value]="exitConditionData.terminateJob.join(', ')"></bex-text-property>
         <bex-text-property label="On scheduling error" [value]="exitConditionData.schedulingError"></bex-text-property>
     </bex-property-group>
 
