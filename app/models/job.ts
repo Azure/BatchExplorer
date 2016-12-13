@@ -1,7 +1,7 @@
 import { Record } from "immutable";
 
 import { JobStats } from "./";
-import { AllTasksCompleteAction, JobAction, TaskFailureAction } from "./jobAction";
+import { AllTasksCompleteAction, TaskFailureAction } from "./jobAction";
 import { JobConstraints } from "./jobConstraints";
 import { JobExecutionInformation } from "./jobExecutionInformation";
 import { NameValuePair } from "./nameValuePair";
