@@ -1,9 +1,16 @@
-// tslint:disable:variable-name
-
-export type JobAction = "noaction" | "terminatejob";
+// https://msdn.microsoft.com/en-us/library/azure/dn820105.aspx#exitOptions
+export type JobAction = "none" | "disable" | "terminate";
 export const JobAction = {
-    noaction: "noaction" as JobAction,
-    terminatejob: "terminatejob" as JobAction,
+    none: "none" as JobAction,
+    disable: "disable" as JobAction,
+    terminate: "terminate" as JobAction,
+};
+
+// https://msdn.microsoft.com/en-us/library/azure/mt282178.aspx
+export type AllTasksCompleteAction = "noaction" | "terminatejob";
+export const AllTasksCompleteAction = {
+    noaction: "noaction" as AllTasksCompleteAction,
+    terminatejob: "terminatejob" as AllTasksCompleteAction,
 };
 
 export type TaskFailureAction = "noaction" | "performexitoptionsjobaction";
