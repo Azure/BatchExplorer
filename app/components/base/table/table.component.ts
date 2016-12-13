@@ -1,6 +1,6 @@
-import { Component, ContentChildren, EventEmitter, Input, Output, QueryList } from "@angular/core";
+import { Component, ContentChildren, QueryList } from "@angular/core";
 
-import { ActivatedItemChangeEvent, SelectableListBase } from "../selectable-list/selectable-list-base";
+import { SelectableListBase } from "../selectable-list/selectable-list-base";
 import { TableRowComponent } from "./table-row.component";
 
 @Component({

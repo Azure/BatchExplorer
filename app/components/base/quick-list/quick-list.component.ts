@@ -1,9 +1,9 @@
 import {
-    Component, ContentChildren, EventEmitter,  Input, Optional, Output, QueryList,
+    Component, ContentChildren, Input, Optional, QueryList,
 } from "@angular/core";
 
 import { FocusSectionComponent } from "../focus-section";
-import { ActivatedItemChangeEvent, SelectableListBase } from "../selectable-list/selectable-list-base";
+import { SelectableListBase } from "../selectable-list/selectable-list-base";
 import { QuickListItemComponent } from "./quick-list-item.component";
 
 @Component({
