@@ -18,7 +18,10 @@ import { AccountDetailsComponent } from "./components/account/details/account-de
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
 import { BaseModule } from "./components/base";
 import { FileDirectoryFilter, FileListDisplayComponent } from "./components/file/browse/display";
-import { FileListComponent } from "./components/file/browse/file-list.component";
+import { NodeFileListComponent } from "./components/file/browse/node-file-list.component";
+import { TaskFileListComponent } from "./components/file/browse/task-file-list.component";
+import { FileDetailsComponent } from "./components/file/details/file-details.component";
+import { FileHomeComponent } from "./components/file/home";
 import { JobStatsPreviewComponent } from "./components/job/base/job-stats-preview";
 import { JobAdvancedFilterComponent } from "./components/job/browse/filter/job-advanced-filter.component";
 import { JobListComponent } from "./components/job/browse/job-list.component";
@@ -117,8 +120,11 @@ import {
         DeleteTaskDialogComponent,
         DisableJobDialogComponent,
         EnableJobDialogComponent,
+        FileDetailsComponent,
         FileDirectoryFilter,
-        FileListComponent,
+        FileHomeComponent,
+        NodeFileListComponent,
+        TaskFileListComponent,
         FileListDisplayComponent,
         JobAdvancedFilterComponent,
         JobCreateBasicDialogComponent,
