@@ -13,10 +13,6 @@ import { SelectableList } from "app/components/base/selectable-list";
 import { Filter, FilterBuilder } from "app/utils/filter-builder";
 import { DeletePoolDialogComponent } from "./delete-selected-items-dialog.component";
 
-export class Banana {
-    public id = "banana";
-}
-
 @Component({
     selector: "bex-list-and-show-layout",
     templateUrl: "list-and-show-layout.html",
@@ -32,9 +28,6 @@ export class Banana {
             transition("* => *", animate(200)),
         ]),
     ],
-    providers: [
-        Banana,
-    ]
 })
 export class ListAndShowLayoutComponent implements AfterViewInit {
     @Input()

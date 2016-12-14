@@ -1,16 +1,15 @@
 import { AfterViewInit, Component, DebugElement, ElementRef, Input, OnChanges, Optional } from "@angular/core";
 import { Subscription } from "rxjs";
 
-import { Banana } from "app/components/base/list-and-show-layout";
 import { ScrollableComponent, ScrollableService } from "app/components/base/scrollable";
 import { FileService } from "app/services";
 import { Constants } from "app/utils";
 
 @Component({
-    selector: "bex-file-content-tail",
-    templateUrl: "file-content-tail.html",
+    selector: "bex-file-content",
+    templateUrl: "file-content.html",
 })
-export class FileContentTailComponent implements OnChanges, AfterViewInit {
+export class FileContentComponent implements OnChanges, AfterViewInit {
     @Input()
     public jobId: string;
 

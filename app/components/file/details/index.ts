@@ -1,1 +1,1 @@
-export * from "./file-content-tail.component";
+export * from "./file-content.component";
