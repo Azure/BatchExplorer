@@ -4,11 +4,14 @@
 **Note: this is in early development and there is no production build available.**
 
 ## Getting started
+**Install node.js >= `6.9`**
+
+Clone the repo `git clone https://github.com/Azure/BatchLabs`
 
 Install the dependencies
 ```
 npm install
-npm install -g gulp
+npm install -g gulp (Optional)
 ```
 
 Start the dev server
