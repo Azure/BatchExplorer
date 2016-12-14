@@ -1,4 +1,4 @@
-<div  class="slideout-form content-wrapper">
+<div class="slideout-form content-wrapper">
     <h1>Create task</h1>
     <p>Adds a task to the selected job</p>
 
@@ -13,7 +13,8 @@
 
             <div class="form-element">
                 <md-input formControlName="displayName" placeholder="Display name"></md-input>
-                <bex-error controlName="displayName" code="maxlength">Display name has a maximum length of 1024 characters</bex-error>            </div>
+                <bex-error controlName="displayName" code="maxlength">Display name has a maximum length of 1024 characters</bex-error>
+            </div>
 
             <div class="form-element">
                 <md-input formControlName="commandLine" placeholder="Command line"></md-input>
@@ -26,6 +27,9 @@
                     <bex-error controlName="maxTaskRetryCount" code="validateRange">Retry count values can range from -1 to 100</bex-error>
                 </div>
             </div>
+
+            <h4>Resource files</h4>
+            <bex-resourcefile-picker formControlName="resourceFiles"></bex-resourcefile-picker>
         </form>
     </bex-create-form>
 </div>

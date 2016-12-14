@@ -1,0 +1,26 @@
+<div [formGroup]="form">
+    <div formArrayName="files">
+        <table>
+            <thead>
+                <tr>
+                    <th>Blob source</th>
+                    <th>File path</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tr *ngFor="let file of files.controls; let i=index" [formGroupName]="i">
+                <td>
+                    <input formControlName="blobSource">
+                </td>
+                <td>
+                    <input formControlName="filePath">
+                </td>
+                <td>
+                    <i class="fa fa-times" (click)="deleteFile(i)"></i>
+                </td>
+            </tr>
+        </table>
+
+        <button class="add-file-btn" md-raised-button (click)="addResourceFile()">New resource file</button>
+    </div>
+</div>

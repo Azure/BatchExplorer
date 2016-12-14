@@ -1,0 +1,40 @@
+bex-resourcefile-picker {
+    table {
+        width: 100%;
+        thead {
+            text-align: left;
+            color: $genericGray;
+        }
+
+        input {
+            width: 100%;
+            border: none;
+            background: $whiteSmoke-darker;
+            border-radius: 2px;
+            padding: 5px;
+            outline: none;
+            font-size: 13px;
+            color: $mineshaft-grey;
+
+            &:focus {
+                border-bottom: 2px solid map-get($md-prussian-blue, 500);
+            }
+        }
+
+        .fa-times {
+            color: $red;
+            cursor: pointer;
+            font-size: 24px;
+            margin: 0 5px;
+
+            &:hover {
+                color: $red-dark;
+            }
+        }
+    }
+
+    .add-file-btn {
+        display: block;
+        margin: 10px auto;
+    }
+}
