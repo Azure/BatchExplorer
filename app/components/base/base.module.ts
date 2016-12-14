@@ -20,6 +20,7 @@ import {
     DeletePoolDialogComponent, EntityDetailsListComponent, ListAndShowLayoutComponent, ListLoadingComponent,
 } from "./list-and-show-layout";
 import { LoadingComponent } from "./loading";
+import { NotificationModule } from "./notifications";
 import { PropertyListModule } from "./property-list";
 import { QuickListModule } from "./quick-list";
 import { RefreshButtonComponent } from "./refresh-btn";
@@ -35,6 +36,7 @@ const modules = [
     DropdownModule,
     FocusSectionModule,
     InfoBoxModule,
+    NotificationModule,
     PropertyListModule,
     QuickListModule,
     SidebarModule,

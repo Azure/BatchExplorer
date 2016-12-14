@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
+import { NotificationManager } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { Pool } from "app/models";
 import { createPoolToData, poolToFormModel } from "app/models/forms";
@@ -24,7 +25,8 @@ export class PoolCreateBasicDialogComponent {
     constructor(
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<PoolCreateBasicDialogComponent>,
-        private poolService: PoolService) {
+        private poolService: PoolService,
+        private notificationManager: NotificationManager) {
 
         this.selectedOsConfiguration = this.OS_CONFIGURATION_TYPES.PaaS;
         this.createPoolForm = this.formBuilder.group({
@@ -47,7 +49,10 @@ export class PoolCreateBasicDialogComponent {
         const id = this.createPoolForm.value.id;
         const data = createPoolToData(this.createPoolForm.value);
         const obs = this.poolService.add(data);
-        obs.subscribe(() => this.poolService.onPoolAdded.next(id));
+        obs.subscribe(() => {
+            this.poolService.onPoolAdded.next(id);
+            this.notificationManager.success("Pool added!", `Pool '${id}' was created successfully!`);
+        });
 
         return obs;
     }
