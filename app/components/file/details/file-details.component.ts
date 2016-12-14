@@ -17,8 +17,8 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     // public data: RxEntityProxy<NodeParams, Node>;
     // public node: Node;
 
-    public jobId: string = "a";
-    public taskId: string = "01";
+    public jobId: string;
+    public taskId: string;
     public url: string;
     public filename: string;
     public contentSize: number;
@@ -48,7 +48,10 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         // }));
         this._paramsSubscribers.push(this.route.params.subscribe((params) => {
             this.url = params["id"];
-            this.filename = this.parseRelativePath(this.url);
+            let obj = this.parseRelativePath(this.url);
+            this.filename = obj.file;
+            this.jobId = obj.containerName;
+            this.taskId = obj.entityName;
 
             this.fileService.getFilePropertiesFromTask(this.jobId, this.taskId, this.filename)
                 .subscribe((details: any) => {
@@ -84,9 +87,18 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     }
 
     // TODO: Add unit tests!
-    private parseRelativePath(fileUrl: string) {
+    private parseRelativePath(fileUrl: string): any {
         let parts: string[] = fileUrl.split("/");
-        let name = parts.slice(8, parts.length).join("/");
-        return name;
+        let obj: any = {};
+        if (parts) {
+            if (parts[3] === "jobs") {
+                obj.type = "job";
+            }
+            obj.containerName = parts[4];
+            obj.entityName = parts[6];
+            obj.file = parts.slice(8, parts.length).join("/");
+        }
+
+        return obj;
     }
 }
