@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, DebugElement, ElementRef, Input, OnChanges, Optional } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, Input, OnChanges } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { ScrollableComponent, ScrollableService } from "app/components/base/scrollable";
@@ -37,7 +37,6 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
     }
 
     public ngAfterViewInit() {
-        let current = this.element.nativeElement;
         this.scrollable = this.scrollableService.getParentSrollable(this.element.nativeElement);
     }
 
