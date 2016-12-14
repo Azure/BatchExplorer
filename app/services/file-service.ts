@@ -18,7 +18,8 @@ export interface TaskFileListParams {
 @Injectable()
 export class FileService extends ServiceBase {
     private _basicProperties: string = "name, url";
-    private _cache = new DataCache<File>("url");
+    private _nodeFilecache = new DataCache<File>("url");
+    private _taskFileCache = new DataCache<File>("url");
 
     public get basicProperties(): string {
         return this._basicProperties;
@@ -31,7 +32,7 @@ export class FileService extends ServiceBase {
         initialOptions: any = {}): RxListProxy<NodeFileListParams, File> {
 
         return new RxListProxy<NodeFileListParams, File>(File, {
-            cache: (params) => this._cache,
+            cache: (params) => this._nodeFilecache,
             proxyConstructor: (params, options) => {
                 return BatchClient.file.listFromComputeNode(params.poolId, params.nodeId, recursive, options);
             },
@@ -47,7 +48,7 @@ export class FileService extends ServiceBase {
         initialOptions: any = {}): RxListProxy<TaskFileListParams, File> {
 
         return new RxListProxy<TaskFileListParams, File>(File, {
-            cache: (params) => this._cache,
+            cache: (params) => this._taskFileCache,
             proxyConstructor: (params, options) => {
                 return BatchClient.file.listFromTask(params.jobId, params.taskId, recursive, options);
             },
