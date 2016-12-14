@@ -83,6 +83,7 @@ import {
 // task actions
 import {
     DeleteTaskDialogComponent,
+    ResourcefilePickerComponent,
     TaskCreateBasicDialogComponent,
     TerminateTaskDialogComponent,
 } from "./components/task/action";
@@ -151,6 +152,7 @@ import {
         PoolOsPickerComponent,
         PoolPropertiesComponent,
         PoolResizeDialogComponent,
+        ResourcefilePickerComponent,
         SubTaskDisplayListComponent,
         SubTaskPropertiesComponent,
         TaskAdvancedFilterComponent,
