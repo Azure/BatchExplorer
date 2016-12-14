@@ -23,6 +23,12 @@
         <md-card class="details">
             <md-tab-group>
                 <md-tab>
+                    <template md-tab-label>Output</template>
+                    <div class="tab-padding">
+                        <bex-file-content [jobId]="jobId" [taskId]="taskId" filename="stdout.txt"></bex-file-content>
+                    </div>
+                </md-tab>
+                <md-tab>
                     <template md-tab-label>Properties</template>
                     <div class="tab-padding">
                         <bex-task-properties [job]="job" [task]="task"></bex-task-properties>

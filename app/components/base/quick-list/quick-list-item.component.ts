@@ -1,5 +1,5 @@
 import {
-    Component, Inject, Input, OnInit, forwardRef,
+    Component, Inject, OnInit, forwardRef,
 } from "@angular/core";
 import { Router } from "@angular/router";
 

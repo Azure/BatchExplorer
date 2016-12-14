@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
 
 import BatchClient from "../api/batch/batch-client";
 import { File } from "../models";
@@ -13,6 +14,11 @@ export interface NodeFileListParams {
 export interface TaskFileListParams {
     jobId?: string;
     taskId?: string;
+}
+
+export interface FileContentResult {
+    content: string;
+    result: any;
 }
 
 @Injectable()
@@ -55,5 +61,24 @@ export class FileService extends ServiceBase {
             initialParams: { jobId: initialJobId, taskId: initialTaskId },
             initialOptions,
         })​;
+    }
+
+    public getFileContentFromTask(
+        jobId: string,
+        taskId: string,
+        filename: string,
+        options: any = {}): Observable<FileContentResult> {
+
+        return Observable.fromPromise(BatchClient.file.getTaskFile(jobId, taskId, filename, options));
+    }
+
+    // TODO change to RxEntityProxy
+    public getFilePropertiesFromTask(
+        jobId: string,
+        taskId: string,
+        filename: string,
+        options: any = {}): Observable<File> {
+
+        return Observable.fromPromise(BatchClient.file.getTaskFileProperties(jobId, taskId, filename, options));
     }
 }

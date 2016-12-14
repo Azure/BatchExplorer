@@ -1,6 +1,6 @@
 import { DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { FormBuilder, FormGroup } from "@angular/forms";
+import { FormBuilder } from "@angular/forms";
 import { MdInput } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { Observable, Subject } from "rxjs";
@@ -12,7 +12,6 @@ import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { BatchError, Pool } from "app/models";
 import { JobService, PoolService } from "app/services";
 import { DataCache, RxListProxy } from "app/services/core";
-import { Constants } from "app/utils";
 import { ComponentTestHelper } from "test/app/components/component-test-helper";
 import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";

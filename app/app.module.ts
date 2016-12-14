@@ -20,6 +20,7 @@ import { BaseModule } from "./components/base";
 import { FileDirectoryFilter, FileListDisplayComponent } from "./components/file/browse/display";
 import { NodeFileListComponent } from "./components/file/browse/node-file-list.component";
 import { TaskFileListComponent } from "./components/file/browse/task-file-list.component";
+import { FileContentComponent } from "./components/file/details";
 import { FileDetailsComponent } from "./components/file/details/file-details.component";
 import { FileHomeComponent } from "./components/file/home";
 import { JobStatsPreviewComponent } from "./components/job/base/job-stats-preview";
@@ -126,6 +127,7 @@ import {
         NodeFileListComponent,
         TaskFileListComponent,
         FileListDisplayComponent,
+        FileContentComponent,
         JobAdvancedFilterComponent,
         JobCreateBasicDialogComponent,
         JobDetailsComponent,

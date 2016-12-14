@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 
-import { Job, JobAction, Task, TaskFailureAction } from "app/models";
+import { ExitOptions, Job, JobAction, Task, TaskFailureAction } from "app/models";
 import { TaskDecorator } from "app/models/decorators";
 
 @Component({
@@ -42,7 +42,7 @@ export class TaskPropertiesComponent {
         const noAction = [];
         const terminateJob = [];
         this._task.exitConditions.exitCodes.forEach((mapping) => {
-            if (mapping.exitOptions.jobAction === JobAction.noaction) {
+            if (mapping.exitOptions.jobAction === JobAction.none) {
                 noAction.push(mapping.code);
             } else {
                 terminateJob.push(mapping.code);
@@ -53,7 +53,7 @@ export class TaskPropertiesComponent {
         });
 
         this._task.exitConditions.exitCodeRanges.forEach((mapping) => {
-            if (mapping.exitOptions.jobAction === JobAction.noaction) {
+            if (mapping.exitOptions.jobAction === JobAction.none) {
                 noAction.push(`${mapping.start} → ${mapping.end}`);
             } else {
                 terminateJob.push(`${mapping.start} → ${mapping.end}`);
@@ -68,12 +68,28 @@ export class TaskPropertiesComponent {
             noAction.unshift(0);
         }
 
-        const schedulingError = this._task.exitConditions.schedulingError;
-        const schedulingErrorNoAction = (schedulingError && schedulingError.jobAction) === JobAction.noaction;
         this.exitConditionData = {
             noAction,
             terminateJob,
-            schedulingError: schedulingErrorNoAction ? "No Action" : "Terminate Job",
+            schedulingError: this._jobActionString(this._task.exitConditions.schedulingError),
+            default: this._jobActionString(this._task.exitConditions.default),
         };
+    }
+
+    private _jobActionString(exitOptions: ExitOptions) {
+        if (!exitOptions) {
+            return null;
+        }
+
+        switch (exitOptions.jobAction) {
+            case JobAction.none:
+                return "No Action";
+            case JobAction.disable:
+                return "Disable Job";
+            case JobAction.terminate:
+                return "Terminate Job";
+            default:
+                return exitOptions.jobAction;
+        }
     }
 }

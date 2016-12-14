@@ -1,4 +1,4 @@
-import { Component, DebugElement, ViewChild } from "@angular/core";
+import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MaterialModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
