@@ -15,21 +15,34 @@ bex-resourcefile-picker {
             outline: none;
             font-size: 13px;
             color: $mineshaft-grey;
+            margin: 2px 0;
+            border-bottom: 1px solid transparent;
 
             &:focus {
                 border-bottom: 2px solid map-get($md-prussian-blue, 500);
             }
         }
+        .delete-file-btn {
+            width: 24px !important;
+            height: 24px !important;
 
-        .fa-times {
-            color: $red;
-            cursor: pointer;
-            font-size: 24px;
-            margin: 0 5px;
-
-            &:hover {
-                color: $red-dark;
+            &:hover, &.md-button-focus {
+                background: $red;
             }
+
+            .fa {
+                color: $whiteSmoke;
+            }
+        }
+        .fa-times {
+            // color: $red;
+            // cursor: pointer;
+            // font-size: 24px;
+            // margin: 0 5px;
+
+            // &:hover {
+            //     color: $red-dark;
+            // }
         }
     }
 

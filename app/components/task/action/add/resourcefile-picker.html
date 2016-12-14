@@ -1,6 +1,6 @@
 <div [formGroup]="form">
     <div formArrayName="files">
-        <table>
+        <table class="noselect">
             <thead>
                 <tr>
                     <th>Blob source</th>
@@ -16,7 +16,7 @@
                     <input formControlName="filePath">
                 </td>
                 <td>
-                    <i class="fa fa-times" (click)="deleteFile(i)"></i>
+                    <button md-mini-fab color="warn" class="delete-file-btn" (click)="deleteFile(i)"><i class="fa fa-times" ></i></button>
                 </td>
             </tr>
         </table>
