@@ -3,6 +3,7 @@ import {
     Component,
     ElementRef,
     EventEmitter,
+    HostBinding,
     HostListener,
     Input,
     OnDestroy,
@@ -12,6 +13,9 @@ import {
 } from "@angular/core";
 import * as elementResizeDetectorMaker from "element-resize-detector";
 
+import { SecureUtils } from "app/utils";
+import { ScrollableService } from "./scrollable.service";
+
 enum Orientation {
     Horizontal,
     Vertical,
@@ -20,7 +24,7 @@ enum Orientation {
 @Component({
     encapsulation: ViewEncapsulation.None,
     selector: "bex-scrollable",
-    template: require("./scrollable.html"),
+    templateUrl: "scrollable.html",
 })
 export class ScrollableComponent implements OnDestroy, AfterViewInit {
     public orientations = Orientation;
@@ -74,12 +78,18 @@ export class ScrollableComponent implements OnDestroy, AfterViewInit {
     @ViewChild("content")
     public simpleBarContent;
 
+    @HostBinding("attr.sid")
+    public id: string;
+
     private flashTimeout: any;
     private erd: any;
     private _currentDragEventCallbacks: any;
     private _lastScroll = { left: 0, top: 0 };
 
-    constructor(private elementRef: ElementRef) { }
+    constructor(private elementRef: ElementRef, private scrollableService: ScrollableService) {
+        this.id = SecureUtils.uuid();
+        this.scrollableService.registerScrollable(this);
+    }
 
     public ngAfterViewInit() {
         this.resizeScrollContent();
@@ -127,13 +137,24 @@ export class ScrollableComponent implements OnDestroy, AfterViewInit {
         // this.resizeScrollbar(Orientation.Horizontal);
     }
 
+    /**
+     * Scroll the content to a specific position
+     */
     public scrollTo(position: number) {
         this.scrollContent.nativeElement.scrollTop = position;
         this.update();
     }
 
+    /**
+     * Scroll to the bottom of the content
+     */
+    public scrollToBottom() {
+        this.scrollTo(this.scrollContent.nativeElement.scrollHeight);
+    }
+
     public ngOnDestroy() {
         this.erd.uninstall(this.elementRef.nativeElement);
+        this.scrollableService.unregisterScrollable(this);
     }
 
     /**
