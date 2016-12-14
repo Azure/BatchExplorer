@@ -10,14 +10,9 @@ export interface NodeFileListParams {
     nodeId?: string;
 }
 
-export interface FileParams {
-    poolId?: string;
-    nodeId?: string;
-
+export interface TaskFileListParams {
     jobId?: string;
     taskId?: string;
-
-    filename?: string;
 }
 
 @Injectable()
@@ -45,26 +40,19 @@ export class FileService extends ServiceBase {
         })​;
     }
 
-    // public listFromTask(
-    //     jobId: string,
-    //     taskId: string,
-    //     recursive = true,
-    //     initialOptions: any = {}): RxListProxy<File> {
+    public listFromTask(
+        initialJobId: string,
+        initialTaskId: string,
+        recursive = true,
+        initialOptions: any = {}): RxListProxy<TaskFileListParams, File> {
 
-    //     return new RxListProxy<File>(File, this._cache, (options) => {
-    //         return BatchClient.file.listFromTask(jobId, taskId, recursive, options);
-    //     }, initialOptions)​;
-    // }
-
-    // public getFromComputeNode(poolId: string, nodeId: string, options: any): RxEntityProxy<FileParams, Node> {
-    //     return new RxEntityProxy(Node, this._cache, (params: FileParams) => {
-    //         return BatchClient.node.get(params.poolId, params.id, options);
-    //     }, { id: nodeId, poolId });
-    // }
-
-    // public getFromTask(jobId: string, taskId: string, options: any): RxEntityProxy<FileParams, Node> {
-    //     return new RxEntityProxy(File, this._cache, (params: FileParams) => {
-    //         return BatchClient.node.get(params.poolId, params.id, options);
-    //     }, { id: nodeId, poolId });
-    // }
+        return new RxListProxy<TaskFileListParams, File>(File, {
+            cache: (params) => this._cache,
+            proxyConstructor: (params, options) => {
+                return BatchClient.file.listFromTask(params.jobId, params.taskId, recursive, options);
+            },
+            initialParams: { jobId: initialJobId, taskId: initialTaskId },
+            initialOptions,
+        })​;
+    }
 }

@@ -9,10 +9,10 @@ import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
 
 @Component({
-    selector: "bex-file-list",
-    template: require("./file-list.html"),
+    selector: "bex-node-file-list",
+    templateUrl: "file-list.html",
 })
-export class FileListComponent implements OnInit {
+export class NodeFileListComponent implements OnInit {
     /**
      * If set to true it will display the quick list view, if false will use the table view
      */

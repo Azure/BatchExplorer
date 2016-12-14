@@ -5,6 +5,8 @@ import { Routes } from "@angular/router";
 import { AccountDetailsHomeComponent } from "./components/account/details/account-details-home.component";
 import { AccountDetailsComponent } from "./components/account/details/account-details.component";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
+import { FileDetailsComponent } from "./components/file/details/file-details.component";
+import { FileHomeComponent } from "./components/file/home";
 import { JobDetailsHomeComponent } from "./components/job/details/job-details-home.component";
 import { JobDetailsComponent } from "./components/job/details/job-details.component";
 import { JobHomeComponent } from "./components/job/home/job-home.component";
@@ -59,6 +61,14 @@ export const routes: Routes = [
             { path: ":id", component: TaskDetailsComponent }, // jobs/{job.id}/tasks/{task.id}
         ],
     },
+    {
+        path: "files",
+        component: FileHomeComponent,
+        children: [
+            // { path: "", component: FileDetailsComponent }, // file/
+            { path: ":id", component: FileDetailsComponent }, // files/{account.url}
+        ],
+    }
 ];
 
 // todo: copied here for reference only, delete when done.
