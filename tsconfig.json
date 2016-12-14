@@ -28,6 +28,9 @@
       "hammerjs",
       "immutable",
       "moment-duration-format"
+    ],
+    "typeRoots": [
+      "./node_modules/@types"
     ]
   },
   "files": [

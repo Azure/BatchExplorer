@@ -7,6 +7,6 @@
     "ts-node.helper.js",
     "helpers/**/*.ts"
   ],
-  "stopSpecOnExpectationFailure": false,
+  "stopSpecOnExpectationFailure": true,
   "random": false
 }
