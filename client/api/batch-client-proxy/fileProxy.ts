@@ -12,8 +12,56 @@ export default class FileProxy {
         return this._getProxy.execute([poolId, nodeId], { nodeFileGetOptions: options });
     }
 
+    public get some() {
+        return this.client.file;
+    }
+
     public getTaskFile(jobId: string, taskId: string, filename: string, options?: BatchRequestOptions) {
-        return this._getProxy.execute([jobId, taskId], { taskFileGetOptions: options });
+        return new Promise((resolve, reject) => {
+            this.client.file.getFromTask(jobId, taskId, filename, options, (error, result, request, response) => {
+                if (error) { return reject(error); }
+                if (result) {
+                    const chunks = [];
+                    result.on("data", (chunk) => {
+                        chunks.push(chunk);
+                    });
+
+                    result.on("end", () => {
+                        resolve({
+                            result,
+                            content: Buffer.concat(chunks),
+                            request,
+                            response,
+                        });
+                    });
+
+                }
+            });
+        });
+    }
+
+    public getTaskFileProperties(jobId: string, taskId: string, filename: string, options?: BatchRequestOptions) {
+        return new Promise((resolve, reject) => {
+            this.client.file.getNodeFilePropertiesFromTask(jobId, taskId, filename, options,
+                (error, result, request, response) => {
+                    if (error) { return reject(error); }
+                    const headers = response.headers;
+                    const out = {
+                        name: filename,
+                        isDirectory: headers["ocp-batch-file-isdirectory"],
+                        url: headers["ocp-batch-file-url"],
+                        properties: {
+                            contentLength: headers["content-length"],
+                            contentType: headers["content-type"],
+                            creationTime: headers["ocp-creation-time"],
+                            lastModified: headers["lastModified"],
+                        },
+                    };
+                    resolve({
+                        data: out,
+                    });
+                });
+        });
     }
 
     /**

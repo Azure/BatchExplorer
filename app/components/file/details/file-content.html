@@ -1,0 +1,19 @@
+<div class="log-console" *ngIf="!notFound">
+    <div class="follow-log-btn" [class.following]="followingLog" (click)="toggleFollowLog()">
+        <i class="fa fa-circle"></i>
+        <span>Follow log</span>
+    </div>
+    <div class="log-container">
+        <div class="line" *ngFor="let line of lines">
+            <span class="line-nb"></span>
+            <span class="line-content">{{line}}</span>
+        </div>
+    </div>
+    <div class="follow-log-btn bottom" [class.following]="followingLog" (click)="followingLog = !followingLog">
+        <i class="fa fa-circle"></i>
+        <span>Follow log</span>
+    </div>
+</div>
+<div *ngIf="notFound" class="notfound-message">
+    The file doesn't exists maybe the node was removed.
+</div>
