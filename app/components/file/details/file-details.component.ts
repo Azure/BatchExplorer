@@ -17,6 +17,12 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     // public data: RxEntityProxy<NodeParams, Node>;
     // public node: Node;
 
+    public jobId: string = "a";
+    public taskId: string = "01";
+    public url: string;
+    public filename: string;
+    public contentSize: number;
+
     private _paramsSubscribers: Subscription[] = [];
 
     constructor(private route: ActivatedRoute, private fileService: FileService) {
@@ -27,6 +33,7 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         //         this.node = node;
         //     }
         // });
+
     }
 
     public ngOnInit() {
@@ -39,6 +46,20 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         //     this.poolId = params["poolId"];
         //     this.update();
         // }));
+        this._paramsSubscribers.push(this.route.params.subscribe((params) => {
+            this.url = params["id"];
+            this.filename = this.parseRelativePath(this.url);
+
+            this.fileService.getFilePropertiesFromTask(this.jobId, this.taskId, this.filename)
+                .subscribe((details: any) => {
+                    this.contentSize = details.data.properties.contentLength;
+                });
+        }));
+
+        // this._paramsSubscribers.push(this.route.parent.params.subscribe((params) => {
+
+        // }));
+
     }
 
     public update() {
@@ -53,7 +74,19 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     }
 
     @autobind()
-    public refreshPool() {
+    public refresh() {
         // return this.data.refresh();
+        console.log("refresh file ...");
+    }
+
+    public downloadFile() {
+        console.log("download file ...");
+    }
+
+    // TODO: Add unit tests!
+    private parseRelativePath(fileUrl: string) {
+        let parts: string[] = fileUrl.split("/");
+        let name = parts.slice(8, parts.length).join("/");
+        return name;
     }
 }

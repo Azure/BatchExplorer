@@ -1,1 +1,50 @@
-<h1>Todo: Show the file here... </h1>
+<!--<bex-loading [status]="data.newDataStatus | async">-->
+    <div *ngIf="filename">
+        <md-card class="overview">
+            <md-card-title-group style="margin: 0px;">
+                <div style="align-items:center;">
+                    <bex-refresh-btn [refresh]="refresh"></bex-refresh-btn>
+                </div>
+                <div style="margin-left:12px; margin-right:auto;">
+                    <md-card-title>{{filename}}</md-card-title>
+                    <md-card-subtitle> {{contentSize}} bytes</md-card-subtitle>
+                </div>
+            </md-card-title-group>
+            <md-card-content>
+                <p>Url: {{url}}</p>
+            </md-card-content>
+            <md-card-actions layout="row" layout-align="end center">
+                <bex-download-button (click)="downloadFile()"></bex-download-button>
+            </md-card-actions>
+        </md-card>
+        <md-card class="details">
+            <!--<md-tab-group>
+                <md-tab>
+                    <template md-tab-label>Properties</template>
+                    <div class="tab-padding">
+                        <bex-node-properties [node]="node"></bex-node-properties>
+                    </div>
+                </md-tab>
+                <md-tab>
+                    <template md-tab-label>Recent tasks</template>
+                    <div class="tab-padding">
+                        Some tasks
+                    </div>
+                </md-tab>
+                <md-tab>
+                    <template md-tab-label>Files</template>
+                    <div class="tab-padding">
+                        <bex-entity-details-list #listWrapper [refresh]="list.refresh">
+                            <bex-node-file-list [poolId]="poolId" [nodeId]="nodeId" [filter]="listWrapper.filter" [quickList]="false" #list></bex-node-file-list>
+                        </bex-entity-details-list>
+                    </div>
+                </md-tab>
+            </md-tab-group>-->
+            <bex-file-content [jobId]="jobId" [taskId]="taskId" [filename]="filename"></bex-file-content>
+        </md-card>
+    </div>
+<!--</bex-loading>-->
+
+
+
+

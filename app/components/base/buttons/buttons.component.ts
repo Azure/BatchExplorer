@@ -166,6 +166,13 @@ export class CloneButtonComponent {
 }
 
 @Component({
+    selector: "bex-download-button",
+    template: `<button md-button><i class="fa fa-download"></i> Download</button>`,
+})
+export class DownloadButtonComponent {
+}
+
+@Component({
     selector: "bex-resize-button",
     template: `<button md-button><i class="fa fa-arrows-v"></i> Resize</button>`,
 })
