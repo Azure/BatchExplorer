@@ -1,0 +1,43 @@
+bex-resourcefile-picker {
+    table {
+        width: 100%;
+        thead {
+            text-align: left;
+            color: $genericGray;
+        }
+
+        input {
+            width: 100%;
+            border: none;
+            background: $whiteSmoke-darker;
+            border-radius: 2px;
+            padding: 5px;
+            outline: none;
+            font-size: 13px;
+            color: $mineshaft-grey;
+            margin: 2px 0;
+            border-bottom: 1px solid transparent;
+
+            &:focus {
+                border-bottom: 2px solid map-get($md-prussian-blue, 500);
+            }
+        }
+        .delete-file-btn {
+            width: 24px !important;
+            height: 24px !important;
+
+            &:hover, &.md-button-focus {
+                background: $red;
+            }
+
+            .fa {
+                color: $whiteSmoke;
+            }
+        }
+    }
+
+    .add-file-btn {
+        display: block;
+        margin: 10px auto;
+    }
+}

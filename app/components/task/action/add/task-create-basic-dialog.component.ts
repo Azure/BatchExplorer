@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
@@ -19,6 +19,7 @@ export class TaskCreateBasicDialogComponent {
     public jobId: string;
     public createTaskForm: FormGroup;
     public constraintsGroup: FormGroup;
+    public resourceFiles: FormArray;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -44,6 +45,7 @@ export class TaskCreateBasicDialogComponent {
             commandLine: ["", Validators.required],
             constraints: this.constraintsGroup,
             runElevated: ["0"],
+            resourceFiles: [[]],
         });
     }
 

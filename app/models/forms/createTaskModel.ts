@@ -29,7 +29,7 @@ export function createTaskFormToJsonData(formData: CreateTaskModel): any {
         displayName: formData.displayName,
         commandLine: formData.commandLine,
         exitConditions: null,
-        resourceFiles: null,
+        resourceFiles: formData.resourceFiles,
         environmentSettings: null,
         affinityInfo: null,
         constraints: {
