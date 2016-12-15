@@ -34,9 +34,6 @@ export class FormBase {
     public loading = false;
     public error: BatchError = null;
 
-    constructor() {
-    }
-
     @autobind()
     public performAction(): Observable<any> {
         this.loading = true;
@@ -74,9 +71,7 @@ export class FormBase {
 
     public close() {
         if (this.dialogRef) {
-            // this.zone.run(() => {
             this.dialogRef.close();
-            // });
         } else if (this.sidebarRef) {
             this.sidebarRef.destroy();
         }
