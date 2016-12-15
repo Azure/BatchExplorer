@@ -78,7 +78,7 @@ export class JobCreateBasicDialogComponent implements OnInit {
             next: () => {
                 const id = this.createJobForm.value.id;
                 this.jobService.onJobAdded.next(id);
-                this.notificationManager.success("Pool added!", `Pool '${id}' was created successfully!`);
+                this.notificationManager.success("Job added!", `Job '${id}' was created successfully!`);
             },
             error: () => null,
         });
