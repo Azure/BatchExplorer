@@ -61,10 +61,10 @@ export class TaskCreateBasicDialogComponent {
         const observable = this.taskService.add(this.jobId, jsonData, {});
         observable.subscribe({
             next: () => {
-                this.notificationManager.success("Pool added!", `Pool '${id}' was created successfully!`);
+                this.notificationManager.success("Task added!", `Task '${id}' was created successfully!`);
                 this.taskService.onTaskAdded.next(onAddedParams);
             },
-            error: (error) => { console.error("taskService.add() :: error: ", JSON.stringify(error)); },
+            error: (error) => null,
         });
 
         return observable;
