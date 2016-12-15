@@ -1,47 +1,55 @@
-import { Component, Input, OnInit } from "@angular/core";
-import { FormBuilder } from "@angular/forms";
+import { Component, Input } from "@angular/core";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { autobind } from "core-decorators";
 
+import { NotificationManager } from "app/components/base/notifications";
+import { SidebarRef } from "app/components/base/sidebar";
 import { Pool } from "app/models";
 import { PoolService } from "app/services";
-import { SidebarRef } from "../../../base/sidebar";
+import { CustomValidators } from "app/utils";
 
 @Component({
     selector: "bex-pool-resize-dialog",
     templateUrl: "pool-resize-dialog.html",
 })
-export class PoolResizeDialogComponent implements OnInit {
+export class PoolResizeDialogComponent {
     @Input()
-    public set pool(value: Pool) {
-        if (value) {
-            this._pool = value;
-            this.targetDedicated = this._pool.targetDedicated;
+    public set pool(pool: Pool) {
+        if (pool) {
+            this._pool = pool;
+            this.form.patchValue({
+                targetDedicated: pool.targetDedicated,
+            });
         }
     }
     public get pool() { return this._pool; }
-    public targetDedicated: number;
-    public isSaving: boolean = false;
+    public form: FormGroup;
 
     private _pool: Pool;
 
     constructor(
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<PoolResizeDialogComponent>,
+        private notificationManager: NotificationManager,
         private poolService: PoolService) {
+        this.form = this.formBuilder.group({
+            targetDedicated: [0, [Validators.required, CustomValidators.number, CustomValidators.min(0)]],
+        });
     }
 
-    public ngOnInit() {
-        return;
-    }
+    @autobind()
+    public submit() {
+        const id = this.pool.id;
+        const targetDedicated = this.form.value.targetDedicated;
+        const obs = this.poolService.resize(id, targetDedicated, {});
 
-    public onSubmit() {
-        this.isSaving = true;
-        this.poolService.resize(this.pool.id, this.targetDedicated, {}).subscribe(
-            (val) => {/*this.resetForm();*/ },
-            (error) => { console.error("resizePool() :: error: ", error); },
-            () => {
-                this.isSaving = false;
-                this.sidebarRef.destroy();
+        obs.subscribe({
+            complete: () => {
+                this.notificationManager.success("Pool resize started!",
+                    `Pool '${id}' will resize to ${targetDedicated} nodes!`);
             },
-        );
+            error: () => null,
+        });
+        return obs;
     }
 }
