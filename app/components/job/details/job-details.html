@@ -45,6 +45,12 @@
                     </div>
                 </md-tab>
                 <md-tab>
+                    <template md-tab-label>Prep & Release Tasks</template>
+                    <div class="tab-padding">
+                        <bex-job-prep-release [jobDecorator]="decorator"></bex-job-prep-release>
+                    </div>
+                </md-tab>
+                <md-tab>
                     <template md-tab-label>Tasks</template>
                     <bex-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/jobs', job.id, 'tasks']" [loadMore]="list.loadMore">
                         <bex-task-list [jobId]="job.id" [filter]="listWrapper.filter" [quickList]="false" #list [manualLoading]="true"></bex-task-list>

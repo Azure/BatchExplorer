@@ -1,0 +1,40 @@
+<!--
+    public resourceFiles: {};
+    public environmentSettings: {};
+    public constraints: {};
+-->
+
+<bex-property-list>
+    <bex-property-group *ngIf="prepTask.id" label="Job preparation task" class="wide">
+        <bex-text-property label="Id" [value]="prepTask.id"></bex-text-property>
+        <bex-text-property label="Command line" [value]="prepTask.commandLine"></bex-text-property>
+
+        <bex-text-property label="Max task retry count" [value]="prepTask.constraints.maxTaskRetryCount"></bex-text-property>
+        <bex-text-property label="Max wall-clock time" [value]="prepTask.constraints.maxWallClockTime"></bex-text-property>
+        <bex-text-property label="Retention time" [value]="prepTask.constraints.retentionTime"></bex-text-property>
+
+        <bex-bool-property label="Wait for success" [value]="prepTask.waitForSuccess" YesNo="true"></bex-bool-property>
+        <bex-bool-property label="Run elevated" [value]="prepTask.runElevated" YesNo="true"></bex-bool-property>
+        <bex-bool-property label="Re-run on node reboot after success" [value]="prepTask.rerunOnNodeRebootAfterSuccess" YesNo="true"></bex-bool-property>
+    </bex-property-group>
+</bex-property-list>
+
+<!--
+    public commandLine: string;
+    public maxWallClockTime: string;
+    public retentionTime: string;
+    public runElevated: boolean;
+
+    public resourceFiles: {};
+    public environmentSettings: {};
+-->
+
+<bex-property-list>
+    <bex-property-group *ngIf="releaseTask.id" label="Job release task" class="wide">
+        <bex-text-property label="Id" [value]="releaseTask.id"></bex-text-property>
+        <bex-text-property label="Command line" [value]="releaseTask.commandLine"></bex-text-property>
+        <bex-text-property label="Max wall-clock time" [value]="releaseTask.maxWallClockTime"></bex-text-property>
+        <bex-text-property label="Retention time" [value]="releaseTask.retentionTime"></bex-text-property>
+        <bex-bool-property label="Run elevated" [value]="releaseTask.runElevated" YesNo="true"></bex-bool-property>
+    </bex-property-group>
+</bex-property-list>

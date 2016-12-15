@@ -7,7 +7,7 @@
         <bex-text-property label="Previous State" [value]="decorator.previousState"></bex-text-property>
         <bex-text-property label="Creation Time" [value]="decorator.creationTime"></bex-text-property>
         <bex-text-property label="Last modified" [value]="decorator.lastModified"></bex-text-property>
-        <bex-bool-property label="Run elevated" [value]="task.runElevated"></bex-bool-property>
+        <bex-bool-property label="Run elevated" [value]="task.runElevated" YesNo="true"></bex-bool-property>
         <bex-text-property label="State transition time" [value]="decorator.stateTransitionTime"></bex-text-property>
         <bex-text-property label="Previous state transition time" [value]="decorator.previousStateTransitionTime"></bex-text-property>
         <bex-text-property label="Exit conditions" *ngIf="!task.exitConditions" value="None"></bex-text-property>
