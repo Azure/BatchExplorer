@@ -47,7 +47,9 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         //     this.update();
         // }));
         this._paramsSubscribers.push(this.route.params.subscribe((params) => {
-            this.url = params["id"];
+            this.url = params["url"];
+            console.log("URL is:" + this.url);
+            console.log(params);
             let obj = this.parseRelativePath(this.url);
             this.filename = obj.file;
             this.jobId = obj.containerName;

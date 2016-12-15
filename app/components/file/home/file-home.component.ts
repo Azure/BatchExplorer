@@ -9,7 +9,7 @@ import { SidebarManager } from "../../base/sidebar";
     templateUrl: "./file-home.html",
 })
 export class FileHomeComponent implements OnInit, OnDestroy {
-    public poolId: string;
+    public id: string;
 
     private _paramsSubscriber: Subscription;
 
@@ -27,8 +27,11 @@ export class FileHomeComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
+        console.log("HERE I AM!");
         this._paramsSubscriber = this.activatedRoute.params.subscribe((params) => {
-            // this.poolId = params["poolId"];
+            // this.poolId = params["url"];
+            console.log("from home Component");
+            console.log(params);
         });
     }
 

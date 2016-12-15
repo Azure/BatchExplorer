@@ -65,10 +65,9 @@ export const routes: Routes = [
         path: "files",
         component: FileHomeComponent,
         children: [
-            // { path: "", component: FileDetailsComponent }, // file/
-            { path: ":id", component: FileDetailsComponent }, // files/{account.url}
+            { path: ":url", component: FileDetailsComponent }, // files/{account.url}
         ],
-    }
+    },
 ];
 
 // todo: copied here for reference only, delete when done.
