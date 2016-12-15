@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { ControlContainer, FormGroupDirective } from "@angular/forms";
+import { AbstractControl, ControlContainer, FormGroupDirective } from "@angular/forms";
 
 @Component({
     selector: "bex-error",
@@ -25,7 +25,17 @@ export class FormErrorComponent {
 
     public get path(): string[] { return [...this.parent.path, this.controlName]; }
 
+    /**
+     * Check if this formControl has an error and has been touched
+     */
     public get hasError(): boolean {
-        return this.formGroup.hasError(this.code, this.path);
+        let current: AbstractControl = this.formGroup.control;
+        for (let segment of this.path) {
+            current = current.get(segment);
+            if (!current) {
+                throw `Path ${this.path} for bex-error is invalid, there is no control with name '${segment}'`;
+            }
+        }
+        return current.hasError(this.code) && current.touched;
     }
 }
