@@ -1,6 +1,6 @@
 bex-property-group {
     $group-width: 750px;
-    $group-padding: 10px;
+    $group-padding: 28px;
     $property-width: $group-width - 2 * $group-padding;
     $label-width: 200px;
     $label-value-margin: 5px;
@@ -9,8 +9,13 @@ bex-property-group {
 
     display: block;
     position: relative;
-    padding: $group-padding;
-    width: $group-width;
+    padding: 0 $group-padding;
+    // width: $group-width;
+    width: 100%;
+
+    &:not(:last-child) {
+        border-bottom: 1px solid $alto;
+    }
 
     > .warning-message {
         color: $yellow;
@@ -21,12 +26,34 @@ bex-property-group {
         }
     }
 
-    legend {
+    .group-header {
         width: 100%;
-        display: block;
-        padding: 0;
+        display: flex;
+        padding: 10px 0;
         padding-bottom: 5px;
         border: 0;
+        cursor: pointer;
+
+        .collapse-icon {
+            display: flex;
+            align-items: center;
+            margin-right: 5px;
+            font-size: 20px;
+            color: map-get($md-prussian-blue, 500);
+            width: 15px;
+        }
+
+        h4 {
+            flex: 1;
+        }
+
+        span {
+            font-weight: 300;
+        }
+    }
+
+    .group-content {
+        padding-bottom: 10px;
     }
 
     section {
@@ -53,7 +80,7 @@ bex-property-group {
 
         .value {
             color: $mineShaftGray;
-            background-color: $whiteSmoke-darker;
+            background-color: $whitesmoke-darker;
             padding: 8px;
             width: $value-width;
             height: 34px;
@@ -104,7 +131,7 @@ bex-property-group {
             [tp-column], [tp-cell] {
                 display: table-cell;
                 color: $mineShaftGray;
-                background-color: $whiteSmoke-darker;
+                background-color: $whitesmoke-darker;
                 padding: 8px;
             }
 

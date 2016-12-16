@@ -8,25 +8,6 @@ export class PropertyListComponent {
 }
 
 @Component({
-    selector: "bex-property-group",
-    template: `
-        <legend><h4>{{label}}</h4></legend>
-        <div class="warning-message" *ngIf="warningMessage">
-           <i class="fa fa-warning"></i>
-           <span>{{warningMessage}}</span>
-        </div>
-        <ng-content></ng-content>
-    `,
-})
-export class PropertyGroupComponent {
-    @Input()
-    public label: string;
-
-    @Input()
-    public warningMessage: string = null;
-}
-
-@Component({
     selector: "bex-link-property",
     template: `
         <section class="one-line">
