@@ -3,9 +3,8 @@ import { NameValuePair, Task } from "app/models";
 
 @Component({
     selector: "bex-task-environment-settings",
-    template: require("./task-env-settings.html"),
+    templateUrl: "task-env-settings.html",
 })
-
 export class TaskEnvironmentSettingsComponent implements OnDestroy {
     @Input()
     public set task(task: Task) {
@@ -13,6 +12,7 @@ export class TaskEnvironmentSettingsComponent implements OnDestroy {
         this.refresh(task);
     }
     public get task() { return this._task; }
+
     public environmentSettings: NameValuePair[] = [];
 
     private _task: Task;

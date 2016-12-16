@@ -1,9 +1,10 @@
 import { Component, Input, OnDestroy, ViewContainerRef } from "@angular/core";
+
 import { ResourceFile, Task } from "app/models";
 
 @Component({
     selector: "bex-task-resource-files",
-    template: require("./task-resource-files.html"),
+    templateUrl: "task-resource-files.html",
 })
 
 export class TaskResourceFilesComponent implements OnDestroy {
@@ -13,6 +14,7 @@ export class TaskResourceFilesComponent implements OnDestroy {
         this.refresh(task);
     }
     public get task() { return this._task; }
+
     public resourceFiles: ResourceFile[] = [];
 
     private _task: Task;

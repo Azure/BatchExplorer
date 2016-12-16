@@ -1,9 +1,10 @@
 import { Component, Input } from "@angular/core";
+
 import { Job } from "app/models";
 
 @Component({
     selector: "bex-job-stats-preview",
-    template: require("./job-stats-preview.html"),
+    templateUrl: "job-stats-preview.html",
 })
 export class JobStatsPreviewComponent {
     @Input()

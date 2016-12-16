@@ -1,9 +1,10 @@
 import { Component, Input } from "@angular/core";
+
 import { Pool } from "app/models";
 
 @Component({
     selector: "bex-pool-nodes-preview",
-    template: require("./pool-nodes-preview.html"),
+    templateUrl: "pool-nodes-preview.html",
 })
 export class PoolNodesPreviewComponent {
     @Input()

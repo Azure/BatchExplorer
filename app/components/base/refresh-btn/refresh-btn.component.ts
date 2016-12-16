@@ -10,7 +10,7 @@ export enum RefreshStatus {
 
 @Component({
     selector: "bex-refresh-btn",
-    template: require("./refresh-btn.html"),
+    templateUrl: "refresh-btn.html",
     animations: [
         trigger("animateSucessIcon", [
             transition(":enter", [
