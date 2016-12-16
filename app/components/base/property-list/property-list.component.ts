@@ -70,6 +70,6 @@ export class BoolPropertyComponent {
     private get ValueSting() {
         return this.YesNo
             ? (this.value ? "Yes" : "No")
-            : (this.value ? "Enabled" : "Disabled")
+            : (this.value ? "Enabled" : "Disabled");
     }
 }
