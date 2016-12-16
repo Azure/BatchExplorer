@@ -1,9 +1,10 @@
 import { Component, Input, OnDestroy, ViewContainerRef } from "@angular/core";
+
 import { Job, NameValuePair } from "app/models";
 
 @Component({
     selector: "bex-job-environment-settings",
-    template: require("./job-env-settings.html"),
+    templateUrl: "job-env-settings.html",
 })
 
 export class JobEnvironmentSettingsComponent implements OnDestroy {

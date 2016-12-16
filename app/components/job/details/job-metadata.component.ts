@@ -1,11 +1,11 @@
 import { Component, Input, OnDestroy, ViewContainerRef } from "@angular/core";
+
 import { Job, NameValuePair } from "app/models";
 
 @Component({
     selector: "bex-job-metadata",
-    template: require("./job-metadata.html"),
+    templateUrl: "job-metadata.html",
 })
-
 export class JobMetadataComponent implements OnDestroy {
     @Input()
     public set job(job: Job) {

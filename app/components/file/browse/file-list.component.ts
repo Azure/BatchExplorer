@@ -10,7 +10,7 @@ import { Filter } from "app/utils/filter-builder";
 
 @Component({
     selector: "bex-file-list",
-    template: require("./file-list.html"),
+    templateUrl: "file-list.html",
 })
 export class FileListComponent implements OnInit {
     /**

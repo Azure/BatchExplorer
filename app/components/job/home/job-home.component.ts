@@ -7,7 +7,7 @@ import { JobCreateBasicDialogComponent } from "../action";
 
 @Component({
     selector: "bex-job-home",
-    template: require("./job-home.html"),
+    templateUrl: "job-home.html",
 })
 export class JobHomeComponent {
     public quickSearchQuery = new FormControl();

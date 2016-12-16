@@ -4,7 +4,7 @@ import { TaskState } from "app/models";
 
 @Component({
     selector: "bex-task-preview",
-    template: require("./task-preview.html"),
+    templateUrl: "task-preview.html",
 })
 
 /**
@@ -12,12 +12,11 @@ import { TaskState } from "app/models";
  * Handles both task and subTask
  */
 export class TaskPreviewComponent {
+    public elapsedTime = "";
     public taskStates = TaskState;
 
     @Input()
     public task: any;
-
-    public elapsedTime = "";
 
     public get exitCode() {
         const code = this.task.executionInfo ? this.task.executionInfo.exitCode : this.task.exitCode;
@@ -31,7 +30,6 @@ export class TaskPreviewComponent {
         } else {
             return `Task completed with exit code ${code}`;
         }
-
     }
 
     public get startTime() {

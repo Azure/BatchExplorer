@@ -6,7 +6,7 @@ import { Filter } from "app/utils/filter-builder";
 
 @Component({
     selector: "bex-pool-advanced-filter",
-    template: require("./pool-advanced-filter.html"),
+    templateUrl: "pool-advanced-filter.html",
 })
 export class PoolAdvancedFilterComponent {
 
