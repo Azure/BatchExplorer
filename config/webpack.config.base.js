@@ -1,24 +1,24 @@
 const baseConfig = {
     entry: {
-        'polyfills': './app/polyfills.browser',
-        'app': './app/app'
+        "polyfills": "./app/polyfills.browser",
+        "app": "./app/app",
     },
 
     resolve: {
-        extensions: ['', '.ts', '.js', '.json', '.scss', '.css', '.html'],
-        modulesDirectories: ['.', 'node_modules']
+        extensions: ["", ".ts", ".js", ".json", ".scss", ".css", ".html"],
+        modulesDirectories: [".", "node_modules"],
     },
 
     module: {
         loaders: [{
             test: /\.ts$/,
-            loaders: ['ts', 'angular2-template-loader'],
-            exclude: [/node_modules/]
+            loaders: ["ts", "angular2-template-loader"],
+            exclude: [/node_modules/],
         },
         {
             test: /\.scss$/,
             loader: "style!css!sass",
-            exclude: [/node_modules/]
+            exclude: [/node_modules/],
         },
         {
             test: /\.html$/,
@@ -30,8 +30,7 @@ const baseConfig = {
             loader: "raw",
         }]
     },
-
-    target: 'electron-renderer'
+    target: "electron-renderer",
 };
 
 

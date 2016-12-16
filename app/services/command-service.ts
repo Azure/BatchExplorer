@@ -15,14 +15,18 @@ export class CommandService {
     private _setOnce = false;
 
     constructor(private injector: Injector, private zone: NgZone, private settingsService: SettingsService) {
+
+    }
+
+    public init() {
         for (let key of Object.keys(CommandMap)) {
             const command = CommandMap[key];
             if (command.id) {
-                this._commandMap[command.id] = injector.get(command);
+                this._commandMap[command.id] = this.injector.get(command);
             }
         }
 
-        settingsService.keybindings.subscribe((keybindings) => {
+        this.settingsService.keybindings.subscribe((keybindings) => {
             if (keybindings) {
                 this.registerShortcuts(keybindings);
             }

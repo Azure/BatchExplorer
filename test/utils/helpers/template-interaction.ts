@@ -18,3 +18,25 @@ export function click(el: DebugElement | HTMLElement, eventObj: any = ButtonClic
         el.triggerEventHandler("click", eventObj);
     }
 }
+
+/**
+ * Simulate a mouseenter event
+ */
+export function mouseenter(el: DebugElement | HTMLElement) {
+    if (el instanceof HTMLElement) {
+        el.dispatchEvent(new Event("mouseenter"));
+    } else {
+        el.triggerEventHandler("mouseenter", {});
+    }
+}
+
+/**
+ * Simulate a mouseleave event
+ */
+export function mouseleave(el: DebugElement | HTMLElement) {
+    if (el instanceof HTMLElement) {
+        el.dispatchEvent(new Event("mouseleave"));
+    } else {
+        el.triggerEventHandler("mouseleave", {});
+    }
+}
