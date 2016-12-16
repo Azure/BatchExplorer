@@ -8,10 +8,13 @@ import { routes } from "app/app.routes";
 import {
     BoolPropertyComponent,
     LinkPropertyComponent,
-    PropertyGroupComponent,
     PropertyListComponent,
     VoidLinkPropertyComponent,
 } from "./property-list.component";
+
+import {
+    PropertyGroupComponent,
+} from "./property-group.component";
 
 import {
     TablePropertyComponent, TablePropertyHeaderComponent, TablePropertyRowComponent,
