@@ -61,6 +61,7 @@ bex-property-group {
         padding: 0;
         margin: 0 0 0.7em;
         display: flex;
+        position: relative;
 
         &.one-line {
             height: 34px;
@@ -71,6 +72,7 @@ bex-property-group {
             color: $genericGray;
             font-size: 13px;
             width: $label-width !important;
+            min-width: $label-width;
             padding: 6px 0;
             margin-bottom: 0;
             margin-right: $label-value-margin;
@@ -78,7 +80,7 @@ bex-property-group {
             height: 34px;
         }
 
-        .value {
+        .value, tp-cell {
             color: $mineShaftGray;
             background-color: $whitesmoke-darker;
             padding: 8px;
@@ -126,32 +128,69 @@ bex-property-group {
         }
 
         > table {
-            width: $property-width;
+            $table-width: $property-width - $clipboard-width + 1;
+            width: $table-width;
+            max-width: $table-width;
+            table-layout: fixed;
 
-            [tp-column], [tp-cell] {
+            [tp-column], tp-cell {
                 display: table-cell;
                 color: $mineShaftGray;
                 background-color: $whitesmoke-darker;
                 padding: 8px;
+                width: auto;
             }
 
             [tp-column] {
                 font-weight: bold;
+                font-size: 13px;
             }
 
             .row {
                 > td.label {
+                    padding: 5px;
                     padding-left: 20px;
+                    font-size: 11px;
+                    height: 23px;
+                }
+
+                tp-cell {
+                    cursor: pointer;
+                    font-size: 11px;
+                    height: 23px;
+                    padding: 5px 8px;
                 }
             }
         }
     }
 
-    &.wide {
+    bex-table-property {
         section {
-            label {
-                width: 200px !important;
+            display: block;
+        }
+
+        .expand-container {
+            margin-left: $label-width;
+            padding: 5px $group-padding 0 $group-padding;
+            width: $value-width;
+
+            > button {
+                display: block;
+                margin: auto;
+            }
+
+            > button.expand {
+                line-height: 26px;
+                padding: 0 5px;
+            }
+
+            > button.collapse {
+                width: 26px !important;
+                height: 26px !important;
+                font-size: 16px;
+                color: map-get($md-prussian-blue, 500);
             }
         }
     }
 }
+
