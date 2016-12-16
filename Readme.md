@@ -46,6 +46,8 @@ If you're using VSCode (recommended) we suggest you use the following extensions
 * EditorConfig for VS Code
 * TSLint
 
+Please also take a look at the [coding guidelines](coding-guidelines.md) for this repo for best practices.
+
 ## How to run the tests
 
 | Description                              | Single run             | Watch                        |
