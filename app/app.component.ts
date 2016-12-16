@@ -25,6 +25,9 @@ export class AppComponent implements AfterViewInit {
         private settingsService: SettingsService,
         private commandService: CommandService,
         private accountService: AccountService) {
+        this.settingsService.init();
+        this.commandService.init();
+
         this.hasAccount = accountService.currentAccount.map((x) => { return Boolean(x); });
 
         Observable
