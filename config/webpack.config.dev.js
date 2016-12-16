@@ -18,7 +18,7 @@ module.exports = merge(config, {
         publicPath: `http://${host}:${port}/build/`,
         filename: "[name].js",
         sourceMapFilename: "[name].js.map",
-        chunkFilename: "[id].chunk.js"
+        chunkFilename: "[id].chunk.js",
     },
     plugins: [
         new CommonsChunkPlugin({ name: "polyfills", filename: "polyfills.js", minChunk: Infinity }),
