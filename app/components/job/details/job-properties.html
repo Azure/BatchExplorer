@@ -14,26 +14,23 @@
         <bex-text-property label="When all tasks complete" [value]="decorator.onAllTasksComplete"></bex-text-property>
         <bex-text-property label="When a task fails" [value]="decorator.onTaskFailure"></bex-text-property>
     </bex-property-group>
-</bex-property-list>
 
-<bex-property-list>
-    <bex-property-group *ngIf="jobManagerTask.id" label="Job manager task" class="wide">
+    <bex-property-group *ngIf="jobManagerTask.id" label="Job manager task" class="wide" [collapsed]="true">
+        <div collapsed-preview></div>
         <bex-void-link-property label="Id" [value]="jobManagerTask.id"></bex-void-link-property>
         <bex-bool-property label="Kill job on completion" [value]="jobManagerTask.killJobOnCompletion" YesNo="true"></bex-bool-property>
         <bex-bool-property label="Run elevated" [value]="jobManagerTask.runElevated" YesNo="true"></bex-bool-property>
         <bex-bool-property label="Run exclusive" [value]="jobManagerTask.runExclusive" YesNo="true"></bex-bool-property>
     </bex-property-group>
-</bex-property-list>
 
-<bex-property-list>
-    <bex-property-group label="Execution information" class="wide">
+    <bex-property-group label="Execution information" class="wide" [collapsed]="true">
+        <div collapsed-preview>Job started {{executionInfo.startTime}}</div>
+
         <bex-text-property label="Start time" [value]="executionInfo.startTime"></bex-text-property>
         <bex-text-property label="End time" [value]="executionInfo.endTime"></bex-text-property>
         <bex-text-property label="Termination reason" [value]="executionInfo.terminateReason"></bex-text-property>
     </bex-property-group>
-</bex-property-list>
 
-<bex-property-list>
     <bex-property-group label="Constraints" class="wide">
         <bex-text-property label="Max task retry count" [value]="constraints.maxTaskRetryCount"></bex-text-property>
         <bex-text-property label="Max wall-clock time" [value]="constraints.maxWallClockTime"></bex-text-property>
