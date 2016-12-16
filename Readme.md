@@ -37,7 +37,7 @@ npm run dev-electron
 // In VSCode just press F5
 ```
 
-The dev-server and dev-electron support hot reload for a better development experience. Simply saving a file will cause the UI to refresh to you updated changes.
+The dev-server and dev-electron support hot reload for a better development experience. Simply saving a file will cause the UI to refresh to your updated changes.
 
 *Note:* Changes to any files in the node client directory ('\client\api\') require restarting the application.
 
