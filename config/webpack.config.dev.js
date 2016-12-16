@@ -1,25 +1,27 @@
 const config = require("./webpack.config.base");
-const path = require('path');
-const webpack = require('webpack');
-var merge = require('webpack-merge');
+const path = require("path");
+const webpack = require("webpack");
+var merge = require("webpack-merge");
+var failPlugin = require("webpack-fail-plugin");
 
 const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 
-const host = 'localhost';
+const host = "localhost";
 const port = process.env.PORT || 3178;
 
 module.exports = merge(config, {
-    devtool: 'cheap-module-source-map',
+    devtool: "cheap-module-source-map",
     debug: true,
     devServer: { host, port },
     output: {
-        path: path.join(__dirname, '../build/'),
+        path: path.join(__dirname, "../build/"),
         publicPath: `http://${host}:${port}/build/`,
-        filename: '[name].js',
-        sourceMapFilename: '[name].js.map',
-        chunkFilename: '[id].chunk.js'
+        filename: "[name].js",
+        sourceMapFilename: "[name].js.map",
+        chunkFilename: "[id].chunk.js"
     },
     plugins: [
-        new CommonsChunkPlugin({name: 'polyfills', filename: 'polyfills.js', minChunk: Infinity}),
+        new CommonsChunkPlugin({ name: "polyfills", filename: "polyfills.js", minChunk: Infinity }),
+        failPlugin,
     ],
 });
