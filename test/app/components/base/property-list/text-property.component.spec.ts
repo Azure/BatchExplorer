@@ -39,18 +39,18 @@ describe("TextPropertyComponent", () => {
     it("the clipboard should be enabled by default", () => {
         const clipboard = de.query(By.css(".clipboard"));
         expect(clipboard).not.toBeNull();
-        expect(clipboard.nativeElement.offsetParent).toBeNull();
+        expect(clipboard).toBeHidden();
     });
 
     it("Should show the clipboard when mouse enter and hide when mouse leave", () => {
         mouseenter(section);
         fixture.detectChanges();
         const clipboard = de.query(By.css(".clipboard"));
-        expect(clipboard.nativeElement.offsetParent).not.toBeNull();
+        expect(clipboard).toBeVisible();
 
         mouseleave(section);
         fixture.detectChanges();
-        expect(clipboard.nativeElement.offsetParent).toBeNull();
+        expect(clipboard).toBeHidden();
     });
 
     describe("when clipboard is disabled", () => {
@@ -71,5 +71,5 @@ describe("TextPropertyComponent", () => {
             const clipboard = de.query(By.css(".clipboard"));
             expect(clipboard).toBeNull();
         });
-    })
+    });
 });

@@ -64,7 +64,6 @@ describe("TextPropertyComponent", () => {
         expect(group.collapsed).toBe(true);
     });
 
-
     it("should show the warning message when present", () => {
         component.warningMessage = "Some warning";
         fixture.detectChanges();

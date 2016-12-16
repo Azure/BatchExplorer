@@ -30,7 +30,6 @@ export function mouseenter(el: DebugElement | HTMLElement) {
     }
 }
 
-
 /**
  * Simulate a mouseleave event
  */
