@@ -27,6 +27,7 @@ import { JobDetailsHomeComponent } from "./components/job/details/job-details-ho
 import { JobDetailsComponent } from "./components/job/details/job-details.component";
 import { JobEnvironmentSettingsComponent } from "./components/job/details/job-env-settings.component";
 import { JobMetadataComponent } from "./components/job/details/job-metadata.component";
+import { JobPrepReleaseComponent } from "./components/job/details/job-prep-release.component";
 import { JobPropertiesComponent } from "./components/job/details/job-properties.component";
 import { JobHomeComponent } from "./components/job/home/job-home.component";
 import { NodeListDisplayComponent } from "./components/node/browse/display";
@@ -131,6 +132,7 @@ import {
         JobHomeComponent,
         JobListComponent,
         JobMetadataComponent,
+        JobPrepReleaseComponent,
         JobPropertiesComponent,
         JobStatsPreviewComponent,
         MainNavigationComponent,

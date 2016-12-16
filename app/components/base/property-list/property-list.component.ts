@@ -33,7 +33,7 @@ export class LinkPropertyComponent {
     template: `
         <section class="one-line">
             <label>{{label}}</label>
-            <span class="value"><a href="javascript:void(0);">{{value}}</a></span>
+            <a class="value link" href="javascript:void(0);">{{value}}</a>
         </section>
     `,
 })
@@ -52,7 +52,7 @@ export class VoidLinkPropertyComponent {
             <label>{{label}}</label>
             <span class="value">
                 <i class="fa" [class.fa-check-circle]="value" [class.fa-times-circle]="!value"></i>
-                {{value ? "Enabled" : "Disabled"}}
+                {{ ValueSting }}
             </span>
         </section>
     `,
@@ -63,4 +63,13 @@ export class BoolPropertyComponent {
 
     @Input()
     public value: boolean;
+
+    @Input()
+    public YesNo: boolean;
+
+    private get ValueSting() {
+        return this.YesNo
+            ? (this.value ? "Yes" : "No")
+            : (this.value ? "Enabled" : "Disabled");
+    }
 }
