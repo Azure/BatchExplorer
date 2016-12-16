@@ -52,7 +52,7 @@ export class LinkPropertyComponent {
     template: `
         <section class="one-line">
             <label>{{label}}</label>
-            <span class="value"><a href="javascript:void(0);">{{value}}</a></span>
+            <a class="value link" href="javascript:void(0);">{{value}}</a>
         </section>
     `,
 })
