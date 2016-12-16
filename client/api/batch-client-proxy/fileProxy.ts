@@ -8,8 +8,52 @@ export default class FileProxy {
         this._getProxy = new GetProxy(this.client.file);
     }
 
-    public getNodeFile(poolId: string, nodeId: string, filename: string, options?: BatchRequestOptions) {
-        return this._getProxy.execute([poolId, nodeId], { nodeFileGetOptions: options });
+    public getComputeNodeFile(poolId: string, nodeId: string, filename: string, options?: BatchRequestOptions) {
+        return new Promise((resolve, reject) => {
+            this.client.file.getFromComputeNode(poolId, nodeId, filename, options, (error, result, request, response) => {
+                if (error) { return reject(error); }
+                if (result) {
+                    const chunks = [];
+                    result.on("data", (chunk) => {
+                        chunks.push(chunk);
+                    });
+
+                    result.on("end", () => {
+                        resolve({
+                            result,
+                            content: Buffer.concat(chunks),
+                            request,
+                            response,
+                        });
+                    });
+
+                }
+            });
+        });
+    }
+
+    public getComputeNodeFileProperties(poolId: string, nodeId: string, filename: string, options?: BatchRequestOptions) {
+        return new Promise((resolve, reject) => {
+            this.client.file.getNodeFilePropertiesFromComputeNode(poolId, nodeId, filename, options,
+                (error, result, request, response) => {
+                    if (error) { return reject(error); }
+                    const headers = response.headers;
+                    const out = {
+                        name: filename,
+                        isDirectory: headers["ocp-batch-file-isdirectory"],
+                        url: headers["ocp-batch-file-url"],
+                        properties: {
+                            contentLength: headers["content-length"],
+                            contentType: headers["content-type"],
+                            creationTime: headers["ocp-creation-time"],
+                            lastModified: headers["lastModified"],
+                        },
+                    };
+                    resolve({
+                        data: out,
+                    });
+                });
+        });
     }
 
     public get some() {

@@ -47,6 +47,25 @@ export class FileService extends ServiceBase {
         })​;
     }
 
+    public getFileContentFromComputeNode(
+        poolId: string,
+        nodeId: string,
+        filename: string,
+        options: any = {}): Observable<FileContentResult> {
+
+        return Observable.fromPromise(BatchClient.file.getComputeNodeFile(poolId, nodeId, filename, options));
+    }
+
+    // TODO change to RxEntityProxy
+    public getFilePropertiesFromComputeNode(
+        poolId: string,
+        nodeId: string,
+        filename: string,
+        options: any = {}): Observable<File> {
+
+        return Observable.fromPromise(BatchClient.file.getComputeNodeFileProperties(poolId, nodeId, filename, options));
+    }
+
     public listFromTask(
         initialJobId: string,
         initialTaskId: string,

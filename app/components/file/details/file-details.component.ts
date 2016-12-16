@@ -12,8 +12,6 @@ import { RxEntityProxy } from "app/services/core";
     templateUrl: "./file-details.html",
 })
 export class FileDetailsComponent implements OnInit, OnDestroy {
-    // public nodeId: string;
-    // public poolId: string;
     // public data: RxEntityProxy<NodeParams, Node>;
     // public node: Node;
 
@@ -23,42 +21,40 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     public filename: string;
     public contentSize: number;
 
+    // test stuff
+    public nodeId: string;
+    public poolId: string;
+
     private _paramsSubscribers: Subscription[] = [];
 
     constructor(private route: ActivatedRoute, private fileService: FileService) {
-        // this.data = nodeService.get(null, null, {});
-        // this.data.item.subscribe((node) => {
-        //     if (node) {
-        //         this.decorator = new NodeDecorator(node);
-        //         this.node = node;
-        //     }
-        // });
-
     }
 
     public ngOnInit() {
-        // this._paramsSubscribers.push(this.route.params.subscribe((params) => {
-        //     this.nodeId = params["id"];
-        //     this.update();
-        // }));
-
-        // this._paramsSubscribers.push(this.route.parent.params.subscribe((params) => {
-        //     this.poolId = params["poolId"];
-        //     this.update();
-        // }));
         this._paramsSubscribers.push(this.route.params.subscribe((params) => {
             this.url = params["url"];
-            console.log("URL is:" + this.url);
-            console.log(params);
             let obj = this.parseRelativePath(this.url);
-            this.filename = obj.file;
-            this.jobId = obj.containerName;
-            this.taskId = obj.entityName;
+            console.log("WHAT UI???: " + this.url);
 
-            this.fileService.getFilePropertiesFromTask(this.jobId, this.taskId, this.filename)
-                .subscribe((details: any) => {
-                    this.contentSize = details.data.properties.contentLength;
-                });
+            if (obj.type === "job") {
+                console.log("WWOOT!!");
+                console.log(obj);
+                this.jobId = obj.containerName;
+                this.taskId = obj.entityName;
+                this.filename = obj.file;
+                this.fileService.getFilePropertiesFromTask(this.jobId, this.taskId, this.filename)
+                    .subscribe((details: any) => {
+                        this.contentSize = details.data.properties.contentLength;
+                    });
+            } else {
+                this.poolId = obj.containerName;
+                this.nodeId = obj.entityName;
+                this.filename = obj.file;
+                this.fileService.getFilePropertiesFromComputeNode(this.poolId, this.nodeId, this.filename)
+                    .subscribe((details: any) => {
+                        this.contentSize = details.data.properties.contentLength;
+                    });
+            }
         }));
 
         // this._paramsSubscribers.push(this.route.parent.params.subscribe((params) => {
@@ -89,12 +85,15 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     }
 
     // TODO: Add unit tests!
+    // TODO: Move to common utils
     private parseRelativePath(fileUrl: string): any {
         let parts: string[] = fileUrl.split("/");
         let obj: any = {};
         if (parts) {
             if (parts[3] === "jobs") {
                 obj.type = "job";
+            } else {
+                obj.type = "pool";
             }
             obj.containerName = parts[4];
             obj.entityName = parts[6];
