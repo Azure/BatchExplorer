@@ -15,8 +15,8 @@ import { click } from "test/utils/helpers";
                 <div tp-column>Source</div>
             </bex-table-property-header>
             <bex-table-property-row *ngFor="let file of files">
-                <tp-cell [value]="file.path"></tp-cell>
-                <tp-cell [value]="file.source"></tp-cell>
+                <bex-tp-cell [value]="file.path"></tp-cell>
+                <bex-tp-cell [value]="file.source"></tp-cell>
             </bex-table-property-row>
         </bex-table-property>
     `,
