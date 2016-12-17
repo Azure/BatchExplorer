@@ -11,6 +11,16 @@
         <bex-text-property label="State transition time" [value]="decorator.stateTransitionTime"></bex-text-property>
         <bex-text-property label="Previous state transition time" [value]="decorator.previousStateTransitionTime"></bex-text-property>
         <bex-text-property label="Exit conditions" *ngIf="!task.exitConditions" value="None"></bex-text-property>
+        <bex-table-property label="Resource files">
+            <bex-table-property-header>
+                <div tp-column>File path</div>
+                <div tp-column>Source</div>
+            </bex-table-property-header>
+            <bex-table-property-row *ngFor="let file of task.resourceFiles">
+                <bex-tp-cell [value]="file.filePath"></bex-tp-cell>
+                <bex-tp-cell [value]="file.blobSource"></bex-tp-cell>
+            </bex-table-property-row>
+        </bex-table-property>
     </bex-property-group>
 
     <bex-property-group label="Constraints" class="wide">

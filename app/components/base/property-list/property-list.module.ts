@@ -17,7 +17,7 @@ import {
 } from "./property-group.component";
 
 import {
-    TablePropertyComponent, TablePropertyHeaderComponent, TablePropertyRowComponent,
+    TablePropertyCellComponent, TablePropertyComponent, TablePropertyHeaderComponent, TablePropertyRowComponent,
 } from "./table-property.component";
 import { TextPropertyComponent } from "./text-property.component";
 
@@ -28,6 +28,7 @@ const components = [
     PropertyGroupComponent,
     TextPropertyComponent,
     VoidLinkPropertyComponent,
+    TablePropertyCellComponent,
     TablePropertyComponent,
     TablePropertyHeaderComponent,
     TablePropertyRowComponent,
