@@ -145,28 +145,49 @@ bex-property-group {
                 font-weight: bold;
                 font-size: 13px;
             }
-
-            .row {
-                > td.label {
-                    padding: 5px;
-                    padding-left: 20px;
-                    font-size: 11px;
-                    height: 23px;
-                }
-
-                tp-cell {
-                    cursor: pointer;
-                    font-size: 11px;
-                    height: 23px;
-                    padding: 5px 8px;
-                }
-            }
         }
     }
 
     bex-table-property {
         section {
             display: block;
+        }
+
+        .row {
+            > td.label {
+                padding: 5px;
+                padding-left: 20px;
+                font-size: 11px;
+                height: 23px;
+            }
+
+            tp-cell {
+                cursor: pointer;
+                font-size: 11px;
+                height: 23px;
+                position: relative;
+                padding: 0;
+
+                .cell-value {
+                    padding: 5px 8px;
+                }
+
+                .copied-notification {
+                    top: 0;
+                    z-index: 1;
+                    background: $green;
+                    position: absolute;
+                    color: $whitesmoke;
+                    padding: 5px;
+                    transition: 100ms ease-in-out;
+                    overflow: hidden;
+                    height: 100%;
+
+                    &.hidden {
+                        transform: translateX(-100%);
+                    }
+                }
+            }
         }
 
         .expand-container {

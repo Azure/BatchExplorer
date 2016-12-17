@@ -17,8 +17,8 @@
                 <div tp-column>Source</div>
             </bex-table-property-header>
             <bex-table-property-row *ngFor="let file of task.resourceFiles">
-                <tp-cell [value]="file.filePath"></tp-cell>
-                <tp-cell [value]="file.blobSource"></tp-cell>
+                <bex-tp-cell [value]="file.filePath"></tp-cell>
+                <bex-tp-cell [value]="file.blobSource"></tp-cell>
             </bex-table-property-row>
         </bex-table-property>
     </bex-property-group>

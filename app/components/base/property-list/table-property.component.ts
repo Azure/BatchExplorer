@@ -30,17 +30,26 @@ export class TablePropertyRowComponent {
 }
 
 @Component({
-    selector: "tp-cell",
-    template: `{{value}}`,
+    selector: "bex-tp-cell",
+    template: `
+        <div class="cell-value">{{value}}</div>
+        <div class="copied-notification" [class.hidden]="copyNotificationHidden">Copied.</div>
+    `,
 })
 export class TablePropertyCellComponent {
     @Input()
     @HostBinding("attr.title")
     public value;
 
+    public copyNotificationHidden = true;
+
     @HostListener("click")
     public onClick() {
+        this.copyNotificationHidden = false;
         clipboard.writeText(this.value);
+        setTimeout(() => {
+            this.copyNotificationHidden = true;
+        }, 1000);
     }
 }
 

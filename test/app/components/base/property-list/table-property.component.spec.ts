@@ -63,7 +63,6 @@ describe("TextPropertyComponent", () => {
             expect(expandContainer).toBeNull();
         });
 
-
         it("all the rows should be displayed", () => {
             expect(de.nativeElement.textContent).toContain("file1.txt");
             expect(de.nativeElement.textContent).toContain("file2.txt");
