@@ -1,11 +1,11 @@
 import { Component, Input, OnDestroy, ViewContainerRef } from "@angular/core";
+
 import { ApplicationPackageReference, Task } from "app/models";
 
 @Component({
     selector: "bex-task-app-packages",
-    template: require("./task-app-packages.html"),
+    templateUrl: "task-app-packages.html",
 })
-
 export class TaskAppPackagesComponent implements OnDestroy {
     @Input()
     public set task(task: Task) {
@@ -13,6 +13,7 @@ export class TaskAppPackagesComponent implements OnDestroy {
         this.refresh(task);
     }
     public get task() { return this._task; }
+
     public appPackages: ApplicationPackageReference[] = [];
 
     private _task: Task;

@@ -26,7 +26,7 @@ const TaskRecord = Record({
     commandLine: null,
     runElevated: null,
     exitConditions: new TaskExitConditions(),
-    resourceFiles: null,
+    resourceFiles: [],
     environmentSettings: null,
     affinityInfo: null,
     constraints: null,

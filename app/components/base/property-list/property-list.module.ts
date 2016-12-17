@@ -8,13 +8,16 @@ import { routes } from "app/app.routes";
 import {
     BoolPropertyComponent,
     LinkPropertyComponent,
-    PropertyGroupComponent,
     PropertyListComponent,
     VoidLinkPropertyComponent,
 } from "./property-list.component";
 
 import {
-    TablePropertyComponent, TablePropertyHeaderComponent, TablePropertyRowComponent,
+    PropertyGroupComponent,
+} from "./property-group.component";
+
+import {
+    TablePropertyCellComponent, TablePropertyComponent, TablePropertyHeaderComponent, TablePropertyRowComponent,
 } from "./table-property.component";
 import { TextPropertyComponent } from "./text-property.component";
 
@@ -25,6 +28,7 @@ const components = [
     PropertyGroupComponent,
     TextPropertyComponent,
     VoidLinkPropertyComponent,
+    TablePropertyCellComponent,
     TablePropertyComponent,
     TablePropertyHeaderComponent,
     TablePropertyRowComponent,

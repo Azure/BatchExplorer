@@ -5,7 +5,7 @@
 </div>
 
 <div class="button-bar">
-    <bex-submit-btn [submit]="add" [multiSubmit]="true" [disabled]="!formGroup.valid" class="add">Add</bex-submit-btn>
-    <bex-submit-btn [submit]="addAndClose" [disabled]="!formGroup.valid" *ngIf="sidebarRef" class="add-and-close">Add and close</bex-submit-btn>
+    <bex-submit-btn [submit]="performAction" [multiSubmit]="true" [disabled]="!formGroup.valid" class="add">Add</bex-submit-btn>
+    <bex-submit-btn [submit]="performActionAndClose" [disabled]="!formGroup.valid" *ngIf="sidebarRef" class="add-and-close">Add and close</bex-submit-btn>
     <button type="button" [disabled]="isSaving" (click)="close()" class="close" md-raised-button>Close</button>
 </div>

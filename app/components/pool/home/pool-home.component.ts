@@ -5,11 +5,11 @@ import { PoolCreateBasicDialogComponent } from "../action";
 
 @Component({
     selector: "bex-pool-home",
-    template: require("./pool-home.html"),
+    templateUrl: "pool-home.html",
 })
 export class PoolHomeComponent {
-
-    constructor(private sidebarManager: SidebarManager) {
+    constructor(
+        private sidebarManager: SidebarManager) {
     }
 
     public addPool() {

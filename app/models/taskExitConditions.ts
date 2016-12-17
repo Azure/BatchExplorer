@@ -8,18 +8,21 @@ const TaskExitConditionsRecord = Record({
     exitCodes: [],
     exitCodeRanges: [],
     schedulingError: null,
+    default: null,
 });
 
 export class TaskExitConditions extends TaskExitConditionsRecord {
     public exitCodes: List<ExitCodeMapping>;
     public exitCodeRanges: List<ExitCodeRangeMapping>;
     public schedulingError: ExitOptions;
+    public default: ExitOptions;
 
     constructor(data: any = {}) {
         super(Object.assign({}, data, ObjectUtils.compact({
             exitCodes: data.exitCodes && List(data.exitCodes.map(x => new ExitCodeMapping(x))),
             exitCodeRanges: data.exitCodeRanges && List(data.exitCodeRanges.map(x => new ExitCodeRangeMapping(x))),
             schedulingError: new ExitOptions(data.schedulingError),
+            default: new ExitOptions(data.default),
         })));
     }
 }

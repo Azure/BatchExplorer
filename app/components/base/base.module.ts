@@ -24,7 +24,7 @@ import { NotificationModule } from "./notifications";
 import { PropertyListModule } from "./property-list";
 import { QuickListModule } from "./quick-list";
 import { RefreshButtonComponent } from "./refresh-btn";
-import { ScrollableComponent } from "./scrollable";
+import { ScrollableComponent, ScrollableService } from "./scrollable";
 import { SidebarModule } from "./sidebar";
 import { TableModule } from "./table";
 
@@ -74,6 +74,7 @@ const components = [
         ...modules.map(x => x.forRoot()),
     ],
     providers: [
+        ScrollableService,
     ],
 })
 export class BaseModule {

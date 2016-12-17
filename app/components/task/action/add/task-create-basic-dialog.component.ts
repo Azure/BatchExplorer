@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
@@ -19,6 +19,7 @@ export class TaskCreateBasicDialogComponent {
     public jobId: string;
     public createTaskForm: FormGroup;
     public constraintsGroup: FormGroup;
+    public resourceFiles: FormArray;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -44,6 +45,7 @@ export class TaskCreateBasicDialogComponent {
             commandLine: ["", Validators.required],
             constraints: this.constraintsGroup,
             runElevated: ["0"],
+            resourceFiles: [[]],
         });
     }
 
@@ -59,10 +61,10 @@ export class TaskCreateBasicDialogComponent {
         const observable = this.taskService.add(this.jobId, jsonData, {});
         observable.subscribe({
             next: () => {
-                this.notificationManager.success("Pool added!", `Pool '${id}' was created successfully!`);
+                this.notificationManager.success("Task added!", `Task '${id}' was created successfully!`);
                 this.taskService.onTaskAdded.next(onAddedParams);
             },
-            error: (error) => { console.error("taskService.add() :: error: ", JSON.stringify(error)); },
+            error: (error) => null,
         });
 
         return observable;

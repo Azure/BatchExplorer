@@ -14,7 +14,8 @@
     "test-client": "cross-env NODE_ENV=test node test/client/run-jasmine.js",
     "test-client-watch": "npm run test-client -- --watch",
     "build-node-ts": "gulp build-node-ts",
-    "build": "npm run build-node-ts && webpack --progress --profile --colors --display-error-details --display-cached",
+    "build-app": "webpack --progress --profile --colors --display-error-details --display-cached",
+    "build": "npm run build-node-ts && npm run build-app",
     "watch": "webpack --watch --progress --profile --colors --display-error-details --display-cached",
     "electron": "electron build/client/main.js",
     "dev": "concurrently --kill-others \"npm run dev-server\" \"npm run dev-electron\"",
@@ -69,9 +70,9 @@
     "style-loader": "^0.13.1",
     "stylelint": "^7.5.0",
     "ts-loader": "1.2.1",
-    "ts-node": "1.7.0",
+    "ts-node": "1.7.2",
     "tslint": "^4.0.2",
-    "typescript": "~2.0.10",
+    "typescript": "~2.1.4",
     "vrsource-tslint-rules": "^0.14.1",
     "webpack": "^1.13.3",
     "webpack-dev-server": "^1.16.2",
@@ -103,6 +104,7 @@
     "mousetrap": "^1.6.0",
     "reflect-metadata": "0.1.8",
     "rxjs": "5.0.0-rc.4",
+    "webpack-fail-plugin": "^1.0.5",
     "zone.js": "^0.7.2"
   }
 }

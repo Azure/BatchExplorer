@@ -20,18 +20,14 @@
             <bex-text-property label="Task scheduling policy" [value]="decorator.taskSchedulingPolicy.nodeFillType"></bex-text-property>
             <bex-text-property label="Url" [value]="decorator.url"></bex-text-property>
 		</bex-property-group>
-	</bex-property-list>
 
-	<bex-property-list *ngIf="pool.cloudServiceConfiguration">
-		<bex-property-group label="Cloud service configuration" class="wide">
+		<bex-property-group label="Cloud service configuration"  *ngIf="pool.cloudServiceConfiguration">
 			<bex-text-property label="OS family" [value]="decorator.cloudServiceConfiguration.osFamily"></bex-text-property>
 			<bex-text-property label="Curent OS version" [value]="decorator.cloudServiceConfiguration.currentOSVersion"></bex-text-property>
 			<bex-text-property label="Target OS version" [value]="decorator.cloudServiceConfiguration.targetOSVersion"></bex-text-property>
 		</bex-property-group>
-	</bex-property-list>
 
-	<bex-property-list *ngIf="pool.virtualMachineConfiguration">
-		<bex-property-group label="Virtual machine configuration" class="wide">
+		<bex-property-group label="Virtual machine configuration" class="wide"  *ngIf="pool.virtualMachineConfiguration">
 			<bex-text-property label="Publisher" [value]="decorator.virtualMachineConfiguration.imageReference.publisher"></bex-text-property>
 			<bex-text-property label="Offer" [value]="decorator.virtualMachineConfiguration.imageReference.offer"></bex-text-property>
             <bex-text-property label="Sku" [value]="decorator.virtualMachineConfiguration.imageReference.sku"></bex-text-property>

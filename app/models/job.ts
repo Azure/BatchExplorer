@@ -1,12 +1,14 @@
 import { Record } from "immutable";
 
 import { JobStats } from "./";
-import { JobAction, TaskFailureAction } from "./jobAction";
+import { AllTasksCompleteAction, TaskFailureAction } from "./jobAction";
 import { JobConstraints } from "./jobConstraints";
 import { JobExecutionInformation } from "./jobExecutionInformation";
+import { JobManagerTask } from "./jobManagerTask";
+import { JobPreparationTask } from "./jobPreparationTask";
+import { JobReleaseTask } from "./jobReleaseTask";
 import { NameValuePair } from "./nameValuePair";
 
-// tslint:disable:variable-name
 const JobRecord = Record({
     id: null,
     displayName: null,
@@ -20,7 +22,7 @@ const JobRecord = Record({
     previousState: null,
     previousStateTransitionTime: null,
     priority: null,
-    onAllTasksComplete: JobAction.noaction,
+    onAllTasksComplete: AllTasksCompleteAction.noaction,
     onTaskFailure: TaskFailureAction.noaction,
     constraints: null,
     jobManagerTask: null,
@@ -49,13 +51,13 @@ export class Job extends JobRecord {
     public previousState: JobState;
     public previousStateTransitionTime: Date;
     public priority: number;
-    public onAllTasksComplete: JobAction;
+    public onAllTasksComplete: AllTasksCompleteAction;
     public onTaskFailure: TaskFailureAction;
 
     public constraints: JobConstraints;
-    public jobManagerTask: any;
-    public jobPreparationTask: any;
-    public jobReleaseTask: any;
+    public jobManagerTask: JobManagerTask;
+    public jobPreparationTask: JobPreparationTask;
+    public jobReleaseTask: JobReleaseTask;
     public commonEnvironmentSettings: NameValuePair[];
     public poolInfo: any;
     public metadata: NameValuePair[];

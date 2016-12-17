@@ -49,3 +49,7 @@ export class ObjectUtils {
         return out;
     }
 }
+
+export function isPresent(obj: any): boolean {
+  return obj !== undefined && obj !== null;
+}

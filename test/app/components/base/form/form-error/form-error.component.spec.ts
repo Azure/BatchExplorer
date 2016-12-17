@@ -62,6 +62,7 @@ describe("FormErrorComponent", () => {
 
     it("Should show error for control at the root of a control group", () => {
         component.form.patchValue({ id: "" });
+        component.form.get("id").markAsTouched();
         fixture.detectChanges();
         expect(component.idRequiredError.hasError).toBe(true);
         expect(component.idMaxLengthError.hasError).toBe(false);
@@ -70,8 +71,17 @@ describe("FormErrorComponent", () => {
         expect(fixture.nativeElement.textContent).not.toContain("Id is max 5 char long");
     });
 
+    it("should not show error if the input is not touched", () => {
+        component.form.patchValue({ id: "" });
+        component.form.get("id").markAsUntouched();
+        fixture.detectChanges();
+        expect(component.idRequiredError.hasError).toBe(false);
+        expect(component.idMaxLengthError.hasError).toBe(false);
+    });
+
     it("Should show error for control at the root of a control group with a different error", () => {
         component.form.patchValue({ id: "waytoolong" });
+        component.form.get("id").markAsTouched();
         fixture.detectChanges();
         expect(component.idRequiredError.hasError).toBe(false);
         expect(component.idMaxLengthError.hasError).toBe(true);
@@ -82,6 +92,8 @@ describe("FormErrorComponent", () => {
 
     it("Should show error in nested group", () => {
         component.form.patchValue({ os: { name: "" } });
+        component.form.get("os").get("name").markAsTouched();
+
         fixture.detectChanges();
 
         expect(component.osNameError.hasError).toBe(true);
@@ -90,6 +102,7 @@ describe("FormErrorComponent", () => {
 
     it("Fixing error in nested group should not show the error text", () => {
         component.form.patchValue({ os: { name: "centos" } });
+        component.form.get("os").get("name").markAsTouched();
         fixture.detectChanges();
 
         expect(component.osNameError.hasError).toBe(false);

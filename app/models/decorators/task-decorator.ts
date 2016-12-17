@@ -33,6 +33,7 @@ export class TaskDecorator extends DecoratorBase<Task> {
 
     constructor(private task?: Task) {
         super(task);
+
         this.displayName = this.stringField(task.displayName);
         this.url = this.stringField(task.url);
         this.eTag = this.stringField(task.eTag);

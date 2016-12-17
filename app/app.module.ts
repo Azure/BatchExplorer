@@ -19,6 +19,7 @@ import { AccountHomeComponent } from "./components/account/home/account-home.com
 import { BaseModule } from "./components/base";
 import { FileDirectoryFilter, FileListDisplayComponent } from "./components/file/browse/display";
 import { FileListComponent } from "./components/file/browse/file-list.component";
+import { FileContentComponent } from "./components/file/details";
 import { JobStatsPreviewComponent } from "./components/job/base/job-stats-preview";
 import { JobAdvancedFilterComponent } from "./components/job/browse/filter/job-advanced-filter.component";
 import { JobListComponent } from "./components/job/browse/job-list.component";
@@ -82,6 +83,7 @@ import {
 // task actions
 import {
     DeleteTaskDialogComponent,
+    ResourcefilePickerComponent,
     TaskCreateBasicDialogComponent,
     TerminateTaskDialogComponent,
 } from "./components/task/action";
@@ -120,6 +122,7 @@ import {
         FileDirectoryFilter,
         FileListComponent,
         FileListDisplayComponent,
+        FileContentComponent,
         JobAdvancedFilterComponent,
         JobCreateBasicDialogComponent,
         JobDetailsComponent,
@@ -149,6 +152,7 @@ import {
         PoolOsPickerComponent,
         PoolPropertiesComponent,
         PoolResizeDialogComponent,
+        ResourcefilePickerComponent,
         SubTaskDisplayListComponent,
         SubTaskPropertiesComponent,
         TaskAdvancedFilterComponent,

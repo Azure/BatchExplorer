@@ -25,6 +25,9 @@ export class SettingsService {
         this.settingsObs = this._settingsSubject.asObservable();
         this.keybindings = this._keybindings.asObservable();
         this.hasSettingsLoaded = this._hasSettingsLoaded.asObservable();
+    }
+
+    public init() {
         this.loadSettings();
     }
 

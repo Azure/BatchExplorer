@@ -7,10 +7,20 @@
         <bex-text-property label="Previous State" [value]="decorator.previousState"></bex-text-property>
         <bex-text-property label="Creation Time" [value]="decorator.creationTime"></bex-text-property>
         <bex-text-property label="Last modified" [value]="decorator.lastModified"></bex-text-property>
-        <bex-bool-property label="Run elevated" [value]="task.runElevated"></bex-bool-property>
+        <bex-bool-property label="Run elevated" [value]="task.runElevated" YesNo="true"></bex-bool-property>
         <bex-text-property label="State transition time" [value]="decorator.stateTransitionTime"></bex-text-property>
         <bex-text-property label="Previous state transition time" [value]="decorator.previousStateTransitionTime"></bex-text-property>
         <bex-text-property label="Exit conditions" *ngIf="!task.exitConditions" value="None"></bex-text-property>
+        <bex-table-property label="Resource files">
+            <bex-table-property-header>
+                <div tp-column>File path</div>
+                <div tp-column>Source</div>
+            </bex-table-property-header>
+            <bex-table-property-row *ngFor="let file of task.resourceFiles">
+                <bex-tp-cell [value]="file.filePath"></bex-tp-cell>
+                <bex-tp-cell [value]="file.blobSource"></bex-tp-cell>
+            </bex-table-property-row>
+        </bex-table-property>
     </bex-property-group>
 
     <bex-property-group label="Constraints" class="wide">
@@ -20,9 +30,10 @@
     </bex-property-group>
 
     <bex-property-group label="Exit conditions" [warningMessage]="exitConditionWarningMessage">
-        <bex-text-property label="Do nothing" [value]="exitConditionData.noAction.join(', ')"></bex-text-property>
-        <bex-text-property label="Terminate Job" [value]="exitConditionData.terminateJob.join(', ')"></bex-text-property>
+        <bex-text-property label="Exit codes that do nothing" [value]="exitConditionData.noAction.join(', ')"></bex-text-property>
+        <bex-text-property label="Exit codes that terminate the job" [value]="exitConditionData.terminateJob.join(', ')"></bex-text-property>
         <bex-text-property label="On scheduling error" [value]="exitConditionData.schedulingError"></bex-text-property>
+        <bex-text-property *ngIf="exitConditionData.default" label="default" [value]="exitConditionData.default"></bex-text-property>
     </bex-property-group>
 
     <bex-property-group label="Execution information" class="wide">
