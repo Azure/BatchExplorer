@@ -2,9 +2,14 @@ import { AfterViewInit, Component, ViewChild } from "@angular/core";
 import { MdSidenav } from "@angular/material";
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { AccountService, CommandService, SettingsService } from "app/services";
+import { AccountService, AdalService, CommandService, SettingsService } from "app/services";
 import AccountCreateDialogComponent from "./components/account/add/account-create-dialog.component";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
+
+const adalConfig = {
+    tenant: "microsoft.onmicrosoft.com",
+    clientId: "9d77ff61-52a4-4e96-a128-44f67265affd",
+};
 
 @Component({
     selector: "bex-app",
@@ -24,9 +29,11 @@ export class AppComponent implements AfterViewInit {
         private sidebarManager: SidebarManager,
         private settingsService: SettingsService,
         private commandService: CommandService,
+        private adalService: AdalService,
         private accountService: AccountService) {
         this.settingsService.init();
         this.commandService.init();
+        this.adalService.init(adalConfig);
 
         this.hasAccount = accountService.currentAccount.map((x) => { return Boolean(x); });
 
@@ -49,5 +56,9 @@ export class AppComponent implements AfterViewInit {
 
     public addAccount() {
         this.sidebarManager.open("add-account", AccountCreateDialogComponent);
+    }
+
+    public login() {
+        this.adalService.login();
     }
 }

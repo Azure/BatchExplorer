@@ -91,6 +91,7 @@ import {
 // services
 import {
     AccountService,
+    AdalService,
     CommandService,
     FileService,
     JobService,
@@ -203,6 +204,7 @@ import {
         NodeService,
         SettingsService,
         TaskService,
+        AdalService,
         ...commands,
     ],
 })
