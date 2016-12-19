@@ -52,7 +52,7 @@ export class AdalService {
 
     private _generateAuthUrl() {
         const base = "https://login.microsoftonline.com";
-        const tenant = "microsoft.onmicrosoft.com";
+        const tenant = "common";
         const clientId = "9d77ff61-52a4-4e96-a128-44f67265affd";
         const params = {
             response_type: "id_token",
@@ -63,7 +63,7 @@ export class AdalService {
         };
         const query = objectToParams(params);
 
-        return `${base}/${tenant}/oauth2/authorize?${query}`;
+        return `${base}/${tenant}/oauth2/v2.0/authorize?${query}`;
     }
 
     private _handleCallback(url: string) {
