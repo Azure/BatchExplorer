@@ -87,7 +87,32 @@ md-tab-group {
     }
 
     .md-tab-body-content {
+        // set to same height as a tab with the .no-item-message
         min-height: 443px;
+
+        bex-sub-task-display-list {
+            &.item-selected {
+                bex-quick-list {
+                    width: 270px !important;
+                }
+            }
+
+            bex-quick-list {
+                float: left;
+                margin-top: 10px;
+                margin-bottom: 20px;
+            }
+        }
+
+        bex-sub-task-properties {
+            float: right;
+            border-left: 1px solid #ddd;
+            margin-bottom: 10px;
+
+            bex-property-group {
+                // todo: override property group css
+            }
+        }
     }
 }
 

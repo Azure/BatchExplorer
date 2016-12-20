@@ -46,6 +46,13 @@ export class ListAndShowLayoutComponent implements AfterViewInit {
     @Input()
     public refresh: Function;
 
+    /**
+     * Field for the quicksearch.
+     * @default id.
+     */
+    @Input()
+    public quickSearchField = "id";
+
     @Output()
     public listScrolledToBottom = new EventEmitter<any>();
 
@@ -68,7 +75,7 @@ export class ListAndShowLayoutComponent implements AfterViewInit {
             if (query === "") {
                 this.quickFilter = FilterBuilder.none();
             } else {
-                this.quickFilter = FilterBuilder.prop("id").startswith(query);
+                this.quickFilter = FilterBuilder.prop(this.quickSearchField).startswith(query);
             }
             this._updateFilter();
         });
