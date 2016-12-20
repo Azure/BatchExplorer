@@ -8,7 +8,7 @@ import { SidebarContentComponent, SidebarManager } from "./components/base/sideb
 
 const adalConfig = {
     tenant: "microsoft.onmicrosoft.com",
-    clientId: "9d77ff61-52a4-4e96-a128-44f67265affd",
+    clientId: "94ef904d-c21a-4672-9946-b4d6a12b8e13",
 };
 
 @Component({
