@@ -50,7 +50,6 @@ import { TaskHomeComponent } from "./components/task/home";
 
 import {
     NoTaskSelectedComponent,
-    TaskAppPackagesComponent,
     TaskDetailsComponent,
     TaskEnvironmentSettingsComponent,
     TaskPropertiesComponent,
@@ -156,7 +155,6 @@ import {
         SubTaskDisplayListComponent,
         SubTaskPropertiesComponent,
         TaskAdvancedFilterComponent,
-        TaskAppPackagesComponent,
         TaskCreateBasicDialogComponent,
         TaskDetailsComponent,
         TaskEnvironmentSettingsComponent,

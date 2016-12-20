@@ -15,10 +15,15 @@
         <bex-text-property label="When a task fails" [value]="decorator.onTaskFailure"></bex-text-property>
     </bex-property-group>
 
+    <bex-property-group label="Constraints" class="wide" [collapsed]="true">
+        <bex-text-property label="Max task retry count" [value]="constraints.maxTaskRetryCount"></bex-text-property>
+        <bex-text-property label="Max wall-clock time" [value]="constraints.maxWallClockTime"></bex-text-property>
+    </bex-property-group>
+
     <bex-property-group label="Execution information" class="wide" [collapsed]="true">
         <div collapsed-preview>
             Job started {{executionInfo.startTime}}
-            <span *ngIf="executionInfo.endTime">and ended {{executionInfo.endTime}}</span>
+            <span *ngIf="executionInfo.endTime != 'n/a'">and ended {{executionInfo.endTime}}</span>
         </div>
 
         <bex-text-property label="Start time" [value]="executionInfo.startTime"></bex-text-property>
@@ -43,8 +48,26 @@
         <bex-bool-property label="Wait for success" [value]="prepTask.waitForSuccess" YesNo="true"></bex-bool-property>
         <bex-bool-property label="Run elevated" [value]="prepTask.runElevated" YesNo="true"></bex-bool-property>
         <bex-bool-property label="Re-run on node reboot" [value]="prepTask.rerunOnNodeRebootAfterSuccess" YesNo="true"></bex-bool-property>
-        <bex-void-link-property label="Environment settings" value="{{prepTask.environmentSettings.length}} settings"></bex-void-link-property>
-        <bex-void-link-property label="Resource files" value="{{prepTask.resourceFiles.length}} files"></bex-void-link-property>
+        <bex-table-property label="Resource files">
+            <bex-table-property-header>
+                <div tp-column>Blob source</div>
+                <div tp-column>File path</div>
+            </bex-table-property-header>
+            <bex-table-property-row *ngFor="let file of prepTask.resourceFiles">
+                <bex-tp-cell [value]="file.blobSource"></bex-tp-cell>
+                <bex-tp-cell [value]="file.filePath"></bex-tp-cell>
+            </bex-table-property-row>
+        </bex-table-property>
+        <bex-table-property label="Environment settings">
+            <bex-table-property-header>
+                <div tp-column>Key</div>
+                <div tp-column>Value</div>
+            </bex-table-property-header>
+            <bex-table-property-row *ngFor="let setting of prepTask.environmentSettings">
+                <bex-tp-cell [value]="setting.key"></bex-tp-cell>
+                <bex-tp-cell [value]="setting.value"></bex-tp-cell>
+            </bex-table-property-row>
+        </bex-table-property>
     </bex-property-group>
 
     <bex-property-group *ngIf="releaseTask.id" label="Job release task" class="wide" [collapsed]="true">
@@ -53,12 +76,25 @@
         <bex-text-property label="Max wall-clock time" [value]="releaseTask.maxWallClockTime"></bex-text-property>
         <bex-text-property label="Retention time" [value]="releaseTask.retentionTime"></bex-text-property>
         <bex-bool-property label="Run elevated" [value]="releaseTask.runElevated" YesNo="true"></bex-bool-property>
-        <bex-void-link-property label="Environment settings" value="{{releaseTask.environmentSettings.length}} settings"></bex-void-link-property>
-        <bex-void-link-property label="Resource files" value="{{releaseTask.resourceFiles.length}} files"></bex-void-link-property>
-    </bex-property-group>
-
-    <bex-property-group label="Constraints" class="wide">
-        <bex-text-property label="Max task retry count" [value]="constraints.maxTaskRetryCount"></bex-text-property>
-        <bex-text-property label="Max wall-clock time" [value]="constraints.maxWallClockTime"></bex-text-property>
+        <bex-table-property label="Resource files">
+            <bex-table-property-header>
+                <div tp-column>Blob source</div>
+                <div tp-column>File path</div>
+            </bex-table-property-header>
+            <bex-table-property-row *ngFor="let file of releaseTask.resourceFiles">
+                <bex-tp-cell [value]="file.blobSource"></bex-tp-cell>
+                <bex-tp-cell [value]="file.filePath"></bex-tp-cell>
+            </bex-table-property-row>
+        </bex-table-property>
+        <bex-table-property label="Environment settings">
+            <bex-table-property-header>
+                <div tp-column>Key</div>
+                <div tp-column>Value</div>
+            </bex-table-property-header>
+            <bex-table-property-row *ngFor="let setting of releaseTask.environmentSettings">
+                <bex-tp-cell [value]="setting.key"></bex-tp-cell>
+                <bex-tp-cell [value]="setting.value"></bex-tp-cell>
+            </bex-table-property-row>
+        </bex-table-property>
     </bex-property-group>
 </bex-property-list>
