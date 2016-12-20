@@ -17,7 +17,7 @@ bex-property-group {
         border-bottom: 1px solid $alto;
     }
 
-    > .warning-message {
+    .warning-message {
         color: $yellow;
         margin-bottom: 10px;
 
@@ -80,7 +80,7 @@ bex-property-group {
             height: 34px;
         }
 
-        .value, tp-cell {
+        .value, bex-tp-cell {
             color: $mineShaftGray;
             background-color: $whitesmoke-darker;
             padding: 8px;
@@ -133,7 +133,7 @@ bex-property-group {
             max-width: $table-width;
             table-layout: fixed;
 
-            [tp-column], tp-cell {
+            [tp-column], bex-tp-cell {
                 display: table-cell;
                 color: $mineShaftGray;
                 background-color: $whitesmoke-darker;
@@ -161,7 +161,7 @@ bex-property-group {
                 height: 23px;
             }
 
-            tp-cell {
+            bex-tp-cell {
                 cursor: pointer;
                 font-size: 11px;
                 height: 23px;
@@ -170,6 +170,8 @@ bex-property-group {
 
                 .cell-value {
                     padding: 5px 8px;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
                 }
 
                 .copied-notification {
