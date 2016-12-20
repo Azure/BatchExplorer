@@ -9,7 +9,8 @@ import { BehaviorSubject } from "rxjs";
 import { ListAndShowLayoutComponent } from "app/components/base/list-and-show-layout";
 import { RefreshButtonComponent } from "app/components/base/refresh-btn";
 import { ScrollableComponent } from "app/components/base/scrollable";
-import { Filter, FilterBuilder } from "app/utils/filter-builder";
+import { ScrollableService } from "app/components/base/scrollable";
+import { FilterBuilder } from "app/utils/filter-builder";
 
 @Component({
     template: `
@@ -22,7 +23,7 @@ export class TestLayoutComponent {
 
 }
 
-fdescribe("ListAndShowLayout", () => {
+describe("ListAndShowLayout", () => {
     let fixture: ComponentFixture<TestLayoutComponent>;
     let de: DebugElement;
     let layoutComponent: ListAndShowLayoutComponent;
@@ -42,6 +43,7 @@ fdescribe("ListAndShowLayout", () => {
                 RefreshButtonComponent,
             ],
             providers: [
+                ScrollableService,
                 { provide: ActivatedRoute, useValue: activatedRouteSpy },
                 { provide: MdDialog, useValue: {} },
             ],
