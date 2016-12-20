@@ -23,12 +23,17 @@ const baseConfig = {
         {
             test: /\.html$/,
             loader: "raw",
-            exclude: [/node_modules/]
+            exclude: [/node_modules/],
+        },
+        {
+            test: /\.json$/,
+            loader: "raw",
+            exclude: [],
         },
         {
             test: /node_modules.*\.css$/,
             loader: "raw",
-        }]
+        }],
     },
     target: "electron-renderer",
 };

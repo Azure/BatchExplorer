@@ -5,6 +5,8 @@ import { SecureUtils } from "app/utils";
 
 const {BrowserWindow} = remote;
 
+const azure = (<any>remote.getCurrentWindow()).azure;
+
 export interface Config {
     tenant: string;
     clientId: string;
@@ -37,6 +39,8 @@ export class AdalService {
 
         authWindow.loadURL(url);
         authWindow.show();
+        authWindow.webContents.openDevTools();
+
         authWindow.webContents.on("will-navigate", (event, url) => {
             this._handleCallback(url);
         });
@@ -53,28 +57,44 @@ export class AdalService {
     private _generateAuthUrl() {
         const base = "https://login.microsoftonline.com";
         const tenant = "common";
-        const clientId = "9d77ff61-52a4-4e96-a128-44f67265affd";
+        // const clientId = "c44b4083-3bb0-49c1-b47d-974e53cbdf3c";
+        const clientId = "94ef904d-c21a-4672-9946-b4d6a12b8e13";
+
         const params = {
-            response_type: "id_token",
+            response_type: "id_token+code",
             redirect_uri: "http://localhost",
             client_id: clientId,
+            scope: "openid",
+            response_mode: "fragment",
             nonce: SecureUtils.uuid(),
             state: SecureUtils.uuid(),
+            resource: "https://managment.core.windows.net",
         };
         const query = objectToParams(params);
-
-        return `${base}/${tenant}/oauth2/v2.0/authorize?${query}`;
+        return `${base}/${tenant}/oauth2/authorize?${query}`;
     }
 
     private _handleCallback(url: string) {
         const pattern = /http:\/\/localhost\/#id_token=([^&]*)/;
+        const errorPattern = /http:\/\/localhost\/#error=([^&]*)/;
         const match = pattern.exec(url) || null;
+        if (!match) {
+            const errorMatch = errorPattern.exec(url) || null;
+            if (errorMatch && errorMatch.length > 1) {
+                console.error("Error connecting to aad", match[1]);
+            }
+            return;
+        }
         const code = (match && match.length > 1) ? match[1] : null;
         if (this._authWindow) {
             this._authWindow.destroy();
         }
         console.log("Tokem is", code);
         console.log("user is", new UserDecoder().decode(code));
+        // const credentials = new azure.TokenCloudCredentials({
+        //     subscriptionId: "",
+        //     token: code,
+        // });
     }
 }
 

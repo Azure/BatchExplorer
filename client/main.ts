@@ -6,6 +6,7 @@ import * as path from "path";
 
 import BatchClientProxy from "./api/batch-client-proxy/batch-client-proxy";
 import { renderLogger } from "./logger";
+import * as azure from "azure";
 
 app.setPath("userData", path.join(app.getPath("appData"), "batch-explorer"));
 
@@ -31,6 +32,7 @@ function createWindow() {
     mainWindow.loadURL(`file://${__dirname}/../../app/index.html`);
     mainWindow.batchClient = new BatchClientProxy();
     mainWindow.logger = renderLogger;
+    mainWindow.azure = azure;
 
     // Open the DevTools.
     mainWindow.webContents.openDevTools();
