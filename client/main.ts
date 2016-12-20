@@ -8,7 +8,7 @@ import BatchClientProxy from "./api/batch-client-proxy/batch-client-proxy";
 import { renderLogger } from "./logger";
 import * as azure from "azure";
 
-app.setPath("userData", path.join(app.getPath("appData"), "batch-explorer"));
+app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.

@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { Headers, Http, RequestOptions } from "@angular/http";
 import { remote } from "electron";
 
 import { SecureUtils } from "app/utils";
@@ -7,16 +8,20 @@ const {BrowserWindow} = remote;
 
 const azure = (<any>remote.getCurrentWindow()).azure;
 
+const base = "https://login.microsoftonline.com";
+const tenant = "common";
+const clientId = "94ef904d-c21a-4672-9946-b4d6a12b8e13";
+
 export interface Config {
     tenant: string;
     clientId: string;
 }
 
-export interface OAuthData {
-    isAuthenticated: boolean;
-    userName: string;
-    loginError: string;
-    profile: any;
+export interface AuthorizationResult {
+    code: string;
+    id_token: string;
+    session_state: string;
+    state: string;
 }
 
 @Injectable()
@@ -24,6 +29,9 @@ export class AdalService {
     private config: Config;
     private _authWindow: any = null;
 
+    constructor(private http: Http) {
+
+    }
     public init(config: Config) {
         this.config = config;
     }
@@ -39,7 +47,7 @@ export class AdalService {
 
         authWindow.loadURL(url);
         authWindow.show();
-        authWindow.webContents.openDevTools();
+        // authWindow.webContents.openDevTools();
 
         authWindow.webContents.on("will-navigate", (event, url) => {
             this._handleCallback(url);
@@ -55,52 +63,77 @@ export class AdalService {
     }
 
     private _generateAuthUrl() {
-        const base = "https://login.microsoftonline.com";
-        const tenant = "common";
+        // Portal
         // const clientId = "c44b4083-3bb0-49c1-b47d-974e53cbdf3c";
-        const clientId = "94ef904d-c21a-4672-9946-b4d6a12b8e13";
+        //Batchlabs
 
         const params = {
             response_type: "id_token+code",
-            redirect_uri: "http://localhost",
+            redirect_uri: encodeURIComponent("http://localhost"),
             client_id: clientId,
-            scope: "openid",
-            response_mode: "fragment",
+            scope: "user_impersonation+openid",
             nonce: SecureUtils.uuid(),
             state: SecureUtils.uuid(),
-            resource: "https://managment.core.windows.net",
+            resource: "https://management.core.windows.net/",
         };
         const query = objectToParams(params);
         return `${base}/${tenant}/oauth2/authorize?${query}`;
     }
 
+    private _isRedirectUrl(url: string) {
+        return url.match(/http:\/\/localhost\/.*/);
+    }
+
+    private _getRedirectUrlParams(url: string): AuthorizationResult {
+        const segments = url.split("#");
+        const params = {};
+        for (let str of segments[1].split("&")) {
+            const [key, value] = str.split("=");
+            params[key] = value;
+        }
+        return <AuthorizationResult>params;
+    }
     private _handleCallback(url: string) {
-        const pattern = /http:\/\/localhost\/#id_token=([^&]*)/;
-        const errorPattern = /http:\/\/localhost\/#error=([^&]*)/;
-        const match = pattern.exec(url) || null;
-        if (!match) {
-            const errorMatch = errorPattern.exec(url) || null;
-            if (errorMatch && errorMatch.length > 1) {
-                console.error("Error connecting to aad", match[1]);
-            }
+        if (!this._isRedirectUrl(url)) {
             return;
         }
-        const code = (match && match.length > 1) ? match[1] : null;
+        console.log("handle callback", url);
+        const params = this._getRedirectUrlParams(url);
+        console.log("POarams", params);
         if (this._authWindow) {
             this._authWindow.destroy();
         }
-        console.log("Tokem is", code);
-        console.log("user is", new UserDecoder().decode(code));
+        console.log("user is", new UserDecoder().decode(params.id_token));
         // const credentials = new azure.TokenCloudCredentials({
         //     subscriptionId: "",
         //     token: code,
         // });
+        this._redeemToken(params.code);
+    }
+
+    private _redeemToken(code: string) {
+        const params = {
+            grant_type: "authorization_code",
+            client_id: clientId,
+            code: code,
+            resource: "https://management.core.windows.net/",
+            redirect_uri: "http://localhost",
+        };
+        const query = objectToParams(params);
+        const url = `${base}/${tenant}/oauth2/token`;
+        console.log("Url is ", url);
+        const headers = new Headers({"Content-Type": "application/x-www-form-urlencoded"});
+        const options = new RequestOptions({headers});
+        this.http.post(url, query, options).subscribe({
+            next: (out) => { console.log("Output is", out); },
+            error: (error) => { console.log("Error for get token is", error); },
+        });
     }
 }
 
 export function objectToParams(object): string {
     return Object.keys(object).map((key) => {
-        return `${encodeURIComponent(key)}=${encodeURIComponent(object[key])}`;
+        return `${encodeURIComponent(key)}=${object[key]}`;
     }).join("&");
 }
 
