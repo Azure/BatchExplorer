@@ -12,6 +12,13 @@ export interface AuthorizeUrlParams {
     prompt?: string;
 }
 
+export interface TokenUrlParams {
+    code: string;
+    client_id: string;
+    redirect_uri: string;
+    grant_type: string;
+}
+
 export function authorizeUrl(tenant: string, params: AuthorizeUrlParams) {
     const query = objectToParams(params);
     return `${baseUrl}/${tenant}/oauth2/authorize?${query}`;

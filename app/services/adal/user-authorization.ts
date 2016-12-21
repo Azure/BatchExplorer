@@ -72,7 +72,7 @@ export class UserAuthorization {
 
         const params = {
             response_type: "id_token+code",
-            redirect_uri: encodeURIComponent("http://localhost"),
+            redirect_uri: encodeURIComponent(this.config.redirectUri),
             client_id: this.config.clientId,
             scope: "user_impersonation+openid",
             nonce: SecureUtils.uuid(),
