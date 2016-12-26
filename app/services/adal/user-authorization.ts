@@ -1,3 +1,4 @@
+import { Http } from "@angular/http";
 import { remote } from "electron";
 import { AsyncSubject, Observable } from "rxjs";
 
@@ -32,7 +33,7 @@ export class UserAuthorization {
     private _authWindow: Electron.BrowserWindow;
     private _subject: AsyncSubject<AuthorizeResult>;
 
-    constructor(private config: AdalConfig) {
+    constructor(private config: AdalConfig, private http: Http) {
     }
 
     /**
@@ -61,6 +62,24 @@ export class UserAuthorization {
             console.error("Error authorizing silently", error);
             return this.authorize(false);
         });
+    }
+
+    /**
+     * Log the user out
+     */
+    public logout(): Observable<any> {
+        this._subject = new AsyncSubject();
+
+        const url = AdalConstants.logoutUrl(this.config.tenant, {
+            post_logout_redirect_uri: encodeURIComponent(this._buildUrl(false)),
+        });
+        const authWindow = this._createAuthWindow();
+
+        authWindow.loadURL(url);
+        this._setupEvents();
+        authWindow.show();
+        return this._subject.asObservable();
+
     }
 
     /**
@@ -124,11 +143,11 @@ export class UserAuthorization {
         this._closeWindow();
         const params = this._getRedirectUrlParams(url);
         if ((<any>params).error) {
-            this._subject.error(params);
+            this._subject.error(params as AuthorizeError);
+        } else {
+            this._subject.next(params as AuthorizeResult);
+            this._subject.complete();
         }
-
-        this._subject.next(params as AuthorizeResult);
-        this._subject.complete();
     }
 
     /**

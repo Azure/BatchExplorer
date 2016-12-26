@@ -62,4 +62,8 @@ export class AppComponent implements AfterViewInit {
     public login() {
         this.adalService.login();
     }
+
+    public logout() {
+        this.adalService.logout();
+    }
 }

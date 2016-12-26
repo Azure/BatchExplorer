@@ -35,12 +35,17 @@ export class AdalService {
 
     public init(config: AdalConfig) {
         this._config = config;
-        this._authorizeUser = new UserAuthorization(config);
+        this._authorizeUser = new UserAuthorization(config, this.http);
         this._accessTokenService = new AccessTokenService(config, this.http);
     }
 
     public login(): void {
         this._retrieveNewAccessToken();
+    }
+
+    public logout(): void {
+        this._currentAccessToken = null;
+        this._authorizeUser.logout();
     }
 
     public get accessToken(): Observable<string> {

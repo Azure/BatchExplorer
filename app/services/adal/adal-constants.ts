@@ -19,9 +19,17 @@ export interface TokenUrlParams {
     grant_type: string;
 }
 
+export interface LogoutParams {
+    post_logout_redirect_uri?: string;
+}
 export function authorizeUrl(tenant: string, params: AuthorizeUrlParams) {
     const query = objectToParams(params);
     return `${baseUrl}/${tenant}/oauth2/authorize?${query}`;
+}
+
+export function logoutUrl(tenant: string, params: LogoutParams) {
+    const query = objectToParams(params);
+    return `${baseUrl}/${tenant}/oauth2/logout?${query}`;
 }
 
 export function objectToParams(object): string {

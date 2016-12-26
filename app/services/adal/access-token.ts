@@ -25,6 +25,9 @@ export interface AccessToken {
     not_before: Date;
 }
 
+/**
+ * This service handle the retrival of the access token to auth AAD queries
+ */
 export class AccessTokenService {
     constructor(private config: AdalConfig, private http: Http) {
     }
@@ -64,7 +67,6 @@ export class AccessTokenService {
         });
         return obs;
     }
-
 
     private _buildUrl() {
         return `${baseUrl}/${this.config.tenant}/oauth2/token`;
