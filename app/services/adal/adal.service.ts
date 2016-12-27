@@ -48,7 +48,8 @@ export class AdalService {
         const obs = this._retrieveNewAccessToken();
         obs.subscribe({
             next: () => {
-                if (!remote.getCurrentWindow().isVisible) {
+                console.log("Is visiable", remote.getCurrentWindow().isVisible());
+                if (!remote.getCurrentWindow().isVisible()) {
                     remote.getCurrentWindow().show();
                 }
             },
@@ -60,7 +61,7 @@ export class AdalService {
     }
 
     public logout(): void {
-        if (remote.getCurrentWindow().isVisible) {
+        if (remote.getCurrentWindow().isVisible()) {
             remote.getCurrentWindow().hide();
         }
         this._currentAccessToken = null;

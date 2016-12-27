@@ -52,11 +52,9 @@ export class AccessTokenService {
     }
 
     public refresh(refreshToken: string): Observable<AccessToken> {
-        console.log("Refrehing..");
         const obs = this.http.post(this._buildUrl(), this._refreshBody(refreshToken), this._options()).share()
             .map((response) => {
                 const data = response.json();
-                console.log("Refreshed1", data);
                 return this._processResponse(data);
             });
 

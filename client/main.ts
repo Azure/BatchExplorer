@@ -24,7 +24,7 @@ function createWindow() {
         height: 1000,
         icon: __dirname + "/../assets/images/labs.ico",
         width: 1600,
-        show: false,
+        show: false, // Don't show the window until the user authenticated, comment to debug auth problems
     });
 
     // and load the index.html of the app.

@@ -12,7 +12,6 @@ export class AdUserDropdownComponent {
 
     constructor(private adalService: AdalService) {
         adalService.currentUser.subscribe((user) => {
-            console.log("user is", user);
             if (user) {
                 this.name = user.name;
             }

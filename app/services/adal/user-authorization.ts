@@ -87,9 +87,7 @@ export class UserAuthorization {
      * @param silent @see #authorize
      */
     private _buildUrl(silent: boolean): string {
-        const prompt = silent ? AuthorizePromptType.none : AuthorizePromptType.login;
-
-        const params = {
+        const params: AdalConstants.AuthorizeUrlParams = {
             response_type: "id_token+code",
             redirect_uri: encodeURIComponent(this.config.redirectUri),
             client_id: this.config.clientId,
@@ -97,8 +95,11 @@ export class UserAuthorization {
             nonce: SecureUtils.uuid(),
             state: SecureUtils.uuid(),
             resource: "https://management.core.windows.net/",
-            prompt,
         };
+
+        if (silent) {
+            params.prompt = AuthorizePromptType.none;
+        }
 
         return AdalConstants.authorizeUrl(this.config.tenant, params);
     }
