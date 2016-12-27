@@ -49,6 +49,7 @@
     "electron": "1.4.6",
     "electron-debug": "^1.0.1",
     "electron-prebuilt": "1.4.6",
+    "electron-rebuild": "^1.4.0",
     "gulp": "^3.9.1",
     "gulp-sourcemaps": "2.2.0",
     "gulp-typescript": "^3.1.2",
