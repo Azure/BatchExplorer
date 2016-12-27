@@ -47,6 +47,7 @@ import { TaskAdvancedFilterComponent } from "./components/task/browse/filter";
 import { TaskPreviewComponent } from "./components/task/browse/preview/task-preview.component";
 import { TaskListComponent } from "./components/task/browse/task-list.component";
 import { TaskHomeComponent } from "./components/task/home";
+import { AdUserDropdownComponent } from "./components/user";
 
 import {
     NoTaskSelectedComponent,
@@ -113,6 +114,7 @@ import {
         AccountDropDown,
         AccountHomeComponent,
         AccountListComponent,
+        AdUserDropdownComponent,
         AppComponent,
         DeleteAccountDialogComponent,
         DeleteJobDialogComponent,

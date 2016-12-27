@@ -1,8 +1,10 @@
 import { Injectable } from "@angular/core";
 import { Headers, Http, RequestOptions } from "@angular/http";
+import { remote } from "electron";
 import * as moment from "moment";
-import { AsyncSubject, Observable } from "rxjs";
+import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
+import { ADUser } from "app/models";
 import { AccessToken, AccessTokenService } from "./access-token";
 import { AdalConfig } from "./adal-config";
 import { AuthorizeResult, UserAuthorization } from "./user-authorization";
@@ -23,14 +25,17 @@ export class AdalService {
      */
     public static refreshMargin = 1000 * 120;
 
+    public currentUser: Observable<ADUser>;
+
     private _config: AdalConfig;
-    private _authWindow: any = null;
     private _authorizeUser: UserAuthorization;
     private _accessTokenService: AccessTokenService;
     private _currentAccessToken: AccessToken;
 
-    constructor(private http: Http) {
+    private _currentUser = new BehaviorSubject<ADUser>(null);
 
+    constructor(private http: Http) {
+        this.currentUser = this._currentUser.asObservable();
     }
 
     public init(config: AdalConfig) {
@@ -39,11 +44,25 @@ export class AdalService {
         this._accessTokenService = new AccessTokenService(config, this.http);
     }
 
-    public login(): void {
-        this._retrieveNewAccessToken();
+    public login(): Observable<any> {
+        const obs = this._retrieveNewAccessToken();
+        obs.subscribe({
+            next: () => {
+                if (!remote.getCurrentWindow().isVisible) {
+                    remote.getCurrentWindow().show();
+                }
+            },
+            error: () => {
+                console.error("Error login");
+            },
+        });
+        return obs;
     }
 
     public logout(): void {
+        if (remote.getCurrentWindow().isVisible) {
+            remote.getCurrentWindow().hide();
+        }
         this._currentAccessToken = null;
         this._authorizeUser.logout();
     }
@@ -76,6 +95,7 @@ export class AdalService {
         this._authorizeUser.authorizeTrySilentFirst().subscribe({
             next: (result: AuthorizeResult) => {
                 console.log("Got result", result);
+                this._processUserToken(result.id_token);
                 this._accessTokenService.redeem(result.code).subscribe((token) => {
                     this._currentAccessToken = token;
                     console.log("Access token is now ", token);
@@ -116,5 +136,14 @@ export class AdalService {
             },
             error: (error) => { console.log("Error for get sub is", error); },
         });
+    }
+
+    /**
+     * Process IDToken return by the /authorize url to extract user information
+     */
+    private _processUserToken(idToken: string) {
+        const decoder = new UserDecoder();
+        const user = decoder.decode(idToken);
+        this._currentUser.next(user);
     }
 }

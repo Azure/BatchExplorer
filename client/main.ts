@@ -24,6 +24,7 @@ function createWindow() {
         height: 1000,
         icon: __dirname + "/../assets/images/labs.ico",
         width: 1600,
+        show: false,
     });
 
     // and load the index.html of the app.

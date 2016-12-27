@@ -45,6 +45,10 @@ export class AppComponent implements AfterViewInit {
             });
     }
 
+    public ngOnInit() {
+        this.adalService.login();
+    }
+
     public ngAfterViewInit() {
         // Give the reference to the sidebar to the sidebar manager
         this.sidebarManager.sidebar = this.sidebar;
@@ -57,10 +61,6 @@ export class AppComponent implements AfterViewInit {
 
     public addAccount() {
         this.sidebarManager.open("add-account", AccountCreateDialogComponent);
-    }
-
-    public login() {
-        this.adalService.login();
     }
 
     public logout() {
