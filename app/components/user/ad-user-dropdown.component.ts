@@ -2,7 +2,6 @@ import { Component } from "@angular/core";
 
 import { AdalService } from "app/services";
 
-
 @Component({
     selector: "bex-ad-user-dropdown",
     templateUrl: "ad-user-dropdown",

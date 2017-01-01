@@ -5,7 +5,9 @@ import * as moment from "moment";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { ADUser } from "app/models";
-import { AccessToken, AccessTokenService } from "./access-token";
+import { Constants } from "app/utils";
+import { AccessToken } from "./access-token";
+import { AccessTokenService } from "./access-token.service";
 import { AdalConfig } from "./adal-config";
 import { AuthorizeResult, UserAuthorization } from "./user-authorization";
 import { UserDecoder } from "./user-decoder";
@@ -42,13 +44,14 @@ export class AdalService {
         this._config = config;
         this._authorizeUser = new UserAuthorization(config, this.http);
         this._accessTokenService = new AccessTokenService(config, this.http);
+        this._retrieveUserFromLocalStorage();
+        this._retrieveAccessTokenFromLocalStorage();
     }
 
     public login(): Observable<any> {
         const obs = this._retrieveNewAccessToken();
         obs.subscribe({
             next: () => {
-                console.log("Is visiable", remote.getCurrentWindow().isVisible());
                 if (!remote.getCurrentWindow().isVisible()) {
                     remote.getCurrentWindow().show();
                 }
@@ -84,6 +87,41 @@ export class AdalService {
     }
 
     /**
+     * Look into the localStorage to see if there is a user to be loaded
+     */
+    private _retrieveUserFromLocalStorage() {
+        const userStr = localStorage.getItem(Constants.localStorageKey.currentUser);
+        if (userStr) {
+            try {
+                const user = JSON.parse(userStr);
+                this._currentUser.next(user);
+            } catch (e) {
+                localStorage.removeItem(Constants.localStorageKey.currentUser);
+            }
+        }
+
+    }
+
+    /**
+     * Look into the local storage to see if there is still an access token
+     */
+    private _retrieveAccessTokenFromLocalStorage() {
+        const tokenStr = localStorage.getItem(Constants.localStorageKey.currentAccessToken);
+        if (tokenStr) {
+            try {
+                const token = new AccessToken(JSON.parse(tokenStr));
+                if (token.hasExpired()) {
+                    localStorage.removeItem(Constants.localStorageKey.currentUser);
+                } else {
+                    this._currentAccessToken = token;
+                }
+            } catch (e) {
+                localStorage.removeItem(Constants.localStorageKey.currentUser);
+            }
+        }
+    }
+
+    /**
      * Retrieve a new access token using the refresh token if available or authorize the user and use authorization code
      * Will set the currentAccesToken.
      * @return Observable with access token object
@@ -98,10 +136,7 @@ export class AdalService {
                 console.log("Got result", result);
                 this._processUserToken(result.id_token);
                 this._accessTokenService.redeem(result.code).subscribe((token) => {
-                    this._currentAccessToken = token;
-                    console.log("Access token is now ", token);
-                    this._listSub(token.access_token);
-
+                    this._processAccessToken(token);
                     subject.next(token);
                     subject.complete();
                 });
@@ -117,8 +152,7 @@ export class AdalService {
         const obs = this._accessTokenService.refresh(refreshToken);
         obs.subscribe({
             next: (token) => {
-                this._currentAccessToken = token;
-                this._listSub(token.access_token);
+                this._processAccessToken(token);
             },
             error: (error) => {
                 console.error("Error refreshing token");
@@ -127,9 +161,10 @@ export class AdalService {
         return obs;
     }
 
+    // DEMO to check the AAD token is working. TODO remove
     private _listSub(token: string) {
         const url = `https://management.azure.com/subscriptions?api-version=2016-06-01`;
-        const headers = new Headers({ "Authorization": `Bearer ${token}` });
+        const headers = new Headers({ Authorization: `Bearer ${token}` });
         const options = new RequestOptions({ headers });
         this.http.get(url, options).subscribe({
             next: (out) => {
@@ -146,5 +181,12 @@ export class AdalService {
         const decoder = new UserDecoder();
         const user = decoder.decode(idToken);
         this._currentUser.next(user);
+        localStorage.setItem(Constants.localStorageKey.currentUser, JSON.stringify(user));
+    }
+
+    private _processAccessToken(token: AccessToken) {
+        this._currentAccessToken = token;
+        localStorage.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(token));
+        this._listSub(token.access_token); // TODO remove - just for testing token is working
     }
 }
