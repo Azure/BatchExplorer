@@ -34,8 +34,20 @@ function toBeHidden() {
     };
 }
 
+function toHaveBeenCalledOnce() {
+    return {
+        compare: (actual: any, expected) => {
+            return {
+                pass: actual.calls.count() === 1,
+                message: `Expected to spy ${actual.and.identity()} to have been called once`,
+            };
+        },
+    };
+}
+
 export const matchers = {
     toBeBlank,
     toBeVisible,
     toBeHidden,
+    toHaveBeenCalledOnce,
 };

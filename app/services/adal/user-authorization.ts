@@ -1,4 +1,3 @@
-import { Http } from "@angular/http";
 import { remote } from "electron";
 import { AsyncSubject, Observable } from "rxjs";
 
@@ -23,7 +22,7 @@ export interface AuthorizeResult {
 
 export interface AuthorizeError {
     error: string;
-    error_desccription: string;
+    error_description: string;
 }
 
 /**
@@ -33,7 +32,7 @@ export class UserAuthorization {
     private _authWindow: Electron.BrowserWindow;
     private _subject: AsyncSubject<AuthorizeResult>;
 
-    constructor(private config: AdalConfig, private http: Http) {
+    constructor(private config: AdalConfig) {
     }
 
     /**
@@ -59,7 +58,6 @@ export class UserAuthorization {
      */
     public authorizeTrySilentFirst(): Observable<AuthorizeResult> {
         return this.authorize(true).catch((error, source) => {
-            console.error("Error authorizing silently", error);
             return this.authorize(false);
         });
     }
@@ -138,9 +136,12 @@ export class UserAuthorization {
      * @param url Url used for callback
      */
     private _handleCallback(url: string) {
+        console.log("Handle callback...", url);
         if (!this._isRedirectUrl(url)) {
             return;
         }
+        console.log("Closing window...");
+
         this._closeWindow();
         const params = this._getRedirectUrlParams(url);
         if ((<any>params).error) {

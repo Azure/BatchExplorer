@@ -26,7 +26,9 @@ module.exports = function (config) {
         autoWatchBatchDelay: 1000,
 
         browsers: ["Electron"],
-
+        electronOpts: {
+            show: false,
+        },
         // Karma plugins loaded
         plugins: [
             "karma-jasmine",
@@ -56,5 +58,5 @@ module.exports = function (config) {
         mochaReporter: {
             output: "autowatch",
         },
-    })
+    });
 };

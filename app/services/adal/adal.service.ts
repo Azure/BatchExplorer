@@ -42,7 +42,7 @@ export class AdalService {
 
     public init(config: AdalConfig) {
         this._config = config;
-        this._authorizeUser = new UserAuthorization(config, this.http);
+        this._authorizeUser = new UserAuthorization(config);
         this._accessTokenService = new AccessTokenService(config, this.http);
         this._retrieveUserFromLocalStorage();
         this._retrieveAccessTokenFromLocalStorage();
