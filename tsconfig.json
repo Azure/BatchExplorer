@@ -27,7 +27,6 @@
       "electron",
       "jasmine",
       "hammerjs",
-      "immutable",
       "moment-duration-format"
     ],
     "typeRoots": [
