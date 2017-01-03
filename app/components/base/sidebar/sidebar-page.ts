@@ -11,7 +11,6 @@ import {
 } from "@angular/core";
 import {
     ComponentPortal,
-    FocusTrap,
     PortalHostDirective,
 } from "@angular/material";
 
@@ -24,9 +23,7 @@ import { SidebarRef } from "./sidebar-ref";
     selector: "bex-sidebar-page",
     template: `
         <div [hidden]="!display">
-            <focus-trap>
                 <template portalHost></template>
-            </focus-trap>
         </div>
     `,
 })
@@ -35,9 +32,6 @@ export class SidebarPageComponent implements OnDestroy {
 
     @ViewChild(PortalHostDirective)
     private portalHost: PortalHostDirective;
-
-    @ViewChild(FocusTrap)
-    private focusTrap: FocusTrap;
 
     private componentRef: ComponentRef<any> = null;
     private onSideBarOpenEvent: any;
@@ -59,18 +53,10 @@ export class SidebarPageComponent implements OnDestroy {
         this.componentRef = this.portalHost.attachComponentPortal(componentPortal);
         sidebarRef.page = this;
         sidebarRef.component = this.componentRef.instance;
-
-        this.onSideBarOpenEvent = this.sidebarManager.onOpen.subscribe(() => {
-            this.resetFocus();
-        });
     }
 
     public show() {
         this.display = true;
-    }
-
-    public resetFocus() {
-        this.focusTrap.focusFirstTabbableElement();
     }
 
     public hide() {
