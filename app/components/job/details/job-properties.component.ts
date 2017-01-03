@@ -12,7 +12,6 @@ import {
     selector: "bex-job-properties",
     templateUrl: "job-properties.html",
 })
-
 export class JobPropertiesComponent implements OnDestroy {
     @Input()
     public set job(job: Job) {
@@ -24,9 +23,9 @@ export class JobPropertiesComponent implements OnDestroy {
     public decorator: JobDecorator = <any>{ usesTaskDependencies: false };
     public constraints: any = {};
     public executionInfo: any = {};
-    public managerTask: JobManagerTaskDecorator = <any>{};
-    public prepTask: JobPreparationTaskDecorator = <any>{};
-    public releaseTask: JobReleaseTaskDecorator = <any>{};
+    public managerTask: JobManagerTaskDecorator;
+    public prepTask: JobPreparationTaskDecorator;
+    public releaseTask: JobReleaseTaskDecorator;
     public poolInfo: any = {};
 
     private _job: Job;

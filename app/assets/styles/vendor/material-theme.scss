@@ -176,3 +176,10 @@ md-dialog-container {
     width: auto !important;
     height: auto !important;
 }
+
+
+.md-select-content {
+    md-option {
+        height: 30px;
+    }
+}

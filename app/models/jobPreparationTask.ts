@@ -8,7 +8,7 @@ const JobPreparationTaskRecord = Record({
     id: null,
     commandLine: null,
     resourceFiles: [],
-    environmentSettings: null,
+    environmentSettings: [],
     constraints: null,
     waitForSuccess: null,
     runElevated: null,

@@ -8,7 +8,7 @@ const JobReleaseTaskRecord = Record({
     id: null,
     commandLine: null,
     resourceFiles: [],
-    environmentSettings: null,
+    environmentSettings: [],
     maxWallClockTime: null,
     retentionTime: null,
     runElevated: null,

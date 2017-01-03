@@ -63,6 +63,14 @@ export class Job extends JobRecord {
     public metadata: NameValuePair[];
     public executionInfo: JobExecutionInformation;
     public stats: JobStats;
+
+    constructor(data: any = {}) {
+        super(Object.assign({}, data, {
+            jobPreparationTask: data.jobPreparationTask && new JobPreparationTask(data.jobPreparationTask),
+            jobReleaseTask: data.jobPreparationTask && new JobReleaseTask(data.jobReleaseTask),
+            jobManagerTask: data.jobManagerTask && new JobManagerTask(data.jobManagerTask),
+        }));
+    }
 }
 
 export type JobState = "active" | "disabling" | "disabled" | "enabling" | "terminating" | "completed" | "deleting";

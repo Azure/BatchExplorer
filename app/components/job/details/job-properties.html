@@ -31,7 +31,7 @@
         <bex-text-property label="Termination reason" [value]="executionInfo.terminateReason"></bex-text-property>
     </bex-property-group>
 
-    <bex-property-group *ngIf="managerTask.id" label="Job manager task" class="wide" [collapsed]="true">
+    <bex-property-group *ngIf="managerTask" label="Job manager task" class="wide" [collapsed]="true">
         <div collapsed-preview></div>
         <bex-void-link-property label="Id" [value]="managerTask.id"></bex-void-link-property>
         <bex-bool-property label="Kill job on completion" [value]="managerTask.killJobOnCompletion" YesNo="true"></bex-bool-property>
@@ -39,7 +39,7 @@
         <bex-bool-property label="Run exclusive" [value]="managerTask.runExclusive" YesNo="true"></bex-bool-property>
     </bex-property-group>
 
-    <bex-property-group *ngIf="prepTask.id" label="Job preparation task" class="wide" [collapsed]="true">
+    <bex-property-group *ngIf="prepTask" label="Job preparation task" class="wide" [collapsed]="true">
         <bex-text-property label="Id" [value]="prepTask.id"></bex-text-property>
         <bex-text-property label="Command line" [value]="prepTask.commandLine"></bex-text-property>
         <bex-text-property label="Max task retry count" [value]="prepTask.constraints.maxTaskRetryCount"></bex-text-property>
@@ -70,7 +70,7 @@
         </bex-table-property>
     </bex-property-group>
 
-    <bex-property-group *ngIf="releaseTask.id" label="Job release task" class="wide" [collapsed]="true">
+    <bex-property-group *ngIf="releaseTask" label="Job release task" class="wide" [collapsed]="true">
         <bex-text-property label="Id" [value]="releaseTask.id"></bex-text-property>
         <bex-text-property label="Command line" [value]="releaseTask.commandLine"></bex-text-property>
         <bex-text-property label="Max wall-clock time" [value]="releaseTask.maxWallClockTime"></bex-text-property>
