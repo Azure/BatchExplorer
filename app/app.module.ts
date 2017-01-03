@@ -51,7 +51,6 @@ import { AdUserDropdownComponent } from "./components/user";
 
 import {
     NoTaskSelectedComponent,
-    TaskAppPackagesComponent,
     TaskDetailsComponent,
     TaskEnvironmentSettingsComponent,
     TaskPropertiesComponent,
@@ -159,7 +158,6 @@ import {
         SubTaskDisplayListComponent,
         SubTaskPropertiesComponent,
         TaskAdvancedFilterComponent,
-        TaskAppPackagesComponent,
         TaskCreateBasicDialogComponent,
         TaskDetailsComponent,
         TaskEnvironmentSettingsComponent,

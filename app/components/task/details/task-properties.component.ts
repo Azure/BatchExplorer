@@ -15,6 +15,7 @@ export class TaskPropertiesComponent {
     public set task(value: Task) {
         this._task = value;
         this.decorator = new TaskDecorator(value);
+        this.appPackages = this.decorator.applicationPackageReferences || [];
         this.constraints = this.decorator.constraints || {};
         this.executionInfo = this.decorator.executionInfo || {};
         this.nodeInfo = this.decorator.nodeInfo || {};
@@ -23,6 +24,7 @@ export class TaskPropertiesComponent {
     public get task() { return this._task; }
 
     public decorator: TaskDecorator;
+    public appPackages: any[];
     public constraints: any;
     public executionInfo: any;
     public exitConditionData: any;

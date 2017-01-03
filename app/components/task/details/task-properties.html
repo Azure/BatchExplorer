@@ -11,32 +11,37 @@
         <bex-text-property label="State transition time" [value]="decorator.stateTransitionTime"></bex-text-property>
         <bex-text-property label="Previous state transition time" [value]="decorator.previousStateTransitionTime"></bex-text-property>
         <bex-text-property label="Exit conditions" *ngIf="!task.exitConditions" value="None"></bex-text-property>
-        <bex-table-property label="Resource files">
+    </bex-property-group>
+
+    <bex-property-group label="Application packages" class="wide" [collapsed]="true">
+        <bex-table-property label="Package references">
             <bex-table-property-header>
-                <div tp-column>File path</div>
-                <div tp-column>Source</div>
+                <div tp-column>Application</div>
+                <div tp-column>Version</div>
             </bex-table-property-header>
-            <bex-table-property-row *ngFor="let file of task.resourceFiles">
-                <bex-tp-cell [value]="file.filePath"></bex-tp-cell>
-                <bex-tp-cell [value]="file.blobSource"></bex-tp-cell>
+            <bex-table-property-row *ngFor="let package of appPackages">
+                <bex-tp-cell [value]="package.applicationId"></bex-tp-cell>
+                <bex-tp-cell [value]="package.version"></bex-tp-cell>
             </bex-table-property-row>
         </bex-table-property>
     </bex-property-group>
 
-    <bex-property-group label="Constraints" class="wide">
+    <bex-property-group label="Compute node" class="wide" [collapsed]="true">
+        <bex-text-property label="Pool" [value]="nodeInfo.poolId"></bex-text-property>
+        <bex-text-property label="Compute node ID" [value]="nodeInfo.nodeId"></bex-text-property>
+        <bex-text-property label="Node URL" [value]="nodeInfo.nodeUrl"></bex-text-property>
+        <bex-text-property label="Affinity ID" [value]="nodeInfo.affinityId"></bex-text-property>
+        <bex-text-property label="Task root directory" [value]="nodeInfo.taskRootDirectory"></bex-text-property>
+        <bex-text-property label="Task root directory URL" [value]="nodeInfo.taskRootDirectoryUrl"></bex-text-property>
+    </bex-property-group>
+
+    <bex-property-group label="Constraints" class="wide" [collapsed]="true">
         <bex-text-property label="Max task retry count" [value]="constraints.maxTaskRetryCount"></bex-text-property>
         <bex-text-property label="Max wall-clock time" [value]="constraints.maxWallClockTime"></bex-text-property>
         <bex-text-property label="Retention time" [value]="constraints.retentionTime"></bex-text-property>
     </bex-property-group>
 
-    <bex-property-group label="Exit conditions" [warningMessage]="exitConditionWarningMessage">
-        <bex-text-property label="Exit codes that do nothing" [value]="exitConditionData.noAction.join(', ')"></bex-text-property>
-        <bex-text-property label="Exit codes that terminate the job" [value]="exitConditionData.terminateJob.join(', ')"></bex-text-property>
-        <bex-text-property label="On scheduling error" [value]="exitConditionData.schedulingError"></bex-text-property>
-        <bex-text-property *ngIf="exitConditionData.default" label="default" [value]="exitConditionData.default"></bex-text-property>
-    </bex-property-group>
-
-    <bex-property-group label="Execution information" class="wide">
+    <bex-property-group label="Execution information" class="wide" [collapsed]="true">
         <bex-text-property label="Start time" [value]="executionInfo.startTime"></bex-text-property>
         <bex-text-property label="End time" [value]="executionInfo.endTime"></bex-text-property>
         <bex-text-property label="Exit code" [value]="executionInfo.exitCode"></bex-text-property>
@@ -46,12 +51,10 @@
         <bex-text-property label="Last requeue time" [value]="executionInfo.lastRequeueTime" *ngIf="executionInfo.requeueCount > 0"></bex-text-property>
     </bex-property-group>
 
-    <bex-property-group label="Compute node" class="wide">
-        <bex-text-property label="Pool" [value]="nodeInfo.poolId"></bex-text-property>
-        <bex-text-property label="Compute node ID" [value]="nodeInfo.nodeId"></bex-text-property>
-        <bex-text-property label="Node URL" [value]="nodeInfo.nodeUrl"></bex-text-property>
-        <bex-text-property label="Affinity ID" [value]="nodeInfo.affinityId"></bex-text-property>
-        <bex-text-property label="Task root directory" [value]="nodeInfo.taskRootDirectory"></bex-text-property>
-        <bex-text-property label="Task root directory URL" [value]="nodeInfo.taskRootDirectoryUrl"></bex-text-property>
+    <bex-property-group label="Exit conditions" [warningMessage]="exitConditionWarningMessage" [collapsed]="true">
+        <bex-text-property label="Exit codes that do nothing" [value]="exitConditionData.noAction.join(', ')"></bex-text-property>
+        <bex-text-property label="Exit codes that terminate the job" [value]="exitConditionData.terminateJob.join(', ')"></bex-text-property>
+        <bex-text-property label="On scheduling error" [value]="exitConditionData.schedulingError"></bex-text-property>
+        <bex-text-property *ngIf="exitConditionData.default" label="default" [value]="exitConditionData.default"></bex-text-property>
     </bex-property-group>
 </bex-property-list>
