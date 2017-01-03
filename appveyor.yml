@@ -7,7 +7,7 @@ install:
     - npm install --force
 
 build_script:
-    - npm run build
+    - npm run build --silent
 
 test_script:
-    - npm run test
+    - npm run test --silent

@@ -71,7 +71,7 @@
     "style-loader": "^0.13.1",
     "stylelint": "^7.5.0",
     "ts-loader": "1.2.1",
-    "ts-node": "1.7.2",
+    "ts-node": "2.0.0",
     "tslint": "^4.0.2",
     "typescript": "~2.1.4",
     "vrsource-tslint-rules": "^0.14.1",
