@@ -32,7 +32,7 @@ export class AdalService {
     private _config: AdalConfig;
     private _authorizeUser: UserAuthorization;
     private _accessTokenService: AccessTokenService;
-    private _currentAccessToken: AccessToken;
+    private _currentAccessToken: AccessToken = null;
 
     private _currentUser = new BehaviorSubject<ADUser>(null);
 

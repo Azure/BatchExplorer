@@ -27,7 +27,7 @@ module.exports = function (config) {
 
         browsers: ["Electron"],
         electronOpts: {
-            show: false,
+            // show: false,
         },
         // Karma plugins loaded
         plugins: [
@@ -53,7 +53,10 @@ module.exports = function (config) {
             useIframe: false,
         },
         webpack: webpackConfig,
-
+        webpackMiddleware: {
+            stats: "errors-only",
+        },
+        browserDisconnectTimeout: "4000",
         singleRun: false,
         mochaReporter: {
             output: "autowatch",
