@@ -5,6 +5,7 @@ declare namespace jasmine {
         toBeBlank(): void;
         toBeVisible(): void;
         toBeHidden(): void;
+        toHaveBeenCalledOnce(): void;
 
         // immutable-matchers
         toBeImmutable(): void;

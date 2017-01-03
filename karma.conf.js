@@ -26,7 +26,9 @@ module.exports = function (config) {
         autoWatchBatchDelay: 1000,
 
         browsers: ["Electron"],
-
+        electronOpts: {
+            // show: false,
+        },
         // Karma plugins loaded
         plugins: [
             "karma-jasmine",
@@ -51,10 +53,13 @@ module.exports = function (config) {
             useIframe: false,
         },
         webpack: webpackConfig,
-
+        webpackMiddleware: {
+            stats: "errors-only",
+        },
+        browserDisconnectTimeout: "4000",
         singleRun: false,
         mochaReporter: {
             output: "autowatch",
         },
-    })
+    });
 };

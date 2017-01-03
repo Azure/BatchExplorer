@@ -7,7 +7,7 @@ import * as path from "path";
 import BatchClientProxy from "./api/batch-client-proxy/batch-client-proxy";
 import { renderLogger } from "./logger";
 
-app.setPath("userData", path.join(app.getPath("appData"), "batch-explorer"));
+app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -24,6 +24,7 @@ function createWindow() {
         height: 1000,
         icon: __dirname + "/../assets/images/labs.ico",
         width: 1600,
+        show: false, // Don't show the window until the user authenticated, comment to debug auth problems
     });
 
     // and load the index.html of the app.

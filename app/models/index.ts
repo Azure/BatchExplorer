@@ -1,4 +1,5 @@
 export * from "./account";
+export * from "./adUser";
 export * from "./applicationPackageReference";
 export * from "./batchError";
 export * from "./cloudServiceConfiguration";

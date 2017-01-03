@@ -1,16 +1,22 @@
-import { AfterViewInit, Component, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { MdSidenav } from "@angular/material";
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { AccountService, CommandService, SettingsService } from "app/services";
+import { AccountService, AdalService, CommandService, SettingsService } from "app/services";
 import AccountCreateDialogComponent from "./components/account/add/account-create-dialog.component";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
+
+const adalConfig = {
+    tenant: "microsoft.onmicrosoft.com",
+    clientId: "94ef904d-c21a-4672-9946-b4d6a12b8e13",
+    redirectUri: "http://localhost",
+};
 
 @Component({
     selector: "bex-app",
     templateUrl: "app.layout.html",
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements AfterViewInit, OnInit {
     public hasAccount: Observable<boolean>;
     public isAppReady = new BehaviorSubject<boolean>(false);
 
@@ -24,9 +30,11 @@ export class AppComponent implements AfterViewInit {
         private sidebarManager: SidebarManager,
         private settingsService: SettingsService,
         private commandService: CommandService,
+        private adalService: AdalService,
         private accountService: AccountService) {
         this.settingsService.init();
         this.commandService.init();
+        this.adalService.init(adalConfig);
 
         this.hasAccount = accountService.currentAccount.map((x) => { return Boolean(x); });
 
@@ -35,6 +43,10 @@ export class AppComponent implements AfterViewInit {
             .subscribe((loadedArray) => {
                 this.isAppReady.next(loadedArray[0] && loadedArray[1]);
             });
+    }
+
+    public ngOnInit() {
+        this.adalService.login();
     }
 
     public ngAfterViewInit() {
@@ -49,5 +61,9 @@ export class AppComponent implements AfterViewInit {
 
     public addAccount() {
         this.sidebarManager.open("add-account", AccountCreateDialogComponent);
+    }
+
+    public logout() {
+        this.adalService.logout();
     }
 }
