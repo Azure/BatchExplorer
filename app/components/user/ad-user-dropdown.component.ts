@@ -4,7 +4,7 @@ import { AdalService } from "app/services";
 
 @Component({
     selector: "bex-ad-user-dropdown",
-    templateUrl: "ad-user-dropdown",
+    templateUrl: "ad-user-dropdown.html",
 })
 export class AdUserDropdownComponent {
     public name: string;
@@ -20,5 +20,4 @@ export class AdUserDropdownComponent {
     public logout() {
         this.adalService.logout();
     }
-
 }

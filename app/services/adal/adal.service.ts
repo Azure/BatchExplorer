@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Headers, Http, RequestOptions } from "@angular/http";
+import { Http } from "@angular/http";
 import { remote } from "electron";
 import * as moment from "moment";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
@@ -67,6 +67,9 @@ export class AdalService {
     }
 
     public logout(): void {
+        localStorage.removeItem(Constants.localStorageKey.currentUser);
+        localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
+
         if (remote.getCurrentWindow().isVisible()) {
             remote.getCurrentWindow().hide();
         }
@@ -164,17 +167,17 @@ export class AdalService {
     }
 
     // DEMO to check the AAD token is working. TODO remove
-    private _listSub(token: string) {
-        const url = `https://management.azure.com/subscriptions?api-version=2016-06-01`;
-        const headers = new Headers({ Authorization: `Bearer ${token}` });
-        const options = new RequestOptions({ headers });
-        this.http.get(url, options).subscribe({
-            next: (out) => {
-                console.log("Subs are", out.json());
-            },
-            error: (error) => { console.log("Error for get sub is", error); },
-        });
-    }
+    // private _listSub(token: string) {
+    //     const url = `https://management.azure.com/subscriptions?api-version=2016-06-01`;
+    //     const headers = new Headers({ Authorization: `Bearer ${token}` });
+    //     const options = new RequestOptions({ headers });
+    //     this.http.get(url, options).subscribe({
+    //         next: (out) => {
+    //             console.log("Subs are", out.json());
+    //         },
+    //         error: (error) => { console.log("Error for get sub is", error); },
+    //     });
+    // }
 
     /**
      * Process IDToken return by the /authorize url to extract user information
@@ -188,6 +191,5 @@ export class AdalService {
     private _processAccessToken(token: AccessToken) {
         this._currentAccessToken = token;
         localStorage.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(token));
-        // this._listSub(token.access_token); // TODO remove - just for testing token is working
     }
 }

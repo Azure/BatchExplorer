@@ -19,7 +19,6 @@ class MockBrowserWindow {
         });
     });
 
-
     public webContents = {
         on: jasmine.createSpy("webcontents.on").and.callFake((event: string, callback: Function) => {
             this.on(`webcontents.${event}`, callback);

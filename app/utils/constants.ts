@@ -33,7 +33,6 @@ export const forms = {
     },
 };
 
-
 export const localStorageKey = {
     /**
      * LocalStorage key for storing the current user information

@@ -14,7 +14,7 @@ export class UserDecoder {
 
         let user = JSON.parse(decodedPayLoad);
 
-        // if (!user || !user.hasOwnProperty('aud')) throw new Error('');
+        // if (!user || !user.ha    sOwnProperty('aud')) throw new Error('');
 
         return <ADUser>user;
     }

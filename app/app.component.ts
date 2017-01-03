@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { MdSidenav } from "@angular/material";
 import { BehaviorSubject, Observable } from "rxjs";
 
@@ -16,7 +16,7 @@ const adalConfig = {
     selector: "bex-app",
     templateUrl: "app.layout.html",
 })
-export class AppComponent implements AfterViewInit {
+export class AppComponent implements AfterViewInit, OnInit {
     public hasAccount: Observable<boolean>;
     public isAppReady = new BehaviorSubject<boolean>(false);
 

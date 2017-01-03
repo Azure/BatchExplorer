@@ -27,7 +27,7 @@ const sampleUser: ADUser = {
     ver: "1.0",
 };
 
-fdescribe("AdalService", () => {
+describe("AdalService", () => {
     let service: AdalService;
     let http: any = {};
     let currentUser: ADUser;

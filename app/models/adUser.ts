@@ -92,5 +92,3 @@ export interface ADUser {
      */
     ver?: string;
 }
-
-let a: ADUser;

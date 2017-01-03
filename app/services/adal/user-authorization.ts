@@ -31,6 +31,7 @@ export interface AuthorizeError {
 export class UserAuthorization {
     private _authWindow: Electron.BrowserWindow;
     private _subject: AsyncSubject<AuthorizeResult>;
+    private _waitingForAuth = false;
 
     constructor(private config: AdalConfig) {
     }
@@ -43,6 +44,7 @@ export class UserAuthorization {
      *      If silent is true and the access fail the observable will return and error of type AuthorizeError
      */
     public authorize(silent = false): Observable<AuthorizeResult> {
+        this._waitingForAuth = true;
         this._subject = new AsyncSubject();
         const authWindow = this._createAuthWindow();
         authWindow.loadURL(this._buildUrl(silent));
@@ -66,8 +68,8 @@ export class UserAuthorization {
      * Log the user out
      */
     public logout(): Observable<any> {
+        this._waitingForAuth = true;
         this._subject = new AsyncSubject();
-
         const url = AdalConstants.logoutUrl(this.config.tenant, {
             post_logout_redirect_uri: encodeURIComponent(this._buildUrl(false)),
         });
@@ -117,16 +119,23 @@ export class UserAuthorization {
 
         authWindow.on("close", (event) => {
             this._authWindow = null;
+            // If the user closed manualy then we need to also close the main window
+            if (this._waitingForAuth) {
+                remote.getCurrentWindow().destroy();
+            }
         });
     }
 
     private _createAuthWindow(): Electron.BrowserWindow {
         this._closeWindow();
         this._authWindow = new BrowserWindow({
-            width: 800, height: 600, show: false, webPreferences: {
+            width: 800, height: 700, show: false,
+            center: true,
+            webPreferences: {
                 nodeIntegration: false,
             },
         });
+        this._authWindow.setMenu(null);
         return this._authWindow;
     }
 
@@ -136,14 +145,13 @@ export class UserAuthorization {
      * @param url Url used for callback
      */
     private _handleCallback(url: string) {
-        console.log("Handle callback...", url);
         if (!this._isRedirectUrl(url)) {
             return;
         }
-        console.log("Closing window...");
 
         this._closeWindow();
         const params = this._getRedirectUrlParams(url);
+        this._waitingForAuth = false;
         if ((<any>params).error) {
             this._subject.error(params as AuthorizeError);
         } else {
