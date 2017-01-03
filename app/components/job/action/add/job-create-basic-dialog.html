@@ -30,10 +30,9 @@
 
             <div formGroupName="poolInfo">
                 <div class="form-element">
-                    <h4>Select a pool to run the job on</h4>
-                    <select formControlName="poolId">
-                        <option *ngFor="let pool of poolsData.items | async" value="{{pool.id}}">{{pool.id}}</option>
-                    </select>
+                    <md-select formControlName="poolId" placeholder="Pool">
+                        <md-option *ngFor="let pool of poolsData.items | async" [value]="pool.id">{{pool.id}}</md-option>
+                    </md-select>
                     <bex-error controlName="poolId" code="required">You must select a pool for this job to run on</bex-error>
                 </div>
             </div>
