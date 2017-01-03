@@ -32,11 +32,14 @@ export class AdalService {
     private _config: AdalConfig;
     private _authorizeUser: UserAuthorization;
     private _accessTokenService: AccessTokenService;
+    private _userDecoder: UserDecoder;
+
     private _currentAccessToken: AccessToken = null;
 
     private _currentUser = new BehaviorSubject<ADUser>(null);
 
     constructor(private http: Http) {
+        this._userDecoder = new UserDecoder();
         this.currentUser = this._currentUser.asObservable();
     }
 
@@ -133,7 +136,6 @@ export class AdalService {
         const subject = new AsyncSubject();
         this._authorizeUser.authorizeTrySilentFirst().subscribe({
             next: (result: AuthorizeResult) => {
-                console.log("Got result", result);
                 this._processUserToken(result.id_token);
                 this._accessTokenService.redeem(result.code).subscribe((token) => {
                     this._processAccessToken(token);
@@ -178,8 +180,7 @@ export class AdalService {
      * Process IDToken return by the /authorize url to extract user information
      */
     private _processUserToken(idToken: string) {
-        const decoder = new UserDecoder();
-        const user = decoder.decode(idToken);
+        const user = this._userDecoder.decode(idToken);
         this._currentUser.next(user);
         localStorage.setItem(Constants.localStorageKey.currentUser, JSON.stringify(user));
     }
@@ -187,6 +188,6 @@ export class AdalService {
     private _processAccessToken(token: AccessToken) {
         this._currentAccessToken = token;
         localStorage.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(token));
-        this._listSub(token.access_token); // TODO remove - just for testing token is working
+        // this._listSub(token.access_token); // TODO remove - just for testing token is working
     }
 }

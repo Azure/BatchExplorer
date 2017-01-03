@@ -35,7 +35,7 @@ export class UserDecoder {
 
         const matches = idTokenPartsRegex.exec(jwtToken);
         if (!matches || matches.length < 4) {
-            throw new Error(`Failed to decode Jwt token. The token has in valid format. Actual token: '${jwtToken}'`);
+            throw new Error(`Failed to decode Jwt token. The token has invalid format. Actual token: '${jwtToken}'`);
         }
 
         const crackedToken = {

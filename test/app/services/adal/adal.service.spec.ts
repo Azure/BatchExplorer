@@ -1,7 +1,8 @@
 import * as moment from "moment";
+import { Observable } from "rxjs";
 
 import { ADUser } from "app/models";
-import { AdalService } from "app/services/adal";
+import { AccessToken, AdalService } from "app/services/adal";
 import { Constants } from "app/utils";
 import { mockStorage } from "test/utils/mocks";
 
@@ -35,6 +36,7 @@ fdescribe("AdalService", () => {
     beforeEach(() => {
         mockStorage(localStorage);
         service = new AdalService(http);
+        service.currentUser.subscribe(x => currentUser = x);
         service.init(config);
     });
 
@@ -43,7 +45,7 @@ fdescribe("AdalService", () => {
         const tmpService = new AdalService(http);
         tmpService.init(config);
         let user: ADUser = null;
-        tmpService.currentUser.subscribe((x) => { user = x; });
+        tmpService.currentUser.subscribe(x => user = x);
         expect(user).toBeNull();
     });
 
@@ -52,7 +54,7 @@ fdescribe("AdalService", () => {
         const tmpService = new AdalService(http);
         tmpService.init(config);
         let user: ADUser = null;
-        tmpService.currentUser.subscribe((x) => { user = x; });
+        tmpService.currentUser.subscribe(x => user = x);
         expect(user).not.toBeNull();
         expect(user.upn).toEqual("frank.smith@example.com");
     });
@@ -79,5 +81,83 @@ fdescribe("AdalService", () => {
         tmpService.init(config);
         expect((<any>tmpService)._currentAccessToken).not.toBeNull();
         expect((<any>tmpService)._currentAccessToken.access_token).toEqual("sometoken");
+    });
+
+    describe("accessTokenData", () => {
+        let authorizeSpy: jasmine.Spy;
+        let refreshSpy: jasmine.Spy;
+        let redeemSpy: jasmine.Spy;
+        let decodeSpy: jasmine.Spy;
+        let refreshedToken;
+        let newToken;
+        let token: AccessToken;
+
+        beforeEach(() => {
+            refreshedToken = { access_token: "refreshedToken", expires_on: moment().add(1, "hour") };
+            newToken = { access_token: "newToken", expires_on: moment().add(1, "hour") };
+            let authorizeResult = {
+                id_token: "someidtoken",
+                code: "somecode",
+            };
+
+            refreshSpy = jasmine.createSpy("refreshSpy").and.returnValue(Observable.of(refreshedToken));
+            redeemSpy = jasmine.createSpy("redeemSpy").and.returnValue(Observable.of(newToken));
+            authorizeSpy = jasmine.createSpy("authorizeSpy").and.returnValue(Observable.of(authorizeResult));
+            decodeSpy = jasmine.createSpy("decodeSpy").and.returnValue(sampleUser);
+
+            (service as any)._accessTokenService.refresh = refreshSpy;
+            (service as any)._accessTokenService.redeem = redeemSpy;
+            (service as any)._authorizeUser.authorizeTrySilentFirst = authorizeSpy;
+            (service as any)._userDecoder.decode = decodeSpy;
+        });
+
+        it("should use the cached token if not expired", () => {
+            (service as any)._currentAccessToken = {
+                access_token: "initialtoken",
+                expires_on: moment().add(1, "hour"),
+            };
+            service.accessTokenData.subscribe(x => token = x);
+            expect(token).not.toBeNull();
+            expect(token.access_token).toEqual("initialtoken");
+        });
+
+        it("should reload a new token if the token is expiring before the safe margin", () => {
+            (service as any)._currentAccessToken = {
+                access_token: "initialtoken",
+                expires_on: moment().add(1, "minute"),
+                refresh_token: "somerefreshtoken",
+            };
+            service.accessTokenData.subscribe(x => token = x);
+            expect(redeemSpy).not.toHaveBeenCalled();
+            expect(refreshSpy).toHaveBeenCalledOnce();
+            expect(refreshSpy).toHaveBeenCalledWith("somerefreshtoken");
+
+            expect(token).not.toBeNull();
+            expect(token.access_token).toEqual("refreshedToken");
+        });
+
+        describe("when there is no token cached", () => {
+            beforeEach(() => {
+                service.accessTokenData.subscribe(x => token = x);
+            });
+
+            it("should authorize the user", () => {
+                expect(authorizeSpy).toHaveBeenCalledOnce();
+                expect(decodeSpy).toHaveBeenCalledOnce();
+                expect(decodeSpy).toHaveBeenCalledWith("someidtoken");
+            });
+
+            it("should save the user inside localStorage", () => {
+                expect(localStorage.getItem(Constants.localStorageKey.currentUser)).toEqual(JSON.stringify(sampleUser));
+            });
+
+            it("should redeem a new token", () => {
+                expect(refreshSpy).not.toHaveBeenCalled();
+                expect(redeemSpy).toHaveBeenCalledOnce();
+                expect(redeemSpy).toHaveBeenCalledWith("somecode");
+                expect(token.access_token).toEqual("newToken");
+            });
+        });
+
     });
 });
