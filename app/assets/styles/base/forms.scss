@@ -152,16 +152,10 @@ fieldset {
                 }
             }
 
-            select {
+            md-select {
                 height: 2em;
                 margin-top: 5px;
                 width: 33%;
-
-                &:focus {
-                    outline: 0;
-                    box-shadow: 1px 1px 8px 0 map-get($md-prussian-blue, 400) !important;
-                    border-color: map-get($md-prussian-blue, 400);
-                }
             }
         }
     }
