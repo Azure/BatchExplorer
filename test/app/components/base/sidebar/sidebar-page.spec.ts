@@ -52,12 +52,4 @@ describe("SidebarPageComponent", () => {
         fixture.detectChanges();
         expect(el.textContent).toContain("Some component content");
     });
-
-    it("#attachComponent() listen to the onOpen event correctly", () => {
-        const sidebarRef = new SidebarRef(null, "id-1");
-        component.attachComponent(FakeComponent, sidebarRef);
-        fixture.detectChanges();
-
-        expect(onOpenSpy).toHaveBeenCalled();
-    });
 });
