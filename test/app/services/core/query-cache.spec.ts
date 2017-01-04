@@ -42,11 +42,6 @@ describe("QueryCache", () => {
         expect(cache.getKeys("id eq a")).not.toBe(null);
     });
 
-    it("should keep a clone of the client proxy", () => {
-        clientProxy.value = "new-val";
-        expect(cache.getKeys(undefined).data.value).toEqual("original");
-    });
-
     it("delete item from query cache should remove from every query", () => {
         cache.deleteItemKey("a");
         expect(cache.getKeys(undefined).keys).toEqualImmutable(List(["b", "c"]));
