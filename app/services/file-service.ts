@@ -3,7 +3,7 @@ import { Observable } from "rxjs";
 
 import BatchClient from "../api/batch/batch-client";
 import { File } from "../models";
-import { DataCache, RxListProxy } from "./core";
+import { DataCache, RxBatchListProxy, RxListProxy } from "./core";
 import ServiceBase from "./service-base";
 
 export interface NodeFileListParams {
@@ -41,7 +41,7 @@ export class FileService extends ServiceBase {
         recursive = true,
         initialOptions: any = {}): RxListProxy<NodeFileListParams, File> {
 
-        return new RxListProxy<NodeFileListParams, File>(File, {
+        return new RxBatchListProxy<NodeFileListParams, File>(File, {
             cache: (params) => this._cache,
             proxyConstructor: (params, options) => {
                 return BatchClient.file.listFromComputeNode(params.poolId, params.nodeId, recursive, options);
