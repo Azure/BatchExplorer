@@ -16,7 +16,6 @@ export class JobPropertiesComponent implements OnDestroy {
     @Input()
     public set job(job: Job) {
         this._job = job;
-        console.log("JOb", job.jobPreparationTask);
         this.refresh(job);
     }
     public get job() { return this._job; }

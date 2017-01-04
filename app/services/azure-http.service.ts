@@ -1,7 +1,7 @@
 import { Location } from "@angular/common";
 import { Injectable } from "@angular/core";
 import {
-    Headers, Http, RequestMethod, RequestOptions, RequestOptionsArgs, Response, URLSearchParams
+    Headers, Http, RequestMethod, RequestOptions, RequestOptionsArgs, Response, URLSearchParams,
 } from "@angular/http";
 import { AsyncSubject, Observable } from "rxjs";
 

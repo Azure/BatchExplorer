@@ -4,7 +4,7 @@ import { Observable, Subject } from "rxjs";
 import { log } from "app/utils";
 import BatchClient from "../api/batch/batch-client";
 import { Pool } from "../models";
-import { DataCache,RxBatchListProxy,  RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
+import { DataCache, RxBatchListProxy,  RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
 import ServiceBase from "./service-base";
 
 export interface PoolParams {

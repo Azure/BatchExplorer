@@ -49,12 +49,12 @@ export class AppComponent implements AfterViewInit, OnInit {
     public ngOnInit() {
         this.adalService.login().subscribe(() => {
             // /subscription/{subId}/resources?$filter=resourceType eq 'Microsoft.Batch/batchAccounts'
-            this.azureHttpService.get(`subscriptions`).subscribe({
-                next: (out) => {
-                    console.log("Subs are", out.json());
-                },
-                error: (error) => { console.log("Error for get sub is", error); },
-            });
+            // this.azureHttpService.get(`subscriptions`).subscribe({
+            //     next: (out) => {
+            //         console.log("Subs are", out.json());
+            //     },
+            //     error: (error) => { console.log("Error for get sub is", error); },
+            // });
         });
     }
 
