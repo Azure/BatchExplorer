@@ -20,6 +20,7 @@ export * from "./listResult";
 export * from "./nameValuePair";
 export * from "./node";
 export * from "./nodeAgentSku";
+export * from "./nodeFileTypes";
 export * from "./pool";
 export * from "./resizeError";
 export * from "./resourceFile";
