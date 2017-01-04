@@ -4,7 +4,7 @@ import {
 } from "@angular/core/testing";
 import { List } from "immutable";
 
-import { DataCache, RxListProxy } from "app/services/core";
+import { DataCache, RxBatchListProxy } from "app/services/core";
 import { FakeModel } from "./fake-model";
 
 const data = [
@@ -62,7 +62,7 @@ class MockClientProxy {
 }
 
 describe("RxListProxy", () => {
-    let proxy: RxListProxy<{}, FakeModel>;
+    let proxy: RxBatchListProxy<{}, FakeModel>;
     let cache: DataCache<FakeModel>;
     let clientProxy: MockClientProxy;
     let hasMore = true;
@@ -70,7 +70,7 @@ describe("RxListProxy", () => {
     beforeEach(() => {
         cache = new DataCache<FakeModel>();
         clientProxy = new MockClientProxy({});
-        proxy = new RxListProxy(FakeModel, {
+        proxy = new RxBatchListProxy(FakeModel, {
             cache: () => cache,
             proxyConstructor: (params, options) => {
                 clientProxy.options = options;

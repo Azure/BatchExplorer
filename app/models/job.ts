@@ -67,7 +67,7 @@ export class Job extends JobRecord {
     constructor(data: any = {}) {
         super(Object.assign({}, data, {
             jobPreparationTask: data.jobPreparationTask && new JobPreparationTask(data.jobPreparationTask),
-            jobReleaseTask: data.jobPreparationTask && new JobReleaseTask(data.jobReleaseTask),
+            jobReleaseTask: data.jobReleaseTask && new JobReleaseTask(data.jobReleaseTask),
             jobManagerTask: data.jobManagerTask && new JobManagerTask(data.jobManagerTask),
         }));
     }

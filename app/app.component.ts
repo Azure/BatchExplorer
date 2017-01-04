@@ -2,7 +2,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { MdSidenav } from "@angular/material";
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { AccountService, AdalService, CommandService, SettingsService } from "app/services";
+import { AccountService, AdalService, AzureHttpService, CommandService, SettingsService } from "app/services";
 import AccountCreateDialogComponent from "./components/account/add/account-create-dialog.component";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
@@ -31,6 +31,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         private settingsService: SettingsService,
         private commandService: CommandService,
         private adalService: AdalService,
+        private azureHttpService: AzureHttpService,
         private accountService: AccountService) {
         this.settingsService.init();
         this.commandService.init();
@@ -46,7 +47,15 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
 
     public ngOnInit() {
-        this.adalService.login();
+        this.adalService.login().subscribe(() => {
+            // /subscription/{subId}/resources?$filter=resourceType eq 'Microsoft.Batch/batchAccounts'
+            this.azureHttpService.get(`subscriptions`).subscribe({
+                next: (out) => {
+                    console.log("Subs are", out.json());
+                },
+                error: (error) => { console.log("Error for get sub is", error); },
+            });
+        });
     }
 
     public ngAfterViewInit() {
