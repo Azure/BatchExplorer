@@ -92,12 +92,14 @@ import {
 import {
     AccountService,
     AdalService,
+    AzureHttpService,
     CommandService,
     FileService,
     JobService,
     NodeService,
     PoolService,
     SettingsService,
+    SubscriptionService,
     TaskService,
     commands,
 } from "./services";
@@ -197,14 +199,16 @@ import {
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         AccountService,
+        AdalService,
+        AzureHttpService,
         CommandService,
         FileService,
         JobService,
         PoolService,
+        SubscriptionService,
         NodeService,
         SettingsService,
         TaskService,
-        AdalService,
         ...commands,
     ],
 })

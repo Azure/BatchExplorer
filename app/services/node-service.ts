@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 
 import BatchClient from "../api/batch/batch-client";
 import { Node } from "../models";
-import { DataCache, RxEntityProxy, RxListProxy, TargetedDataCache } from "./core";
+import { DataCache, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache } from "./core";
 import ServiceBase from "./service-base";
 
 export interface NodeListParams {
@@ -29,7 +29,7 @@ export class NodeService extends ServiceBase {
     }
 
     public list(initialPoolId: string, initialOptions: any = {}): RxListProxy<NodeListParams, Node> {
-        return new RxListProxy<NodeListParams, Node>(​​​Node, {
+        return new RxBatchListProxy<NodeListParams, Node>(​​​Node, {
             cache: ({poolId}) => this.getCache(poolId),
             proxyConstructor: ({poolId}, options) => {
                 return BatchClient.node.list(poolId, options);

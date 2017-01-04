@@ -26,6 +26,7 @@ export * from "./resourceFile";
 export * from "./schedulingError";
 export * from "./settings";
 export * from "./startTask";
+export * from "./subscription";
 export * from "./subtaskInformation";
 export * from "./task";
 export * from "./taskConstraints";

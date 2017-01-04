@@ -3,36 +3,29 @@ import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
 import { DataCache } from "./data-cache";
+import { CachedKeyList } from "./query-cache";
 import { RxEntityProxy } from "./rx-entity-proxy";
 import { RxProxyBase } from "./rx-proxy-base";
 
-const defaultOptions = {
-    maxResults: 50,
-};
-
 export interface RxListProxyConfig<TParams, TEntity> {
     cache: (params: TParams) => DataCache<TEntity>;
-    proxyConstructor: (params: TParams, options: any) => any;
     initialOptions?: any;
     initialParams?: any;
 }
 
-export class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams, TEntity> {
+export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams, TEntity> {
     public items: Observable<List<TEntity>>;
     public hasMore: Observable<boolean>;
 
+    protected _options: any;
+
     private _itemKeys: BehaviorSubject<List<string>> = new BehaviorSubject(List([]));
     private _hasMore: BehaviorSubject<boolean> = new BehaviorSubject(true);
-    private _proxyConstructor: (params: TParams, options: any) => any;
-    private _clientProxy: any;
-    private _options: any;
 
     constructor(type: Type<TEntity>, config: RxListProxyConfig<TParams, TEntity>) {
         super(type, config.cache);
         this._options = config.initialOptions || {};
         this.params = config.initialParams;
-        this._proxyConstructor = config.proxyConstructor;
-        this._clientProxy = config.proxyConstructor(this._params, this.computeOptions(this._options));
         this._hasMore.next(true);
         this.status = this._status.asObservable();
         this.hasMore = this._hasMore.asObservable();
@@ -50,7 +43,7 @@ export class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams, TEntity>
 
     public setOptions(options: {}) {
         this._options = options;
-        this._clientProxy = this._proxyConstructor(this.params, this.computeOptions(options));
+        this.handleNewOptions(options);
         this._itemKeys.next(List([]));
         this._hasMore.next(true);
 
@@ -72,7 +65,7 @@ export class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams, TEntity>
         if (this._itemKeys.getValue().size === 0 && !forceNew) {
             const cachedList = this.cache.queryCache.getKeys(this._options.filter);
             if (cachedList) {
-                this._clientProxy = cachedList.clientProxy;
+                this.getQueryCacheData(cachedList);
                 this._itemKeys.next(cachedList.keys);
                 return Observable.from(cachedList.keys.toJS());
             }
@@ -80,13 +73,13 @@ export class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams, TEntity>
 
         return this.fetchData({
             getData: () => {
-                return Observable.fromPromise(this._clientProxy.fetchNext());
+                return this.fetchNextItems();
             }, next: (response: any) => {
-                this._hasMore.next(this._clientProxy.hasMoreItems());
-                const keys = List(this.newItems(response.data));
+                this._hasMore.next(this.hasMoreItems());
+                const keys = List(this.newItems(this.processResponse(response)));
                 const currentKeys = this._itemKeys.getValue();
                 if (currentKeys.size === 0) {
-                    this.cache.queryCache.cacheQuery(this._options.filter, keys, this._clientProxy.clone());
+                    this.cache.queryCache.cacheQuery(this._options.filter, keys, this.putQueryCacheData());
                 }
                 this._itemKeys.next(List<string>(currentKeys.concat(keys)));
             },
@@ -120,7 +113,11 @@ export class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams, TEntity>
         return this.fetchNext(true);
     }
 
-    private computeOptions(options: any) {
-        return Object.assign({}, defaultOptions, options);
-    }
+    protected abstract handleNewOptions(options: {});
+    protected abstract fetchNextItems(): Observable<any>;
+    protected abstract processResponse(response: any): any[];
+    protected abstract hasMoreItems(): boolean;
+    protected abstract queryCacheKey(): string;
+    protected abstract putQueryCacheData(): any;
+    protected abstract getQueryCacheData(queryCache: CachedKeyList): any;
 }

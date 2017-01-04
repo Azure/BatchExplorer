@@ -7,7 +7,7 @@ const noQueryKey = "no-query";
 
 export class CachedKeyList {
     public createdAt: Date;
-    constructor(public keys: List<string>, public clientProxy: any) {
+    constructor(public keys: List<string>, public data: any) {
         this.createdAt = new Date();
     }
 }
@@ -18,11 +18,11 @@ export class CachedKeyList {
 export class QueryCache {
     private _cache: { [key: string]: CachedKeyList } = {};
 
-    public cacheQuery(filter: string, keys: List<string>, clientProxy: any) {
+    public cacheQuery(filter: string, keys: List<string>, data: any) {
         if (!filter) {
             filter = noQueryKey;
         }
-        this._cache[filter] = new CachedKeyList(keys, clientProxy.clone());
+        this._cache[filter] = new CachedKeyList(keys, data);
         this.cleanCache();
     }
 

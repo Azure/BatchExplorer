@@ -1,4 +1,5 @@
 export * from "./data-cache";
+export * from "./rx-batch-list-proxy";
 export * from "./rx-entity-proxy";
 export * from "./rx-list-proxy";
 export * from "./targeted-data-cache";

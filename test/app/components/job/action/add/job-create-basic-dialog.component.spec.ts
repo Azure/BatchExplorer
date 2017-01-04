@@ -11,7 +11,7 @@ import { SidebarRef } from "app/components/base/sidebar";
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { BatchError, Pool } from "app/models";
 import { JobService, PoolService } from "app/services";
-import { DataCache, RxListProxy } from "app/services/core";
+import { DataCache, RxBatchListProxy } from "app/services/core";
 import { ComponentTestHelper } from "test/app/components/component-test-helper";
 import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";
@@ -73,7 +73,7 @@ describe("JobCreateBasicDialogComponent ", () => {
         poolServiceSpy = {
             list: jasmine.createSpy("ListPools").and.callFake((...args) => {
                 const cache = new DataCache<Pool>();
-                const proxy = new RxListProxy<{}, Pool>(Pool, {
+                const proxy = new RxBatchListProxy<{}, Pool>(Pool, {
                     cache: (params) => cache,
                     proxyConstructor: (params, options) => new FakeListProxy(),
                     initialOptions: {},

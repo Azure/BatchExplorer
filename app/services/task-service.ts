@@ -3,7 +3,7 @@ import { Observable, Subject } from "rxjs";
 
 import { SubtaskInformation, Task } from "app/models";
 import BatchClient from "../api/batch/batch-client";
-import { DataCache, RxEntityProxy, RxListProxy, TargetedDataCache, getOnceProxy } from "./core";
+import { DataCache, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache, getOnceProxy } from "./core";
 import ServiceBase from "./service-base";
 
 export interface TaskListParams {
@@ -44,7 +44,7 @@ export class TaskService extends ServiceBase {
     }
 
     public list(initialJobId: string, initialOptions: any = {}): RxListProxy<TaskListParams, Task> {
-        return new RxListProxy<TaskListParams, Task>(Task, {
+        return new RxBatchListProxy<TaskListParams, Task>(Task, {
             cache: ({jobId}) => this.getCache(jobId),
             proxyConstructor: ({jobId}, options) => {
                 return BatchClient.task.list(jobId, options);
@@ -59,7 +59,7 @@ export class TaskService extends ServiceBase {
         initialTaskId: string,
         initialOptions: any = {}): RxListProxy<SubtaskListParams, SubtaskInformation> {
 
-        return new RxListProxy<SubtaskListParams, SubtaskInformation>(SubtaskInformation, {
+        return new RxBatchListProxy<SubtaskListParams, SubtaskInformation>(SubtaskInformation, {
             cache: ({jobId, taskId}) => this._subTaskCache.getCache({ jobId, taskId }),
             proxyConstructor: ({jobId, taskId}, options) => {
                 return BatchClient.task.listSubtasks(jobId, taskId, options);

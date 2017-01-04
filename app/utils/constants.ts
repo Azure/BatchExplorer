@@ -44,3 +44,7 @@ export const localStorageKey = {
      */
     currentAccessToken: "current_access_token",
 };
+
+export const ApiVersion = {
+    arm: "2016-06-01",
+};

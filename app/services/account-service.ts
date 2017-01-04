@@ -6,7 +6,7 @@ import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 import { Account, NodeAgentSku } from "app/models";
 import { SecureUtils } from "app/utils";
 import BatchClient from "../api/batch/batch-client";
-import { DataCache, DataCacheTracker, RxListProxy } from "./core";
+import { DataCache, DataCacheTracker, RxBatchListProxy, RxListProxy } from "./core";
 
 const lastSelectedAccountStorageKey = "last-account-selected-name";
 
@@ -66,8 +66,8 @@ export class AccountService {
         }
     }
 
-    public listNodeAgentSkus(initialOptions: any) {
-        return new RxListProxy<{}, NodeAgentSku>(NodeAgentSku, {
+    public listNodeAgentSkus(initialOptions: any): RxListProxy<{}, NodeAgentSku> {
+        return new RxBatchListProxy<{}, NodeAgentSku>(NodeAgentSku, {
             cache: (params) => this._cache,
             proxyConstructor: (params, options) => BatchClient.account.listNodeAgentSkus(options),
             initialOptions,
