@@ -3,7 +3,7 @@ import { Job } from "app/models";
 import { Observable, Subject } from "rxjs";
 
 import BatchClient from "../api/batch/batch-client";
-import { DataCache, RxBatchListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
+import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
 import ServiceBase from "./service-base";
 
 export interface JobParams {
@@ -34,7 +34,7 @@ export class JobService extends ServiceBase {
     }
 
     public get(jobId: string, options: any = {}): RxEntityProxy<JobParams, Job> {
-        return new RxEntityProxy(Job, {
+        return new RxBatchEntityProxy(Job, {
             cache: () => this._cache,
             getFn: (params: JobParams) => {
                 return BatchClient.job.get(params.id, options);

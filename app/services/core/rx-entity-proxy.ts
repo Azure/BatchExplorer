@@ -13,17 +13,12 @@ export interface RxEntityProxyConfig<TParams, TEntity> {
     cache: (params: TParams) => DataCache<TEntity>;
 
     /**
-     * Get function(Ususally call the client proxy)
-     */
-    getFn: (params: TParams) => Promise<any>;
-
-    /**
      * Initial set of params.
      */
     initialParams?: TParams;
 }
 
-export class RxEntityProxy<TParams, TEntity> extends RxProxyBase<TParams, TEntity> {
+export abstract class RxEntityProxy<TParams, TEntity> extends RxProxyBase<TParams, TEntity> {
     /**
      * Contains the observable of the item you want to load.
      * Subscribe to this or use the async pipe on this attribute.
@@ -31,7 +26,6 @@ export class RxEntityProxy<TParams, TEntity> extends RxProxyBase<TParams, TEntit
     public item: Observable<TEntity>;
 
     private _itemKey = new BehaviorSubject<string>(null);
-    private _getMethod: (params: TParams) => Promise<any>;
 
     /**
      * @param _type Class for TEntity used to instantiate
@@ -42,7 +36,6 @@ export class RxEntityProxy<TParams, TEntity> extends RxProxyBase<TParams, TEntit
     constructor(type: Type<TEntity>, config: RxEntityProxyConfig<TParams, TEntity>) {
         super(type, config.cache);
         this.params = config.initialParams || <TParams>{};
-        this._getMethod = config.getFn;
         this.item = this._itemKey.map((key) => {
             return this.cache.items.map((items) => {
                 return items.get(key);
@@ -56,10 +49,10 @@ export class RxEntityProxy<TParams, TEntity> extends RxProxyBase<TParams, TEntit
     public fetch(): Observable<any> {
         return this.fetchData({
             getData: () => {
-                return Observable.fromPromise(this._getMethod(this.params));
+                return this.getData();
             },
             next: (response: any) => {
-                const key = this.newItem(response.data);
+                const key = this.newItem(response);
                 this._itemKey.next(key);
             },
             error: (error: any) => {
@@ -75,6 +68,8 @@ export class RxEntityProxy<TParams, TEntity> extends RxProxyBase<TParams, TEntit
     public refresh(): Observable<any> {
         return this.fetch();
     }
+
+    protected abstract getData(): Observable<any>;
 }
 
 export function getOnceProxy<TEntity>(getProxy: RxEntityProxy<any, TEntity>): Observable<TEntity> {
