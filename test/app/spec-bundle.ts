@@ -10,5 +10,5 @@ require("zone.js/dist/sync-test");
 require("zone.js/dist/proxy");
 require("zone.js/dist/jasmine-patch");
 Error.stackTraceLimit = 5;
-
+import "hammerjs";
 import "../utils/matchers";
