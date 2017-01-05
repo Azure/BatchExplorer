@@ -67,14 +67,7 @@ export class AccountListComponent implements OnInit {
         if (!subscriptionAccounts.expanded) {
             if (!subscriptionAccounts.accounts) {
                 subscriptionAccounts.accounts = this.accountService.list(subscriptionId);
-                subscriptionAccounts.accounts.fetchNext();
-                subscriptionAccounts.accounts.items.subscribe((accounts) => {
-                    if (accounts.size > 1) {
-                        this.accountService.getAccount(accounts.first().id).subscribe((response) => {
-                            console.log("Got account", response.json());
-                        });
-                    }
-                });
+                subscriptionAccounts.accounts.fetchNext(true);
             }
         }
         subscriptionAccounts.expanded = !subscriptionAccounts.expanded;

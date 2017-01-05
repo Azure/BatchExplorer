@@ -1,4 +1,5 @@
 export * from "./account";
+export * from "./accountKeys";
 export * from "./adUser";
 export * from "./applicationPackageReference";
 export * from "./batchError";

@@ -3,8 +3,9 @@ import { MdDialog, MdDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 
-import { Account } from "app/models";
-import { AccountService } from "app/services";
+import { AccountResource } from "app/models";
+import { AccountParams, AccountService } from "app/services";
+import { RxEntityProxy } from "app/services/core";
 import { DeleteAccountDialogComponent } from "../action/delete-account-dialog.component";
 
 @Component({
@@ -12,18 +13,14 @@ import { DeleteAccountDialogComponent } from "../action/delete-account-dialog.co
     templateUrl: "account-details.html",
 })
 export class AccountDetailsComponent implements OnInit, OnDestroy {
-    public account: Account;
+    public account: AccountResource;
+    public data: RxEntityProxy<AccountParams, AccountResource>;
 
     public set accountId(id: string) {
         this._accountId = id;
-        this.accountService.get(id).subscribe((account) => {
-            this.account = account;
-            if (account) {
-                this.zone.run(() => {
-                    this.accountService.selectAccount(account);
-                });
-            }
-        });
+        this.data.params = { id };
+        this.data.fetch();
+        this.selectAccount(id);
     }
 
     public get accountId() {
@@ -40,6 +37,8 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         private accountService: AccountService,
         private zone: NgZone,
         private viewContainerRef: ViewContainerRef) {
+        this.data = accountService.getAccount(null);
+        this.data.item.subscribe(account => this.account = account);
 
     }
 
@@ -66,7 +65,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         });
     }
 
-    public selectAccount(account: Account): void {
-        this.accountService.selectAccount(account);
+    public selectAccount(accountId: string): void {
+        this.accountService.selectAccount(accountId);
     }
 }

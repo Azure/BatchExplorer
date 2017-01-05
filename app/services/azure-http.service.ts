@@ -60,7 +60,6 @@ export class AzureHttpService {
     public apiVersion(uri: string) {
         const providerSpecific = /.*\/providers\/([a-zA-Z.]*)\/.+/i;
         const match = providerSpecific.exec(uri);
-        console.log("MAtch", match);
         if (match && match.length > 1) {
             const provider = match[1];
             if (provider in providersApiVersion) {

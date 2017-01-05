@@ -26,17 +26,18 @@ export default class AccountCreateDialogComponent implements OnInit {
     }
 
     public onSubmit() {
-        this.isSaving = true;
-        const account  = Object.assign({}, this.account);
-        this.accountService.add(account).subscribe(
-            (val) => { this.resetForm(); },
-            (error) => { console.error("storeAccount() :: error: ", error); },
-            () => {
-                this.isSaving = false;
-                this.sidebarRef.destroy();
-                this.router.navigate(["/accounts", account.id]);
-            },
-        );
+        alert("Not supported yet!");
+        // this.isSaving = true;
+        // const account  = Object.assign({}, this.account);
+        // this.accountService.add(account).subscribe(
+        //     (val) => { this.resetForm(); },
+        //     (error) => { console.error("storeAccount() :: error: ", error); },
+        //     () => {
+        //         this.isSaving = false;
+        //         this.sidebarRef.destroy();
+        //         this.router.navigate(["/accounts", account.id]);
+        //     },
+        // );
     }
 
     private resetForm() {

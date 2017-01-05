@@ -35,6 +35,7 @@ export class AppComponent implements AfterViewInit {
         this.settingsService.init();
         this.commandService.init();
         this.adalService.init(adalConfig);
+        this.accountService.loadInitialData();
 
         this.hasAccount = accountService.currentAccount.map((x) => { return Boolean(x); });
 

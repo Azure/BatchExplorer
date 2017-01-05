@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { NavigationStart, Router } from "@angular/router";
 
-import { Account } from "app/models";
+import { AccountResource } from "app/models";
 import { AccountService, AccountStatus } from "app/services";
 
 @Component({
@@ -41,7 +41,7 @@ import { AccountService, AccountStatus } from "app/services";
 export default class AccountDropDownComponent {
     public status = AccountStatus;
 
-    public selected: Account = null;
+    public selected: AccountResource = null;
     public showAccountDropDown: boolean = true;
     public selectedAccountAlias: string = "";
     public showDropdown = false;
@@ -50,7 +50,7 @@ export default class AccountDropDownComponent {
         accountService.currentAccount.subscribe((account) => {
             if (account) {
                 this.selected = account;
-                this.selectedAccountAlias = account.alias;
+                this.selectedAccountAlias = account.name;
             } else {
                 this.selectedAccountAlias = "No account selected!";
             }
@@ -65,7 +65,7 @@ export default class AccountDropDownComponent {
     }
 
     // todo: where do i hold the selected account now that we are binding to the server observable data?
-    public selectAccount(account: Account): void {
-        this.accountService.selectAccount(account);
+    public selectAccount(account: AccountResource): void {
+        this.accountService.selectAccount(account.id);
     }
 }

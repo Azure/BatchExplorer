@@ -1,5 +1,6 @@
 <div id="container" [hidden]="!(isAppReady | async)">
-    <header id="header" [class.no-userinteract]="!(hasAccount | async)" class="noselect">
+    <!--[class.no-userinteract]="!(hasAccount | async)" -->
+    <header id="header" class="noselect">
         <div class="logo-banner-bar">
             <a class="logo" href="#" [routerLink]="['']" title="Batch labs - Home">
                 <img src="./assets/images/header/batchlabs.png" height="19" alt="Batch labs logo">
@@ -21,15 +22,16 @@
                 <md-sidenav #rightSidebar align="end">
                     <bex-sidebar-content #sidebarContent [sidebar]="rightSidebar"></bex-sidebar-content>
                 </md-sidenav>
-                <div [hidden]="!(hasAccount | async)">
+                <!--[hidden]="!(hasAccount | async)"-->
+                <div>
                     <router-outlet></router-outlet>
                 </div>
-                <div *ngIf="!(hasAccount | async)" class="no-account">
+                <!--<div *ngIf="!(hasAccount | async)" class="no-account">
                     <md-card (click)="addAccount()">
                         <i class="fa fa-user fa-lg"></i>
                         <div>Add a batch account</div>
                     </md-card>
-                </div>
+                </div>-->
             </md-sidenav-container>
         </div>
     </section>
