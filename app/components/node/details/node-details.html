@@ -31,7 +31,7 @@
         <md-tab>
             <template md-tab-label>Files</template>
             <div class="tab-padding">
-                <md-radio-group placeholder="StartTask/ApplicationPackage/Task" [(ngModel)]="selectedFileType">
+                <md-radio-group class="output-toggle-std" placeholder="StartTask/ApplicationPackage/Task" [(ngModel)]="selectedFileType">
                     <md-radio-button *ngFor="let entry of fileTypes" [value]="entry.id">{{entry.name}}</md-radio-button>
                 </md-radio-group>
             </div>
