@@ -6,37 +6,7 @@ import { AccountService, AccountStatus } from "app/services";
 
 @Component({
     selector: "bex-account-dropdown",
-    template: `
-        <bex-dropdown class="account-dropdown">
-            <div bex-dropdown-btn
-                [routerLink]="['/accounts/', (accountService.currentAccount | async)?.name]"
-                [class.invalid]="(accountService.currentAccountValid | async) === status.Invalid">
-                {{selectedAccountAlias}}
-
-                <i *ngIf="(accountService.currentAccountValid | async) === status.Invalid"
-                    class="fa fa-warning"></i>
-
-                <i *ngIf="(accountService.currentAccountValid | async) === status.Loading"
-                    class="fa fa-spinner fa-spin"></i>
-            </div>
-            <div bex-dropdown-content>
-                <div *ngFor="let account of accountService.accounts | async" class="dropdown-item"
-                        [routerLink]="['/accounts', account.id]"
-                        (click)="selectAccount(account)" [class.selected]="account === selected">
-                    <div class="main">
-                        <div class="alias">{{account.alias}}</div>
-                        <div class="url">{{account.url}}</div>
-                    </div>
-                    <div *ngIf="account === selected" class="extra">
-                        <i class="fa fa-check"></i>
-                    </div>
-                </div>
-                <div class="dropdown-item" routerLink="accounts">
-                    <i class="fa fa-cog fa-2x"></i>Manage accounts
-                </div>
-            </div>
-        </bex-dropdown>
-    `,
+    templateUrl: "account-dropdown.html",
 })
 export default class AccountDropDownComponent {
     public status = AccountStatus;

@@ -1,4 +1,4 @@
-<bex-loading [status]="subscriptions.status">
+<bex-loading [status]="subscriptions.status | async">
     <bex-quick-list>
 
         <div class="subscription" *ngFor="let subscription of subscriptions.items | async">
@@ -19,7 +19,7 @@
                     <p bex-quick-list-item-field>{{account.location}}</p>
                     <div bex-quick-list-item-preview>
                         <div class="flex-center">
-                            <i class="fa fa-star" [class.favorite]="isAccountFavorite(account.id)"></i>
+                            <i class="fa fa-star" [class.favorite]="isAccountFavorite(account.id)" (click)="toggleFavorite(account.id)"></i>
                         </div>
                     </div>
                 </bex-quick-list-item>

@@ -31,7 +31,6 @@ export class RxArmEntityProxy<TParams, TEntity> extends RxEntityProxy<TParams, T
         if (this._provideUri instanceof String) {
             return this._provideUri;
         } else {
-            console.log("COmpute params", this._params);
             return this._provideUri(this._params);
         }
     }

@@ -1,8 +1,6 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { List } from "immutable";
 
-import { LoadingStatus } from "app/components/base/loading";
 import { AccountResource, Subscription } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
 import { RxListProxy } from "app/services/core";
@@ -19,7 +17,6 @@ interface SubscriptionAccount {
     templateUrl: "account-list.html",
 })
 export class AccountListComponent implements OnInit {
-    public status = LoadingStatus.Loading;
     public subscriptions: RxListProxy<{}, Subscription>;
 
     public subscriptionAccounts: { [subId: string]: SubscriptionAccount } = {};
@@ -36,7 +33,6 @@ export class AccountListComponent implements OnInit {
         private subscriptionService: SubscriptionService,
         private sidebarManager: SidebarManager,
         private activatedRoute: ActivatedRoute) {
-
         this.subscriptions = subscriptionService.list();
         this.subscriptions.items.subscribe((subscriptions) => {
             const data: any = {};
@@ -53,13 +49,10 @@ export class AccountListComponent implements OnInit {
 
             this.subscriptionAccounts = data;
         });
-        accountService.accounts.subscribe(() => {
-            this.status = LoadingStatus.Ready;
-        });
     }
 
     public ngOnInit() {
-        this.subscriptions.fetchNext();
+        this.subscriptions.fetchNext(true);
     }
 
     public toggleExpandSubscription(subscriptionId: string) {
@@ -74,6 +67,14 @@ export class AccountListComponent implements OnInit {
     }
 
     public isAccountFavorite(accountId: string) {
-        return false;
+        return this.accountService.isAccountFavorite(accountId);
+    }
+
+    public toggleFavorite(accountId: string) {
+        if (this.isAccountFavorite(accountId)) {
+            this.accountService.unFavoriteAccount(accountId);
+        } else {
+            this.accountService.favoriteAccount(accountId);
+        }
     }
 }

@@ -28,22 +28,24 @@ bex-account-list {
 
             .quick-list-item {
                 padding-left: 20px;
-
-                .fa-star {
-                    font-size: 2em;
-                    color: #d5d5d5;
-
-                    &:hover {
-                        color: map-get($md-prussian-blue, 100);
-                    }
-
-                    &.favorite {
-                        color: map-get($md-prussian-blue, 400);
-                    }
-                }
             }
             border-top: 1px solid #e5e5e5;
             border-bottom: 1px solid #e5e5e5;
+        }
+    }
+}
+
+bex-account-list, bex-account-fav-list {
+     .fa-star {
+        font-size: 2em;
+        color: #d5d5d5;
+
+        &:hover {
+            color: map-get($md-prussian-blue, 100);
+        }
+
+        &.favorite {
+            color: map-get($md-prussian-blue, 400);
         }
     }
 }

@@ -57,7 +57,6 @@ export class RxArmListProxy<TParams, TEntity> extends RxListProxy<TParams, TEnti
     }
 
     private _requestOptions(): RequestOptions {
-        console.log("Search is search");
         const search = new URLSearchParams();
         if (this._options.filter) {
             search.set("$filter", this._options.filter);

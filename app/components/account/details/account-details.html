@@ -10,16 +10,16 @@
             <md-card-content>
             </md-card-content>
             <md-card-actions layout="row" layout-align="end center">
-                <bex-delete-button [entity]="account" (click)="deleteAccount()"></bex-delete-button>
+                <!--<bex-delete-button [entity]="account" (click)="deleteAccount()"></bex-delete-button>-->
             </md-card-actions>
         </md-card>
         <div class="account-links">
-            <md-card class="link" routerLink="/jobs" (click)="selectAccount(account)">
+            <md-card class="link" routerLink="/jobs" (click)="selectAccount(account.id)">
                 <i class="fa fa-tasks fa-lg"></i>
                 <div>Jobs</div>
             </md-card>
 
-            <md-card class="link" routerLink="/pools" (click)="selectAccount(account)">
+            <md-card class="link" routerLink="/pools" (click)="selectAccount(account.id)">
                 <i class="fa fa-database fa-lg"></i>
                 <div>Pools</div>
             </md-card>
