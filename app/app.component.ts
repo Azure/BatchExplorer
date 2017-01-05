@@ -16,7 +16,7 @@ const adalConfig = {
     selector: "bex-app",
     templateUrl: "app.layout.html",
 })
-export class AppComponent implements AfterViewInit, OnInit {
+export class AppComponent implements AfterViewInit {
     public hasAccount: Observable<boolean>;
     public isAppReady = new BehaviorSubject<boolean>(false);
 
@@ -31,7 +31,6 @@ export class AppComponent implements AfterViewInit, OnInit {
         private settingsService: SettingsService,
         private commandService: CommandService,
         private adalService: AdalService,
-        private azureHttpService: AzureHttpService,
         private accountService: AccountService) {
         this.settingsService.init();
         this.commandService.init();
@@ -44,18 +43,6 @@ export class AppComponent implements AfterViewInit, OnInit {
             .subscribe((loadedArray) => {
                 this.isAppReady.next(loadedArray[0] && loadedArray[1]);
             });
-    }
-
-    public ngOnInit() {
-        this.adalService.login().subscribe(() => {
-            // /subscription/{subId}/resources?$filter=resourceType eq 'Microsoft.Batch/batchAccounts'
-            // this.azureHttpService.get(`subscriptions`).subscribe({
-            //     next: (out) => {
-            //         console.log("Subs are", out.json());
-            //     },
-            //     error: (error) => { console.log("Error for get sub is", error); },
-            // });
-        });
     }
 
     public ngAfterViewInit() {

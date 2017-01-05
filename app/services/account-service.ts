@@ -3,10 +3,11 @@ import * as storage from "electron-json-storage";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import { Account, NodeAgentSku } from "app/models";
+import { Account, AccountResource, NodeAgentSku } from "app/models";
 import { SecureUtils } from "app/utils";
 import BatchClient from "../api/batch/batch-client";
-import { DataCache, DataCacheTracker, RxBatchListProxy, RxListProxy } from "./core";
+import { AzureHttpService } from "./azure-http.service";
+import { DataCache, DataCacheTracker, RxArmListProxy, RxBatchListProxy, RxListProxy, TargetedDataCache } from "./core";
 
 const lastSelectedAccountStorageKey = "last-account-selected-name";
 
@@ -14,6 +15,9 @@ export enum AccountStatus {
     Valid,
     Invalid,
     Loading,
+}
+export interface AccountListParams {
+    subscriptionId: string;
 }
 
 @Injectable()
@@ -26,9 +30,13 @@ export class AccountService {
     private _currentAccount: BehaviorSubject<Account> = new BehaviorSubject(null);
     private _currentAccountValid: BehaviorSubject<AccountStatus> = new BehaviorSubject(AccountStatus.Invalid);
     private _accountLoaded = new BehaviorSubject<boolean>(false);
+    private _accountCache = new TargetedDataCache<AccountListParams, AccountResource>({
+        key: ({subscriptionId}) => subscriptionId,
+    });
+
     private _cache = new DataCache<any>();
 
-    constructor(private zone: NgZone) {
+    constructor(private zone: NgZone, private azure: AzureHttpService) {
         this.loadInitialData();
         this.accountLoaded = this._accountLoaded.asObservable();
 
@@ -64,6 +72,19 @@ export class AccountService {
         if (this._currentAccount.getValue() !== account) {
             this._currentAccount.next(account);
         }
+    }
+
+    public getAccount(id: string) {
+        return this.azure.get(id);
+    }
+
+    public list(initalSubscriptionId: string): RxListProxy<AccountListParams, AccountResource> {
+        return new RxArmListProxy<AccountListParams, AccountResource>(AccountResource, this.azure, {
+            cache: (params) => this._accountCache.getCache(params),
+            uri: ({ subscriptionId }) => `/subscriptions/${subscriptionId}/resources`,
+            initialParams: { subscriptionId: initalSubscriptionId },
+            initialOptions: { filter: "resourceType eq 'Microsoft.Batch/batchAccounts'" },
+        });
     }
 
     public listNodeAgentSkus(initialOptions: any): RxListProxy<{}, NodeAgentSku> {

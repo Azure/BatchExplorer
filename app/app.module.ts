@@ -11,8 +11,8 @@ import { routes } from "./app.routes";
 import { AppComponent } from "./app.component";
 import { DeleteAccountDialogComponent } from "./components/account/action/delete-account-dialog.component";
 import AccountCreateDialogComponent from "./components/account/add/account-create-dialog.component";
+import { AccountFavListComponent, AccountListComponent } from "./components/account/browse";
 import AccountDropDown from "./components/account/browse/account-dropdown.component";
-import { AccountListComponent } from "./components/account/browse/account-list.component";
 import { AccountDetailsHomeComponent } from "./components/account/details/account-details-home.component";
 import { AccountDetailsComponent } from "./components/account/details/account-details.component";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
@@ -114,6 +114,7 @@ import {
         AccountDetailsHomeComponent,
         AccountDropDown,
         AccountHomeComponent,
+        AccountFavListComponent,
         AccountListComponent,
         AdUserDropdownComponent,
         AppComponent,

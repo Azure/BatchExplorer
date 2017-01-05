@@ -2,10 +2,12 @@ import { Injectable } from "@angular/core";
 
 import { Subscription } from "app/models";
 import { AzureHttpService } from "./azure-http.service";
-import { RxListProxy } from "./core";
+import { DataCache, RxArmListProxy, RxListProxy } from "./core";
 
 @Injectable()
 export class SubscriptionService {
+    public cache = new DataCache<Subscription>();
+
     constructor(private azure: AzureHttpService) {
     }
 
@@ -13,6 +15,11 @@ export class SubscriptionService {
      * List the subscriptions of the current user
      */
     public list(): RxListProxy<{}, Subscription> {
-        return null;
+        return new RxArmListProxy(Subscription, this.azure, {
+            cache: () => this.cache,
+            uri: () => "subscriptions",
+            initialParams: {},
+            initialOptions: {},
+        });
     }
 }
