@@ -3,7 +3,7 @@ import {
     tick,
 } from "@angular/core/testing";
 
-import { DataCache, RxEntityProxy } from "app/services/core";
+import { DataCache, RxBatchEntityProxy, RxEntityProxy } from "app/services/core";
 import { FakeModel } from "./fake-model";
 
 const data = [
@@ -20,7 +20,7 @@ describe("RxEnity proxy", () => {
     beforeEach(() => {
         cache = new DataCache<FakeModel>();
         dataSpy = jasmine.createSpy("").and.returnValues(...data.map(x => Promise.resolve({ data: x })));
-        proxy = new RxEntityProxy(FakeModel, {
+        proxy = new RxBatchEntityProxy(FakeModel, {
             cache: (params) => cache,
             getFn: dataSpy,
             initialParams: { id: "1" },
@@ -85,7 +85,7 @@ describe("RxEnity proxy", () => {
 
         it("should not send to delete if loading for the first time and I get a 404", fakeAsync(() => {
             fakeClient = () => Promise.reject({ statusCode: 404 });
-            proxy = new RxEntityProxy(FakeModel, {
+            proxy = new RxBatchEntityProxy(FakeModel, {
                 cache: (params) => cache,
                 getFn: fakeClient,
                 initialParams: { id: "1" },
@@ -109,7 +109,7 @@ describe("RxEnity proxy", () => {
                     return Promise.resolve({ data: data[0] });
                 }
             };
-            const otherProxy = new RxEntityProxy(FakeModel, {
+            const otherProxy = new RxBatchEntityProxy(FakeModel, {
                 cache: (params) => cache,
                 getFn: fakeClient,
                 initialParams: { id: "1" },
@@ -138,7 +138,7 @@ describe("RxEnity proxy", () => {
                     return Promise.resolve({ data: data[0] });
                 }
             };
-            proxy = new RxEntityProxy(FakeModel, {
+            proxy = new RxBatchEntityProxy(FakeModel, {
                 cache: (params) => cache,
                 getFn: fakeClient,
                 initialParams: { id: "1" },
