@@ -3,7 +3,7 @@ import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
-import { File } from "app/models";
+import { File, NodeFileTypes } from "app/models";
 import { FileService, NodeFileListParams } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
@@ -47,12 +47,19 @@ export class FileListComponent implements OnInit {
     }
     public get filter(): Filter { return this._filter; };
 
+    @Input()
+    public set fileType(value: NodeFileTypes) {
+        this._fileType = value;
+    }
+    public get fileType(): NodeFileTypes { return this._fileType; }
+
     public status: Observable<LoadingStatus>;
     public data: RxListProxy<NodeFileListParams, File>;
 
     private _filter: Filter;
     private _poolId: string;
     private _nodeId: string;
+    private _fileType: NodeFileTypes;
 
     constructor(private fileService: FileService) {
     }

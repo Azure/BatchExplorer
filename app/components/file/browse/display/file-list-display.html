@@ -18,7 +18,7 @@
     </bex-thead>
 
     <!--<bex-row *ngFor="let file of files" [routerLink]="['/pools/', poolId, 'nodes', node.id,]" routerLinkActive="selected">-->
-    <bex-row *ngFor="let file of files | fileDirectoryFilter" [key]="file.name">
+    <bex-row *ngFor="let file of files | fileDirectoryFilter | fileTypeFilter:fileType" [key]="file.name">
         <bex-cell>{{file.name}}</bex-cell>
         <bex-cell>{{file.properties.contentLength}}</bex-cell>
         <!--<bex-cell>{{file.name}}</bex-cell>-->

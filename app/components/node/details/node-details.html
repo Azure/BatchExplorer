@@ -37,7 +37,7 @@
             </div>
             <div>
                 <bex-entity-details-list #listWrapper [refresh]="list.refresh">
-                    <bex-file-list [poolId]="poolId" [nodeId]="nodeId" [filter]="listWrapper.filter" [quickList]="false" #list></bex-file-list>
+                    <bex-file-list [poolId]="poolId" [nodeId]="nodeId" [filter]="listWrapper.filter" [quickList]="false" [fileType]="selectedFileType" #list></bex-file-list>
                 </bex-entity-details-list>
             </div>
         </md-tab>

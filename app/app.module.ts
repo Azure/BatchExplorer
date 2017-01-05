@@ -17,7 +17,7 @@ import { AccountDetailsHomeComponent } from "./components/account/details/accoun
 import { AccountDetailsComponent } from "./components/account/details/account-details.component";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
 import { BaseModule } from "./components/base";
-import { FileDirectoryFilter, FileListDisplayComponent } from "./components/file/browse/display";
+import { FileDirectoryFilter, FileTypeFilter, FileListDisplayComponent } from "./components/file/browse/display";
 import { FileListComponent } from "./components/file/browse/file-list.component";
 import { FileContentComponent } from "./components/file/details";
 import { JobStatsPreviewComponent } from "./components/job/base/job-stats-preview";
@@ -126,6 +126,7 @@ import {
         FileDirectoryFilter,
         FileListComponent,
         FileListDisplayComponent,
+        FileTypeFilter,
         FileContentComponent,
         JobAdvancedFilterComponent,
         JobCreateBasicDialogComponent,
