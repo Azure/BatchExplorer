@@ -14,7 +14,7 @@
             </div>
             <div class="accounts" *ngIf="subscriptionAccounts[subscription.subscriptionId].expanded">
 
-                <bex-quick-list-item *ngFor="let account of subscriptionAccounts[subscription.subscriptionId].accounts.items | async" [key]="account.id">
+                <bex-quick-list-item *ngFor="let account of subscriptionAccounts[subscription.subscriptionId].accounts.items | async"  [routerLink]="['/accounts', account.id]" [key]="account.id">
                     <h4 bex-quick-list-item-title>{{account.name}}</h4>
                     <p bex-quick-list-item-field>{{account.location}}</p>
                     <div bex-quick-list-item-preview>
