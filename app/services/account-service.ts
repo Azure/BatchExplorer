@@ -3,8 +3,7 @@ import * as storage from "electron-json-storage";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import { Account, AccountKeys, AccountResource, NodeAgentSku } from "app/models";
-import { SecureUtils } from "app/utils";
+import { AccountKeys, AccountResource, NodeAgentSku } from "app/models";
 import BatchClient from "../api/batch/batch-client";
 import { AzureHttpService } from "./azure-http.service";
 import { SubscriptionService } from "./subscription.service";
@@ -131,7 +130,6 @@ export class AccountService {
     }
 
     public favoriteAccount(accountId: string): Observable<any> {
-        console.log("Fav account", accountId);
         if (this.isAccountFavorite(accountId)) {
             return Observable.of(true);
         }
@@ -139,7 +137,6 @@ export class AccountService {
         this.getOnce(accountId).subscribe({
             next: (account) => {
                 this._accountFavorites.next(this._accountFavorites.getValue().push(account));
-                console.log("fac", account, this._accountFavorites.getValue().toJS());
                 this._saveAccountFavorites();
                 subject.complete();
             }, error: (e) => {

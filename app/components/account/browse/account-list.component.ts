@@ -38,7 +38,7 @@ export class AccountListComponent implements OnInit {
             const data: any = {};
             subscriptions.forEach((subscription) => {
                 if (subscription.subscriptionId in this.subscriptionAccounts) {
-                    data[subscription.subscriptionId] = this.subscriptionAccounts[subscription.subscriptionId]
+                    data[subscription.subscriptionId] = this.subscriptionAccounts[subscription.subscriptionId];
                 } else {
                     data[subscription.subscriptionId] = {
                         expanded: false,

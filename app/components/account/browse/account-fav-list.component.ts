@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
 import { LoadingStatus } from "app/components/base/loading";
 import { Account } from "app/models";
 import { AccountService } from "app/services";
-import { FilterBuilder, Property } from "app/utils/filter-builder";
+import {  Property } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
 
 @Component({
@@ -20,7 +20,6 @@ export class AccountFavListComponent {
     @Input()
     public set filter(filter: Property) {
         this._filter = filter;
-        console.log("FIlter is", filter);
         this.displayedAccounts = this.accountService.accountFavorites.map((accounts) => {
             const query = filter.value || "";
             return List<Account>(accounts.filter((x) => {
