@@ -1,5 +1,6 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+import { List } from "immutable";
 
 import { AccountResource, Subscription } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
@@ -17,7 +18,7 @@ interface SubscriptionAccount {
     templateUrl: "account-list.html",
 })
 export class AccountListComponent implements OnInit {
-    public subscriptions: RxListProxy<{}, Subscription>;
+    public subscriptionData: RxListProxy<{}, Subscription>;
 
     public subscriptionAccounts: { [subId: string]: SubscriptionAccount } = {};
     @Input()
@@ -26,6 +27,8 @@ export class AccountListComponent implements OnInit {
     }
     public get filter(): Property { return this._filter; };
 
+    public subscriptions: List<Subscription>;
+
     private _filter: Property;
 
     constructor(
@@ -33,9 +36,17 @@ export class AccountListComponent implements OnInit {
         private subscriptionService: SubscriptionService,
         private sidebarManager: SidebarManager,
         private activatedRoute: ActivatedRoute) {
-        this.subscriptions = subscriptionService.list();
-        this.subscriptions.items.subscribe((subscriptions) => {
+        this.subscriptionData = subscriptionService.list();
+        this.subscriptionData.items.subscribe((subscriptions) => {
             const data: any = {};
+            this.subscriptions = List<Subscription>(subscriptions.sort((a, b) => {
+                if (a.displayName < b.displayName) {
+                    return -1;
+                } else if (a.displayName > b.displayName) {
+                    return 1;
+                }
+                return 0;
+            }));
             subscriptions.forEach((subscription) => {
                 if (subscription.subscriptionId in this.subscriptionAccounts) {
                     data[subscription.subscriptionId] = this.subscriptionAccounts[subscription.subscriptionId];
@@ -52,7 +63,7 @@ export class AccountListComponent implements OnInit {
     }
 
     public ngOnInit() {
-        this.subscriptions.fetchNext(true);
+        this.subscriptionData.fetchNext(true);
     }
 
     public toggleExpandSubscription(subscriptionId: string) {

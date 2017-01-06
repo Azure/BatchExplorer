@@ -1,7 +1,7 @@
 import { Type } from "@angular/core";
 import * as moment from "moment";
 
-import { Job, Node, Pool, SubtaskInformation, Task } from "app/models";
+import { Job, Node, Pool, Subscription, SubtaskInformation, Task } from "app/models";
 
 export class FixtureFactory<TEntity> {
     constructor(private type: Type<TEntity>, private defaultData: any) {
@@ -12,7 +12,7 @@ export class FixtureFactory<TEntity> {
      * @param attributes List of attribute you want to override
      */
     public create(attributes: any = {}): TEntity {
-        return new this.type(Object.assign(this.defaultData, attributes));
+        return new this.type(Object.assign({}, this.defaultData, attributes));
     }
 }
 
@@ -195,4 +195,12 @@ export const node = new FixtureFactory<Node>(Node, {
     id: "node-1",
     displayName: "MyImaginaryNode",
     state: "running",
+});
+
+export const subscription = new FixtureFactory<Subscription>(Subscription, {
+    id: "/subscriptions/sub-id-xyz",
+    subscriptionId: "sub-id-xyz",
+    tenantId: "tenant-id",
+    displayName: "Test subscription",
+    state: "ready",
 });

@@ -4,7 +4,7 @@ import { List } from "immutable";
 import { Observable } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
-import { Account } from "app/models";
+import { AccountResource } from "app/models";
 import { AccountService } from "app/services";
 import {  Property } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
@@ -14,7 +14,7 @@ import { SidebarManager } from "../../base/sidebar";
     templateUrl: "account-fav-list.html",
 })
 export class AccountFavListComponent {
-    public displayedAccounts: Observable<List<Account>> = Observable.of(List([]));
+    public displayedAccounts: Observable<List<AccountResource>> = Observable.of(List([]));
     public status = LoadingStatus.Loading;
 
     @Input()
@@ -22,7 +22,7 @@ export class AccountFavListComponent {
         this._filter = filter;
         this.displayedAccounts = this.accountService.accountFavorites.map((accounts) => {
             const query = filter.value || "";
-            return List<Account>(accounts.filter((x) => {
+            return List<AccountResource>(accounts.filter((x) => {
                 return query === ""
                     || x.name.toLowerCase().startsWith(query);
             }));

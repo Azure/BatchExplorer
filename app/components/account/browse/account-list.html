@@ -1,7 +1,7 @@
-<bex-loading [status]="subscriptions.status | async">
+<bex-loading [status]="subscriptionData.status | async">
     <bex-quick-list>
 
-        <div class="subscription" *ngFor="let subscription of subscriptions.items | async">
+        <div class="subscription" *ngFor="let subscription of subscriptions">
             <div class="subscription-details noselect" (click)="toggleExpandSubscription(subscription.subscriptionId)">
                 <div class="icon">
                     <i class="fa fa-caret-right" *ngIf="!subscriptionAccounts[subscription.subscriptionId].expanded"></i>
