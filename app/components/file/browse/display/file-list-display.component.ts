@@ -5,7 +5,7 @@ import { LoadingStatus } from "app/components/base/loading";
 import { QuickListComponent } from "app/components/base/quick-list";
 import { ListOrTableBase } from "app/components/base/selectable-list";
 import { TableComponent } from "app/components/base/table";
-import { File } from "app/models";
+import { File, NodeFileTypes } from "app/models";
 
 @Component({
     selector: "bex-file-list-display",
@@ -33,9 +33,10 @@ export class FileListDisplayComponent {
     // public get files() { return this._files; };
 
     @Input()
-    public status: LoadingStatus;
+    public fileType: NodeFileTypes;
 
-    // private _files: List<File>;
+    @Input()
+    public status: LoadingStatus;
 
     public isErrorState(file: any) {
         // if (node.state === "startTaskFailed") {

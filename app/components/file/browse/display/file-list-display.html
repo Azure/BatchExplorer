@@ -12,9 +12,8 @@
         <bex-column>Name</bex-column>
         <bex-column>Content Length</bex-column>
     </bex-thead>
-
     <!--<bex-row *ngFor="let file of files | fileDirectoryFilter" [routerLink]="[...routerLinkBase, file.url]" [key]="file.url">-->
-    <bex-row *ngFor="let file of files | fileDirectoryFilter" [routerLink]="['/files', file.url]" [key]="file.url">
+    <bex-row *ngFor="let file of files | fileDirectoryFilter| fileTypeFilter:fileType" [routerLink]="['/files', file.url]" [key]="file.url">
         <bex-cell>{{file.name}}</bex-cell>
         <bex-cell>{{file.properties.contentLength}}</bex-cell>
     </bex-row>
