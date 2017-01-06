@@ -1,6 +1,6 @@
 bex-account-list {
     .subscription {
-        > .subscription-details{
+        > .subscription-details {
             display: flex;
             align-items: center;
             cursor: pointer;
@@ -9,7 +9,7 @@ bex-account-list {
                 background-color: $altoGray;
             }
 
-            .icon  {
+            .icon {
                 color: map-get($md-prussian-blue, 300);
                 margin: 0 10px;
                 font-size: 2em;
@@ -36,7 +36,7 @@ bex-account-list {
 }
 
 bex-account-list, bex-account-fav-list {
-     .fa-star {
+    .fa-star {
         font-size: 2em;
         color: #d5d5d5;
 
