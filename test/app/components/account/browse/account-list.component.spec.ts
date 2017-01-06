@@ -1,22 +1,16 @@
 import { DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { Observable, Subject } from "rxjs";
 
 import { AppModule } from "app/app.module";
-import { CreateFormComponent } from "app/components/base/form/create-form";
-import { SidebarRef } from "app/components/base/sidebar";
 import { AccountListComponent } from "app/components/account/browse";
 import { AccountResource, Subscription } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
-import { DataCache, RxBatchListProxy } from "app/services/core";
-import { ComponentTestHelper } from "test/app/components/component-test-helper";
 import * as Fixtures from "test/fixture";
 import { click } from "test/utils/helpers";
 import { RxMockListProxy } from "test/utils/mocks";
 
-
-fdescribe("AccountListComponent", () => {
+describe("AccountListComponent", () => {
     let fixture: ComponentFixture<AccountListComponent>;
     let component: AccountListComponent;
     let de: DebugElement;
@@ -29,7 +23,6 @@ fdescribe("AccountListComponent", () => {
             list: (subId) => new RxMockListProxy<any, AccountResource>(AccountResource, {
                 initialParams: { subscriptionId: subId },
                 items: ({subscriptionId}) => {
-                    console.log("Sibid", subscriptionId);
                     switch (subscriptionId) {
                         case "sub-1":
                             return [
@@ -84,7 +77,6 @@ fdescribe("AccountListComponent", () => {
         fixture.detectChanges();
 
         subscriptionsElList = de.queryAll(By.css(".subscription"));
-
     });
 
     it("Should list all subscriptions sorted alphabetically", () => {
@@ -124,5 +116,5 @@ fdescribe("AccountListComponent", () => {
         const noItemEl = subscriptionsElList[0].query(By.css(".accounts .noitem"));
         expect(noItemEl).not.toBeNull();
         expect(noItemEl.nativeElement.textContent).toContain("No accounts in this subscription");
-    })
+    });
 });

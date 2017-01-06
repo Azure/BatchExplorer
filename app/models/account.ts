@@ -34,4 +34,3 @@ export class AccountResource extends AccountRecord {
     public type: string;
     public properties: AccountResourceProperties;
 }
-
