@@ -4,7 +4,7 @@ import { Observable, Subject } from "rxjs";
 import { log } from "app/utils";
 import BatchClient from "../api/batch/batch-client";
 import { Pool } from "../models";
-import { DataCache, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
+import { DataCache, RxBatchEntityProxy, RxBatchListProxy,  RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
 import ServiceBase from "./service-base";
 
 export interface PoolParams {
@@ -31,7 +31,7 @@ export class PoolService extends ServiceBase {
     }
 
     public list(initialOptions: any = {}): RxListProxy<{}, Pool> {
-        return new RxListProxy<{}, Pool>(Pool, {
+        return new RxBatchListProxy<{}, Pool>(Pool, {
             cache: () => this._cache,
             proxyConstructor: (params, options) => BatchClient.pool.list(options),
             initialOptions,
@@ -39,7 +39,7 @@ export class PoolService extends ServiceBase {
     }
 
     public get(poolId: string, options: any = {}): RxEntityProxy<PoolParams, Pool> {
-        return new RxEntityProxy<PoolParams, Pool>(Pool, {
+        return new RxBatchEntityProxy<PoolParams, Pool>(Pool, {
             cache: () => this._cache,
             getFn: (params: PoolParams) => {
                 return BatchClient.pool.get(params.id, options);

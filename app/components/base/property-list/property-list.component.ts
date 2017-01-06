@@ -8,25 +8,6 @@ export class PropertyListComponent {
 }
 
 @Component({
-    selector: "bex-property-group",
-    template: `
-        <legend><h4>{{label}}</h4></legend>
-        <div class="warning-message" *ngIf="warningMessage">
-           <i class="fa fa-warning"></i>
-           <span>{{warningMessage}}</span>
-        </div>
-        <ng-content></ng-content>
-    `,
-})
-export class PropertyGroupComponent {
-    @Input()
-    public label: string;
-
-    @Input()
-    public warningMessage: string = null;
-}
-
-@Component({
     selector: "bex-link-property",
     template: `
         <section class="one-line">
@@ -52,7 +33,7 @@ export class LinkPropertyComponent {
     template: `
         <section class="one-line">
             <label>{{label}}</label>
-            <span class="value"><a href="javascript:void(0);">{{value}}</a></span>
+            <a class="value link" href="javascript:void(0);">{{value}}</a>
         </section>
     `,
 })
@@ -71,7 +52,7 @@ export class VoidLinkPropertyComponent {
             <label>{{label}}</label>
             <span class="value">
                 <i class="fa" [class.fa-check-circle]="value" [class.fa-times-circle]="!value"></i>
-                {{value ? "Enabled" : "Disabled"}}
+                {{ ValueSting }}
             </span>
         </section>
     `,
@@ -82,4 +63,13 @@ export class BoolPropertyComponent {
 
     @Input()
     public value: boolean;
+
+    @Input()
+    public YesNo: boolean;
+
+    private get ValueSting() {
+        return this.YesNo
+            ? (this.value ? "Yes" : "No")
+            : (this.value ? "Enabled" : "Disabled");
+    }
 }

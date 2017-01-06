@@ -6,7 +6,7 @@ import { Filter } from "app/utils/filter-builder";
 
 @Component({
     selector: "bex-node-advanced-filter",
-    template: require("./node-advanced-filter.html"),
+    templateUrl: "node-advanced-filter.html",
 })
 export class NodeAdvancedFilterComponent {
 

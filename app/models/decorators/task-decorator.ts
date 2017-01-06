@@ -29,10 +29,11 @@ export class TaskDecorator extends DecoratorBase<Task> {
     public multiInstanceSettings: {};
     public stats: {};
     public dependsOn: {};
-    public applicationPackageReferences: {};
+    public applicationPackageReferences: any[];
 
     constructor(private task?: Task) {
         super(task);
+
         this.displayName = this.stringField(task.displayName);
         this.url = this.stringField(task.url);
         this.eTag = this.stringField(task.eTag);
@@ -56,7 +57,7 @@ export class TaskDecorator extends DecoratorBase<Task> {
         this.multiInstanceSettings = task.multiInstanceSettings || {};
         this.stats = task.stats || {};
         this.dependsOn = task.dependsOn || {};
-        this.applicationPackageReferences = task.applicationPackageReferences || {};
+        this.applicationPackageReferences = task.applicationPackageReferences || [];
     }
 
     private _getStateIcon(state: TaskState): string {

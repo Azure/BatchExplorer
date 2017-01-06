@@ -15,6 +15,7 @@
     // This means absolute path only works in the browser environment you need to use relative import for the code in side the client folder
     // Node.js doesn't support custom load path yet
     "baseUrl": ".",
+    // "noUnusedLocals": true, // TODO enable instead of tslint no-unused-vars
     "paths": {
       "*": [
         "*",
@@ -26,8 +27,10 @@
       "electron",
       "jasmine",
       "hammerjs",
-      "immutable",
       "moment-duration-format"
+    ],
+    "typeRoots": [
+      "./node_modules/@types"
     ]
   },
   "files": [

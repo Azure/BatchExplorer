@@ -22,10 +22,9 @@
             </div>
 
             <div class="form-element">
-                <h4>Select a vm size for the worker nodes</h4>
-                <select formControlName="vmSize">
-                    <option *ngFor="let vmSize of vmSizes" value="{{vmSize}}">{{vmSize}}</option>
-                </select>
+                <md-select formControlName="vmSize" placeholder="VM size">
+                    <md-option *ngFor="let vmSize of vmSizes" value="{{vmSize}}">{{vmSize}}</md-option>
+                </md-select>
                 <bex-error controlName="vmSize" code="required">You must select a VM size</bex-error>
             </div>
 

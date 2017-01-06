@@ -32,3 +32,19 @@ export const forms = {
         },
     },
 };
+
+export const localStorageKey = {
+    /**
+     * LocalStorage key for storing the current user information
+     */
+    currentUser: "current_user",
+
+    /**
+     * LocalStorage key for storing the access token(For AAD request)
+     */
+    currentAccessToken: "current_access_token",
+};
+
+export const ApiVersion = {
+    arm: "2016-06-01",
+};

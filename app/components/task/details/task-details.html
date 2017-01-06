@@ -25,25 +25,22 @@
                 <md-tab>
                     <template md-tab-label>Output</template>
                     <div class="tab-padding">
-                        <bex-file-content [jobId]="jobId" [taskId]="taskId" filename="stdout.txt"></bex-file-content>
+                        <md-radio-group [(ngModel)]="outputFilename" class="output-toggle-std">
+                            <md-radio-button value="stdout.txt">Stdout</md-radio-button>
+                            <md-radio-button value="stderr.txt">Stderr</md-radio-button>
+                        </md-radio-group>
+                        <br>
+                        <bex-file-content [jobId]="jobId" [taskId]="taskId" [filename]="outputFilename"></bex-file-content>
                     </div>
                 </md-tab>
                 <md-tab>
                     <template md-tab-label>Properties</template>
-                    <div class="tab-padding">
-                        <bex-task-properties [job]="job" [task]="task"></bex-task-properties>
-                    </div>
+                    <bex-task-properties [job]="job" [task]="task"></bex-task-properties>
                 </md-tab>
                 <md-tab>
                     <template md-tab-label>Environment Settings</template>
                     <div class="tab-padding">
                         <bex-task-environment-settings [task]="task"></bex-task-environment-settings>
-                    </div>
-                </md-tab>
-                <md-tab>
-                    <template md-tab-label>Application packages</template>
-                    <div class="tab-padding">
-                        <bex-task-app-packages [task]="task"></bex-task-app-packages>
                     </div>
                 </md-tab>
                 <md-tab>

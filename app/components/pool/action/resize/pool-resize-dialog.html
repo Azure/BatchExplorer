@@ -1,39 +1,11 @@
 <div class="slideout-form content-wrapper">
     <h1>Resize your pool</h1>
     <p>You can manually resize the number of nodes in the pool</p>
-    <img src="./assets/images/ajax/loading.gif" alt="loading ..." class="loading-indicator" [ngClass]="{ 'loading': isSaving }" />
-    <form *ngIf="pool" (ngSubmit)="onSubmit()" #poolResizeForm="ngForm" [ngClass]="{ 'loading': isSaving }">
-        <div class="form-element">
-            <md-input type="number" placeholder="Target Dedicated" [(ngModel)]="targetDedicated" name="targetDedicated" required md-no-asterisk></md-input>
-            <!--<div [hidden]="targetDedicated.valid || targetDedicated.pristine" class="required-alert">Target Dedicated is a required field</div>-->
-        </div>
-
-        <!--<div class="form-element">
-            <md-input placeholder="Name" [(ngModel)]="account.name" name="name" required md-no-asterisk #name="ngModel"></md-input>
-            <div [hidden]="name.valid || name.pristine" class="required-alert">Name is a required field</div>
-        </div>
-
-        <div class="form-element">
-            <md-input placeholder="Url" [(ngModel)]="account.url" name="url" required md-no-asterisk #url="ngModel">
-                <md-hint align="end">https://(accountname).(region).batch.azure.com</md-hint>
-            </md-input>
-            <div [hidden]="url.valid || url.pristine" class="required-alert">Url is a required field</div>
-        </div>
-
-        <div class="form-element">
-            <md-input placeholder="Key" [(ngModel)]="account.key" name="key" required md-no-asterisk #key="ngModel"></md-input>
-            <div [hidden]="key.valid || key.pristine" class="required-alert">Key is a required field</div>
-        </div>
-
-        <div class="form-element">
-            <md-checkbox [(ngModel)]="account.isDefault" name="isDefault">
-                Default (selected by default in the account selector)
-            </md-checkbox>
-        </div>-->
-
-        <div class="button-bar">
-            <button type="submit" [disabled]="!poolResizeForm.valid" class="submit-btn" md-raised-button>Resize</button>
-            <button type="button" [disabled]="isSaving" (click)="sidebarRef.destroy()" class="" md-raised-button>Close</button>
-        </div>
-    </form>
+    <bex-action-form [submit]="submit" [sidebarRef]="sidebarRef" [formGroup]="form">
+        <form *ngIf="pool" [formGroup]="form">
+            <div class="form-element">
+                <md-input type="number" placeholder="Target Dedicated" formControlName="targetDedicated" min="0"></md-input>
+            </div>
+        </form>
+    </bex-action-form>
 </div>

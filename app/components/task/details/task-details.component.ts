@@ -25,6 +25,8 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
     public decorator: TaskDecorator;
     public job: Job;
 
+    public outputFilename: "stdout.txt" | "stderr.txt" = "stdout.txt";
+
     public get hasMultiInstanceSettings() {
         return this.task && !!this.task.multiInstanceSettings;
     }

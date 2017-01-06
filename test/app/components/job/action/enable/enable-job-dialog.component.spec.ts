@@ -59,7 +59,7 @@ describe("EnableJobDialogComponent ", () => {
     });
 
     it("Submit should call service and close the dialog", () => {
-        actionForm.action();
+        actionForm.performActionAndClose();
 
         expect(jobServiceSpy.enable).toHaveBeenCalledTimes(1);
         expect(jobServiceSpy.enable).toHaveBeenCalledWith("job-1", {});
@@ -68,7 +68,7 @@ describe("EnableJobDialogComponent ", () => {
     it("Submit should call service and show error if fail", () => {
         component.jobId = "bad-job-id";
         fixture.detectChanges();
-        actionForm.action();
+        actionForm.performActionAndClose();
 
         expect(jobServiceSpy.enable).toHaveBeenCalledTimes(1);
         expect(jobServiceSpy.enable).toHaveBeenCalledWith("bad-job-id", {});

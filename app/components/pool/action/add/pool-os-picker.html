@@ -1,47 +1,43 @@
 <div [formGroup]="form">
-    <div class="form-element">
+    <div class="form-element" class="source">
         <h4>Select an operating system configuration</h4>
         <p>Windows PaaS configuration lets use .... while Gallery images give you the option to ...</p>
-        <select formControlName="source">
-            <option [value]="PoolOsSources.PaaS">PaaS</option>
-            <option [value]="PoolOsSources.IaaS">IaaS</option>
-        </select>
+        <md-radio-group formControlName="source" placeholder="IAAS/PAAS">
+            <md-radio-button [value]="PoolOsSources.PaaS">PaaS</md-radio-button>
+            <md-radio-button [value]="PoolOsSources.IaaS">IaaS</md-radio-button>
+        </md-radio-group>
     </div>
 
     <div *ngIf="selectedSource === PoolOsSources.PaaS">
         <div formGroupName="cloudServiceConfiguration">
             <div class="form-element">
-                <h4>Select an operating system</h4>
-                <select formControlName="osFamily">
-                    <option *ngFor="let osFamily of cloudServiceOsFamilies" [value]="osFamily.id">{{osFamily.name}}</option>
-                </select>
+                <md-select formControlName="osFamily" placeholder="Operating System">
+                    <md-option *ngFor="let osFamily of cloudServiceOsFamilies" [value]="osFamily.id">{{osFamily.name}}</md-option>
+                </md-select>
             </div>
         </div>
     </div>
 
     <div formGroupName="virtualMachineConfiguration" *ngIf="selectedSource === PoolOsSources.IaaS">
-        <div formGroupName="imageReference">
+        <div formGroupName="imageReference" class="imageReference">
             <div class="form-element">
-                <h4>Select an operating system publisher</h4>
-                <select formControlName="publisher">
-                <option *ngFor="let publisher of vmPublishers" [value]="publisher">{{publisher}}</option>
-            </select>
+                <md-select formControlName="publisher" placeholder="Publisher">
+                    <md-option *ngFor="let publisher of vmPublishers" [value]="publisher">{{publisher}}</md-option>
+                </md-select>
             </div>
 
             <div class="form-element" *ngIf="selectedPublisher">
-                <h4>Select the publisher's offer</h4>
-                <select formControlName="offer">
-                <option *ngFor="let offer of vmOffers" [value]="offer">{{offer}}</option>
-            </select>
+                <md-select formControlName="offer" placeholder="Offer">
+                    <md-option *ngFor="let offer of vmOffers" [value]="offer">{{offer}}</md-option>
+                </md-select>
             </div>
 
             <div class="form-element" *ngIf="selectedOffer">
-                <h4>Select the publisher's sku</h4>
-                <select formControlName="sku">
-                    <option *ngFor="let sku of vmSkus" [value]="sku">{{sku}}</option>
-                </select>
+                <md-select formControlName="sku" placeholder="Sku">
+                    <md-option *ngFor="let sku of vmSkus" [value]="sku">{{sku}}</md-option>
+                </md-select>
             </div>
-            <p *ngIf="selectedSku">Based on your selection node agent '{{vmNodeAgentId}}'' will be used</p>
         </div>
+        <p *ngIf="selectedSku">Based on your selection node agent '{{vmNodeAgentId}}'' will be used</p>
     </div>
 </div>

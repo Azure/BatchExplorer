@@ -5,12 +5,12 @@
 
 	</div>
 
-	<div *ngSwitchCase="taskStates.completed" [class.success]="exitCode === 0" [class.failure]="exitCode !== 0">
+	<div *ngSwitchCase="taskStates.completed" [class.success]="exitCode === 0" [class.failure]="exitCode !== 0" [md-tooltip]="exitCodeMessage">
 		<span>{{exitCode}}</span>
         <i class="fa fa-check-square-o" aria-hidden="true"></i>
 	</div>
 
-	<div *ngSwitchDefault>
+	<div *ngSwitchDefault md-tooltip="Task is waiting to start">
 		<i class="fa fa-hourglass-half" aria-hidden="true"></i>
 	</div>
 </div>

@@ -11,7 +11,7 @@ import { SidebarRef } from "./sidebar-ref";
 @Component({
     encapsulation: ViewEncapsulation.None,
     selector: "bex-sidebar-bookmarks",
-    template: require("./sidebar-bookmarks.html"),
+    templateUrl: "sidebar-bookmarks.html",
 })
 export class SidebarBookmarksComponent {
     public showBookmarks = false;

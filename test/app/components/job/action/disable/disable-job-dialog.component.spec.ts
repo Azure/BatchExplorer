@@ -83,7 +83,7 @@ describe("DisableJobDialogComponent ", () => {
     it("Submit should call service and close the dialog", () => {
         component.taskAction = "terminate";
         fixture.detectChanges();
-        actionForm.action();
+        actionForm.performActionAndClose();
 
         expect(jobServiceSpy.disable).toHaveBeenCalledTimes(1);
         expect(jobServiceSpy.disable).toHaveBeenCalledWith("job-1", "terminate", {});
@@ -92,7 +92,7 @@ describe("DisableJobDialogComponent ", () => {
     it("Submit should call service and show error if fail", () => {
         component.jobId = "bad-job-id";
         fixture.detectChanges();
-        actionForm.action();
+        actionForm.performActionAndClose();
 
         expect(jobServiceSpy.disable).toHaveBeenCalledTimes(1);
         expect(jobServiceSpy.disable).toHaveBeenCalledWith("bad-job-id", "requeue", {});

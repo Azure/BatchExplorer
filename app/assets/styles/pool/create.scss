@@ -1,0 +1,21 @@
+bex-pool-os-picker {
+    .source {
+        // margin-bottom: 10px;
+    }
+
+    h5 {
+        margin: 0;
+    }
+
+    .imageReference {
+        display: flex;
+        > .form-element {
+            width: 30%;
+            margin-right: 10px;
+
+            md-select {
+                width: 100%;
+            }
+        }
+    }
+}

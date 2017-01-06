@@ -9,11 +9,9 @@ import { AccountService } from "app/services";
 import { Property } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
 
-// todo: can move the loading indicator to the common template when we can fire an event to turn it on and off
-
 @Component({
     selector: "bex-account-list",
-    template: require("./account-list.html"),
+    templateUrl: "account-list.html",
 })
 export class AccountListComponent {
     public searchQuery = new FormControl();

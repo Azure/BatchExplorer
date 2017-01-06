@@ -2,6 +2,9 @@ import { Job, JobState } from "app/models";
 import { DecoratorBase } from "../../utils/decorators";
 import { JobConstraintsDecorator } from "./job-constraints-decorator";
 import { JobExecutionInfoDecorator } from "./job-execution-info-decorator";
+import { JobManagerTaskDecorator } from "./job-manager-task-decorator";
+import { JobPreparationTaskDecorator } from "./job-preparation-task-decorator";
+import { JobReleaseTaskDecorator } from "./job-release-task-decorator";
 
 export class JobDecorator extends DecoratorBase<Job> {
     public state: string;
@@ -19,9 +22,9 @@ export class JobDecorator extends DecoratorBase<Job> {
 
     public constraints: JobConstraintsDecorator;
     public executionInfo: JobExecutionInfoDecorator;
-    public jobManagerTask: {};
-    public jobPreparationTask: {};
-    public jobReleaseTask: {};
+    public jobManagerTask: JobManagerTaskDecorator;
+    public jobPreparationTask: JobPreparationTaskDecorator;
+    public jobReleaseTask: JobReleaseTaskDecorator;
     public poolInfo: {};
 
     constructor(private job?: Job) {
@@ -42,9 +45,9 @@ export class JobDecorator extends DecoratorBase<Job> {
 
         this.constraints = new JobConstraintsDecorator(job.constraints || <any>{});
         this.executionInfo = new JobExecutionInfoDecorator(job.executionInfo || <any>{});
-        this.jobManagerTask = job.jobManagerTask || {};
-        this.jobPreparationTask = job.jobPreparationTask || {};
-        this.jobReleaseTask = job.jobReleaseTask || {};
+        this.jobManagerTask = new JobManagerTaskDecorator(job.jobManagerTask || <any>{});
+        this.jobPreparationTask = new JobPreparationTaskDecorator(job.jobPreparationTask || <any>{});
+        this.jobReleaseTask = new JobReleaseTaskDecorator(job.jobReleaseTask || <any>{});
         this.poolInfo = job.poolInfo || {};
     }
 

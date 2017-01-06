@@ -6,10 +6,9 @@ import { Filter } from "app/utils/filter-builder";
 
 @Component({
     selector: "bex-task-advanced-filter",
-    template: require("./task-advanced-filter.html"),
+    templateUrl: "task-advanced-filter.html",
 })
 export class TaskAdvancedFilterComponent {
-
     @Output()
     public change = new EventEmitter<Filter>();
 

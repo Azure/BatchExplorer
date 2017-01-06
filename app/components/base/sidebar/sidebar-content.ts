@@ -13,7 +13,7 @@ import { SidebarRef } from "./sidebar-ref";
 
 @Component({
     selector: "bex-sidebar-content",
-    template: require("./sidebar.html"),
+    templateUrl: "sidebar.html",
 })
 export class SidebarContentComponent {
     @ViewChild(PortalHostDirective)
@@ -29,7 +29,8 @@ export class SidebarContentComponent {
 
     private componentRefs: { [key: string]: ComponentRef<SidebarPageComponent> } = {};
 
-    constructor(private componentFactoryResolver: ComponentFactoryResolver) {
+    constructor(
+        private componentFactoryResolver: ComponentFactoryResolver) {
     }
 
     /**

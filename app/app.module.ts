@@ -50,10 +50,10 @@ import { TaskAdvancedFilterComponent } from "./components/task/browse/filter";
 import { TaskPreviewComponent } from "./components/task/browse/preview/task-preview.component";
 import { TaskListComponent } from "./components/task/browse/task-list.component";
 import { TaskHomeComponent } from "./components/task/home";
+import { AdUserDropdownComponent } from "./components/user";
 
 import {
     NoTaskSelectedComponent,
-    TaskAppPackagesComponent,
     TaskDetailsComponent,
     TaskEnvironmentSettingsComponent,
     TaskPropertiesComponent,
@@ -94,12 +94,15 @@ import {
 // services
 import {
     AccountService,
+    AdalService,
+    AzureHttpService,
     CommandService,
     FileService,
     JobService,
     NodeService,
     PoolService,
     SettingsService,
+    SubscriptionService,
     TaskService,
     commands,
 } from "./services";
@@ -115,6 +118,7 @@ import {
         AccountDropDown,
         AccountHomeComponent,
         AccountListComponent,
+        AdUserDropdownComponent,
         AppComponent,
         DeleteAccountDialogComponent,
         DeleteJobDialogComponent,
@@ -162,7 +166,6 @@ import {
         SubTaskDisplayListComponent,
         SubTaskPropertiesComponent,
         TaskAdvancedFilterComponent,
-        TaskAppPackagesComponent,
         TaskCreateBasicDialogComponent,
         TaskDetailsComponent,
         TaskEnvironmentSettingsComponent,
@@ -202,10 +205,13 @@ import {
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         AccountService,
+        AdalService,
+        AzureHttpService,
         CommandService,
         FileService,
         JobService,
         PoolService,
+        SubscriptionService,
         NodeService,
         SettingsService,
         TaskService,

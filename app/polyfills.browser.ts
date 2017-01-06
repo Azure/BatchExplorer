@@ -1,3 +1,5 @@
+import "reflect-metadata";
+
 // Angular
 import "@angular/common";
 import "@angular/core";
@@ -11,7 +13,6 @@ import "rxjs";
 
 // Polyfills
 import "core-js/es6";
-import "core-js/es7/reflect";
 
 // tslint:disable-next-line
 require("zone.js/dist/zone");

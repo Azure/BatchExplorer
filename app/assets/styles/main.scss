@@ -27,11 +27,13 @@
 
 // Pool styles
 @import "./pool/base";
+@import "./pool/create";
 
 // Job styles
 @import "./job/base";
 
 //Task styles
+@import "./task/base";
 @import "./task/form";
 
 // File styles

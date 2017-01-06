@@ -1,12 +1,17 @@
 import { Component, Input, OnDestroy, ViewContainerRef } from "@angular/core";
+
 import { Job } from "app/models";
-import { JobDecorator } from "app/models/decorators";
+import {
+    JobDecorator,
+    JobManagerTaskDecorator,
+    JobPreparationTaskDecorator,
+    JobReleaseTaskDecorator,
+} from "app/models/decorators";
 
 @Component({
     selector: "bex-job-properties",
-    template: require("./job-properties.html"),
+    templateUrl: "job-properties.html",
 })
-
 export class JobPropertiesComponent implements OnDestroy {
     @Input()
     public set job(job: Job) {
@@ -18,9 +23,9 @@ export class JobPropertiesComponent implements OnDestroy {
     public decorator: JobDecorator = <any>{ usesTaskDependencies: false };
     public constraints: any = {};
     public executionInfo: any = {};
-    public jobManagerTask: any = {};
-    public jobPreparationTask: any = {};
-    public jobReleaseTask: any = {};
+    public managerTask: JobManagerTaskDecorator;
+    public prepTask: JobPreparationTaskDecorator;
+    public releaseTask: JobReleaseTaskDecorator;
     public poolInfo: any = {};
 
     private _job: Job;
@@ -34,9 +39,9 @@ export class JobPropertiesComponent implements OnDestroy {
             this.decorator = new JobDecorator(this.job);
             this.constraints = this.decorator.constraints || {};
             this.executionInfo = this.decorator.executionInfo || {};
-            this.jobManagerTask = this.decorator.jobManagerTask || {};
-            this.jobPreparationTask = this.decorator.jobPreparationTask || {};
-            this.jobReleaseTask = this.decorator.jobReleaseTask || {};
+            this.managerTask = this.decorator.jobManagerTask;
+            this.prepTask = this.decorator.jobPreparationTask;
+            this.releaseTask = this.decorator.jobReleaseTask;
             this.poolInfo = this.decorator.poolInfo || {};
         }
     }
