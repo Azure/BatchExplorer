@@ -20,7 +20,7 @@ function mergeOptions(original: RequestOptionsArgs, method: RequestMethod): Requ
 
 const providersApiVersion = {
     "Microsoft.Batch": Constants.ApiVersion.armBatch,
-}
+};
 
 /**
  * Wrapper around the http service so call the azure ARM api.
