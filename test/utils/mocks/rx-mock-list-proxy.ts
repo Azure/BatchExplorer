@@ -4,7 +4,8 @@ import { Observable } from "rxjs";
 import { CachedKeyList, DataCache, RxListProxy } from "app/services/core";
 
 export interface RxMockListProxyConfig<TParams, TEntity> {
-    items: TEntity[];
+    initialParams?: TParams;
+    items: TEntity[] | ((params: TParams) => TEntity[]);
 }
 
 /**
@@ -12,13 +13,18 @@ export interface RxMockListProxyConfig<TParams, TEntity> {
  */
 export class RxMockListProxy<TParams, TEntity> extends RxListProxy<TParams, TEntity> {
     private _loadedFirst = false;
-    private _items: TEntity[];
+    private _items: (params: TParams) => TEntity[];
 
     constructor(type: Type<TEntity>, config: RxMockListProxyConfig<TParams, TEntity>) {
         super(type, {
+            initialParams: config.initialParams,
             cache: () => new DataCache<TEntity>(),
         });
-        this._items = config.items;
+        if (config.items instanceof Function) {
+            this._items = config.items;
+        } else {
+            this._items = () => config.items as TEntity[];
+        }
     }
 
     protected handleNewOptions(options: {}) {
@@ -26,7 +32,7 @@ export class RxMockListProxy<TParams, TEntity> extends RxListProxy<TParams, TEnt
     }
 
     protected fetchNextItems(): Observable<any> {
-        return Observable.of(this._items);
+        return Observable.of(this._items(this._params));
     }
 
     protected processResponse(response: any) {

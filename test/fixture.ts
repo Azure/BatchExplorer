@@ -1,7 +1,7 @@
 import { Type } from "@angular/core";
 import * as moment from "moment";
 
-import { Job, Node, Pool, Subscription, SubtaskInformation, Task } from "app/models";
+import { AccountResource, Job, Node, Pool, Subscription, SubtaskInformation, Task } from "app/models";
 
 export class FixtureFactory<TEntity> {
     constructor(private type: Type<TEntity>, private defaultData: any) {
@@ -203,4 +203,11 @@ export const subscription = new FixtureFactory<Subscription>(Subscription, {
     tenantId: "tenant-id",
     displayName: "Test subscription",
     state: "ready",
+});
+
+export const account = new FixtureFactory<AccountResource>(AccountResource, {
+    id: "account-id",
+    name: "account-test",
+    location: "westus",
+    type: "BatchAccount",
 });
