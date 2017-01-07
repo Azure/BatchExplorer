@@ -26,7 +26,7 @@ export class RxBatchListProxy<TParams, TEntity> extends RxListProxy<TParams, TEn
         this._clientProxy = config.proxyConstructor(this._params, this._computeOptions(this._options));
     }
 
-    protected handleNewOptions(options: {}) {
+    protected handleNewOptions(options: any) {
         this._clientProxy = this._proxyConstructor(this.params, this._computeOptions(options));
     }
 

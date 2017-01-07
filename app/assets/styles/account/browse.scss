@@ -1,0 +1,51 @@
+bex-account-list {
+    .subscription {
+        > .subscription-details {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+
+            &:hover {
+                background-color: $altoGray;
+            }
+
+            .icon {
+                color: map-get($md-prussian-blue, 300);
+                margin: 0 10px;
+                font-size: 2em;
+                width: 26px;
+            }
+        }
+
+        > .accounts {
+            background: #f1f1f1;
+
+            .noitem {
+                margin: auto;
+                padding: 5px;
+                text-align: center;
+            }
+
+            .quick-list-item {
+                padding-left: 20px;
+            }
+            border-top: 1px solid #e5e5e5;
+            border-bottom: 1px solid #e5e5e5;
+        }
+    }
+}
+
+bex-account-list, bex-account-fav-list {
+    .fa-star {
+        font-size: 2em;
+        color: #d5d5d5;
+
+        &:hover {
+            color: map-get($md-prussian-blue, 100);
+        }
+
+        &.favorite {
+            color: map-get($md-prussian-blue, 400);
+        }
+    }
+}

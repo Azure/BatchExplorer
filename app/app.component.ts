@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, ViewChild } from "@angular/core";
 import { MdSidenav } from "@angular/material";
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { AccountService, AdalService, AzureHttpService, CommandService, SettingsService } from "app/services";
+import { AccountService, AdalService, CommandService, SettingsService } from "app/services";
 import AccountCreateDialogComponent from "./components/account/add/account-create-dialog.component";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
@@ -16,7 +16,7 @@ const adalConfig = {
     selector: "bex-app",
     templateUrl: "app.layout.html",
 })
-export class AppComponent implements AfterViewInit, OnInit {
+export class AppComponent implements AfterViewInit {
     public hasAccount: Observable<boolean>;
     public isAppReady = new BehaviorSubject<boolean>(false);
 
@@ -31,11 +31,11 @@ export class AppComponent implements AfterViewInit, OnInit {
         private settingsService: SettingsService,
         private commandService: CommandService,
         private adalService: AdalService,
-        private azureHttpService: AzureHttpService,
         private accountService: AccountService) {
         this.settingsService.init();
         this.commandService.init();
         this.adalService.init(adalConfig);
+        this.accountService.loadInitialData();
 
         this.hasAccount = accountService.currentAccount.map((x) => { return Boolean(x); });
 
@@ -44,18 +44,6 @@ export class AppComponent implements AfterViewInit, OnInit {
             .subscribe((loadedArray) => {
                 this.isAppReady.next(loadedArray[0] && loadedArray[1]);
             });
-    }
-
-    public ngOnInit() {
-        this.adalService.login().subscribe(() => {
-            // /subscription/{subId}/resources?$filter=resourceType eq 'Microsoft.Batch/batchAccounts'
-            // this.azureHttpService.get(`subscriptions`).subscribe({
-            //     next: (out) => {
-            //         console.log("Subs are", out.json());
-            //     },
-            //     error: (error) => { console.log("Error for get sub is", error); },
-            // });
-        });
     }
 
     public ngAfterViewInit() {

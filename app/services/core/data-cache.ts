@@ -14,9 +14,12 @@ export class DataCacheTracker {
         delete this._caches[cache.id];
     }
 
-    public static clearAllCaches() {
+    public static clearAllCaches(...except: Array<DataCache<any>>) {
+        const excludeIds = except.map(x => x.id);
         for (let cache of ObjectUtils.values(this._caches)) {
-            cache.clear();
+            if (excludeIds.indexOf(cache.id) === -1) {
+                cache.clear();
+            }
         }
     }
 

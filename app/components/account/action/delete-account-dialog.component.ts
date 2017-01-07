@@ -17,9 +17,10 @@ export class DeleteAccountDialogComponent {
     }
 
     public destroyAccount() {
-        this.accountService.delete(this.accountId).subscribe({
-            error: (error) => { console.error("destroyAccount() :: error: ", error); },
-            complete: () => this.dialogRef.close(), // todo: clear current selection, show notification
-        });
+        alert("Not supported yet!");
+        // this.accountService.delete(this.accountId).subscribe({
+        //     error: (error) => { console.error("destroyAccount() :: error: ", error); },
+        //     complete: () => this.dialogRef.close(), // todo: clear current selection, show notification
+        // });
     }
 }
