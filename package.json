@@ -74,8 +74,8 @@
     "tslint": "^4.0.2",
     "typescript": "~2.1.4",
     "vrsource-tslint-rules": "^0.14.1",
-    "webpack": "^1.13.3",
-    "webpack-dev-server": "^1.16.2",
+    "webpack": "2.2.0-rc.3",
+    "webpack-dev-server": "2.2.0-rc.0",
     "webpack-merge": "^0.15.0"
   },
   "dependencies": {
