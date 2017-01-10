@@ -4,7 +4,6 @@ import * as elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";
 
 import { Node, NodeState } from "app/models";
-import { ObjectUtils } from "app/utils";
 
 interface HeatmapTile {
     index: number;
@@ -12,10 +11,10 @@ interface HeatmapTile {
 }
 
 const availableStates = [
-    ...Array(20).fill(NodeState.idle),
+    ...Array(40).fill(NodeState.idle),
     ...Array(20).fill(NodeState.running),
     ...Array(4).fill(NodeState.waitingForStartTask),
-    ...Array(3).fill(NodeState.waitingForStartTask),
+    ...Array(3).fill(NodeState.offline),
     ...Array(1).fill(NodeState.creating),
     ...Array(1).fill(NodeState.starting),
     ...Array(1).fill(NodeState.rebooting),
@@ -29,18 +28,18 @@ const availableStates = [
 const stateTree = [
     { state: NodeState.idle, color: "#6ba3cb" },
     { state: NodeState.running, color: "#388e3c" },
-    { state: NodeState.waitingForStartTask, color: "#cde0ed" },
-    { state: NodeState.offline, color: "#d5d5d5" },
+    { state: NodeState.waitingForStartTask, color: "#94bdd9" },
+    { state: NodeState.offline, color: "#5b5b5b" },
     {
         category: "transition",
         label: "Transition states",
-        color: "#c5c5c5",
+        color: "#ffcc5c",
         states: [
-            { state: NodeState.creating, color: "#916e09" },
-            { state: NodeState.starting, color: "#916e09" },
-            { state: NodeState.rebooting, color: "#916e09" },
-            { state: NodeState.reimaging, color: "#916e09" },
-            { state: NodeState.leavingPool, color: "#916e09" },
+            { state: NodeState.creating, color: "#dbf659" },
+            { state: NodeState.starting, color: "#fffe5c" },
+            { state: NodeState.rebooting, color: "#ffcc5c" },
+            { state: NodeState.reimaging, color: "#ffc95c" },
+            { state: NodeState.leavingPool, color: "#ff755c" },
         ],
     }, {
         category: "error",
@@ -48,8 +47,8 @@ const stateTree = [
         color: "#aa3939",
         states: [
             { state: NodeState.startTaskFailed, color: "#aa3939" },
-            { state: NodeState.unusable, color: "#aa3939" },
-            { state: NodeState.unknown, color: "#aa3939" },
+            { state: NodeState.unusable, color: "#f95619" },
+            { state: NodeState.unknown, color: "#f98819" },
         ],
     },
 ];
@@ -73,6 +72,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
         this._processNewNodes();
     }
     public get nodes() { return this._nodes; };
+    public highlightedState: string;
 
     private _nodes: List<Node>;
 
@@ -83,7 +83,6 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
     private _tileSize: number;
     private _rows: number;
     private _columns: number;
-    public highlightedState: string;
 
     constructor(private elementRef: ElementRef) {
         this._computeColors();
@@ -124,7 +123,11 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
     }
 
     public selectState(state: string) {
-        this.highlightedState = state;
+        if (state === this.highlightedState) {
+            this.highlightedState = null;
+        } else {
+            this.highlightedState = state;
+        }
         this.redraw();
     }
 
@@ -223,7 +226,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
                             if (subitem.state === this.highlightedState) {
                                 colors[subitem.state] = subitem.color;
                             } else {
-                                colors[subitem.state] = shadeColor2(item.color, 0.6);
+                                colors[subitem.state] = shadeColor2(item.color, 0.8);
                             }
                         }
                     }
@@ -237,7 +240,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
         if (key === this.highlightedState) {
             return color;
         } else {
-            return shadeColor2(color, 0.6);
+            return shadeColor2(color, 0.8);
         }
     }
 }

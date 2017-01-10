@@ -22,18 +22,18 @@ $color-width: 14px;
 
         .legend-item {
             width: $legend-width;
-            display: flex;
-            align-items: center;
             margin: 2px 0;
             cursor: pointer;
         }
 
         .legend-subitem {
-            margin-left: $color-width + 20px;
+            margin-left: $color-width + 5px;
             cursor: pointer;
         }
 
         .legend-item, .legend-subitem {
+            display: flex;
+            align-items: center;
             color: $mineshaft-grey;
             &:hover {
                 background: $concreteGray;
@@ -47,7 +47,7 @@ $color-width: 14px;
 
         .label {
             display: inline-block;
-            width: $legend-width - $color-width - 5px;
+            width: calc(100% - #{$color-width } - 5px);
             margin-left: 5px;
         }
 
