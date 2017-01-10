@@ -21,6 +21,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
 
     private _itemKeys: BehaviorSubject<List<string>> = new BehaviorSubject(List([]));
     private _hasMore: BehaviorSubject<boolean> = new BehaviorSubject(true);
+    private _lastRequest: { params: TParams, options: any };
 
     constructor(type: Type<TEntity>, config: RxListProxyConfig<TParams, TEntity>) {
         super(type, config.cache);
@@ -41,10 +42,17 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         });
     }
 
-    public setOptions(options: {}) {
+    public updateParams(params: TParams) {
+        this.params = params;
+        this.handleChanges(params, this._options);
+    }
+
+    public setOptions(options: {}, clearItems = true) {
         this._options = options;
-        this.handleNewOptions(options);
-        this._itemKeys.next(List([]));
+        this.handleChanges(this._params, options);
+        if (clearItems) {
+            this._itemKeys.next(List([]));
+        }
         this._hasMore.next(true);
 
         if (this.queryInProgress()) {
@@ -81,7 +89,13 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
                 if (currentKeys.size === 0) {
                     this.cache.queryCache.cacheQuery(this._options.filter, keys, this.putQueryCacheData());
                 }
-                this._itemKeys.next(List<string>(currentKeys.concat(keys)));
+                const last = this._lastRequest;
+                if (last && (last.params === this._params || last.options !== this._options)) {
+                    this._itemKeys.next(keys);
+                } else {
+                    this._itemKeys.next(List<string>(currentKeys.concat(keys)));
+                }
+                this._lastRequest = { params: this._params, options: this._options };
             },
             error: (error) => {
                 this._itemKeys.error(error);
@@ -107,13 +121,16 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         entityProxy.fetch();
     }
 
-    public refresh(): Observable<any> {
+    /**
+     * Refresh the list, clearExisiting data will clear the data before doing the request
+     */
+    public refresh(clearExistingData = true): Observable<any> {
         this.cache.queryCache.clearCache();
-        this.setOptions(this._options);
+        this.setOptions(this._options, clearExistingData);
         return this.fetchNext(true);
     }
 
-    protected abstract handleNewOptions(options: {});
+    protected abstract handleChanges(params: TParams, options: {});
     protected abstract fetchNextItems(): Observable<any>;
     protected abstract processResponse(response: any): any[];
     protected abstract hasMoreItems(): boolean;

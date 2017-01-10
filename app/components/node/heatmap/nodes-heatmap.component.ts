@@ -1,11 +1,11 @@
-import { AfterViewInit, Component, ElementRef, OnDestroy, ViewChild } from "@angular/core";
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, ViewChild } from "@angular/core";
 import * as d3 from "d3";
 import * as elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";
 
 import { Node, NodeState } from "app/models";
-import { ObjectUtils } from "app/utils";
 import { HeatmapColor } from "./heatmap-color";
+import { StateCounter } from "./state-counter";
 import { StateTree } from "./state-tree";
 
 interface HeatmapTile {
@@ -56,27 +56,35 @@ const stateTree: StateTree = [
     },
 ];
 
+const maxNodes = 1000;
+
 @Component({
     selector: "bex-nodes-heatmap",
     templateUrl: "nodes-heatmap.html",
+    viewProviders: [
+        { provide: "StateTree", useValue: stateTree },
+    ]
 })
 export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
     public colors: HeatmapColor;
-    public stateTree = stateTree;
+
+    @Input()
+    public poolId: string;
 
     @ViewChild("heatmap")
     public heatmapEl: ElementRef;
 
+    @Input()
     public set nodes(nodes: List<Node>) {
-        if (nodes.size > 1000) {
-            console.warn("Only supporting up to 1000 nodes for now!");
+        if (nodes.size > maxNodes) {
+            console.warn(`Only supporting up to ${maxNodes} nodes for now!`);
         }
-        this._nodes = List<Node>(nodes.slice(0, 1000));
+        this._nodes = List<Node>(nodes.slice(0, maxNodes));
         this._processNewNodes();
     }
     public get nodes() { return this._nodes; };
     public highlightedState: string;
-    public stateCounts: { [key: string]: number } = {};
+    public selectedNode: Node = null;
 
     private _nodes: List<Node>;
 
@@ -88,7 +96,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
     private _rows: number;
     private _columns: number;
 
-    constructor(private elementRef: ElementRef) {
+    constructor(private elementRef: ElementRef, private changeDetector: ChangeDetectorRef) {
         this.colors = new HeatmapColor(stateTree);
     }
 
@@ -108,18 +116,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
         this._svg = d3.select(this.heatmapEl.nativeElement).append("svg")
             .attr("width", this._width)
             .attr("height", this._height);
-
-        const add = 1000;
-        this._nodes = List([]);
-        setTimeout(() => {
-            const newNodes = [];
-            for (let i = 0; i < add; i++) {
-                const stateIndex = Math.floor(Math.random() * availableStates.length);
-                const state = availableStates[stateIndex];
-                newNodes.push(new Node({ id: Math.random().toString(), state: state }));
-            }
-            this.nodes = List<Node>(this._nodes.concat(newNodes));
-        }, 2000);
+        this._processNewNodes();
     }
 
     public ngOnDestroy() {
@@ -136,7 +133,6 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
     }
 
     public redraw() {
-        this._countStates();
         this.colors.updateColors(this.highlightedState);
         this._computeDimensions();
         const rects = this._svg.selectAll("rect");
@@ -144,9 +140,12 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
     }
 
     private _processNewNodes() {
-        const tiles = this._nodes.map((node, index) => { return { node, index }; });
+        if (!this._svg) {
+            return;
+        }
         this._computeDimensions();
 
+        const tiles = this._nodes.map((node, index) => { return { node, index }; });
         const rects = this._svg.selectAll("rect").data(tiles.toJS());
 
         rects.exit().remove();
@@ -162,6 +161,8 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
             .style("cursor", "pointer")
             .style("fill", (tile: any) => {
                 return d3.color(this.colors.get(tile.node.state)) as any;
+            }).on("click", (tile) => {
+                this.selectedNode = tile.node;
             });
     }
 
@@ -192,8 +193,13 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
         }).sort((a, b) => {
             return a.total - b.total;
         });
-        this._rows = options[0].y;
-        this._columns = options[0].x;
+        if (options.length === 0) {
+            this._rows = 0;
+            this._columns = 0;
+        } else {
+            this._rows = options[0].y;
+            this._columns = options[0].x;
+        }
     }
 
     private _translate(tile: HeatmapTile) {
@@ -203,20 +209,5 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
         const x = ((i % c) * z + 1);
         const y = Math.floor(i / c) * z + 1;
         return `translate(${x}, ${y})`;
-    }
-
-    private _countStates() {
-        let counts: { [key: string]: number } = {};
-        for (let state of ObjectUtils.values(NodeState)) {
-            counts[state] = 0;
-        }
-        this._nodes.forEach((node) => {
-            if (node.state in counts) {
-                counts[node.state]++;
-            } else {
-                console.error(`Node '${node.id}' has an unknown state '${node.state}'`);
-            }
-        });
-        this.stateCounts = counts;
     }
 }

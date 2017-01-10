@@ -21,7 +21,7 @@ export class RxArmListProxy<TParams, TEntity> extends RxListProxy<TParams, TEnti
         this._provideUri = config.uri;
     }
 
-    protected handleNewOptions(options: {}) {
+    protected handleChanges(params: any, options: {}) {
         this._nextLink = null;
         this._loadedFirst = false;
     }

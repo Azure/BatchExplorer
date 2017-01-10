@@ -1,0 +1,10 @@
+<div>
+    <a class="id" [routerLink]="['/pools', poolId, 'nodes', node.id]">{{node.id}}</a>
+    <div class="state">{{node.state}}</div>
+
+    <div class="actions">
+        <button md-raised-button color="primary">Reboot</button>
+        <button md-raised-button color="primary">Reimage</button>
+        <button md-raised-button color="warn">Delete</button>
+    </div>
+</div>

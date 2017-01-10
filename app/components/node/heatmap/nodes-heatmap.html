@@ -1,23 +1,7 @@
 <div class="heatmap-graph">
     <div class="legend noselect">
-        <div *ngFor="let item of stateTree">
-            <div *ngIf="item.state" class="legend-item" (click)="selectState(item.state)" [class.highlighted]="item.state === highlightedState">
-                <div [style.background]="colors.get(item.state)" class="color"></div>
-                <div class="label">{{item.state}} ({{stateCounts[item.state]}})</div>
-            </div>
-            <div *ngIf="item.category">
-                <div class="legend-item" (click)="selectState(item.category)"  [class.highlighted]="item.category === highlightedState">
-                    <div [style.background]="item.color" class="color"></div>
-                    <div class="label">{{item.label}}</div>
-                </div>
-                <div *ngFor="let subitem of item.states" class="legend-subitem" (click)="selectState(subitem.state)"  [class.highlighted]="subitem.state === highlightedState">
-                    <div [style.background]="colors.get(subitem.state)" class="color"></div>
-                    <div class="label">{{subitem.state}} ({{stateCounts[subitem.state]}})</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="clear-highlight" (click)="selectState(null)" *ngIf="highlightedState">Clear highlight</div>
+        <bex-nodes-heatmap-legend [nodes]="nodes" [colors]="colors" (selectedStateChange)="selectState($event)"></bex-nodes-heatmap-legend>
+        <bex-node-preview-card [poolId]="poolId" [node]="selectedNode" *ngIf="selectedNode"></bex-node-preview-card>
     </div>
     <div #heatmap class="heatmap-container"></div>
 </div>
