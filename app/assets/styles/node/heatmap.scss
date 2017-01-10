@@ -4,15 +4,17 @@ rect {
     stroke-width: 0.1px;
 }
 
-.heatmap-container {
-    width: 100%;
-    min-height: 500px;
-}
 
-$legend-width: 140px;
+$legend-width: 160px;
 $color-width: 14px;
 .heatmap-graph {
     display: flex;
+
+    rect {
+        &:hover {
+            fill: map-get($md-prussian-blue, 500) !important;
+        }
+    }
 
     > .legend {
         flex: 1;
@@ -57,6 +59,11 @@ $color-width: 14px;
             height: $color-width;
             border-radius: $color-width/2;
         }
+    }
+
+    .heatmap-container {
+        width: calc(100% - #{$legend-width});
+        min-height: 500px;
     }
 }
 

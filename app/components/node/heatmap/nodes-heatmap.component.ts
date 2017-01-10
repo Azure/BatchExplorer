@@ -4,6 +4,7 @@ import * as elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";
 
 import { Node, NodeState } from "app/models";
+import { ColorUtils, ObjectUtils } from "app/utils";
 
 interface HeatmapTile {
     index: number;
@@ -73,6 +74,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
     }
     public get nodes() { return this._nodes; };
     public highlightedState: string;
+    public stateCounts: { [key: string]: number } = {};
 
     private _nodes: List<Node>;
 
@@ -96,6 +98,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
         this._erd.listenTo(this.heatmapEl.nativeElement, (element) => {
             this._width = this.heatmapEl.nativeElement.offsetWidth;
             this._height = this.heatmapEl.nativeElement.offsetHeight;
+            console.log("nEw hieh", this._width, this._height);
             this._svg.attr("width", this._width)
                 .attr("height", this._height);
             this.redraw();
@@ -132,6 +135,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
     }
 
     public redraw() {
+        this._countStates();
         this._computeColors();
         this._computeDimensions();
         const rects = this._svg.selectAll("rect");
@@ -154,6 +158,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
             .attr("transform", (x) => this._translate(x as any))
             .attr("width", z)
             .attr("height", z)
+            .style("cursor", "pointer")
             .style("fill", (tile: any) => {
                 return d3.color(this.colors[tile.node.state]) as any;
             });
@@ -165,8 +170,10 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
         let estimatedSize = Math.floor(Math.sqrt(areaPerTile));
         let rows = this._height / estimatedSize;
         let columns = this._width / estimatedSize;
+        console.log("Estimated rows", rows, columns);
         this._computeBestDimension(rows, columns);
-
+        console.log("Choosen rows are", this._rows, this._columns);
+        console.log("Tile size ", Math.floor(this._height / this._rows), Math.floor(this._width / this._columns));
         this._tileSize = Math.min(Math.floor(this._height / this._rows), Math.floor(this._width / this._columns));
     }
 
@@ -226,7 +233,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
                             if (subitem.state === this.highlightedState) {
                                 colors[subitem.state] = subitem.color;
                             } else {
-                                colors[subitem.state] = shadeColor2(item.color, 0.8);
+                                colors[subitem.state] = ColorUtils.shadeColor(item.color, 0.8);
                             }
                         }
                     }
@@ -240,12 +247,22 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
         if (key === this.highlightedState) {
             return color;
         } else {
-            return shadeColor2(color, 0.8);
+            return ColorUtils.shadeColor(color, 0.8);
         }
     }
-}
 
-function shadeColor2(color, percent) {
-    var f = parseInt(color.slice(1), 16), t = percent < 0 ? 0 : 255, p = percent < 0 ? percent * -1 : percent, R = f >> 16, G = f >> 8 & 0x00FF, B = f & 0x0000FF;
-    return "#" + (0x1000000 + (Math.round((t - R) * p) + R) * 0x10000 + (Math.round((t - G) * p) + G) * 0x100 + (Math.round((t - B) * p) + B)).toString(16).slice(1);
+    private _countStates() {
+        let counts: { [key: string]: number } = {};
+        for (let state of ObjectUtils.values(NodeState)) {
+            counts[state] = 0;
+        }
+        this._nodes.forEach((node) => {
+            if (node.state in counts) {
+                counts[node.state]++;
+            } else {
+                console.error(`Node '${node.id}' has an unknown state '${node.state}'`);
+            }
+        });
+        this.stateCounts = counts;
+    }
 }
