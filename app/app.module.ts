@@ -33,6 +33,7 @@ import { NodeListDisplayComponent } from "./components/node/browse/display";
 import { NodeAdvancedFilterComponent } from "./components/node/browse/filter";
 import { NodeListComponent } from "./components/node/browse/node.list.component";
 import { NoNodeSelectedComponent, NodeDetailsComponent, NodePropertiesComponent } from "./components/node/details";
+import { NodesHeatmapComponent } from "./components/node/heatmap";
 import { NodeHomeComponent } from "./components/node/home";
 import { PoolNodesPreviewComponent } from "./components/pool/base/pool-nodes-preview.component";
 import { PoolAdvancedFilterComponent } from "./components/pool/browse/filter";
@@ -143,6 +144,7 @@ import {
         NodeListComponent,
         NodeListDisplayComponent,
         NodeDetailsComponent,
+        NodesHeatmapComponent,
         NodePropertiesComponent,
         NodeHomeComponent,
         NoNodeSelectedComponent,

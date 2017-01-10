@@ -61,7 +61,8 @@ export class AccountService {
                     key: keys.primary,
                     url: "https://" + account.properties.accountEndpoint,
                 });
-                DataCacheTracker.clearAllCaches(this._accountCache, subscriptionService.cache);
+                // TODO handle this
+                // DataCacheTracker.clearAllCaches(this._accountCache, subscriptionService.cache);
                 this.validateCurrentAccount();
             } else {
                 this._currentAccountValid.next(AccountStatus.Invalid);

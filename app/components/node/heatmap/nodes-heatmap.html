@@ -1,0 +1,22 @@
+<div class="heatmap-graph">
+    <div class="legend">
+        <div *ngFor="let item of stateTree">
+            <div *ngIf="item.state" class="legend-item" (click)="selectState(item.state)" [class.highlighted]="item.state === highlightedState">
+                <div [style.background]="item.color" class="color"></div>
+                <div class="label">{{item.state}}</div>
+            </div>
+            <div *ngIf="item.category">
+                <div class="legend-item" (click)="selectState(item.category)"  [class.highlighted]="item.category === highlightedState">
+                    <div [style.background]="item.color" class="color"></div>
+                    <div class="label">{{item.label}}</div>
+                </div>
+                <div *ngFor="let subitem of item.states" class="legend-subitem" (click)="selectState(subitem.state)"  [class.highlighted]="subitem.state === highlightedState">
+                    {{subitem.state}}
+                </div>
+            </div>
+        </div>
+
+        <div class="clear-highlight" (click)="selectState(null)" *ngIf="highlightedState">Clear highlight</div>
+    </div>
+    <div #heatmap class="heatmap-container"></div>
+</div>

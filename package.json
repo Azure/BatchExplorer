@@ -32,6 +32,7 @@
   "devDependencies": {
     "@types/bunyan": "0.0.32",
     "@types/core-decorators": "^0.10.30",
+    "@types/d3": "^4.4.0",
     "@types/electron": "^1.4.25",
     "@types/electron-json-storage": "0.0.19",
     "@types/hammerjs": "^2.0.33",
@@ -92,6 +93,7 @@
     "azure-batch": "^0.5.2",
     "bunyan": "^1.8.4",
     "core-decorators": "^0.14.0",
+    "d3": "^4.4.1",
     "electron-json-storage": "^2.0.3",
     "element-resize-detector": "^1.1.9",
     "extract-text-webpack-plugin": "^1.0.1",

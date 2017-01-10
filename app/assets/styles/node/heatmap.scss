@@ -1,0 +1,68 @@
+
+rect {
+    stroke: #fff;
+    stroke-width: 0.1px;
+}
+
+.heatmap-container {
+    width: 100%;
+    min-height: 500px;
+}
+
+$legend-width: 140px;
+$color-width: 14px;
+.heatmap-graph {
+    display: flex;
+
+    > .legend {
+        flex: 1;
+        position: relative;
+        width: $legend-width;
+        margin: 10px;
+
+        .legend-item {
+            width: $legend-width;
+            display: flex;
+            align-items: center;
+            margin: 2px 0;
+            cursor: pointer;
+        }
+
+        .legend-subitem {
+            margin-left: $color-width + 20px;
+            cursor: pointer;
+        }
+
+        .legend-item, .legend-subitem {
+            color: $mineshaft-grey;
+            &:hover {
+                background: $concreteGray;
+            }
+
+            &.highlighted {
+                color: $concreteGray;
+                background: map-get($md-prussian-blue, 400);
+            }
+        }
+
+        .label {
+            display: inline-block;
+            width: $legend-width - $color-width - 5px;
+            margin-left: 5px;
+        }
+
+        .color {
+            display: inline-block;
+            width: $color-width;
+            height: $color-width;
+            border-radius: $color-width/2;
+        }
+    }
+}
+
+
+.clear-highlight {
+    margin-top: 10px;
+    cursor: pointer;
+    height: 20px;
+}
