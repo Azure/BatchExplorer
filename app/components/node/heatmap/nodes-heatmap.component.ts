@@ -4,7 +4,9 @@ import * as elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";
 
 import { Node, NodeState } from "app/models";
-import { ColorUtils, ObjectUtils } from "app/utils";
+import { ObjectUtils } from "app/utils";
+import { HeatmapColor } from "./heatmap-color";
+import { StateTree } from "./state-tree";
 
 interface HeatmapTile {
     index: number;
@@ -26,7 +28,7 @@ const availableStates = [
     ...Array(1).fill(NodeState.unknown),
 ];
 
-const stateTree = [
+const stateTree: StateTree = [
     { state: NodeState.idle, color: "#6ba3cb" },
     { state: NodeState.running, color: "#388e3c" },
     { state: NodeState.waitingForStartTask, color: "#94bdd9" },
@@ -59,7 +61,7 @@ const stateTree = [
     templateUrl: "nodes-heatmap.html",
 })
 export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
-    public colors: any = {};
+    public colors: HeatmapColor;
     public stateTree = stateTree;
 
     @ViewChild("heatmap")
@@ -87,7 +89,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
     private _columns: number;
 
     constructor(private elementRef: ElementRef) {
-        this._computeColors();
+        this.colors = new HeatmapColor(stateTree);
     }
 
     public ngAfterViewInit() {
@@ -98,7 +100,6 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
         this._erd.listenTo(this.heatmapEl.nativeElement, (element) => {
             this._width = this.heatmapEl.nativeElement.offsetWidth;
             this._height = this.heatmapEl.nativeElement.offsetHeight;
-            console.log("nEw hieh", this._width, this._height);
             this._svg.attr("width", this._width)
                 .attr("height", this._height);
             this.redraw();
@@ -136,7 +137,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
 
     public redraw() {
         this._countStates();
-        this._computeColors();
+        this.colors.updateColors(this.highlightedState);
         this._computeDimensions();
         const rects = this._svg.selectAll("rect");
         this._updateSvg(rects);
@@ -160,7 +161,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
             .attr("height", z)
             .style("cursor", "pointer")
             .style("fill", (tile: any) => {
-                return d3.color(this.colors[tile.node.state]) as any;
+                return d3.color(this.colors.get(tile.node.state)) as any;
             });
     }
 
@@ -170,10 +171,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
         let estimatedSize = Math.floor(Math.sqrt(areaPerTile));
         let rows = this._height / estimatedSize;
         let columns = this._width / estimatedSize;
-        console.log("Estimated rows", rows, columns);
         this._computeBestDimension(rows, columns);
-        console.log("Choosen rows are", this._rows, this._columns);
-        console.log("Tile size ", Math.floor(this._height / this._rows), Math.floor(this._width / this._columns));
         this._tileSize = Math.min(Math.floor(this._height / this._rows), Math.floor(this._width / this._columns));
     }
 
@@ -204,51 +202,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
         const c = this._columns;
         const x = ((i % c) * z + 1);
         const y = Math.floor(i / c) * z + 1;
-        return "translate(" + x + "," + y + ")";
-    }
-
-    private _computeColors() {
-        const colors = {};
-        if (!this.highlightedState) {
-            for (let item of stateTree as any) {
-                if (item.state) {
-                    colors[item.state] = item.color;
-                } else {
-                    for (let subitem of item.states) {
-                        colors[subitem.state] = item.color;
-                    }
-                }
-            }
-        } else {
-            for (let item of stateTree as any) {
-                if (item.state) {
-                    colors[item.state] = this._getHighlightColor(item.state, item.color);
-                } else {
-                    if (item.category === this.highlightedState) {
-                        for (let subitem of item.states) {
-                            colors[subitem.state] = subitem.color;
-                        }
-                    } else {
-                        for (let subitem of item.states) {
-                            if (subitem.state === this.highlightedState) {
-                                colors[subitem.state] = subitem.color;
-                            } else {
-                                colors[subitem.state] = ColorUtils.shadeColor(item.color, 0.8);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        this.colors = colors;
-    }
-
-    private _getHighlightColor(key, color) {
-        if (key === this.highlightedState) {
-            return color;
-        } else {
-            return ColorUtils.shadeColor(color, 0.8);
-        }
+        return `translate(${x}, ${y})`;
     }
 
     private _countStates() {
