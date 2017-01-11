@@ -83,8 +83,8 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
         this._processNewNodes();
     }
     public get nodes() { return this._nodes; };
-    public highlightedState: string;
     public selectedNode: Node = null;
+    public highlightedState: string;
 
     private _nodes: List<Node>;
 
@@ -124,11 +124,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
     }
 
     public selectState(state: string) {
-        if (state === this.highlightedState) {
-            this.highlightedState = null;
-        } else {
-            this.highlightedState = state;
-        }
+        this.highlightedState = state;
         this.redraw();
     }
 

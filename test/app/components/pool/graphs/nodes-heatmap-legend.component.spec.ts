@@ -23,7 +23,7 @@ const stateTree = [
     },
 ];
 
-fdescribe("NodesHeatmapLegendComponent", () => {
+describe("NodesHeatmapLegendComponent", () => {
     let fixture: ComponentFixture<NodesHeatmapLegendComponent>;
     let component: NodesHeatmapLegendComponent;
     let colors: HeatmapColor;
