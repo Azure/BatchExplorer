@@ -40,9 +40,7 @@ import { PoolListComponent } from "./components/pool/browse/pool-list.component"
 import { PoolDetailsComponent } from "./components/pool/details/pool-details.component";
 import { PoolPropertiesComponent } from "./components/pool/details/pool-properties.component";
 import { PoolDetailsHomeComponent } from "./components/pool/details/pool.details.home";
-import {
-    NodePreviewCardComponent, NodesHeatmapComponent, NodesHeatmapLegendComponent, PoolGraphsComponent,
-} from "./components/pool/graphs";
+import { PoolGraphsModule } from "./components/pool/graphs";
 import { PoolHomeComponent } from "./components/pool/home/pool-home.component";
 import { MainNavigationComponent } from "./components/shared/main-navigation.component";
 import { TaskListDisplayComponent } from "./components/task/browse/display";
@@ -107,6 +105,7 @@ import {
     commands,
 } from "./services";
 
+const modules = [PoolGraphsModule];
 @NgModule({
     bootstrap: [
         AppComponent,
@@ -146,9 +145,6 @@ import {
         NodeListComponent,
         NodeListDisplayComponent,
         NodeDetailsComponent,
-        NodePreviewCardComponent,
-        NodesHeatmapComponent,
-        NodesHeatmapLegendComponent,
         NodePropertiesComponent,
         NodeHomeComponent,
         NoNodeSelectedComponent,
@@ -157,7 +153,6 @@ import {
         PoolCreateBasicDialogComponent,
         PoolDetailsComponent,
         PoolDetailsHomeComponent,
-        PoolGraphsComponent,
         PoolHomeComponent,
         PoolListComponent,
         PoolNodesPreviewComponent,
@@ -203,6 +198,7 @@ import {
         ReactiveFormsModule,
         RouterModule.forRoot(routes, { useHash: true }),
         BaseModule.forRoot(),
+        ...modules,
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },

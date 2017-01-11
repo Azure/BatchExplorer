@@ -86,15 +86,20 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
     public selectedNode: Node = null;
     public highlightedState: string;
 
+    public dimensions = {
+        tileSize: 0,
+        rows: 0,
+        columns: 0,
+    };
+
     private _nodes: List<Node>;
 
     private _erd: any;
     private _svg: d3.Selection<any, any, any, any>;
-    private _width: number = 960;
-    private _height: number = 500;
-    private _tileSize: number;
-    private _rows: number;
-    private _columns: number;
+    private _width: number = 0;
+    private _height: number = 0;
+
+
 
     constructor(private elementRef: ElementRef, private changeDetector: ChangeDetectorRef) {
         this.colors = new HeatmapColor(stateTree);
@@ -104,13 +109,8 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
         this._erd = elementResizeDetectorMaker({
             strategy: "scroll",
         });
-
         this._erd.listenTo(this.heatmapEl.nativeElement, (element) => {
-            this._width = this.heatmapEl.nativeElement.offsetWidth;
-            this._height = this.heatmapEl.nativeElement.offsetHeight;
-            this._svg.attr("width", this._width)
-                .attr("height", this._height);
-            this.redraw();
+            this.containerSizeChanged();
         });
 
         this._svg = d3.select(this.heatmapEl.nativeElement).append("svg")
@@ -121,6 +121,14 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
 
     public ngOnDestroy() {
         this._erd.uninstall(this.elementRef.nativeElement);
+    }
+
+    public containerSizeChanged() {
+        this._width = this.heatmapEl.nativeElement.offsetWidth;
+        this._height = this.heatmapEl.nativeElement.offsetHeight;
+        this._svg.attr("width", this._width)
+            .attr("height", this._height);
+        this.redraw();
     }
 
     public selectState(state: string) {
@@ -149,12 +157,11 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
     }
 
     private _updateSvg(rects: any) {
-        const z = this._tileSize - 2;
+        const z = this.dimensions.tileSize - 2;
         rects.enter().append("rect").merge(rects)
             .attr("transform", (x) => this._translate(x as any))
             .attr("width", z)
             .attr("height", z)
-            .style("cursor", "pointer")
             .style("fill", (tile: any) => {
                 return d3.color(this.colors.get(tile.node.state)) as any;
             }).on("click", (tile) => {
@@ -169,7 +176,11 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
         let rows = this._height / estimatedSize;
         let columns = this._width / estimatedSize;
         this._computeBestDimension(rows, columns);
-        this._tileSize = Math.min(Math.floor(this._height / this._rows), Math.floor(this._width / this._columns));
+        const dimensions = this.dimensions;
+        dimensions.tileSize = Math.min(
+            Math.floor(this._height / dimensions.rows),
+            Math.floor(this._width / dimensions.columns),
+        );
     }
 
     private _computeBestDimension(estimatedRows: number, estimatedColumns: number) {
@@ -190,18 +201,18 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
             return a.total - b.total;
         });
         if (options.length === 0) {
-            this._rows = 0;
-            this._columns = 0;
+            this.dimensions.rows = 0;
+            this.dimensions.columns = 0;
         } else {
-            this._rows = options[0].y;
-            this._columns = options[0].x;
+            this.dimensions.rows = options[0].y;
+            this.dimensions.columns = options[0].x;
         }
     }
 
     private _translate(tile: HeatmapTile) {
         const i = tile.index;
-        const z = this._tileSize;
-        const c = this._columns;
+        const z = this.dimensions.tileSize;
+        const c = this.dimensions.columns;
         const x = ((i % c) * z + 1);
         const y = Math.floor(i / c) * z + 1;
         return `translate(${x}, ${y})`;

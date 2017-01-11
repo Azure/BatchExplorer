@@ -11,15 +11,16 @@ $color-width: 14px;
     display: flex;
 
     rect {
+        cursor: pointer;
         &:hover {
             fill: map-get($md-prussian-blue, 500) !important;
         }
     }
 
     > .legend {
-        flex: 1;
-        position: relative;
         width: $legend-width;
+        flex: 1 0 $color-width;
+        position: relative;
         margin: 10px;
 
         .legend-item {
@@ -63,7 +64,8 @@ $color-width: 14px;
 
     .heatmap-container {
         width: calc(100% - #{$legend-width});
-        min-height: 500px;
+        flex: 1 0 calc(100% - 160px);
+        height: 500px;
     }
 }
 
