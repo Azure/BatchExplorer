@@ -5,28 +5,12 @@ import { List } from "immutable";
 
 import { Node, NodeState } from "app/models";
 import { HeatmapColor } from "./heatmap-color";
-import { StateCounter } from "./state-counter";
 import { StateTree } from "./state-tree";
 
 interface HeatmapTile {
     index: number;
     node: Node;
 }
-
-const availableStates = [
-    ...Array(40).fill(NodeState.idle),
-    ...Array(20).fill(NodeState.running),
-    ...Array(4).fill(NodeState.waitingForStartTask),
-    ...Array(3).fill(NodeState.offline),
-    ...Array(1).fill(NodeState.creating),
-    ...Array(1).fill(NodeState.starting),
-    ...Array(1).fill(NodeState.rebooting),
-    ...Array(1).fill(NodeState.reimaging),
-    ...Array(1).fill(NodeState.leavingPool),
-    ...Array(1).fill(NodeState.startTaskFailed),
-    ...Array(1).fill(NodeState.unusable),
-    ...Array(1).fill(NodeState.unknown),
-];
 
 const stateTree: StateTree = [
     { state: NodeState.idle, color: "#6ba3cb" },
@@ -98,8 +82,6 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
     private _svg: d3.Selection<any, any, any, any>;
     private _width: number = 0;
     private _height: number = 0;
-
-
 
     constructor(private elementRef: ElementRef, private changeDetector: ChangeDetectorRef) {
         this.colors = new HeatmapColor(stateTree);

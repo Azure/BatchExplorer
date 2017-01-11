@@ -72,6 +72,4 @@ describe("Statecounter", () => {
             expect(colors.get("rebooting")).toEqual(ColorUtils.shadeColor("#777777", 0.8));
         });
     });
-
-
 });

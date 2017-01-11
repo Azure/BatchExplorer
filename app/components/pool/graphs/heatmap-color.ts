@@ -1,7 +1,6 @@
 import { ColorUtils } from "app/utils";
 import { StateTree } from "./state-tree";
 
-
 type ColorMap = { [key: string]: string };
 
 /**

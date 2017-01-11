@@ -18,7 +18,7 @@ describe("Statecounter", () => {
             Fixtures.node.create({ state: NodeState.startTaskFailed }),
             Fixtures.node.create({ state: NodeState.running }),
             Fixtures.node.create({ state: NodeState.offline }),
-        ]
+        ];
         counter.updateCount(List<Node>(nodes));
     });
 
