@@ -19,6 +19,7 @@ export class NodesHeatmapLegendComponent {
     public colors: any;
 
     public stateCounter: StateCounter;
+    public highlightedState: string = null;
 
     @Output()
     public selectedStateChange = new EventEmitter();
@@ -28,6 +29,11 @@ export class NodesHeatmapLegendComponent {
     }
 
     public selectState(state: string) {
-        this.selectedStateChange.emit(state);
+        if (state === this.highlightedState) {
+            this.highlightedState = null;
+        } else {
+            this.highlightedState = state;
+        }
+        this.selectedStateChange.emit(this.highlightedState);
     }
 }

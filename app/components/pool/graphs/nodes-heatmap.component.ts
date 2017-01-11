@@ -63,7 +63,7 @@ const maxNodes = 1000;
     templateUrl: "nodes-heatmap.html",
     viewProviders: [
         { provide: "StateTree", useValue: stateTree },
-    ]
+    ],
 })
 export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
     public colors: HeatmapColor;
