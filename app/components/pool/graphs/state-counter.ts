@@ -1,11 +1,11 @@
 import { List } from "immutable";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 
 import { Node, NodeState } from "app/models";
 import { ObjectUtils } from "app/utils";
 
 type CountMap = { [key: string]: number };
-type CounObsMap = { [key: string]: Observable<number> };
+type CounObsMap = { [key: string]: BehaviorSubject<number> };
 
 export class StateCounter {
     private _data: CounObsMap = {};
@@ -15,6 +15,7 @@ export class StateCounter {
             this._data[state] = new BehaviorSubject(0);
         }
     }
+
     public get(state: NodeState) {
         return this._data[state];
     }

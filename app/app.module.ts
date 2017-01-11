@@ -33,9 +33,6 @@ import { NodeListDisplayComponent } from "./components/node/browse/display";
 import { NodeAdvancedFilterComponent } from "./components/node/browse/filter";
 import { NodeListComponent } from "./components/node/browse/node.list.component";
 import { NoNodeSelectedComponent, NodeDetailsComponent, NodePropertiesComponent } from "./components/node/details";
-import {
-    NodePreviewCardComponent, NodesHeatmapComponent, NodesHeatmapLegendComponent, PoolGraphsComponent,
-} from "./components/node/heatmap";
 import { NodeHomeComponent } from "./components/node/home";
 import { PoolNodesPreviewComponent } from "./components/pool/base/pool-nodes-preview.component";
 import { PoolAdvancedFilterComponent } from "./components/pool/browse/filter";
@@ -43,6 +40,9 @@ import { PoolListComponent } from "./components/pool/browse/pool-list.component"
 import { PoolDetailsComponent } from "./components/pool/details/pool-details.component";
 import { PoolPropertiesComponent } from "./components/pool/details/pool-properties.component";
 import { PoolDetailsHomeComponent } from "./components/pool/details/pool.details.home";
+import {
+    NodePreviewCardComponent, NodesHeatmapComponent, NodesHeatmapLegendComponent, PoolGraphsComponent,
+} from "./components/pool/graphs";
 import { PoolHomeComponent } from "./components/pool/home/pool-home.component";
 import { MainNavigationComponent } from "./components/shared/main-navigation.component";
 import { TaskListDisplayComponent } from "./components/task/browse/display";

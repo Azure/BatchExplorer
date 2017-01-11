@@ -48,7 +48,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
     }
 
     public setOptions(options: {}, clearItems = true) {
-        this._options = options;
+        this._options = Object.assign({}, options);
         this.handleChanges(this._params, options);
         if (clearItems) {
             this._itemKeys.next(List([]));
@@ -90,7 +90,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
                     this.cache.queryCache.cacheQuery(this._options.filter, keys, this.putQueryCacheData());
                 }
                 const last = this._lastRequest;
-                if (last && (last.params === this._params || last.options !== this._options)) {
+                if (last && (last.params !== this._params || last.options !== this._options)) {
                     this._itemKeys.next(keys);
                 } else {
                     this._itemKeys.next(List<string>(currentKeys.concat(keys)));

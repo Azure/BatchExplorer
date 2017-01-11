@@ -61,7 +61,7 @@ class MockClientProxy {
     }
 }
 
-describe("RxListProxy", () => {
+describe("RxBatchListProxy", () => {
     let proxy: RxBatchListProxy<{}, FakeModel>;
     let cache: DataCache<FakeModel>;
     let clientProxy: MockClientProxy;
@@ -104,6 +104,31 @@ describe("RxListProxy", () => {
 
         expect(clientProxy.fetchNext).toHaveBeenCalledTimes(2);
         expect(hasMore).toBe(false);
+    }));
+
+    it("should not clear the items when refresing with params true", fakeAsync(() => {
+        let items: List<FakeModel>;
+        proxy.items.subscribe((x) => items = x);
+        proxy.fetchNext();
+        tick();
+        proxy.refresh(true);
+        expect(items.size).toBe(0);
+        tick();
+        expect(items).toEqualImmutable(List(data[0].map((x) => new FakeModel(x))));
+    }));
+
+    it("should not clear the items when refresing with params false", fakeAsync(() => {
+        let items: List<FakeModel>;
+        proxy.items.subscribe((x) => items = x);
+        proxy.fetchNext();
+        tick();
+        proxy.refresh(false);
+        expect(items.size).not.toBe(0);
+        expect(items).toEqualImmutable(List(data[0].map((x) => new FakeModel(x))));
+        items = null; // To make sure items get reassigned
+        tick();
+        expect(items).not.toBe(null);
+        expect(items).toEqualImmutable(List(data[0].map((x) => new FakeModel(x))));
     }));
 
     it("it should apply the options", fakeAsync(() => {
