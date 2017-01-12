@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { autobind } from "core-decorators";
 
 import { Node } from "app/models";
+import { NodeService } from "app/services";
 
 @Component({
     selector: "bex-node-preview-card",
@@ -15,4 +17,19 @@ export class NodePreviewCardComponent {
 
     @Output()
     public close = new EventEmitter();
+
+    constructor(private nodeService: NodeService) {
+
+    }
+
+    @autobind()
+    public reboot() {
+        console.log("REbooting", this.poolId, this.node.id);
+        return this.nodeService.reboot(this.poolId, this.node.id);
+    }
+
+    @autobind()
+    public reimage() {
+        return this.nodeService.reimage(this.poolId, this.node.id);
+    }
 }

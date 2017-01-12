@@ -5,8 +5,8 @@
     </div>
     <div class="state">{{node.state}}</div>
     <div class="actions">
-        <button md-raised-button color="primary">Reboot</button>
-        <button md-raised-button color="primary">Reimage</button>
-        <button md-raised-button color="warn">Delete</button>
+        <bex-submit-btn color="primary" [submit]="reboot" [multiSubmit]="true">Reboot</bex-submit-btn>
+        <bex-submit-btn color="primary" [submit]="reimage" [multiSubmit]="true">Reimage</bex-submit-btn>
+        <!--<button md-raised-button color="warn">Delete</button>-->
     </div>
 </div>

@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } fro
 import * as d3 from "d3";
 import * as elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 
 import { Node, NodeState } from "app/models";
 import { HeatmapColor } from "./heatmap-color";
@@ -42,6 +42,7 @@ const stateTree: StateTree = [
 ];
 
 const maxNodes = 1000;
+const maxTileSize = 300;
 
 @Component({
     selector: "bex-nodes-heatmap",
@@ -173,6 +174,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
             dimensions.tileSize = Math.min(
                 Math.floor(this._height / dimensions.rows),
                 Math.floor(this._width / dimensions.columns),
+                maxTileSize,
             );
         }
     }
