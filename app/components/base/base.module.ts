@@ -5,7 +5,6 @@ import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 
 // components
-import { routes } from "../../app.routes";
 import { AdvancedFilterModule } from "./advanced-filter";
 import { BackgroundTaskModule } from "./background-task";
 import { BannerComponent } from "./banner";
@@ -68,10 +67,10 @@ const components = [
     imports: [
         BrowserModule,
         FormsModule,
-        MaterialModule.forRoot(),
+        MaterialModule,
         ReactiveFormsModule,
-        RouterModule.forRoot(routes, { useHash: true }),
-        ...modules.map(x => x.forRoot()),
+        RouterModule,
+        ...modules,
     ],
     providers: [
         ScrollableService,

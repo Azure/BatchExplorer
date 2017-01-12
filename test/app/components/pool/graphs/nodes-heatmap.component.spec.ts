@@ -21,7 +21,7 @@ export class TestHeatmapComponent {
     public nodes: List<Node> = List([]);
 }
 
-describe("NodesHeatmapLegendComponent", () => {
+fdescribe("NodesHeatmapLegendComponent", () => {
     let fixture: ComponentFixture<TestHeatmapComponent>;
     let component: TestHeatmapComponent;
     let heatmap: NodesHeatmapComponent;
@@ -61,14 +61,14 @@ describe("NodesHeatmapLegendComponent", () => {
         expect(svg.attr("height")).toBe("500");
     });
 
-    it("Should compute optimal tile dimensions for 1 tile", () => {
+    it("Should compute optimal tile dimensions for 1 tile(Max tile size)", () => {
         component.nodes = List([
             Fixture.node.create({ state: NodeState.idle }),
         ]);
         fixture.detectChanges();
         expect(heatmap.dimensions.columns).toBe(1);
         expect(heatmap.dimensions.rows).toBe(1);
-        expect(heatmap.dimensions.tileSize).toBe(500);
+        expect(heatmap.dimensions.tileSize).toBe(300);
     });
 
     it("Should compute optimal tile dimensions for 4 tile", () => {
