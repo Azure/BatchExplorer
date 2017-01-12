@@ -75,6 +75,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
             if (cachedList) {
                 this.getQueryCacheData(cachedList);
                 this._itemKeys.next(cachedList.keys);
+                this._lastRequest = { params: this._params, options: this._options };
                 return Observable.from(cachedList.keys.toJS());
             }
         }

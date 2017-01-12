@@ -91,6 +91,27 @@ describe("NodesHeatmapLegendComponent", () => {
             expect(d3.select(group[i]).attr("style")).toBe("fill: rgb(107, 163, 203);");
         });
     });
+
+    it("should not fail when the size of the svg is 0x0", () => {
+        component.width = "160px";
+        component.nodes = createNodes(4);
+        fixture.detectChanges();
+        heatmap.containerSizeChanged();
+
+        expect(svg.attr("width")).toBe("0");
+        expect(heatmap.dimensions.rows).toBe(0);
+        expect(heatmap.dimensions.columns).toBe(0);
+        expect(heatmap.dimensions.tileSize).toBe(0);
+
+        const rects = svg.selectAll("rect");
+        expect(rects.size()).toBe(4);
+        rects.each((d, i, group) => {
+            expect(d3.select(group[i]).attr("width")).toBe("0");
+            expect(d3.select(group[i]).attr("height")).toBe("0");
+            expect(d3.select(group[i]).attr("transform")).not.toContain("NaN");
+        });
+    });
+
 });
 
 function createNodes(count: number) {

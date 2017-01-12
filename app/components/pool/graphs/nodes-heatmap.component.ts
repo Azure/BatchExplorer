@@ -15,7 +15,7 @@ interface HeatmapTile {
 const stateTree: StateTree = [
     { state: NodeState.idle, color: "#6ba3cb" },
     { state: NodeState.running, color: "#388e3c" },
-    { state: NodeState.waitingForStartTask, color: "#94bdd9" },
+    { state: NodeState.waitingForStartTask, color: "#be93d9" },
     { state: NodeState.offline, color: "#5b5b5b" },
     {
         category: "transition",
@@ -139,7 +139,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
     }
 
     private _updateSvg(rects: any) {
-        const z = this.dimensions.tileSize - 2;
+        const z = Math.max(this.dimensions.tileSize - 2, 0);
         rects.enter().append("rect").merge(rects)
             .attr("transform", (x) => this._translate(x as any))
             .attr("width", z)
@@ -158,11 +158,16 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
         let rows = this._height / estimatedSize;
         let columns = this._width / estimatedSize;
         this._computeBestDimension(rows, columns);
+
         const dimensions = this.dimensions;
-        dimensions.tileSize = Math.min(
-            Math.floor(this._height / dimensions.rows),
-            Math.floor(this._width / dimensions.columns),
-        );
+        if (dimensions.rows === 0 || dimensions.columns === 0) {
+            dimensions.tileSize = 0;
+        } else {
+            dimensions.tileSize = Math.min(
+                Math.floor(this._height / dimensions.rows),
+                Math.floor(this._width / dimensions.columns),
+            );
+        }
     }
 
     private _computeBestDimension(estimatedRows: number, estimatedColumns: number) {
@@ -192,8 +197,11 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
     }
 
     private _translate(tile: HeatmapTile) {
-        const i = tile.index;
         const z = this.dimensions.tileSize;
+        if (z === 0) {
+            return `translate(0,0)`;
+        }
+        const i = tile.index;
         const c = this.dimensions.columns;
         const x = ((i % c) * z + 1);
         const y = Math.floor(i / c) * z + 1;

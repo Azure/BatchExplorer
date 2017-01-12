@@ -4,9 +4,8 @@ import { StateTree } from "./state-tree";
 type ColorMap = { [key: string]: string };
 
 /**
- * Utility which handle the color mapping for the heatmap.
- * This will handle lighten up all colors when highliting a state
- * as well as showing different colors for category and substate
+ * This handles highlighting or dimming colors based on a state selection.
+ * It also handles showing different colors for categories and substates
  */
 export class HeatmapColor {
     private _colors: ColorMap = {};
