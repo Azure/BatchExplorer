@@ -95,9 +95,20 @@ bex-node-preview-card {
         font-weight: 700;
     }
 
+    .title {
+        display: flex;
+
+        .fa-times {
+            color: $genericGray;
+            cursor: pointer;
+
+            &:hover {
+                color: $mineshaft-grey;
+            }
+        }
+    }
+
     .actions {
-
-
         button {
             display: block;
             margin: 5px auto;

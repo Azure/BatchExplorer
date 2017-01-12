@@ -1,7 +1,8 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnDestroy, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from "@angular/core";
 import * as d3 from "d3";
 import * as elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";
+import { BehaviorSubject, Observable } from "rxjs";
 
 import { Node, NodeState } from "app/models";
 import { HeatmapColor } from "./heatmap-color";
@@ -64,10 +65,12 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
             console.warn(`Only supporting up to ${maxNodes} nodes for now!`);
         }
         this._nodes = List<Node>(nodes.slice(0, maxNodes));
+        this._buildNodeMap();
         this._processNewNodes();
     }
     public get nodes() { return this._nodes; };
-    public selectedNode: Node = null;
+    public selectedNodeId = new BehaviorSubject<string>(null);
+    public selectedNode = new BehaviorSubject<Node>(null);
     public highlightedState: string;
 
     public dimensions = {
@@ -82,9 +85,13 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
     private _svg: d3.Selection<any, any, any, any>;
     private _width: number = 0;
     private _height: number = 0;
+    private _nodeMap: { [id: string]: Node } = {};
 
-    constructor(private elementRef: ElementRef, private changeDetector: ChangeDetectorRef) {
+    constructor(private elementRef: ElementRef) {
         this.colors = new HeatmapColor(stateTree);
+        this.selectedNodeId.subscribe(() => {
+            this._updateSelectedNode();
+        });
     }
 
     public ngAfterViewInit() {
@@ -147,7 +154,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
             .style("fill", (tile: any) => {
                 return d3.color(this.colors.get(tile.node.state)) as any;
             }).on("click", (tile) => {
-                this.selectedNode = tile.node;
+                this.selectedNodeId.next(tile.node.id);
             });
     }
 
@@ -206,5 +213,18 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
         const x = ((i % c) * z + 1);
         const y = Math.floor(i / c) * z + 1;
         return `translate(${x}, ${y})`;
+    }
+
+    private _buildNodeMap() {
+        const map: { [id: string]: Node } = {};
+        this._nodes.forEach((node) => {
+            map[node.id] = node;
+        });
+        this._nodeMap = map;
+        this._updateSelectedNode();
+    }
+
+    private _updateSelectedNode() {
+        this.selectedNode.next(this._nodeMap[this.selectedNodeId.getValue()]);
     }
 }

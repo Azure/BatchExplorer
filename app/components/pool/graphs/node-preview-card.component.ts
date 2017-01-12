@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 
 import { Node } from "app/models";
 
@@ -12,4 +12,7 @@ export class NodePreviewCardComponent {
 
     @Input()
     public poolId: string;
+
+    @Output()
+    public close = new EventEmitter();
 }
