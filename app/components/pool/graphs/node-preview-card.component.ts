@@ -24,7 +24,6 @@ export class NodePreviewCardComponent {
 
     @autobind()
     public reboot() {
-        console.log("REbooting", this.poolId, this.node.id);
         return this.nodeService.reboot(this.poolId, this.node.id);
     }
 

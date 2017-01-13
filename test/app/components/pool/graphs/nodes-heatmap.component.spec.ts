@@ -21,7 +21,7 @@ export class TestHeatmapComponent {
     public nodes: List<Node> = List([]);
 }
 
-fdescribe("NodesHeatmapLegendComponent", () => {
+describe("NodesHeatmapLegendComponent", () => {
     let fixture: ComponentFixture<TestHeatmapComponent>;
     let component: TestHeatmapComponent;
     let heatmap: NodesHeatmapComponent;
