@@ -27,7 +27,7 @@ export class RxMockListProxy<TParams, TEntity> extends RxListProxy<TParams, TEnt
         }
     }
 
-    protected handleNewOptions(options: {}) {
+    protected handleChanges(options: {}) {
         // Nothing todo
     }
 

@@ -46,6 +46,10 @@
         <md-card class="details">
             <md-tab-group>
                 <md-tab>
+                    <template md-tab-label>Heatmap</template>
+                    <bex-pool-graphs [poolId]="poolId"></bex-pool-graphs>
+                </md-tab>
+                <md-tab>
                     <template md-tab-label>Nodes</template>
                     <bex-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/pools', poolId, 'nodes']">
                         <bex-node-list  #list [poolId]="poolId" [filter]="listWrapper.filter" [quickList]="false" [manualLoading]="true"></bex-node-list>

@@ -1,0 +1,12 @@
+<div>
+    <div class="title">
+        <a class="id" [routerLink]="['/pools', poolId, 'nodes', node.id]">{{node.id}}</a>
+        <i class="fa fa-times" (click)="close.emit()"></i>
+    </div>
+    <div class="state">{{node.state}}</div>
+    <div class="actions">
+        <bex-submit-btn color="primary" [submit]="reboot" [multiSubmit]="true">Reboot</bex-submit-btn>
+        <bex-submit-btn color="primary" [submit]="reimage" [multiSubmit]="true">Reimage</bex-submit-btn>
+        <!--<button md-raised-button color="warn">Delete</button>-->
+    </div>
+</div>

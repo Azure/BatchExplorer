@@ -1,7 +1,6 @@
 import { ModuleWithProviders, NgModule } from "@angular/core";
 import { RouterModule } from "@angular/router";
 
-import { routes } from "app/app.routes";
 import { InfoBoxComponent } from "./info-box.component";
 
 const components = [
@@ -11,8 +10,8 @@ const components = [
 @NgModule({
     declarations: components,
     entryComponents: [],
-    exports: [ ...components ],
-    imports: [ RouterModule.forRoot(routes, { useHash: true }) ],
+    exports: [...components],
+    imports: [RouterModule],
     providers: [],
 })
 

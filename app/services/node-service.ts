@@ -1,5 +1,7 @@
 import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
 
+import { log } from "app/utils";
 import BatchClient from "../api/batch/batch-client";
 import { Node } from "../models";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache } from "./core";
@@ -47,5 +49,29 @@ export class NodeService extends ServiceBase {
             },
             initialParams: { poolId: initialPoolId },
         })​;
+    }
+
+    public reboot(poolId: string, nodeId: string): Observable<any> {
+        let observable = Observable.fromPromise<any>(
+            BatchClient.node.reboot(poolId, nodeId, {}));
+        observable.subscribe({
+            error: (error) => {
+                log.error("Error rebooting node: " + nodeId, Object.assign({}, error));
+            },
+        });
+
+        return observable;
+    }
+
+    public reimage(poolId: string, nodeId: string): Observable<any> {
+        let observable = Observable.fromPromise<any>(
+            BatchClient.node.reimage(poolId, nodeId, {}));
+        observable.subscribe({
+            error: (error) => {
+                log.error("Error reimaging node: " + nodeId, Object.assign({}, error));
+            },
+        });
+
+        return observable;
     }
 }

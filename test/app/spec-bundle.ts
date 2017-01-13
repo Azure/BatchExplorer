@@ -12,3 +12,5 @@ require("zone.js/dist/jasmine-patch");
 Error.stackTraceLimit = 5;
 import "hammerjs";
 import "../utils/matchers";
+
+import "../../app/assets/styles/main.scss";

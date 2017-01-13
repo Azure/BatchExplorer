@@ -48,7 +48,11 @@ export class AccountService {
 
     private _cache = new DataCache<any>();
 
-    constructor(private zone: NgZone, private azure: AzureHttpService, subscriptionService: SubscriptionService) {
+    constructor(
+        private zone: NgZone,
+        private azure: AzureHttpService,
+        private subscriptionService: SubscriptionService) {
+
         this.accountLoaded = this._accountLoaded.asObservable();
         this._accountLoaded.next(true);
 
@@ -61,7 +65,6 @@ export class AccountService {
                     key: keys.primary,
                     url: "https://" + account.properties.accountEndpoint,
                 });
-                DataCacheTracker.clearAllCaches(this._accountCache, subscriptionService.cache);
                 this.validateCurrentAccount();
             } else {
                 this._currentAccountValid.next(AccountStatus.Invalid);
@@ -88,6 +91,7 @@ export class AccountService {
         }
         const accountObs = this.getOnce(accountId);
         const keyObs = this.getAccountKeys(accountId);
+        DataCacheTracker.clearAllCaches(this._accountCache, this.subscriptionService.cache);
         Observable.forkJoin(accountObs, keyObs).subscribe(([account, keys]) => {
             this._currentAccount.next({ account, keys });
             if (!this._accountLoaded.getValue()) {

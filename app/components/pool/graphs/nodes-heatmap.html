@@ -1,0 +1,7 @@
+<div class="heatmap-graph">
+    <div class="legend noselect">
+        <bex-nodes-heatmap-legend [nodes]="nodes" [colors]="colors" (selectedStateChange)="selectState($event)"></bex-nodes-heatmap-legend>
+        <bex-node-preview-card [poolId]="poolId" [node]="selectedNode | async" *ngIf="selectedNode | async" (close)="selectedNodeId.next(null)"></bex-node-preview-card>
+    </div>
+    <div #heatmap class="heatmap-container"></div>
+</div>
