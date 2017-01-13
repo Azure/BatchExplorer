@@ -1,8 +1,7 @@
 const config = require("./webpack.config.base");
 const path = require("path");
 const webpack = require("webpack");
-var merge = require("webpack-merge");
-var failPlugin = require("webpack-fail-plugin");
+const merge = require("webpack-merge");
 
 const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 
@@ -22,6 +21,5 @@ module.exports = merge(config, {
     },
     plugins: [
         new CommonsChunkPlugin({ name: "polyfills", filename: "polyfills.js", minChunk: Infinity }),
-        failPlugin,
     ],
 });
