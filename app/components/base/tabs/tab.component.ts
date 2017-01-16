@@ -26,4 +26,3 @@ export class TabComponent {
     @ViewChild(TemplateRef)
     public content: TemplateRef<any>;
 }
-
