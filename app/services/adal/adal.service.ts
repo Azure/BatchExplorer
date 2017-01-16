@@ -33,6 +33,7 @@ export class AdalService {
     private _authorizeUser: UserAuthorization;
     private _accessTokenService: AccessTokenService;
     private _userDecoder: UserDecoder;
+    private _newAccessTokenSubject: AsyncSubject<any> = null;
 
     private _currentAccessToken: AccessToken = null;
 
@@ -57,9 +58,12 @@ export class AdalService {
     }
 
     public login(): Observable<any> {
+        if (this._currentUser.getValue() && this._currentAccessToken) {
+            return Observable.of({});
+        }
         const obs = this._retrieveNewAccessToken();
         obs.subscribe({
-            complete: () => {
+            next: () => {
                 if (!remote.getCurrentWindow().isVisible()) {
                     remote.getCurrentWindow().show();
                 }
@@ -79,6 +83,7 @@ export class AdalService {
             remote.getCurrentWindow().hide();
         }
         this._currentAccessToken = null;
+        this._currentUser.next(null);
         this._authorizeUser.logout();
     }
 
@@ -141,21 +146,35 @@ export class AdalService {
         if (this._currentAccessToken && this._currentAccessToken.refresh_token) {
             return this._useRefreshToken(this._currentAccessToken.refresh_token);
         }
-        const subject = new AsyncSubject();
+        if (this._newAccessTokenSubject) {
+            return this._newAccessTokenSubject.asObservable();
+        }
+        const subject = this._newAccessTokenSubject = new AsyncSubject();
+        (<any>subject)._uida = Math.floor(Math.random() * 100);
         this._authorizeUser.authorizeTrySilentFirst().subscribe({
             next: (result: AuthorizeResult) => {
                 this._processUserToken(result.id_token);
-                this._accessTokenService.redeem(result.code).subscribe((token) => {
-                    this._processAccessToken(token);
-                    subject.next(token);
-                    subject.complete();
+
+                this._accessTokenService.redeem(result.code).subscribe({
+                    next: (token) => {
+                        this._processAccessToken(token);
+                        subject.next(token);
+                        subject.complete();
+                        this._newAccessTokenSubject = null;
+                    },
+                    error: (e) => {
+                        subject.error(e);
+                        this._newAccessTokenSubject = null;
+                    },
                 });
             },
             error: (error) => {
+                subject.error(error);
+                this._newAccessTokenSubject = null;
                 console.error("Error auth", error);
             },
         });
-        return subject.asObservable();
+        return subject;
     }
 
     private _useRefreshToken(refreshToken: string) {
@@ -170,19 +189,6 @@ export class AdalService {
         });
         return obs;
     }
-
-    // DEMO to check the AAD token is working. TODO remove
-    // private _listSub(token: string) {
-    //     const url = `https://management.azure.com/subscriptions?api-version=2016-06-01`;
-    //     const headers = new Headers({ Authorization: `Bearer ${token}` });
-    //     const options = new RequestOptions({ headers });
-    //     this.http.get(url, options).subscribe({
-    //         next: (out) => {
-    //             console.log("Subs are", out.json());
-    //         },
-    //         error: (error) => { console.log("Error for get sub is", error); },
-    //     });
-    // }
 
     /**
      * Process IDToken return by the /authorize url to extract user information
