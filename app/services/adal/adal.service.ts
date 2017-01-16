@@ -49,12 +49,17 @@ export class AdalService {
         this._accessTokenService = new AccessTokenService(config, this.http);
         this._retrieveUserFromLocalStorage();
         this._retrieveAccessTokenFromLocalStorage();
+        if (this._currentUser.getValue() && this._currentAccessToken) {
+            if (!remote.getCurrentWindow().isVisible()) {
+                remote.getCurrentWindow().show();
+            }
+        }
     }
 
     public login(): Observable<any> {
         const obs = this._retrieveNewAccessToken();
         obs.subscribe({
-            next: () => {
+            complete: () => {
                 if (!remote.getCurrentWindow().isVisible()) {
                     remote.getCurrentWindow().show();
                 }
