@@ -133,7 +133,6 @@ export class UserAuthorization {
             center: true,
             webPreferences: {
                 nodeIntegration: false,
-                webSecurity: false,
             },
         });
         // Uncomment to debug auth errors
