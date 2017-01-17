@@ -1,0 +1,117 @@
+
+rect {
+    stroke: #fff;
+    stroke-width: 0.1px;
+}
+
+bex-pool-graphs {
+    display: block;
+    padding: 10px;
+}
+
+$legend-width: 160px;
+$color-width: 14px;
+.heatmap-graph {
+    display: flex;
+
+    rect {
+        cursor: pointer;
+        &:hover {
+            fill: map-get($md-prussian-blue, 500) !important;
+        }
+    }
+
+    > .legend {
+        width: $legend-width;
+        flex: 1 0 $color-width;
+        position: relative;
+        margin-right: 10px;
+
+        .legend-item {
+            width: $legend-width;
+            margin: 2px 0;
+            cursor: pointer;
+        }
+
+        .legend-subitem {
+            margin-left: $color-width + 5px;
+            cursor: pointer;
+        }
+
+        .legend-item, .legend-subitem {
+            display: flex;
+            align-items: center;
+            color: $mineshaft-grey;
+            &:hover {
+                background: $concreteGray;
+            }
+
+            &.highlighted {
+                color: $concreteGray;
+                background: map-get($md-prussian-blue, 400);
+            }
+        }
+
+        .label {
+            display: inline-block;
+            width: calc(100% - #{$color-width } - 5px);
+            margin-left: 5px;
+        }
+
+        .color {
+            display: inline-block;
+            width: $color-width;
+            height: $color-width;
+            border-radius: $color-width/2;
+        }
+    }
+
+    .heatmap-container {
+        width: calc(100% - #{$legend-width});
+        flex: 1 0 calc(100% - 160px);
+        height: 500px;
+    }
+}
+
+.clear-highlight {
+    margin-top: 10px;
+    cursor: pointer;
+    height: 20px;
+}
+
+bex-node-preview-card {
+    display: block;
+    margin: 10px 0;
+    padding: 5px;
+
+    background: $concreteGray;
+    border:  1px solid $mercuryGray;
+    .id {
+        font-size: 14px;
+    }
+
+    .state {
+        font-size: 12px;
+        font-weight: 700;
+    }
+
+    .title {
+        display: flex;
+
+        .fa-times {
+            color: $genericGray;
+            cursor: pointer;
+
+            &:hover {
+                color: $mineshaft-grey;
+            }
+        }
+    }
+
+    .actions {
+        button {
+            display: block;
+            margin: 5px auto;
+        }
+    }
+}

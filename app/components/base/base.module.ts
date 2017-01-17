@@ -5,7 +5,6 @@ import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 
 // components
-import { routes } from "../../app.routes";
 import { AdvancedFilterModule } from "./advanced-filter";
 import { BackgroundTaskModule } from "./background-task";
 import { BannerComponent } from "./banner";
@@ -27,6 +26,7 @@ import { RefreshButtonComponent } from "./refresh-btn";
 import { ScrollableComponent, ScrollableService } from "./scrollable";
 import { SidebarModule } from "./sidebar";
 import { TableModule } from "./table";
+import { TabsModule } from "./tabs";
 
 // Add submodules there
 const modules = [
@@ -41,6 +41,7 @@ const modules = [
     QuickListModule,
     SidebarModule,
     TableModule,
+    TabsModule,
     FormModule,
 ];
 
@@ -68,10 +69,10 @@ const components = [
     imports: [
         BrowserModule,
         FormsModule,
-        MaterialModule.forRoot(),
+        MaterialModule,
         ReactiveFormsModule,
-        RouterModule.forRoot(routes, { useHash: true }),
-        ...modules.map(x => x.forRoot()),
+        RouterModule,
+        ...modules,
     ],
     providers: [
         ScrollableService,

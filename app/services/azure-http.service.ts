@@ -18,6 +18,10 @@ function mergeOptions(original: RequestOptionsArgs, method: RequestMethod): Requ
     return options;
 }
 
+const providersApiVersion = {
+    "Microsoft.Batch": Constants.ApiVersion.armBatch,
+};
+
 /**
  * Wrapper around the http service so call the azure ARM api.
  * Set the Authorization header and the api version
@@ -31,8 +35,8 @@ export class AzureHttpService {
         const subject = new AsyncSubject<Response>();
         this.adal.accessTokenData.subscribe({
             next: (accessToken) => {
-                options = this._setupRequestOptions(options, accessToken);
-                this.http.request(Location.joinWithSlash(baseUrl, uri), options).subscribe({
+                options = this._setupRequestOptions(uri, options, accessToken);
+                this.http.request(this._computeUrl(uri), options).subscribe({
                     next: (data) => {
                         subject.next(data);
                         subject.complete();
@@ -53,15 +57,42 @@ export class AzureHttpService {
         return this.request(uri, mergeOptions(options, RequestMethod.Post));
     }
 
-    private _setupRequestOptions(originalOptions: RequestOptionsArgs, accessToken: AccessToken): RequestOptionsArgs {
+    public apiVersion(uri: string) {
+        const providerSpecific = /.*\/providers\/([a-zA-Z.]*)\/.+/i;
+        const match = providerSpecific.exec(uri);
+        if (match && match.length > 1) {
+            const provider = match[1];
+            if (provider in providersApiVersion) {
+                return providersApiVersion[provider];
+            } else {
+                throw `Unkown provider '${provider}'`;
+            }
+        }
+        return apiVersion;
+    }
+
+    private _setupRequestOptions(
+        uri: string,
+        originalOptions: RequestOptionsArgs,
+        accessToken: AccessToken): RequestOptionsArgs {
+
         const options = new RequestOptions(originalOptions);
         options.headers = new Headers(originalOptions.headers);
         options.headers.append("Authorization", `${accessToken.token_type} ${accessToken.access_token}`);
         if (!options.search) {
             options.search = new URLSearchParams();
         }
-        options.search.set(apiVersionParams, apiVersion);
+        options.search.set(apiVersionParams, this.apiVersion(uri));
 
         return options;
     }
+
+    private _computeUrl(uri: string): string {
+        if (/^https?:\/\//i.test(uri)) {
+            return uri;
+        } else {
+            return Location.joinWithSlash(baseUrl, uri);
+        }
+    }
+
 }

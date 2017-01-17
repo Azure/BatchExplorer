@@ -11,8 +11,8 @@ import { routes } from "./app.routes";
 import { AppComponent } from "./app.component";
 import { DeleteAccountDialogComponent } from "./components/account/action/delete-account-dialog.component";
 import AccountCreateDialogComponent from "./components/account/add/account-create-dialog.component";
+import { AccountFavListComponent, AccountListComponent } from "./components/account/browse";
 import AccountDropDown from "./components/account/browse/account-dropdown.component";
-import { AccountListComponent } from "./components/account/browse/account-list.component";
 import { AccountDetailsHomeComponent } from "./components/account/details/account-details-home.component";
 import { AccountDetailsComponent } from "./components/account/details/account-details.component";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
@@ -48,6 +48,7 @@ import { PoolListComponent } from "./components/pool/browse/pool-list.component"
 import { PoolDetailsComponent } from "./components/pool/details/pool-details.component";
 import { PoolPropertiesComponent } from "./components/pool/details/pool-properties.component";
 import { PoolDetailsHomeComponent } from "./components/pool/details/pool.details.home";
+import { PoolGraphsModule } from "./components/pool/graphs";
 import { PoolHomeComponent } from "./components/pool/home/pool-home.component";
 import { MainNavigationComponent } from "./components/shared/main-navigation.component";
 import { TaskListDisplayComponent } from "./components/task/browse/display";
@@ -112,6 +113,7 @@ import {
     commands,
 } from "./services";
 
+const modules = [PoolGraphsModule];
 @NgModule({
     bootstrap: [
         AppComponent,
@@ -122,6 +124,7 @@ import {
         AccountDetailsHomeComponent,
         AccountDropDown,
         AccountHomeComponent,
+        AccountFavListComponent,
         AccountListComponent,
         AdUserDropdownComponent,
         AppComponent,
@@ -207,6 +210,7 @@ import {
         ReactiveFormsModule,
         RouterModule.forRoot(routes, { useHash: true }),
         BaseModule.forRoot(),
+        ...modules,
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },

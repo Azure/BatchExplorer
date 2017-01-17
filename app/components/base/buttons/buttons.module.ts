@@ -3,7 +3,6 @@ import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 
-import { routes } from "../../../app.routes";
 import { SubmitButtonComponent } from "./submit-btn.component";
 
 import {
@@ -39,7 +38,7 @@ const components = [
     declarations: components,
     entryComponents: [],
     exports: [...components],
-    imports: [BrowserModule, MaterialModule, RouterModule.forRoot(routes, { useHash: true })],
+    imports: [BrowserModule, MaterialModule, RouterModule],
     providers: [],
 })
 

@@ -44,25 +44,29 @@
             </div>
         </bex-banner>
         <md-card class="details">
-            <md-tab-group>
-                <md-tab>
-                    <template md-tab-label>Nodes</template>
+            <bex-tab-group>
+                <bex-tab key="heatmap">
+                    <bex-tab-label>Heatmap</bex-tab-label>
+                    <bex-pool-graphs [poolId]="poolId"></bex-pool-graphs>
+                </bex-tab>
+                <bex-tab key="nodes">
+                    <bex-tab-label>Nodes</bex-tab-label>
                     <bex-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/pools', poolId, 'nodes']">
                         <bex-node-list  #list [poolId]="poolId" [filter]="listWrapper.filter" [quickList]="false" [manualLoading]="true"></bex-node-list>
                     </bex-entity-details-list>
-                </md-tab>
-                <md-tab>
-                    <template md-tab-label>Start Task</template>
+                </bex-tab>
+                <bex-tab key="startTask">
+                    <bex-tab-label>Start Task</bex-tab-label>
                     <div class="tab-padding">
                         <h3>Update your start task here</h3>
                         <p>...</p>
                     </div>
-                </md-tab>
-                <md-tab>
-                    <template md-tab-label>Properties</template>
+                </bex-tab>
+                <bex-tab key="properties">
+                    <bex-tab-label>Properties</bex-tab-label>
                     <bex-pool-properties [pool]="pool"></bex-pool-properties>
-                </md-tab>
-            </md-tab-group>
+                </bex-tab>
+            </bex-tab-group>
         </md-card>
     </div>
 </bex-loading>

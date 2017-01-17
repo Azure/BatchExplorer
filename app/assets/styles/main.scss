@@ -24,10 +24,12 @@
 
 // Account styles
 @import "./account/details";
+@import "./account/browse";
 
 // Pool styles
 @import "./pool/base";
 @import "./pool/create";
+@import "./pool/heatmap";
 
 // Job styles
 @import "./job/base";

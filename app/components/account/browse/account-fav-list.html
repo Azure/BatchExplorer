@@ -1,0 +1,13 @@
+<bex-loading [status]="status">
+    <bex-quick-list>
+        <bex-quick-list-item *ngFor="let account of displayedAccounts | async" [routerLink]="['/accounts', account.id]" [key]="account.id">
+            <h4 bex-quick-list-item-title>{{account.name}}</h4>
+            <p bex-quick-list-item-field>{{account.location}}</p>
+            <div bex-quick-list-item-preview>
+                <div class="flex-center">
+                    <i class="fa fa-star" [class.favorite]="true" (click)="accountService.unFavoriteAccount(account.id)"></i>
+                </div>
+            </div>
+        </bex-quick-list-item>
+    </bex-quick-list>
+</bex-loading>

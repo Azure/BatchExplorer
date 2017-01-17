@@ -34,7 +34,7 @@ export class Node extends NodeRecord {
 }
 
 export type NodeState = "creating" | "starting" | "waitingforstarttask" | "starttaskfailed" |
-    "idle" | "leavingpool" | "rebooting" | "reimaging" | "running" | "unknown" | "unusable";
+    "idle" | "offline" | "leavingpool" | "rebooting" | "reimaging" | "running" | "unknown" | "unusable";
 
 export const NodeState = {
     creating: "creating" as NodeState,
@@ -42,6 +42,7 @@ export const NodeState = {
     waitingForStartTask: "waitingforstarttask" as NodeState,
     startTaskFailed: "starttaskfailed" as NodeState,
     idle: "idle" as NodeState,
+    offline: "offline" as NodeState,
     leavingPool: "leavingpool" as NodeState,
     rebooting: "rebooting" as NodeState,
     reimaging: "reimaging" as NodeState,

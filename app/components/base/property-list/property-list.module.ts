@@ -3,8 +3,6 @@ import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 
-import { routes } from "app/app.routes";
-
 import {
     BoolPropertyComponent,
     LinkPropertyComponent,
@@ -38,7 +36,7 @@ const components = [
     declarations: components,
     entryComponents: [],
     exports: [...components],
-    imports: [BrowserModule, MaterialModule, RouterModule.forRoot(routes, { useHash: true })],
+    imports: [BrowserModule, MaterialModule, RouterModule],
     providers: [],
 })
 

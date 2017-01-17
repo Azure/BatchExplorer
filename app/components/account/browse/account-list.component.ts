@@ -1,59 +1,91 @@
-import { Component, Input } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { Component, Input, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { List } from "immutable";
 
-import { LoadingStatus } from "app/components/base/loading";
-import { Account } from "app/models";
-import { AccountService } from "app/services";
+import { AccountResource, Subscription } from "app/models";
+import { AccountService, SubscriptionService } from "app/services";
+import { RxListProxy } from "app/services/core";
 import { Property } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
+
+interface SubscriptionAccount {
+    expanded: boolean;
+    accounts: RxListProxy<any, AccountResource>;
+}
 
 @Component({
     selector: "bex-account-list",
     templateUrl: "account-list.html",
 })
-export class AccountListComponent {
-    public searchQuery = new FormControl();
-    public displayedAccounts: List<Account>;
-    public status = LoadingStatus.Loading;
+export class AccountListComponent implements OnInit {
+    public subscriptionData: RxListProxy<{}, Subscription>;
 
+    public subscriptionAccounts: { [subId: string]: SubscriptionAccount } = {};
     @Input()
     public set filter(filter: Property) {
         this._filter = filter;
-
-        this.accountService.accounts.subscribe((accounts) => {
-            const query = filter.value;
-            this.displayedAccounts = List<Account>(accounts.filter((x) => {
-                return query === ""
-                    || x.name.toLowerCase().startsWith(query)
-                    || x.alias.toLowerCase().startsWith(query);
-            }));
-        });
     }
     public get filter(): Property { return this._filter; };
+
+    public subscriptions: List<Subscription>;
 
     private _filter: Property;
 
     constructor(
         private accountService: AccountService,
+        private subscriptionService: SubscriptionService,
         private sidebarManager: SidebarManager,
         private activatedRoute: ActivatedRoute) {
-        accountService.accounts.subscribe(() => {
-            this.status = LoadingStatus.Ready;
-        });
-
-        this.searchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
-            query = query.toLowerCase();
-            return accountService.accounts.subscribe((accounts) => {
-                this.displayedAccounts = List<Account>(accounts.filter((x) => {
-                    return query === ""
-                        || x.name.toLowerCase().startsWith(query)
-                        || x.alias.toLowerCase().startsWith(query);
-                }));
+        this.subscriptionData = subscriptionService.list();
+        this.subscriptionData.items.subscribe((subscriptions) => {
+            const data: any = {};
+            this.subscriptions = List<Subscription>(subscriptions.sort((a, b) => {
+                if (a.displayName < b.displayName) {
+                    return -1;
+                } else if (a.displayName > b.displayName) {
+                    return 1;
+                }
+                return 0;
+            }));
+            subscriptions.forEach((subscription) => {
+                if (subscription.subscriptionId in this.subscriptionAccounts) {
+                    data[subscription.subscriptionId] = this.subscriptionAccounts[subscription.subscriptionId];
+                } else {
+                    data[subscription.subscriptionId] = {
+                        expanded: false,
+                        accounts: null,
+                    };
+                }
             });
-        });
 
-        this.searchQuery.patchValue("");
+            this.subscriptionAccounts = data;
+        });
+    }
+
+    public ngOnInit() {
+        this.subscriptionData.fetchNext(true);
+    }
+
+    public toggleExpandSubscription(subscriptionId: string) {
+        const subscriptionAccounts = this.subscriptionAccounts[subscriptionId];
+        if (!subscriptionAccounts.expanded) {
+            if (!subscriptionAccounts.accounts) {
+                subscriptionAccounts.accounts = this.accountService.list(subscriptionId);
+                subscriptionAccounts.accounts.fetchNext(true);
+            }
+        }
+        subscriptionAccounts.expanded = !subscriptionAccounts.expanded;
+    }
+
+    public isAccountFavorite(accountId: string) {
+        return this.accountService.isAccountFavorite(accountId);
+    }
+
+    public toggleFavorite(accountId: string) {
+        if (this.isAccountFavorite(accountId)) {
+            this.accountService.unFavoriteAccount(accountId);
+        } else {
+            this.accountService.favoriteAccount(accountId);
+        }
     }
 }

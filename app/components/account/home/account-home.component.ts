@@ -5,11 +5,20 @@ import * as FilterBuilder from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
 import AccountCreateDialogComponent from "../add/account-create-dialog.component";
 
+enum ListType {
+    Favourite,
+    All,
+};
+
 @Component({
     selector: "bex-account-home",
     templateUrl: "account-home.html",
 })
 export class AccountHomeComponent {
+    public ListType = ListType;
+
+    public showType: ListType = ListType.All;
+
     public quickSearchQuery = new FormControl();
     public filter = FilterBuilder.none();
 
