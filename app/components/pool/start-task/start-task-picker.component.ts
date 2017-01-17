@@ -1,9 +1,7 @@
 import { Component, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormControl, FormBuilder, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators,
+    ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators,
 } from "@angular/forms";
-
-import { ObjectUtils } from "app/utils";
 
 @Component({
     selector: "bex-start-task-picker",
@@ -41,11 +39,10 @@ export class StartTaskPickerComponent implements ControlValueAccessor {
     }
 
     public writeValue(value: any) {
-        console.log("Write value", value);
         if (value) {
             this.form.patchValue({
                 enableStartTask: true,
-                ...value
+                ...value,
             });
         } else {
             this.form.patchValue({

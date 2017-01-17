@@ -53,7 +53,6 @@ import { TaskListComponent } from "./components/task/browse/task-list.component"
 import { TaskHomeComponent } from "./components/task/home";
 import { AdUserDropdownComponent } from "./components/user";
 
-
 import {
     NoTaskSelectedComponent,
     TaskDetailsComponent,

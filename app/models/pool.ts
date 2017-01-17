@@ -3,8 +3,8 @@ import { Duration } from "moment";
 
 import { CloudServiceConfiguration } from "./cloudServiceConfiguration";
 import { ResizeError } from "./resizeError";
-import { VirtualMachineConfiguration } from "./virtualMachineConfiguration";
 import { StartTask } from "./startTask";
+import { VirtualMachineConfiguration } from "./virtualMachineConfiguration";
 
 // tslint:disable:variable-name object-literal-sort-keys
 const PoolRecord = Record({
