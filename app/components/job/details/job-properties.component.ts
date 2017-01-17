@@ -49,4 +49,12 @@ export class JobPropertiesComponent implements OnDestroy {
     public ngOnDestroy() {
         /* tab hide */
     }
+
+    public get hasStartTime(): boolean {
+        return this.job.executionInfo && !!this.job.executionInfo.startTime;
+    }
+
+    public get hasEndTime(): boolean {
+        return this.job.executionInfo && !!this.job.executionInfo.endTime;
+    }
 }

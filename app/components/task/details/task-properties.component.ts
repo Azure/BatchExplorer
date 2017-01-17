@@ -78,6 +78,14 @@ export class TaskPropertiesComponent {
         };
     }
 
+    public get hasStartTime(): boolean {
+        return this.task.executionInfo && !!this.task.executionInfo.startTime;
+    }
+
+    public get hasEndTime(): boolean {
+        return this.task.executionInfo && !!this.task.executionInfo.endTime;
+    }
+
     private _jobActionString(exitOptions: ExitOptions) {
         if (!exitOptions) {
             return null;

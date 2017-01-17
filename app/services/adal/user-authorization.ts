@@ -56,7 +56,7 @@ export class UserAuthorization {
     }
 
     /**
-     * This will try to do authorize silently first and if it fails sheow the login window to the user
+     * This will try to do authorize silently first and if it fails show the login window to the user
      */
     public authorizeTrySilentFirst(): Observable<AuthorizeResult> {
         return this.authorize(true).catch((error, source) => {
