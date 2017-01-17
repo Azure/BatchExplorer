@@ -88,10 +88,10 @@ import {
 // task actions
 import {
     DeleteTaskDialogComponent,
-    ResourcefilePickerComponent,
     TaskCreateBasicDialogComponent,
     TerminateTaskDialogComponent,
 } from "./components/task/action";
+import { TaskBaseModule } from "./components/task/base";
 
 // services
 import {
@@ -109,7 +109,8 @@ import {
     commands,
 } from "./services";
 
-const modules = [PoolGraphsModule, StartTaskModule];
+const modules = [PoolGraphsModule, StartTaskModule, TaskBaseModule];
+
 @NgModule({
     bootstrap: [
         AppComponent,
@@ -163,7 +164,6 @@ const modules = [PoolGraphsModule, StartTaskModule];
         PoolOsPickerComponent,
         PoolPropertiesComponent,
         PoolResizeDialogComponent,
-        ResourcefilePickerComponent,
         SubTaskDisplayListComponent,
         SubTaskPropertiesComponent,
         TaskAdvancedFilterComponent,
