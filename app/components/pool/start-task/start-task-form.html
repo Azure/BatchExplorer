@@ -1,8 +1,0 @@
-<div class="edit-form">
-    <h2>Edit start task for pool {{pool.id}}</h2>
-    <bex-action-form [formGroup]="form" [submit]="submit" submitText="Update" (done)="close.emit()">
-        <form novalidate [formGroup]="form">
-            <bex-start-task-picker formControlName="startTask"></bex-start-task-picker>
-        </form>
-    </bex-action-form>
-</div>

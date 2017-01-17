@@ -6,11 +6,11 @@ import { RouterModule } from "@angular/router";
 
 import { BaseModule } from "app/components/base";
 import { TaskBaseModule } from "app/components/task/base";
-import { StartTaskFormComponent } from "./start-task-form.component";
+import { StartTaskEditFormComponent } from "./start-task-edit-form.component";
 import { StartTaskPickerComponent } from "./start-task-picker.component";
 import { StartTaskPropertiesComponent } from "./start-task-properties.component";
 
-const components = [StartTaskFormComponent, StartTaskPickerComponent, StartTaskPropertiesComponent];
+const components = [StartTaskEditFormComponent, StartTaskPickerComponent, StartTaskPropertiesComponent];
 
 @NgModule({
     declarations: components,
