@@ -1,0 +1,90 @@
+import { Component } from "@angular/core";
+import { MaterialModule } from "@angular/material";
+import { By } from "@angular/platform-browser";
+import { ActivatedRoute, Router } from "@angular/router";
+import { BehaviorSubject } from "rxjs";
+
+import { ComponentFixture, TestBed, async } from "@angular/core/testing";
+import { TabsModule } from "app/components/base/tabs";
+
+@Component({
+    template: `
+        <bex-tab-group>
+            <bex-tab key="first">
+                <bex-tab-label>First label</bex-tab-label>
+                Content 1
+            </bex-tab>
+            <bex-tab key="second">
+                <bex-tab-label>Second label</bex-tab-label>
+                Content 2
+            </bex-tab>
+        </bex-tab-group>
+    `,
+})
+export class TabTestComponent {
+
+}
+
+describe("Tabs", () => {
+    let component: TabTestComponent;
+    let fixture: ComponentFixture<TabTestComponent>;
+    let routerSpy: any;
+    let activeRouteSpy: any;
+
+    beforeEach(() => {
+        routerSpy = {
+            navigate: jasmine.createSpy("navigate"),
+        };
+        activeRouteSpy = {
+            queryParams: new BehaviorSubject<any>({}),
+        };
+
+        TestBed.configureTestingModule({
+            imports: [MaterialModule.forRoot(), TabsModule],
+            declarations: [TabTestComponent],
+            providers: [
+                { provide: Router, useValue: routerSpy },
+                { provide: ActivatedRoute, useValue: activeRouteSpy },
+            ],
+        });
+
+        fixture = TestBed.createComponent(TabTestComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
+    it("should show all labels", () => {
+        expect(fixture.nativeElement.textContent).toContain("First label");
+        expect(fixture.nativeElement.textContent).toContain("Second label");
+    });
+
+    it("should only show content 1 by default", () => {
+        expect(fixture.nativeElement.textContent).toContain("Content 1");
+        expect(fixture.nativeElement.textContent).not.toContain("Content 2");
+    });
+
+    it("changing the route should update the tab", () => {
+        activeRouteSpy.queryParams.next({ tab: "second" });
+        fixture.detectChanges();
+
+        expect(fixture.nativeElement.textContent).toContain("Content 2");
+        expect(routerSpy.navigate).not.toHaveBeenCalled();
+    });
+
+    it("clicking on a tab label should update the route", async(() => {
+        const labels = fixture.debugElement.queryAll(By.css(".md-tab-label"));
+        expect(labels.length).toBe(2);
+        labels[1].nativeElement.click();
+        fixture.detectChanges();
+        expect(fixture.nativeElement.textContent).toContain("Content 2");
+        fixture.whenStable().then(() => {
+            expect(routerSpy.navigate).toHaveBeenCalledOnce();
+            expect(routerSpy.navigate).toHaveBeenCalledWith([], {
+                relativeTo: activeRouteSpy,
+                queryParams: {
+                    tab: "second",
+                },
+            });
+        });
+    }));
+});
