@@ -8,6 +8,7 @@ import { RouterModule } from "@angular/router";
 import { routes } from "./app.routes";
 
 // components
+import { StartTaskModule } from "app/components/pool/start-task";
 import { AppComponent } from "./app.component";
 import { DeleteAccountDialogComponent } from "./components/account/action/delete-account-dialog.component";
 import AccountCreateDialogComponent from "./components/account/add/account-create-dialog.component";
@@ -41,9 +42,6 @@ import {
     PoolDetailsComponent,
     PoolDetailsHomeComponent,
     PoolPropertiesComponent,
-    StartTaskFormComponent,
-    StartTaskPickerComponent,
-    StartTaskPropertiesComponent,
 } from "./components/pool/details";
 import { PoolGraphsModule } from "./components/pool/graphs";
 import { PoolHomeComponent } from "./components/pool/home/pool-home.component";
@@ -54,6 +52,7 @@ import { TaskPreviewComponent } from "./components/task/browse/preview/task-prev
 import { TaskListComponent } from "./components/task/browse/task-list.component";
 import { TaskHomeComponent } from "./components/task/home";
 import { AdUserDropdownComponent } from "./components/user";
+
 
 import {
     NoTaskSelectedComponent,
@@ -110,7 +109,7 @@ import {
     commands,
 } from "./services";
 
-const modules = [PoolGraphsModule];
+const modules = [PoolGraphsModule, StartTaskModule];
 @NgModule({
     bootstrap: [
         AppComponent,
@@ -167,9 +166,6 @@ const modules = [PoolGraphsModule];
         ResourcefilePickerComponent,
         SubTaskDisplayListComponent,
         SubTaskPropertiesComponent,
-        StartTaskPropertiesComponent,
-        StartTaskFormComponent,
-        StartTaskPickerComponent,
         TaskAdvancedFilterComponent,
         TaskCreateBasicDialogComponent,
         TaskDetailsComponent,

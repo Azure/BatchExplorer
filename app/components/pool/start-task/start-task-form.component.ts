@@ -1,7 +1,6 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup } from "@angular/forms";
 import { autobind } from "core-decorators";
-import { Observable } from "rxjs";
 
 import { NotificationManager } from "app/components/base/notifications";
 import { Pool, StartTask } from "app/models";
