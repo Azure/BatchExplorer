@@ -37,9 +37,14 @@ import { NodeHomeComponent } from "./components/node/home";
 import { PoolNodesPreviewComponent } from "./components/pool/base/pool-nodes-preview.component";
 import { PoolAdvancedFilterComponent } from "./components/pool/browse/filter";
 import { PoolListComponent } from "./components/pool/browse/pool-list.component";
-import { PoolDetailsComponent } from "./components/pool/details/pool-details.component";
-import { PoolPropertiesComponent } from "./components/pool/details/pool-properties.component";
-import { PoolDetailsHomeComponent } from "./components/pool/details/pool.details.home";
+import {
+    PoolDetailsComponent,
+    PoolDetailsHomeComponent,
+    PoolPropertiesComponent,
+    StartTaskFormComponent,
+    StartTaskPickerComponent,
+    StartTaskPropertiesComponent,
+} from "./components/pool/details";
 import { PoolGraphsModule } from "./components/pool/graphs";
 import { PoolHomeComponent } from "./components/pool/home/pool-home.component";
 import { MainNavigationComponent } from "./components/shared/main-navigation.component";
@@ -162,6 +167,9 @@ const modules = [PoolGraphsModule];
         ResourcefilePickerComponent,
         SubTaskDisplayListComponent,
         SubTaskPropertiesComponent,
+        StartTaskPropertiesComponent,
+        StartTaskFormComponent,
+        StartTaskPickerComponent,
         TaskAdvancedFilterComponent,
         TaskCreateBasicDialogComponent,
         TaskDetailsComponent,

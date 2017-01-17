@@ -1,0 +1,36 @@
+<div *ngIf="!edit" class="editable-properties">
+    <bex-property-list *ngIf="startTask">
+        <bex-property-group label="General" class="wide">
+            <bex-text-property label="Command line" [value]="startTask.commandLine"></bex-text-property>
+            <bex-text-property label="Max retry count" [value]="startTask.maxTaskRetryCount"></bex-text-property>
+            <bex-bool-property label="Run elevated" [value]="startTask.runElevated" YesNo="true"></bex-bool-property>
+            <bex-bool-property label="Wait for success" [value]="startTask.waitForSuccess" YesNo="true"></bex-bool-property>
+
+            <bex-table-property label="Resource files">
+                <bex-table-property-header>
+                    <div tp-column>Blob source</div>
+                    <div tp-column>File path</div>
+                </bex-table-property-header>
+                <bex-table-property-row *ngFor="let file of startTask.resourceFiles">
+                    <bex-tp-cell [value]="file.blobSource"></bex-tp-cell>
+                    <bex-tp-cell [value]="file.filePath"></bex-tp-cell>
+                </bex-table-property-row>
+            </bex-table-property>
+            <bex-table-property label="Environment settings">
+                <bex-table-property-header>
+                    <div tp-column>Key</div>
+                    <div tp-column>Value</div>
+                </bex-table-property-header>
+                <bex-table-property-row *ngFor="let setting of startTask.environmentSettings">
+                    <bex-tp-cell [value]="setting.key"></bex-tp-cell>
+                    <bex-tp-cell [value]="setting.value"></bex-tp-cell>
+                </bex-table-property-row>
+            </bex-table-property>
+        </bex-property-group>
+    </bex-property-list>
+
+    <button md-mini-fab color="primary" (click)="edit = true" mdTooltip="Edit">
+        <i class="fa fa-pencil"></i>
+    </button>
+</div>
+<bex-start-task-form [pool]="pool" *ngIf="edit" (close)="edit=false"></bex-start-task-form>

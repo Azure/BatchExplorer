@@ -8,3 +8,12 @@ bex-pool-nodes-preview {
 bex-pool-advanced-filter {
     display: block;
 }
+
+
+.editable-properties {
+    display: flex;
+
+    > bex-property-list {
+        flex: 1;
+    }
+}
