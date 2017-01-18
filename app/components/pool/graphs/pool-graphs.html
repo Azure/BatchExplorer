@@ -1,6 +1,6 @@
 <bex-banner *ngIf="startTaskFailedError" fixMessage="Edit the start task" [fix]="openEditStartTask">
     <div message>It seems like the start task is failing on many nodes. ({{startTaskFailedError.failedNodes}}/{{startTaskFailedError.nodeCount}})</div>
-    <div other-fix [fix]="rebootFailedNodes" fixMessage="Reboot failed nodes"></div>
-    <div other-fix [fix]="rebootFailedNodes" fixMessage="Reimage failed nodes"></div>
+    <div [other-fix]="rebootFailedNodes" fixMessage="Reboot failed nodes"></div>
+    <div [other-fix]="rebootFailedNodes" fixMessage="Reimage failed nodes"></div>
 </bex-banner>
 <bex-nodes-heatmap [poolId]="poolId" [nodes]="nodes"></bex-nodes-heatmap>

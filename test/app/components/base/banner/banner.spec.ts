@@ -3,14 +3,17 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MaterialModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
 
-import { BannerComponent } from "app/components/base/banner";
+import { BannerComponent, BannerOtherFixDirective } from "app/components/base/banner";
+import { mouseenter } from "test/utils/helpers";
 
 @Component({
     template: `
-        <bex-banner #banner>
+        <bex-banner #banner [fix]="fix1" fixMessage="Main fix">
             <div code>Error 404</div>
             <div message>Page not found</div>
             <div details *ngIf="includeDetails">You got to look carefully where you go</div>
+            <div *ngIf="includeOtherFixes" [other-fix]="fix2" fixMessage="Second fix"></div>
+            <div *ngIf="includeOtherFixes" [other-fix]="fix3" fixMessage="Third fix"></div>
         </bex-banner>
     `,
 })
@@ -19,10 +22,16 @@ export class BannerTestComponent {
     public banner: BannerComponent;
 
     public includeDetails = true;
+    public includeOtherFixes = false;
+
+    public fix1: jasmine.Spy;
+    public fix2: jasmine.Spy;
+    public fix3: jasmine.Spy;
 }
 
 describe("Banner", () => {
     let fixture: ComponentFixture<BannerTestComponent>;
+    let component: BannerTestComponent;
     let bannerElement: DebugElement;
 
     beforeEach(() => {
@@ -30,12 +39,17 @@ describe("Banner", () => {
             imports: [MaterialModule.forRoot()],
             declarations: [
                 BannerComponent,
+                BannerOtherFixDirective,
                 BannerTestComponent,
             ],
         });
 
         TestBed.compileComponents();
         fixture = TestBed.createComponent(BannerTestComponent);
+        component = fixture.componentInstance;
+        component.fix1 = jasmine.createSpy("Fix 1");
+        component.fix2 = jasmine.createSpy("Fix 2");
+        component.fix3 = jasmine.createSpy("Fix 3");
         fixture.detectChanges();
         bannerElement = fixture.debugElement.query(By.css("bex-banner"));
     });
@@ -43,6 +57,10 @@ describe("Banner", () => {
     describe("When there is details", () => {
         it("should not show details by default(Until you click)", () => {
             expect(fixture.componentRef.instance.banner.showDetails).toBe(false);
+        });
+
+        it("should not show the more fixes button", () => {
+            expect(bannerElement.query(By.css(".other-fixes-btn"))).toBeNull();
         });
 
         it("should not have the carret on facing left", () => {
@@ -85,4 +103,26 @@ describe("Banner", () => {
         });
     });
 
+    describe("when there is other fixes", () => {
+        beforeEach(() => {
+            component.includeOtherFixes = true;
+            fixture.detectChanges();
+        });
+
+        it("should show the more fixes button", () => {
+            expect(bannerElement.query(By.css(".other-fixes-btn"))).not.toBeNull();
+            expect(bannerElement.query(By.css(".other-fixes"))).toBeNull();
+        });
+
+        it("should list other fixes when mouse over the more fixes button", () => {
+            mouseenter(bannerElement.query(By.css(".other-fixes-btn")));
+            fixture.detectChanges();
+            const otherFixesEl = bannerElement.query(By.css(".other-fixes"));
+            expect(otherFixesEl).not.toBeNull();
+            const els = otherFixesEl.queryAll(By.css(".other-fix"));
+            expect(els.length).toBe(2);
+            expect(els[0].nativeElement.textContent).toContain("Second fix");
+            expect(els[1].nativeElement.textContent).toContain("Third fix");
+        });
+    });
 });

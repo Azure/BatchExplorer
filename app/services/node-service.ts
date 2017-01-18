@@ -108,7 +108,6 @@ export class NodeService extends ServiceBase {
         });
     }
 
-
     public performOnEachNode(
         taskName: string,
         poolId: string,

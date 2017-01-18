@@ -1,6 +1,5 @@
 import { BehaviorSubject, Observable } from "rxjs";
 
-
 export interface CommonListOptions {
     filter?: string;
     select?: string;

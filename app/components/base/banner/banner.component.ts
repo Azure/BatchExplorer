@@ -8,13 +8,15 @@ export enum ErrorState {
 }
 
 @Directive({
+    // tslint:disable-next-line:directive-selector
     selector: "[other-fix]",
 })
 export class BannerOtherFixDirective {
     @Input()
     public fixMessage: string;
 
-    @Input()
+    // tslint:disable-next-line:no-input-rename
+    @Input("other-fix")
     public fix: () => Observable<any>;
 }
 
@@ -66,4 +68,3 @@ export class BannerComponent {
         }, 1000);
     }
 }
-
