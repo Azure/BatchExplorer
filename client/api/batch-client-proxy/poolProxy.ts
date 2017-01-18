@@ -1,5 +1,5 @@
 import { BatchRequestOptions } from "./models";
-import { DeleteProxy, GetProxy, ListProxy }  from "./shared";
+import { DeleteProxy, GetProxy, ListProxy } from "./shared";
 
 export default class PoolProxy {
     private _getProxy: GetProxy;
@@ -52,6 +52,15 @@ export default class PoolProxy {
 
         return new Promise((resolve, reject) => {
             this.client.pool.resize(poolId, resizeBody, { poolResizeOptions: options }, (error, result) => {
+                if (error) { return reject(error); }
+                return resolve();
+            });
+        });
+    }
+
+    public patch(poolId: string, attributes: any, options?: any) {
+        return new Promise((resolve, reject) => {
+            this.client.pool.patch(poolId, attributes, { poolResizeOptions: options }, (error, result) => {
                 if (error) { return reject(error); }
                 return resolve();
             });

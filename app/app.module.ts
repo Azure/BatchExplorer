@@ -8,6 +8,7 @@ import { RouterModule } from "@angular/router";
 import { routes } from "./app.routes";
 
 // components
+import { StartTaskModule } from "app/components/pool/start-task";
 import { AppComponent } from "./app.component";
 import { DeleteAccountDialogComponent } from "./components/account/action/delete-account-dialog.component";
 import AccountCreateDialogComponent from "./components/account/add/account-create-dialog.component";
@@ -37,9 +38,11 @@ import { NodeHomeComponent } from "./components/node/home";
 import { PoolNodesPreviewComponent } from "./components/pool/base/pool-nodes-preview.component";
 import { PoolAdvancedFilterComponent } from "./components/pool/browse/filter";
 import { PoolListComponent } from "./components/pool/browse/pool-list.component";
-import { PoolDetailsComponent } from "./components/pool/details/pool-details.component";
-import { PoolPropertiesComponent } from "./components/pool/details/pool-properties.component";
-import { PoolDetailsHomeComponent } from "./components/pool/details/pool.details.home";
+import {
+    PoolDetailsComponent,
+    PoolDetailsHomeComponent,
+    PoolPropertiesComponent,
+} from "./components/pool/details";
 import { PoolGraphsModule } from "./components/pool/graphs";
 import { PoolHomeComponent } from "./components/pool/home/pool-home.component";
 import { MainNavigationComponent } from "./components/shared/main-navigation.component";
@@ -84,10 +87,10 @@ import {
 // task actions
 import {
     DeleteTaskDialogComponent,
-    ResourcefilePickerComponent,
     TaskCreateBasicDialogComponent,
     TerminateTaskDialogComponent,
 } from "./components/task/action";
+import { TaskBaseModule } from "./components/task/base";
 
 // services
 import {
@@ -105,7 +108,8 @@ import {
     commands,
 } from "./services";
 
-const modules = [PoolGraphsModule];
+const modules = [PoolGraphsModule, StartTaskModule, TaskBaseModule];
+
 @NgModule({
     bootstrap: [
         AppComponent,
@@ -159,7 +163,6 @@ const modules = [PoolGraphsModule];
         PoolOsPickerComponent,
         PoolPropertiesComponent,
         PoolResizeDialogComponent,
-        ResourcefilePickerComponent,
         SubTaskDisplayListComponent,
         SubTaskPropertiesComponent,
         TaskAdvancedFilterComponent,

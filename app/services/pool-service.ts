@@ -4,7 +4,7 @@ import { Observable, Subject } from "rxjs";
 import { log } from "app/utils";
 import BatchClient from "../api/batch/batch-client";
 import { Pool } from "../models";
-import { DataCache, RxBatchEntityProxy, RxBatchListProxy,  RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
+import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
 import ServiceBase from "./service-base";
 
 export interface PoolParams {
@@ -80,6 +80,18 @@ export class PoolService extends ServiceBase {
         observable.subscribe({
             error: (error) => {
                 log.error("Error resizing pool: " + poolId, Object.assign({}, error));
+            },
+        });
+
+        return observable;
+    }
+
+    public patch(poolId: string, attributes: any, options: any = {}) {
+        let observable = Observable.fromPromise<any>(
+            BatchClient.pool.patch(poolId, attributes, options));
+        observable.subscribe({
+            error: (error) => {
+                log.error("Error updating pool: " + poolId, Object.assign({}, error));
             },
         });
 
