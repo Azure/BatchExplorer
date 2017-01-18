@@ -3,6 +3,21 @@ import { AsyncSubject, Observable } from "rxjs";
 type ObservableBuilder = () => Observable<any>;
 
 export class ObservableUtils {
+
+    /**
+     * This will queue a list of function returning an observable.
+     * Each function will be called after the previous observable has completed
+     * @return List of the output in the order it was given
+     *
+     * @example
+     * const a = () => Observable.of("a");
+     * const b = () => Observable.of("b");
+     * const c = () => Observable.of("c");
+     *
+     * ObservableUtils.queue(a, b, c).subscribe(x => {
+     * // x is ["a", "b", "c"]
+     * })
+     */
     public static queue(...callback: ObservableBuilder[]): Observable<any[]> {
         return this._queueNext(callback);
     }
