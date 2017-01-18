@@ -1,0 +1,21 @@
+<div *ngIf="hasResizeError">
+    <bex-banner *ngIf="!hasQuotaReachedError" fixMessage="Rescale" [fix]="fixStopResizeError">
+        <div code>{{pool.resizeError.code}}</div>
+        <div message>{{pool.resizeError.message}}</div>
+        <div details *ngIf="pool.resizeError.vals.size !== 0">
+            <div *ngFor="let entry of pool.resizeError.vals">
+                <div>{{entry.key}}: {{entry.value}}</div>
+            </div>
+        </div>
+    </bex-banner>
+    <bex-banner *ngIf="hasQuotaReachedError" fixMessage="Increase quota" [fix]="increaseQuota">
+        <div other-fix="fixStopResizeError" fixMessage="Rescale"></div>
+        <div code>{{pool.resizeError.code}}</div>
+        <div message>{{pool.resizeError.message}}</div>
+        <div details *ngIf="pool.resizeError.vals.size !== 0">
+            <div *ngFor="let entry of pool.resizeError.vals">
+                <div>{{entry.key}}: {{entry.value}}</div>
+            </div>
+        </div>
+    </bex-banner>
+</div>

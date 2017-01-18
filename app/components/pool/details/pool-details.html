@@ -34,15 +34,7 @@
                 <bex-delete-button [entity]="pool" (click)="deletePool()"></bex-delete-button>
             </md-card-actions>
         </md-card>
-        <bex-banner *ngIf="pool.resizeError" fixMessage="Rescale" [fix]="fixStopResizeError">
-            <div code>{{pool.resizeError.code}}</div>
-            <div message>{{pool.resizeError.message}}</div>
-            <div details *ngIf="pool.resizeError.vals.size !== 0">
-                <div *ngFor="let entry of pool.resizeError.vals">
-                    <div>{{entry.key}}: {{entry.value}}</div>
-                </div>
-            </div>
-        </bex-banner>
+        <bex-pool-error-display [pool]="pool"></bex-pool-error-display>
         <md-card class="details">
             <bex-tab-group>
                 <bex-tab key="heatmap">
