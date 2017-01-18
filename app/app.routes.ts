@@ -62,10 +62,10 @@ export const routes: Routes = [
         ],
     },
     {
-        path: "files",
+        path: "files/:url",
         component: FileHomeComponent,
         children: [
-            { path: ":url", component: FileDetailsComponent }, // files/{account.url}
+            { path: "", component: FileDetailsComponent }, // files/{account.url}
         ],
     },
 ];

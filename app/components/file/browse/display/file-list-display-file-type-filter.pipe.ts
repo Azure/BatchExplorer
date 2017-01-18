@@ -14,7 +14,7 @@ export class FileTypeFilter implements PipeTransform {
             case NodeFileTypes.Task:
             return files.filter(file => file.name.startsWith("workitems"));
             default:
-            return files;           
+            return files;
         }
     }
 }

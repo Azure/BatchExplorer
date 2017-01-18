@@ -1,23 +1,23 @@
-<!--<bex-list-and-show-layout #layout (listScrolledToBottom)="nodeList.loadMore()" [list]="nodeList">
+<!--<bex-list-and-show-layout #layout (listScrolledToBottom)="nodeList.loadMore()" [list]="nodeList">-->
+<bex-list-and-show-layout #layout>
     <bex-breadcrumbs>
-        <bex-crumb [routerLink]="['/pools', poolId]" label="Pool">{{poolId}}</bex-crumb>
+        <bex-crumb *ngIf="isJob" [routerLink]="['/jobs', jobId, 'tasks', taskId]" label="Task">{{taskId}}</bex-crumb>
+        <bex-crumb *ngIf="isPool" [routerLink]="['/pools', poolId, 'nodes', nodeId]" label="Node">{{nodeId}}</bex-crumb>
     </bex-breadcrumbs>
     <div bex-list-buttons>
     </div>
     <div bex-list-content>
         <bex-focus-section>
-            <bex-node-list #nodeList [poolId]="poolId" [filter]="layout.filter" [quickList]="!(layout.showAdvancedFilter | async)"></bex-node-list>
+            <!--<bex-node-list #nodeList [poolId]="poolId" [filter]="layout.filter" [quickList]="!(layout.showAdvancedFilter | async)"></bex-node-list>-->
+            <bex-task-file-list *ngIf="isJob" [jobId]="jobId" [taskId]="taskId" [filter]="layout.filter" [quickList]="true"></bex-task-file-list>
+            <bex-node-file-list *ngIf="isPool" [poolId]="poolId" [nodeId]="nodeId" [filter]="layout.filter" [quickList]="true"></bex-node-file-list>
         </bex-focus-section>
     </div>
     <div bex-show-content>
         <router-outlet></router-outlet>
     </div>
-    <div bex-show-advanced-filter>
+    <!--<div bex-show-advanced-filter>
         <bex-node-advanced-filter (change)="layout.advancedFilterChanged($event)">
         </bex-node-advanced-filter>
-    </div>
-</bex-list-and-show-layout>-->
-
-<div bex-show-content>
-    <router-outlet></router-outlet>
-</div>
+    </div>-->
+</bex-list-and-show-layout>

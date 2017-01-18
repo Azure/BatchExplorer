@@ -19,15 +19,15 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
 
     public fileTypes: any = [{
         id: NodeFileTypes.StartTask,
-        name: "Start Task Files"
+        name: "Start Task Files",
     }, {
         id: NodeFileTypes.ApplicationPackage,
-        name: "Application Pacakge Files"
-    },{
+        name: "Application Pacakge Files",
+    }, {
         id: NodeFileTypes.Task,
-        name: "Task Files"
+        name: "Task Files",
     }];
-    
+
     public selectedFileType: NodeFileTypes = NodeFileTypes.StartTask;
 
     private _paramsSubscribers: Subscription[] = [];
@@ -60,7 +60,7 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
             this.data.fetch();
         }
     }
-    
+
     public fileTypeChanged(value: NodeFileTypes) {
         this.selectedFileType = value;
         // this.filterFilesOnType(value);
@@ -68,13 +68,13 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
 
     private filterFilesOnType(type: NodeFileTypes) {
         //console.log("Filtering file type to: " + type + ", " + NodeFileTypes[type]);
-        switch(type) {
+        switch (type) {
             case NodeFileTypes.ApplicationPackage:
-            break;
+                break;
             case NodeFileTypes.StartTask:
-            break;
+                break;
             case NodeFileTypes.Task:
-            break;
+                break;
         }
     }
 

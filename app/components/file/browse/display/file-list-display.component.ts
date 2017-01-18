@@ -31,6 +31,7 @@ export class FileListDisplayComponent {
     //     console.log(value);
     // }
     // public get files() { return this._files; };
+    // private _files: List<File>;
 
     @Input()
     public fileType: NodeFileTypes;

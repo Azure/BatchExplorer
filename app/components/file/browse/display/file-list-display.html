@@ -1,26 +1,29 @@
-<bex-quick-list *ngIf="quickList">
-    <!--<bex-quick-list-item *ngFor="let node of nodes" [routerLink]="['/pools', poolId, 'nodes', node.id]" routerLinkActive="selected">-->
-    <!--<bex-quick-list-item *ngFor="let node of nodes" [routerLink]="['/pools', poolId, 'nodes', node.id]" routerLinkActive="selected">
-        <h4 bex-quick-list-item-title>{{node.id}}</h4>
-        <p bex-quick-list-item-field>{{node.state}}</p>
-    </bex-quick-list-item>-->
-    <h1>TODO: Implement quicklist</h1>
-</bex-quick-list>
+<bex-focus-section>
+    <bex-quick-list *ngIf="quickList">
+        <bex-quick-list-item *ngFor="let file of files| fileDirectoryFilter" [routerLink]="['/files', file.url]"
+            [key]="file.url">
+            <bex-quick-list-item-status [status]="" [tooltip]="">
+            </bex-quick-list-item-status>
 
-<bex-table *ngIf="!quickList">
-    <bex-thead>
-        <bex-column>Name</bex-column>
-        <bex-column>Content Length</bex-column>
-    </bex-thead>
-    <!--<bex-row *ngFor="let file of files | fileDirectoryFilter" [routerLink]="[...routerLinkBase, file.url]" [key]="file.url">-->
-    <bex-row *ngFor="let file of files | fileDirectoryFilter| fileTypeFilter:fileType" [routerLink]="['/files', file.url]" [key]="file.url">
-        <bex-cell>{{file.name}}</bex-cell>
-        <bex-cell>{{file.properties.contentLength}}</bex-cell>
-    </bex-row>
-</bex-table>
+            <h4 bex-quick-list-item-title>{{file.name}}</h4>
+            <p bex-quick-list-item-field>{{file.properties.contentLength}} bytes</p>
+        </bex-quick-list-item>
+    </bex-quick-list>
 
-<bex-no-item [itemCount]="files.size" [filter]="filter" [status]="status | async">
-    <i icon class="fa fa-tv"></i>
-    <span no-filter>No files</span>
-    <span with-filter>No files match this filter</span>
-</bex-no-item>
+    <bex-table *ngIf="!quickList">
+        <bex-thead>
+            <bex-column>Name</bex-column>
+            <bex-column>Content Length</bex-column>
+        </bex-thead>
+        <bex-row *ngFor="let file of files | fileDirectoryFilter| fileTypeFilter:fileType" [routerLink]="['/files', file.url]" [key]="file.url">
+            <bex-cell>{{file.name}}</bex-cell>
+            <bex-cell>{{file.properties.contentLength}}</bex-cell>
+        </bex-row>
+    </bex-table>
+
+    <bex-no-item [itemCount]="files.size" [filter]="filter" [status]="status | async">
+        <i icon class="fa fa-tv"></i>
+        <span no-filter>No files</span>
+        <span with-filter>No files match this filter</span>
+    </bex-no-item>
+</bex-focus-section>

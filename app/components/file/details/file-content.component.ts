@@ -71,7 +71,8 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
     private _updateFileContent() {
         // TODO: Refactor code!
         if (this.jobId && this.taskId) {
-            this.currentSubscription = this.fileService.getFilePropertiesFromTask(this.jobId, this.taskId, this.filename)
+            this.currentSubscription = this.fileService.getFilePropertiesFromTask(
+                this.jobId, this.taskId, this.filename)
                 .subscribe({
                     next: (result: any) => {
                         if (result && result.data && result.data.properties) {
@@ -86,7 +87,8 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
                     },
                 });
         } else if (this.poolId && this.nodeId) {
-            this.currentSubscription = this.fileService.getFilePropertiesFromComputeNode(this.poolId, this.nodeId, this.filename)
+            this.currentSubscription = this.fileService.getFilePropertiesFromComputeNode(
+                this.poolId, this.nodeId, this.filename)
                 .subscribe({
                     next: (result: any) => {
                         if (result && result.data && result.data.properties) {
@@ -133,7 +135,8 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
                 this._processError(e);
             });
         } else if (this.poolId && this.nodeId) {
-            this.currentSubscription = this.fileService.getFileContentFromComputeNode(this.poolId, this.nodeId, this.filename, {
+            this.currentSubscription = this.fileService.getFileContentFromComputeNode(
+                this.poolId, this.nodeId, this.filename, {
                 fileGetFromTaskOptions: {
                     ocpRange: `bytes=${this.lastContentLength}-${newContentLength}`,
                 },

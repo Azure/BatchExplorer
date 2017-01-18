@@ -12,9 +12,6 @@ import { RxEntityProxy } from "app/services/core";
     templateUrl: "./file-details.html",
 })
 export class FileDetailsComponent implements OnInit, OnDestroy {
-    // public data: RxEntityProxy<NodeParams, Node>;
-    // public node: Node;
-
     public jobId: string;
     public taskId: string;
     public url: string;
@@ -34,11 +31,8 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         this._paramsSubscribers.push(this.route.params.subscribe((params) => {
             this.url = params["url"];
             let obj = this.parseRelativePath(this.url);
-            console.log("WHAT UI???: " + this.url);
 
             if (obj.type === "job") {
-                console.log("WWOOT!!");
-                console.log(obj);
                 this.jobId = obj.containerName;
                 this.taskId = obj.entityName;
                 this.filename = obj.file;
