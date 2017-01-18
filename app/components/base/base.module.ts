@@ -7,7 +7,7 @@ import { RouterModule } from "@angular/router";
 // components
 import { AdvancedFilterModule } from "./advanced-filter";
 import { BackgroundTaskModule } from "./background-task";
-import { BannerComponent } from "./banner";
+import { BannerComponent, BannerOtherFixDirective } from "./banner";
 import { BreadcrumbsComponent, CrumbComponent } from "./breadcrumbs";
 import { ButtonsModule } from "./buttons";
 import { DropdownModule } from "./dropdown";
@@ -48,6 +48,7 @@ const modules = [
 // Add subcomponnent not in a module here
 const components = [
     BannerComponent,
+    BannerOtherFixDirective,
     BreadcrumbsComponent,
     CrumbComponent,
     ElapsedTimeComponent,

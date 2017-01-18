@@ -1,9 +1,11 @@
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import { AsyncSubject, Observable } from "rxjs";
 
+import { BackgroundTaskManager } from "app/components/base/background-task";
 import { log } from "app/utils";
+import { FilterBuilder } from "app/utils/filter-builder";
 import BatchClient from "../api/batch/batch-client";
-import { Node } from "../models";
+import { Node, NodeState } from "../models";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache } from "./core";
 import ServiceBase from "./service-base";
 
@@ -22,6 +24,9 @@ export class NodeService extends ServiceBase {
         key: ({poolId}) => poolId,
     });
 
+    constructor(private taskManager: BackgroundTaskManager) {
+        super();
+    }
     public get basicProperties(): string {
         return this._basicProperties;
     }
@@ -61,6 +66,44 @@ export class NodeService extends ServiceBase {
         });
 
         return observable;
+    }
+
+    /**
+     * Reboot all the nodes for a given pool
+     * @param poolId Id of the pool
+     * @param states [Optional] list of the states the nodes should have to be rebooted
+     */
+    public rebootAll(poolId: string, states?: NodeState[]) {
+
+        this.taskManager.startTask(`Reboot pool '${poolId}' nodes`, (bTask) => {
+            let subject = new AsyncSubject();
+            const options: any = {
+                maxResults: 1000,
+            };
+            if (states) {
+                options.filter = FilterBuilder.or(...states.map(x => FilterBuilder.prop("state").eq(x))).toOData();
+            }
+            const data = this.list(poolId, options);
+            bTask.progress.next(1);
+            data.fetchNext(true).subscribe(() => {
+                const sub = data.items.subscribe(nodes => {
+                    const waitFor = [];
+                    bTask.progress.next(10);
+                    nodes.forEach((node, i) => {
+
+                        waitFor.push(this.reboot(poolId, node.id));
+                        bTask.progress.next(10 + (i + 1 / node.size * 90));
+                    });
+                    Observable.zip(...waitFor).subscribe(() => subject.complete());
+                });
+                sub.unsubscribe();
+            });
+            return subject.asObservable();
+        });
+    }
+
+    public performOnEachNode(poolId: string, callback: (node: Node) => void) {
+
     }
 
     public reimage(poolId: string, nodeId: string): Observable<any> {
