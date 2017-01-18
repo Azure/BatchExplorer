@@ -17,8 +17,8 @@ export class JobPropertiesComponent implements OnDestroy {
     public set job(job: Job) {
         this._job = job;
         if (job && job.executionInfo) {
-            this.hasStartTime = !!job.executionInfo.startTime;
-            this.hasEndTime = !job.executionInfo.endTime;
+            this.hasStartTime = Boolean(job.executionInfo.startTime);
+            this.hasEndTime = Boolean(job.executionInfo.endTime);
         }
 
         this.refresh(job);

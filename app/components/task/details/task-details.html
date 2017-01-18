@@ -6,7 +6,7 @@
                     <bex-refresh-btn [refresh]="refresh"></bex-refresh-btn>
                 </div>
                 <div style="margin-left:12px; margin-right:auto;">
-                    <md-card-title>{{task.id}} <span *ngIf="!!task.displayName"> - {{task.displayName}}</span> </md-card-title>
+                    <md-card-title>{{task.id}} <span *ngIf="Boolean(task.displayName)"> - {{task.displayName}}</span> </md-card-title>
                     <md-card-subtitle><i class="fa" [ngClass]="decorator.stateIcon"></i> {{task.state}}</md-card-subtitle>
                 </div>
             </md-card-title-group>

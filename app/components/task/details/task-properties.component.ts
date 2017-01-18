@@ -16,8 +16,8 @@ export class TaskPropertiesComponent {
     public set task(task: Task) {
         this._task = task;
         if (task && task.executionInfo) {
-            this.hasStartTime = !!this.task.executionInfo.startTime;
-            this.hasEndTime = !!this.task.executionInfo.endTime;
+            this.hasStartTime = Boolean(this.task.executionInfo.startTime);
+            this.hasEndTime = Boolean(this.task.executionInfo.endTime);
         }
 
         this.decorator = new TaskDecorator(task);
