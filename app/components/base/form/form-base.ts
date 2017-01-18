@@ -1,4 +1,4 @@
-import { Input } from "@angular/core";
+import { EventEmitter, Input, Output } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { MdDialogRef } from "@angular/material";
 import { autobind } from "core-decorators";
@@ -8,6 +8,9 @@ import { BatchError } from "app/models";
 import { SidebarRef } from "../sidebar";
 
 export class FormBase {
+    @Output()
+    public done = new EventEmitter();
+
     /**
      * Dialog ref if the form is used in the dialog.
      * If provided this will add a add and close button option that will close the sidebar when the form is submitted.
@@ -70,6 +73,7 @@ export class FormBase {
     }
 
     public close() {
+        this.done.emit();
         if (this.dialogRef) {
             this.dialogRef.close();
         } else if (this.sidebarRef) {

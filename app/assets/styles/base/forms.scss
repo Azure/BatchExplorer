@@ -99,7 +99,7 @@ fieldset {
     }
 }
 
-.slideout-form {
+.slideout-form, .edit-form {
     width: 640px;
 
     &.content-wrapper {
@@ -234,4 +234,9 @@ bex-create-form {
             padding-right: 10px;
         }
     }
+}
+
+.form-element md-checkbox {
+    display: block;
+    margin: 10px 0;
 }

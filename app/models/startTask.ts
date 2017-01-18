@@ -6,8 +6,8 @@ const StartTaskRecord = Record({
     waitForSuccess: true,
     runElevated: false,
     maxTaskRetryCount: 0,
-    resourceFiles: null,
-    environmentSettings: null,
+    resourceFiles: [],
+    environmentSettings: [],
 });
 
 /**
