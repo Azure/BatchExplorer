@@ -127,7 +127,6 @@ export class NodeService extends ServiceBase {
                 const chunks = ArrayUtils.chunk<Node>(nodes.toJS(), 100);
                 const chunkFuncs = chunks.map((chunk, i) => {
                     return () => {
-                        console.log("Calling chun", chunk);
                         bTask.progress.next(10 + (i + 1 / chunks.length * 100));
                         return this._performOnNodeChunk(chunk, callback);
                     };
