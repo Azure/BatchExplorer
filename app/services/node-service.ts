@@ -3,7 +3,7 @@ import { List } from "immutable";
 import { AsyncSubject, Observable } from "rxjs";
 
 import { BackgroundTaskManager } from "app/components/base/background-task";
-import { log } from "app/utils";
+import { ArrayUtils, ObservableUtils, log } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 import BatchClient from "../api/batch/batch-client";
 import { Node, NodeState } from "../models";
@@ -124,14 +124,16 @@ export class NodeService extends ServiceBase {
             }
             bTask.progress.next(1);
             this.listAll(poolId, options).subscribe((nodes) => {
-                const waitFor = [];
-                bTask.progress.next(10);
-                nodes.forEach((node, i) => {
-
-                    waitFor.push(callback(node));
-                    bTask.progress.next(10 + (i + 1 / node.size * 90));
+                const chunks = ArrayUtils.chunk<Node>(nodes.toJS(), 100);
+                const chunkFuncs = chunks.map((chunk, i) => {
+                    return () => {
+                        console.log("Calling chun", chunk);
+                        bTask.progress.next(10 + (i + 1 / chunks.length * 100));
+                        return this._performOnNodeChunk(chunk, callback);
+                    };
                 });
-                Observable.zip(...waitFor).subscribe(() => subject.complete());
+
+                ObservableUtils.queue(...chunkFuncs).subscribe(() => subject.complete());
             });
             return subject.asObservable();
         });
@@ -147,5 +149,13 @@ export class NodeService extends ServiceBase {
         });
 
         return observable;
+    }
+
+    private _performOnNodeChunk(nodes: Node[], callback: any) {
+        const waitFor = [];
+        nodes.forEach((node, i) => {
+            waitFor.push(callback(node));
+        });
+        return Observable.zip(...waitFor).delay(1000);
     }
 }
