@@ -16,6 +16,11 @@ export class JobPropertiesComponent implements OnDestroy {
     @Input()
     public set job(job: Job) {
         this._job = job;
+        if (job && job.executionInfo) {
+            this.hasStartTime = !!job.executionInfo.startTime;
+            this.hasEndTime = !job.executionInfo.endTime;
+        }
+
         this.refresh(job);
     }
     public get job() { return this._job; }
@@ -27,6 +32,8 @@ export class JobPropertiesComponent implements OnDestroy {
     public prepTask: JobPreparationTaskDecorator;
     public releaseTask: JobReleaseTaskDecorator;
     public poolInfo: any = {};
+    public hasStartTime: boolean;
+    public hasEndTime: boolean;
 
     private _job: Job;
 
@@ -48,13 +55,5 @@ export class JobPropertiesComponent implements OnDestroy {
 
     public ngOnDestroy() {
         /* tab hide */
-    }
-
-    public get hasStartTime(): boolean {
-        return this.job.executionInfo && !!this.job.executionInfo.startTime;
-    }
-
-    public get hasEndTime(): boolean {
-        return this.job.executionInfo && !!this.job.executionInfo.endTime;
     }
 }

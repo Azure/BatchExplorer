@@ -5,9 +5,9 @@
         <bex-column>File mode</bex-column>
     </bex-thead>
     <bex-row *ngFor="let file of resourceFiles" [key]="file.blobSource">
-        <bex-cell>{{file.blobSource}}</bex-cell>
-        <bex-cell>{{file.filePath}}</bex-cell>
-        <bex-cell>{{file.fileMode}}</bex-cell>
+        <bex-cell style="width: 60%" [value]="file.blobSource"></bex-cell>
+        <bex-cell style="width: 25%" [value]="file.filePath"></bex-cell>
+        <bex-cell style="width: 15%" [value]="file.fileMode"></bex-cell>
     </bex-row>
 </bex-table>
 <bex-no-item [itemCount]="resourceFiles.length">

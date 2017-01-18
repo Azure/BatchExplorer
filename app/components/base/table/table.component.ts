@@ -1,4 +1,4 @@
-import { Component, ContentChildren, QueryList } from "@angular/core";
+import { Component, ContentChildren, Input, QueryList } from "@angular/core";
 
 import { SelectableListBase } from "../selectable-list/selectable-list-base";
 import { TableRowComponent } from "./table-row.component";
@@ -14,21 +14,30 @@ export class TableComponent extends SelectableListBase {
 
 @Component({
     selector: "bex-thead",
-    templateUrl: `<tr><ng-content></ng-content></tr>`,
+    template: `<tr><ng-content></ng-content></tr>`,
 })
 export class TableHeadComponent {
 }
 
 @Component({
     selector: "bex-column",
-    templateUrl: `<ng-content></ng-content>`,
+    template: `<ng-content></ng-content>`,
 })
 export class TableColumnComponent {
 }
 
 @Component({
     selector: "bex-cell",
-    templateUrl: `<ng-content></ng-content>`,
+    template: `<div class="cell-value" title="{{value}}">{{value}}</div>`,
 })
 export class TableCellComponent {
+    @Input()
+    public set value(value: string) {
+        this._value = value;
+    }
+    public get value() {
+        return this._value;
+    }
+
+    private _value: string;
 }
