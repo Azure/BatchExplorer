@@ -68,6 +68,11 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
         this.nodeService.rebootAll(this.poolId, [NodeState.startTaskFailed]);
     }
 
+    @autobind()
+    public reimageFailedNodes() {
+        this.nodeService.reimageAll(this.poolId, [NodeState.startTaskFailed]);
+    }
+
     private _scanForProblems() {
         const failedNodes = this._stateCounter.get(NodeState.startTaskFailed).getValue();
         const nodeCount = this.nodes.size;
