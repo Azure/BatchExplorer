@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
@@ -47,6 +47,9 @@ export class TaskFileListComponent implements OnInit {
     }
     public get filter(): Filter { return this._filter; };
 
+    @ViewChild(TaskFileListComponent)
+    public list: TaskFileListComponent;
+
     public status: Observable<LoadingStatus>;
     public data: RxListProxy<NodeFileListParams, File>;
 
@@ -58,7 +61,7 @@ export class TaskFileListComponent implements OnInit {
     }
 
     public ngOnInit() {
-        return;
+        this.data.fetchNext();
     }
 
     @autobind()
@@ -72,7 +75,8 @@ export class TaskFileListComponent implements OnInit {
         }
     }
 
-    public onScrollToBottom(x) {
-        this.data.fetchNext();
+    @autobind()
+    public loadMore(): Observable<any> {
+        return this.data.fetchNext();
     }
 }

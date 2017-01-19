@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
@@ -18,6 +18,9 @@ export class NodeFileListComponent implements OnInit {
      */
     @Input()
     public quickList: boolean;
+
+    @Input()
+    public manualLoading: boolean;
 
     @Input()
     public set poolId(value: string) {
@@ -53,6 +56,9 @@ export class NodeFileListComponent implements OnInit {
     }
     public get fileType(): NodeFileTypes { return this._fileType; }
 
+    @ViewChild(NodeFileListComponent)
+    public list: NodeFileListComponent;
+
     public status: Observable<LoadingStatus>;
     public data: RxListProxy<NodeFileListParams, File>;
 
@@ -65,7 +71,7 @@ export class NodeFileListComponent implements OnInit {
     }
 
     public ngOnInit() {
-        return;
+        this.data.fetchNext();
     }
 
     @autobind()
@@ -79,7 +85,8 @@ export class NodeFileListComponent implements OnInit {
         }
     }
 
-    public onScrollToBottom(x) {
-        this.data.fetchNext();
+    @autobind()
+    public loadMore(): Observable<any> {
+        return this.data.fetchNext();
     }
 }
