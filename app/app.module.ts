@@ -20,7 +20,7 @@ import { AccountHomeComponent } from "./components/account/home/account-home.com
 import { BaseModule } from "./components/base";
 import { FileDirectoryFilter, FileListDisplayComponent } from "./components/file/browse/display";
 import { FileListComponent } from "./components/file/browse/file-list.component";
-import { FileContentComponent } from "./components/file/details";
+import { FileDetailsModule } from "./components/file/details";
 import { JobStatsPreviewComponent } from "./components/job/base/job-stats-preview";
 import { JobAdvancedFilterComponent } from "./components/job/browse/filter/job-advanced-filter.component";
 import { JobListComponent } from "./components/job/browse/job-list.component";
@@ -40,26 +40,10 @@ import { PoolDetailsModule } from "./components/pool/details";
 import { PoolGraphsModule } from "./components/pool/graphs";
 import { PoolHomeComponent } from "./components/pool/home/pool-home.component";
 import { MainNavigationComponent } from "./components/shared/main-navigation.component";
-import { TaskListDisplayComponent } from "./components/task/browse/display";
-import { TaskAdvancedFilterComponent } from "./components/task/browse/filter";
-import { TaskPreviewComponent } from "./components/task/browse/preview/task-preview.component";
-import { TaskListComponent } from "./components/task/browse/task-list.component";
+import { TaskBrowseModule } from "./components/task/browse";
+import { TaskDetailsModule } from "./components/task/details";
 import { TaskHomeComponent } from "./components/task/home";
 import { AdUserDropdownComponent } from "./components/user";
-
-import {
-    NoTaskSelectedComponent,
-    TaskDetailsComponent,
-    TaskEnvironmentSettingsComponent,
-    TaskPropertiesComponent,
-    TaskResourceFilesComponent,
-    TaskSubTasksTabComponent,
-} from "./components/task/details";
-
-import {
-    SubTaskDisplayListComponent,
-    SubTaskPropertiesComponent,
-} from "./components/task/details/sub-tasks";
 
 // job actions
 import {
@@ -102,7 +86,12 @@ import {
     commands,
 } from "./services";
 
-const modules = [PoolDetailsModule, PoolGraphsModule, StartTaskModule, TaskBaseModule, NodeBrowseModule];
+const modules = [
+    PoolDetailsModule, PoolGraphsModule, StartTaskModule,
+    TaskBaseModule, TaskDetailsModule, TaskBrowseModule,
+    NodeBrowseModule,
+    FileDetailsModule,
+];
 
 @NgModule({
     bootstrap: [
@@ -127,7 +116,6 @@ const modules = [PoolDetailsModule, PoolGraphsModule, StartTaskModule, TaskBaseM
         FileDirectoryFilter,
         FileListComponent,
         FileListDisplayComponent,
-        FileContentComponent,
         JobAdvancedFilterComponent,
         JobCreateBasicDialogComponent,
         JobDetailsComponent,
@@ -143,7 +131,6 @@ const modules = [PoolDetailsModule, PoolGraphsModule, StartTaskModule, TaskBaseM
         NodePropertiesComponent,
         NodeHomeComponent,
         NoNodeSelectedComponent,
-        NoTaskSelectedComponent,
         PoolAdvancedFilterComponent,
         PoolCreateBasicDialogComponent,
         PoolHomeComponent,
@@ -151,19 +138,8 @@ const modules = [PoolDetailsModule, PoolGraphsModule, StartTaskModule, TaskBaseM
         PoolNodesPreviewComponent,
         PoolOsPickerComponent,
         PoolResizeDialogComponent,
-        SubTaskDisplayListComponent,
-        SubTaskPropertiesComponent,
-        TaskAdvancedFilterComponent,
         TaskCreateBasicDialogComponent,
-        TaskDetailsComponent,
-        TaskEnvironmentSettingsComponent,
         TaskHomeComponent,
-        TaskListComponent,
-        TaskListDisplayComponent,
-        TaskPreviewComponent,
-        TaskPropertiesComponent,
-        TaskResourceFilesComponent,
-        TaskSubTasksTabComponent,
         TerminateJobDialogComponent,
         TerminateTaskDialogComponent,
     ],
