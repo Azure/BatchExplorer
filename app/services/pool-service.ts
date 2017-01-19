@@ -5,7 +5,7 @@ import { log } from "app/utils";
 import BatchClient from "../api/batch/batch-client";
 import { Pool } from "../models";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
-import ServiceBase from "./service-base";
+import { ServiceBase } from "./service-base";
 
 export interface PoolParams {
     id?: string;

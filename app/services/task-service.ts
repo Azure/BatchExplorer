@@ -6,7 +6,7 @@ import BatchClient from "../api/batch/batch-client";
 import {
     DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache, getOnceProxy,
 } from "./core";
-import ServiceBase from "./service-base";
+import { CommonListOptions, ServiceBase } from "./service-base";
 
 export interface TaskListParams {
     jobId?: string;
@@ -19,6 +19,10 @@ export interface TaskParams extends TaskListParams {
 export interface SubtaskListParams {
     jobId?: string;
     taskId?: string;
+}
+
+export interface TaskListOptions extends CommonListOptions {
+
 }
 
 @Injectable()
@@ -45,7 +49,7 @@ export class TaskService extends ServiceBase {
         return this._cache.getCache({ jobId });
     }
 
-    public list(initialJobId: string, initialOptions: any = {}): RxListProxy<TaskListParams, Task> {
+    public list(initialJobId: string, initialOptions: TaskListOptions = {}): RxListProxy<TaskListParams, Task> {
         return new RxBatchListProxy<TaskListParams, Task>(Task, {
             cache: ({jobId}) => this.getCache(jobId),
             proxyConstructor: ({jobId}, options) => {

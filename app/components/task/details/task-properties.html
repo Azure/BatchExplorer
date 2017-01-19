@@ -42,6 +42,12 @@
     </bex-property-group>
 
     <bex-property-group label="Execution information" class="wide" [collapsed]="true">
+        <div collapsed-preview>
+            <span *ngIf="!hasStartTime">Task not started</span>
+            <span *ngIf="hasStartTime">Task started {{executionInfo.startTime}}</span>
+            <span *ngIf="hasEndTime"> and ended {{executionInfo.endTime}}</span>
+        </div>
+
         <bex-text-property label="Start time" [value]="executionInfo.startTime"></bex-text-property>
         <bex-text-property label="End time" [value]="executionInfo.endTime"></bex-text-property>
         <bex-text-property label="Exit code" [value]="executionInfo.exitCode"></bex-text-property>

@@ -28,11 +28,11 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
     public outputFilename: "stdout.txt" | "stderr.txt" = "stdout.txt";
 
     public get hasMultiInstanceSettings() {
-        return this.task && !!this.task.multiInstanceSettings;
+        return this.task && Boolean(this.task.multiInstanceSettings);
     }
 
     public get hasDependencies() {
-        return this.task && !!this.task.dependsOn;
+        return this.task && Boolean(this.task.dependsOn);
     }
 
     private _paramsSubscribers: Subscription[] = [];
