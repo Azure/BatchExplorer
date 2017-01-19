@@ -11,7 +11,7 @@ Has resize? {{hasResizeError}}
         </div>
     </bex-banner>
     <bex-banner *ngIf="hasQuotaReachedError" fixMessage="Increase quota" [fix]="increaseQuota">
-        <div other-fix="fixStopResizeError" fixMessage="Rescale"></div>
+        <div [other-fix]="fixStopResizeError" fixMessage="Rescale"></div>
         <div code>{{pool.resizeError.code}}</div>
         <div message>{{pool.resizeError.message}} ({{quota | async}} cores)</div>
         <div details *ngIf="pool.resizeError.vals.size !== 0">

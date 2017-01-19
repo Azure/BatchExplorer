@@ -2,6 +2,7 @@ export * from "./array";
 export * from "./color";
 export * from "./logger";
 export * from "./observable";
+export * from "./form-utils";
 export * from "./object";
 export * from "./os";
 export * from "./secure";

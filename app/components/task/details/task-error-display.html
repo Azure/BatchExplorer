@@ -1,4 +1,4 @@
 <bex-banner *ngIf="hasFailureExitCode" fixMessage="Rerun task" [fix]="rerun">
-    <div other-fix="rerunDifferent" fixMessage="Rerun with different attributes"></div>
+    <div [other-fix]="rerunDifferent" fixMessage="Rerun with different attributes"></div>
     <div message>Task completed with exit code '{{code}}'</div>
 </bex-banner>

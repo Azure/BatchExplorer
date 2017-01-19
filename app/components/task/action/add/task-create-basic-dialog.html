@@ -2,8 +2,8 @@
     <h1>Create task</h1>
     <p>Adds a task to the selected job</p>
 
-    <bex-create-form [formGroup]="createTaskForm" [submit]="submit" [sidebarRef]="sidebarRef">
-        <form novalidate [formGroup]="createTaskForm">
+    <bex-create-form [formGroup]="form" [submit]="submit" [sidebarRef]="sidebarRef">
+        <form novalidate [formGroup]="form">
             <div class="form-element">
                 <md-input formControlName="id" placeholder="Id"></md-input>
                 <bex-error controlName="id" code="required">Id is a required field</bex-error>
