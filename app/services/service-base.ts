@@ -21,4 +21,15 @@ export class ServiceBase {
     public setLoadingState(loading: boolean) {
         this._loading.next(loading);
     }
+
+    protected callBatchClient(promise: any, errorCallback: (error: any) => void): Observable<any> {
+        const observable = Observable.fromPromise<any>(promise);
+        observable.subscribe({
+            error: (error) => {
+                errorCallback(error);
+            },
+        });
+
+        return observable;
+    }
 }

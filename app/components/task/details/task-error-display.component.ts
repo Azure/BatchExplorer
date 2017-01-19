@@ -2,19 +2,21 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { autobind } from "core-decorators";
 
 import { Task, TaskState } from "app/models";
-import { AccountService, PoolService } from "app/services";
-import { ExternalLinks } from "app/utils/constants";
+import { TaskService } from "app/services";
 
 @Component({
-    selector: "bex-pool-error-display",
-    templateUrl: "pool-error-display.html",
+    selector: "bex-task-error-display",
+    templateUrl: "task-error-display.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskErrorDisplayComponent {
     @Input()
+    public jobId: string;
+
+    @Input()
     public task: Task;
 
-    constructor(private poolService: PoolService, private accountService: AccountService) {
+    constructor(private taskService: TaskService) {
 
     }
 
@@ -32,7 +34,7 @@ export class TaskErrorDisplayComponent {
 
     @autobind()
     public rerun() {
-
+        return this.taskService.reactivate(this.jobId, this.task.id);
     }
 
     @autobind()
