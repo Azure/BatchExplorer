@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { ExitOptions, Job, JobAction, Task, TaskFailureAction } from "app/models";
 import { TaskDecorator } from "app/models/decorators";
@@ -6,19 +6,26 @@ import { TaskDecorator } from "app/models/decorators";
 @Component({
     selector: "bex-task-properties",
     templateUrl: "./task-properties.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskPropertiesComponent {
     @Input()
     public job: Job;
 
     @Input()
-    public set task(value: Task) {
-        this._task = value;
-        this.decorator = new TaskDecorator(value);
+    public set task(task: Task) {
+        this._task = task;
+        if (task && task.executionInfo) {
+            this.hasStartTime = Boolean(this.task.executionInfo.startTime);
+            this.hasEndTime = Boolean(this.task.executionInfo.endTime);
+        }
+
+        this.decorator = new TaskDecorator(task);
         this.appPackages = this.decorator.applicationPackageReferences || [];
         this.constraints = this.decorator.constraints || {};
         this.executionInfo = this.decorator.executionInfo || {};
         this.nodeInfo = this.decorator.nodeInfo || {};
+
         this.processExitConditionData();
     }
     public get task() { return this._task; }
@@ -29,6 +36,8 @@ export class TaskPropertiesComponent {
     public executionInfo: any;
     public exitConditionData: any;
     public nodeInfo: any;
+    public hasStartTime: boolean;
+    public hasEndTime: boolean;
 
     private _task: Task;
 

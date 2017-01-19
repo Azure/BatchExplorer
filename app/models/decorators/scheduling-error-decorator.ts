@@ -20,7 +20,7 @@ export class SchedulingErrorDecorator extends DecoratorBase<SchedulingError> {
     constructor(private error: SchedulingError) {
         super(error);
 
-        this.exists = !!error && !!error.category;
+        this.exists = Boolean(error && error.category);
         this.category = this.stringField(error.category);
         this.code = this.stringField(error.code);
         this.message = this.stringField(error.message);
@@ -34,7 +34,7 @@ export class SchedulingErrorDecorator extends DecoratorBase<SchedulingError> {
     }
 
     private _getDetails(details: any): string {
-        if (!!details && details.length > 0) {
+        if (Boolean(details) && details.length > 0) {
             const detailMessage = details.filter((x) => x.name === "Message")[0];
 
             if (detailMessage) {

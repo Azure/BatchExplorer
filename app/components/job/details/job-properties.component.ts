@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, ViewContainerRef } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, ViewContainerRef } from "@angular/core";
 
 import { Job } from "app/models";
 import {
@@ -11,11 +11,17 @@ import {
 @Component({
     selector: "bex-job-properties",
     templateUrl: "job-properties.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JobPropertiesComponent implements OnDestroy {
     @Input()
     public set job(job: Job) {
         this._job = job;
+        if (job && job.executionInfo) {
+            this.hasStartTime = Boolean(job.executionInfo.startTime);
+            this.hasEndTime = Boolean(job.executionInfo.endTime);
+        }
+
         this.refresh(job);
     }
     public get job() { return this._job; }
@@ -27,6 +33,8 @@ export class JobPropertiesComponent implements OnDestroy {
     public prepTask: JobPreparationTaskDecorator;
     public releaseTask: JobReleaseTaskDecorator;
     public poolInfo: any = {};
+    public hasStartTime: boolean;
+    public hasEndTime: boolean;
 
     private _job: Job;
 
