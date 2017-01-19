@@ -3,7 +3,7 @@ import { autobind } from "core-decorators";
 import { shell } from "electron";
 
 import { Pool, ResizeErrorCode } from "app/models";
-import { PoolService } from "app/services";
+import { AccountService, PoolService } from "app/services";
 import { ExternalLinks } from "app/utils/constants";
 
 @Component({
@@ -15,7 +15,7 @@ export class PoolErrorDisplayComponent {
     @Input()
     public pool: Pool;
 
-    constructor(private poolService: PoolService) {
+    constructor(private poolService: PoolService, private accountService: AccountService) {
 
     }
 
@@ -25,6 +25,10 @@ export class PoolErrorDisplayComponent {
 
     public get hasQuotaReachedError(): boolean {
         return this.hasResizeError && Boolean(this.pool.resizeError.code === ResizeErrorCode.accountCoreQuotaReached);
+    }
+
+    public get quota() {
+        return this.accountService.currentAccount.map(x => x.properties.coreQuota);
     }
 
     @autobind()
