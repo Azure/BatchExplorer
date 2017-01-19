@@ -1,3 +1,5 @@
+
+Has resize? {{hasResizeError}}
 <div *ngIf="hasResizeError">
     <bex-banner *ngIf="!hasQuotaReachedError" fixMessage="Rescale" [fix]="fixStopResizeError">
         <div code>{{pool.resizeError.code}}</div>
