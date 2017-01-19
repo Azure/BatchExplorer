@@ -8,7 +8,7 @@ const ResizeErrorRecord = Record({
 });
 
 export class ResizeError extends ResizeErrorRecord {
-    public code: string;
+    public code: ResizeErrorCode;
 
     public message: string;
 
@@ -21,3 +21,9 @@ export class ResizeError extends ResizeErrorRecord {
         }));
     }
 }
+
+export type ResizeErrorCode = "AccountCoreQuotaReached" | "ResizeStopped";
+export const ResizeErrorCode = {
+    accountCoreQuotaReached: "AccountCoreQuotaReached" as ResizeErrorCode,
+    resizeStopped: "ResizeStopped" as ResizeErrorCode,
+};

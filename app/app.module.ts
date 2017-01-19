@@ -30,19 +30,13 @@ import { JobEnvironmentSettingsComponent } from "./components/job/details/job-en
 import { JobMetadataComponent } from "./components/job/details/job-metadata.component";
 import { JobPropertiesComponent } from "./components/job/details/job-properties.component";
 import { JobHomeComponent } from "./components/job/home/job-home.component";
-import { NodeListDisplayComponent } from "./components/node/browse/display";
-import { NodeAdvancedFilterComponent } from "./components/node/browse/filter";
-import { NodeListComponent } from "./components/node/browse/node.list.component";
+import { NodeBrowseModule } from "./components/node/browse";
 import { NoNodeSelectedComponent, NodeDetailsComponent, NodePropertiesComponent } from "./components/node/details";
 import { NodeHomeComponent } from "./components/node/home";
 import { PoolNodesPreviewComponent } from "./components/pool/base/pool-nodes-preview.component";
 import { PoolAdvancedFilterComponent } from "./components/pool/browse/filter";
 import { PoolListComponent } from "./components/pool/browse/pool-list.component";
-import {
-    PoolDetailsComponent,
-    PoolDetailsHomeComponent,
-    PoolPropertiesComponent,
-} from "./components/pool/details";
+import { PoolDetailsModule } from "./components/pool/details";
 import { PoolGraphsModule } from "./components/pool/graphs";
 import { PoolHomeComponent } from "./components/pool/home/pool-home.component";
 import { MainNavigationComponent } from "./components/shared/main-navigation.component";
@@ -108,7 +102,7 @@ import {
     commands,
 } from "./services";
 
-const modules = [PoolGraphsModule, StartTaskModule, TaskBaseModule];
+const modules = [PoolDetailsModule, PoolGraphsModule, StartTaskModule, TaskBaseModule, NodeBrowseModule];
 
 @NgModule({
     bootstrap: [
@@ -145,9 +139,6 @@ const modules = [PoolGraphsModule, StartTaskModule, TaskBaseModule];
         JobPropertiesComponent,
         JobStatsPreviewComponent,
         MainNavigationComponent,
-        NodeAdvancedFilterComponent,
-        NodeListComponent,
-        NodeListDisplayComponent,
         NodeDetailsComponent,
         NodePropertiesComponent,
         NodeHomeComponent,
@@ -155,13 +146,10 @@ const modules = [PoolGraphsModule, StartTaskModule, TaskBaseModule];
         NoTaskSelectedComponent,
         PoolAdvancedFilterComponent,
         PoolCreateBasicDialogComponent,
-        PoolDetailsComponent,
-        PoolDetailsHomeComponent,
         PoolHomeComponent,
         PoolListComponent,
         PoolNodesPreviewComponent,
         PoolOsPickerComponent,
-        PoolPropertiesComponent,
         PoolResizeDialogComponent,
         SubTaskDisplayListComponent,
         SubTaskPropertiesComponent,
