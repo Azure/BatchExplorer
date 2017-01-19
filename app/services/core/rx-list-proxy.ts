@@ -1,6 +1,6 @@
 import { Type } from "@angular/core";
 import { List } from "immutable";
-import { BehaviorSubject, Observable } from "rxjs";
+import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { DataCache } from "./data-cache";
 import { CachedKeyList } from "./query-cache";
@@ -102,7 +102,24 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
                 this._itemKeys.error(error);
             },
         });
+    }
 
+    public fetchAll(): Observable<any> {
+        if (!this.hasMoreItems()) {
+            return Observable.of(true);
+        }
+        const subject = new AsyncSubject();
+        subject.next(true);
+        this.fetchNext().subscribe({
+            complete: () => {
+                this.fetchAll().subscribe({
+                    complete: () => subject.complete(),
+                    error: (e) => subject.error(e),
+                });
+            },
+            error: (e) => subject.error(e),
+        });
+        return subject.asObservable();
     }
 
     public loadNewItem(entityProxy: RxEntityProxy<any, TEntity>) {

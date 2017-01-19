@@ -32,17 +32,17 @@ bex-banner {
 
             > .quick-fix-btn-container {
                 padding: 0 10px;
+                position: relative;
                 border-right: 1px solid $red-dark;
                 border-left: 1px solid $red-dark;
                 height: 100%;
                 display: flex;
                 align-items: center;
 
-                > .btn {
-                    border: 3px solid $red-dark;
+                > .btn, > .other-fixes-btn {
                     border-radius: 3px;
-                    padding: 2px 10px;
                     cursor: pointer;
+                    height: 28px;
                     &:hover:not(.disabled) {
                         background: $red-dark;
                     }
@@ -50,10 +50,25 @@ bex-banner {
                     &.disabled {
                         cursor: default;
                     }
+                }
+
+                > .btn {
+                    border: 3px solid $red-dark;
+                    padding: 2px 10px;
 
                     .fa {
                         margin-right: 5px;
                     }
+
+                }
+
+                > .other-fixes-btn {
+                    border: 3px solid $red-dark;
+                    border-left: none;
+                    border-top-left-radius: 0;
+                    border-bottom-left-radius: 0;
+                    padding: 5px 5px 5px 8px;
+                    margin-left: -3px;
                 }
             }
 
@@ -67,6 +82,31 @@ bex-banner {
             padding: 10px 24px;
             border-top: 1px solid $red-dark;
             font-weight: 500;
+        }
+    }
+}
+
+.other-fixes {
+    position: absolute;
+    top: 29px;
+    right: 10px;
+    z-index: 100;
+    background: $red;
+    width: calc(100% - 20px);
+    border: 3px solid $red-dark;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+
+    > .other-fix {
+        &:not(:last-child) {
+            border-bottom: 3px solid $red-dark;
+        }
+
+        cursor: pointer;
+        padding: 2px 10px;
+
+        &:hover:not(.disabled) {
+            background: $red-dark;
         }
     }
 }
