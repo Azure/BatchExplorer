@@ -28,7 +28,10 @@ export class TableColumnComponent {
 
 @Component({
     selector: "bex-cell",
-    template: `<div class="cell-value" title="{{value}}">{{value}}</div>`,
+    template: `
+        <div *ngIf="value" class="cell-value" title="{{value}}">{{value}}</div>
+        <ng-content *ngIf="!value"></ng-content>
+    `,
 })
 export class TableCellComponent {
     @Input()

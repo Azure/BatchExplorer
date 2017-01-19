@@ -83,9 +83,9 @@ fieldset {
     margin-top: 16px;
 
     .infobox-image {
-        width: 40px;
-        height: 40px;
-        padding: 8px;
+        width: 45px;
+        height: 45px;
+        padding: 10px;
         background-color: $silverGray;
 
         i {
@@ -94,8 +94,8 @@ fieldset {
     }
 
     .infobox-text {
-        margin-left: 14px;
-        padding: 10px 10px 10px 0;
+        margin-left: 4px;
+        padding: 4px;
     }
 }
 
@@ -163,6 +163,10 @@ fieldset {
 
 .dialog-form {
     width: 500px;
+
+    hr {
+        margin: 0.4em 0 1.4em;
+    }
 }
 
 bex-create-form {

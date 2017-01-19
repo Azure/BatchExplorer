@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, ViewContainerRef } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnDestroy, ViewContainerRef } from "@angular/core";
 
 import { Job } from "app/models";
 import {
@@ -11,6 +11,7 @@ import {
 @Component({
     selector: "bex-job-properties",
     templateUrl: "job-properties.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class JobPropertiesComponent implements OnDestroy {
     @Input()
