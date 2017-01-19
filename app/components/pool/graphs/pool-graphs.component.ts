@@ -1,9 +1,12 @@
 import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import { Router } from "@angular/router";
+import { autobind } from "core-decorators";
 import { List } from "immutable";
 
-import { Node } from "app/models";
+import { Node, NodeState } from "app/models";
 import { NodeListParams, NodeService } from "app/services";
 import { RxListProxy } from "app/services/core";
+import { StateCounter } from "./state-counter";
 
 const refreshRate = 5000;
 @Component({
@@ -17,10 +20,14 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     public data: RxListProxy<NodeListParams, Node>;
 
     public nodes: List<Node> = List([]);
+    public startTaskFailedError: any;
+
+    private _stateCounter = new StateCounter();
 
     private _refreshInterval: any;
 
-    constructor(nodeService: NodeService) {
+    constructor(private nodeService: NodeService, private router: Router) {
+
         this.data = nodeService.list(null, {
             maxResults: 1000,
             select: "id,state",
@@ -28,7 +35,9 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
         this.data.items.subscribe((nodes) => {
             if (nodes.size !== 0) {
                 this.nodes = nodes;
+                this._stateCounter.updateCount(nodes);
             }
+            this._scanForProblems();
         });
 
         this._refreshInterval = setInterval(() => {
@@ -46,4 +55,34 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     public ngOnDestroy() {
         clearInterval(this._refreshInterval);
     }
+
+    @autobind()
+    public openEditStartTask() {
+        this.router.navigate([], {
+            queryParams: { tab: "startTask" },
+        });
+    }
+
+    @autobind()
+    public rebootFailedNodes() {
+        this.nodeService.rebootAll(this.poolId, [NodeState.startTaskFailed]);
+    }
+
+    @autobind()
+    public reimageFailedNodes() {
+        this.nodeService.reimageAll(this.poolId, [NodeState.startTaskFailed]);
+    }
+
+    private _scanForProblems() {
+        const failedNodes = this._stateCounter.get(NodeState.startTaskFailed).getValue();
+        const nodeCount = this.nodes.size;
+        if (nodeCount > 0 && (failedNodes > 10 || failedNodes / nodeCount > 0.3)) {
+            this.startTaskFailedError = {
+                failedNodes, nodeCount,
+            };
+        } else {
+            this.startTaskFailedError = null;
+        }
+    }
+
 }

@@ -12,8 +12,8 @@ import { JobDetailsComponent } from "./components/job/details/job-details.compon
 import { JobHomeComponent } from "./components/job/home/job-home.component";
 import { NoNodeSelectedComponent, NodeDetailsComponent } from "./components/node/details";
 import { NodeHomeComponent } from "./components/node/home";
-import { PoolDetailsComponent } from "./components/pool/details/pool-details.component";
-import { PoolDetailsHomeComponent } from "./components/pool/details/pool.details.home";
+import { PoolDetailsComponent } from "./components/pool/details";
+import { PoolDetailsHomeComponent } from "./components/pool/details";
 import { PoolHomeComponent } from "./components/pool/home/pool-home.component";
 import { NoTaskSelectedComponent, TaskDetailsComponent } from "./components/task/details";
 import { TaskHomeComponent } from "./components/task/home";

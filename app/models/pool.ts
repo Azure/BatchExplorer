@@ -3,14 +3,15 @@ import { Duration } from "moment";
 
 import { CloudServiceConfiguration } from "./cloudServiceConfiguration";
 import { ResizeError } from "./resizeError";
+import { StartTask } from "./startTask";
 import { VirtualMachineConfiguration } from "./virtualMachineConfiguration";
 
 // tslint:disable:variable-name object-literal-sort-keys
 const PoolRecord = Record({
     allocationState: null,
     allocationStateTransitionTime: null,
-    applicationPackageReferences: null,
-    certificateReferences: null,
+    applicationPackageReferences: [],
+    certificateReferences: [],
     cloudServiceConfiguration: null,
     creationTime: null,
     currentDedicated: 0,
@@ -29,6 +30,8 @@ const PoolRecord = Record({
     url: null,
     virtualMachineConfiguration: null,
     vmSize: null,
+    startTask: null,
+    metadata: [],
 });
 
 /**
@@ -57,10 +60,13 @@ export class Pool extends PoolRecord {
     public url: string;
     public virtualMachineConfiguration: VirtualMachineConfiguration;
     public vmSize: string;
+    public startTask: StartTask;
+    public metadata: any[];
 
     constructor(data: any = {}) {
         super(Object.assign({}, data, {
             resizeError: data.resizeError && new ResizeError(data.resizeError),
+            startTask: data.startTask && new StartTask(data.startTask),
         }));
     }
 }

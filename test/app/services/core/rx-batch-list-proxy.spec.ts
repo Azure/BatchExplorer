@@ -158,4 +158,13 @@ describe("RxBatchListProxy", () => {
         ];
         expect(items).toEqualImmutable(List(newList.map((x) => new FakeModel(x))));
     }));
+
+    it("#fetchAll() should get all the items", (done) => {
+        let items: List<FakeModel>;
+        proxy.items.subscribe((x) => items = x);
+        proxy.fetchAll().subscribe(() => {
+            expect(items).toEqualImmutable(List(data[0].concat(data[1]).map((x) => new FakeModel(x))));
+            done();
+        });
+    });
 });

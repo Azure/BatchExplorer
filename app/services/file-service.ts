@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import BatchClient from "../api/batch/batch-client";
 import { File } from "../models";
 import { DataCache, RxBatchListProxy, RxListProxy } from "./core";
-import ServiceBase from "./service-base";
+import { ServiceBase } from "./service-base";
 
 export interface NodeFileListParams {
     poolId?: string;

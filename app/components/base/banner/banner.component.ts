@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, ContentChildren, Directive, Input, QueryList } from "@angular/core";
 import { Observable } from "rxjs";
 
 export enum ErrorState {
@@ -6,6 +6,20 @@ export enum ErrorState {
     Fixing,
     Fixed,
 }
+
+@Directive({
+    // tslint:disable-next-line:directive-selector
+    selector: "[other-fix]",
+})
+export class BannerOtherFixDirective {
+    @Input()
+    public fixMessage: string;
+
+    // tslint:disable-next-line:no-input-rename
+    @Input("other-fix")
+    public fix: () => Observable<any>;
+}
+
 /**
  * Banner to be used in the detail section for warning and error.
  * - Summary for quick view
@@ -24,14 +38,33 @@ export class BannerComponent {
     @Input()
     public fix: () => Observable<any>;
 
+    @ContentChildren(BannerOtherFixDirective)
+    public otherFixes: QueryList<BannerOtherFixDirective>;
+
     public showDetails = false;
 
     public state = ErrorState.Error;
 
-    public triggerFix() {
+    public showOtherFixes = false;
+
+    public triggerFix(otherFix?: BannerOtherFixDirective) {
+        this.showOtherFixes = false;
         this.state = ErrorState.Fixing;
-        this.fix().subscribe(() => {
-            this.state = ErrorState.Fixed;
-        });
+        const fixMethod = otherFix ? otherFix.fix : this.fix;
+        const fixObs = fixMethod();
+        if (fixObs) {
+            fixObs.subscribe(() => {
+                this._markFixed();
+            });
+        } else {
+            this._markFixed();
+        }
+    }
+
+    private _markFixed() {
+        this.state = ErrorState.Fixed;
+        setTimeout(() => {
+            this.state = ErrorState.Error;
+        }, 1000);
     }
 }
