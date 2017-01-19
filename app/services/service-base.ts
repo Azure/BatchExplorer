@@ -1,6 +1,12 @@
 import { BehaviorSubject, Observable } from "rxjs";
 
-export default class ServiceBase {
+export interface CommonListOptions {
+    filter?: string;
+    select?: string;
+    maxResults?: number;
+}
+
+export class ServiceBase {
     private _defaultPageSize: number = 25;
     private _loading: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
