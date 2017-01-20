@@ -51,17 +51,10 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
             }
         }));
 
-        // this._paramsSubscribers.push(this.route.parent.params.subscribe((params) => {
-
-        // }));
-
     }
 
     public update() {
-        // if (this.nodeId && this.poolId) {
-        //     this.data.params = { id: this.nodeId, poolId: this.poolId };
-        //     this.data.fetch();
-        // }
+        return;
     }
 
     public ngOnDestroy() {
@@ -70,12 +63,12 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public refresh() {
-        // return this.data.refresh();
-        console.log("refresh file ...");
+        return;
     }
 
     public downloadFile() {
-        console.log("download file ...");
+        // TODO: Download file
+        return;
     }
 
     // TODO: Add unit tests!

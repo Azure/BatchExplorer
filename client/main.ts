@@ -15,7 +15,6 @@ let mainWindow: any;
 
 // Create the browser window.
 function createWindow() {
-    console.log(path.join(app.getPath("appData"), "batch-labs"));
     /**
      * Setting the icon here will only work in Win and Linux. To set the icon on OS-X, use
      * electron-packager and set the icon using the --icon switch. It will need to be in .icns

@@ -2,9 +2,6 @@ import { Component, Input } from "@angular/core";
 import { List } from "immutable";
 
 import { LoadingStatus } from "app/components/base/loading";
-import { QuickListComponent } from "app/components/base/quick-list";
-import { ListOrTableBase } from "app/components/base/selectable-list";
-import { TableComponent } from "app/components/base/table";
 import { File, NodeFileTypes } from "app/models";
 
 @Component({
@@ -20,18 +17,6 @@ export class FileListDisplayComponent {
 
     @Input()
     public files: List<File>;
-
-    // @Input
-    // public routerLinkBase: [];
-
-    // @Input()
-    // public set files(value: List<File>) {
-    //     this._files = value;
-    //     console.log("files array:");
-    //     console.log(value);
-    // }
-    // public get files() { return this._files; };
-    // private _files: List<File>;
 
     @Input()
     public fileType: NodeFileTypes;
