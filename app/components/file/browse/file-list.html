@@ -1,4 +1,9 @@
-<bex-file-list-display [files]="data.items | async" [status]="status" [quickList]="quickList" [fileType]="fileType"></bex-file-list-display>
-<!--<bex-loading [status]="status | async">
-</bex-loading>-->
-<bex-list-loading [manualLoading]="manualLoading" [data]="data"></bex-list-loading>
+<div *ngIf="!notFound">
+    <bex-file-list-display [files]="data.items | async" [status]="status" [quickList]="quickList" [fileType]="fileType"></bex-file-list-display>
+    <!--<bex-loading [status]="status | async">
+    </bex-loading>-->
+    <bex-list-loading [manualLoading]="manualLoading" [data]="data"></bex-list-loading>
+</div>
+<div *ngIf="notFound" class="notfound-message">
+    Files for this task were not found. The node may no longer be availble.
+</div>

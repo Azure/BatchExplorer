@@ -63,19 +63,6 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
 
     public fileTypeChanged(value: NodeFileTypes) {
         this.selectedFileType = value;
-        // this.filterFilesOnType(value);
-    }
-
-    private filterFilesOnType(type: NodeFileTypes) {
-        //console.log("Filtering file type to: " + type + ", " + NodeFileTypes[type]);
-        switch (type) {
-            case NodeFileTypes.ApplicationPackage:
-                break;
-            case NodeFileTypes.StartTask:
-                break;
-            case NodeFileTypes.Task:
-                break;
-        }
     }
 
     public ngOnDestroy() {
