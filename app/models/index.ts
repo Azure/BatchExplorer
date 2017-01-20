@@ -7,6 +7,7 @@ export * from "./cloudServiceConfiguration";
 export * from "./constraints";
 export * from "./imageReference";
 export * from "./file";
+export * from "./fileType";
 export * from "./fileProperties";
 export * from "./job";
 export * from "./jobAction";

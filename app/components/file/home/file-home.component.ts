@@ -2,11 +2,12 @@ import { Component, HostBinding, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
 
+import { Constants, FileUrlUtils } from "app/utils";
 import { SidebarManager } from "../../base/sidebar";
 
 @Component({
     selector: "bex-file-home",
-    templateUrl: "./file-home.html",
+    templateUrl: "file-home.html",
 })
 export class FileHomeComponent implements OnInit, OnDestroy {
     public url: string;
@@ -38,10 +39,9 @@ export class FileHomeComponent implements OnInit, OnDestroy {
     public ngOnInit() {
         this._paramsSubscriber = this.activatedRoute.params.subscribe((params) => {
             this.url = params["url"];
-            let obj: any = this.parseRelativePath(this.url);
-
-            this.isJob = obj.type === "job";
-            this.isPool = obj.type === "pool";
+            let obj: any = FileUrlUtils.parseRelativePath(this.url);
+            this.isJob = obj.type === Constants.FileSourceTypes.Job;
+            this.isPool = obj.type === Constants.FileSourceTypes.Pool;
 
             if (this.isJob) {
                 this.jobId = obj.containerName;
@@ -57,22 +57,5 @@ export class FileHomeComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._paramsSubscriber.unsubscribe();
-    }
-
-    private parseRelativePath(fileUrl: string): any {
-        let parts: string[] = fileUrl.split("/");
-        let obj: any = {};
-        if (parts) {
-            if (parts[3] === "jobs") {
-                obj.type = "job";
-            } else {
-                obj.type = "pool";
-            }
-            obj.containerName = parts[4];
-            obj.entityName = parts[6];
-            obj.file = parts.slice(8, parts.length).join("/");
-        }
-
-        return obj;
     }
 }

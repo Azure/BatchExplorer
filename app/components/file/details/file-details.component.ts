@@ -4,10 +4,11 @@ import { autobind } from "core-decorators";
 import { Subscription } from "rxjs";
 
 import { FileService } from "app/services";
+import { Constants, FileUrlUtils } from "app/utils";
 
 @Component({
     selector: "bex-file-details",
-    templateUrl: "./file-details.html",
+    templateUrl: "file-details.html",
 })
 export class FileDetailsComponent implements OnInit, OnDestroy {
     public jobId: string;
@@ -31,9 +32,9 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     public ngOnInit() {
         this._paramsSubscribers.push(this.route.params.subscribe((params) => {
             this.url = params["url"];
-            let obj = this.parseRelativePath(this.url);
+            let obj = FileUrlUtils.parseRelativePath(this.url);
 
-            if (obj.type === "job") {
+            if (obj.type === Constants.FileSourceTypes.Job) {
                 this.jobId = obj.containerName;
                 this.taskId = obj.entityName;
                 this.filename = obj.file;
@@ -70,24 +71,5 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     public downloadFile() {
         // TODO: Download file
         return;
-    }
-
-    // TODO: Add unit tests!
-    // TODO: Move to common utils
-    private parseRelativePath(fileUrl: string): any {
-        let parts: string[] = fileUrl.split("/");
-        let obj: any = {};
-        if (parts) {
-            if (parts[3] === "jobs") {
-                obj.type = "job";
-            } else {
-                obj.type = "pool";
-            }
-            obj.containerName = parts[4];
-            obj.entityName = parts[6];
-            obj.file = parts.slice(8, parts.length).join("/");
-        }
-
-        return obj;
     }
 }

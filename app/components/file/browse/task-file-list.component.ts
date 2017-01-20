@@ -6,7 +6,6 @@ import { LoadingStatus } from "app/components/base/loading";
 import { File, Node, Task } from "app/models";
 import { FileService, NodeFileListParams, NodeService, TaskService } from "app/services";
 import { RxListProxy } from "app/services/core";
-import { Constants } from "app/utils";
 import { Filter } from "app/utils/filter-builder";
 
 @Component({
@@ -63,8 +62,8 @@ export class TaskFileListComponent implements OnInit {
     private _taskId: string;
 
     constructor(private fileService: FileService,
-        private nodeService: NodeService,
-        private taskService: TaskService) {
+                private nodeService: NodeService,
+                private taskService: TaskService) {
         this.notFound = true;
     }
 

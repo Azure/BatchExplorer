@@ -14,10 +14,6 @@ export class Filter {
         return formats.filter.format(this.properties.map(x => x.toOData()).join(` ${this.connector.id} `));
     }
 
-    public toODataWithName(): string {
-        return formats.filter.format(this.properties.map(x => x.toOData()).join(` ${this.connector.name} `));
-    }
-
     public clone(): Filter {
         return new Filter(this.connector, this.properties);
     }

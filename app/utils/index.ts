@@ -6,6 +6,9 @@ export * from "./object";
 export * from "./os";
 export * from "./secure";
 
+import * as fileUrlUtils from "./fileUrlUtils";
+export const FileUrlUtils = fileUrlUtils;
+
 import * as constants from "./constants";
 export const Constants = constants;
 

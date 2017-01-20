@@ -9,7 +9,7 @@ import { RxEntityProxy } from "app/services/core";
 
 @Component({
     selector: "bex-node-details",
-    templateUrl: "./node-details.html",
+    templateUrl: "node-details.html",
 })
 export class NodeDetailsComponent implements OnInit, OnDestroy {
     public nodeId: string;

@@ -6,7 +6,7 @@ import { File, NodeFileTypes } from "app/models";
 
 @Component({
     selector: "bex-file-list-display",
-    templateUrl: "./file-list-display.html",
+    templateUrl: "file-list-display.html",
 })
 export class FileListDisplayComponent {
     /**
