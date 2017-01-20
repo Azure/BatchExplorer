@@ -87,6 +87,7 @@ export class PoolService extends ServiceBase {
     }
 
     public patch(poolId: string, attributes: any, options: any = {}) {
+        console.log("PAthc", attributes);
         let observable = Observable.fromPromise<any>(
             BatchClient.pool.patch(poolId, attributes, options));
         observable.subscribe({

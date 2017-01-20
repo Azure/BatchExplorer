@@ -99,7 +99,7 @@ describe("CreateFormComponent", () => {
 
     it("add button should allow multisubmit", () => {
         expect(addButtonComponent.multiSubmit).toBe(true);
-        expect(addAndCloseButtonComponent.multiSubmit).toBe(false);
+        expect(addAndCloseButtonComponent.multiSubmit).toBe(true);
     });
 
     it("should not have any erros by default", () => {

@@ -44,7 +44,7 @@ export class StartTaskEditFormComponent {
         const startTask = this.form.value.startTask;
         const id = this._pool.id;
         const obs = this.poolService.patch(id, {
-            startTask: startTask,
+            startTask: startTask || new StartTask().toJS(),
         });
         obs.subscribe(() => {
             this.poolService.getOnce(id); // Refresh the pool

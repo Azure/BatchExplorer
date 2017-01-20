@@ -1,89 +1,131 @@
 bex-banner {
     display: block;
     margin-top: 10px;
+}
 
-    > md-card {
-        color: $whiteSmoke-darker;
-        background: $red;
-        padding: 0;
+bex-banner > md-card {
+    color: $whiteSmoke-darker;
+    padding: 0;
 
-        > .summary-container {
-            font-weight: 500;
+    > .summary-container {
+        font-weight: 500;
+        display: flex;
+        align-items: center;
+        height: 36px;
+
+        &.expandable {
+            cursor: pointer;
+        }
+
+        > [code] {
+            padding: 5px 24px;
+            height: 100%;
             display: flex;
             align-items: center;
-            height: 36px;
+        }
 
-            &.expandable {
+        > [message] {
+            padding: 5px 24px;
+            flex: 1;
+        }
+
+        > .quick-fix-btn-container {
+            padding: 0 10px;
+            position: relative;
+            height: 100%;
+            display: flex;
+            align-items: center;
+
+            > .btn, > .other-fixes-btn {
+                border-radius: 3px;
                 cursor: pointer;
-            }
+                height: 28px;
 
-            > [code] {
-                padding: 5px 24px;
-                border-right: 1px solid $red-dark;
-                height: 100%;
-                display: flex;
-                align-items: center;
-            }
-
-            > [message] {
-                padding: 5px 24px;
-                flex: 1;
-            }
-
-            > .quick-fix-btn-container {
-                padding: 0 10px;
-                position: relative;
-                border-right: 1px solid $red-dark;
-                border-left: 1px solid $red-dark;
-                height: 100%;
-                display: flex;
-                align-items: center;
-
-                > .btn, > .other-fixes-btn {
-                    border-radius: 3px;
-                    cursor: pointer;
-                    height: 28px;
-                    &:hover:not(.disabled) {
-                        background: $red-dark;
-                    }
-
-                    &.disabled {
-                        cursor: default;
-                    }
-                }
-
-                > .btn {
-                    border: 3px solid $red-dark;
-                    padding: 2px 10px;
-
-                    .fa {
-                        margin-right: 5px;
-                    }
-
-                }
-
-                > .other-fixes-btn {
-                    border: 3px solid $red-dark;
-                    border-left: none;
-                    border-top-left-radius: 0;
-                    border-bottom-left-radius: 0;
-                    padding: 5px 5px 5px 8px;
-                    margin-left: -3px;
+                &.disabled {
+                    cursor: default;
                 }
             }
 
-            > .caret {
-                width: 20px;
-                font-size: 16px;
+            > .btn {
+                padding: 2px 10px;
+
+                .fa {
+                    margin-right: 5px;
+                }
+
+            }
+
+            > .other-fixes-btn {
+                border-left: none;
+                border-top-left-radius: 0;
+                border-bottom-left-radius: 0;
+                padding: 5px 5px 5px 8px;
+                margin-left: -3px;
+            }
+        }
+
+        > .caret {
+            width: 20px;
+            font-size: 16px;
+        }
+    }
+
+    > .details-container {
+        padding: 10px 24px;
+        border-top: 1px solid $red-dark;
+        font-weight: 500;
+    }
+}
+
+
+@mixin banner-scheme($main, $accent) {
+    background: $main;
+
+    > .summary-container {
+        > [code] {
+            border-right: 1px solid $accent;
+        }
+
+        > .quick-fix-btn-container {
+            border-right: 1px solid $accent;
+            border-left: 1px solid $accent;
+
+            > .btn, > .other-fixes-btn {
+                border: 3px solid $accent;
+
+                &:hover:not(.disabled) {
+                    background: $accent;
+                }
             }
         }
 
         > .details-container {
-            padding: 10px 24px;
-            border-top: 1px solid $red-dark;
-            font-weight: 500;
+            border-top: 1px solid $accent;
         }
     }
+
+    .other-fixes {
+        background: $main;
+        border: 3px solid $accent;
+
+        > .other-fix {
+            &:not(:last-child) {
+                border-bottom: 3px solid $accent;
+            }
+
+            &:hover:not(.disabled) {
+                background: $accent;
+            }
+        }
+    }
+}
+
+bex-banner > md-card.error {
+    @include banner-scheme($red, $red-dark);
+}
+
+bex-banner > md-card.warning {
+    @include banner-scheme($yellow, $yellow-dark);
 }
 
 .other-fixes {
@@ -91,22 +133,12 @@ bex-banner {
     top: 29px;
     right: 10px;
     z-index: 100;
-    background: $red;
     width: calc(100% - 20px);
-    border: 3px solid $red-dark;
     border-bottom-left-radius: 3px;
     border-bottom-right-radius: 3px;
 
     > .other-fix {
-        &:not(:last-child) {
-            border-bottom: 3px solid $red-dark;
-        }
-
         cursor: pointer;
         padding: 2px 10px;
-
-        &:hover:not(.disabled) {
-            background: $red-dark;
-        }
     }
 }
