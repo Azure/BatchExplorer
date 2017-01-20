@@ -3,9 +3,7 @@ import { ActivatedRoute } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs";
 
-import { File } from "app/models";
 import { FileService } from "app/services";
-import { RxEntityProxy } from "app/services/core";
 
 @Component({
     selector: "bex-file-details",
@@ -17,6 +15,7 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     public url: string;
     public filename: string;
     public contentSize: number;
+    public downloadEnabled: boolean;
 
     // test stuff
     public nodeId: string;
@@ -25,6 +24,8 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     private _paramsSubscribers: Subscription[] = [];
 
     constructor(private route: ActivatedRoute, private fileService: FileService) {
+        // Todo: Enable download file
+        this.downloadEnabled = false;
     }
 
     public ngOnInit() {
