@@ -43,9 +43,20 @@ export class StartTaskEditFormComponent {
     public submit() {
         const startTask = this.form.value.startTask;
         const id = this._pool.id;
-        const obs = this.poolService.patch(id, {
-            startTask: startTask || new StartTask().toJS(),
-        });
+        let obs;
+        if (startTask) {
+            obs = this.poolService.patch(id, {
+                startTask: startTask,
+            });
+        } else {
+            obs = this.poolService.getOnce(this.pool.id).cascade((pool) => {
+                return this.poolService.replaceProperties(id, {
+                    applicationPackageReferences: pool.applicationPackageReferences,
+                    certificateReferences: pool.certificateReferences,
+                    metadata: pool.metadata,
+                });
+            });
+        }
         obs.subscribe(() => {
             this.poolService.getOnce(id); // Refresh the pool
         });

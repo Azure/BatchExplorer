@@ -26,7 +26,7 @@ export class ServiceBase {
         const observable = Observable.fromPromise<any>(promise);
         observable.subscribe({
             error: (error) => {
-                errorCallback(error);
+                errorCallback(Object.assign({}, error));
             },
         });
 

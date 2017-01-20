@@ -87,15 +87,14 @@ export class PoolService extends ServiceBase {
     }
 
     public patch(poolId: string, attributes: any, options: any = {}) {
-        console.log("PAthc", attributes);
-        let observable = Observable.fromPromise<any>(
-            BatchClient.pool.patch(poolId, attributes, options));
-        observable.subscribe({
-            error: (error) => {
-                log.error("Error updating pool: " + poolId, Object.assign({}, error));
-            },
+        return this.callBatchClient(BatchClient.pool.patch(poolId, attributes, options), (error) => {
+            log.error("Error patching pool: " + poolId, error);
         });
+    }
 
-        return observable;
+    public replaceProperties(poolId: string, attributes: any, options: any = {}) {
+        return this.callBatchClient(BatchClient.pool.replaceProperties(poolId, attributes, options), (error) => {
+            log.error("Error updating pool: " + poolId, error);
+        });
     }
 }
