@@ -55,6 +55,7 @@ import { AdUserDropdownComponent } from "./components/user";
 
 import {
     NoTaskSelectedComponent,
+    TaskDependenciesComponent,
     TaskDetailsComponent,
     TaskEnvironmentSettingsComponent,
     TaskPropertiesComponent,
@@ -167,6 +168,7 @@ const modules = [PoolGraphsModule, StartTaskModule, TaskBaseModule];
         SubTaskPropertiesComponent,
         TaskAdvancedFilterComponent,
         TaskCreateBasicDialogComponent,
+        TaskDependenciesComponent,
         TaskDetailsComponent,
         TaskEnvironmentSettingsComponent,
         TaskHomeComponent,

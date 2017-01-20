@@ -31,6 +31,7 @@ export * from "./subscription";
 export * from "./subtaskInformation";
 export * from "./task";
 export * from "./taskConstraints";
+export * from "./taskDependency";
 export * from "./taskExecutionInformation";
 export * from "./taskExitConditions";
 export * from "./taskSchedulingPolicy";

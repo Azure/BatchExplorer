@@ -58,7 +58,7 @@
                 <md-tab [disabled]="!hasDependencies">
                     <template md-tab-label>Dependencies</template>
                     <div class="tab-padding">
-                        Task dependencies
+                        <bex-task-dependencies [jobId]="job.id" [task]="task"></bex-task-dependencies>
                     </div>
                 </md-tab>
             </md-tab-group>
