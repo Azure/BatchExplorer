@@ -20,6 +20,11 @@
             <bex-cell>{{file.properties.contentLength}}</bex-cell>
         </bex-row>
     </bex-table>
+    <!--<bex-row *ngFor="let file of files | fileDirectoryFilter" [key]="file.name">
+        <bex-cell [value]="file.name"></bex-cell>
+        <bex-cell [value]="file.properties.contentLength"></bex-cell>
+    </bex-row>-->
+</bex-table>
 
     <bex-no-item [itemCount]="files.size" [filter]="filter" [status]="status | async">
         <i icon class="fa fa-tv"></i>

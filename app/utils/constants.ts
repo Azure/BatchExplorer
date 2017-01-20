@@ -49,3 +49,7 @@ export const ApiVersion = {
     arm: "2016-09-01",
     armBatch: "2015-12-01",
 };
+
+export const ExternalLinks = {
+    supportRequest: "https://ms.portal.azure.com/#blade/Microsoft_Azure_Support/HelpAndSupportBlade/newsupportrequest",
+};

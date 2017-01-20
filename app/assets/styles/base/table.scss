@@ -10,6 +10,7 @@ bex-table {
         width: 100%;
         border-spacing: 0;
         overflow: hidden;
+        display: table;
     }
 
     bex-thead {
@@ -57,6 +58,7 @@ bex-table {
         &:last-child {
             padding: 0 $padding-first-and-last 0 0;
         }
+
         &[numericField] {
             text-align: right;
         }
@@ -73,6 +75,16 @@ bex-table {
         display: table-cell;
         font-size: 1em;
         border-top: 1px $athensGrey solid;
+        position: relative;
+        white-space: nowrap;
+
+        .cell-value {
+            width: 95%;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            position: absolute;
+            top: 11px;
+        }
     }
 
     bex-row:last-child {
