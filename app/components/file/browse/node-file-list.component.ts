@@ -4,8 +4,8 @@ import { Observable } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { File, Node, NodeFileTypes } from "app/models";
-import { FileService, NodeFileListParams, NodeParams, NodeService } from "app/services";
-import { RxEntityProxy, RxListProxy } from "app/services/core";
+import { FileService, NodeFileListParams } from "app/services";
+import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
 
 @Component({
@@ -63,7 +63,6 @@ export class NodeFileListComponent implements OnInit {
 
     public status: Observable<LoadingStatus>;
     public data: RxListProxy<NodeFileListParams, File>;
-    public nodeData: RxEntityProxy<NodeParams, Node>;
     public node: Node;
     public notFound: boolean;
 
@@ -72,38 +71,24 @@ export class NodeFileListComponent implements OnInit {
     private _nodeId: string;
     private _fileType: NodeFileTypes;
 
-    constructor(private nodeService: NodeService, private fileService: FileService) {
+    constructor(private fileService: FileService) {
         this.notFound = false;
-        this.nodeData = nodeService.get(null, null, {});
-        this.nodeData.item.subscribe((node) => {
-            if (node) {
-                this.node = node;
-                this.refresh();
-            } else {
-                this.notFound = true;
-            }
-        });
     }
 
     public ngOnInit() {
-        if (this.poolId && this.nodeId) {
-            this.nodeData.params = { id: this.nodeId, poolId: this.poolId };
-            this.nodeData.fetch();
-        }
+        return;
     }
 
     @autobind()
     public refresh(): Observable<any> {
         if (this.poolId && this.nodeId) {
-            if (this.node) {
-                // only load files if the node exists and is in a state to list files
-                // (e.g. idle, running, startTaskFailed, etc...)
-                this.data = this.fileService.listFromComputeNode(this.poolId, this.nodeId, true, {});
-                this.status = this.data.status;
-                this.data.setOptions({}); // This clears the previous list objects
-                this.notFound = false;
-                return this.data.fetchNext();
-            }
+            // only load files if the node exists and is in a state to list files
+            // (e.g. idle, running, startTaskFailed, etc...)
+            this.data = this.fileService.listFromComputeNode(this.poolId, this.nodeId, true, {});
+            this.status = this.data.status;
+            this.data.setOptions({}); // This clears the previous list objects
+            this.notFound = false;
+            return this.data.fetchNext();
         }
     }
 
