@@ -102,8 +102,8 @@ describe("ActionFormComponent", () => {
         expect(actionButton.componentInstance.disabled).toBe(false);
     });
 
-    it("action button should not allow multisubmit", () => {
-        expect(actionButtonComponent.multiSubmit).toBe(false);
+    it("action button should allow multisubmit", () => {
+        expect(actionButtonComponent.multiSubmit).toBe(true);
     });
 
     it("should not have any erros by default", () => {
