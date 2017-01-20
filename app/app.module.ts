@@ -65,6 +65,7 @@ import {
 // task actions
 import {
     DeleteTaskDialogComponent,
+    RerunTaskFormComponent,
     TaskCreateBasicDialogComponent,
     TerminateTaskDialogComponent,
 } from "./components/task/action";
@@ -102,6 +103,7 @@ const modules = [
         AccountDetailsComponent,
         AccountDetailsHomeComponent,
         AccountDropDown,
+        RerunTaskFormComponent,
         AccountHomeComponent,
         AccountFavListComponent,
         AccountListComponent,
@@ -154,6 +156,7 @@ const modules = [
         JobCreateBasicDialogComponent,
         PoolCreateBasicDialogComponent,
         PoolResizeDialogComponent,
+        RerunTaskFormComponent,
         TaskCreateBasicDialogComponent,
         TerminateJobDialogComponent,
         TerminateTaskDialogComponent,

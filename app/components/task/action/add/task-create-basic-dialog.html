@@ -1,8 +1,8 @@
 <div class="slideout-form content-wrapper">
-    <h1>Create task</h1>
-    <p>Adds a task to the selected job</p>
+    <h1>{{title}}</h1>
+    <p>{{subtitle}}</p>
 
-    <bex-create-form [formGroup]="form" [submit]="submit" [sidebarRef]="sidebarRef">
+    <bex-create-form [formGroup]="form" [submit]="submit" [sidebarRef]="sidebarRef" [multiUse]="multiUse" [actionName]="actionName">
         <form novalidate [formGroup]="form">
             <div class="form-element">
                 <md-input formControlName="id" placeholder="Id"></md-input>

@@ -21,10 +21,15 @@ export class TaskCreateBasicDialogComponent extends FormBaseComponent<Task, Crea
     public constraintsGroup: FormGroup;
     public resourceFiles: FormArray;
 
+    public title = "Add task";
+    public subtitle = "Adds a task to the selected job";
+    public multiUse = true;
+    public actionName = "Add";
+
     constructor(
         private formBuilder: FormBuilder,
         private sidebarRef: SidebarRef<TaskCreateBasicDialogComponent>,
-        private taskService: TaskService,
+        protected taskService: TaskService,
         private notificationManager: NotificationManager) {
         super();
 
@@ -51,8 +56,10 @@ export class TaskCreateBasicDialogComponent extends FormBaseComponent<Task, Crea
     }
 
     public execute(): Observable<any> {
-        const id = this.form.value.id;
-        const jsonData = createTaskFormToJsonData(this.form.value);
+        const value = this.form.getRawValue();
+        const id = value.id;
+
+        const jsonData = createTaskFormToJsonData(value);
         const onAddedParams = { jobId: this.jobId, id };
         const observable = this.taskService.add(this.jobId, jsonData, {});
         observable.subscribe({

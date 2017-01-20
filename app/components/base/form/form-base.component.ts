@@ -17,8 +17,11 @@ export abstract class FormBaseComponent<TEntity, TFormModel> {
     public submit() {
         this.beforeSubmit.next(true);
         const obs = this.execute();
-        obs.subscribe(() => {
-            this.afterSubmit.next(true);
+        obs.subscribe({
+            next: () => {
+                this.afterSubmit.next(true);
+            },
+            error: () => null,
         });
         return obs;
     }

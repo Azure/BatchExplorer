@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { autobind } from "core-decorators";
 
 import { SidebarManager } from "app/components/base/sidebar";
-import { TaskCreateBasicDialogComponent } from "app/components/task/action";
+import { RerunTaskFormComponent } from "app/components/task/action";
 import { Task, TaskState } from "app/models";
 import { TaskService } from "app/services";
 import { ObservableUtils } from "app/utils";
@@ -45,9 +45,8 @@ export class TaskErrorDisplayComponent {
 
     @autobind()
     public rerunDifferent() {
-        const ref = this.sidebarManager.open("add-basic-pool", TaskCreateBasicDialogComponent);
+        const ref = this.sidebarManager.open("rerun-task", RerunTaskFormComponent);
         ref.component.jobId = this.jobId;
         ref.component.patchValue(this.task);
-        ref.component.disable("id");
     }
 }
