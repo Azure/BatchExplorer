@@ -12,6 +12,10 @@ import { RxEntityProxy } from "app/services/core";
     templateUrl: "./node-details.html",
 })
 export class NodeDetailsComponent implements OnInit, OnDestroy {
+    public static breadcrumb({id}) {
+        return { name: id, label: "Node" };
+    }
+
     public nodeId: string;
     public poolId: string;
     public data: RxEntityProxy<NodeParams, Node>;
