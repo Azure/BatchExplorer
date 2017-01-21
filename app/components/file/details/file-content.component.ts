@@ -106,16 +106,24 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
                 this._processError(e);
             });
         } else if (this.poolId && this.nodeId) {
-            this.currentSubscription = this.fileService.getFileContentFromComputeNode(
+            let contentProxy = this.fileService.getFileContentFromComputeNode(
                 this.poolId, this.nodeId, this.filename, {
                     fileGetFromTaskOptions: {
                         ocpRange: `bytes=${this.lastContentLength}-${newContentLength}`,
                     },
-                }).subscribe((result) => {
-                    this._loadFileContent(result, newContentLength);
-                }, (e) => {
-                    this._processError(e);
                 });
+
+            contentProxy.params = {
+                filename: this.filename,
+                nodeId: this.nodeId,
+                poolId: this.poolId,
+            };
+
+            contentProxy.fetch().subscribe((result) => {
+                this._loadFileContent(result, newContentLength);
+            }, (e) => {
+                this._processError(e);
+            });
         }
     }
 
