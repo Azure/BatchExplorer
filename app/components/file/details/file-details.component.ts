@@ -38,18 +38,22 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
                 this.jobId = obj.containerName;
                 this.taskId = obj.entityName;
                 this.filename = obj.file;
-                this.fileService.getFilePropertiesFromTask(this.jobId, this.taskId, this.filename)
-                    .subscribe((details: any) => {
-                        this.contentSize = details.data.properties.contentLength;
-                    });
+                let propertiesProxy = this.fileService.getFilePropertiesFromTask(
+                    this.jobId, this.taskId, this.filename);
+
+                propertiesProxy.fetch().subscribe((details: any) => {
+                    this.contentSize = details.properties.contentLength;
+                });
             } else {
                 this.poolId = obj.containerName;
                 this.nodeId = obj.entityName;
                 this.filename = obj.file;
-                this.fileService.getFilePropertiesFromComputeNode(this.poolId, this.nodeId, this.filename)
-                    .subscribe((details: any) => {
-                        this.contentSize = details.data.properties.contentLength;
-                    });
+                let propertiesProxy = this.fileService.getFilePropertiesFromComputeNode(
+                    this.poolId, this.nodeId, this.filename);
+
+                propertiesProxy.fetch().subscribe((details: any) => {
+                    this.contentSize = details.properties.contentLength;
+                });
             }
         }));
 

@@ -70,27 +70,29 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
 
     private _updateFileContent() {
         if (this.jobId && this.taskId) {
-            this.currentSubscription = this.fileService.getFilePropertiesFromTask(
-                this.jobId, this.taskId, this.filename)
-                .subscribe({
-                    next: (result: any) => {
-                        this._loadPropertiesContentNext(result);
-                    },
-                    error: (e) => {
-                        this._processError(e);
-                    },
-                });
+            let propertiesProxy = this.fileService.getFilePropertiesFromTask(
+                this.jobId, this.taskId, this.filename);
+
+            this.currentSubscription = propertiesProxy.fetch().subscribe({
+                next: (result: any) => {
+                    this._loadPropertiesContentNext(result);
+                },
+                error: (e) => {
+                    this._processError(e);
+                },
+            });
         } else if (this.poolId && this.nodeId) {
-            this.currentSubscription = this.fileService.getFilePropertiesFromComputeNode(
-                this.poolId, this.nodeId, this.filename)
-                .subscribe({
-                    next: (result: any) => {
-                        this._loadPropertiesContentNext(result);
-                    },
-                    error: (e) => {
-                        this._processError(e);
-                    },
-                });
+            let propertiesProxy = this.fileService.getFilePropertiesFromComputeNode(
+                this.poolId, this.nodeId, this.filename);
+
+            this.currentSubscription = propertiesProxy.fetch().subscribe({
+                next: (result: any) => {
+                    this._loadPropertiesContentNext(result);
+                },
+                error: (e) => {
+                    this._processError(e);
+                },
+            });
         }
     }
 
@@ -106,30 +108,22 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
                 this._processError(e);
             });
         } else if (this.poolId && this.nodeId) {
-            let contentProxy = this.fileService.getFileContentFromComputeNode(
+            this.currentSubscription = this.fileService.getFileContentFromComputeNode(
                 this.poolId, this.nodeId, this.filename, {
                     fileGetFromTaskOptions: {
                         ocpRange: `bytes=${this.lastContentLength}-${newContentLength}`,
                     },
+                }).subscribe((result) => {
+                    this._loadFileContent(result, newContentLength);
+                }, (e) => {
+                    this._processError(e);
                 });
-
-            contentProxy.params = {
-                filename: this.filename,
-                nodeId: this.nodeId,
-                poolId: this.poolId,
-            };
-
-            contentProxy.fetch().subscribe((result) => {
-                this._loadFileContent(result, newContentLength);
-            }, (e) => {
-                this._processError(e);
-            });
         }
     }
 
     private _loadPropertiesContentNext(result: any) {
-        if (result && result.data && result.data.properties) {
-            const newContentLength = result.data.properties.contentLength;
+        if (result && result.properties) {
+            const newContentLength = result.properties.contentLength;
             if (newContentLength !== this.lastContentLength) {
                 this._loadUpTo(newContentLength);
             }
