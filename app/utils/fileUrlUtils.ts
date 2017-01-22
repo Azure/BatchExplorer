@@ -2,7 +2,7 @@ import { FileType } from "app/models";
 import { Constants } from "app/utils";
 
 export function parseRelativePath(fileUrl: string): FileType {
-    let parts: string[] = fileUrl.split(Constants.FileUrlStrings.Separator);
+    const parts: string[] = fileUrl.split(Constants.FileUrlStrings.Separator);
     let file: FileType = <any>{};
     if (parts) {
         if (parts[3] === Constants.FileUrlStrings.Job) {
@@ -16,4 +16,13 @@ export function parseRelativePath(fileUrl: string): FileType {
     }
 
     return file;
+}
+
+export function getFileName(fileUrl: string): string {
+    const parts: string[] = fileUrl.split(Constants.FileUrlStrings.Separator);
+    return parts[parts.length - 1];
+}
+
+export function getFileExtension(fileUrl: string): string {
+    return fileUrl.split(".").pop();
 }

@@ -31,7 +31,7 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     public ngOnInit() {
         this._paramsSubscribers.push(this.route.params.subscribe((params) => {
             this.url = params["url"];
-            let obj = FileUrlUtils.parseRelativePath(this.url);
+            const obj = FileUrlUtils.parseRelativePath(this.url);
 
             if (obj.type === Constants.FileSourceTypes.Job) {
                 this.jobId = obj.containerName;
@@ -77,8 +77,8 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         const dialog = remote.dialog;
         const localPath = dialog.showSaveDialog({
             buttonLabel: "Download",
-            // Set default path to downloads / filename of file to download
-            // defaultPath
+            // Set default filename of file to download
+            defaultPath: FileUrlUtils.getFileName(this.url),
         });
 
         if (localPath) {
@@ -91,7 +91,7 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
             return;
         }
 
-        let obj = FileUrlUtils.parseRelativePath(this.url);
+        const obj = FileUrlUtils.parseRelativePath(this.url);
         if (obj.type === Constants.FileSourceTypes.Job) {
             this.fileService.getFileContentFromTask(
                 this.jobId, this.taskId, this.filename).subscribe((data) => {
