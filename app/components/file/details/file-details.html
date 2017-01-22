@@ -13,7 +13,7 @@
             <p>Url: {{url}}</p>
         </md-card-content>
         <md-card-actions layout="row" layout-align="end center">
-            <bex-download-button enabled="downloadEnabled" (click)="downloadFile()"></bex-download-button>
+            <bex-download-button [enabled]="downloadEnabled" (click)="downloadFile()"></bex-download-button>
         </md-card-actions>
     </md-card>
     <md-card class="details">

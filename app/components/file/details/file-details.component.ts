@@ -1,6 +1,8 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { autobind } from "core-decorators";
+import { remote } from "electron";
+import { writeFile } from "fs";
 import { Subscription } from "rxjs";
 
 import { FileService } from "app/services";
@@ -13,19 +15,16 @@ import { Constants, FileUrlUtils } from "app/utils";
 export class FileDetailsComponent implements OnInit, OnDestroy {
     public jobId: string;
     public taskId: string;
+    public nodeId: string;
+    public poolId: string;
     public url: string;
     public filename: string;
     public contentSize: number;
     public downloadEnabled: boolean;
 
-    // test stuff
-    public nodeId: string;
-    public poolId: string;
-
     private _paramsSubscribers: Subscription[] = [];
 
     constructor(private route: ActivatedRoute, private fileService: FileService) {
-        // Todo: Enable download file
         this.downloadEnabled = false;
     }
 
@@ -54,6 +53,8 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
                 propertiesProxy.fetch().subscribe((details: any) => {
                     this.contentSize = details.properties.contentLength;
                 });
+
+                this.downloadEnabled = true;
             }
         }));
 
@@ -73,7 +74,35 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     }
 
     public downloadFile() {
-        // TODO: Download file
-        return;
+        const dialog = remote.dialog;
+        const localPath = dialog.showSaveDialog({
+            buttonLabel: "Download",
+            // Set default path to downloads / filename of file to download
+            // defaultPath
+        });
+
+        if (localPath) {
+            this._saveFile(localPath);
+        }
+    }
+
+    private _saveFile(fileName) {
+        if (fileName === undefined) {
+            return;
+        }
+
+        let obj = FileUrlUtils.parseRelativePath(this.url);
+        if (obj.type === Constants.FileSourceTypes.Job) {
+            this.fileService.getFileContentFromTask(
+                this.jobId, this.taskId, this.filename).subscribe((data) => {
+                    writeFile(fileName, data.content);
+                });
+        } else {
+            this.fileService.getFileContentFromComputeNode(
+                this.poolId, this.nodeId, this.filename).subscribe((data) => {
+                    writeFile(fileName, data.content);
+                });
+        }
+
     }
 }

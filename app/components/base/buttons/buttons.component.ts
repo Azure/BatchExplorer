@@ -170,7 +170,15 @@ export class CloneButtonComponent {
     template: `<button md-button [disabled]="!enabled"><i class="fa fa-download"></i> Download</button>`,
 })
 export class DownloadButtonComponent {
-    public enabled: boolean;
+    @Input()
+    public set enabled(value: boolean) {
+        this._enabled = value;
+    }
+    public get enabled() {
+        return this._enabled;
+    }
+
+    private _enabled: boolean;
 }
 
 @Component({
