@@ -2,6 +2,8 @@ import { Injectable, Input, TemplateRef, Type, ViewChild } from "@angular/core";
 import { ActivatedRoute, NavigationEnd, PRIMARY_OUTLET, Params, Router } from "@angular/router";
 import { BehaviorSubject, Observable } from "rxjs";
 
+import { Constants } from "app/utils";
+
 // /pools               => Pools
 // /pools/a             => Pools > a
 // /pools/a/nodes/xyz   => Pools > a > xyz
@@ -14,7 +16,8 @@ export interface BreadcrumbData {
 export interface Breadcrumb {
     data: BreadcrumbData;
     params: Params;
-    component: RouteComponent;
+    queryParams: Params;
+    componentName: string;
     segments: string[];
     url: string;
 }
@@ -43,6 +46,7 @@ export class BreadcrumbService {
     public _crumbs = new BehaviorSubject<Breadcrumb[]>([]);
 
     constructor(private router: Router, private activatedRoute: ActivatedRoute) {
+        this._loadInitialData();
         this.router.events.filter(event => event instanceof NavigationEnd).subscribe(event => {
             let cls: any = this.activatedRoute.component;
             console.log("CHnage url", event.url, cls.name);
@@ -55,6 +59,9 @@ export class BreadcrumbService {
             this.addBreadcrumb(crumb);
         });
         this.crumbs = this._crumbs.asObservable();
+        this._crumbs.subscribe((data) => {
+            sessionStorage.setItem(Constants.sessionStorageKey.breadcrumb, JSON.stringify(data));
+        });
     }
 
 
@@ -80,21 +87,24 @@ export class BreadcrumbService {
         return true;
     }
 
+    public navigateTo(crumb: Breadcrumb) {
+        this.router.navigateByUrl(crumb.url, {
+            queryParams: crumb.queryParams,
+        });
+    }
+
     private _cleanupCrumbs(breadcrumb: Breadcrumb): Breadcrumb[] {
         const crumbs = this._crumbs.getValue();
         if (crumbs.length === 0) {
             return crumbs;
         }
         const last = crumbs[crumbs.length - 1];
-        console.log("Crubm", last, breadcrumb);
         let removeLast = (
             last.url === breadcrumb.url                             // If same url don't add a new breadcrumb
             || last.url.startsWith(breadcrumb.url)                  // Breadcrumb goes back remove
-            || last.component.name === breadcrumb.component.name    // If call the same component /pools/a => /pools/b
+            || last.componentName === breadcrumb.componentName    // If call the same component /pools/a => /pools/b
             || !this.compareSegments(last, breadcrumb)
         );
-        console.log("LASt ", removeLast, last.url, "cur", breadcrumb.url);
-
 
         if (removeLast) {
             crumbs.pop();
@@ -102,6 +112,20 @@ export class BreadcrumbService {
         }
 
         return crumbs;
+    }
+
+    private _loadInitialData() {
+        const breadCrumbStr = sessionStorage.getItem(Constants.sessionStorageKey.breadcrumb);
+        if (breadCrumbStr) {
+            try {
+                const crumbs = JSON.parse(breadCrumbStr);
+                console.log("Loaded initial crumbs", Object.assign({}, crumbs));
+                this._crumbs.next(crumbs);
+            } catch (e) {
+                console.warn("Invalid error in breadcrumbs");
+                sessionStorage.removeItem(Constants.sessionStorageKey.breadcrumb);
+            }
+        }
     }
 
     private getBreadcrumb(route: ActivatedRoute, segments = []): Breadcrumb {
@@ -127,8 +151,9 @@ export class BreadcrumbService {
                 }
                 return {
                     data,
-                    component,
                     segments,
+                    componentName: component.name,
+                    queryParams: child.snapshot.queryParams,
                     params: child.snapshot.params,
                     url: `/${segments.join("/")}`,
                 };

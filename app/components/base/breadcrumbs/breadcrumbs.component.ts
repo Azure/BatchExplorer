@@ -28,11 +28,16 @@ export class BreadcrumbsComponent implements OnDestroy {
 
     private _subscription: Subscription;
 
-    constructor(breadcrumbService: BreadcrumbService) {
+    constructor(private breadcrumbService: BreadcrumbService) {
         this._subscription = breadcrumbService.crumbs.subscribe(x => this.crumbs = x);
     }
 
     public ngOnDestroy() {
         this._subscription.unsubscribe();
+    }
+
+    public clickBreadcrumb(crumb: Breadcrumb) {
+        console.log("Click on ", crumb);
+        this.breadcrumbService.navigateTo(crumb);
     }
 }

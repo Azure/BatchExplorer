@@ -45,6 +45,13 @@ export const localStorageKey = {
     currentAccessToken: "current_access_token",
 };
 
+export const sessionStorageKey = {
+    /**
+     * Sessionstorage key that save the last breadcrumb.
+     */
+    breadcrumb: "breadcrumb",
+};
+
 export const ApiVersion = {
     arm: "2016-09-01",
     armBatch: "2015-12-01",
