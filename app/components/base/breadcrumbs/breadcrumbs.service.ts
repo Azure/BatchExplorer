@@ -2,6 +2,10 @@ import { Injectable, Input, TemplateRef, Type, ViewChild } from "@angular/core";
 import { ActivatedRoute, NavigationEnd, PRIMARY_OUTLET, Params, Router } from "@angular/router";
 import { BehaviorSubject, Observable } from "rxjs";
 
+// /pools               => Pools
+// /pools/a             => Pools > a
+// /pools/a/nodes/xyz   => Pools > a > xyz
+// /jobs                => jobs
 export interface BreadcrumbData {
     name: string;
     label: string;
@@ -11,6 +15,7 @@ export interface Breadcrumb {
     data: BreadcrumbData;
     params: Params;
     component: RouteComponent;
+    segments: string[];
     url: string;
 }
 
@@ -58,6 +63,23 @@ export class BreadcrumbService {
         this._crumbs.next(cleaned.concat([breadcrumb]));
     }
 
+    /**
+     * Compare segments of 2 breadcrumb
+     * If the 2 breadcrumb don't have the same base return false
+     */
+    public compareSegments(first: Breadcrumb, second: Breadcrumb) {
+        const firstSegments = first.segments;
+        const secondSegments = second.segments;
+
+        for (let i = 0; i < Math.min(firstSegments.length, secondSegments.length); i++) {
+            if (firstSegments[i] !== secondSegments[i]) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     private _cleanupCrumbs(breadcrumb: Breadcrumb): Breadcrumb[] {
         const crumbs = this._crumbs.getValue();
         if (crumbs.length === 0) {
@@ -65,12 +87,15 @@ export class BreadcrumbService {
         }
         const last = crumbs[crumbs.length - 1];
         console.log("Crubm", last, breadcrumb);
-        const removeLast = (
+        let removeLast = (
             last.url === breadcrumb.url                             // If same url don't add a new breadcrumb
             || last.url.startsWith(breadcrumb.url)                  // Breadcrumb goes back remove
             || last.component.name === breadcrumb.component.name    // If call the same component /pools/a => /pools/b
+            || !this.compareSegments(last, breadcrumb)
         );
         console.log("LASt ", removeLast, last.url, "cur", breadcrumb.url);
+
+
         if (removeLast) {
             crumbs.pop();
             this._cleanupCrumbs(breadcrumb);
@@ -79,7 +104,7 @@ export class BreadcrumbService {
         return crumbs;
     }
 
-    private getBreadcrumb(route: ActivatedRoute, url = ""): Breadcrumb {
+    private getBreadcrumb(route: ActivatedRoute, segments = []): Breadcrumb {
         if (route.children.length === 0) {
             return null;
         }
@@ -88,8 +113,8 @@ export class BreadcrumbService {
             if (child.outlet !== PRIMARY_OUTLET) {
                 continue;
             }
-            let routeURL: string = child.snapshot.url.map(segment => segment.path).join("/");
-            url += `/${routeURL}`;
+            let current: string[] = child.snapshot.url.map(segment => segment.path);
+            segments = segments.concat(current);
             if (child.children.length === 0) {
 
                 // Found deepest child
@@ -103,11 +128,12 @@ export class BreadcrumbService {
                 return {
                     data,
                     component,
+                    segments,
                     params: child.snapshot.params,
-                    url: url,
+                    url: `/${segments.join("/")}`,
                 };
             } else {
-                return this.getBreadcrumb(child, url);
+                return this.getBreadcrumb(child, segments);
             }
         }
         return null;

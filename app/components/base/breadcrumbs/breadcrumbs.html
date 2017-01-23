@@ -1,5 +1,5 @@
 <ul>
-    <li *ngFor="let crumb of crumbs; let i = index" [style.z-index]="crumbs.length - i" [routerLink]="crumb.routerLink" [queryParams]="{goingBack: true}"
+    <li *ngFor="let crumb of crumbs; let i = index" [style.z-index]="crumbs.length - i" [routerLink]="crumb.url" [queryParams]="{goingBack: true}"
         routerLinkActive="selected" class="noselect">
         <div class="crumb-content">
             {{crumb.data.name}}

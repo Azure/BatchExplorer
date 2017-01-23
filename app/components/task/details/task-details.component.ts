@@ -16,6 +16,10 @@ import { DeleteTaskDialogComponent, TaskCreateBasicDialogComponent, TerminateTas
     templateUrl: "./task-details.html",
 })
 export class TaskDetailsComponent implements OnInit, OnDestroy {
+    public static breadcrumb({id}) {
+        return { name: id, label: "Task" };
+    }
+
     public taskId: string;
     public jobId: string;
     public data: RxEntityProxy<TaskParams, Task>;
