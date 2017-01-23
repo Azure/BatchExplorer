@@ -10,29 +10,31 @@ export default class FileProxy {
 
     public getComputeNodeFile(poolId: string, nodeId: string, filename: string, options?: BatchRequestOptions) {
         return new Promise((resolve, reject) => {
-            this.client.file.getFromComputeNode(poolId, nodeId, filename, options, (error, result, request, response) => {
-                if (error) { return reject(error); }
-                if (result) {
-                    const chunks = [];
-                    result.on("data", (chunk) => {
-                        chunks.push(chunk);
-                    });
-
-                    result.on("end", () => {
-                        resolve({
-                            result,
-                            content: Buffer.concat(chunks),
-                            request,
-                            response,
+            this.client.file.getFromComputeNode(
+                poolId, nodeId, filename, options, (error, result, request, response) => {
+                    if (error) { return reject(error); }
+                    if (result) {
+                        const chunks = [];
+                        result.on("data", (chunk) => {
+                            chunks.push(chunk);
                         });
-                    });
 
-                }
-            });
+                        result.on("end", () => {
+                            resolve({
+                                result,
+                                content: Buffer.concat(chunks),
+                                request,
+                                response,
+                            });
+                        });
+
+                    }
+                });
         });
     }
 
-    public getComputeNodeFileProperties(poolId: string, nodeId: string, filename: string, options?: BatchRequestOptions) {
+    public getComputeNodeFileProperties(
+        poolId: string, nodeId: string, filename: string, options?: BatchRequestOptions) {
         return new Promise((resolve, reject) => {
             this.client.file.getNodeFilePropertiesFromComputeNode(poolId, nodeId, filename, options,
                 (error, result, request, response) => {
