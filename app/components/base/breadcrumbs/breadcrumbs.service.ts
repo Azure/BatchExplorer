@@ -4,10 +4,6 @@ import { BehaviorSubject, Observable } from "rxjs";
 
 import { Constants } from "app/utils";
 
-// /pools               => Pools
-// /pools/a             => Pools > a
-// /pools/a/nodes/xyz   => Pools > a > xyz
-// /jobs                => jobs
 export interface BreadcrumbData {
     name: string;
     label: string;
@@ -24,7 +20,7 @@ export interface Breadcrumb {
 
 export interface RouteComponent extends Type<any> {
     name: string;
-    breadcrumb: (params: any) => BreadcrumbData;
+    breadcrumb: (params: Params, queryParams: Params) => BreadcrumbData;
 }
 
 function breadcrumbMethodMessage(componentName) {
@@ -33,7 +29,7 @@ function breadcrumbMethodMessage(componentName) {
     return `${message}
     class ${componentName} {
         // Add this method
-        public static breadcrumb(params) {
+        public static breadcrumb(params, queryParams) {
             return {name: "Some name", label: "Some label"};
         }
     }
@@ -51,11 +47,8 @@ export class BreadcrumbService {
             let cls: any = this.activatedRoute.component;
             console.log("CHnage url", event.url, cls.name);
 
-            // let root: ActivatedRoute = this.activatedRoute.root;
-            // this.breadcrumbs = this.getBreadcrumbs(root);
             let root: ActivatedRoute = this.activatedRoute.root;
             const crumb = this.getBreadcrumb(root);
-            console.log("Breadcrumb", crumb);
             this.addBreadcrumb(crumb);
         });
         this.crumbs = this._crumbs.asObservable();
@@ -88,13 +81,14 @@ export class BreadcrumbService {
     }
 
     public navigateTo(crumb: Breadcrumb) {
-        this.router.navigateByUrl(crumb.url, {
+        this.router.navigate([crumb.url], {
+            relativeTo: this.activatedRoute,
             queryParams: crumb.queryParams,
         });
     }
 
     private _cleanupCrumbs(breadcrumb: Breadcrumb): Breadcrumb[] {
-        const crumbs = this._crumbs.getValue();
+        const crumbs = this._crumbs.value;
         if (crumbs.length === 0) {
             return crumbs;
         }
@@ -119,7 +113,6 @@ export class BreadcrumbService {
         if (breadCrumbStr) {
             try {
                 const crumbs = JSON.parse(breadCrumbStr);
-                console.log("Loaded initial crumbs", Object.assign({}, crumbs));
                 this._crumbs.next(crumbs);
             } catch (e) {
                 console.warn("Invalid error in breadcrumbs");
@@ -145,7 +138,7 @@ export class BreadcrumbService {
                 const component: RouteComponent = child.snapshot.component as any;
                 let data: BreadcrumbData;
                 if (component.breadcrumb) {
-                    data = component.breadcrumb(child.snapshot.params);
+                    data = component.breadcrumb(child.snapshot.params, child.snapshot.queryParams);
                 } else {
                     console.error(breadcrumbMethodMessage(component.name));
                 }

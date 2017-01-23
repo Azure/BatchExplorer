@@ -18,10 +18,11 @@ import { PoolCreateBasicDialogComponent } from "../action";
     templateUrl: "./pool-details.html",
 })
 export class PoolDetailsComponent implements OnInit, OnDestroy {
-    public static breadcrumb({id}) {
+    public static breadcrumb({id}, {tab}) {
+        let label = tab ? `Pool - ${tab}` : "Pool";
         return {
             name: id,
-            label: "Pool",
+            label,
         };
     }
 
