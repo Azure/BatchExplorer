@@ -126,14 +126,4 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
     public get lastResize(): string {
         return Moment(this.pool.allocationStateTransitionTime).fromNow();
     }
-
-    @autobind()
-    public fixStopResizeError() {
-        const obs = this.poolService.resize(this.poolId, this.pool.targetDedicated);
-        obs.subscribe(() => {
-            this.refreshPool();
-        });
-
-        return obs;
-    }
 }
