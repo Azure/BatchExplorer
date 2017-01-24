@@ -45,21 +45,6 @@ import { TaskDetailsModule } from "./components/task/details";
 import { TaskHomeComponent } from "./components/task/home";
 import { AdUserDropdownComponent } from "./components/user";
 
-import {
-    NoTaskSelectedComponent,
-    TaskDependenciesComponent,
-    TaskDetailsComponent,
-    TaskEnvironmentSettingsComponent,
-    TaskPropertiesComponent,
-    TaskResourceFilesComponent,
-    TaskSubTasksTabComponent,
-} from "./components/task/details";
-
-import {
-    SubTaskDisplayListComponent,
-    SubTaskPropertiesComponent,
-} from "./components/task/details/sub-tasks";
-
 // job actions
 import {
     DeleteJobDialogComponent,
@@ -154,9 +139,6 @@ const modules = [
         PoolOsPickerComponent,
         PoolResizeDialogComponent,
         TaskCreateBasicDialogComponent,
-        TaskDependenciesComponent,
-        TaskDetailsComponent,
-        TaskEnvironmentSettingsComponent,
         TaskHomeComponent,
         TerminateJobDialogComponent,
         TerminateTaskDialogComponent,
