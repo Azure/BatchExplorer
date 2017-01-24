@@ -1,7 +1,8 @@
 import { Component, Input, OnDestroy, TemplateRef, ViewChild } from "@angular/core";
 import { Subscription } from "rxjs";
 
-import { Breadcrumb, BreadcrumbService } from "./breadcrumbs.service";
+import { Breadcrumb } from "./breadcrumb-models";
+import { BreadcrumbService } from "./breadcrumb.service";
 
 
 @Component({
