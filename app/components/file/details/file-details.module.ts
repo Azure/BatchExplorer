@@ -11,8 +11,7 @@ const components = [FileContentComponent];
 @NgModule({
     declarations: components,
     exports: components,
-    imports: [...commonModules,
-        PoolGraphsModule, NodeBrowseModule, StartTaskModule],
+    imports: [...commonModules],
 })
 export class FileDetailsModule {
 
