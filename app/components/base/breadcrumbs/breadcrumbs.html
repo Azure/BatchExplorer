@@ -1,10 +1,10 @@
 <ul>
     <li *ngFor="let crumb of crumbs; let i = index" [style.z-index]="crumbs.length - i" (click)="clickBreadcrumb(crumb)"
         class="noselect">
-        <div class="crumb-content">
+        <div class="crumb-content" [class.no-label]="!crumb.data.label">
             {{crumb.data.name}}
         </div>
-        <div class="crumb-label">
+        <div class="crumb-label" *ngIf="crumb.data.label">
             {{crumb.data.label}}
         </div>
     </li>

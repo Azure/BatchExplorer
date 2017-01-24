@@ -44,12 +44,11 @@ export class BreadcrumbService {
     constructor(private router: Router, private activatedRoute: ActivatedRoute) {
         this._loadInitialData();
         this.router.events.filter(event => event instanceof NavigationEnd).subscribe(event => {
-            let cls: any = this.activatedRoute.component;
-            console.log("CHnage url", event.url, cls.name);
-
             let root: ActivatedRoute = this.activatedRoute.root;
-            const crumb = this.getBreadcrumb(root);
-            this.addBreadcrumb(crumb);
+            const crumb = this.getBreadcrumbFromRoute(root);
+            if (crumb) {
+                this.addBreadcrumb(crumb);
+            }
         });
         this.crumbs = this._crumbs.asObservable();
         this._crumbs.subscribe((data) => {
@@ -87,6 +86,43 @@ export class BreadcrumbService {
         });
     }
 
+    public getBreadcrumbFromRoute(route: ActivatedRoute, segments = []): Breadcrumb {
+        if (route.children.length === 0) {
+            return null;
+        }
+
+        for (let child of route.children) {
+            if (child.outlet !== PRIMARY_OUTLET) {
+                continue;
+            }
+            let current: string[] = child.snapshot.url.map(segment => segment.path);
+            segments = segments.concat(current);
+            if (child.children.length === 0) {
+
+                // Found deepest child
+                const component: RouteComponent = child.snapshot.component as any;
+                let data: BreadcrumbData;
+                if (component.breadcrumb) {
+                    data = component.breadcrumb(child.snapshot.params, child.snapshot.queryParams);
+                } else {
+                    console.error(breadcrumbMethodMessage(component.name));
+                    return null;
+                }
+                return {
+                    data,
+                    segments,
+                    componentName: component.name,
+                    queryParams: child.snapshot.queryParams,
+                    params: child.snapshot.params,
+                    url: `/${segments.join("/")}`,
+                };
+            } else {
+                return this.getBreadcrumbFromRoute(child, segments);
+            }
+        }
+        return null;
+    }
+
     private _cleanupCrumbs(breadcrumb: Breadcrumb): Breadcrumb[] {
         const crumbs = this._crumbs.value;
         if (crumbs.length === 0) {
@@ -119,41 +155,5 @@ export class BreadcrumbService {
                 sessionStorage.removeItem(Constants.sessionStorageKey.breadcrumb);
             }
         }
-    }
-
-    private getBreadcrumb(route: ActivatedRoute, segments = []): Breadcrumb {
-        if (route.children.length === 0) {
-            return null;
-        }
-
-        for (let child of route.children) {
-            if (child.outlet !== PRIMARY_OUTLET) {
-                continue;
-            }
-            let current: string[] = child.snapshot.url.map(segment => segment.path);
-            segments = segments.concat(current);
-            if (child.children.length === 0) {
-
-                // Found deepest child
-                const component: RouteComponent = child.snapshot.component as any;
-                let data: BreadcrumbData;
-                if (component.breadcrumb) {
-                    data = component.breadcrumb(child.snapshot.params, child.snapshot.queryParams);
-                } else {
-                    console.error(breadcrumbMethodMessage(component.name));
-                }
-                return {
-                    data,
-                    segments,
-                    componentName: component.name,
-                    queryParams: child.snapshot.queryParams,
-                    params: child.snapshot.params,
-                    url: `/${segments.join("/")}`,
-                };
-            } else {
-                return this.getBreadcrumb(child, segments);
-            }
-        }
-        return null;
     }
 }
