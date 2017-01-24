@@ -9,7 +9,7 @@ import { Node } from "app/models";
 
 @Component({
     selector: "bex-node-list-display",
-    templateUrl: "./node-list-display.html",
+    templateUrl: "node-list-display.html",
 })
 export class NodeListDisplayComponent  extends ListOrTableBase  {
     @Input()

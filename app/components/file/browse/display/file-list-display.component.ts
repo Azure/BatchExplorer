@@ -2,11 +2,11 @@ import { Component, Input } from "@angular/core";
 import { List } from "immutable";
 
 import { LoadingStatus } from "app/components/base/loading";
-import { File } from "app/models";
+import { File, NodeFileTypes } from "app/models";
 
 @Component({
     selector: "bex-file-list-display",
-    templateUrl: "./file-list-display.html",
+    templateUrl: "file-list-display.html",
 })
 export class FileListDisplayComponent {
     /**
@@ -18,18 +18,11 @@ export class FileListDisplayComponent {
     @Input()
     public files: List<File>;
 
-    // @Input()
-    // public set files(value: List<File>) {
-    //     this._files = value;
-    //     console.log("files array:");
-    //     console.log(value);
-    // }
-    // public get files() { return this._files; };
+    @Input()
+    public fileType: NodeFileTypes;
 
     @Input()
     public status: LoadingStatus;
-
-    // private _files: List<File>;
 
     public isErrorState(file: any) {
         // if (node.state === "startTaskFailed") {
