@@ -67,6 +67,15 @@ export default class PoolProxy {
         });
     }
 
+    public replaceProperties(poolId: string, attributes: any, options?: any) {
+        return new Promise((resolve, reject) => {
+            this.client.pool.updateProperties(poolId, attributes, { poolResizeOptions: options }, (error, result) => {
+                if (error) { return reject(error); }
+                return resolve();
+            });
+        });
+    }
+
     /**
      * Adds a pool to the specified account.
      * http://azure.github.io/azure-sdk-for-node/azure-batch/latest/Pool.html#add

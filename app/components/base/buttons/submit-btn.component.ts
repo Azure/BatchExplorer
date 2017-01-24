@@ -33,7 +33,7 @@ export class SubmitButtonComponent {
     public disabled = false;
 
     @Input()
-    public multiSubmit = false;
+    public multiSubmit = true;
 
     public status = SubmitStatus.Idle;
 

@@ -13,7 +13,7 @@ bex-pool-advanced-filter {
 .editable-properties {
     display: flex;
 
-    > bex-property-list {
+    > bex-property-list, > .no-properties {
         flex: 1;
     }
 }
