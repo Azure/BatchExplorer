@@ -45,6 +45,14 @@
                     </div>
                 </md-tab>
                 <md-tab>
+                    <template md-tab-label>Files</template>
+                    <div class="tab-padding">
+                        <bex-entity-details-list #listWrapper [refresh]="list.refresh">
+                            <bex-task-file-list [jobId]="jobId" [taskId]="taskId" [filter]="listWrapper.filter" [quickList]="false" #list></bex-task-file-list>
+                        </bex-entity-details-list>
+                    </div>
+                </md-tab>
+                <md-tab>
                     <template md-tab-label>Resource files</template>
                     <div class="tab-padding">
                         <bex-task-resource-files [task]="task"></bex-task-resource-files>

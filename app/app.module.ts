@@ -18,9 +18,9 @@ import { AccountDetailsHomeComponent } from "./components/account/details/accoun
 import { AccountDetailsComponent } from "./components/account/details/account-details.component";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
 import { BaseModule } from "./components/base";
-import { FileDirectoryFilter, FileListDisplayComponent } from "./components/file/browse/display";
-import { FileListComponent } from "./components/file/browse/file-list.component";
+import { FileBrowseModule } from "./components/file/browse";
 import { FileDetailsModule } from "./components/file/details";
+import { FileHomeComponent } from "./components/file/home";
 import { JobStatsPreviewComponent } from "./components/job/base/job-stats-preview";
 import { JobAdvancedFilterComponent } from "./components/job/browse/filter/job-advanced-filter.component";
 import { JobListComponent } from "./components/job/browse/job-list.component";
@@ -91,7 +91,7 @@ const modules = [
     PoolDetailsModule, PoolGraphsModule, StartTaskModule,
     TaskBaseModule, TaskDetailsModule, TaskBrowseModule,
     NodeBrowseModule,
-    FileDetailsModule,
+    FileBrowseModule, FileDetailsModule,
 ];
 
 @NgModule({
@@ -115,9 +115,7 @@ const modules = [
         DeleteTaskDialogComponent,
         DisableJobDialogComponent,
         EnableJobDialogComponent,
-        FileDirectoryFilter,
-        FileListComponent,
-        FileListDisplayComponent,
+        FileHomeComponent,
         JobAdvancedFilterComponent,
         JobCreateBasicDialogComponent,
         JobDetailsComponent,

@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 
 import { commonModules } from "app/common";
+import { FileBrowseModule } from "app/components/file/browse";
 import { FileDetailsModule } from "app/components/file/details";
 import { TaskBrowseModule } from "app/components/task/browse";
 
@@ -21,7 +22,7 @@ const components = [NoTaskSelectedComponent, TaskDetailsComponent, TaskEnvironme
     declarations: components,
     exports: components,
     imports: [...commonModules,
-        FileDetailsModule, TaskBrowseModule],
+        FileBrowseModule, FileDetailsModule, TaskBrowseModule],
 })
 export class TaskDetailsModule {
 

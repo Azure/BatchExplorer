@@ -3,13 +3,13 @@ import { ActivatedRoute } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs";
 
-import { Node } from "app/models";
+import { Node, NodeFileTypes } from "app/models";
 import { FileService, NodeParams, NodeService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
 
 @Component({
     selector: "bex-node-details",
-    templateUrl: "./node-details.html",
+    templateUrl: "node-details.html",
 })
 export class NodeDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({id}) {
@@ -20,6 +20,19 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
     public poolId: string;
     public data: RxEntityProxy<NodeParams, Node>;
     public node: Node;
+
+    public fileTypes: any = [{
+        id: NodeFileTypes.StartTask,
+        name: "Start Task Files",
+    }, {
+        id: NodeFileTypes.ApplicationPackage,
+        name: "Application Pacakge Files",
+    }, {
+        id: NodeFileTypes.Task,
+        name: "Task Files",
+    }];
+
+    public selectedFileType: NodeFileTypes = NodeFileTypes.StartTask;
 
     private _paramsSubscribers: Subscription[] = [];
 
@@ -50,6 +63,10 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
             this.data.params = { id: this.nodeId, poolId: this.poolId };
             this.data.fetch();
         }
+    }
+
+    public fileTypeChanged(value: NodeFileTypes) {
+        this.selectedFileType = value;
     }
 
     public ngOnDestroy() {

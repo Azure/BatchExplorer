@@ -3,7 +3,7 @@ import { Observable } from "rxjs";
 
 import BatchClient from "../api/batch/batch-client";
 import { File } from "../models";
-import { DataCache, RxBatchListProxy, RxListProxy } from "./core";
+import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache } from "./core";
 import { ServiceBase } from "./service-base";
 
 export interface NodeFileListParams {
@@ -11,14 +11,17 @@ export interface NodeFileListParams {
     nodeId?: string;
 }
 
-export interface FileParams {
-    poolId?: string;
-    nodeId?: string;
+export interface NodeFileParams extends NodeFileListParams {
+    filename: string;
+}
 
+export interface TaskFileListParams {
     jobId?: string;
     taskId?: string;
+}
 
-    filename?: string;
+export interface TaskFileParams extends TaskFileListParams {
+    filename: string;
 }
 
 export interface FileContentResult {
@@ -29,10 +32,23 @@ export interface FileContentResult {
 @Injectable()
 export class FileService extends ServiceBase {
     private _basicProperties: string = "name, url";
-    private _cache = new DataCache<File>("url");
+    private _nodeFilecache = new TargetedDataCache<NodeFileListParams, File>({
+        key: ({poolId, nodeId}) => poolId + "/" + nodeId,
+    }, "url");
+    private _taskFileCache = new TargetedDataCache<TaskFileListParams, File>({
+        key: ({jobId, taskId}) => jobId + "/" + taskId,
+    }, "url");
 
     public get basicProperties(): string {
         return this._basicProperties;
+    }
+
+    public getNodeFileCache(params: NodeFileListParams): DataCache<File> {
+        return this._nodeFilecache.getCache(params);
+    }
+
+    public getTaskFileCache(params: TaskFileListParams): DataCache<File> {
+        return this._taskFileCache.getCache(params);
     }
 
     public listFromComputeNode(
@@ -42,11 +58,50 @@ export class FileService extends ServiceBase {
         initialOptions: any = {}): RxListProxy<NodeFileListParams, File> {
 
         return new RxBatchListProxy<NodeFileListParams, File>(File, {
-            cache: (params) => this._cache,
+            cache: (params) => this.getNodeFileCache(params),
             proxyConstructor: (params, options) => {
                 return BatchClient.file.listFromComputeNode(params.poolId, params.nodeId, recursive, options);
             },
             initialParams: { poolId: initialPoolId, nodeId: initialNodeId },
+            initialOptions,
+        })​;
+    }
+
+    public getFileContentFromComputeNode(
+        poolId: string,
+        nodeId: string,
+        filename: string,
+        options: any = {}): Observable<FileContentResult> {
+
+        return Observable.fromPromise(BatchClient.file.getComputeNodeFile(poolId, nodeId, filename, options));
+    }
+
+    public getFilePropertiesFromComputeNode(
+        poolId: string,
+        nodeId: string,
+        filename: string,
+        options: any = {}): RxEntityProxy<NodeFileParams, File> {
+        return new RxBatchEntityProxy<NodeFileParams, File>(File, {
+            cache: (params) => this.getNodeFileCache(params),
+            getFn: (params) => {
+                return BatchClient.file.getComputeNodeFileProperties(poolId, nodeId, filename, options);
+            },
+            initialParams: { poolId: poolId, nodeId: nodeId, filename: filename },
+        });
+    }
+
+    public listFromTask(
+        initialJobId: string,
+        initialTaskId: string,
+        recursive = true,
+        initialOptions: any = {}): RxListProxy<TaskFileListParams, File> {
+
+        return new RxBatchListProxy<TaskFileListParams, File>(File, {
+            cache: (params) => this.getTaskFileCache(params),
+            proxyConstructor: (params, options) => {
+                return BatchClient.file.listFromTask(params.jobId, params.taskId, recursive, options);
+            },
+            initialParams: { jobId: initialJobId, taskId: initialTaskId },
             initialOptions,
         })​;
     }
@@ -60,36 +115,17 @@ export class FileService extends ServiceBase {
         return Observable.fromPromise(BatchClient.file.getTaskFile(jobId, taskId, filename, options));
     }
 
-    // TODO change to RxEntityProxy
     public getFilePropertiesFromTask(
         jobId: string,
         taskId: string,
         filename: string,
-        options: any = {}): Observable<File> {
-
-        return Observable.fromPromise(BatchClient.file.getTaskFileProperties(jobId, taskId, filename, options));
+        options: any = {}): RxEntityProxy<TaskFileParams, File> {
+        return new RxBatchEntityProxy<TaskFileParams, File>(File, {
+            cache: (params) => this.getTaskFileCache(params),
+            getFn: (params) => {
+                return BatchClient.file.getTaskFileProperties(jobId, taskId, filename, options);
+            },
+            initialParams: { jobId: jobId, taskId: taskId, filename: filename },
+        });
     }
-
-    // public listFromTask(
-    //     jobId: string,
-    //     taskId: string,
-    //     recursive = true,
-    //     initialOptions: any = {}): RxListProxy<File> {
-
-    //     return new RxListProxy<File>(File, this._cache, (options) => {
-    //         return BatchClient.file.listFromTask(jobId, taskId, recursive, options);
-    //     }, initialOptions)​;
-    // }
-
-    // public getFromComputeNode(poolId: string, nodeId: string, options: any): RxEntityProxy<FileParams, Node> {
-    //     return new RxEntityProxy(Node, this._cache, (params: FileParams) => {
-    //         return BatchClient.node.get(params.poolId, params.id, options);
-    //     }, { id: nodeId, poolId });
-    // }
-
-    // public getFromTask(jobId: string, taskId: string, options: any): RxEntityProxy<FileParams, Node> {
-    //     return new RxEntityProxy(File, this._cache, (params: FileParams) => {
-    //         return BatchClient.node.get(params.poolId, params.id, options);
-    //     }, { id: nodeId, poolId });
-    // }
 }
