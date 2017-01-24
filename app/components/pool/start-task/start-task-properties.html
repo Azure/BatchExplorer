@@ -29,6 +29,10 @@
         </bex-property-group>
     </bex-property-list>
 
+    <div *ngIf="!startTask" class="no-properties">
+        Pool doesn't have a start task
+    </div>
+
     <button md-mini-fab color="primary" (click)="edit = true" mdTooltip="Edit">
         <i class="fa fa-pencil"></i>
     </button>

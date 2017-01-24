@@ -29,7 +29,7 @@ export class StartTaskPickerComponent implements ControlValueAccessor {
 
         this.form.valueChanges.subscribe((val: any) => {
             if (this._propagateChange) {
-                this._propagateChange(val);
+                this._propagateChange(val.enableStartTask ? val : null);
             }
         });
     }

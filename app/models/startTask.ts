@@ -2,7 +2,7 @@ import { Record } from "immutable";
 
 // tslint:disable:variable-name object-literal-sort-keys
 const StartTaskRecord = Record({
-    commandLine: null,
+    commandLine: "",
     waitForSuccess: true,
     runElevated: false,
     maxTaskRetryCount: 0,

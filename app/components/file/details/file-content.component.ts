@@ -114,9 +114,12 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
         if (e.statusCode === Constants.HttpCode.NotFound) {
             this.notFound = true;
             return;
+        } else if (e.statusCode === Constants.HttpCode.Conflict) {
+            this.notFound = true;
+            return;
         }
 
-        console.error("Error is", e.statusCode, Object.assign({}, e));
+        console.error("[FileContent.component] Error is", e.statusCode, Object.assign({}, e));
     }
 
     private _scrollToBottom() {

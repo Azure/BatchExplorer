@@ -1,4 +1,4 @@
-<md-card>
+<md-card [class]="type">
     <div class="summary-container" (click)="showDetails = !showDetails && details.children.length !== 0" [class.expandable]="details.children.length !== 0">
         <ng-content select="[code]"></ng-content>
         <ng-content select="[message]"></ng-content>

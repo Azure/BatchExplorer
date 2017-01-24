@@ -1,5 +1,4 @@
 // tslint:disable:only-arrow-functions
-
 interface String {
     /**
      * Format a string

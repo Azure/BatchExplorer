@@ -7,6 +7,12 @@ export enum ErrorState {
     Fixed,
 }
 
+export type BannerType = "error" | "warning";
+export const BannerType = {
+    error: "error" as BannerType,
+    warning: "warning" as BannerType,
+};
+
 @Directive({
     // tslint:disable-next-line:directive-selector
     selector: "[other-fix]",
@@ -37,6 +43,9 @@ export class BannerComponent {
 
     @Input()
     public fix: () => Observable<any>;
+
+    @Input()
+    public type = BannerType.error;
 
     @ContentChildren(BannerOtherFixDirective)
     public otherFixes: QueryList<BannerOtherFixDirective>;

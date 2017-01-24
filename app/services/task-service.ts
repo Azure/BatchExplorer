@@ -97,17 +97,22 @@ export class TaskService extends ServiceBase {
      * Starts the deletion process
      */
     public delete(jobId: string, taskId: string, options: any = {}): Observable<void> {
-        const observable = Observable.fromPromise<any>(BatchClient.task.delete(jobId, taskId, options));
-        observable.subscribe({
-            error: (error) => {
-                console.error(`Error deleting task: ${taskId}, for job: ${jobId}`, error);
-            },
+        return this.callBatchClient(BatchClient.task.delete(jobId, taskId, options), (error) => {
+            console.error(`Error deleting task: ${taskId}, for job: ${jobId}`, error);
         });
-
-        return observable;
     }
 
     public add(jobId: string, task: any, options: any): Observable<void> {
         return Observable.fromPromise<any>(BatchClient.task.add(jobId, task, options));
+    }
+
+    /**
+     * Reactivate a task
+     * https://msdn.microsoft.com/en-us/library/azure/mt742660.aspx?f=255&MSPPError=-2147217396
+     */
+    public reactivate(jobId: string, taskId: string, options: any = {}): Observable<void> {
+        return this.callBatchClient(BatchClient.task.reactivate(jobId, taskId, options), (error) => {
+            console.error(`Error reactivating task: ${taskId}, for job: ${jobId}`, error);
+        });
     }
 }
