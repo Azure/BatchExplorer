@@ -3,8 +3,7 @@ import { ActivatedRoute, NavigationEnd, PRIMARY_OUTLET, Router } from "@angular/
 import { BehaviorSubject, Observable } from "rxjs";
 
 import { Constants } from "app/utils";
-import { Breadcrumb, BreadcrumbData, RouteComponent } from "./breadcrumb-models";
-
+import { Breadcrumb, RouteComponent } from "./breadcrumb-models";
 
 function breadcrumbMethodMessage(componentName) {
     const message = "The breadcrumb could not be generated because the route component"
@@ -38,7 +37,6 @@ export class BreadcrumbService {
             sessionStorage.setItem(Constants.sessionStorageKey.breadcrumb, JSON.stringify(data));
         });
     }
-
 
     public addBreadcrumb(breadcrumb: Breadcrumb) {
         const cleaned = this._cleanupCrumbs(breadcrumb);

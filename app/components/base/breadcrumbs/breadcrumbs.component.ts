@@ -4,7 +4,6 @@ import { Subscription } from "rxjs";
 import { Breadcrumb } from "./breadcrumb-models";
 import { BreadcrumbService } from "./breadcrumb.service";
 
-
 @Component({
     selector: "bex-crumb",
     template: `<template><ng-content></ng-content></template>`,
@@ -38,7 +37,6 @@ export class BreadcrumbsComponent implements OnDestroy {
     }
 
     public clickBreadcrumb(crumb: Breadcrumb) {
-        console.log("Click on ", crumb);
         this.breadcrumbService.navigateTo(crumb);
     }
 }
