@@ -1,11 +1,13 @@
 <div [formGroup]="form">
     <div class="form-element" class="source">
         <h4>Select an operating system configuration</h4>
-        <p>Windows PaaS configuration lets use .... while Gallery images give you the option to ...</p>
-        <md-radio-group formControlName="source" placeholder="IAAS/PAAS">
-            <md-radio-button [value]="PoolOsSources.PaaS">PaaS</md-radio-button>
-            <md-radio-button [value]="PoolOsSources.IaaS">IaaS</md-radio-button>
-        </md-radio-group>
+        <div class="infrastructure">
+            <label>Underlying infrastructure</label>
+            <md-radio-group formControlName="source">
+                <md-radio-button [value]="PoolOsSources.IaaS">Virtual Machine</md-radio-button>
+                <md-radio-button [value]="PoolOsSources.PaaS">Cloud Service (Windows only)</md-radio-button>
+            </md-radio-group>
+        </div>
     </div>
 
     <div *ngIf="selectedSource === PoolOsSources.PaaS">
