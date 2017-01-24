@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { Constants } from "app/utils";
 import { Breadcrumb, RouteComponent } from "./breadcrumb-models";
 
-function breadcrumbMethodMessage(componentName) {
+function breadcrumbMethodMissingMessage(componentName) {
     const message = "The breadcrumb could not be generated because the route component"
         + ` '${componentName}' doesn't have the static breadcrumb method defined`;
     return `${message}
@@ -38,6 +38,11 @@ export class BreadcrumbService {
         });
     }
 
+
+    /**
+     * Add a breadcrumb to the list
+     * This will remove any previous breadcrumb that doesn't make sense
+     */
     public addBreadcrumb(breadcrumb: Breadcrumb) {
         const cleaned = this._cleanupCrumbs(breadcrumb);
         this._crumbs.next(cleaned.concat([breadcrumb]));
@@ -45,9 +50,12 @@ export class BreadcrumbService {
 
     /**
      * Compare segments of 2 breadcrumb
-     * If the 2 breadcrumb don't have the same base return false
+     * This check if one of the segments is a subset of the other
      */
     public compareSegments(first: Breadcrumb, second: Breadcrumb) {
+        if (!first || !second) {
+            return false;
+        }
         const firstSegments = first.segments;
         const secondSegments = second.segments;
 
@@ -95,7 +103,7 @@ export class BreadcrumbService {
         const component: RouteComponent = route.snapshot.component as any;
         const {params, queryParams} = route.snapshot;
         if (!component.breadcrumb) {
-            console.error(breadcrumbMethodMessage(component.name));
+            console.error(breadcrumbMethodMissingMessage(component.name));
             return null;
         }
         const data = component.breadcrumb(params, queryParams);

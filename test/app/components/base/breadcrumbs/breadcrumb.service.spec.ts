@@ -89,6 +89,8 @@ describe("Breadcrumb service", () => {
         expect(service.compareSegments(b1, b2)).toBe(true);
         expect(service.compareSegments(b1, b3)).toBe(false);
         expect(service.compareSegments(b1, b4)).toBe(false);
+        expect(service.compareSegments(b1, null)).toBe(false);
+        expect(service.compareSegments(undefined, b2)).toBe(false);
     });
 
     it("Navigate to breadcrumb call router navigate", () => {
