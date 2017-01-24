@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { List } from "immutable";
+import { Subscription } from "rxjs";
 
 import { Node, NodeState } from "app/models";
 import { NodeListParams, NodeService } from "app/services";
@@ -25,6 +26,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     private _stateCounter = new StateCounter();
 
     private _refreshInterval: any;
+    private _nodesSub: Subscription;
 
     constructor(private nodeService: NodeService, private router: Router) {
 
@@ -32,7 +34,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
             maxResults: 1000,
             select: "id,state",
         });
-        this.data.items.subscribe((nodes) => {
+        this._nodesSub = this.data.items.subscribe((nodes) => {
             if (nodes.size !== 0) {
                 this.nodes = nodes;
                 this._stateCounter.updateCount(nodes);
@@ -54,6 +56,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
 
     public ngOnDestroy() {
         clearInterval(this._refreshInterval);
+        this._nodesSub.unsubscribe();
     }
 
     @autobind()
