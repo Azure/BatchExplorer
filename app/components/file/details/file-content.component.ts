@@ -17,6 +17,12 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
     public taskId: string;
 
     @Input()
+    public poolId: string;
+
+    @Input()
+    public nodeId: string;
+
+    @Input()
     public filename: string;
     public inter;
 
@@ -63,49 +69,86 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
     }
 
     private _updateFileContent() {
-        this.currentSubscription = this.fileService.getFilePropertiesFromTask(this.jobId, this.taskId, this.filename)
-            .subscribe({
+        if (this.jobId && this.taskId) {
+            let propertiesProxy = this.fileService.getFilePropertiesFromTask(
+                this.jobId, this.taskId, this.filename);
+
+            this.currentSubscription = propertiesProxy.fetch().subscribe({
                 next: (result: any) => {
-                    if (result && result.data && result.data.properties) {
-                        const newContentLength = result.data.properties.contentLength;
-                        if (newContentLength !== this.lastContentLength) {
-                            this._loadUpTo(newContentLength);
-                        }
-                    }
+                    this._loadPropertiesContentNext(result);
                 },
                 error: (e) => {
                     this._processError(e);
                 },
             });
+        } else if (this.poolId && this.nodeId) {
+            let propertiesProxy = this.fileService.getFilePropertiesFromComputeNode(
+                this.poolId, this.nodeId, this.filename);
+
+            this.currentSubscription = propertiesProxy.fetch().subscribe({
+                next: (result: any) => {
+                    this._loadPropertiesContentNext(result);
+                },
+                error: (e) => {
+                    this._processError(e);
+                },
+            });
+        }
     }
 
     private _loadUpTo(newContentLength: number) {
-        this.currentSubscription = this.fileService.getFileContentFromTask(this.jobId, this.taskId, this.filename, {
-            fileGetFromTaskOptions: {
-                ocpRange: `bytes=${this.lastContentLength}-${newContentLength}`,
-            },
-        }).subscribe((result) => {
-            this.lastContentLength = newContentLength;
-            const newLines = result.content.toString().split("\n");
-            let first = "";
-            if (newLines.length > 1) {
-                first = newLines.shift();
-            }
-            if (this.lines.length === 0) {
-                this.lines = [first];
-            } else {
-                this.lines[this.lines.length - 1] += first;
-            }
-            this.lines = this.lines.concat(newLines);
-            if (this.followingLog) {
-                setTimeout(() => {
-                    this._scrollToBottom();
+        if (this.jobId && this.taskId) {
+            this.currentSubscription = this.fileService.getFileContentFromTask(this.jobId, this.taskId, this.filename, {
+                fileGetFromTaskOptions: {
+                    ocpRange: `bytes=${this.lastContentLength}-${newContentLength}`,
+                },
+            }).subscribe((result) => {
+                this._loadFileContent(result, newContentLength);
+            }, (e) => {
+                this._processError(e);
+            });
+        } else if (this.poolId && this.nodeId) {
+            this.currentSubscription = this.fileService.getFileContentFromComputeNode(
+                this.poolId, this.nodeId, this.filename, {
+                    fileGetFromTaskOptions: {
+                        ocpRange: `bytes=${this.lastContentLength}-${newContentLength}`,
+                    },
+                }).subscribe((result) => {
+                    this._loadFileContent(result, newContentLength);
+                }, (e) => {
+                    this._processError(e);
                 });
+        }
+    }
+
+    private _loadPropertiesContentNext(result: any) {
+        if (result && result.properties) {
+            const newContentLength = result.properties.contentLength;
+            if (newContentLength !== this.lastContentLength) {
+                this._loadUpTo(newContentLength);
             }
-            this.currentSubscription = null;
-        }, (e) => {
-            this._processError(e);
-        });
+        }
+    }
+
+    private _loadFileContent(result: any, newContentLength: number) {
+        this.lastContentLength = newContentLength;
+        const newLines = result.content.toString().split("\n");
+        let first = "";
+        if (newLines.length > 1) {
+            first = newLines.shift();
+        }
+        if (this.lines.length === 0) {
+            this.lines = [first];
+        } else {
+            this.lines[this.lines.length - 1] += first;
+        }
+        this.lines = this.lines.concat(newLines);
+        if (this.followingLog) {
+            setTimeout(() => {
+                this._scrollToBottom();
+            });
+        }
+        this.currentSubscription = null;
     }
 
     private _processError(e) {
@@ -114,9 +157,12 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
         if (e.statusCode === Constants.HttpCode.NotFound) {
             this.notFound = true;
             return;
+        } else if (e.statusCode === Constants.HttpCode.Conflict) {
+            this.notFound = true;
+            return;
         }
 
-        console.error("Error is", e.statusCode, Object.assign({}, e));
+        console.error("[FileContent.component] Error is", e.statusCode, Object.assign({}, e));
     }
 
     private _scrollToBottom() {

@@ -20,6 +20,7 @@
                 <bex-clone-button (click)="cloneTask()"></bex-clone-button>
             </md-card-actions>
         </md-card>
+        <bex-task-error-display [jobId]="jobId" [task]="task"></bex-task-error-display>
         <md-card class="details">
             <md-tab-group>
                 <md-tab>
@@ -41,6 +42,14 @@
                     <template md-tab-label>Environment Settings</template>
                     <div class="tab-padding">
                         <bex-task-environment-settings [task]="task"></bex-task-environment-settings>
+                    </div>
+                </md-tab>
+                <md-tab>
+                    <template md-tab-label>Files</template>
+                    <div class="tab-padding">
+                        <bex-entity-details-list #listWrapper [refresh]="list.refresh">
+                            <bex-task-file-list [jobId]="jobId" [taskId]="taskId" [filter]="listWrapper.filter" [quickList]="false" #list></bex-task-file-list>
+                        </bex-entity-details-list>
                     </div>
                 </md-tab>
                 <md-tab>

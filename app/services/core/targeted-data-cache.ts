@@ -15,7 +15,7 @@ export class TargetedDataCache<TParams, TEntity> {
     private _caches = new Map<string, DataCache<TEntity>>();
     private _options: TargetedDataCacheOptions<TParams>;
 
-    constructor(options: TargetedDataCacheOptions<TParams> = {}) {
+    constructor(options: TargetedDataCacheOptions<TParams> = {}, private _uniqueField = "id") {
         this._options = Object.assign({}, defaultOptions, options);
     }
 
@@ -30,7 +30,7 @@ export class TargetedDataCache<TParams, TEntity> {
         const key = this.getCacheKey(params);
         let cache = this._caches.get(key);
         if (!cache) {
-            cache = new DataCache<TEntity>();
+            cache = new DataCache<TEntity>(this._uniqueField);
             this._caches.set(key, cache);
         }
         return cache;

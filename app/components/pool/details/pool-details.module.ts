@@ -1,9 +1,6 @@
 import { NgModule } from "@angular/core";
-import { MaterialModule } from "@angular/material";
-import { BrowserModule } from "@angular/platform-browser";
-import { RouterModule } from "@angular/router";
 
-import { BaseModule } from "app/components/base";
+import { commonModules } from "app/common";
 import { NodeBrowseModule } from "app/components/node/browse";
 import { PoolGraphsModule } from "app/components/pool/graphs";
 import { StartTaskModule } from "app/components/pool/start-task";
@@ -17,7 +14,7 @@ const components = [PoolPropertiesComponent, PoolDetailsComponent, PoolDetailsHo
 @NgModule({
     declarations: components,
     exports: components,
-    imports: [BrowserModule, MaterialModule, RouterModule, BaseModule,
+    imports: [...commonModules,
         PoolGraphsModule, NodeBrowseModule, StartTaskModule],
 })
 export class PoolDetailsModule {

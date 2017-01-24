@@ -14,7 +14,19 @@ export enum HttpCode {
     Ok = 200,
     Accepted = 201,
     NotFound = 404,
+    Conflict = 409,
     BadRequest = 500,
+};
+
+export const FileUrlStrings = {
+    Job: "jobs",
+    Pool: "pools",
+    Separator: "/",
+};
+
+export const FileSourceTypes = {
+    Job: "job",
+    Pool: "pool",
 };
 
 export const forms = {

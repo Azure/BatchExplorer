@@ -48,14 +48,9 @@ If you're using VSCode (recommended) we suggest you use the following extensions
 
 Please also take a look at the [coding guidelines](coding-guidelines.md) for this repo for best practices.
 
-## How to run the tests
+## Testing
 
-| Description                              | Single run             | Watch                        |
-|------------------------------------------|------------------------|------------------------------|
-| Run the test for the browser environment | `npm run test-browser` | `npm run test-browser-watch` |
-| Run the test for the node environemnt    | `npm run test-client`  | `npm run test-client-watch`  |
-| Run all the tests                        | `npm run test`         |                              |
-| Run the lint                             | `npm run lint`         |                              |
+[Testing doc](docs/testing.md)
 
 ## Editor
 

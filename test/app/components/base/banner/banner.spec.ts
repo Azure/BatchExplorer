@@ -8,7 +8,7 @@ import { mouseenter } from "test/utils/helpers";
 
 @Component({
     template: `
-        <bex-banner #banner [fix]="fix1" fixMessage="Main fix">
+        <bex-banner #banner [fix]="fix1" fixMessage="Main fix" [type]="type">
             <div code>Error 404</div>
             <div message>Page not found</div>
             <div details *ngIf="includeDetails">You got to look carefully where you go</div>
@@ -23,6 +23,7 @@ export class BannerTestComponent {
 
     public includeDetails = true;
     public includeOtherFixes = false;
+    public type = "error";
 
     public fix1: jasmine.Spy;
     public fix2: jasmine.Spy;
@@ -33,6 +34,7 @@ describe("Banner", () => {
     let fixture: ComponentFixture<BannerTestComponent>;
     let component: BannerTestComponent;
     let bannerElement: DebugElement;
+    let bannerComponent: BannerComponent;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -52,6 +54,19 @@ describe("Banner", () => {
         component.fix3 = jasmine.createSpy("Fix 3");
         fixture.detectChanges();
         bannerElement = fixture.debugElement.query(By.css("bex-banner"));
+        bannerComponent = bannerElement.componentInstance;
+    });
+
+    it("should be of error type by default", () => {
+        expect(bannerComponent.type).toBe("error");
+        expect(bannerElement.query(By.css("md-card")).nativeElement.className).toBe("error");
+    });
+
+    it("should be of warning type when changed", () => {
+        component.type = "warning";
+        fixture.detectChanges();
+        expect(bannerComponent.type).toBe("warning");
+        expect(bannerElement.query(By.css("md-card")).nativeElement.className).toBe("warning");
     });
 
     describe("When there is details", () => {
