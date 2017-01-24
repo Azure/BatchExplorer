@@ -3,6 +3,7 @@ export * from "./color";
 export * from "./file-url-utils";
 export * from "./logger";
 export * from "./observable";
+export * from "./form-utils";
 export * from "./object";
 export * from "./os";
 export * from "./secure";

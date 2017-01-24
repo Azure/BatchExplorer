@@ -14,6 +14,7 @@ export enum HttpCode {
     Ok = 200,
     Accepted = 201,
     NotFound = 404,
+    Conflict = 409,
     BadRequest = 500,
 };
 

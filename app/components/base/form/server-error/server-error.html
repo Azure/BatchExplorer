@@ -3,8 +3,8 @@
         <div class="main-info">
             <h4>{{error.code}}</h4>
             <p>{{errorData.message}}</p>
-            <div class="details" *ngIf="error.values">
-                <div *ngFor="let detail of error.values">{{detail.key}}: {{detail.value}}</div>
+            <div class="details" *ngIf="error.body?.values">
+                <div *ngFor="let detail of error.body.values"><b>{{detail.key}}</b>: {{detail.value}}</div>
             </div>
         </div>
         <div class="troubleshoot-btn">

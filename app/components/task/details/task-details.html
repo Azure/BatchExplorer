@@ -20,6 +20,7 @@
                 <bex-clone-button (click)="cloneTask()"></bex-clone-button>
             </md-card-actions>
         </md-card>
+        <bex-task-error-display [jobId]="jobId" [task]="task"></bex-task-error-display>
         <md-card class="details">
             <md-tab-group>
                 <md-tab>
