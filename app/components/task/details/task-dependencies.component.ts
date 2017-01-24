@@ -1,12 +1,13 @@
 import { Component, Input, OnDestroy, ViewContainerRef } from "@angular/core";
 
 import { Task, TaskDependency } from "app/models";
+import { TaskService } from "app/services";
+import { BehaviorSubject } from "rxjs";
 
 @Component({
     selector: "bex-task-dependencies",
     templateUrl: "task-dependencies.html",
 })
-
 export class TaskDependenciesComponent implements OnDestroy {
     @Input()
     public set jobId(value: string) {
@@ -22,7 +23,7 @@ export class TaskDependenciesComponent implements OnDestroy {
     public get task() { return this._task; }
 
     public dependentIds: string[] = [];
-    public dependencies: TaskDependency[] = [];
+    public dependencies: BehaviorSubject<TaskDependency[]>;
     public loadingMore: boolean = false;
     public hasMore: boolean = false;
 
@@ -31,12 +32,16 @@ export class TaskDependenciesComponent implements OnDestroy {
     private _skip: number;
     private _take: number;
 
-    constructor(private viewContainerRef: ViewContainerRef) {
-        this._skip = 0;
-        this._take = 15;
+    constructor(
+        private viewContainerRef: ViewContainerRef,
+        private taskService: TaskService) {
     }
 
     public refresh(task: Task) {
+        this._skip = 0;
+        this._take = 15;
+
+        this.dependencies = new BehaviorSubject<TaskDependency[]>([]);
         this.dependentIds = (task && task.dependsOn)
             ? this._getTaskDependencyIds(task.dependsOn)
             : [];
@@ -45,21 +50,66 @@ export class TaskDependenciesComponent implements OnDestroy {
     }
 
     public loadMore() {
-        console.log(`loadMore ... skip: ${this._skip}, take: ${this._take}, length: ${this.dependentIds.length}`);
-        if (this.dependentIds.length > 0) {
-            this.dependencies.push(... this.dependentIds.slice(this._skip, this._skip + this._take).map(id => {
-                return new TaskDependency(id);
-            }));
+        // leave this comment until its finished ....
+        // console.log(`loadMore ... skip: ${this._skip}, take: ${this._take}, length: ${this.dependentIds.length}`);
 
-            // todo: more work on this to make sure its correct.
-            // BELOW CODE SNIPPET
+        if (this.dependentIds.length > 0) {
+            // this seems to handle where (this._skip + this._take) is greater than then number of items left
+            // todo: might want to clean it up so we always ask for the correct number of items.
+            let taskIdSet = this.dependentIds.slice(this._skip, this._skip + this._take);
+            let currentPage = taskIdSet.map(id => {
+                return new TaskDependency(id);
+            });
+
+            this.dependencies.next(this.dependencies.value.concat(currentPage));
+            this.taskService.getMultiple(this.jobId, taskIdSet).subscribe({
+                next: (response: any) => {
+                    if (response.data) {
+                        this._processGetMultipleResponse(response, currentPage);
+                    }
+                },
+            });
+
             this._skip += this._take;
             this.hasMore = this._skip < this.dependentIds.length;
+        } else {
+            this.hasMore = false;
         }
     }
 
     public ngOnDestroy() {
         /* tab hide */
+    }
+
+    /**
+     * Process the data returned from the API for the current page of taskId's we are showing
+     * @param response: api reponse
+     * @param pageData: data for the current page
+     */
+    private _processGetMultipleResponse(response: any, pageData: TaskDependency[]): void {
+        if (response.data) {
+            pageData.forEach(td => {
+                const found = response.data.filter(item => item.id === td.id);
+                if (found && found.length > 0) {
+                    td.state = found[0].state;
+                    const dependencies = found[0].dependsOn;
+                    if (dependencies) {
+                        const count = this._taskDependenciesCount(dependencies);
+
+                        /* tslint:disable:no-empty */
+                        if (count === 0) {
+                        } else if (count <= 2) {
+                            const ids = this._getTaskDependencyIds(dependencies);
+                            td.dependsOn = ids.join(",");
+                        } else {
+                            td.dependsOn = `${count} tasks`;
+                        }
+                    } else {
+                        td.dependsOn = "no tasks";
+                    }
+                }
+            });
+        }
     }
 
     /**
@@ -83,41 +133,18 @@ export class TaskDependenciesComponent implements OnDestroy {
 
         return out;
     }
+
+    /**
+     * Get the task.dependsOn count for displaying in the table.
+     */
+    private _taskDependenciesCount(dependencies: any): number {
+        const ids = dependencies.taskIds;
+        const ranges = dependencies.taskIdRanges;
+        const count = ids ? ids.length : 0;
+        const rangeCount = ranges
+            ? ranges.map((x) => (x.end - x.start + 1)).reduce((range, out) => out + range, 0)
+            : 0;
+
+        return count + rangeCount;
+    }
 }
-
-// function getTaskDependenciesIds(dependencies: TaskDependencies, skip: number, take: number): string[] {
-//     "use strict";
-
-//     const ids = dependencies.taskIds() || [];
-//     const ranges = dependencies.taskIdRanges();
-//     let out = ids.slice(skip, take);
-//     let leftToSkip = skip - ids.length;
-//     let leftToTake = take - out.length;
-
-//     if (leftToSkip < 0) {
-//         leftToSkip = 0;
-//     }
-
-//     if (!ranges) {
-//         return out;
-//     }
-
-//     for (let range of ranges) {
-//         if (leftToTake <= 0) {
-//             break;
-//         }
-//         const rangeLength = range.end() - range.start() + 1;
-//         if (leftToSkip < rangeLength) {
-//             const start = range.start() + leftToSkip;
-//             const end = start + Math.min(leftToTake, rangeLength - leftToSkip);
-//             leftToSkip = 0;
-//             for (let i = start; i < end; i++) {
-//                 out.push(i.toString());
-//             }
-//             leftToTake = take - out.length;
-//         } else {
-//             leftToSkip -= rangeLength;
-//         }
-//     }
-//     return out;
-// }

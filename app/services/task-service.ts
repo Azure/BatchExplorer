@@ -2,9 +2,16 @@ import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 
 import { SubtaskInformation, Task } from "app/models";
+import { FilterBuilder } from "app/utils/filter-builder";
 import BatchClient from "../api/batch/batch-client";
 import {
-    DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache, getOnceProxy,
+    DataCache,
+    RxBatchEntityProxy,
+    RxBatchListProxy,
+    RxEntityProxy,
+    RxListProxy,
+    TargetedDataCache,
+    getOnceProxy,
 } from "./core";
 import { CommonListOptions, ServiceBase } from "./service-base";
 
@@ -32,7 +39,7 @@ export class TaskService extends ServiceBase {
      */
     public onTaskAdded = new Subject<TaskParams>();
 
-    private _basicProperties: string = "id,displayName,state";
+    private _basicProperties: string = "id,state,dependsOn";
     private _cache = new TargetedDataCache<TaskListParams, Task>({
         key: ({jobId}) => jobId,
     });
@@ -87,6 +94,25 @@ export class TaskService extends ServiceBase {
 
     public getOnce(jobId: string, taskId: string, options: any = {}): Observable<Task> {
         return getOnceProxy(this.get(jobId, taskId, options));
+    }
+
+    public getMultiple(jobId: string, taskIds: string[], properties?: string): Observable<Task[]> {
+        let options = {
+            filter: FilterBuilder.or(...taskIds.map(id => FilterBuilder.prop("id").eq(id))).toOData(),
+            select: properties || this.basicProperties,
+            maxResults: taskIds.length,
+        };
+
+        const observable = Observable.fromPromise<any>(BatchClient.task.list(jobId, options).fetchNext());
+        observable.subscribe({
+            error: (error) => {
+                console.error(
+                    `Error getting multiple tasks for job: ${jobId}, and filter: ${options.filter}`,
+                    error.toJSON());
+            },
+        });
+
+        return observable;
     }
 
     public terminate(jobId: string, taskId: string, options: any): Observable<void> {
