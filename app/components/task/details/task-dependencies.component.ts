@@ -50,14 +50,10 @@ export class TaskDependenciesComponent implements OnDestroy {
     }
 
     public loadMore() {
-        // leave this comment until its finished ....
-        // console.log(`loadMore ... skip: ${this._skip}, take: ${this._take}, length: ${this.dependentIds.length}`);
-
         if (this.dependentIds.length > 0) {
-            // this seems to handle where (this._skip + this._take) is greater than then number of items left
-            // todo: might want to clean it up so we always ask for the correct number of items.
-            let taskIdSet = this.dependentIds.slice(this._skip, this._skip + this._take);
-            let currentPage = taskIdSet.map(id => {
+            const endIndex = this._skip + Math.min(this._take, this.dependentIds.length - this._skip);
+            const taskIdSet = this.dependentIds.slice(this._skip, endIndex);
+            const currentPage = taskIdSet.map(id => {
                 return new TaskDependency(id);
             });
 
