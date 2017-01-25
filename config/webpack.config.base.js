@@ -40,9 +40,9 @@ const baseConfig = {
     plugins: [
         // Workaround for WARNING Critical dependency: the request of a dependency is an expression
         new webpack.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/, __dirname),
-        // new webpack.LoaderOptionsPlugin({
-        //     debug: true
-        // })
+        new webpack.LoaderOptionsPlugin({
+            debug: true
+        })
     ],
     target: "electron-renderer",
 };
