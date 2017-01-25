@@ -61,9 +61,10 @@ export class TaskFileListComponent implements OnInit {
     private _jobId: string;
     private _taskId: string;
 
-    constructor(private fileService: FileService,
-                private nodeService: NodeService,
-                private taskService: TaskService) {
+    constructor(
+        private fileService: FileService,
+        private nodeService: NodeService,
+        private taskService: TaskService) {
         this.notFound = true;
     }
 
@@ -92,6 +93,10 @@ export class TaskFileListComponent implements OnInit {
             return this.data.fetchNext();
         }
         return new Observable(null);
+    }
+
+    public get baseUrl() {
+        return ["/jobs", this.jobId, "tasks", this.taskId];
     }
 
     private _loadIfNodeExists() {

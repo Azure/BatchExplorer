@@ -1,6 +1,7 @@
 // tslint:disable: object-literal-sort-keys
 import { Routes } from "@angular/router";
 
+import { Constants } from "app/utils";
 // component imports for routing
 import { AccountDetailsHomeComponent } from "./components/account/details/account-details-home.component";
 import { AccountDetailsComponent } from "./components/account/details/account-details.component";
@@ -62,10 +63,19 @@ export const routes: Routes = [
         ],
     },
     {
-        path: "files/:url",
+        path: "pools/:poolId/nodes/:nodeId/files/:filename",
         component: FileHomeComponent,
+        data: { type: Constants.FileSourceTypes.Pool },
         children: [
-            { path: "", component: FileDetailsComponent }, // files/{account.url}
+            { path: "", component: FileDetailsComponent },
+        ],
+    },
+    {
+        path: "jobs/:jobId/tasks/:taskId/files/:filename",
+        component: FileHomeComponent,
+        data: { type: Constants.FileSourceTypes.Job },
+        children: [
+            { path: "", component: FileDetailsComponent },
         ],
     },
 ];

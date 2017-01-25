@@ -1,5 +1,5 @@
 <div *ngIf="!notFound">
-    <bex-file-list-display [files]="data.items | async" [status]="status" [quickList]="quickList" [fileType]="fileType"></bex-file-list-display>
+    <bex-file-list-display [files]="data.items | async" [status]="status" [quickList]="quickList" [fileType]="fileType" [baseUrl]="baseUrl"></bex-file-list-display>
     <!--<bex-loading [status]="status | async">
     </bex-loading>-->
     <bex-list-loading [manualLoading]="manualLoading" [data]="data"></bex-list-loading>
