@@ -63,7 +63,7 @@ export class Task extends TaskRecord {
     public executionInfo: TaskExecutionInformation;
     public nodeInfo: ComputeNodeInformation;
     public multiInstanceSettings: MultiInstanceSettings;
-    public stats: any;                           // TaskStatistics
+    public stats: any; // TaskStatistics
     public dependsOn: TaskDependencies;
     public applicationPackageReferences: ApplicationPackageReference[];
 

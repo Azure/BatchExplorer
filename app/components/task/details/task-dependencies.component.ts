@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, ViewContainerRef } from "@angular/core";
+import { Component, Input, OnDestroy } from "@angular/core";
 
 import { Task, TaskDependency } from "app/models";
 import { TaskService } from "app/services";
@@ -18,7 +18,7 @@ export class TaskDependenciesComponent implements OnDestroy {
     @Input()
     public set task(task: Task) {
         this._task = task;
-        this.refresh(task);
+        this._refresh(task);
     }
     public get task() { return this._task; }
 
@@ -33,20 +33,7 @@ export class TaskDependenciesComponent implements OnDestroy {
     private _take: number;
 
     constructor(
-        private viewContainerRef: ViewContainerRef,
         private taskService: TaskService) {
-    }
-
-    public refresh(task: Task) {
-        this._skip = 0;
-        this._take = 15;
-
-        this.dependencies = new BehaviorSubject<TaskDependency[]>([]);
-        this.dependentIds = (task && task.dependsOn)
-            ? this._getTaskDependencyIds(task.dependsOn)
-            : [];
-
-        this.loadMore();
     }
 
     public loadMore() {
@@ -75,6 +62,18 @@ export class TaskDependenciesComponent implements OnDestroy {
 
     public ngOnDestroy() {
         /* tab hide */
+    }
+
+    private _refresh(task: Task) {
+        this._skip = 0;
+        this._take = 15;
+
+        this.dependencies = new BehaviorSubject<TaskDependency[]>([]);
+        this.dependentIds = (task && task.dependsOn)
+            ? this._getTaskDependencyIds(task.dependsOn)
+            : [];
+
+        this.loadMore();
     }
 
     /**
