@@ -38,7 +38,6 @@ export class BreadcrumbService {
         });
     }
 
-
     /**
      * Add a breadcrumb to the list
      * This will remove any previous breadcrumb that doesn't make sense
