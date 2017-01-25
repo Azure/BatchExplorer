@@ -49,6 +49,7 @@ export class NodeService extends ServiceBase {
             initialParams: { poolId: initialPoolId },
             initialOptions,
         })​;
+
     }
 
     public listAll(poolId: string, options: PoolListOptions = {}): Observable<List<Node>> {
@@ -72,6 +73,7 @@ export class NodeService extends ServiceBase {
             },
             initialParams: { poolId: initialPoolId },
         })​;
+
     }
 
     public reboot(poolId: string, nodeId: string): Observable<any> {

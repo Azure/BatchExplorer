@@ -65,6 +65,7 @@ export class FileService extends ServiceBase {
             initialParams: { poolId: initialPoolId, nodeId: initialNodeId },
             initialOptions,
         })​;
+
     }
 
     public getFileContentFromComputeNode(
@@ -104,6 +105,7 @@ export class FileService extends ServiceBase {
             initialParams: { jobId: initialJobId, taskId: initialTaskId },
             initialOptions,
         })​;
+
     }
 
     public getFileContentFromTask(
