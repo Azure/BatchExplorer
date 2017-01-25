@@ -1,5 +1,5 @@
 const Jasmine = require("jasmine");
-const SpecReporter = require("jasmine-spec-reporter");
+const { SpecReporter } = require("jasmine-spec-reporter");
 const path = require("path");
 
 const jrunner = new Jasmine();

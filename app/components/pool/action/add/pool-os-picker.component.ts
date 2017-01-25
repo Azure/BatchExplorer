@@ -42,7 +42,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
     public nodeAgentSKUId: FormControl;
     public accountData: RxListProxy<{}, NodeAgentSku>;
 
-    public selectedSource = PoolOsSources.PaaS;
+    public selectedSource = PoolOsSources.IaaS;
     public selectedPublisher: string = null;
     public selectedOffer: string = null;
     public selectedSku: string = null;
