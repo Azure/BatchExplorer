@@ -27,6 +27,7 @@
         "named-imports-order": "lowercase-last"
     }],
     "object-literal-sort-keys": false,
+    "arrow-return-shorthand": [true],
 
     // Codelyzer rules(Angular2)
     "directive-selector": [true, "attribute", "bex", "camelCase"],
