@@ -10,4 +10,7 @@ import { Component } from "@angular/core";
     `,
 })
 export class NoNodeSelectedComponent {
+    public static breadcrumb(params, queryParams) {
+        return { name: "Nodes" };
+    }
 }

@@ -39,7 +39,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.adalService.init(adalConfig);
         this.accountService.loadInitialData();
 
-        this.hasAccount = accountService.currentAccount.map((x) => { return Boolean(x); });
+        this.hasAccount = accountService.currentAccount.map((x) => Boolean(x));
 
         Observable
             .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)

@@ -56,7 +56,6 @@ export class FileService extends ServiceBase {
         initialNodeId: string,
         recursive = true,
         initialOptions: any = {}): RxListProxy<NodeFileListParams, File> {
-
         return new RxBatchListProxy<NodeFileListParams, File>(File, {
             cache: (params) => this.getNodeFileCache(params),
             proxyConstructor: (params, options) => {
@@ -64,7 +63,7 @@ export class FileService extends ServiceBase {
             },
             initialParams: { poolId: initialPoolId, nodeId: initialNodeId },
             initialOptions,
-        })​;
+        });
     }
 
     public getFileContentFromComputeNode(
@@ -95,7 +94,6 @@ export class FileService extends ServiceBase {
         initialTaskId: string,
         recursive = true,
         initialOptions: any = {}): RxListProxy<TaskFileListParams, File> {
-
         return new RxBatchListProxy<TaskFileListParams, File>(File, {
             cache: (params) => this.getTaskFileCache(params),
             proxyConstructor: (params, options) => {
@@ -103,7 +101,7 @@ export class FileService extends ServiceBase {
             },
             initialParams: { jobId: initialJobId, taskId: initialTaskId },
             initialOptions,
-        })​;
+        });
     }
 
     public getFileContentFromTask(
