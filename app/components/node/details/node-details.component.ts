@@ -54,6 +54,10 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
         }));
     }
 
+    public get filterPlaceholderText() {
+        return "Filter by file name";
+    }
+
     public update() {
         if (this.nodeId && this.poolId) {
             this.data.params = { id: this.nodeId, poolId: this.poolId };

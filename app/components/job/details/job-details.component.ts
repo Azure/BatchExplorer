@@ -66,6 +66,10 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
         this._paramsSubscriber.unsubscribe();
     }
 
+    public get filterPlaceholderText() {
+        return "Filter by task id";
+    }
+
     @autobind()
     public refresh() {
         return this.data.refresh();

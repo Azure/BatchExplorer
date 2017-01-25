@@ -43,7 +43,7 @@
                 </bex-tab>
                 <bex-tab key="nodes">
                     <bex-tab-label>Nodes</bex-tab-label>
-                    <bex-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/pools', poolId, 'nodes']">
+                    <bex-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/pools', poolId, 'nodes']" [filterPlaceholder]="filterPlaceholderText">
                         <bex-node-list #list [poolId]="poolId" [filter]="listWrapper.filter" [quickList]="false" [manualLoading]="true"></bex-node-list>
                     </bex-entity-details-list>
                 </bex-tab>

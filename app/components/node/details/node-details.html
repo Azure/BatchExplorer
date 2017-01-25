@@ -36,7 +36,7 @@
                 </md-radio-group>
             </div>
             <div>
-                <bex-entity-details-list #listWrapper [refresh]="list.refresh">
+                <bex-entity-details-list #listWrapper [refresh]="list.refresh" [filterPlaceholder]="filterPlaceholderText" [showAddButton]="false">
                     <bex-node-file-list [poolId]="poolId" [nodeId]="nodeId" [filter]="listWrapper.filter" [quickList]="false" [fileType]="selectedFileType" #list></bex-node-file-list>
                 </bex-entity-details-list>
             </div>

@@ -56,6 +56,10 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         this._paramsSubscriber.unsubscribe();
     }
 
+    public get filterPlaceholderText() {
+        return "Filter by node id";
+    }
+
     @autobind()
     public refreshPool() {
         return this.data.refresh();

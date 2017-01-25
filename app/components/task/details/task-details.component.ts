@@ -80,6 +80,10 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
         this._paramsSubscribers.forEach(x => x.unsubscribe());
     }
 
+    public get filterPlaceholderText() {
+        return "Filter by file name";
+    }
+
     @autobind()
     public refresh() {
         return this.data.refresh();
