@@ -72,7 +72,7 @@
     "stylelint": "^7.5.0",
     "ts-loader": "2.0.0",
     "ts-node": "2.0.0",
-    "tslint": "^4.3.1",
+    "tslint": "^4.4.1",
     "typescript": "~2.1.4",
     "vrsource-tslint-rules": "^4.0.1",
     "webpack": "^2.2.0",
