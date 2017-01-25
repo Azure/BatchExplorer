@@ -24,6 +24,9 @@ export class FileListDisplayComponent {
     @Input()
     public status: LoadingStatus;
 
+    @Input()
+    public baseUrl: any[];
+
     public isErrorState(file: any) {
         // if (node.state === "startTaskFailed") {
         //     return true;

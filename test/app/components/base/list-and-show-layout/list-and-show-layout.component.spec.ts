@@ -6,6 +6,7 @@ import { BrowserModule, By } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import { BehaviorSubject } from "rxjs";
 
+import { BreadcrumbService, BreadcrumbsComponent } from "app/components/base/breadcrumbs";
 import { ListAndShowLayoutComponent } from "app/components/base/list-and-show-layout";
 import { RefreshButtonComponent } from "app/components/base/refresh-btn";
 import { ScrollableComponent } from "app/components/base/scrollable";
@@ -34,6 +35,9 @@ describe("ListAndShowLayout", () => {
         activatedRouteSpy = {
             queryParams: new BehaviorSubject({}),
         };
+        let breadcrumbServiceSpy = {
+            crumbs: new BehaviorSubject([]),
+        };
         TestBed.configureTestingModule({
             imports: [BrowserModule, FormsModule, ReactiveFormsModule, MaterialModule],
             declarations: [
@@ -41,9 +45,12 @@ describe("ListAndShowLayout", () => {
                 ListAndShowLayoutComponent,
                 ScrollableComponent,
                 RefreshButtonComponent,
+                BreadcrumbsComponent,
             ],
             providers: [
                 ScrollableService,
+                BreadcrumbService,
+                { provide: BreadcrumbService, useValue: breadcrumbServiceSpy },
                 { provide: ActivatedRoute, useValue: activatedRouteSpy },
                 { provide: MdDialog, useValue: {} },
             ],

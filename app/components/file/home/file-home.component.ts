@@ -2,7 +2,7 @@ import { Component, HostBinding, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
 
-import { Constants, FileUrlUtils } from "app/utils";
+import { Constants } from "app/utils";
 import { SidebarManager } from "../../base/sidebar";
 
 @Component({
@@ -21,6 +21,7 @@ export class FileHomeComponent implements OnInit, OnDestroy {
     public taskId: string;
     public filename: string;
 
+    private _dataSub: Subscription;
     private _paramsSubscriber: Subscription;
 
     @HostBinding("style.display") get display() {
@@ -37,25 +38,23 @@ export class FileHomeComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
+        this._dataSub = this.activatedRoute.data.subscribe((data) => {
+            const type = data["type"];
+            this.isJob = type === Constants.FileSourceTypes.Job;
+            this.isPool = type === Constants.FileSourceTypes.Pool;
+        });
+
         this._paramsSubscriber = this.activatedRoute.params.subscribe((params) => {
-            this.url = params["url"];
-            let obj: any = FileUrlUtils.parseRelativePath(this.url);
-            this.isJob = obj.type === Constants.FileSourceTypes.Job;
-            this.isPool = obj.type === Constants.FileSourceTypes.Pool;
-
-            if (this.isJob) {
-                this.jobId = obj.containerName;
-                this.taskId = obj.entityName;
-            } else {
-                this.poolId = obj.containerName;
-                this.nodeId = obj.entityName;
-            }
-
-            this.filename = obj.file;
+            this.jobId = params["jobId"];
+            this.taskId = params["taskId"];
+            this.poolId = params["poolId"];
+            this.nodeId = params["nodeId"];
+            this.filename = params["filename"];
         });
     }
 
     public ngOnDestroy() {
+        this._dataSub.unsubscribe();
         this._paramsSubscriber.unsubscribe();
     }
 }

@@ -13,6 +13,10 @@ import { Constants, FileUrlUtils } from "app/utils";
     templateUrl: "file-details.html",
 })
 export class FileDetailsComponent implements OnInit, OnDestroy {
+    public static breadcrumb({filename}) {
+        return { name: filename, label: "File", invertName: true };
+    }
+
     public jobId: string;
     public taskId: string;
     public nodeId: string;
@@ -22,6 +26,7 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     public contentSize: number;
     public downloadEnabled: boolean;
 
+    private _sourceType: string;
     private _paramsSubscribers: Subscription[] = [];
 
     constructor(private route: ActivatedRoute, private fileService: FileService) {
@@ -29,28 +34,30 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        this._paramsSubscribers.push(this.route.params.subscribe((params) => {
-            this.url = params["url"];
-            const obj = FileUrlUtils.parseRelativePath(this.url);
+        this._paramsSubscribers.push(this.route.data.subscribe((data) => {
+            this._sourceType = data["type"];
+        }));
 
-            if (obj.type === Constants.FileSourceTypes.Job) {
-                this.jobId = obj.containerName;
-                this.taskId = obj.entityName;
-                this.filename = obj.file;
+        this._paramsSubscribers.push(this.route.params.subscribe((params) => {
+            this.jobId = params["jobId"];
+            this.taskId = params["taskId"];
+            this.poolId = params["poolId"];
+            this.nodeId = params["nodeId"];
+            this.filename = params["filename"];
+            if (this._sourceType === Constants.FileSourceTypes.Job) {
                 let propertiesProxy = this.fileService.getFilePropertiesFromTask(
                     this.jobId, this.taskId, this.filename);
 
                 propertiesProxy.fetch().subscribe((details: any) => {
+                    this.url = decodeURIComponent(details.url);
                     this.contentSize = details.properties.contentLength;
                 });
             } else {
-                this.poolId = obj.containerName;
-                this.nodeId = obj.entityName;
-                this.filename = obj.file;
                 let propertiesProxy = this.fileService.getFilePropertiesFromComputeNode(
                     this.poolId, this.nodeId, this.filename);
 
                 propertiesProxy.fetch().subscribe((details: any) => {
+                    this.url = decodeURIComponent(details.url);
                     this.contentSize = details.properties.contentLength;
                 });
 

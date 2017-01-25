@@ -1,7 +1,4 @@
 <bex-list-and-show-layout #layout (listScrolledToBottom)="taskList.loadMore()" [list]="taskList">
-    <bex-breadcrumbs>
-        <bex-crumb [routerLink]="['/jobs', jobId]" label="Job">{{jobId}}</bex-crumb>
-    </bex-breadcrumbs>
     <div bex-list-buttons>
         <button md-mini-fab color="primary" title="Add a task" (click)="addTask()">
             <i class="fa fa-plus spin-hover"></i>

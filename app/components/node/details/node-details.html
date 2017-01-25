@@ -2,46 +2,47 @@
     <div *ngIf="node">
         <md-card class="overview">
             <md-card-title-group style="margin: 0px;">
-<div style="align-items:center;">
-<bex-refresh-btn [refresh]="refresh"></bex-refresh-btn>
-</div>
-<div style="margin-left:12px; margin-right:auto;">
-<md-card-title>{{node.id}}</md-card-title>
-<md-card-subtitle> {{node.state}}</md-card-subtitle>
-</div>
-</md-card-title-group>
-<md-card-content>
-    <p>Pool: {{poolId}}</p>
-</md-card-content>
-<md-card-actions layout="row" layout-align="end center">
-</md-card-actions>
-</md-card>
-<md-card class="details">
-    <md-tab-group>
-        <md-tab>
-            <template md-tab-label>Properties</template>
-            <bex-node-properties [node]="node"></bex-node-properties>
-        </md-tab>
-        <md-tab>
-            <template md-tab-label>Recent tasks</template>
-            <div class="tab-padding">
-                Some tasks
-            </div>
-        </md-tab>
-        <md-tab>
-            <template md-tab-label>Files</template>
-            <div class="tab-padding">
-                <md-radio-group class="output-toggle-std" placeholder="StartTask/ApplicationPackage/Task" [(ngModel)]="selectedFileType">
-                    <md-radio-button *ngFor="let entry of fileTypes" [value]="entry.id">{{entry.name}}</md-radio-button>
-                </md-radio-group>
-            </div>
-            <div>
-                <bex-entity-details-list #listWrapper [refresh]="list.refresh" [filterPlaceholder]="filterPlaceholderText" [showAddButton]="false">
-                    <bex-node-file-list [poolId]="poolId" [nodeId]="nodeId" [filter]="listWrapper.filter" [quickList]="false" [fileType]="selectedFileType" #list></bex-node-file-list>
-                </bex-entity-details-list>
-            </div>
-        </md-tab>
-    </md-tab-group>
-</md-card>
-</div>
+                <div style="align-items:center;">
+                    <bex-refresh-btn [refresh]="refresh"></bex-refresh-btn>
+                </div>
+                <div style="margin-left:12px; margin-right:auto;">
+                    <md-card-title>{{node.id}}</md-card-title>
+                    <md-card-subtitle> {{node.state}}</md-card-subtitle>
+                </div>
+            </md-card-title-group>
+            <md-card-content>
+                <p>Pool: {{poolId}}</p>
+            </md-card-content>
+            <md-card-actions layout="row" layout-align="end center">
+            </md-card-actions>
+        </md-card>
+        <md-card class="details">
+            <bex-tab-group>
+                <bex-tab key="properties">
+                    <bex-tab-label>Properties</bex-tab-label>
+                    <bex-node-properties [node]="node"></bex-node-properties>
+                </bex-tab>
+                <bex-tab key="recent-tasks">
+                    <bex-tab-label>Recent tasks</bex-tab-label>
+                    <div class="tab-padding">
+                        Some tasks
+                    </div>
+                </bex-tab>
+                <bex-tab key="files">
+                    <bex-tab-label>Files</bex-tab-label>
+                    <div class="tab-padding">
+                        <md-radio-group class="output-toggle-std" placeholder="StartTask/ApplicationPackage/Task" [(ngModel)]="selectedFileType">
+                            <md-radio-button *ngFor="let entry of fileTypes" [value]="entry.id">{{entry.name}}</md-radio-button>
+                        </md-radio-group>
+                    </div>
+                    <div>
+                        <bex-entity-details-list #listWrapper [refresh]="list.refresh" [filterPlaceholder]="filterPlaceholderText" [showAddButton]="false">
+                            <bex-node-file-list [poolId]="poolId" [nodeId]="nodeId" [filter]="listWrapper.filter" [quickList]="false" [fileType]="selectedFileType"
+                                #list></bex-node-file-list>
+                        </bex-entity-details-list>
+                    </div>
+                </bex-tab>
+            </bex-tab-group>
+        </md-card>
+    </div>
 </bex-loading>

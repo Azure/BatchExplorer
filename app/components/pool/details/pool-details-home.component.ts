@@ -11,4 +11,7 @@ import { Component } from "@angular/core";
 })
 
 export class PoolDetailsHomeComponent {
+    public static breadcrumb() {
+        return { name: "Pools" };
+    }
 }
