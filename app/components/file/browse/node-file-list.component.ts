@@ -96,4 +96,8 @@ export class NodeFileListComponent implements OnInit {
     public loadMore(): Observable<any> {
         return this.data.fetchNext();
     }
+
+    public get baseUrl() {
+        return ["/pools", this.poolId, "nodes", this.nodeId];
+    }
 }
