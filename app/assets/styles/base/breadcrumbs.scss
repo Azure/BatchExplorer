@@ -1,7 +1,7 @@
 
 bex-breadcrumbs {
     $separation: 3px;
-    $height: 30px;
+    $height: 28px;
     $half-height: $height / 2;
     $color: lighten($blue-lighter, 5%);
     $hover-color: $blue-light;
@@ -14,7 +14,7 @@ bex-breadcrumbs {
     ul > li {
         height: $height;
         background: $color;
-        padding: 0 5px;
+        padding: 0 2px;
         position: relative;
         margin: 0 ($half-height + $separation) 0 0;
         text-decoration: none;
@@ -60,6 +60,22 @@ bex-breadcrumbs {
             word-break: break-all;
             white-space: nowrap;
             color: $whiteSmoke;
+            font-size: 12px;
+            line-height: 16px;
+
+            &.no-label {
+                height: 100%;
+                display: flex;
+                align-items: center;
+                margin-left: 3px;
+            }
+
+            &.invert-ellipsis {
+                // width:170px;
+                // border:1px solid #999;
+                direction:rtl;
+                text-align:left;
+            }
         }
 
         > div.crumb-label {
@@ -67,7 +83,7 @@ bex-breadcrumbs {
             font-style: italic;
             text-align: right;
             line-height: 0.7em;
-            font-size: 0.7em;
+            font-size: 9px;
             margin-top: 3px;
         }
     }

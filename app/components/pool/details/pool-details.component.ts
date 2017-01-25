@@ -18,6 +18,14 @@ import { PoolCreateBasicDialogComponent } from "../action";
     templateUrl: "./pool-details.html",
 })
 export class PoolDetailsComponent implements OnInit, OnDestroy {
+    public static breadcrumb({id}, {tab}) {
+        let label = tab ? `Pool - ${tab}` : "Pool";
+        return {
+            name: id,
+            label,
+        };
+    }
+
     public poolId: string;
     public pool: Pool;
     public data: RxEntityProxy<PoolParams, Pool>;

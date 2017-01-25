@@ -11,4 +11,7 @@ import { Component } from "@angular/core";
 })
 
 export class JobDetailsHomeComponent {
+    public static breadcrumb() {
+        return { name: "Job" };
+    }
 }

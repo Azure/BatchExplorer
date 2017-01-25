@@ -1,5 +1,5 @@
 <bex-dropdown class="account-dropdown">
-    <div bex-dropdown-btn [routerLink]="['/accounts/', (accountService.currentAccount | async)?.name]" [class.invalid]="(accountService.currentAccountValid | async) === status.Invalid">
+    <div bex-dropdown-btn [routerLink]="['/accounts/', (accountService.currentAccount | async)?.id]" [class.invalid]="(accountService.currentAccountValid | async) === status.Invalid">
         {{selectedAccountAlias}}
 
         <i *ngIf="(accountService.currentAccountValid | async) === status.Invalid" class="fa fa-warning"></i>

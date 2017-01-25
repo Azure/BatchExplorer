@@ -1,3 +1,4 @@
+import { Location } from "@angular/common";
 import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { MdSidenav } from "@angular/material";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -27,6 +28,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     private sidebarContent: SidebarContentComponent;
 
     constructor(
+        private location: Location,
         private sidebarManager: SidebarManager,
         private settingsService: SettingsService,
         private commandService: CommandService,
@@ -66,5 +68,13 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     public logout() {
         this.adalService.logout();
+    }
+
+    public goBack() {
+        this.location.back();
+    }
+
+    public goForward() {
+        this.location.forward();
     }
 }

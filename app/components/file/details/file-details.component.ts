@@ -13,6 +13,10 @@ import { Constants, FileUrlUtils } from "app/utils";
     templateUrl: "file-details.html",
 })
 export class FileDetailsComponent implements OnInit, OnDestroy {
+    public static breadcrumb({filename}) {
+        return { name: filename, label: "File", invertName: true };
+    }
+
     public jobId: string;
     public taskId: string;
     public nodeId: string;

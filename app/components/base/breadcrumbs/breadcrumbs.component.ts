@@ -1,4 +1,8 @@
-import { Component, ContentChildren, Input, QueryList, TemplateRef, ViewChild } from "@angular/core";
+import { Component, Input, OnDestroy, TemplateRef, ViewChild } from "@angular/core";
+import { Subscription } from "rxjs";
+
+import { Breadcrumb } from "./breadcrumb-models";
+import { BreadcrumbService } from "./breadcrumb.service";
 
 @Component({
     selector: "bex-crumb",
@@ -19,8 +23,20 @@ export class CrumbComponent {
     selector: "bex-breadcrumbs",
     templateUrl: "./breadcrumbs.html",
 })
-export class BreadcrumbsComponent {
+export class BreadcrumbsComponent implements OnDestroy {
+    public crumbs: Breadcrumb[] = [];
 
-    @ContentChildren(CrumbComponent)
-    public crumbs: QueryList<CrumbComponent>;
+    private _subscription: Subscription;
+
+    constructor(private breadcrumbService: BreadcrumbService) {
+        this._subscription = breadcrumbService.crumbs.subscribe(x => this.crumbs = x);
+    }
+
+    public ngOnDestroy() {
+        this._subscription.unsubscribe();
+    }
+
+    public clickBreadcrumb(crumb: Breadcrumb) {
+        this.breadcrumbService.navigateTo(crumb);
+    }
 }

@@ -8,6 +8,10 @@ import { PoolCreateBasicDialogComponent } from "../action";
     templateUrl: "pool-home.html",
 })
 export class PoolHomeComponent {
+
+    public static breadcrumb() {
+        return { name: "Pools" };
+    }
     constructor(
         private sidebarManager: SidebarManager) {
     }
