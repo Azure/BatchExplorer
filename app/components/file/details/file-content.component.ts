@@ -154,6 +154,7 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
     private _processError(e) {
         this.currentSubscription = null;
 
+        clearInterval(this.inter);
         if (e.statusCode === Constants.HttpCode.NotFound) {
             this.notFound = true;
             return;
@@ -161,7 +162,6 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
             this.notFound = true;
             return;
         }
-
         console.error("[FileContent.component] Error is", e.statusCode, Object.assign({}, e));
     }
 

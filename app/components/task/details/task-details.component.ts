@@ -16,8 +16,12 @@ import { DeleteTaskDialogComponent, TaskCreateBasicDialogComponent, TerminateTas
     templateUrl: "./task-details.html",
 })
 export class TaskDetailsComponent implements OnInit, OnDestroy {
-    public static breadcrumb({id}) {
-        return { name: id, label: "Task" };
+    public static breadcrumb({id}, {tab}) {
+        let label = tab ? `Task - ${tab}` : "Task";
+        return {
+            name: id,
+            label,
+        };
     }
 
     public taskId: string;

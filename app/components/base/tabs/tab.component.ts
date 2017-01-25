@@ -19,6 +19,11 @@ export class TabComponent {
      */
     @Input()
     public key: string;
+    /**
+     * Disabled
+     */
+    @Input()
+    public disabled: boolean;
 
     @ContentChild(TabLabelComponent)
     public label: TemplateRef<any>;
