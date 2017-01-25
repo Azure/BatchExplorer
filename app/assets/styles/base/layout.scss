@@ -324,3 +324,18 @@ ul.list-point {
         }
     }
 }
+
+
+.back-nav {
+    float: left;
+    margin-top: 2px;
+    .fa {
+        color: $whiteSmoke;
+        font-size: 26px;
+        cursor: pointer;
+        margin: 0 5px;
+        &:hover {
+            color: map-get($md-prussian-blue, 300);
+        }
+    }
+}

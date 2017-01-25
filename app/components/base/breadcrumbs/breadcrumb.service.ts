@@ -43,6 +43,7 @@ export class BreadcrumbService {
      * This will remove any previous breadcrumb that doesn't make sense
      */
     public addBreadcrumb(breadcrumb: Breadcrumb) {
+        console.log("Add breadcrumb", breadcrumb.url, breadcrumb);
         const cleaned = this._cleanupCrumbs(breadcrumb);
         this._crumbs.next(cleaned.concat([breadcrumb]));
     }

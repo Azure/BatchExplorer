@@ -4,6 +4,7 @@ import { Params } from "@angular/router";
 export interface BreadcrumbData {
     name: string;
     label: string;
+    invertName?: boolean;
 }
 
 export interface Breadcrumb {

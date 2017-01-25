@@ -13,8 +13,8 @@ import { Constants, FileUrlUtils } from "app/utils";
     templateUrl: "file-details.html",
 })
 export class FileDetailsComponent implements OnInit, OnDestroy {
-    public static breadcrumb({url}) {
-        return { name: FileUrlUtils.getFileName(url), label: "File" };
+    public static breadcrumb({filename}) {
+        return { name: filename, label: "File", invertName: true };
     }
 
     public jobId: string;

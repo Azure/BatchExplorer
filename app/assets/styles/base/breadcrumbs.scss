@@ -14,7 +14,7 @@ bex-breadcrumbs {
     ul > li {
         height: $height;
         background: $color;
-        padding: 0 5px;
+        padding: 0 2px;
         position: relative;
         margin: 0 ($half-height + $separation) 0 0;
         text-decoration: none;
@@ -67,6 +67,14 @@ bex-breadcrumbs {
                 height: 100%;
                 display: flex;
                 align-items: center;
+                margin-left: 3px;
+            }
+
+            &.invert-ellipsis {
+                // width:170px;
+                // border:1px solid #999;
+                direction:rtl;
+                text-align:left;
             }
         }
 
