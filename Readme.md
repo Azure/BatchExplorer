@@ -22,6 +22,8 @@ npm run electron
 ```
 
 ## Developers
+[Dev docs](docs/readme.md)
+
 For developers, you can set up a development environment as follows:
 
 Start the dev server
