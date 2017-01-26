@@ -27,7 +27,7 @@ import { List, Record } from "immutable";
 const FooRecord = Record({
     id: null,
     state: null,
-    files: [],
+    files: List([]),
     bar: null,
 });
 ```
@@ -53,7 +53,8 @@ In the case some of the attributes are other models(Record). Then you'll need to
 // Add this constructor
 constructor(data: any = {}) {
     super(Object.assign({}, data, {
-        bar: data.bar && new Bar(data.ar),
+        files: List(data.files),
+        bar: data.bar && new Bar(data.bar),
     }));
 }
 ```
