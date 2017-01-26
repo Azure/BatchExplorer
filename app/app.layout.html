@@ -1,12 +1,15 @@
 <div id="container" [hidden]="!(isAppReady | async)">
     <!--[class.no-userinteract]="!(hasAccount | async)" -->
     <header id="header" class="noselect">
+        <div class="back-nav">
+            <i class="fa fa-angle-left" (click)="goBack()"></i>
+            <i class="fa fa-angle-right" (click)="goForward()"></i>
+        </div>
         <div class="logo-banner-bar">
             <a class="logo" href="#" [routerLink]="['']" title="Batch labs - Home">
                 <img src="./assets/images/header/batchlabs.png" height="19" alt="Batch labs logo">
             </a>
         </div>
-
         <bex-sidebar-bookmarks></bex-sidebar-bookmarks>
         <bex-ad-user-dropdown></bex-ad-user-dropdown>
         <bex-account-dropdown></bex-account-dropdown>

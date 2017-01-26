@@ -13,6 +13,14 @@ import { DeleteAccountDialogComponent } from "../action/delete-account-dialog.co
     templateUrl: "account-details.html",
 })
 export class AccountDetailsComponent implements OnInit, OnDestroy {
+    public static breadcrumb({id}) {
+        let name = "";
+        if (id) {
+            const split = id.split("/");
+            name = split[split.length - 1];
+        }
+        return { name: name, label: "Account" };
+    }
     public account: AccountResource;
     public data: RxEntityProxy<AccountParams, AccountResource>;
 

@@ -22,13 +22,13 @@
         </md-card>
         <bex-task-error-display [jobId]="jobId" [task]="task"></bex-task-error-display>
         <md-card class="details">
-            <md-tab-group>
-                <md-tab>
-                    <template md-tab-label>Properties</template>
+            <bex-tab-group>
+                <bex-tab key="properties">
+                    <bex-tab-label>Properties</bex-tab-label>
                     <bex-task-properties [job]="job" [task]="task"></bex-task-properties>
-                </md-tab>
-                <md-tab>
-                    <template md-tab-label>Output</template>
+                </bex-tab>
+                <bex-tab key="output">
+                    <bex-tab-label>Output</bex-tab-label>
                     <div class="tab-padding">
                         <md-radio-group [(ngModel)]="outputFilename" class="output-toggle-std">
                             <md-radio-button value="stdout.txt">Stdout</md-radio-button>
@@ -37,40 +37,40 @@
                         <br>
                         <bex-file-content [jobId]="jobId" [taskId]="taskId" [filename]="outputFilename"></bex-file-content>
                     </div>
-                </md-tab>
-                <md-tab>
-                    <template md-tab-label>Environment Settings</template>
+                </bex-tab>
+                <bex-tab key="envs">
+                    <bex-tab-label>Environment Settings</bex-tab-label>
                     <div class="tab-padding">
                         <bex-task-environment-settings [task]="task"></bex-task-environment-settings>
                     </div>
-                </md-tab>
-                <md-tab>
-                    <template md-tab-label>Files</template>
+                </bex-tab>
+                <bex-tab key="files">
+                    <bex-tab-label>Files</bex-tab-label>
                     <div class="tab-padding">
                         <bex-entity-details-list #listWrapper [refresh]="list.refresh">
                             <bex-task-file-list [jobId]="jobId" [taskId]="taskId" [filter]="listWrapper.filter" [quickList]="false" #list></bex-task-file-list>
                         </bex-entity-details-list>
                     </div>
-                </md-tab>
-                <md-tab>
-                    <template md-tab-label>Resource files</template>
+                </bex-tab>
+                <bex-tab key="resource-files">
+                    <bex-tab-label>Resource files</bex-tab-label>
                     <div class="tab-padding">
                         <bex-task-resource-files [task]="task"></bex-task-resource-files>
                     </div>
-                </md-tab>
-                <md-tab [disabled]="!hasMultiInstanceSettings">
-                    <template md-tab-label>Sub Tasks</template>
+                </bex-tab>
+                <bex-tab  key="subtasks" [disabled]="!hasMultiInstanceSettings">
+                    <bex-tab-label>Sub Tasks</bex-tab-label>
                     <div class="tab-padding">
                         <bex-task-sub-tasks-tab [jobId]="job.id" [taskId]="task.id"></bex-task-sub-tasks-tab>
                     </div>
-                </md-tab>
-                <md-tab [disabled]="!hasDependencies">
-                    <template md-tab-label>Dependencies</template>
+                </bex-tab>
+                <bex-tab key="task-dependencies" [disabled]="!hasDependencies">
+                    <bex-tab-label>Dependencies</bex-tab-label>
                     <div class="tab-padding">
                         <bex-task-dependencies [jobId]="job.id" [task]="task"></bex-task-dependencies>
                     </div>
-                </md-tab>
-            </md-tab-group>
+                </bex-tab>
+            </bex-tab-group>
         </md-card>
     </div>
 </bex-loading>

@@ -139,7 +139,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
         }
         this._computeDimensions();
 
-        const tiles = this._nodes.map((node, index) => { return { node, index }; });
+        const tiles = this._nodes.map((node, index) => ({ node, index }));
         const rects = this._svg.selectAll("rect").data(tiles.toJS());
 
         rects.exit().remove();

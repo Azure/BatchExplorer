@@ -25,30 +25,30 @@
             </md-card-actions>
         </md-card>
         <md-card class="details">
-            <md-tab-group>
-                <md-tab>
-                    <template md-tab-label>Properties</template>
+            <bex-tab-group>
+                <bex-tab key="properties">
+                    <bex-tab-label>Properties</bex-tab-label>
                     <bex-job-properties [job]="job"></bex-job-properties>
-                </md-tab>
-                <md-tab>
-                    <template md-tab-label>Environment Settings</template>
+                </bex-tab>
+                <bex-tab  key="envs">
+                    <bex-tab-label>Environment Settings</bex-tab-label>
                     <div class="tab-padding">
                         <bex-job-environment-settings [job]="job"></bex-job-environment-settings>
                     </div>
-                </md-tab>
-                <md-tab>
-                    <template md-tab-label>Metadata</template>
+                </bex-tab>
+                <bex-tab  key="metadata">
+                    <bex-tab-label>Metadata</bex-tab-label>
                     <div class="tab-padding">
                         <bex-job-metadata [job]="job"></bex-job-metadata>
                     </div>
-                </md-tab>
-                <md-tab>
-                    <template md-tab-label>Tasks</template>
+                </bex-tab>
+                <bex-tab key="tasks">
+                    <bex-tab-label>Tasks</bex-tab-label>
                     <bex-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/jobs', job.id, 'tasks']" [loadMore]="list.loadMore">
                         <bex-task-list [jobId]="job.id" [filter]="listWrapper.filter" [quickList]="false" #list [manualLoading]="true"></bex-task-list>
                     </bex-entity-details-list>
-                </md-tab>
-            </md-tab-group>
+                </bex-tab>
+            </bex-tab-group>
         </md-card>
     </div>
 </bex-loading>
