@@ -47,7 +47,7 @@
                 <bex-tab key="files">
                     <bex-tab-label>Files</bex-tab-label>
                     <div class="tab-padding">
-                        <bex-entity-details-list #listWrapper [refresh]="list.refresh">
+                        <bex-entity-details-list #listWrapper [refresh]="list.refresh" [filterPlaceholder]="filterPlaceholderText" [showAddButton]="false">
                             <bex-task-file-list [jobId]="jobId" [taskId]="taskId" [filter]="listWrapper.filter" [quickList]="false" #list></bex-task-file-list>
                         </bex-entity-details-list>
                     </div>
