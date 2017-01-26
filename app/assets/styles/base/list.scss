@@ -162,15 +162,12 @@ bex-no-item {
         flex-direction: column;
         align-items: center;
         justify-content: center;
+        font-size: 2em;
+        color: $silverGray;
 
         .fa {
             font-size: 8em;
             margin-bottom: 20px;
-            color: $silverGray;
-        }
-
-        [no-filter], [with-filter] {
-            font-size: 2em;
             color: $silverGray;
         }
     }
