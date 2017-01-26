@@ -49,8 +49,6 @@ export class TaskDependenciesComponent implements OnDestroy {
             this.dependencies.next(this.dependencies.value.concat(currentPage));
             this.taskService.getMultiple(this.jobId, taskIdSet, this.taskService.basicProperties).subscribe({
                 next: (tasks: List<Task>) => {
-                    // todo: remove log when working
-                    console.log("RESPONSE :: ", tasks);
                     if (tasks) {
                         this._processMultipleTaskResponse(tasks, currentPage);
                     }
@@ -94,10 +92,13 @@ export class TaskDependenciesComponent implements OnDestroy {
             if (!found) {
                 continue;
             }
+
+            console.log("process response :: ", td.id)
             td.state = found.state;
             const dependencies = found.dependsOn;
             if (dependencies) {
                 const count = this._taskDependenciesCount(dependencies);
+                console.log(`count :: ${count} :: dependencies :: `, dependencies)
                 if (count > 0 && count <= 2) {
                     const ids = this._getTaskDependencyIds(dependencies);
                     td.dependsOn = ids.join(",");
