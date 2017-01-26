@@ -15,8 +15,8 @@ export class TaskDependencies extends TaskDependenciesRecord {
 
     constructor(data) {
         super(Object.assign({}, data, {
-            taskIds: List(data.taskIds && data.taskIds),
-            taskIdRanges: List(data.taskIdRanges && data.taskIdRanges),
+            taskIds: List(data.taskIds),
+            taskIdRanges: List(data.taskIdRanges),
         }));
     }
 }
