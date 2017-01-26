@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy } from "@angular/core";
 import { List } from "immutable";
 import { BehaviorSubject } from "rxjs";
 
-import { Task, TaskDependency } from "app/models";
+import { Task, TaskDependencies, TaskDependency } from "app/models";
 import { TaskListParams, TaskService } from "app/services";
 import { RxListProxy } from "app/services/core";
 
@@ -98,7 +98,7 @@ export class TaskDependenciesComponent implements OnDestroy {
             const dependencies = found.dependsOn;
             if (dependencies) {
                 const count = this._taskDependenciesCount(dependencies);
-                console.log(`count :: ${count} :: dependencies :: `, dependencies)
+                console.log(`count :: ${count} :: dependencies :: `, dependencies.toJS())
                 if (count > 0 && count <= 2) {
                     const ids = this._getTaskDependencyIds(dependencies);
                     td.dependsOn = ids.join(",");
@@ -115,20 +115,20 @@ export class TaskDependenciesComponent implements OnDestroy {
      * Get the list of task id's to display on the current page.
      * @param dependencies: list of dependencies from the selected task
      */
-    private _getTaskDependencyIds(dependencies: any): string[] {
-        const ids = dependencies.taskIds || [];
+    private _getTaskDependencyIds(dependencies: TaskDependencies): string[] {
+        const ids = dependencies.taskIds;
         const ranges = dependencies.taskIdRanges;
-        let out = ids;
+        let out = ids.toJS();
 
         if (!ranges) {
             return out;
         }
 
-        for (let range of ranges) {
+        ranges.forEach((range) => {
             for (let id = range.start; id <= range.end; id++) {
                 out.push(id.toString());
             }
-        }
+        });
 
         return out;
     }
@@ -136,13 +136,11 @@ export class TaskDependenciesComponent implements OnDestroy {
     /**
      * Get the task.dependsOn count for displaying in the table.
      */
-    private _taskDependenciesCount(dependencies: any): number {
+    private _taskDependenciesCount(dependencies: TaskDependencies): number {
         const ids = dependencies.taskIds;
         const ranges = dependencies.taskIdRanges;
-        const count = ids ? ids.length : 0;
-        const rangeCount = ranges
-            ? ranges.map((x) => (x.end - x.start + 1)).reduce((range, out) => out + range, 0)
-            : 0;
+        const count = ids ? ids.size : 0;
+        const rangeCount = ranges.map((x) => (x.end - x.start + 1)).reduce((range, out) => out + range, 0);
 
         return count + rangeCount;
     }

@@ -1,8 +1,8 @@
-import { Record } from "immutable";
+import { List, Record } from "immutable";
 
 const TaskDependenciesRecord = Record({
-    taskIds: [],
-    taskIdRanges: [],
+    taskIds: List([]),
+    taskIdRanges: List([]),
 });
 /**
  * Specifies any dependencies of a task. Any task that is explicitly
@@ -10,8 +10,15 @@ const TaskDependenciesRecord = Record({
  * task will be scheduled.
  */
 export class TaskDependencies extends TaskDependenciesRecord {
-    public taskIds: string[];
-    public taskIdRanges: TaskIdRange[];
+    public taskIds: List<string>;
+    public taskIdRanges: List<TaskIdRange>;
+
+    constructor(data) {
+        super(Object.assign({}, data, {
+            taskIds: List(data.taskIds && data.taskIds),
+            taskIdRanges: List(data.taskIdRanges && data.taskIdRanges),
+        }));
+    }
 }
 
 /**
