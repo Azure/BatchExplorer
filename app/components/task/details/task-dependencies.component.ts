@@ -66,7 +66,7 @@ export class TaskDependenciesComponent implements OnDestroy {
 
     private _refresh(task: Task) {
         this._skip = 0;
-        this._take = 15;
+        this._take = 20;
 
         this.dependencies = new BehaviorSubject<TaskDependency[]>([]);
         this.dependentIds = (task && task.dependsOn)

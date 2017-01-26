@@ -29,7 +29,6 @@ export interface SubtaskListParams {
 }
 
 export interface TaskListOptions extends CommonListOptions {
-
 }
 
 @Injectable()
