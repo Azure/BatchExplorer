@@ -44,7 +44,7 @@
                 </bex-tab>
                 <bex-tab key="tasks">
                     <bex-tab-label>Tasks</bex-tab-label>
-                    <bex-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/jobs', job.id, 'tasks']" [loadMore]="list.loadMore">
+                    <bex-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/jobs', job.id, 'tasks']" [loadMore]="list.loadMore" [filterPlaceholder]="filterPlaceholderText">
                         <bex-task-list [jobId]="job.id" [filter]="listWrapper.filter" [quickList]="false" #list [manualLoading]="true"></bex-task-list>
                     </bex-entity-details-list>
                 </bex-tab>
