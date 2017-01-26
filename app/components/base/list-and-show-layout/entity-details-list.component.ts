@@ -25,6 +25,27 @@ export class EntityDetailsListComponent {
     @Input()
     public canLoadMore: boolean = true;
 
+    @Input()
+    public filterPlaceholder: string;
+
+    @Input()
+    public showExpandButton: boolean = true;
+
+    @Input()
+    public expandButtonHoverText: string = "Expand";
+
+    @Input()
+    public showRefreshButton: boolean = true;
+
+    @Input()
+    public refreshButtonHoverText: string = "Refresh";
+
+    @Input()
+    public showAddButton: boolean = true;
+
+    @Input()
+    public addButtonHoverText: string = "Add";
+
     public filter = FilterBuilder.none();
     public searchQuery = new FormControl();
 

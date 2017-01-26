@@ -18,12 +18,14 @@ bex-account-list {
         }
 
         > .accounts {
+            position: relative;
             background: #f1f1f1;
+            min-height: 40px;
 
-            .noitem {
-                margin: auto;
-                padding: 5px;
-                text-align: center;
+            .no-item-message {
+                height: 40px;
+                padding: 5px 0;
+                font-size: 14px;
             }
 
             .quick-list-item {
