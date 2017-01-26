@@ -112,6 +112,7 @@ export class TaskService extends ServiceBase {
         if (properties) {
             options.select = properties;
         }
+
         const data = this.list(jobId, options);
         return data.fetchAll().cascade(() => {
             return data.items.first();

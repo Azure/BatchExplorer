@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { List } from "immutable";
 import { Observable } from "rxjs";
 
 import { AppModule } from "app/app.module";
@@ -12,7 +13,7 @@ const taskMap: Map<string, Task> = new Map()
     .set("1", new Task({ id: "1", dependsOn: { taskIds: ["1", "2"]} }))
     .set("2", new Task({ id: "2", dependsOn: { taskIds: ["3", "4", "5"]} }));
 
-describe("TaskDependenciesComponent", () => {
+fdescribe("TaskDependenciesComponent", () => {
     let fixture: ComponentFixture<TaskDependenciesComponent>;
     let component: TaskDependenciesComponent;
     let taskServiceSpy: any;
@@ -23,11 +24,11 @@ describe("TaskDependenciesComponent", () => {
                 .createSpy("getMultipleTasks").and
                 .callFake((jobid: string, taskIds: string[], properties?: string) => {
 
-                let result: Task[] = taskIds.map(id => {
+                const result = List<Task>(taskIds.map(id => {
                     return taskMap.get(id) || Fixtures.task.create({ id: id });
-                });
+                }));
 
-                return Observable.of({ data: result });
+                return Observable.of(result);
             }),
         };
 

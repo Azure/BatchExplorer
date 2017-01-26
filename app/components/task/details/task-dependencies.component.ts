@@ -93,12 +93,10 @@ export class TaskDependenciesComponent implements OnDestroy {
                 continue;
             }
 
-            console.log("process response :: ", td.id)
             td.state = found.state;
             const dependencies = found.dependsOn;
             if (dependencies) {
                 const count = this._taskDependenciesCount(dependencies);
-                console.log(`count :: ${count} :: dependencies :: `, dependencies.toJS())
                 if (count > 0 && count <= 2) {
                     const ids = this._getTaskDependencyIds(dependencies);
                     td.dependsOn = ids.join(",");
