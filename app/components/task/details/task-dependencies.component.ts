@@ -46,8 +46,6 @@ export class TaskDependenciesComponent implements OnDestroy {
             });
 
             this.dependencies.next(this.dependencies.value.concat(currentPage));
-
-
             this.taskService.getMultiple(this.jobId, taskIdSet, this.taskService.basicProperties).subscribe({
                 next: (tasks: Task[]) => {
                     // todo: remove log when working
