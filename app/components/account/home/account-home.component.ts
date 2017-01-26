@@ -1,7 +1,6 @@
 import { Component } from "@angular/core";
-import { FormBuilder, FormControl } from "@angular/forms";
+import { FormBuilder } from "@angular/forms";
 
-import * as FilterBuilder from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
 import AccountCreateDialogComponent from "../add/account-create-dialog.component";
 
@@ -19,17 +18,7 @@ export class AccountHomeComponent {
 
     public showType: ListType = ListType.All;
 
-    public quickSearchQuery = new FormControl();
-    public filter = FilterBuilder.none();
-
     constructor(private formBuilder: FormBuilder, private sidebarManager: SidebarManager) {
-        this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
-            if (query === "") {
-                this.filter = FilterBuilder.none();
-            } else {
-                this.filter = FilterBuilder.prop("id").startswith(query);
-            }
-        });
     }
 
     public addAccount() {

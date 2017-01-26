@@ -5,7 +5,7 @@ import { List } from "immutable";
 import { AccountResource, Subscription } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
 import { RxListProxy } from "app/services/core";
-import { Property } from "app/utils/filter-builder";
+import { Filter } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
 
 interface SubscriptionAccount {
@@ -22,14 +22,16 @@ export class AccountListComponent implements OnInit {
 
     public subscriptionAccounts: { [subId: string]: SubscriptionAccount } = {};
     @Input()
-    public set filter(filter: Property) {
+    public set filter(filter: Filter) {
         this._filter = filter;
+        this._updateDisplayedSubscriptions();
     }
-    public get filter(): Property { return this._filter; };
+    public get filter(): Filter { return this._filter; };
 
     public subscriptions: List<Subscription>;
+    public displayedSubscriptions: List<Subscription>;
 
-    private _filter: Property;
+    private _filter: Filter;
 
     constructor(
         private accountService: AccountService,
@@ -37,6 +39,7 @@ export class AccountListComponent implements OnInit {
         private sidebarManager: SidebarManager,
         private activatedRoute: ActivatedRoute) {
         this.subscriptionData = subscriptionService.list();
+        this.subscriptionData.setOptions({ filter: "startswith(subscriptionId, \"Bat\")" });
         this.subscriptionData.items.subscribe((subscriptions) => {
             const data: any = {};
             this.subscriptions = List<Subscription>(subscriptions.sort((a, b) => {
@@ -59,6 +62,7 @@ export class AccountListComponent implements OnInit {
             });
 
             this.subscriptionAccounts = data;
+            this._updateDisplayedSubscriptions();
         });
     }
 
@@ -87,5 +91,16 @@ export class AccountListComponent implements OnInit {
         } else {
             this.accountService.favoriteAccount(accountId);
         }
+    }
+
+    private _updateDisplayedSubscriptions() {
+        let text: string = null;
+        if (this._filter && this._filter.properties.length > 0) {
+            text = (this._filter.properties[0] as any).value;
+            text = text && text.toLowerCase();
+        }
+        this.displayedSubscriptions = List<Subscription>(this.subscriptions.filter((sub) => {
+            return !text || sub.displayName.toLowerCase().indexOf(text) !== -1;
+        }));
     }
 }

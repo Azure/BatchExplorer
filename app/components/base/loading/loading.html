@@ -1,6 +1,6 @@
 <div [ngSwitch]="displayStatus | async">
 	<div   [hidden]="(displayStatus | async) !== statuses.Loading" class="loading-icon" [class.relative]="ref.children.length === 0">
-		<div class="spinner">
+		<div [class]="'spinner ' + size">
 			<div class="double-bounce1"></div>
 			<div class="double-bounce2"></div>
 		</div>
