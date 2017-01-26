@@ -1,4 +1,4 @@
 # Dev docs
 
-* [Models](docs/models.md)
-* [Testing](docs/testing.md)
+* [Models](models.md)
+* [Testing](testing.md)
