@@ -51,6 +51,7 @@ export class RxProxyBase<TParams, TEntity> {
                 this._newDataStatus.next(status);
             }
         });
+
         this.deleted = this._deleted.asObservable();
     }
 
@@ -87,7 +88,7 @@ export class RxProxyBase<TParams, TEntity> {
     /**
      * Create a new item of type TEntity and adds it to the cache
      */
-    protected newItems(data: any[]): string[] {
+    protected newItems(data: any[], select?: string): string[] {
         const items = data.map(x => new this.type(x));
         return this.cache.addItems(items);
     }

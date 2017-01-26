@@ -1,8 +1,9 @@
 import { Component, Input, OnDestroy } from "@angular/core";
+import { BehaviorSubject } from "rxjs";
 
 import { Task, TaskDependency } from "app/models";
-import { TaskService } from "app/services";
-import { BehaviorSubject } from "rxjs";
+import { TaskListParams, TaskService } from "app/services";
+import { RxListProxy } from "app/services/core";
 
 @Component({
     selector: "bex-task-dependencies",
@@ -45,10 +46,14 @@ export class TaskDependenciesComponent implements OnDestroy {
             });
 
             this.dependencies.next(this.dependencies.value.concat(currentPage));
-            this.taskService.getMultiple(this.jobId, taskIdSet).subscribe({
-                next: (response: any) => {
-                    if (response.data) {
-                        this._processGetMultipleResponse(response, currentPage);
+
+
+            this.taskService.getMultiple(this.jobId, taskIdSet, this.taskService.basicProperties).subscribe({
+                next: (tasks: Task[]) => {
+                    // todo: remove log when working
+                    console.log("RESPONSE :: ", tasks);
+                    if (tasks) {
+                        this._processMultipleTaskResponse(tasks, currentPage);
                     }
                 },
             });
@@ -81,19 +86,16 @@ export class TaskDependenciesComponent implements OnDestroy {
      * @param response: api reponse
      * @param pageData: data for the current page
      */
-    private _processGetMultipleResponse(response: any, pageData: TaskDependency[]): void {
-        if (response.data) {
+    private _processMultipleTaskResponse(tasks: Task[], pageData: TaskDependency[]): void {
+        if (tasks && tasks.length > 0) {
             pageData.forEach(td => {
-                const found = response.data.filter(item => item.id === td.id);
+                const found = tasks.filter(item => item.id === td.id);
                 if (found && found.length > 0) {
                     td.state = found[0].state;
                     const dependencies = found[0].dependsOn;
                     if (dependencies) {
                         const count = this._taskDependenciesCount(dependencies);
-
-                        /* tslint:disable:no-empty */
-                        if (count === 0) {
-                        } else if (count <= 2) {
+                        if (count > 0 && count <= 2) {
                             const ids = this._getTaskDependencyIds(dependencies);
                             td.dependsOn = ids.join(",");
                         } else {

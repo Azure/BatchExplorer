@@ -95,23 +95,23 @@ export class TaskService extends ServiceBase {
         return getOnceProxy(this.get(jobId, taskId, options));
     }
 
+    /**
+     * Get multiple tasks for the specified id's.
+     * @param jobId: for this jobId
+     * @param taskIds: get tasks mathing these id's
+     * @param properties: optional OData select properties
+     */
     public getMultiple(jobId: string, taskIds: string[], properties?: string): Observable<Task[]> {
-        let options = {
+        let options: TaskListOptions = {
             filter: FilterBuilder.or(...taskIds.map(id => FilterBuilder.prop("id").eq(id))).toOData(),
-            select: properties || this.basicProperties,
             maxResults: taskIds.length,
         };
 
-        const observable = Observable.fromPromise<any>(BatchClient.task.list(jobId, options).fetchNext());
-        observable.subscribe({
-            error: (error) => {
-                console.error(
-                    `Error getting multiple tasks for job: ${jobId}, and filter: ${options.filter}`,
-                    error.toJSON());
-            },
-        });
+        if (properties) {
+            options.select = properties;
+        }
 
-        return observable;
+        return this.list(jobId, options).fetchAll();
     }
 
     public terminate(jobId: string, taskId: string, options: any): Observable<void> {
