@@ -1,7 +1,6 @@
 <bex-loading [status]="subscriptionData.status | async">
     <bex-quick-list>
-
-        <div class="subscription" *ngFor="let subscription of subscriptions">
+        <div class="subscription" *ngFor="let subscription of displayedSubscriptions">
             <div class="subscription-details noselect" (click)="toggleExpandSubscription(subscription.subscriptionId)">
                 <div class="icon">
                     <i class="fa fa-caret-right" *ngIf="!subscriptionAccounts[subscription.subscriptionId].expanded"></i>
@@ -13,19 +12,21 @@
                 </div>
             </div>
             <div class="accounts" *ngIf="subscriptionAccounts[subscription.subscriptionId].expanded">
-
-                <bex-quick-list-item *ngFor="let account of subscriptionAccounts[subscription.subscriptionId].accounts.items | async"  [routerLink]="['/accounts', account.id]" [key]="account.id">
-                    <h4 bex-quick-list-item-title>{{account.name}}</h4>
-                    <p bex-quick-list-item-field>{{account.location}}</p>
-                    <div bex-quick-list-item-preview>
-                        <div class="flex-center">
-                            <i class="fa fa-star" [class.favorite]="isAccountFavorite(account.id)" (click)="toggleFavorite(account.id)"></i>
+                <bex-loading size="medium" [status]="subscriptionAccounts[subscription.subscriptionId].accounts.status | async">
+                    <bex-quick-list-item *ngFor="let account of subscriptionAccounts[subscription.subscriptionId].accounts.items | async" [routerLink]="['/accounts', account.id]"
+                        [key]="account.id">
+                        <h4 bex-quick-list-item-title>{{account.name}}</h4>
+                        <p bex-quick-list-item-field>{{account.location}}</p>
+                        <div bex-quick-list-item-preview>
+                            <div class="flex-center">
+                                <i class="fa fa-star" [class.favorite]="isAccountFavorite(account.id)" (click)="toggleFavorite(account.id)"></i>
+                            </div>
                         </div>
-                    </div>
-                </bex-quick-list-item>
-                <div class="noitem" *ngIf="(subscriptionAccounts[subscription.subscriptionId].accounts.items | async).size === 0">
-                    No accounts in this subscription
-                </div>
+                    </bex-quick-list-item>
+                    <bex-no-item [itemCount]="(subscriptionAccounts[subscription.subscriptionId].accounts.items | async).size"  [status]="subscriptionAccounts[subscription.subscriptionId].accounts.status | async">
+                        <span no-filter>No accounts in this subscription</span>
+                    </bex-no-item>
+                </bex-loading>
             </div>
         </div>
     </bex-quick-list>

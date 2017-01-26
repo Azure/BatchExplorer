@@ -1,4 +1,4 @@
-<bex-list-and-show-layout>
+<bex-list-and-show-layout #layout>
     <div bex-list-buttons>
         <!--<button md-mini-fab color="primary" title="Add an account" (click)="addAccount()">
             <i class="fa fa-plus"></i>
@@ -9,8 +9,8 @@
             <md-radio-button [value]="ListType.Favourite">Favourite</md-radio-button>
             <md-radio-button [value]="ListType.All">All</md-radio-button>
         </md-radio-group>
-        <bex-account-fav-list [filter]="filter" *ngIf="showType === ListType.Favourite"></bex-account-fav-list>
-        <bex-account-list [filter]="filter" *ngIf="showType === ListType.All"></bex-account-list>
+        <bex-account-fav-list [filter]="layout.filter" *ngIf="showType === ListType.Favourite"></bex-account-fav-list>
+        <bex-account-list [filter]="layout.filter" *ngIf="showType === ListType.All"></bex-account-list>
     </div>
     <div bex-show-content>
         <router-outlet></router-outlet>

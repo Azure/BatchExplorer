@@ -33,6 +33,9 @@ export class LoadingComponent {
     public loadOnlyOnce = false;
 
     @Input()
+    public size: "small" | "medium" | "large" = "large";
+
+    @Input()
     public set status(value: LoadingStatus) {
         if (this.loadOnlyOnce && this._alreadyLoaded && value === LoadingStatus.Loading) {
             return;

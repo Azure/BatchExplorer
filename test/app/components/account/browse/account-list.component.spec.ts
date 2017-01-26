@@ -113,7 +113,7 @@ describe("AccountListComponent", () => {
         click(subscriptionsElList[0].query(By.css(".subscription-details")));
         fixture.detectChanges();
 
-        const noItemEl = subscriptionsElList[0].query(By.css(".accounts .noitem"));
+        const noItemEl = subscriptionsElList[0].query(By.css(".accounts bex-no-item"));
         expect(noItemEl).not.toBeNull();
         expect(noItemEl.nativeElement.textContent).toContain("No accounts in this subscription");
     });

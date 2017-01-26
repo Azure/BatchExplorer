@@ -3,7 +3,8 @@
 This is a documentation to help create models which are DataStructure that maps entities returned by apis.
 
 All models should be immmutable using `immutable.Record` otherwise the `RxProxy` that is using immutable `List` and `Map` will not handle those correctly.
-(Immutable.js will convert those to a Map automatically which then lose the ability to run `myModel.myAttr`)
+
+Immutable.js will convert those to a Map automatically which then lose the ability to run `myModel.myAttr`
 
 If you are just making a model that is internal to a component:
 * doesn't it really need to be shared with others
@@ -15,6 +16,16 @@ add this to `app/models/index.ts`
 
 ```typescript
 export * from "./myNewModel"
+```
+
+Then you should be able to have
+
+```typescript
+// Good
+import { MyNewModel } from "app/models"
+
+// Bad
+import {MyNewModel} from "app/models/myNewModel"
 ```
 
 ### Step 2: Write the Record
