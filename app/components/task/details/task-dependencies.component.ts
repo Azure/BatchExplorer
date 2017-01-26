@@ -1,4 +1,5 @@
 import { Component, Input, OnDestroy } from "@angular/core";
+import { List } from "immutable";
 import { BehaviorSubject } from "rxjs";
 
 import { Task, TaskDependency } from "app/models";
@@ -47,7 +48,7 @@ export class TaskDependenciesComponent implements OnDestroy {
 
             this.dependencies.next(this.dependencies.value.concat(currentPage));
             this.taskService.getMultiple(this.jobId, taskIdSet, this.taskService.basicProperties).subscribe({
-                next: (tasks: Task[]) => {
+                next: (tasks: List<Task>) => {
                     // todo: remove log when working
                     console.log("RESPONSE :: ", tasks);
                     if (tasks) {
@@ -84,28 +85,30 @@ export class TaskDependenciesComponent implements OnDestroy {
      * @param response: api reponse
      * @param pageData: data for the current page
      */
-    private _processMultipleTaskResponse(tasks: Task[], pageData: TaskDependency[]): void {
-        if (tasks && tasks.length > 0) {
-            pageData.forEach(td => {
-                const found = tasks.filter(item => item.id === td.id);
-                if (found && found.length > 0) {
-                    td.state = found[0].state;
-                    const dependencies = found[0].dependsOn;
-                    if (dependencies) {
-                        const count = this._taskDependenciesCount(dependencies);
-                        if (count > 0 && count <= 2) {
-                            const ids = this._getTaskDependencyIds(dependencies);
-                            td.dependsOn = ids.join(",");
-                        } else {
-                            td.dependsOn = `${count} tasks`;
-                        }
-                    } else {
-                        td.dependsOn = "no tasks";
-                    }
-                }
-            });
+    private _processMultipleTaskResponse(tasks: List<Task>, pageData: TaskDependency[]): void {
+        if (!(tasks && tasks.size > 0)) {
+            return;
         }
-    }
+        for (let td of pageData) {
+            const found = tasks.filter(item => item.id === td.id).first();
+            if (!found) {
+                continue;
+            }
+            td.state = found.state;
+            const dependencies = found.dependsOn;
+            if (dependencies) {
+                const count = this._taskDependenciesCount(dependencies);
+                if (count > 0 && count <= 2) {
+                    const ids = this._getTaskDependencyIds(dependencies);
+                    td.dependsOn = ids.join(",");
+                } else {
+                    td.dependsOn = `${count} tasks`;
+                }
+            } else {
+                td.dependsOn = "no tasks";
+            }
+        }
+    };
 
     /**
      * Get the list of task id's to display on the current page.

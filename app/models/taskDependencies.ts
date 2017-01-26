@@ -1,9 +1,15 @@
+import { Record } from "immutable";
+
+const TaskDependenciesRecord = Record({
+    taskIds: [],
+    taskIdRanges: [],
+});
 /**
  * Specifies any dependencies of a task. Any task that is explicitly
  * specified or within a dependency range must complete before the dependant
  * task will be scheduled.
  */
-export class TaskDependencies {
+export class TaskDependencies extends TaskDependenciesRecord {
     public taskIds: string[];
     public taskIdRanges: TaskIdRange[];
 }

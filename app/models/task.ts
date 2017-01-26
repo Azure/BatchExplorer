@@ -70,6 +70,7 @@ export class Task extends TaskRecord {
     constructor(data: any = {}) {
         super(Object.assign({}, data, {
             exitConditions: new TaskExitConditions(data.exitConditions),
+            dependsOn: data.dependsOn && new TaskDependencies(data.dependsOn),
         }));
     }
 }

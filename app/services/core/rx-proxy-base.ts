@@ -10,10 +10,14 @@ export interface FetchDataOptions {
     next: (response: any) => void;
     error?: (error: any) => void;
 }
+
+export interface OptionsBase {
+    select?: string;
+}
 /**
  * Base proxy for List and Entity proxies
  */
-export class RxProxyBase<TParams, TEntity> {
+export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
     /**
      * Status that keep track of any loading
      */
@@ -35,6 +39,7 @@ export class RxProxyBase<TParams, TEntity> {
 
     protected _params: TParams;
     protected _cache: DataCache<TEntity>;
+    protected _options: TOptions;
 
     private _currentQuerySub: Subscription = null;
     private _currentObservable: Observable<any>;
@@ -66,6 +71,13 @@ export class RxProxyBase<TParams, TEntity> {
         return this._params;
     }
 
+    public setOptions(options: TOptions, clearItems = true) {
+        this._options = Object.assign({}, options);
+        if (this.queryInProgress()) {
+            this.abortFetch();
+        }
+    }
+
     protected set cache(cache: DataCache<TEntity>) {
         this._cache = cache;
         this._clearDeleteSub();
@@ -82,15 +94,15 @@ export class RxProxyBase<TParams, TEntity> {
      */
     protected newItem(data: any): string {
         const item = new this.type(data);
-        return this.cache.addItem(item);
+        return this.cache.addItem(item, this._options && this._options.select);
     }
 
     /**
      * Create a new item of type TEntity and adds it to the cache
      */
-    protected newItems(data: any[], select?: string): string[] {
+    protected newItems(data: any[]): string[] {
         const items = data.map(x => new this.type(x));
-        return this.cache.addItems(items);
+        return this.cache.addItems(items, this._options && this._options.select);
     }
 
     protected fetchData(options: FetchDataOptions): Observable<any> {

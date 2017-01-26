@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { List } from "immutable";
 import { Observable, Subject } from "rxjs";
 
 import { SubtaskInformation, Task } from "app/models";
@@ -101,7 +102,8 @@ export class TaskService extends ServiceBase {
      * @param taskIds: get tasks mathing these id's
      * @param properties: optional OData select properties
      */
-    public getMultiple(jobId: string, taskIds: string[], properties?: string): Observable<Task[]> {
+    public getMultiple(jobId: string, taskIds: string[], properties?: string): Observable<List<Task>> {
+        console.log("Getting multiple", jobId, taskIds);
         let options: TaskListOptions = {
             filter: FilterBuilder.or(...taskIds.map(id => FilterBuilder.prop("id").eq(id))).toOData(),
             maxResults: taskIds.length,
@@ -110,8 +112,10 @@ export class TaskService extends ServiceBase {
         if (properties) {
             options.select = properties;
         }
-
-        return this.list(jobId, options).fetchAll();
+        const data = this.list(jobId, options);
+        return data.fetchAll().cascade(() => {
+            return data.items.first();
+        });
     }
 
     public terminate(jobId: string, taskId: string, options: any): Observable<void> {
