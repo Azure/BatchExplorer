@@ -13,7 +13,7 @@ const taskMap: Map<string, Task> = new Map()
     .set("1", new Task({ id: "1", dependsOn: { taskIds: ["1", "2"]} }))
     .set("2", new Task({ id: "2", dependsOn: { taskIds: ["3", "4", "5"]} }));
 
-fdescribe("TaskDependenciesComponent", () => {
+describe("TaskDependenciesComponent", () => {
     let fixture: ComponentFixture<TaskDependenciesComponent>;
     let component: TaskDependenciesComponent;
     let taskServiceSpy: any;
