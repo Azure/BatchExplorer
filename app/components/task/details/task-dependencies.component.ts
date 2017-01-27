@@ -3,8 +3,7 @@ import { List } from "immutable";
 import { BehaviorSubject } from "rxjs";
 
 import { Task, TaskDependencies, TaskDependency } from "app/models";
-import { TaskListParams, TaskService } from "app/services";
-import { RxListProxy } from "app/services/core";
+import { TaskService } from "app/services";
 
 @Component({
     selector: "bex-task-dependencies",

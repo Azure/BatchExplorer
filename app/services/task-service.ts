@@ -103,7 +103,6 @@ export class TaskService extends ServiceBase {
      * @param properties: optional OData select properties
      */
     public getMultiple(jobId: string, taskIds: string[], properties?: string): Observable<List<Task>> {
-        console.log("Getting multiple", jobId, taskIds);
         let options: TaskListOptions = {
             filter: FilterBuilder.or(...taskIds.map(id => FilterBuilder.prop("id").eq(id))).toOData(),
             maxResults: taskIds.length,
