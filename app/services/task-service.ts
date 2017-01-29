@@ -1,10 +1,18 @@
 import { Injectable } from "@angular/core";
+import { List } from "immutable";
 import { Observable, Subject } from "rxjs";
 
 import { SubtaskInformation, Task } from "app/models";
+import { FilterBuilder } from "app/utils/filter-builder";
 import BatchClient from "../api/batch/batch-client";
 import {
-    DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache, getOnceProxy,
+    DataCache,
+    RxBatchEntityProxy,
+    RxBatchListProxy,
+    RxEntityProxy,
+    RxListProxy,
+    TargetedDataCache,
+    getOnceProxy,
 } from "./core";
 import { CommonListOptions, ServiceBase } from "./service-base";
 
@@ -22,7 +30,6 @@ export interface SubtaskListParams {
 }
 
 export interface TaskListOptions extends CommonListOptions {
-
 }
 
 @Injectable()
@@ -32,7 +39,7 @@ export class TaskService extends ServiceBase {
      */
     public onTaskAdded = new Subject<TaskParams>();
 
-    private _basicProperties: string = "id,displayName,state";
+    private _basicProperties: string = "id,state,dependsOn";
     private _cache = new TargetedDataCache<TaskListParams, Task>({
         key: ({jobId}) => jobId,
     });
@@ -87,6 +94,28 @@ export class TaskService extends ServiceBase {
 
     public getOnce(jobId: string, taskId: string, options: any = {}): Observable<Task> {
         return getOnceProxy(this.get(jobId, taskId, options));
+    }
+
+    /**
+     * Get multiple tasks for the specified id's.
+     * @param jobId: for this jobId
+     * @param taskIds: get tasks mathing these id's
+     * @param properties: optional OData select properties
+     */
+    public getMultiple(jobId: string, taskIds: string[], properties?: string): Observable<List<Task>> {
+        let options: TaskListOptions = {
+            filter: FilterBuilder.or(...taskIds.map(id => FilterBuilder.prop("id").eq(id))).toOData(),
+            maxResults: taskIds.length,
+        };
+
+        if (properties) {
+            options.select = properties;
+        }
+
+        const data = this.list(jobId, options);
+        return data.fetchAll().cascade(() => {
+            return data.items.first();
+        });
     }
 
     public terminate(jobId: string, taskId: string, options: any): Observable<void> {

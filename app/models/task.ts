@@ -63,13 +63,14 @@ export class Task extends TaskRecord {
     public executionInfo: TaskExecutionInformation;
     public nodeInfo: ComputeNodeInformation;
     public multiInstanceSettings: MultiInstanceSettings;
-    public stats: any;                           // TaskStatistics
+    public stats: any; // TaskStatistics
     public dependsOn: TaskDependencies;
     public applicationPackageReferences: ApplicationPackageReference[];
 
     constructor(data: any = {}) {
         super(Object.assign({}, data, {
             exitConditions: new TaskExitConditions(data.exitConditions),
+            dependsOn: data.dependsOn && new TaskDependencies(data.dependsOn),
         }));
     }
 }

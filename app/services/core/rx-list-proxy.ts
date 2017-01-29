@@ -13,11 +13,9 @@ export interface RxListProxyConfig<TParams, TEntity> {
     initialParams?: any;
 }
 
-export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams, TEntity> {
+export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams, any, TEntity> {
     public items: Observable<List<TEntity>>;
     public hasMore: Observable<boolean>;
-
-    protected _options: any;
 
     private _itemKeys: BehaviorSubject<List<string>> = new BehaviorSubject(List([]));
     private _hasMore: BehaviorSubject<boolean> = new BehaviorSubject(true);
@@ -44,20 +42,16 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
 
     public updateParams(params: TParams) {
         this.params = params;
-        this.handleChanges(params, this._options);
+        this.handleChanges(this._params, this._options);
     }
 
     public setOptions(options: {}, clearItems = true) {
-        this._options = Object.assign({}, options);
-        this.handleChanges(this._params, options);
+        super.setOptions(options);
+        this.handleChanges(this._params, this._options);
         if (clearItems) {
             this._itemKeys.next(List([]));
         }
         this._hasMore.next(true);
-
-        if (this.queryInProgress()) {
-            this.abortFetch();
-        }
     }
 
     /**

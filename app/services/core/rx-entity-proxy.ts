@@ -18,7 +18,7 @@ export interface RxEntityProxyConfig<TParams, TEntity> {
     initialParams?: TParams;
 }
 
-export abstract class RxEntityProxy<TParams, TEntity> extends RxProxyBase<TParams, TEntity> {
+export abstract class RxEntityProxy<TParams, TEntity> extends RxProxyBase<TParams, any, TEntity> {
     /**
      * Contains the observable of the item you want to load.
      * Subscribe to this or use the async pipe on this attribute.

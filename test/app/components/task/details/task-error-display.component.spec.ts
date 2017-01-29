@@ -15,7 +15,7 @@ class TestTaskErrorDisplayComponent {
     public task: Task;
 }
 
-describe("PoolErrorDisplayComponent", () => {
+describe("TaskErrorDisplayComponent", () => {
     let fixture: ComponentFixture<TestTaskErrorDisplayComponent>;
     let testComponent: TestTaskErrorDisplayComponent;
     let component: TaskErrorDisplayComponent;
