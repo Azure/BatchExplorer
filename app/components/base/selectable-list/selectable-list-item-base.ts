@@ -56,7 +56,6 @@ export class SelectableListItemBase implements OnInit {
             console.error(`Every list item needs to have a key. Use this attribute [key]="item.id"`, this);
         }
         this.selected = this.list.isSelected(this.key);
-        console.log("Is bre", this.forceBreadcrumb);
     }
 
     public checkActive(): boolean {
@@ -113,7 +112,6 @@ export class SelectableListItemBase implements OnInit {
      */
     private _triggerRouter() {
         if (this.routerLink) {
-            console.log("Force bc", this.forceBreadcrumb);
             if (this.forceBreadcrumb) {
                 this.breadcrumbService.navigate(this.routerLink);
             } else {
