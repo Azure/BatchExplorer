@@ -64,7 +64,7 @@
                         <bex-task-sub-tasks-tab [jobId]="job.id" [taskId]="task.id"></bex-task-sub-tasks-tab>
                     </div>
                 </bex-tab>
-                <bex-tab key="task-dependencies" [disabled]="!hasDependencies">
+                <bex-tab key="dependencies" [disabled]="!hasDependencies">
                     <bex-tab-label>Dependencies</bex-tab-label>
                     <div class="tab-padding">
                         <bex-task-dependencies [jobId]="job.id" [task]="task"></bex-task-dependencies>

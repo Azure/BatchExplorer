@@ -14,6 +14,7 @@ export interface Breadcrumb {
     componentName: string;
     segments: string[];
     url: string;
+    lockedFor?: string;
 }
 
 export interface RouteComponent extends Type<any> {

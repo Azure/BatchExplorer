@@ -8,7 +8,7 @@ import { RouterModule } from "@angular/router";
 import { AdvancedFilterModule } from "./advanced-filter";
 import { BackgroundTaskModule } from "./background-task";
 import { BannerComponent, BannerOtherFixDirective } from "./banner";
-import { BreadcrumbService, BreadcrumbsComponent, CrumbComponent } from "./breadcrumbs";
+import { BreadcrumbModule } from "./breadcrumbs";
 import { ButtonsModule } from "./buttons";
 import { DropdownModule } from "./dropdown";
 import { ElapsedTimeComponent } from "./elapsed-time";
@@ -31,6 +31,7 @@ import { TabsModule } from "./tabs";
 // Add submodules there
 const modules = [
     AdvancedFilterModule,
+    BreadcrumbModule,
     ButtonsModule,
     BackgroundTaskModule,
     DropdownModule,
@@ -49,8 +50,6 @@ const modules = [
 const components = [
     BannerComponent,
     BannerOtherFixDirective,
-    BreadcrumbsComponent,
-    CrumbComponent,
     ElapsedTimeComponent,
     EntityDetailsListComponent,
     ListAndShowLayoutComponent,
@@ -77,7 +76,6 @@ const components = [
     ],
     providers: [
         ScrollableService,
-        BreadcrumbService,
     ],
 })
 export class BaseModule {

@@ -3,6 +3,7 @@ import {
 } from "@angular/core";
 import { Router } from "@angular/router";
 
+import { BreadcrumbService } from "app/components/base/breadcrumbs";
 import { SelectableListItemBase } from "../selectable-list/selectable-list-item-base";
 import { QuickListComponent } from "./quick-list.component";
 
@@ -16,7 +17,10 @@ export class QuickListItemComponent extends SelectableListItemBase implements On
     }
 
     // tslint:disable:no-forward-ref
-    constructor(@Inject(forwardRef(() => QuickListComponent)) list: QuickListComponent, router: Router) {
-        super(list, router);
+    constructor(
+        @Inject(forwardRef(() => QuickListComponent)) list: QuickListComponent,
+        router: Router,
+        breadcrumbService: BreadcrumbService) {
+        super(list, router, breadcrumbService);
     }
 }

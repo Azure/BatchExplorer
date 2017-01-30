@@ -4,7 +4,7 @@
         <bex-column>State</bex-column>
         <bex-column>Depends on</bex-column>
     </bex-thead>
-    <bex-row *ngFor="let dependency of dependencies | async" [key]="dependency.id">
+    <bex-row *ngFor="let dependency of dependencies | async" [key]="dependency.id" [routerLink]="['/jobs', jobId, 'tasks', dependency.id]" [forceBreadcrumb]="true">
         <bex-cell>{{dependency.id}}</bex-cell>
         <bex-cell>{{dependency.state}}</bex-cell>
         <bex-cell>{{dependency.dependsOn}}</bex-cell>

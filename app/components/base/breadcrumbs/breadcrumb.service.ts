@@ -67,6 +67,16 @@ export class BreadcrumbService {
         return true;
     }
 
+    public navigate(commands: any[]) {
+        const urlTree = this.router.createUrlTree(commands);
+        const crumbs = this._crumbs.value;
+        if (crumbs.length > 0) {
+            const last = crumbs[crumbs.length - 1];
+            last.lockedFor = urlTree.toString();
+        }
+        this.router.navigate(commands);
+    }
+
     public navigateTo(crumb: Breadcrumb) {
         this.router.navigate([crumb.url], {
             relativeTo: this.activatedRoute,
@@ -122,6 +132,9 @@ export class BreadcrumbService {
             return crumbs;
         }
         const last = crumbs[crumbs.length - 1];
+        if (last.lockedFor && last.lockedFor === breadcrumb.url) {
+            return crumbs;
+        }
         let removeLast = (
             last.url === breadcrumb.url                             // If same url don't add a new breadcrumb
             || last.url.startsWith(breadcrumb.url)                  // Breadcrumb goes back remove
