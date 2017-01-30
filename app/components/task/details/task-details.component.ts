@@ -57,10 +57,8 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
         this.data = taskService.get(null, null, {});
         this.jobData = jobService.get(null, {});
         this.data.item.subscribe((task) => {
-            if (task) {
-                this.decorator = new TaskDecorator(task);
-                this.task = task;
-            }
+            this.task = task;
+            this.decorator = task && new TaskDecorator(task);
         });
 
         this.data.deleted.subscribe((key) => {

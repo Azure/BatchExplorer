@@ -47,10 +47,7 @@ export class BreadcrumbsComponent implements OnDestroy {
 
     @HostListener("document:click", ["$event"])
     public onClick(event: Event) {
-        console.log("Event target", event.target, this.elementRef.nativeElement,
-            this.elementRef.nativeElement.contains(event.target));
         if (!this.elementRef.nativeElement.contains(event.target)) {
-            console.log("Its outside");
             this.expanded = false;
             this._updateDisplayedCrumbs();
         }
