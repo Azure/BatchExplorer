@@ -32,7 +32,7 @@ bex-list-and-show-layout {
             width: $listview-width;
             height: $contentview-height;
             background-color: $listview-background;
-            overflow: hidden;
+            // overflow: hidden; // [Tim] removed for the breadcrumb expand
             box-shadow: 1px 1px 5px 0 #d5d5d5;
             z-index: 1;
 

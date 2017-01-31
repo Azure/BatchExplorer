@@ -1,9 +1,5 @@
 <!--<bex-list-and-show-layout #layout (listScrolledToBottom)="fileList.loadMore()" [list]="fileList">-->
 <bex-list-and-show-layout #layout>
-    <bex-breadcrumbs>
-        <bex-crumb *ngIf="isJob" [routerLink]="['/jobs', jobId, 'tasks', taskId]" label="Task">{{taskId}}</bex-crumb>
-        <bex-crumb *ngIf="isPool" [routerLink]="['/pools', poolId, 'nodes', nodeId]" label="Node">{{nodeId}}</bex-crumb>
-    </bex-breadcrumbs>
     <div bex-list-buttons>
     </div>
     <div bex-list-content>

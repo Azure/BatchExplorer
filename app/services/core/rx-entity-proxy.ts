@@ -58,6 +58,7 @@ export abstract class RxEntityProxy<TParams, TEntity> extends RxProxyBase<TParam
             error: (error: any) => {
                 // If there is a 404 delete the item from the cache as it doesn't exist anymore
                 if (error.statusCode === HttpCode.NotFound) {
+                    this._itemKey.next(null);
                     const queryKey = this.params[this.cache.uniqueField];
                     this.cache.deleteItemByKey(queryKey);
                 }

@@ -1,17 +1,25 @@
 
-bex-breadcrumbs {
+bex-breadcrumb-group {
     $separation: 3px;
     $height: 28px;
     $half-height: $height / 2;
     $color: lighten($blue-lighter, 5%);
     $hover-color: $blue-light;
+    display: block;
+    height: $height;
 
     ul {
         display: flex;
         margin: 0;
+
+        &.expanded {
+            position: absolute;
+            z-index: 1000;
+        }
     }
 
-    ul > li {
+    ul > bex-breadcrumb {
+        display: block;
         height: $height;
         background: $color;
         padding: 0 2px;
@@ -53,12 +61,15 @@ bex-breadcrumbs {
             }
         }
 
-        > div.crumb-content {
-            text-align: left;
+        > div.crumb-content, > div.crumb-label {
             overflow: hidden;
             text-overflow: ellipsis;
             word-break: break-all;
             white-space: nowrap;
+        }
+
+        > div.crumb-content {
+            text-align: left;
             color: $whiteSmoke;
             font-size: 12px;
             line-height: 16px;
@@ -82,9 +93,21 @@ bex-breadcrumbs {
             color: $whiteSmoke-darker;
             font-style: italic;
             text-align: right;
-            line-height: 0.7em;
+            line-height: 9px;
             font-size: 9px;
-            margin-top: 3px;
+            margin-top: 2px;
+        }
+    }
+
+    ul > .expand {
+        margin-right: 14px;
+        font-size: 20px;
+        font-weight: bold;
+        color: $color;
+        cursor: pointer;
+
+        &:hover {
+            color: $hover-color;
         }
     }
 }

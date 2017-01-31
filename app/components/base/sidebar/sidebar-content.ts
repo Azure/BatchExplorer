@@ -59,7 +59,7 @@ export class SidebarContentComponent {
         if (id in this.componentRefs) {
             this.switchDisplay(this.componentRefs[id]);
         } else {
-            console.error(`SidebarRef with id '${id}' doesn't exists.`);
+            console.error(`SidebarRef with id '${id}' doesn't exist.`);
         }
     }
 

@@ -3,6 +3,7 @@ import {
 } from "@angular/core";
 import { Router } from "@angular/router";
 
+import { BreadcrumbService } from "app/components/base/breadcrumbs";
 import { SelectableListItemBase } from "../selectable-list/selectable-list-item-base";
 import { TableComponent } from "./table.component";
 
@@ -25,7 +26,10 @@ export class TableRowComponent extends SelectableListItemBase {
     }
 
     // tslint:disable:no-forward-ref
-    constructor(@Inject(forwardRef(() => TableComponent)) list: TableComponent, router: Router) {
-        super(list, router);
+    constructor(
+        @Inject(forwardRef(() => TableComponent)) list: TableComponent,
+        router: Router,
+        breadcrumbService: BreadcrumbService) {
+        super(list, router, breadcrumbService);
     }
 }

@@ -6,7 +6,7 @@ import { BrowserModule, By } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import { BehaviorSubject } from "rxjs";
 
-import { BreadcrumbService, BreadcrumbsComponent } from "app/components/base/breadcrumbs";
+import { BreadcrumbModule, BreadcrumbService } from "app/components/base/breadcrumbs";
 import { ListAndShowLayoutComponent } from "app/components/base/list-and-show-layout";
 import { RefreshButtonComponent } from "app/components/base/refresh-btn";
 import { ScrollableComponent } from "app/components/base/scrollable";
@@ -39,13 +39,12 @@ describe("ListAndShowLayout", () => {
             crumbs: new BehaviorSubject([]),
         };
         TestBed.configureTestingModule({
-            imports: [BrowserModule, FormsModule, ReactiveFormsModule, MaterialModule],
+            imports: [BrowserModule, FormsModule, ReactiveFormsModule, MaterialModule, BreadcrumbModule],
             declarations: [
                 TestLayoutComponent,
                 ListAndShowLayoutComponent,
                 ScrollableComponent,
                 RefreshButtonComponent,
-                BreadcrumbsComponent,
             ],
             providers: [
                 ScrollableService,

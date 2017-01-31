@@ -83,11 +83,13 @@ export class TaskDependenciesComponent implements OnDestroy {
      * @param pageData: data for the current page
      */
     private _processMultipleTaskResponse(tasks: List<Task>, pageData: TaskDependency[]): void {
-        if (!(tasks && tasks.size > 0)) {
-            return;
-        }
         for (let td of pageData) {
-            const found = tasks.filter(item => item.id === td.id).first();
+            td.loading = false;
+
+            const found = tasks && tasks.size > 0
+                ? tasks.filter(item => item.id === td.id).first()
+                : null;
+
             if (!found) {
                 continue;
             }

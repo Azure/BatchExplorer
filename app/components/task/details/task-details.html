@@ -1,4 +1,7 @@
 <bex-loading [status]="data.newDataStatus | async">
+    <md-card bex-loading-error>
+        Task with id '{{taskId}}' doesn't exist
+    </md-card>
     <div *ngIf="task && job">
         <md-card class="overview">
             <md-card-title-group style="margin: 0px;">
@@ -6,7 +9,7 @@
                     <bex-refresh-btn [refresh]="refresh"></bex-refresh-btn>
                 </div>
                 <div style="margin-left:12px; margin-right:auto;">
-                    <md-card-title>{{task.id}} <span *ngIf="!!task.displayName"> - {{task.displayName}}</span> </md-card-title>
+                    <md-card-title>{{task.id}} <span *ngIf="!!task.displayName"> - {{task.displayName}} - {{taskId}}</span> </md-card-title>
                     <md-card-subtitle><i class="fa" [ngClass]="decorator.stateIcon"></i> {{task.state}}</md-card-subtitle>
                 </div>
             </md-card-title-group>
@@ -64,7 +67,7 @@
                         <bex-task-sub-tasks-tab [jobId]="job.id" [taskId]="task.id"></bex-task-sub-tasks-tab>
                     </div>
                 </bex-tab>
-                <bex-tab key="task-dependencies" [disabled]="!hasDependencies">
+                <bex-tab key="dependencies" [disabled]="!hasDependencies">
                     <bex-tab-label>Dependencies</bex-tab-label>
                     <div class="tab-padding">
                         <bex-task-dependencies [jobId]="job.id" [task]="task"></bex-task-dependencies>

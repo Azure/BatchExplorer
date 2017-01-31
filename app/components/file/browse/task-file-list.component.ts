@@ -101,6 +101,9 @@ export class TaskFileListComponent implements OnInit {
 
     private _loadIfNodeExists() {
         this.taskService.get(this.jobId, this.taskId).fetch().subscribe((task: Task) => {
+            if (!task.nodeInfo) {
+                return;
+            }
             let nodeData = this.nodeService.get(task.nodeInfo.poolId, task.nodeInfo.nodeId, {});
             nodeData.params = { id: task.nodeInfo.nodeId, poolId: task.nodeInfo.poolId };
             nodeData.fetch().subscribe(

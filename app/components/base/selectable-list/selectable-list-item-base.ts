@@ -3,6 +3,7 @@ import {
 } from "@angular/core";
 import { Router } from "@angular/router";
 
+import { BreadcrumbService } from "app/components/base/breadcrumbs";
 import { SelectableListBase } from "./selectable-list-base";
 
 /**
@@ -27,6 +28,9 @@ export class SelectableListItemBase implements OnInit {
     }
     public get routerLink() { return this._routerLink; }
 
+    @Input()
+    public forceBreadcrumb = false;
+
     /**
      * If the item is selected(!= active)
      */
@@ -40,7 +44,10 @@ export class SelectableListItemBase implements OnInit {
      * Need to inject list
      * e.g.  @Inject(forwardRef(() => QuickListComponent)) list: QuickListComponent
      */
-    constructor(protected list: SelectableListBase, private router: Router) {
+    constructor(
+        protected list: SelectableListBase,
+        private router: Router,
+        private breadcrumbService: BreadcrumbService) {
 
     }
 
@@ -105,7 +112,11 @@ export class SelectableListItemBase implements OnInit {
      */
     private _triggerRouter() {
         if (this.routerLink) {
-            this.router.navigate(this.routerLink);
+            if (this.forceBreadcrumb) {
+                this.breadcrumbService.navigate(this.routerLink);
+            } else {
+                this.router.navigate(this.routerLink);
+            }
         }
     }
 }

@@ -6,6 +6,7 @@
 		</div>
 	</div>
 	<div *ngSwitchCase="statuses.Error">
+        <ng-content select="[bex-loading-error]"></ng-content>
 	</div>
 	<div class="loading-content"  [class.loading]="(displayStatus | async) === statuses.Loading" #ref>
 		<ng-content></ng-content>
