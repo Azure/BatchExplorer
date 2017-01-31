@@ -18,7 +18,8 @@ bex-breadcrumbs {
         }
     }
 
-    ul > li {
+    ul > bex-breadcrumb {
+        display: block;
         height: $height;
         background: $color;
         padding: 0 2px;

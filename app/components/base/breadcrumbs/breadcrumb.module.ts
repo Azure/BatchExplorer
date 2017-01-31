@@ -1,13 +1,16 @@
 import { NgModule } from "@angular/core";
 import { BrowserModule } from "@angular/platform-browser";
 
+import { BreadcrumbGroupComponent } from "./breadcrumb-group.component";
 import { BreadcrumbLinkDirective } from "./breadcrumb-link.directive";
+import { BreadcrumbComponent } from "./breadcrumb.component";
 import { BreadcrumbService } from "./breadcrumb.service";
-import { BreadcrumbsComponent, CrumbComponent } from "./breadcrumbs.component";
 
-const components = [BreadcrumbsComponent, BreadcrumbLinkDirective, CrumbComponent];
+const components = [BreadcrumbGroupComponent, BreadcrumbLinkDirective];
+const internalComponents = [BreadcrumbComponent];
+
 @NgModule({
-    declarations: components,
+    declarations: [...components, ...internalComponents],
     exports: components,
     providers: [BreadcrumbService],
     imports: [BrowserModule],

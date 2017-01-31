@@ -1,31 +1,16 @@
-import { Component, ElementRef, HostListener, Input, OnDestroy, TemplateRef, ViewChild } from "@angular/core";
+import { Component, ElementRef, HostListener, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { Breadcrumb } from "./breadcrumb-models";
 import { BreadcrumbService } from "./breadcrumb.service";
 
-@Component({
-    selector: "bex-crumb",
-    template: `<template><ng-content></ng-content></template>`,
-})
-export class CrumbComponent {
-    @Input()
-    public label: string;
-
-    @Input()
-    public routerLink: any;
-
-    @ViewChild(TemplateRef)
-    public content: TemplateRef<any>;
-}
-
 // Max number of breadcrumb to display without expanding
 const expandableCount = 4;
 @Component({
-    selector: "bex-breadcrumbs",
-    templateUrl: "breadcrumbs.html",
+    selector: "bex-breadcrumb-group",
+    templateUrl: "breadcrumb-group.html",
 })
-export class BreadcrumbsComponent implements OnDestroy {
+export class BreadcrumbGroupComponent implements OnDestroy {
     public crumbs: Breadcrumb[] = [];
     public displayCrumbs: Breadcrumb[] = [];
     public expandable = false;
@@ -51,10 +36,6 @@ export class BreadcrumbsComponent implements OnDestroy {
             this.expanded = false;
             this._updateDisplayedCrumbs();
         }
-    }
-
-    public clickBreadcrumb(crumb: Breadcrumb) {
-        this.breadcrumbService.navigateTo(crumb);
     }
 
     public expand(event: Event) {

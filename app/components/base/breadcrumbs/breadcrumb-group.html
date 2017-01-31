@@ -1,0 +1,9 @@
+<ul [class.expanded]="expanded">
+    <bex-breadcrumb *ngIf="expandable && !expanded" [index]="0" [crumb]="crumbs[0]">
+    </bex-breadcrumb>
+    <div class="expand" *ngIf="expandable && !expanded" (click)="expand($event)">
+        ...
+    </div>
+    <bex-breadcrumb *ngFor="let crumb of displayCrumbs; let i = index" [index]="i" [crumb]="crumb">
+    </bex-breadcrumb>
+</ul>

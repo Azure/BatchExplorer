@@ -1,0 +1,4 @@
+<div class="crumb-content" [class.no-label]="!crumb.data.label" [class.invert-ellipsis]="crumb.data.invertName">{{crumb.data.name}}</div>
+<div class="crumb-label" *ngIf="crumb.data.label">
+    {{crumb.data.label}}
+</div>
