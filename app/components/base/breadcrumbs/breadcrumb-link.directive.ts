@@ -15,7 +15,6 @@ export class BreadcrumbLinkDirective {
 
     @HostListener("click", ["$event.target"])
     public onClick(e) {
-        console.log("Clicked", e);
         this.router.navigate(this.link);
     }
 }
