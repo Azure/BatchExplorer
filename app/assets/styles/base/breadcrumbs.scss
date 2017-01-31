@@ -1,5 +1,5 @@
 
-bex-breadcrumbs {
+.bex-breadcrumbs {
     $separation: 3px;
     $height: 28px;
     $half-height: $height / 2;
@@ -61,7 +61,7 @@ bex-breadcrumbs {
             }
         }
 
-         > div.crumb-content, > div.crumb-label {
+        > div.crumb-content, > div.crumb-label {
             overflow: hidden;
             text-overflow: ellipsis;
             word-break: break-all;
