@@ -1,65 +1,7 @@
-import { Breadcrumb, BreadcrumbService } from "app/components/base/breadcrumbs";
 import { Subject } from "rxjs";
 
-const poolsCrumb: Breadcrumb = {
-    url: "/pools",
-    segments: ["pools"],
-    componentName: "PoolDetailsHomeComponent",
-    params: {},
-    queryParams: {},
-    data: {
-        name: "Pools",
-        label: "",
-    },
-};
-
-const pool1Crumb: Breadcrumb = {
-    url: "/pools/a",
-    segments: ["pools", "a"],
-    componentName: "PoolDetailsComponent",
-    params: { id: "a" },
-    queryParams: { tab: "nodes" },
-    data: {
-        name: "a",
-        label: "Pool - nodes",
-    },
-};
-
-const pool1PropertiesCrumb: Breadcrumb = {
-    url: "/pools/a",
-    segments: ["pools", "a"],
-    componentName: "PoolDetailsComponent",
-    params: { id: "a" },
-    queryParams: { tab: "properties" },
-    data: {
-        name: "a",
-        label: "Pool - properties",
-    },
-};
-
-const node1Crumb: Breadcrumb = {
-    url: "/pools/a/nodes/xyz",
-    segments: ["pools", "a", "nodes", "xyz"],
-    componentName: "NodeDetailsComponent",
-    params: { id: "xyz", poolId: "a" },
-    queryParams: {},
-    data: {
-        name: "xyz",
-        label: "Node",
-    },
-};
-
-const jobsCrumb: Breadcrumb = {
-    url: "/jobs",
-    segments: ["jobs"],
-    componentName: "JobDetailsHomeComponent",
-    params: {},
-    queryParams: {},
-    data: {
-        name: "Jobs",
-        label: "",
-    },
-};
+import { Breadcrumb, BreadcrumbService } from "app/components/base/breadcrumbs";
+import { jobsCrumb, node1Crumb, pool1Crumb, pool1PropertiesCrumb, poolsCrumb } from "./crumbs-data";
 
 describe("Breadcrumb service", () => {
     let service: BreadcrumbService;
