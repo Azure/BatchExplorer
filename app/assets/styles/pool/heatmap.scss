@@ -16,6 +16,8 @@ $color-width: 14px;
 
     rect {
         cursor: pointer;
+        stroke: map-get($md-prussian-blue, 500);
+
         &:hover {
             fill: map-get($md-prussian-blue, 500) !important;
         }
