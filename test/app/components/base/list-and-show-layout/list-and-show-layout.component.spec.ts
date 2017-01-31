@@ -6,7 +6,7 @@ import { BrowserModule, By } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import { BehaviorSubject } from "rxjs";
 
-import { BreadcrumbService, BreadcrumbsComponent } from "app/components/base/breadcrumbs";
+import { BreadcrumbGroupComponent, BreadcrumbService } from "app/components/base/breadcrumbs";
 import { ListAndShowLayoutComponent } from "app/components/base/list-and-show-layout";
 import { RefreshButtonComponent } from "app/components/base/refresh-btn";
 import { ScrollableComponent } from "app/components/base/scrollable";
@@ -45,7 +45,7 @@ describe("ListAndShowLayout", () => {
                 ListAndShowLayoutComponent,
                 ScrollableComponent,
                 RefreshButtonComponent,
-                BreadcrumbsComponent,
+                BreadcrumbGroupComponent,
             ],
             providers: [
                 ScrollableService,
