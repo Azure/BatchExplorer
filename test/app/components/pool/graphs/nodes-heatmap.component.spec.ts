@@ -5,7 +5,6 @@ import { RouterTestingModule } from "@angular/router/testing";
 import * as d3 from "d3";
 import { List } from "immutable";
 
-
 import { NodesHeatmapComponent, PoolGraphsModule } from "app/components/pool/graphs";
 import { Node, NodeState } from "app/models";
 import { NodeService } from "app/services";
