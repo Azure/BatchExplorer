@@ -1,4 +1,4 @@
-import { ObjectUtils } from "app/utils/object";
+import { ObjectUtils, exists, nil } from "app/utils/object";
 
 describe("Object extensions", () => {
     it("Should slice an object correctly", () => {
@@ -18,5 +18,29 @@ describe("Object extensions", () => {
     it("Should compact an object correctly", () => {
         expect(ObjectUtils.compact({ a: null, b: 2, c: undefined, d: 4 })).toEqual({ b: 2, d: 4 });
         expect(ObjectUtils.compact({ a: null, b: 2, c: false, d: 4 })).toEqual({ b: 2, c: false, d: 4 });
+    });
+
+    it("exists should return true if not null or undefined", () => {
+        expect(exists("abc")).toBe(true);
+        expect(exists(123)).toBe(true);
+        expect(exists([{}])).toBe(true);
+        expect(exists("")).toBe(true);
+        expect(exists(0)).toBe(true);
+        expect(exists([])).toBe(true);
+
+        expect(exists(null)).toBe(false);
+        expect(exists(undefined)).toBe(false);
+    });
+
+    it("nil should return true if null or undefined", () => {
+        expect(nil("abc")).toBe(false);
+        expect(nil(123)).toBe(false);
+        expect(nil([{}])).toBe(false);
+        expect(nil("")).toBe(false);
+        expect(nil(0)).toBe(false);
+        expect(nil([])).toBe(false);
+
+        expect(nil(null)).toBe(true);
+        expect(nil(undefined)).toBe(true);
     });
 });

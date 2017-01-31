@@ -2,15 +2,12 @@ import { Type } from "@angular/core";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import { DataCache } from "./data-cache";
 import { CachedKeyList } from "./query-cache";
 import { RxEntityProxy } from "./rx-entity-proxy";
-import { RxProxyBase } from "./rx-proxy-base";
+import { RxProxyBase, RxProxyBaseConfig } from "./rx-proxy-base";
 
-export interface RxListProxyConfig<TParams, TEntity> {
-    cache: (params: TParams) => DataCache<TEntity>;
+export interface RxListProxyConfig<TParams, TEntity> extends RxProxyBaseConfig<TParams, TEntity> {
     initialOptions?: any;
-    initialParams?: any;
 }
 
 export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams, any, TEntity> {
@@ -22,7 +19,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
     private _lastRequest: { params: TParams, options: any };
 
     constructor(type: Type<TEntity>, config: RxListProxyConfig<TParams, TEntity>) {
-        super(type, config.cache);
+        super(type, config);
         this._options = config.initialOptions || {};
         this.params = config.initialParams;
         this._hasMore.next(true);

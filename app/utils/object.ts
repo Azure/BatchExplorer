@@ -50,6 +50,20 @@ export class ObjectUtils {
     }
 }
 
+/**
+ * @returns true if obj is NOT null or undefined
+ */
+export function exists(obj: any): boolean {
+    return obj !== undefined && obj !== null;
+}
+
+/**
+ * @returns true if obj is null or undefined
+ */
+export function nil(obj: any): boolean {
+    return obj === undefined || obj === null;
+}
+
 export function isPresent(obj: any): boolean {
-  return obj !== undefined && obj !== null;
+    return this.exist(obj);
 }

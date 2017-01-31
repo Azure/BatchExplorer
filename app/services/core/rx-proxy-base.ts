@@ -2,7 +2,7 @@ import { Type } from "@angular/core";
 import { BehaviorSubject, Observable, Subject, Subscription } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
-import { log } from "app/utils";
+import { Constants, exists, log } from "app/utils";
 import { DataCache } from "./data-cache";
 
 export interface FetchDataOptions {
@@ -14,6 +14,21 @@ export interface FetchDataOptions {
 export interface OptionsBase {
     select?: string;
 }
+
+export interface RxProxyBaseConfig<TParams, TEntity> {
+    /**
+     *  Method that return the cache given the params.
+     * This allow the use of targeted data cache which depends on some params.
+     */
+    cache: (params: TParams) => DataCache<TEntity>;
+    initialParams?: TParams;
+    /**
+     * List of error code not to log in the console
+     * @default [404]
+     */
+    logIgnoreError?: number[];
+}
+
 /**
  * Base proxy for List and Entity proxies
  */
@@ -37,6 +52,7 @@ export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
     protected _status = new BehaviorSubject<LoadingStatus>(LoadingStatus.Loading);
     protected _newDataStatus = new BehaviorSubject<LoadingStatus>(LoadingStatus.Loading);
 
+    protected getCache: (params: TParams) => DataCache<TEntity>;
     protected _params: TParams;
     protected _cache: DataCache<TEntity>;
     protected _options: TOptions;
@@ -45,8 +61,11 @@ export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
     private _currentObservable: Observable<any>;
     private _deletedSub: Subscription;
     private _deleted = new Subject<string>();
+    private _logIgnoreError: number[];
 
-    constructor(private type: Type<TEntity>, protected cacheFn: (params: TParams) => DataCache<TEntity>) {
+    constructor(private type: Type<TEntity>, config: RxProxyBaseConfig<TParams, TEntity>) {
+        this.getCache = config.cache;
+        this._logIgnoreError = exists(config.logIgnoreError) ? config.logIgnoreError : [Constants.HttpCode.NotFound];
         this.status = this._status.asObservable();
         this.newDataStatus = this._newDataStatus.asObservable();
 
@@ -62,7 +81,7 @@ export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
 
     public set params(params: TParams) {
         this._params = params;
-        this.cache = this.cacheFn(params);
+        this.cache = this.getCache(params);
         this.markLoadingNewData();
         this.abortFetch();
     }
@@ -119,7 +138,9 @@ export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
         }, (error) => {
             // We need to clone the error otherwise it only logs the stacktrace
             // and not the actual error returned by the server which is not helpful
-            log.error("Error in RxProxy", Object.assign({}, error));
+            if (error && error.statusCode && !this._logIgnoreError.includes(error.statusCode)) {
+                log.error("Error in RxProxy", Object.assign({}, error));
+            }
             if (options.error) {
                 options.error(error);
             }
