@@ -2,20 +2,9 @@ import { Type } from "@angular/core";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { HttpCode } from "app/utils/constants";
-import { DataCache } from "./data-cache";
-import { RxProxyBase } from "./rx-proxy-base";
+import { RxProxyBase, RxProxyBaseConfig } from "./rx-proxy-base";
 
-export interface RxEntityProxyConfig<TParams, TEntity> {
-    /**
-     *  Method that return the cache given the params.
-     * This allow the use of targeted data cache which depends on some params.
-     */
-    cache: (params: TParams) => DataCache<TEntity>;
-
-    /**
-     * Initial set of params.
-     */
-    initialParams?: TParams;
+export interface RxEntityProxyConfig<TParams, TEntity> extends RxProxyBaseConfig<TParams, TEntity> {
 }
 
 export abstract class RxEntityProxy<TParams, TEntity> extends RxProxyBase<TParams, any, TEntity> {
@@ -34,7 +23,7 @@ export abstract class RxEntityProxy<TParams, TEntity> extends RxProxyBase<TParam
      * @param initialParams This is the initial values of params.
      */
     constructor(type: Type<TEntity>, config: RxEntityProxyConfig<TParams, TEntity>) {
-        super(type, config.cache);
+        super(type, config);
         this.params = config.initialParams || <TParams>{};
         this.item = this._itemKey.map((key) => {
             return this.cache.items.map((items) => {

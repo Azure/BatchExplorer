@@ -2,6 +2,7 @@
   "compilerOptions": {
     "target": "ES6",
     "module": "commonjs",
+    "lib": ["es6", "es2016", "dom"],
     "removeComments": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,

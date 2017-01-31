@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
+import { Constants } from "app/utils";
 import BatchClient from "../api/batch/batch-client";
 import { File } from "../models";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache } from "./core";
@@ -28,6 +29,12 @@ export interface FileContentResult {
     content: string;
     result: any;
 }
+
+// List of error we don't want to log for files
+const fileIgnoredErrors = [
+    Constants.HttpCode.NotFound,
+    Constants.HttpCode.Conflict,
+];
 
 @Injectable()
 export class FileService extends ServiceBase {
@@ -63,6 +70,7 @@ export class FileService extends ServiceBase {
             },
             initialParams: { poolId: initialPoolId, nodeId: initialNodeId },
             initialOptions,
+            logIgnoreError: fileIgnoredErrors,
         });
     }
 
@@ -86,6 +94,7 @@ export class FileService extends ServiceBase {
                 return BatchClient.file.getComputeNodeFileProperties(poolId, nodeId, filename, options);
             },
             initialParams: { poolId: poolId, nodeId: nodeId, filename: filename },
+            logIgnoreError: fileIgnoredErrors,
         });
     }
 
@@ -101,6 +110,7 @@ export class FileService extends ServiceBase {
             },
             initialParams: { jobId: initialJobId, taskId: initialTaskId },
             initialOptions,
+            logIgnoreError: fileIgnoredErrors,
         });
     }
 
@@ -124,6 +134,7 @@ export class FileService extends ServiceBase {
                 return BatchClient.file.getTaskFileProperties(jobId, taskId, filename, options);
             },
             initialParams: { jobId: jobId, taskId: taskId, filename: filename },
+            logIgnoreError: fileIgnoredErrors,
         });
     }
 }
