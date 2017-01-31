@@ -87,6 +87,8 @@ export class TaskDependenciesComponent implements OnDestroy {
             return;
         }
         for (let td of pageData) {
+            td.loading = false;
+
             const found = tasks.filter(item => item.id === td.id).first();
             if (!found) {
                 continue;
