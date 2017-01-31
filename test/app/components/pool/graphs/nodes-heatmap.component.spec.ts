@@ -39,8 +39,6 @@ describe("NodesHeatmapLegendComponent", () => {
             declarations: [TestHeatmapComponent],
             providers: [
                 { provide: NodeService, useValue: {} },
-                // { provide: ActivatedRoute, useValue: {} },
-                // { provide: LocationStrategy, useValue: HashLocationStrategy },
             ],
         });
         TestBed.compileComponents();
