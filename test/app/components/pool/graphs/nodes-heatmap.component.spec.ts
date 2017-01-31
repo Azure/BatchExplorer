@@ -88,7 +88,8 @@ describe("NodesHeatmapLegendComponent", () => {
         rects.each((d, i, group) => {
             expect(d3.select(group[i]).attr("width")).toBe(size);
             expect(d3.select(group[i]).attr("height")).toBe(size);
-            expect(d3.select(group[i]).attr("style")).toBe("fill: rgb(107, 163, 203);");
+            expect(d3.select(group[i]).attr("style")).toContain("fill: rgb(107, 163, 203);");
+            expect(d3.select(group[i]).attr("style")).toContain("stroke-width: 0;");
         });
     });
 

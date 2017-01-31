@@ -154,8 +154,13 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
             .attr("height", z)
             .style("fill", (tile: any) => {
                 return d3.color(this.colors.get(tile.node.state)) as any;
-            }).on("click", (tile) => {
+            })
+            .style("stroke-width", (tile: any) => {
+                return tile.node.id === this.selectedNodeId.value ? "2px" : "0";
+            })
+            .on("click", (tile) => {
                 this.selectedNodeId.next(tile.node.id);
+                this._updateSvg(rects);
             });
     }
 
