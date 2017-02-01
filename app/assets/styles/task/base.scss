@@ -2,3 +2,93 @@
     display: flex;
     justify-content: center;
 }
+bex-task-details {
+    .summary {
+        display: flex;
+
+        > .main-info {
+            flex: 1;
+        }
+    }
+}
+
+bex-task-lifetime {
+    $state-size: 70px;
+    $current-state-size: $state-size + 20px;
+    $separator-width: 120px;
+
+    height: $current-state-size + 30px;
+
+    .timeline {
+        display: flex;
+        align-items: center;
+
+        .state {
+            position: relative;
+            > .tile {
+                font-weight: bold;
+                color: white;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-direction: column;
+                width: $state-size;
+                height: $state-size;
+                border-radius: $state-size / 2;
+                background: $green-light;
+
+                > .subtitle {
+                    font-size: 12px;
+                    font-weight: 400;
+                }
+            }
+
+            > .extra {
+                font-size: 12px;
+                position: absolute;
+                width: 200px;
+                left: - (200px - $state-size) / 2;
+                text-align: center;
+            }
+
+            &.current {
+                > .tile {
+                    width: $current-state-size;
+                    height: $current-state-size;
+                    border-radius: $current-state-size / 2;
+                }
+
+                > .extra {
+                    left: - (200px - $current-state-size) / 2;
+                }
+            }
+
+            &.locked > .tile {
+                color: $dusty-grey;
+                background: $alto;
+            }
+
+            &.warn > .tile {
+                background: $yellow;
+            }
+        }
+
+        .state-link {
+            text-align: center;
+            height: 20px;
+            font-size: 12px;
+            line-height: 12px;
+            margin-bottom: 12px;
+            width: $separator-width;
+            border-bottom: 4px solid $green-light;
+            color: $mineshaft-grey;
+
+            &.locked {
+                border-bottom: 4px solid $alto;
+            }
+        }
+
+        md-progress-bar {
+        }
+    }
+}

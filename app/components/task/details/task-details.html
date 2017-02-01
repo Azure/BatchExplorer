@@ -4,18 +4,24 @@
     </md-card>
     <div *ngIf="task && job">
         <md-card class="overview">
-            <md-card-title-group style="margin: 0px;">
-                <div style="align-items:center;">
-                    <bex-refresh-btn [refresh]="refresh"></bex-refresh-btn>
+            <div class="summary">
+                <div class="main-info">
+                    <md-card-title-group style="margin: 0px;">
+                        <div style="align-items:center;">
+                            <bex-refresh-btn [refresh]="refresh"></bex-refresh-btn>
+                        </div>
+                        <div style="margin-left:12px; margin-right:auto;">
+                            <md-card-title>{{task.id}} <span *ngIf="!!task.displayName"> - {{task.displayName}} - {{taskId}}</span> </md-card-title>
+                            <md-card-subtitle><i class="fa" [ngClass]="decorator.stateIcon"></i> {{task.state}}</md-card-subtitle>
+                        </div>
+                    </md-card-title-group>
+                    <md-card-content>
+                        <p>Job: {{jobId}}</p>
+                    </md-card-content>
                 </div>
-                <div style="margin-left:12px; margin-right:auto;">
-                    <md-card-title>{{task.id}} <span *ngIf="!!task.displayName"> - {{task.displayName}} - {{taskId}}</span> </md-card-title>
-                    <md-card-subtitle><i class="fa" [ngClass]="decorator.stateIcon"></i> {{task.state}}</md-card-subtitle>
-                </div>
-            </md-card-title-group>
-            <md-card-content>
-                <p>Job: {{jobId}}</p>
-            </md-card-content>
+                <bex-task-lifetime [task]="task"></bex-task-lifetime>
+            </div>
+
             <md-card-actions layout="row" layout-align="end center">
                 <bex-add-button (click)="addTask()"></bex-add-button>
                 <bex-terminate-button [entity]="task" (click)="terminateTask()"></bex-terminate-button>

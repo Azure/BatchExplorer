@@ -1,12 +1,15 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import * as moment from "moment";
+import { BehaviorSubject } from "rxjs";
+
+import { exists } from "app/utils";
 
 @Component({
     selector: "bex-elapsed-time",
-    template: `{{formattedValue}}`,
+    template: `{{formattedValue | async}}`,
 })
 export class ElapsedTimeComponent implements OnInit, OnDestroy {
-    public formattedValue = "";
+    public formattedValue = new BehaviorSubject("");
 
     @Input()
     public set startTime(startTime: Date) {
@@ -18,7 +21,7 @@ export class ElapsedTimeComponent implements OnInit, OnDestroy {
     @Input()
     public set endTime(endTime: Date) {
         this._endTime = endTime;
-        if (this.endTime !== null) {
+        if (exists(this.endTime)) {
             this._clearInterval();
             this.updateElapsedTime();
         }
@@ -34,7 +37,7 @@ export class ElapsedTimeComponent implements OnInit, OnDestroy {
     public updateElapsedTime() {
         const endTime = this._endTime === null ? moment.utc() : moment.utc(this._endTime);
         const time: any = moment.duration(endTime.diff(moment(this.startTime)));
-        this.formattedValue = time.format("h[h] mm[m] ss[s]");
+        this.formattedValue.next(time.format("d[d] h[h] mm[m] ss[s]"));
     }
 
     public ngOnInit() {
