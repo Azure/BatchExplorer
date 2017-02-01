@@ -17,6 +17,9 @@ export class TaskLifetimeStateComponent {
     @Input()
     public currentState: TaskState;
 
+    @Input()
+    public title: string = "";
+
     public get active() {
         return this.currentState === this.state && !this.completed;
     }

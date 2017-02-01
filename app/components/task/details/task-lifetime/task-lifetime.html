@@ -1,5 +1,5 @@
 <div class="timeline">
-    <bex-task-lifetime-state state="active" [currentState]="task.state" title="">
+    <bex-task-lifetime-state state="active" [currentState]="task.state" [title]="activeMessage">
         {{creationTime}}
     </bex-task-lifetime-state>
     <div *ngIf="hasPreparationTask" class="state-link" [class.locked]="active"></div>

@@ -1,5 +1,5 @@
 <div class="state" [class.done]="done" [class.active]="active" [class.locked]="!active && !done">
-    <div class="tile">
+    <div class="tile" [title]="title">
         <i class="fa fa-check" *ngIf="done"></i>
         <i class="fa fa-play" *ngIf="active"></i>
     </div>
