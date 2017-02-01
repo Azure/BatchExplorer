@@ -1,44 +1,25 @@
 <div class="timeline">
-    <div class="state" [class.current]="active">
-        <div class="tile" [title]="activeMessage">
-            Active
-        </div>
-        <div class="extra">
-            <div> Created at </div>
-            <div> {{creationTime}} </div>
-        </div>
-    </div>
-    <div class="state-link" [class.locked]="active"></div>
-    <div class="state" [class.current]="preparing" [class.locked]="active">
-        <div class="tile" title="Waiting for the job preparation task to run">
-            Preparing
-        </div>
-    </div>
+    <bex-task-lifetime-state state="active" [currentState]="task.state" title="">
+        {{creationTime}}
+    </bex-task-lifetime-state>
+    <div *ngIf="hasPreparationTask" class="state-link" [class.locked]="active"></div>
+    <bex-task-lifetime-state *ngIf="hasPreparationTask" state="preparing" [currentState]="task.state">
+        --
+        <!-- TODO load the prep task info-->
+    </bex-task-lifetime-state>
+
     <div class="state-link" [class.locked]="active || preparing">
-        <span *ngIf="running || completed">{{startTime}}</span>
     </div>
-    <div class="state" [class.current]="running" [class.locked]="active || preparing">
-        <div class="tile">
-            <div>Runnning</div>
-            <div class="subtitle" *ngIf="running || completed">
-                <bex-elapsed-time [startTime]="task.executionInfo?.startTime" [endTime]="task.executionInfo?.endTime"></bex-elapsed-time>
-            </div>
+    <bex-task-lifetime-state state="running" [currentState]="task.state">
+        <div *ngIf="running || completed">
+            <bex-elapsed-time [startTime]="task.executionInfo?.startTime" [endTime]="task.executionInfo?.endTime"></bex-elapsed-time>
         </div>
-        <div class="extra" *ngIf="(running || completed) && retryCount">
-            <div>Retried {{retryCount}} times</div>
-        </div>
-    </div>
+        <div *ngIf="(running || completed) && retryCount" class="warn">{{retryCount}} retries</div>
+    </bex-task-lifetime-state>
     <div class="state-link" [class.locked]="!completed">
-        <span *ngIf="completed">{{endTime}}</span>
     </div>
-    <div class="state" [class.current]="completed" [class.locked]="!completed" [class.warn]="completedWarning">
-        <div class="tile">
-            <div>Completed</div>
-            <div class="subtitle" *ngIf="completedWarning">{{task.executionInfo?.exitCode}}</div>
-        </div>
-        <div class="extra">
-
-        </div>
-    </div>
-
+    <bex-task-lifetime-state state="completed" [currentState]="task.state">
+        <div *ngIf="completed">{{endTime}}</div>
+        <div *ngIf="completedWarning" class="warn">Exit code {{task.executionInfo?.exitCode}}</div>
+    </bex-task-lifetime-state>
 </div>

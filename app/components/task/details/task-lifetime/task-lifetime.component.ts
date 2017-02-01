@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import * as moment from "moment";
 
-import { Task, TaskState } from "app/models";
+import { Job, Task, TaskState } from "app/models";
+
+const relativeTimeRange = 20; // days
 
 @Component({
     selector: "bex-task-lifetime",
@@ -11,6 +13,13 @@ import { Task, TaskState } from "app/models";
 export class TaskLifetimeComponent {
     @Input()
     public task: Task;
+
+    @Input()
+    public job: Job;
+
+    public get hasPreparationTask() {
+        return Boolean(this.job.jobPreparationTask);
+    }
 
     public get state() {
         return this.task.state;
@@ -56,7 +65,6 @@ export class TaskLifetimeComponent {
 
     public get retryCount() {
         const info = this.task.executionInfo;
-        console.log("retry count", info);
         return info && info.retryCount;
     }
 
@@ -80,6 +88,18 @@ export class TaskLifetimeComponent {
     }
 
     private _formatDate(date: Date): string {
-        return date ? moment(date).format("HH:mm:ss - YYYY/MM/DD") : "NaN";
+        if (!date) {
+            return "";
+        }
+        const momentDate = moment(date);
+        if (this._useRelativeTime(momentDate)) {
+            return momentDate.fromNow();
+        } else {
+            return momentDate.format("MMM D, YYYY");
+        }
+    }
+
+    private _useRelativeTime(momentDate) {
+        return moment().diff(momentDate, "days") <= relativeTimeRange;
     }
 }

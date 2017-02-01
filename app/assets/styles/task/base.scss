@@ -13,54 +13,61 @@ bex-task-details {
 }
 
 bex-task-lifetime {
-    $state-size: 70px;
-    $current-state-size: $state-size + 20px;
-    $separator-width: 120px;
-
-    height: $current-state-size + 30px;
+    $tile-size: 30px;
+    $separator-width: 40px;
+    $separator-height: 2px;
 
     .timeline {
         display: flex;
-        align-items: center;
 
         .state {
             position: relative;
+            display: flex;
+
             > .tile {
                 font-weight: bold;
-                color: white;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 flex-direction: column;
-                width: $state-size;
-                height: $state-size;
-                border-radius: $state-size / 2;
-                background: $green-light;
+                width: $tile-size;
+                height: $tile-size;
+                border-radius: $tile-size / 2;
 
+                > .fa {
+                    color: white;
+                }
                 > .subtitle {
                     font-size: 12px;
                     font-weight: 400;
                 }
             }
 
-            > .extra {
+            > .details {
+                margin-left: 5px;
                 font-size: 12px;
-                position: absolute;
-                width: 200px;
-                left: - (200px - $state-size) / 2;
-                text-align: center;
+                text-align: left;
+                line-height: 14px;
+
+                > .state-name {
+                    font-weight: bold;
+                }
+
+                > .info {
+                    color: $dusty-grey;
+
+                    .warn {
+                        color: $yellow;
+                    }
+                }
             }
 
-            &.current {
-                > .tile {
-                    width: $current-state-size;
-                    height: $current-state-size;
-                    border-radius: $current-state-size / 2;
-                }
+            &.done > .tile {
+                background: map-get($md-prussian-blue, 300);
+            }
 
-                > .extra {
-                    left: - (200px - $current-state-size) / 2;
-                }
+            &.active > .tile {
+                background: map-get($md-prussian-blue, 300);
             }
 
             &.locked > .tile {
@@ -74,17 +81,14 @@ bex-task-lifetime {
         }
 
         .state-link {
-            text-align: center;
-            height: 20px;
-            font-size: 12px;
-            line-height: 12px;
-            margin-bottom: 12px;
+            height: 2px;
             width: $separator-width;
-            border-bottom: 4px solid $green-light;
-            color: $mineshaft-grey;
+            background: map-get($md-prussian-blue, 300);
+            margin: 0 5px;
+            margin-top: ($tile-size - $separator-height )/ 2;
 
             &.locked {
-                border-bottom: 4px solid $alto;
+                background: $alto;
             }
         }
 
