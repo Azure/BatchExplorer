@@ -23,7 +23,7 @@ export class ApplicationService {
      */
     public onApplicationAdded = new Subject<string>();
 
-    private _currentAccount: AccountResource;
+    private _currentAccountId: string;
     private _basicProperties: string = "id,displayName,allowUpdates,defaultVersion";
     private _cache = new DataCache<Application>();
 
@@ -31,9 +31,9 @@ export class ApplicationService {
         private azure: AzureHttpService,
         private accountService: AccountService) {
 
-        accountService.currentAccount.subscribe((account) => {
-            console.log("setting current account :: ", account);
-            this._currentAccount = account;
+        accountService.currentAccountId.subscribe((accountId) => {
+            console.log("setting current account :: ", accountId);
+            this._currentAccountId = accountId;
         });
     }
 
@@ -48,7 +48,7 @@ export class ApplicationService {
         return new RxArmListProxy<ApplicationListParams, Application>(Application, this.azure, {
             cache: (params) => this._cache,
             uri: ({ batchAccountId }) => `${batchAccountId}/applications`,
-            initialParams: { batchAccountId: this._currentAccount.id },
+            initialParams: { batchAccountId: this._currentAccountId },
             initialOptions: initialOptions,
         });
     }
@@ -61,7 +61,7 @@ export class ApplicationService {
             cache: () => this._cache,
             uri: ({batchAccountId, id}) => `${batchAccountId}/applications/${id}`,
             initialParams: {
-                batchAccountId: this._currentAccount.id,
+                batchAccountId: this._currentAccountId,
                 id: applicationId,
             },
         });

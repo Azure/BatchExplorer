@@ -37,6 +37,7 @@ export interface SelectedAccount {
 @Injectable()
 export class AccountService {
     public accountLoaded: Observable<boolean>;
+    public currentAccountId: Observable<string>;
 
     private _accountJsonFileName: string = "account-favorites";
     private _accountFavorites: BehaviorSubject<List<AccountResource>> = new BehaviorSubject(List([]));
@@ -45,6 +46,7 @@ export class AccountService {
     private _accountLoaded = new BehaviorSubject<boolean>(false);
     private _accountCache = new DataCache<AccountResource>();
     private _cache = new DataCache<any>();
+    private _currentAccountId = new BehaviorSubject<string>(null);
 
     constructor(
         private zone: NgZone,
@@ -68,6 +70,8 @@ export class AccountService {
                 this._currentAccountValid.next(AccountStatus.Invalid);
             }
         });
+
+        this.currentAccountId = this._currentAccountId.asObservable();
     }
 
     public get accountFavorites(): Observable<List<AccountResource>> {
@@ -83,6 +87,7 @@ export class AccountService {
     }
 
     public selectAccount(accountId: string) {
+        this._currentAccountId.next(accountId);
         const current = this._currentAccount.getValue();
         if (current && current.account.id === accountId) {
             return;
