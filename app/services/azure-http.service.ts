@@ -82,7 +82,10 @@ export class AzureHttpService {
         if (!options.search) {
             options.search = new URLSearchParams();
         }
-        options.search.set(apiVersionParams, this.apiVersion(uri));
+
+        if (!uri.includes(apiVersionParams)) {
+            options.search.set(apiVersionParams, this.apiVersion(uri));
+        }
 
         return options;
     }

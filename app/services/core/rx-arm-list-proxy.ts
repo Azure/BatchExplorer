@@ -2,7 +2,7 @@ import { Type } from "@angular/core";
 import { RequestOptions, URLSearchParams } from "@angular/http";
 import { Observable } from "rxjs";
 
-import { ObjectUtils } from "app/utils";
+import { ObjectUtils, exists } from "app/utils";
 import { AzureHttpService } from "../azure-http.service";
 import { CachedKeyList } from "./query-cache";
 import { RxListProxy, RxListProxyConfig } from "./rx-list-proxy";
@@ -35,13 +35,14 @@ export class RxArmListProxy<TParams, TEntity> extends RxListProxy<TParams, TEnti
     }
 
     protected processResponse(response: any) {
+        const body = response.json();
         this._loadedFirst = true;
-        this._nextLink = response.nextLink;
-        return response.json().value;
+        this._nextLink = body.nextLink;
+        return body.value;
     }
 
     protected hasMoreItems(): boolean {
-        return !this._loadedFirst || this._nextLink !== null;
+        return !this._loadedFirst || exists(this._nextLink);
     }
 
     protected queryCacheKey(): string {
@@ -61,6 +62,10 @@ export class RxArmListProxy<TParams, TEntity> extends RxListProxy<TParams, TEnti
         if (this._options.filter) {
             search.set("$filter", this._options.filter);
         }
+        if (this._options.select) {
+            search.set("$select", this._options.select);
+        }
+
         for (let key of Object.keys(ObjectUtils.except(this._options, ["filter"]))) {
             search.set(key, this._options[key]);
         }
