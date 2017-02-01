@@ -1,0 +1,35 @@
+<bex-quick-list *ngIf="quickList">
+    <bex-quick-list-item *ngFor="let application of data.items | async" [routerLink]="['/applications/', application.id]" [key]="application.id">
+        <bex-quick-list-item-status [status]="appStatus(application)" [tooltip]="appStatusText(application)">
+        </bex-quick-list-item-status>
+
+        <h4 bex-quick-list-item-title>{{application.id}}</h4>
+        <p bex-quick-list-item-field>{{application.defaultVerson}}</p>
+        <div bex-quick-list-item-preview>
+            <!--<bex-job-stats-preview [job]="job"></bex-job-stats-preview>-->
+        </div>
+    </bex-quick-list-item>
+</bex-quick-list>
+
+<bex-table *ngIf="!quickList">
+    <bex-thead>
+        <bex-column>Id</bex-column>
+        <bex-column>Packages</bex-column>
+        <bex-column>Default Version</bex-column>
+        <bex-column>Allow Updates</bex-column>
+    </bex-thead>
+    <bex-row *ngFor="let application of data.items | async" [routerLink]="['/applications/', application.id]" [key]="application.id">
+        <bex-cell>{{application.id}}</bex-cell>
+        <bex-cell>{{application.packages?.length}}</bex-cell>
+        <bex-cell>{{application.defaultVerson}}</bex-cell>
+        <bex-cell>{{application.allowUpdates}}</bex-cell>
+    </bex-row>
+</bex-table>
+
+<bex-no-item [itemCount]="(data.items | async).size" [filter]="filter" [status]="status | async">
+    <i icon class="fa fa-tasks"></i>
+    <span no-filter>No applications</span>
+    <span with-filter>No applications match this filter</span>
+</bex-no-item>
+
+<bex-loading [status]="status | async" *ngIf="data.hasMore | async"></bex-loading>

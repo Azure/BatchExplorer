@@ -1,3 +1,4 @@
+export * from "./application-decorator";
 export * from "./cloud-service-configuration-decorator";
 export * from "./image-reference-decorator";
 export * from "./job-constraints-decorator";

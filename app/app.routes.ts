@@ -6,6 +6,9 @@ import { Constants } from "app/utils";
 import { AccountDetailsHomeComponent } from "./components/account/details/account-details-home.component";
 import { AccountDetailsComponent } from "./components/account/details/account-details.component";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
+import { ApplicationDetailsHomeComponent } from "./components/application/details/application-details-home.component";
+import { ApplicationDetailsComponent } from "./components/application/details/application-details.component";
+import { ApplicationHomeComponent } from "./components/application/home/application-home.component";
 import { FileDetailsComponent } from "./components/file/details/file-details.component";
 import { FileHomeComponent } from "./components/file/home";
 import { JobDetailsHomeComponent } from "./components/job/details/job-details-home.component";
@@ -44,6 +47,14 @@ export const routes: Routes = [
         children: [
             { path: "", component: PoolDetailsHomeComponent }, // pools/
             { path: ":id", component: PoolDetailsComponent }, // pools/{pool.id}
+        ],
+    },
+    {
+        path: "applications",
+        component: ApplicationHomeComponent,
+        children: [
+            { path: "", component: ApplicationDetailsHomeComponent }, // applications/
+            { path: ":id", component: ApplicationDetailsComponent }, // applications/{application.id}
         ],
     },
     {
