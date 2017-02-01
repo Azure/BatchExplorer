@@ -54,6 +54,7 @@ export class RxArmListProxy<TParams, TEntity> extends RxListProxy<TParams, TEnti
     }
 
     protected getQueryCacheData(queryCache: CachedKeyList): any {
+        this._loadedFirst = true;
         this._nextLink = queryCache.data;
     }
 
