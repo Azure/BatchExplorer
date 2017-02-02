@@ -27,6 +27,7 @@ function createTask(state: string, timeout = "PT6M") {
             startTime: moment().subtract(25, "minutes").toDate(),
             endTime: moment().subtract(20, "minutes").toDate(),
             retryCount: 3,
+            exitCode: -3,
         },
         constraints: {
             maxWallClockTime: moment.duration(timeout),
