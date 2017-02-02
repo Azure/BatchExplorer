@@ -1,12 +1,12 @@
 <bex-quick-list *ngIf="quickList">
-    <bex-quick-list-item *ngFor="let application of data.items | async" [routerLink]="['/applications/', application.id]" [key]="application.id">
-        <bex-quick-list-item-status [status]="appStatus(application)" [tooltip]="appStatusText(application)">
+    <bex-quick-list-item *ngFor="let application of displayedApplications" [routerLink]="['/applications/', application.id]" [key]="application.id">
+        <bex-quick-list-item-status [status]="appStatus(application)">
         </bex-quick-list-item-status>
 
         <h4 bex-quick-list-item-title>{{application.id}}</h4>
-        <p bex-quick-list-item-field>{{application.defaultVerson}}</p>
+        <p bex-quick-list-item-field>{{application.packages?.length}} packages</p>
         <div bex-quick-list-item-preview>
-            <!--<bex-job-stats-preview [job]="job"></bex-job-stats-preview>-->
+            <bex-application-preview [application]="application"></bex-application-preview>
         </div>
     </bex-quick-list-item>
 </bex-quick-list>
@@ -18,10 +18,10 @@
         <bex-column>Default Version</bex-column>
         <bex-column>Allow Updates</bex-column>
     </bex-thead>
-    <bex-row *ngFor="let application of data.items | async" [routerLink]="['/applications/', application.id]" [key]="application.id">
+    <bex-row *ngFor="let application of displayedApplications" [routerLink]="['/applications/', application.id]" [key]="application.id">
         <bex-cell>{{application.id}}</bex-cell>
         <bex-cell>{{application.packages?.length}}</bex-cell>
-        <bex-cell>{{application.defaultVerson}}</bex-cell>
+        <bex-cell>{{application.defaultVersion}}</bex-cell>
         <bex-cell>{{application.allowUpdates}}</bex-cell>
     </bex-row>
 </bex-table>

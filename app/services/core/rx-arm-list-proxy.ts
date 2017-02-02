@@ -63,6 +63,7 @@ export class RxArmListProxy<TParams, TEntity> extends RxListProxy<TParams, TEnti
         if (this._options.filter) {
             search.set("$filter", this._options.filter);
         }
+
         if (this._options.select) {
             search.set("$select", this._options.select);
         }
@@ -74,6 +75,5 @@ export class RxArmListProxy<TParams, TEntity> extends RxListProxy<TParams, TEnti
         return new RequestOptions({
             search,
         });
-
     }
 }

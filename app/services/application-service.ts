@@ -30,7 +30,6 @@ export class ApplicationService {
         private accountService: AccountService) {
 
         accountService.currentAccountId.subscribe((accountId) => {
-            console.log("setting current account :: ", accountId);
             this._currentAccountId = accountId;
         });
     }

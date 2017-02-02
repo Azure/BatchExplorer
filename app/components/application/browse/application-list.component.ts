@@ -2,6 +2,7 @@ import { Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { Router } from "@angular/router";
 import { autobind } from "core-decorators";
+import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
 import { BackgroundTaskManager } from "app/components/base/background-task";
@@ -21,7 +22,8 @@ import { Filter } from "app/utils/filter-builder";
 export class ApplicationListComponent extends ListOrTableBase implements OnInit, OnDestroy {
     public status: Observable<LoadingStatus>;
     public data: RxListProxy<{}, Application>;
-    public searchQuery = new FormControl();
+    public applications: List<Application>;
+    public displayedApplications: List<Application>;
 
     @ViewChild(QuickListComponent)
     public list: QuickListComponent;
@@ -35,18 +37,11 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
     @Input()
     public set filter(filter: Filter) {
         this._filter = filter;
-
-        if (filter.isEmpty()) {
-            this.data.patchOptions({});
-        } else {
-            this.data.patchOptions({ filter: filter.toOData() });
-        }
-
-        this.data.fetchNext();
+        this._filterApplications();
     }
     public get filter(): Filter { return this._filter; };
 
-    private _baseOptions = {maxresults: 2};
+    private _baseOptions = { maxresults: 50 };
     private _onJobAddedSub: Subscription;
     private _filter: Filter;
 
@@ -59,6 +54,11 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
         super();
 
         this.data = this.applicationService.list(this._baseOptions);
+        this.data.items.subscribe((applications) => {
+            this.applications = applications;
+            this._filterApplications();
+        });
+
         this.status = this.data.status;
         this._onJobAddedSub = applicationService.onApplicationAdded.subscribe((applicationId) => {
             this.data.loadNewItem(applicationService.get(applicationId));
@@ -79,11 +79,15 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
     }
 
     public appStatus(application: Application): QuickListItemStatus {
-        return QuickListItemStatus.normal;
+        return application.allowUpdates
+            ? QuickListItemStatus.lightaccent
+            : QuickListItemStatus.accent;
     }
 
     public appStatusText(application: Application): string {
-        return "";
+        return application.allowUpdates
+            ? "Application allows updates"
+            : "Application is locked";
     }
 
     public onScrollToBottom(x) {
@@ -97,4 +101,16 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
     //         return task.waitingDone;
     //     });
     // }
+
+    private _filterApplications() {
+        let text: string = null;
+        if (this._filter && this._filter.properties.length > 0) {
+            text = (this._filter.properties[0] as any).value;
+            text = text && text.toLowerCase();
+        }
+
+        this.displayedApplications = List<Application>(this.applications.filter((app) => {
+            return !text || app.id.toLowerCase().indexOf(text) !== -1;
+        }));
+    }
 }

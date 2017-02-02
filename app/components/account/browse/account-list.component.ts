@@ -39,7 +39,6 @@ export class AccountListComponent implements OnInit {
         private sidebarManager: SidebarManager,
         private activatedRoute: ActivatedRoute) {
         this.subscriptionData = subscriptionService.list();
-        this.subscriptionData.setOptions({ filter: "startswith(subscriptionId, \"Bat\")" });
         this.subscriptionData.items.subscribe((subscriptions) => {
             const data: any = {};
             this.subscriptions = List<Subscription>(subscriptions.sort((a, b) => {

@@ -1,0 +1,9 @@
+<div [ngSwitch]="application.allowUpdates">
+	<div *ngSwitchCase="true" class="success" md-tooltip="Application allows updates">
+		<i class="fa fa-unlock-alt" aria-hidden="true"></i>
+	</div>
+
+	<div *ngSwitchCase="false" class="failure" md-tooltip="Application is locked">
+        <i class="fa fa-lock" aria-hidden="true"></i>
+	</div>
+</div>
