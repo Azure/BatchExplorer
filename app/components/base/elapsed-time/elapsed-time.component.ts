@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit } from "@angular/core";
 import * as moment from "moment";
 
 import { exists } from "app/utils";
@@ -7,34 +7,34 @@ import { exists } from "app/utils";
     selector: "bex-elapsed-time",
     template: `{{formattedValue}}`,
 })
-export class ElapsedTimeComponent implements OnInit, OnDestroy {
+export class ElapsedTimeComponent implements OnInit, OnChanges, OnDestroy {
     public formattedValue = "";
 
     @Input()
-    public set startTime(startTime: Date) {
-        this._startTime = startTime;
-        this.updateElapsedTime();
-    }
+    public startTime: Date = null;
 
-    public get startTime() { return this._startTime; }
     @Input()
     public set endTime(endTime: Date) {
         this._endTime = endTime;
         if (exists(this.endTime)) {
             this._clearInterval();
-            this.updateElapsedTime();
         }
     }
 
     public get endTime() { return this._endTime; }
 
     private _endTime: Date = null;
-    private _startTime: Date = null;
 
     private _refreshInterval: any;
 
     constructor(private changeDetection: ChangeDetectorRef) {
 
+    }
+
+    public ngOnChanges(inputs) {
+        if (inputs.startTime || inputs.endTime) {
+            this.updateElapsedTime();
+        }
     }
 
     public updateElapsedTime() {
