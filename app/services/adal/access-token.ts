@@ -34,6 +34,7 @@ export class AccessToken extends AccessTokenRecord {
      */
     public expireInLess(milliseconds: number): boolean {
         const expireIn = moment(this.expires_on).diff(moment());
+        console.log("Exp in", expireIn);
         return expireIn < milliseconds;
     }
 
