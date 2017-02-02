@@ -1,0 +1,29 @@
+<div class="timeline">
+    <!-- Active-->
+    <bex-task-lifetime-state state="active" [currentState]="task.state" [title]="activeMessage">
+        {{creationTime}}
+    </bex-task-lifetime-state>
+    <div class="state-link" [class.locked]="active"></div>
+
+    <!-- Preparing (Optional) -->
+    <bex-task-lifetime-state *ngIf="hasPreparationTask" state="preparing" [currentState]="task.state">
+        --
+        <!-- TODO load the prep task info-->
+    </bex-task-lifetime-state>
+    <div *ngIf="hasPreparationTask" class="state-link" [class.locked]="active || preparing"></div>
+
+    <!-- Running-->
+    <bex-task-lifetime-state state="running" [currentState]="task.state">
+        <div *ngIf="started">
+            <bex-elapsed-time [startTime]="task.executionInfo?.startTime" [endTime]="task.executionInfo?.endTime"></bex-elapsed-time>
+        </div>
+        <div *ngIf="started && retryCount" class="warn">{{retryCount}} retries</div>
+    </bex-task-lifetime-state>
+    <div class="state-link" [class.locked]="!completed"></div>
+
+    <!-- Completed-->
+    <bex-task-lifetime-state state="completed" [currentState]="task.state">
+        <div *ngIf="completed">{{endTime}}</div>
+        <div *ngIf="completedWarning" class="warn">Exit code {{task.executionInfo?.exitCode}}</div>
+    </bex-task-lifetime-state>
+</div>

@@ -9,7 +9,7 @@ describe("AccessToken", () => {
             expires_on: moment().add(1, "h").toDate(),
         });
         expect(token.expireInLess(1000 * 120)).toBe(false);
-        expect(token.expireInLess(1000 * 3600)).toBe(true);
+        expect(token.expireInLess(1000 * 3600 + 1)).toBe(true);
         expect(token.expireInLess(1000 * 3600 * 2)).toBe(true);
     });
 

@@ -1,0 +1,10 @@
+<div class="tile" [title]="title">
+    <i class="fa fa-check" *ngIf="done"></i>
+    <i class="fa fa-play" *ngIf="active"></i>
+</div>
+<div class="details">
+    <div class="state-name"> {{stateName}} </div>
+    <div class="info">
+        <ng-content></ng-content>
+    </div>
+</div>

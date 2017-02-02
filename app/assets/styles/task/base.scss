@@ -2,3 +2,13 @@
     display: flex;
     justify-content: center;
 }
+
+bex-task-details {
+    .summary {
+        display: flex;
+
+        > .main-info {
+            flex: 1;
+        }
+    }
+}
