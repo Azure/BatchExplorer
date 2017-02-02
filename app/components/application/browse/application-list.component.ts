@@ -37,16 +37,16 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
         this._filter = filter;
 
         if (filter.isEmpty()) {
-            this.data.setOptions({});
+            this.data.patchOptions({});
         } else {
-            this.data.setOptions({ filter: filter.toOData() });
+            this.data.patchOptions({ filter: filter.toOData() });
         }
 
         this.data.fetchNext();
     }
     public get filter(): Filter { return this._filter; };
 
-    private _baseOptions = {};
+    private _baseOptions = {maxresults: 2};
     private _onJobAddedSub: Subscription;
     private _filter: Filter;
 

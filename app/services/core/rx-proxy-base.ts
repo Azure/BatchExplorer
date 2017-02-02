@@ -97,6 +97,10 @@ export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
         }
     }
 
+    public patchOptions(options: TOptions, clearItems = true) {
+        this.setOptions(Object.assign({}, this._options, options), clearItems);
+    }
+
     protected set cache(cache: DataCache<TEntity>) {
         this._cache = cache;
         this._clearDeleteSub();

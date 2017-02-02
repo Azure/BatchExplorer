@@ -7,11 +7,9 @@ import { AzureHttpService } from "./azure-http.service";
 import { DataCache, RxArmEntityProxy, RxArmListProxy, RxEntityProxy, RxListProxy } from "./core";
 
 export interface ApplicationListParams {
-    batchAccountId: string;
 }
 
 export interface ApplicationParams {
-    batchAccountId: string;
     id?: string;
 }
 
@@ -47,8 +45,7 @@ export class ApplicationService {
     public list(initialOptions: any = {}): RxListProxy<ApplicationListParams, Application> {
         return new RxArmListProxy<ApplicationListParams, Application>(Application, this.azure, {
             cache: (params) => this._cache,
-            uri: ({ batchAccountId }) => `${batchAccountId}/applications`,
-            initialParams: { batchAccountId: this._currentAccountId },
+            uri: () => `${this._currentAccountId}/applications`,
             initialOptions: initialOptions,
         });
     }
@@ -59,9 +56,8 @@ export class ApplicationService {
     public get(applicationId: string, options: any = {}): RxEntityProxy<ApplicationParams, Application> {
         return new RxArmEntityProxy<ApplicationParams, Application>(Application, this.azure, {
             cache: () => this._cache,
-            uri: ({batchAccountId, id}) => `${batchAccountId}/applications/${id}`,
+            uri: ({ id}) => `${this._currentAccountId}/applications/${id}`,
             initialParams: {
-                batchAccountId: this._currentAccountId,
                 id: applicationId,
             },
         });
