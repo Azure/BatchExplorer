@@ -19,6 +19,7 @@ export class ComponentTestHelper<T> {
 
         input.value = value;
         this.fixture.detectChanges();
+        // afawfaf
         expect(formGroup.hasError(validator, [name])).toBe(expected);
     }
 }
