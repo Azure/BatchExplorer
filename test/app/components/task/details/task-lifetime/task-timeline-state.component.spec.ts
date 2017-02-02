@@ -54,6 +54,7 @@ describe("TaskTimelineStateComponent", () => {
             expect(de.classes["locked"]).toBe(true);
             expect(de.classes["active"]).toBe(false);
             expect(de.classes["done"]).toBe(false);
+            expect(de.classes["error"]).toBe(false);
         });
 
         it("should not have an icon", () => {
@@ -71,6 +72,7 @@ describe("TaskTimelineStateComponent", () => {
             expect(de.classes["locked"]).toBe(false);
             expect(de.classes["active"]).toBe(true);
             expect(de.classes["done"]).toBe(false);
+            expect(de.classes["error"]).toBe(false);
         });
 
         it("should  have the play icon", () => {
@@ -90,12 +92,33 @@ describe("TaskTimelineStateComponent", () => {
             expect(de.classes["locked"]).toBe(false);
             expect(de.classes["active"]).toBe(false);
             expect(de.classes["done"]).toBe(true);
+            expect(de.classes["error"]).toBe(false);
         });
 
         it("should  have the done icon", () => {
             const icons = de.queryAll(By.css(".tile .fa"));
             expect(icons.length).toBe(1);
             expect(icons[0].nativeElement.classList).toContain("fa-check");
+        });
+    });
+
+    describe("when there is an error", () => {
+        beforeEach(() => {
+            testComponent.currentState = TaskState.completed;
+            fixture.detectChanges();
+        });
+
+        it("should have the active class", () => {
+            expect(de.classes["locked"]).toBe(false);
+            expect(de.classes["active"]).toBe(false);
+            expect(de.classes["done"]).toBe(false);
+            expect(de.classes["error"]).toBe(true);
+        });
+
+        it("should have the warning icon", () => {
+            const icons = de.queryAll(By.css(".tile .fa"));
+            expect(icons.length).toBe(1);
+            expect(icons[0].nativeElement.classList).toContain("fa-exclamation-triangle");
         });
     });
 });

@@ -66,7 +66,7 @@ describe("TaskErrorDisplayComponent", () => {
 
         it("Should show the code and message", () => {
             const banner = fixture.debugElement.query(By.css("bex-banner"));
-            expect(banner.nativeElement.textContent).toContain("ask completed with exit code '1'");
+            expect(banner.nativeElement.textContent).toContain("Task completed with exit code '1'");
         });
 
         it("should propose increase quota as a first fix", () => {

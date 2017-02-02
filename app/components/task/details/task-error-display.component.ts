@@ -41,7 +41,7 @@ export class TaskErrorDisplayComponent {
             const time: any = this.task.constraints.maxWallClockTime;
             return `Task timed out after running for ${DateUtils.prettyDuration(time)}`;
         } else {
-            return `Task completed with exit code ${this.code}'`;
+            return `Task completed with exit code '${this.code}'`;
         }
     }
 

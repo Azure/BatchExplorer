@@ -1,11 +1,11 @@
 import { Record } from "immutable";
-import { NameValuePair } from "./nameValuePair";
+import * as moment from "moment";
 
-import { Constants } from "app/utils";
 import { AffinityInformation } from "./affinityInformation";
 import { ApplicationPackageReference } from "./applicationPackageReference";
 import { ComputeNodeInformation } from "./computeNodeInformation";
 import { MultiInstanceSettings } from "./multiInstanceSettings";
+import { NameValuePair } from "./nameValuePair";
 import { ResourceFile } from "./resourceFile";
 import { TaskConstraints } from "./taskConstraints";
 import { TaskDependencies } from "./taskDependencies";
@@ -81,7 +81,13 @@ export class Task extends TaskRecord {
      */
     public get didTimeout() {
         const info = this.executionInfo;
-        return Boolean(info && info.exitCode === Constants.CommonExitCodes.taskTimeout);
+        const constraints = this.constraints;
+        if (!(info && constraints && constraints.maxWallClockTime)) {
+            return false;
+        }
+        const maxTime = constraints.maxWallClockTime.asMilliseconds();
+        const runningTime = moment(info.endTime).diff(moment(info.startTime));
+        return maxTime - runningTime < 0;
     }
 }
 

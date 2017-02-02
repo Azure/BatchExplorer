@@ -19,7 +19,7 @@ class TestComponent {
     public task: Task = new Task();
 }
 
-function createTask(state: string) {
+function createTask(state: string, timeout = "PT6M") {
     return new Task({
         state,
         creationTime: moment().subtract(28, "minutes").toDate(),
@@ -27,6 +27,9 @@ function createTask(state: string) {
             startTime: moment().subtract(25, "minutes").toDate(),
             endTime: moment().subtract(20, "minutes").toDate(),
             retryCount: 3,
+        },
+        constraints: {
+            maxWallClockTime: moment.duration(timeout),
         },
     });
 }
@@ -161,8 +164,42 @@ describe("TaskTimelineComponent", () => {
             expect(de.nativeElement.textContent).toContain("5m 00s"); // Running time
         });
 
-        it("should not show completed info", () => {
+        it("should show completed info", () => {
             expect(de.nativeElement.textContent).toContain("20 minutes ago");
+        });
+
+        it("should not show timeout info", () => {
+            expect(de.nativeElement.textContent).not.toContain("Task timed out");
+        });
+    });
+
+    describe("when the task timeout is completed", () => {
+        beforeEach(() => {
+            testComponent.task = createTask(TaskState.completed, "PT4M");
+            fixture.detectChanges();
+        });
+
+        it("1st 2 state link should not be locked", () => {
+            expect(stateLinks[0].classes["locked"]).toBe(false, "Link between active - preparing");
+            expect(stateLinks[1].classes["locked"]).toBe(false, "Link between preparing - running");
+            expect(stateLinks[2].classes["locked"]).toBe(false, "Link between running - completed");
+        });
+
+        it("should show creation time", () => {
+            expect(de.nativeElement.textContent).toContain("28 minutes ago");
+        });
+
+        it("should show execution info", () => {
+            expect(de.nativeElement.textContent).toContain("3 retries");
+            expect(de.nativeElement.textContent).toContain("5m 00s"); // Running time
+        });
+
+        it("should show completed info", () => {
+            expect(de.nativeElement.textContent).toContain("20 minutes ago");
+        });
+
+        it("should show timeout info", () => {
+            expect(de.nativeElement.textContent).toContain("Task timed out");
         });
     });
 });
