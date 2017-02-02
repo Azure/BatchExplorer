@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, HostBinding, Input } from "@angular/core";
 
 import { TaskState } from "app/models";
 import * as inflection from "inflection";
@@ -20,12 +20,19 @@ export class TaskLifetimeStateComponent {
     @Input()
     public title: string = "";
 
+    @HostBinding("class.active")
     public get active() {
         return this.currentState === this.state && !this.completed;
     }
 
+    @HostBinding("class.done")
     public get done() {
         return this.completed || stateOrder.indexOf(this.currentState) > stateOrder.indexOf(this.state);
+    }
+
+    @HostBinding("class.locked")
+    public get locked() {
+        return stateOrder.indexOf(this.currentState) < stateOrder.indexOf(this.state);
     }
 
     public get completed() {

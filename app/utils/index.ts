@@ -1,5 +1,6 @@
 export * from "./array";
 export * from "./color";
+export * from "./date-utils";
 export * from "./file-url-utils";
 export * from "./logger";
 export * from "./observable";
