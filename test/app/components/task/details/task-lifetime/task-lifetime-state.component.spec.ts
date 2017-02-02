@@ -6,7 +6,6 @@ import { TaskDetailsModule } from "app/components/task/details";
 import { TaskLifetimeStateComponent } from "app/components/task/details/task-lifetime";
 import { TaskState } from "app/models";
 
-
 @Component({
     template: `
         <bex-task-lifetime-state [state]="state" [currentState]="currentState">
@@ -100,4 +99,3 @@ describe("TaskLifetimeStateComponent", () => {
         });
     });
 });
-
