@@ -1,6 +1,6 @@
 <div class="quicksearch">
     <input [formControl]="searchQuery" placeholder="{{filterPlaceholder}}" />
-    <i class="fa fa-filter fa-2x" [routerLink]="baseLink" [queryParams]="{filter: true}"></i>
+    <i *ngIf="showFilterIcon" class="fa fa-filter fa-2x" [routerLink]="baseLink" [queryParams]="{filter: true}"></i>
 </div>
 <hr />
 <div class="context-button-bar">

@@ -26,10 +26,10 @@
     </bex-row>
 </bex-table>
 
-<bex-no-item [itemCount]="(data.items | async).size" [filter]="filter" [status]="status | async">
-    <i icon class="fa fa-tasks"></i>
+<bex-no-item [itemCount]="displayedApplications.size" [filter]="filter" [status]="status | async">
+    <i icon class="fa fa-cogs small"></i>
     <span no-filter>No applications</span>
-    <span with-filter>No applications match this filter</span>
+    <span with-filter>Current filter returned no applications</span>
 </bex-no-item>
 
 <bex-loading [status]="status | async" *ngIf="data.hasMore | async"></bex-loading>
