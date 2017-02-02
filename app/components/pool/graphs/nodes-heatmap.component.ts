@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, ViewChild } from "@angular/core";
 import * as d3 from "d3";
 import * as elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";
@@ -51,7 +51,7 @@ const maxTileSize = 300;
         { provide: "StateTree", useValue: stateTree },
     ],
 })
-export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
+export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestroy {
     public colors: HeatmapColor;
 
     @Input()
@@ -93,6 +93,12 @@ export class NodesHeatmapComponent implements AfterViewInit, OnDestroy {
         this.selectedNodeId.subscribe(() => {
             this._updateSelectedNode();
         });
+    }
+
+    public ngOnChanges(changes) {
+        if (changes.poolId) {
+            this.selectedNodeId.next(null);
+        }
     }
 
     public ngAfterViewInit() {

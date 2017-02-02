@@ -1,17 +1,20 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { RouterTestingModule } from "@angular/router/testing";
 import * as d3 from "d3";
 import { List } from "immutable";
 
 import { NodesHeatmapComponent, PoolGraphsModule } from "app/components/pool/graphs";
 import { Node, NodeState } from "app/models";
+import { NodeService } from "app/services";
 import * as Fixture from "test/fixture";
+import { click } from "test/utils/helpers";
 
 @Component({
     template: `
         <div [style.width]="width" [style.height]="height" [style.position]="'relative'">
-            <bex-nodes-heatmap poolId="some-id" [nodes]="nodes"></bex-nodes-heatmap>
+            <bex-nodes-heatmap [poolId]="poolId" [nodes]="nodes"></bex-nodes-heatmap>
         </div>
     `,
 })
@@ -19,6 +22,8 @@ export class TestHeatmapComponent {
     public width = "700px";
     public height = "500px";
     public nodes: List<Node> = List([]);
+
+    public poolId = "pool-1";
 }
 
 describe("NodesHeatmapLegendComponent", () => {
@@ -30,8 +35,11 @@ describe("NodesHeatmapLegendComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [PoolGraphsModule],
+            imports: [PoolGraphsModule, RouterTestingModule.withRoutes([])],
             declarations: [TestHeatmapComponent],
+            providers: [
+                { provide: NodeService, useValue: {} },
+            ],
         });
         TestBed.compileComponents();
         fixture = TestBed.createComponent(TestHeatmapComponent);
@@ -113,12 +121,31 @@ describe("NodesHeatmapLegendComponent", () => {
         });
     });
 
+    it("click on a tile should select the node", () => {
+        component.nodes = createNodes(4);
+        fixture.detectChanges();
+
+        const rect = svg.select("rect:nth-child(2)");
+
+        const el: any = rect.node();
+        click(el);
+        fixture.detectChanges();
+        expect(heatmap.selectedNodeId.value).toEqual("node-2");
+    });
+
+    it("should clear selection when poolId change", () => {
+        heatmap.selectedNodeId.next("node-1");
+        component.poolId = "pool-2";
+        fixture.detectChanges();
+        expect(heatmap.poolId).toEqual("pool-2");
+        expect(heatmap.selectedNodeId.value).toBeNull();
+    });
 });
 
 function createNodes(count: number) {
     const nodes: Node[] = [];
     for (let i = 0; i < count; i++) {
-        nodes.push(Fixture.node.create({ state: NodeState.idle }));
+        nodes.push(Fixture.node.create({ id: `node-${i + 1}`, state: NodeState.idle }));
     }
     return List(nodes);
 }
