@@ -8,7 +8,7 @@ import { TaskState } from "app/models";
 
 @Component({
     template: `
-        <bex-task-timeline-state [state]="state" [currentState]="currentState">
+        <bex-task-timeline-state [state]="state" [currentState]="currentState" [error]="error">
             Additional content info
         </bex-task-timeline-state>
     `,
@@ -16,6 +16,7 @@ import { TaskState } from "app/models";
 class TestComponent {
     public state: TaskState = TaskState.running;
     public currentState: TaskState;
+    public error = false;
 }
 
 describe("TaskTimelineStateComponent", () => {
@@ -105,13 +106,14 @@ describe("TaskTimelineStateComponent", () => {
     describe("when there is an error", () => {
         beforeEach(() => {
             testComponent.currentState = TaskState.completed;
+            testComponent.error = true;
             fixture.detectChanges();
         });
 
         it("should have the active class", () => {
             expect(de.classes["locked"]).toBe(false);
             expect(de.classes["active"]).toBe(false);
-            expect(de.classes["done"]).toBe(false);
+            expect(de.classes["done"]).toBe(true);
             expect(de.classes["error"]).toBe(true);
         });
 
