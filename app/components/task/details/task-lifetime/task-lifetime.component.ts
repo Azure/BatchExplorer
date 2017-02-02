@@ -23,12 +23,8 @@ export class TaskLifetimeComponent {
         return this.task.state;
     }
 
-    public get doneActive() {
-        return this.state !== TaskState.active;
-    }
-
-    public get donePreparing() {
-        return [TaskState.running, TaskState.completed].includes(this.state);
+    public get started() {
+        return this.running || this.completed;
     }
 
     public get active() {

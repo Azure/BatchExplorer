@@ -1,8 +1,8 @@
-
 bex-task-lifetime {
     $tile-size: 30px;
-    $separator-width: 40px;
+    $separator-width: 60px;
     $separator-height: 2px;
+    $state-reached-color: map-get($md-prussian-blue, 300);
 
     .timeline {
         display: flex;
@@ -50,11 +50,11 @@ bex-task-lifetime {
             }
 
             &.done > .tile {
-                background: map-get($md-prussian-blue, 300);
+                background: $state-reached-color;
             }
 
             &.active > .tile {
-                background: map-get($md-prussian-blue, 300);
+                background: $state-reached-color;
             }
 
             &.locked > .tile {
@@ -68,18 +68,15 @@ bex-task-lifetime {
         }
 
         .state-link {
-            height: 2px;
+            height: $separator-height;
             width: $separator-width;
-            background: map-get($md-prussian-blue, 300);
+            background: $state-reached-color;
             margin: 0 5px;
             margin-top: ($tile-size - $separator-height )/ 2;
 
             &.locked {
                 background: $alto;
             }
-        }
-
-        md-progress-bar {
         }
     }
 }
