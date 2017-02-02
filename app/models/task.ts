@@ -1,13 +1,14 @@
 import { Record } from "immutable";
 import { NameValuePair } from "./nameValuePair";
 
-import { AffinityInformation }  from "./affinityInformation";
-import { ApplicationPackageReference }  from "./applicationPackageReference";
-import { ComputeNodeInformation }  from "./computeNodeInformation";
-import { MultiInstanceSettings }  from "./multiInstanceSettings";
-import { ResourceFile }  from "./resourceFile";
-import { TaskConstraints }  from "./taskConstraints";
-import { TaskDependencies }  from "./taskDependencies";
+import { Constants } from "app/utils";
+import { AffinityInformation } from "./affinityInformation";
+import { ApplicationPackageReference } from "./applicationPackageReference";
+import { ComputeNodeInformation } from "./computeNodeInformation";
+import { MultiInstanceSettings } from "./multiInstanceSettings";
+import { ResourceFile } from "./resourceFile";
+import { TaskConstraints } from "./taskConstraints";
+import { TaskDependencies } from "./taskDependencies";
 import { TaskExecutionInformation } from "./taskExecutionInformation";
 import { TaskExitConditions } from "./taskExitConditions";
 
@@ -72,6 +73,15 @@ export class Task extends TaskRecord {
             exitConditions: new TaskExitConditions(data.exitConditions),
             dependsOn: data.dependsOn && new TaskDependencies(data.dependsOn),
         }));
+    }
+
+    /**
+     * @returns true if the task timeout.
+     * To happen the task must have maxWallClockTime set
+     */
+    public get didTimeout() {
+        const info = this.executionInfo;
+        return Boolean(info && info.exitCode === Constants.CommonExitCodes.taskTimeout);
     }
 }
 

@@ -4,14 +4,14 @@ import { By } from "@angular/platform-browser";
 import * as moment from "moment";
 
 import { TaskDetailsModule } from "app/components/task/details";
-import { TaskLifetimeComponent } from "app/components/task/details/task-lifetime";
+import { TaskTimelineComponent } from "app/components/task/details/task-timeline";
 import { Job, Task, TaskState } from "app/models";
 
 @Component({
     template: `
-        <bex-task-lifetime [job]="job" [task]="task">
+        <bex-task-timeline [job]="job" [task]="task">
             Additional content info
-        </bex-task-lifetime>
+        </bex-task-timeline>
     `,
 })
 class TestComponent {
@@ -31,10 +31,10 @@ function createTask(state: string) {
     });
 }
 
-describe("TaskLifetimeComponent", () => {
+describe("TaskTimelineComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
-    let component: TaskLifetimeComponent;
+    let component: TaskTimelineComponent;
     let de: DebugElement;
     let stateLinks: DebugElement[];
 
@@ -45,7 +45,7 @@ describe("TaskLifetimeComponent", () => {
         });
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
-        de = fixture.debugElement.query(By.css("bex-task-lifetime"));
+        de = fixture.debugElement.query(By.css("bex-task-timeline"));
         component = de.componentInstance;
         fixture.detectChanges();
         stateLinks = de.queryAll(By.css(".state-link"));

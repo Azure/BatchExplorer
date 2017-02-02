@@ -1,6 +1,7 @@
 <div class="tile" [title]="title">
-    <i class="fa fa-check" *ngIf="done"></i>
-    <i class="fa fa-play" *ngIf="active"></i>
+    <i class="fa fa-check" *ngIf="done && !error"></i>
+    <i class="fa fa-play" *ngIf="active && !error"></i>
+    <i class="fa fa-exclamation-triangle" *ngIf="error"></i>
 </div>
 <div class="details">
     <div class="state-name"> {{stateName}} </div>

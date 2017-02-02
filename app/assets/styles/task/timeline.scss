@@ -1,4 +1,4 @@
-bex-task-lifetime {
+bex-task-timeline {
     $tile-size: 30px;
     $separator-width: 60px;
     $separator-height: 2px;
@@ -7,7 +7,7 @@ bex-task-lifetime {
     .timeline {
         display: flex;
 
-        bex-task-lifetime-state {
+        bex-task-timeline-state {
             position: relative;
             display: flex;
 
@@ -46,6 +46,11 @@ bex-task-lifetime {
                     .warn {
                         color: $yellow;
                     }
+
+                    .error {
+                        font-weight: bold;
+                        color: $red;
+                    }
                 }
             }
 
@@ -64,6 +69,10 @@ bex-task-lifetime {
 
             &.warn > .tile {
                 background: $yellow;
+            }
+
+            &.error > .tile {
+                background: $red;
             }
         }
 

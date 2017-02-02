@@ -3,14 +3,14 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
 import { TaskDetailsModule } from "app/components/task/details";
-import { TaskLifetimeStateComponent } from "app/components/task/details/task-lifetime";
+import { TaskTimelineStateComponent } from "app/components/task/details/task-timeline";
 import { TaskState } from "app/models";
 
 @Component({
     template: `
-        <bex-task-lifetime-state [state]="state" [currentState]="currentState">
+        <bex-task-timeline-state [state]="state" [currentState]="currentState">
             Additional content info
-        </bex-task-lifetime-state>
+        </bex-task-timeline-state>
     `,
 })
 class TestComponent {
@@ -18,10 +18,10 @@ class TestComponent {
     public currentState: TaskState;
 }
 
-describe("TaskLifetimeStateComponent", () => {
+describe("TaskTimelineStateComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
-    let component: TaskLifetimeStateComponent;
+    let component: TaskTimelineStateComponent;
     let de: DebugElement;
 
     beforeEach(() => {
@@ -31,7 +31,7 @@ describe("TaskLifetimeStateComponent", () => {
         });
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
-        de = fixture.debugElement.query(By.css("bex-task-lifetime-state"));
+        de = fixture.debugElement.query(By.css("bex-task-timeline-state"));
         component = de.componentInstance;
         fixture.detectChanges();
     });

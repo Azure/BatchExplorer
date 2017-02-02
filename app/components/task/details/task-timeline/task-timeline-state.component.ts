@@ -6,11 +6,11 @@ import * as inflection from "inflection";
 const stateOrder = [TaskState.active, TaskState.preparing, TaskState.running, TaskState.completed];
 
 @Component({
-    selector: "bex-task-lifetime-state",
-    templateUrl: "task-lifetime-state.html",
+    selector: "bex-task-timeline-state",
+    templateUrl: "task-timeline-state.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskLifetimeStateComponent {
+export class TaskTimelineStateComponent {
     @Input()
     public state: TaskState;
 
@@ -19,6 +19,14 @@ export class TaskLifetimeStateComponent {
 
     @Input()
     public title: string = "";
+
+    @Input()
+    @HostBinding("class.error")
+    public error: boolean = false;
+
+    @Input()
+    @HostBinding("class.warn")
+    public warn: boolean = false;
 
     @HostBinding("class.active")
     public get active() {
