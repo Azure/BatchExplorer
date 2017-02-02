@@ -5,7 +5,7 @@ import { SidebarManager } from "app/components/base/sidebar";
 import { RerunTaskFormComponent } from "app/components/task/action";
 import { Task, TaskState } from "app/models";
 import { TaskService } from "app/services";
-import { Constants, DateUtils, ObservableUtils } from "app/utils";
+import { DateUtils, ObservableUtils } from "app/utils";
 
 @Component({
     selector: "bex-task-error-display",
@@ -36,9 +36,8 @@ export class TaskErrorDisplayComponent {
     }
 
     public get exitCodeMessage(): string {
-        const code = this.code;
-        if (code === Constants.CommonExitCodes.taskTimeout) {
-            const time: any = this.task.constraints.maxWallClockTime;
+        if (this.task.didTimeout) {
+            const time: any = this.task.constraints && this.task.constraints.maxWallClockTime;
             return `Task timed out after running for ${DateUtils.prettyDuration(time)}`;
         } else {
             return `Task completed with exit code '${this.code}'`;
