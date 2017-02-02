@@ -12,7 +12,7 @@ export class ApplicationDecorator extends DecoratorBase<Application> {
         super(application);
 
         this.id = this.stringField(application.id);
-        this.displayName = this.stringField(application.displayName);
+        this.displayName = this.stringField(application.displayName, true);
         this.allowUpdates = this.booleanField(application.allowUpdates);
         this.defaultVersion = this.stringField(application.defaultVersion);
     }

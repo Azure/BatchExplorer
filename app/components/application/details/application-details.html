@@ -1,5 +1,5 @@
 <bex-loading [status]="data.newDataStatus | async">
-    <!--<div *ngIf="job">
+    <div *ngIf="application">
         <md-card class="overview">
             <md-card-title-group style="margin: 0px;">
                 <div style="align-items:center;">
@@ -7,48 +7,34 @@
                 </div>
                 <div style="margin-left:12px; margin-right:auto;">
                     <md-card-title>{{decorator.id}}</md-card-title>
-                    <md-card-subtitle><i class="fa" [ngClass]="decorator.stateIcon"></i> {{decorator.state}}</md-card-subtitle>
+                    <md-card-subtitle>
+                        <i class="fa" [ngClass]="application.allowUpdates ? 'fa-unlock-alt' : 'fa-lock'"></i> {{decorator.displayName}}
+                        <div *ngIf="application.allowUpdates"> <b>(unlocked)</b></div>
+                        <div *ngIf="!application.allowUpdates"> <b>(locked)</b></div>
+                    </md-card-subtitle>
                 </div>
             </md-card-title-group>
-            <md-card-content>
-                <p>Pool: {{decorator.executionInfo.poolId}}</p>
-                <p>Start time: {{decorator.executionInfo.startTime}}</p>
-                <p>End time: {{decorator.executionInfo.endTime}}</p>
-            </md-card-content>
+            <md-card-content></md-card-content>
             <md-card-actions layout="row" layout-align="end center">
-                <bex-add-task-button title="Add task" [job]="job" (click)="addTask()"></bex-add-task-button>
-                <bex-terminate-button [entity]="job" (click)="terminateJob()"></bex-terminate-button>
-                <bex-delete-button [entity]="job" (click)="deleteJob()"></bex-delete-button>
-                <bex-disable-button [job]="job" (click)="disableJob()"></bex-disable-button>
-                <bex-enable-button [job]="job" (click)="enableJob()"></bex-enable-button>
-                <bex-clone-button (click)="cloneJob()"></bex-clone-button>
+                <bex-add-task-button title="Add" [job]="application" (click)="addTask()"></bex-add-task-button>
+                <bex-add-task-button title="Edit" [job]="application" (click)="addTask()"></bex-add-task-button>
+                <bex-delete-button [entity]="application" (click)="deleteJob()"></bex-delete-button>
             </md-card-actions>
         </md-card>
         <md-card class="details">
             <bex-tab-group>
                 <bex-tab key="properties">
                     <bex-tab-label>Properties</bex-tab-label>
-                    <bex-job-properties [job]="job"></bex-job-properties>
+                    <bex-application-properties [application]="application"></bex-application-properties>
                 </bex-tab>
-                <bex-tab  key="envs">
-                    <bex-tab-label>Environment Settings</bex-tab-label>
-                    <div class="tab-padding">
-                        <bex-job-environment-settings [job]="job"></bex-job-environment-settings>
-                    </div>
-                </bex-tab>
-                <bex-tab  key="metadata">
-                    <bex-tab-label>Metadata</bex-tab-label>
-                    <div class="tab-padding">
-                        <bex-job-metadata [job]="job"></bex-job-metadata>
-                    </div>
-                </bex-tab>
-                <bex-tab key="tasks">
-                    <bex-tab-label>Tasks</bex-tab-label>
-                    <bex-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/jobs', job.id, 'tasks']" [loadMore]="list.loadMore" [filterPlaceholder]="filterPlaceholderText">
+                <bex-tab key="packages">
+                    <bex-tab-label>Packages</bex-tab-label>
+                    <bex-application-packages [application]="application"></bex-application-packages>
+                    <!--<bex-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/jobs', job.id, 'tasks']" [loadMore]="list.loadMore" [filterPlaceholder]="filterPlaceholderText">
                         <bex-task-list [jobId]="job.id" [filter]="listWrapper.filter" [quickList]="false" #list [manualLoading]="true"></bex-task-list>
-                    </bex-entity-details-list>
+                    </bex-entity-details-list>-->
                 </bex-tab>
             </bex-tab-group>
         </md-card>
-    </div>-->
+    </div>
 </bex-loading>

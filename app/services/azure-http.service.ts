@@ -97,5 +97,4 @@ export class AzureHttpService {
             return Location.joinWithSlash(baseUrl, uri);
         }
     }
-
 }

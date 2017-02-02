@@ -32,7 +32,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
         };
     }
 
-    public job: Application;
+    public application: Application;
     public applicationId: string;
     public decorator: ApplicationDecorator;
     public data: RxEntityProxy<ApplicationParams, Application>;
@@ -48,10 +48,10 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
         private router: Router) {
 
         this.data = this.applicationService.get(null, {});
-        this.data.item.subscribe((job) => {
-            this.job = job;
-            if (job) {
-                this.decorator = new ApplicationDecorator(job);
+        this.data.item.subscribe((application) => {
+            this.application = application;
+            if (application) {
+                this.decorator = new ApplicationDecorator(application);
             }
         });
 

@@ -1,5 +1,4 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { FormControl } from "@angular/forms";
 import { Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { List } from "immutable";

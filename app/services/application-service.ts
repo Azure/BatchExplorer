@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 
-import { AccountResource, Application } from "app/models";
+import { Application } from "app/models";
 import { AccountService } from "app/services";
 import { AzureHttpService } from "./azure-http.service";
 import { DataCache, RxArmEntityProxy, RxArmListProxy, RxEntityProxy, RxListProxy } from "./core";
