@@ -1,14 +1,15 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import * as moment from "moment";
 
 import { Job, Task, TaskState } from "app/models";
 import { DateUtils } from "app/utils";
 
 @Component({
-    selector: "bex-task-lifetime",
-    templateUrl: "task-lifetime.html",
+    selector: "bex-task-timeline",
+    templateUrl: "task-timeline.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskLifetimeComponent {
+export class TaskTimelineComponent {
     @Input()
     public task: Task;
 
@@ -60,6 +61,33 @@ export class TaskLifetimeComponent {
     public get retryCount() {
         const info = this.task.executionInfo;
         return info && info.retryCount;
+    }
+
+    /**
+     * Return true if the task timeout is close(10%)
+     */
+    public get isTaskTimeoutClose() {
+        const info = this.task.executionInfo;
+        const constraints = this.task.constraints;
+        if (!(info && constraints && constraints.maxWallClockTime)) {
+            return false;
+        }
+        const maxTime = constraints.maxWallClockTime.asMilliseconds();
+        const runningTime = moment(info.endTime).diff(moment(info.startTime));
+        const diff = maxTime - runningTime;
+        // If less than 10%
+        return diff / maxTime < 0.1;
+    }
+
+    public get timeoutMessage(): string {
+        const maxTime = DateUtils.prettyDuration(this.task.constraints.maxWallClockTime);
+        if (this.task.didTimeout) {
+            return `Task timed out after running for ${maxTime}`;
+        } else if (this.isTaskTimeoutClose) {
+            return `Task is close to timeout at ${maxTime}`;
+        } else {
+            return "";
+        }
     }
 
     /**

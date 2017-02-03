@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component, Input, OnChanges, OnDestroy, OnInit } from "@angular/core";
 import * as moment from "moment";
 
-import { exists } from "app/utils";
+import { DateUtils, exists } from "app/utils";
 
 @Component({
     selector: "bex-elapsed-time",
@@ -39,8 +39,8 @@ export class ElapsedTimeComponent implements OnInit, OnChanges, OnDestroy {
 
     public updateElapsedTime() {
         const endTime = this._endTime === null ? moment.utc() : moment.utc(this._endTime);
-        const time: any = moment.duration(endTime.diff(moment(this.startTime)));
-        this.formattedValue = time.format("d[d] h[h] mm[m] ss[s]");
+        const time = moment.duration(endTime.diff(moment(this.startTime)));
+        this.formattedValue = DateUtils.prettyDuration(time);
         this.changeDetection.detectChanges();
     }
 

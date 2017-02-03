@@ -1,13 +1,14 @@
 import { Record } from "immutable";
-import { NameValuePair } from "./nameValuePair";
+import * as moment from "moment";
 
-import { AffinityInformation }  from "./affinityInformation";
-import { ApplicationPackageReference }  from "./applicationPackageReference";
-import { ComputeNodeInformation }  from "./computeNodeInformation";
-import { MultiInstanceSettings }  from "./multiInstanceSettings";
-import { ResourceFile }  from "./resourceFile";
-import { TaskConstraints }  from "./taskConstraints";
-import { TaskDependencies }  from "./taskDependencies";
+import { AffinityInformation } from "./affinityInformation";
+import { ApplicationPackageReference } from "./applicationPackageReference";
+import { ComputeNodeInformation } from "./computeNodeInformation";
+import { MultiInstanceSettings } from "./multiInstanceSettings";
+import { NameValuePair } from "./nameValuePair";
+import { ResourceFile } from "./resourceFile";
+import { TaskConstraints } from "./taskConstraints";
+import { TaskDependencies } from "./taskDependencies";
 import { TaskExecutionInformation } from "./taskExecutionInformation";
 import { TaskExitConditions } from "./taskExitConditions";
 
@@ -72,6 +73,24 @@ export class Task extends TaskRecord {
             exitConditions: new TaskExitConditions(data.exitConditions),
             dependsOn: data.dependsOn && new TaskDependencies(data.dependsOn),
         }));
+    }
+
+    /**
+     * @returns true if the task timeout.
+     * To happen the task must have maxWallClockTime set
+     */
+    public get didTimeout() {
+        const info = this.executionInfo;
+        const constraints = this.constraints;
+        if (!(info && info.exitCode && constraints && constraints.maxWallClockTime)) {
+            return false;
+        }
+        if (info.exitCode === 0) {
+            return false;
+        }
+        const maxTime = constraints.maxWallClockTime.asMilliseconds();
+        const runningTime = moment(info.endTime).diff(moment(info.startTime));
+        return maxTime - runningTime < 0;
     }
 }
 

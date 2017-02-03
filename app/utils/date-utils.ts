@@ -1,7 +1,5 @@
 import * as moment from "moment";
 
-const prettyDateRelativeRange = 20;
-
 export class DateUtils {
     /**
      * Check if the given date is withing the range of the last amount of unit given
@@ -20,12 +18,15 @@ export class DateUtils {
      * This will return a relative time if less that 20 days older
      * Otherwhise will print only the date in a readable way
      *
+     * @param date Date to display
+     * @param prettyDateRelativeRange Max number of days to use relative time
+     *
      * @example
      * - 2 hours ago
      * - Feb 2, 2016
      * - Nob 12, 2015
      */
-    public static prettyDate(date: Date | moment.Moment) {
+    public static prettyDate(date: Date | moment.Moment, prettyDateRelativeRange = 20) {
         if (!date) {
             return "";
         }
@@ -35,5 +36,14 @@ export class DateUtils {
         } else {
             return momentDate.format("MMM D, YYYY");
         }
+    }
+
+    /**
+     * Return a pretty duration
+     * 3d 2h 4m 1s
+     */
+    public static prettyDuration(duration: moment.Duration) {
+        duration = moment.duration(duration);
+        return (duration as any).format("d[d] h[h] mm[m] ss[s]");
     }
 }
