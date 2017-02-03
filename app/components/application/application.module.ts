@@ -7,11 +7,11 @@ import { ApplicationDetailsHomeComponent } from "./details/application-details-h
 import { ApplicationDetailsComponent } from "./details/application-details.component";
 import { ApplicationPackagesComponent } from "./details/application-packages.component";
 import { ApplicationPropertiesComponent } from "./details/application-properties.component";
+import { ApplicationErrorDisplayComponent } from "./errors/application-error-display.component";
 import { ApplicationHomeComponent } from "./home/application-home.component";
 
-
-const components = [ApplicationDetailsHomeComponent, ApplicationDetailsComponent, ApplicationHomeComponent,
-    ApplicationListComponent, ApplicationPreviewComponent, ApplicationPackagesComponent,
+const components = [ApplicationDetailsHomeComponent, ApplicationDetailsComponent, ApplicationErrorDisplayComponent,
+    ApplicationHomeComponent, ApplicationListComponent, ApplicationPreviewComponent, ApplicationPackagesComponent,
     ApplicationPropertiesComponent];
 
 @NgModule({
