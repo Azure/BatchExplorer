@@ -1,17 +1,33 @@
 import { DebugElement } from "@angular/core";
 
+export class FakeMouseEvent {
+    public stopImmediatePropagation: jasmine.Spy;
+    public stopPropagation: jasmine.Spy;
+    public shiftKey = false;
+    public ctrlKey = false;
+    public button: number;
+
+    constructor(attrs: any) {
+        this.stopImmediatePropagation = jasmine.createSpy("stopImmediatePropagation");
+        this.stopPropagation = jasmine.createSpy("stopPropagation");
+        Object.assign(this, attrs);
+    }
+}
+
 /**
  * Button events to pass to `DebugElement.triggerEventHandler` for RouterLink event handler
  */
 export const ButtonClickEvents = {
-    left: { button: 0, stopImmediatePropagation: () => null },
-    right: { button: 2, stopImmediatePropagation: () => null },
+    left: new FakeMouseEvent({ button: 0 }),
+    leftShift: new FakeMouseEvent({ button: 0, shiftKey: true }),
+    leftCtrl: new FakeMouseEvent({ button: 0, ctrlKey: true }),
+    right: new FakeMouseEvent({ button: 2 }),
 };
 
 /**
  * Simulate element click. Defaults to mouse left-button click event.
  */
-export function click(el: DebugElement | HTMLElement | Node, eventObj: any = ButtonClickEvents.left): void {
+export function click(el: DebugElement | HTMLElement | Node, eventObj: any = ButtonClickEvents.left): FakeMouseEvent {
     if (el instanceof DebugElement) {
         el.triggerEventHandler("click", eventObj);
     } else if ((el as any).click) {
@@ -21,6 +37,7 @@ export function click(el: DebugElement | HTMLElement | Node, eventObj: any = But
         evt.initMouseEvent("click", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
         el.dispatchEvent(evt);
     }
+    return eventObj;
 }
 
 /**

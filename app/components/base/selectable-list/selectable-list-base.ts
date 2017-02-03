@@ -86,11 +86,25 @@ export class SelectableListBase implements AfterViewInit, OnDestroy {
         return Boolean(event && event.key === key);
     }
 
-    public onSelectedChange(key: string, value: boolean) {
-        if (value) {
+    /**
+     * Toggle selection on the given item.
+     * If there is one item selected it will also select the active item.
+     * If you unselect the last item(Expect the active one) it wil
+     * @param key Item unique key
+     * @param selected If the item with the given key should be selected
+     */
+    public onSelectedChange(key: string, selected: boolean) {
+        const activeItemKey = this._activeItemKey.value && this._activeItemKey.value.key;
+        if (selected) {
+            if (activeItemKey && Object.keys(this._selectedItems).length === 0) {
+                this._selectedItems[activeItemKey] = true;
+            }
             this._selectedItems[key] = true;
         } else {
             delete this._selectedItems[key];
+            if (activeItemKey && Object.keys(this._selectedItems).length === 1 && this._selectedItems[activeItemKey]) {
+                delete this._selectedItems[activeItemKey];
+            }
         }
         this.selectedItemsChange.emit(this.selectedItems);
     }
