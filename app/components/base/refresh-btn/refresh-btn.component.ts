@@ -19,7 +19,6 @@ export enum RefreshStatus {
             ]),
         ]),
     ],
-
 })
 export class RefreshButtonComponent {
     public statuses = RefreshStatus;

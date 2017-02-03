@@ -93,13 +93,13 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
         this.data.fetchNext();
     }
 
-    // public deleteSelected() {
-    //     this.taskManager.startTask("", (backgroundTask) => {
-    //         const task = new DeleteJobAction(this.jobService, this.selectedItems);
-    //         task.start(backgroundTask);
-    //         return task.waitingDone;
-    //     });
-    // }
+    public deleteSelected() {
+        // this.taskManager.startTask("", (backgroundTask) => {
+        //     const task = new DeleteJobAction(this.jobService, this.selectedItems);
+        //     task.start(backgroundTask);
+        //     return task.waitingDone;
+        // });
+    }
 
     private _filterApplications() {
         let text: string = null;

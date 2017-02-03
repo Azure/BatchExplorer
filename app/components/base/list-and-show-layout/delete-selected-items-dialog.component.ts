@@ -6,7 +6,7 @@ import { MdDialogRef } from "@angular/material";
     template: `
         <div class="confirmation-dialog">
             <div class="message">
-                You are about to delete all the selected items this include:
+                You are about to delete all the selected items including:
                 <ul class="list-point"><li *ngFor="let item of items">{{item}}</li></ul>
             </div>
             <div class="buttons">
