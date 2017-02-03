@@ -1,6 +1,4 @@
-import {
-    Input, OnInit,
-} from "@angular/core";
+import { HostListener, Input, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { BreadcrumbService } from "app/components/base/breadcrumbs";
@@ -9,7 +7,6 @@ import { SelectableListBase } from "./selectable-list-base";
 /**
  * Usage: Needs to be used with a SelectableListBase
  * 1. Inject the component inheriting SelectableListBase in the construtor using @Inject and forwardRef
- * 3. Call handle click in html (click)="handleClick($event)"
  */
 export class SelectableListItemBase implements OnInit {
     /**
@@ -74,6 +71,7 @@ export class SelectableListItemBase implements OnInit {
         return this.list.focusedItem === this.key;
     }
 
+    @HostListener("click", ["$event"])
     public handleClick(event: MouseEvent) {
         const shiftKey = event.shiftKey;
         const ctrlKey = event.ctrlKey || event.metaKey;
