@@ -4,24 +4,25 @@ import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 
 import { AdvancedFilterComponent } from "./advanced-filter.component";
+import { AdvancedFilterListComponent } from "./list-filter-control";
 import { AdvancedFilterStatePickerComponent } from "./state-picker-control";
 
+const components = [
+    AdvancedFilterComponent,
+    AdvancedFilterStatePickerComponent,
+    AdvancedFilterListComponent,
+];
+
 @NgModule({
-    declarations: [
-        AdvancedFilterComponent,
-        AdvancedFilterStatePickerComponent,
-    ],
+    declarations: components,
     entryComponents: [
     ],
-    exports: [
-        AdvancedFilterComponent,
-        AdvancedFilterStatePickerComponent,
-    ],
+    exports: components,
     imports: [
         BrowserModule,
         FormsModule,
         ReactiveFormsModule,
-        MaterialModule.forRoot(),
+        MaterialModule,
     ],
     providers: [
     ],

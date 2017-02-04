@@ -11,10 +11,18 @@
     bottom: 0;
     width: 100%;
     min-height: 100%;
+    z-index: 100;
 }
 
 bex-adv-filter-statepicker {
     .state-checkbox {
         margin-right: 10px;
+    }
+}
+
+
+bex-adv-filter-list {
+    .value {
+        width: 300px;
     }
 }

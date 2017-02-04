@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from "@angular/core";
 
-import { AdvancedFilter, StatePickerControl } from "app/components/base/advanced-filter";
+import { AdvancedFilter, ListFilterControl, StatePickerControl } from "app/components/base/advanced-filter";
 import { TaskState } from "app/models";
 import { Filter } from "app/utils/filter-builder";
 
@@ -10,19 +10,20 @@ import { Filter } from "app/utils/filter-builder";
 })
 export class TaskAdvancedFilterComponent {
     @Output()
-    public change = new EventEmitter<Filter>();
+    public filterChange = new EventEmitter<Filter>();
 
     public advancedFilter: AdvancedFilter;
 
     constructor() {
         this.advancedFilter = new AdvancedFilter({
-            state: new StatePickerControl("State", [
+            "state": new StatePickerControl("State", [
                 TaskState.active, TaskState.completed, TaskState.running, TaskState.preparing,
             ]),
+            "executionInfo/exitCode": new ListFilterControl("Exit code", true),
         });
 
         this.advancedFilter.filterChange.subscribe((filter: Filter) => {
-            this.change.emit(filter);
+            this.filterChange.emit(filter);
         });
     }
 }
