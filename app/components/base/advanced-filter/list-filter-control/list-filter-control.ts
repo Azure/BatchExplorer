@@ -2,8 +2,8 @@ import { Component, Input } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 
 import { Filter, and, none, or, prop } from "app/utils/filter-builder";
-import { AdvancedFilter } from "./advanced-filter";
-import { AdvancedFilterControlBase } from "./control-base";
+import { AdvancedFilter } from "../advanced-filter";
+import { AdvancedFilterControlBase } from "../control-base";
 
 export enum ListFilterType {
     Include,
@@ -23,10 +23,15 @@ export interface ListFilterControlConfig {
     allowRanges?: boolean;
 
     /**
-     * @default "-"
+     * @default "|"
      */
     rangeSeparator?: string;
 }
+
+export interface ListFilterParsedValue {
+    items: any[];
+    ranges: any[][];
+};
 
 export class ListFilterControl extends AdvancedFilterControlBase {
     private _valueControl = new FormControl("");
@@ -63,11 +68,11 @@ export class ListFilterControl extends AdvancedFilterControlBase {
         }
     }
 
-    public parseValue(value: string): { items: any[], ranges: any[][] } {
+    public parseValue(value: string): ListFilterParsedValue {
         if (!value) {
             return { items: [], ranges: [] };
         }
-        let values = value.replace(/\s/g, "").split(",").filter(x => x !== "");
+        let values = this._parseInput(value);
 
         let {items, ranges} = this._extractRanges(values) as any;
 
@@ -81,6 +86,16 @@ export class ListFilterControl extends AdvancedFilterControlBase {
         };
     }
 
+    /**
+     * This remove all whitespace in the input, split it by "," and then remove blank entries.
+     * @param value Input to parseValue
+     *
+     * @example this._parseInput(" a, b,,   c,") //=> ["a", "b", "c"]
+     */
+    private _parseInput(value: string): string[] {
+        return value.clearWhitespace().split(",").filter(x => x !== "");
+    }
+
     private _parseNumbers(list: string[]): number[] {
         return list.map(x => Number(x)).filter(x => !isNaN(x));
     }
@@ -91,7 +106,7 @@ export class ListFilterControl extends AdvancedFilterControlBase {
         }).filter(x => x.length === 2);
     }
 
-    private _extractRanges(values: string[]) {
+    private _extractRanges(values: string[]): ListFilterParsedValue {
         if (!this._config.allowRanges) {
             return { items: values, ranges: [] };
         }
@@ -115,20 +130,7 @@ export class ListFilterControl extends AdvancedFilterControlBase {
 
 @Component({
     selector: "bex-adv-filter-list",
-    template: `
-        <div [formGroup]="advancedFilter.group" *ngIf="advancedFilter && control">
-            <h3>{{control.label}}</h3>
-            <fieldset formGroupName="{{control.name}}" >
-                <md-input-container class="value">
-                    <input md-input formControlName="value" placeholder="Values comma speparated(1,54432,-2,100|200)"/>
-                </md-input-container>
-                <md-radio-group formControlName="type" class="type">
-                    <md-radio-button [value]="ListFilterType.Include">Include</md-radio-button>
-                    <md-radio-button [value]="ListFilterType.Exclude">Exclude</md-radio-button>
-                </md-radio-group>
-            </fieldset>
-        </div>
-    `,
+    template: "list-filter-control.html",
 })
 export class AdvancedFilterListComponent {
     public ListFilterType = ListFilterType;

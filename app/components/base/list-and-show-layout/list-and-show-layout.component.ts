@@ -75,7 +75,7 @@ export class ListAndShowLayoutComponent implements AfterViewInit {
             if (query === "") {
                 this.quickFilter = FilterBuilder.none();
             } else {
-                this.quickFilter = FilterBuilder.prop(this.quickSearchField).startswith(query.replace(/\s/g, ""));
+                this.quickFilter = FilterBuilder.prop(this.quickSearchField).startswith(query.clearWhitespace());
             }
             this._updateFilter();
         });

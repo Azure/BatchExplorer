@@ -4,7 +4,7 @@ import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 
 import { AdvancedFilterComponent } from "./advanced-filter.component";
-import { AdvancedFilterListComponent } from "./list-filter-control";
+import { AdvancedFilterListComponent } from "./list-filter-control/list-filter-control";
 import { AdvancedFilterStatePickerComponent } from "./state-picker-control";
 
 const components = [

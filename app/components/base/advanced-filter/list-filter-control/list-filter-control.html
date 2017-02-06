@@ -1,0 +1,12 @@
+<div [formGroup]="advancedFilter.group" *ngIf="advancedFilter && control">
+    <h3>{{control.label}}</h3>
+    <fieldset formGroupName="{{control.name}}">
+        <md-input-container class="value">
+            <input md-input formControlName="value" placeholder="Values comma speparated(1,54432,-2,100|200)" />
+        </md-input-container>
+        <md-radio-group formControlName="type" class="type">
+            <md-radio-button [value]="ListFilterType.Include">Include</md-radio-button>
+            <md-radio-button [value]="ListFilterType.Exclude">Exclude</md-radio-button>
+        </md-radio-group>
+    </fieldset>
+</div>
