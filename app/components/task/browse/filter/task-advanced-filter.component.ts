@@ -19,7 +19,10 @@ export class TaskAdvancedFilterComponent {
             "state": new StatePickerControl("State", [
                 TaskState.active, TaskState.completed, TaskState.running, TaskState.preparing,
             ]),
-            "executionInfo/exitCode": new ListFilterControl("Exit code", true),
+            "executionInfo/exitCode": new ListFilterControl("Exit code", {
+                number: true,
+                allowRanges: true,
+            }),
         });
 
         this.advancedFilter.filterChange.subscribe((filter: Filter) => {

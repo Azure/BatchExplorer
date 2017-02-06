@@ -1,6 +1,24 @@
 .advanced-filter-container {
     min-height: 100%;
     width: 100%;
+
+    .odata-preview {
+        display: flex;
+
+        .label {
+            padding: 2px 5px;
+            background: $alto;
+            color: map-get($md-prussian-blue, 400);
+        }
+
+        .value {
+            flex: 1;
+            font-size: 13px;
+            background: $whitesmoke-darker;
+            color: $mineshaft-grey;
+            padding: 2px 5px;
+        }
+    }
 }
 
 .advanced-filter-content {
