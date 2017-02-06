@@ -96,16 +96,28 @@ export class ListFilterControl extends AdvancedFilterControlBase {
         return value.clearWhitespace().split(",").filter(x => x !== "");
     }
 
+    /**
+     * Parse a list of string into a list of numbers.
+     * This ignore all strings not being valid numbers
+     */
     private _parseNumbers(list: string[]): number[] {
         return list.map(x => Number(x)).filter(x => !isNaN(x));
     }
 
+    /**
+     * Parse the ranges to return a range of numbers
+     * If either the start or the end of the range is not a valid number it will be ignored
+     */
     private _parseRangeNumbers(ranges: string[][]): number[][] {
         return ranges.map((range) => {
             return this._parseNumbers(range);
         }).filter(x => x.length === 2);
     }
 
+    /**
+     * If allowRanges is enable extract the ranges from the list of values.
+     * @returns object containing the items and the ranges.
+     */
     private _extractRanges(values: string[]): ListFilterParsedValue {
         if (!this._config.allowRanges) {
             return { items: values, ranges: [] };
