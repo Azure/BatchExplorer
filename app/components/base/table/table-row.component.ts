@@ -11,7 +11,7 @@ import { TableComponent } from "./table.component";
     selector: "bex-row",
     templateUrl: `
         <template>
-            <tr [class.selected]="active || selected" [class.focused]="isFocused">
+            <tr (click)="handleClick($event)" [class.selected]="active || selected" [class.focused]="isFocused">
                 <ng-content></ng-content>
             </tr>
         </template>

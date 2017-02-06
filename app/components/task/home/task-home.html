@@ -13,7 +13,7 @@
         <router-outlet></router-outlet>
     </div>
     <div bex-show-advanced-filter>
-        <bex-task-advanced-filter (change)="layout.advancedFilterChanged($event)">
+        <bex-task-advanced-filter (filterChange)="layout.advancedFilterChanged($event)">
         </bex-task-advanced-filter>
     </div>
 </bex-list-and-show-layout>
