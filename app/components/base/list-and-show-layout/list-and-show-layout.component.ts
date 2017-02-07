@@ -25,7 +25,7 @@ import { DeletePoolDialogComponent } from "./delete-selected-items-dialog.compon
             state("*", style({
                 transform: "translateX(0)",
             })),
-            transition("* => *", animate(200)),
+            transition("void => *", animate(200)),
         ]),
     ],
 })

@@ -26,7 +26,7 @@ export * from "./nodeFileTypes";
 export * from "./pool";
 export * from "./resizeError";
 export * from "./resourceFile";
-export * from "./schedulingError";
+export * from "./scheduling-error";
 export * from "./settings";
 export * from "./startTask";
 export * from "./subscription";
