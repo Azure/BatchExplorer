@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 
-import { Application } from "app/models";
+import { Application, ApplicationPackage } from "app/models";
 import { AccountService } from "app/services";
 import { AzureHttpService } from "./azure-http.service";
 import { DataCache, RxArmEntityProxy, RxArmListProxy, RxEntityProxy, RxListProxy } from "./core";
@@ -16,10 +16,16 @@ export interface ApplicationParams {
 @Injectable()
 export class ApplicationService {
     /**
-     * Triggered only when an application is added through this app.
+     * Triggered when an application is added through this app.
      * Used to notify the list of a new item
      */
     public onApplicationAdded = new Subject<string>();
+
+    /**
+     * Triggered when a new version is added to an application.
+     * Used to notify the list of a new item
+     */
+    public onPackageVersionAdded = new Subject<string>();
 
     private _currentAccountId: string;
     private _basicProperties: string = "id,displayName,allowUpdates,defaultVersion";
@@ -60,6 +66,18 @@ export class ApplicationService {
                 id: applicationId,
             },
         });
+    }
+
+    public put(applicationId: string, version: string): Observable<ApplicationPackage> {
+        return this.azure
+            .put(`${this._currentAccountId}/applications/${applicationId}/versions/${version}`)
+            .map(response => new ApplicationPackage(response.json()));
+    }
+
+    public activate(applicationId: string, version: string): Observable<any> {
+        return this.azure.post(
+            `${this._currentAccountId}/applications/${applicationId}/versions/${version}/activate`,
+            { body: { format: "zip" } });
     }
 
     /**

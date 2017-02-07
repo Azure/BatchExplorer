@@ -15,6 +15,7 @@ const baseUrl = "https://management.azure.com";
 function mergeOptions(original: RequestOptionsArgs, method: RequestMethod): RequestOptionsArgs {
     const options = original || new RequestOptions();
     options.method = method;
+
     return options;
 }
 
@@ -53,8 +54,20 @@ export class AzureHttpService {
         return this.request(uri, mergeOptions(options, RequestMethod.Get));
     }
 
-    public post(uri: string, options?: RequestOptionsArgs) {
+    public post(uri: string, body: any, options?: RequestOptionsArgs) {
         return this.request(uri, mergeOptions(options, RequestMethod.Post));
+    }
+
+    public put(uri: string, options?: RequestOptionsArgs) {
+        return this.request(uri, mergeOptions(options, RequestMethod.Put));
+    }
+
+    public patch(uri: string, body: any, options?: RequestOptionsArgs) {
+        return this.request(uri, mergeOptions(options, RequestMethod.Patch));
+    }
+
+    public delete(uri: string, options?: RequestOptionsArgs) {
+        return this.request(uri, mergeOptions(options, RequestMethod.Delete));
     }
 
     public apiVersion(uri: string) {

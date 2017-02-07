@@ -5,11 +5,9 @@ import { Observable } from "rxjs";
 
 import { NotificationManager } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
-import { RangeValidatorDirective } from "app/components/base/validation";
-import { Application, Pool } from "app/models";
-import { createApplicationFormToJsonData, applicationToFormModel } from "app/models/forms";
+import { Application } from "app/models";
+import { applicationToFormModel } from "app/models/forms";
 import { ApplicationService } from "app/services";
-import { RxListProxy } from "app/services/core";
 import { Constants } from "app/utils";
 
 @Component({
@@ -41,11 +39,7 @@ export class ApplicationCreateDialogComponent implements OnInit {
     }
 
     public ngOnInit() {
-        // this.poolsData.fetchNext().subscribe((result) => {
-        //     if (result.data && result.data.length > 0) {
-        //         this.createJobForm.value.poolId = result.data[0].id;
-        //     }
-        // });
+        /** noop */
     }
 
     public setValue(application: Application) {
@@ -54,18 +48,26 @@ export class ApplicationCreateDialogComponent implements OnInit {
 
     @autobind()
     public submit(): Observable<any> {
-        // const jsonData = createJobFormToJsonData(this.createJobForm.value);
-        // const observable = this.jobService.add(jsonData, {});
-        // observable.subscribe({
-        //     next: () => {
-        //         const id = this.createJobForm.value.id;
-        //         this.jobService.onJobAdded.next(id);
-        //         this.notificationManager.success("Job added!", `Job '${id}' was created successfully!`);
-        //     },
-        //     error: () => null,
-        // });
+        const formData = this.applicationForm.value;
+        const observable = this.applicationService.put(formData.id, formData.version);
+        observable.subscribe({
+            next: (packageVersion) => {
+                const id = formData.id;
 
-        // return observable;
-        return null;
+                /**
+                 * get "packageVersion.storageUrl" and use that SAS to upload the package into storage
+                 * then call /activate to complete the upload.
+                 */
+
+                this.applicationService.onApplicationAdded.next(id);
+                this.notificationManager.success(
+                    "Application added!",
+                    `Version ${packageVersion.version} for application '${id}' was successfully created!`
+                );
+            },
+            error: () => null,
+        });
+
+        return observable;
     }
 }
