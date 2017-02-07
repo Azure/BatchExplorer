@@ -65,5 +65,5 @@ export function nil(obj: any): boolean {
 }
 
 export function isPresent(obj: any): boolean {
-    return this.exist(obj);
+    return exists(obj);
 }
