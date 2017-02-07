@@ -68,7 +68,7 @@ describe("JobErrorDisplayComponent", () => {
 
         it("Should show task failed message", () => {
             const banner = fixture.debugElement.query(By.css("bex-banner"));
-            expect(banner.nativeElement.textContent).toContain("Job was terminated because one task failed.");
+            expect(banner.nativeElement.textContent).toContain("Job was terminated because a task failed.");
         });
 
         it("should propose to list failed task as quickfix", () => {
