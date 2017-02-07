@@ -1,6 +1,6 @@
 $padding-first-and-last: 15px;
-$table-heading-height: 48px;
-$table-row-height: 40px;
+$table-heading-height: 40px;
+$table-row-height: 30px;
 
 bex-table {
     display: block;
@@ -73,7 +73,7 @@ bex-table {
 
     bex-cell {
         display: table-cell;
-        font-size: 1em;
+        font-size: 13px;
         border-top: 1px $athensGrey solid;
         position: relative;
         white-space: nowrap;

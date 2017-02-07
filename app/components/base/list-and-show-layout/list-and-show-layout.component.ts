@@ -75,7 +75,7 @@ export class ListAndShowLayoutComponent implements AfterViewInit {
             if (query === "") {
                 this.quickFilter = FilterBuilder.none();
             } else {
-                this.quickFilter = FilterBuilder.prop(this.quickSearchField).startswith(query);
+                this.quickFilter = FilterBuilder.prop(this.quickSearchField).startswith(query.clearWhitespace());
             }
             this._updateFilter();
         });
@@ -130,6 +130,7 @@ export class ListAndShowLayoutComponent implements AfterViewInit {
             }
         });
     }
+
     private _updateFilter() {
         this.filter = FilterBuilder.and(this.quickFilter, this.advancedFilter);
     }

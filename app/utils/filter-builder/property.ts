@@ -1,5 +1,5 @@
 import { Filter } from "./filter";
-import { or, prop } from "./filter-builder";
+import { and, or, prop } from "./filter-builder";
 import { Operator } from "./operator";
 
 export class Property extends Filter {
@@ -31,6 +31,11 @@ export class Property extends Filter {
     public inList(values: any[], validOptions?: any[]): Filter {
         const props = values.map((value) => prop(this.name).eq(value, validOptions));
         return or(...props);
+    }
+
+    public notInList(values: any[], validOptions?: any[]): Filter {
+        const props = values.map((value) => prop(this.name).ne(value));
+        return and(...props);
     }
 
     public startswith(value: any): Filter {

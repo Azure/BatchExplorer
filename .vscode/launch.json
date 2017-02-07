@@ -11,6 +11,9 @@
       "cwd": "${workspaceRoot}",
       "preLaunchTask": "build-node-ts",
       "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
+      "windows": {
+        "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd"
+      },
       "runtimeArgs": [
         "--remote-debugging-port=9222",
         "--nolazy"
@@ -19,17 +22,11 @@
         "NODE_ENV": "development",
         "HOT": "1"
       },
-      "console": "integratedTerminal",
+      "console": "internalConsole",
       "sourceMaps": true,
-      "outFiles": ["${workspaceRoot}/build/**/*.js"]
-    },
-    {
-      "name": "Attach",
-      "type": "node",
-      "request": "attach",
-      "port": 5858,
-      "sourceMaps": false,
-      "outDir": null
+      "outFiles": [
+        "${workspaceRoot}/build/**/*.js"
+      ]
     },
     {
       "name": "Attach to Process",
@@ -38,6 +35,7 @@
       "port": 9222,
       "sourceMaps": true,
       "diagnosticLogging": true,
+      "url": "file://*",
       "webRoot": "${workspaceRoot}/build"
     }
   ]
