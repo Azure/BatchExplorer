@@ -95,3 +95,32 @@ class TestJobErrorDisplayComponent {
 }
 
 ```
+
+
+## Testing a component
+
+Create a file named with the component name `do-something.component.spec.ts` in the `test/app` folder and following the same structure you have in the `app` folder.
+
+Here is a snippet of a test component test
+```typescript
+
+import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { By } from "@angular/platform-browser";
+
+import { MyComp } from "app/components/path";
+
+describe("MyComp", () => {
+    let fixture: ComponentFixture<MyComp>;
+    let component: MyComp;
+
+    beforeEach(() => {
+        TestBed.configureTestingModule(); // Import or declare here whatever you'll be testing
+        fixture = TestBed.createComponent(MyComp);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
+    it("", () => {
+    });
+});
+```
