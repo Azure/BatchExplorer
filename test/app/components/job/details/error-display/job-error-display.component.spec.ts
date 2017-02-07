@@ -11,7 +11,7 @@ import { JobService } from "app/services";
 import * as Fixtures from "test/fixture";
 
 @Component({
-    template: `<bex-job-error-display jobId="job-1" [job]="job"></bex-job-error-display>`,
+    template: `<bex-job-error-display [job]="job"></bex-job-error-display>`,
 })
 class TestJobErrorDisplayComponent {
     public job: Job;
