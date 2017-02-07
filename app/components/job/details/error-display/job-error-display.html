@@ -1,5 +1,5 @@
 <bex-banner *ngIf="jobFailed" fixMessage="View failed tasks" [fix]="gotoFailedTask" type="warning">
-    <div message>Job was terminated because one task failed.</div>
+    <div message>Job was terminated because a task failed.</div>
 </bex-banner>
 <bex-banner *ngIf="jobTimeout" type="warning">
     <div message>Job timed out after running for {{jobRunningTime}}.</div>
