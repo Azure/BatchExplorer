@@ -3,6 +3,7 @@ import { Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
+import { ListFilterType } from "app/components/base/advanced-filter";
 import { Job, JobTerminateReason, TaskState } from "app/models";
 import { DateUtils } from "app/utils";
 import { ODataFields } from "app/utils/constants";
@@ -50,7 +51,7 @@ export class JobErrorDisplayComponent {
             [ODataFields.state]: { [TaskState.completed]: true },
             [ODataFields.taskExitCode]: {
                 value: "0",
-                type: 1,
+                type: ListFilterType.Exclude,
             },
         };
         this.router.navigate(["/jobs", this.job.id, "tasks"], {
