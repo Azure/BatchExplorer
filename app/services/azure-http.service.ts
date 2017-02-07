@@ -12,9 +12,12 @@ const apiVersionParams = "api-version";
 const apiVersion = Constants.ApiVersion.arm;
 const baseUrl = "https://management.azure.com";
 
-function mergeOptions(original: RequestOptionsArgs, method: RequestMethod): RequestOptionsArgs {
+function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?: any): RequestOptionsArgs {
     const options = original || new RequestOptions();
     options.method = method;
+    if (body) {
+        options.body = body;
+    }
 
     return options;
 }
@@ -54,8 +57,8 @@ export class AzureHttpService {
         return this.request(uri, mergeOptions(options, RequestMethod.Get));
     }
 
-    public post(uri: string, body: any, options?: RequestOptionsArgs) {
-        return this.request(uri, mergeOptions(options, RequestMethod.Post));
+    public post(uri: string, body?: any, options?: RequestOptionsArgs) {
+        return this.request(uri, mergeOptions(options, RequestMethod.Post, body));
     }
 
     public put(uri: string, options?: RequestOptionsArgs) {
@@ -63,7 +66,7 @@ export class AzureHttpService {
     }
 
     public patch(uri: string, body: any, options?: RequestOptionsArgs) {
-        return this.request(uri, mergeOptions(options, RequestMethod.Patch));
+        return this.request(uri, mergeOptions(options, RequestMethod.Patch, body));
     }
 
     public delete(uri: string, options?: RequestOptionsArgs) {
