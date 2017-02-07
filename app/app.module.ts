@@ -24,11 +24,7 @@ import { FileHomeComponent } from "./components/file/home";
 import { JobStatsPreviewComponent } from "./components/job/base/job-stats-preview";
 import { JobAdvancedFilterComponent } from "./components/job/browse/filter/job-advanced-filter.component";
 import { JobListComponent } from "./components/job/browse/job-list.component";
-import { JobDetailsHomeComponent } from "./components/job/details/job-details-home.component";
-import { JobDetailsComponent } from "./components/job/details/job-details.component";
-import { JobEnvironmentSettingsComponent } from "./components/job/details/job-env-settings.component";
-import { JobMetadataComponent } from "./components/job/details/job-metadata.component";
-import { JobPropertiesComponent } from "./components/job/details/job-properties.component";
+import { JobDetailsModule } from "./components/job/details";
 import { JobHomeComponent } from "./components/job/home/job-home.component";
 import { NodeBrowseModule } from "./components/node/browse";
 import { NoNodeSelectedComponent, NodeDetailsComponent, NodePropertiesComponent } from "./components/node/details";
@@ -89,6 +85,7 @@ import {
 
 const modules = [
     PoolDetailsModule, PoolGraphsModule, StartTaskModule,
+    JobDetailsModule,
     TaskBaseModule, TaskDetailsModule, TaskBrowseModule,
     NodeBrowseModule,
     FileBrowseModule, FileDetailsModule,
@@ -118,13 +115,8 @@ const modules = [
         FileHomeComponent,
         JobAdvancedFilterComponent,
         JobCreateBasicDialogComponent,
-        JobDetailsComponent,
-        JobDetailsHomeComponent,
-        JobEnvironmentSettingsComponent,
         JobHomeComponent,
         JobListComponent,
-        JobMetadataComponent,
-        JobPropertiesComponent,
         JobStatsPreviewComponent,
         MainNavigationComponent,
         NodeDetailsComponent,

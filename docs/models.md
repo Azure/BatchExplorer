@@ -59,6 +59,7 @@ export class Foo extends FooRecord {
 ### Step 4(If applicable): created nested Record
 In the case some of the attributes are other models(Record). Then you'll need to do the following to make sure they are initialized correctly
 
+**Important If the model has some attributes with complex object as type. Write another model(Extending record) for it.**
 
 ```typescript
 // Add this constructor

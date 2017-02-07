@@ -72,3 +72,8 @@ export const ApiVersion = {
 export const ExternalLinks = {
     supportRequest: "https://ms.portal.azure.com/#blade/Microsoft_Azure_Support/HelpAndSupportBlade/newsupportrequest",
 };
+
+export const ODataFields = {
+    state: "state",
+    taskExitCode: "executionInfo/exitCode",
+};

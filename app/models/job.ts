@@ -33,6 +33,7 @@ const JobRecord = Record({
     metadata: null,
     executionInfo: null,
     stats: null,
+    schedulingError: null,
 });
 
 /**
@@ -69,6 +70,7 @@ export class Job extends JobRecord {
             jobPreparationTask: data.jobPreparationTask && new JobPreparationTask(data.jobPreparationTask),
             jobReleaseTask: data.jobReleaseTask && new JobReleaseTask(data.jobReleaseTask),
             jobManagerTask: data.jobManagerTask && new JobManagerTask(data.jobManagerTask),
+            executionInfo: data.executionInfo && new JobExecutionInformation(data.executionInfo),
         }));
     }
 }
