@@ -1,7 +1,7 @@
 import { Record } from "immutable";
 
 import { ComputeNodeInformation }  from "./computeNodeInformation";
-import { SchedulingError }  from "./schedulingError";
+import { SchedulingError }  from "./scheduling-error";
 import { TaskState }  from "./task";
 
 // tslint:disable:variable-name

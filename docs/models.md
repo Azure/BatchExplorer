@@ -11,11 +11,11 @@ If you are just making a model that is internal to a component:
 * if yes maybe just export from the component file/folder
 
 ### Step 1: Create file
-Create model file `myNewModel.ts` in `app/models`
+Create model file `my-new-model.ts` in `app/models`
 add this to `app/models/index.ts`
 
 ```typescript
-export * from "./myNewModel"
+export * from "./my-new-model"
 ```
 
 Then you should be able to have
@@ -59,6 +59,7 @@ export class Foo extends FooRecord {
 ### Step 4(If applicable): created nested Record
 In the case some of the attributes are other models(Record). Then you'll need to do the following to make sure they are initialized correctly
 
+**Important If the model has some attributes with complex object as type. Write another model(Extending record) for it.**
 
 ```typescript
 // Add this constructor

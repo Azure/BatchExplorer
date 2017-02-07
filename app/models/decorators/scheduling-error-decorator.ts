@@ -1,5 +1,5 @@
 import { DecoratorBase } from "../../utils/decorators";
-import { SchedulingError } from "../schedulingError";
+import { SchedulingError } from "../scheduling-error";
 
 export class SchedulingErrorDecorator extends DecoratorBase<SchedulingError> {
     public category: string;

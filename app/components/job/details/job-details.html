@@ -24,6 +24,7 @@
                 <bex-clone-button (click)="cloneJob()"></bex-clone-button>
             </md-card-actions>
         </md-card>
+        <bex-job-error-display [job]="job"></bex-job-error-display>
         <md-card class="details">
             <bex-tab-group>
                 <bex-tab key="properties">
