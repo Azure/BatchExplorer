@@ -34,9 +34,13 @@ export const forms = {
         maxLength: {
             id: 64,
             displayName: 1024,
+            applicationName: 64,
+            version: 64,
         },
         regex: {
             id: "^[\\w\\_-]+$",
+            appVersion: "^[a-zA-Z0-9_-][a-zA-Z0-9_.-]*$",
+            appFilename: "\\S\\.[zZ][iI][pP]$",
         },
         range: {
             retry: { min: -1, max: 100 },

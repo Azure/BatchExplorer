@@ -9,15 +9,10 @@ import { ApplicationDecorator } from "app/models/decorators";
 import { AccountService, ApplicationParams, ApplicationService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
 import { SidebarManager } from "../../base/sidebar";
-// import { TaskCreateBasicDialogComponent } from "../../task/action";
-// import { JobCreateBasicDialogComponent } from "../action";
 
-// import {
-//     DeleteJobDialogComponent,
-//     DisableJobDialogComponent,
-//     EnableJobDialogComponent,
-//     TerminateJobDialogComponent,
-// } from "../action";
+import {
+    ApplicationCreateDialogComponent,
+} from "../action";
 
 @Component({
     selector: "bex-application-details",
@@ -72,6 +67,11 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._paramsSubscriber.unsubscribe();
+    }
+
+    public addApplication() {
+        const createRef = this.sidebarManager.open("add-application", ApplicationCreateDialogComponent);
+        createRef.component.setValue(this.application);
     }
 
     public get filterPlaceholderText() {

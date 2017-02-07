@@ -3,7 +3,7 @@ import { FormBuilder, FormControl } from "@angular/forms";
 
 import { Filter, FilterBuilder } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
-// import { JobCreateBasicDialogComponent } from "../action";
+import { ApplicationCreateDialogComponent } from "../action/add/application-create-dialog.component";
 
 @Component({
     selector: "bex-application-home",
@@ -14,7 +14,6 @@ export class ApplicationHomeComponent {
 
     public filter: Filter = FilterBuilder.none();
     public quickFilter: Filter = FilterBuilder.none();
-    // public advancedFilter: Filter = FilterBuilder.none();
 
     constructor(private formBuilder: FormBuilder, private sidebarManager: SidebarManager) {
         this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
@@ -29,16 +28,14 @@ export class ApplicationHomeComponent {
     }
 
     public addApplication() {
-        // this.sidebarManager.open("add-basic-job", JobCreateBasicDialogComponent);
+        this.sidebarManager.open("add-application", ApplicationCreateDialogComponent);
     }
 
     public advancedFilterChanged(filter: Filter) {
-        // this.advancedFilter = filter;
         this._updateFilter();
     }
 
     private _updateFilter() {
         this.filter = this.quickFilter;
-        // this.filter = FilterBuilder.and(this.quickFilter, this.advancedFilter);
     }
 }
