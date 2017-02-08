@@ -20,13 +20,14 @@
 
             <div class="form-element">
                 <h4>Select a package for upload</h4>
-                <input type="file" (change)="fileSelected($event)"  />
+                <input type="file" (change)="fileSelected($event)" />
                 <bex-error controlName="package" code="required">Please select a valid application package file</bex-error>
                 <bex-error controlName="package" code="pattern">Application packages need to be valid ZIP files only</bex-error>
                 <div *ngIf="file" class="input-summary">
-                    <p><b>Name:</b> {{file.name}}</p>
-                    <p><b>File Size:</b>  {{file.size}} bytes.</p>
-                    <p><b>File Type:</b>  {{file.type}}</p>
+                    <p><b>Name:</b> {{ file.name }}</p>
+                    <p><b>File size:</b>  {{ file.size }} bytes.</p>
+                    <p><b>File type:</b>  {{ file.type }}</p>
+                    <p><b>Block count:</b>  {{ blockCount }}</p>
                 </div>
             </div>
         </form>
