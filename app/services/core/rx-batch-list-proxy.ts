@@ -31,17 +31,10 @@ export class RxBatchListProxy<TParams, TEntity> extends RxListProxy<TParams, TEn
     }
 
     protected fetchNextItems(): Observable<any> {
-        if (this.type.name === "File") {
-            console.log("Fetch next...", this.type.name);
-        }
         return Observable.fromPromise(this._clientProxy.fetchNext());
     }
 
     protected processResponse(response: any) {
-        if (this.type.name === "File") {
-            console.log("Got response...", this.type.name, response);
-        }
-
         return response.data;
     }
 

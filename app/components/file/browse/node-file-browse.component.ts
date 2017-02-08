@@ -57,4 +57,12 @@ export class NodeFileBrowseComponent implements OnChanges {
     public selectFolder(folderName: string) {
         this.currentFolder = folderName;
     }
+
+    public get quicksearchPlaceholder() {
+        if (this.currentFolder) {
+            return `Filter by file name under folder "${this.currentFolder}"`;
+        } else {
+            return "Filter by file name";
+        }
+    }
 }

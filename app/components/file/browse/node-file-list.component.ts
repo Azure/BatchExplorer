@@ -6,7 +6,7 @@ import { LoadingStatus } from "app/components/base/loading";
 import { File, Node } from "app/models";
 import { FileService, NodeFileListParams } from "app/services";
 import { RxListProxy } from "app/services/core";
-import { Filter, FilterBuilder } from "app/utils/filter-builder";
+import { Filter, FilterBuilder, Property } from "app/utils/filter-builder";
 
 @Component({
     selector: "bex-node-file-list",
@@ -56,8 +56,7 @@ export class NodeFileListComponent implements OnInit, OnChanges {
     }
 
     public ngOnChanges(inputs) {
-        if (inputs.poolId || inputs.nodeId || inputs.folder) {
-            console.log("New inputs", this.poolId, this.nodeId, this.folder);
+        if (inputs.poolId || inputs.nodeId || inputs.folder || inputs.filter) {
             this.refresh();
         }
     }
@@ -66,9 +65,10 @@ export class NodeFileListComponent implements OnInit, OnChanges {
     public refresh(): Observable<any> {
         if (this.poolId && this.nodeId) {
             let options = {};
-            if (this.folder) {
+            const filter = this._buildFilter();
+            if (!filter.isEmpty()) {
                 options = {
-                    filter: FilterBuilder.prop("name").startswith(this.folder).toOData(),
+                    filter: filter.toOData(),
                 };
             }
             // only load files if the node exists and is in a state to list files
@@ -77,7 +77,6 @@ export class NodeFileListComponent implements OnInit, OnChanges {
             this.data.updateParams({ poolId: this.poolId, nodeId: this.nodeId });
             this.data.setOptions(options); // This clears the previous list objects
             this.notFound = false;
-            console.log("Filter", options);
             return this.data.fetchNext();
 
         }
@@ -90,5 +89,17 @@ export class NodeFileListComponent implements OnInit, OnChanges {
 
     public get baseUrl() {
         return ["/pools", this.poolId, "nodes", this.nodeId];
+    }
+
+    private _buildFilter() {
+        const filter: Property = this.filter as Property;
+        const quickSearch = filter && filter.value;
+
+        const name = [this.folder, quickSearch].filter(x => Boolean(x)).join("/");
+        if (name) {
+            return FilterBuilder.prop("name").startswith(name);
+        } else {
+            return FilterBuilder.none();
+        }
     }
 }
