@@ -6,6 +6,12 @@ import { CachedKeyList, DataCache, RxListProxy } from "app/services/core";
 export interface RxMockListProxyConfig<TParams, TEntity> {
     initialParams?: TParams;
     items: TEntity[] | ((params: TParams) => TEntity[]);
+
+    /**
+     * Name of the key for the cache
+     * @default id
+     */
+    cacheKey?: string;
 }
 
 /**
@@ -18,7 +24,7 @@ export class RxMockListProxy<TParams, TEntity> extends RxListProxy<TParams, TEnt
     constructor(type: Type<TEntity>, config: RxMockListProxyConfig<TParams, TEntity>) {
         super(type, {
             initialParams: config.initialParams,
-            cache: () => new DataCache<TEntity>(),
+            cache: () => new DataCache<TEntity>(config.cacheKey || "id"),
         });
         if (config.items instanceof Function) {
             this._items = config.items;
@@ -32,7 +38,7 @@ export class RxMockListProxy<TParams, TEntity> extends RxListProxy<TParams, TEnt
     }
 
     protected fetchNextItems(): Observable<any> {
-        return Observable.of(this._items(this._params));
+        return Observable.of(this._processItems(this._items(this._params)));
     }
 
     protected processResponse(response: any) {
@@ -54,5 +60,15 @@ export class RxMockListProxy<TParams, TEntity> extends RxListProxy<TParams, TEnt
 
     protected getQueryCacheData(queryCache: CachedKeyList): any {
         this._loadedFirst = queryCache.data;
+    }
+
+    private _processItems(items: TEntity[]) {
+        return items.map(item => {
+            if ((item as any).toJS) {
+                return (item as any).toJS();
+            } else {
+                return item;
+            }
+        });
     }
 }

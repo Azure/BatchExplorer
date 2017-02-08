@@ -63,23 +63,21 @@ export class NodeFileListComponent implements OnInit, OnChanges {
 
     @autobind()
     public refresh(): Observable<any> {
-        if (this.poolId && this.nodeId) {
-            let options = {};
-            const filter = this._buildFilter();
-            if (!filter.isEmpty()) {
-                options = {
-                    filter: filter.toOData(),
-                };
-            }
-            // only load files if the node exists and is in a state to list files
-            // (e.g. idle, running, startTaskFailed, etc...)
-            this.status = this.data.status;
-            this.data.updateParams({ poolId: this.poolId, nodeId: this.nodeId });
-            this.data.setOptions(options); // This clears the previous list objects
-            this.notFound = false;
-            return this.data.fetchNext(true);
-
+        if (!(this.poolId && this.nodeId)) {
+            return;
         }
+        let options = {};
+        const filter = this._buildFilter();
+        if (!filter.isEmpty()) {
+            options = {
+                filter: filter.toOData(),
+            };
+        }
+        this.status = this.data.status;
+        this.data.updateParams({ poolId: this.poolId, nodeId: this.nodeId });
+        this.data.setOptions(options); // This clears the previous list objects
+        this.notFound = false;
+        return this.data.fetchNext(true);
     }
 
     @autobind()

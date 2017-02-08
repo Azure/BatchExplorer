@@ -97,6 +97,13 @@ export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
         }
     }
 
+    /**
+     * @returns the current options.
+     */
+    public get options() {
+        return this._options;
+    }
+
     protected set cache(cache: DataCache<TEntity>) {
         this._cache = cache;
         this._clearDeleteSub();

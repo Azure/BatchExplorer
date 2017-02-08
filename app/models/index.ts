@@ -8,7 +8,7 @@ export * from "./constraints";
 export * from "./imageReference";
 export * from "./file";
 export * from "./fileType";
-export * from "./fileProperties";
+export * from "./file-properties";
 export * from "./job";
 export * from "./jobAction";
 export * from "./jobConstraints";

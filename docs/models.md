@@ -32,9 +32,12 @@ import {MyNewModel} from "app/models/myNewModel"
 Use this to specify default values for each input. This is quite useful for inputs which are array for example and prevent a null check later in the code
 **It is important to have every input defined here otherwise they will be ignored**
 
+
 ```typescript
 import { List, Record } from "immutable";
 
+
+// Note the record is not being exported
 const FooRecord = Record({
     id: null,
     state: null,
@@ -43,16 +46,39 @@ const FooRecord = Record({
 });
 ```
 
-### Step 3: Write the model class
+### Step 3: Write the attribute interface
+
+In this interface define all the attributes of the model
+This may look like we are creating a lot of duplicate code here but it makes it worth it when using the model later as you'll have typing when creating a new model.
+
+```typescript
+import { Partial } from "app/utils"
+
+export interface MyModelAttributes {
+    id: string;
+    state: string;
+    files: List<string>;
+    bar: Partial<BarAttributes>
+}
+
+```
+
+### Step 4: Write the model class
 
 You'll need to redefine the inputs. This is for typing purposes.
 
 ```typescript
-export class Foo extends FooRecord {
+import { Bar, BarAttributes } from "./bar"
+
+export class Foo extends FooRecord implements MyModelAttributes {
     public id: string;
     public state: string;
     public files: List<string>;
     public bar: Bar;
+
+    constructor(data: Partial<MyModelAttributes> = {}) {
+        super(data);
+    }
 }
 ```
 
@@ -63,7 +89,7 @@ In the case some of the attributes are other models(Record). Then you'll need to
 
 ```typescript
 // Add this constructor
-constructor(data: any = {}) {
+constructor(data: Partial<MyModelAttributes> = {}) {
     super(Object.assign({}, data, {
         files: List(data.files),
         bar: data.bar && new Bar(data.bar),
