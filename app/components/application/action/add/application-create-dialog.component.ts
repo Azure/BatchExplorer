@@ -62,6 +62,7 @@ export class ApplicationCreateDialogComponent implements OnInit {
 
     public fileSelected(changeEvent: Event) {
         const element = <any>changeEvent.srcElement;
+        this.applicationForm.controls["package"].markAsTouched();
         if (element.files.length > 0) {
             this.file = element.files[0];
             this.applicationForm.controls["package"].setValue(this.file.name);
@@ -142,30 +143,30 @@ export class ApplicationCreateDialogComponent implements OnInit {
 
     private _readAndUploadFileBlocks() {
         if (this._totalBytesRemaining > 0) {
-                // todo: not actually sure that these need to be padded. will check out the
-                // storage docs in the morning so see the blocklist format.
-                const blockId = "block-" + (this._blockIds.length + "").padStart(6, "0");
-                const fileContent = this.file.slice(this._currentFilePointer,
-                    this._currentFilePointer + this._blockSize);
+            // todo: not actually sure that these need to be padded. will check out the
+            // storage docs in the morning so see the blocklist format.
+            const blockId = "block-" + (this._blockIds.length + "").padStart(6, "0");
+            const fileContent = this.file.slice(this._currentFilePointer,
+                this._currentFilePointer + this._blockSize);
 
-                console.log(`block id: ${blockId}, current file pointer: ${this._currentFilePointer}, bytes read: ${this._blockSize}`);
+            console.log(`block id: ${blockId}, current file pointer: ${this._currentFilePointer}, bytes read: ${this._blockSize}`);
 
-                /**
-                 * TODO: a couple of sites say not to use "btoa" as apparently it has an issue
-                 * handling Unicode.
-                 */
-                this._blockIds.push(btoa(blockId));
-                this._fileReader.readAsArrayBuffer(fileContent);
+            /**
+             * TODO: a couple of sites say not to use "btoa" as apparently it has an issue
+             * handling Unicode.
+             */
+            this._blockIds.push(btoa(blockId));
+            this._fileReader.readAsArrayBuffer(fileContent);
 
-                this._currentFilePointer += this._blockSize;
-                this._totalBytesRemaining -= this._blockSize;
+            this._currentFilePointer += this._blockSize;
+            this._totalBytesRemaining -= this._blockSize;
 
-                if (this._totalBytesRemaining < this._blockSize) {
-                    this._blockSize = this._totalBytesRemaining;
-                }
-            } else {
-                this._commitBlockList();
+            if (this._totalBytesRemaining < this._blockSize) {
+                this._blockSize = this._totalBytesRemaining;
             }
+        } else {
+            this._commitBlockList();
+        }
     }
 
     private _fileReaderLoadEnded(evt: any) {
