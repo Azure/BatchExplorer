@@ -15,6 +15,7 @@ import { Constants } from "app/utils";
     templateUrl: "application-create-dialog.html",
 })
 export class ApplicationCreateDialogComponent implements OnInit {
+    public file: File;
     public applicationForm: FormGroup;
 
     constructor(
@@ -35,6 +36,10 @@ export class ApplicationCreateDialogComponent implements OnInit {
                 Validators.maxLength(validation.maxLength.version),
                 Validators.pattern(validation.regex.appVersion),
             ]],
+            package: ["", [
+                Validators.required,
+                Validators.pattern(validation.regex.appFilename),
+            ]],
         });
     }
 
@@ -44,6 +49,23 @@ export class ApplicationCreateDialogComponent implements OnInit {
 
     public setValue(application: Application) {
         this.applicationForm.patchValue(applicationToFormModel(application));
+    }
+
+    public fileSelected(changeEvent: Event) {
+        const element = <any>changeEvent.srcElement;
+        if (element.files.length > 0) {
+            this.file = element.files[0];
+            // this.applicationForm.patchValue({ package: this.file.name });
+            this.applicationForm.controls["package"].setValue(this.file.name);
+        } else {
+            this.file = null;
+            this.applicationForm.controls["package"].setValue(null);
+            // this.applicationForm.patchValue({ package: null });
+        }
+
+        // this.applicationForm.controls["package"].touched = true;
+        console.log("this.applicationForm.controls[\"package\"] :: ", this.applicationForm.controls["package"]);
+        console.log("fileSelected :: ", this.file);
     }
 
     @autobind()

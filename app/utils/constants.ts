@@ -38,9 +38,9 @@ export const forms = {
             version: 64,
         },
         regex: {
-            id: "^[\\w\\_-]+$",
-            appVersion: "^[a-zA-Z0-9_-][a-zA-Z0-9_.-]*$",
-            appFilename: "\\S\\.[zZ][iI][pP]$",
+            id: /^[\w\_-]+$/i,
+            appVersion: /^[a-zA-Z0-9_-][a-zA-Z0-9_.-]*$/i,
+            appFilename: /\.zip$/i,
         },
         range: {
             retry: { min: -1, max: 100 },

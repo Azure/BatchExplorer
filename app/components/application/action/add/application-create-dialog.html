@@ -17,6 +17,18 @@
                 <bex-error controlName="version" code="maxlength">Package version has a maximum length of 64 characters</bex-error>
                 <bex-error controlName="version" code="pattern">Package version can only be in the format: 1, 1.2, 1.2a, 1.200.1, beta, etc</bex-error>
             </div>
+
+            <div class="form-element">
+                <h4>Select a package for upload</h4>
+                <input type="file" (change)="fileSelected($event)"  />
+                <bex-error controlName="package" code="required">Please select a valid application package file</bex-error>
+                <bex-error controlName="package" code="pattern">Application packages need to be valid ZIP files only</bex-error>
+                <div *ngIf="file" class="input-summary">
+                    <p><b>Name:</b> {{file.name}}</p>
+                    <p><b>File Size:</b>  {{file.size}} bytes.</p>
+                    <p><b>File Type:</b>  {{file.type}}</p>
+                </div>
+            </div>
         </form>
     </bex-create-form>
 </div>
