@@ -4,6 +4,7 @@
         <span>Follow log</span>
     </div>
     <div class="log-container">
+        <bex-simple-loading *ngIf="loading"></bex-simple-loading>
         <div class="line" *ngFor="let line of lines">
             <span class="line-nb"></span>
             <span class="line-content">{{line}}</span>

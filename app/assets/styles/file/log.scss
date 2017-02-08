@@ -15,6 +15,10 @@
         background-color: #222;
         counter-reset: line-numbering;
         margin-top: 0;
+
+        > bex-simple-loading {
+            padding-left: 10px;
+        }
     }
 
     .line {
