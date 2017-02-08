@@ -46,6 +46,9 @@ export class EntityDetailsListComponent {
     @Input()
     public addButtonHoverText: string = "Add";
 
+    @Input()
+    public enableAdvancedFilter = true;
+
     public filter = FilterBuilder.none();
     public searchQuery = new FormControl();
 
