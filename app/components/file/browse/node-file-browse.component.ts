@@ -35,6 +35,7 @@ export class NodeFileBrowseComponent implements OnChanges {
     public currentFolder: string = null;
 
     constructor(private fileService: FileService) {
+        console.log("Crated that again...");
         this.data = this.fileService.listFromComputeNode(null, null, false);
         this.data.items.subscribe((files) => {
             this.folders = List<Folder>(files.map(x => {
@@ -47,10 +48,11 @@ export class NodeFileBrowseComponent implements OnChanges {
     }
 
     public ngOnChanges(inputs) {
+        console.log("INputs changed...", inputs);
         if (inputs.poolId || inputs.node) {
             this.currentFolder = null;
             this.data.updateParams({ poolId: this.poolId, nodeId: this.node.id });
-            this.data.fetchNext();
+            this.data.fetchNext(true);
         }
     }
 

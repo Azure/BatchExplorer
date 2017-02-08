@@ -77,7 +77,7 @@ export class NodeFileListComponent implements OnInit, OnChanges {
             this.data.updateParams({ poolId: this.poolId, nodeId: this.nodeId });
             this.data.setOptions(options); // This clears the previous list objects
             this.notFound = false;
-            return this.data.fetchNext();
+            return this.data.fetchNext(true);
 
         }
     }
