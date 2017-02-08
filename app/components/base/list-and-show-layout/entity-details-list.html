@@ -1,6 +1,9 @@
 <div class="quicksearch">
+    <div class="pre-quicksearch">
+        <ng-content select="[pre-quicksearch]"></ng-content>
+    </div>
     <input [formControl]="searchQuery" placeholder="{{filterPlaceholder}}" />
-    <i class="fa fa-filter fa-2x" [routerLink]="baseLink" [queryParams]="{filter: true}"></i>
+    <i *ngIf="enableAdvancedFilter" class="fa fa-filter fa-2x" [routerLink]="baseLink" [queryParams]="{filter: true}"></i>
 </div>
 <hr />
 <div class="context-button-bar">
@@ -13,4 +16,3 @@
     </button>
 </div>
 <ng-content></ng-content>
-

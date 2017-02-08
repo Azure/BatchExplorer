@@ -5,6 +5,7 @@ export * from "./file-url-utils";
 export * from "./logger";
 export * from "./observable";
 export * from "./form-utils";
+export * from "./misc";
 export * from "./object";
 export * from "./os";
 export * from "./secure";

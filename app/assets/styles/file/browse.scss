@@ -1,0 +1,11 @@
+bex-node-file-browse {
+    display: block;
+    padding-top: 20px;
+
+    .folders {
+        margin-right: 20px;
+        > md-select {
+            width: 300px;
+        }
+    }
+}
