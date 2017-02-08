@@ -24,7 +24,7 @@
         <bex-cell [value]="file.properties.contentLength"></bex-cell>
     </bex-row>-->
     </bex-table>
-    <bex-no-item [itemCount]="files.size" [filter]="filter" [status]="status | async">
+    <bex-no-item [itemCount]="(files  | fileDirectoryFilter).size" [filter]="filter" [status]="status | async">
         <i icon class="fa fa-tv"></i>
         <span no-filter>No files</span>
         <span with-filter>No files match this filter</span>

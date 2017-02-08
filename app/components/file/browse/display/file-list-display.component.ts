@@ -22,6 +22,9 @@ export class FileListDisplayComponent {
     public status: LoadingStatus;
 
     @Input()
+    public filter: any;
+
+    @Input()
     public baseUrl: any[];
 
     public isErrorState(file: any) {
