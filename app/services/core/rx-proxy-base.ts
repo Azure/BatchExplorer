@@ -63,7 +63,7 @@ export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
     private _deleted = new Subject<string>();
     private _logIgnoreError: number[];
 
-    constructor(private type: Type<TEntity>, config: RxProxyBaseConfig<TParams, TEntity>) {
+    constructor(protected type: Type<TEntity>, config: RxProxyBaseConfig<TParams, TEntity>) {
         this.getCache = config.cache;
         this._logIgnoreError = exists(config.logIgnoreError) ? config.logIgnoreError : [Constants.HttpCode.NotFound];
         this.status = this._status.asObservable();

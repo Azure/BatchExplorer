@@ -1,18 +1,18 @@
-import { Component, Input, OnInit, ViewChild } from "@angular/core";
+import { Component, Input, OnChanges, OnInit, ViewChild } from "@angular/core";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
-import { File, Node, NodeFileTypes } from "app/models";
+import { File, Node } from "app/models";
 import { FileService, NodeFileListParams } from "app/services";
 import { RxListProxy } from "app/services/core";
-import { Filter } from "app/utils/filter-builder";
+import { Filter, FilterBuilder } from "app/utils/filter-builder";
 
 @Component({
     selector: "bex-node-file-list",
     templateUrl: "file-list.html",
 })
-export class NodeFileListComponent implements OnInit {
+export class NodeFileListComponent implements OnInit, OnChanges {
     /**
      * If set to true it will display the quick list view, if false will use the table view
      */
@@ -23,40 +23,20 @@ export class NodeFileListComponent implements OnInit {
     public manualLoading: boolean;
 
     @Input()
-    public set poolId(value: string) {
-        this._poolId = (value && value.trim());
-        this.refresh();
-    }
-    public get poolId() { return this._poolId; }
+    public poolId: string;
 
     @Input()
-    public set nodeId(value: string) {
-        this._nodeId = (value && value.trim());
-        this.refresh();
-    }
-    public get nodeId() { return this._nodeId; }
+    public nodeId: string;
 
     @Input()
-    public set filter(filter: Filter) {
-        this._filter = filter;
+    public filter: Filter;
 
-        if (this.data) {
-            if (filter.isEmpty()) {
-                this.data.setOptions({});
-            } else {
-                this.data.setOptions({ filter: filter.toOData() });
-            }
-
-            this.data.fetchNext();
-        }
-    }
-    public get filter(): Filter { return this._filter; };
-
+    /**
+     * Name of the folder this list should display the content of.
+     * e.g. workitems, startup
+     */
     @Input()
-    public set fileType(value: NodeFileTypes) {
-        this._fileType = value;
-    }
-    public get fileType(): NodeFileTypes { return this._fileType; }
+    public folder: string = "";
 
     @ViewChild(NodeFileListComponent)
     public list: NodeFileListComponent;
@@ -66,29 +46,40 @@ export class NodeFileListComponent implements OnInit {
     public node: Node;
     public notFound: boolean;
 
-    private _filter: Filter;
-    private _poolId: string;
-    private _nodeId: string;
-    private _fileType: NodeFileTypes;
-
     constructor(private fileService: FileService) {
         this.notFound = false;
+        this.data = this.fileService.listFromComputeNode(null, null, true, {});
     }
 
     public ngOnInit() {
         return;
     }
 
+    public ngOnChanges(inputs) {
+        if (inputs.poolId || inputs.nodeId || inputs.folder) {
+            console.log("New inputs", this.poolId, this.nodeId, this.folder);
+            this.refresh();
+        }
+    }
+
     @autobind()
     public refresh(): Observable<any> {
         if (this.poolId && this.nodeId) {
+            let options = {};
+            if (this.folder) {
+                options = {
+                    filter: FilterBuilder.prop("name").startswith(this.folder).toOData(),
+                };
+            }
             // only load files if the node exists and is in a state to list files
             // (e.g. idle, running, startTaskFailed, etc...)
-            this.data = this.fileService.listFromComputeNode(this.poolId, this.nodeId, true, {});
             this.status = this.data.status;
-            this.data.setOptions({}); // This clears the previous list objects
+            this.data.updateParams({ poolId: this.poolId, nodeId: this.nodeId });
+            this.data.setOptions(options); // This clears the previous list objects
             this.notFound = false;
+            console.log("Filter", options);
             return this.data.fetchNext();
+
         }
     }
 

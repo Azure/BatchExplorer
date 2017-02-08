@@ -2,7 +2,7 @@ import { Component, Input } from "@angular/core";
 import { List } from "immutable";
 
 import { LoadingStatus } from "app/components/base/loading";
-import { File, NodeFileTypes } from "app/models";
+import { File } from "app/models";
 
 @Component({
     selector: "bex-file-list-display",
@@ -17,9 +17,6 @@ export class FileListDisplayComponent {
 
     @Input()
     public files: List<File>;
-
-    @Input()
-    public fileType: NodeFileTypes;
 
     @Input()
     public status: LoadingStatus;
