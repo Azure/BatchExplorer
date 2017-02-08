@@ -142,6 +142,8 @@ export class ApplicationCreateDialogComponent implements OnInit {
 
     private _readAndUploadFileBlocks() {
         if (this._totalBytesRemaining > 0) {
+                // todo: not actually sure that these need to be padded. will check out the
+                // storage docs in the morning so see the blocklist format.
                 const blockId = "block-" + (this._blockIds.length + "").padStart(6, "0");
                 const fileContent = this.file.slice(this._currentFilePointer,
                     this._currentFilePointer + this._blockSize);
