@@ -24,12 +24,13 @@ function createWindow() {
         height: 1000,
         icon: __dirname + "/../assets/images/labs.ico",
         width: 1600,
-        show: false, // Don't show the window until the user authenticated, comment to debug auth problems
+        show: true, // Don't show the window until the user authenticated, comment to debug auth problems
     });
 
     // and load the index.html of the app.
     // When we build app this file get move into build/client/main.js
-    mainWindow.loadURL(`file://${__dirname}/../../app/index.html`);
+    // mainWindow.loadURL(`file://${__dirname}/../../app/index.html`);
+    mainWindow.loadURL(`http://localhost:3178/index.html`);
     mainWindow.batchClient = new BatchClientProxy();
     mainWindow.logger = renderLogger;
 

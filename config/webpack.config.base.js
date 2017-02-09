@@ -1,4 +1,11 @@
 const webpack = require("webpack");
+const helpers = require('./helpers');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+
+const METADATA = {
+  baseUrl: '/',
+  isDevServer: helpers.isWebpackDevServer()
+};
 
 const baseConfig = {
     entry: {
@@ -25,7 +32,7 @@ const baseConfig = {
         {
             test: /\.html$/,
             loader: "raw-loader",
-            exclude: [/node_modules/],
+            exclude: [/node_modules/, helpers.root('app/index.html')],
         },
         {
             test: /\.json$/,
@@ -38,6 +45,12 @@ const baseConfig = {
         }],
     },
     plugins: [
+        new HtmlWebpackPlugin({
+            template: 'app/index.html',
+            chunksSortMode: 'dependency',
+            inject: 'head',
+            metadata: METADATA,
+        }),
         // Workaround for WARNING Critical dependency: the request of a dependency is an expression
         new webpack.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/, __dirname),
         new webpack.LoaderOptionsPlugin({

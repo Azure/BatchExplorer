@@ -16,20 +16,6 @@
 		<img src="./assets/images/ajax/login.gif" alt="loading ..." style="position:absolute;top:50%;left:50%;transform:translate(-50%, -50%);"
 		/>
 	</bex-app>
-	<script>
-        const script = document.createElement('script');
-        const port = process.env.PORT || 3178;
-    </script>
-
-	<script>
-        script.src = (process.env.HOT) ? `http://localhost:${port}/build/polyfills.js` : '../build/polyfills.js';
-        document.write(script.outerHTML);
-    </script>
-
-	<script>
-        script.src = (process.env.HOT) ? `http://localhost:${port}/build/app.js` : '../build/app.js';
-        document.write(script.outerHTML);
-    </script>
 </body>
 
 </html>
