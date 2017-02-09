@@ -20,6 +20,6 @@ module.exports = merge(config, {
         chunkFilename: "[id].chunk.js",
     },
     plugins: [
-        new CommonsChunkPlugin({ name: "polyfills", filename: "polyfills.js", minChunk: Infinity }),
+        // new CommonsChunkPlugin({ name: "polyfills", filename: "polyfills.js", minChunk: Infinity }),
     ],
 });
