@@ -7,7 +7,10 @@ import { ArrayUtils, ObservableUtils, log } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 import BatchClient from "../api/batch/batch-client";
 import { Node, NodeState } from "../models";
-import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache } from "./core";
+import {
+    DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache,
+    getOnceProxy,
+} from "./core";
 import { CommonListOptions, ServiceBase } from "./service-base";
 
 export interface NodeListParams {
@@ -70,8 +73,16 @@ export class NodeService extends ServiceBase {
             getFn: (params: NodeParams) => {
                 return BatchClient.node.get(params.poolId, params.id, options);
             },
-            initialParams: { poolId: initialPoolId },
+            initialParams: { poolId: initialPoolId, id: initialNodeId },
         });
+    }
+
+    /**
+     * Get a node once and forget.
+     * You don't need to cleanup the subscription.
+     */
+    public getOnce(poolId: string, nodeId: string, options: any): Observable<Node> {
+        return getOnceProxy(this.get(poolId, nodeId, options));
     }
 
     public reboot(poolId: string, nodeId: string): Observable<any> {
