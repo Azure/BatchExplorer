@@ -51,6 +51,7 @@
     "no-jasmine-focus": true
   },
   "jsRules": {
-    "object-literal-sort-keys": false
+    "object-literal-sort-keys": false,
+    "trailing-comma": [false]
   }
 }
