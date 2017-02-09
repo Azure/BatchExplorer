@@ -9,5 +9,6 @@
     "**/node_modules": true,
     "**/bower_components": true,
     "build/**": true
-  }
+  },
+  "tslint.jsEnable": true
 }

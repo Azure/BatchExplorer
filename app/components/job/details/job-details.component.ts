@@ -63,8 +63,6 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        console.warn("LOading has paren32");
-
         this._paramsSubscriber = this.activatedRoute.params.subscribe((params) => {
             this.jobId = params["id"];
             this.data.params = { id: this.jobId };
