@@ -8,6 +8,12 @@ export interface CommitBlockListOptions {
     options?: RequestOptionsArgs;
 }
 
+export interface UploadBlockOptions {
+    blockId: string;
+    blockContent: ArrayBuffer;
+    options?: RequestOptionsArgs;
+}
+
 /**
  * Http service for uploading files into storage
  */
@@ -16,13 +22,15 @@ export class HttpUploadService {
     constructor(private http: Http) {
     }
 
-    public putBlock(uri: string, body: Uint8Array): Observable<Response> {
-        const options = new RequestOptions();
-        options.headers = new Headers();
+    public putBlock(sasUrl: string, uploadOptions: UploadBlockOptions): Observable<Response> {
+        const options = this._getRequestOptionsHeader(uploadOptions.options);
         options.headers.append("x-ms-blob-type", "BlockBlob");
 
+        // add the block id to the uri
+        sasUrl = sasUrl + "&comp=block&blockid=" + uploadOptions.blockId;
+
         const subject = new AsyncSubject<Response>();
-        this.http.put(uri, body, options).subscribe({
+        this.http.put(sasUrl, uploadOptions.blockContent, options).subscribe({
             next: (data) => {
                 subject.next(data);
                 subject.complete();
@@ -33,17 +41,16 @@ export class HttpUploadService {
         return subject.asObservable();
     }
 
-    public commitBlockList(uri: string, commitOptions: CommitBlockListOptions): Observable<Response> {
-        const options = commitOptions.options || new RequestOptions();
-        if (!options.headers) {
-            options.headers = new Headers();
-        }
-
+    public commitBlockList(sasUrl: string, commitOptions: CommitBlockListOptions): Observable<Response> {
+        const options = this._getRequestOptionsHeader(commitOptions.options);
         options.headers.append("x-ms-blob-content-type", commitOptions.fileType);
+
+        // add the commit block list parameter
+        sasUrl = sasUrl + "&comp=blocklist";
 
         const subject = new AsyncSubject<Response>();
         const requestBody = this._generateBlockListXml(commitOptions.blockIds);
-        this.http.put(uri, requestBody, options).subscribe({
+        this.http.put(sasUrl, requestBody, options).subscribe({
             next: (data) => {
                 subject.next(data);
                 subject.complete();
@@ -52,6 +59,18 @@ export class HttpUploadService {
         });
 
         return subject.asObservable();
+    }
+
+    private _getRequestOptionsHeader(originalOptions?: RequestOptionsArgs): RequestOptions {
+        const options = originalOptions
+            ? new RequestOptions(originalOptions)
+            : new RequestOptions();
+
+        if (!options.headers) {
+            options.headers = new Headers();
+        }
+
+        return options;
     }
 
     private _generateBlockListXml(blockIds: string[]): string {

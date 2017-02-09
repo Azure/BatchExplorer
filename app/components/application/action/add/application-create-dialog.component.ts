@@ -7,7 +7,7 @@ import { NotificationManager } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { Application } from "app/models";
 import { applicationToFormModel } from "app/models/forms";
-import { ApplicationService, HttpUploadService } from "app/services";
+import { ApplicationService, CommitBlockListOptions, HttpUploadService, UploadBlockOptions } from "app/services";
 import { Constants } from "app/utils";
 
 @Component({
@@ -18,6 +18,7 @@ export class ApplicationCreateDialogComponent implements OnInit {
     public file: File;
     public applicationForm: FormGroup;
     public blockCount: number = 0;
+    public progress: string;
 
     // upload block size of 1mb
     private _blockSize: number;
@@ -26,6 +27,9 @@ export class ApplicationCreateDialogComponent implements OnInit {
     private _currentFilePointer: number;
     private _totalBytesRemaining: number;
     private _bytesUploaded: number;
+
+    // hard code URL for now
+    private _sasUrl = "https://andrew1973.blob.core.windows.net/app-test-a94a8fe5ccb19ba61c4c0873d391e987982fbbd3/test-2.1-90347f95-af9b-4f83-9fac-e9aa2e2d5392?sv=2015-04-05&sr=b&sig=JlinNzzh355LtKL9O73DHXuS7WVg6Golsl8QbW2taao%3D&st=2017-02-09T01%3A31%3A22Z&se=2017-02-09T05%3A36%3A22Z&sp=rw";
 
     constructor(
         private formBuilder: FormBuilder,
@@ -76,9 +80,6 @@ export class ApplicationCreateDialogComponent implements OnInit {
         /**
          * TODO :: The following code wont be run from here. It will be kicked off
          * from the submit() method. Just here so i can test it on file selection.
-         *
-         * NOTE: mostly taken from here:
-         * http://gauravmantri.com/2013/02/16/uploading-large-files-in-windows-azure-blob-storage-using-shared-access-signature-html-and-javascript/
          */
         if (this.hasValidFile()) {
             this._blockIds = [];
@@ -90,14 +91,10 @@ export class ApplicationCreateDialogComponent implements OnInit {
             this._fileReader = new FileReader();
             this._fileReader.onloadend = (evt => this._fileReaderLoadEnded(evt));
 
-            console.log("fileSelected :: ", this.file.path);
-
             let fileSize = this.file.size;
             this._blockSize = fileSize < this._blockSize
                 ? fileSize
                 : this._blockSize;
-
-            console.log("max block size :: " + this._blockSize);
 
             this._totalBytesRemaining = fileSize;
             if (fileSize % this._blockSize === 0) {
@@ -106,7 +103,6 @@ export class ApplicationCreateDialogComponent implements OnInit {
                 this.blockCount = Math.floor(fileSize / this._blockSize) + 1;
             }
 
-            console.log("total blocks to upload :: " + this.blockCount);
             this._readAndUploadFileBlocks();
         }
     }
@@ -144,6 +140,7 @@ export class ApplicationCreateDialogComponent implements OnInit {
             error: () => {
                 /**
                  * Handle put application errors:
+                 *  - trying to put a package that already exists and has allowUpdates = false
                  *  - max applications reached
                  */
             },
@@ -154,8 +151,6 @@ export class ApplicationCreateDialogComponent implements OnInit {
 
     private _readAndUploadFileBlocks() {
         if (this._totalBytesRemaining > 0) {
-            // todo: not actually sure that these need to be padded. will check out the
-            // storage docs in the morning so see the blocklist format.
             const blockId = "block-" + (this._blockIds.length + "").padStart(6, "0");
             const fileContent = this.file.slice(this._currentFilePointer,
                 this._currentFilePointer + this._blockSize);
@@ -177,27 +172,18 @@ export class ApplicationCreateDialogComponent implements OnInit {
     }
 
     private _fileReaderLoadEnded(evt: any) {
-        // console.log("_afterLoadEnded :: ", evt);
         if (evt.target.readyState === 2) {
-            console.log("evt.target.result.length :: ", evt.target.result.byteLength);
-            console.log("evt.target :: ", evt.target);
-            // const requestData = new Uint8Array(evt.target.result);
+            const requestData: ArrayBuffer = evt.target.result;
+            const uploadOptions: UploadBlockOptions = {
+                blockId: this._blockIds[this._blockIds.length - 1],
+                blockContent: requestData,
+            };
 
-            const requestData = evt.target.result;
-
-            console.log("requestData.length :: ", requestData.byteLength);
-
-            // upload file here to SAS URL then call to upload the next one
-            // this.uploadService.uploadBlock(sasUrl, requestData)
-            let url = "https://andrew1973.blob.core.windows.net/app-test-a94a8fe5ccb19ba61c4c0873d391e987982fbbd3/test-2.1-90347f95-af9b-4f83-9fac-e9aa2e2d5392?sv=2015-04-05&sr=b&sig=JlinNzzh355LtKL9O73DHXuS7WVg6Golsl8QbW2taao%3D&st=2017-02-09T01%3A31%3A22Z&se=2017-02-09T05%3A36%3A22Z&sp=rw";
-            url = url + "&comp=block&blockid=" + this._blockIds[this._blockIds.length - 1];
-
-            this.httpUploadService.putBlock(url, requestData).subscribe({
+            this.httpUploadService.putBlock(this._sasUrl, uploadOptions).subscribe({
                 next: (response) => {
-                    console.log("RESPONSE :: ", response);
                     this._bytesUploaded += requestData.byteLength;
                     const percentComplete = Math.floor(this._bytesUploaded / this.file.size * 100);
-                    console.log(`requestData.byteLength: ${requestData.byteLength}, progress: ${percentComplete}%`);
+                    this.progress = `${percentComplete}%`;
                     this._readAndUploadFileBlocks();
                 },
                 error: (error) => {
@@ -208,16 +194,12 @@ export class ApplicationCreateDialogComponent implements OnInit {
     }
 
     private _commitBlockList() {
-        console.log("*** _commitBlockList ***");
-        let url = "https://andrew1973.blob.core.windows.net/app-test-a94a8fe5ccb19ba61c4c0873d391e987982fbbd3/test-2.1-90347f95-af9b-4f83-9fac-e9aa2e2d5392?sv=2015-04-05&sr=b&sig=JlinNzzh355LtKL9O73DHXuS7WVg6Golsl8QbW2taao%3D&st=2017-02-09T01%3A31%3A22Z&se=2017-02-09T05%3A36%3A22Z&sp=rw";
-        url = url + "&comp=blocklist";
-
-        const commitOptions = {
+        const commitOptions: CommitBlockListOptions = {
             blockIds: this._blockIds,
             fileType: this.file.type,
         };
 
-        this.httpUploadService.commitBlockList(url, commitOptions).subscribe({
+        this.httpUploadService.commitBlockList(this._sasUrl, commitOptions).subscribe({
             next: (response) => {
                 /** happy */
             },
