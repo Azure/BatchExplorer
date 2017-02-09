@@ -12,8 +12,5 @@ import "./assets/styles/main.scss";
 
 const platform = platformBrowserDynamic();
 
-
-// document.addEventListener("DOMContentLoaded", (event) => {
-    platform.bootstrapModule(AppModule)
-        .catch(error => console.error("Bootstrapping failed :: ", error));
-// });
+platform.bootstrapModule(AppModule)
+    .catch(error => console.error("Bootstrapping failed :: ", error));
