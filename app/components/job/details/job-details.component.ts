@@ -63,7 +63,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        console.warn("LOading has parent5");
+        console.warn("LOading has parent2");
 
         this._paramsSubscriber = this.activatedRoute.params.subscribe((params) => {
             this.jobId = params["id"];
