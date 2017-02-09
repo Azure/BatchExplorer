@@ -121,6 +121,8 @@ fieldset {
 
             input[type=file] {
                 width: 100%;
+                margin-top: 5px;
+                margin-bottom: 5px;
             }
 
             md-input {
@@ -157,7 +159,7 @@ fieldset {
             }
 
             .input-summary {
-                margin-top: 20px;
+                margin-top: 15px;
                 padding-bottom: 5px;
 
                 p {

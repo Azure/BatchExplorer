@@ -7,7 +7,7 @@ import { NotificationManager } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { Application } from "app/models";
 import { applicationToFormModel } from "app/models/forms";
-import { ApplicationService } from "app/services";
+import { ApplicationService, HttpUploadService } from "app/services";
 import { Constants } from "app/utils";
 
 @Component({
@@ -31,6 +31,7 @@ export class ApplicationCreateDialogComponent implements OnInit {
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<ApplicationCreateDialogComponent>,
         private applicationService: ApplicationService,
+        private httpUploadService: HttpUploadService,
         private notificationManager: NotificationManager) {
 
         const validation = Constants.forms.validation;
@@ -63,6 +64,7 @@ export class ApplicationCreateDialogComponent implements OnInit {
     public fileSelected(changeEvent: Event) {
         const element = <any>changeEvent.srcElement;
         this.applicationForm.controls["package"].markAsTouched();
+
         if (element.files.length > 0) {
             this.file = element.files[0];
             this.applicationForm.controls["package"].setValue(this.file.name);
@@ -78,7 +80,7 @@ export class ApplicationCreateDialogComponent implements OnInit {
          * NOTE: mostly taken from here:
          * http://gauravmantri.com/2013/02/16/uploading-large-files-in-windows-azure-blob-storage-using-shared-access-signature-html-and-javascript/
          */
-        if (this.file) {
+        if (this.hasValidFile()) {
             this._blockIds = [];
             this._currentFilePointer = 0;
             this._totalBytesRemaining = 0;
@@ -109,6 +111,10 @@ export class ApplicationCreateDialogComponent implements OnInit {
         }
     }
 
+    public hasValidFile(): boolean {
+        return this.file && this.applicationForm.controls["package"].valid;
+    }
+
     @autobind()
     public submit(): Observable<any> {
         const formData = this.applicationForm.value;
@@ -135,7 +141,12 @@ export class ApplicationCreateDialogComponent implements OnInit {
                     `Version ${packageVersion.version} for application '${id}' was successfully created!`,
                 );
             },
-            error: () => null,
+            error: () => {
+                /**
+                 * Handle put application errors:
+                 *  - max applications reached
+                 */
+            },
         });
 
         return observable;
@@ -151,10 +162,6 @@ export class ApplicationCreateDialogComponent implements OnInit {
 
             console.log(`block id: ${blockId}, current file pointer: ${this._currentFilePointer}, bytes read: ${this._blockSize}`);
 
-            /**
-             * TODO: a couple of sites say not to use "btoa" as apparently it has an issue
-             * handling Unicode.
-             */
             this._blockIds.push(btoa(blockId));
             this._fileReader.readAsArrayBuffer(fileContent);
 
@@ -172,21 +179,51 @@ export class ApplicationCreateDialogComponent implements OnInit {
     private _fileReaderLoadEnded(evt: any) {
         // console.log("_afterLoadEnded :: ", evt);
         if (evt.target.readyState === 2) {
-            const requestData = new Uint8Array(evt.target.result);
+            console.log("evt.target.result.length :: ", evt.target.result.byteLength);
+            console.log("evt.target :: ", evt.target);
+            // const requestData = new Uint8Array(evt.target.result);
+
+            const requestData = evt.target.result;
+
+            console.log("requestData.length :: ", requestData.byteLength);
 
             // upload file here to SAS URL then call to upload the next one
             // this.uploadService.uploadBlock(sasUrl, requestData)
+            let url = "https://andrew1973.blob.core.windows.net/app-test-a94a8fe5ccb19ba61c4c0873d391e987982fbbd3/test-2.1-90347f95-af9b-4f83-9fac-e9aa2e2d5392?sv=2015-04-05&sr=b&sig=JlinNzzh355LtKL9O73DHXuS7WVg6Golsl8QbW2taao%3D&st=2017-02-09T01%3A31%3A22Z&se=2017-02-09T05%3A36%3A22Z&sp=rw";
+            url = url + "&comp=block&blockid=" + this._blockIds[this._blockIds.length - 1];
 
-            this._bytesUploaded += requestData.length;
-            const percentComplete = Math.floor(this._bytesUploaded / this.file.size * 100);
-            console.log(`requestData.length: ${requestData.length}, progress: ${percentComplete}%`);
-
-            this._readAndUploadFileBlocks();
+            this.httpUploadService.putBlock(url, requestData).subscribe({
+                next: (response) => {
+                    console.log("RESPONSE :: ", response);
+                    this._bytesUploaded += requestData.byteLength;
+                    const percentComplete = Math.floor(this._bytesUploaded / this.file.size * 100);
+                    console.log(`requestData.byteLength: ${requestData.byteLength}, progress: ${percentComplete}%`);
+                    this._readAndUploadFileBlocks();
+                },
+                error: (error) => {
+                    console.log("ERROR :: ", error);
+                },
+            });
         }
     }
 
     private _commitBlockList() {
         console.log("*** _commitBlockList ***");
-        // this.uploadService.commitBlockList(sasUrl, this._blockIds)
+        let url = "https://andrew1973.blob.core.windows.net/app-test-a94a8fe5ccb19ba61c4c0873d391e987982fbbd3/test-2.1-90347f95-af9b-4f83-9fac-e9aa2e2d5392?sv=2015-04-05&sr=b&sig=JlinNzzh355LtKL9O73DHXuS7WVg6Golsl8QbW2taao%3D&st=2017-02-09T01%3A31%3A22Z&se=2017-02-09T05%3A36%3A22Z&sp=rw";
+        url = url + "&comp=blocklist";
+
+        const commitOptions = {
+            blockIds: this._blockIds,
+            fileType: this.file.type,
+        };
+
+        this.httpUploadService.commitBlockList(url, commitOptions).subscribe({
+            next: (response) => {
+                /** happy */
+            },
+            error: (error) => {
+                console.log("ERROR :: ", error);
+            },
+        });
     }
 }

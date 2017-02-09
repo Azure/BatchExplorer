@@ -23,7 +23,8 @@
                 <input type="file" (change)="fileSelected($event)" />
                 <bex-error controlName="package" code="required">Please select a valid application package file</bex-error>
                 <bex-error controlName="package" code="pattern">Application packages need to be valid ZIP files only</bex-error>
-                <div *ngIf="file" class="input-summary">
+                <div *ngIf="hasValidFile()" class="input-summary">
+                    <h4>Selected file details</h4>
                     <p><b>Name:</b> {{ file.name }}</p>
                     <p><b>File size:</b>  {{ file.size }} bytes.</p>
                     <p><b>File type:</b>  {{ file.type }}</p>
