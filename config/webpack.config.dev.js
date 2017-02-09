@@ -15,7 +15,14 @@ const port = process.env.PORT || 3178;
 module.exports = merge(config, {
     devtool: "cheap-module-source-map",
     // debug: true,
-    devServer: { host, port },
+    devServer: {
+        host, port,
+        historyApiFallback: true,
+        watchOptions: {
+            aggregateTimeout: 300,
+            poll: 1000
+        }
+    },
     output: {
         path: path.join(__dirname, "../build/"),
         // publicPath: `http://${host}:${port}/build/`,

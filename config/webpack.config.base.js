@@ -7,6 +7,8 @@ const METADATA = {
   isDevServer: helpers.isWebpackDevServer()
 };
 
+console.log("Is running dev server", helpers.isWebpackDevServer());
+
 const baseConfig = {
     entry: {
         "polyfills": "./app/polyfills.browser",
@@ -48,7 +50,7 @@ const baseConfig = {
         new HtmlWebpackPlugin({
             template: 'app/index.html',
             chunksSortMode: 'dependency',
-            inject: 'head',
+            inject: 'body',
             metadata: METADATA,
         }),
         // Workaround for WARNING Critical dependency: the request of a dependency is an expression

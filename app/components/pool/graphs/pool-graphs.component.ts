@@ -48,7 +48,6 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     }
 
     public ngOnChanges(changes) {
-        console.log("Changes are ", changes);
         if (changes.poolId) {
             this.data.updateParams({ poolId: changes.poolId.currentValue });
             // this.data.fetchNext(true);
