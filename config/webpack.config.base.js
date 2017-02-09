@@ -48,29 +48,29 @@ const baseConfig = {
             },
             {
                 test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: "file-loader"
+                loader: "file-loader",
             },
             {
                 test: /\.woff(2)?(\?v=\d+\.\d+\.\d+)?$/,
-                loader: "url-loader?limit=10000&mimetype=application/font-woff"
-            }
+                loader: "url-loader?limit=10000&mimetype=application/font-woff",
+            },
         ],
     },
     plugins: [
         new CheckerPlugin(),
         new CommonsChunkPlugin({
             name: "polyfills",
-            chunks: ["polyfills"]
+            chunks: ["polyfills"],
         }),
         // This enables tree shaking of the vendor modules
         new CommonsChunkPlugin({
             name: "vendor",
             chunks: ["app"],
-            minChunks: module => /node_modules/.test(module.resource)
+            minChunks: module => /node_modules/.test(module.resource),
         }),
         // Specify the correct order the scripts will be injected in
         new CommonsChunkPlugin({
-            name: ["polyfills", "vendor"].reverse()
+            name: ["polyfills", "vendor"].reverse(),
         }),
         new HtmlWebpackPlugin({
             template: "app/index.html",
