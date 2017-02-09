@@ -2,10 +2,11 @@ const webpack = require("webpack");
 const helpers = require('./helpers');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
+const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 
 const METADATA = {
-  baseUrl: '/',
-  isDevServer: helpers.isWebpackDevServer()
+    baseUrl: '/',
+    isDevServer: helpers.isWebpackDevServer()
 };
 
 console.log("Is running dev server", helpers.isWebpackDevServer());
@@ -13,7 +14,7 @@ console.log("Is running dev server", helpers.isWebpackDevServer());
 const baseConfig = {
     entry: {
         "polyfills": "./app/polyfills.browser",
-        "app": "./app/app",
+        "app": "./app/app.ts",
     },
 
     resolve: {
@@ -48,6 +49,7 @@ const baseConfig = {
         }],
     },
     plugins: [
+        new CheckerPlugin(),
         new CommonsChunkPlugin({
             name: 'polyfills',
             chunks: ['polyfills']
