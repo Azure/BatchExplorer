@@ -6,7 +6,7 @@ const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 
 const isDevServer = helpers.isWebpackDevServer();
 const METADATA = {
-    baseUrl: isDevServer ? "/" : ".",
+    baseUrl: "/",
     isDevServer: isDevServer,
 };
 

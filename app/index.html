@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Batch Labs</title>
-
-    <base href="<%= htmlWebpackPlugin.options.metadata.baseUrl %>">
+    <% if (htmlWebpackPlugin.options.metadata.isDevServer) { %>
+        <base href="<%= htmlWebpackPlugin.options.metadata.baseUrl %>">
+    <% } %>
 </head>
 
 <body>
