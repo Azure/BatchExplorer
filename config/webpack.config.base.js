@@ -4,9 +4,10 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 const CheckerPlugin = require('awesome-typescript-loader').CheckerPlugin;
 
+const isDevServer = helpers.isWebpackDevServer();
 const METADATA = {
-    baseUrl: '/',
-    isDevServer: helpers.isWebpackDevServer()
+    baseUrl: isDevServer ? '/' : ".",
+    isDevServer: isDevServer
 };
 
 console.log("Is running dev server", helpers.isWebpackDevServer());
