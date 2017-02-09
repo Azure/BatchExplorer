@@ -6,6 +6,7 @@ import { AppModule } from "./app.module";
 import "hammerjs";
 import "./utils/extensions";
 
+import "font-awesome/css/font-awesome.min.css";
 import "./assets/styles/main.scss";
 
 const platform = platformBrowserDynamic();

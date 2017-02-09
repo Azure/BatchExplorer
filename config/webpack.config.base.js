@@ -23,30 +23,40 @@ const baseConfig = {
     },
 
     module: {
-        rules: [{
-            test: /\.ts$/,
-            loaders: ["awesome-typescript-loader", "angular2-template-loader"],
-            exclude: [/node_modules/],
-        },
-        {
-            test: /\.scss$/,
-            loader: "style-loader!css-loader!sass-loader",
-            exclude: [/node_modules/],
-        },
-        {
-            test: /\.html$/,
-            loader: "raw-loader",
-            exclude: [/node_modules/, helpers.root('app/index.html')],
-        },
-        {
-            test: /\.json$/,
-            loader: "raw-loader",
-            exclude: [],
-        },
-        {
-            test: /node_modules.*\.css$/,
-            loader: "raw-loader",
-        }],
+        rules: [
+            {
+                test: /\.ts$/,
+                loaders: ["awesome-typescript-loader", "angular2-template-loader"],
+                exclude: [/node_modules/],
+            },
+            {
+                test: /\.scss$/,
+                loader: "style-loader!css-loader!sass-loader",
+                exclude: [/node_modules/],
+            },
+            {
+                test: /\.html$/,
+                loader: "raw-loader",
+                exclude: [/node_modules/, helpers.root('app/index.html')],
+            },
+            {
+                test: /\.json$/,
+                loader: "raw-loader",
+                exclude: [],
+            },
+            {
+                test: /node_modules.*\.css$/,
+                loader: "style-loader!css-loader",
+            },
+            {
+                test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+                loader: "file-loader"
+            },
+            {
+                test: /\.woff(2)?(\?v=\d+\.\d+\.\d+)?$/,
+                loader: "url-loader?limit=10000&mimetype=application/font-woff"
+            }
+        ],
     },
     plugins: [
         new CheckerPlugin(),
