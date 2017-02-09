@@ -1,12 +1,15 @@
 const config = require("./webpack.config.base");
 const helpers = require("./helpers");
 const path = require("path");
+const DefinePlugin = require("webpack/lib/DefinePlugin");
 const webpack = require("webpack");
+const LoaderOptionsPlugin = require("webpack/lib/LoaderOptionsPlugin");
 const merge = require("webpack-merge");
 const OptimizeJsPlugin = require("optimize-js-plugin");
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
-const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
+const ENV = "production";
+const UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 
 module.exports = merge(config, {
     devtool: "source-map",
@@ -88,5 +91,80 @@ module.exports = merge(config, {
          * @see https://github.com/webpack/extract-text-webpack-plugin
          */
         new ExtractTextPlugin("[name].[contenthash].css"),
+
+        new DefinePlugin({
+            "ENV": JSON.stringify(ENV),
+        }),
+
+        /**
+         * Plugin: UglifyJsPlugin
+         * Description: Minimize all JavaScript output of chunks.
+         * Loaders are switched into minimizing mode.
+         *
+         * See: https://webpack.github.io/docs/list-of-plugins.html#uglifyjsplugin
+         */
+        // NOTE: To debug prod builds uncomment //debug lines and comment //prod lines
+        new UglifyJsPlugin({
+            // Bug when beautify is disabled "Can't resolve all parameters for t"
+            beautify: true, //debug
+            // mangle: false, //debug
+            // compress: {
+            //   screw_ie8: true,
+            //   keep_fnames: true,
+            //   drop_debugger: false,
+            //   dead_code: false,
+            //   unused: false
+            // }, // debug
+            // output: {
+            //     comments: true
+            // }, // Debug
+
+            // beautify: false, //prod
+            output: {
+                comments: false
+            }, //prod
+            mangle: {
+                screw_ie8: true
+            }, //prod
+            compress: {
+                screw_ie8: true,
+                warnings: false,
+                conditionals: true,
+                unused: true,
+                comparisons: true,
+                sequences: true,
+                dead_code: true,
+                evaluate: true,
+                if_return: true,
+                join_vars: true,
+                negate_iife: false // we need this for lazy v8
+            },
+        }),
+
+        new LoaderOptionsPlugin({
+            minimize: true,
+            debug: false,
+            options: {
+
+                /**
+                 * Html loader advanced options
+                 *
+                 * See: https://github.com/webpack/html-loader#advanced-options
+                 */
+                // TODO: Need to workaround Angular 2's html syntax => #id [bind] (event) *ngFor
+                htmlLoader: {
+                    minimize: true,
+                    removeAttributeQuotes: false,
+                    caseSensitive: true,
+                    customAttrSurround: [
+                        [/#/, /(?:)/],
+                        [/\*/, /(?:)/],
+                        [/\[?\(?/, /(?:)/]
+                    ],
+                    customAttrAssign: [/\)?\]?=/]
+                },
+
+            }
+        }),
     ],
 });

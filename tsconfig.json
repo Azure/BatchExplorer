@@ -1,11 +1,16 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "ES5", // Uglify doesn't support es6 yet so we can't have the prod build use es6 https://github.com/mishoo/UglifyJS2/issues/448
     "module": "commonjs",
-    "lib": ["es6", "es2016", "dom"],
+    "lib": [
+      "es6",
+      "es2016",
+      "dom"
+    ],
     "removeComments": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
     "sourceMap": true,
     "noImplicitAny": false,
     "moduleResolution": "node",
@@ -42,5 +47,9 @@
     "./client/**/*.ts",
     "./app/**/*.ts",
     "./test/**/*.ts"
-  ]
+  ],
+  "awesomeTypescriptLoaderOptions": {
+    "forkChecker": true,
+    "useWebpackText": true
+  }
 }

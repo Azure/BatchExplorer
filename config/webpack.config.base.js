@@ -28,10 +28,6 @@ const baseConfig = {
                 loaders: ["awesome-typescript-loader", "angular2-template-loader"],
                 exclude: [/node_modules/],
             },
-            // {
-            //     test: /\.scss$/,
-            //     loader: "style-loader!css-loader!sass-loader",
-            // },
             {
                 test: /\.html$/,
                 loader: "raw-loader",
@@ -42,10 +38,6 @@ const baseConfig = {
                 loader: "raw-loader",
                 exclude: [],
             },
-            // {
-            //     test: /node_modules.*\.css$/,
-            //     loader: "style-loader!css-loader",
-            // },
             {
                 test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
                 loader: "file-loader",

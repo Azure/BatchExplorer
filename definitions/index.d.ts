@@ -24,3 +24,8 @@ declare module "mousetrap" {
     function trigger(key: string);
     function reset();
 }
+
+declare type Environment = "production" | "development" | "test";
+
+// Gloval variables set by webpack
+declare const ENV: Environment;

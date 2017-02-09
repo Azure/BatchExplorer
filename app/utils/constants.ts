@@ -77,3 +77,9 @@ export const ODataFields = {
     state: "state",
     taskExitCode: "executionInfo/exitCode",
 };
+
+export const Environment = {
+    prod: "production" as Environment,
+    dev: "developement" as Environment,
+    test: "test" as Environment,
+};
