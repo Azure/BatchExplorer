@@ -76,7 +76,6 @@ export class ListAndShowLayoutComponent implements AfterViewInit, OnChanges, OnD
     private _activatedItemSub: Subscription;
     private _selectedItemsSub: Subscription;
 
-
     constructor(private activatedRoute: ActivatedRoute, private dialog: MdDialog) {
         this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
             if (query === "") {
@@ -157,7 +156,6 @@ export class ListAndShowLayoutComponent implements AfterViewInit, OnChanges, OnD
             this.toggleFilter(false);
         }
     }
-
 
     private _updateFilter() {
         this.filter = FilterBuilder.and(this.quickFilter, this.advancedFilter);

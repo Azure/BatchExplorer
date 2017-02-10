@@ -62,7 +62,6 @@ export class AbstractListItemBase implements OnInit {
         } else {
             this.active = this.list.isActive(this.key);
         }
-        console.log("Check active", this.active);
         return this.active;
     }
 
