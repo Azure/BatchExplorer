@@ -1,0 +1,8 @@
+<div class="dropdown" (mouseenter)="mouseEnter()" (mouseleave)="mouseLeave()">
+    <div class="dropdown-btn-container" [ngClass]="{'active': showDropdown}" (click)="forceOpen()">
+        <ng-content select="[bex-dropdown-btn]"></ng-content>
+    </div>
+    <div class="dropdown-content" *ngIf="showDropdown">
+        <ng-content select="[bex-dropdown-content]"></ng-content>
+    </div>
+</div>
