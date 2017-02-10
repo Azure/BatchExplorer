@@ -84,61 +84,85 @@ export class ApplicationCreateDialogComponent implements OnInit {
     public submit(): Observable<any> {
         const formData = this.applicationForm.value;
         console.log("PUT'ing application package");
-        const observable = this.applicationService.put(formData.id, formData.version);
-        observable.subscribe({
-            next: (packageVersion) => {
-                // on completion, upload the package
-                console.log("PUT complete, uploading file");
-                this._uploadAppPackage(this.file, packageVersion.storageUrl).subscribe({
+
+        // put().cascade((sasUrl) => upload(sasUrl)).cascade(() => activate)
+
+        return this.applicationService.put(formData.id, formData.version)
+            .cascade((packageVersion) => this._uploadAppPackage(this.file, packageVersion.storageUrl))
+            .cascade(() => {
+                return this.applicationService.activate(formData.id, formData.version).subscribe({
                     next: () => {
-                        // call off to activate the package
-                        console.log("Upload complete, activating package");
-                        this.applicationService.activate(formData.id, formData.version).subscribe({
-                            next: () => {
-                                this._notifySuccess();
-                            },
-                            error: (response: Response) => {
-                                console.error("Failed to activate application package :: ", response.json());
-                                this.notificationManager.error(
-                                    "Activation failed",
-                                    `The application package was uploaded into storage successfully, but the activation process failed.`,
-                                );
-                            },
-                        });
+                        this.applicationService.onApplicationAdded.next(formData.id);
+                        this.notificationManager.success(
+                            "Application added!",
+                            `Version ${formData.version} for application '${formData.id}' was successfully created!`,
+                        );
                     },
-                    error: (error) => {
-                        console.error("Failed to upload application package :: ", error);
+                    error: (response: Response) => {
+                        console.error("Failed to activate application package :: ", response.json());
+                        this.notificationManager.error(
+                            "Activation failed",
+                            `The application package was uploaded into storage successfully, but the activation process failed.`,
+                        );
                     },
                 });
-                /**
-                 * todo:
-                 *      create upload file handler action
-                 *      create activate package action
-                 *      pass both of these actions to the long running task mananger
-                 *      on completion call the onApplicationAdded code below
-                 */
-            },
-            error: (error) => {
-                /**
-                 * Handle put application errors:
-                 *  - trying to put a package that already exists and has allowUpdates = false
-                 *  - max applications reached
-                 */
-                console.error("Failed to create application package record :: ", error);
-            },
-        });
+            });
 
-        return observable;
+        // const observable = this.applicationService.put(formData.id, formData.version);
+        // observable.subscribe({
+        //     next: (packageVersion) => {
+        //         // on completion, upload the package
+        //         console.log("PUT complete, uploading file");
+        //         this._uploadAppPackage(this.file, packageVersion.storageUrl).subscribe({
+        //             next: () => {
+        //                 // call off to activate the package
+        //                 console.log("Upload complete, activating package");
+        //                 this.applicationService.activate(formData.id, formData.version).subscribe({
+        //                     next: () => {
+        //                         this._notifySuccess();
+        //                     },
+        //                     error: (response: Response) => {
+        //                         console.error("Failed to activate application package :: ", response.json());
+        //                         this.notificationManager.error(
+        //                             "Activation failed",
+        //                             `The application package was uploaded into storage successfully, but the activation process failed.`,
+        //                         );
+        //                     },
+        //                 });
+        //             },
+        //             error: (error) => {
+        //                 console.error("Failed to upload application package :: ", error);
+        //             },
+        //         });
+        //         /**
+        //          * todo:
+        //          *      create upload file handler action
+        //          *      create activate package action
+        //          *      pass both of these actions to the long running task mananger
+        //          *      on completion call the onApplicationAdded code below
+        //          */
+        //     },
+        //     error: (error) => {
+        //         /**
+        //          * Handle put application errors:
+        //          *  - trying to put a package that already exists and has allowUpdates = false
+        //          *  - max applications reached
+        //          */
+        //         console.error("Failed to create application package record :: ", error);
+        //     },
+        // });
+
+        // return observable;
     }
 
-    private _notifySuccess() {
-        const formData = this.applicationForm.value;
-        this.applicationService.onApplicationAdded.next(formData.id);
-        this.notificationManager.success(
-            "Application added!",
-            `Version ${formData.version} for application '${formData.id}' was successfully created!`,
-        );
-    }
+    // private _notifySuccess() {
+    //     const formData = this.applicationForm.value;
+    //     this.applicationService.onApplicationAdded.next(formData.id);
+    //     this.notificationManager.success(
+    //         "Application added!",
+    //         `Version ${formData.version} for application '${formData.id}' was successfully created!`,
+    //     );
+    // }
 
     private _uploadAppPackage(file, sasUrl): Observable<any> {
         if (!this.hasValidFile()) {

@@ -11,7 +11,7 @@ import { BehaviorSubject } from "rxjs";
 import { FocusSectionComponent } from "app/components/base/focus-section";
 import { SelectableList } from "app/components/base/selectable-list";
 import { Filter, FilterBuilder } from "app/utils/filter-builder";
-import { DeletePoolDialogComponent } from "./delete-selected-items-dialog.component";
+import { DeleteSelectedItemsDialogComponent } from "./delete-selected-items-dialog.component";
 
 @Component({
     selector: "bex-list-and-show-layout",
@@ -121,7 +121,7 @@ export class ListAndShowLayoutComponent implements AfterViewInit {
     public deleteSelectedItems() {
         let config = new MdDialogConfig();
 
-        const dialogRef = this.dialog.open(DeletePoolDialogComponent, config);
+        const dialogRef = this.dialog.open(DeleteSelectedItemsDialogComponent, config);
         dialogRef.componentInstance.items = this.list.selectedItems;
         dialogRef.afterClosed().subscribe((proceed) => {
             if (proceed) {

@@ -18,11 +18,11 @@ import { MdDialogRef } from "@angular/material";
         </div>
     `,
 })
-export class DeletePoolDialogComponent {
+export class DeleteSelectedItemsDialogComponent {
     public poolId: string;
 
     public items: string[];
 
-    constructor(public dialogRef: MdDialogRef<DeletePoolDialogComponent>) {
+    constructor(public dialogRef: MdDialogRef<DeleteSelectedItemsDialogComponent>) {
     }
 }

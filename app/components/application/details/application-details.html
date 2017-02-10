@@ -21,7 +21,7 @@
                 <bex-delete-button [entity]="application" (click)="deleteJob()"></bex-delete-button>-->
             </md-card-actions>
         </md-card>
-        <bex-application-error-display></bex-application-error-display>
+        <bex-application-error-display [application]="application"></bex-application-error-display>
         <md-card class="details">
             <bex-tab-group>
                 <bex-tab key="properties">
@@ -40,14 +40,17 @@
                                     - delete: only enabled if allow updates is off
                                     - update: only enabled if allow updates is off
                                     - active: only enabled if selected package is pending
+
+                                note: after tim changes this check selectedItems count === 1
+                                or change to get hasSingleSelectedItem()
                             -->
-                            <button md-mini-fab color="warn" title="Delete">
+                            <button md-mini-fab color="warn" title="Delete" [disabled]="!list?.isAnyItemSelected() || !application.allowUpdates" (click)="list?.deleteSelectedItems()">
                                 <i class="fa fa-trash spin-hover"></i>
                             </button>
-                            <button md-mini-fab color="primary" title="Update">
+                            <button md-mini-fab color="primary" title="Update" [disabled]="!list?.activatedItem || !application.allowUpdates">
                                 <i class="fa fa-pencil-square-o spin-hover"></i>
                             </button>
-                            <button md-mini-fab color="primary" title="Activate">
+                            <button md-mini-fab color="primary" title="Activate" [disabled]="!list?.activatedItem || !list?.isPackagePending(list?.activatedItem)">
                                 <i class="fa fa-toggle-on spin-hover"></i>
                             </button>
                         </div>

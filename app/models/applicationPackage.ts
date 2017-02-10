@@ -28,5 +28,5 @@ export class ApplicationPackage extends ApplicationPackageRecord {
 export type PackageState = "active" | "pending";
 export const PackageState = {
     active: "active" as PackageState,
-    disabling: "pending" as PackageState,
+    pending: "pending" as PackageState,
 };

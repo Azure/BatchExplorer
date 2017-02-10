@@ -1,8 +1,8 @@
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { autobind } from "core-decorators";
 
 import { SidebarManager } from "app/components/base/sidebar";
-import { AccountResource } from "app/models";
+import { AccountResource, Application } from "app/models";
 import { AccountService } from "app/services";
 
 @Component({
@@ -11,6 +11,9 @@ import { AccountService } from "app/services";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ApplicationErrorDisplayComponent {
+    @Input()
+    public application: Application;
+
     private _batchAccount: AccountResource;
 
     constructor(
