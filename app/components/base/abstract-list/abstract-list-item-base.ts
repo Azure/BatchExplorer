@@ -2,13 +2,13 @@ import { HostListener, Input, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { BreadcrumbService } from "app/components/base/breadcrumbs";
-import { SelectableListBase } from "./selectable-list-base";
+import { AbstractListBase } from "./abstract-list-base";
 
 /**
  * Usage: Needs to be used with a SelectableListBase
  * 1. Inject the component inheriting SelectableListBase in the construtor using @Inject and forwardRef
  */
-export class SelectableListItemBase implements OnInit {
+export class AbstractListItemBase implements OnInit {
     /**
      * Unique key to give to the list used for knowing if the item is selected
      */
@@ -20,7 +20,8 @@ export class SelectableListItemBase implements OnInit {
         this._routerLink = routerLink;
         if (routerLink) {
             this._urlTree = this.router.createUrlTree(routerLink);
-            this.checkActive();
+            // console.log("trigger check active");
+            // this.checkActive();
         }
     }
     public get routerLink() { return this._routerLink; }
@@ -42,7 +43,7 @@ export class SelectableListItemBase implements OnInit {
      * e.g.  @Inject(forwardRef(() => QuickListComponent)) list: QuickListComponent
      */
     constructor(
-        protected list: SelectableListBase,
+        protected list: AbstractListBase,
         private router: Router,
         private breadcrumbService: BreadcrumbService) {
 
@@ -61,6 +62,7 @@ export class SelectableListItemBase implements OnInit {
         } else {
             this.active = this.list.isActive(this.key);
         }
+        console.log("Check active", this.active);
         return this.active;
     }
 

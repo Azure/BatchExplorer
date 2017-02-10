@@ -4,7 +4,7 @@ import {
 import { Router } from "@angular/router";
 
 import { BreadcrumbService } from "app/components/base/breadcrumbs";
-import { SelectableListItemBase } from "../selectable-list/selectable-list-item-base";
+import { AbstractListItemBase } from "../abstract-list";
 import { TableComponent } from "./table.component";
 
 @Component({
@@ -17,7 +17,7 @@ import { TableComponent } from "./table.component";
         </template>
     `,
 })
-export class TableRowComponent extends SelectableListItemBase {
+export class TableRowComponent extends AbstractListItemBase {
     @ViewChild(TemplateRef)
     public content: TemplateRef<any>;
 

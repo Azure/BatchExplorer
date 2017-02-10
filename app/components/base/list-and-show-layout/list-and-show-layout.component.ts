@@ -1,12 +1,12 @@
 import {
     AfterViewInit, Component, ContentChild,
-    ElementRef, EventEmitter, Input, Output, ViewChild,
+    ElementRef, EventEmitter, Input, OnChanges, OnDestroy, Output, ViewChild,
     animate, state, style, transition, trigger,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MdDialog, MdDialogConfig } from "@angular/material";
 import { ActivatedRoute } from "@angular/router";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, Subscription } from "rxjs";
 
 import { FocusSectionComponent } from "app/components/base/focus-section";
 import { SelectableList } from "app/components/base/selectable-list";
@@ -29,16 +29,13 @@ import { DeletePoolDialogComponent } from "./delete-selected-items-dialog.compon
         ]),
     ],
 })
-export class ListAndShowLayoutComponent implements AfterViewInit {
+export class ListAndShowLayoutComponent implements AfterViewInit, OnChanges, OnDestroy {
     @Input()
     public set list(list: SelectableList) {
         this._list = list;
         if (list.refresh) {
             this.refresh = list.refresh;
         }
-        list.activatedItemChange.subscribe((x) => {
-            this.itemSelected(x);
-        });
     }
     public get list() { return this._list; };
 
@@ -69,7 +66,17 @@ export class ListAndShowLayoutComponent implements AfterViewInit {
     public quickFilter: Filter = FilterBuilder.none();
     public advancedFilter: Filter = FilterBuilder.none();
 
+    /**
+     * If the provided list has implemented delete selected items
+     */
+    public deleteSelectedIsEnabled = false;
+    public selectedItems: string[] = [];
+
     private _list: SelectableList;
+    private _activatedItemSub: Subscription;
+    private _selectedItemsSub: Subscription;
+
+
     constructor(private activatedRoute: ActivatedRoute, private dialog: MdDialog) {
         this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
             if (query === "") {
@@ -92,6 +99,29 @@ export class ListAndShowLayoutComponent implements AfterViewInit {
         this.quickSearchInput.nativeElement.focus();
     }
 
+    public ngOnChanges(inputs) {
+        if (inputs.list) {
+            this._clearListSubs();
+            this._activatedItemSub = this.list.activatedItemChange.subscribe((x) => {
+                this._itemActivated(x);
+            });
+
+            this._selectedItemsSub = this.list.selectedItemsChange.subscribe((items) => {
+                this.selectedItems = items;
+            });
+
+            this.deleteSelectedIsEnabled = Boolean(this.list.deleteSelected);
+        }
+    }
+
+    public ngOnDestroy() {
+        this._clearListSubs();
+    }
+
+    /**
+     * Get triggered when a key is pressed while focus is in the quick searchbox
+     * If it is arrow down it will move the focus down in the list so you can navigate elements there.
+     */
     public handleKeyPressedInQuickSearch(event: KeyboardEvent) {
         if (event.code === "ArrowDown") {
             event.preventDefault();
@@ -101,16 +131,7 @@ export class ListAndShowLayoutComponent implements AfterViewInit {
     }
 
     public toggleFilter(value?: boolean) {
-        this.showAdvancedFilter.next(value == null ? !this.showAdvancedFilter.getValue() : value);
-    }
-
-    public itemSelected(item: any) {
-        // Triggered twice everytime TODO check
-        if (item) {
-            this.toggleFilter(false);
-        } else {
-            // this.toggleFilter(true);
-        }
+        this.showAdvancedFilter.next(value === undefined ? !this.showAdvancedFilter.getValue() : value);
     }
 
     public advancedFilterChanged(filter: Filter) {
@@ -131,7 +152,23 @@ export class ListAndShowLayoutComponent implements AfterViewInit {
         });
     }
 
+    private _itemActivated(item: any) {
+        if (item && item.key) {
+            this.toggleFilter(false);
+        }
+    }
+
+
     private _updateFilter() {
         this.filter = FilterBuilder.and(this.quickFilter, this.advancedFilter);
+    }
+
+    private _clearListSubs() {
+        if (this._activatedItemSub) {
+            this._activatedItemSub.unsubscribe();
+        }
+        if (this._selectedItemsSub) {
+            this._selectedItemsSub.unsubscribe();
+        }
     }
 }

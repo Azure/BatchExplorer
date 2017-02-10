@@ -1,15 +1,20 @@
 import { Component, ContentChildren, Input, QueryList } from "@angular/core";
+import { Router } from "@angular/router";
 
-import { SelectableListBase } from "../selectable-list/selectable-list-base";
+import { AbstractListBase } from "../abstract-list";
 import { TableRowComponent } from "./table-row.component";
 
 @Component({
     selector: "bex-table",
     templateUrl: "table.html",
 })
-export class TableComponent extends SelectableListBase {
+export class TableComponent extends AbstractListBase {
     @ContentChildren(TableRowComponent)
     public items: QueryList<TableRowComponent>;
+
+    constructor(router: Router) {
+        super(router, null);
+    }
 }
 
 @Component({
