@@ -49,6 +49,7 @@ export class NodeFileListComponent implements OnInit, OnChanges {
     constructor(private fileService: FileService) {
         this.notFound = false;
         this.data = this.fileService.listFromComputeNode(null, null, true, {});
+        this.status = this.data.status;
     }
 
     public ngOnInit() {
@@ -73,7 +74,6 @@ export class NodeFileListComponent implements OnInit, OnChanges {
                 filter: filter.toOData(),
             };
         }
-        this.status = this.data.status;
         this.data.updateParams({ poolId: this.poolId, nodeId: this.nodeId });
         this.data.setOptions(options); // This clears the previous list objects
         this.notFound = false;
