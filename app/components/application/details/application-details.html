@@ -32,6 +32,25 @@
                     <bex-tab-label>Packages</bex-tab-label>
 
                     <bex-entity-details-list #listWrapper [showRefreshButton]="false" [showExpandButton]="false" [showFilterIcon]="false" filterPlaceholder="Filter by package version">
+                        <div bex-list-buttons>
+                            <!--
+                                TODO: hook these buttons up
+                                multi select - only delete enabled
+                                single select
+                                    - delete: only enabled if allow updates is off
+                                    - update: only enabled if allow updates is off
+                                    - active: only enabled if selected package is pending
+                            -->
+                            <button md-mini-fab color="warn" title="Delete">
+                                <i class="fa fa-trash spin-hover"></i>
+                            </button>
+                            <button md-mini-fab color="primary" title="Update">
+                                <i class="fa fa-pencil-square-o spin-hover"></i>
+                            </button>
+                            <button md-mini-fab color="primary" title="Activate">
+                                <i class="fa fa-toggle-on spin-hover"></i>
+                            </button>
+                        </div>
                         <bex-application-packages [application]="application" [filter]="listWrapper.filter" #list></bex-application-packages>
                     </bex-entity-details-list>
                 </bex-tab>

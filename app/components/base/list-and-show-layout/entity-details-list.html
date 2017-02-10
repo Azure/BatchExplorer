@@ -11,6 +11,7 @@
     <button *ngIf="showAddButton" md-mini-fab color="primary" title="{{addButtonHoverText}}">
         <i class="fa fa-plus spin-hover"></i>
     </button>
+    <ng-content select="[bex-list-buttons]"></ng-content>
 </div>
 <ng-content></ng-content>
 

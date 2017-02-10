@@ -16,7 +16,7 @@ export class ListOrTableBase extends SelectableList {
             table.activatedItemChange.subscribe((event) => {
                 if (!(event.initialValue && this.activatedItem)) {
                     this.activatedItemChange.emit(event);
-                    this.activatedItem = event.keycccc;
+                    this.activatedItem = event.key;
                 }
             });
         }

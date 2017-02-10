@@ -77,7 +77,9 @@ export class ApplicationService {
     public activate(applicationId: string, version: string): Observable<any> {
         return this.azure.post(
             `${this._currentAccountId}/applications/${applicationId}/versions/${version}/activate`,
-            { body: { format: "zip" } });
+            {
+                format: "zip",
+            });
     }
 
     /**

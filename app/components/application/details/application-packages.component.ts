@@ -43,7 +43,9 @@ export class ApplicationPackagesComponent implements OnDestroy {
     }
 
     public formatDate(date: Date) {
-        return moment(date).format("MMM Do, YYYY, HH:mm:ss");
+        return date
+            ? moment(date).format("MMM Do, YYYY, HH:mm:ss")
+            : "";
     }
 
     private _filterPackages() {

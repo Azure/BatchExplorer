@@ -1,7 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { Response } from "@angular/http";
 import { autobind } from "core-decorators";
-import { Observable } from "rxjs";
+import { AsyncSubject, Observable } from "rxjs";
 
 import { NotificationManager } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
@@ -27,9 +28,6 @@ export class ApplicationCreateDialogComponent implements OnInit {
     private _currentFilePointer: number;
     private _totalBytesRemaining: number;
     private _bytesUploaded: number;
-
-    // hard code URL for now
-    private _sasUrl = "https://andrew1973.blob.core.windows.net/app-test-a94a8fe5ccb19ba61c4c0873d391e987982fbbd3/test-2.1-90347f95-af9b-4f83-9fac-e9aa2e2d5392?sv=2015-04-05&sr=b&sig=JlinNzzh355LtKL9O73DHXuS7WVg6Golsl8QbW2taao%3D&st=2017-02-09T01%3A31%3A22Z&se=2017-02-09T05%3A36%3A22Z&sp=rw";
 
     constructor(
         private formBuilder: FormBuilder,
@@ -76,35 +74,6 @@ export class ApplicationCreateDialogComponent implements OnInit {
             this.file = null;
             this.applicationForm.controls["package"].setValue(null);
         }
-
-        /**
-         * TODO :: The following code wont be run from here. It will be kicked off
-         * from the submit() method. Just here so i can test it on file selection.
-         */
-        if (this.hasValidFile()) {
-            this._blockIds = [];
-            this._currentFilePointer = 0;
-            this._totalBytesRemaining = 0;
-            this._blockSize = 1024 * 1024;
-            this._bytesUploaded = 0;
-
-            this._fileReader = new FileReader();
-            this._fileReader.onloadend = (evt => this._fileReaderLoadEnded(evt));
-
-            let fileSize = this.file.size;
-            this._blockSize = fileSize < this._blockSize
-                ? fileSize
-                : this._blockSize;
-
-            this._totalBytesRemaining = fileSize;
-            if (fileSize % this._blockSize === 0) {
-                this.blockCount = fileSize / this._blockSize;
-            } else {
-                this.blockCount = Math.floor(fileSize / this._blockSize) + 1;
-            }
-
-            this._readAndUploadFileBlocks();
-        }
     }
 
     public hasValidFile(): boolean {
@@ -114,42 +83,96 @@ export class ApplicationCreateDialogComponent implements OnInit {
     @autobind()
     public submit(): Observable<any> {
         const formData = this.applicationForm.value;
+        console.log("PUT'ing application package");
         const observable = this.applicationService.put(formData.id, formData.version);
         observable.subscribe({
             next: (packageVersion) => {
-                const id = formData.id;
+                // on completion, upload the package
+                console.log("PUT complete, uploading file");
+                this._uploadAppPackage(this.file, packageVersion.storageUrl).subscribe({
+                    next: () => {
+                        // call off to activate the package
+                        console.log("Upload complete, activating package");
+                        this.applicationService.activate(formData.id, formData.version).subscribe({
+                            next: () => {
+                                this._notifySuccess();
+                            },
+                            error: (response: Response) => {
+                                console.error("Failed to activate application package :: ", response.json());
+                                this.notificationManager.error(
+                                    "Activation failed",
+                                    `The application package was uploaded into storage successfully, but the activation process failed.`,
+                                );
+                            },
+                        });
+                    },
+                    error: (error) => {
+                        console.error("Failed to upload application package :: ", error);
+                    },
+                });
                 /**
-                 * get "packageVersion.storageUrl" and use that SAS to upload the package into storage
-                 * then call /activate to complete the upload.
-                 *
                  * todo:
                  *      create upload file handler action
                  *      create activate package action
                  *      pass both of these actions to the long running task mananger
                  *      on completion call the onApplicationAdded code below
                  */
-
-                console.log("packageVersion.storageUrl :: ", packageVersion.storageUrl);
-
-                this.applicationService.onApplicationAdded.next(id);
-                this.notificationManager.success(
-                    "Application added!",
-                    `Version ${packageVersion.version} for application '${id}' was successfully created!`,
-                );
             },
-            error: () => {
+            error: (error) => {
                 /**
                  * Handle put application errors:
                  *  - trying to put a package that already exists and has allowUpdates = false
                  *  - max applications reached
                  */
+                console.error("Failed to create application package record :: ", error);
             },
         });
 
         return observable;
     }
 
-    private _readAndUploadFileBlocks() {
+    private _notifySuccess() {
+        const formData = this.applicationForm.value;
+        this.applicationService.onApplicationAdded.next(formData.id);
+        this.notificationManager.success(
+            "Application added!",
+            `Version ${formData.version} for application '${formData.id}' was successfully created!`,
+        );
+    }
+
+    private _uploadAppPackage(file, sasUrl): Observable<any> {
+        if (!this.hasValidFile()) {
+            return Observable.throw("Valid file not selected");
+        }
+
+        this._blockIds = [];
+        this._currentFilePointer = 0;
+        this._totalBytesRemaining = 0;
+        this._blockSize = 1024 * 1024;
+        this._bytesUploaded = 0;
+
+        const subject = new AsyncSubject<any>();
+        this._fileReader = new FileReader();
+        this._fileReader.onloadend = (evt => this._fileReaderLoadEnded(evt, sasUrl, subject));
+
+        let fileSize = this.file.size;
+        this._blockSize = fileSize < this._blockSize
+            ? fileSize
+            : this._blockSize;
+
+        this._totalBytesRemaining = fileSize;
+        if (fileSize % this._blockSize === 0) {
+            this.blockCount = fileSize / this._blockSize;
+        } else {
+            this.blockCount = Math.floor(fileSize / this._blockSize) + 1;
+        }
+
+        this._readAndUploadFileBlocks(sasUrl, subject);
+
+        return subject.asObservable();
+    }
+
+    private _readAndUploadFileBlocks(sasUrl: string, subject: AsyncSubject<any>) {
         if (this._totalBytesRemaining > 0) {
             const blockId = "block-" + (this._blockIds.length + "").padStart(6, "0");
             const fileContent = this.file.slice(this._currentFilePointer,
@@ -158,6 +181,8 @@ export class ApplicationCreateDialogComponent implements OnInit {
             console.log(`block id: ${blockId}, current file pointer: ${this._currentFilePointer}, bytes read: ${this._blockSize}`);
 
             this._blockIds.push(btoa(blockId));
+
+            // this calls off to _fileReaderLoadEnded callback
             this._fileReader.readAsArrayBuffer(fileContent);
 
             this._currentFilePointer += this._blockSize;
@@ -167,11 +192,19 @@ export class ApplicationCreateDialogComponent implements OnInit {
                 this._blockSize = this._totalBytesRemaining;
             }
         } else {
-            this._commitBlockList();
+            this._commitBlockList(sasUrl).subscribe({
+                next: () => {
+                    subject.next(true);
+                    subject.complete();
+                },
+                error: (error) => {
+                    subject.error(error);
+                },
+            });
         }
     }
 
-    private _fileReaderLoadEnded(evt: any) {
+    private _fileReaderLoadEnded(evt: any, sasUrl: string, subject: AsyncSubject<any>) {
         if (evt.target.readyState === 2) {
             const requestData: ArrayBuffer = evt.target.result;
             const uploadOptions: UploadBlockOptions = {
@@ -179,12 +212,12 @@ export class ApplicationCreateDialogComponent implements OnInit {
                 blockContent: requestData,
             };
 
-            this.httpUploadService.putBlock(this._sasUrl, uploadOptions).subscribe({
+            this.httpUploadService.putBlock(sasUrl, uploadOptions).subscribe({
                 next: (response) => {
                     this._bytesUploaded += requestData.byteLength;
                     const percentComplete = Math.floor(this._bytesUploaded / this.file.size * 100);
                     this.progress = `${percentComplete}%`;
-                    this._readAndUploadFileBlocks();
+                    this._readAndUploadFileBlocks(sasUrl, subject);
                 },
                 error: (error) => {
                     console.log("ERROR :: ", error);
@@ -193,19 +226,12 @@ export class ApplicationCreateDialogComponent implements OnInit {
         }
     }
 
-    private _commitBlockList() {
+    private _commitBlockList(sasUrl: string): Observable<any> {
         const commitOptions: CommitBlockListOptions = {
             blockIds: this._blockIds,
             fileType: this.file.type,
         };
 
-        this.httpUploadService.commitBlockList(this._sasUrl, commitOptions).subscribe({
-            next: (response) => {
-                /** happy */
-            },
-            error: (error) => {
-                console.log("ERROR :: ", error);
-            },
-        });
+        return this.httpUploadService.commitBlockList(sasUrl, commitOptions);
     }
 }
