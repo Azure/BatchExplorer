@@ -7,8 +7,8 @@ import {
     Notification,
     NotificationContainerComponent,
     NotificationLevel,
-    NotificationManager,
     NotificationModule,
+    NotificationService,
 } from "app/components/base/notifications";
 
 @Component({
@@ -19,7 +19,7 @@ class FakeAppComponent {
 }
 
 describe("Notification", () => {
-    let notificationManager: NotificationManager;
+    let notificationService: NotificationService;
     let currentNotifications: List<Notification>;
     let fixture: ComponentFixture<FakeAppComponent>;
     let de: DebugElement;
@@ -30,8 +30,8 @@ describe("Notification", () => {
             imports: [NotificationModule],
             declarations: [FakeAppComponent],
         });
-        notificationManager = TestBed.get(NotificationManager);
-        notificationManager.notifications.subscribe((x) => currentNotifications = x);
+        notificationService = TestBed.get(notificationService);
+        notificationService.notifications.subscribe((x) => currentNotifications = x);
         fixture = TestBed.createComponent(FakeAppComponent);
         de = fixture.debugElement;
 
@@ -45,7 +45,7 @@ describe("Notification", () => {
 
     describe("when a notification is sent", () => {
         beforeEach(() => {
-            notificationManager.notify(NotificationLevel.success, "FakeNotification", "Something happend!", {
+            notificationService.notify(NotificationLevel.success, "FakeNotification", "Something happend!", {
                 autoDismiss: 1000,
             });
             fixture.detectChanges();
@@ -95,7 +95,7 @@ describe("Notification", () => {
 
     describe("Calling helper functions", () => {
         it("calling success should show a success notification", () => {
-            notificationManager.success("FakeNotification", "Something great happend!");
+            notificationService.success("FakeNotification", "Something great happend!");
             expect(currentNotifications.size).toBe(1);
             const notification = currentNotifications.first();
             expect(notification.level).toEqual(NotificationLevel.success);
@@ -104,7 +104,7 @@ describe("Notification", () => {
         });
 
         it("calling error should show a error notification", () => {
-            notificationManager.error("FakeNotification", "Something bad happend!");
+            notificationService.error("FakeNotification", "Something bad happend!");
             expect(currentNotifications.size).toBe(1);
             const notification = currentNotifications.first();
             expect(notification.level).toEqual(NotificationLevel.error);
@@ -113,7 +113,7 @@ describe("Notification", () => {
         });
 
         it("calling info should show a error notification", () => {
-            notificationManager.info("FakeNotification", "Something happend!");
+            notificationService.info("FakeNotification", "Something happend!");
             expect(currentNotifications.size).toBe(1);
             const notification = currentNotifications.first();
             expect(notification.level).toEqual(NotificationLevel.info);

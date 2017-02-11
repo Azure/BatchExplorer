@@ -6,7 +6,7 @@ import { RouterModule } from "@angular/router";
 
 import { DropdownModule } from "../dropdown";
 import { NotificationContainerComponent } from "./notification-container.component";
-import { NotificationManager } from "./notification-manager";
+import { NotificationService } from "./notification-service";
 import { NotificationComponent } from "./notification.component";
 import { PersistentNotificationDropdownComponent } from "./persistent-dropdown";
 
@@ -27,7 +27,7 @@ const components = [
         DropdownModule,
     ],
     providers: [
-        NotificationManager,
+        NotificationService,
     ],
 })
 export class NotificationModule {

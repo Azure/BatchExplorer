@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { Notification, NotificationConfig, NotificationLevel } from "./notification";
 
 @Injectable()
-export class NotificationManager {
+export class NotificationService {
     public notifications: Observable<List<Notification>>;
     public persistedNotifications: Observable<List<Notification>>;
 

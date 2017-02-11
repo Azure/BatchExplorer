@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { NotificationManager } from "../../base/notifications";
+import { NotificationService } from "../../base/notifications";
 
 @Component({
     selector: "bex-job-details-home",
@@ -22,7 +22,7 @@ export class JobDetailsHomeComponent {
         return { name: "Job" };
     }
 
-    constructor(public notif: NotificationManager) {
+    constructor(public notif: NotificationService) {
 
     }
 
