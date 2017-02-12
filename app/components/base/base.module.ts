@@ -18,7 +18,7 @@ import { InfoBoxModule } from "./info-box";
 import {
     DeleteSelectedItemsDialogComponent, EntityDetailsListComponent, ListAndShowLayoutComponent, ListLoadingComponent,
 } from "./list-and-show-layout";
-import { LoadingComponent } from "./loading";
+import { LoadingComponent, SimpleLoadingComponent } from "./loading";
 import { NotificationModule } from "./notifications";
 import { PropertyListModule } from "./property-list";
 import { QuickListModule } from "./quick-list";
@@ -53,6 +53,7 @@ const components = [
     ElapsedTimeComponent,
     EntityDetailsListComponent,
     ListAndShowLayoutComponent,
+    SimpleLoadingComponent,
     LoadingComponent,
     ScrollableComponent,
     RefreshButtonComponent,

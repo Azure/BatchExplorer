@@ -13,6 +13,12 @@ app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow: any;
 
+// Webpack dev server url when using HOT=1
+const devServerUrl = "http://localhost:3178/index.html";
+
+// Webpack build output
+const buildFileUrl = `file://${__dirname}/../../build/index.html`;
+
 // Create the browser window.
 function createWindow() {
     /**
@@ -24,12 +30,15 @@ function createWindow() {
         height: 1000,
         icon: __dirname + "/../assets/images/labs.ico",
         width: 1600,
-        show: false, // Don't show the window until the user authenticated, comment to debug auth problems
+        show: false, // Don't show the window until the user authenticated, comment to debug auth problems,
+        webPreferences: {
+            webSecurity: false,
+        },
     });
 
-    // and load the index.html of the app.
-    // When we build app this file get move into build/client/main.js
-    mainWindow.loadURL(`file://${__dirname}/../../app/index.html`);
+    const url = process.env.HOT ? devServerUrl : buildFileUrl;
+
+    mainWindow.loadURL(url);
     mainWindow.batchClient = new BatchClientProxy();
     mainWindow.logger = renderLogger;
 

@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
 
 import { AdvancedFilter } from "./advanced-filter";
@@ -22,9 +23,26 @@ export class AdvancedFilterComponent implements OnChanges {
     public currentOData: string;
 
     private _sub: Subscription;
+    private _urlFilter: any = null;
+    private _setUrlFilter = false;
 
+    constructor(activatedRoute: ActivatedRoute) {
+        activatedRoute.queryParams.subscribe((params: any) => {
+            if (params.filter) {
+                try {
+                    this._urlFilter = JSON.parse(params.filter);
+                } catch (e) {
+                    console.warn("Invalid filter", params.filter);
+                }
+            }
+        });
+    }
     public ngOnChanges(inputs) {
         this._cleanSubscription();
+        if (this._urlFilter && !this._setUrlFilter) {
+            this.advancedFilter.group.patchValue(this._urlFilter);
+            this._setUrlFilter = true;
+        }
         this._sub = this.advancedFilter.filterChange.subscribe((filter) => {
             if (filter.isEmpty()) {
                 this.currentOData = "None";

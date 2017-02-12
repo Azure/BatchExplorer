@@ -12,16 +12,22 @@ declare module "rxjs/Observable" {
          *      return Observable.of(count + 1);
          * }).subscribe((result) => console.log(result)) //=> Result 2
          */
-        cascade<TOut>(callback: (data: T) => Observable<TOut>);
+        cascade<TOut>(callback: (data: T) => Observable<TOut> | TOut);
     }
 }
 
 if (!Observable.prototype.cascade) {
-    Observable.prototype.cascade = function (callback: (data: any) => Observable<any>) {
+    Observable.prototype.cascade = function (callback: (data: any) => Observable<any> | any) {
         const subject = new AsyncSubject();
         this.take(1).subscribe({
             next: (data) => {
-                callback(data).take(1).subscribe({
+                const obs = callback(data);
+                if (!(obs instanceof Observable)) {
+                    subject.next(obs);
+                    subject.complete();
+                    return;
+                }
+                obs.take(1).subscribe({
                     next: (out) => {
                         subject.next(out);
                         subject.complete();

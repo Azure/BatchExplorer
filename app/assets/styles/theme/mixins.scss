@@ -1,5 +1,5 @@
 
-// Vertical align ANYTHING! 
+// Vertical align ANYTHING!
 // ----------------------------------
 @mixin vertical-align() {
     position: relative;
@@ -34,7 +34,7 @@
         // http://nicolasgallagher.com/micro-clearfix-hack/#comment-36952
         line-height: 0;
     }
-  
+
     &:after {
         clear: both;
     }
@@ -92,26 +92,4 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-}
-
-
-// Fonts
-// ----------------------------------
-@mixin font-weight($fontWeight) {
-    @if $fontWeight == "bold" {
-        font-family: $segoiUiFontFamilyBold;
-        font-weight: normal;
-    }
-    @else if $fontWeight == "semibold" {
-        font-family: $segoiUiFontFamilySemibold;
-        font-weight: normal;
-    }
-    @else if $fontWeight == "light" or $fontWeight == "semilight" {
-        font-family: $segoiUiFontFamilySemilight;
-        font-weight: normal;
-    }
-    @else {
-        font-family: $segoeUiFontFamily;
-        font-weight: normal;
-    }
 }

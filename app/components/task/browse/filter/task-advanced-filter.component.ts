@@ -2,6 +2,7 @@ import { Component, EventEmitter, Output } from "@angular/core";
 
 import { AdvancedFilter, ListFilterControl, StatePickerControl } from "app/components/base/advanced-filter";
 import { TaskState } from "app/models";
+import { ODataFields } from "app/utils/constants";
 import { Filter } from "app/utils/filter-builder";
 
 @Component({
@@ -16,10 +17,10 @@ export class TaskAdvancedFilterComponent {
 
     constructor() {
         this.advancedFilter = new AdvancedFilter({
-            "state": new StatePickerControl("State", [
+            [ODataFields.state]: new StatePickerControl("State", [
                 TaskState.active, TaskState.completed, TaskState.running, TaskState.preparing,
             ]),
-            "executionInfo/exitCode": new ListFilterControl("Exit code", {
+            [ODataFields.taskExitCode]: new ListFilterControl("Exit code", {
                 number: true,
                 allowRanges: true,
             }),

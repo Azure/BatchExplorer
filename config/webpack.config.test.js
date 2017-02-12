@@ -5,4 +5,6 @@ delete config.entry;
 
 config.devtool = "inline-source-map";
 
+// Karma webpack doesn't support CommonChunkPlugin yet https://github.com/webpack-contrib/karma-webpack/issues/24
+config.plugins = [];
 module.exports = config;

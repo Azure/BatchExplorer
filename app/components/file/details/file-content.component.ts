@@ -1,7 +1,8 @@
 import { AfterViewInit, Component, ElementRef, Input, OnChanges } from "@angular/core";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
 import { ScrollableComponent, ScrollableService } from "app/components/base/scrollable";
+import { File } from "app/models";
 import { FileService } from "app/services";
 import { Constants } from "app/utils";
 
@@ -32,6 +33,7 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
     public notFound = false;
 
     public lines = [];
+    public loading = true;
 
     public scrollable: ScrollableComponent;
     public currentSubscription: Subscription;
@@ -40,6 +42,7 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
         private scrollableService: ScrollableService,
         private fileService: FileService,
         private element: ElementRef) {
+
     }
 
     public ngAfterViewInit() {
@@ -55,6 +58,7 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
         }
         this.notFound = false;
         this.lines = [];
+        this.loading = true;
         this.lastContentLength = 0;
         this.inter = setInterval(() => {
             this._updateFileContent();
@@ -69,68 +73,71 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
     }
 
     private _updateFileContent() {
+        let data;
         if (this.jobId && this.taskId) {
-            let propertiesProxy = this.fileService.getFilePropertiesFromTask(
+            data = this.fileService.getFilePropertiesFromTask(
                 this.jobId, this.taskId, this.filename);
-
-            this.currentSubscription = propertiesProxy.fetch().subscribe({
-                next: (result: any) => {
-                    this._loadPropertiesContentNext(result);
-                },
-                error: (e) => {
-                    this._processError(e);
-                },
-            });
         } else if (this.poolId && this.nodeId) {
-            let propertiesProxy = this.fileService.getFilePropertiesFromComputeNode(
+            data = this.fileService.getFilePropertiesFromComputeNode(
                 this.poolId, this.nodeId, this.filename);
-
-            this.currentSubscription = propertiesProxy.fetch().subscribe({
-                next: (result: any) => {
-                    this._loadPropertiesContentNext(result);
-                },
-                error: (e) => {
-                    this._processError(e);
-                },
-            });
+        } else {
+            return;
         }
+
+        this.currentSubscription = data.fetch().subscribe({
+            next: (result: any) => {
+                this._processProperties(result);
+            },
+            error: (e) => {
+                this._processError(e);
+            },
+        });
     }
 
+    /**
+     * Load the content of the file up to the given byte from the last number it loaded.
+     * @param newContentLength Number of bytes to get the content to
+     *
+     * @example
+     * this._loadUpTo(100); //=> Loads bytes 0-100
+     * this._loadUpTo(300); //=> Loads bytes 100-300
+     */
     private _loadUpTo(newContentLength: number) {
+        const ocpRange = `bytes=${this.lastContentLength}-${newContentLength}`;
+        let obs: Observable<any>;
+
         if (this.jobId && this.taskId) {
-            this.currentSubscription = this.fileService.getFileContentFromTask(this.jobId, this.taskId, this.filename, {
-                fileGetFromTaskOptions: {
-                    ocpRange: `bytes=${this.lastContentLength}-${newContentLength}`,
-                },
-            }).subscribe((result) => {
-                this._loadFileContent(result, newContentLength);
-            }, (e) => {
-                this._processError(e);
+            obs = this.fileService.getFileContentFromTask(this.jobId, this.taskId, this.filename, {
+                fileGetFromTaskOptions: { ocpRange },
             });
         } else if (this.poolId && this.nodeId) {
-            this.currentSubscription = this.fileService.getFileContentFromComputeNode(
-                this.poolId, this.nodeId, this.filename, {
-                    fileGetFromTaskOptions: {
-                        ocpRange: `bytes=${this.lastContentLength}-${newContentLength}`,
-                    },
-                }).subscribe((result) => {
-                    this._loadFileContent(result, newContentLength);
-                }, (e) => {
-                    this._processError(e);
-                });
+            obs = this.fileService.getFileContentFromComputeNode(this.poolId, this.nodeId, this.filename, {
+                fileGetFromComputeNodeOptions: { ocpRange },
+            });
+        } else {
+            return;
         }
+
+        this.currentSubscription = obs.subscribe((result) => {
+            this._processFileContent(result, newContentLength);
+        }, (e) => {
+            this._processError(e);
+        });
     }
 
-    private _loadPropertiesContentNext(result: any) {
-        if (result && result.properties) {
-            const newContentLength = result.properties.contentLength;
+    /**
+     * Process the properties of the file and check if we need to load more content.
+     */
+    private _processProperties(file: File) {
+        if (file && file.properties) {
+            const newContentLength = file.properties.contentLength;
             if (newContentLength !== this.lastContentLength) {
                 this._loadUpTo(newContentLength);
             }
         }
     }
 
-    private _loadFileContent(result: any, newContentLength: number) {
+    private _processFileContent(result: any, newContentLength: number) {
         this.lastContentLength = newContentLength;
         const newLines = result.content.toString().split("\n");
         let first = "";
@@ -148,11 +155,13 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
                 this._scrollToBottom();
             });
         }
+        this.loading = false;
         this.currentSubscription = null;
     }
 
     private _processError(e) {
         this.currentSubscription = null;
+        this.loading = false;
 
         clearInterval(this.inter);
         if (e.statusCode === Constants.HttpCode.NotFound) {

@@ -30,17 +30,7 @@
                 </bex-tab>
                 <bex-tab key="files">
                     <bex-tab-label>Files</bex-tab-label>
-                    <div class="tab-padding">
-                        <md-radio-group class="output-toggle-std" placeholder="StartTask/ApplicationPackage/Task" [(ngModel)]="selectedFileType">
-                            <md-radio-button *ngFor="let entry of fileTypes" [value]="entry.id">{{entry.name}}</md-radio-button>
-                        </md-radio-group>
-                    </div>
-                    <div>
-                        <bex-entity-details-list #listWrapper [refresh]="list.refresh" [filterPlaceholder]="filterPlaceholderText" [showAddButton]="false">
-                            <bex-node-file-list [poolId]="poolId" [nodeId]="nodeId" [filter]="listWrapper.filter" [quickList]="false" [fileType]="selectedFileType"
-                                #list></bex-node-file-list>
-                        </bex-entity-details-list>
-                    </div>
+                    <bex-node-file-browse [poolId]="poolId" [node]="node"></bex-node-file-browse>
                 </bex-tab>
             </bex-tab-group>
         </md-card>

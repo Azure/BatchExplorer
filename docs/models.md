@@ -11,11 +11,11 @@ If you are just making a model that is internal to a component:
 * if yes maybe just export from the component file/folder
 
 ### Step 1: Create file
-Create model file `myNewModel.ts` in `app/models`
+Create model file `my-new-model.ts` in `app/models`
 add this to `app/models/index.ts`
 
 ```typescript
-export * from "./myNewModel"
+export * from "./my-new-model"
 ```
 
 Then you should be able to have
@@ -32,9 +32,12 @@ import {MyNewModel} from "app/models/myNewModel"
 Use this to specify default values for each input. This is quite useful for inputs which are array for example and prevent a null check later in the code
 **It is important to have every input defined here otherwise they will be ignored**
 
+
 ```typescript
 import { List, Record } from "immutable";
 
+
+// Note the record is not being exported
 const FooRecord = Record({
     id: null,
     state: null,
@@ -43,26 +46,50 @@ const FooRecord = Record({
 });
 ```
 
-### Step 3: Write the model class
+### Step 3: Write the attribute interface
+
+In this interface define all the attributes of the model
+This may look like we are creating a lot of duplicate code here but it makes it worth it when using the model later as you'll have typing when creating a new model.
+
+```typescript
+import { Partial } from "app/utils"
+
+export interface MyModelAttributes {
+    id: string;
+    state: string;
+    files: List<string>;
+    bar: Partial<BarAttributes>
+}
+
+```
+
+### Step 4: Write the model class
 
 You'll need to redefine the inputs. This is for typing purposes.
 
 ```typescript
-export class Foo extends FooRecord {
+import { Bar, BarAttributes } from "./bar"
+
+export class Foo extends FooRecord implements MyModelAttributes {
     public id: string;
     public state: string;
     public files: List<string>;
     public bar: Bar;
+
+    constructor(data: Partial<MyModelAttributes> = {}) {
+        super(data);
+    }
 }
 ```
 
 ### Step 4(If applicable): created nested Record
 In the case some of the attributes are other models(Record). Then you'll need to do the following to make sure they are initialized correctly
 
+**Important If the model has some attributes with complex object as type. Write another model(Extending record) for it.**
 
 ```typescript
 // Add this constructor
-constructor(data: any = {}) {
+constructor(data: Partial<MyModelAttributes> = {}) {
     super(Object.assign({}, data, {
         files: List(data.files),
         bar: data.bar && new Bar(data.bar),

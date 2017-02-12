@@ -25,7 +25,7 @@ import { DeleteSelectedItemsDialogComponent } from "./delete-selected-items-dial
             state("*", style({
                 transform: "translateX(0)",
             })),
-            transition("* => *", animate(200)),
+            transition("void => *", animate(200)),
         ]),
     ],
 })

@@ -49,6 +49,12 @@ export class EntityDetailsListComponent {
     @Input()
     public addButtonHoverText: string = "Add";
 
+    @Input()
+    public enableAdvancedFilter = true;
+
+    @Input()
+    public quickSearchField = "id";
+
     public filter = FilterBuilder.none();
     public searchQuery = new FormControl();
 
@@ -57,7 +63,7 @@ export class EntityDetailsListComponent {
             if (query === "") {
                 this.filter = FilterBuilder.none();
             } else {
-                this.filter = FilterBuilder.prop("id").startswith(query);
+                this.filter = FilterBuilder.prop(this.quickSearchField).startswith(query);
             }
         });
     }
