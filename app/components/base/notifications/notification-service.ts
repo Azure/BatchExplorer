@@ -4,6 +4,10 @@ import { BehaviorSubject, Observable } from "rxjs";
 
 import { Notification, NotificationConfig, NotificationLevel } from "./notification";
 
+function mergeConfig(defaultConfig: NotificationConfig, userConfig: NotificationConfig) {
+    return Object.assign({}, defaultConfig, userConfig);
+}
+
 @Injectable()
 export class NotificationService {
     public notifications: Observable<List<Notification>>;
@@ -39,11 +43,13 @@ export class NotificationService {
     }
 
     public error(title: string, message: string, config: NotificationConfig = {}): Notification {
-        return this.notify(NotificationLevel.error, title, message, config);
+        const defaultConfig: NotificationConfig = { persist: true };
+        return this.notify(NotificationLevel.error, title, message, mergeConfig(defaultConfig, config));
     }
 
     public warn(title: string, message: string, config: NotificationConfig = {}): Notification {
-        return this.notify(NotificationLevel.warn, title, message, config);
+        const defaultConfig: NotificationConfig = { persist: true };
+        return this.notify(NotificationLevel.warn, title, message, mergeConfig(defaultConfig, config));
     }
 
     /**

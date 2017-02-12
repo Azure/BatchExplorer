@@ -18,7 +18,7 @@ class FakeAppComponent {
 
 }
 
-describe("Notification", () => {
+fdescribe("Notification", () => {
     let notificationService: NotificationService;
     let currentNotifications: List<Notification>;
     let fixture: ComponentFixture<FakeAppComponent>;
@@ -30,7 +30,7 @@ describe("Notification", () => {
             imports: [NotificationModule],
             declarations: [FakeAppComponent],
         });
-        notificationService = TestBed.get(notificationService);
+        notificationService = TestBed.get(NotificationService);
         notificationService.notifications.subscribe((x) => currentNotifications = x);
         fixture = TestBed.createComponent(FakeAppComponent);
         de = fixture.debugElement;
