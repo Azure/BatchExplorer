@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES5", // Uglify doesn't support es6 yet so we can't have the prod build use es6 https://github.com/mishoo/UglifyJS2/issues/448
-    "module": "commonjs",
+    "module": "es2015",
     "lib": [
       "es6",
       "es2016",

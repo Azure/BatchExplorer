@@ -10,6 +10,10 @@ import { TableRowComponent } from "./table-row.component";
 export class TableComponent extends SelectableListBase {
     @ContentChildren(TableRowComponent)
     public items: QueryList<TableRowComponent>;
+
+    constructor() {
+        super(null);
+    }
 }
 
 @Component({

@@ -1,6 +1,3 @@
-// tslint:disable-next-line
-/// <reference path="../definitions/index.d.ts"/>
-
 import { BrowserWindow, app } from "electron";
 import * as path from "path";
 

@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "target": "ES6", // Uglify doesn't support es6 yet so we can't have the prod build use es6 https://github.com/mishoo/UglifyJS2/issues/448
+    "module": "commonjs",
+    "lib": [
+      "es6",
+      "es2016",
+      "dom"
+    ],
+    "removeComments": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "noImplicitAny": false,
+    "moduleResolution": "node",
+    "listEmittedFiles": true, // debug option
+    "listFiles": true, // debug option
+    "outDir": "build/client",
+    "types": [
+      "node",
+      "electron",
+      "jasmine",
+      "hammerjs",
+      "moment-duration-format"
+    ],
+    "typeRoots": [
+      "./node_modules/@types"
+    ]
+  },
+  "files": [
+    "./definitions/index.d.ts"
+  ],
+  // This is not actually used for building but to let the editor know what files use this config
+  "include": [
+    "./client/**/*.ts"
+  ]
+}
