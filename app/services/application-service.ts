@@ -45,7 +45,8 @@ export class ApplicationService {
     }
 
     /**
-     * List applications for the currently selected account
+     * Lists all of the applications in the specified account.
+     * @param initialOptions: options for the list query
      */
     public list(initialOptions: any = {}): RxListProxy<ApplicationListParams, Application> {
         return new RxArmListProxy<ApplicationListParams, Application>(Application, this.azure, {
@@ -56,9 +57,11 @@ export class ApplicationService {
     }
 
     /**
-     * Get the selected account
+     * Gets information about the specified application, including
+     * a list of it's packages.
+     * @param applicationId: id of the application
      */
-    public get(applicationId: string, options: any = {}): RxEntityProxy<ApplicationParams, Application> {
+    public get(applicationId: string): RxEntityProxy<ApplicationParams, Application> {
         return new RxArmEntityProxy<ApplicationParams, Application>(Application, this.azure, {
             cache: () => this._cache,
             uri: ({ id}) => `${this._currentAccountId}/applications/${id}`,
@@ -68,18 +71,50 @@ export class ApplicationService {
         });
     }
 
+    /**
+     * Creates an application package record.
+     * @param applicationId: id of the application
+     * @param version: selected package version
+     */
     public put(applicationId: string, version: string): Observable<ApplicationPackage> {
         return this.azure
             .put(`${this._currentAccountId}/applications/${applicationId}/versions/${version}`)
             .map(response => new ApplicationPackage(response.json()));
     }
 
-    public activate(applicationId: string, version: string): Observable<any> {
+    /**
+     * Activates the specified application package.
+     * Note: This is just a backup in case the automatic activation fails for whatever
+     * reason, leaving the package in an inconsistent state.
+     * @param applicationId: id of the application
+     * @param version: selected package version
+     */
+    public activatePackage(applicationId: string, version: string): Observable<any> {
         return this.azure.post(
             `${this._currentAccountId}/applications/${applicationId}/versions/${version}/activate`,
             {
                 format: "zip",
             });
+    }
+
+    /**
+     * Gets information about the specified application package.
+     * @param applicationId: id of the application
+     * @param version: selected package version
+     */
+    public getPackage(applicationId: string, version: string): Observable<ApplicationPackage> {
+        return this.azure
+            .get(`${this._currentAccountId}/applications/${applicationId}/versions/${version}`)
+            .map(response => new ApplicationPackage(response.json()));
+    }
+
+    /**
+     * Deletes an application package record and its associated binary file.
+     * @param applicationId: id of the application
+     * @param version: selected package version
+     */
+    public deletePackage(applicationId: string, version: string): Observable<any> {
+        return this.azure.delete(`${this._currentAccountId}/applications/${applicationId}/versions/${version}`);
     }
 
     /**

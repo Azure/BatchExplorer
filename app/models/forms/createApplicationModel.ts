@@ -3,6 +3,7 @@ import { Application } from "app/models";
 export interface CreateApplicationModel {
     id: string;
     displayName: string;
+    defaultVersion: string;
     allowUpdates: boolean;
     version: string;
 }
@@ -18,11 +19,12 @@ export function createApplicationFormToJsonData(formData: CreateApplicationModel
     return data;
 }
 
-export function applicationToFormModel(application: Application): CreateApplicationModel {
+export function applicationToFormModel(application: Application, version?: string): CreateApplicationModel {
     return {
         id: application.id,
-        displayName: application.defaultVersion,
+        displayName: application.displayName,
+        defaultVersion: application.defaultVersion,
         allowUpdates: application.allowUpdates,
-        version: null,
+        version: version,
     };
 }

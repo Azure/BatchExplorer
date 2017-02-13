@@ -41,7 +41,7 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
     public get filter(): Filter { return this._filter; };
 
     private _baseOptions = { maxresults: 50 };
-    private _onJobAddedSub: Subscription;
+    private _onApplicationAddedSub: Subscription;
     private _filter: Filter;
 
     constructor(
@@ -59,7 +59,7 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
         });
 
         this.status = this.data.status;
-        this._onJobAddedSub = applicationService.onApplicationAdded.subscribe((applicationId) => {
+        this._onApplicationAddedSub = applicationService.onApplicationAdded.subscribe((applicationId) => {
             this.data.loadNewItem(applicationService.get(applicationId));
         });
     }
@@ -69,7 +69,7 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
     }
 
     public ngOnDestroy() {
-        this._onJobAddedSub.unsubscribe();
+        this._onApplicationAddedSub.unsubscribe();
     }
 
     @autobind()

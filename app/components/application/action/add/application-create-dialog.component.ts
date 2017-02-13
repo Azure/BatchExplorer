@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Response } from "@angular/http";
 import { autobind } from "core-decorators";
@@ -15,13 +15,12 @@ import { Constants } from "app/utils";
     selector: "bex-job-create-basic-dialog",
     templateUrl: "application-create-dialog.html",
 })
-export class ApplicationCreateDialogComponent implements OnInit {
+export class ApplicationCreateDialogComponent {
     public file: File;
     public applicationForm: FormGroup;
     public blockCount: number = 0;
     public progress: string;
 
-    // upload block size of 1mb
     private _blockSize: number;
     private _fileReader: FileReader;
     private _blockIds: string[];
@@ -55,12 +54,9 @@ export class ApplicationCreateDialogComponent implements OnInit {
         });
     }
 
-    public ngOnInit() {
-        /** noop */
-    }
-
-    public setValue(application: Application) {
-        this.applicationForm.patchValue(applicationToFormModel(application));
+    public setValue(application: Application, version?: string) {
+        // TODO: need to disable appId and version fields if they are supplied
+        this.applicationForm.patchValue(applicationToFormModel(application, version));
     }
 
     public fileSelected(changeEvent: Event) {
@@ -83,14 +79,19 @@ export class ApplicationCreateDialogComponent implements OnInit {
     @autobind()
     public submit(): Observable<any> {
         const formData = this.applicationForm.value;
-        console.log("PUT'ing application package");
 
-        // put().cascade((sasUrl) => upload(sasUrl)).cascade(() => activate)
-
+        /**
+         * Todo:
+         * - create upload file handler action
+         * - create activate package action
+         * - pass both of these actions to the long running task mananger
+         * handle errors
+         *  - max applications, or packages reached
+         */
         return this.applicationService.put(formData.id, formData.version)
             .cascade((packageVersion) => this._uploadAppPackage(this.file, packageVersion.storageUrl))
             .cascade(() => {
-                return this.applicationService.activate(formData.id, formData.version).subscribe({
+                return this.applicationService.activatePackage(formData.id, formData.version).subscribe({
                     next: () => {
                         this.applicationService.onApplicationAdded.next(formData.id);
                         this.notificationManager.success(
@@ -99,70 +100,27 @@ export class ApplicationCreateDialogComponent implements OnInit {
                         );
                     },
                     error: (response: Response) => {
+                        /**
+                         * Possible errors
+                         *  - trying to put a package that already exists and has allowUpdates = false
+                         *      409 (The settings for the specified application forbid package updates.)
+                         *      code : "ApplicationDoesntAllowPackageUpdates"
+                         *      message :
+                         *          "The settings for the specified application forbid package updates."
+                         *          RequestId: 0427d452-dbfe-48ff-80f9-680a26bbff27
+                         *          Time:2017-02-13T03:35:27.0685745Z
+                         */
                         console.error("Failed to activate application package :: ", response.json());
                         this.notificationManager.error(
                             "Activation failed",
-                            `The application package was uploaded into storage successfully, but the activation process failed.`,
+                            "The application package was uploaded into storage successfully, "
+                            + "but the activation process failed.",
                         );
                     },
                 });
             });
-
-        // const observable = this.applicationService.put(formData.id, formData.version);
-        // observable.subscribe({
-        //     next: (packageVersion) => {
-        //         // on completion, upload the package
-        //         console.log("PUT complete, uploading file");
-        //         this._uploadAppPackage(this.file, packageVersion.storageUrl).subscribe({
-        //             next: () => {
-        //                 // call off to activate the package
-        //                 console.log("Upload complete, activating package");
-        //                 this.applicationService.activate(formData.id, formData.version).subscribe({
-        //                     next: () => {
-        //                         this._notifySuccess();
-        //                     },
-        //                     error: (response: Response) => {
-        //                         console.error("Failed to activate application package :: ", response.json());
-        //                         this.notificationManager.error(
-        //                             "Activation failed",
-        //                             `The application package was uploaded into storage successfully, but the activation process failed.`,
-        //                         );
-        //                     },
-        //                 });
-        //             },
-        //             error: (error) => {
-        //                 console.error("Failed to upload application package :: ", error);
-        //             },
-        //         });
-        //         /**
-        //          * todo:
-        //          *      create upload file handler action
-        //          *      create activate package action
-        //          *      pass both of these actions to the long running task mananger
-        //          *      on completion call the onApplicationAdded code below
-        //          */
-        //     },
-        //     error: (error) => {
-        //         /**
-        //          * Handle put application errors:
-        //          *  - trying to put a package that already exists and has allowUpdates = false
-        //          *  - max applications reached
-        //          */
-        //         console.error("Failed to create application package record :: ", error);
-        //     },
-        // });
-
-        // return observable;
     }
 
-    // private _notifySuccess() {
-    //     const formData = this.applicationForm.value;
-    //     this.applicationService.onApplicationAdded.next(formData.id);
-    //     this.notificationManager.success(
-    //         "Application added!",
-    //         `Version ${formData.version} for application '${formData.id}' was successfully created!`,
-    //     );
-    // }
 
     private _uploadAppPackage(file, sasUrl): Observable<any> {
         if (!this.hasValidFile()) {
@@ -172,7 +130,9 @@ export class ApplicationCreateDialogComponent implements OnInit {
         this._blockIds = [];
         this._currentFilePointer = 0;
         this._totalBytesRemaining = 0;
-        this._blockSize = 1024 * 1024;
+
+        // block size of 2mb
+        this._blockSize = 1024 * 1024 * 2;
         this._bytesUploaded = 0;
 
         const subject = new AsyncSubject<any>();
@@ -244,7 +204,7 @@ export class ApplicationCreateDialogComponent implements OnInit {
                     this._readAndUploadFileBlocks(sasUrl, subject);
                 },
                 error: (error) => {
-                    console.log("ERROR :: ", error);
+                    console.error("ERROR :: ", error);
                 },
             });
         }

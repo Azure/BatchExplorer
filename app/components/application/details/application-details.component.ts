@@ -1,18 +1,15 @@
 import { Component, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
-import { MdDialog, MdDialogConfig } from "@angular/material";
+import { MdDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs/Subscription";
 
 import { Application } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";
-import { AccountService, ApplicationParams, ApplicationService } from "app/services";
+import { ApplicationParams, ApplicationService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
 import { SidebarManager } from "../../base/sidebar";
-
-import {
-    ApplicationCreateDialogComponent,
-} from "../action";
+import { ApplicationCreateDialogComponent } from "../action";
 
 @Component({
     selector: "bex-application-details",
