@@ -20,8 +20,8 @@ import {
     imports: [
         BrowserModule,
         FormsModule,
-        MaterialModule.forRoot(),
-        DropdownModule.forRoot(),
+        MaterialModule,
+        DropdownModule,
     ],
     providers: [
         BackgroundTaskManager,

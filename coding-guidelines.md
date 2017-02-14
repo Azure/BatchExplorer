@@ -21,7 +21,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
-import { NotificationManager } from "app/components/base/notifications";
+import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 
 // Code goes here

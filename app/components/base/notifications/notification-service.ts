@@ -4,15 +4,22 @@ import { BehaviorSubject, Observable } from "rxjs";
 
 import { Notification, NotificationConfig, NotificationLevel } from "./notification";
 
+function mergeConfig(defaultConfig: NotificationConfig, userConfig: NotificationConfig) {
+    return Object.assign({}, defaultConfig, userConfig);
+}
+
 @Injectable()
-export class NotificationManager {
+export class NotificationService {
     public notifications: Observable<List<Notification>>;
+    public persistedNotifications: Observable<List<Notification>>;
 
     private _notifications = new BehaviorSubject(List<Notification>([]));
+    private _persistedNotifications = new BehaviorSubject(List<Notification>([]));
     private _dimissTimeouts = {};
 
     constructor() {
         this.notifications = this._notifications.asObservable();
+        this.persistedNotifications = this._persistedNotifications.asObservable();
     }
 
     public notify(
@@ -36,7 +43,13 @@ export class NotificationManager {
     }
 
     public error(title: string, message: string, config: NotificationConfig = {}): Notification {
-        return this.notify(NotificationLevel.error, title, message, config);
+        const defaultConfig: NotificationConfig = { persist: true };
+        return this.notify(NotificationLevel.error, title, message, mergeConfig(defaultConfig, config));
+    }
+
+    public warn(title: string, message: string, config: NotificationConfig = {}): Notification {
+        const defaultConfig: NotificationConfig = { persist: true };
+        return this.notify(NotificationLevel.warn, title, message, mergeConfig(defaultConfig, config));
     }
 
     /**
@@ -52,8 +65,22 @@ export class NotificationManager {
         if (this._dimissTimeouts[notification.id]) {
             clearTimeout(this._dimissTimeouts[notification.id]);
         }
-        const newNotifications = this._notifications.getValue().filter((x) => x.id !== notification.id);
+        const newNotifications = this._notifications.value.filter(x => x.id !== notification.id);
         this._notifications.next(List<Notification>(newNotifications));
+        if (persistIfApplicable && notification.config.persist) {
+            this._persistedNotifications.next(this._persistedNotifications.value.push(notification));
+        } else {
+            const newPersistedNotifications = this._persistedNotifications.value.filter(x => x.id !== notification.id);
+            this._persistedNotifications.next(List<Notification>(newPersistedNotifications));
+        }
+    }
+
+    /**
+     * Dismiss all notifcations
+     */
+    public dismissAll() {
+        this._notifications.next(List([]));
+        this._persistedNotifications.next(List([]));
     }
 
     private _registerForDismiss(notification: Notification) {
