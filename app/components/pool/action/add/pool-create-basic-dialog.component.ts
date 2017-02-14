@@ -49,7 +49,7 @@ export class PoolCreateBasicDialogComponent {
         const id = this.createPoolForm.value.id;
         const data = createPoolToData(this.createPoolForm.value);
         const obs = this.poolService.add(data);
-        obs.subscribe(() => {
+        obs.do(() => {
             this.poolService.onPoolAdded.next(id);
             this.notificationManager.success("Pool added!", `Pool '${id}' was created successfully!`);
         });

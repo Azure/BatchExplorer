@@ -27,6 +27,7 @@ export * from "./resizeError";
 export * from "./resourceFile";
 export * from "./scheduling-error";
 export * from "./settings";
+export * from "./server-error";
 export * from "./startTask";
 export * from "./subscription";
 export * from "./subtaskInformation";

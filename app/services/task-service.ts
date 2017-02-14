@@ -119,7 +119,7 @@ export class TaskService extends ServiceBase {
     }
 
     public terminate(jobId: string, taskId: string, options: any): Observable<void> {
-        return Observable.fromPromise<any>(BatchClient.task.terminate(jobId, taskId, options));
+        return this.callBatchClient(BatchClient.task.terminate(jobId, taskId, options));
     }
 
     /**
@@ -132,7 +132,7 @@ export class TaskService extends ServiceBase {
     }
 
     public add(jobId: string, task: any, options: any): Observable<void> {
-        return Observable.fromPromise<any>(BatchClient.task.add(jobId, task, options));
+        return this.callBatchClient(BatchClient.task.add(jobId, task, options));
     }
 
     /**
