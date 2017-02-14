@@ -106,11 +106,13 @@ export class ApplicationService {
             `${this._currentAccountId}/applications/${applicationId}/versions/${version}/activate`,
             {
                 format: "zip",
-            });
+            },
+        );
     }
 
     /**
      * Gets information about the specified application package.
+     * TODO: Returns an Observable so won't work with delete poller.
      * @param applicationId: id of the application
      * @param version: selected package version
      */

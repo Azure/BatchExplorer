@@ -46,7 +46,8 @@ export abstract class RxEntityProxy<TParams, TEntity> extends RxProxyBase<TParam
             },
             error: (error: any) => {
                 // If there is a 404 delete the item from the cache as it doesn't exist anymore
-                if (error.statusCode === HttpCode.NotFound) {
+                const status = error.statusCode || error.status;
+                if (status === HttpCode.NotFound) {
                     this._itemKey.next(null);
                     const queryKey = this.params[this.cache.uniqueField];
                     this.cache.deleteItemByKey(queryKey);
@@ -81,8 +82,10 @@ export function getOnceProxy<TEntity>(getProxy: RxEntityProxy<any, TEntity>): Ob
         },
         error: errorCallback,
     });
+
     getProxy.fetch().subscribe({
         error: errorCallback,
     });
+
     return obs.asObservable();
 }

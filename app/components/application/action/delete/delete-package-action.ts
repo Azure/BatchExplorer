@@ -22,8 +22,7 @@ export class DeletePackageAction extends LongRunningDeleteAction {
     protected waitForDelete(version: string, taskManager?: BackgroundTaskManager) {
         this.applicationService.getPackage(this.applicationId, version).subscribe({
             next: (appPackage: ApplicationPackage) => {
-                const getFunc = this.applicationService.getPackage(this.applicationId, version);
-                const task = new WaitForDeletePoller(getFunc);
+                const task = new WaitForDeletePoller(this.applicationService.getPackage(this.applicationId, version));
                 if (taskManager) {
                     const message = `Deleting version '${version}' of application: ${this.applicationId}`;
                     taskManager.startTask(message, (bTask) => {

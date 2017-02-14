@@ -48,7 +48,6 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
         });
 
         this.data.deleted.subscribe((key) => {
-            console.log("DELETED :: ", key);
             if (this.applicationId === key) {
                 this.router.navigate(["/applications"]);
             }

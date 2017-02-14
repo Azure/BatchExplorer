@@ -11,7 +11,7 @@ export class DeleteApplicationAction extends LongRunningDeleteAction {
         private applicationService: ApplicationService,
         private applicationId: string) {
 
-        super("App package", [applicationId]);
+        super("Application", [applicationId]);
     }
 
     public deleteAction() {
@@ -21,8 +21,7 @@ export class DeleteApplicationAction extends LongRunningDeleteAction {
     protected waitForDelete(id: string, taskManager?: BackgroundTaskManager) {
         this.applicationService.getOnce(id).subscribe({
             next: (application: Application) => {
-                const getFunc = this.applicationService.get(id);
-                const task = new WaitForDeletePoller(getFunc);
+                const task = new WaitForDeletePoller(this.applicationService.get(id));
                 if (taskManager) {
                     const message = `Deleting application: ${id}`;
                     taskManager.startTask(message, (bTask) => {
