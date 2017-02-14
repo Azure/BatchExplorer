@@ -50,4 +50,7 @@ export class ServerError {
         Object.assign(this, attributes);
     }
 
+    public toString() {
+        return `${this.status} - ${this.body.message}`;
+    }
 }

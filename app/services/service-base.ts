@@ -30,8 +30,8 @@ export class ServiceBase {
      * @param promise Promise returned by the batch client
      * @param  errorCallback Optional error callback if want to log
      */
-    protected callBatchClient(promise: Promise<any>, errorCallback?: (error: any) => void): Observable<any> {
-        const observable = Observable.fromPromise<any>(promise).catch((err) => {
+    protected callBatchClient<T>(promise: Promise<any>, errorCallback?: (error: any) => void): Observable<T> {
+        const observable = Observable.fromPromise<T>(promise).catch((err) => {
             const serverError = ServerError.fromBatch(err);
             if (errorCallback) {
                 errorCallback(serverError);

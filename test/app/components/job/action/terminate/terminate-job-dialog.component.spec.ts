@@ -76,6 +76,6 @@ describe("TerminateJobDialogComponent ", () => {
         fixture.detectChanges();
 
         expect(actionForm.error).not.toBeNull();
-        expect(actionForm.error.message.value).toContain("Some random test error happened terminating job");
+        expect(actionForm.error.body.message).toContain("Some random test error happened terminating job");
     });
 });

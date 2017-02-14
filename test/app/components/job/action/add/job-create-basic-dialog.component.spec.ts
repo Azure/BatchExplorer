@@ -228,8 +228,8 @@ describe("JobCreateBasicDialogComponent ", () => {
         createForm.add();
 
         expect(createForm.error).not.toBeNull();
-        expect(createForm.error.code).toEqual("RandomTestErrorCode");
-        expect(createForm.error.message.value).toEqual("error, error, error");
+        expect(createForm.error.body.code).toEqual("RandomTestErrorCode");
+        expect(createForm.error.body.message).toEqual("error, error, error");
 
         let jobAddedCalled = false;
         jobServiceSpy.onJobAdded.subscribe({

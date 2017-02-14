@@ -118,20 +118,20 @@ export class TaskService extends ServiceBase {
         });
     }
 
-    public terminate(jobId: string, taskId: string, options: any): Observable<void> {
+    public terminate(jobId: string, taskId: string, options: any): Observable<{}> {
         return this.callBatchClient(BatchClient.task.terminate(jobId, taskId, options));
     }
 
     /**
      * Starts the deletion process
      */
-    public delete(jobId: string, taskId: string, options: any = {}): Observable<void> {
+    public delete(jobId: string, taskId: string, options: any = {}): Observable<{}> {
         return this.callBatchClient(BatchClient.task.delete(jobId, taskId, options), (error) => {
             console.error(`Error deleting task: ${taskId}, for job: ${jobId}`, error);
         });
     }
 
-    public add(jobId: string, task: any, options: any): Observable<void> {
+    public add(jobId: string, task: any, options: any): Observable<{}> {
         return this.callBatchClient(BatchClient.task.add(jobId, task, options));
     }
 
@@ -139,7 +139,7 @@ export class TaskService extends ServiceBase {
      * Reactivate a task
      * https://msdn.microsoft.com/en-us/library/azure/mt742660.aspx?f=255&MSPPError=-2147217396
      */
-    public reactivate(jobId: string, taskId: string, options: any = {}): Observable<void> {
+    public reactivate(jobId: string, taskId: string, options: any = {}): Observable<{}> {
         return this.callBatchClient(BatchClient.task.reactivate(jobId, taskId, options), (error) => {
             console.error(`Error reactivating task: ${taskId}, for job: ${jobId}`, error);
         });

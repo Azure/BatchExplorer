@@ -2,7 +2,7 @@ import { AfterViewInit, Component, ElementRef, Input, OnChanges } from "@angular
 import { Observable, Subscription } from "rxjs";
 
 import { ScrollableComponent, ScrollableService } from "app/components/base/scrollable";
-import { File } from "app/models";
+import { File, ServerError } from "app/models";
 import { FileService } from "app/services";
 import { Constants } from "app/utils";
 
@@ -89,6 +89,7 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
                 this._processProperties(result);
             },
             error: (e) => {
+                console.log("Sub heree", e);
                 this._processError(e);
             },
         });
@@ -159,19 +160,19 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
         this.currentSubscription = null;
     }
 
-    private _processError(e) {
+    private _processError(e: ServerError) {
         this.currentSubscription = null;
         this.loading = false;
 
         clearInterval(this.inter);
-        if (e.statusCode === Constants.HttpCode.NotFound) {
+        if (e.status === Constants.HttpCode.NotFound) {
             this.notFound = true;
             return;
-        } else if (e.statusCode === Constants.HttpCode.Conflict) {
+        } else if (e.status === Constants.HttpCode.Conflict) {
             this.notFound = true;
             return;
         }
-        console.error("[FileContent.component] Error is", e.statusCode, Object.assign({}, e));
+        console.error("[FileContent.component] Error is", e.status, e);
     }
 
     private _scrollToBottom() {
