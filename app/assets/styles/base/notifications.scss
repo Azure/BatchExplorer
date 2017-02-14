@@ -13,7 +13,7 @@ bex-notification-container {
     margin: 30px 10px;
     width: 320px;
     position: fixed;
-    z-index: 9900;
+    z-index: $zindex-notification;
 
     &.tl {
         top: 0;
@@ -103,8 +103,10 @@ bex-notification {
     }
 
     &.warn {
-        color: $yellow-dark;
         background-color: $yellow-light;
+        a {
+            color: $yellow-dark;
+        }
     }
 
     &.notification-hidden {

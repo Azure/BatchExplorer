@@ -25,7 +25,7 @@
 
 [bex-dropdown-content] {
     position: absolute;
-    z-index: 9997;
+    z-index: $zindex-dropdown;
     right: 0;
     top: $header-height;
     background-color: $navigation-background;

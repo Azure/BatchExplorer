@@ -6,7 +6,6 @@ import { BrowserModule } from "@angular/platform-browser";
 import { ScrollableComponent } from "./scrollable.component";
 import { ScrollableService } from "./scrollable.service";
 
-
 @NgModule({
     declarations: [
         ScrollableComponent,
@@ -21,7 +20,7 @@ import { ScrollableService } from "./scrollable.service";
     ],
     providers: [
         ScrollableService,
-    ]
+    ],
 })
 export class ScrollableModule {
 }
