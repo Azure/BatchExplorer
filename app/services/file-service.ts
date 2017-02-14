@@ -80,7 +80,7 @@ export class FileService extends ServiceBase {
         filename: string,
         options: any = {}): Observable<FileContentResult> {
 
-        return Observable.fromPromise(BatchClient.file.getComputeNodeFile(poolId, nodeId, filename, options));
+        return this.callBatchClient(BatchClient.file.getComputeNodeFile(poolId, nodeId, filename, options));
     }
 
     public getFilePropertiesFromComputeNode(
@@ -120,7 +120,7 @@ export class FileService extends ServiceBase {
         filename: string,
         options: any = {}): Observable<FileContentResult> {
 
-        return Observable.fromPromise(BatchClient.file.getTaskFile(jobId, taskId, filename, options));
+        return this.callBatchClient(BatchClient.file.getTaskFile(jobId, taskId, filename, options));
     }
 
     public getFilePropertiesFromTask(

@@ -86,8 +86,7 @@ export class NodeService extends ServiceBase {
     }
 
     public reboot(poolId: string, nodeId: string): Observable<any> {
-        let observable = Observable.fromPromise<any>(
-            BatchClient.node.reboot(poolId, nodeId, {}));
+        let observable = this.callBatchClient(BatchClient.node.reboot(poolId, nodeId, {}));
         observable.subscribe({
             error: (error) => {
                 log.error("Error rebooting node: " + nodeId, Object.assign({}, error));
@@ -150,7 +149,7 @@ export class NodeService extends ServiceBase {
     }
 
     public reimage(poolId: string, nodeId: string): Observable<any> {
-        let observable = Observable.fromPromise<any>(
+        let observable = this.callBatchClient(
             BatchClient.node.reimage(poolId, nodeId, {}));
         observable.subscribe({
             error: (error) => {

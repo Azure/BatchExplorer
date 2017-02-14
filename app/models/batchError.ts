@@ -23,6 +23,7 @@ export interface BatchError {
     code?: string;
     message?: ErrorMessage;
     body?: BatchErrorBody;
+    statusCode: number;
 }
 
 export interface BatchErrorBody {

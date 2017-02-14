@@ -4,7 +4,7 @@ import { MaterialModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
 
 import { ServerErrorComponent } from "app/components/base/form/server-error";
-import { BatchError } from "app/models";
+import { ServerError } from "app/models";
 
 @Component({
     template: `
@@ -15,12 +15,13 @@ export class ServerErrorTestComponent {
     public error = null;
 }
 
-const fakeError: BatchError = {
+const fakeError = ServerError.fromBatch({
+    statusCode: 408,
     code: "FakeErrorCode",
     message: {
         value: "There was a fake error\nRequestId:abc-def-ghi\nTime:time:2016-12-08T18:23:14",
     },
-};
+});
 
 describe("ServerErrorComponent", () => {
     let fixture: ComponentFixture<ServerErrorTestComponent>;
