@@ -89,7 +89,6 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
                 this._processProperties(result);
             },
             error: (e) => {
-                console.log("Sub heree", e);
                 this._processError(e);
             },
         });

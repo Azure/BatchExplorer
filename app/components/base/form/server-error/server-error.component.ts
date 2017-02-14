@@ -16,7 +16,6 @@ export class ServerErrorComponent {
 
     @Input()
     public set error(error: ServerError) {
-        console.log("Got new error", error);
         if (error && !(error instanceof ServerError)) {
             console.error("Error passed to bex-server-error is not a server error.", error);
         }
