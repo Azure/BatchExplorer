@@ -4,13 +4,16 @@ import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 
+import { DropdownModule } from "../dropdown";
 import { NotificationContainerComponent } from "./notification-container.component";
-import { NotificationManager } from "./notification-manager";
+import { NotificationService } from "./notification-service";
 import { NotificationComponent } from "./notification.component";
+import { PersistentNotificationDropdownComponent } from "./persistent-dropdown";
 
 const components = [
     NotificationComponent,
     NotificationContainerComponent,
+    PersistentNotificationDropdownComponent,
 ];
 
 @NgModule({
@@ -20,10 +23,11 @@ const components = [
         BrowserModule,
         FormsModule,
         RouterModule,
-        MaterialModule.forRoot(),
+        MaterialModule,
+        DropdownModule,
     ],
     providers: [
-        NotificationManager,
+        NotificationService,
     ],
 })
 export class NotificationModule {

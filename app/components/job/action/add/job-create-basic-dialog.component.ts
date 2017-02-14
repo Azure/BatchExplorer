@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
-import { NotificationManager } from "app/components/base/notifications";
+import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { RangeValidatorDirective } from "app/components/base/validation";
 import { Job, Pool } from "app/models";
@@ -27,7 +27,7 @@ export class JobCreateBasicDialogComponent implements OnInit {
         public sidebarRef: SidebarRef<JobCreateBasicDialogComponent>,
         private jobService: JobService,
         private poolService: PoolService,
-        private notificationManager: NotificationManager) {
+        private notificationService: NotificationService) {
 
         this.poolsData = this.poolService.list();
         const validation = Constants.forms.validation;
@@ -78,7 +78,7 @@ export class JobCreateBasicDialogComponent implements OnInit {
             next: () => {
                 const id = this.createJobForm.value.id;
                 this.jobService.onJobAdded.next(id);
-                this.notificationManager.success("Job added!", `Job '${id}' was created successfully!`);
+                this.notificationService.success("Job added!", `Job '${id}' was created successfully!`);
             },
             error: () => null,
         });

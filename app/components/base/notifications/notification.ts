@@ -5,6 +5,7 @@ export const NotificationLevel = {
     info: "info" as NotificationLevel,
     error: "error" as NotificationLevel,
     success: "success" as NotificationLevel,
+    warn: "warn" as NotificationLevel,
 };
 
 export interface NotificationConfig {

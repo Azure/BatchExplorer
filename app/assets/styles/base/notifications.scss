@@ -13,7 +13,7 @@ bex-notification-container {
     margin: 30px 10px;
     width: 320px;
     position: fixed;
-    z-index: 9998;
+    z-index: $zindex-notification;
 
     &.tl {
         top: 0;
@@ -102,6 +102,13 @@ bex-notification {
         background-color: white;
     }
 
+    &.warn {
+        background-color: $yellow-light;
+        a {
+            color: $yellow-dark;
+        }
+    }
+
     &.notification-hidden {
         opacity: 0;
     }
@@ -146,6 +153,100 @@ bex-notification {
         &:hover:before,
         &:hover:after {
             background: white;
+        }
+    }
+}
+
+
+bex-persistent-notifications-dropdown {
+    .fa-bell {
+        font-size: 20px;
+    }
+
+    .count {
+        font-size: 0.7em;
+        position: absolute;
+        left: 0;
+        top: 0;
+        background-color: $fuzzyWuzzyBrown;
+        border-radius: 10px;
+        width: 18px;
+        height: 18px;
+    }
+
+    [bex-dropdown-btn] {
+        border-right: 1px solid $navigation-background;
+    }
+
+    [bex-dropdown-content] {
+        width: 400px;
+
+        .icon {
+            font-size: 30px;
+            width: 40px;
+            text-align: center;
+            margin-right: 10px;
+
+            .fa-exclamation-triangle {
+                color: $yellow;
+            }
+        }
+
+        .details {
+            flex: 1;
+            .title {
+                font-size: 14px;
+                font-weight: bold;
+            }
+
+            .message {
+                font-size: 13px;
+            }
+        }
+
+        .dismiss {
+            flex: 0 0 20px;
+            background-color: white;
+            color: #3f51b5;
+            border-radius: 10px;
+            width: 20px;
+            height: 20px;
+            text-align: center;
+            vertical-align: middle;
+            line-height: 20px;
+            cursor: pointer;
+
+            &:hover {
+                color: white;
+                background-color: $crail;
+            }
+
+            &:active {
+                background-color: $buttonBrown;
+            }
+        }
+
+        .clear-all {
+            font-size: 14px;
+            justify-content: center;
+            padding: 10px;
+
+            .fa-trash {
+                margin-right: 5px;
+                font-size: 20px;
+            }
+        }
+
+        .no-notifications {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+
+            .fa-bell {
+                font-size: 40px;
+            }
         }
     }
 }
