@@ -74,7 +74,8 @@ describe("QuickListComponent", () => {
         expect(activeItem.active).toBe(true);
         expect(items[1].componentInstance.active).toBe(true);
 
-        expect(selectedItems.length).toBe(0, "Should not select the item");
+        expect(selectedItems.length).toBe(1, "Should also select the item");
+        expect(selectedItems[0]).toEqual("item-2", "Should also select the item");
     });
 
     describe("When an item is active", () => {
@@ -125,7 +126,8 @@ describe("QuickListComponent", () => {
 
             click(items[4], ButtonClickEvents.leftCtrl);
 
-            expect(selectedItems.length).toBe(0, "Should have also unselected the active as it was the last remaining");
+            expect(selectedItems.length).toBe(1, "Should not have unselected the active");
+            expect(selectedItems[0]).toEqual("item-2", "Should not have unselected the active");
         });
     });
 });
