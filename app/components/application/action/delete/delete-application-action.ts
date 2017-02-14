@@ -1,31 +1,30 @@
 import { BehaviorSubject } from "rxjs";
 
 import { BackgroundTaskManager } from "app/components/base/background-task";
-import { ApplicationPackage } from "app/models";
+import { Application } from "app/models";
 import { ApplicationService } from "app/services";
 import { LongRunningDeleteAction } from "app/services/core";
 import { WaitForDeletePoller } from "./";
 
-export class DeletePackageAction extends LongRunningDeleteAction {
+export class DeleteApplicationAction extends LongRunningDeleteAction {
     constructor(
         private applicationService: ApplicationService,
-        private applicationId: string,
-        private versions: string[]) {
+        private applicationId: string) {
 
-        super("App package", versions);
+        super("App package", [applicationId]);
     }
 
-    public deleteAction(version: string) {
-        return this.applicationService.deletePackage(this.applicationId, version);
+    public deleteAction() {
+        return this.applicationService.delete(this.applicationId);
     }
 
-    protected waitForDelete(version: string, taskManager?: BackgroundTaskManager) {
-        this.applicationService.getPackage(this.applicationId, version).subscribe({
-            next: (appPackage: ApplicationPackage) => {
-                const getFunc = this.applicationService.getPackage(this.applicationId, version);
+    protected waitForDelete(id: string, taskManager?: BackgroundTaskManager) {
+        this.applicationService.getOnce(id).subscribe({
+            next: (application: Application) => {
+                const getFunc = this.applicationService.get(id);
                 const task = new WaitForDeletePoller(getFunc);
                 if (taskManager) {
-                    const message = `Deleting version '${version}' of application: ${this.applicationId}`;
+                    const message = `Deleting application: ${id}`;
                     taskManager.startTask(message, (bTask) => {
                         return task.start(bTask.progress);
                     });
@@ -38,7 +37,7 @@ export class DeletePackageAction extends LongRunningDeleteAction {
                 }
             },
             error: (error) => {
-                // No need to watch for App Package it is already deleted
+                // No need to watch for App it is already deleted
                 this.markItemAsDeleted();
             },
         });

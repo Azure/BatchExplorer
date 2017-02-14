@@ -1,7 +1,6 @@
 <div  class="slideout-form content-wrapper">
-    <h1>Create application</h1>
-    <p>Upload an application package and give it an identifier to create your application</p>
-
+    <h1>{{ title }}</h1>
+    <p>{{ description }}</p>
     <bex-create-form [formGroup]="applicationForm" [submit]="submit" [sidebarRef]="sidebarRef">
         <form novalidate [formGroup]="applicationForm">
             <div class="form-element">

@@ -16,9 +16,9 @@
             </md-card-title-group>
             <md-card-content></md-card-content>
             <md-card-actions layout="row" layout-align="end center">
-                <bex-add-button title="Add package" (click)="addApplication()"></bex-add-button>
-                <!--<bex-add-task-button title="Edit" [job]="application" (click)="addTask()"></bex-add-task-button>
-                <bex-delete-button [entity]="application" (click)="deleteJob()"></bex-delete-button>-->
+                <bex-add-button title="Add package" (click)="addPackage()"></bex-add-button>
+                <bex-edit-button (click)="editApplication()"></bex-edit-button>
+                <bex-delete-button [entity]="application" (click)="deleteApplication()"></bex-delete-button>
             </md-card-actions>
         </md-card>
         <bex-application-error-display [application]="application"></bex-application-error-display>
@@ -30,8 +30,8 @@
                 </bex-tab>
                 <bex-tab key="packages">
                     <bex-tab-label>Packages</bex-tab-label>
-
-                    <bex-entity-details-list #listWrapper [showRefreshButton]="false" [showExpandButton]="false" [showFilterIcon]="false" filterPlaceholder="Filter by package version">
+                    <bex-entity-details-list #listWrapper [showRefreshButton]="false" [showExpandButton]="false" [showFilterIcon]="false"
+                        addButtonHoverText="Add package version" (onAddEntity)="list?.addPackage($event)" filterPlaceholder="Filter by package version">
                         <div bex-list-buttons>
                             <!--
                                 TODO: hook these buttons up

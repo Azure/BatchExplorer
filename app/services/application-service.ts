@@ -4,7 +4,7 @@ import { Observable, Subject } from "rxjs";
 import { Application, ApplicationPackage } from "app/models";
 import { AccountService } from "app/services";
 import { AzureHttpService } from "./azure-http.service";
-import { DataCache, RxArmEntityProxy, RxArmListProxy, RxEntityProxy, RxListProxy } from "./core";
+import { DataCache, RxArmEntityProxy, RxArmListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
 
 export interface ApplicationListParams {
 }
@@ -71,6 +71,10 @@ export class ApplicationService {
         });
     }
 
+    public getOnce(applicationId: string, options: any = {}): Observable<Application> {
+        return getOnceProxy(this.get(applicationId));
+    }
+
     /**
      * Creates an application package record.
      * @param applicationId: id of the application
@@ -80,6 +84,14 @@ export class ApplicationService {
         return this.azure
             .put(`${this._currentAccountId}/applications/${applicationId}/versions/${version}`)
             .map(response => new ApplicationPackage(response.json()));
+    }
+
+    /**
+     * Deletes an application.
+     * @param applicationId: id of the application
+     */
+    public delete(applicationId: string): Observable<any> {
+        return this.azure.delete(`${this._currentAccountId}/applications/${applicationId}`);
     }
 
     /**

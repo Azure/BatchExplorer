@@ -1,7 +1,9 @@
 import { Component, Input, OnChanges, OnDestroy, ViewChild, ViewContainerRef } from "@angular/core";
 import { MdDialog, MdDialogConfig } from "@angular/material";
+import { autobind } from "core-decorators";
 import { List } from "immutable";
 import * as moment from "moment";
+import { Observable } from "rxjs";
 
 import { BackgroundTaskManager } from "app/components/base/background-task";
 import { DeleteSelectedItemsDialogComponent } from "app/components/base/list-and-show-layout";
@@ -59,8 +61,8 @@ export class ApplicationPackagesComponent extends ListOrTableBase implements OnC
 
     public ngOnChanges(inputs) {
         if (inputs.application) {
-            this._stateMap.clear();
             this.application.packages.map((pkg) => {
+                // will add or update value
                 this._stateMap.set(pkg.version, pkg.state);
             });
         }
@@ -80,6 +82,15 @@ export class ApplicationPackagesComponent extends ListOrTableBase implements OnC
         return version
             ? this._stateMap.get(version) === PackageState.pending
             : false;
+    }
+
+    public addPackage(event: any) {
+        const sidebarRef = this.sidebarManager.open("add-package", ApplicationCreateDialogComponent);
+        sidebarRef.component.setValue(this.application);
+        sidebarRef.afterCompletition.subscribe(() => {
+            // TODO: figure out how to refresh parent
+            // this.refresh();
+        });
     }
 
     public deleteSelected() {
@@ -121,7 +132,7 @@ export class ApplicationPackagesComponent extends ListOrTableBase implements OnC
     }
 
     public updatePackageVersion() {
-        const sidebarRef = this.sidebarManager.open("update-application", ApplicationCreateDialogComponent);
+        const sidebarRef = this.sidebarManager.open("update-package", ApplicationCreateDialogComponent);
         sidebarRef.component.setValue(this.application, this.activatedItem);
         sidebarRef.afterCompletition.subscribe(() => {
             // TODO: figure out how to refresh parent

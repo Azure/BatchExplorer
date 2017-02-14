@@ -61,13 +61,6 @@ export class JobService extends ServiceBase {
         return observable;
     }
 
-    /**
-     * Once delete has completed we call this to remove it from the cache
-     */
-    public notifyJobDeleted(jobId) {
-        this._cache.deleteItemByKey(jobId);
-    }
-
     public terminate(jobId: string, options: any): Observable<void> {
         return Observable.fromPromise<any>(BatchClient.job.terminate(jobId, options));
     }

@@ -20,6 +20,8 @@ export class ApplicationCreateDialogComponent {
     public applicationForm: FormGroup;
     public blockCount: number = 0;
     public progress: string;
+    public title: string = "Create application package";
+    public description: string = "Upload an application package and give it an identifier to create your application";
 
     private _blockSize: number;
     private _fileReader: FileReader;
@@ -57,6 +59,12 @@ export class ApplicationCreateDialogComponent {
     public setValue(application: Application, version?: string) {
         // TODO: need to disable appId and version fields if they are supplied
         this.applicationForm.patchValue(applicationToFormModel(application, version));
+        if (version) {
+            this.title = "Update selected package";
+            this.description = "Select a new package to overwrite the existing version";
+        } else {
+            this.description = "Upload a new package version for the selected application";
+        }
     }
 
     public fileSelected(changeEvent: Event) {

@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
-import { MdDialog } from "@angular/material";
+import { MdDialog, MdDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs/Subscription";
@@ -9,7 +9,7 @@ import { ApplicationDecorator } from "app/models/decorators";
 import { ApplicationParams, ApplicationService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
 import { SidebarManager } from "../../base/sidebar";
-import { ApplicationCreateDialogComponent } from "../action";
+import { ApplicationCreateDialogComponent, DeleteApplicationDialogComponent } from "../action";
 
 @Component({
     selector: "bex-application-details",
@@ -39,7 +39,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
         private applicationService: ApplicationService,
         private router: Router) {
 
-        this.data = this.applicationService.get(null, {});
+        this.data = this.applicationService.get(null);
         this.data.item.subscribe((application) => {
             this.application = application;
             if (application) {
@@ -48,6 +48,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
         });
 
         this.data.deleted.subscribe((key) => {
+            console.log("DELETED :: ", key);
             if (this.applicationId === key) {
                 this.router.navigate(["/applications"]);
             }
@@ -66,9 +67,23 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
         this._paramsSubscriber.unsubscribe();
     }
 
-    public addApplication() {
-        const createRef = this.sidebarManager.open("add-application", ApplicationCreateDialogComponent);
-        createRef.component.setValue(this.application);
+    public addPackage() {
+        const sidebarRef = this.sidebarManager.open("add-package", ApplicationCreateDialogComponent);
+        sidebarRef.component.setValue(this.application);
+        sidebarRef.afterCompletition.subscribe(() => {
+            this.refresh();
+        });
+    }
+
+    public editApplication() {
+        /** noop */
+    }
+
+    public deleteApplication() {
+        let config = new MdDialogConfig();
+        config.viewContainerRef = this.viewContainerRef;
+        const dialogRef = this.dialog.open(DeleteApplicationDialogComponent, config);
+        dialogRef.componentInstance.applicationId = this.application.id;
     }
 
     public get filterPlaceholderText() {
