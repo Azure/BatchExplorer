@@ -1,7 +1,11 @@
-<md-radio-group [(ngModel)]="outputFilename" class="output-toggle-std">
-    <md-radio-button *ngFor="let filename of outputFileNames" [value]="filename">
+<div class="file-tabs">
+    <div class="file-tab" *ngFor="let filename of outputFileNames" [class.active]="filename === outputFilename" (click)="outputFilename = filename">
         {{filename}} ({{fileSizes[filename] || " - B"}})
-    </md-radio-button>
-</md-radio-group>
-<br>
+    </div>
+
+    <!-- TODO when material2 autocomplete is here add a quick add another file -->
+    <!--<div class="file-tab-more">
+        <i class="fa fa-plus"></i>
+    </div>-->
+</div>
 <bex-file-content [jobId]="jobId" [taskId]="task.id" [filename]="outputFilename"></bex-file-content>

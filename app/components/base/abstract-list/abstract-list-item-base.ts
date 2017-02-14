@@ -76,6 +76,7 @@ export class AbstractListItemBase implements OnInit {
     public handleClick(event: MouseEvent) {
         const shiftKey = event.shiftKey;
         const ctrlKey = event.ctrlKey || event.metaKey;
+        console.log("Clicked on list", ctrlKey, shiftKey);
 
         // Prevent the routerlink from being activated if we have shift or ctrl
         if (shiftKey || ctrlKey) {
