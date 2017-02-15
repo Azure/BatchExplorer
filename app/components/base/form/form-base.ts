@@ -4,7 +4,7 @@ import { MdDialogRef } from "@angular/material";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
-import { BatchError } from "app/models";
+import { ServerError } from "app/models";
 import { SidebarRef } from "../sidebar";
 
 export class FormBase {
@@ -25,6 +25,10 @@ export class FormBase {
     @Input()
     public sidebarRef: SidebarRef<any>;
 
+    /**
+     * Submit method.
+     * Needs to return an observable that will have a {ServerError} if failing.
+     */
     @Input()
     public submit: () => Observable<any>;
 
@@ -35,7 +39,7 @@ export class FormBase {
     public formGroup: FormGroup;
 
     public loading = false;
-    public error: BatchError = null;
+    public error: ServerError = null;
 
     @autobind()
     public performAction(): Observable<any> {
@@ -46,7 +50,7 @@ export class FormBase {
                 this.loading = false;
                 this.error = null;
             },
-            error: (e: BatchError) => {
+            error: (e: ServerError) => {
                 this.loading = false;
                 this.error = e;
             },

@@ -1,6 +1,7 @@
 import { Type } from "@angular/core";
 import { Observable } from "rxjs";
 
+import { ServerError } from "app/models";
 import { RxEntityProxy, RxEntityProxyConfig } from "./rx-entity-proxy";
 
 export interface RxBatchEntityProxyConfig<TParams, TEntity> extends RxEntityProxyConfig<TParams, TEntity> {
@@ -20,6 +21,8 @@ export class RxBatchEntityProxy<TParams, TEntity> extends RxEntityProxy<TParams,
     }
 
     protected getData(): Observable<any> {
-        return Observable.fromPromise(this._getMethod(this._params)).map(x => x.data);
+        return Observable.fromPromise(this._getMethod(this._params)).map(x => x.data).catch((error) => {
+            return Observable.throw(ServerError.fromBatch(error));
+        });
     }
 }

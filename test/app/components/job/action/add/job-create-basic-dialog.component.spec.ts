@@ -9,7 +9,7 @@ import { AppModule } from "app/app.module";
 import { CreateFormComponent } from "app/components/base/form/create-form";
 import { SidebarRef } from "app/components/base/sidebar";
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
-import { BatchError, Pool } from "app/models";
+import { Pool, ServerError } from "app/models";
 import { JobService, PoolService } from "app/services";
 import { DataCache, RxBatchListProxy } from "app/services/core";
 import { ComponentTestHelper } from "test/app/components/component-test-helper";
@@ -59,10 +59,11 @@ describe("JobCreateBasicDialogComponent ", () => {
         jobServiceSpy = {
             add: jasmine.createSpy("CreateJob").and.callFake((newJobJson, ...args) => {
                 if (newJobJson.id === "bad-job-id") {
-                    return Observable.throw(<BatchError>{
+                    return Observable.throw(ServerError.fromBatch({
+                        statusCode: 408,
                         code: "RandomTestErrorCode",
                         message: { value: "error, error, error" },
-                    });
+                    }));
                 }
 
                 return Observable.of({});
@@ -228,8 +229,8 @@ describe("JobCreateBasicDialogComponent ", () => {
         createForm.add();
 
         expect(createForm.error).not.toBeNull();
-        expect(createForm.error.code).toEqual("RandomTestErrorCode");
-        expect(createForm.error.message.value).toEqual("error, error, error");
+        expect(createForm.error.body.code).toEqual("RandomTestErrorCode");
+        expect(createForm.error.body.message).toEqual("error, error, error");
 
         let jobAddedCalled = false;
         jobServiceSpy.onJobAdded.subscribe({
