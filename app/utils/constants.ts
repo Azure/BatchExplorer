@@ -14,9 +14,24 @@ export enum HttpCode {
     Ok = 200,
     Accepted = 201,
     NotFound = 404,
+    BadRequest = 400,
+    RequestTimeout = 408,
     Conflict = 409,
-    BadRequest = 500,
+    InteralServerError = 500,
+    BadGateway = 502,
+    ServiceUnavailable = 503,
+    GatewayTimeout = 504,
 };
+
+export const RetryableHttpCode = new Set([
+    HttpCode.RequestTimeout,
+    HttpCode.InteralServerError,
+    HttpCode.BadGateway,
+    HttpCode.ServiceUnavailable,
+    HttpCode.GatewayTimeout,
+]);
+
+export const badHttpCodeMaxRetryCount = 5;
 
 export const FileUrlStrings = {
     Job: "jobs",
@@ -77,3 +92,4 @@ export const ODataFields = {
     state: "state",
     taskExitCode: "executionInfo/exitCode",
 };
+

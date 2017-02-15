@@ -1,9 +1,9 @@
 import { Location } from "@angular/common";
 import { Injectable } from "@angular/core";
 import {
-    Headers, Http, RequestMethod, RequestOptions, RequestOptionsArgs, Response, URLSearchParams,
+    Headers, Http, RequestMethod, RequestOptions, RequestOptionsArgs, Response, URLSearchParams, ResponseOptions,
 } from "@angular/http";
-import { AsyncSubject, Observable } from "rxjs";
+import { Observable } from "rxjs";
 
 import { ServerError } from "app/models";
 import { Constants } from "app/utils";
@@ -33,21 +33,14 @@ export class AzureHttpService {
     }
 
     public request(uri: string, options: RequestOptionsArgs): Observable<Response> {
-        const subject = new AsyncSubject<Response>();
-        this.adal.accessTokenData.subscribe({
-            next: (accessToken) => {
-                options = this._setupRequestOptions(uri, options, accessToken);
-                this.http.request(this._computeUrl(uri), options).subscribe({
-                    next: (data) => {
-                        subject.next(data);
-                        subject.complete();
-                    },
-                    error: (e) => subject.error(ServerError.fromARM(e)),
+        return this.adal.accessTokenData.flatMap((accessToken) => {
+            options = this._setupRequestOptions(uri, options, accessToken);
+            return this.http.request(this._computeUrl(uri), options)
+                .retryWhen(attempts => this._retryWhen(attempts))
+                .catch((error) => {
+                    return Observable.throw(ServerError.fromARM(error));
                 });
-            },
-            error: (e) => subject.error(e),
-        });
-        return subject.asObservable();
+        }).share();
     }
 
     public get(uri: string, options?: RequestOptionsArgs) {
@@ -94,6 +87,27 @@ export class AzureHttpService {
         } else {
             return Location.joinWithSlash(baseUrl, uri);
         }
+    }
+
+    private _retryWhen(attempts: Observable<Response>) {
+        const retryRange = Observable.range(0, Constants.badHttpCodeMaxRetryCount + 1);
+        return attempts
+            .switchMap((x: any) => {
+                console.log("switching map", x);
+                if (Constants.RetryableHttpCode.has(x.status)) {
+                    return Observable.of(x);
+                }
+                return Observable.throw(x);
+            })
+            .zip(retryRange, (attempt, retryCount) => {
+                if (retryCount >= Constants.badHttpCodeMaxRetryCount) {
+                    throw attempt;
+                }
+                return retryCount;
+            })
+            .flatMap((retryCount) => {
+                return Observable.timer(100 * Math.pow(3, retryCount));
+            });
     }
 
 }
