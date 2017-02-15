@@ -92,4 +92,3 @@ export const ODataFields = {
     state: "state",
     taskExitCode: "executionInfo/exitCode",
 };
-

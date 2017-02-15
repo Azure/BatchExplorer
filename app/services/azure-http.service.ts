@@ -1,7 +1,7 @@
 import { Location } from "@angular/common";
 import { Injectable } from "@angular/core";
 import {
-    Headers, Http, RequestMethod, RequestOptions, RequestOptionsArgs, Response, URLSearchParams, ResponseOptions,
+    Headers, Http, RequestMethod, RequestOptions, RequestOptionsArgs, Response, URLSearchParams,
 } from "@angular/http";
 import { Observable } from "rxjs";
 
@@ -93,7 +93,6 @@ export class AzureHttpService {
         const retryRange = Observable.range(0, Constants.badHttpCodeMaxRetryCount + 1);
         return attempts
             .switchMap((x: any) => {
-                console.log("switching map", x);
                 if (Constants.RetryableHttpCode.has(x.status)) {
                     return Observable.of(x);
                 }

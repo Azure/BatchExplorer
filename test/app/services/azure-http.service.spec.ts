@@ -23,7 +23,6 @@ describe("MyComp", () => {
         });
     }
 
-
     beforeEach(() => {
 
         adalSpy = {
