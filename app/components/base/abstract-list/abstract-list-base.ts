@@ -51,6 +51,9 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     public listFocused: boolean = false;
     public focusedItem: string = null;
 
+    /**
+     * Map of the selected items. Used for better performance to check if an item is selected.
+     */
     private _selectedItems: { [key: string]: boolean } = {};
     private _activeItemKey = new BehaviorSubject<ActivatedItemChangeEvent>(null);
     private _subs: Subscription[] = [];
@@ -72,7 +75,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         router.events.filter(event => event instanceof NavigationEnd).subscribe(event => {
             if (this.items) {
                 if (this._activeItemKey.value) {
-                    const active = this.getActiveItem();
+                    const active = this.getActiveItemFromRouter();
                     this.setActiveItem(active && active.key);
                 }
             }
@@ -94,13 +97,26 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         this._subs.forEach((x) => x.unsubscribe());
     }
 
+    /**
+     * Test if the given key is in the list of selected items.
+     */
     public isSelected(key: string): boolean {
         return key in this._selectedItems;
     }
 
+    /**
+     * Test to check if the given key is the active item.
+     */
     public isActive(key: string): boolean {
-        const event = this._activeItemKey.getValue();
-        return Boolean(event && event.key === key);
+        return Boolean(this.activeKey === key);
+    }
+
+    /**
+     * @returns the current key
+     */
+    public get activeKey(): string {
+        const event = this._activeItemKey.value;
+        return event && event.key;
     }
 
     /**
@@ -127,14 +143,13 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         if (this._activeItemKey.value) {
             this._selectedItems[this._activeItemKey.value.key] = true;
         }
-        this.items.forEach(item => item.selected = false);
         this.selectedItemsChange.emit(this.selectedItems);
     }
 
     /**
      * Get the item actually selected(With the routerlink)
      */
-    public getActiveItem(): AbstractListItemBase {
+    public getActiveItemFromRouter(): AbstractListItemBase {
         const vals = this.items.filter((x) => this._checkItemActive(x));
         if (vals.length === 0) {
             return null;
@@ -149,11 +164,10 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      */
     public setActiveItem(key: string, initialValue = false) {
         const activeKey = this._activeItemKey;
-        if (activeKey.value && activeKey.value.key === key) {
-            return;
+        const sameKey = activeKey.value && activeKey.value.key === key;
+        if (!sameKey) {
+            this._activeItemKey.next({ key, initialValue });
         }
-        this._activeItemKey.next({ key, initialValue });
-        this.items.forEach(x => x.active = x.key === key);
         this.clearSelection();
     }
 
@@ -162,16 +176,15 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      */
     public selectTo(key: string) {
         let foundStart = false;
+        const activeKey = this.activeKey;
         this.items.some((item) => {
-            if (!foundStart && (item.active || item.key === key)) {
+            if (!foundStart && (item.key === activeKey || item.key === key)) {
                 foundStart = true;
                 this._selectedItems[item.key] = true;
-                item.selected = true;
             } else if (foundStart) {
                 this._selectedItems[item.key] = true;
-                item.selected = true;
                 // Reached the end of the selection
-                if (item.active || item.key === key) {
+                if (item.key === activeKey || item.key === key) {
                     return true;
                 }
             }
@@ -225,7 +238,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     }
 
     private _setInitialActivatedItem() {
-        const item = this.getActiveItem();
+        const item = this.getActiveItemFromRouter();
         if (item) {
             this.setActiveItem(item.key, true);
         }

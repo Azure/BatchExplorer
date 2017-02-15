@@ -68,7 +68,7 @@ describe("QuickListComponent", () => {
     it("click on an item should make the item active", () => {
         click(items[1].query(By.css(".quick-list-item")));
         fixture.detectChanges();
-        const activeItem = quicklist.getActiveItem();
+        const activeItem = quicklist.getActiveItemFromRouter();
         expect(activeItem).not.toBeNull();
         expect(activeItemKey).toEqual("item-2");
         expect(activeItem.active).toBe(true);

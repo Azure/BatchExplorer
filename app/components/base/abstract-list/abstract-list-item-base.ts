@@ -1,5 +1,6 @@
-import { Input, OnInit } from "@angular/core";
+import { Input, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
+import { Subscription } from "rxjs";
 
 import { BreadcrumbService } from "app/components/base/breadcrumbs";
 import { AbstractListBase } from "./abstract-list-base";
@@ -8,7 +9,7 @@ import { AbstractListBase } from "./abstract-list-base";
  * Usage: Needs to be used with a SelectableListBase
  * 1. Inject the component inheriting SelectableListBase in the construtor using @Inject and forwardRef
  */
-export class AbstractListItemBase implements OnInit {
+export class AbstractListItemBase implements OnDestroy, OnInit {
     /**
      * Unique key to give to the list used for knowing if the item is selected
      */
@@ -31,11 +32,17 @@ export class AbstractListItemBase implements OnInit {
      * If the item is selected(!= active)
      */
     public selected: boolean = null;
-    public active: boolean = null;
+
+    public get active(): boolean {
+        return this.list && this._activeItemKey === this.key;
+    };
+
     public urlTree: any = null;
 
     private _routerLink: any = null;
-
+    private _activeItemKey: string = null;
+    private _activeSub: Subscription;
+    private _selectedSub: Subscription;
     /**
      * Need to inject list
      * e.g.  @Inject(forwardRef(() => QuickListComponent)) list: QuickListComponent
@@ -45,6 +52,13 @@ export class AbstractListItemBase implements OnInit {
         private router: Router,
         private breadcrumbService: BreadcrumbService) {
 
+        this._activeSub = list.activatedItemChange.subscribe((event) => {
+            this._activeItemKey = event && event.key;
+        });
+
+        this._selectedSub = list.selectedItemsChange.subscribe(() => {
+            this.selected = this.list.isSelected(this.key);
+        });
     }
 
     public ngOnInit() {
@@ -52,6 +66,15 @@ export class AbstractListItemBase implements OnInit {
             console.error(`Every list item needs to have a key. Use this attribute [key]="item.id"`, this);
         }
         this.selected = this.list.isSelected(this.key);
+    }
+
+    public ngOnDestroy() {
+        if (this._activeSub) {
+            this._activeSub.unsubscribe();
+        }
+        if (this._selectedSub) {
+            this._selectedSub.unsubscribe();
+        }
     }
 
     /**
@@ -67,7 +90,7 @@ export class AbstractListItemBase implements OnInit {
 
         // Prevent the routerlink from being activated if we have shift or ctrl
         if (shiftKey || ctrlKey) {
-            const activeItem = this.list.getActiveItem();
+            const activeItem = this._activeItemKey;
             if (!activeItem) {
                 return;
             }
