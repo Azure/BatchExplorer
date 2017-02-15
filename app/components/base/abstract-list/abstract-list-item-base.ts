@@ -20,8 +20,6 @@ export class AbstractListItemBase implements OnInit {
         this._routerLink = routerLink;
         if (routerLink) {
             this.urlTree = this.router.createUrlTree(routerLink);
-            // console.log("trigger check active");
-            // this.checkActive();
         }
     }
     public get routerLink() { return this._routerLink; }
@@ -63,7 +61,6 @@ export class AbstractListItemBase implements OnInit {
         return this.list.focusedItem === this.key;
     }
 
-    // @HostListener("click", ["$event"])
     public handleClick(event: MouseEvent) {
         const shiftKey = event.shiftKey;
         const ctrlKey = event.ctrlKey || event.metaKey;

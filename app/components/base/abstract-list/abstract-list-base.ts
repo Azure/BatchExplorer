@@ -149,10 +149,11 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      */
     public setActiveItem(key: string, initialValue = false) {
         const activeKey = this._activeItemKey;
-        if (!(activeKey.value && activeKey.value.key === key)) {
-            this._activeItemKey.next({ key, initialValue });
-            this.items.forEach(x => x.active = x.key === key);
+        if (activeKey.value && activeKey.value.key === key) {
+            return;
         }
+        this._activeItemKey.next({ key, initialValue });
+        this.items.forEach(x => x.active = x.key === key);
         this.clearSelection();
     }
 
