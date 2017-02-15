@@ -51,6 +51,9 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     public listFocused: boolean = false;
     public focusedItem: string = null;
 
+    /**
+     * Map of the selected items. Used for better performance to check if an item is selected.
+     */
     private _selectedItems: { [key: string]: boolean } = {};
     private _activeItemKey = new BehaviorSubject<ActivatedItemChangeEvent>(null);
     private _subs: Subscription[] = [];
@@ -71,38 +74,49 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
 
         router.events.filter(event => event instanceof NavigationEnd).subscribe(event => {
             if (this.items) {
-                this.items.forEach((item) => {
-                    item.checkActive();
-                });
-                const active = this.getActiveItem();
-                this.setActiveItem(active && active.key);
+                if (this._activeItemKey.value) {
+                    const active = this.getActiveItemFromRouter();
+                    this.setActiveItem(active && active.key);
+                }
             }
         });
     }
 
     public ngAfterViewInit() {
-        this.items.changes.first().subscribe((newItems: QueryList<AbstractListItemBase>) => {
-            setTimeout(() => {
-                newItems.forEach((x) => x.checkActive());
-                if (newItems.length && !this._activeItemKey.getValue()) {
-                    this._setInitialActivatedItem();
-                }
+        if (this.items.length > 0) {
+            this._processInitialItems(this.items);
+        } else {
+            this.items.changes.first().subscribe((newItems: QueryList<AbstractListItemBase>) => {
+                this._processInitialItems(newItems);
+
             });
-        });
-        this._setInitialActivatedItem();
+        }
     }
 
     public ngOnDestroy() {
         this._subs.forEach((x) => x.unsubscribe());
     }
 
+    /**
+     * Test if the given key is in the list of selected items.
+     */
     public isSelected(key: string): boolean {
         return key in this._selectedItems;
     }
 
+    /**
+     * Test to check if the given key is the active item.
+     */
     public isActive(key: string): boolean {
-        const event = this._activeItemKey.getValue();
-        return Boolean(event && event.key === key);
+        return Boolean(this.activeKey === key);
+    }
+
+    /**
+     * @returns the current key
+     */
+    public get activeKey(): string {
+        const event = this._activeItemKey.value;
+        return event && event.key;
     }
 
     /**
@@ -129,15 +143,14 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         if (this._activeItemKey.value) {
             this._selectedItems[this._activeItemKey.value.key] = true;
         }
-        this.items.forEach(item => item.selected = false);
         this.selectedItemsChange.emit(this.selectedItems);
     }
 
     /**
      * Get the item actually selected(With the routerlink)
      */
-    public getActiveItem(): AbstractListItemBase {
-        const vals = this.items.filter((x) => x.active);
+    public getActiveItemFromRouter(): AbstractListItemBase {
+        const vals = this.items.filter((x) => this._checkItemActive(x));
         if (vals.length === 0) {
             return null;
         } else {
@@ -151,9 +164,9 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      */
     public setActiveItem(key: string, initialValue = false) {
         const activeKey = this._activeItemKey;
-        if (!(activeKey.value && activeKey.value.key === key)) {
+        const sameKey = activeKey.value && activeKey.value.key === key;
+        if (!sameKey) {
             this._activeItemKey.next({ key, initialValue });
-            this.items.forEach(x => x.active = x.key === key);
         }
         this.clearSelection();
     }
@@ -163,16 +176,15 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      */
     public selectTo(key: string) {
         let foundStart = false;
+        const activeKey = this.activeKey;
         this.items.some((item) => {
-            if (!foundStart && (item.active || item.key === key)) {
+            if (!foundStart && (item.key === activeKey || item.key === key)) {
                 foundStart = true;
                 this._selectedItems[item.key] = true;
-                item.selected = true;
             } else if (foundStart) {
                 this._selectedItems[item.key] = true;
-                item.selected = true;
                 // Reached the end of the selection
-                if (item.active || item.key === key) {
+                if (item.key === activeKey || item.key === key) {
                     return true;
                 }
             }
@@ -226,12 +238,28 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     }
 
     private _setInitialActivatedItem() {
-        const item = this.getActiveItem();
+        const item = this.getActiveItemFromRouter();
         if (item) {
-            // Need a timeout to trigger change detection in AfterViewInit otherwise angular throws an error
-            setTimeout(() => {
-                this._activeItemKey.next({ key: item.key, initialValue: true });
-            });
+            this.setActiveItem(item.key, true);
+        }
+    }
+
+    /**
+     * Goes through the initial list of items to check if one is active.
+     */
+    private _processInitialItems(items: QueryList<AbstractListItemBase>) {
+        setTimeout(() => {
+            if (items.length && !this._activeItemKey.value) {
+                this._setInitialActivatedItem();
+            }
+        });
+    }
+
+    private _checkItemActive(item: AbstractListItemBase): boolean {
+        if (item.urlTree) {
+            return this.router.isActive(item.urlTree, false);
+        } else {
+            return this.isActive(item.key);
         }
     }
 }

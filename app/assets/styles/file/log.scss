@@ -1,4 +1,6 @@
 .log-console {
+    $file-content-bg: #222;
+
     position: relative;
     background: $mineshaft-grey;
     color: $whiteSmoke;
@@ -12,7 +14,7 @@
         line-height: 19px;
         font-family: Monaco, monospace;
         word-wrap: break-word;
-        background-color: #222;
+        background-color: $file-content-bg;
         counter-reset: line-numbering;
         margin-top: 0;
 

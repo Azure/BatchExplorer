@@ -32,6 +32,12 @@
         <bex-task-error-display [jobId]="jobId" [task]="task"></bex-task-error-display>
         <md-card class="details">
             <bex-tab-group>
+                <bex-tab key="output">
+                    <bex-tab-label>Log Output</bex-tab-label>
+                    <div class="tab-padding">
+                        <bex-task-output [jobId]="jobId" [task]="task"></bex-task-output>
+                    </div>
+                </bex-tab>
                 <bex-tab key="properties">
                     <bex-tab-label>Properties</bex-tab-label>
                     <bex-task-properties [job]="job" [task]="task"></bex-task-properties>
@@ -48,26 +54,16 @@
                         <bex-task-resource-files [task]="task"></bex-task-resource-files>
                     </div>
                 </bex-tab>
-                <bex-tab key="output">
-                    <bex-tab-label>Log Output</bex-tab-label>
-                    <div class="tab-padding">
-                        <md-radio-group [(ngModel)]="outputFilename" class="output-toggle-std">
-                            <md-radio-button value="stdout.txt">Stdout</md-radio-button>
-                            <md-radio-button value="stderr.txt">Stderr</md-radio-button>
-                        </md-radio-group>
-                        <br>
-                        <bex-file-content [jobId]="jobId" [taskId]="taskId" [filename]="outputFilename"></bex-file-content>
-                    </div>
-                </bex-tab>
                 <bex-tab key="files">
                     <bex-tab-label>Node Files</bex-tab-label>
                     <div class="tab-padding">
-                        <bex-entity-details-list #listWrapper [refresh]="list.refresh" [filterPlaceholder]="filterPlaceholderText" [showAddButton]="false" quickSearchField="name">
-                            <bex-task-file-list  #list [jobId]="jobId" [taskId]="taskId" [filter]="listWrapper.filter" [quickList]="false"></bex-task-file-list>
-                        </bex-entity-details-list>
+                        <bex-entity-details-list #listWrapper [refresh]="list.refresh" [filterPlaceholder]="filterPlaceholderText" [showAddButton]="false"
+                            quickSearchField="name">
+                            <bex-task-file-list #list [jobId]="jobId" [taskId]="taskId" [filter]="listWrapper.filter" [quickList]="false"></bex-task-file-list>
+                            </bex-entity-details-list>
                     </div>
                 </bex-tab>
-                <bex-tab  key="subtasks" [disabled]="!hasMultiInstanceSettings">
+                <bex-tab key="subtasks" [disabled]="!hasMultiInstanceSettings">
                     <bex-tab-label>Sub Tasks</bex-tab-label>
                     <div class="tab-padding">
                         <bex-task-sub-tasks-tab [jobId]="job.id" [taskId]="task.id"></bex-task-sub-tasks-tab>

@@ -6,6 +6,7 @@ import { FileDetailsModule } from "app/components/file/details";
 import { TaskBrowseModule } from "app/components/task/browse";
 
 import { NoTaskSelectedComponent } from "./no-task-selected.component";
+import { TaskOutputComponent } from "./output";
 import { SubTaskDisplayListComponent, SubTaskPropertiesComponent } from "./sub-tasks";
 import { TaskDependenciesComponent } from "./task-dependencies.component";
 import { TaskDetailsComponent } from "./task-details.component";
@@ -18,7 +19,7 @@ import { TaskTimelineComponent, TaskTimelineStateComponent } from "./task-timeli
 
 const components = [
     TaskTimelineComponent, TaskTimelineStateComponent, NoTaskSelectedComponent,
-    TaskDependenciesComponent, TaskDetailsComponent,
+    TaskDependenciesComponent, TaskDetailsComponent, TaskOutputComponent,
     TaskEnvironmentSettingsComponent, TaskPropertiesComponent, TaskResourceFilesComponent, TaskSubTasksTabComponent,
     SubTaskPropertiesComponent, SubTaskDisplayListComponent, TaskErrorDisplayComponent,
 ];

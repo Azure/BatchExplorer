@@ -1,5 +1,6 @@
-import { HostListener, Input, OnInit } from "@angular/core";
+import { Input, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
+import { Subscription } from "rxjs";
 
 import { BreadcrumbService } from "app/components/base/breadcrumbs";
 import { AbstractListBase } from "./abstract-list-base";
@@ -8,7 +9,7 @@ import { AbstractListBase } from "./abstract-list-base";
  * Usage: Needs to be used with a SelectableListBase
  * 1. Inject the component inheriting SelectableListBase in the construtor using @Inject and forwardRef
  */
-export class AbstractListItemBase implements OnInit {
+export class AbstractListItemBase implements OnDestroy, OnInit {
     /**
      * Unique key to give to the list used for knowing if the item is selected
      */
@@ -19,9 +20,7 @@ export class AbstractListItemBase implements OnInit {
     public set routerLink(routerLink: any) {
         this._routerLink = routerLink;
         if (routerLink) {
-            this._urlTree = this.router.createUrlTree(routerLink);
-            // console.log("trigger check active");
-            // this.checkActive();
+            this.urlTree = this.router.createUrlTree(routerLink);
         }
     }
     public get routerLink() { return this._routerLink; }
@@ -33,11 +32,17 @@ export class AbstractListItemBase implements OnInit {
      * If the item is selected(!= active)
      */
     public selected: boolean = null;
-    public active: boolean = null;
+
+    public get active(): boolean {
+        return this.list && this._activeItemKey === this.key;
+    };
+
+    public urlTree: any = null;
 
     private _routerLink: any = null;
-    private _urlTree: any = null;
-
+    private _activeItemKey: string = null;
+    private _activeSub: Subscription;
+    private _selectedSub: Subscription;
     /**
      * Need to inject list
      * e.g.  @Inject(forwardRef(() => QuickListComponent)) list: QuickListComponent
@@ -47,6 +52,13 @@ export class AbstractListItemBase implements OnInit {
         private router: Router,
         private breadcrumbService: BreadcrumbService) {
 
+        this._activeSub = list.activatedItemChange.subscribe((event) => {
+            this._activeItemKey = event && event.key;
+        });
+
+        this._selectedSub = list.selectedItemsChange.subscribe(() => {
+            this.selected = this.list.isSelected(this.key);
+        });
     }
 
     public ngOnInit() {
@@ -56,13 +68,13 @@ export class AbstractListItemBase implements OnInit {
         this.selected = this.list.isSelected(this.key);
     }
 
-    public checkActive(): boolean {
-        if (this._urlTree) {
-            this.active = this.router.isActive(this._urlTree, true);
-        } else {
-            this.active = this.list.isActive(this.key);
+    public ngOnDestroy() {
+        if (this._activeSub) {
+            this._activeSub.unsubscribe();
         }
-        return this.active;
+        if (this._selectedSub) {
+            this._selectedSub.unsubscribe();
+        }
     }
 
     /**
@@ -72,14 +84,13 @@ export class AbstractListItemBase implements OnInit {
         return this.list.focusedItem === this.key;
     }
 
-    @HostListener("click", ["$event"])
     public handleClick(event: MouseEvent) {
         const shiftKey = event.shiftKey;
         const ctrlKey = event.ctrlKey || event.metaKey;
 
         // Prevent the routerlink from being activated if we have shift or ctrl
         if (shiftKey || ctrlKey) {
-            const activeItem = this.list.getActiveItem();
+            const activeItem = this._activeItemKey;
             if (!activeItem) {
                 return;
             }
@@ -91,6 +102,7 @@ export class AbstractListItemBase implements OnInit {
                 this.list.onSelectedChange(this.key, this.selected);
             }
             event.stopPropagation();
+            event.stopImmediatePropagation();
             return false;
         } else {
             // Means the user actually selected the item
