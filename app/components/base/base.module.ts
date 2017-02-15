@@ -10,6 +10,7 @@ import { BackgroundTaskModule } from "./background-task";
 import { BannerComponent, BannerOtherFixDirective } from "./banner";
 import { BreadcrumbModule } from "./breadcrumbs";
 import { ButtonsModule } from "./buttons";
+import { ContextMenuModule } from "./context-menu";
 import { DropdownModule } from "./dropdown";
 import { ElapsedTimeComponent } from "./elapsed-time";
 import { FocusSectionModule } from "./focus-section";
@@ -34,6 +35,7 @@ const modules = [
     BreadcrumbModule,
     ButtonsModule,
     BackgroundTaskModule,
+    ContextMenuModule,
     DropdownModule,
     FocusSectionModule,
     InfoBoxModule,

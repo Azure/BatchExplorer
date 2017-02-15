@@ -5,6 +5,7 @@ import { Subscription } from "rxjs";
 import { BreadcrumbService } from "app/components/base/breadcrumbs";
 import { AbstractListBase } from "./abstract-list-base";
 
+
 /**
  * Usage: Needs to be used with a SelectableListBase
  * 1. Inject the component inheriting SelectableListBase in the construtor using @Inject and forwardRef
@@ -118,6 +119,9 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
         this._triggerRouter();
     }
 
+    public openContextMenu() {
+
+    }
     /**
      * Just trigger the router the item will not be marked as active
      */
@@ -131,3 +135,5 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
         }
     }
 }
+
+
