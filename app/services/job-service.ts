@@ -50,30 +50,25 @@ export class JobService extends ServiceBase {
     /**
      * Starts the deletion process
      */
-    public delete(jobId: string, options: any = {}): Observable<void> {
-        const observable = Observable.fromPromise<any>(BatchClient.job.delete(jobId, options));
-        observable.subscribe({
-            error: (error) => {
-                console.error("Error deleting job: " + jobId, error);
-            },
+    public delete(jobId: string, options: any = {}): Observable<{}> {
+        return this.callBatchClient(BatchClient.job.delete(jobId, options), (error) => {
+            console.error("Error deleting job: " + jobId, error);
         });
-
-        return observable;
     }
 
-    public terminate(jobId: string, options: any): Observable<void> {
-        return Observable.fromPromise<any>(BatchClient.job.terminate(jobId, options));
+    public terminate(jobId: string, options: any): Observable<{}> {
+        return this.callBatchClient(BatchClient.job.terminate(jobId, options));
     }
 
-    public disable(jobId: string, disableTasks: string, options: any): Observable<void> {
-        return Observable.fromPromise<any>(BatchClient.job.disable(jobId, disableTasks, options));
+    public disable(jobId: string, disableTasks: string, options: any): Observable<{}> {
+        return this.callBatchClient(BatchClient.job.disable(jobId, disableTasks, options));
     }
 
-    public enable(jobId: string, options: any): Observable<void> {
-        return Observable.fromPromise<any>(BatchClient.job.enable(jobId, options));
+    public enable(jobId: string, options: any): Observable<{}> {
+        return this.callBatchClient(BatchClient.job.enable(jobId, options));
     }
 
-    public add(job: any, options: any): Observable<void> {
-        return Observable.fromPromise<any>(BatchClient.job.add(job, options));
+    public add(job: any, options: any): Observable<{}> {
+        return this.callBatchClient(BatchClient.job.add(job, options));
     }
 }

@@ -5,6 +5,7 @@ import { Application, ApplicationPackage } from "app/models";
 import { AccountService } from "app/services";
 import { AzureHttpService } from "./azure-http.service";
 import { DataCache, RxArmEntityProxy, RxArmListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
+import { ServiceBase } from "./service-base";
 
 export interface ApplicationListParams {
 }
@@ -14,7 +15,7 @@ export interface ApplicationParams {
 }
 
 @Injectable()
-export class ApplicationService {
+export class ApplicationService extends ServiceBase {
     /**
      * Triggered when an application is added through this app.
      * Used to notify the list of a new item
@@ -35,6 +36,7 @@ export class ApplicationService {
         private azure: AzureHttpService,
         private accountService: AccountService) {
 
+        super();
         accountService.currentAccountId.subscribe((accountId) => {
             this._currentAccountId = accountId;
         });
@@ -129,12 +131,5 @@ export class ApplicationService {
      */
     public deletePackage(applicationId: string, version: string): Observable<any> {
         return this.azure.delete(`${this._currentAccountId}/applications/${applicationId}/versions/${version}`);
-    }
-
-    /**
-     * Once delete has completed we call this to remove it from the cache
-     */
-    public notifyApplicationDeleted(applicationId: string) {
-        this._cache.deleteItemByKey(applicationId);
     }
 }

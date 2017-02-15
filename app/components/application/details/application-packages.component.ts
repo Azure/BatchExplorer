@@ -1,9 +1,8 @@
 import { Component, Input, OnChanges, OnDestroy, ViewChild, ViewContainerRef } from "@angular/core";
 import { MdDialog, MdDialogConfig } from "@angular/material";
-import { autobind } from "core-decorators";
 import { List } from "immutable";
 import * as moment from "moment";
-import { Observable } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 
 import { BackgroundTaskManager } from "app/components/base/background-task";
 import { DeleteSelectedItemsDialogComponent } from "app/components/base/list-and-show-layout";
@@ -44,6 +43,11 @@ export class ApplicationPackagesComponent extends ListOrTableBase implements OnC
     public packages: List<ApplicationPackage>;
     public displayedPackages: List<ApplicationPackage>;
 
+    // enabled handlers for the UI
+    public deleteItemEnabled = new BehaviorSubject<boolean>(false);
+    public activateItemEnabled = new BehaviorSubject<boolean>(false);
+    public editItemEnabled = new BehaviorSubject<boolean>(false);
+
     private _filter: Filter;
     private _application: Application;
     private _stateMap: Map<string, PackageState>;
@@ -57,13 +61,29 @@ export class ApplicationPackagesComponent extends ListOrTableBase implements OnC
 
         super();
         this._stateMap = new Map();
+        this.selectedItemsChange.subscribe((items) => {
+            if (items.length > 1) {
+                this.activateItemEnabled.next(false);
+                this.editItemEnabled.next(false);
+            }
+        });
+
+        this.activatedItemChange.subscribe((activatedItem) => {
+            this.activateItemEnabled.next(this._activatedItemActivateEnabled(activatedItem.key));
+            this.deleteItemEnabled.next(this.application.allowUpdates && this.isAnyItemSelected());
+            this.editItemEnabled.next(this._activatedItemEditEnabled(activatedItem.key));
+        });
     }
 
     public ngOnChanges(inputs) {
         if (inputs.application) {
+            this._stateMap.clear();
             this.application.packages.map((pkg) => {
-                // will add or update value
                 this._stateMap.set(pkg.version, pkg.state);
+            });
+
+            setTimeout(() => {
+                this._resetSubjects();
             });
         }
     }
@@ -78,18 +98,11 @@ export class ApplicationPackagesComponent extends ListOrTableBase implements OnC
             : "";
     }
 
-    public isPackagePending(version: string): boolean {
-        return version
-            ? this._stateMap.get(version) === PackageState.pending
-            : false;
-    }
-
     public addPackage(event: any) {
         const sidebarRef = this.sidebarManager.open("add-package", ApplicationCreateDialogComponent);
         sidebarRef.component.setValue(this.application);
         sidebarRef.afterCompletition.subscribe(() => {
-            // TODO: figure out how to refresh parent
-            // this.refresh();
+            this.applicationService.getOnce(this.application.id);
         });
     }
 
@@ -126,8 +139,7 @@ export class ApplicationPackagesComponent extends ListOrTableBase implements OnC
         dialogRef.componentInstance.applicationId = this.application.id;
         dialogRef.componentInstance.packageVersion = this.activatedItem;
         dialogRef.afterClosed().subscribe((obj) => {
-            // TODO: figure out how to refresh parent
-            // this.refresh();
+            this.applicationService.getOnce(this.application.id);
         });
     }
 
@@ -135,9 +147,29 @@ export class ApplicationPackagesComponent extends ListOrTableBase implements OnC
         const sidebarRef = this.sidebarManager.open("update-package", ApplicationCreateDialogComponent);
         sidebarRef.component.setValue(this.application, this.activatedItem);
         sidebarRef.afterCompletition.subscribe(() => {
-            // TODO: figure out how to refresh parent
-            // this.refresh();
+            this.applicationService.getOnce(this.application.id);
         });
+    }
+
+    private _activatedItemEditEnabled(activeItem: string) {
+        return activeItem && this.application.allowUpdates && !this._isPackagePending(activeItem)
+            && this.selectedItems.length <= 1;
+    }
+
+    private _activatedItemActivateEnabled(activeItem: string) {
+        return activeItem && this._isPackagePending(activeItem) && this.selectedItems.length <= 1;
+    }
+
+    private _isPackagePending(version: string): boolean {
+        return version
+            ? this._stateMap.get(version) === PackageState.pending
+            : false;
+    }
+
+    private _resetSubjects() {
+        this.deleteItemEnabled.next(false);
+        this.activateItemEnabled.next(false);
+        this.editItemEnabled.next(false);
     }
 
     private _filterPackages() {

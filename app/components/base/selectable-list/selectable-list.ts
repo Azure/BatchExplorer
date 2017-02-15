@@ -1,7 +1,4 @@
-import {
-    EventEmitter,
-    ViewChild,
-} from "@angular/core";
+import { EventEmitter, ViewChild } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { QuickListComponent } from "app/components/base/quick-list";

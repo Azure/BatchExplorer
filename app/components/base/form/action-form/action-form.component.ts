@@ -14,6 +14,9 @@ export class ActionFormComponent extends FormBase {
     @Input()
     public cancelText = "Cancel";
 
+    @Input()
+    public actionColor = "primary";
+
     /**
      * Enabled if the formGroup is valid or there is no formGroup
      */

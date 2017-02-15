@@ -1,6 +1,7 @@
 import { Type } from "@angular/core";
 import { Observable } from "rxjs";
 
+import { ServerError } from "app/models";
 import { CachedKeyList } from "./query-cache";
 import { RxListProxy, RxListProxyConfig } from "./rx-list-proxy";
 
@@ -31,7 +32,9 @@ export class RxBatchListProxy<TParams, TEntity> extends RxListProxy<TParams, TEn
     }
 
     protected fetchNextItems(): Observable<any> {
-        return Observable.fromPromise(this._clientProxy.fetchNext());
+        return Observable.fromPromise(this._clientProxy.fetchNext()).catch((error) => {
+            return Observable.throw(ServerError.fromBatch(error));
+        });
     }
 
     protected processResponse(response: any) {

@@ -7,7 +7,7 @@ import { Observable } from "rxjs";
 import { AppModule } from "app/app.module";
 import { ActionFormComponent } from "app/components/base/form/action-form";
 import { TerminateJobDialogComponent } from "app/components/job/action";
-import { BatchError } from "app/models";
+import { ServerError } from "app/models";
 import { JobService } from "app/services";
 
 describe("TerminateJobDialogComponent ", () => {
@@ -26,10 +26,11 @@ describe("TerminateJobDialogComponent ", () => {
         jobServiceSpy = {
             terminate: jasmine.createSpy("TerminateJob").and.callFake((jobid, ...args) => {
                 if (jobid === "bad-job-id") {
-                    return Observable.throw(<BatchError>{
+                    return Observable.throw(ServerError.fromBatch({
+                        statusCode: 408,
                         code: "RandomTestErrorCode",
                         message: { value: "Some random test error happened terminating job" },
-                    });
+                    }));
                 }
 
                 return Observable.of({});
@@ -76,6 +77,6 @@ describe("TerminateJobDialogComponent ", () => {
         fixture.detectChanges();
 
         expect(actionForm.error).not.toBeNull();
-        expect(actionForm.error.message.value).toContain("Some random test error happened terminating job");
+        expect(actionForm.error.body.message).toContain("Some random test error happened terminating job");
     });
 });

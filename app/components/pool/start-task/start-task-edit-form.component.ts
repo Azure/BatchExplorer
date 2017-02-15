@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { autobind } from "core-decorators";
 
-import { NotificationManager } from "app/components/base/notifications";
+import { NotificationService } from "app/components/base/notifications";
 import { Pool, StartTask } from "app/models";
 import { PoolService } from "app/services";
 
@@ -33,7 +33,7 @@ export class StartTaskEditFormComponent {
     constructor(
         private formBuilder: FormBuilder,
         private poolService: PoolService,
-        private notificationManager: NotificationManager) {
+        private notificationService: NotificationService) {
         this.form = formBuilder.group({
             startTask: [null],
         });

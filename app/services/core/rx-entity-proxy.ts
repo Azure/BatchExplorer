@@ -1,6 +1,7 @@
 import { Type } from "@angular/core";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
+import { ServerError } from "app/models";
 import { HttpCode } from "app/utils/constants";
 import { RxProxyBase, RxProxyBaseConfig } from "./rx-proxy-base";
 
@@ -44,10 +45,9 @@ export abstract class RxEntityProxy<TParams, TEntity> extends RxProxyBase<TParam
                 const key = this.newItem(response);
                 this._itemKey.next(key);
             },
-            error: (error: any) => {
+            error: (error: ServerError) => {
                 // If there is a 404 delete the item from the cache as it doesn't exist anymore
-                const status = error.statusCode || error.status;
-                if (status === HttpCode.NotFound) {
+                if (error.status === HttpCode.NotFound) {
                     this._itemKey.next(null);
                     const queryKey = this.params[this.cache.uniqueField];
                     this.cache.deleteItemByKey(queryKey);

@@ -27,7 +27,7 @@ export class PoolService extends ServiceBase {
     }
 
     public add(pool: any, options: any = {}): Observable<any> {
-        return Observable.fromPromise<any>(BatchClient.pool.add(pool, options));
+        return this.callBatchClient(BatchClient.pool.add(pool, options));
     }
 
     public list(initialOptions: any = {}): RxListProxy<{}, Pool> {
@@ -56,8 +56,7 @@ export class PoolService extends ServiceBase {
      * This will start the delete process
      */
     public delete(poolId: string, options: any = {}): Observable<any> {
-        let observable = Observable.fromPromise<any>(
-            BatchClient.pool.delete(poolId, options));
+        let observable = this.callBatchClient(BatchClient.pool.delete(poolId, options));
         observable.subscribe({
             error: (error) => {
                 log.error("Error deleting pool: " + poolId, Object.assign({}, error));
@@ -75,8 +74,7 @@ export class PoolService extends ServiceBase {
     }
 
     public resize(poolId: string, targetDedicated: number, options: any = {}) {
-        let observable = Observable.fromPromise<any>(
-            BatchClient.pool.resize(poolId, targetDedicated, options));
+        let observable = this.callBatchClient(BatchClient.pool.resize(poolId, targetDedicated, options));
         observable.subscribe({
             error: (error) => {
                 log.error("Error resizing pool: " + poolId, Object.assign({}, error));

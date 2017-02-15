@@ -13,7 +13,7 @@
                 </div>
                 <hr />
                 <div class="context-button-bar left">
-                    <button md-mini-fab color="warn" *ngIf="list?.isAnyItemSelected() && list?.deleteSelected" (click)="deleteSelectedItems()">
+                    <button md-mini-fab color="warn" *ngIf="deleteSelectedIsEnabled && selectedItems.length > 0" (click)="deleteSelectedItems()">
                         <i class="fa fa-trash"></i>
                     </button>
                 </div>

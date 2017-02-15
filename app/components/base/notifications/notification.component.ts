@@ -1,7 +1,7 @@
 import { Component, HostBinding, Input } from "@angular/core";
 
 import { Notification } from "./notification";
-import { NotificationManager } from "./notification-manager";
+import { NotificationService } from "./notification-service";
 
 @Component({
     selector: "bex-notification",
@@ -16,10 +16,10 @@ export class NotificationComponent {
         return this.notification && this.notification.level;
     }
 
-    constructor(private notificationManager: NotificationManager) {
+    constructor(private notificationService: NotificationService) {
     }
 
     public dismiss() {
-        this.notificationManager.dismiss(this.notification);
+        this.notificationService.dismiss(this.notification);
     }
 }

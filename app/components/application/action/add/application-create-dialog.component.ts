@@ -4,7 +4,7 @@ import { Response } from "@angular/http";
 import { autobind } from "core-decorators";
 import { AsyncSubject, Observable } from "rxjs";
 
-import { NotificationManager } from "app/components/base/notifications";
+import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { Application } from "app/models";
 import { applicationToFormModel } from "app/models/forms";
@@ -35,7 +35,7 @@ export class ApplicationCreateDialogComponent {
         public sidebarRef: SidebarRef<ApplicationCreateDialogComponent>,
         private applicationService: ApplicationService,
         private httpUploadService: HttpUploadService,
-        private notificationManager: NotificationManager) {
+        private notificationService: NotificationService) {
 
         const validation = Constants.forms.validation;
         this.applicationForm = this.formBuilder.group({
@@ -102,7 +102,7 @@ export class ApplicationCreateDialogComponent {
                 return this.applicationService.activatePackage(formData.id, formData.version).subscribe({
                     next: () => {
                         this.applicationService.onApplicationAdded.next(formData.id);
-                        this.notificationManager.success(
+                        this.notificationService.success(
                             "Application added!",
                             `Version ${formData.version} for application '${formData.id}' was successfully created!`,
                         );
@@ -119,7 +119,7 @@ export class ApplicationCreateDialogComponent {
                          *          Time:2017-02-13T03:35:27.0685745Z
                          */
                         console.error("Failed to activate application package :: ", response.json());
-                        this.notificationManager.error(
+                        this.notificationService.error(
                             "Activation failed",
                             "The application package was uploaded into storage successfully, "
                             + "but the activation process failed.",

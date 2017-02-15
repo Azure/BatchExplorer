@@ -23,7 +23,7 @@ import { NotificationModule } from "./notifications";
 import { PropertyListModule } from "./property-list";
 import { QuickListModule } from "./quick-list";
 import { RefreshButtonComponent } from "./refresh-btn";
-import { ScrollableComponent, ScrollableService } from "./scrollable";
+import { ScrollableModule } from "./scrollable";
 import { SidebarModule } from "./sidebar";
 import { TableModule } from "./table";
 import { TabsModule } from "./tabs";
@@ -44,6 +44,7 @@ const modules = [
     TableModule,
     TabsModule,
     FormModule,
+    ScrollableModule,
 ];
 
 // Add subcomponnent not in a module here
@@ -55,7 +56,6 @@ const components = [
     ListAndShowLayoutComponent,
     SimpleLoadingComponent,
     LoadingComponent,
-    ScrollableComponent,
     RefreshButtonComponent,
     ListLoadingComponent,
     DeleteSelectedItemsDialogComponent,
@@ -76,7 +76,6 @@ const components = [
         ...modules,
     ],
     providers: [
-        ScrollableService,
     ],
 })
 export class BaseModule {

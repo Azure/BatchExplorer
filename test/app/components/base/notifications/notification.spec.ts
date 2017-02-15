@@ -7,8 +7,8 @@ import {
     Notification,
     NotificationContainerComponent,
     NotificationLevel,
-    NotificationManager,
     NotificationModule,
+    NotificationService,
 } from "app/components/base/notifications";
 
 @Component({
@@ -19,8 +19,9 @@ class FakeAppComponent {
 }
 
 describe("Notification", () => {
-    let notificationManager: NotificationManager;
+    let notificationService: NotificationService;
     let currentNotifications: List<Notification>;
+    let currentPersistedNotifications: List<Notification>;
     let fixture: ComponentFixture<FakeAppComponent>;
     let de: DebugElement;
     let notificationContainer: NotificationContainerComponent;
@@ -30,8 +31,9 @@ describe("Notification", () => {
             imports: [NotificationModule],
             declarations: [FakeAppComponent],
         });
-        notificationManager = TestBed.get(NotificationManager);
-        notificationManager.notifications.subscribe((x) => currentNotifications = x);
+        notificationService = TestBed.get(NotificationService);
+        notificationService.notifications.subscribe((x) => currentNotifications = x);
+        notificationService.persistedNotifications.subscribe((x) => currentPersistedNotifications = x);
         fixture = TestBed.createComponent(FakeAppComponent);
         de = fixture.debugElement;
 
@@ -45,7 +47,7 @@ describe("Notification", () => {
 
     describe("when a notification is sent", () => {
         beforeEach(() => {
-            notificationManager.notify(NotificationLevel.success, "FakeNotification", "Something happend!", {
+            notificationService.notify(NotificationLevel.success, "FakeNotification", "Something happend!", {
                 autoDismiss: 1000,
             });
             fixture.detectChanges();
@@ -93,9 +95,66 @@ describe("Notification", () => {
         });
     });
 
+    describe("when a persistent notification is sent", () => {
+        beforeEach(() => {
+            notificationService.notify(NotificationLevel.success, "FakePersistentNotification", "Something happend!", {
+                autoDismiss: 1000,
+                persist: true,
+            });
+            fixture.detectChanges();
+        });
+
+        it("should add a notification to the list", () => {
+            expect(currentNotifications.size).toBe(1);
+            const notification = currentNotifications.first();
+            expect(notification.level).toEqual(NotificationLevel.success);
+            expect(notification.title).toEqual("FakePersistentNotification");
+            expect(notification.message).toEqual("Something happend!");
+            expect(notification.config.autoDismiss).toBe(1000);
+        });
+
+        it("notificationContainer should display the notification", () => {
+            const notificationEl = de.query(By.css("bex-notification"));
+            expect(notificationEl).not.toBeNull();
+
+            expect(notificationEl.nativeElement.classList).toContain(NotificationLevel.success);
+            expect(notificationEl.nativeElement.classList).not.toContain(NotificationLevel.error);
+            expect(notificationEl.nativeElement.classList).not.toContain(NotificationLevel.info);
+
+            const titleEl = notificationEl.query(By.css(".notification-title"));
+            const messageEl = notificationEl.query(By.css(".notification-message"));
+            expect(titleEl.nativeElement.textContent).toContain("FakePersistentNotification");
+            expect(messageEl.nativeElement.textContent).toContain("Something happend!");
+        });
+
+        it("should dismiss automatically after 1s and add to persisted list", (done) => {
+            expect(currentNotifications.size).not.toBe(0);
+            setTimeout(() => {
+                fixture.detectChanges();
+                expect(currentNotifications.size).toBe(0);
+                expect(de.query(By.css("bex-notification"))).toBeNull();
+                expect(currentPersistedNotifications.size).toBe(1);
+                const notification = currentPersistedNotifications.first();
+                expect(notification.level).toEqual(NotificationLevel.success);
+                expect(notification.title).toEqual("FakePersistentNotification");
+                expect(notification.message).toEqual("Something happend!");
+                done();
+            }, 1000);
+        });
+
+        it("clicking dimiss should dismiss and not add to the list", () => {
+            const notificationBtn = de.query(By.css("bex-notification .dismiss-btn"));
+            notificationBtn.nativeElement.click();
+            fixture.detectChanges();
+            expect(currentNotifications.size).toBe(0);
+            expect(de.query(By.css("bex-notification"))).toBeNull();
+            expect(currentPersistedNotifications.size).toBe(0);
+        });
+    });
+
     describe("Calling helper functions", () => {
         it("calling success should show a success notification", () => {
-            notificationManager.success("FakeNotification", "Something great happend!");
+            notificationService.success("FakeNotification", "Something great happend!");
             expect(currentNotifications.size).toBe(1);
             const notification = currentNotifications.first();
             expect(notification.level).toEqual(NotificationLevel.success);
@@ -104,7 +163,7 @@ describe("Notification", () => {
         });
 
         it("calling error should show a error notification", () => {
-            notificationManager.error("FakeNotification", "Something bad happend!");
+            notificationService.error("FakeNotification", "Something bad happend!");
             expect(currentNotifications.size).toBe(1);
             const notification = currentNotifications.first();
             expect(notification.level).toEqual(NotificationLevel.error);
@@ -113,7 +172,7 @@ describe("Notification", () => {
         });
 
         it("calling info should show a error notification", () => {
-            notificationManager.info("FakeNotification", "Something happend!");
+            notificationService.info("FakeNotification", "Something happend!");
             expect(currentNotifications.size).toBe(1);
             const notification = currentNotifications.first();
             expect(notification.level).toEqual(NotificationLevel.info);

@@ -1,9 +1,10 @@
 import {
     Component, ContentChildren, Input, Optional, QueryList,
 } from "@angular/core";
+import { Router } from "@angular/router";
 
+import { AbstractListBase } from "../abstract-list";
 import { FocusSectionComponent } from "../focus-section";
-import { SelectableListBase } from "../selectable-list/selectable-list-base";
 import { QuickListItemComponent } from "./quick-list-item.component";
 
 @Component({
@@ -12,12 +13,12 @@ import { QuickListItemComponent } from "./quick-list-item.component";
         <ng-content></ng-content>
     `,
 })
-export class QuickListComponent extends SelectableListBase {
+export class QuickListComponent extends AbstractListBase {
     @ContentChildren(QuickListItemComponent)
     public items: QueryList<QuickListItemComponent>;
 
-    constructor(@Optional() focusSection: FocusSectionComponent) {
-        super(focusSection);
+    constructor( @Optional() focusSection: FocusSectionComponent, router: Router) {
+        super(router, focusSection);
     }
 }
 

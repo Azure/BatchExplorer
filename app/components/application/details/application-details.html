@@ -34,26 +34,19 @@
                         addButtonHoverText="Add package version" (onAddEntity)="list?.addPackage($event)" filterPlaceholder="Filter by package version">
                         <div bex-list-buttons>
                             <!--
-                                TODO: hook these buttons up
-                                multi select - only delete enabled
+                                multi select - "add" enabled and "delete" enabled if allow updates is true
                                 single select
-                                    - delete: only enabled if allow updates is off
-                                    - update: only enabled if allow updates is off
-                                    - active: only enabled if selected package is pending
-
-                                note: after tim changes this check selectedItems count === 1
-                                or change to get hasSingleSelectedItem()
+                                    - delete: enabled if allow updates is true
+                                    - update: enabled if allow updates is true and package is active
+                                    - activate: enabled if package is pending
                             -->
-                            <button md-mini-fab color="warn" title="Delete selected" (click)="list?.deleteSelectedItems()"
-                                [disabled]="!list?.isAnyItemSelected() || !application.allowUpdates">
+                            <button md-mini-fab color="warn" title="Delete selected" (click)="list?.deleteSelectedItems()" [disabled]="!(list?.deleteItemEnabled | async)">
                                 <i class="fa fa-trash spin-hover"></i>
                             </button>
-                            <button md-mini-fab color="primary" title="Update package" (click)="list?.updatePackageVersion()"
-                                [disabled]="!list?.activatedItem || !application.allowUpdates || list?.isPackagePending(list?.activatedItem)">
+                            <button md-mini-fab color="primary" title="Update package" (click)="list?.updatePackageVersion()" [disabled]="!(list?.editItemEnabled | async)">
                                 <i class="fa fa-pencil-square-o spin-hover"></i>
                             </button>
-                            <button md-mini-fab color="primary" title="Activate pending package" (click)="list?.activateActiveItem()"
-                                [disabled]="!list?.activatedItem || !list?.isPackagePending(list?.activatedItem)">
+                            <button md-mini-fab color="primary" title="Activate pending package" (click)="list?.activateActiveItem()" [disabled]="!(list?.activateItemEnabled | async)">
                                 <i class="fa fa-toggle-on spin-hover"></i>
                             </button>
                         </div>
