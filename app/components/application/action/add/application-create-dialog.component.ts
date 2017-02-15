@@ -12,7 +12,7 @@ import { ApplicationService, CommitBlockListOptions, HttpUploadService, UploadBl
 import { Constants } from "app/utils";
 
 @Component({
-    selector: "bex-job-create-basic-dialog",
+    selector: "bex-application-create-dialog",
     templateUrl: "application-create-dialog.html",
 })
 export class ApplicationCreateDialogComponent {

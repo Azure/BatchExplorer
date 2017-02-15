@@ -9,7 +9,9 @@ import { ApplicationDecorator } from "app/models/decorators";
 import { ApplicationParams, ApplicationService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
 import { SidebarManager } from "../../base/sidebar";
-import { ApplicationCreateDialogComponent, DeleteApplicationDialogComponent } from "../action";
+import { ApplicationCreateDialogComponent } from "../action/add/application-create-dialog.component";
+import { DeleteApplicationDialogComponent } from "../action/delete/delete-application-dialog.component";
+import { ApplicationEditDialogComponent } from "../action/edit/application-edit-dialog.component";
 
 @Component({
     selector: "bex-application-details",
@@ -75,7 +77,11 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     }
 
     public editApplication() {
-        /** noop */
+        const sidebarRef = this.sidebarManager.open("edit-application", ApplicationEditDialogComponent);
+        sidebarRef.component.setValue(this.application);
+        sidebarRef.afterCompletition.subscribe(() => {
+            this.refresh();
+        });
     }
 
     public deleteApplication() {
