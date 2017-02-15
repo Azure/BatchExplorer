@@ -9,6 +9,7 @@ import { AsyncSubject } from "rxjs";
 import { SubmitButtonComponent } from "app/components/base/buttons";
 import { ActionFormComponent } from "app/components/base/form/action-form";
 import { ServerErrorComponent } from "app/components/base/form/server-error";
+import { ServerError } from "app/models";
 
 @Component({
     template: `
@@ -48,7 +49,7 @@ export class FormTestComponent {
         const sub = new AsyncSubject();
         if (this.form.value.id === "error") {
             const value = "Id already exists\nRequestId:abc-def\ntime:2016-12-08T18";
-            sub.error({ code: "IdExists", message: { value } });
+            sub.error(ServerError.fromBatch({ statusCode: 408, code: "IdExists", message: { value } }));
         } else {
             sub.next(true);
             sub.complete();
@@ -146,7 +147,6 @@ describe("ActionFormComponent", () => {
             expect(fixture.componentInstance.dialogRef.close).not.toHaveBeenCalled();
             const error = getErrorElement();
             expect(error.error).not.toBeNull();
-
         });
     });
 });

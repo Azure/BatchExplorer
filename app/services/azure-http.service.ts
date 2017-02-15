@@ -5,6 +5,7 @@ import {
 } from "@angular/http";
 import { AsyncSubject, Observable } from "rxjs";
 
+import { ServerError } from "app/models";
 import { Constants } from "app/utils";
 import { AccessToken, AdalService } from "./adal";
 
@@ -41,7 +42,7 @@ export class AzureHttpService {
                         subject.next(data);
                         subject.complete();
                     },
-                    error: (e) => subject.error(e),
+                    error: (e) => subject.error(ServerError.fromARM(e)),
                 });
             },
             error: (e) => subject.error(e),

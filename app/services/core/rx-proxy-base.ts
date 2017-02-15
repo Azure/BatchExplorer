@@ -2,6 +2,7 @@ import { Type } from "@angular/core";
 import { BehaviorSubject, Observable, Subject, Subscription } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
+import { ServerError } from "app/models";
 import { Constants, exists, log } from "app/utils";
 import { DataCache } from "./data-cache";
 
@@ -142,10 +143,10 @@ export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
             options.next(response);
             this._status.next(LoadingStatus.Ready);
             this.abortFetch();
-        }, (error) => {
+        }, (error: ServerError) => {
             // We need to clone the error otherwise it only logs the stacktrace
             // and not the actual error returned by the server which is not helpful
-            if (error && error.statusCode && !this._logIgnoreError.includes(error.statusCode)) {
+            if (error && error.status && !this._logIgnoreError.includes(error.status)) {
                 log.error("Error in RxProxy", Object.assign({}, error));
             }
             if (options.error) {

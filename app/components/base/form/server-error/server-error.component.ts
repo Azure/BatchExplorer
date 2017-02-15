@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 
-import { BatchError } from "app/models";
+import { ServerError } from "app/models";
 
 interface ErrorData {
     message: string;
@@ -15,7 +15,10 @@ interface ErrorData {
 export class ServerErrorComponent {
 
     @Input()
-    public set error(error: BatchError) {
+    public set error(error: ServerError) {
+        if (error && !(error instanceof ServerError)) {
+            console.error("Error passed to bex-server-error is not a server error.", error);
+        }
         this._error = error;
         this.errorData = this.parseErrorData();
     }
@@ -23,17 +26,17 @@ export class ServerErrorComponent {
 
     public errorData: ErrorData;
 
-    private _error: BatchError = null;
+    private _error: ServerError = null;
 
     public parseErrorData(): ErrorData {
-        if (!this.error || !this.error.message) {
+        if (!this.error || !this.error.body.message) {
             return {
                 message: null,
                 requestId: null,
                 time: null,
             };
         }
-        const value = this.error.message.value;
+        const value = this.error.body.message;
         // Remove the request id from the the message
         const lines = value.split("\n");
         const message = lines.length > 0 ? lines[0] : null;

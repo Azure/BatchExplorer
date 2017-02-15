@@ -1,7 +1,7 @@
 <div class="error-banner" *ngIf="error">
     <div class="content">
         <div class="main-info">
-            <h4>{{error.code}}</h4>
+            <h4>{{error.body.code}}</h4>
             <p>{{errorData.message}}</p>
             <div class="details" *ngIf="error.body?.values">
                 <div *ngFor="let detail of error.body.values"><b>{{detail.key}}</b>: {{detail.value}}</div>
