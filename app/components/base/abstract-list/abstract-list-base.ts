@@ -71,25 +71,23 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
 
         router.events.filter(event => event instanceof NavigationEnd).subscribe(event => {
             if (this.items) {
-                this.items.forEach((item) => {
-                    item.checkActive();
-                });
-                const active = this.getActiveItem();
-                this.setActiveItem(active && active.key);
+                if (this._activeItemKey.value) {
+                    const active = this.getActiveItem();
+                    this.setActiveItem(active && active.key);
+                }
             }
         });
     }
 
     public ngAfterViewInit() {
-        this.items.changes.first().subscribe((newItems: QueryList<AbstractListItemBase>) => {
-            setTimeout(() => {
-                newItems.forEach((x) => x.checkActive());
-                if (newItems.length && !this._activeItemKey.getValue()) {
-                    this._setInitialActivatedItem();
-                }
+        if (this.items.length > 0) {
+            this._processInitialItems(this.items);
+        } else {
+            this.items.changes.first().subscribe((newItems: QueryList<AbstractListItemBase>) => {
+                this._processInitialItems(newItems);
+
             });
-        });
-        this._setInitialActivatedItem();
+        }
     }
 
     public ngOnDestroy() {
@@ -137,7 +135,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      * Get the item actually selected(With the routerlink)
      */
     public getActiveItem(): AbstractListItemBase {
-        const vals = this.items.filter((x) => x.active);
+        const vals = this.items.filter((x) => this._checkItemActive(x));
         if (vals.length === 0) {
             return null;
         } else {
@@ -228,10 +226,26 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     private _setInitialActivatedItem() {
         const item = this.getActiveItem();
         if (item) {
-            // Need a timeout to trigger change detection in AfterViewInit otherwise angular throws an error
-            setTimeout(() => {
-                this._activeItemKey.next({ key: item.key, initialValue: true });
-            });
+            this.setActiveItem(item.key, true);
+        }
+    }
+
+    /**
+     * Goes through the initial list of items to check if one is active.
+     */
+    private _processInitialItems(items: QueryList<AbstractListItemBase>) {
+        setTimeout(() => {
+            if (items.length && !this._activeItemKey.value) {
+                this._setInitialActivatedItem();
+            }
+        });
+    }
+
+    private _checkItemActive(item: AbstractListItemBase): boolean {
+        if (item.urlTree) {
+            return this.router.isActive(item.urlTree, false);
+        } else {
+            return this.isActive(item.key);
         }
     }
 }

@@ -1,4 +1,4 @@
-import { HostListener, Input, OnInit } from "@angular/core";
+import { Input, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 
 import { BreadcrumbService } from "app/components/base/breadcrumbs";
@@ -19,7 +19,7 @@ export class AbstractListItemBase implements OnInit {
     public set routerLink(routerLink: any) {
         this._routerLink = routerLink;
         if (routerLink) {
-            this._urlTree = this.router.createUrlTree(routerLink);
+            this.urlTree = this.router.createUrlTree(routerLink);
             // console.log("trigger check active");
             // this.checkActive();
         }
@@ -34,9 +34,9 @@ export class AbstractListItemBase implements OnInit {
      */
     public selected: boolean = null;
     public active: boolean = null;
+    public urlTree: any = null;
 
     private _routerLink: any = null;
-    private _urlTree: any = null;
 
     /**
      * Need to inject list
@@ -56,15 +56,6 @@ export class AbstractListItemBase implements OnInit {
         this.selected = this.list.isSelected(this.key);
     }
 
-    public checkActive(): boolean {
-        if (this._urlTree) {
-            this.active = this.router.isActive(this._urlTree, true);
-        } else {
-            this.active = this.list.isActive(this.key);
-        }
-        return this.active;
-    }
-
     /**
      * If the current item is active(Router)
      */
@@ -72,11 +63,10 @@ export class AbstractListItemBase implements OnInit {
         return this.list.focusedItem === this.key;
     }
 
-    @HostListener("click", ["$event"])
+    // @HostListener("click", ["$event"])
     public handleClick(event: MouseEvent) {
         const shiftKey = event.shiftKey;
         const ctrlKey = event.ctrlKey || event.metaKey;
-        console.log("Clicked on list", ctrlKey, shiftKey);
 
         // Prevent the routerlink from being activated if we have shift or ctrl
         if (shiftKey || ctrlKey) {
@@ -92,6 +82,7 @@ export class AbstractListItemBase implements OnInit {
                 this.list.onSelectedChange(this.key, this.selected);
             }
             event.stopPropagation();
+            event.stopImmediatePropagation();
             return false;
         } else {
             // Means the user actually selected the item

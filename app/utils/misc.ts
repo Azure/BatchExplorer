@@ -23,7 +23,6 @@ export type Partial<T> = {
     [P in keyof T]?: T[P];
 };
 
-
 const UNITS = ["B", "kB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB"];
 
 /**
