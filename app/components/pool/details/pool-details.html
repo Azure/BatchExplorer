@@ -18,7 +18,7 @@
                         This is tracked at https://github.com/angular/material2/issues/1157
                         <bex-pool-nodes-preview [pool]="pool"></bex-pool-nodes-preview>
                     -->
-                    <h4>{{pool.currentDedicated}} / {{pool.targetDedicated}}</h4>
+                    <h4 [title]="nodesTooltipMessage">{{pool.currentDedicated}} / {{pool.targetDedicated}}</h4>
                     <h5>Nodes</h5>
                 </div>
             </md-card-title-group>

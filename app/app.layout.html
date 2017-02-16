@@ -2,8 +2,12 @@
     <!--[class.no-userinteract]="!(hasAccount | async)" -->
     <header id="header" class="noselect">
         <div class="back-nav">
-            <i class="fa fa-angle-left" (click)="goBack()"></i>
-            <i class="fa fa-angle-right" (click)="goForward()"></i>
+            <div class="back" (click)="goBack()" title="Back">
+                <i class="fa fa-angle-left"></i>
+            </div>
+            <div class="forward" (click)="goForward()" title="Forward">
+                <i class="fa fa-angle-right"></i>
+            </div>
         </div>
         <div class="logo-banner-bar">
             <a class="logo" href="#" [routerLink]="['']" title="Batch labs - Home">
