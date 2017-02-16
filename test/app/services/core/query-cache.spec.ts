@@ -1,5 +1,5 @@
 import { QueryCache } from "app/services/core";
-import { List } from "immutable";
+import { OrderedSet } from "immutable";
 
 class FakeClientProxy {
     public value = "original";
@@ -16,8 +16,8 @@ describe("QueryCache", () => {
     beforeEach(() => {
         clientProxy = new FakeClientProxy();
         cache = new QueryCache();
-        cache.cacheQuery(undefined, List(["a", "b", "c"]), clientProxy);
-        cache.cacheQuery("id eq a", List(["a"]), clientProxy);
+        cache.cacheQuery(undefined, OrderedSet(["a", "b", "c"]), clientProxy);
+        cache.cacheQuery("id eq a", OrderedSet(["a"]), clientProxy);
 
     });
 
@@ -25,11 +25,11 @@ describe("QueryCache", () => {
         const cacheList = cache.getKeys("id eq a");
 
         expect(cacheList).not.toBe(clientProxy);
-        expect(cacheList.keys).toEqualImmutable(List(["a"]));
+        expect(cacheList.keys).toEqualImmutable(OrderedSet(["a"]));
     });
 
     it("Caching a new query should remove the oldest execluding the no-query", () => {
-        cache.cacheQuery("id eq b", List(["b"]), clientProxy);
+        cache.cacheQuery("id eq b", OrderedSet(["b"]), clientProxy);
 
         expect(cache.getKeys(undefined)).not.toBe(null, "Should not have removed the undefined query");
         expect(cache.getKeys("id eq b")).not.toBe(null, "The new query should have been added");
@@ -44,7 +44,7 @@ describe("QueryCache", () => {
 
     it("delete item from query cache should remove from every query", () => {
         cache.deleteItemKey("a");
-        expect(cache.getKeys(undefined).keys).toEqualImmutable(List(["b", "c"]));
-        expect(cache.getKeys("id eq a").keys).toEqualImmutable(List([]));
+        expect(cache.getKeys(undefined).keys).toEqualImmutable(OrderedSet(["b", "c"]));
+        expect(cache.getKeys("id eq a").keys).toEqualImmutable(OrderedSet([]));
     });
 });
