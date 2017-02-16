@@ -4,7 +4,9 @@
     <bex-action-form [submit]="submit" [formGroup]="applicationForm" [sidebarRef]="sidebarRef" submitText="Update">
         <form novalidate [formGroup]="applicationForm">
             <div class="form-element pad-top">
-                <md-input formControlName="displayName" placeholder="Display name"></md-input>
+                <md-input-container>
+                    <input md-input formControlName="displayName" placeholder="Display name">
+                </md-input-container>
                 <bex-error controlName="displayName" code="maxlength">Display name has a maximum length of 1024 characters</bex-error>
             </div>
 
