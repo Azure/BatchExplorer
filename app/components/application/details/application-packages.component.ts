@@ -2,10 +2,9 @@ import { Component, Input, OnChanges, OnDestroy, ViewChild, ViewContainerRef } f
 import { MdDialog, MdDialogConfig } from "@angular/material";
 import { List } from "immutable";
 import * as moment from "moment";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 
 import { BackgroundTaskManager } from "app/components/base/background-task";
-import { DeleteSelectedItemsDialogComponent } from "app/components/base/list-and-show-layout";
 import { ListOrTableBase } from "app/components/base/selectable-list";
 import { TableComponent } from "app/components/base/table";
 import { Application, ApplicationPackage, PackageState } from "app/models";
@@ -27,6 +26,7 @@ export class ApplicationPackagesComponent extends ListOrTableBase implements OnC
     public set application(application: Application) {
         this._application = application;
         if (this.application) {
+            this.entityParentId = this.application.id;
             this.packages = List(this.application.packages);
             this._filterPackages();
         }
@@ -53,16 +53,17 @@ export class ApplicationPackagesComponent extends ListOrTableBase implements OnC
     private _stateMap: Map<string, PackageState>;
 
     constructor(
+        protected dialog: MdDialog,
         private applicationService: ApplicationService,
-        private dialog: MdDialog,
         private sidebarManager: SidebarManager,
         private taskManager: BackgroundTaskManager,
         private viewContainerRef: ViewContainerRef) {
 
-        super();
+        super(dialog);
         this._stateMap = new Map();
+        this.entityName = "application packages";
         this.selectedItemsChange.subscribe((items) => {
-            if (items.length > 1) {
+            if (items.length !== 1) {
                 this.activateItemEnabled.next(false);
                 this.editItemEnabled.next(false);
             }
@@ -102,7 +103,7 @@ export class ApplicationPackagesComponent extends ListOrTableBase implements OnC
         const sidebarRef = this.sidebarManager.open("add-package", ApplicationCreateDialogComponent);
         sidebarRef.component.setValue(this.application);
         sidebarRef.afterCompletition.subscribe(() => {
-            this.applicationService.getOnce(this.application.id);
+            this.refresh();
         });
     }
 
@@ -110,25 +111,16 @@ export class ApplicationPackagesComponent extends ListOrTableBase implements OnC
         this.taskManager.startTask("", (backgroundTask) => {
             const task = new DeletePackageAction(this.applicationService, this.application.id, this.selectedItems);
             task.start(backgroundTask);
-
             return task.waitingDone;
+        }).subscribe((done) => {
+            if (done) {
+                this.refresh();
+            }
         });
     }
 
-    // TODO: move me into ListOrTableBase?
-    public deleteSelectedItems() {
-        let config = new MdDialogConfig();
-        const dialogRef = this.dialog.open(DeleteSelectedItemsDialogComponent, config);
-        dialogRef.componentInstance.items = this.selectedItems;
-        dialogRef.componentInstance.entityName = "Application packages";
-        dialogRef.componentInstance.parentId = this.application.id;
-        dialogRef.afterClosed().subscribe((proceed) => {
-            if (proceed) {
-                this.deleteSelected();
-                // TODO :: clear selection doesnt work except for quicklist
-                // this.clearSelection();
-            }
-        });
+    public refresh(): Observable<any> {
+        return this.applicationService.getOnce(this.application.id);
     }
 
     public activateActiveItem() {
@@ -139,7 +131,7 @@ export class ApplicationPackagesComponent extends ListOrTableBase implements OnC
         dialogRef.componentInstance.applicationId = this.application.id;
         dialogRef.componentInstance.packageVersion = this.activatedItem;
         dialogRef.afterClosed().subscribe((obj) => {
-            this.applicationService.getOnce(this.application.id);
+            this.refresh();
         });
     }
 
@@ -147,7 +139,7 @@ export class ApplicationPackagesComponent extends ListOrTableBase implements OnC
         const sidebarRef = this.sidebarManager.open("update-package", ApplicationCreateDialogComponent);
         sidebarRef.component.setValue(this.application, this.activatedItem);
         sidebarRef.afterCompletition.subscribe(() => {
-            this.applicationService.getOnce(this.application.id);
+            this.refresh();
         });
     }
 

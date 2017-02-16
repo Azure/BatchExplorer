@@ -3,18 +3,25 @@
     <p>Update the display name, default version, or locked status of your application</p>
     <bex-action-form [submit]="submit" [formGroup]="applicationForm" [sidebarRef]="sidebarRef" submitText="Update">
         <form novalidate [formGroup]="applicationForm">
-            <div class="form-element">
-                <md-input formControlName="allowUpdates" placeholder="Allow updates"></md-input>
-                <bex-error controlName="allowUpdates" code="required">The application identifier is a required field</bex-error>
-            </div>
-
-            <div class="form-element">
-                <md-input formControlName="defaultVersion" placeholder="Default version"></md-input>
-            </div>
-
-            <div class="form-element">
+            <div class="form-element pad-top">
                 <md-input formControlName="displayName" placeholder="Display name"></md-input>
-                <bex-error controlName="displayName" code="maxlength">Package version has a maximum length of 1024 characters</bex-error>
+                <bex-error controlName="displayName" code="maxlength">Display name has a maximum length of 1024 characters</bex-error>
+            </div>
+
+            <div class="form-element">
+                <md-select formControlName="defaultVersion" placeholder="Default version">
+                    <md-option value="">No default version</md-option>
+                    <md-option *ngFor="let package of packages" value="{{package.version}}">{{package.version}}</md-option>
+                </md-select>
+            </div>
+
+            <div class="form-element pad-top">
+                <h5>Allow updates</h5>
+                <p>When set to 'No', package versions cannot be updated or deleted. Only new versions can be added.</p>
+                <md-radio-group formControlName="allowUpdates">
+                    <md-radio-button [value]="true">Yes</md-radio-button>
+                    <md-radio-button [value]="false">No</md-radio-button>
+                </md-radio-group>
             </div>
         </form>
     </bex-action-form>

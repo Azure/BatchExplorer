@@ -1,6 +1,6 @@
 import "app/utils/extensions/string";
 
-fdescribe("String extensions", () => {
+describe("String extensions", () => {
     it("Should format string correctly with 1 argument", () => {
         expect("Some value is {0}".format("awesome")).toEqual("Some value is awesome");
     });

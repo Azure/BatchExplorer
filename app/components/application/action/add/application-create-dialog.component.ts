@@ -7,7 +7,7 @@ import { AsyncSubject, Observable } from "rxjs";
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { Application } from "app/models";
-import { applicationToFormModel } from "app/models/forms";
+import { applicationToCreateFormModel } from "app/models/forms";
 import { ApplicationService, CommitBlockListOptions, HttpUploadService, UploadBlockOptions } from "app/services";
 import { Constants } from "app/utils";
 
@@ -58,7 +58,7 @@ export class ApplicationCreateDialogComponent {
 
     public setValue(application: Application, version?: string) {
         // TODO: need to disable appId and version fields if they are supplied
-        this.applicationForm.patchValue(applicationToFormModel(application, version));
+        this.applicationForm.patchValue(applicationToCreateFormModel(application, version));
         if (version) {
             this.title = "Update selected package";
             this.description = "Select a new package to overwrite the existing version";
@@ -118,7 +118,7 @@ export class ApplicationCreateDialogComponent {
                          *          RequestId: 0427d452-dbfe-48ff-80f9-680a26bbff27
                          *          Time:2017-02-13T03:35:27.0685745Z
                          */
-                        console.error("Failed to activate application package :: ", response.json());
+                        console.error("Failed to activate application package :: ", response);
                         this.notificationService.error(
                             "Activation failed",
                             "The application package was uploaded into storage successfully, "
@@ -128,7 +128,6 @@ export class ApplicationCreateDialogComponent {
                 });
             });
     }
-
 
     private _uploadAppPackage(file, sasUrl): Observable<any> {
         if (!this.hasValidFile()) {
@@ -170,7 +169,8 @@ export class ApplicationCreateDialogComponent {
             const fileContent = this.file.slice(this._currentFilePointer,
                 this._currentFilePointer + this._blockSize);
 
-            console.log(`block id: ${blockId}, current file pointer: ${this._currentFilePointer}, bytes read: ${this._blockSize}`);
+            // console.log(`block id: ${blockId}, current file pointer: ${this._currentFilePointer}`);
+            // console.log(`bytes read: ${this._blockSize}`);
 
             this._blockIds.push(btoa(blockId));
 

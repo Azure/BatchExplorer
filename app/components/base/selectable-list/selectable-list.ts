@@ -1,6 +1,8 @@
 import { EventEmitter, ViewChild } from "@angular/core";
+import { MdDialog, MdDialogConfig } from "@angular/material";
 import { Observable } from "rxjs";
 
+import { DeleteSelectedItemsDialogComponent } from "app/components/base/list-and-show-layout";
 import { QuickListComponent } from "app/components/base/quick-list";
 
 export class SelectableList {
@@ -22,8 +24,18 @@ export class SelectableList {
             });
         }
     }
-
     public get list() { return this._list; };
+
+    /**
+     * Name of the thing we are deleting
+     */
+    public entityName: string;
+
+    /**
+     * Parent id of the thing we are deleting, if at all.
+     * Uses this value to make the delete message easier to understand.
+     */
+    public entityParentId: string;
 
     public selectedItems: any[] = [];
     public activatedItem: string = null;
@@ -32,10 +44,7 @@ export class SelectableList {
 
     private _list: QuickListComponent | SelectableList;
 
-    public clearSelection() {
-        if (this.list) {
-            this.list.clearSelection();
-        }
+    constructor(protected dialog?: MdDialog) {
     }
 
     /**
@@ -47,4 +56,28 @@ export class SelectableList {
 
     public refresh?(): Observable<any>;
     public deleteSelected?();
+    public clearSelection?() {
+        if (this.list) {
+            this.list.clearSelection();
+        }
+    }
+
+    public deleteSelectedItems() {
+        if (!this.dialog) {
+            console.error("this.dialog not defined, call 'super(dialog)' in your constructor to set it.");
+            return;
+        }
+
+        let config = new MdDialogConfig();
+        const dialogRef = this.dialog.open(DeleteSelectedItemsDialogComponent, config);
+        dialogRef.componentInstance.items = this.selectedItems;
+        dialogRef.componentInstance.entityName = this.entityName;
+        dialogRef.componentInstance.parentId = this.entityParentId;
+        dialogRef.afterClosed().subscribe((proceed) => {
+            if (proceed) {
+                this.deleteSelected();
+                this.clearSelection();
+            }
+        });
+    }
 }

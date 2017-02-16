@@ -117,6 +117,10 @@ fieldset {
             width: 100%;
             margin: 10px 0;
 
+            &.pad-top {
+                margin-top: 20px;
+            }
+
             // pretty sure most of what is in here can be set in the HTML with: dividerColor="<color>"
 
             input[type=file] {

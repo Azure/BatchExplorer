@@ -89,6 +89,22 @@ export class ApplicationService extends ServiceBase {
     }
 
     /**
+     * Updates settings for the specified application.
+     * @param application: application to patch to the current state
+     * @param jsonData: json data containing the application patch data
+     */
+    public patch(applicationId: string, jsonData: any): Observable<any> {
+        return this.azure.patch(
+            `${this._currentAccountId}/applications/${applicationId}`,
+            {
+                allowUpdates: jsonData.allowUpdates,
+                defaultVersion: jsonData.defaultVersion,
+                displayName: jsonData.displayName,
+            },
+        );
+    }
+
+    /**
      * Deletes an application.
      * @param applicationId: id of the application
      */

@@ -21,7 +21,6 @@ export class ListOrTableBase extends SelectableList {
             });
         }
     }
-
     public get table() { return this._table; };
 
     private _table: TableComponent;
