@@ -1,5 +1,5 @@
 import { Type } from "@angular/core";
-import { List } from "immutable";
+import { List, OrderedSet } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { CachedKeyList } from "./query-cache";
@@ -14,7 +14,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
     public items: Observable<List<TEntity>>;
     public hasMore: Observable<boolean>;
 
-    private _itemKeys: BehaviorSubject<List<string>> = new BehaviorSubject(List([]));
+    private _itemKeys: BehaviorSubject<OrderedSet<string>> = new BehaviorSubject(OrderedSet([]));
     private _hasMore: BehaviorSubject<boolean> = new BehaviorSubject(true);
     private _lastRequest: { params: TParams, options: any };
 
@@ -28,12 +28,12 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
 
         this.items = this._itemKeys.map((keys) => {
             return this.cache.items.map((items) => {
-                return keys.map((x) => items.get(x));
+                return List<TEntity>(keys.map((x) => items.get(x)));
             });
         }).switch();
 
         this.deleted.subscribe((deletedKey) => {
-            this._itemKeys.next(List<string>(this._itemKeys.getValue().filter((key) => key !== deletedKey)));
+            this._itemKeys.next(OrderedSet<string>(this._itemKeys.getValue().filter((key) => key !== deletedKey)));
         });
     }
 
@@ -46,7 +46,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         super.setOptions(options);
         this.handleChanges(this._params, this._options);
         if (clearItems) {
-            this._itemKeys.next(List([]));
+            this._itemKeys.next(OrderedSet([]));
         }
         this._hasMore.next(true);
     }
@@ -77,7 +77,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
             },
             next: (response: any) => {
                 this._hasMore.next(this.hasMoreItems());
-                const keys = List(this.newItems(this.processResponse(response)));
+                const keys = OrderedSet(this.newItems(this.processResponse(response)));
                 const currentKeys = this._itemKeys.getValue();
                 if (currentKeys.size === 0) {
                     this.cache.queryCache.cacheQuery(this._options.filter, keys, this.putQueryCacheData());
@@ -86,7 +86,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
                 if (last && (last.params !== this._params || last.options !== this._options)) {
                     this._itemKeys.next(keys);
                 } else {
-                    this._itemKeys.next(List<string>(currentKeys.concat(keys)));
+                    this._itemKeys.next(OrderedSet<string>(currentKeys.concat(keys)));
                 }
                 this._lastRequest = { params: this._params, options: this._options };
             },
@@ -111,21 +111,25 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         return subject.asObservable();
     }
 
-    public loadNewItem(entityProxy: RxEntityProxy<any, TEntity>) {
-        const sub = entityProxy.item.subscribe({
-            next: (newItem) => {
-                if (newItem) {
-                    const key = this.cache.getItemKey(newItem);
-                    this._itemKeys.next(this._itemKeys.getValue().unshift(key));
-                    sub.unsubscribe();
+    /**
+     * This add a new item to the list by loading it from a entity proxy
+     * It should not add the new item if already present.
+     * The cache system will handle updating it already.
+     */
+    public loadNewItem(entityProxy: RxEntityProxy<any, TEntity>): Observable<any> {
+        const obs = entityProxy.fetch();
+        obs.subscribe(() => {
+            entityProxy.item.first().subscribe((newItem) => {
+                if (!newItem) { return; }
+                const key = this.cache.getItemKey(newItem);
+                const itemKeys = this._itemKeys;
+                if (itemKeys.value.has(key)) {
+                    return;
                 }
-            },
-            error: () => {
-                sub.unsubscribe();
-            },
+                this._itemKeys.next(OrderedSet(OrderedSet([key]).concat(this._itemKeys.value)));
+            });
         });
-
-        entityProxy.fetch();
+        return obs;
     }
 
     /**
