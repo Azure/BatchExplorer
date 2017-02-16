@@ -118,12 +118,12 @@ md-card {
 md-radio-button {
     margin-right: 15px;
 
-    &.md-radio-checked {
-        .md-radio-outer-circle {
+    &.mat-radio-checked {
+        .mat-radio-outer-circle {
             border-color: map-get($md-prussian-blue, 400);
         }
 
-        .md-radio-inner-circle {
+        .mat-radio-inner-circle {
             background: map-get($md-prussian-blue, 400);
         }
     }

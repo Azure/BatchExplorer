@@ -136,7 +136,7 @@ fieldset {
                     border-color: $validation-error-color;
                     border-width: 2px;
 
-                    .mat-input-ripple.md-focused {
+                    .mat-input-ripple.mat-focused {
                         opacity: 0;
                     }
                 }
