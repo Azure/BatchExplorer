@@ -59,14 +59,14 @@ describe("Banner", () => {
 
     it("should be of error type by default", () => {
         expect(bannerComponent.type).toBe("error");
-        expect(bannerElement.query(By.css("md-card")).nativeElement.className).toBe("error");
+        expect(bannerElement.query(By.css("md-card")).nativeElement.className).toContain("error");
     });
 
     it("should be of warning type when changed", () => {
         component.type = "warning";
         fixture.detectChanges();
         expect(bannerComponent.type).toBe("warning");
-        expect(bannerElement.query(By.css("md-card")).nativeElement.className).toBe("warning");
+        expect(bannerElement.query(By.css("md-card")).nativeElement.className).toContain("warning");
     });
 
     describe("When there is details", () => {

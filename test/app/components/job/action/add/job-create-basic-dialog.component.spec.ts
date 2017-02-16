@@ -1,7 +1,6 @@
 import { DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormBuilder } from "@angular/forms";
-import { MdInput } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { Observable, Subject } from "rxjs";
 
@@ -113,13 +112,11 @@ describe("JobCreateBasicDialogComponent ", () => {
 
     it("JobId is initialized", () => {
         let control = baseForm.controls.id;
-        expect(control).not.toBeNull();
-        expect(control.validator).not.toBeNull();
     });
 
     it("JobId has required, pattern, and maxLength validation", () => {
         const controlName = "id";
-        const input = de.query(By.css("md-input[formControlName=id]")).componentInstance as MdInput;
+        const input = de.query(By.css("input[formControlName=id]"));
         helper.expectValidation(baseForm, input, controlName, "", validators.required, true);
         helper.expectValidation(baseForm, input, controlName, "invalid job id", validators.pattern, true);
         helper.expectValidation(baseForm, input, controlName, "a".repeat(65), validators.maxlength, true);
@@ -134,7 +131,7 @@ describe("JobCreateBasicDialogComponent ", () => {
 
     it("DisplayName has maxLength validation only", () => {
         const controlName = "displayName";
-        const input = de.query(By.css("md-input[formControlName=displayName]")).componentInstance as MdInput;
+        const input = de.query(By.css("input[formControlName=displayName]"));
         helper.expectValidation(baseForm, input, controlName, "a".repeat(1025), validators.maxlength, true);
         helper.expectValidation(baseForm, input, controlName, null, validators.required, false);
     });
@@ -147,7 +144,7 @@ describe("JobCreateBasicDialogComponent ", () => {
 
     it("Priority has range validation only", () => {
         const controlName = "priority";
-        const input = de.query(By.css("md-input[formControlName=priority]")).componentInstance as MdInput;
+        const input = de.query(By.css("input[formControlName=priority]"));
         helper.expectValidation(baseForm, input, controlName, null, validators.required, false);
         helper.expectValidation(baseForm, input, controlName, -1001, validators.range, true);
         helper.expectValidation(baseForm, input, controlName, 1001, validators.range, true);
@@ -162,7 +159,7 @@ describe("JobCreateBasicDialogComponent ", () => {
 
     it("MaxRetryCount has range validation only", () => {
         const controlName = "maxTaskRetryCount";
-        const input = de.query(By.css("md-input[formControlName=maxTaskRetryCount]")).componentInstance as MdInput;
+        const input = de.query(By.css("input[formControlName=maxTaskRetryCount]"));
         helper.expectValidation(constraintsForm, input, controlName, null, validators.required, false);
         helper.expectValidation(constraintsForm, input, controlName, -2, validators.range, true);
         helper.expectValidation(constraintsForm, input, controlName, 101, validators.range, true);
