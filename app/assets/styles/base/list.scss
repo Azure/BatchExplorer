@@ -143,12 +143,6 @@ bex-quick-list {
                 right: 0;
 
             }
-
-            // Disabled checkbox animations otherwise it does some flickering on select
-            .md-checkbox-mixedmark, .md-checkbox-checkmark-path, .md-checkbox-background {
-                animation: none !important;
-                transition: none !important;
-            }
         }
     }
 }
