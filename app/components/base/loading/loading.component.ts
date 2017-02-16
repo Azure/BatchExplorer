@@ -37,6 +37,7 @@ export class LoadingComponent {
 
     @Input()
     public set status(value: LoadingStatus) {
+        console.log("recieved new status", LoadingStatus[value]);
         if (this.loadOnlyOnce && this._alreadyLoaded && value === LoadingStatus.Loading) {
             return;
         }

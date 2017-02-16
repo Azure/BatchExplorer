@@ -2,6 +2,7 @@ import { Type } from "@angular/core";
 import { List, OrderedSet } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
+import { LoadingStatus } from "app/components/base/loading";
 import { CachedKeyList } from "./query-cache";
 import { RxEntityProxy } from "./rx-entity-proxy";
 import { RxProxyBase, RxProxyBaseConfig } from "./rx-proxy-base";
@@ -57,16 +58,18 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
      *                  instead of loading from cache
      */
     public fetchNext(forceNew = false): Observable<any> {
-        if (!this._hasMore.getValue()) {
+        if (!this._hasMore.value) {
             return Observable.of({ data: [] });
         }
 
-        if (this._itemKeys.getValue().size === 0 && !forceNew) {
+        if (this._itemKeys.value.size === 0 && !forceNew) {
             const cachedList = this.cache.queryCache.getKeys(this._options.filter);
             if (cachedList) {
                 this.getQueryCacheData(cachedList);
                 this._itemKeys.next(cachedList.keys);
                 this._lastRequest = { params: this._params, options: this._options };
+                this._hasMore.next(this.hasMoreItems());
+                this._status.next(LoadingStatus.Ready);
                 return Observable.from(cachedList.keys.toJS());
             }
         }
