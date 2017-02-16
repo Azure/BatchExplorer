@@ -112,6 +112,8 @@ describe("JobCreateBasicDialogComponent ", () => {
 
     it("JobId is initialized", () => {
         let control = baseForm.controls.id;
+        expect(control).not.toBeNull();
+        expect(control.validator).not.toBeNull();
     });
 
     it("JobId has required, pattern, and maxLength validation", () => {
