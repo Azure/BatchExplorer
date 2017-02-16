@@ -119,17 +119,11 @@ fieldset {
 
             // pretty sure most of what is in here can be set in the HTML with: dividerColor="<color>"
 
-            md-input {
+            md-input-container {
                 width: 100%;
-
-                .md-input-underline {
-                    .md-input-ripple.md-focused {
-                        // opacity: 0;
-                    }
-                }
             }
 
-            md-input.ng-invalid.ng-touched {
+            md-input-container.ng-invalid.ng-touched {
                 label {
                     color: $validation-error-color;
 
@@ -138,11 +132,11 @@ fieldset {
                     }
                 }
 
-                .md-input-underline {
+                .mat-input-underline {
                     border-color: $validation-error-color;
                     border-width: 2px;
 
-                    .md-input-ripple.md-focused {
+                    .mat-input-ripple.md-focused {
                         opacity: 0;
                     }
                 }

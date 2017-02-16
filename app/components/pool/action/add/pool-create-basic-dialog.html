@@ -4,20 +4,26 @@
     <bex-create-form [formGroup]="createPoolForm" [submit]="submit" [sidebarRef]="sidebarRef">
         <form novalidate [formGroup]="createPoolForm">
             <div class="form-element">
-                <md-input #idInput formControlName="id" placeholder="Id" maxlength="64">
+                <md-input-container>
+                <input mdInput #idInput formControlName="id" placeholder="Id" maxlength="64">
                      <md-hint align="end">{{idInput.characterCount}} / 64</md-hint>
-                </md-input>
+                </md-input-container>
+
                 <bex-error controlName="id" code="required">Id is a required field</bex-error>
                 <bex-error controlName="id" code="maxlength">Id has a maximum length of 64 characters</bex-error>
                 <bex-error controlName="id" code="pattern">Id can contain any combination of alphanumeric characters including hyphens and underscores.</bex-error>
             </div>
 
             <div class="form-element">
-                <md-input formControlName="displayName" placeholder="Display name"></md-input>
+                <md-input-container>
+                <input mdInput formControlName="displayName" placeholder="Display name">
+                </md-input-container>
             </div>
 
             <div class="form-element">
-                <md-input formControlName="targetDedicated" placeholder="Number of virtual machines in pool" type="number"></md-input>
+                <md-input-container>
+                <input mdInput formControlName="targetDedicated" placeholder="Number of virtual machines in pool" type="number">
+                </md-input-container>
                 <bex-error controlName="targetDedicated" code="required">Target size is a required field</bex-error>
             </div>
 

@@ -4,7 +4,9 @@
     <bex-action-form [submit]="submit" [sidebarRef]="sidebarRef" [formGroup]="form">
         <form *ngIf="pool" [formGroup]="form">
             <div class="form-element">
-                <md-input type="number" placeholder="Target Dedicated" formControlName="targetDedicated" min="0"></md-input>
+                <md-input-container>
+                    <input mdInput type="number" placeholder="Target Dedicated" formControlName="targetDedicated" min="0">
+                </md-input-container>
             </div>
         </form>
     </bex-action-form>
