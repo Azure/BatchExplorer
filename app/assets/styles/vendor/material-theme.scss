@@ -26,37 +26,6 @@ $theme: mat-light-theme($primary, $accent, $warn);
 // TODO: can we pull in the material scss classes into the project?
 // really want to be able to override the styles more easily.
 
-// overrides
-md-list, md-nav-list {
-    padding-top: 0 !important;
-
-    md-list-item {
-        .md-list-item {
-            height: auto !important;
-            font-family: $baseFontFamily !important;
-            margin-bottom: 10px !important;
-            padding: 0 !important;
-
-            .md-list-text {
-                padding-left: 8px;
-                padding-right: 0;
-
-                a {
-                    text-overflow: ellipsis;
-                }
-
-                h4 {
-                    font-size: $h4FontSize;
-                }
-
-                p {
-                    font-size: $baseFontSize !important;
-                }
-            }
-        }
-    }
-}
-
 [md-mini-fab] {
     width: 30px !important;
     height: 30px !important;
@@ -69,15 +38,15 @@ md-list, md-nav-list {
 }
 
 md-tab-group {
-    .md-tab-label {
+    .mat-tab-label {
         opacity: 0.8 !important;
         border-right: 1px solid #ddd;
 
-        &.md-tab-label-active {
+        &.mat-tab-label-active {
             background-color: map-get($md-prussian-blue, 100);
         }
 
-        &.md-tab-disabled {
+        &.mat-tab-disabled {
             color: #bbb;
         }
 
@@ -86,7 +55,7 @@ md-tab-group {
         }
     }
 
-    .md-tab-body-content {
+    .mat-tab-body-content {
         // set to same height as a tab with the .no-item-message
         min-height: 443px;
 
@@ -160,13 +129,13 @@ md-radio-button {
     }
 }
 
-[md-raised-button].md-primary.md-button-focus {
+[md-raised-button].mat-primary.mat-button-focus {
     background: map-get($md-prussian-blue, 700);
 }
 
 
 md-checkbox[small] {
-    .md-checkbox-inner-container {
+    .mat-checkbox-inner-container {
         width: 14px;
         height: 14px;
     }
@@ -178,7 +147,7 @@ md-dialog-container {
 }
 
 
-.md-select-content {
+.mat-select-content {
     md-option {
         height: 30px;
     }
