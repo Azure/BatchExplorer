@@ -15,6 +15,8 @@ import { NodeListDisplayComponent } from "./display";
     templateUrl: "node-list.html",
 })
 export class NodeListComponent extends SelectableList implements OnInit {
+    public LoadingStatus = LoadingStatus;
+
     /**
      * If set to true it will display the quick list view, if false will use the table view
      */
