@@ -24,7 +24,6 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         this._options = config.initialOptions || {};
         this.params = config.initialParams;
         this._hasMore.next(true);
-        this.status = this._status.asObservable();
         this.hasMore = this._hasMore.asObservable();
 
         this.items = this._itemKeys.map((keys) => {
