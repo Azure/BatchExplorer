@@ -1,7 +1,7 @@
 import { Location } from "@angular/common";
 import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { MdSidenav } from "@angular/material";
-import { BehaviorSubject, Observable } from "rxjs";
+import { Observable } from "rxjs";
 
 import { AccountService, AdalService, CommandService, SettingsService } from "app/services";
 import AccountCreateDialogComponent from "./components/account/add/account-create-dialog.component";
@@ -19,7 +19,7 @@ const adalConfig = {
 })
 export class AppComponent implements AfterViewInit, OnInit {
     public hasAccount: Observable<boolean>;
-    public isAppReady = new BehaviorSubject<boolean>(false);
+    public isAppReady = false;
 
     @ViewChild("rightSidebar")
     private sidebar: MdSidenav;
@@ -44,7 +44,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         Observable
             .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)
             .subscribe((loadedArray) => {
-                this.isAppReady.next(loadedArray[0] && loadedArray[1]);
+                this.isAppReady = loadedArray[0] && loadedArray[1];
             });
     }
 
