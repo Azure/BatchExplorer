@@ -1,4 +1,4 @@
-import { List } from "immutable";
+import { OrderedSet } from "immutable";
 import * as moment from "moment";
 
 import { Constants, ObjectUtils } from "app/utils";
@@ -7,7 +7,7 @@ const noQueryKey = "no-query";
 
 export class CachedKeyList {
     public createdAt: Date;
-    constructor(public keys: List<string>, public data: any) {
+    constructor(public keys: OrderedSet<string>, public data: any) {
         this.createdAt = new Date();
     }
 }
@@ -18,7 +18,7 @@ export class CachedKeyList {
 export class QueryCache {
     private _cache: { [key: string]: CachedKeyList } = {};
 
-    public cacheQuery(filter: string, keys: List<string>, data: any) {
+    public cacheQuery(filter: string, keys: OrderedSet<string>, data: any) {
         if (!filter) {
             filter = noQueryKey;
         }
@@ -55,7 +55,7 @@ export class QueryCache {
      */
     public deleteItemKey(key: string) {
         for (let cachedList of ObjectUtils.values(this._cache)) {
-            cachedList.keys = List<string>(cachedList.keys.filter(x => x !== key));
+            cachedList.keys = OrderedSet<string>(cachedList.keys.filter(x => x !== key));
         }
     }
 }

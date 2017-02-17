@@ -4,7 +4,7 @@ import {
 } from "@angular/core/testing";
 import { List } from "immutable";
 
-import { DataCache, RxBatchListProxy } from "app/services/core";
+import { DataCache, RxBatchEntityProxy, RxBatchListProxy } from "app/services/core";
 import { FakeModel } from "./fake-model";
 
 const data = [
@@ -66,6 +66,7 @@ describe("RxBatchListProxy", () => {
     let cache: DataCache<FakeModel>;
     let clientProxy: MockClientProxy;
     let hasMore = true;
+    let items: List<FakeModel>;
 
     beforeEach(() => {
         cache = new DataCache<FakeModel>();
@@ -79,11 +80,10 @@ describe("RxBatchListProxy", () => {
             initialOptions: { filter: "filter1" },
         });
         proxy.hasMore.subscribe(x => hasMore = x);
+        proxy.items.subscribe((x) => items = x);
     });
 
     it("It retrieve the first batch of items", fakeAsync(() => {
-        let items: List<FakeModel>;
-        proxy.items.subscribe((x) => items = x);
         proxy.fetchNext();
         tick();
         expect(items).toEqualImmutable(List(data[0].map((x) => new FakeModel(x))));
@@ -92,8 +92,6 @@ describe("RxBatchListProxy", () => {
     }));
 
     it("It fetch the next batch", fakeAsync(() => {
-        let items: List<FakeModel>;
-        proxy.items.subscribe((x) => items = x);
         proxy.fetchNext();
         tick();
         expect(items).toEqualImmutable(List(data[0].map((x) => new FakeModel(x))));
@@ -107,8 +105,6 @@ describe("RxBatchListProxy", () => {
     }));
 
     it("should not clear the items when refresing with params true", fakeAsync(() => {
-        let items: List<FakeModel>;
-        proxy.items.subscribe((x) => items = x);
         proxy.fetchNext();
         tick();
         proxy.refresh(true);
@@ -118,8 +114,6 @@ describe("RxBatchListProxy", () => {
     }));
 
     it("should not clear the items when refresing with params false", fakeAsync(() => {
-        let items: List<FakeModel>;
-        proxy.items.subscribe((x) => items = x);
         proxy.fetchNext();
         tick();
         proxy.refresh(false);
@@ -132,8 +126,6 @@ describe("RxBatchListProxy", () => {
     }));
 
     it("it should apply the options", fakeAsync(() => {
-        let items: List<FakeModel>;
-        proxy.items.subscribe((x) => items = x);
         proxy.fetchNext();
         tick();
         expect(items).toEqualImmutable(List(data[0].map((x) => new FakeModel(x))));
@@ -146,8 +138,6 @@ describe("RxBatchListProxy", () => {
     }));
 
     it("Should remove item from the list when the cache call onItemDeleted", fakeAsync(() => {
-        let items: List<FakeModel>;
-        proxy.items.subscribe((x) => items = x);
         proxy.fetchNext();
         tick();
 
@@ -160,11 +150,48 @@ describe("RxBatchListProxy", () => {
     }));
 
     it("#fetchAll() should get all the items", (done) => {
-        let items: List<FakeModel>;
-        proxy.items.subscribe((x) => items = x);
         proxy.fetchAll().subscribe(() => {
             expect(items).toEqualImmutable(List(data[0].concat(data[1]).map((x) => new FakeModel(x))));
             done();
+        });
+    });
+
+    describe("#loadNewItem()", () => {
+        beforeEach((done) => {
+            proxy.fetchNext().subscribe(() => done());
+        });
+
+        it("should NOT add the item if already present and update exiting one", (done) => {
+            const entityProxy = new RxBatchEntityProxy<any, FakeModel>(FakeModel, {
+                cache: () => cache,
+                getFn: () => Promise.resolve({ data: { id: "2", state: "running", name: "Fake2" } }),
+            });
+            const expected = [
+                { id: "1", state: "active", name: "Fake1" },
+                { id: "2", state: "running", name: "Fake2" },
+                { id: "3", state: "running", name: "Fake3" },
+            ];
+
+            proxy.loadNewItem(entityProxy as any).subscribe(() => {
+                expect(items).toEqualImmutable(List(expected.map((x) => new FakeModel(x))));
+                done();
+            });
+        });
+
+        it("should add the item if NOT already present", (done) => {
+            const entityProxy = new RxBatchEntityProxy<any, FakeModel>(FakeModel, {
+                cache: () => cache,
+                getFn: () => Promise.resolve({ data: { id: "4", state: "running", name: "Fake4" } }),
+            });
+
+            const expected = [
+                { id: "4", state: "running", name: "Fake4" },
+            ].concat(data[0]);
+
+            proxy.loadNewItem(entityProxy as any).subscribe(() => {
+                expect(items).toEqualImmutable(List(expected.map((x) => new FakeModel(x))));
+                done();
+            });
         });
     });
 });

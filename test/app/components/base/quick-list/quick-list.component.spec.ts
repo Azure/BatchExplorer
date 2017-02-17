@@ -66,9 +66,9 @@ describe("QuickListComponent", () => {
     });
 
     it("click on an item should make the item active", () => {
-        click(items[1]);
+        click(items[1].query(By.css(".quick-list-item")));
         fixture.detectChanges();
-        const activeItem = quicklist.getActiveItem();
+        const activeItem = quicklist.getActiveItemFromRouter();
         expect(activeItem).not.toBeNull();
         expect(activeItemKey).toEqual("item-2");
         expect(activeItem.active).toBe(true);
@@ -89,7 +89,7 @@ describe("QuickListComponent", () => {
         });
 
         it("Shift click should select all items between current active and clicked", () => {
-            click(items[3], ButtonClickEvents.leftShift);
+            click(items[3].query(By.css(".quick-list-item")), ButtonClickEvents.leftShift);
             fixture.detectChanges();
             expect(activeItemKey).toEqual("item-2", "Should not have changed active item");
             expect(selectedItems.length).toBe(3);
@@ -99,14 +99,14 @@ describe("QuickListComponent", () => {
         });
 
         it("Ctrl click should select on item + the active item", () => {
-            click(items[3], ButtonClickEvents.leftCtrl);
+            click(items[3].query(By.css(".quick-list-item")), ButtonClickEvents.leftCtrl);
             fixture.detectChanges();
             expect(activeItemKey).toEqual("item-2", "Should not have changed active item");
             expect(selectedItems.length).toBe(2);
             expect(selectedItems[0]).toBe("item-2");
             expect(selectedItems[1]).toBe("item-4");
 
-            click(items[4], ButtonClickEvents.leftCtrl);
+            click(items[4].query(By.css(".quick-list-item")), ButtonClickEvents.leftCtrl);
             expect(selectedItems.length).toBe(3);
 
             expect(selectedItems[0]).toBe("item-2");
@@ -115,16 +115,16 @@ describe("QuickListComponent", () => {
         });
 
         it("Ctrl click on a selected item should unselect", () => {
-            click(items[3], ButtonClickEvents.leftCtrl);
-            click(items[4], ButtonClickEvents.leftCtrl);
+            click(items[3].query(By.css(".quick-list-item")), ButtonClickEvents.leftCtrl);
+            click(items[4].query(By.css(".quick-list-item")), ButtonClickEvents.leftCtrl);
             fixture.detectChanges();
             expect(selectedItems.length).toBe(3);
-            click(items[3], ButtonClickEvents.leftCtrl);
+            click(items[3].query(By.css(".quick-list-item")), ButtonClickEvents.leftCtrl);
             expect(selectedItems.length).toBe(2);
             expect(selectedItems[0]).toBe("item-2");
             expect(selectedItems[1]).toBe("item-5");
 
-            click(items[4], ButtonClickEvents.leftCtrl);
+            click(items[4].query(By.css(".quick-list-item")), ButtonClickEvents.leftCtrl);
 
             expect(selectedItems.length).toBe(1, "Should not have unselected the active");
             expect(selectedItems[0]).toEqual("item-2", "Should not have unselected the active");
