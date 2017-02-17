@@ -61,17 +61,8 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
             return Observable.of({ data: [] });
         }
 
-        if (this._itemKeys.value.size === 0 && !forceNew) {
-            const cachedList = this.cache.queryCache.getKeys(this._options.filter);
-            if (cachedList) {
-                this.getQueryCacheData(cachedList);
-                this._itemKeys.next(cachedList.keys);
-                this._lastRequest = { params: this._params, options: this._options };
-                this._hasMore.next(this.hasMoreItems());
-                this._status.next(LoadingStatus.Ready);
-
-                return Observable.from(cachedList.keys.toJS());
-            }
+        if (this._tryLoadFromQueryCache(forceNew)) {
+            return Observable.of({ data: [] });
         }
 
         return this.fetchData({
@@ -92,6 +83,9 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
                     this._itemKeys.next(OrderedSet<string>(currentKeys.concat(keys)));
                 }
                 this._lastRequest = { params: this._params, options: this._options };
+            },
+            error: () => {
+                this._hasMore.next(false);
             },
         });
     }
@@ -137,6 +131,8 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
 
     /**
      * Refresh the list, clearExisiting data will clear the data before doing the request
+     * @param clearExistingData If set to false it will only clear the data when the new date comes in.
+     *  This means that during the loading time the items are still the old ones.
      */
     public refresh(clearExistingData = true): Observable<any> {
         this.cache.queryCache.clearCache();
@@ -144,6 +140,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         return this.fetchNext(true);
     }
 
+    // Method to implement in the child class
     protected abstract handleChanges(params: TParams, options: {});
     protected abstract fetchNextItems(): Observable<any>;
     protected abstract processResponse(response: any): any[];
@@ -151,4 +148,25 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
     protected abstract queryCacheKey(): string;
     protected abstract putQueryCacheData(): any;
     protected abstract getQueryCacheData(queryCache: CachedKeyList): any;
+
+    /**
+     * This will try to load keys from the query cache
+     * This succeed only if there is no item currently loaded, we don't want new data and there is cached data.
+     */
+    private _tryLoadFromQueryCache(forceNew: boolean): boolean {
+        if (this._itemKeys.value.size !== 0 || forceNew) {
+            return false;
+        }
+        const cachedList = this.cache.queryCache.getKeys(this._options.filter);
+        if (!cachedList) {
+            return false;
+        }
+        this.getQueryCacheData(cachedList);
+        this._itemKeys.next(cachedList.keys);
+        this._lastRequest = { params: this._params, options: this._options };
+        this._hasMore.next(this.hasMoreItems());
+        this._status.next(LoadingStatus.Ready);
+        return true;
+    }
+
 }

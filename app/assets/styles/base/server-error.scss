@@ -2,7 +2,11 @@ bex-server-error {
     display: block;
 
     &.error-in-list {
-        margin: 10px;
+        margin: 10px 0;
+
+        > .error-banner {
+            border-radius: 0;
+        }
     }
 }
 
@@ -10,23 +14,27 @@ bex-server-error {
     background: $red;
     color: $whiteSmoke;
     border-radius: 4px;
-
     > .content {
+        padding: 10px;
+    }
+
+    > .content > .main-content {
         display: flex;
         position: relative;
 
         h4, p, table {
             color: $whiteSmoke;
-            font-size: 1em;
+            font-size: 12px;
         }
 
         h4 {
-            font-weight: 500;
+            font-size: 24px;
+            font-weight: 300;
         }
 
         .main-info {
             flex: 1;
-            padding: 10px;
+            margin-right: 10px;
         }
     }
 
@@ -39,7 +47,6 @@ bex-server-error {
             border: 1px solid $red-dark;
             border-radius: 3px;
             padding: 3px;
-            margin: 10px;
             &:hover {
                 background-color: $red-dark;
             }
