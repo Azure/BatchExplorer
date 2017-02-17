@@ -70,6 +70,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
                 this._lastRequest = { params: this._params, options: this._options };
                 this._hasMore.next(this.hasMoreItems());
                 this._status.next(LoadingStatus.Ready);
+
                 return Observable.from(cachedList.keys.toJS());
             }
         }
