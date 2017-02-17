@@ -15,7 +15,7 @@ interface String {
      * Add padding to the start of a string so that is in N characters long.
      * '1'.padStart(5, '0') = 00001
      */
-    padStart(maxLength: number, padString: string);
+    padStart(maxLength: number, padString?: string);
 }
 
 // First, checks if it isn't implemented yet.
@@ -34,8 +34,8 @@ if (!String.prototype.clearWhitespace) {
 }
 
 if (!String.prototype.padStart) {
-    String.prototype.padStart = function (maxLength: number, padString: string) {
-        padString = String(padString);
+    String.prototype.padStart = function (maxLength: number, padString?: string) {
+        padString = padString ? String(padString) : " ";
         if (padString.length === 0) {
             padString = " ";
         }

@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Response } from "@angular/http";
 import { autobind } from "core-decorators";
+import { List } from "immutable";
 import { Observable } from "rxjs";
 
 import { NotificationService } from "app/components/base/notifications";
@@ -17,7 +18,7 @@ import { Constants } from "app/utils";
 })
 export class ApplicationEditDialogComponent {
     public appplication: Application;
-    public packages: ApplicationPackage[];
+    public packages: List<ApplicationPackage>;
     public applicationForm: FormGroup;
 
     constructor(
@@ -41,7 +42,7 @@ export class ApplicationEditDialogComponent {
 
     public setValue(application: Application) {
         this.appplication = application;
-        this.packages = application.packages || [];
+        this.packages = application.packages || List([]);
         this.applicationForm.patchValue(applicationToEditFormModel(application));
     }
 

@@ -78,7 +78,8 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         return this.fetchData({
             getData: () => {
                 return this.fetchNextItems();
-            }, next: (response: any) => {
+            },
+            next: (response: any) => {
                 this._hasMore.next(this.hasMoreItems());
                 const keys = OrderedSet(this.newItems(this.processResponse(response)));
                 const currentKeys = this._itemKeys.getValue();
@@ -92,6 +93,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
                 } else {
                     this._itemKeys.next(OrderedSet<string>(currentKeys.concat(keys)));
                 }
+
                 this._lastRequest = { params: this._params, options: this._options };
             },
         });

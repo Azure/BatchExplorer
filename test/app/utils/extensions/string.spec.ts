@@ -1,6 +1,6 @@
 import "app/utils/extensions/string";
 
-describe("String extensions", () => {
+fdescribe("String extensions", () => {
     it("Should format string correctly with 1 argument", () => {
         expect("Some value is {0}".format("awesome")).toEqual("Some value is awesome");
     });
@@ -16,5 +16,9 @@ describe("String extensions", () => {
 
         // should leave any over length strings as they are
         expect("50000000".padStart(5, "0")).toEqual("50000000");
+    });
+
+    it("Should pad string with spaces if no character supplied", () => {
+        expect("1".padStart(5)).toEqual("    1");
     });
 });

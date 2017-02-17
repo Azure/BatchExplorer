@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 
 import { DeleteSelectedItemsDialogComponent } from "app/components/base/list-and-show-layout";
 import { QuickListComponent } from "app/components/base/quick-list";
+import { log } from "app/utils"
 
 export class SelectableList {
     // NEED TO REDEFINE this in the child https://github.com/angular/angular/issues/5415
@@ -64,7 +65,7 @@ export class SelectableList {
 
     public deleteSelectedItems() {
         if (!this.dialog) {
-            console.error("this.dialog not defined, call 'super(dialog)' in your constructor to set it.");
+            log.error("this.dialog not defined, call 'super(dialog)' in your constructor to set it.");
             return;
         }
 
