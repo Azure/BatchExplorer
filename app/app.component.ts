@@ -19,7 +19,7 @@ const adalConfig = {
 })
 export class AppComponent implements AfterViewInit, OnInit {
     public hasAccount: Observable<boolean>;
-    public isAppReady = new BehaviorSubject<boolean>(false);
+    public isAppReady = false;
 
     @ViewChild("rightSidebar")
     private sidebar: MdSidenav;
@@ -44,7 +44,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         Observable
             .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)
             .subscribe((loadedArray) => {
-                this.isAppReady.next(loadedArray[0] && loadedArray[1]);
+                this.isAppReady = loadedArray[0] && loadedArray[1];
             });
     }
 

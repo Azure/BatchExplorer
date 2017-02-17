@@ -1,4 +1,4 @@
-import { Injectable, NgZone } from "@angular/core";
+import { ApplicationRef, Injectable, NgZone } from "@angular/core";
 import * as storage from "electron-json-storage";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
@@ -49,6 +49,7 @@ export class AccountService {
     private _cache = new DataCache<any>();
 
     constructor(
+        private applicationRef: ApplicationRef,
         private zone: NgZone,
         private azure: AzureHttpService,
         private subscriptionService: SubscriptionService) {
@@ -66,6 +67,7 @@ export class AccountService {
                     url: "https://" + account.properties.accountEndpoint,
                 });
                 this.validateCurrentAccount();
+                this.applicationRef.tick();
             } else {
                 this._currentAccountValid.next(AccountStatus.Invalid);
             }
