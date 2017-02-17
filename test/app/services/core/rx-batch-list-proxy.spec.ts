@@ -5,6 +5,7 @@ import {
 import { List, OrderedSet } from "immutable";
 
 import { LoadingStatus } from "app/components/base/loading";
+import { BatchError, ServerError } from "app/models";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy } from "app/services/core";
 import { FakeModel } from "./fake-model";
 
@@ -39,6 +40,12 @@ class MockClientProxy {
         this.id = mockProxyIdCounter++;
         this.options = options;
         this.fetchNext = jasmine.createSpy("fetchNext").and.callFake(() => {
+            if (!this.data) {
+                return Promise.reject(<BatchError>{
+                    statusCode: 409, code: "Bad",
+                    message: { value: "Very bad stuff." },
+                });
+            }
             return Promise.resolve({ data: this.data[this.page++] });
         });
     }
@@ -47,8 +54,10 @@ class MockClientProxy {
         this._options = options;
         if (options.filter === "filter1") {
             this.data = data;
-        } else {
+        } else if (options.filter === "filter2") {
             this.data = updatedData;
+        } else {
+            this.data = null;
         }
         this.page = 0;
     }
@@ -72,7 +81,7 @@ describe("RxBatchListProxy", () => {
     let hasMore = true;
     let items: List<FakeModel>;
     let status: LoadingStatus;
-
+    let error: ServerError;
     beforeEach(() => {
         cache = new DataCache<FakeModel>();
         clientProxy = new MockClientProxy({});
@@ -87,6 +96,7 @@ describe("RxBatchListProxy", () => {
         proxy.hasMore.subscribe(x => hasMore = x);
         proxy.items.subscribe((x) => items = x);
         proxy.status.subscribe((x) => status = x);
+        proxy.error.subscribe((x) => error = x);
     });
 
     it("It retrieve the first batch of items", fakeAsync(() => {
@@ -138,7 +148,7 @@ describe("RxBatchListProxy", () => {
         expect(items).toEqualImmutable(List(data[0].map((x) => new FakeModel(x))));
         expect(clientProxy.fetchNext).toHaveBeenCalledTimes(1);
 
-        proxy.setOptions({ filter: "fitler2" });
+        proxy.setOptions({ filter: "filter2" });
         proxy.fetchNext();
         tick();
         expect(items).toEqualImmutable(List(updatedData[0].map((x) => new FakeModel(x))));
@@ -236,6 +246,68 @@ describe("RxBatchListProxy", () => {
 
                 expect(otherStatus).toBe(LoadingStatus.Ready);
                 done();
+            });
+        });
+    });
+
+    describe("when first call returns an error", () => {
+        let thrownError: ServerError;
+        beforeEach((done) => {
+            proxy.setOptions({ filter: "bad-filter" });
+            proxy.fetchNext().subscribe(
+                () => done(),
+                (e) => { thrownError = e; done(); },
+            );
+        });
+
+        it("should have the status set to Error", () => {
+            expect(status).toBe(LoadingStatus.Error);
+        });
+
+        it("should have have an error", () => {
+            expect(thrownError).not.toBeFalsy();
+            expect(error).not.toBeFalsy();
+            expect(error instanceof ServerError).toBe(true);
+        });
+
+        it("should have set hasMore item to false", () => {
+            expect(hasMore).toBe(false);
+        });
+
+        it("should not fetch next", (done) => {
+            proxy.fetchNext().subscribe(() => {
+                // only the initial call
+                expect(clientProxy.fetchNext).toHaveBeenCalledOnce();
+                done();
+            }, () => {
+                expect(false).toBe(true, "Should not have returned a failure here");
+            });
+        });
+
+        it("should fetch next if forcing new data", (done) => {
+            proxy.refresh().subscribe({
+                next: () => {
+                    // only the initial call
+                    expect(false).toBe(true, "Should not have returned a success here");
+                },
+                error: () => {
+                    expect(clientProxy.fetchNext).toHaveBeenCalledTimes(2);
+                    done();
+                },
+            });
+        });
+
+        it("should fix the error if changing filter to a valid one", (done) => {
+            proxy.setOptions({ filter: "filter1" });
+            proxy.fetchNext().subscribe({
+                next: () => {
+                    expect(clientProxy.fetchNext).toHaveBeenCalledTimes(2);
+                    done();
+                },
+                error: () => {
+                    // only the initial call
+                    expect(false).toBe(true, "Should not have returned a failure here");
+                },
             });
         });
     });
