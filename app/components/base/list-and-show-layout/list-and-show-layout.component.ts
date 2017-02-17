@@ -81,7 +81,7 @@ export class ListAndShowLayoutComponent implements AfterViewInit, OnChanges, OnD
             if (query === "") {
                 this.quickFilter = FilterBuilder.none();
             } else {
-                this.quickFilter = FilterBuilder.prop(this.quickSearchField).startswith(query);
+                this.quickFilter = FilterBuilder.prop(this.quickSearchField).startswith(query.clearWhitespace());
             }
             this._updateFilter();
         });
