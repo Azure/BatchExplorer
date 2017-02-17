@@ -22,6 +22,8 @@ const validStates = [
     templateUrl: "file-list.html",
 })
 export class TaskFileListComponent implements OnInit, OnChanges {
+    public LoadingStatus = LoadingStatus;
+
     /**
      * If set to true it will display the quick list view, if false will use the table view
      */

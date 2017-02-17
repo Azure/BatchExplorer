@@ -13,6 +13,8 @@ import { Filter, FilterBuilder, Property } from "app/utils/filter-builder";
     templateUrl: "file-list.html",
 })
 export class NodeFileListComponent implements OnInit, OnChanges {
+    public LoadingStatus = LoadingStatus;
+
     /**
      * If set to true it will display the quick list view, if false will use the table view
      */

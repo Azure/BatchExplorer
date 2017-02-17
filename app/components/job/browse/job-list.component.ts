@@ -21,6 +21,8 @@ import { DeleteJobAction } from "../action";
     templateUrl: "./job-list.html",
 })
 export class JobListComponent extends ListOrTableBase implements OnInit, OnDestroy {
+    public LoadingStatus = LoadingStatus;
+
     public status: Observable<LoadingStatus>;
     public data: RxListProxy<{}, Job>;
     public searchQuery = new FormControl();
