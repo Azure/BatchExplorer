@@ -9,13 +9,13 @@ import { WaitForDeletePoller } from "./";
 export class DeleteApplicationAction extends LongRunningDeleteAction {
     constructor(
         private applicationService: ApplicationService,
-        private applicationId: string) {
+        private applicationIds: string[]) {
 
-        super("Application", [applicationId]);
+        super("Application", applicationIds);
     }
 
-    public deleteAction() {
-        return this.applicationService.delete(this.applicationId);
+    public deleteAction(id: string) {
+        return this.applicationService.delete(id);
     }
 
     protected waitForDelete(id: string, taskManager?: BackgroundTaskManager) {

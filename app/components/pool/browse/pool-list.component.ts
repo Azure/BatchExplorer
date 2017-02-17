@@ -63,6 +63,10 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         super();
         this.data = this.poolService.list();
         this.status = this.data.status;
+        this.status.subscribe((neVal) => {
+            console.log("pools :: ", neVal);
+        });
+
         this._onPoolAddedSub = poolService.onPoolAdded.subscribe((poolId) => {
             this.data.loadNewItem(poolService.get(poolId));
         });

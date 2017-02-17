@@ -13,6 +13,7 @@ import { Application } from "app/models";
 import { AccountService, ApplicationService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
+import { DeleteApplicationAction } from "../action";
 
 @Component({
     selector: "bex-application-list",
@@ -59,6 +60,10 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
         });
 
         this.status = this.data.status;
+        this.status.subscribe((neVal) => {
+            console.log("apps :: ", neVal);
+        });
+
         this._onApplicationAddedSub = applicationService.onApplicationAdded.subscribe((applicationId) => {
             this.data.loadNewItem(applicationService.get(applicationId));
         });
@@ -94,11 +99,12 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
     }
 
     public deleteSelected() {
-        // this.taskManager.startTask("", (backgroundTask) => {
-        //     const task = new DeleteJobAction(this.jobService, this.selectedItems);
-        //     task.start(backgroundTask);
-        //     return task.waitingDone;
-        // });
+        this.taskManager.startTask("", (backgroundTask) => {
+            const task = new DeleteApplicationAction(this.applicationService, this.selectedItems);
+            task.start(backgroundTask);
+
+            return task.waitingDone;
+        });
     }
 
     private _filterApplications() {

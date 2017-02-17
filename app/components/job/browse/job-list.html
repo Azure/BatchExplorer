@@ -29,4 +29,5 @@
     <span no-filter>No jobs</span>
     <span with-filter>No job match this filter</span>
 </bex-no-item>
-<bex-loading [status]="status | async" *ngIf="data.hasMore | async"></bex-loading>
+
+<bex-loading [status]="status | async"></bex-loading>

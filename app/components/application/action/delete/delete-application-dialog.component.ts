@@ -21,7 +21,7 @@ export class DeleteApplicationDialogComponent {
 
     @autobind()
     public destroyApplication() {
-        const task = new DeleteApplicationAction(this.applicationService, this.applicationId);
+        const task = new DeleteApplicationAction(this.applicationService, [this.applicationId]);
         task.startAndWaitAsync(this.taskManager);
 
         return task.actionDone;

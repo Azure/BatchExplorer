@@ -58,6 +58,10 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
         super();
         this.data = this.jobService.list(this._baseOptions);
         this.status = this.data.status;
+        this.status.subscribe((neVal) => {
+            console.log("jobs :: ", neVal);
+        });
+
         this._onJobAddedSub = jobService.onJobAdded.subscribe((jobId) => {
             this.data.loadNewItem(jobService.get(jobId));
         });
