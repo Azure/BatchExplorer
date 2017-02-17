@@ -8,6 +8,7 @@ import { RouterModule } from "@angular/router";
 import { routes } from "./app.routes";
 
 // components
+import { NodeConnectModule } from "app/components/node/connect";
 import { StartTaskModule } from "app/components/pool/start-task";
 import { AppComponent } from "./app.component";
 import { DeleteAccountDialogComponent } from "./components/account/action/delete-account-dialog.component";
@@ -87,7 +88,7 @@ const modules = [
     PoolDetailsModule, PoolGraphsModule, StartTaskModule,
     JobDetailsModule,
     TaskBaseModule, TaskDetailsModule, TaskBrowseModule,
-    NodeBrowseModule,
+    NodeBrowseModule, NodeConnectModule,
     FileBrowseModule, FileDetailsModule,
 ];
 

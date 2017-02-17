@@ -1,0 +1,20 @@
+<div class="slideout-form content-wrapper" style="width: 800px" *ngIf="node && pool">
+    <h1>Connect to node </h1>
+    <div *ngIf="credentialSource === null">
+        <h3>Node credentials</h3>
+        <div class="credentials-source">
+            <bex-submit-btn [submit]="generateCredentials">Generate</bex-submit-btn>
+            <bex-submit-btn [submit]="specifyCredentials">Specify</bex-submit-btn>
+        </div>
+    </div>
+    <div>
+        <bex-property-group *ngIf="credentialSource === CredentialSource.Generated && credentials">
+            <div class="warn-text">Those credentials are now valid for 24 hours on this node</div>
+            <bex-text-property label="Username" [value]="credentials.username"></bex-text-property>
+            <bex-text-property label="Password" [value]="credentials.password"></bex-text-property>
+        </bex-property-group>
+    </div>
+    <div *ngIf="credentials && windows && agentSkus">
+        <bex-submit-btn [submit]="downloadRdpFile">Download rdp file</bex-submit-btn>
+    </div>
+</div>

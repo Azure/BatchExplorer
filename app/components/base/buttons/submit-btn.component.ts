@@ -39,7 +39,13 @@ export class SubmitButtonComponent {
 
     public onClick() {
         this.status = SubmitStatus.Submitting;
-        this.submit().subscribe({
+        const submit = this.submit();
+        if (!submit) {
+            this.status = SubmitStatus.Succeeded;
+            this.done();
+            return;
+        }
+        submit.subscribe({
             complete: () => {
                 this.status = SubmitStatus.Succeeded;
                 this.done();

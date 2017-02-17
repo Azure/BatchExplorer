@@ -127,7 +127,7 @@ export class AccountService {
         return this.azure.post(`${accountId}/listKeys`).map(response => new AccountKeys(response.json()));
     }
 
-    public listNodeAgentSkus(initialOptions: any): RxListProxy<{}, NodeAgentSku> {
+    public listNodeAgentSkus(initialOptions: any = {}): RxListProxy<{}, NodeAgentSku> {
         return new RxBatchListProxy<{}, NodeAgentSku>(NodeAgentSku, {
             cache: (params) => this._cache,
             proxyConstructor: (params, options) => BatchClient.account.listNodeAgentSkus(options),

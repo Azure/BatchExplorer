@@ -119,7 +119,7 @@ fieldset {
 
             // pretty sure most of what is in here can be set in the HTML with: dividerColor="<color>"
 
-            md-input {
+            md-input, md-input-container {
                 width: 100%;
 
                 .md-input-underline {
