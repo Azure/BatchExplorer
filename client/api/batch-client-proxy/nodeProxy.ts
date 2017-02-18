@@ -47,4 +47,52 @@ export default class NodeProxy {
             });
         });
     }
+
+    /**
+     * Adds a user account to the specified compute node.
+     * http://azure.github.io/azure-sdk-for-node/azure-batch/latest/ComputeNodeOperations.html#addUser
+     * @param poolId: The id of the pool.
+     * @param nodeId: The id of the node to reboot
+     * @param user: The user account to be created.
+     */
+    public addUser(poolId: string, nodeId: string, user: any,  options?: any) {
+        return new Promise((resolve, reject) => {
+            this.client.computeNodeOperations.addUser(poolId, nodeId, user, options, (error, result) => {
+                if (error) { return reject(error); }
+                return resolve();
+            });
+        });
+    }
+
+    /**
+     * Adds a user account to the specified compute node.
+     * http://azure.github.io/azure-sdk-for-node/azure-batch/latest/ComputeNodeOperations.html#updateUser
+     * @param poolId: The id of the pool.
+     * @param nodeId: The id of the node to reboot
+     * @param user: The user account to be updated.
+     */
+    public updateUser(poolId: string, nodeId: string, username: string, user: any,  options?: any) {
+        return new Promise((resolve, reject) => {
+            this.client.computeNodeOperations.updateUser(poolId, nodeId, username, user, options, (error, result) => {
+                if (error) { return reject(error); }
+                return resolve();
+            });
+        });
+    }
+
+    /**
+     * Adds a user account to the specified compute node.
+     * http://azure.github.io/azure-sdk-for-node/azure-batch/latest/ComputeNodeOperations.html#deleteUser
+     * @param poolId: The id of the pool.
+     * @param nodeId: The id of the node to reboot
+     * @param userName: The username of the account to delete
+     */
+    public deleteUser(poolId: string, nodeId: string, userName: string,  options?: any) {
+        return new Promise((resolve, reject) => {
+            this.client.computeNodeOperations.deleteUser(poolId, nodeId, userName, options, (error, result) => {
+                if (error) { return reject(error); }
+                return resolve();
+            });
+        });
+    }
 }
