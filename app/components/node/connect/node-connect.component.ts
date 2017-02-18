@@ -52,6 +52,10 @@ export class NodeConnectComponent implements OnInit {
                 this.windows = PoolUtils.isWindows(this.pool, agentSkus);
             });
         });
+
+        this.nodeUserService.getRemoteDesktop(this.pool.id, this.node.id).subscribe((rdp) => {
+            console.log("Rdp output", rdp.content.toString());
+        })
     }
 
     @autobind()

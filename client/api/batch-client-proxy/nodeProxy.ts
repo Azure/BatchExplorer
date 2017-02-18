@@ -55,7 +55,7 @@ export default class NodeProxy {
      * @param nodeId: The id of the node to reboot
      * @param user: The user account to be created.
      */
-    public addUser(poolId: string, nodeId: string, user: any,  options?: any) {
+    public addUser(poolId: string, nodeId: string, user: any, options?: any) {
         return new Promise((resolve, reject) => {
             this.client.computeNodeOperations.addUser(poolId, nodeId, user, options, (error, result) => {
                 if (error) { return reject(error); }
@@ -71,7 +71,7 @@ export default class NodeProxy {
      * @param nodeId: The id of the node to reboot
      * @param user: The user account to be updated.
      */
-    public updateUser(poolId: string, nodeId: string, username: string, user: any,  options?: any) {
+    public updateUser(poolId: string, nodeId: string, username: string, user: any, options?: any) {
         return new Promise((resolve, reject) => {
             this.client.computeNodeOperations.updateUser(poolId, nodeId, username, user, options, (error, result) => {
                 if (error) { return reject(error); }
@@ -87,12 +87,37 @@ export default class NodeProxy {
      * @param nodeId: The id of the node to reboot
      * @param userName: The username of the account to delete
      */
-    public deleteUser(poolId: string, nodeId: string, userName: string,  options?: any) {
+    public deleteUser(poolId: string, nodeId: string, userName: string, options?: any) {
         return new Promise((resolve, reject) => {
             this.client.computeNodeOperations.deleteUser(poolId, nodeId, userName, options, (error, result) => {
                 if (error) { return reject(error); }
                 return resolve();
             });
+        });
+    }
+
+    public getRemoteDesktop(poolId: string, nodeId: string, options?: BatchRequestOptions) {
+        return new Promise((resolve, reject) => {
+            this.client.computeNodeOperations.getRemoteDesktop(
+                poolId, nodeId, options, (error, result, request, response) => {
+                    if (error) { return reject(error); }
+                    if (result) {
+                        const chunks = [];
+                        result.on("data", (chunk) => {
+                            chunks.push(chunk);
+                        });
+
+                        result.on("end", () => {
+                            resolve({
+                                result,
+                                content: Buffer.concat(chunks),
+                                request,
+                                response,
+                            });
+                        });
+
+                    }
+                });
         });
     }
 }
