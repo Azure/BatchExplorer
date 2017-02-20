@@ -28,11 +28,8 @@
                 <bex-error controlName="package" code="pattern">Application packages need to be valid ZIP files only</bex-error>
                 <div *ngIf="hasValidFile()" class="input-summary">
                     <h4>Selected file details</h4>
-                    <p><b>Name:</b> {{ file.name }}</p>
-                    <p><b>File size:</b>  {{ file.size }} bytes.</p>
-                    <p><b>File type:</b>  {{ file.type }}</p>
-                    <p><b>Block count:</b>  {{ blockCount }}</p>
-                    <p><b>Progress:</b>  {{ progress }}</p>
+                    <p><b>{{ file.name }}</b> ({{ prettyFileSize(file.size) }})</p>
+                    <p *ngIf="progress"><b>Progress:</b>  {{ progress }}</p>
                 </div>
             </div>
         </form>

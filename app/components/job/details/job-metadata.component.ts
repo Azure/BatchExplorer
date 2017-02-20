@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, ViewContainerRef } from "@angular/core";
+import { Component, Input, ViewContainerRef } from "@angular/core";
 
 import { Job, NameValuePair } from "app/models";
 
@@ -6,7 +6,7 @@ import { Job, NameValuePair } from "app/models";
     selector: "bex-job-metadata",
     templateUrl: "job-metadata.html",
 })
-export class JobMetadataComponent implements OnDestroy {
+export class JobMetadataComponent {
     @Input()
     public set job(job: Job) {
         this._job = job;
@@ -25,9 +25,5 @@ export class JobMetadataComponent implements OnDestroy {
         if (this.job) {
             this.jobMetadata = this.job.metadata || [];
         }
-    }
-
-    public ngOnDestroy() {
-        /* tab hide */
     }
 }

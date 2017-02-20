@@ -6,7 +6,7 @@ import { Constants } from "app/utils";
 import { AccountDetailsHomeComponent } from "./components/account/details/account-details-home.component";
 import { AccountDetailsComponent } from "./components/account/details/account-details.component";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
-import { ApplicationDetailsHomeComponent } from "./components/application/details/application-details-home.component";
+import { ApplicationDefaultComponent } from "./components/application/details/application-default.component";
 import { ApplicationDetailsComponent } from "./components/application/details/application-details.component";
 import { ApplicationHomeComponent } from "./components/application/home/application-home.component";
 import { FileDetailsComponent } from "./components/file/details/file-details.component";
@@ -53,7 +53,7 @@ export const routes: Routes = [
         path: "applications",
         component: ApplicationHomeComponent,
         children: [
-            { path: "", component: ApplicationDetailsHomeComponent }, // applications/
+            { path: "", component: ApplicationDefaultComponent }, // applications/
             { path: ":id", component: ApplicationDetailsComponent }, // applications/{application.id}
         ],
     },

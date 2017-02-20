@@ -9,7 +9,7 @@ import { SidebarRef } from "app/components/base/sidebar";
 import { Application } from "app/models";
 import { applicationToCreateFormModel } from "app/models/forms";
 import { ApplicationService, CommitBlockListOptions, HttpUploadService, UploadBlockOptions } from "app/services";
-import { Constants } from "app/utils";
+import { Constants, prettyBytes } from "app/utils";
 
 @Component({
     selector: "bex-application-create-dialog",
@@ -82,6 +82,10 @@ export class ApplicationCreateDialogComponent {
 
     public hasValidFile(): boolean {
         return this.file && this.applicationForm.controls["package"].valid;
+    }
+
+    public prettyFileSize(size: number) {
+        return prettyBytes(size);
     }
 
     @autobind()

@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 
 @Component({
-    selector: "bex-application-details-home",
+    selector: "bex-application-default",
     template: `
         <bex-application-error-display></bex-application-error-display>
         <div class="no-entity-home">
@@ -11,8 +11,8 @@ import { Component } from "@angular/core";
     `,
 })
 
-export class ApplicationDetailsHomeComponent {
+export class ApplicationDefaultComponent {
     public static breadcrumb() {
-        return { name: "Application" };
+        return { name: "Applications" };
     }
 }

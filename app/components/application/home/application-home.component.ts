@@ -3,7 +3,7 @@ import { FormBuilder, FormControl } from "@angular/forms";
 
 import { Filter, FilterBuilder } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
-import { ApplicationCreateDialogComponent } from "../action/add/application-create-dialog.component";
+import { ApplicationCreateDialogComponent } from "../action";
 
 @Component({
     selector: "bex-application-home",

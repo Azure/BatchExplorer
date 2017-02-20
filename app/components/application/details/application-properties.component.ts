@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, ViewContainerRef } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, ViewContainerRef } from "@angular/core";
 
 import { Application } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";
@@ -8,7 +8,7 @@ import { ApplicationDecorator } from "app/models/decorators";
     templateUrl: "application-properties.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ApplicationPropertiesComponent implements OnDestroy {
+export class ApplicationPropertiesComponent {
     @Input()
     public set application(application: Application) {
         this._application = application;
@@ -28,9 +28,5 @@ export class ApplicationPropertiesComponent implements OnDestroy {
         if (this.application) {
             this.decorator = new ApplicationDecorator(this.application);
         }
-    }
-
-    public ngOnDestroy() {
-        /* tab hide */
     }
 }

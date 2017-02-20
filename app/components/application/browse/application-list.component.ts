@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { List } from "immutable";
@@ -6,9 +6,8 @@ import { Observable, Subscription } from "rxjs";
 
 import { BackgroundTaskManager } from "app/components/base/background-task";
 import { LoadingStatus } from "app/components/base/loading";
-import { QuickListComponent, QuickListItemStatus } from "app/components/base/quick-list";
+import { QuickListItemStatus } from "app/components/base/quick-list";
 import { ListOrTableBase } from "app/components/base/selectable-list";
-import { TableComponent } from "app/components/base/table";
 import { Application } from "app/models";
 import { AccountService, ApplicationService } from "app/services";
 import { RxListProxy } from "app/services/core";
@@ -17,19 +16,13 @@ import { DeleteApplicationAction } from "../action";
 
 @Component({
     selector: "bex-application-list",
-    templateUrl: "./application-list.html",
+    templateUrl: "application-list.html",
 })
 export class ApplicationListComponent extends ListOrTableBase implements OnInit, OnDestroy {
     public status: Observable<LoadingStatus>;
     public data: RxListProxy<{}, Application>;
     public applications: List<Application>;
     public displayedApplications: List<Application>;
-
-    @ViewChild(QuickListComponent)
-    public list: QuickListComponent;
-
-    @ViewChild(TableComponent)
-    public table: TableComponent;
 
     @Input()
     public quickList: boolean;

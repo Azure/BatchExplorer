@@ -9,13 +9,13 @@ import { ApplicationDecorator } from "app/models/decorators";
 import { ApplicationParams, ApplicationService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
 import { SidebarManager } from "../../base/sidebar";
-import { ApplicationCreateDialogComponent } from "../action/add/application-create-dialog.component";
-import { DeleteApplicationDialogComponent } from "../action/delete/delete-application-dialog.component";
-import { ApplicationEditDialogComponent } from "../action/edit/application-edit-dialog.component";
+import { ApplicationCreateDialogComponent, ApplicationEditDialogComponent,
+    DeleteApplicationDialogComponent,
+} from "../action";
 
 @Component({
     selector: "bex-application-details",
-    templateUrl: "./application-details.html",
+    templateUrl: "application-details.html",
 })
 export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({id}, {tab}) {

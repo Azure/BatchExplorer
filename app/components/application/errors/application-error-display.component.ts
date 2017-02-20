@@ -27,8 +27,8 @@ export class ApplicationErrorDisplayComponent {
 
     public get hasLinkedStorageAccountIssue(): boolean {
         if (this._batchAccount && this._batchAccount.properties) {
-            return !Boolean(this._batchAccount.properties.autoStorage)
-                || !Boolean(this._batchAccount.properties.autoStorage.storageAccountId);
+            return !this._batchAccount.properties.autoStorage
+                || !this._batchAccount.properties.autoStorage.storageAccountId;
         }
 
         return false;

@@ -1,0 +1,20 @@
+<bex-table>
+    <bex-thead>
+        <bex-column>Version</bex-column>
+        <bex-column>State</bex-column>
+        <bex-column>Format</bex-column>
+        <bex-column>Last activation time</bex-column>
+    </bex-thead>
+    <bex-row *ngFor="let package of displayedPackages" [key]="package.version">
+        <bex-cell style="width: 25%" [value]="package.version"></bex-cell>
+        <bex-cell style="width: 25%" [value]="package.state"></bex-cell>
+        <bex-cell style="width: 25%" [value]="package.format"></bex-cell>
+        <bex-cell style="width: 25%" [value]="formatDate(package.lastActivationTime)"></bex-cell>
+    </bex-row>
+</bex-table>
+
+<bex-no-item [itemCount]="displayedPackages.size" [filter]="filter">
+    <i icon class="fa fa-cogs"></i>
+    <span no-filter>This application contains no package versions</span>
+    <span with-filter>Current filter returned no matches</span>
+</bex-no-item>
