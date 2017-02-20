@@ -38,6 +38,6 @@ export class ApplicationErrorDisplayComponent {
 
     @autobind()
     public setupLinkedStorage() {
-        shell.openExternal(ExternalLinks.setUpStorageAccount.format(this._batchAccount.id));
+        shell.openExternal(ExternalLinks.setupStorageAccount.format(this._batchAccount.id));
     }
 }

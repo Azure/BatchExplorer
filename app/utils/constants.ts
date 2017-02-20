@@ -90,7 +90,7 @@ export const ApiVersion = {
 
 export const ExternalLinks = {
     supportRequest: "https://portal.azure.com/#blade/Microsoft_Azure_Support/HelpAndSupportBlade/newsupportrequest",
-    setUpStorageAccount: "https://portal.azure.com/#resource{0}/storageAccount",
+    setupStorageAccount: "https://portal.azure.com/#resource{0}/storageAccount",
 };
 
 export const ODataFields = {
