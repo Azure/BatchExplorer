@@ -1,14 +1,10 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { autobind } from "core-decorators";
-import { remote, shell } from "electron";
-import * as fs from "fs";
 import { List } from "immutable";
-import * as path from "path";
-import * as mkdirp from "mkdirp";
-import { AsyncSubject, Observable } from "rxjs";
 
-import { Node, NodeAgentSku, Pool } from "app/models";
-import { AccountService, NodeUserService } from "app/services";
+import {SidebarRef} from "app/components/base/sidebar";
+import { Node, NodeAgentSku, NodeConnectionSettings, Pool } from "app/models";
+import { AccountService, NodeService, NodeUserService } from "app/services";
 import { PoolUtils, SecureUtils } from "app/utils";
 enum CredentialSource {
     Generated,
@@ -36,6 +32,7 @@ export class NodeConnectComponent implements OnInit {
      * This is either downloaded from the api on CloudService nodes or generated from the ip/port on VMs nodes
      */
     public rdpContent: string;
+    public connectionSettings: NodeConnectionSettings;
 
     @Input()
     public set pool(pool: Pool) {
@@ -51,7 +48,11 @@ export class NodeConnectComponent implements OnInit {
     public node: Node;
     private _pool: Pool;
 
-    constructor(private accountService: AccountService, private nodeUserService: NodeUserService) {
+    constructor(
+        public sidebarRef: SidebarRef,
+        private accountService: AccountService,
+        private nodeUserService: NodeUserService,
+        private nodeService: NodeService) {
     }
 
     public ngOnInit() {
@@ -62,9 +63,7 @@ export class NodeConnectComponent implements OnInit {
                 this.windows = PoolUtils.isWindows(this.pool, agentSkus);
             });
         });
-        this.nodeUserService.getRemoteDesktop(this.pool.id, this.node.id).subscribe((rdp) => {
-            this.rdpContent = rdp.content.toString();
-        });
+        this._loadConnectionData();
     }
 
     @autobind()
@@ -83,8 +82,30 @@ export class NodeConnectComponent implements OnInit {
         });
     }
 
+    public get sshCommand() {
+        if (!this.connectionSettings || !this.credentials) {
+            return "N/A";
+        }
+        const {ip, port} = this.connectionSettings;
+        return `ssh ${this.credentials.username}@${ip} -p ${port}`;
+    }
     @autobind()
     public specifyCredentials() {
         this.credentialSource = CredentialSource.Specified;
+    }
+
+    /**
+     * Load either the RDP file or the node connection settings depending if the VM is IAAS or PAAS
+     */
+    private _loadConnectionData() {
+        if (PoolUtils.isPaas(this.pool)) {
+            this.nodeService.getRemoteDesktop(this.pool.id, this.node.id).subscribe((rdp) => {
+                this.rdpContent = rdp.content.toString();
+            });
+        } else {
+            this.nodeService.getRemoteLoginSettings(this.pool.id, this.node.id).subscribe((connection) => {
+                this.connectionSettings = connection;
+            });
+        }
     }
 }

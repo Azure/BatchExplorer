@@ -21,6 +21,7 @@ export * from "./keybindings";
 export * from "./listResult";
 export * from "./nameValuePair";
 export * from "./node";
+export * from "./node-connection-settings";
 export * from "./node-user";
 export * from "./nodeAgentSku";
 export * from "./pool";

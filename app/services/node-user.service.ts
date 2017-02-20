@@ -4,7 +4,6 @@ import { Observable } from "rxjs";
 
 import { log } from "app/utils";
 import { ServiceBase } from "./service-base";
-import { FileContentResult } from "./file.service";
 
 interface UpdateNodeUserAttributes {
     expiryTime?: Date;
@@ -49,12 +48,6 @@ export class NodeUserService extends ServiceBase {
             error: (error) => {
                 log.error("Error adding a new user to node" + nodeId, Object.assign({}, error));
             },
-        });
-    }
-
-    public getRemoteDesktop(poolId: string, nodeId: string, options: any = {}): Observable<FileContentResult> {
-        return this.callBatchClient(BatchClient.node.getRemoteDesktop(poolId, nodeId, options), (error) => {
-            log.error("Error downloading RDP file for node " + nodeId, Object.assign({}, error));
         });
     }
 }

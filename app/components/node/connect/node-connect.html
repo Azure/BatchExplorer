@@ -14,7 +14,18 @@
             <bex-text-property label="Password" [value]="credentials.password"></bex-text-property>
         </bex-property-group>
     </div>
-    <div *ngIf="credentials && windows && agentSkus">
-        <bex-download-rdp [nodeId]="node.id" [credentials]="credentials" [rdpContent]="rdpContent"></bex-download-rdp>
+    <div *ngIf="hasIp && connectionSettings && credentialSource !== null">
+        <h3>Connection settings</h3>
+        <bex-property-group>
+            <bex-text-property label="Ip" [value]="connectionSettings.ip"></bex-text-property>
+            <bex-text-property label="Port" [value]="connectionSettings.port"></bex-text-property>
+            <bex-text-property *ngIf="!windows" label="SSH command" [value]="sshCommand"></bex-text-property>
+        </bex-property-group>
+    </div>
+    <div>
+        <span *ngIf="credentials && windows && agentSkus">
+            <bex-download-rdp [nodeId]="node.id" [credentials]="credentials" [rdpContent]="rdpContent" [connectionSettings]="connectionSettings"></bex-download-rdp>
+        </span>
+        <button md-raised-button (click)="sidebarRef.destroy()">Close</button>
     </div>
 </div>

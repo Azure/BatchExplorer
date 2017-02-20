@@ -1,10 +1,9 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { autobind } from "core-decorators";
 import { remote } from "electron";
 import * as fs from "fs";
-import { List } from "immutable";
-import * as path from "path";
 import * as mkdirp from "mkdirp";
+import * as path from "path";
 import { AsyncSubject, Observable } from "rxjs";
 
 import { OS } from "app/utils";
@@ -70,7 +69,7 @@ export class DownloadRdpComponent {
                     console.error("An error ocurred downloading the rdp file " + err.message);
                     subject.error(err.message);
                 }
-                subject.next(filename)
+                subject.next(filename);
                 return subject.complete();
             });
         });
@@ -84,6 +83,8 @@ export class DownloadRdpComponent {
     }
 
     private _buildRdpFromConnection() {
-        return ``;
+        const {ip, port} = this.connectionSettings;
+        const address = `full address:s:${ip}:${port}`;
+        return address;
     }
 }
