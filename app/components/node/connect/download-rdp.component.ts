@@ -1,11 +1,10 @@
 import { Component, Input } from "@angular/core";
 import { autobind } from "core-decorators";
-import { remote } from "electron";
-import * as fs from "fs";
-import * as mkdirp from "mkdirp";
+import { shell } from "electron";
 import * as path from "path";
-import { AsyncSubject, Observable } from "rxjs";
+import { Observable } from "rxjs";
 
+import { FileSystemService } from "app/services";
 import { OS } from "app/utils";
 
 @Component({
@@ -31,10 +30,21 @@ export class DownloadRdpComponent {
     @Input()
     public connectionSettings: any;
 
+    constructor(private fsService: FileSystemService) {
+
+    }
+
     @autobind()
     public connectWithRdp() {
         return this._saveRdpFile().do((filename) => {
-            remote.shell.openItem(filename);
+            shell.openItem(filename);
+        });
+    }
+
+    @autobind()
+    public downloadRdp() {
+        return this._saveRdpFile().do((filename) => {
+            shell.showItemInFolder(filename);
         });
     }
 
@@ -52,31 +62,21 @@ export class DownloadRdpComponent {
 
     public get tempDownloadFolder() {
         if (OS.isWindows()) {
-            return path.join(remote.app.getPath("temp"), "batch-labs", "rdp");
+            return path.join(this.fsService.commonFolders.temp, "rdp");
         } else {
-            return remote.app.getPath("downloads");
+            return this.fsService.commonFolders.downloads;
         }
     }
 
+    /**
+     * Save the rdp file to the given location
+     */
     private _saveRdpFile(): Observable<string> {
         const content = this._computeFullRdpFile();
-        const dir = this.tempDownloadFolder;
-        const subject = new AsyncSubject();
-        mkdirp(dir, () => {
-            const filename = path.join(dir, `${this.nodeId}.rdp`);
-            fs.writeFile(filename, content, (err) => {
-                if (err) {
-                    console.error("An error ocurred downloading the rdp file " + err.message);
-                    subject.error(err.message);
-                }
-                subject.next(filename);
-                return subject.complete();
-            });
-        });
-
-        return subject.asObservable();
+        const directory = this.tempDownloadFolder;
+        const filename = `${this.nodeId}.rdp`;
+        return Observable.fromPromise(this.fsService.saveFile(filename, content, directory));
     }
-
 
     private _computeFullRdpFile() {
         return `${this.rdpBaseContent}\nusername:s:${this.credentials.username}\nprompt for credentials:i:1`;

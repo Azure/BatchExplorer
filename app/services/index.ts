@@ -1,6 +1,7 @@
 export * from "./account-service";
 export * from "./azure-http.service";
 export * from "./file-service";
+export * from "./fs.service";
 export * from "./job-service";
 export * from "./pool-service";
 export * from "./node-service";

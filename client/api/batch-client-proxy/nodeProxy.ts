@@ -115,12 +115,10 @@ export default class NodeProxy {
                                 response,
                             });
                         });
-
                     }
                 });
         });
     }
-
 
     /**
      * Gets the settings required for remote login to a compute node.

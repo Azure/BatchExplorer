@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from "@angular/core";
 import { autobind } from "core-decorators";
 import { List } from "immutable";
 
-import {SidebarRef} from "app/components/base/sidebar";
+import { SidebarRef } from "app/components/base/sidebar";
 import { Node, NodeAgentSku, NodeConnectionSettings, Pool } from "app/models";
 import { AccountService, NodeService, NodeUserService } from "app/services";
 import { PoolUtils, SecureUtils } from "app/utils";
@@ -49,7 +49,7 @@ export class NodeConnectComponent implements OnInit {
     private _pool: Pool;
 
     constructor(
-        public sidebarRef: SidebarRef,
+        public sidebarRef: SidebarRef<any>,
         private accountService: AccountService,
         private nodeUserService: NodeUserService,
         private nodeService: NodeService) {
