@@ -1,28 +1,33 @@
-<div class="slideout-form content-wrapper" style="width: 800px" *ngIf="node && pool">
-    <h1>Connect to node </h1>
-    <div *ngIf="credentialSource === null">
-        <h3>Node credentials</h3>
-        <div class="credentials-source">
-            <bex-submit-btn [submit]="generateCredentials">Generate</bex-submit-btn>
-            <bex-submit-btn [submit]="specifyCredentials">Specify</bex-submit-btn>
+<div class="slideout-form content-wrapper node-connect" *ngIf="node && pool">
+    <div class="connect-content">
+        <h1>Connect to node </h1>
+        <div *ngIf="credentialSource === null">
+            <h3>Node credentials</h3>
+            <div class="credentials-source">
+                <bex-submit-btn [submit]="generateCredentials">Generate</bex-submit-btn>
+                <bex-submit-btn [submit]="specifyCredentials">Specify</bex-submit-btn>
+            </div>
+        </div>
+        <div *ngIf="credentialSource === CredentialSource.Specified && !credentials">
+            <bex-node-user-credentials-form [submit]="addOrUpdateUser" [isWindowsNode]="isWindows"></bex-node-user-credentials-form>
+        </div>
+        <div>
+            <bex-property-group *ngIf="credentials">
+                <div class="warn-text">Those credentials are now valid for 24 hours on this node</div>
+                <bex-text-property label="Username" [value]="credentials.username"></bex-text-property>
+                <bex-text-property label="Password" [value]="credentials.password" *ngIf="credentialSource === CredentialSource.Generated"></bex-text-property>
+            </bex-property-group>
+        </div>
+        <div *ngIf="hasIp && connectionSettings && credentialSource !== null">
+            <h3>Connection settings</h3>
+            <bex-property-group>
+                <bex-text-property label="Ip" [value]="connectionSettings.ip"></bex-text-property>
+                <bex-text-property label="Port" [value]="connectionSettings.port"></bex-text-property>
+                <bex-text-property *ngIf="!windows" label="SSH command" [value]="sshCommand"></bex-text-property>
+            </bex-property-group>
         </div>
     </div>
-    <div>
-        <bex-property-group *ngIf="credentialSource === CredentialSource.Generated && credentials">
-            <div class="warn-text">Those credentials are now valid for 24 hours on this node</div>
-            <bex-text-property label="Username" [value]="credentials.username"></bex-text-property>
-            <bex-text-property label="Password" [value]="credentials.password"></bex-text-property>
-        </bex-property-group>
-    </div>
-    <div *ngIf="hasIp && connectionSettings && credentialSource !== null">
-        <h3>Connection settings</h3>
-        <bex-property-group>
-            <bex-text-property label="Ip" [value]="connectionSettings.ip"></bex-text-property>
-            <bex-text-property label="Port" [value]="connectionSettings.port"></bex-text-property>
-            <bex-text-property *ngIf="!windows" label="SSH command" [value]="sshCommand"></bex-text-property>
-        </bex-property-group>
-    </div>
-    <div>
+    <div class="action-btns">
         <span *ngIf="credentials && windows && agentSkus">
             <bex-download-rdp [nodeId]="node.id" [credentials]="credentials" [rdpContent]="rdpContent" [connectionSettings]="connectionSettings"></bex-download-rdp>
         </span>

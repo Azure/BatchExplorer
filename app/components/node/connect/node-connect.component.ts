@@ -6,6 +6,7 @@ import { SidebarRef } from "app/components/base/sidebar";
 import { Node, NodeAgentSku, NodeConnectionSettings, Pool } from "app/models";
 import { AccountService, NodeService, NodeUserService } from "app/services";
 import { PoolUtils, SecureUtils } from "app/utils";
+
 enum CredentialSource {
     Generated,
     Specified,
@@ -72,16 +73,22 @@ export class NodeConnectComponent implements OnInit {
             username: SecureUtils.username(),
             password: SecureUtils.password(),
         };
+
+        return this.addOrUpdateUser(credentials).do(() => {
+            this.credentialSource = CredentialSource.Generated;
+        });
+    }
+
+    @autobind()
+    public addOrUpdateUser(credentials) {
         return this.nodeUserService.addOrUpdateUser(this.pool.id, this.node.id, {
             name: credentials.username,
             password: credentials.password,
             isAdmin: true,
         }).do(() => {
-            this.credentialSource = CredentialSource.Generated;
             this.credentials = credentials;
         });
     }
-
     public get sshCommand() {
         if (!this.connectionSettings || !this.credentials) {
             return "N/A";
