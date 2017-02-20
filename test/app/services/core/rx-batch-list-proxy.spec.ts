@@ -2,8 +2,10 @@ import {
     fakeAsync,
     tick,
 } from "@angular/core/testing";
-import { List } from "immutable";
+import { List, OrderedSet } from "immutable";
 
+import { LoadingStatus } from "app/components/base/loading";
+import { BatchError, ServerError } from "app/models";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy } from "app/services/core";
 import { FakeModel } from "./fake-model";
 
@@ -25,39 +27,50 @@ const updatedData = [[
     { id: "3", state: "completed", name: "Fake3" },
 ]];
 
+let mockProxyIdCounter = 0;
+
 class MockClientProxy {
     public fetchNext: jasmine.Spy;
     public data: any[];
-
+    public page = 0;
+    public id: number;
     private _options: any;
 
     constructor(options: any) {
+        this.id = mockProxyIdCounter++;
         this.options = options;
-
+        this.fetchNext = jasmine.createSpy("fetchNext").and.callFake(() => {
+            if (!this.data) {
+                return Promise.reject(<BatchError>{
+                    statusCode: 409, code: "Bad",
+                    message: { value: "Very bad stuff." },
+                });
+            }
+            return Promise.resolve({ data: this.data[this.page++] });
+        });
     }
 
     public set options(options) {
         this._options = options;
         if (options.filter === "filter1") {
             this.data = data;
-        } else {
+        } else if (options.filter === "filter2") {
             this.data = updatedData;
+        } else {
+            this.data = null;
         }
-        this.fetchNext = jasmine.createSpy("").and.returnValues(...this.data.map(x => {
-            return Promise.resolve({ data: x });
-        }));
+        this.page = 0;
     }
 
     public clone() {
         const clone = new MockClientProxy(this._options);
-        for (let i = 0; i < this.fetchNext.calls.count(); i++) {
-            clone.fetchNext();
-        }
+        clone.page = this.page;
+        clone.id = this.id;
         return clone;
     }
 
     public hasMoreItems() {
-        return this.fetchNext.calls.count() < this.data.length;
+        return this.page < this.data.length;
     }
 }
 
@@ -67,7 +80,8 @@ describe("RxBatchListProxy", () => {
     let clientProxy: MockClientProxy;
     let hasMore = true;
     let items: List<FakeModel>;
-
+    let status: LoadingStatus;
+    let error: ServerError;
     beforeEach(() => {
         cache = new DataCache<FakeModel>();
         clientProxy = new MockClientProxy({});
@@ -81,6 +95,8 @@ describe("RxBatchListProxy", () => {
         });
         proxy.hasMore.subscribe(x => hasMore = x);
         proxy.items.subscribe((x) => items = x);
+        proxy.status.subscribe((x) => status = x);
+        proxy.error.subscribe((x) => error = x);
     });
 
     it("It retrieve the first batch of items", fakeAsync(() => {
@@ -89,6 +105,7 @@ describe("RxBatchListProxy", () => {
         expect(items).toEqualImmutable(List(data[0].map((x) => new FakeModel(x))));
         expect(clientProxy.fetchNext).toHaveBeenCalledTimes(1);
         expect(hasMore).toBe(true);
+        expect(status).toBe(LoadingStatus.Ready);
     }));
 
     it("It fetch the next batch", fakeAsync(() => {
@@ -131,7 +148,7 @@ describe("RxBatchListProxy", () => {
         expect(items).toEqualImmutable(List(data[0].map((x) => new FakeModel(x))));
         expect(clientProxy.fetchNext).toHaveBeenCalledTimes(1);
 
-        proxy.setOptions({ filter: "fitler2" });
+        proxy.setOptions({ filter: "filter2" });
         proxy.fetchNext();
         tick();
         expect(items).toEqualImmutable(List(updatedData[0].map((x) => new FakeModel(x))));
@@ -191,6 +208,106 @@ describe("RxBatchListProxy", () => {
             proxy.loadNewItem(entityProxy as any).subscribe(() => {
                 expect(items).toEqualImmutable(List(expected.map((x) => new FakeModel(x))));
                 done();
+            });
+        });
+    });
+
+    describe("when there is keys in the cachedKeys", () => {
+        beforeEach((done) => {
+            // This should set the query cache
+            proxy.fetchNext().subscribe(() => done());
+        });
+
+        it("should have set the query cache", () => {
+            let queryCache = cache.queryCache.getKeys("filter1");
+            expect(queryCache).not.toBeFalsy();
+            expect(queryCache.keys).toEqualImmutable(OrderedSet(["1", "2", "3"]));
+        });
+
+        it("a new proxy with the same query should use the same keys and not load anything", (done) => {
+            const otherClientProxy = new MockClientProxy({});
+            let otherProxy = new RxBatchListProxy(FakeModel, {
+                cache: () => cache,
+                proxyConstructor: (params, options) => {
+                    otherClientProxy.options = options;
+                    return otherClientProxy;
+                },
+                initialOptions: { filter: "filter1" },
+            });
+            let otherStatus: LoadingStatus;
+            otherProxy.status.subscribe((x) => otherStatus = x);
+            otherProxy.fetchNext().subscribe(() => {
+                expect(items).toEqualImmutable(List(data[0].map((x) => new FakeModel(x))));
+                const currentClientProxy: MockClientProxy = (otherProxy as any)._clientProxy;
+                expect(currentClientProxy.id).toEqual(clientProxy.id,
+                    "Should be a clone of the client proxy used the first time");
+                expect(currentClientProxy.fetchNext).not.toHaveBeenCalled();
+                expect(otherClientProxy.fetchNext).not.toHaveBeenCalled();
+
+                expect(otherStatus).toBe(LoadingStatus.Ready);
+                done();
+            });
+        });
+    });
+
+    describe("when first call returns an error", () => {
+        let thrownError: ServerError;
+        beforeEach((done) => {
+            proxy.setOptions({ filter: "bad-filter" });
+            proxy.fetchNext().subscribe(
+                () => done(),
+                (e) => { thrownError = e; done(); },
+            );
+        });
+
+        it("should have the status set to Error", () => {
+            expect(status).toBe(LoadingStatus.Error);
+        });
+
+        it("should have have an error", () => {
+            expect(thrownError).not.toBeFalsy();
+            expect(error).not.toBeFalsy();
+            expect(error instanceof ServerError).toBe(true);
+        });
+
+        it("should have set hasMore item to false", () => {
+            expect(hasMore).toBe(false);
+        });
+
+        it("should not fetch next", (done) => {
+            proxy.fetchNext().subscribe(() => {
+                // only the initial call
+                expect(clientProxy.fetchNext).toHaveBeenCalledOnce();
+                done();
+            }, () => {
+                expect(false).toBe(true, "Should not have returned a failure here");
+            });
+        });
+
+        it("should fetch next if forcing new data", (done) => {
+            proxy.refresh().subscribe({
+                next: () => {
+                    // only the initial call
+                    expect(false).toBe(true, "Should not have returned a success here");
+                },
+                error: () => {
+                    expect(clientProxy.fetchNext).toHaveBeenCalledTimes(2);
+                    done();
+                },
+            });
+        });
+
+        it("should fix the error if changing filter to a valid one", (done) => {
+            proxy.setOptions({ filter: "filter1" });
+            proxy.fetchNext().subscribe({
+                next: () => {
+                    expect(clientProxy.fetchNext).toHaveBeenCalledTimes(2);
+                    done();
+                },
+                error: () => {
+                    // only the initial call
+                    expect(false).toBe(true, "Should not have returned a failure here");
+                },
             });
         });
     });

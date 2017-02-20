@@ -40,6 +40,11 @@ export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
     public status: Observable<LoadingStatus>;
 
     /**
+     * Contains the current error if any.
+     */
+    public error: Observable<ServerError>;
+
+    /**
      * Push observable that send a notification if the item has been deleted.
      * Which means the item was previously loaded but returned a 404 on the last fetch.
      */
@@ -52,6 +57,7 @@ export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
 
     protected _status = new BehaviorSubject<LoadingStatus>(LoadingStatus.Loading);
     protected _newDataStatus = new BehaviorSubject<LoadingStatus>(LoadingStatus.Loading);
+    protected _error = new BehaviorSubject<ServerError>(null);
 
     protected getCache: (params: TParams) => DataCache<TEntity>;
     protected _params: TParams;
@@ -69,10 +75,14 @@ export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
         this._logIgnoreError = exists(config.logIgnoreError) ? config.logIgnoreError : [Constants.HttpCode.NotFound];
         this.status = this._status.asObservable();
         this.newDataStatus = this._newDataStatus.asObservable();
+        this.error = this._error.asObservable();
 
         this.status.subscribe((status) => {
+            if (status === LoadingStatus.Loading) {
+                this._error.next(null);
+            }
             // If we were loading and the last request status change to ready or error
-            if (this._newDataStatus.getValue() === LoadingStatus.Loading && status !== LoadingStatus.Loading) {
+            if (this._newDataStatus.value === LoadingStatus.Loading && status !== LoadingStatus.Loading) {
                 this._newDataStatus.next(status);
             }
         });
@@ -157,6 +167,7 @@ export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
                 options.error(error);
             }
             this._status.next(LoadingStatus.Error);
+            this._error.next(error);
             this.abortFetch();
         });
         return obs;

@@ -18,6 +18,8 @@ import { DeleteTaskAction } from "../action";
     templateUrl: "./task-list.html",
 })
 export class TaskListComponent extends SelectableList implements OnInit {
+    public LoadingStatus = LoadingStatus;
+
     /**
      * If set to true it will display the quick list view, if false will use the table view
      */
