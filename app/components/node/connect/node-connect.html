@@ -18,7 +18,7 @@
                 <bex-text-property label="Password" [value]="credentials.password" *ngIf="credentialSource === CredentialSource.Generated"></bex-text-property>
             </bex-property-group>
         </div>
-        <div *ngIf="hasIp && connectionSettings && credentialSource !== null">
+        <div *ngIf="hasIp && connectionSettings && credentials">
             <h3>Connection settings</h3>
             <bex-property-group  class="normal">
                 <bex-text-property label="Ip" [value]="connectionSettings.ip"></bex-text-property>
