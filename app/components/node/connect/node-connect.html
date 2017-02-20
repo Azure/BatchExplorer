@@ -12,7 +12,7 @@
             <bex-node-user-credentials-form [submit]="addOrUpdateUser" [isWindowsNode]="isWindows"></bex-node-user-credentials-form>
         </div>
         <div>
-            <bex-property-group *ngIf="credentials">
+            <bex-property-group *ngIf="credentials" class="normal">
                 <div class="warn-text">Those credentials are now valid for 24 hours on this node</div>
                 <bex-text-property label="Username" [value]="credentials.username"></bex-text-property>
                 <bex-text-property label="Password" [value]="credentials.password" *ngIf="credentialSource === CredentialSource.Generated"></bex-text-property>
@@ -20,7 +20,7 @@
         </div>
         <div *ngIf="hasIp && connectionSettings && credentialSource !== null">
             <h3>Connection settings</h3>
-            <bex-property-group>
+            <bex-property-group  class="normal">
                 <bex-text-property label="Ip" [value]="connectionSettings.ip"></bex-text-property>
                 <bex-text-property label="Port" [value]="connectionSettings.port"></bex-text-property>
                 <bex-text-property *ngIf="!windows" label="SSH command" [value]="sshCommand"></bex-text-property>

@@ -1,14 +1,46 @@
+$label-value-margin: 5px;
+$clipboard-width: 30px;
+$group-padding: 28px;
+
+@mixin group-sizing($group-width) {
+    $property-width: $group-width - 2 * $group-padding;
+    $label-width: $group-width / 4;
+    $value-width: $property-width - $label-width - $label-value-margin - $clipboard-width;
+
+    section {
+        width: $property-width;
+        label, > table td.label {
+            width: $label-width !important;
+            min-width: $label-width;
+        }
+        .value {
+            width: $value-width;
+        }
+    }
+}
+
 bex-property-group {
     $label-font-size: 13px;
     $value-font-size: 12px;
     $group-width: 750px;
-    $group-padding: 28px;
     $property-width: $group-width - 2 * $group-padding;
     $label-width: 200px;
-    $label-value-margin: 5px;
-    $clipboard-width: 30px;
     $value-width: $property-width - $label-width - $label-value-margin - $clipboard-width;
     $property-height: 24px;
+
+    // Default value
+    &.wide {
+        @include group-sizing(750);
+    }
+
+    &.normal {
+        @include group-sizing(650);
+    }
+
+    &.compact {
+        @include group-sizing(550);
+    }
+
 
     display: block;
     position: relative;
