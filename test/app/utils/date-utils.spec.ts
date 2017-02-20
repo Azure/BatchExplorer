@@ -24,11 +24,25 @@ describe("DateUtils", () => {
             expect(DateUtils.prettyDate(moment().subtract(83, "seconds"))).toEqual("a minute ago");
             expect(DateUtils.prettyDate(moment().subtract(19, "days"))).toEqual("19 days ago");
         });
+
         it("return a absoluate time when more than 20 days", () => {
             const date1 = moment().subtract(20, "days");
             const date2 = moment().subtract(1, "year");
             expect(DateUtils.prettyDate(date1)).toEqual(date1.format("MMM D, YYYY"));
             expect(DateUtils.prettyDate(date2)).toEqual(date2.format("MMM D, YYYY"));
+        });
+    });
+
+    describe("#fullDateAndTime()", () => {
+        it("returns empty string when no date supplied", () => {
+            expect(DateUtils.fullDateAndTime(null)).toEqual("");
+        });
+
+        it("returns formatted full date", () => {
+            // note: date month array starts at 0 for jan
+            const date = new Date(2017, 11, 24, 10, 55, 2);
+            expect(DateUtils.fullDateAndTime(date)).toEqual(moment(date).format("MMM Do, YYYY, HH:mm:ss"));
+            expect(DateUtils.fullDateAndTime(date)).toEqual("Dec 24th, 2017, 10:55:02");
         });
     });
 });

@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { Observable } from "rxjs";
 
@@ -38,6 +38,9 @@ export class EntityDetailsListComponent {
     public showRefreshButton: boolean = true;
 
     @Input()
+    public showFilterIcon: boolean = true;
+
+    @Input()
     public refreshButtonHoverText: string = "Refresh";
 
     @Input()
@@ -52,6 +55,9 @@ export class EntityDetailsListComponent {
     @Input()
     public quickSearchField = "id";
 
+    @Output()
+    public onAddEntity: EventEmitter<Event> = new EventEmitter<Event>();
+
     public filter = FilterBuilder.none();
     public searchQuery = new FormControl();
 
@@ -63,5 +69,9 @@ export class EntityDetailsListComponent {
                 this.filter = FilterBuilder.prop(this.quickSearchField).startswith(query);
             }
         });
+    }
+
+    public onAdd(event: Event) {
+        this.onAddEntity.emit(event);
     }
 }

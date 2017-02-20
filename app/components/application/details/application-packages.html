@@ -1,0 +1,23 @@
+<bex-entity-details-list #listWrapper [showRefreshButton]="false" [showExpandButton]="false" [showFilterIcon]="false"
+    addButtonHoverText="Add package version" (onAddEntity)="list?.addPackage($event)" filterPlaceholder="Filter by package version">
+    <div bex-list-buttons>
+        <!--
+            multi select - "add" enabled and "delete" enabled if allow updates is true
+            single select
+                - delete: enabled if allow updates is true
+                - update: enabled if allow updates is true and package is active
+                - activate: enabled if package is pending
+        -->
+        <button md-mini-fab color="warn" title="Delete selected" (click)="list?.deleteSelectedItems()" [disabled]="!(list?.deleteItemEnabled | async)">
+            <i class="fa fa-trash spin-hover"></i>
+        </button>
+        <button md-mini-fab color="primary" title="Update package" (click)="list?.updatePackageVersion()" [disabled]="!(list?.editItemEnabled | async)">
+            <i class="fa fa-pencil-square-o spin-hover"></i>
+        </button>
+        <button md-mini-fab color="primary" title="Activate pending package" (click)="list?.activateActiveItem()" [disabled]="!(list?.activateItemEnabled | async)">
+            <i class="fa fa-toggle-on spin-hover"></i>
+        </button>
+    </div>
+
+    <bex-application-package-table [application]="application" [filter]="listWrapper.filter" #list></bex-application-package-table>
+</bex-entity-details-list>

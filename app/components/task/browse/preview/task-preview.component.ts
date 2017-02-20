@@ -8,7 +8,7 @@ import { TaskState } from "app/models";
 })
 
 /**
- * Display preview infomration about a task.
+ * Display preview information about a task.
  * Handles both task and subTask
  */
 export class TaskPreviewComponent {

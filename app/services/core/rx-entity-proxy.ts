@@ -82,8 +82,10 @@ export function getOnceProxy<TEntity>(getProxy: RxEntityProxy<any, TEntity>): Ob
         },
         error: errorCallback,
     });
+
     getProxy.fetch().subscribe({
         error: errorCallback,
     });
+
     return obs.asObservable();
 }

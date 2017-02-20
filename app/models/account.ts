@@ -11,6 +11,10 @@ const AccountRecord = Record({
         coreQuota: null,
         poolQuota: null,
         provisioningState: null,
+        autoStorage: {
+            storageAccountId: null,
+            lastKeySync: null,
+        },
     },
 });
 
@@ -19,12 +23,18 @@ export const AccountProvisingState = {
     Succeeded: "Succeeded" as AccountProvisingState,
 };
 
+export interface AutoStorageAccount {
+    storageAccountId: string;
+    lastKeySync: Date;
+}
+
 export interface AccountResourceProperties {
     accountEndpoint: string;
-    activeJobAndJobScheduleQuota: number;
+    provisioningState: AccountProvisingState;
     coreQuota: number;
     poolQuota: number;
-    provisioningState: AccountProvisingState;
+    activeJobAndJobScheduleQuota: number;
+    autoStorage: AutoStorageAccount;
 }
 
 export class AccountResource extends AccountRecord {

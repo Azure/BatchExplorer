@@ -76,12 +76,14 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
                 if (currentKeys.size === 0) {
                     this.cache.queryCache.cacheQuery(this._options.filter, keys, this.putQueryCacheData());
                 }
+
                 const last = this._lastRequest;
                 if (last && (last.params !== this._params || last.options !== this._options)) {
                     this._itemKeys.next(keys);
                 } else {
                     this._itemKeys.next(OrderedSet<string>(currentKeys.concat(keys)));
                 }
+
                 this._lastRequest = { params: this._params, options: this._options };
             },
             error: () => {
@@ -168,5 +170,4 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         this._status.next(LoadingStatus.Ready);
         return true;
     }
-
 }
