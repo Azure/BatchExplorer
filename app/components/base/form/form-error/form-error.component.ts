@@ -1,11 +1,11 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, OnChanges } from "@angular/core";
 import { AbstractControl, ControlContainer, FormGroupDirective } from "@angular/forms";
 
 @Component({
     selector: "bex-error",
     template: `<div *ngIf="hasError"><ng-content></ng-content></div>`,
 })
-export class FormErrorComponent {
+export class FormErrorComponent implements OnChanges {
 
     /**
      * Name of the control.
@@ -20,15 +20,20 @@ export class FormErrorComponent {
     @Input()
     public code: string = null;
 
+    private _control: AbstractControl;
+
     constructor(private formGroup: FormGroupDirective, private parent: ControlContainer) {
+    }
+
+    public ngOnChanges(inputs) {
+        if (inputs.controlName) {
+            this._control = this.retrieveControl();
+        }
     }
 
     public get path(): string[] { return [...this.parent.path, this.controlName]; }
 
-    /**
-     * Check if this formControl has an error and has been touched
-     */
-    public get hasError(): boolean {
+    public retrieveControl(): AbstractControl {
         let current: AbstractControl = this.formGroup.control;
         for (let segment of this.path) {
             current = current.get(segment);
@@ -36,6 +41,14 @@ export class FormErrorComponent {
                 throw `Path ${this.path} for bex-error is invalid, there is no control with name '${segment}'`;
             }
         }
-        return current.hasError(this.code) && current.touched;
+        return current;
+    }
+
+    /**
+     * Check if this formControl has an error and has been touched
+     */
+    public get hasError(): boolean {
+        const control = this._control;
+        return control.hasError(this.code) && control.touched;
     }
 }

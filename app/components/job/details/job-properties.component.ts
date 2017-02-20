@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnDestroy, ViewContainerRef } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, ViewContainerRef } from "@angular/core";
 
 import { Job } from "app/models";
 import {
@@ -13,7 +13,7 @@ import {
     templateUrl: "job-properties.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class JobPropertiesComponent implements OnDestroy {
+export class JobPropertiesComponent {
     @Input()
     public set job(job: Job) {
         this._job = job;
@@ -52,9 +52,5 @@ export class JobPropertiesComponent implements OnDestroy {
             this.releaseTask = this.decorator.jobReleaseTask;
             this.poolInfo = this.decorator.poolInfo || {};
         }
-    }
-
-    public ngOnDestroy() {
-        /* tab hide */
     }
 }

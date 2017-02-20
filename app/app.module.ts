@@ -18,6 +18,7 @@ import AccountDropDown from "./components/account/browse/account-dropdown.compon
 import { AccountDetailsHomeComponent } from "./components/account/details/account-details-home.component";
 import { AccountDetailsComponent } from "./components/account/details/account-details.component";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
+import { ApplicationModule } from "./components/application/application.module";
 import { BaseModule } from "./components/base";
 import { FileBrowseModule } from "./components/file/browse";
 import { FileDetailsModule } from "./components/file/details";
@@ -72,10 +73,12 @@ import { TaskBaseModule } from "./components/task/base";
 import {
     AccountService,
     AdalService,
+    ApplicationService,
     AzureHttpService,
     CommandService,
     FileService,
     FileSystemService,
+    HttpUploadService,
     JobService,
     NodeService,
     NodeUserService,
@@ -87,6 +90,7 @@ import {
 } from "./services";
 
 const modules = [
+    ApplicationModule,
     PoolDetailsModule, PoolGraphsModule, StartTaskModule,
     JobDetailsModule,
     TaskBaseModule, TaskDetailsModule, TaskBrowseModule,
@@ -104,8 +108,8 @@ const modules = [
         AccountDetailsHomeComponent,
         AccountDropDown,
         RerunTaskFormComponent,
-        AccountHomeComponent,
         AccountFavListComponent,
+        AccountHomeComponent,
         AccountListComponent,
         AdUserDropdownComponent,
         AppComponent,
@@ -167,10 +171,12 @@ const modules = [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         AccountService,
         AdalService,
+        ApplicationService,
         AzureHttpService,
         CommandService,
         FileService,
         FileSystemService,
+        HttpUploadService,
         JobService,
         PoolService,
         SubscriptionService,

@@ -5,6 +5,6 @@
 </div>
 
 <div class="button-bar">
-    <bex-submit-btn [submit]="performActionAndClose" [disabled]="!submitEnabled" class="submit">{{submitText}}</bex-submit-btn>
+    <bex-submit-btn [submit]="performActionAndClose" [disabled]="!submitEnabled" class="submit" color="{{actionColor}}">{{submitText}}</bex-submit-btn>
     <button type="button" [disabled]="loading" (click)="cancel()" class="cancel" md-raised-button>{{cancelText}}</button>
 </div>

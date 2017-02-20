@@ -14,9 +14,6 @@ export class DeleteJobDialogComponent {
     public jobId: string;
     public processing: boolean = false;
 
-    private _hasError: boolean = false;
-    private _errorText: string;
-
     constructor(
         public dialogRef: MdDialogRef<DeleteJobDialogComponent>,
         private jobService: JobService,
@@ -28,13 +25,5 @@ export class DeleteJobDialogComponent {
         const task = new DeleteJobAction(this.jobService, [this.jobId]);
         task.startAndWaitAsync(this.taskManager);
         return task.actionDone;
-    }
-
-    public hasError(): boolean {
-        return this._hasError;
-    }
-
-    public errorText(): string {
-        return this._errorText;
     }
 }

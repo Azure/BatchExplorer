@@ -117,16 +117,20 @@ fieldset {
             width: 100%;
             margin: 10px 0;
 
+            &.pad-top {
+                margin-top: 20px;
+            }
+
             // pretty sure most of what is in here can be set in the HTML with: dividerColor="<color>"
+
+            input[type=file] {
+                width: 100%;
+                margin-top: 5px;
+                margin-bottom: 5px;
+            }
 
             md-input, md-input-container {
                 width: 100%;
-
-                .md-input-underline {
-                    .md-input-ripple.md-focused {
-                        // opacity: 0;
-                    }
-                }
             }
 
             md-input.ng-invalid.ng-touched {
@@ -156,6 +160,15 @@ fieldset {
                 height: 2em;
                 margin-top: 5px;
                 width: 33%;
+            }
+
+            .input-summary {
+                margin-top: 15px;
+                padding-bottom: 5px;
+
+                p {
+                    margin-bottom: 10px;
+                }
             }
         }
     }

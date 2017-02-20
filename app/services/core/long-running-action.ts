@@ -135,3 +135,48 @@ export abstract class LongRunningDeleteAction extends LongRunningAction {
         }
     }
 }
+
+// NOTE: pretty much copied and pasted the above and changed the names\
+// will no doubt change somewhat ....
+export abstract class LongRunningUploadAction extends LongRunningAction {
+    protected uploadCount = 0;
+
+    constructor(protected fileType: string, protected fileStreams: any[]) {
+        super();
+    }
+
+    protected abstract uploadAction(id: string): Observable<any>;
+    protected abstract waitForUpload(filename: string, taskManager?: BackgroundTaskManager);
+
+    protected action() {
+        this.progress.next(0);
+        this.name.next(`Uploading ${this.fileStreams.length} ${inflection.pluralize(this.fileType)}`);
+        return this.performMultiple(this.fileStreams.map((stream) => {
+            return () => this.uploadAction(stream);
+        }), 20);
+    }
+
+    protected wait(taskManager?: BackgroundTaskManager) {
+        this._updateWaitingMessage();
+        for (let stream of this.fileStreams) {
+            this.waitForUpload(stream, taskManager);
+        }
+    }
+
+    protected markItemAsUploaded() {
+        this.uploadCount++;
+        this._updateWaitingMessage();
+        this.progress.next(20 + (this.uploadCount) * 80 / this.fileStreams.length);
+        if (this.uploadCount === this.fileStreams.length) {
+            this.waitingCompleted();
+        }
+    }
+
+    private _updateWaitingMessage() {
+        if (this.fileStreams.length === 1) {
+            this.name.next(`Uploading ${this.fileType} ${this.fileStreams[0]}`);
+        } else {
+            this.name.next(`Waiting for ${this.fileType} upload ${this.uploadCount}/${this.fileStreams.length}`);
+        }
+    }
+}

@@ -108,6 +108,10 @@ export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
         }
     }
 
+    public patchOptions(options: TOptions, clearItems = true) {
+        this.setOptions(Object.assign({}, this._options, options), clearItems);
+    }
+
     /**
      * @returns the current options.
      */

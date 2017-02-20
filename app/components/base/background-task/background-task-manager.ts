@@ -101,14 +101,18 @@ export class BackgroundTaskManager {
         this.runningTasks = this._runningTasks.asObservable();
     }
 
-    public startTask(name, func: TaskFunction) {
+    public startTask(name, func: TaskFunction): Observable<boolean> {
         const task = new SingleBackgroundTask(this, name, func);
         this._queueTask(task);
+
+        return task.done;
     }
 
-    public startTasks(name, tasks: NamedTaskFunction[]) {
+    public startTasks(name, tasks: NamedTaskFunction[]): Observable<any> {
         const task = new GroupedBackgroundTask(this, name, tasks);
         this._queueTask(task);
+
+        return task.done;
     }
 
     public completeTask(id: string) {

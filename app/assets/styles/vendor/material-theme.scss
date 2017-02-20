@@ -125,6 +125,12 @@ md-card {
     transition: none !important;
     box-shadow: 1px 1px 5px 0 #d5d5d5 !important;
 
+    md-card-subtitle {
+        div {
+            display: inline;
+        }
+    }
+
     &.overview {
         padding: 18px !important;
 
