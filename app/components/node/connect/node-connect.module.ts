@@ -2,9 +2,11 @@ import { NgModule } from "@angular/core";
 
 import { commonModules } from "app/common";
 
+import { DownloadRdpComponent } from "./download-rdp.component";
 import { NodeConnectComponent } from "./node-connect.component";
 
 const components = [
+    DownloadRdpComponent,
     NodeConnectComponent,
 ];
 

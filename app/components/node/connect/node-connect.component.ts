@@ -1,7 +1,11 @@
 import { Component, Input, OnInit } from "@angular/core";
 import { autobind } from "core-decorators";
+import { remote, shell } from "electron";
+import * as fs from "fs";
 import { List } from "immutable";
-import { Observable } from "rxjs";
+import * as path from "path";
+import * as mkdirp from "mkdirp";
+import { AsyncSubject, Observable } from "rxjs";
 
 import { Node, NodeAgentSku, Pool } from "app/models";
 import { AccountService, NodeUserService } from "app/services";
@@ -26,6 +30,12 @@ export class NodeConnectComponent implements OnInit {
     public windows = false;
     public linux = false;
     public hasIp = false;
+
+    /**
+     * Base content for the rdp file(IP adress).
+     * This is either downloaded from the api on CloudService nodes or generated from the ip/port on VMs nodes
+     */
+    public rdpContent: string;
 
     @Input()
     public set pool(pool: Pool) {
@@ -52,10 +62,9 @@ export class NodeConnectComponent implements OnInit {
                 this.windows = PoolUtils.isWindows(this.pool, agentSkus);
             });
         });
-
         this.nodeUserService.getRemoteDesktop(this.pool.id, this.node.id).subscribe((rdp) => {
-            console.log("Rdp output", rdp.content.toString());
-        })
+            this.rdpContent = rdp.content.toString();
+        });
     }
 
     @autobind()

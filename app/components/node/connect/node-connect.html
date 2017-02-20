@@ -15,6 +15,6 @@
         </bex-property-group>
     </div>
     <div *ngIf="credentials && windows && agentSkus">
-        <bex-submit-btn [submit]="downloadRdpFile">Download rdp file</bex-submit-btn>
+        <bex-download-rdp [nodeId]="node.id" [credentials]="credentials" [rdpContent]="rdpContent"></bex-download-rdp>
     </div>
 </div>
