@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 
 import { DeleteSelectedItemsDialogComponent } from "app/components/base/list-and-show-layout";
 import { QuickListComponent } from "app/components/base/quick-list";
-import { log } from "app/utils"
+import { log } from "app/utils";
 
 export class SelectableList {
     // NEED TO REDEFINE this in the child https://github.com/angular/angular/issues/5415
