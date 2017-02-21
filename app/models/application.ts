@@ -1,6 +1,6 @@
 import { List, Record } from "immutable";
 
-import { ApplicationPackage } from "app/models";
+import { ApplicationPackage } from "app/models/application-package";
 import { Partial } from "app/utils";
 
 const ApplicationRecord = Record({

@@ -1,7 +1,8 @@
 import { Record } from "immutable";
 import { Duration } from "moment";
 
-import { NameValuePair, ResourceFile } from "app/models";
+import { NameValuePair } from "app/models/name-value-pair";
+import { ResourceFile } from "app/models/resource-file";
 
 const JobReleaseTaskRecord = Record({
     id: null,

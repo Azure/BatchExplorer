@@ -1,7 +1,9 @@
 import { Job, JobState } from "app/models";
-import { JobConstraintsDecorator, JobExecutionInfoDecorator, JobManagerTaskDecorator,
-    JobPreparationTaskDecorator, JobReleaseTaskDecorator,
-} from "app/models/decorators";
+import { JobConstraintsDecorator } from "app/models/decorators/job-constraints-decorator";
+import { JobExecutionInfoDecorator } from "app/models/decorators/job-execution-info-decorator";
+import { JobManagerTaskDecorator } from "app/models/decorators/job-manager-task-decorator";
+import { JobPreparationTaskDecorator } from "app/models/decorators/job-preparation-task-decorator";
+import { JobReleaseTaskDecorator } from "app/models/decorators/job-release-task-decorator";
 import { DecoratorBase } from "app/utils/decorators";
 
 export class JobDecorator extends DecoratorBase<Job> {

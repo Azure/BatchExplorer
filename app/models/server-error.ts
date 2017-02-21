@@ -1,6 +1,6 @@
 import { Response } from "@angular/http";
 
-import { BatchError } from "app/models";
+import { BatchError } from "app/models/batch-error";
 
 interface ServerErrorAttributes {
     status: number;

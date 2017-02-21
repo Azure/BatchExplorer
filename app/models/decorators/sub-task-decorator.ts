@@ -1,5 +1,6 @@
 import { SubtaskInformation, TaskState } from "app/models";
-import { ComputeNodeInfoDecorator, SchedulingErrorDecorator } from "app/models/decorators";
+import { ComputeNodeInfoDecorator } from "app/models/decorators/compute-node-info-decorator";
+import { SchedulingErrorDecorator } from "app/models/decorators/scheduling-error-decorator";
 import { DecoratorBase } from "app/utils/decorators";
 
 export class SubTaskDecorator extends DecoratorBase<SubtaskInformation> {

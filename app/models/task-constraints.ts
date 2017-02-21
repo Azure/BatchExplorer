@@ -1,6 +1,6 @@
 import { Duration } from "moment";
 
-import { Constraints } from "app/models";
+import { Constraints } from "app/models/constraints";
 
 /**
  * Specifies the execution constraints for tasks.
