@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 import { LoadingStatus } from "app/components/base/loading";
 
 @Component({
-    selector: "bex-list-loading",
+    selector: "bl-list-loading",
     templateUrl: "list-loading.html",
 })
 export class ListLoadingComponent {

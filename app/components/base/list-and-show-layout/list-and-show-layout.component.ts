@@ -14,7 +14,7 @@ import { Filter, FilterBuilder } from "app/utils/filter-builder";
 import { DeleteSelectedItemsDialogComponent } from "./delete-selected-items-dialog.component";
 
 @Component({
-    selector: "bex-list-and-show-layout",
+    selector: "bl-list-and-show-layout",
     templateUrl: "list-and-show-layout.html",
     animations: [
         // Slide in from the right

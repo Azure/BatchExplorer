@@ -1,4 +1,4 @@
-bex-property-group {
+bl-property-group {
     $label-font-size: 13px;
     $value-font-size: 12px;
     $group-width: 750px;
@@ -81,7 +81,7 @@ bex-property-group {
             font-weight: bold;
         }
 
-        .value, bex-tp-cell {
+        .value, bl-tp-cell {
             color: $mineShaftGray;
             background-color: $whitesmoke-darker;
             font-size: $value-font-size;
@@ -135,7 +135,7 @@ bex-property-group {
             max-width: $table-width;
             table-layout: fixed;
 
-            [tp-column], bex-tp-cell {
+            [tp-column], bl-tp-cell {
                 display: table-cell;
                 color: $mineShaftGray;
                 background-color: $whitesmoke-darker;
@@ -150,7 +150,7 @@ bex-property-group {
         }
     }
 
-    bex-table-property {
+    bl-table-property {
         section {
             display: block;
         }
@@ -163,7 +163,7 @@ bex-property-group {
                 height: 23px;
             }
 
-            bex-tp-cell {
+            bl-tp-cell {
                 cursor: pointer;
                 font-size: $value-font-size;
                 height: 23px;

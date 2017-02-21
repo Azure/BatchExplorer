@@ -46,7 +46,7 @@ const maxNodes = 1000;
 const maxTileSize = 300;
 
 @Component({
-    selector: "bex-nodes-heatmap",
+    selector: "bl-nodes-heatmap",
     templateUrl: "nodes-heatmap.html",
     viewProviders: [
         { provide: "StateTree", useValue: stateTree },

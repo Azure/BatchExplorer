@@ -5,7 +5,7 @@ import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
 
 @Component({
-    selector: "bex-file-list-display",
+    selector: "bl-file-list-display",
     templateUrl: "file-list-display.html",
 })
 export class FileListDisplayComponent {

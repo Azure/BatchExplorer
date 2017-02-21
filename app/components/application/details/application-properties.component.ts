@@ -4,7 +4,7 @@ import { Application } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";
 
 @Component({
-    selector: "bex-application-properties",
+    selector: "bl-application-properties",
     templateUrl: "application-properties.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

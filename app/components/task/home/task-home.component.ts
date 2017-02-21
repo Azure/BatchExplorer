@@ -6,8 +6,8 @@ import { SidebarManager } from "../../base/sidebar";
 import { TaskCreateBasicDialogComponent } from "../action";
 
 @Component({
-    selector: "bex-task-home",
-    templateUrl: "./task-home.html",
+    selector: "bl-task-home",
+    templateUrl: "task-home.html",
 })
 export class TaskHomeComponent implements OnInit, OnDestroy {
     public quickSearchQuery = new FormControl();

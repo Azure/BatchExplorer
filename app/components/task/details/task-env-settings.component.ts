@@ -2,7 +2,7 @@ import { Component, Input, ViewContainerRef } from "@angular/core";
 import { NameValuePair, Task } from "app/models";
 
 @Component({
-    selector: "bex-task-environment-settings",
+    selector: "bl-task-environment-settings",
     templateUrl: "task-env-settings.html",
 })
 export class TaskEnvironmentSettingsComponent {

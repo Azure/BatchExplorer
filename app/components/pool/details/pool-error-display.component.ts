@@ -7,7 +7,7 @@ import { AccountService, PoolService } from "app/services";
 import { ExternalLinks } from "app/utils/constants";
 
 @Component({
-    selector: "bex-pool-error-display",
+    selector: "bl-pool-error-display",
     templateUrl: "pool-error-display.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

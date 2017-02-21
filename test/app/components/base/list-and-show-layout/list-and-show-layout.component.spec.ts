@@ -15,9 +15,9 @@ import { FilterBuilder } from "app/utils/filter-builder";
 
 @Component({
     template: `
-        <bex-list-and-show-layout quickSearchField="url">
+        <bl-list-and-show-layout quickSearchField="url">
 
-        </bex-list-and-show-layout>
+        </bl-list-and-show-layout>
     `,
 })
 export class TestLayoutComponent {
@@ -58,7 +58,7 @@ describe("ListAndShowLayout", () => {
         fixture.detectChanges();
 
         de = fixture.debugElement;
-        layoutComponent = de.query(By.css("bex-list-and-show-layout")).componentInstance;
+        layoutComponent = de.query(By.css("bl-list-and-show-layout")).componentInstance;
         quickSearchInput = de.query(By.css(".quicksearch > input"));
 
     });

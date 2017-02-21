@@ -1,14 +1,14 @@
 import { Component, Input } from "@angular/core";
 
 @Component({
-    selector: "bex-property-list",
+    selector: "bl-property-list",
     template: `<fieldset><ng-content></ng-content></fieldset>`,
 })
 export class PropertyListComponent {
 }
 
 @Component({
-    selector: "bex-link-property",
+    selector: "bl-link-property",
     template: `
         <section class="one-line">
             <label>{{label}}</label>
@@ -29,7 +29,7 @@ export class LinkPropertyComponent {
 
 // todo: only for testing, delete when we have task navigation working.
 @Component({
-    selector: "bex-void-link-property",
+    selector: "bl-void-link-property",
     template: `
         <section class="one-line">
             <label>{{label}}</label>
@@ -46,7 +46,7 @@ export class VoidLinkPropertyComponent {
 }
 
 @Component({
-    selector: "bex-bool-property",
+    selector: "bl-bool-property",
     template: `
         <section class="one-line">
             <label>{{label}}</label>

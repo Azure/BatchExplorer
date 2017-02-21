@@ -11,7 +11,7 @@ import { JobService } from "app/services";
 import * as Fixtures from "test/fixture";
 
 @Component({
-    template: `<bex-job-error-display [job]="job"></bex-job-error-display>`,
+    template: `<bl-job-error-display [job]="job"></bl-job-error-display>`,
 })
 class TestJobErrorDisplayComponent {
     public job: Job;
@@ -36,13 +36,13 @@ describe("JobErrorDisplayComponent", () => {
         });
         fixture = TestBed.createComponent(TestJobErrorDisplayComponent);
         testComponent = fixture.componentInstance;
-        component = fixture.debugElement.query(By.css("bex-job-error-display")).componentInstance;
+        component = fixture.debugElement.query(By.css("bl-job-error-display")).componentInstance;
         fixture.detectChanges();
     });
 
     describe("when there is no error", () => {
         it("should not show anything", () => {
-            expect(fixture.debugElement.query(By.css("bex-banner"))).toBeNull();
+            expect(fixture.debugElement.query(By.css("bl-banner"))).toBeNull();
         });
     });
 
@@ -62,17 +62,17 @@ describe("JobErrorDisplayComponent", () => {
             expect(component.jobTimeout).toBe(false);
         });
 
-        it("should show 1 bex banner", () => {
-            expect(fixture.debugElement.queryAll(By.css("bex-banner")).length).toBe(1);
+        it("should show 1 bl banner", () => {
+            expect(fixture.debugElement.queryAll(By.css("bl-banner")).length).toBe(1);
         });
 
         it("Should show task failed message", () => {
-            const banner = fixture.debugElement.query(By.css("bex-banner"));
+            const banner = fixture.debugElement.query(By.css("bl-banner"));
             expect(banner.nativeElement.textContent).toContain("Job was terminated because a task failed.");
         });
 
         it("should propose to list failed task as quickfix", () => {
-            const banner = fixture.debugElement.query(By.css("bex-banner")).componentInstance;
+            const banner = fixture.debugElement.query(By.css("bl-banner")).componentInstance;
             expect(banner.fixMessage).toContain("View failed tasks");
         });
     });
@@ -96,12 +96,12 @@ describe("JobErrorDisplayComponent", () => {
             expect(component.jobTimeout).toBe(true);
         });
 
-        it("should show 1 bex banner", () => {
-            expect(fixture.debugElement.queryAll(By.css("bex-banner")).length).toBe(1);
+        it("should show 1 bl banner", () => {
+            expect(fixture.debugElement.queryAll(By.css("bl-banner")).length).toBe(1);
         });
 
         it("Should show task failed message", () => {
-            const banner = fixture.debugElement.query(By.css("bex-banner"));
+            const banner = fixture.debugElement.query(By.css("bl-banner"));
             expect(banner.nativeElement.textContent).toContain("Job timed out after running for 2m 00s.");
         });
     });
@@ -132,18 +132,18 @@ describe("JobErrorDisplayComponent", () => {
             expect(component.jobTimeout).toBe(false);
         });
 
-        it("should show 1 bex banner", () => {
-            expect(fixture.debugElement.queryAll(By.css("bex-banner")).length).toBe(1);
+        it("should show 1 bl banner", () => {
+            expect(fixture.debugElement.queryAll(By.css("bl-banner")).length).toBe(1);
         });
 
         it("Should show task failed message", () => {
-            const banner = fixture.debugElement.query(By.css("bex-banner"));
+            const banner = fixture.debugElement.query(By.css("bl-banner"));
             expect(banner.nativeElement.textContent).toContain("InvalidAutoPoolSettings");
             expect(banner.nativeElement.textContent).toContain("Auto pool has invalid settings");
         });
 
         it("Should show details", () => {
-            const banner = fixture.debugElement.query(By.css("bex-banner"));
+            const banner = fixture.debugElement.query(By.css("bl-banner"));
             expect(banner.nativeElement.textContent).toContain("some");
             expect(banner.nativeElement.textContent).toContain("More info");
         });

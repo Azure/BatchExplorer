@@ -11,7 +11,7 @@ import { PoolDecorator } from "app/models/decorators";
 // todo: pull in timespan and date formatting code from the portal.
 
 @Component({
-    selector: "bex-pool-properties",
+    selector: "bl-pool-properties",
     templateUrl: "pool-properties.html",
 })
 export class PoolPropertiesComponent implements OnInit, /*OnChanges,*/ OnDestroy {

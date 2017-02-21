@@ -8,7 +8,7 @@ import { FileService, NodeParams, NodeService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
 
 @Component({
-    selector: "bex-node-details",
+    selector: "bl-node-details",
     templateUrl: "node-details.html",
 })
 export class NodeDetailsComponent implements OnInit, OnDestroy {

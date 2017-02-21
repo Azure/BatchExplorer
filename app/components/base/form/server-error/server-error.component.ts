@@ -10,7 +10,7 @@ interface ErrorData {
 }
 
 @Component({
-    selector: "bex-server-error",
+    selector: "bl-server-error",
     templateUrl: "server-error.html",
 })
 export class ServerErrorComponent {

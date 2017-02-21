@@ -6,7 +6,7 @@ import { SidebarManager } from "../../base/sidebar";
 import { JobCreateBasicDialogComponent } from "../action";
 
 @Component({
-    selector: "bex-job-home",
+    selector: "bl-job-home",
     templateUrl: "job-home.html",
 })
 export class JobHomeComponent {

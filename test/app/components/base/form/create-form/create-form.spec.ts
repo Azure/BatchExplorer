@@ -13,12 +13,12 @@ import { ServerError } from "app/models";
 
 @Component({
     template: `
-        <bex-create-form [formGroup]="form" [submit]="submit" [sidebarRef]="sidebarRef" >
+        <bl-create-form [formGroup]="form" [submit]="submit" [sidebarRef]="sidebarRef" >
             <div [formGroup]="form">
                 <input  formControlName="id" />
                 <input  formControlName="state"/>
             </div>
-        </bex-create-form>
+        </bl-create-form>
     `,
 })
 export class FormTestComponent {
@@ -81,11 +81,11 @@ describe("CreateFormComponent", () => {
         TestBed.compileComponents();
         fixture = TestBed.createComponent(FormTestComponent);
         fixture.detectChanges();
-        createFormElement = fixture.debugElement.query(By.css("bex-create-form"));
+        createFormElement = fixture.debugElement.query(By.css("bl-create-form"));
 
         // Get the buttons
-        addButton = createFormElement.query(By.css("bex-submit-btn.add"));
-        addAndCloseButton = createFormElement.query(By.css("bex-submit-btn.add-and-close"));
+        addButton = createFormElement.query(By.css("bl-submit-btn.add"));
+        addAndCloseButton = createFormElement.query(By.css("bl-submit-btn.add-and-close"));
         addButtonComponent = addButton && addButton.componentInstance;
         addAndCloseButtonComponent = addAndCloseButton && addAndCloseButton.componentInstance;
     });

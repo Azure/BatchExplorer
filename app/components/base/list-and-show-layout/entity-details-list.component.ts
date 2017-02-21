@@ -9,7 +9,7 @@ import { FilterBuilder } from "app/utils/filter-builder";
  * Adds a search box and a refresh button
  */
 @Component({
-    selector: "bex-entity-details-list",
+    selector: "bl-entity-details-list",
     templateUrl: "entity-details-list.html",
 })
 export class EntityDetailsListComponent {

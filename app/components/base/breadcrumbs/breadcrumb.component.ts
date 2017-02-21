@@ -4,7 +4,7 @@ import { Breadcrumb } from "./breadcrumb-models";
 import { BreadcrumbService } from "./breadcrumb.service";
 
 @Component({
-    selector: "bex-breadcrumb",
+    selector: "bl-breadcrumb",
     templateUrl: "breadcrumb.html",
 })
 export class BreadcrumbComponent {

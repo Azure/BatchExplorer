@@ -8,7 +8,7 @@ import { FocusSectionComponent } from "../focus-section";
 import { QuickListItemComponent } from "./quick-list-item.component";
 
 @Component({
-    selector: "bex-quick-list",
+    selector: "bl-quick-list",
     template: `
         <ng-content></ng-content>
     `,
@@ -45,7 +45,7 @@ export const QuickListItemStatus = {
 };
 
 @Component({
-    selector: "bex-quick-list-item-status",
+    selector: "bl-quick-list-item-status",
     template: `
         <div class="status-badge" [ngClass]="status" *ngIf="tooltip" [md-tooltip]="tooltip"></div>
         <div class="status-badge" [ngClass]="status" *ngIf="!tooltip"></div>

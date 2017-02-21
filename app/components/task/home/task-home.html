@@ -1,19 +1,19 @@
-<bex-list-and-show-layout #layout (listScrolledToBottom)="taskList.loadMore()" [list]="taskList">
-    <div bex-list-buttons>
+<bl-list-and-show-layout #layout (listScrolledToBottom)="taskList.loadMore()" [list]="taskList">
+    <div bl-list-buttons>
         <button md-mini-fab color="primary" title="Add a task" (click)="addTask()">
             <i class="fa fa-plus spin-hover"></i>
         </button>
     </div>
-    <div bex-list-content>
-        <bex-focus-section>
-            <bex-task-list #taskList [jobId]="jobId" [filter]="layout.filter" [quickList]="!(layout.showAdvancedFilter | async)"></bex-task-list>
-        </bex-focus-section>
+    <div bl-list-content>
+        <bl-focus-section>
+            <bl-task-list #taskList [jobId]="jobId" [filter]="layout.filter" [quickList]="!(layout.showAdvancedFilter | async)"></bl-task-list>
+        </bl-focus-section>
     </div>
-    <div bex-show-content>
+    <div bl-show-content>
         <router-outlet></router-outlet>
     </div>
-    <div bex-show-advanced-filter>
-        <bex-task-advanced-filter (filterChange)="layout.advancedFilterChanged($event)">
-        </bex-task-advanced-filter>
+    <div bl-show-advanced-filter>
+        <bl-task-advanced-filter (filterChange)="layout.advancedFilterChanged($event)">
+        </bl-task-advanced-filter>
     </div>
-</bex-list-and-show-layout>
+</bl-list-and-show-layout>

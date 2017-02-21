@@ -6,7 +6,7 @@ import { log } from "app/utils";
 import { AdvancedFilter } from "./advanced-filter";
 
 @Component({
-    selector: "bex-adv-filter",
+    selector: "bl-adv-filter",
     template: `
         <form [formGroup]="advancedFilter.group" *ngIf="advancedFilter">
             <div class="odata-preview">

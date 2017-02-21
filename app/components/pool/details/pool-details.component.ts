@@ -14,8 +14,8 @@ import { DeletePoolDialogComponent, PoolResizeDialogComponent } from "../action"
 import { PoolCreateBasicDialogComponent } from "../action";
 
 @Component({
-    selector: "bex-pool-details",
-    templateUrl: "./pool-details.html",
+    selector: "bl-pool-details",
+    templateUrl: "pool-details.html",
 })
 export class PoolDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({id}, {tab}) {

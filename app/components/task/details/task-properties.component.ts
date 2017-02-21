@@ -5,8 +5,8 @@ import { TaskDecorator } from "app/models/decorators";
 import { JobAction, TaskFailureAction } from "app/models/job-action";
 
 @Component({
-    selector: "bex-task-properties",
-    templateUrl: "./task-properties.html",
+    selector: "bl-task-properties",
+    templateUrl: "task-properties.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskPropertiesComponent {

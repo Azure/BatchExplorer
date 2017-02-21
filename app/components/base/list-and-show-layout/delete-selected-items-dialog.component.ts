@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { MdDialogRef } from "@angular/material";
 
 @Component({
-    selector: "bex-delete-selected-items-dialog",
+    selector: "bl-delete-selected-items-dialog",
     template: `
         <div class="confirmation-dialog">
             <h2>Delete {{ entityName || "items" }}</h2>

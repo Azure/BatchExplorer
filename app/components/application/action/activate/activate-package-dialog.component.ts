@@ -5,7 +5,7 @@ import { autobind } from "core-decorators";
 import { ApplicationService } from "app/services";
 
 @Component({
-    selector: "bex-activate-package-dialog",
+    selector: "bl-activate-package-dialog",
     templateUrl: "activate-package-dialog.html",
 })
 export class ActivatePackageDialogComponent {

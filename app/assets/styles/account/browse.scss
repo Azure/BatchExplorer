@@ -1,4 +1,4 @@
-bex-account-list {
+bl-account-list {
     .subscription {
         > .subscription-details {
             display: flex;
@@ -37,7 +37,7 @@ bex-account-list {
     }
 }
 
-bex-account-list, bex-account-fav-list {
+bl-account-list, bl-account-fav-list {
     .fa-star {
         font-size: 2em;
         color: #d5d5d5;
