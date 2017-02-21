@@ -10,7 +10,6 @@ const NodeConnectionSettingsRecord = Record({
 export interface NodeConnectionSettingsAttributes {
     remoteLoginIPAddress: string;
     remoteLoginPort: number;
-
 }
 
 export class NodeConnectionSettings extends NodeConnectionSettingsRecord implements NodeConnectionSettingsAttributes {

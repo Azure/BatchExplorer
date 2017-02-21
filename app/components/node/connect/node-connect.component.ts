@@ -19,11 +19,8 @@ enum CredentialSource {
 export class NodeConnectComponent implements OnInit {
     public CredentialSource = CredentialSource;
     public credentialSource: CredentialSource = null;
-
     public credentials = null;
-
     public agentSkus: List<NodeAgentSku>;
-
     public windows = false;
     public linux = false;
     public hasIp = false;
@@ -47,6 +44,7 @@ export class NodeConnectComponent implements OnInit {
 
     @Input()
     public node: Node;
+
     private _pool: Pool;
 
     constructor(
@@ -89,6 +87,7 @@ export class NodeConnectComponent implements OnInit {
             this.credentials = credentials;
         });
     }
+
     public get sshCommand() {
         if (!this.connectionSettings || !this.credentials) {
             return "N/A";
@@ -96,6 +95,7 @@ export class NodeConnectComponent implements OnInit {
         const {ip, port} = this.connectionSettings;
         return `ssh ${this.credentials.username}@${ip} -p ${port}`;
     }
+
     @autobind()
     public specifyCredentials() {
         this.credentialSource = CredentialSource.Specified;

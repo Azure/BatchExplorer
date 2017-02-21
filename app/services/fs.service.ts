@@ -11,6 +11,7 @@ export interface CommonFolders {
     temp: string;
     downloads: string;
 }
+
 /**
  * Service to handle saving files to the client filesystem.
  */
@@ -24,6 +25,7 @@ export class FileSystemService {
             downloads: app.getPath("downloads"),
         };
     }
+
     /**
      * This make sure the given dir exists. Will recusrivelly create any missing directory.
      * @param directory Path that we expect to exists

@@ -37,6 +37,7 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
         private poolService: PoolService,
         private fileService: FileService,
         private sidebarManager: SidebarManager) {
+
         this.data = nodeService.get(null, null, {});
         this.data.item.subscribe((node) => {
             if (node) {

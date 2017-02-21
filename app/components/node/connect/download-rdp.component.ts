@@ -30,9 +30,7 @@ export class DownloadRdpComponent {
     @Input()
     public connectionSettings: any;
 
-    constructor(private fsService: FileSystemService, private shell: ElectronShell) {
-
-    }
+    constructor(private fsService: FileSystemService, private shell: ElectronShell) { }
 
     @autobind()
     public connectWithRdp() {

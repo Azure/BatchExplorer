@@ -13,7 +13,7 @@
         </div>
         <div>
             <bex-property-group *ngIf="credentials" class="normal">
-                <div class="warn-text">Those credentials are now valid for 24 hours on this node</div>
+                <div class="warn-text">These credentials are now valid for 24 hours on this node</div>
                 <bex-text-property label="Username" [value]="credentials.username"></bex-text-property>
                 <bex-text-property label="Password" [value]="credentials.password" *ngIf="credentialSource === CredentialSource.Generated"></bex-text-property>
             </bex-property-group>
