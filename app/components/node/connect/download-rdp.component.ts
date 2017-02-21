@@ -1,15 +1,15 @@
-import { Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { autobind } from "core-decorators";
-import { shell } from "electron";
 import * as path from "path";
 import { Observable } from "rxjs";
 
-import { FileSystemService } from "app/services";
+import { ElectronShell, FileSystemService } from "app/services";
 import { OS } from "app/utils";
 
 @Component({
     selector: "bex-download-rdp",
     templateUrl: "download-rdp.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DownloadRdpComponent {
     @Input()
@@ -30,21 +30,21 @@ export class DownloadRdpComponent {
     @Input()
     public connectionSettings: any;
 
-    constructor(private fsService: FileSystemService) {
+    constructor(private fsService: FileSystemService, private shell: ElectronShell) {
 
     }
 
     @autobind()
     public connectWithRdp() {
         return this._saveRdpFile().do((filename) => {
-            shell.openItem(filename);
+            this.shell.openItem(filename);
         });
     }
 
     @autobind()
     public downloadRdp() {
         return this._saveRdpFile().do((filename) => {
-            shell.showItemInFolder(filename);
+            this.shell.showItemInFolder(filename);
         });
     }
 
@@ -60,7 +60,7 @@ export class DownloadRdpComponent {
         }
     }
 
-    public get tempDownloadFolder() {
+    public get downloadFolder() {
         if (OS.isWindows()) {
             return path.join(this.fsService.commonFolders.temp, "rdp");
         } else {
@@ -73,7 +73,7 @@ export class DownloadRdpComponent {
      */
     private _saveRdpFile(): Observable<string> {
         const content = this._computeFullRdpFile();
-        const directory = this.tempDownloadFolder;
+        const directory = this.downloadFolder;
         const filename = `${this.nodeId}.rdp`;
         return Observable.fromPromise(this.fsService.saveFile(filename, content, directory));
     }
