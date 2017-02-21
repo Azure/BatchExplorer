@@ -3,6 +3,7 @@ import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
 import { BreadcrumbService } from "app/components/base/breadcrumbs";
+import { ContextMenuService } from "app/components/base/context-menu";
 import { log } from "app/utils";
 import { AbstractListBase } from "./abstract-list-base";
 
@@ -52,6 +53,7 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
     constructor(
         protected list: AbstractListBase,
         private router: Router,
+        private contextmenuService: ContextMenuService,
         private breadcrumbService: BreadcrumbService) {
 
         this._activeSub = list.activatedItemChange.subscribe((event) => {
@@ -121,7 +123,10 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
     }
 
     public openContextMenu() {
-
+        const menu = this.list.contextmenu;
+        if (menu) {
+            this.contextmenuService.openMenu(menu.withArgs(this.key));
+        }
     }
     /**
      * Just trigger the router the item will not be marked as active

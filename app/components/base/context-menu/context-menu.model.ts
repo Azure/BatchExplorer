@@ -18,7 +18,7 @@ export class ContextMenu {
      *
      */
     public withArgs(...args: any[]) {
-        return new ContextMenu(this.items.map(item => item.withArgs(args)));
+        return new ContextMenu(this.items.map(item => item.withArgs(...args)));
     }
 }
 
