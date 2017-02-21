@@ -1,4 +1,4 @@
-import { ResourceFile } from "./resourceFile";
+import { ResourceFile } from "./";
 
 /**
  * Settings which specify how to run a multi-instance task

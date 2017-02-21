@@ -1,6 +1,6 @@
 import { JobPreparationTask } from "app/models";
-import { DecoratorBase } from "../../utils/decorators";
-import { TaskConstraintsDecorator } from "./task-constraints-decorator";
+import { DecoratorBase } from "app/utils/decorators";
+import { TaskConstraintsDecorator } from "./";
 
 export class JobPreparationTaskDecorator extends DecoratorBase<JobPreparationTask> {
     public commandLine: string;

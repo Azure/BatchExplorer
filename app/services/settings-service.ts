@@ -2,8 +2,7 @@ import { Injectable } from "@angular/core";
 import * as storage from "electron-json-storage";
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { KeyBindings, defaultKeybindings } from "app/models/keybindings";
-import { Settings, defaultSettings } from "app/models/settings";
+import { KeyBindings, Settings, defaultKeybindings, defaultSettings } from "app/models";
 import { log } from "app/utils";
 
 @Injectable()

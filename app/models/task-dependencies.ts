@@ -4,6 +4,7 @@ const TaskDependenciesRecord = Record({
     taskIds: List([]),
     taskIdRanges: List([]),
 });
+
 /**
  * Specifies any dependencies of a task. Any task that is explicitly
  * specified or within a dependency range must complete before the dependant

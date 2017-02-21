@@ -1,12 +1,12 @@
 import * as moment from "moment";
 import { Observable } from "rxjs";
 
-import { ADUser } from "app/models";
+import { AADUser } from "app/models";
 import { AccessToken, AdalService } from "app/services/adal";
 import { Constants } from "app/utils";
 import { mockStorage } from "test/utils/mocks";
 
-const sampleUser: ADUser = {
+const sampleUser: AADUser = {
     aud: "94ef904d-c21a-4972-9244-b4d6a12b8e13",
     iss: "https://sts.windows.net/72f788bf-86f1-41af-21ab-2d7cd011db47/",
     iat: 1483372574,
@@ -30,7 +30,7 @@ const sampleUser: ADUser = {
 describe("AdalService", () => {
     let service: AdalService;
     let http: any = {};
-    let currentUser: ADUser;
+    let currentUser: AADUser;
     const config = { tenant: "common", clientId: "abc", redirectUri: "http://localhost" };
 
     beforeEach(() => {
@@ -44,7 +44,7 @@ describe("AdalService", () => {
         localStorage.removeItem(Constants.localStorageKey.currentUser);
         const tmpService = new AdalService(http);
         tmpService.init(config);
-        let user: ADUser = null;
+        let user: AADUser = null;
         tmpService.currentUser.subscribe(x => user = x);
         expect(user).toBeNull();
     });
@@ -53,7 +53,7 @@ describe("AdalService", () => {
         localStorage.setItem(Constants.localStorageKey.currentUser, JSON.stringify(sampleUser));
         const tmpService = new AdalService(http);
         tmpService.init(config);
-        let user: ADUser = null;
+        let user: AADUser = null;
         tmpService.currentUser.subscribe(x => user = x);
         expect(user).not.toBeNull();
         expect(user.upn).toEqual("frank.smith@example.com");

@@ -1,7 +1,7 @@
 import { List, Record } from "immutable";
 
 import { Partial } from "app/utils";
-import { ApplicationPackage } from "./applicationPackage";
+import { ApplicationPackage } from "./";
 
 const ApplicationRecord = Record({
     id: null,

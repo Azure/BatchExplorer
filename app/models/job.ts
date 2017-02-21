@@ -1,13 +1,9 @@
 import { Record } from "immutable";
 
-import { JobStats } from "./";
-import { AllTasksCompleteAction, TaskFailureAction } from "./jobAction";
-import { JobConstraints } from "./jobConstraints";
-import { JobExecutionInformation } from "./jobExecutionInformation";
-import { JobManagerTask } from "./jobManagerTask";
-import { JobPreparationTask } from "./jobPreparationTask";
-import { JobReleaseTask } from "./jobReleaseTask";
-import { NameValuePair } from "./nameValuePair";
+import { JobConstraints, JobExecutionInformation, JobManagerTask, JobPreparationTask,
+    JobReleaseTask, JobStats, NameValuePair,
+} from "./";
+import { AllTasksCompleteAction, TaskFailureAction } from "./job-action";
 
 const JobRecord = Record({
     id: null,

@@ -1,9 +1,9 @@
-import { ADUser } from "app/models";
+import { AADUser } from "app/models";
 
 declare function escape(v: string): string;
 
 export class UserDecoder {
-    public decode(encoded: string): ADUser {
+    public decode(encoded: string): AADUser {
 
         const jwtDecoded = this.decodeJwt(encoded);
         if (!jwtDecoded) {
@@ -16,7 +16,7 @@ export class UserDecoder {
 
         // if (!user || !user.ha    sOwnProperty('aud')) throw new Error('');
 
-        return <ADUser>user;
+        return <AADUser>user;
     }
 
     private safeDecodeBase64(value: string) {

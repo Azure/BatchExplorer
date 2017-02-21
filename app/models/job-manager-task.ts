@@ -1,9 +1,6 @@
 import { Record } from "immutable";
-import { NameValuePair } from "./nameValuePair";
 
-import { ApplicationPackageReference }  from "./applicationPackageReference";
-import { ResourceFile }  from "./resourceFile";
-import { TaskConstraints }  from "./taskConstraints";
+import { ApplicationPackageReference, NameValuePair, ResourceFile, TaskConstraints } from "./";
 
 const JobManagerTaskRecord = Record({
     id: null,

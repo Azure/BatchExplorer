@@ -1,5 +1,7 @@
 import { Record } from "immutable";
 
+import { Partial } from "app/utils";
+
 const ApplicationPackageRecord = Record({
     version: null,
     state: null,
@@ -9,10 +11,19 @@ const ApplicationPackageRecord = Record({
     storageUrlExpiry: null,
 });
 
+export interface ApplicationPackageAttributes {
+    version: string;
+    state: PackageState;
+    format: string;
+    lastActivationTime: Date;
+    storageUrl: string;
+    storageUrlExpiry: Date;
+}
+
 /**
  * Class for displaying Batch application package information.
  */
-export class ApplicationPackage extends ApplicationPackageRecord {
+export class ApplicationPackage extends ApplicationPackageRecord implements ApplicationPackageAttributes {
     public version: string;
     public state: PackageState;
     public format: string;
@@ -20,7 +31,7 @@ export class ApplicationPackage extends ApplicationPackageRecord {
     public storageUrl: string;
     public storageUrlExpiry: Date;
 
-    constructor(data: any = {}) {
+    constructor(data: Partial<ApplicationPackageAttributes> = {}) {
         super(Object.assign({}, data, {  }));
     }
 }

@@ -1,4 +1,4 @@
-import { SchedulingError } from "./scheduling-error";
+import { SchedulingError } from "./";
 
 /**
  * Contains information about the execution of a task in the Azure

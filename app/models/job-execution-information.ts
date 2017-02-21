@@ -1,5 +1,6 @@
 import { Record } from "immutable";
-import { SchedulingError } from "./scheduling-error";
+
+import { SchedulingError } from "./";
 
 const JobExecutionInformationRecord = Record({
     startTime: null,
@@ -15,6 +16,7 @@ const JobExecutionInformationRecord = Record({
  */
 export type JobTerminateReason = "JMComplete" | "MaxWallClockTimeExpiry"
     | "TerminateJobSchedule" | "AllTasksComplete" | "TaskFailed" | "UserTerminate" | string;
+
 export const JobTerminateReason = {
     JMComplete: "JMComplete" as JobTerminateReason,
     MaxWallClockTimeExpiry: "MaxWallClockTimeExpiry" as JobTerminateReason,

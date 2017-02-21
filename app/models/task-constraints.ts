@@ -1,6 +1,7 @@
 import { Duration } from "moment";
 
-import { Constraints } from "./constraints";
+import { Constraints } from "./";
+
 /**
  * Specifies the execution constraints for tasks.
  */

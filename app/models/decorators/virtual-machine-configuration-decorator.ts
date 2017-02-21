@@ -1,7 +1,6 @@
-import { DecoratorBase } from "../../utils/decorators";
-import { VirtualMachineConfiguration } from "../virtualMachineConfiguration";
-import { ImageReferenceDecorator } from "./image-reference-decorator";
-import { WindowsConfigurationDecorator } from "./windows-configuration-decorator";
+import { VirtualMachineConfiguration } from "app/models";
+import { DecoratorBase } from "app/utils/decorators";
+import { ImageReferenceDecorator, WindowsConfigurationDecorator } from "./";
 
 export class VirtualMachineConfigurationDecorator extends DecoratorBase<VirtualMachineConfiguration> {
     public imageReference: ImageReferenceDecorator;
