@@ -1,8 +1,9 @@
 import { Record } from "immutable";
 import * as moment from "moment";
 
+import { TaskExitConditions } from "app/models/task-exit-conditions";
 import { AffinityInformation, ApplicationPackageReference, ComputeNodeInformation, MultiInstanceSettings,
-    NameValuePair, ResourceFile, TaskConstraints, TaskDependencies, TaskExecutionInformation, TaskExitConditions,
+    NameValuePair, ResourceFile, TaskConstraints, TaskDependencies, TaskExecutionInformation,
 } from "./";
 
 // tslint:disable:variable-name
