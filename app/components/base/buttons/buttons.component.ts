@@ -187,3 +187,10 @@ export class DownloadButtonComponent {
 })
 export class ResizeButtonComponent {
 }
+
+@Component({
+    selector: "bex-edit-button",
+    template: `<button md-button><i class="fa fa-pencil-square-o"></i> Edit</button>`,
+})
+export class EditButtonComponent {
+}

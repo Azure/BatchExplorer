@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, ViewContainerRef } from "@angular/core";
+import { Component, Input, ViewContainerRef } from "@angular/core";
 
 import { Job, NameValuePair } from "app/models";
 
@@ -7,7 +7,7 @@ import { Job, NameValuePair } from "app/models";
     templateUrl: "job-env-settings.html",
 })
 
-export class JobEnvironmentSettingsComponent implements OnDestroy {
+export class JobEnvironmentSettingsComponent {
     @Input()
     public set job(job: Job) {
         this._job = job;
@@ -26,9 +26,5 @@ export class JobEnvironmentSettingsComponent implements OnDestroy {
         if (this.job) {
             this.environmentSettings = this.job.commonEnvironmentSettings || [];
         }
-    }
-
-    public ngOnDestroy() {
-        /* tab hide */
     }
 }

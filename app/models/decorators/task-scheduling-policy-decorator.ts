@@ -1,5 +1,5 @@
-import { DecoratorBase } from "../../utils/decorators";
-import { TaskSchedulingPolicy } from "../taskSchedulingPolicy";
+import { TaskSchedulingPolicy } from "app/models";
+import { DecoratorBase } from "app/utils/decorators";
 
 export class TaskSchedulingPolicyDecorator extends DecoratorBase<TaskSchedulingPolicy> {
     public nodeFillType: string;

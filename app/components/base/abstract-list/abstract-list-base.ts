@@ -143,6 +143,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         if (this._activeItemKey.value) {
             this._selectedItems[this._activeItemKey.value.key] = true;
         }
+
         this.selectedItemsChange.emit(this.selectedItems);
     }
 

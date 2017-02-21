@@ -1,4 +1,4 @@
-export interface ADUser {
+export interface AADUser {
     /**
      * Audience
      * Identifies the application that is using the token to access a resource.

@@ -8,6 +8,7 @@ import {
 } from "@angular/core";
 import { ComponentPortal, MdSidenav, PortalHostDirective } from "@angular/material";
 
+import { log } from "app/utils";
 import { SidebarPageComponent } from "./sidebar-page";
 import { SidebarRef } from "./sidebar-ref";
 
@@ -59,7 +60,7 @@ export class SidebarContentComponent {
         if (id in this.componentRefs) {
             this.switchDisplay(this.componentRefs[id]);
         } else {
-            console.error(`SidebarRef with id '${id}' doesn't exist.`);
+            log.error(`SidebarRef with id '${id}' doesn't exist.`);
         }
     }
 

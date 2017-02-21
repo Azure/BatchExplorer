@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
-import { Job } from "app/models";
 import { Observable, Subject } from "rxjs";
 
+import { Job } from "app/models";
+import { log } from "app/utils";
 import BatchClient from "../api/batch/batch-client";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
 import { ServiceBase } from "./service-base";
@@ -52,15 +53,8 @@ export class JobService extends ServiceBase {
      */
     public delete(jobId: string, options: any = {}): Observable<{}> {
         return this.callBatchClient(BatchClient.job.delete(jobId, options), (error) => {
-            console.error("Error deleting job: " + jobId, error);
+            log.error("Error deleting job: " + jobId, error);
         });
-    }
-
-    /**
-     * Once delete has completed we call this to remove it from the cache
-     */
-    public notifyJobDeleted(jobId) {
-        this._cache.deleteItemByKey(jobId);
     }
 
     public terminate(jobId: string, options: any): Observable<{}> {

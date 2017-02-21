@@ -3,6 +3,7 @@ import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
 import { BreadcrumbService } from "app/components/base/breadcrumbs";
+import { log } from "app/utils";
 import { AbstractListBase } from "./abstract-list-base";
 
 
@@ -64,7 +65,7 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
 
     public ngOnInit() {
         if (!this.key) {
-            console.error(`Every list item needs to have a key. Use this attribute [key]="item.id"`, this);
+            log.error(`Every list item needs to have a key. Use this attribute [key]="item.id"`, this);
         }
         this.selected = this.list.isSelected(this.key);
     }

@@ -17,7 +17,7 @@ import { FocusSectionModule } from "./focus-section";
 import { FormModule } from "./form";
 import { InfoBoxModule } from "./info-box";
 import {
-    DeletePoolDialogComponent, EntityDetailsListComponent, ListAndShowLayoutComponent, ListLoadingComponent,
+    DeleteSelectedItemsDialogComponent, EntityDetailsListComponent, ListAndShowLayoutComponent, ListLoadingComponent,
 } from "./list-and-show-layout";
 import { LoadingComponent, SimpleLoadingComponent } from "./loading";
 import { NotificationModule } from "./notifications";
@@ -60,13 +60,13 @@ const components = [
     LoadingComponent,
     RefreshButtonComponent,
     ListLoadingComponent,
-    DeletePoolDialogComponent,
+    DeleteSelectedItemsDialogComponent,
 ];
 
 @NgModule({
     declarations: components,
     entryComponents: [
-        DeletePoolDialogComponent,
+        DeleteSelectedItemsDialogComponent,
     ],
     exports: [...modules, ...components],
     imports: [

@@ -156,19 +156,24 @@ bex-quick-list {
 
 bex-no-item {
     > .no-item-message {
-        height: 300px;
+        height: 275px;
         width: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        font-size: 2em;
         color: $silverGray;
+        font-size: 1.5em;
+        line-height: 1em;
 
         .fa {
             font-size: 8em;
             margin-bottom: 20px;
             color: $silverGray;
+
+            &.small {
+                font-size: 5em;
+            }
         }
     }
 }

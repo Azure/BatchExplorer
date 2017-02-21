@@ -1,5 +1,4 @@
-import { Component } from "@angular/core";
-import { NavigationStart, Router } from "@angular/router";
+import { AfterViewInit, ChangeDetectorRef, Component } from "@angular/core";
 
 import { AccountResource } from "app/models";
 import { AccountService, AccountStatus } from "app/services";
@@ -8,15 +7,18 @@ import { AccountService, AccountStatus } from "app/services";
     selector: "bex-account-dropdown",
     templateUrl: "account-dropdown.html",
 })
-export default class AccountDropDownComponent {
+export default class AccountDropDownComponent implements AfterViewInit {
     public status = AccountStatus;
 
     public selected: AccountResource = null;
-    public showAccountDropDown: boolean = true;
     public selectedAccountAlias: string = "";
     public showDropdown = false;
+    public currentAccountValid = AccountStatus.Loading;
 
-    constructor(private router: Router, private accountService: AccountService) {
+    constructor(
+        private accountService: AccountService,
+        private changeDetection: ChangeDetectorRef) {
+
         accountService.currentAccount.subscribe((account) => {
             if (account) {
                 this.selected = account;
@@ -25,17 +27,17 @@ export default class AccountDropDownComponent {
                 this.selectedAccountAlias = "No account selected!";
             }
         });
-
-        router.events.subscribe((val) => {
-            if (val instanceof NavigationStart) {
-                // todo: pretty tacky. make better.
-                this.showAccountDropDown = !val.url.startsWith("/accounts") && val.url !== "/";
-            }
-        });
     }
 
     // todo: where do i hold the selected account now that we are binding to the server observable data?
     public selectAccount(account: AccountResource): void {
         this.accountService.selectAccount(account.id);
+    }
+
+    public ngAfterViewInit() {
+        this.accountService.currentAccountValid.subscribe((status) => {
+            this.currentAccountValid = status;
+            this.changeDetection.detectChanges();
+        });
     }
 }

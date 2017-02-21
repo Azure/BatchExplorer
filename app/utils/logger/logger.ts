@@ -23,8 +23,9 @@ export class Logger {
         bunyan.info(message);
     }
 
-    public warn(message: string) {
-        console.warn(message);
+    public warn(message: string, params?: any[]) {
+        console.warn(message, params);
+        // todo: can i pass params to bunyan.warn?
         bunyan.warn(message);
     }
 

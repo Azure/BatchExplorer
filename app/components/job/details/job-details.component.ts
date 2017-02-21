@@ -10,12 +10,12 @@ import { JobParams, JobService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
 import { SidebarManager } from "../../base/sidebar";
 import { TaskCreateBasicDialogComponent } from "../../task/action";
-import { JobCreateBasicDialogComponent } from "../action";
 
 import {
     DeleteJobDialogComponent,
     DisableJobDialogComponent,
     EnableJobDialogComponent,
+    JobCreateBasicDialogComponent,
     TerminateJobDialogComponent,
 } from "../action";
 

@@ -1,4 +1,3 @@
-
 /**
  * @class
  * Initializes a new instance of the BatchError class.

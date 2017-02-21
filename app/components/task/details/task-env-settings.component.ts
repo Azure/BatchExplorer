@@ -1,11 +1,11 @@
-import { Component, Input, OnDestroy, ViewContainerRef } from "@angular/core";
+import { Component, Input, ViewContainerRef } from "@angular/core";
 import { NameValuePair, Task } from "app/models";
 
 @Component({
     selector: "bex-task-environment-settings",
     templateUrl: "task-env-settings.html",
 })
-export class TaskEnvironmentSettingsComponent implements OnDestroy {
+export class TaskEnvironmentSettingsComponent {
     @Input()
     public set task(task: Task) {
         this._task = task;
@@ -25,9 +25,5 @@ export class TaskEnvironmentSettingsComponent implements OnDestroy {
         if (this.task) {
             this.environmentSettings = this.task.environmentSettings || [];
         }
-    }
-
-    public ngOnDestroy() {
-        /* tab hide */
     }
 }

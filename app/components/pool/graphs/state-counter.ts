@@ -2,7 +2,7 @@ import { List } from "immutable";
 import { BehaviorSubject } from "rxjs";
 
 import { Node, NodeState } from "app/models";
-import { ObjectUtils } from "app/utils";
+import { ObjectUtils, log } from "app/utils";
 
 type CountMap = { [key: string]: number };
 type CounObsMap = { [key: string]: BehaviorSubject<number> };
@@ -29,7 +29,7 @@ export class StateCounter {
             if (node.state in counts) {
                 counts[node.state]++;
             } else {
-                console.error(`Node '${node.id}' has an unknown state '${node.state}'`);
+                log.error(`Node '${node.id}' has an unknown state '${node.state}'`);
             }
         });
         for (let state of ObjectUtils.values(NodeState)) {

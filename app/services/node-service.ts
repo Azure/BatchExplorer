@@ -3,10 +3,10 @@ import { List } from "immutable";
 import { AsyncSubject, Observable } from "rxjs";
 
 import { BackgroundTaskManager } from "app/components/base/background-task";
+import { Node, NodeState } from "app/models";
 import { ArrayUtils, ObservableUtils, log } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 import BatchClient from "../api/batch/batch-client";
-import { Node, NodeState } from "../models";
 import {
     DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache,
     getOnceProxy,
