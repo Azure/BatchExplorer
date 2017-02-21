@@ -1,6 +1,6 @@
 import { Record } from "immutable";
 
-import { SchedulingError } from "./";
+import { SchedulingError } from "app/models";
 
 const JobExecutionInformationRecord = Record({
     startTime: null,

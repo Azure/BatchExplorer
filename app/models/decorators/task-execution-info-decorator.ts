@@ -1,6 +1,6 @@
 import { TaskExecutionInformation } from "app/models";
+import { SchedulingErrorDecorator } from "app/models/decorators";
 import { DecoratorBase } from "app/utils/decorators";
-import { SchedulingErrorDecorator } from "./";
 
 export class TaskExecutionInfoDecorator extends DecoratorBase<TaskExecutionInformation> {
     public startTime: string;

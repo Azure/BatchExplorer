@@ -1,10 +1,10 @@
 import { Record } from "immutable";
 import * as moment from "moment";
 
-import { TaskExitConditions } from "app/models/task-exit-conditions";
 import { AffinityInformation, ApplicationPackageReference, ComputeNodeInformation, MultiInstanceSettings,
     NameValuePair, ResourceFile, TaskConstraints, TaskDependencies, TaskExecutionInformation,
-} from "./";
+} from "app/models";
+import { TaskExitConditions } from "app/models/task-exit-conditions";
 
 // tslint:disable:variable-name
 const TaskRecord = Record({

@@ -1,10 +1,10 @@
 import { BehaviorSubject } from "rxjs";
 
+import { WaitForDeletePoller } from "app/components/application/action";
 import { BackgroundTaskManager } from "app/components/base/background-task";
 import { Application } from "app/models";
 import { ApplicationService } from "app/services";
 import { LongRunningDeleteAction } from "app/services/core";
-import { WaitForDeletePoller } from "./";
 
 export class DeleteApplicationAction extends LongRunningDeleteAction {
     constructor(

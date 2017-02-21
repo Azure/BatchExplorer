@@ -1,8 +1,8 @@
 import { Job, JobState } from "app/models";
-import { DecoratorBase } from "app/utils/decorators";
 import { JobConstraintsDecorator, JobExecutionInfoDecorator, JobManagerTaskDecorator,
     JobPreparationTaskDecorator, JobReleaseTaskDecorator,
-} from "./";
+} from "app/models/decorators";
+import { DecoratorBase } from "app/utils/decorators";
 
 export class JobDecorator extends DecoratorBase<Job> {
     public state: string;

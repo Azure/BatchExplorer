@@ -1,4 +1,4 @@
-import { ResourceFile } from "./";
+import { ResourceFile } from "app/models";
 
 /**
  * Settings which specify how to run a multi-instance task

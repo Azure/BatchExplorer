@@ -1,8 +1,8 @@
 import { Pool } from "app/models";
-import { DecoratorBase } from "app/utils/decorators";
 import { CloudServiceConfigurationDecorator, TaskSchedulingPolicyDecorator,
     VirtualMachineConfigurationDecorator,
-} from "./";
+} from "app/models/decorators";
+import { DecoratorBase } from "app/utils/decorators";
 
 export class PoolDecorator extends DecoratorBase<Pool> {
     public allocationState: string;

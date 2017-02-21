@@ -1,6 +1,6 @@
 import { Record } from "immutable";
 
-import { NameValuePair, ResourceFile, TaskConstraints } from "./";
+import { NameValuePair, ResourceFile, TaskConstraints } from "app/models";
 
 const JobPreparationTaskRecord = Record({
     id: null,
