@@ -28,6 +28,20 @@ const testContext = require.context("../test/app", true, /\.spec\.ts/);
 function requireAll(requireContext) {
     return requireContext.keys().map(requireContext);
 }
+let initialValue = null;
+jasmine.getEnv().clearReporters();
+jasmine.getEnv().addReporter({
+    suiteStarted: (result) => {
+        if (initialValue === null) {
+            initialValue = performance.memory.usedJSHeapSize;
+        }
+    },
+    suiteDone: (result) => {
+        const end = performance.memory.usedJSHeapSize;
+        const out = Math.round((end - initialValue) / 1000);
+        console.warn("Memory increase", `${out} kB`, result.fullName);
+    }
+});
 
 // requires and returns all modules that match
 var modules = requireAll(testContext);

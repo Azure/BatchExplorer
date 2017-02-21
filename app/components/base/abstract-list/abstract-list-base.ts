@@ -59,27 +59,28 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     private _subs: Subscription[] = [];
 
     constructor(private router: Router, private focusSection: FocusSectionComponent) {
-        this._activeItemKey.subscribe(x => {
+        this._subs.push(this._activeItemKey.subscribe(x => {
             this.selectedItems = x ? [x.key] : [];
             this.activatedItemChange.emit(x);
             if (this.listFocused) {
                 this.focusedItem = x.key;
             }
-        });
+        }));
+
         if (focusSection) {
             this._subs.push(focusSection.keypress.subscribe(this.keyPressed));
             this._subs.push(focusSection.onFocus.subscribe(this.onFocus));
             this._subs.push(focusSection.onBlur.subscribe(this.onBlur));
         }
 
-        router.events.filter(event => event instanceof NavigationEnd).subscribe(event => {
+        this._subs.push(router.events.filter(event => event instanceof NavigationEnd).subscribe(event => {
             if (this.items) {
                 if (this._activeItemKey.value) {
                     const active = this.getActiveItemFromRouter();
                     this.setActiveItem(active && active.key);
                 }
             }
-        });
+        }));
     }
 
     public ngAfterViewInit() {
@@ -94,6 +95,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     }
 
     public ngOnDestroy() {
+        this.focusSection = null;
         this._subs.forEach((x) => x.unsubscribe());
     }
 

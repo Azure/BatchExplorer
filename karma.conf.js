@@ -18,16 +18,25 @@ module.exports = function (config) {
 
         port: 9876,
 
-        logLevel: config.LOG_INFO,
+        logLevel: config.LOG_DEBUG,
 
         colors: true,
 
         autoWatch: false,
         autoWatchBatchDelay: 1000,
 
-        browsers: ["Electron"],
+        browsers: ["CustomElectron"],
+        customLaunchers: {
+            CustomElectron: {
+                base: "Electron",
+                flags: ["--enable-precise-memory-info"]
+            }
+        },
         electronOpts: {
-            // show: false,
+            title: "Banana",
+            "webPreferences": {
+                "blinkFeatures": "PreciseMemoryInfo"
+            }
         },
         // Karma plugins loaded
         plugins: [
@@ -37,7 +46,6 @@ module.exports = function (config) {
             "karma-sourcemap-loader",
             "karma-mocha-reporter",
             "karma-electron",
-            "karma-electron-launcher",
             "karma-webpack",
         ],
 
