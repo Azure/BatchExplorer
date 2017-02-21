@@ -1,9 +1,15 @@
 import { Record } from "immutable";
 import * as moment from "moment";
 
-import { AffinityInformation, ApplicationPackageReference, ComputeNodeInformation, MultiInstanceSettings,
-    NameValuePair, ResourceFile, TaskConstraints, TaskDependencies, TaskExecutionInformation,
-} from "app/models";
+import { AffinityInformation } from "app/models/affinity-information";
+import { ApplicationPackageReference } from "app/models/application-package-reference";
+import { ComputeNodeInformation } from "app/models/compute-node-information";
+import { MultiInstanceSettings } from "app/models/multi-instance-settings";
+import { NameValuePair } from "app/models/name-value-pair";
+import { ResourceFile } from "app/models/resource-file";
+import { TaskConstraints } from "app/models/task-constraints";
+import { TaskDependencies } from "app/models/task-dependencies";
+import { TaskExecutionInformation } from "app/models/task-execution-information";
 import { TaskExitConditions } from "app/models/task-exit-conditions";
 
 // tslint:disable:variable-name

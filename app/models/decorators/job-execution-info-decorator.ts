@@ -1,5 +1,5 @@
 import { JobExecutionInformation } from "app/models";
-import { SchedulingErrorDecorator } from "app/models/decorators";
+import { SchedulingErrorDecorator } from "app/models/decorators/scheduling-error-decorator";
 import { DecoratorBase } from "app/utils/decorators";
 
 export class JobExecutionInfoDecorator extends DecoratorBase<JobExecutionInformation> {

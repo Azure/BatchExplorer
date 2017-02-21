@@ -1,6 +1,7 @@
 import { Record } from "immutable";
 
-import { ImageReference, WindowsConfiguration } from "app/models";
+import { ImageReference } from "app/models/image-reference";
+import { WindowsConfiguration } from "app/models/windows-configuration";
 
 // tslint:disable:variable-name object-literal-sort-keys
 const VirtualMachineConfigurationRecord = Record({

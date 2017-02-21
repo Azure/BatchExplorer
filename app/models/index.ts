@@ -14,6 +14,7 @@ export * from "./file";
 export * from "./file-type";
 export * from "./file-properties";
 export * from "./job";
+export * from "./job-action";
 export * from "./job-constraints";
 export * from "./job-execution-information";
 export * from "./job-manager-task";
