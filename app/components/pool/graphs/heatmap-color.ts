@@ -1,4 +1,4 @@
-import { ColorUtils } from "app/utils";
+import { ColorUtils, log } from "app/utils";
 import { StateTree } from "./state-tree";
 
 type ColorMap = { [key: string]: string };
@@ -19,7 +19,7 @@ export class HeatmapColor {
         if (key in this._colors) {
             return this._colors[key];
         } else {
-            console.error(`HeatmapColor: Cannot retrieve color, unknown key ${key}`);
+            log.error(`HeatmapColor: Cannot retrieve color, unknown key ${key}`);
         }
     }
 
