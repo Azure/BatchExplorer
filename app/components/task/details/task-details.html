@@ -1,5 +1,5 @@
-<bex-loading [status]="data.newDataStatus | async">
-    <md-card bex-loading-error>
+<bl-loading [status]="data.newDataStatus | async">
+    <md-card bl-loading-error>
         Task with id '{{taskId}}' doesn't exist
     </md-card>
     <div *ngIf="task && job">
@@ -8,7 +8,7 @@
                 <div class="main-info">
                     <md-card-title-group style="margin: 0px;">
                         <div style="align-items:center;">
-                            <bex-refresh-btn [refresh]="refresh"></bex-refresh-btn>
+                            <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
                         </div>
                         <div style="margin-left:12px; margin-right:auto;">
                             <md-card-title>{{task.id}} <span *ngIf="!!task.displayName"> - {{task.displayName}} - {{taskId}}</span> </md-card-title>
@@ -19,63 +19,63 @@
                         <p>Job: {{jobId}}</p>
                     </md-card-content>
                 </div>
-                <bex-task-timeline [job]="job" [task]="task"></bex-task-timeline>
+                <bl-task-timeline [job]="job" [task]="task"></bl-task-timeline>
             </div>
 
             <md-card-actions layout="row" layout-align="end center">
-                <bex-add-button (click)="addTask()"></bex-add-button>
-                <bex-terminate-button [entity]="task" (click)="terminateTask()"></bex-terminate-button>
-                <bex-delete-button [entity]="task" (click)="deleteTask()"></bex-delete-button>
-                <bex-clone-button (click)="cloneTask()"></bex-clone-button>
+                <bl-add-button (click)="addTask()"></bl-add-button>
+                <bl-terminate-button [entity]="task" (click)="terminateTask()"></bl-terminate-button>
+                <bl-delete-button [entity]="task" (click)="deleteTask()"></bl-delete-button>
+                <bl-clone-button (click)="cloneTask()"></bl-clone-button>
             </md-card-actions>
         </md-card>
-        <bex-task-error-display [jobId]="jobId" [task]="task"></bex-task-error-display>
+        <bl-task-error-display [jobId]="jobId" [task]="task"></bl-task-error-display>
         <md-card class="details">
-            <bex-tab-group>
-                <bex-tab key="output">
-                    <bex-tab-label>Log Output</bex-tab-label>
+            <bl-tab-group>
+                <bl-tab key="output">
+                    <bl-tab-label>Log Output</bl-tab-label>
                     <div class="tab-padding">
-                        <bex-task-output [jobId]="jobId" [task]="task"></bex-task-output>
+                        <bl-task-output [jobId]="jobId" [task]="task"></bl-task-output>
                     </div>
-                </bex-tab>
-                <bex-tab key="properties">
-                    <bex-tab-label>Properties</bex-tab-label>
-                    <bex-task-properties [job]="job" [task]="task"></bex-task-properties>
-                </bex-tab>
-                <bex-tab key="envs">
-                    <bex-tab-label>Environment Settings</bex-tab-label>
+                </bl-tab>
+                <bl-tab key="properties">
+                    <bl-tab-label>Properties</bl-tab-label>
+                    <bl-task-properties [job]="job" [task]="task"></bl-task-properties>
+                </bl-tab>
+                <bl-tab key="envs">
+                    <bl-tab-label>Environment Settings</bl-tab-label>
                     <div class="tab-padding">
-                        <bex-task-environment-settings [task]="task"></bex-task-environment-settings>
+                        <bl-task-environment-settings [task]="task"></bl-task-environment-settings>
                     </div>
-                </bex-tab>
-                <bex-tab key="resource-files">
-                    <bex-tab-label>Resource Files</bex-tab-label>
+                </bl-tab>
+                <bl-tab key="resource-files">
+                    <bl-tab-label>Resource Files</bl-tab-label>
                     <div class="tab-padding">
-                        <bex-task-resource-files [task]="task"></bex-task-resource-files>
+                        <bl-task-resource-files [task]="task"></bl-task-resource-files>
                     </div>
-                </bex-tab>
-                <bex-tab key="files">
-                    <bex-tab-label>Node Files</bex-tab-label>
+                </bl-tab>
+                <bl-tab key="files">
+                    <bl-tab-label>Node Files</bl-tab-label>
                     <div class="tab-padding">
-                        <bex-entity-details-list #listWrapper [refresh]="list.refresh" [filterPlaceholder]="filterPlaceholderText" [showAddButton]="false"
+                        <bl-entity-details-list #listWrapper [refresh]="list.refresh" [filterPlaceholder]="filterPlaceholderText" [showAddButton]="false"
                             quickSearchField="name">
-                            <bex-task-file-list #list [jobId]="jobId" [taskId]="taskId" [filter]="listWrapper.filter" [quickList]="false"></bex-task-file-list>
-                            </bex-entity-details-list>
+                            <bl-task-file-list #list [jobId]="jobId" [taskId]="taskId" [filter]="listWrapper.filter" [quickList]="false"></bl-task-file-list>
+                            </bl-entity-details-list>
                     </div>
-                </bex-tab>
-                <bex-tab key="subtasks" [disabled]="!hasMultiInstanceSettings">
-                    <bex-tab-label>Sub Tasks</bex-tab-label>
+                </bl-tab>
+                <bl-tab key="subtasks" [disabled]="!hasMultiInstanceSettings">
+                    <bl-tab-label>Sub Tasks</bl-tab-label>
                     <div class="tab-padding">
-                        <bex-task-sub-tasks-tab [jobId]="job.id" [taskId]="task.id"></bex-task-sub-tasks-tab>
+                        <bl-task-sub-tasks-tab [jobId]="job.id" [taskId]="task.id"></bl-task-sub-tasks-tab>
                     </div>
-                </bex-tab>
-                <bex-tab key="dependencies" [disabled]="!hasDependencies">
-                    <bex-tab-label>Dependencies</bex-tab-label>
+                </bl-tab>
+                <bl-tab key="dependencies" [disabled]="!hasDependencies">
+                    <bl-tab-label>Dependencies</bl-tab-label>
                     <div class="tab-padding">
-                        <bex-task-dependencies [jobId]="job.id" [task]="task"></bex-task-dependencies>
+                        <bl-task-dependencies [jobId]="job.id" [task]="task"></bl-task-dependencies>
                     </div>
-                </bex-tab>
-            </bex-tab-group>
+                </bl-tab>
+            </bl-tab-group>
         </md-card>
     </div>
-</bex-loading>
+</bl-loading>

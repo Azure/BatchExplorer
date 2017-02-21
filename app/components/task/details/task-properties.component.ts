@@ -4,8 +4,8 @@ import { ExitOptions, Job, JobAction, Task, TaskFailureAction } from "app/models
 import { TaskDecorator } from "app/models/decorators";
 
 @Component({
-    selector: "bex-task-properties",
-    templateUrl: "./task-properties.html",
+    selector: "bl-task-properties",
+    templateUrl: "task-properties.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskPropertiesComponent {

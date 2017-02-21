@@ -4,7 +4,7 @@ import * as moment from "moment";
 import { DateUtils, exists } from "app/utils";
 
 @Component({
-    selector: "bex-elapsed-time",
+    selector: "bl-elapsed-time",
     template: `{{formattedValue}}`,
 })
 export class ElapsedTimeComponent implements OnInit, OnChanges, OnDestroy {

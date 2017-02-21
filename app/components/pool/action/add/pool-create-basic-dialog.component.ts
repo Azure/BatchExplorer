@@ -10,7 +10,7 @@ import { createPoolToData, poolToFormModel } from "app/models/forms";
 import { PoolService } from "app/services";
 
 @Component({
-    selector: "bex-pool-create-basic-dialog",
+    selector: "bl-pool-create-basic-dialog",
     templateUrl: "pool-create-basic-dialog.html",
 })
 export class PoolCreateBasicDialogComponent {

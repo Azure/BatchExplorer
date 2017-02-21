@@ -5,7 +5,7 @@ import { BehaviorSubject } from "rxjs";
 import { TabComponent } from "./tab.component";
 
 @Component({
-    selector: "bex-tab-group",
+    selector: "bl-tab-group",
     templateUrl: "tab-group.html",
 })
 export class TabGroupComponent implements AfterViewInit {

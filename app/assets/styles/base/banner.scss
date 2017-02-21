@@ -1,9 +1,9 @@
-bex-banner {
+bl-banner {
     display: block;
     margin-top: 10px;
 }
 
-bex-banner > md-card {
+bl-banner > md-card {
     color: $whiteSmoke-darker;
     padding: 0;
 
@@ -120,11 +120,11 @@ bex-banner > md-card {
     }
 }
 
-bex-banner > md-card.error {
+bl-banner > md-card.error {
     @include banner-scheme($red, $red-dark);
 }
 
-bex-banner > md-card.warning {
+bl-banner > md-card.warning {
     @include banner-scheme($yellow, $yellow-dark);
 }
 

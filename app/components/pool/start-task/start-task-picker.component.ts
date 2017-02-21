@@ -4,7 +4,7 @@ import {
 } from "@angular/forms";
 
 @Component({
-    selector: "bex-start-task-picker",
+    selector: "bl-start-task-picker",
     templateUrl: "start-task-picker.html",
     providers: [
         // tslint:disable:no-forward-ref

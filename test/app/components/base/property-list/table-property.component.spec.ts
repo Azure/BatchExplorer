@@ -9,16 +9,16 @@ import { click } from "test/utils/helpers";
 
 @Component({
     template: `
-        <bex-table-property label="Files">
-            <bex-table-property-header>
+        <bl-table-property label="Files">
+            <bl-table-property-header>
                 <div tp-column>File path</div>
                 <div tp-column>Source</div>
-            </bex-table-property-header>
-            <bex-table-property-row *ngFor="let file of files">
-                <bex-tp-cell [value]="file.path"></bex-tp-cell>
-                <bex-tp-cell [value]="file.source"></bex-tp-cell>
-            </bex-table-property-row>
-        </bex-table-property>
+            </bl-table-property-header>
+            <bl-table-property-row *ngFor="let file of files">
+                <bl-tp-cell [value]="file.path"></bl-tp-cell>
+                <bl-tp-cell [value]="file.source"></bl-tp-cell>
+            </bl-table-property-row>
+        </bl-table-property>
     `,
 })
 class TestTableComponent {
@@ -49,7 +49,7 @@ describe("TextPropertyComponent", () => {
         component = fixture.componentInstance;
         section = de.query(By.css("section"));
         fixture.detectChanges();
-        table = de.query(By.css("bex-table-property")).componentInstance;
+        table = de.query(By.css("bl-table-property")).componentInstance;
     });
 
     it("Should show the label", () => {

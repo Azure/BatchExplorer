@@ -20,7 +20,7 @@ import { SidebarRef } from "./sidebar-ref";
 
 @Component({
     encapsulation: ViewEncapsulation.None,
-    selector: "bex-sidebar-page",
+    selector: "bl-sidebar-page",
     template: `
         <div [hidden]="!display">
                 <template portalHost></template>

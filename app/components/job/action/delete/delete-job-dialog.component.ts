@@ -7,7 +7,7 @@ import { JobService } from "app/services";
 import { DeleteJobAction } from "./";
 
 @Component({
-    selector: "bex-delete-job-dialog",
+    selector: "bl-delete-job-dialog",
     templateUrl: "delete-job-dialog.html",
 })
 export class DeleteJobDialogComponent {

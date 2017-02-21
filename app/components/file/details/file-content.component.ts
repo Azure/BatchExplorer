@@ -7,7 +7,7 @@ import { FileService } from "app/services";
 import { Constants } from "app/utils";
 
 @Component({
-    selector: "bex-file-content",
+    selector: "bl-file-content",
     templateUrl: "file-content.html",
 })
 export class FileContentComponent implements OnChanges, AfterViewInit {

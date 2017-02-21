@@ -23,7 +23,7 @@ const cloudServiceOsFamilies = [{
 }].reverse(); // Reverse so we have most recent first
 
 @Component({
-    selector: "bex-pool-os-picker",
+    selector: "bl-pool-os-picker",
     templateUrl: "pool-os-picker.html",
     providers: [
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => PoolOsPickerComponent), multi: true },

@@ -7,7 +7,7 @@ import { Pool, StartTask } from "app/models";
 import { PoolService } from "app/services";
 
 @Component({
-    selector: "bex-start-task-edit-form",
+    selector: "bl-start-task-edit-form",
     templateUrl: "start-task-edit-form.html",
 })
 export class StartTaskEditFormComponent {

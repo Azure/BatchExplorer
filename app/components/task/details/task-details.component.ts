@@ -12,8 +12,8 @@ import { SidebarManager } from "../../base/sidebar";
 import { DeleteTaskDialogComponent, TaskCreateBasicDialogComponent, TerminateTaskDialogComponent } from "../action";
 
 @Component({
-    selector: "bex-task-details",
-    templateUrl: "./task-details.html",
+    selector: "bl-task-details",
+    templateUrl: "task-details.html",
 })
 export class TaskDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({id}, {tab}) {

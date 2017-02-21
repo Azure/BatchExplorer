@@ -5,7 +5,7 @@ import { Node } from "app/models";
 import { NodeService } from "app/services";
 
 @Component({
-    selector: "bex-node-preview-card",
+    selector: "bl-node-preview-card",
     templateUrl: "node-preview-card.html",
 })
 export class NodePreviewCardComponent {

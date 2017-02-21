@@ -6,7 +6,7 @@ import { Constants } from "app/utils";
 import { SidebarManager } from "../../base/sidebar";
 
 @Component({
-    selector: "bex-file-home",
+    selector: "bl-file-home",
     templateUrl: "file-home.html",
 })
 export class FileHomeComponent implements OnInit, OnDestroy {

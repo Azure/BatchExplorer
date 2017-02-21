@@ -8,7 +8,7 @@ import { prettyBytes } from "app/utils";
 const outputFileNames = ["stdout.txt", "stderr.txt"];
 
 @Component({
-    selector: "bex-task-output",
+    selector: "bl-task-output",
     templateUrl: "task-output.html",
 })
 export class TaskOutputComponent implements OnChanges, OnDestroy {

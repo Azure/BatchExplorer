@@ -7,7 +7,7 @@ import { TaskService } from "app/services";
 import { DeleteTaskAction } from "./";
 
 @Component({
-    selector: "bex-delete-task-dialog",
+    selector: "bl-delete-task-dialog",
     templateUrl: "delete-task-dialog.html",
 })
 export class DeleteTaskDialogComponent {

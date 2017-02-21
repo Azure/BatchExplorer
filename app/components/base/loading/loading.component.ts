@@ -20,7 +20,7 @@ export enum DisplayStatus {
 }
 
 @Component({
-    selector: "bex-loading",
+    selector: "bl-loading",
     templateUrl: "loading.html",
 })
 export class LoadingComponent {

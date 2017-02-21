@@ -203,7 +203,7 @@ describe("JobCreateBasicDialogComponent ", () => {
         const job = Fixtures.job.create({ id: "job-001", poolInfo: { poolId: "pool-002" } });
         component.setValue(job);
 
-        const createForm = de.query(By.css("bex-create-form")).componentInstance as CreateFormComponent;
+        const createForm = de.query(By.css("bl-create-form")).componentInstance as CreateFormComponent;
         createForm.add();
 
         expect(jobServiceSpy.add).toHaveBeenCalledTimes(1);
@@ -225,7 +225,7 @@ describe("JobCreateBasicDialogComponent ", () => {
         const job = Fixtures.job.create({ id: "bad-job-id", poolInfo: { poolId: "pool-002" } });
         component.setValue(job);
 
-        const createForm = de.query(By.css("bex-create-form")).componentInstance as CreateFormComponent;
+        const createForm = de.query(By.css("bl-create-form")).componentInstance as CreateFormComponent;
         createForm.add();
 
         expect(createForm.error).not.toBeNull();

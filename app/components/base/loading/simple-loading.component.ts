@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
  * Loading showing a simple loading text.
  */
 @Component({
-    selector: "bex-simple-loading",
+    selector: "bl-simple-loading",
     template: `{{message}}`,
 })
 export class SimpleLoadingComponent implements OnInit {

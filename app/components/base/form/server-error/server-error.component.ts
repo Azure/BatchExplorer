@@ -9,7 +9,7 @@ interface ErrorData {
 }
 
 @Component({
-    selector: "bex-server-error",
+    selector: "bl-server-error",
     templateUrl: "server-error.html",
 })
 export class ServerErrorComponent {
@@ -17,7 +17,7 @@ export class ServerErrorComponent {
     @Input()
     public set error(error: ServerError) {
         if (error && !(error instanceof ServerError)) {
-            console.error("Error passed to bex-server-error is not a server error.", error);
+            console.error("Error passed to bl-server-error is not a server error.", error);
         }
         this._error = error;
         this.errorData = this.parseErrorData();

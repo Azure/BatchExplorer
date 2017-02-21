@@ -12,7 +12,7 @@ import { SidebarPageComponent } from "./sidebar-page";
 import { SidebarRef } from "./sidebar-ref";
 
 @Component({
-    selector: "bex-sidebar-content",
+    selector: "bl-sidebar-content",
     templateUrl: "sidebar.html",
 })
 export class SidebarContentComponent {

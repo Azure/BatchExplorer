@@ -8,7 +8,7 @@ import { ServerError } from "app/models";
 
 @Component({
     template: `
-       <bex-server-error #errorComponent [error]="error"></bex-server-error>
+       <bl-server-error #errorComponent [error]="error"></bl-server-error>
     `,
 })
 export class ServerErrorTestComponent {
@@ -40,7 +40,7 @@ describe("ServerErrorComponent", () => {
         TestBed.compileComponents();
         fixture = TestBed.createComponent(ServerErrorTestComponent);
         fixture.detectChanges();
-        serverErrorElement = fixture.debugElement.query(By.css("bex-server-error"));
+        serverErrorElement = fixture.debugElement.query(By.css("bl-server-error"));
         serverErrorComponent = serverErrorElement.componentInstance;
     });
 

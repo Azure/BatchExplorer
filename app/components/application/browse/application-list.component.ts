@@ -15,7 +15,7 @@ import { Filter } from "app/utils/filter-builder";
 import { DeleteApplicationAction } from "../action";
 
 @Component({
-    selector: "bex-application-list",
+    selector: "bl-application-list",
     templateUrl: "application-list.html",
 })
 export class ApplicationListComponent extends ListOrTableBase implements OnInit, OnDestroy {

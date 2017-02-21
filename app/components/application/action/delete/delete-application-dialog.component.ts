@@ -7,7 +7,7 @@ import { ApplicationService } from "app/services";
 import { DeleteApplicationAction } from "./";
 
 @Component({
-    selector: "bex-delete-application-dialog",
+    selector: "bl-delete-application-dialog",
     templateUrl: "delete-application-dialog.html",
 })
 export class DeleteApplicationDialogComponent {

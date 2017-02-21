@@ -18,7 +18,7 @@ const validStates = [
 ];
 
 @Component({
-    selector: "bex-task-file-list",
+    selector: "bl-task-file-list",
     templateUrl: "file-list.html",
 })
 export class TaskFileListComponent implements OnInit, OnChanges {

@@ -28,15 +28,15 @@ describe("BackgroundTaskTrackerComponent", () => {
     }));
 
     it("Should have the dropdown elements", () => {
-        const dropdownEl = fixture.debugElement.query(By.css("bex-dropdown"));
-        expect(dropdownEl).not.toBeNull("bex-dropdown should be present");
+        const dropdownEl = fixture.debugElement.query(By.css("bl-dropdown"));
+        expect(dropdownEl).not.toBeNull("bl-dropdown should be present");
 
-        const dropdownBtnEl = dropdownEl.query(By.css("[bex-dropdown-btn]"));
-        expect(dropdownBtnEl).not.toBeNull("[bex-dropdown-btn] should be present in bex-dropdown");
+        const dropdownBtnEl = dropdownEl.query(By.css("[bl-dropdown-btn]"));
+        expect(dropdownBtnEl).not.toBeNull("[bl-dropdown-btn] should be present in bl-dropdown");
     });
 
     it("dropdown button should have the right value", fakeAsync(() => {
-        const dropdownBtnEl = fixture.debugElement.query(By.css("[bex-dropdown-btn]"));
+        const dropdownBtnEl = fixture.debugElement.query(By.css("[bl-dropdown-btn]"));
 
         const noTaskMessage = "No current background tasks";
         // There is not current running task yet
@@ -55,7 +55,7 @@ describe("BackgroundTaskTrackerComponent", () => {
         fixture.detectChanges();
 
         expect(dropdownBtnEl.nativeElement.textContent).not.toContain(noTaskMessage);
-        expect(dropdownBtnEl.query(By.css("bex-background-task-tracker-item"))).not.toBeNull();
+        expect(dropdownBtnEl.query(By.css("bl-background-task-tracker-item"))).not.toBeNull();
 
         const otherTaskCountel = dropdownBtnEl.query(By.css(".other-task-count"));
         expect(otherTaskCountel).not.toBeNull();

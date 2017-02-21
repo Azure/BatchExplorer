@@ -6,7 +6,7 @@ import { ODataFields } from "app/utils/constants";
 import { Filter } from "app/utils/filter-builder";
 
 @Component({
-    selector: "bex-task-advanced-filter",
+    selector: "bl-task-advanced-filter",
     templateUrl: "task-advanced-filter.html",
 })
 export class TaskAdvancedFilterComponent {

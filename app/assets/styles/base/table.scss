@@ -2,7 +2,7 @@ $padding-first-and-last: 15px;
 $table-heading-height: 40px;
 $table-row-height: 30px;
 
-bex-table {
+bl-table {
     display: block;
     width: 100%;
     margin-bottom: 25px;
@@ -14,7 +14,7 @@ bex-table {
         display: table;
     }
 
-    bex-thead {
+    bl-thead {
         display: table-header-group;
         color: $genericGray;
 
@@ -46,8 +46,8 @@ bex-table {
         }
     }
 
-    bex-cell,
-    bex-column {
+    bl-cell,
+    bl-column {
         vertical-align: middle;
         text-align: left;
         padding: 0 5px;
@@ -65,14 +65,14 @@ bex-table {
         }
     }
 
-    bex-column {
+    bl-column {
         display: table-cell;
         font-size: 0.9em;
         font-weight: bold;
         white-space: nowrap;
     }
 
-    bex-cell {
+    bl-cell {
         display: table-cell;
         font-size: 13px;
         border-top: 1px $athensGrey solid;
@@ -88,8 +88,8 @@ bex-table {
         }
     }
 
-    bex-row:last-child {
-        bex-cell {
+    bl-row:last-child {
+        bl-cell {
             border-bottom: 1px $athensGrey solid;
         }
     }

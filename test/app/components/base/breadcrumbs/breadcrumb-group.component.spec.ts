@@ -31,7 +31,7 @@ describe("BreadcrumbGroupComponent", () => {
         });
 
         it("should display all the crumbs", () => {
-            const crumbs = fixture.debugElement.queryAll(By.css("bex-breadcrumb"));
+            const crumbs = fixture.debugElement.queryAll(By.css("bl-breadcrumb"));
             expect(crumbs.length).toBe(3);
             expect(crumbs[0].nativeElement.textContent).toContain(poolsCrumb.data.name);
             expect(crumbs[1].nativeElement.textContent).toContain(pool1Crumb.data.name);
@@ -46,7 +46,7 @@ describe("BreadcrumbGroupComponent", () => {
         });
 
         it("should only display 4 crumbs", () => {
-            const crumbs = fixture.debugElement.queryAll(By.css("bex-breadcrumb"));
+            const crumbs = fixture.debugElement.queryAll(By.css("bl-breadcrumb"));
             expect(crumbs.length).toBe(4);
             expect(crumbs[0].nativeElement.textContent).toContain(poolsCrumb.data.name);
             expect(crumbs[1].nativeElement.textContent).toContain(pool1PropertiesCrumb.data.name);
@@ -63,7 +63,7 @@ describe("BreadcrumbGroupComponent", () => {
             const expandBtn = fixture.debugElement.query(By.css(".expand"));
             click(expandBtn);
             fixture.detectChanges();
-            const crumbs = fixture.debugElement.queryAll(By.css("bex-breadcrumb"));
+            const crumbs = fixture.debugElement.queryAll(By.css("bl-breadcrumb"));
             expect(crumbs.length).toBe(5);
 
             expect(crumbs[0].nativeElement.textContent).toContain(poolsCrumb.data.name);

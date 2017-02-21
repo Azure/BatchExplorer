@@ -1,7 +1,7 @@
 import { Component, ElementRef, EventEmitter, HostBinding, HostListener, Output } from "@angular/core";
 
 @Component({
-    selector: "bex-focus-section",
+    selector: "bl-focus-section",
     template: `
         <ng-content></ng-content>
     `,

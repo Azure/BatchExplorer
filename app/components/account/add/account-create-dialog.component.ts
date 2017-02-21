@@ -6,7 +6,7 @@ import { AccountService } from "app/services";
 import { SidebarRef } from "../../base/sidebar";
 
 @Component({
-    selector: "bex-account-create-dialog",
+    selector: "bl-account-create-dialog",
     templateUrl: "account-create-dialog.html",
 })
 export default class AccountCreateDialogComponent {

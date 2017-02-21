@@ -3,7 +3,7 @@ import { Component, Input, ViewContainerRef } from "@angular/core";
 import { ResourceFile, Task } from "app/models";
 
 @Component({
-    selector: "bex-task-resource-files",
+    selector: "bl-task-resource-files",
     templateUrl: "task-resource-files.html",
 })
 

@@ -3,7 +3,7 @@ import { Component, Input } from "@angular/core";
 import { TaskState } from "app/models";
 
 @Component({
-    selector: "bex-task-preview",
+    selector: "bl-task-preview",
     templateUrl: "task-preview.html",
 })
 

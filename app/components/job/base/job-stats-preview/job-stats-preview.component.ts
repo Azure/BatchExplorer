@@ -3,7 +3,7 @@ import { Component, Input } from "@angular/core";
 import { Job } from "app/models";
 
 @Component({
-    selector: "bex-job-stats-preview",
+    selector: "bl-job-stats-preview",
     templateUrl: "job-stats-preview.html",
 })
 export class JobStatsPreviewComponent {

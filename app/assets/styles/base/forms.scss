@@ -2,7 +2,7 @@
 @import "../theme/variables";
 @import "../theme/mixins";
 
-.required-alert, bex-error {
+.required-alert, bl-error {
     color: $validation-error-color;
 }
 
@@ -182,7 +182,7 @@ fieldset {
     }
 }
 
-bex-create-form {
+bl-create-form {
     > .content {
         position: relative;
 

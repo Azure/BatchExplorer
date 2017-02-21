@@ -10,7 +10,7 @@ import {  Property } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
 
 @Component({
-    selector: "bex-account-fav-list",
+    selector: "bl-account-fav-list",
     templateUrl: "account-fav-list.html",
 })
 export class AccountFavListComponent {

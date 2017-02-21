@@ -14,7 +14,7 @@ import { ApplicationCreateDialogComponent, ApplicationEditDialogComponent,
 } from "../action";
 
 @Component({
-    selector: "bex-application-details",
+    selector: "bl-application-details",
     templateUrl: "application-details.html",
 })
 export class ApplicationDetailsComponent implements OnInit, OnDestroy {

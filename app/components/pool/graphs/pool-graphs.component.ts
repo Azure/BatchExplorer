@@ -11,7 +11,7 @@ import { StateCounter } from "./state-counter";
 
 const refreshRate = 5000;
 @Component({
-    selector: "bex-pool-graphs",
+    selector: "bl-pool-graphs",
     templateUrl: "pool-graphs.html",
 })
 export class PoolGraphsComponent implements OnChanges, OnDestroy {

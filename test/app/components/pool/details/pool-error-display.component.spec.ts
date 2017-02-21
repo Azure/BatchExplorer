@@ -9,7 +9,7 @@ import { AccountService, PoolService } from "app/services";
 import * as Fixtures from "test/fixture";
 
 @Component({
-    template: `<bex-pool-error-display [pool]="pool"></bex-pool-error-display>`,
+    template: `<bl-pool-error-display [pool]="pool"></bl-pool-error-display>`,
 })
 class TestPoolErrorDisplayComponent {
     public pool: Pool;
@@ -35,13 +35,13 @@ describe("PoolErrorDisplayComponent", () => {
         });
         fixture = TestBed.createComponent(TestPoolErrorDisplayComponent);
         testComponent = fixture.componentInstance;
-        component = fixture.debugElement.query(By.css("bex-pool-error-display")).componentInstance;
+        component = fixture.debugElement.query(By.css("bl-pool-error-display")).componentInstance;
         fixture.detectChanges();
     });
 
     describe("when there is no error", () => {
         it("should not show anything", () => {
-            expect(fixture.debugElement.query(By.css("bex-banner"))).toBeNull();
+            expect(fixture.debugElement.query(By.css("bl-banner"))).toBeNull();
         });
     });
 
@@ -64,18 +64,18 @@ describe("PoolErrorDisplayComponent", () => {
             expect(component.hasQuotaReachedError).toBe(true);
         });
 
-        it("should show 1 bex banner", () => {
-            expect(fixture.debugElement.queryAll(By.css("bex-banner")).length).toBe(1);
+        it("should show 1 bl banner", () => {
+            expect(fixture.debugElement.queryAll(By.css("bl-banner")).length).toBe(1);
         });
 
         it("Should show the code and message", () => {
-            const banner = fixture.debugElement.query(By.css("bex-banner"));
+            const banner = fixture.debugElement.query(By.css("bl-banner"));
             expect(banner.nativeElement.textContent).toContain(ResizeErrorCode.accountCoreQuotaReached);
             expect(banner.nativeElement.textContent).toContain("Reached account core quota");
         });
 
         it("should propose increase quota as a first fix", () => {
-            const banner = fixture.debugElement.query(By.css("bex-banner")).componentInstance;
+            const banner = fixture.debugElement.query(By.css("bl-banner")).componentInstance;
             expect(banner.fixMessage).toContain("Increase quota");
         });
     });
@@ -99,18 +99,18 @@ describe("PoolErrorDisplayComponent", () => {
             expect(component.hasQuotaReachedError).toBe(false);
         });
 
-        it("should show 1 bex banner", () => {
-            expect(fixture.debugElement.queryAll(By.css("bex-banner")).length).toBe(1);
+        it("should show 1 bl banner", () => {
+            expect(fixture.debugElement.queryAll(By.css("bl-banner")).length).toBe(1);
         });
 
         it("Should show the code and message", () => {
-            const banner = fixture.debugElement.query(By.css("bex-banner"));
+            const banner = fixture.debugElement.query(By.css("bl-banner"));
             expect(banner.nativeElement.textContent).toContain(ResizeErrorCode.resizeStopped);
             expect(banner.nativeElement.textContent).toContain("The resize was stopped");
         });
 
         it("should to rescale", () => {
-            const banner = fixture.debugElement.query(By.css("bex-banner")).componentInstance;
+            const banner = fixture.debugElement.query(By.css("bl-banner")).componentInstance;
             expect(banner.fixMessage).toContain("Rescale");
         });
     });

@@ -8,7 +8,7 @@ import { AbstractListItemBase } from "../abstract-list";
 import { QuickListComponent } from "./quick-list.component";
 
 @Component({
-    selector: "bex-quick-list-item",
+    selector: "bl-quick-list-item",
     templateUrl: "quick-list-item.html",
 })
 export class QuickListItemComponent extends AbstractListItemBase implements OnInit {

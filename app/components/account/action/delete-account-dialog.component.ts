@@ -4,7 +4,7 @@ import { MdDialogRef } from "@angular/material";
 import { AccountService } from "app/services";
 
 @Component({
-    selector: "bex-delete-account-dialog",
+    selector: "bl-delete-account-dialog",
     templateUrl: "delete-account-dialog.html",
 })
 export class DeleteAccountDialogComponent {
