@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
+import { File } from "app/models";
 import { Constants } from "app/utils";
 import BatchClient from "../api/batch/batch-client";
-import { File } from "../models";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache } from "./core";
 import { ServiceBase } from "./service-base";
 

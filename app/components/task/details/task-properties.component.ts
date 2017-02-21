@@ -1,7 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
-import { ExitOptions, Job, JobAction, Task, TaskFailureAction } from "app/models";
+import { ExitOptions, Job, Task } from "app/models";
 import { TaskDecorator } from "app/models/decorators";
+import { JobAction, TaskFailureAction } from "app/models/job-action";
 
 @Component({
     selector: "bl-task-properties",

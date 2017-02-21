@@ -1,6 +1,5 @@
-
 import { Application } from "app/models";
-import { DecoratorBase } from "../../utils/decorators";
+import { DecoratorBase } from "app/utils/decorators";
 
 export class ApplicationDecorator extends DecoratorBase<Application> {
     public id: string;
