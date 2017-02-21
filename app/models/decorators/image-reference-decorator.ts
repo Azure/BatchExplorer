@@ -1,5 +1,5 @@
-import { DecoratorBase } from "../../utils/decorators";
-import { ImageReference } from "../imageReference";
+import { ImageReference } from "app/models";
+import { DecoratorBase } from "app/utils/decorators";
 
 export class ImageReferenceDecorator extends DecoratorBase<ImageReference> {
     public publisher: string;

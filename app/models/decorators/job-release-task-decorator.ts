@@ -1,5 +1,5 @@
 import { JobReleaseTask } from "app/models";
-import { DecoratorBase } from "../../utils/decorators";
+import { DecoratorBase } from "app/utils/decorators";
 
 export class JobReleaseTaskDecorator extends DecoratorBase<JobReleaseTask> {
     public commandLine: string;

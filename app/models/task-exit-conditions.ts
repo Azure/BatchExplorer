@@ -1,7 +1,7 @@
 import { List, Record } from "immutable";
 
 import { ObjectUtils } from "app/utils";
-import { JobAction } from "./jobAction";
+import { JobAction } from "./job-action";
 
 // tslint:disable:variable-name
 const TaskExitConditionsRecord = Record({

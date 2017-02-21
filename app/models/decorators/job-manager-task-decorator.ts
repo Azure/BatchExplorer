@@ -1,5 +1,5 @@
 import { JobManagerTask } from "app/models";
-import { DecoratorBase } from "../../utils/decorators";
+import { DecoratorBase } from "app/utils/decorators";
 import { TaskConstraintsDecorator } from "./task-constraints-decorator";
 
 export class JobManagerTaskDecorator extends DecoratorBase<JobManagerTask> {

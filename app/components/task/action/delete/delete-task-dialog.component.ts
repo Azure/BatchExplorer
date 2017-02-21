@@ -3,8 +3,8 @@ import { MdDialogRef } from "@angular/material";
 import { autobind } from "core-decorators";
 
 import { BackgroundTaskManager } from "app/components/base/background-task";
+import { DeleteTaskAction } from "app/components/task/action";
 import { TaskService } from "app/services";
-import { DeleteTaskAction } from "./";
 
 @Component({
     selector: "bex-delete-task-dialog",

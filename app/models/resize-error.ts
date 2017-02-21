@@ -9,10 +9,9 @@ const ResizeErrorRecord = Record({
 
 export class ResizeError extends ResizeErrorRecord {
     public code: ResizeErrorCode;
-
     public message: string;
 
-    // Equivalent to the values in the API as values is already used in immutable
+    // equivalent to the values in the API as values is already used in immutable
     public vals: List<any>;
 
     constructor(data: any = {}) {

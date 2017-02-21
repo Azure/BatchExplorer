@@ -1,5 +1,5 @@
-import { DecoratorBase } from "../../utils/decorators";
-import { ComputeNodeInformation } from "../computeNodeInformation";
+import { ComputeNodeInformation } from "app/models";
+import { DecoratorBase } from "app/utils/decorators";
 
 export class ComputeNodeInfoDecorator extends DecoratorBase<ComputeNodeInformation> {
     public affinityId: string;

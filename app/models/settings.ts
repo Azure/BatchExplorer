@@ -1,4 +1,3 @@
-
 export interface Settings {
     homePage: "account" | "home" | "job";
 }
