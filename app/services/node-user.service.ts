@@ -2,8 +2,8 @@ import { Injectable } from "@angular/core";
 import BatchClient from "app/api/batch/batch-client";
 import { Observable } from "rxjs";
 
-import { log } from "app/utils";
 import { ServerError } from "app/models";
+import { log } from "app/utils";
 import { ServiceBase } from "./service-base";
 
 interface UpdateNodeUserAttributes {
