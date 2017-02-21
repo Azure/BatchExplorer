@@ -1,8 +1,8 @@
 import { Task, TaskState } from "app/models";
-import { ComputeNodeInfoDecorator } from "app/models/decorators/compute-node-info-decorator";
-import { TaskConstraintsDecorator } from "app/models/decorators/task-constraints-decorator";
-import { TaskExecutionInfoDecorator } from "app/models/decorators/task-execution-info-decorator";
 import { DecoratorBase } from "app/utils/decorators";
+import { ComputeNodeInfoDecorator } from "./compute-node-info-decorator";
+import { TaskConstraintsDecorator } from "./task-constraints-decorator";
+import { TaskExecutionInfoDecorator } from "./task-execution-info-decorator";
 
 export class TaskDecorator extends DecoratorBase<Task> {
     public displayName: string;

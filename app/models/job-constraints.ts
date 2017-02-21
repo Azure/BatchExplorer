@@ -1,4 +1,4 @@
-import { Constraints } from "app/models/constraints";
+import { Constraints } from "./constraints";
 
 /**
  * Specifies the execution constraints for jobs created on a schedule.

@@ -1,7 +1,7 @@
 import { Record } from "immutable";
 
-import { FileProperties, FilePropertiesAttributes } from "app/models/file-properties";
 import { Partial } from "app/utils";
+import { FileProperties, FilePropertiesAttributes } from "./file-properties";
 
 export interface FileAttributes {
     name: string;
