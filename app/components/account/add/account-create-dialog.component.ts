@@ -25,7 +25,7 @@ export default class AccountCreateDialogComponent {
         // const account  = Object.assign({}, this.account);
         // this.accountService.add(account).subscribe(
         //     (val) => { this.resetForm(); },
-        //     (error) => { console.error("storeAccount() :: error: ", error); },
+        //     (error) => { log.error("storeAccount() :: error: ", error); },
         //     () => {
         //         this.isSaving = false;
         //         this.sidebarRef.destroy();

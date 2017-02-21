@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { ActivatedRoute, NavigationEnd, PRIMARY_OUTLET, Router } from "@angular/router";
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { Constants } from "app/utils";
+import { Constants, log } from "app/utils";
 import { Breadcrumb, RouteComponent } from "./breadcrumb-models";
 
 function breadcrumbMethodMissingMessage(componentName) {
@@ -112,7 +112,7 @@ export class BreadcrumbService {
         const component: RouteComponent = route.snapshot.component as any;
         const {params, queryParams} = route.snapshot;
         if (!component.breadcrumb) {
-            console.error(breadcrumbMethodMissingMessage(component.name));
+            log.error(breadcrumbMethodMissingMessage(component.name));
             return null;
         }
         const data = component.breadcrumb(params, queryParams);
@@ -157,7 +157,7 @@ export class BreadcrumbService {
                 const crumbs = JSON.parse(breadCrumbStr);
                 this._crumbs.next(crumbs);
             } catch (e) {
-                console.warn("Invalid error in breadcrumbs");
+                log.warn("Invalid error in breadcrumbs");
                 sessionStorage.removeItem(Constants.sessionStorageKey.breadcrumb);
             }
         }

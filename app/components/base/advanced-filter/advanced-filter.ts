@@ -2,6 +2,7 @@ import { FormGroup } from "@angular/forms";
 import { Map } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
+import { log } from "app/utils";
 import * as FilterBuilder from "app/utils/filter-builder";
 import { AdvancedFilterControlBase } from "./control-base";
 
@@ -40,7 +41,7 @@ export class AdvancedFilter {
         for (let key of Object.keys(data)) {
             const control = controls[key];
             if (!control) {
-                console.error(`Error advanced filter has unknown output key '${key}'`, data, controls);
+                log.error(`Error advanced filter has unknown output key '${key}'`, [data, controls]);
             }
 
             filters.push(control.buildFilter(data[key]));

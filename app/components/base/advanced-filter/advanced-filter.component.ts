@@ -2,6 +2,7 @@ import { Component, Input, OnChanges } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
 
+import { log } from "app/utils";
 import { AdvancedFilter } from "./advanced-filter";
 
 @Component({
@@ -32,7 +33,7 @@ export class AdvancedFilterComponent implements OnChanges {
                 try {
                     this._urlFilter = JSON.parse(params.filter);
                 } catch (e) {
-                    console.warn("Invalid filter", params.filter);
+                    log.warn("Invalid filter", params.filter);
                 }
             }
         });

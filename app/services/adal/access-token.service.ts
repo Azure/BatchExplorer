@@ -1,6 +1,7 @@
 import { Headers, Http, RequestOptions } from "@angular/http";
 import { Observable } from "rxjs";
 
+import { log } from "app/utils";
 import { AccessToken } from "./access-token";
 import { AdalConfig } from "./adal-config";
 import { baseUrl, objectToParams } from "./adal-constants";
@@ -26,7 +27,7 @@ export class AccessTokenService {
 
         obs.subscribe({
             error: (error) => {
-                console.error("Error redeem the auth code for access token", error);
+                log.error("Error redeem the auth code for access token", error);
             },
         });
 
@@ -42,7 +43,7 @@ export class AccessTokenService {
 
         obs.subscribe({
             error: (error) => {
-                console.error("Error refresh access token", error);
+                log.error("Error refresh access token", error);
             },
         });
         return obs;
