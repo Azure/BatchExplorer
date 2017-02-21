@@ -1,6 +1,7 @@
 import { Component, Input } from "@angular/core";
 
 import { ServerError } from "app/models";
+import { log } from "app/utils";
 
 interface ErrorData {
     message: string;
@@ -17,7 +18,7 @@ export class ServerErrorComponent {
     @Input()
     public set error(error: ServerError) {
         if (error && !(error instanceof ServerError)) {
-            console.error("Error passed to bex-server-error is not a server error.", error);
+            log.error("Error passed to bex-server-error is not a server error.", error);
         }
         this._error = error;
         this.errorData = this.parseErrorData();

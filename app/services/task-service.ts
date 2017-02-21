@@ -3,6 +3,7 @@ import { List } from "immutable";
 import { Observable, Subject } from "rxjs";
 
 import { SubtaskInformation, Task } from "app/models";
+import { log } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 import BatchClient from "../api/batch/batch-client";
 import {
@@ -127,7 +128,7 @@ export class TaskService extends ServiceBase {
      */
     public delete(jobId: string, taskId: string, options: any = {}): Observable<{}> {
         return this.callBatchClient(BatchClient.task.delete(jobId, taskId, options), (error) => {
-            console.error(`Error deleting task: ${taskId}, for job: ${jobId}`, error);
+            log.error(`Error deleting task: ${taskId}, for job: ${jobId}`, error);
         });
     }
 
@@ -141,7 +142,7 @@ export class TaskService extends ServiceBase {
      */
     public reactivate(jobId: string, taskId: string, options: any = {}): Observable<{}> {
         return this.callBatchClient(BatchClient.task.reactivate(jobId, taskId, options), (error) => {
-            console.error(`Error reactivating task: ${taskId}, for job: ${jobId}`, error);
+            log.error(`Error reactivating task: ${taskId}, for job: ${jobId}`, error);
         });
     }
 }

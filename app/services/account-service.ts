@@ -4,6 +4,7 @@ import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { AccountKeys, AccountResource, NodeAgentSku } from "app/models";
+import { log } from "app/utils";
 import BatchClient from "../api/batch/batch-client";
 import { AzureHttpService } from "./azure-http.service";
 import { SubscriptionService } from "./subscription.service";
@@ -185,7 +186,7 @@ export class AccountService {
             this._currentAccountValid.next(AccountStatus.Valid);
         }).catch((error) => {
             const {account: {name, properties}} = this._currentAccount.getValue();
-            console.error(`Could not connect to account '${name}' at '${properties.accountEndpoint}'`, error);
+            log.error(`Could not connect to account '${name}' at '${properties.accountEndpoint}'`, error);
             this._currentAccountValid.next(AccountStatus.Invalid);
         });
     }
@@ -206,7 +207,7 @@ export class AccountService {
         let sub = new AsyncSubject();
         storage.get(this._accountJsonFileName, (error, data) => {
             if (error) {
-                console.error("Error retrieving accounts");
+                log.error("Error retrieving accounts");
                 sub.error(error);
             }
 
@@ -228,7 +229,7 @@ export class AccountService {
         accounts = accounts === null ? this._accountFavorites.getValue() : accounts;
         storage.set(this._accountJsonFileName, accounts.toJS(), (error) => {
             if (error) {
-                console.error("Error saving accounts", error);
+                log.error("Error saving accounts", error);
                 sub.error(error);
             }
 
