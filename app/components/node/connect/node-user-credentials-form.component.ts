@@ -20,6 +20,7 @@ export class NodeUserCredentialsFormComponent {
         this.form = formBuilder.group({
             username: [""],
             password: [""],
+            isAdmin: [true],
         });
     }
 
