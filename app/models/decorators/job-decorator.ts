@@ -1,5 +1,5 @@
 import { Job, JobState } from "app/models";
-import { DecoratorBase } from "../../utils/decorators";
+import { DecoratorBase } from "app/utils/decorators";
 import { JobConstraintsDecorator } from "./job-constraints-decorator";
 import { JobExecutionInfoDecorator } from "./job-execution-info-decorator";
 import { JobManagerTaskDecorator } from "./job-manager-task-decorator";

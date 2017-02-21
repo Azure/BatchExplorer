@@ -4,7 +4,7 @@ import { remote } from "electron";
 import * as moment from "moment";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import { ADUser } from "app/models";
+import { AADUser } from "app/models";
 import { Constants } from "app/utils";
 import { AccessToken } from "./access-token";
 import { AccessTokenService } from "./access-token.service";
@@ -27,7 +27,7 @@ export class AdalService {
      */
     public static refreshMargin = 1000 * 120;
 
-    public currentUser: Observable<ADUser>;
+    public currentUser: Observable<AADUser>;
 
     private _config: AdalConfig;
     private _authorizeUser: UserAuthorization;
@@ -37,7 +37,7 @@ export class AdalService {
 
     private _currentAccessToken: AccessToken = null;
 
-    private _currentUser = new BehaviorSubject<ADUser>(null);
+    private _currentUser = new BehaviorSubject<AADUser>(null);
 
     constructor(private http: Http) {
         this._userDecoder = new UserDecoder();

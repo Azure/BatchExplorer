@@ -1,5 +1,5 @@
-import { DecoratorBase } from "../../utils/decorators";
-import { CloudServiceConfiguration } from "../cloudServiceConfiguration";
+import { CloudServiceConfiguration } from "app/models";
+import { DecoratorBase } from "app/utils/decorators";
 
 export class CloudServiceConfigurationDecorator extends DecoratorBase<CloudServiceConfiguration> {
     public osFamily: string;

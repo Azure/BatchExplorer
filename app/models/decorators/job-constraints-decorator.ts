@@ -1,5 +1,5 @@
-import { DecoratorBase } from "../../utils/decorators";
-import { JobConstraints } from "../jobConstraints";
+import { JobConstraints } from "app/models";
+import { DecoratorBase } from "app/utils/decorators";
 
 export class JobConstraintsDecorator extends DecoratorBase<JobConstraints> {
     public maxWallClockTime: string;

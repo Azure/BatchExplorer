@@ -1,5 +1,5 @@
-import { DecoratorBase } from "../../utils/decorators";
-import { TaskExecutionInformation } from "../taskExecutionInformation";
+import { TaskExecutionInformation } from "app/models";
+import { DecoratorBase } from "app/utils/decorators";
 import { SchedulingErrorDecorator } from "./scheduling-error-decorator";
 
 export class TaskExecutionInfoDecorator extends DecoratorBase<TaskExecutionInformation> {

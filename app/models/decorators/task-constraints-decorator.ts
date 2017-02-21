@@ -1,5 +1,5 @@
-import { DecoratorBase } from "../../utils/decorators";
-import { TaskConstraints } from "../taskConstraints";
+import { TaskConstraints } from "app/models";
+import { DecoratorBase } from "app/utils/decorators";
 
 export class TaskConstraintsDecorator extends DecoratorBase<TaskConstraints> {
     public maxWallClockTime: string;

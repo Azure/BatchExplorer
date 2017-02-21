@@ -2,9 +2,9 @@ import { Component } from "@angular/core";
 import { MdDialogRef } from "@angular/material";
 import { autobind } from "core-decorators";
 
+import { DeleteApplicationAction } from "app/components/application/action";
 import { BackgroundTaskManager } from "app/components/base/background-task";
 import { ApplicationService } from "app/services";
-import { DeleteApplicationAction } from "./";
 
 @Component({
     selector: "bex-delete-application-dialog",

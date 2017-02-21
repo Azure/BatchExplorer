@@ -1,5 +1,5 @@
-import { DecoratorBase } from "../../utils/decorators";
-import { VirtualMachineConfiguration } from "../virtualMachineConfiguration";
+import { VirtualMachineConfiguration } from "app/models";
+import { DecoratorBase } from "app/utils/decorators";
 import { ImageReferenceDecorator } from "./image-reference-decorator";
 import { WindowsConfigurationDecorator } from "./windows-configuration-decorator";
 

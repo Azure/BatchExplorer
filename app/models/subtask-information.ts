@@ -1,6 +1,6 @@
 import { Record } from "immutable";
 
-import { ComputeNodeInformation }  from "./computeNodeInformation";
+import { ComputeNodeInformation }  from "./compute-node-information";
 import { SchedulingError }  from "./scheduling-error";
 import { TaskState }  from "./task";
 
