@@ -1,6 +1,6 @@
 import { JobExecutionInformation } from "app/models";
-import { SchedulingErrorDecorator } from "app/models/decorators/scheduling-error-decorator";
 import { DecoratorBase } from "app/utils/decorators";
+import { SchedulingErrorDecorator } from "./scheduling-error-decorator";
 
 export class JobExecutionInfoDecorator extends DecoratorBase<JobExecutionInformation> {
     public startTime: string;

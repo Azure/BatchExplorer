@@ -1,8 +1,8 @@
 import { Record } from "immutable";
 
-import { ComputeNodeInformation }  from "app/models/compute-node-information";
-import { SchedulingError }  from "app/models/scheduling-error";
-import { TaskState }  from "app/models/task";
+import { ComputeNodeInformation }  from "./compute-node-information";
+import { SchedulingError }  from "./scheduling-error";
+import { TaskState }  from "./task";
 
 // tslint:disable:variable-name
 const SubtaskRecord = Record({
