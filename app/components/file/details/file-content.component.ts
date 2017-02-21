@@ -172,7 +172,7 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
             return;
         }
 
-        log.error("[FileContent.component] Error is", { status: e.status, error: e });
+        log.error(`[FileContent.component] Error is ${e.status}`, e);
     }
 
     private _scrollToBottom() {
