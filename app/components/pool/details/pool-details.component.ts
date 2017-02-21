@@ -135,6 +135,16 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         return "linux";
     }
 
+    public get nodesTooltipMessage() {
+        if (this.pool.resizeError) {
+            return "There was a resize error";
+        } else if (this.pool.currentDedicated !== this.pool.targetDedicated) {
+            return `Pool is resizing from ${this.pool.currentDedicated} to ${this.pool.targetDedicated} nodes`;
+        } else {
+            return `Pool has ${this.pool.currentDedicated} nodes`;
+        }
+    }
+
     public get lastResize(): string {
         return Moment(this.pool.allocationStateTransitionTime).fromNow();
     }

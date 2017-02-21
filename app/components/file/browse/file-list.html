@@ -1,4 +1,5 @@
 <div *ngIf="!nodeNotFound">
+    <bex-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bex-server-error>
     <bex-file-list-display [files]="data.items | async" [status]="status | async" [quickList]="quickList" [baseUrl]="baseUrl"
         [filter]="filter"></bex-file-list-display>
     <bex-list-loading [manualLoading]="manualLoading" [data]="data" [status]="status | async"></bex-list-loading>

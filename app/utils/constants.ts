@@ -49,9 +49,13 @@ export const forms = {
         maxLength: {
             id: 64,
             displayName: 1024,
+            applicationName: 64,
+            version: 64,
         },
         regex: {
-            id: "^[\\w\\_-]+$",
+            id: /^[\w\_-]+$/i,
+            appVersion: /^[a-zA-Z0-9_-][a-zA-Z0-9_.-]*$/i,
+            appFilename: /\.zip$/i,
         },
         range: {
             retry: { min: -1, max: 100 },
@@ -85,7 +89,8 @@ export const ApiVersion = {
 };
 
 export const ExternalLinks = {
-    supportRequest: "https://ms.portal.azure.com/#blade/Microsoft_Azure_Support/HelpAndSupportBlade/newsupportrequest",
+    supportRequest: "https://portal.azure.com/#blade/Microsoft_Azure_Support/HelpAndSupportBlade/newsupportrequest",
+    setupStorageAccount: "https://portal.azure.com/#resource{0}/storageAccount",
 };
 
 export const ODataFields = {

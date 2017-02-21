@@ -117,7 +117,17 @@ fieldset {
             width: 100%;
             margin: 10px 0;
 
+            &.pad-top {
+                margin-top: 20px;
+            }
+
             // pretty sure most of what is in here can be set in the HTML with: dividerColor="<color>"
+
+            input[type=file] {
+                width: 100%;
+                margin-top: 5px;
+                margin-bottom: 5px;
+            }
 
             md-input-container {
                 width: 100%;
@@ -151,6 +161,15 @@ fieldset {
                 margin-top: 5px;
                 width: 33%;
             }
+
+            .input-summary {
+                margin-top: 15px;
+                padding-bottom: 5px;
+
+                p {
+                    margin-bottom: 10px;
+                }
+            }
         }
     }
 }
@@ -178,60 +197,6 @@ bex-create-form {
         }
     }
 
-}
-
-.error-banner {
-    background: $red;
-    color: $whiteSmoke;
-    border-radius: 4px;
-
-    > .content {
-        display: flex;
-        position: relative;
-
-        h4, p, table {
-            color: $whiteSmoke;
-            font-size: 1em;
-        }
-
-        h4 {
-            font-weight: 500;
-        }
-
-        .main-info {
-            flex: 1;
-            padding: 10px;
-        }
-    }
-
-    .troubleshoot-btn {
-        font-size: 1.5em;
-        cursor: pointer;
-        z-index: 10;
-
-        i {
-            border: 1px solid $red-dark;
-            border-radius: 3px;
-            padding: 3px;
-            margin: 10px;
-            &:hover {
-                background-color: $red-dark;
-            }
-        }
-    }
-
-    .troubleshoot-info {
-        padding: 10px;
-        border-top: 1px solid $red-dark;
-
-        table {
-            font-size: 1em;
-            color: $whiteSmoke;
-        }
-        td {
-            padding-right: 10px;
-        }
-    }
 }
 
 .form-element md-checkbox {

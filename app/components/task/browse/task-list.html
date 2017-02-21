@@ -1,2 +1,3 @@
+<bex-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bex-server-error>
 <bex-task-list-display [jobId]="jobId" [tasks]="data.items | async" [status]="status | async" [quickList]="quickList"></bex-task-list-display>
 <bex-list-loading [manualLoading]="manualLoading" [data]="data"></bex-list-loading>

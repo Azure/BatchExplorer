@@ -2,6 +2,7 @@ import { Type } from "@angular/core";
 import { List, OrderedSet } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
+import { LoadingStatus } from "app/components/base/loading";
 import { CachedKeyList } from "./query-cache";
 import { RxEntityProxy } from "./rx-entity-proxy";
 import { RxProxyBase, RxProxyBaseConfig } from "./rx-proxy-base";
@@ -23,7 +24,6 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         this._options = config.initialOptions || {};
         this.params = config.initialParams;
         this._hasMore.next(true);
-        this.status = this._status.asObservable();
         this.hasMore = this._hasMore.asObservable();
 
         this.items = this._itemKeys.map((keys) => {
@@ -57,18 +57,12 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
      *                  instead of loading from cache
      */
     public fetchNext(forceNew = false): Observable<any> {
-        if (!this._hasMore.getValue()) {
+        if (!this._hasMore.value) {
             return Observable.of({ data: [] });
         }
 
-        if (this._itemKeys.getValue().size === 0 && !forceNew) {
-            const cachedList = this.cache.queryCache.getKeys(this._options.filter);
-            if (cachedList) {
-                this.getQueryCacheData(cachedList);
-                this._itemKeys.next(cachedList.keys);
-                this._lastRequest = { params: this._params, options: this._options };
-                return Observable.from(cachedList.keys.toJS());
-            }
+        if (this._tryLoadFromQueryCache(forceNew)) {
+            return Observable.of({ data: [] });
         }
 
         return this.fetchData({
@@ -82,13 +76,18 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
                 if (currentKeys.size === 0) {
                     this.cache.queryCache.cacheQuery(this._options.filter, keys, this.putQueryCacheData());
                 }
+
                 const last = this._lastRequest;
                 if (last && (last.params !== this._params || last.options !== this._options)) {
                     this._itemKeys.next(keys);
                 } else {
                     this._itemKeys.next(OrderedSet<string>(currentKeys.concat(keys)));
                 }
+
                 this._lastRequest = { params: this._params, options: this._options };
+            },
+            error: () => {
+                this._hasMore.next(false);
             },
         });
     }
@@ -134,6 +133,8 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
 
     /**
      * Refresh the list, clearExisiting data will clear the data before doing the request
+     * @param clearExistingData If set to false it will only clear the data when the new date comes in.
+     *  This means that during the loading time the items are still the old ones.
      */
     public refresh(clearExistingData = true): Observable<any> {
         this.cache.queryCache.clearCache();
@@ -141,6 +142,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         return this.fetchNext(true);
     }
 
+    // Method to implement in the child class
     protected abstract handleChanges(params: TParams, options: {});
     protected abstract fetchNextItems(): Observable<any>;
     protected abstract processResponse(response: any): any[];
@@ -148,4 +150,24 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
     protected abstract queryCacheKey(): string;
     protected abstract putQueryCacheData(): any;
     protected abstract getQueryCacheData(queryCache: CachedKeyList): any;
+
+    /**
+     * This will try to load keys from the query cache
+     * This succeed only if there is no item currently loaded, we don't want new data and there is cached data.
+     */
+    private _tryLoadFromQueryCache(forceNew: boolean): boolean {
+        if (this._itemKeys.value.size !== 0 || forceNew) {
+            return false;
+        }
+        const cachedList = this.cache.queryCache.getKeys(this._options.filter);
+        if (!cachedList) {
+            return false;
+        }
+        this.getQueryCacheData(cachedList);
+        this._itemKeys.next(cachedList.keys);
+        this._lastRequest = { params: this._params, options: this._options };
+        this._hasMore.next(this.hasMoreItems());
+        this._status.next(LoadingStatus.Ready);
+        return true;
+    }
 }

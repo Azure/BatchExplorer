@@ -8,11 +8,12 @@
 <hr />
 <div class="context-button-bar">
     <button *ngIf="showExpandButton" md-mini-fab color="primary" [routerLink]="baseLink" title="{{expandButtonHoverText}}">
-        <i class="fa fa-expand"></i>
+        <i class="fa fa-expand spin-hover"></i>
     </button>
     <bex-refresh-btn *ngIf="showRefreshButton" [refresh]="refresh" title="{{refreshButtonHoverText}}"></bex-refresh-btn>
-    <button *ngIf="showAddButton" md-mini-fab color="primary" title="{{addButtonHoverText}}">
-        <i class="fa fa-plus"></i>
+    <button *ngIf="showAddButton" (click)="onAdd($event)" md-mini-fab color="primary" title="{{addButtonHoverText}}">
+        <i class="fa fa-plus spin-hover"></i>
     </button>
+    <ng-content select="[bex-list-buttons]"></ng-content>
 </div>
 <ng-content></ng-content>

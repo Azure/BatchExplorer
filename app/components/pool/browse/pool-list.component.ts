@@ -21,6 +21,7 @@ import { DeletePoolTask } from "../action/delete";
     templateUrl: "./pool-list.html",
 })
 export class PoolListComponent extends ListOrTableBase implements OnInit, OnDestroy {
+    public LoadingStatus = LoadingStatus;
     public status: Observable<LoadingStatus>;
     public data: RxListProxy<{}, Pool>;
 

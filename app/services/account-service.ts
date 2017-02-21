@@ -1,4 +1,4 @@
-import { Injectable, NgZone } from "@angular/core";
+import { ApplicationRef, Injectable, NgZone } from "@angular/core";
 import * as storage from "electron-json-storage";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
@@ -37,18 +37,19 @@ export interface SelectedAccount {
 @Injectable()
 export class AccountService {
     public accountLoaded: Observable<boolean>;
+    public currentAccountId: Observable<string>;
 
-    private accountJsonFileName: string = "account-favorites";
-
+    private _accountJsonFileName: string = "account-favorites";
     private _accountFavorites: BehaviorSubject<List<AccountResource>> = new BehaviorSubject(List([]));
     private _currentAccount: BehaviorSubject<SelectedAccount> = new BehaviorSubject(null);
     private _currentAccountValid: BehaviorSubject<AccountStatus> = new BehaviorSubject(AccountStatus.Invalid);
     private _accountLoaded = new BehaviorSubject<boolean>(false);
     private _accountCache = new DataCache<AccountResource>();
-
     private _cache = new DataCache<any>();
+    private _currentAccountId = new BehaviorSubject<string>(null);
 
     constructor(
+        private applicationRef: ApplicationRef,
         private zone: NgZone,
         private azure: AzureHttpService,
         private subscriptionService: SubscriptionService) {
@@ -66,10 +67,13 @@ export class AccountService {
                     url: "https://" + account.properties.accountEndpoint,
                 });
                 this.validateCurrentAccount();
+                this.applicationRef.tick();
             } else {
                 this._currentAccountValid.next(AccountStatus.Invalid);
             }
         });
+
+        this.currentAccountId = this._currentAccountId.asObservable();
     }
 
     public get accountFavorites(): Observable<List<AccountResource>> {
@@ -85,10 +89,12 @@ export class AccountService {
     }
 
     public selectAccount(accountId: string) {
+        this._currentAccountId.next(accountId);
         const current = this._currentAccount.getValue();
         if (current && current.account.id === accountId) {
             return;
         }
+
         const accountObs = this.getOnce(accountId);
         const keyObs = this.getAccountKeys(accountId);
         DataCacheTracker.clearAllCaches(this._accountCache, this.subscriptionService.cache);
@@ -137,6 +143,7 @@ export class AccountService {
         if (this.isAccountFavorite(accountId)) {
             return Observable.of(true);
         }
+
         const subject = new AsyncSubject();
         this.getOnce(accountId).subscribe({
             next: (account) => {
@@ -147,6 +154,7 @@ export class AccountService {
                 subject.error(e);
             },
         });
+
         return subject.asObservable();
     }
 
@@ -155,6 +163,7 @@ export class AccountService {
         if (!this.isAccountFavorite(accountId)) {
             return;
         }
+
         const newAccounts = this._accountFavorites.getValue().filter(account => account.id.toLowerCase() !== accountId);
         this._accountFavorites.next(List<AccountResource>(newAccounts));
         this._saveAccountFavorites();
@@ -162,9 +171,9 @@ export class AccountService {
 
     public isAccountFavorite(accountId: string): boolean {
         accountId = accountId.toLowerCase();
-
         const favorites = this._accountFavorites.getValue();
         const account = favorites.filter(x => x.id.toLowerCase() === accountId).first();
+
         return Boolean(account);
     }
 
@@ -186,6 +195,7 @@ export class AccountService {
         if (selectedAccountId) {
             this.selectAccount(selectedAccountId);
         }
+
         this._loadFavoriteAccounts().subscribe((accounts) => {
             this._accountFavorites.next(accounts);
             this._accountLoaded.next(true);
@@ -194,18 +204,21 @@ export class AccountService {
 
     private _loadFavoriteAccounts(): Observable<List<AccountResource>> {
         let sub = new AsyncSubject();
-        storage.get(this.accountJsonFileName, (error, data) => {
+        storage.get(this._accountJsonFileName, (error, data) => {
             if (error) {
                 console.error("Error retrieving accounts");
                 sub.error(error);
             }
+
             if (Array.isArray(data)) {
                 sub.next(List(data));
             } else {
                 sub.next(List([]));
             }
+
             sub.complete();
         });
+
         return sub;
     }
 
@@ -213,14 +226,16 @@ export class AccountService {
         let sub = new AsyncSubject();
 
         accounts = accounts === null ? this._accountFavorites.getValue() : accounts;
-        storage.set(this.accountJsonFileName, accounts.toJS(), (error) => {
+        storage.set(this._accountJsonFileName, accounts.toJS(), (error) => {
             if (error) {
                 console.error("Error saving accounts", error);
                 sub.error(error);
             }
+
             sub.next(true);
             sub.complete();
         });
+
         return sub;
     }
 }

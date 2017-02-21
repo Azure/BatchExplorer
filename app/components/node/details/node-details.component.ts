@@ -61,7 +61,7 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
     }
 
     @autobind()
-    public refreshPool() {
-        // return this.data.refresh();
+    public refresh() {
+        return this.data.refresh();
     }
 }
