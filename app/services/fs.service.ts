@@ -28,7 +28,7 @@ export class FileSystemService {
 
     /**
      * This make sure the given dir exists. Will recusrivelly create any missing directory.
-     * @param directory Path that we expect to exists
+     * @param directory: Path that we expect to exists
      */
     public ensureDir(directory: string): Promise<void> {
         return new Promise<void>((resolve, reject) => {
@@ -42,9 +42,9 @@ export class FileSystemService {
     /**
      * Save the given content to the given location.
      *
-     * @param filename Name of the file(without directory)
-     * @param content Content of the file
-     * @param directory Where should the file be saved
+     * @param filename: Name of the file(without directory)
+     * @param content: Content of the file
+     * @param directory: Where should the file be saved
      */
     public saveFile(filename: string, content: string, directory: string): Promise<string> {
         return this.ensureDir(directory).then(() => {
