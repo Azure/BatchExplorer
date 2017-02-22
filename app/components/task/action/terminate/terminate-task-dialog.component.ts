@@ -5,7 +5,7 @@ import { autobind } from "core-decorators";
 import { TaskService } from "app/services";
 
 @Component({
-    selector: "bex-terminate-task-dialog",
+    selector: "bl-terminate-task-dialog",
     templateUrl: "terminate-task-dialog.html",
 })
 export class TerminateTaskDialogComponent {

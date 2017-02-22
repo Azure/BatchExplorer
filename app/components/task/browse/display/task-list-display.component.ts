@@ -14,7 +14,7 @@ import { TaskService } from "app/services";
 import { DateUtils } from "app/utils";
 
 @Component({
-    selector: "bex-task-list-display",
+    selector: "bl-task-list-display",
     templateUrl: "task-list-display.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

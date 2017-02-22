@@ -3,7 +3,7 @@ import { Component, Input } from "@angular/core";
 import { Application } from "app/models";
 
 @Component({
-    selector: "bex-application-packages",
+    selector: "bl-application-packages",
     templateUrl: "application-packages.html",
 })
 

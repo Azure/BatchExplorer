@@ -14,8 +14,8 @@ import { DeletePoolDialogComponent, PoolResizeDialogComponent } from "../action"
 import { PoolCreateBasicDialogComponent } from "../action";
 
 @Component({
-    selector: "bex-pool-details",
-    templateUrl: "./pool-details.html",
+    selector: "bl-pool-details",
+    templateUrl: "pool-details.html",
 })
 export class PoolDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({id}, {tab}) {
@@ -109,8 +109,10 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
                 osName = "Windows Server 2008 R2 SP1";
             } else if (osFamily === 3) {
                 osName = "Windows Server 2012";
-            } else {
+            } else if (osFamily === 4) {
                 osName = "Windows Server 2012 R2";
+            } else {
+                osName = "Windows Server 2016";
             }
 
             return osName;

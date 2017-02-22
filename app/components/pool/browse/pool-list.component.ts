@@ -21,8 +21,8 @@ import { DeletePoolDialogComponent, PoolResizeDialogComponent } from "../action"
 import { DeletePoolTask } from "../action/delete";
 
 @Component({
-    selector: "bex-pool-list",
-    templateUrl: "./pool-list.html",
+    selector: "bl-pool-list",
+    templateUrl: "pool-list.html",
 })
 export class PoolListComponent extends ListOrTableBase implements OnInit, OnDestroy {
     public LoadingStatus = LoadingStatus;

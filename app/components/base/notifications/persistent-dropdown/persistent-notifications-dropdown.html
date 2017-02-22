@@ -1,9 +1,9 @@
-<bex-dropdown class="notifications-dropdown">
-    <div bex-dropdown-btn>
+<bl-dropdown class="notifications-dropdown">
+    <div bl-dropdown-btn>
         <i class="fa fa-bell"></i>
         <span class="count" *ngIf="notifications.size > 0">{{notifications.size}}</span>
     </div>
-    <div bex-dropdown-content>
+    <div bl-dropdown-content>
         <div *ngFor="let notification of notifications" class="dropdown-item">
             <div class="icon" [ngSwitch]="notification.level">
                 <i class="fa fa-info-circle" *ngSwitchCase="NotificationLevel.info"></i>
@@ -28,4 +28,4 @@
             </div>
         </div>
     </div>
-</bex-dropdown>
+</bl-dropdown>

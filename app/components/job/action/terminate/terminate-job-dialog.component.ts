@@ -5,7 +5,7 @@ import { autobind } from "core-decorators";
 import { JobService } from "app/services";
 
 @Component({
-    selector: "bex-terminate-job-dialog",
+    selector: "bl-terminate-job-dialog",
     templateUrl: "terminate-job-dialog.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

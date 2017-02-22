@@ -6,7 +6,7 @@ import { SidebarManager } from "../../base/sidebar";
 import { ApplicationCreateDialogComponent } from "../action";
 
 @Component({
-    selector: "bex-application-home",
+    selector: "bl-application-home",
     templateUrl: "application-home.html",
 })
 export class ApplicationHomeComponent {

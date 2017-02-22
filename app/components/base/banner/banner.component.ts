@@ -32,8 +32,8 @@ export class BannerOtherFixDirective {
  * - Detail content that is hidden by default
  */
 @Component({
-    selector: "bex-banner",
-    templateUrl: "./banner.html",
+    selector: "bl-banner",
+    templateUrl: "banner.html",
 })
 export class BannerComponent {
     public errorStates = ErrorState;

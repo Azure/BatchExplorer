@@ -10,7 +10,7 @@ import { SidebarRef } from "./sidebar-ref";
 
 @Component({
     encapsulation: ViewEncapsulation.None,
-    selector: "bex-sidebar-bookmarks",
+    selector: "bl-sidebar-bookmarks",
     templateUrl: "sidebar-bookmarks.html",
 })
 export class SidebarBookmarksComponent {

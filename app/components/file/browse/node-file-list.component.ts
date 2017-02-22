@@ -9,7 +9,7 @@ import { RxListProxy } from "app/services/core";
 import { Filter, FilterBuilder, Property } from "app/utils/filter-builder";
 
 @Component({
-    selector: "bex-node-file-list",
+    selector: "bl-node-file-list",
     templateUrl: "file-list.html",
 })
 export class NodeFileListComponent implements OnInit, OnChanges {

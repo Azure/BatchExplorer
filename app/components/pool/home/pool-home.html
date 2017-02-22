@@ -1,19 +1,19 @@
-<bex-list-and-show-layout #layout (listScrolledToBottom)="poolList.onScrollToBottom()" [list]="poolList">
-    <div bex-list-buttons>
+<bl-list-and-show-layout #layout (listScrolledToBottom)="poolList.onScrollToBottom()" [list]="poolList">
+    <div bl-list-buttons>
         <button md-mini-fab color="primary" title="Add a pool" (click)="addPool()">
             <i class="fa fa-plus spin-hover"></i>
         </button>
     </div>
-    <div bex-list-content>
-        <bex-focus-section>
-            <bex-pool-list #poolList [filter]="layout.filter" [quickList]="!(layout.showAdvancedFilter | async)"></bex-pool-list>
-        </bex-focus-section>
+    <div bl-list-content>
+        <bl-focus-section>
+            <bl-pool-list #poolList [filter]="layout.filter" [quickList]="!(layout.showAdvancedFilter | async)"></bl-pool-list>
+        </bl-focus-section>
     </div>
-    <div bex-show-content>
+    <div bl-show-content>
         <router-outlet></router-outlet>
     </div>
-    <div bex-show-advanced-filter>
-        <bex-pool-advanced-filter (change)="layout.advancedFilterChanged($event)">
-        </bex-pool-advanced-filter>
+    <div bl-show-advanced-filter>
+        <bl-pool-advanced-filter (change)="layout.advancedFilterChanged($event)">
+        </bl-pool-advanced-filter>
     </div>
-</bex-list-and-show-layout>
+</bl-list-and-show-layout>

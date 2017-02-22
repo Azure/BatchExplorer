@@ -3,7 +3,7 @@ import { Component, Input } from "@angular/core";
 import { Job, JobState } from "app/models";
 
 @Component({
-    selector: "bex-loading-button",
+    selector: "bl-loading-button",
     template: `<button md-raised-button color="primary">
         <ng-content *ngIf="!loading"></ng-content>
         <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
@@ -15,7 +15,7 @@ export class LoadingButtonComponent {
 }
 
 @Component({
-    selector: "bex-clear-list-selection",
+    selector: "bl-clear-list-selection",
     template: `<button md-mini-fab color="accent" (click)="onClick()" md-tooltip="Clear selection">
         <i class="fa fa-check-square-o"></i>
     </button>`,
@@ -34,7 +34,7 @@ export class ClearListSelectionButtonComponent {
  * button template and we just called super("Add", "fa-icon").
  */
 @Component({
-    selector: "bex-add-button",
+    selector: "bl-add-button",
     template: `<button md-button><i class="fa fa-plus"></i> {{title}}</button>`,
 })
 export class AddButtonComponent {
@@ -50,7 +50,7 @@ export class AddButtonComponent {
 }
 
 @Component({
-    selector: "bex-add-task-button",
+    selector: "bl-add-task-button",
     template: `<button md-button [disabled]="!enabled"><i class="fa fa-plus"></i> {{title}}</button>`,
 })
 export class AddTaskButtonComponent {
@@ -78,7 +78,7 @@ export class AddTaskButtonComponent {
 }
 
 @Component({
-    selector: "bex-terminate-button",
+    selector: "bl-terminate-button",
     template: `<button md-button [disabled]="!enabled"><i class="fa fa-times"></i> Terminate</button>`,
 })
 export class TerminateButtonComponent {
@@ -94,7 +94,7 @@ export class TerminateButtonComponent {
 }
 
 @Component({
-    selector: "bex-delete-button",
+    selector: "bl-delete-button",
     template: `<button md-button [disabled]="!enabled"><i class="fa fa-trash-o"></i> Delete</button>`,
 })
 export class DeleteButtonComponent {
@@ -113,7 +113,7 @@ export class DeleteButtonComponent {
 }
 
 @Component({
-    selector: "bex-disable-button",
+    selector: "bl-disable-button",
     template: `<button md-button *ngIf="visible" [disabled]="!enabled"><i class="fa fa-pause"></i> Disable</button>`,
 })
 export class DisableButtonComponent {
@@ -133,7 +133,7 @@ export class DisableButtonComponent {
 }
 
 @Component({
-    selector: "bex-enable-button",
+    selector: "bl-enable-button",
     template: `<button md-button *ngIf="visible" [disabled]="!enabled"><i class="fa fa-play"></i> Enable</button>`,
 })
 export class EnableButtonComponent {
@@ -150,7 +150,7 @@ export class EnableButtonComponent {
 }
 
 @Component({
-    selector: "bex-clone-button",
+    selector: "bl-clone-button",
     template: `<button md-button><i class="fa fa-clone"></i> {{title}}</button>`,
 })
 export class CloneButtonComponent {
@@ -166,7 +166,7 @@ export class CloneButtonComponent {
 }
 
 @Component({
-    selector: "bex-download-button",
+    selector: "bl-download-button",
     template: `<button md-button [disabled]="!enabled"><i class="fa fa-download"></i> Download</button>`,
 })
 export class DownloadButtonComponent {
@@ -182,14 +182,14 @@ export class DownloadButtonComponent {
 }
 
 @Component({
-    selector: "bex-resize-button",
+    selector: "bl-resize-button",
     template: `<button md-button><i class="fa fa-arrows-v"></i> Resize</button>`,
 })
 export class ResizeButtonComponent {
 }
 
 @Component({
-    selector: "bex-edit-button",
+    selector: "bl-edit-button",
     template: `<button md-button><i class="fa fa-pencil-square-o"></i> Edit</button>`,
 })
 export class EditButtonComponent {

@@ -5,7 +5,7 @@ import { PoolAllocationState, PoolState } from "app/models";
 import { Filter } from "app/utils/filter-builder";
 
 @Component({
-    selector: "bex-pool-advanced-filter",
+    selector: "bl-pool-advanced-filter",
     templateUrl: "pool-advanced-filter.html",
 })
 export class PoolAdvancedFilterComponent {

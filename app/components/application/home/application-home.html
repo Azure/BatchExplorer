@@ -1,15 +1,15 @@
-<bex-list-and-show-layout #layout (listScrolledToBottom)="applicationList.onScrollToBottom()" [list]="applicationList">
-    <div bex-list-buttons>
+<bl-list-and-show-layout #layout (listScrolledToBottom)="applicationList.onScrollToBottom()" [list]="applicationList">
+    <div bl-list-buttons>
         <button md-mini-fab color="primary" title="Add an application" (click)="addApplication()">
             <i class="fa fa-plus spin-hover"></i>
         </button>
     </div>
-    <div bex-list-content>
-        <bex-focus-section>
-            <bex-application-list #applicationList [filter]="layout.filter" [quickList]="!(layout.showAdvancedFilter | async)"></bex-application-list>
-        </bex-focus-section>
+    <div bl-list-content>
+        <bl-focus-section>
+            <bl-application-list #applicationList [filter]="layout.filter" [quickList]="!(layout.showAdvancedFilter | async)"></bl-application-list>
+        </bl-focus-section>
     </div>
-    <div bex-show-content>
+    <div bl-show-content>
         <router-outlet></router-outlet>
     </div>
-</bex-list-and-show-layout>
+</bl-list-and-show-layout>

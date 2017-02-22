@@ -7,7 +7,7 @@ import { PoolService } from "app/services";
 import { DeletePoolTask } from "./delete-pool-task";
 
 @Component({
-    selector: "bex-delete-pool-dialog",
+    selector: "bl-delete-pool-dialog",
     templateUrl: "delete-pool-dialog.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

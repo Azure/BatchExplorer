@@ -9,7 +9,7 @@ import { FileService } from "app/services";
 import { Constants, FileUrlUtils } from "app/utils";
 
 @Component({
-    selector: "bex-file-details",
+    selector: "bl-file-details",
     templateUrl: "file-details.html",
 })
 export class FileDetailsComponent implements OnInit, OnDestroy {

@@ -13,7 +13,7 @@ import { RxListProxy } from "app/services/core";
 import { Constants } from "app/utils";
 
 @Component({
-    selector: "bex-job-create-basic-dialog",
+    selector: "bl-job-create-basic-dialog",
     templateUrl: "job-create-basic-dialog.html",
 })
 export class JobCreateBasicDialogComponent implements OnInit {

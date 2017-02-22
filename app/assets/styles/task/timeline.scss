@@ -1,4 +1,4 @@
-bex-task-timeline {
+bl-task-timeline {
     $tile-size: 30px;
     $separator-width: 60px;
     $separator-height: 2px;
@@ -7,7 +7,7 @@ bex-task-timeline {
     .timeline {
         display: flex;
 
-        bex-task-timeline-state {
+        bl-task-timeline-state {
             position: relative;
             display: flex;
 

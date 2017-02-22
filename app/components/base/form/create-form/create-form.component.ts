@@ -3,7 +3,7 @@ import { Component, Input } from "@angular/core";
 import { FormBase } from "../form-base";
 
 @Component({
-    selector: "bex-create-form",
+    selector: "bl-create-form",
     templateUrl: "create-form.html",
 })
 export class CreateFormComponent extends FormBase {

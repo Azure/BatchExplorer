@@ -1,7 +1,7 @@
 import { Component, Input } from "@angular/core";
 
 @Component({
-    selector: "bex-application-preview",
+    selector: "bl-application-preview",
     templateUrl: "application-preview.html",
 })
 

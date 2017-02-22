@@ -4,8 +4,8 @@ import { List } from "immutable";
 import { BackgroundTask, BackgroundTaskManager } from "./background-task-manager";
 
 @Component({
-    selector: "bex-background-task-tracker",
-    templateUrl: "./background-task-tracker.html",
+    selector: "bl-background-task-tracker",
+    templateUrl: "background-task-tracker.html",
 })
 export class BackgroundTaskTrackerComponent {
 
@@ -21,8 +21,8 @@ export class BackgroundTaskTrackerComponent {
 }
 
 @Component({
-    selector: "bex-background-task-tracker-item",
-    templateUrl: "./background-task-tracker-item.html",
+    selector: "bl-background-task-tracker-item",
+    templateUrl: "background-task-tracker-item.html",
 })
 export class BackgroundTaskTrackerItemComponent {
     @Input()

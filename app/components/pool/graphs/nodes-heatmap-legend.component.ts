@@ -6,7 +6,7 @@ import { StateCounter } from "./state-counter";
 import { StateTree } from "./state-tree";
 
 @Component({
-    selector: "bex-nodes-heatmap-legend",
+    selector: "bl-nodes-heatmap-legend",
     templateUrl: "nodes-heatmap-legend.html",
 })
 export class NodesHeatmapLegendComponent {

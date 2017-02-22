@@ -14,8 +14,8 @@ import { Filter } from "app/utils/filter-builder";
 import { DeleteTaskAction } from "../action";
 
 @Component({
-    selector: "bex-task-list",
-    templateUrl: "./task-list.html",
+    selector: "bl-task-list",
+    templateUrl: "task-list.html",
 })
 export class TaskListComponent extends SelectableList implements OnInit {
     public LoadingStatus = LoadingStatus;

@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 
 @Component({
-    selector: "bex-pool-details-home",
+    selector: "bl-pool-details-home",
     template: `
         <div class="no-entity-home">
             <i class="fa fa-database"></i>

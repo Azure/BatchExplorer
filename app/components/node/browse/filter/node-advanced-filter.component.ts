@@ -5,7 +5,7 @@ import { NodeState } from "app/models";
 import { Filter } from "app/utils/filter-builder";
 
 @Component({
-    selector: "bex-node-advanced-filter",
+    selector: "bl-node-advanced-filter",
     templateUrl: "node-advanced-filter.html",
 })
 export class NodeAdvancedFilterComponent {

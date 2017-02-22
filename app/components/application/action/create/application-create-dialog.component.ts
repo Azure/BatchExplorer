@@ -12,7 +12,7 @@ import { ApplicationService, CommitBlockListOptions, HttpUploadService, UploadBl
 import { Constants, log, prettyBytes } from "app/utils";
 
 @Component({
-    selector: "bex-application-create-dialog",
+    selector: "bl-application-create-dialog",
     templateUrl: "application-create-dialog.html",
 })
 export class ApplicationCreateDialogComponent {

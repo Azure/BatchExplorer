@@ -26,6 +26,8 @@ export * from "./list-result";
 export * from "./multi-instance-settings";
 export * from "./name-value-pair";
 export * from "./node";
+export * from "./node-connection-settings";
+export * from "./node-user";
 export * from "./node-agent-sku";
 export * from "./pool";
 export * from "./resize-error";

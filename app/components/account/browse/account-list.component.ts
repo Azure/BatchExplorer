@@ -14,7 +14,7 @@ interface SubscriptionAccount {
 }
 
 @Component({
-    selector: "bex-account-list",
+    selector: "bl-account-list",
     templateUrl: "account-list.html",
 })
 export class AccountListComponent implements OnInit {

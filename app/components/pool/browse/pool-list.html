@@ -1,40 +1,40 @@
-<bex-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bex-server-error>
-<bex-quick-list #list *ngIf="quickList" >
-    <bex-quick-list-item *ngFor="let pool of data.items | async" [routerLink]="['/pools/', pool.id]" [key]="pool.id" [contextmenu]="contextmenu(pool)">
-        <bex-quick-list-item-status [status]="poolStatus(pool)" [tooltip]="poolStatusText(pool)">
-        </bex-quick-list-item-status>
-        <h4 bex-quick-list-item-title>{{pool.id}}</h4>
-        <p bex-quick-list-item-field>{{pool.state}}, {{pool.allocationState}}</p>
+<bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
+<bl-quick-list #list *ngIf="quickList" >
+    <bl-quick-list-item *ngFor="let pool of data.items | async" [routerLink]="['/pools/', pool.id]" [key]="pool.id" [contextmenu]="contextmenu(pool)">
+        <bl-quick-list-item-status [status]="poolStatus(pool)" [tooltip]="poolStatusText(pool)">
+        </bl-quick-list-item-status>
+        <h4 bl-quick-list-item-title>{{pool.id}}</h4>
+        <p bl-quick-list-item-field>{{pool.state}}, {{pool.allocationState}}</p>
 
-        <div bex-quick-list-item-preview>
-            <bex-pool-nodes-preview [pool]="pool"></bex-pool-nodes-preview>
+        <div bl-quick-list-item-preview>
+            <bl-pool-nodes-preview [pool]="pool"></bl-pool-nodes-preview>
         </div>
-    </bex-quick-list-item>
-</bex-quick-list>
+    </bl-quick-list-item>
+</bl-quick-list>
 
-<bex-table *ngIf="!quickList">
-    <bex-thead>
-        <bex-column>Id</bex-column>
-        <bex-column>State</bex-column>
-        <bex-column>Allocation State</bex-column>
-        <bex-column>VmSize</bex-column>
-        <bex-column numericField>Current <i class="fa fa-tv"></i></bex-column>
-        <bex-column numericField>Target <i class="fa fa-tv"></i></bex-column>
-    </bex-thead>
-    <bex-row *ngFor="let pool of data.items | async" [routerLink]="['/pools/', pool.id]" [key]="pool.id" [contextmenu]="contextmenu(pool)">
-        <bex-cell>{{pool.id}}</bex-cell>
-        <bex-cell>{{pool.state}}</bex-cell>
-        <bex-cell>{{pool.allocationState}}</bex-cell>
-        <bex-cell>{{pool.vmSize}}</bex-cell>
-        <bex-cell numericField>{{pool.currentDedicated}}</bex-cell>
-        <bex-cell numericField>{{pool.targetDedicated}}</bex-cell>
-    </bex-row>
-</bex-table>
+<bl-table *ngIf="!quickList">
+    <bl-thead>
+        <bl-column>Id</bl-column>
+        <bl-column>State</bl-column>
+        <bl-column>Allocation State</bl-column>
+        <bl-column>VmSize</bl-column>
+        <bl-column numericField>Current <i class="fa fa-tv"></i></bl-column>
+        <bl-column numericField>Target <i class="fa fa-tv"></i></bl-column>
+    </bl-thead>
+    <bl-row *ngFor="let pool of data.items | async" [routerLink]="['/pools/', pool.id]" [key]="pool.id" [contextmenu]="contextmenu(pool)">
+        <bl-cell>{{pool.id}}</bl-cell>
+        <bl-cell>{{pool.state}}</bl-cell>
+        <bl-cell>{{pool.allocationState}}</bl-cell>
+        <bl-cell>{{pool.vmSize}}</bl-cell>
+        <bl-cell numericField>{{pool.currentDedicated}}</bl-cell>
+        <bl-cell numericField>{{pool.targetDedicated}}</bl-cell>
+    </bl-row>
+</bl-table>
 
-<bex-no-item [itemCount]="(data.items | async).size" [filter]="filter" [status]="status | async">
+<bl-no-item [itemCount]="(data.items | async).size" [filter]="filter" [status]="status | async">
     <i icon class="fa fa-database"></i>
     <span no-filter>No pools</span>
     <span with-filter>No pool match this filter</span>
-</bex-no-item>
+</bl-no-item>
 
-<bex-loading [status]="status | async"></bex-loading>
+<bl-loading [status]="status | async"></bl-loading>

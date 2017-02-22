@@ -6,7 +6,7 @@ import { Task, TaskDependencies, TaskDependency } from "app/models";
 import { TaskService } from "app/services";
 
 @Component({
-    selector: "bex-task-dependencies",
+    selector: "bl-task-dependencies",
     templateUrl: "task-dependencies.html",
 })
 export class TaskDependenciesComponent {

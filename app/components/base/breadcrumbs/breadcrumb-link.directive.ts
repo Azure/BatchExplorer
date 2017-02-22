@@ -2,15 +2,14 @@ import { Directive, HostListener, Input } from "@angular/core";
 import { Router } from "@angular/router";
 
 @Directive({
-    selector: "[bexBreadcrumbLink]",
+    selector: "[blBreadcrumbLink]",
 })
 export class BreadcrumbLinkDirective {
     // tslint:disable-next-line:no-input-rename
-    @Input("bexBreadcrumbLink")
+    @Input("blBreadcrumbLink")
     public link: any[];
 
     constructor(private router: Router) {
-
     }
 
     @HostListener("click", ["$event.target"])

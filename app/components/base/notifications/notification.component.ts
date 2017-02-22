@@ -4,7 +4,7 @@ import { Notification } from "./notification";
 import { NotificationService } from "./notification-service";
 
 @Component({
-    selector: "bex-notification",
+    selector: "bl-notification",
     templateUrl: "notification.html",
 })
 export class NotificationComponent {

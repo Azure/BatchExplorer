@@ -8,7 +8,7 @@ import { ResourceFile } from "app/models";
 // tslint:disable:no-forward-ref
 
 @Component({
-    selector: "bex-resourcefile-picker",
+    selector: "bl-resourcefile-picker",
     templateUrl: "resourcefile-picker.html",
     providers: [
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => ResourcefilePickerComponent), multi: true },

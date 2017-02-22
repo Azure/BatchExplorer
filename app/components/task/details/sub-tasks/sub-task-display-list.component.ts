@@ -8,7 +8,7 @@ import { SubtaskInformation, TaskState } from "app/models";
 import { SchedulingErrorDecorator } from "app/models/decorators";
 
 @Component({
-    selector: "bex-sub-task-display-list",
+    selector: "bl-sub-task-display-list",
     templateUrl: "sub-task-display-list.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -9,7 +9,7 @@ import { PoolService } from "app/services";
 import { CustomValidators } from "app/utils";
 
 @Component({
-    selector: "bex-pool-resize-dialog",
+    selector: "bl-pool-resize-dialog",
     templateUrl: "pool-resize-dialog.html",
 })
 export class PoolResizeDialogComponent {

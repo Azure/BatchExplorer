@@ -4,7 +4,7 @@ import {
 import { clipboard } from "electron";
 
 @Component({
-    selector: "bex-table-property-header",
+    selector: "bl-table-property-header",
     template: `
         <template><ng-content></ng-content></template>
     `,
@@ -15,7 +15,7 @@ export class TablePropertyHeaderComponent {
 }
 
 @Component({
-    selector: "bex-table-property-row",
+    selector: "bl-table-property-row",
     template: `
         <template><ng-content></ng-content></template>
     `,
@@ -30,7 +30,7 @@ export class TablePropertyRowComponent {
 }
 
 @Component({
-    selector: "bex-tp-cell",
+    selector: "bl-tp-cell",
     template: `
         <div class="cell-value">{{value}}</div>
         <div class="copied-notification" [class.hidden]="copyNotificationHidden">Copied.</div>
@@ -54,7 +54,7 @@ export class TablePropertyCellComponent {
 }
 
 @Component({
-    selector: "bex-table-property",
+    selector: "bl-table-property",
     templateUrl: "table-property.html",
 })
 export class TablePropertyComponent {

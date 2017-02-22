@@ -1,21 +1,21 @@
-<bex-table>
-    <bex-thead>
-        <bex-column>Task ID</bex-column>
-        <bex-column>State</bex-column>
-        <bex-column>Depends on</bex-column>
-    </bex-thead>
-    <bex-row *ngFor="let dependency of dependencies | async" [key]="dependency.id" [routerLink]="['/jobs', jobId, 'tasks', dependency.id]" [forceBreadcrumb]="true">
-        <bex-cell>{{dependency.id}}</bex-cell>
-        <bex-cell>
+<bl-table>
+    <bl-thead>
+        <bl-column>Task ID</bl-column>
+        <bl-column>State</bl-column>
+        <bl-column>Depends on</bl-column>
+    </bl-thead>
+    <bl-row *ngFor="let dependency of dependencies | async" [key]="dependency.id" [routerLink]="['/jobs', jobId, 'tasks', dependency.id]" [forceBreadcrumb]="true">
+        <bl-cell>{{dependency.id}}</bl-cell>
+        <bl-cell>
             <span *ngIf="!dependency.loading">{{dependency.state}}</span>
             <i *ngIf="dependency.loading" class="fa fa-spinner fa-spin cell-spinner"></i>
-        </bex-cell>
-        <bex-cell>{{dependency.dependsOn}}</bex-cell>
-    </bex-row>
-</bex-table>
-<bex-no-item [itemCount]="dependencies.value.length">
+        </bl-cell>
+        <bl-cell>{{dependency.dependsOn}}</bl-cell>
+    </bl-row>
+</bl-table>
+<bl-no-item [itemCount]="dependencies.value.length">
     <span no-filter>This task contains no dependent tasks</span>
-</bex-no-item>
+</bl-no-item>
 <div class="load-more-btn" *ngIf="hasMore">
-    <bex-loading-button [loading]="loadingMore" (click)="loadMore()">Load more</bex-loading-button>
+    <bl-loading-button [loading]="loadingMore" (click)="loadMore()">Load more</bl-loading-button>
 </div>

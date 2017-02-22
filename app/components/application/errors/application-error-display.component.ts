@@ -8,7 +8,7 @@ import { AccountService } from "app/services";
 import { ExternalLinks } from "app/utils/constants";
 
 @Component({
-    selector: "bex-application-error-display",
+    selector: "bl-application-error-display",
     templateUrl: "application-error-display.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

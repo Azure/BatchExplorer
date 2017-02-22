@@ -20,8 +20,8 @@ import {
 } from "../action";
 
 @Component({
-    selector: "bex-job-details",
-    templateUrl: "./job-details.html",
+    selector: "bl-job-details",
+    templateUrl: "job-details.html",
 })
 export class JobDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({id}, {tab}) {

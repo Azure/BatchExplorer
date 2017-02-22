@@ -29,9 +29,9 @@ export class MyComponent {
 Table and quicklist support the context menu you just have to pass the menu as input to the quick list item/row.
 
 ```html
-    <bex-quick-list>
-    <bex-quick-list-item *ngFor="let item of items" [contextmenu]="contextmenu(item)"></bex-quick-list-item>
-    </bex-quick-list>
+    <bl-quick-list>
+    <bl-quick-list-item *ngFor="let item of items" [contextmenu]="contextmenu(item)"></bl-quick-list-item>
+    </bl-quick-list>
 ```
 
 
