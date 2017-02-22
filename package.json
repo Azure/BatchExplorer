@@ -107,6 +107,7 @@
     "hammerjs": "^2.0.8",
     "immutable": "^3.8.1",
     "inflection": "^1.10.0",
+    "mkdirp": "^0.5.1",
     "moment": "^2.15.2",
     "moment-duration-format": "^1.3.0",
     "mousetrap": "^1.6.0",

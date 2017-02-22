@@ -1,0 +1,34 @@
+bl-node-connect {
+    .connect-content {
+        min-height: calc(100% - 85px);
+    }
+}
+.credentials-source {
+    display: flex;
+    justify-content: center;
+
+    > bl-submit-btn > button {
+        @extend .noselect;
+        width: 150px;
+        height: 75px;
+        font-size: 20px;
+        margin: 10px 20px;
+        text-align: center;
+        cursor: pointer;
+
+        &:hover {
+            color: $whitesmoke;
+            background-color: map-get($md-prussian-blue, 400);
+        }
+
+        &:active {
+            color: $whitesmoke;
+            background-color: map-get($md-prussian-blue, 500);
+        }
+    }
+}
+
+bl-node-user-credentials-form {
+    display: block;
+    margin-bottom: 20px;
+}

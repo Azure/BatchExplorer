@@ -8,6 +8,7 @@ import { RouterModule } from "@angular/router";
 import { routes } from "./app.routes";
 
 // components
+import { NodeConnectModule } from "app/components/node/connect";
 import { StartTaskModule } from "app/components/pool/start-task";
 import { AppComponent } from "./app.component";
 import { DeleteAccountDialogComponent } from "./components/account/action/delete-account-dialog.component";
@@ -75,10 +76,13 @@ import {
     ApplicationService,
     AzureHttpService,
     CommandService,
+    ElectronShell,
     FileService,
+    FileSystemService,
     HttpUploadService,
     JobService,
     NodeService,
+    NodeUserService,
     PoolService,
     SettingsService,
     SubscriptionService,
@@ -87,9 +91,12 @@ import {
 } from "./services";
 
 const modules = [
-    ApplicationModule, PoolDetailsModule, PoolGraphsModule, StartTaskModule,
-    JobDetailsModule, TaskBaseModule, TaskDetailsModule, TaskBrowseModule,
-    NodeBrowseModule, FileBrowseModule, FileDetailsModule,
+    ApplicationModule,
+    PoolDetailsModule, PoolGraphsModule, StartTaskModule,
+    JobDetailsModule,
+    TaskBaseModule, TaskDetailsModule, TaskBrowseModule,
+    NodeBrowseModule, NodeConnectModule,
+    FileBrowseModule, FileDetailsModule,
 ];
 
 @NgModule({
@@ -168,12 +175,15 @@ const modules = [
         ApplicationService,
         AzureHttpService,
         CommandService,
+        ElectronShell,
         FileService,
+        FileSystemService,
         HttpUploadService,
         JobService,
         PoolService,
         SubscriptionService,
         NodeService,
+        NodeUserService,
         SettingsService,
         TaskService,
         ...commands,
