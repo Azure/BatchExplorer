@@ -13,7 +13,7 @@ enum CredentialSource {
 }
 
 @Component({
-    selector: "bex-node-connect",
+    selector: "bl-node-connect",
     templateUrl: "node-connect.html",
 })
 export class NodeConnectComponent implements OnInit {

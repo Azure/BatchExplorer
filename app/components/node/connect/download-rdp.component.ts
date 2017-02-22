@@ -7,7 +7,7 @@ import { ElectronShell, FileSystemService } from "app/services";
 import { OS } from "app/utils";
 
 @Component({
-    selector: "bex-download-rdp",
+    selector: "bl-download-rdp",
     templateUrl: "download-rdp.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

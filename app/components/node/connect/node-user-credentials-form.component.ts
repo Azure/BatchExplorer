@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup } from "@angular/forms";
 import { autobind } from "core-decorators";
 
 @Component({
-    selector: "bex-node-user-credentials-form",
+    selector: "bl-node-user-credentials-form",
     templateUrl: "node-user-credentials-form.html",
 })
 export class NodeUserCredentialsFormComponent {

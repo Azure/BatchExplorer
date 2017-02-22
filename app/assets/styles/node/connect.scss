@@ -1,4 +1,4 @@
-bex-node-connect {
+bl-node-connect {
     .connect-content {
         min-height: calc(100% - 85px);
     }
@@ -7,7 +7,7 @@ bex-node-connect {
     display: flex;
     justify-content: center;
 
-    > bex-submit-btn > button {
+    > bl-submit-btn > button {
         @extend .noselect;
         width: 150px;
         height: 75px;
@@ -28,7 +28,7 @@ bex-node-connect {
     }
 }
 
-bex-node-user-credentials-form {
+bl-node-user-credentials-form {
     display: block;
     margin-bottom: 20px;
 }

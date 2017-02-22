@@ -10,9 +10,9 @@ import { OS } from "app/utils";
 
 @Component({
     template: `
-        <bex-download-rdp nodeId="node-1" [rdpContent]="rdpContent" [credentials]="credentials"
+        <bl-download-rdp nodeId="node-1" [rdpContent]="rdpContent" [credentials]="credentials"
             [connectionSettings]="connectionSettings">
-        </bex-download-rdp>
+        </bl-download-rdp>
     `,
 })
 class TestComponent {
@@ -53,7 +53,7 @@ describe("DownloadRdpComponent", () => {
         });
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
-        de = fixture.debugElement.query(By.css("bex-download-rdp"));
+        de = fixture.debugElement.query(By.css("bl-download-rdp"));
         component = de.componentInstance;
         fixture.detectChanges();
     });
@@ -86,13 +86,13 @@ describe("DownloadRdpComponent", () => {
         });
 
         it("should have 1 button proposing to connect", () => {
-            const btn = de.query(By.css("bex-submit-btn"));
+            const btn = de.query(By.css("bl-submit-btn"));
             expect(btn).not.toBeFalsy();
             expect(btn.nativeElement.textContent).toContain("Connect");
         });
 
         it("should save the rdp file when submitting", (done) => {
-            const btn = de.query(By.css("bex-submit-btn")).componentInstance;
+            const btn = de.query(By.css("bl-submit-btn")).componentInstance;
             btn.submit().subscribe(() => {
                 expect(fsServiceSpy.saveFile).toHaveBeenCalledOnce();
                 const expectedContent = "full address:s:0.0.0.0\nusername:s:.\\bar\nprompt for credentials:i:1";
@@ -119,14 +119,14 @@ describe("DownloadRdpComponent", () => {
         });
 
         it("should have 1 button proposing to download", () => {
-            const btn = de.query(By.css("bex-submit-btn"));
+            const btn = de.query(By.css("bl-submit-btn"));
             expect(btn).not.toBeFalsy();
             fixture.detectChanges();
             expect(btn.nativeElement.textContent).toContain("Download rdp file");
         });
 
         it("should save the rdp file when submitting", (done) => {
-            const btn = de.query(By.css("bex-submit-btn")).componentInstance;
+            const btn = de.query(By.css("bl-submit-btn")).componentInstance;
             btn.submit().subscribe(() => {
                 expect(fsServiceSpy.saveFile).toHaveBeenCalledOnce();
                 const expectedContent = "full address:s:0.0.0.0\nusername:s:.\\bar\nprompt for credentials:i:1";
