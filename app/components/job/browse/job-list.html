@@ -1,5 +1,5 @@
 <bex-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bex-server-error>
-<bex-quick-list *ngIf="quickList">
+<bex-quick-list *ngIf="quickList" [contextmenu]="contextmenu">
     <bex-quick-list-item *ngFor="let job of data.items | async" [routerLink]="['/jobs/', job.id]" [key]="job.id">
         <bex-quick-list-item-status [status]="jobStatus(job)" [tooltip]="jobStatusText(job)">
         </bex-quick-list-item-status>
@@ -12,7 +12,7 @@
     </bex-quick-list-item>
 </bex-quick-list>
 
-<bex-table *ngIf="!quickList">
+<bex-table *ngIf="!quickList" [contextmenu]="contextmenu">
     <bex-thead>
         <bex-column>Id</bex-column>
         <bex-column>State</bex-column>

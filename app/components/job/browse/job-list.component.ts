@@ -1,10 +1,12 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormControl } from "@angular/forms";
+import { MdDialog } from "@angular/material";
 import { Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Observable, Subscription } from "rxjs";
 
 import { BackgroundTaskManager } from "app/components/base/background-task";
+import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListComponent, QuickListItemStatus } from "app/components/base/quick-list";
 import { ListOrTableBase } from "app/components/base/selectable-list";
@@ -14,7 +16,13 @@ import { SchedulingErrorDecorator } from "app/models/decorators";
 import { JobService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
-import { DeleteJobAction } from "../action";
+import {
+    DeleteJobAction,
+    DeleteJobDialogComponent,
+    DisableJobDialogComponent,
+    EnableJobDialogComponent,
+    TerminateJobDialogComponent,
+} from "../action";
 
 @Component({
     selector: "bex-job-list",
@@ -56,8 +64,11 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
     private _baseOptions = {};
     private _onJobAddedSub: Subscription;
 
-    constructor(router: Router, private jobService: JobService, private taskManager: BackgroundTaskManager) {
-        super();
+    constructor(router: Router,
+        dialog: MdDialog,
+        private jobService: JobService,
+        private taskManager: BackgroundTaskManager) {
+        super(dialog);
         this.data = this.jobService.list(this._baseOptions);
         this.status = this.data.status;
         this._onJobAddedSub = jobService.onJobAdded.subscribe((jobId) => {
@@ -122,5 +133,46 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
             task.start(backgroundTask);
             return task.waitingDone;
         });
+    }
+
+    public deleteJob(jobId: string) {
+        const dialogRef = this.dialog.open(DeleteJobDialogComponent);
+        dialogRef.componentInstance.jobId = jobId;
+        dialogRef.afterClosed().subscribe((obj) => {
+            this.jobService.getOnce(jobId);
+        });
+    }
+
+    public terminateJob(jobId: string) {
+        const dialogRef = this.dialog.open(TerminateJobDialogComponent);
+        dialogRef.componentInstance.jobId = jobId;
+        dialogRef.afterClosed().subscribe((obj) => {
+            this.jobService.getOnce(jobId);
+        });
+    }
+
+    public disableJob(jobId: string) {
+        const dialogRef = this.dialog.open(DisableJobDialogComponent);
+        dialogRef.componentInstance.jobId = jobId;
+        dialogRef.afterClosed().subscribe((obj) => {
+            this.jobService.getOnce(jobId);
+        });
+    }
+
+    public enableJob(jobId: string) {
+        const dialogRef = this.dialog.open(EnableJobDialogComponent);
+        dialogRef.componentInstance.jobId = jobId;
+        dialogRef.afterClosed().subscribe((obj) => {
+            this.jobService.getOnce(jobId);
+        });
+    }
+
+    public get contextmenu() {
+        return new ContextMenu([
+            new ContextMenuItem({ label: "Delete", click: (jobId) => this.deleteJob(jobId) }),
+            new ContextMenuItem({ label: "Terminate", click: (jobId) => this.terminateJob(jobId) }),
+            new ContextMenuItem({ label: "Enable", click: (jobId) => this.enableJob(jobId) }),
+            new ContextMenuItem({ label: "Disable", click: (jobId) => this.disableJob(jobId) }),
+        ]);
     }
 }
