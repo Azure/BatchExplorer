@@ -64,7 +64,8 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
     private _baseOptions = {};
     private _onJobAddedSub: Subscription;
 
-    constructor(router: Router,
+    constructor(
+        router: Router,
         dialog: MdDialog,
         private jobService: JobService,
         private taskManager: BackgroundTaskManager) {

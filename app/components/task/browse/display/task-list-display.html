@@ -1,5 +1,5 @@
 <bex-quick-list *ngIf="quickList">
-    <bex-quick-list-item *ngFor="let task of tasks" [routerLink]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id">
+    <bex-quick-list-item *ngFor="let task of tasks" [routerLink]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id" [contextmenu]="contextmenu(task)">
         <bex-quick-list-item-status [status]="taskStatus(task)" [tooltip]="taskStatusText(task)">
         </bex-quick-list-item-status>
 
@@ -21,7 +21,7 @@
         <bex-column>Exit code</bex-column>
     </bex-thead>
 
-    <bex-row *ngFor="let task of tasks" [routerLink]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id">
+    <bex-row *ngFor="let task of tasks" [routerLink]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id" [contextmenu]="contextmenu(task)">
         <bex-cell>{{task.id}}</bex-cell>
         <bex-cell>{{task.state}}</bex-cell>
         <bex-cell>{{formatDate(task.creationTime)}}</bex-cell>

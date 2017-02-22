@@ -1,12 +1,16 @@
 import { ChangeDetectionStrategy, Component, Input, ViewChild } from "@angular/core";
+import { MdDialog } from "@angular/material";
 import { List } from "immutable";
 
+import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListComponent, QuickListItemStatus } from "app/components/base/quick-list";
 import { ListOrTableBase } from "app/components/base/selectable-list";
 import { TableComponent } from "app/components/base/table";
+import { DeleteTaskDialogComponent, TerminateTaskDialogComponent } from "app/components/task/action";
 import { Task, TaskState } from "app/models";
 import { SchedulingErrorDecorator } from "app/models/decorators";
+import { TaskService } from "app/services";
 import { DateUtils } from "app/utils";
 
 @Component({
@@ -33,6 +37,8 @@ export class TaskListDisplayComponent extends ListOrTableBase {
     @ViewChild(TableComponent)
     public table: TableComponent;
 
+    constructor(private taskService: TaskService, dialog: MdDialog) { super(dialog); }
+
     public taskStatus(task: Task): QuickListItemStatus {
         if (task.state === TaskState.completed && task.executionInfo.exitCode !== 0) {
             return QuickListItemStatus.warning;
@@ -49,5 +55,31 @@ export class TaskListDisplayComponent extends ListOrTableBase {
 
     public formatDate(date: Date) {
         return DateUtils.prettyDate(date, 7);
+    }
+
+    public deleteTask(task: Task) {
+        const dialogRef = this.dialog.open(DeleteTaskDialogComponent);
+        dialogRef.componentInstance.jobId = this.jobId;
+        dialogRef.componentInstance.taskId = task.id;
+        dialogRef.afterClosed().subscribe((obj) => {
+            this.taskService.getOnce(this.jobId, task.id);
+        });
+    }
+
+    public terminateTask(task: Task) {
+        const dialogRef = this.dialog.open(TerminateTaskDialogComponent);
+        dialogRef.componentInstance.jobId = this.jobId;
+        dialogRef.componentInstance.taskId = task.id;
+        dialogRef.afterClosed().subscribe((obj) => {
+            this.taskService.getOnce(this.jobId, task.id);
+        });
+    }
+
+    public contextmenu(task: Task) {
+        const isCompleted = task.state === TaskState.completed;
+        return new ContextMenu([
+            new ContextMenuItem({ label: "Delete", click: () => this.deleteTask(task) }),
+            new ContextMenuItem({ label: "Terminate", click: () => this.terminateTask(task), enabled: !isCompleted }),
+        ]);
     }
 }
