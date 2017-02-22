@@ -5,7 +5,6 @@ import { NavigationEnd, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { BehaviorSubject, Subscription } from "rxjs";
 
-import { ContextMenu } from "../context-menu";
 import { FocusSectionComponent } from "../focus-section";
 import { AbstractListItemBase } from "./abstract-list-item-base";
 
@@ -22,9 +21,6 @@ export interface ActivatedItemChangeEvent {
  * 2. Refefine items with @ContentChildren and the class that inherit SelectableListItemBase
  */
 export class AbstractListBase implements AfterViewInit, OnDestroy {
-    @Input()
-    public contextmenu: ContextMenu;
-
     @ContentChildren(AbstractListItemBase)
     public items: QueryList<AbstractListItemBase>;
 

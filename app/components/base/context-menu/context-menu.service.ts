@@ -21,6 +21,7 @@ export class ContextMenuService {
                 click: () => {
                     this.zone.run(() => item.click());
                 },
+                enabled: item.enabled,
             }));
         }
         return electronMenu;

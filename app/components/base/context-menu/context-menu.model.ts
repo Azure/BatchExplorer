@@ -1,4 +1,4 @@
-import { SecureUtils } from "app/utils";
+import { SecureUtils, exists } from "app/utils";
 
 export class ContextMenu {
     public args: any[];
@@ -25,13 +25,14 @@ export class ContextMenu {
 interface ContextMenuItemConfig {
     label: string;
     click: Function;
+    enabled?: boolean;
 }
 
 export class ContextMenuItem {
     public id: string;
     public label: string;
     public callbackArgs: any[] = [];
-
+    public enabled: boolean = true;
     private _click: Function;
 
     constructor(config: ContextMenuItemConfig);
@@ -44,6 +45,9 @@ export class ContextMenuItem {
         } else {
             this.label = labelOrConfig.label;
             this._click = labelOrConfig.click;
+            if (exists(labelOrConfig.enabled)) {
+                this.enabled = labelOrConfig.enabled;
+            }
         }
     }
 

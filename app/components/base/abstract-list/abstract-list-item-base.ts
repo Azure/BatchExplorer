@@ -5,6 +5,7 @@ import { Subscription } from "rxjs";
 import { BreadcrumbService } from "app/components/base/breadcrumbs";
 import { ContextMenuService } from "app/components/base/context-menu";
 import { log } from "app/utils";
+import { ContextMenu } from "../context-menu";
 import { AbstractListBase } from "./abstract-list-base";
 
 
@@ -13,6 +14,9 @@ import { AbstractListBase } from "./abstract-list-base";
  * 1. Inject the component inheriting SelectableListBase in the construtor using @Inject and forwardRef
  */
 export class AbstractListItemBase implements OnDestroy, OnInit {
+    @Input()
+    public contextmenu: ContextMenu;
+
     /**
      * Unique key to give to the list used for knowing if the item is selected
      */
@@ -123,9 +127,9 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
     }
 
     public openContextMenu() {
-        const menu = this.list.contextmenu;
+        const menu = this.contextmenu;
         if (menu) {
-            this.contextmenuService.openMenu(menu.withArgs(this.key));
+            this.contextmenuService.openMenu(menu);
         }
     }
     /**

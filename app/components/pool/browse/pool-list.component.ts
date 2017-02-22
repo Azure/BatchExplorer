@@ -112,29 +112,23 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         });
     }
 
-    public deletePool(poolId: string) {
+    public deletePool(pool: Pool) {
         const dialogRef = this.dialog.open(DeletePoolDialogComponent);
-        dialogRef.componentInstance.poolId = poolId;
+        dialogRef.componentInstance.poolId = pool.id;
     }
 
-    public resizePool(poolId: string) {
-        this.data.items.first().subscribe((pools) => {
-            const pool = pools.filter(x => x.id === poolId).first();
-            if (!pool) {
-                return;
-            }
-            const sidebarRef = this.sidebarManager.open("resize-pool", PoolResizeDialogComponent);
-            sidebarRef.component.pool = pool;
-            this.sidebarManager.onClosed.subscribe(() => {
-                this.poolService.getOnce(poolId);
-            });
+    public resizePool(pool: Pool) {
+        const sidebarRef = this.sidebarManager.open("resize-pool", PoolResizeDialogComponent);
+        sidebarRef.component.pool = pool;
+        this.sidebarManager.onClosed.subscribe(() => {
+            this.poolService.getOnce(pool.id);
         });
     }
 
-    public get contextmenu() {
+    public contextmenu(pool) {
         return new ContextMenu([
-            new ContextMenuItem({ label: "Delete", click: (poolId) => this.deletePool(poolId) }),
-            new ContextMenuItem({ label: "Resize", click: (poolId) => this.resizePool(poolId) }),
+            new ContextMenuItem({ label: "Delete", click: () => this.deletePool(pool) }),
+            new ContextMenuItem({ label: "Resize", click: () => this.resizePool(pool) }),
         ]);
     }
 }

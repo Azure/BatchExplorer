@@ -20,7 +20,6 @@ export class TerminateJobDialogComponent {
 
     private _jobId: string;
 
-
     private _hasError: boolean = false;
     private _errorText: string;
 

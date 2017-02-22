@@ -135,44 +135,54 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
         });
     }
 
-    public deleteJob(jobId: string) {
+    public deleteJob(job: Job) {
         const dialogRef = this.dialog.open(DeleteJobDialogComponent);
-        dialogRef.componentInstance.jobId = jobId;
+        dialogRef.componentInstance.jobId = job.id;
         dialogRef.afterClosed().subscribe((obj) => {
-            this.jobService.getOnce(jobId);
+            this.jobService.getOnce(job.id);
         });
     }
 
-    public terminateJob(jobId: string) {
+    public terminateJob(job: Job) {
         const dialogRef = this.dialog.open(TerminateJobDialogComponent);
-        dialogRef.componentInstance.jobId = jobId;
+        dialogRef.componentInstance.jobId = job.id;
         dialogRef.afterClosed().subscribe((obj) => {
-            this.jobService.getOnce(jobId);
+            this.jobService.getOnce(job.id);
         });
     }
 
-    public disableJob(jobId: string) {
+    public disableJob(job: Job) {
         const dialogRef = this.dialog.open(DisableJobDialogComponent);
-        dialogRef.componentInstance.jobId = jobId;
+        dialogRef.componentInstance.jobId = job.id;
         dialogRef.afterClosed().subscribe((obj) => {
-            this.jobService.getOnce(jobId);
+            this.jobService.getOnce(job.id);
         });
     }
 
-    public enableJob(jobId: string) {
+    public enableJob(job: Job) {
         const dialogRef = this.dialog.open(EnableJobDialogComponent);
-        dialogRef.componentInstance.jobId = jobId;
+        dialogRef.componentInstance.jobId = job.id;
         dialogRef.afterClosed().subscribe((obj) => {
-            this.jobService.getOnce(jobId);
+            this.jobService.getOnce(job.id);
         });
     }
 
-    public get contextmenu() {
+    public contextmenu(job: Job) {
+        const isCompleted = job.state === JobState.completed;
+        const isDisabled = job.state === JobState.disabled;
         return new ContextMenu([
-            new ContextMenuItem({ label: "Delete", click: (jobId) => this.deleteJob(jobId) }),
-            new ContextMenuItem({ label: "Terminate", click: (jobId) => this.terminateJob(jobId) }),
-            new ContextMenuItem({ label: "Enable", click: (jobId) => this.enableJob(jobId) }),
-            new ContextMenuItem({ label: "Disable", click: (jobId) => this.disableJob(jobId) }),
+            new ContextMenuItem({ label: "Delete", click: () => this.deleteJob(job) }),
+            new ContextMenuItem({ label: "Terminate", click: () => this.terminateJob(job), enabled: !isCompleted }),
+            new ContextMenuItem({
+                label: "Enable",
+                click: () => this.enableJob(job),
+                enabled: !isCompleted && isDisabled,
+            }),
+            new ContextMenuItem({
+                label: "Disable",
+                click: () => this.disableJob(job),
+                enabled: !isCompleted && !isDisabled,
+            }),
         ]);
     }
 }
