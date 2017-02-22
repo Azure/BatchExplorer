@@ -9,7 +9,7 @@ import { RxEntityProxy } from "app/services/core";
 import { DeleteAccountDialogComponent } from "../action/delete-account-dialog.component";
 
 @Component({
-    selector: "bex-account-details",
+    selector: "bl-account-details",
     templateUrl: "account-details.html",
 })
 export class AccountDetailsComponent implements OnInit, OnDestroy {

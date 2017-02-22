@@ -8,12 +8,12 @@ import { FormErrorComponent } from "app/components/base/form/form-error";
     template: `
         <form [formGroup]="form">
             <input formControlName="id">
-            <bex-error #idRequiredError controlName="id" code="required">Id is required</bex-error>
-            <bex-error #idMaxLengthError controlName="id" code="maxlength">Id is max 5 char long</bex-error>
+            <bl-error #idRequiredError controlName="id" code="required">Id is required</bl-error>
+            <bl-error #idMaxLengthError controlName="id" code="maxlength">Id is max 5 char long</bl-error>
 
             <div formGroupName="os">
                 <input formControlName="name">
-                <bex-error #osNameError controlName="name" code="required">Name of os is required</bex-error>
+                <bl-error #osNameError controlName="name" code="required">Name of os is required</bl-error>
             </div>
         </form>
     `,

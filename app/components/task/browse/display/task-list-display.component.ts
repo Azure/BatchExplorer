@@ -10,7 +10,7 @@ import { SchedulingErrorDecorator } from "app/models/decorators";
 import { DateUtils } from "app/utils";
 
 @Component({
-    selector: "bex-task-list-display",
+    selector: "bl-task-list-display",
     templateUrl: "task-list-display.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

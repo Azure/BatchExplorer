@@ -25,7 +25,7 @@ export class StatePickerControl extends AdvancedFilterControlBase {
 }
 
 @Component({
-    selector: "bex-adv-filter-statepicker",
+    selector: "bl-adv-filter-statepicker",
     template: `
         <div [formGroup]="advancedFilter.group" *ngIf="advancedFilter && control">
             <fieldset formGroupName="{{control.name}}" >

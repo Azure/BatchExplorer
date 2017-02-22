@@ -7,7 +7,7 @@ import { BackgroundTaskManager } from "app/components/base/background-task";
 import { ApplicationService } from "app/services";
 
 @Component({
-    selector: "bex-delete-application-dialog",
+    selector: "bl-delete-application-dialog",
     templateUrl: "delete-application-dialog.html",
 })
 export class DeleteApplicationDialogComponent {

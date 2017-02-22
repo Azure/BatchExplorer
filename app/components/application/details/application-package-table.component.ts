@@ -13,7 +13,7 @@ import { SidebarManager } from "../../base/sidebar";
 import { ActivatePackageDialogComponent, ApplicationCreateDialogComponent, DeletePackageAction } from "../action";
 
 @Component({
-    selector: "bex-application-package-table",
+    selector: "bl-application-package-table",
     templateUrl: "application-package-table.html",
 })
 

@@ -8,9 +8,9 @@ import { TaskState } from "app/models";
 
 @Component({
     template: `
-        <bex-task-timeline-state [state]="state" [currentState]="currentState" [error]="error">
+        <bl-task-timeline-state [state]="state" [currentState]="currentState" [error]="error">
             Additional content info
-        </bex-task-timeline-state>
+        </bl-task-timeline-state>
     `,
 })
 class TestComponent {
@@ -32,7 +32,7 @@ describe("TaskTimelineStateComponent", () => {
         });
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
-        de = fixture.debugElement.query(By.css("bex-task-timeline-state"));
+        de = fixture.debugElement.query(By.css("bl-task-timeline-state"));
         component = de.componentInstance;
         fixture.detectChanges();
     });

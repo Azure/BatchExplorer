@@ -5,7 +5,7 @@ import { AbstractListBase } from "../abstract-list";
 import { TableRowComponent } from "./table-row.component";
 
 @Component({
-    selector: "bex-table",
+    selector: "bl-table",
     templateUrl: "table.html",
 })
 export class TableComponent extends AbstractListBase {
@@ -18,21 +18,21 @@ export class TableComponent extends AbstractListBase {
 }
 
 @Component({
-    selector: "bex-thead",
+    selector: "bl-thead",
     template: `<tr><ng-content></ng-content></tr>`,
 })
 export class TableHeadComponent {
 }
 
 @Component({
-    selector: "bex-column",
+    selector: "bl-column",
     template: `<ng-content></ng-content>`,
 })
 export class TableColumnComponent {
 }
 
 @Component({
-    selector: "bex-cell",
+    selector: "bl-cell",
     template: `
         <div *ngIf="value" class="cell-value" title="{{value}}">{{value}}</div>
         <ng-content *ngIf="!value"></ng-content>

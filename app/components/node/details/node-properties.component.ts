@@ -4,8 +4,8 @@ import { Node } from "app/models";
 import { NodeDecorator } from "app/models/decorators";
 
 @Component({
-    selector: "bex-node-properties",
-    templateUrl: "./node-properties.html",
+    selector: "bl-node-properties",
+    templateUrl: "node-properties.html",
 })
 export class NodePropertiesComponent {
     @Input()

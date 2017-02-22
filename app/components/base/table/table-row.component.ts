@@ -8,7 +8,7 @@ import { AbstractListItemBase } from "../abstract-list";
 import { TableComponent } from "./table.component";
 
 @Component({
-    selector: "bex-row",
+    selector: "bl-row",
     templateUrl: `
         <template>
             <tr (click)="handleClick($event)" [class.selected]="active || selected" [class.focused]="isFocused">

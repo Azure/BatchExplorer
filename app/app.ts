@@ -1,5 +1,6 @@
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 
+import { log } from "app/utils";
 import { AppModule } from "./app.module";
 
 // Setup extension methods
@@ -13,4 +14,4 @@ import "./assets/styles/main.scss";
 const platform = platformBrowserDynamic();
 
 platform.bootstrapModule(AppModule)
-    .catch(error => console.error("Bootstrapping failed :: ", error));
+    .catch(error => log.error("Bootstrapping failed :: ", error));

@@ -1,7 +1,7 @@
 import { Component, Input } from "@angular/core";
 
 @Component({
-    selector: "bex-info-box",
+    selector: "bl-info-box",
     template: `
         <div class="infobox">
             <div class="infobox-image"><i class="fa fa-info-circle fa-3"></i></div>

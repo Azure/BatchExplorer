@@ -10,7 +10,7 @@ declare module "rxjs/Observable" {
          * @example
          * Observable.of(1).cascade((count) => {
          *      return Observable.of(count + 1);
-         * }).subscribe((result) => console.log(result)) //=> Result 2
+         * }).subscribe((result) => logger.log(result)) //=> Result 2
          */
         cascade<TOut>(callback: (data: T) => Observable<TOut> | TOut);
     }

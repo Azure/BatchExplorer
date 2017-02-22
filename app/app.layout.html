@@ -14,21 +14,21 @@
                 <img src="./assets/images/header/batchlabs.png" height="19" alt="Batch labs logo">
             </a>
         </div>
-        <bex-sidebar-bookmarks></bex-sidebar-bookmarks>
-        <bex-persistent-notifications-dropdown></bex-persistent-notifications-dropdown>
-        <bex-ad-user-dropdown></bex-ad-user-dropdown>
-        <bex-account-dropdown></bex-account-dropdown>
-        <bex-background-task-tracker></bex-background-task-tracker>
+        <bl-sidebar-bookmarks></bl-sidebar-bookmarks>
+        <bl-persistent-notifications-dropdown></bl-persistent-notifications-dropdown>
+        <bl-aad-user-dropdown></bl-aad-user-dropdown>
+        <bl-account-dropdown></bl-account-dropdown>
+        <bl-background-task-tracker></bl-background-task-tracker>
     </header>
     <nav [class.no-userinteract]="!(hasAccount | async)" class="noselect">
-        <bex-app-nav></bex-app-nav>
+        <bl-app-nav></bl-app-nav>
     </nav>
     <section id="content">
         <div id="content-inner">
-            <bex-notification-container class="tr"></bex-notification-container>
+            <bl-notification-container class="tr"></bl-notification-container>
             <md-sidenav-container>
                 <md-sidenav #rightSidebar align="end">
-                    <bex-sidebar-content #sidebarContent [sidebar]="rightSidebar"></bex-sidebar-content>
+                    <bl-sidebar-content #sidebarContent [sidebar]="rightSidebar"></bl-sidebar-content>
                 </md-sidenav>
                 <!--[hidden]="!(hasAccount | async)"-->
                 <div>

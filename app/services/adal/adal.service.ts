@@ -5,7 +5,7 @@ import * as moment from "moment";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { AADUser } from "app/models";
-import { Constants } from "app/utils";
+import { Constants, log } from "app/utils";
 import { AccessToken } from "./access-token";
 import { AccessTokenService } from "./access-token.service";
 import { AdalConfig } from "./adal-config";
@@ -69,7 +69,7 @@ export class AdalService {
                 }
             },
             error: () => {
-                console.error("Error login");
+                log.error("Error login");
             },
         });
         return obs;
@@ -171,7 +171,7 @@ export class AdalService {
             error: (error) => {
                 subject.error(error);
                 this._newAccessTokenSubject = null;
-                console.error("Error auth", error);
+                log.error("Error auth", error);
             },
         });
         return subject;
@@ -184,7 +184,7 @@ export class AdalService {
                 this._processAccessToken(token);
             },
             error: (error) => {
-                console.error("Error refreshing token");
+                log.error("Error refreshing token");
             },
         });
         return obs;

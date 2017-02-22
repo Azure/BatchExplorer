@@ -1,6 +1,6 @@
 <div class="dialog-form">
     <h2>Disable job</h2>
-    <bex-action-form [submit]="ok" [dialogRef]="dialogRef">
+    <bl-action-form [submit]="ok" [dialogRef]="dialogRef">
         <div class="message">
             <p>Do you want to disable the job '<b>{{jobId}}</b>'?</p>
         </div>
@@ -13,7 +13,7 @@
                 <md-radio-button value="terminate">Terminate</md-radio-button>
                 <md-radio-button value="wait">Wait</md-radio-button>
             </md-radio-group>
-            <bex-info-box [message]="actionDescription"></bex-info-box>
+            <bl-info-box [message]="actionDescription"></bl-info-box>
         </div>
-    </bex-action-form>
+    </bl-action-form>
 </div>

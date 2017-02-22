@@ -41,7 +41,7 @@ import { MainNavigationComponent } from "./components/shared/main-navigation.com
 import { TaskBrowseModule } from "./components/task/browse";
 import { TaskDetailsModule } from "./components/task/details";
 import { TaskHomeComponent } from "./components/task/home";
-import { AdUserDropdownComponent } from "./components/user";
+import { AADUserDropdownComponent } from "./components/user";
 
 // job actions
 import {
@@ -104,15 +104,14 @@ const modules = [
         AppComponent,
     ],
     declarations: [
+        AADUserDropdownComponent,
         AccountCreateDialogComponent,
         AccountDetailsComponent,
         AccountDetailsHomeComponent,
         AccountDropDown,
-        RerunTaskFormComponent,
         AccountFavListComponent,
         AccountHomeComponent,
         AccountListComponent,
-        AdUserDropdownComponent,
         AppComponent,
         DeleteAccountDialogComponent,
         DeleteJobDialogComponent,
@@ -138,6 +137,7 @@ const modules = [
         PoolNodesPreviewComponent,
         PoolOsPickerComponent,
         PoolResizeDialogComponent,
+        RerunTaskFormComponent,
         TaskCreateBasicDialogComponent,
         TaskHomeComponent,
         TerminateJobDialogComponent,

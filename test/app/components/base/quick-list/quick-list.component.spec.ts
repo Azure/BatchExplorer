@@ -14,11 +14,11 @@ interface TestItem {
 
 @Component({
     template: `
-        <bex-quick-list>
-            <bex-quick-list-item *ngFor="let item of items" [key]="item.id">
-                <h4 bex-quick-list-item-title>{{item.name}}</h4>
-            </bex-quick-list-item>
-        </bex-quick-list>
+        <bl-quick-list>
+            <bl-quick-list-item *ngFor="let item of items" [key]="item.id">
+                <h4 bl-quick-list-item-title>{{item.name}}</h4>
+            </bl-quick-list-item>
+        </bl-quick-list>
     `,
 })
 class TestComponent {
@@ -48,12 +48,12 @@ describe("QuickListComponent", () => {
         });
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
-        de = fixture.debugElement.query(By.css("bex-quick-list"));
+        de = fixture.debugElement.query(By.css("bl-quick-list"));
         quicklist = de.componentInstance;
         quicklist.activatedItemChange.subscribe(e => activeItemKey = e.key);
         quicklist.selectedItemsChange.subscribe(x => selectedItems = x);
         fixture.detectChanges();
-        items = de.queryAll(By.css("bex-quick-list-item"));
+        items = de.queryAll(By.css("bl-quick-list-item"));
     });
 
     it("should display all the content", () => {

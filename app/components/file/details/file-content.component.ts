@@ -4,10 +4,10 @@ import { Observable, Subscription } from "rxjs";
 import { ScrollableComponent, ScrollableService } from "app/components/base/scrollable";
 import { File, ServerError } from "app/models";
 import { FileService } from "app/services";
-import { Constants } from "app/utils";
+import { Constants, log } from "app/utils";
 
 @Component({
-    selector: "bex-file-content",
+    selector: "bl-file-content",
     templateUrl: "file-content.html",
 })
 export class FileContentComponent implements OnChanges, AfterViewInit {
@@ -171,7 +171,8 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
             this.notFound = true;
             return;
         }
-        console.error("[FileContent.component] Error is", e.status, e);
+
+        log.error(`[FileContent.component] Error is ${e.status}`, e);
     }
 
     private _scrollToBottom() {

@@ -3,10 +3,10 @@ import { Component } from "@angular/core";
 import { AdalService } from "app/services";
 
 @Component({
-    selector: "bex-ad-user-dropdown",
-    templateUrl: "ad-user-dropdown.html",
+    selector: "bl-aad-user-dropdown",
+    templateUrl: "aad-user-dropdown.html",
 })
-export class AdUserDropdownComponent {
+export class AADUserDropdownComponent {
     public name: string;
 
     constructor(private adalService: AdalService) {

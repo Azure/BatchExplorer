@@ -1,15 +1,15 @@
-<bex-table>
-    <bex-thead>
-        <bex-column>Blob source</bex-column>
-        <bex-column>Local file path</bex-column>
-        <bex-column>File mode</bex-column>
-    </bex-thead>
-    <bex-row *ngFor="let file of resourceFiles" [key]="file.blobSource">
-        <bex-cell style="width: 60%" [value]="file.blobSource"></bex-cell>
-        <bex-cell style="width: 25%" [value]="file.filePath"></bex-cell>
-        <bex-cell style="width: 15%" [value]="file.fileMode"></bex-cell>
-    </bex-row>
-</bex-table>
-<bex-no-item [itemCount]="resourceFiles.length">
+<bl-table>
+    <bl-thead>
+        <bl-column>Blob source</bl-column>
+        <bl-column>Local file path</bl-column>
+        <bl-column>File mode</bl-column>
+    </bl-thead>
+    <bl-row *ngFor="let file of resourceFiles" [key]="file.blobSource">
+        <bl-cell style="width: 60%" [value]="file.blobSource"></bl-cell>
+        <bl-cell style="width: 25%" [value]="file.filePath"></bl-cell>
+        <bl-cell style="width: 15%" [value]="file.fileMode"></bl-cell>
+    </bl-row>
+</bl-table>
+<bl-no-item [itemCount]="resourceFiles.length">
     <span no-filter>This task contains no resource files</span>
-</bex-no-item>
+</bl-no-item>

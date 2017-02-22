@@ -2,7 +2,7 @@
     <md-card class="overview">
         <md-card-title-group style="margin: 0px;">
             <div style="align-items:center;">
-                <bex-refresh-btn [refresh]="refresh"></bex-refresh-btn>
+                <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
             </div>
             <div style="margin-left:12px; margin-right:auto;">
                 <md-card-title>{{filename}}</md-card-title>
@@ -13,12 +13,12 @@
             <p>Url: {{url}}</p>
         </md-card-content>
         <md-card-actions layout="row" layout-align="end center">
-            <bex-download-button [enabled]="downloadEnabled" (click)="downloadFile()"></bex-download-button>
+            <bl-download-button [enabled]="downloadEnabled" (click)="downloadFile()"></bl-download-button>
         </md-card-actions>
     </md-card>
     <md-card class="details">
-        <bex-file-content *ngIf="jobId && taskId" [jobId]="jobId" [taskId]="taskId" [filename]="filename"></bex-file-content>
-        <bex-file-content *ngIf="poolId && nodeId" [poolId]="poolId" [nodeId]="nodeId" [filename]="filename"></bex-file-content>
+        <bl-file-content *ngIf="jobId && taskId" [jobId]="jobId" [taskId]="taskId" [filename]="filename"></bl-file-content>
+        <bl-file-content *ngIf="poolId && nodeId" [poolId]="poolId" [nodeId]="nodeId" [filename]="filename"></bl-file-content>
     </md-card>
 </div>
 

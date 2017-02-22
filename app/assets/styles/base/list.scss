@@ -30,7 +30,7 @@
     }
 }
 
-bex-quick-list {
+bl-quick-list {
     display: block;
     width: 100%;
 
@@ -63,13 +63,13 @@ bex-quick-list {
             text-overflow: ellipsis;
             min-width: 0;
 
-            [bex-quick-list-item-title], [bex-quick-list-item-field] {
+            [bl-quick-list-item-title], [bl-quick-list-item-field] {
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
         }
 
-        [bex-quick-list-item-preview] {
+        [bl-quick-list-item-preview] {
             padding: 5px;
 
             i {
@@ -81,7 +81,7 @@ bex-quick-list {
             }
         }
 
-        bex-quick-list-item-status {
+        bl-quick-list-item-status {
             position: relative;
             color: $blue-light;
             flex: 0 0 8px;
@@ -127,13 +127,13 @@ bex-quick-list {
             text-overflow: ellipsis;
             min-width: 0;
 
-            [bex-quick-list-item-title], [bex-quick-list-item-field] {
+            [bl-quick-list-item-title], [bl-quick-list-item-field] {
                 overflow: hidden;
                 text-overflow: ellipsis;
             }
         }
 
-        [bex-quick-list-item-preview] {
+        [bl-quick-list-item-preview] {
             padding: 3px 10px 0 0;
         }
 
@@ -154,7 +154,7 @@ bex-quick-list {
 }
 
 
-bex-no-item {
+bl-no-item {
     > .no-item-message {
         height: 275px;
         width: 100%;

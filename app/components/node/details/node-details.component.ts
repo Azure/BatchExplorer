@@ -10,7 +10,7 @@ import { RxEntityProxy } from "app/services/core";
 import { NodeConnectComponent } from "../connect";
 
 @Component({
-    selector: "bex-node-details",
+    selector: "bl-node-details",
     templateUrl: "node-details.html",
 })
 export class NodeDetailsComponent implements OnInit, OnDestroy {

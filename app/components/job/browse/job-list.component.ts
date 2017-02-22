@@ -17,8 +17,8 @@ import { Filter } from "app/utils/filter-builder";
 import { DeleteJobAction } from "../action";
 
 @Component({
-    selector: "bex-job-list",
-    templateUrl: "./job-list.html",
+    selector: "bl-job-list",
+    templateUrl: "job-list.html",
 })
 export class JobListComponent extends ListOrTableBase implements OnInit, OnDestroy {
     public LoadingStatus = LoadingStatus;

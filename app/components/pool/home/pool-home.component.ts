@@ -4,7 +4,7 @@ import { SidebarManager } from "../../base/sidebar";
 import { PoolCreateBasicDialogComponent } from "../action";
 
 @Component({
-    selector: "bex-pool-home",
+    selector: "bl-pool-home",
     templateUrl: "pool-home.html",
 })
 export class PoolHomeComponent {

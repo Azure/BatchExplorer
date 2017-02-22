@@ -6,7 +6,7 @@ import * as inflection from "inflection";
 const stateOrder = [TaskState.active, TaskState.preparing, TaskState.running, TaskState.completed];
 
 @Component({
-    selector: "bex-task-timeline-state",
+    selector: "bl-task-timeline-state",
     templateUrl: "task-timeline-state.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

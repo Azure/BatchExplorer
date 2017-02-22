@@ -1,28 +1,28 @@
-<bex-focus-section>
-    <bex-quick-list *ngIf="quickList">
-        <bex-quick-list-item *ngFor="let file of files| fileDirectoryFilter" [routerLink]="baseUrl.concat(['files', file.name])"
+<bl-focus-section>
+    <bl-quick-list *ngIf="quickList">
+        <bl-quick-list-item *ngFor="let file of files| fileDirectoryFilter" [routerLink]="baseUrl.concat(['files', file.name])"
             [key]="file.url">
-            <bex-quick-list-item-status [status]="" [tooltip]="">
-            </bex-quick-list-item-status>
+            <bl-quick-list-item-status [status]="" [tooltip]="">
+            </bl-quick-list-item-status>
 
-            <h4 bex-quick-list-item-title>{{file.name}}</h4>
-            <p bex-quick-list-item-field>{{file.properties.contentLength}} bytes</p>
-        </bex-quick-list-item>
-    </bex-quick-list>
+            <h4 bl-quick-list-item-title>{{file.name}}</h4>
+            <p bl-quick-list-item-field>{{file.properties.contentLength}} bytes</p>
+        </bl-quick-list-item>
+    </bl-quick-list>
 
-    <bex-table *ngIf="!quickList">
-        <bex-thead>
-            <bex-column>Name</bex-column>
-            <bex-column>Content Length</bex-column>
-        </bex-thead>
-        <bex-row *ngFor="let file of files | fileDirectoryFilter" [routerLink]="baseUrl.concat(['files', file.name])" [key]="file.url">
-            <bex-cell>{{file.name}}</bex-cell>
-            <bex-cell>{{file.properties.contentLength}}</bex-cell>
-        </bex-row>
-    </bex-table>
-    <bex-no-item [itemCount]="(files  | fileDirectoryFilter).size" [filter]="filter" [status]="status">
+    <bl-table *ngIf="!quickList">
+        <bl-thead>
+            <bl-column>Name</bl-column>
+            <bl-column>Content Length</bl-column>
+        </bl-thead>
+        <bl-row *ngFor="let file of files | fileDirectoryFilter" [routerLink]="baseUrl.concat(['files', file.name])" [key]="file.url">
+            <bl-cell>{{file.name}}</bl-cell>
+            <bl-cell>{{file.properties.contentLength}}</bl-cell>
+        </bl-row>
+    </bl-table>
+    <bl-no-item [itemCount]="(files  | fileDirectoryFilter).size" [filter]="filter" [status]="status">
         <i icon class="fa fa-tv"></i>
         <span no-filter>No files</span>
         <span with-filter>No files match this filter</span>
-    </bex-no-item>
-</bex-focus-section>
+    </bl-no-item>
+</bl-focus-section>

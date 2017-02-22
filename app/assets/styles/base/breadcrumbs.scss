@@ -1,5 +1,5 @@
 
-bex-breadcrumb-group {
+bl-breadcrumb-group {
     $separation: 3px;
     $height: 28px;
     $half-height: $height / 2;
@@ -18,7 +18,7 @@ bex-breadcrumb-group {
         }
     }
 
-    ul > bex-breadcrumb {
+    ul > bl-breadcrumb {
         display: block;
         height: $height;
         background: $color;

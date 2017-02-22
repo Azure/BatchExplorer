@@ -1,30 +1,30 @@
 <div class="timeline">
     <!-- Active-->
-    <bex-task-timeline-state state="active" [currentState]="task.state" [title]="activeMessage">
+    <bl-task-timeline-state state="active" [currentState]="task.state" [title]="activeMessage">
         {{creationTime}}
-    </bex-task-timeline-state>
+    </bl-task-timeline-state>
     <div class="state-link" [class.locked]="active"></div>
 
     <!-- Preparing (Optional) -->
-    <bex-task-timeline-state *ngIf="hasPreparationTask" state="preparing" [currentState]="task.state">
+    <bl-task-timeline-state *ngIf="hasPreparationTask" state="preparing" [currentState]="task.state">
         --
         <!-- TODO load the prep task info-->
-    </bex-task-timeline-state>
+    </bl-task-timeline-state>
     <div *ngIf="hasPreparationTask" class="state-link" [class.locked]="active || preparing"></div>
 
     <!-- Running-->
-    <bex-task-timeline-state state="running" [currentState]="task.state">
+    <bl-task-timeline-state state="running" [currentState]="task.state">
         <div *ngIf="started" [class.warn]="isTaskTimeoutClose" [class.error]="task.didTimeout" [title]="timeoutMessage">
-            <bex-elapsed-time [startTime]="task.executionInfo?.startTime" [endTime]="task.executionInfo?.endTime"></bex-elapsed-time>
+            <bl-elapsed-time [startTime]="task.executionInfo?.startTime" [endTime]="task.executionInfo?.endTime"></bl-elapsed-time>
         </div>
         <div *ngIf="started && retryCount" class="warn">{{retryCount}} retries</div>
-    </bex-task-timeline-state>
+    </bl-task-timeline-state>
     <div class="state-link" [class.locked]="!completed"></div>
 
     <!-- Completed-->
-    <bex-task-timeline-state state="completed" [currentState]="task.state" [error]="task.didTimeout">
+    <bl-task-timeline-state state="completed" [currentState]="task.state" [error]="task.didTimeout">
         <div *ngIf="completed">{{endTime}}</div>
         <div *ngIf="task.didTimeout" class="error">Task timed out</div>
         <div *ngIf="completedWarning" class="warn">Exit code {{task.executionInfo?.exitCode}}</div>
-    </bex-task-timeline-state>
+    </bl-task-timeline-state>
 </div>

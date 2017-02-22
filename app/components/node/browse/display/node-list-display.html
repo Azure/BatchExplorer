@@ -1,35 +1,35 @@
-<bex-focus-section>
-    <bex-quick-list *ngIf="quickList">
-        <bex-quick-list-item *ngFor="let node of nodes" [routerLink]="['/pools', poolId, 'nodes', node.id]" [key]="node.id">
-            <bex-quick-list-item-status [status]="" [tooltip]="">
-            </bex-quick-list-item-status>
+<bl-focus-section>
+    <bl-quick-list *ngIf="quickList">
+        <bl-quick-list-item *ngFor="let node of nodes" [routerLink]="['/pools', poolId, 'nodes', node.id]" [key]="node.id">
+            <bl-quick-list-item-status [status]="" [tooltip]="">
+            </bl-quick-list-item-status>
 
-            <h4 bex-quick-list-item-title>{{node.id}}</h4>
-            <p bex-quick-list-item-field>{{node.state}}</p>
-        </bex-quick-list-item>
-    </bex-quick-list>
+            <h4 bl-quick-list-item-title>{{node.id}}</h4>
+            <p bl-quick-list-item-field>{{node.state}}</p>
+        </bl-quick-list-item>
+    </bl-quick-list>
 
-    <bex-table *ngIf="!quickList">
-        <bex-thead>
-            <bex-column>Id</bex-column>
-            <bex-column>State</bex-column>
-            <bex-column>Scheduling State</bex-column>
-            <bex-column>VmSize</bex-column>
-            <bex-column>Total task run</bex-column>
-        </bex-thead>
+    <bl-table *ngIf="!quickList">
+        <bl-thead>
+            <bl-column>Id</bl-column>
+            <bl-column>State</bl-column>
+            <bl-column>Scheduling State</bl-column>
+            <bl-column>VmSize</bl-column>
+            <bl-column>Total task run</bl-column>
+        </bl-thead>
 
-        <bex-row *ngFor="let node of nodes" [routerLink]="['/pools', poolId, 'nodes', node.id]" [key]="node.id">
-            <bex-cell>{{node.id}}</bex-cell>
-            <bex-cell>{{node.state}}</bex-cell>
-            <bex-cell>{{node.schedulingState}}</bex-cell>
-            <bex-cell>{{node.vmSize}}</bex-cell>
-            <bex-cell>{{node.totalTasksRun}}</bex-cell>
-        </bex-row>
-    </bex-table>
+        <bl-row *ngFor="let node of nodes" [routerLink]="['/pools', poolId, 'nodes', node.id]" [key]="node.id">
+            <bl-cell>{{node.id}}</bl-cell>
+            <bl-cell>{{node.state}}</bl-cell>
+            <bl-cell>{{node.schedulingState}}</bl-cell>
+            <bl-cell>{{node.vmSize}}</bl-cell>
+            <bl-cell>{{node.totalTasksRun}}</bl-cell>
+        </bl-row>
+    </bl-table>
 
-    <bex-no-item [itemCount]="nodes.size" [filter]="filter" [status]="status | async">
+    <bl-no-item [itemCount]="nodes.size" [filter]="filter" [status]="status | async">
         <i icon class="fa fa-tv"></i>
         <span no-filter>No nodes</span>
         <span with-filter>No node match this filter</span>
-    </bex-no-item>
-</bex-focus-section>
+    </bl-no-item>
+</bl-focus-section>

@@ -2,7 +2,7 @@ import { Component, Input } from "@angular/core";
 import { clipboard } from "electron";
 
 @Component({
-    selector: "bex-text-property",
+    selector: "bl-text-property",
     template: `
         <section class="one-line" (mouseenter)="showClipboard = true" (mouseleave)="showClipboard = false">
             <label>{{label}}</label>

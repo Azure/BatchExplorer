@@ -1,6 +1,6 @@
-<bex-entity-details-list #listWrapper [showRefreshButton]="false" [showExpandButton]="false" [showFilterIcon]="false"
+<bl-entity-details-list #listWrapper [showRefreshButton]="false" [showExpandButton]="false" [showFilterIcon]="false"
     addButtonHoverText="Add package version" (onAddEntity)="list?.addPackage($event)" filterPlaceholder="Filter by package version">
-    <div bex-list-buttons>
+    <div bl-list-buttons>
         <!--
             multi select - "add" enabled and "delete" enabled if allow updates is true
             single select
@@ -19,5 +19,5 @@
         </button>
     </div>
 
-    <bex-application-package-table [application]="application" [filter]="listWrapper.filter" #list></bex-application-package-table>
-</bex-entity-details-list>
+    <bl-application-package-table [application]="application" [filter]="listWrapper.filter" #list></bl-application-package-table>
+</bl-entity-details-list>

@@ -5,7 +5,7 @@ import { autobind } from "core-decorators";
 import { JobService } from "app/services";
 
 @Component({
-    selector: "bex-enable-job-dialog",
+    selector: "bl-enable-job-dialog",
     templateUrl: "enable-job-dialog.html",
 })
 export class EnableJobDialogComponent {

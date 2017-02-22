@@ -9,7 +9,7 @@ import { ObservableUtils } from "app/utils";
 import { TaskCreateBasicDialogComponent } from "./task-create-basic-dialog.component";
 
 @Component({
-    selector: "bex-rerun-task-form",
+    selector: "bl-rerun-task-form",
     templateUrl: "task-create-basic-dialog.html",
 })
 export class RerunTaskFormComponent extends TaskCreateBasicDialogComponent {

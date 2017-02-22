@@ -100,7 +100,7 @@ describe("AccountListComponent", () => {
         const accountsEl = subscriptionsElList[1].query(By.css(".accounts"));
         expect(accountsEl).not.toBeNull();
 
-        const accountElList = accountsEl.queryAll(By.css("bex-quick-list-item"));
+        const accountElList = accountsEl.queryAll(By.css("bl-quick-list-item"));
         expect(accountElList.length).toBe(2);
 
         expect(accountElList[0].nativeElement.textContent).toContain("Account 1");
@@ -113,7 +113,7 @@ describe("AccountListComponent", () => {
         click(subscriptionsElList[0].query(By.css(".subscription-details")));
         fixture.detectChanges();
 
-        const noItemEl = subscriptionsElList[0].query(By.css(".accounts bex-no-item"));
+        const noItemEl = subscriptionsElList[0].query(By.css(".accounts bl-no-item"));
         expect(noItemEl).not.toBeNull();
         expect(noItemEl.nativeElement.textContent).toContain("No accounts in this subscription");
     });

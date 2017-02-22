@@ -1,16 +1,16 @@
-<bex-dropdown class="account-dropdown">
-    <div bex-dropdown-btn>
+<bl-dropdown class="account-dropdown">
+    <div bl-dropdown-btn>
         <div *ngIf="currentTask" class="current-task">
-            <bex-background-task-tracker-item [task]="currentTask"></bex-background-task-tracker-item>
+            <bl-background-task-tracker-item [task]="currentTask"></bl-background-task-tracker-item>
             <div class="other-task-count" *ngIf="otherTasks.size > 0">+{{otherTasks.size}}</div>
         </div>
         <div *ngIf="!currentTask">
             No current background tasks
         </div>
     </div>
-    <div bex-dropdown-content>
+    <div bl-dropdown-content>
         <div *ngFor="let task of otherTasks" class="dropdown-item">
-            <bex-background-task-tracker-item [task]="task"></bex-background-task-tracker-item>
+            <bl-background-task-tracker-item [task]="task"></bl-background-task-tracker-item>
         </div>
     </div>
-</bex-dropdown>
+</bl-dropdown>

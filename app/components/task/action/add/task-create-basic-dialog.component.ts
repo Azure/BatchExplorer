@@ -13,7 +13,7 @@ import { TaskService } from "app/services";
 import { Constants } from "app/utils";
 
 @Component({
-    selector: "bex-task-create-basic-dialog",
+    selector: "bl-task-create-basic-dialog",
     templateUrl: "task-create-basic-dialog.html",
 })
 export class TaskCreateBasicDialogComponent extends FormBaseComponent<Task, CreateTaskModel> {

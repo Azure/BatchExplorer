@@ -1,31 +1,31 @@
 <div  class="slideout-form content-wrapper">
     <h1>{{ title }}</h1>
     <p>{{ description }}</p>
-    <bex-create-form [formGroup]="applicationForm" [submit]="submit" [sidebarRef]="sidebarRef">
+    <bl-create-form [formGroup]="applicationForm" [submit]="submit" [sidebarRef]="sidebarRef">
         <form novalidate [formGroup]="applicationForm">
             <div class="form-element">
                 <md-input-container>
                     <input md-input formControlName="id" placeholder="Application identifier">
                 </md-input-container>
-                <bex-error controlName="id" code="required">The application identifier is a required field</bex-error>
-                <bex-error controlName="id" code="maxlength">Application identifier has a maximum length of 64 characters</bex-error>
-                <bex-error controlName="id" code="pattern">Application can contain any combination of alphanumeric characters including hyphens and underscores</bex-error>
+                <bl-error controlName="id" code="required">The application identifier is a required field</bl-error>
+                <bl-error controlName="id" code="maxlength">Application identifier has a maximum length of 64 characters</bl-error>
+                <bl-error controlName="id" code="pattern">Application can contain any combination of alphanumeric characters including hyphens and underscores</bl-error>
             </div>
 
             <div class="form-element">
                 <md-input-container>
                     <input md-input formControlName="version" placeholder="Package version">
                 </md-input-container>
-                <bex-error controlName="version" code="required">The package version is a required field</bex-error>
-                <bex-error controlName="version" code="maxlength">Package version has a maximum length of 64 characters</bex-error>
-                <bex-error controlName="version" code="pattern">Package version can only be in the format: 1, 1.2, 1.2a, 1.200.1, beta, etc</bex-error>
+                <bl-error controlName="version" code="required">The package version is a required field</bl-error>
+                <bl-error controlName="version" code="maxlength">Package version has a maximum length of 64 characters</bl-error>
+                <bl-error controlName="version" code="pattern">Package version can only be in the format: 1, 1.2, 1.2a, 1.200.1, beta, etc</bl-error>
             </div>
 
             <div class="form-element">
                 <h4>Select a package for upload</h4>
                 <input type="file" (change)="fileSelected($event)" />
-                <bex-error controlName="package" code="required">Please select a valid application package file</bex-error>
-                <bex-error controlName="package" code="pattern">Application packages need to be valid ZIP files only</bex-error>
+                <bl-error controlName="package" code="required">Please select a valid application package file</bl-error>
+                <bl-error controlName="package" code="pattern">Application packages need to be valid ZIP files only</bl-error>
                 <div *ngIf="hasValidFile()" class="input-summary">
                     <h4>Selected file details</h4>
                     <p><b>{{ file.name }}</b> ({{ prettyFileSize(file.size) }})</p>
@@ -33,5 +33,5 @@
                 </div>
             </div>
         </form>
-    </bex-create-form>
+    </bl-create-form>
 </div>

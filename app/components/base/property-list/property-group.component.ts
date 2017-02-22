@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 
 @Component({
-    selector: "bex-property-group",
+    selector: "bl-property-group",
     templateUrl: "property-group.html",
 })
 export class PropertyGroupComponent {

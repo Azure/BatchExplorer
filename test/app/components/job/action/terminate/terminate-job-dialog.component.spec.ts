@@ -50,7 +50,7 @@ describe("TerminateJobDialogComponent ", () => {
         component = fixture.componentInstance;
         component.jobId = "job-1";
         de = fixture.debugElement;
-        actionForm = de.query(By.css("bex-action-form")).componentInstance;
+        actionForm = de.query(By.css("bl-action-form")).componentInstance;
         fixture.detectChanges();
     });
 

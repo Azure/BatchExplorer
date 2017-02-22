@@ -7,7 +7,7 @@ import { BreadcrumbService } from "./breadcrumb.service";
 // Max number of breadcrumb to display without expanding
 const expandableCount = 4;
 @Component({
-    selector: "bex-breadcrumb-group",
+    selector: "bl-breadcrumb-group",
     templateUrl: "breadcrumb-group.html",
 })
 export class BreadcrumbGroupComponent implements OnDestroy {

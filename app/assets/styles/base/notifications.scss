@@ -9,7 +9,7 @@
     }
 }
 
-bex-notification-container {
+bl-notification-container {
     margin: 30px 10px;
     width: 320px;
     position: fixed;
@@ -58,7 +58,7 @@ bex-notification-container {
     }
 }
 
-bex-notification {
+bl-notification {
     position: relative;
     display: flex;
     width: 100%;
@@ -158,7 +158,7 @@ bex-notification {
 }
 
 
-bex-persistent-notifications-dropdown {
+bl-persistent-notifications-dropdown {
     .fa-bell {
         font-size: 20px;
     }
@@ -174,11 +174,11 @@ bex-persistent-notifications-dropdown {
         height: 18px;
     }
 
-    [bex-dropdown-btn] {
+    [bl-dropdown-btn] {
         border-right: 1px solid $navigation-background;
     }
 
-    [bex-dropdown-content] {
+    [bl-dropdown-content] {
         width: 400px;
 
         .icon {

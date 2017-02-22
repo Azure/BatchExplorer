@@ -11,8 +11,8 @@ export enum SubmitStatus {
 }
 
 @Component({
-    selector: "bex-submit-btn",
-    templateUrl: "./submit-btn.html",
+    selector: "bl-submit-btn",
+    templateUrl: "submit-btn.html",
     animations: [
         trigger("animateSucessIcon", [
             transition(":enter", [

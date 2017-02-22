@@ -9,7 +9,7 @@ import { TaskService } from "app/services";
 import * as Fixtures from "test/fixture";
 
 @Component({
-    template: `<bex-task-error-display jobId="job-1" [task]="task"></bex-task-error-display>`,
+    template: `<bl-task-error-display jobId="job-1" [task]="task"></bl-task-error-display>`,
 })
 class TestTaskErrorDisplayComponent {
     public task: Task;
@@ -34,13 +34,13 @@ describe("TaskErrorDisplayComponent", () => {
         });
         fixture = TestBed.createComponent(TestTaskErrorDisplayComponent);
         testComponent = fixture.componentInstance;
-        component = fixture.debugElement.query(By.css("bex-task-error-display")).componentInstance;
+        component = fixture.debugElement.query(By.css("bl-task-error-display")).componentInstance;
         fixture.detectChanges();
     });
 
     describe("when there is no error", () => {
         it("should not show anything", () => {
-            expect(fixture.debugElement.query(By.css("bex-banner"))).toBeNull();
+            expect(fixture.debugElement.query(By.css("bl-banner"))).toBeNull();
         });
     });
 
@@ -60,17 +60,17 @@ describe("TaskErrorDisplayComponent", () => {
             expect(component.hasFailureExitCode).toBe(true);
         });
 
-        it("should show 1 bex banner", () => {
-            expect(fixture.debugElement.queryAll(By.css("bex-banner")).length).toBe(1);
+        it("should show 1 bl banner", () => {
+            expect(fixture.debugElement.queryAll(By.css("bl-banner")).length).toBe(1);
         });
 
         it("Should show the code and message", () => {
-            const banner = fixture.debugElement.query(By.css("bex-banner"));
+            const banner = fixture.debugElement.query(By.css("bl-banner"));
             expect(banner.nativeElement.textContent).toContain("Task completed with exit code '1'");
         });
 
         it("should propose increase quota as a first fix", () => {
-            const banner = fixture.debugElement.query(By.css("bex-banner")).componentInstance;
+            const banner = fixture.debugElement.query(By.css("bl-banner")).componentInstance;
             expect(banner.fixMessage).toContain("Rerun task");
         });
     });
