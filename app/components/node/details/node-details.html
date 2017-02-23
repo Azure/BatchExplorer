@@ -1,5 +1,5 @@
 <bl-loading [status]="data.newDataStatus | async">
-    <div *ngIf="node">
+    <div *ngIf="pool && node">
         <md-card class="overview">
             <md-card-title-group style="margin: 0px;">
                 <div style="align-items:center;">
@@ -23,7 +23,7 @@
             <bl-tab-group>
                 <bl-tab key="properties">
                     <bl-tab-label>Properties</bl-tab-label>
-                    <bl-node-properties [node]="node"></bl-node-properties>
+                    <bl-node-properties [pool]="pool" [node]="node"></bl-node-properties>
                 </bl-tab>
                 <bl-tab key="recent-tasks">
                     <bl-tab-label>Recent tasks</bl-tab-label>
