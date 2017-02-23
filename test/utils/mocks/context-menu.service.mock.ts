@@ -8,6 +8,6 @@ export class ContextMenuServiceMock {
     }
 
     public asProvider() {
-        return { provide: ContextMenuService, usevalue: this };
+        return { provide: ContextMenuService, useValue: this };
     }
 }

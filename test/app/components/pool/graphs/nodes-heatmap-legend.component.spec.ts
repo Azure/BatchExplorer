@@ -4,7 +4,7 @@ import { By } from "@angular/platform-browser";
 import { AppModule } from "app/app.module";
 import { NodesHeatmapLegendComponent } from "app/components/pool/graphs";
 import { HeatmapColor } from "app/components/pool/graphs/heatmap-color";
-import { ButtonClickEvents, click } from "test/utils/helpers";
+import {  click, rightClick } from "test/utils/helpers";
 import { ContextMenuServiceMock } from "test/utils/mocks";
 
 const stateTree = [
@@ -107,7 +107,7 @@ describe("NodesHeatmapLegendComponent", () => {
 
     it("should show context menu when right clicking on a state", () => {
         const stateEls = fixture.debugElement.queryAll(By.css(".legend-item.state"));
-        click(stateEls[0], ButtonClickEvents.right);
+        rightClick(stateEls[0]);
 
         expect(contextMenuService.openMenu).toHaveBeenCalledOnce();
     });
