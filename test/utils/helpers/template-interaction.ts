@@ -21,7 +21,6 @@ export const ButtonClickEvents = {
     left: new FakeMouseEvent({ button: 0 }),
     leftShift: new FakeMouseEvent({ button: 0, shiftKey: true }),
     leftCtrl: new FakeMouseEvent({ button: 0, ctrlKey: true }),
-    right: new FakeMouseEvent({ button: 2 }),
 };
 
 /**
@@ -38,6 +37,21 @@ export function click(el: DebugElement | HTMLElement | Node, eventObj: any = But
         el.dispatchEvent(evt);
     }
     return eventObj;
+}
+
+/**
+ * Simulate element click. Defaults to mouse left-button click event.
+ */
+export function rightClick(el: DebugElement | HTMLElement | Node) {
+    if (el instanceof DebugElement) {
+        el.triggerEventHandler("contextmenu", new FakeMouseEvent({}));
+    } else if ((el as any).contextmenu) {
+        (el as any).contextmenu();
+    } else if (el.dispatchEvent) {
+        const evt = document.createEvent("MouseEvents");
+        evt.initMouseEvent("contextmenu", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+        el.dispatchEvent(evt);
+    }
 }
 
 /**

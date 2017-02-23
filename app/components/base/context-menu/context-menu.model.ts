@@ -39,7 +39,7 @@ export class ContextMenuItem {
     constructor(label: string, click: Function);
     constructor(labelOrConfig: string | ContextMenuItemConfig, click?: Function) {
         this.id = SecureUtils.uuid();
-        if (labelOrConfig instanceof String) {
+        if (typeof (labelOrConfig) === "string") {
             this.label = labelOrConfig;
             this._click = click;
         } else {
