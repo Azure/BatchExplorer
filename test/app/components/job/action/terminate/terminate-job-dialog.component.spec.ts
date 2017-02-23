@@ -63,7 +63,7 @@ describe("TerminateJobDialogComponent ", () => {
         actionForm.performActionAndClose();
 
         expect(jobServiceSpy.terminate).toHaveBeenCalledTimes(1);
-        expect(jobServiceSpy.terminate).toHaveBeenCalledWith("job-1", {});
+        expect(jobServiceSpy.terminate).toHaveBeenCalledWith("job-1");
     });
 
     it("Submit should call service and show error if fail", () => {
@@ -72,7 +72,7 @@ describe("TerminateJobDialogComponent ", () => {
         actionForm.performActionAndClose();
 
         expect(jobServiceSpy.terminate).toHaveBeenCalledTimes(1);
-        expect(jobServiceSpy.terminate).toHaveBeenCalledWith("bad-job-id", {});
+        expect(jobServiceSpy.terminate).toHaveBeenCalledWith("bad-job-id");
 
         fixture.detectChanges();
 

@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
 import { MdDialogRef } from "@angular/material";
 import { autobind } from "core-decorators";
 
@@ -9,15 +9,22 @@ import { JobService } from "app/services";
 @Component({
     selector: "bl-delete-job-dialog",
     templateUrl: "delete-job-dialog.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DeleteJobDialogComponent {
-    public jobId: string;
-    public processing: boolean = false;
+    public set jobId(jobId: string) {
+        this._jobId = jobId;
+        this.changeDetector.detectChanges();
+    }
+    public get jobId() { return this._jobId; };
+
+    private _jobId: string;
 
     constructor(
         public dialogRef: MdDialogRef<DeleteJobDialogComponent>,
         private jobService: JobService,
-        private taskManager: BackgroundTaskManager) {
+        private taskManager: BackgroundTaskManager,
+        private changeDetector: ChangeDetectorRef) {
     }
 
     @autobind()
