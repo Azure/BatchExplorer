@@ -19,7 +19,9 @@ module.exports = function (config) {
         port: 9876,
 
         logLevel: config.LOG_INFO,
-
+        browserConsoleLogOptions: {
+            level: "log",
+        },
         colors: true,
 
         autoWatch: false,
@@ -37,7 +39,6 @@ module.exports = function (config) {
             "karma-sourcemap-loader",
             "karma-mocha-reporter",
             "karma-electron",
-            "karma-electron-launcher",
             "karma-webpack",
         ],
 
