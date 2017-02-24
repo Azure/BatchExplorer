@@ -1,6 +1,6 @@
 <bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
 <bl-quick-list *ngIf="quickList">
-    <bl-quick-list-item *ngFor="let job of data.items | async" [routerLink]="['/jobs/', job.id]" [key]="job.id">
+    <bl-quick-list-item *ngFor="let job of data.items | async" [routerLink]="['/jobs/', job.id]" [key]="job.id" [contextmenu]="contextmenu(job)">
         <bl-quick-list-item-status [status]="jobStatus(job)" [tooltip]="jobStatusText(job)">
         </bl-quick-list-item-status>
 
@@ -19,7 +19,7 @@
         <bl-column>Pool</bl-column>
     </bl-thead>
 
-    <bl-row *ngFor="let job of data.items | async" [routerLink]="['/jobs/', job.id]" [key]="job.id">
+    <bl-row *ngFor="let job of data.items | async" [routerLink]="['/jobs/', job.id]" [key]="job.id" [contextmenu]="contextmenu(job)">
         <bl-cell>{{job.id}}</bl-cell>
         <bl-cell>{{job.state}}</bl-cell>
         <bl-cell>{{job.poolInfo?.poolId}}</bl-cell>

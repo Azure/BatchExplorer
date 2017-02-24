@@ -1,7 +1,8 @@
 import { Component, Input } from "@angular/core";
 import { List } from "immutable";
 
-import { BackgroundTask, BackgroundTaskManager } from "./background-task-manager";
+import { BackgroundTask } from "./background-task.model";
+import { BackgroundTaskService } from "./background-task.service";
 
 @Component({
     selector: "bl-background-task-tracker",
@@ -12,7 +13,7 @@ export class BackgroundTaskTrackerComponent {
     public currentTask: BackgroundTask;
     public otherTasks: List<BackgroundTask>;
 
-    constructor(public taskManager: BackgroundTaskManager) {
+    constructor(public taskManager: BackgroundTaskService) {
         taskManager.runningTasks.subscribe((tasks) => {
             this.currentTask = tasks.first();
             this.otherTasks = tasks.shift();

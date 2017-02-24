@@ -1,0 +1,36 @@
+<div class="slideout-form content-wrapper node-connect" *ngIf="node && pool">
+    <div class="connect-content">
+        <h1>Connect to node </h1>
+        <div *ngIf="credentialSource === null">
+            <h3>Node credentials</h3>
+            <div class="credentials-source">
+                <bl-submit-btn [submit]="generateCredentials">Generate</bl-submit-btn>
+                <bl-submit-btn [submit]="specifyCredentials">Specify</bl-submit-btn>
+            </div>
+        </div>
+        <div *ngIf="credentialSource === CredentialSource.Specified && !credentials">
+            <bl-node-user-credentials-form [submit]="addOrUpdateUser" [isWindowsNode]="isWindows"></bl-node-user-credentials-form>
+        </div>
+        <div>
+            <bl-property-group *ngIf="credentials" class="normal">
+                <div class="warn-text">These credentials are now valid for 24 hours on this node</div>
+                <bl-text-property label="Username" [value]="credentials.username"></bl-text-property>
+                <bl-text-property label="Password" [value]="credentials.password" *ngIf="credentialSource === CredentialSource.Generated"></bl-text-property>
+            </bl-property-group>
+        </div>
+        <div *ngIf="hasIp && connectionSettings && credentials">
+            <h3>Connection settings</h3>
+            <bl-property-group  class="normal">
+                <bl-text-property label="Ip" [value]="connectionSettings.ip"></bl-text-property>
+                <bl-text-property label="Port" [value]="connectionSettings.port"></bl-text-property>
+                <bl-text-property *ngIf="!windows" label="SSH command" [value]="sshCommand"></bl-text-property>
+            </bl-property-group>
+        </div>
+    </div>
+    <div class="action-btns">
+        <span *ngIf="credentials && windows && agentSkus">
+            <bl-download-rdp [nodeId]="node.id" [credentials]="credentials" [rdpContent]="rdpContent" [connectionSettings]="connectionSettings"></bl-download-rdp>
+        </span>
+        <button md-raised-button (click)="sidebarRef.destroy()">Close</button>
+    </div>
+</div>

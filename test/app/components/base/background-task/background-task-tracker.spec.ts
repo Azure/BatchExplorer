@@ -4,12 +4,12 @@ import { By } from "@angular/platform-browser";
 import { Subject } from "rxjs";
 
 import {
-    BackgroundTaskManager, BackgroundTaskModule, BackgroundTaskTrackerComponent,
+    BackgroundTaskModule, BackgroundTaskService, BackgroundTaskTrackerComponent,
 } from "app/components/base/background-task";
 
 describe("BackgroundTaskTrackerComponent", () => {
     let fixture: ComponentFixture<BackgroundTaskTrackerComponent>;
-    let taskManager: BackgroundTaskManager;
+    let taskManager: BackgroundTaskService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -23,7 +23,7 @@ describe("BackgroundTaskTrackerComponent", () => {
         fixture.detectChanges();
     });
 
-    beforeEach(inject([BackgroundTaskManager], (d: BackgroundTaskManager) => {
+    beforeEach(inject([BackgroundTaskService], (d: BackgroundTaskService) => {
         taskManager = d;
     }));
 

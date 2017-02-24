@@ -1,5 +1,5 @@
 import {
-    AfterViewInit, ContentChildren, EventEmitter, OnDestroy, Output, QueryList,
+    AfterViewInit, ContentChildren, EventEmitter,  OnDestroy, Output, QueryList,
 } from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
 import { autobind } from "core-decorators";

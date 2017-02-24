@@ -2,7 +2,7 @@ import { Component } from "@angular/core";
 import { MdDialogRef } from "@angular/material";
 import { autobind } from "core-decorators";
 
-import { BackgroundTaskManager } from "app/components/base/background-task";
+import { BackgroundTaskService } from "app/components/base/background-task";
 import { DeleteTaskAction } from "app/components/task/action";
 import { TaskService } from "app/services";
 
@@ -17,7 +17,7 @@ export class DeleteTaskDialogComponent {
     constructor(
         public dialogRef: MdDialogRef<DeleteTaskDialogComponent>,
         private taskService: TaskService,
-        private taskManager: BackgroundTaskManager) {
+        private taskManager: BackgroundTaskService) {
     }
 
     @autobind()

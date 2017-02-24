@@ -2,6 +2,7 @@ import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 
 import { log } from "app/utils";
 import { AppModule } from "./app.module";
+import { handleCoreError } from "./error-handler";
 
 // Setup extension methods
 import "hammerjs";
@@ -13,5 +14,7 @@ import "./assets/styles/main.scss";
 
 const platform = platformBrowserDynamic();
 
-platform.bootstrapModule(AppModule)
-    .catch(error => log.error("Bootstrapping failed :: ", error));
+platform.bootstrapModule(AppModule).catch(error => {
+    log.error("Bootstrapping failed :: ", error);
+    handleCoreError(error);
+});

@@ -1,19 +1,23 @@
 import {
     Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild,
 } from "@angular/core";
+import { MdDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Observable, Subscription } from "rxjs";
 
-import { BackgroundTaskManager } from "app/components/base/background-task";
+import { BackgroundTaskService } from "app/components/base/background-task";
+import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListComponent, QuickListItemStatus } from "app/components/base/quick-list";
 import { ListOrTableBase } from "app/components/base/selectable-list";
+import { SidebarManager } from "app/components/base/sidebar";
 import { TableComponent } from "app/components/base/table";
 import { Pool } from "app/models";
 import { PoolService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
+import { DeletePoolDialogComponent, PoolResizeDialogComponent } from "../action";
 import { DeletePoolTask } from "../action/delete";
 
 @Component({
@@ -59,9 +63,11 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         private poolService: PoolService,
         activatedRoute: ActivatedRoute,
         router: Router,
-        private taskManager: BackgroundTaskManager) {
+        dialog: MdDialog,
+        private sidebarManager: SidebarManager,
+        private taskManager: BackgroundTaskService) {
 
-        super();
+        super(dialog);
         this.data = this.poolService.list();
         this.status = this.data.status;
         this._onPoolAddedSub = poolService.onPoolAdded.subscribe((poolId) => {
@@ -104,5 +110,25 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
             task.start(backgroundTask);
             return task.waitingDone;
         });
+    }
+
+    public deletePool(pool: Pool) {
+        const dialogRef = this.dialog.open(DeletePoolDialogComponent);
+        dialogRef.componentInstance.poolId = pool.id;
+    }
+
+    public resizePool(pool: Pool) {
+        const sidebarRef = this.sidebarManager.open("resize-pool", PoolResizeDialogComponent);
+        sidebarRef.component.pool = pool;
+        this.sidebarManager.onClosed.subscribe(() => {
+            this.poolService.getOnce(pool.id);
+        });
+    }
+
+    public contextmenu(pool) {
+        return new ContextMenu([
+            new ContextMenuItem({ label: "Delete", click: () => this.deletePool(pool) }),
+            new ContextMenuItem({ label: "Resize", click: () => this.resizePool(pool) }),
+        ]);
     }
 }

@@ -1,5 +1,5 @@
 import { HashLocationStrategy, LocationStrategy } from "@angular/common";
-import { NgModule } from "@angular/core";
+import { ErrorHandler, NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
@@ -8,6 +8,7 @@ import { RouterModule } from "@angular/router";
 import { routes } from "./app.routes";
 
 // components
+import { NodeConnectModule } from "app/components/node/connect";
 import { StartTaskModule } from "app/components/pool/start-task";
 import { AppComponent } from "./app.component";
 import { DeleteAccountDialogComponent } from "./components/account/action/delete-account-dialog.component";
@@ -41,6 +42,7 @@ import { TaskBrowseModule } from "./components/task/browse";
 import { TaskDetailsModule } from "./components/task/details";
 import { TaskHomeComponent } from "./components/task/home";
 import { AADUserDropdownComponent } from "./components/user";
+import { BatchLabsErrorHandler } from "./error-handler";
 
 // job actions
 import {
@@ -75,10 +77,13 @@ import {
     ApplicationService,
     AzureHttpService,
     CommandService,
+    ElectronShell,
     FileService,
+    FileSystemService,
     HttpUploadService,
     JobService,
     NodeService,
+    NodeUserService,
     PoolService,
     SettingsService,
     SubscriptionService,
@@ -87,9 +92,12 @@ import {
 } from "./services";
 
 const modules = [
-    ApplicationModule, PoolDetailsModule, PoolGraphsModule, StartTaskModule,
-    JobDetailsModule, TaskBaseModule, TaskDetailsModule, TaskBrowseModule,
-    NodeBrowseModule, FileBrowseModule, FileDetailsModule,
+    ApplicationModule,
+    PoolDetailsModule, PoolGraphsModule, StartTaskModule,
+    JobDetailsModule,
+    TaskBaseModule, TaskDetailsModule, TaskBrowseModule,
+    NodeBrowseModule, NodeConnectModule,
+    FileBrowseModule, FileDetailsModule,
 ];
 
 @NgModule({
@@ -168,14 +176,18 @@ const modules = [
         ApplicationService,
         AzureHttpService,
         CommandService,
+        ElectronShell,
         FileService,
+        FileSystemService,
         HttpUploadService,
         JobService,
         PoolService,
         SubscriptionService,
         NodeService,
+        NodeUserService,
         SettingsService,
         TaskService,
+        { provide: ErrorHandler, useClass: BatchLabsErrorHandler },
         ...commands,
     ],
 })

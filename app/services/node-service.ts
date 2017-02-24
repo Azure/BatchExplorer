@@ -2,8 +2,8 @@ import { Injectable } from "@angular/core";
 import { List } from "immutable";
 import { AsyncSubject, Observable } from "rxjs";
 
-import { BackgroundTaskManager } from "app/components/base/background-task";
-import { Node, NodeState } from "app/models";
+import { BackgroundTaskService } from "app/components/base/background-task";
+import { Node, NodeConnectionSettings, NodeState } from "app/models";
 import { ArrayUtils, ObservableUtils, log } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 import BatchClient from "../api/batch/batch-client";
@@ -11,6 +11,7 @@ import {
     DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache,
     getOnceProxy,
 } from "./core";
+import { FileContentResult } from "./file-service";
 import { CommonListOptions, ServiceBase } from "./service-base";
 
 export interface NodeListParams {
@@ -32,7 +33,7 @@ export class NodeService extends ServiceBase {
         key: ({poolId}) => poolId,
     });
 
-    constructor(private taskManager: BackgroundTaskManager) {
+    constructor(private taskManager: BackgroundTaskService) {
         super();
     }
     public get basicProperties(): string {
@@ -118,6 +119,19 @@ export class NodeService extends ServiceBase {
         });
     }
 
+    public getRemoteDesktop(poolId: string, nodeId: string, options: any = {}): Observable<FileContentResult> {
+        return this.callBatchClient(BatchClient.node.getRemoteDesktop(poolId, nodeId, options), (error) => {
+            log.error("Error downloading RDP file for node " + nodeId, Object.assign({}, error));
+        });
+    }
+
+    public getRemoteLoginSettings(poolId: string, nodeId: string, options = {}): Observable<NodeConnectionSettings> {
+        return this.callBatchClient(BatchClient.node.getRemoteLoginSettings(poolId, nodeId, options))
+            .map((response: any) => {
+                return new NodeConnectionSettings(response.data);
+            });
+    }
+
     public performOnEachNode(
         taskName: string,
         poolId: string,
@@ -125,7 +139,6 @@ export class NodeService extends ServiceBase {
         callback: (node: Node) => Observable<any>) {
 
         this.taskManager.startTask(taskName, (bTask) => {
-            let subject = new AsyncSubject();
             const options: any = {
                 maxResults: 1000,
             };
@@ -133,7 +146,7 @@ export class NodeService extends ServiceBase {
                 options.filter = FilterBuilder.or(...states.map(x => FilterBuilder.prop("state").eq(x))).toOData();
             }
             bTask.progress.next(1);
-            this.listAll(poolId, options).subscribe((nodes) => {
+            return this.listAll(poolId, options).cascade((nodes) => {
                 const chunks = ArrayUtils.chunk<Node>(nodes.toJS(), 100);
                 const chunkFuncs = chunks.map((chunk, i) => {
                     return () => {
@@ -142,9 +155,8 @@ export class NodeService extends ServiceBase {
                     };
                 });
 
-                ObservableUtils.queue(...chunkFuncs).subscribe(() => subject.complete());
+                return ObservableUtils.queue(...chunkFuncs);
             });
-            return subject.asObservable();
         });
     }
 

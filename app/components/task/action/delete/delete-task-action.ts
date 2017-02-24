@@ -1,7 +1,7 @@
 import { autobind } from "core-decorators";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import { BackgroundTaskManager } from "app/components/base/background-task";
+import { BackgroundTaskService } from "app/components/base/background-task";
 import { Task } from "app/models";
 import { TaskService } from "app/services";
 import { LongRunningDeleteAction } from "app/services/core";
@@ -16,7 +16,7 @@ export class DeleteTaskAction extends LongRunningDeleteAction {
         return this.taskService.delete(this.jobId, id);
     }
 
-    public waitForDelete(id: string, taskManager?: BackgroundTaskManager) {
+    public waitForDelete(id: string, taskManager?: BackgroundTaskService) {
         this.taskService.getOnce(this.jobId, id).subscribe({
             next: (task: Task) => {
                 const poller = new WaitForDeleteTaskPoller(this.taskService, this.jobId, id);
