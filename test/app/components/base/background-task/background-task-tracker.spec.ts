@@ -4,7 +4,7 @@ import { By } from "@angular/platform-browser";
 import { Subject } from "rxjs";
 
 import {
-    BackgroundTaskService, BackgroundTaskModule, BackgroundTaskTrackerComponent,
+    BackgroundTaskModule, BackgroundTaskService, BackgroundTaskTrackerComponent,
 } from "app/components/base/background-task";
 
 describe("BackgroundTaskTrackerComponent", () => {

@@ -7,13 +7,15 @@ import { List } from "immutable";
 import { BehaviorSubject, Subject } from "rxjs";
 
 import { BackgroundTask, BackgroundTaskService } from "app/components/base/background-task";
+import { NotificationServiceMock } from "test/utils/mocks";
 
 describe("BackgroundTaskService ", () => {
     let taskManager: BackgroundTaskService;
     let runningTasks: List<BackgroundTask>;
-
+    let notificationServiceSpy: NotificationServiceMock;
     beforeEach(() => {
-        taskManager = new BackgroundTaskService();
+        notificationServiceSpy = new NotificationServiceMock();
+        taskManager = new BackgroundTaskService(notificationServiceSpy as any);
         taskManager.runningTasks.subscribe((tasks) => {
             runningTasks = tasks;
         });
