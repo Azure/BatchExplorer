@@ -39,7 +39,6 @@ module.exports = function (config) {
             "karma-sourcemap-loader",
             "karma-mocha-reporter",
             "karma-electron",
-            "karma-electron-launcher",
             "karma-webpack",
         ],
 
