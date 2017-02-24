@@ -17,14 +17,11 @@ function createTask(exitCode: number, startTime: Date, endTime: Date, maxWallClo
 
 describe("Task Model", () => {
     describe("#didTimeout()", () => {
-        fit("should return false if execution info or constraints are null", () => {
-            console.log("Should log this...");
-            console.debug("Should debug this...");
+        it("should return false if execution info or constraints are null", () => {
             expect(new Task().didTimeout).toBe(false);
             expect(new Task({ executionInfo: { startTime: null } }).didTimeout).toBe(false);
             expect(new Task({ constraints: {} }).didTimeout).toBe(false);
         });
-        // maxWallClockTime: moment.duration("PT4M"
 
         it("Should return false if there is no maxWallClockTime", () => {
             expect(new Task({ executionInfo: {}, constraints: {} }).didTimeout).toBe(false);
