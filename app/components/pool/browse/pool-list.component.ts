@@ -6,7 +6,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Observable, Subscription } from "rxjs";
 
-import { BackgroundTaskManager } from "app/components/base/background-task";
+import { BackgroundTaskService } from "app/components/base/background-task";
 import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListComponent, QuickListItemStatus } from "app/components/base/quick-list";
@@ -65,7 +65,7 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         router: Router,
         dialog: MdDialog,
         private sidebarManager: SidebarManager,
-        private taskManager: BackgroundTaskManager) {
+        private taskManager: BackgroundTaskService) {
 
         super(dialog);
         this.data = this.poolService.list();
