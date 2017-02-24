@@ -1,7 +1,9 @@
 import { Type } from "@angular/core";
 import * as moment from "moment";
 
-import { AccountResource, Job, Node, Pool, Subscription, SubtaskInformation, Task } from "app/models";
+import { AccountResource, Application, ApplicationPackage, Job, Node, PackageState, Pool,
+    Subscription, SubtaskInformation, Task,
+} from "app/models";
 
 export class FixtureFactory<TEntity> {
     constructor(private type: Type<TEntity>, private defaultData: any) {
@@ -210,4 +212,27 @@ export const account = new FixtureFactory<AccountResource>(AccountResource, {
     name: "account-test",
     location: "westus",
     type: "BatchAccount",
+    properties: {
+        autoStorage: {
+            storageAccountId: null,
+            lastKeySync: null,
+        },
+    },
+});
+
+export const application = new FixtureFactory<Application>(Application, {
+    id: "app-1",
+    displayName: "test application",
+    allowUpdates: true,
+    defaultVersion: null,
+    packages: null,
+});
+
+export const applicationPackage = new FixtureFactory<ApplicationPackage>(ApplicationPackage, {
+    version: "1",
+    state: PackageState.active,
+    format: "zip",
+    lastActivationTime: new Date(),
+    storageUrl: "",
+    storageUrlExpiry: null,
 });
