@@ -27,7 +27,7 @@ export class RxMockEntityProxy<TParams, TEntity> extends RxEntityProxy<TParams, 
     }
 
     public fetch(): Observable<TEntity> {
-        console.log("returning", this._processItem(this._item));
+        // console.log("returning", this._processItem(this._item));
         return Observable.of(this._processItem(this._item));
     }
 
