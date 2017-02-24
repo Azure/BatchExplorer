@@ -1,7 +1,6 @@
 import { Type } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { ServerError } from "app/models";
 import { DataCache, RxEntityProxy } from "app/services/core";
 
 export interface RxMockEntityProxyConfig<TParams, TEntity> {
@@ -22,23 +21,11 @@ export class RxMockEntityProxy<TParams, TEntity> extends RxEntityProxy<TParams, 
             cache: () => new DataCache<TEntity>(config.cacheKey || "id"),
         });
 
-        // console.log((config.item as any).toJS());
         this._item = config.item as TEntity;
     }
 
-    public fetch(): Observable<TEntity> {
-        // console.log("returning", this._processItem(this._item));
-        return Observable.of(this._processItem(this._item));
-    }
-
-    public refresh(): Observable<TEntity> {
-        return this.fetch();
-    }
-
     protected getData(): Observable<TEntity> {
-        return this.fetch().catch((error) => {
-            return Observable.throw(ServerError.fromBatch(error));
-        });
+        return Observable.of(this._processItem(this._item));
     }
 
     private _processItem(item: TEntity) {

@@ -1,14 +1,15 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { ActivatedRoute } from "@angular/router";
+import { RouterTestingModule } from "@angular/router/testing";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
-import { AppModule } from "app/app.module";
+import { ApplicationModule } from "app/components/application/application.module";
 import { ApplicationDetailsComponent } from "app/components/application/details";
 import { Application, PackageState } from "app/models";
-import { ApplicationService } from "app/services";
+import { AccountService, ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";
-import { RxMockEntityProxy } from "test/utils/mocks";
+import { ActivatedRouteMock, RxMockEntityProxy } from "test/utils/mocks";
 
 const enabledAppId: string = "app-1";
 
@@ -26,10 +27,10 @@ fdescribe("ApplicationDetailsComponent", () => {
     let entityProxy: RxMockEntityProxy<any, Application>;
     let applicationServiceSpy: any;
     let activatedRouteSpy: any;
+    let accountServiceSpy: any;
 
     beforeEach(() => {
         entityProxy = new RxMockEntityProxy(Application, {
-            cacheKey: "url",
             item: Fixtures.application.create({ id: enabledAppId, displayName: "bob" }),
         });
 
@@ -37,14 +38,19 @@ fdescribe("ApplicationDetailsComponent", () => {
             get: () => entityProxy,
         };
 
-        activatedRouteSpy = {
-            params: Observable.of({ id: enabledAppId }),
+        accountServiceSpy = {
+            currentAccount: Observable.of({ id: "some-account" }),
         };
 
+        activatedRouteSpy = new ActivatedRouteMock({
+            params: Observable.of({ id: enabledAppId }),
+        });
+
         TestBed.configureTestingModule({
-            imports: [AppModule],
+            imports: [ApplicationModule, RouterTestingModule],
             providers: [
                 { provide: ApplicationService, useValue: applicationServiceSpy },
+                { provide: AccountService, useValue: accountServiceSpy },
                 { provide: ActivatedRoute, useValue: activatedRouteSpy },
             ],
         });
