@@ -3,7 +3,7 @@ import { MdDialog, MdDialogConfig } from "@angular/material";
 import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { BackgroundTaskManager } from "app/components/base/background-task";
+import { BackgroundTaskService } from "app/components/base/background-task";
 import { ListOrTableBase } from "app/components/base/selectable-list";
 import { Application, ApplicationPackage, PackageState } from "app/models";
 import { ApplicationService } from "app/services";
@@ -52,7 +52,7 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
         protected dialog: MdDialog,
         private applicationService: ApplicationService,
         private sidebarManager: SidebarManager,
-        private taskManager: BackgroundTaskManager,
+        private taskManager: BackgroundTaskService,
         private viewContainerRef: ViewContainerRef) {
 
         super(dialog);

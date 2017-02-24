@@ -2,7 +2,7 @@
 // import { autobind } from "core-decorators";
 // import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import { BackgroundTaskManager } from "app/components/base/background-task";
+import { BackgroundTaskService } from "app/components/base/background-task";
 // import { Pool } from "app/models";
 import { PoolService } from "app/services";
 import { LongRunningUploadAction } from "app/services/core";
@@ -17,7 +17,7 @@ export class UploadPackageTask extends LongRunningUploadAction {
         return null;
     }
 
-    protected waitForUpload(filename: string, taskManager?: BackgroundTaskManager) {
+    protected waitForUpload(filename: string, taskManager?: BackgroundTaskService) {
         // this.poolService.getOnce(id).subscribe({
         //     next: (pool: Pool) => {
         //         const task = new WaitForDeletePoolPollTask(this.poolService, id, pool.currentDedicated);
