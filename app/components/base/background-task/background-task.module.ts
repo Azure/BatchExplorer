@@ -4,10 +4,10 @@ import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 
 import { DropdownModule } from "../dropdown";
-import { BackgroundTaskManager } from "./background-task-manager";
 import {
     BackgroundTaskTrackerComponent, BackgroundTaskTrackerItemComponent,
 } from "./background-task-tracker.component";
+import { BackgroundTaskService } from "./background-task.service";
 
 @NgModule({
     declarations: [
@@ -24,7 +24,7 @@ import {
         DropdownModule,
     ],
     providers: [
-        BackgroundTaskManager,
+        BackgroundTaskService,
     ],
 })
 export class BackgroundTaskModule {

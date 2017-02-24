@@ -6,14 +6,14 @@ import {
 import { List } from "immutable";
 import { BehaviorSubject, Subject } from "rxjs";
 
-import { BackgroundTask, BackgroundTaskManager } from "app/components/base/background-task";
+import { BackgroundTask, BackgroundTaskService } from "app/components/base/background-task";
 
-describe("BackgroundTaskManager ", () => {
-    let taskManager: BackgroundTaskManager;
+describe("BackgroundTaskService ", () => {
+    let taskManager: BackgroundTaskService;
     let runningTasks: List<BackgroundTask>;
 
     beforeEach(() => {
-        taskManager = new BackgroundTaskManager();
+        taskManager = new BackgroundTaskService();
         taskManager.runningTasks.subscribe((tasks) => {
             runningTasks = tasks;
         });

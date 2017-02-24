@@ -1,12 +1,12 @@
-import { Injectable } from "@angular/core";
-import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
+
+import { BackgroundTaskService } from "./background-task.service";
 
 /**
  * Function that run the task.
  * @param progress Subject that should keep track of the progress(from 0 to 100);
  */
-type TaskFunction = (task: BackgroundTask) => Observable<any>;
+export type TaskFunction = (task: BackgroundTask) => Observable<any>;
 export interface NamedTaskFunction {
     name: string;
     func: TaskFunction;
@@ -26,12 +26,17 @@ export abstract class BackgroundTask {
 
     protected _done = new BehaviorSubject<boolean>(false);
 
-    constructor(protected taskManager: BackgroundTaskManager) {
+    constructor(protected taskManager: BackgroundTaskService) {
         this.done = this._done.asObservable();
         this.id = (BackgroundTask.idCounter++).toString();
     }
 
     public abstract start(): void;
+
+    protected errored(error) {
+        this.taskManager.taskFailed(this, error);
+        this._done.error(error);
+    }
 
     protected end() {
         this._done.next(true);
@@ -42,7 +47,7 @@ export abstract class BackgroundTask {
 }
 
 export class SingleBackgroundTask extends BackgroundTask {
-    constructor(taskManager: BackgroundTaskManager, name: string, public func: TaskFunction) {
+    constructor(taskManager: BackgroundTaskService, name: string, public func: TaskFunction) {
         super(taskManager);
         this.name.next(name);
     }
@@ -50,6 +55,9 @@ export class SingleBackgroundTask extends BackgroundTask {
     public start() {
         const obs = this.func(this);
         obs.subscribe({
+            error: (error) => {
+                this.errored(error);
+            },
             complete: () => {
                 this.end();
             },
@@ -59,8 +67,9 @@ export class SingleBackgroundTask extends BackgroundTask {
 
 export class GroupedBackgroundTask extends BackgroundTask {
     public progress = new BehaviorSubject<number>(0);
+
     constructor(
-        taskManager: BackgroundTaskManager,
+        taskManager: BackgroundTaskService,
         private _baseName: string,
         private _tasks: NamedTaskFunction[]) {
 
@@ -83,46 +92,13 @@ export class GroupedBackgroundTask extends BackgroundTask {
         const obs = task.func(null);
         this.name.next(`${this._baseName}: ${task.name} (${index + 1}/${totalTask})`);
         obs.subscribe({
+            error: (error) => {
+                this.errored(error);
+            },
             complete: () => {
                 this.progress.next((index + 1) / totalTask * 100);
                 this._runNextTask(index + 1);
             },
         });
     }
-}
-
-@Injectable()
-export class BackgroundTaskManager {
-    public runningTasks: Observable<List<BackgroundTask>>;
-
-    private _runningTasks = new BehaviorSubject<List<BackgroundTask>>(List([]));
-
-    constructor() {
-        this.runningTasks = this._runningTasks.asObservable();
-    }
-
-    public startTask(name, func: TaskFunction): Observable<boolean> {
-        const task = new SingleBackgroundTask(this, name, func);
-        this._queueTask(task);
-
-        return task.done;
-    }
-
-    public startTasks(name, tasks: NamedTaskFunction[]): Observable<any> {
-        const task = new GroupedBackgroundTask(this, name, tasks);
-        this._queueTask(task);
-
-        return task.done;
-    }
-
-    public completeTask(id: string) {
-        const newTasks = List<BackgroundTask>(this._runningTasks.getValue().filter(x => x.id !== id));
-        this._runningTasks.next(newTasks);
-    }
-
-    private _queueTask(task: BackgroundTask) {
-        this._runningTasks.next(this._runningTasks.getValue().push(task));
-        task.start();
-    }
-
 }

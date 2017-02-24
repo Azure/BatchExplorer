@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/
 import { MdDialogRef } from "@angular/material";
 import { autobind } from "core-decorators";
 
-import { BackgroundTaskManager } from "app/components/base/background-task";
+import { BackgroundTaskService } from "app/components/base/background-task";
 import { PoolService } from "app/services";
 import { DeletePoolTask } from "./delete-pool-task";
 
@@ -23,7 +23,7 @@ export class DeletePoolDialogComponent {
     constructor(
         public dialogRef: MdDialogRef<DeletePoolDialogComponent>,
         private poolService: PoolService,
-        private taskManager: BackgroundTaskManager,
+        private taskManager: BackgroundTaskService,
         private changeDetector: ChangeDetectorRef) {
     }
 
