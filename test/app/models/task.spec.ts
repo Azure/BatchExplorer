@@ -17,7 +17,9 @@ function createTask(exitCode: number, startTime: Date, endTime: Date, maxWallClo
 
 describe("Task Model", () => {
     describe("#didTimeout()", () => {
-        it("should return false if execution info or constraints are null", () => {
+        fit("should return false if execution info or constraints are null", () => {
+            console.log("Should log this...");
+            console.debug("Should debug this...");
             expect(new Task().didTimeout).toBe(false);
             expect(new Task({ executionInfo: { startTime: null } }).didTimeout).toBe(false);
             expect(new Task({ constraints: {} }).didTimeout).toBe(false);
