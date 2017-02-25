@@ -9,3 +9,6 @@
     </div>-->
 </div>
 <bl-file-content [jobId]="jobId" [taskId]="task.id" [filename]="outputFilename"></bl-file-content>
+<!--<div *ngFor="let filename of outputFileNames" [hidden]="filename !== outputFilename">
+    <bl-file-content [jobId]="jobId" [taskId]="task.id" [filename]="filename"></bl-file-content>
+</div>-->

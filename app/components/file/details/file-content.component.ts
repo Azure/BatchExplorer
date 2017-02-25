@@ -3,7 +3,7 @@ import { Observable, Subscription } from "rxjs";
 
 import { ScrollableComponent, ScrollableService } from "app/components/base/scrollable";
 import { File, ServerError } from "app/models";
-import { FileService } from "app/services";
+import { FileService, TaskService } from "app/services";
 import { Constants, log } from "app/utils";
 
 @Component({
@@ -40,6 +40,7 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
 
     constructor(
         private scrollableService: ScrollableService,
+        private taskService: TaskService,
         private fileService: FileService,
         private element: ElementRef) {
 
@@ -60,9 +61,8 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
         this.lines = [];
         this.loading = true;
         this.lastContentLength = 0;
-        this.inter = setInterval(() => {
-            this._updateFileContent();
-        }, 5000);
+        this._updateFileContent();
+        this._setRefreshInterval();
     }
 
     public toggleFollowLog() {
@@ -72,6 +72,17 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
         }
     }
 
+    /**
+     * Set the interval for refresh only if checking a task file.
+     */
+    private _setRefreshInterval() {
+        if (this.poolId || this.nodeId) {
+            return;
+        }
+        this.inter = setInterval(() => {
+            this._updateFileContent();
+        }, 5000);
+    }
     private _updateFileContent() {
         let data;
         if (this.jobId && this.taskId) {
@@ -103,6 +114,7 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
      * this._loadUpTo(300); //=> Loads bytes 100-300
      */
     private _loadUpTo(newContentLength: number) {
+        console.log("Loading more data for ", this.filename, newContentLength);
         const ocpRange = `bytes=${this.lastContentLength}-${newContentLength}`;
         let obs: Observable<any>;
 
@@ -129,15 +141,19 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
      * Process the properties of the file and check if we need to load more content.
      */
     private _processProperties(file: File) {
+        console.log("GOt properties for ", this.filename, file);
         if (file && file.properties) {
             const newContentLength = file.properties.contentLength;
-            if (newContentLength !== this.lastContentLength) {
+            if (newContentLength === 0) {
+                this.loading = false;
+            } else if (newContentLength !== this.lastContentLength) {
                 this._loadUpTo(newContentLength);
             }
         }
     }
 
     private _processFileContent(result: any, newContentLength: number) {
+        console.log("Got content for", this.filename, result.content.toString());
         this.lastContentLength = newContentLength;
         const newLines = result.content.toString().split("\n");
         let first = "";
