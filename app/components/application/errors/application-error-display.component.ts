@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { autobind } from "core-decorators";
-import { shell } from "electron";
 
 import { AccountResource, Application } from "app/models";
-import { AccountService } from "app/services";
+import { AccountService, ElectronShell } from "app/services";
 import { ExternalLinks } from "app/utils/constants";
 
 @Component({
@@ -17,7 +16,10 @@ export class ApplicationErrorDisplayComponent {
 
     private _batchAccount: AccountResource;
 
-    constructor(private accountService: AccountService) {
+    constructor(
+        private accountService: AccountService,
+        private shell: ElectronShell) {
+
         accountService.currentAccount.subscribe((account) => {
             this._batchAccount = account;
         });
@@ -34,6 +36,6 @@ export class ApplicationErrorDisplayComponent {
 
     @autobind()
     public setupLinkedStorage() {
-        shell.openExternal(ExternalLinks.setupStorageAccount.format(this._batchAccount.id));
+        this.shell.openExternal(ExternalLinks.setupStorageAccount.format(this._batchAccount.id));
     }
 }

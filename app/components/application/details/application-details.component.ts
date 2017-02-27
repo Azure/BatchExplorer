@@ -43,7 +43,6 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
 
         this.data = this.applicationService.get(null);
         this.data.item.subscribe((application) => {
-            console.log("this.data.item.subscribe :: ", application);
             this.application = application;
             if (application) {
                 this.decorator = new ApplicationDecorator(application);
@@ -61,7 +60,6 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
         this._paramsSubscriber = this.activatedRoute.params.subscribe((params) => {
             this.applicationId = params["id"];
             this.data.params = { id: this.applicationId };
-            console.log("fetching :: ", this.applicationId);
             this.data.fetch();
         });
     }

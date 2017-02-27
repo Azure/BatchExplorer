@@ -1,8 +1,9 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { RouterTestingModule } from "@angular/router/testing";
 import { Observable } from "rxjs";
 
-import { AppModule } from "app/app.module";
+import { ApplicationModule } from "app/components/application/application.module";
 import { ApplicationPackageTableComponent } from "app/components/application/details";
 import { Application, PackageState } from "app/models";
 import { ApplicationService } from "app/services";
@@ -44,7 +45,7 @@ describe("ApplicationPackageTableComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [AppModule],
+            imports: [ApplicationModule, RouterTestingModule],
             providers: [
                 { provide: ApplicationService, useValue: applicationServiceSpy },
             ],
