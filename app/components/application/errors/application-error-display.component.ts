@@ -14,6 +14,10 @@ export class ApplicationErrorDisplayComponent {
     @Input()
     public application: Application;
 
+    public get batchAccount() {
+        return this._batchAccount;
+    }
+
     private _batchAccount: AccountResource;
 
     constructor(
@@ -26,8 +30,9 @@ export class ApplicationErrorDisplayComponent {
     }
 
     public get hasLinkedStorageAccountIssue(): boolean {
-        if (this._batchAccount && this._batchAccount.properties) {
-            return !this._batchAccount.properties.autoStorage
+        if (this._batchAccount) {
+            return !this._batchAccount.properties
+                || !this._batchAccount.properties.autoStorage
                 || !this._batchAccount.properties.autoStorage.storageAccountId;
         }
 
