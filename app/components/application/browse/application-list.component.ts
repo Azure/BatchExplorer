@@ -40,7 +40,6 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
 
     constructor(
         private router: Router,
-        private accountService: AccountService,
         private applicationService: ApplicationService,
         private taskManager: BackgroundTaskService) {
 

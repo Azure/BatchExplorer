@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
 import { autobind } from "core-decorators";
 
 import { AccountResource, Application } from "app/models";
@@ -10,7 +10,7 @@ import { ExternalLinks } from "app/utils/constants";
     templateUrl: "application-error-display.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ApplicationErrorDisplayComponent {
+export class ApplicationErrorDisplayComponent implements OnInit {
     @Input()
     public application: Application;
 
@@ -22,11 +22,8 @@ export class ApplicationErrorDisplayComponent {
 
     constructor(
         private accountService: AccountService,
+        private changeDetector: ChangeDetectorRef,
         private shell: ElectronShell) {
-
-        accountService.currentAccount.subscribe((account) => {
-            this._batchAccount = account;
-        });
     }
 
     public get hasLinkedStorageAccountIssue(): boolean {
@@ -37,6 +34,13 @@ export class ApplicationErrorDisplayComponent {
         }
 
         return false;
+    }
+
+    public ngOnInit() {
+        this.accountService.currentAccount.subscribe((account) => {
+            this._batchAccount = account;
+            this.changeDetector.markForCheck();
+        });
     }
 
     @autobind()

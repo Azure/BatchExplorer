@@ -1,0 +1,38 @@
+import { FormGroup } from "@angular/forms";
+
+export class ControlValidator {
+    public static validate(formGroup: FormGroup, controlName: string) {
+        return new Validate(formGroup, controlName);
+    }
+}
+
+class Validate {
+    constructor (
+        private formGroup: FormGroup,
+        private controlName: string) {
+    }
+
+    public fails(validator: string): With {
+        return new With(this.formGroup, this.controlName, validator, true);
+    }
+
+    public passes(validator: string): With {
+        return new With(this.formGroup, this.controlName, validator, false);
+    }
+}
+
+class With {
+    constructor(
+        private formGroup: FormGroup,
+        private controlName: string,
+        private validator: string,
+        private hasError: boolean) {
+    }
+
+    public with(value: any) {
+        const control = this.formGroup.controls[this.controlName];
+        control.setValue(value);
+
+        expect(this.formGroup.hasError(this.validator, [this.controlName])).toBe(this.hasError);
+    }
+}

@@ -17,7 +17,7 @@ class TestApplicationErrorDisplayComponent {
     public application: Application;
 }
 
-fdescribe("ApplicationErrorDisplayComponent", () => {
+describe("ApplicationErrorDisplayComponent", () => {
     let fixture: ComponentFixture<TestApplicationErrorDisplayComponent>;
     let testComponent: TestApplicationErrorDisplayComponent;
     let component: ApplicationErrorDisplayComponent;
@@ -54,8 +54,8 @@ fdescribe("ApplicationErrorDisplayComponent", () => {
 
         fixture = TestBed.createComponent(TestApplicationErrorDisplayComponent);
         testComponent = fixture.componentInstance;
+        testComponent.application = Fixtures.application.create({ id: "app-1", allowUpdates: true });
         component = fixture.debugElement.query(By.css("bl-application-error-display")).componentInstance;
-        component.application = Fixtures.application.create({ id: "app-1", allowUpdates: true });
         fixture.detectChanges();
     });
 
@@ -94,35 +94,39 @@ fdescribe("ApplicationErrorDisplayComponent", () => {
             expect(fixture.debugElement.queryAll(By.css("bl-banner")).length).toBe(1);
         });
 
-        // it("Should show auto storage warning", () => {
-        //     const banner = fixture.debugElement.query(By.css("bl-banner"));
-        //     expect(banner.nativeElement.textContent).toContain("No linked storage account configured for this Batch account. This is required for uploading application packages.");
-        // });
+        it("Should show auto storage warning", () => {
+            const banner = fixture.debugElement.query(By.css("bl-banner"));
+            expect(banner.nativeElement.textContent)
+                .toContain("No linked storage account configured for this Batch account. "
+                    + "This is required for uploading application packages.");
+        });
 
-        // it("should link to portal storage config as quickfix", () => {
-        //     const banner = fixture.debugElement.query(By.css("bl-banner")).componentInstance;
-        //     expect(banner.fixMessage).toContain("Setup linked storage account in the portal");
-        // });
+        it("should link to portal storage config as quickfix", () => {
+            const banner = fixture.debugElement.query(By.css("bl-banner")).componentInstance;
+            expect(banner.fixMessage).toContain("Setup linked storage account in the portal");
+        });
     });
 
-    // describe("when application allow updates is disabled", () => {
-    //     beforeEach(() => {
-    //         component.application = Fixtures.application.create({ id: "app-1", allowUpdates: false });
-    //         fixture.detectChanges();
-    //     });
+    describe("when application allow updates is disabled", () => {
+        beforeEach(() => {
+            testComponent.application = Fixtures.application.create({ id: "app-1", allowUpdates: false });
+            fixture.detectChanges();
+        });
 
-    //     it("should show 1 banner", () => {
-    //         expect(fixture.debugElement.queryAll(By.css("bl-banner")).length).toBe(1);
-    //     });
+        it("should show 1 banner", () => {
+            expect(fixture.debugElement.queryAll(By.css("bl-banner")).length).toBe(1);
+        });
 
-    //     it("Should show account locked warning", () => {
-    //         const banner = fixture.debugElement.query(By.css("bl-banner"));
-    //         expect(banner.nativeElement.textContent).toContain("Package update and delete has been disabled. Turn on 'Allow updates' to enable for this application.");
-    //     });
+        it("Should show account locked warning", () => {
+            const banner = fixture.debugElement.query(By.css("bl-banner"));
+            expect(banner.nativeElement.textContent)
+                .toContain("Package update and delete has been disabled. "
+                    + "Turn on 'Allow updates' to enable for this application.");
+        });
 
-    //     it("there is no proposed quickfix", () => {
-    //         const banner = fixture.debugElement.query(By.css("bl-banner")).componentInstance;
-    //         expect(banner.fixMessage).toEqual("");
-    //     });
-    // });
+        it("there is no proposed quickfix", () => {
+            const banner = fixture.debugElement.query(By.css("bl-banner")).componentInstance;
+            expect(banner.fixMessage).toEqual("");
+        });
+    });
 });
