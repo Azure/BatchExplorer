@@ -11,9 +11,9 @@ import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { Pool, ServerError } from "app/models";
 import { JobService, PoolService } from "app/services";
 import { DataCache, RxBatchListProxy } from "app/services/core";
-import { ControlValidator } from "test/app/components/validators";
 import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";
+import { ControlValidator } from "test/utils/helpers";
 
 // Just making test work for now. Need Tim's input to come up with a strategy for testing with proxy data.
 // TODO: hook up MockListProxy.

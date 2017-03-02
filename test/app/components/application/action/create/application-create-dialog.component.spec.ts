@@ -12,9 +12,9 @@ import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { ServerError } from "app/models";
 import { ApplicationService, HttpUploadService } from "app/services";
-import { ControlValidator } from "test/app/components/validators";
 import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";
+import { ControlValidator } from "test/utils/helpers";
 import { MockedFile } from "test/utils/mocks";
 
 fdescribe("ApplicationCreateDialogComponent ", () => {
@@ -50,6 +50,15 @@ fdescribe("ApplicationCreateDialogComponent ", () => {
             }),
 
             activatePackage: jasmine.createSpy("activatePackage").and.callFake((applicationId, version) => {
+                if (applicationId === "activate-fail") {
+                    const options = new ResponseOptions({
+                        status: 400,
+                        statusText: "error, error, error",
+                    });
+
+                    return Observable.throw(ServerError.fromARM(new Response(options)));
+                }
+
                 return Observable.of({});
             }),
 
@@ -199,7 +208,7 @@ fdescribe("ApplicationCreateDialogComponent ", () => {
         });
     });
 
-    describe("Submitting action form", () => {
+    fdescribe("Submitting action form", () => {
         beforeEach(() => {
             applicationForm.controls["id"].setValue("app-5");
             applicationForm.controls["version"].setValue("1.0");
@@ -216,10 +225,11 @@ fdescribe("ApplicationCreateDialogComponent ", () => {
             fixture.detectChanges();
         });
 
-        it("Clicking add creates and doesn't close sidebar", () => {
+        it("Clicking add creates and doesn't close sidebar", (done) => {
             const form = debugElement.query(By.css("bl-create-form")).componentInstance as CreateFormComponent;
-            form.add().subscribe(() => {
-                expect(appServiceSpy.put).toHaveBeenCalledTimes(1);
+            form.add().subscribe((asd: any) => {
+                console.log("expecting");
+                expect(appServiceSpy.put).toHaveBeenCalledTimes(12);
                 expect(appServiceSpy.put).toHaveBeenCalledWith("app-5", "1.0");
 
                 expect(uploadServiceSpy.putBlock).toHaveBeenCalledTimes(1);
@@ -247,9 +257,11 @@ fdescribe("ApplicationCreateDialogComponent ", () => {
                     expect(appAddedCalled).toBe(true);
                 },
             });
+
+            done();
         });
 
-        it("If create application throws we handle the error", () => {
+        it("If create application throws we handle the error", (done) => {
             applicationForm.controls["id"].setValue("throw-me");
             fixture.detectChanges();
 
@@ -283,9 +295,69 @@ fdescribe("ApplicationCreateDialogComponent ", () => {
                     expect(appAddedCalled).toBe(false);
                 },
             });
+
+            done();
         });
 
-        // todo: check activation failure notifies correctly.
+        it("If activate package throws we carry on and notify the user", (done) => {
+            applicationForm.controls["id"].setValue("activate-fail");
+            fixture.detectChanges();
+
+            const form = debugElement.query(By.css("bl-create-form")).componentInstance as CreateFormComponent;
+            form.add().subscribe({
+                // next: () => {
+                //     console.log("in next")
+                //     expect(appServiceSpy.put).toHaveBeenCalledTimes(1);
+                //     expect(uploadServiceSpy.putBlock).toHaveBeenCalledTimes(1);
+                //     expect(uploadServiceSpy.commitBlockList).toHaveBeenCalledTimes(1);
+                //     expect(appServiceSpy.activatePackage).toHaveBeenCalledTimes(1);
+                //     expect(notificationServiceSpy.success).toHaveBeenCalledTimes(0);
+                //     expect(notificationServiceSpy.error).toHaveBeenCalledTimes(1);
+                //     expect(notificationServiceSpy.error).toHaveBeenCalledWith(
+                //         "Activation failed",
+                //         "The application package was uploaded into storage successfully, "
+                //             + "but the activation process failed.",
+                //     );
+
+                //     expect(true).toBe(false);
+                // },
+                error: (error: ServerError) => {
+                    expect(true).toBe(false, "shouldnt have caught error here");
+                },
+                complete: () => {
+                    console.log("in complete");
+                    fail("failed");
+                    expect(true).toBe(false);
+                    console.log("after should fail");
+
+                    expect(appServiceSpy.put).toHaveBeenCalledTimes(7);
+                    expect(uploadServiceSpy.putBlock).toHaveBeenCalledTimes(1);
+                    expect(uploadServiceSpy.commitBlockList).toHaveBeenCalledTimes(1);
+                    expect(appServiceSpy.activatePackage).toHaveBeenCalledTimes(1);
+                    expect(notificationServiceSpy.success).toHaveBeenCalledTimes(0);
+                    expect(notificationServiceSpy.error).toHaveBeenCalledTimes(1);
+                    expect(notificationServiceSpy.error).toHaveBeenCalledWith(
+                        "Activation failed",
+                        "The application package was uploaded into storage successfully, "
+                            + "but the activation process failed.",
+                    );
+                },
+            });
+
+            let appAddedCalled = false;
+            appServiceSpy.onApplicationAdded.subscribe({
+                next: (appId) => {
+                    expect(appId).toEqual("activate-fail");
+                    appAddedCalled = true;
+                },
+                complete: () => {
+                    expect(appAddedCalled).toBe(true);
+                },
+            });
+
+            done();
+        });
+
         // todo: move validator into utils folder
     });
 });
