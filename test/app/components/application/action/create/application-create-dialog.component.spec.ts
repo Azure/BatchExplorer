@@ -1,21 +1,21 @@
 import { DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormBuilder } from "@angular/forms";
+import { Response, ResponseOptions } from "@angular/http";
 import { By } from "@angular/platform-browser";
 import { Observable, Subject } from "rxjs";
 
 import { ApplicationCreateDialogComponent } from "app/components/application/action";
 import { ApplicationModule } from "app/components/application/application.module";
-import { NotificationService } from "app/components/base/notifications";
 import { CreateFormComponent } from "app/components/base/form/create-form";
+import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
-
-import { Application, ServerError } from "app/models";
+import { ServerError } from "app/models";
 import { ApplicationService, HttpUploadService } from "app/services";
-import { DataCache, RxBatchListProxy } from "app/services/core";
 import { ControlValidator } from "test/app/components/validators";
 import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";
+import { MockedFile } from "test/utils/mocks";
 
 fdescribe("ApplicationCreateDialogComponent ", () => {
     let fixture: ComponentFixture<ApplicationCreateDialogComponent>;
@@ -31,28 +31,46 @@ fdescribe("ApplicationCreateDialogComponent ", () => {
 
     beforeEach(() => {
         sidebarRefSpy = {
-            close: jasmine.createSpy("SidebarClose"),
+            close: jasmine.createSpy("close"),
         };
 
         appServiceSpy = {
-            add: jasmine.createSpy("CreateJob").and.callFake((newJobJson, ...args) => {
-                if (newJobJson.id === "bad-job-id") {
-                    return Observable.throw(ServerError.fromBatch({
-                        statusCode: 408,
-                        code: "RandomTestErrorCode",
-                        message: { value: "error, error, error" },
-                    }));
+            put: jasmine.createSpy("put").and.callFake((applicationId, version) => {
+                if (applicationId === "throw-me") {
+                    const options = new ResponseOptions({
+                        status: 400,
+                        body: JSON.stringify({ message: "blast, we failed" }),
+                        statusText: "error, error, error",
+                    });
+
+                    return Observable.throw(ServerError.fromARM(new Response(options)));
                 }
 
+                return Observable.of({ storageUrl: "https://some/url" });
+            }),
+
+            activatePackage: jasmine.createSpy("activatePackage").and.callFake((applicationId, version) => {
                 return Observable.of({});
             }),
 
-            onJobAdded: new Subject(),
+            onApplicationAdded: new Subject(),
         };
 
-        uploadServiceSpy = { };
+        uploadServiceSpy = {
+            putBlock: jasmine.createSpy("putBlock").and.callFake((sasUrl, options) => {
+                return Observable.of({});
+            }),
 
-        notificationServiceSpy = { };
+            commitBlockList: jasmine.createSpy("commitBlockList").and.callFake((sasUrl, options) => {
+                return Observable.of({});
+            }),
+        };
+
+        notificationServiceSpy = {
+            success: jasmine.createSpy("success"),
+
+            error: jasmine.createSpy("error"),
+        };
 
         TestBed.configureTestingModule({
             imports: [ApplicationModule],
@@ -141,63 +159,133 @@ fdescribe("ApplicationCreateDialogComponent ", () => {
         });
     });
 
-    // it("Can patch poolId directly", () => {
-    //     component.preSelectPool("pool-002");
-    //     expect(poolForm.controls["poolId"].value).toEqual("pool-002");
-    // });
+    describe("Passing in application populates form", () => {
+        beforeEach(() => {
+            component.setValue(Fixtures.application.create({ id: "monkeys" }));
+            fixture.detectChanges();
+        });
 
-    // it("Can clone job into form", () => {
-    //     const job = Fixtures.job.create({ id: "job-001", poolInfo: { poolId: "pool-002" } });
-    //     component.setValue(job);
+        it("sets the application id", () => {
+            expect(applicationForm.controls["id"].value).toBe("monkeys");
+        });
 
-    //     expect(baseForm.controls.id.value).toEqual("job-001");
-    //     expect(baseForm.controls.displayName.value).toEqual("display name");
-    //     expect(baseForm.controls.priority.value).toEqual(1);
-    //     expect(constraintsForm.controls.maxTaskRetryCount.value).toEqual(3);
-    //     expect(poolForm.controls.poolId.value).toEqual("pool-002");
-    // });
+        it("updates the description", () => {
+            const description = "Upload a new package version for the selected application";
+            expect(debugElement.nativeElement.textContent).toContain(description);
+        });
+    });
 
-    // it("Clicking add creates job and doesnt close form", () => {
-    //     const job = Fixtures.job.create({ id: "job-001", poolInfo: { poolId: "pool-002" } });
-    //     component.setValue(job);
+    describe("Passing in application and version populates form", () => {
+        beforeEach(() => {
+            component.setValue(Fixtures.application.create({ id: "more-monkeys" }), "12.5");
+            fixture.detectChanges();
+        });
 
-    //     const createForm = de.query(By.css("bl-create-form")).componentInstance as CreateFormComponent;
-    //     createForm.add();
+        it("sets the application id", () => {
+            expect(applicationForm.controls["id"].value).toBe("more-monkeys");
+        });
 
-    //     expect(jobServiceSpy.add).toHaveBeenCalledTimes(1);
-    //     expect(sidebarRefSpy.close).toHaveBeenCalledTimes(0);
+        it("sets the version", () => {
+            expect(applicationForm.controls["version"].value).toBe("12.5");
+        });
 
-    //     let jobAddedCalled = false;
-    //     jobServiceSpy.onJobAdded.subscribe({
-    //         next: (newJobId) => {
-    //             expect(newJobId).toEqual("job-001");
-    //             jobAddedCalled = true;
-    //         },
-    //         complete: () => {
-    //             expect(jobAddedCalled).toBe(true);
-    //         },
-    //     });
-    // });
+        it("updates the description", () => {
+            const description = "Select a new package to overwrite the existing version";
+            expect(debugElement.nativeElement.textContent).toContain(description);
+        });
 
-    // it("If create job throws we handle the error", () => {
-    //     const job = Fixtures.job.create({ id: "bad-job-id", poolInfo: { poolId: "pool-002" } });
-    //     component.setValue(job);
+        it("updates the title", () => {
+            expect(debugElement.nativeElement.textContent).toContain("Update selected package");
+        });
+    });
 
-    //     const createForm = de.query(By.css("bl-create-form")).componentInstance as CreateFormComponent;
-    //     createForm.add();
+    describe("Submitting action form", () => {
+        beforeEach(() => {
+            applicationForm.controls["id"].setValue("app-5");
+            applicationForm.controls["version"].setValue("1.0");
+            applicationForm.controls["package"].setValue("bob.zip");
+            component.file = new MockedFile({
+                name: "GreenButtonIntegrationTest-1.0.zip",
+                path: "C:\Users\ascobie\Desktop\App Images\GreenButtonIntegrationTest-1.0.zip",
+                lastModifiedDate: new Date(),
+                type: "application/x-zip-compressed",
+                webkitRelativePath: "",
+                size: 2876,
+            });
 
-    //     expect(createForm.error).not.toBeNull();
-    //     expect(createForm.error.body.code).toEqual("RandomTestErrorCode");
-    //     expect(createForm.error.body.message).toEqual("error, error, error");
+            fixture.detectChanges();
+        });
 
-    //     let jobAddedCalled = false;
-    //     jobServiceSpy.onJobAdded.subscribe({
-    //         next: (newJobId) => {
-    //             jobAddedCalled = true;
-    //         },
-    //         complete: () => {
-    //             expect(jobAddedCalled).toBe(false);
-    //         },
-    //     });
-    // });
+        it("Clicking add creates and doesn't close sidebar", () => {
+            const form = debugElement.query(By.css("bl-create-form")).componentInstance as CreateFormComponent;
+            form.add().subscribe(() => {
+                expect(appServiceSpy.put).toHaveBeenCalledTimes(1);
+                expect(appServiceSpy.put).toHaveBeenCalledWith("app-5", "1.0");
+
+                expect(uploadServiceSpy.putBlock).toHaveBeenCalledTimes(1);
+                expect(uploadServiceSpy.commitBlockList).toHaveBeenCalledTimes(1);
+
+                expect(appServiceSpy.activatePackage).toHaveBeenCalledTimes(1);
+                expect(appServiceSpy.activatePackage).toHaveBeenCalledWith("app-5", "1.0");
+
+                expect(notificationServiceSpy.success).toHaveBeenCalledTimes(1);
+                expect(notificationServiceSpy.success).toHaveBeenCalledWith(
+                    "Application added!",
+                    "Version 1.0 for application 'app-5' was successfully created!",
+                );
+
+                expect(sidebarRefSpy.close).toHaveBeenCalledTimes(0);
+            });
+
+            let appAddedCalled = false;
+            appServiceSpy.onApplicationAdded.subscribe({
+                next: (appId) => {
+                    expect(appId).toEqual("app-5");
+                    appAddedCalled = true;
+                },
+                complete: () => {
+                    expect(appAddedCalled).toBe(true);
+                },
+            });
+        });
+
+        it("If create application throws we handle the error", () => {
+            applicationForm.controls["id"].setValue("throw-me");
+            fixture.detectChanges();
+
+            const form = debugElement.query(By.css("bl-create-form")).componentInstance as CreateFormComponent;
+            form.add().subscribe({
+                next: () => {
+                    expect(true).toBe(false);
+                },
+                error: (error: ServerError) => {
+                    expect(error.statusText).toBe("error, error, error");
+                    expect(error.toString()).toBe("400 - blast, we failed");
+                },
+                complete: () => {
+                    expect(appServiceSpy.put).toHaveBeenCalledTimes(1);
+                    expect(appServiceSpy.put).toHaveBeenCalledWith("throw-me", "1.0");
+
+                    expect(uploadServiceSpy.putBlock).toHaveBeenCalledTimes(0);
+                    expect(uploadServiceSpy.commitBlockList).toHaveBeenCalledTimes(0);
+                    expect(appServiceSpy.activatePackage).toHaveBeenCalledTimes(0);
+                    expect(notificationServiceSpy.success).toHaveBeenCalledTimes(0);
+                    expect(sidebarRefSpy.close).toHaveBeenCalledTimes(0);
+                },
+            });
+
+            let appAddedCalled = false;
+            appServiceSpy.onApplicationAdded.subscribe({
+                next: (appId) => {
+                    appAddedCalled = true;
+                },
+                complete: () => {
+                    expect(appAddedCalled).toBe(false);
+                },
+            });
+        });
+
+        // todo: check activation failure notifies correctly.
+        // todo: move validator into utils folder
+    });
 });
