@@ -5,4 +5,3 @@ export * from "./notification.service.mock";
 export * from "./rx-mock-entity-proxy";
 export * from "./rx-mock-list-proxy";
 export * from "./storage";
-

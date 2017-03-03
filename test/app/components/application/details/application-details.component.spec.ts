@@ -8,7 +8,7 @@ import { Observable } from "rxjs";
 import { ApplicationModule } from "app/components/application/application.module";
 import { ApplicationDetailsComponent } from "app/components/application/details";
 import { Application } from "app/models";
-import { AccountService, ApplicationService } from "app/services";
+import { AccountService, ApplicationService, ElectronShell } from "app/services";
 import * as Fixtures from "test/fixture";
 import { ActivatedRouteMock, RxMockEntityProxy } from "test/utils/mocks";
 
@@ -65,6 +65,7 @@ describe("ApplicationDetailsComponent", () => {
                 { provide: ApplicationService, useValue: applicationServiceSpy },
                 { provide: AccountService, useValue: accountServiceSpy },
                 { provide: ActivatedRoute, useValue: activatedRouteSpy },
+                { provide: ElectronShell, useValue: null },
             ],
         });
 

@@ -13,7 +13,7 @@ import { JobService, PoolService } from "app/services";
 import { DataCache, RxBatchListProxy } from "app/services/core";
 import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";
-import { ControlValidator } from "test/utils/helpers";
+import { validateControl } from "test/utils/helpers";
 
 // Just making test work for now. Need Tim's input to come up with a strategy for testing with proxy data.
 // TODO: hook up MockListProxy.
@@ -116,10 +116,10 @@ describe("JobCreateBasicDialogComponent ", () => {
     });
 
     it("JobId has required, pattern, and maxLength validation", () => {
-        ControlValidator.validate(baseForm, "id").fails(validators.required).with("");
-        ControlValidator.validate(baseForm, "id").fails(validators.maxlength).with("a".repeat(65));
-        ControlValidator.validate(baseForm, "id").fails(validators.pattern).with("invalid job id");
-        ControlValidator.validate(baseForm, "id").passes(validators.pattern).with("valid-id");
+        validateControl(baseForm, "id").fails(validators.required).with("");
+        validateControl(baseForm, "id").fails(validators.maxlength).with("a".repeat(65));
+        validateControl(baseForm, "id").fails(validators.pattern).with("invalid job id");
+        validateControl(baseForm, "id").passes(validators.pattern).with("valid-id");
     });
 
     it("DisplayName is initialized", () => {
@@ -130,8 +130,8 @@ describe("JobCreateBasicDialogComponent ", () => {
 
     it("DisplayName has maxLength validation only", () => {
         const controlName = "displayName";
-        ControlValidator.validate(baseForm, controlName).fails(validators.maxlength).with("a".repeat(1025));
-        ControlValidator.validate(baseForm, controlName).passes(validators.required).with(null);
+        validateControl(baseForm, controlName).fails(validators.maxlength).with("a".repeat(1025));
+        validateControl(baseForm, controlName).passes(validators.required).with(null);
     });
 
     it("Priority is initialized", () => {
@@ -142,10 +142,10 @@ describe("JobCreateBasicDialogComponent ", () => {
 
     it("Priority has range validation only", () => {
         const controlName = "priority";
-        ControlValidator.validate(baseForm, controlName).passes(validators.required).with(null);
-        ControlValidator.validate(baseForm, controlName).fails(validators.range).with(-1001);
-        ControlValidator.validate(baseForm, controlName).fails(validators.range).with(1001);
-        ControlValidator.validate(baseForm, controlName).passes(validators.range).with(500);
+        validateControl(baseForm, controlName).passes(validators.required).with(null);
+        validateControl(baseForm, controlName).fails(validators.range).with(-1001);
+        validateControl(baseForm, controlName).fails(validators.range).with(1001);
+        validateControl(baseForm, controlName).passes(validators.range).with(500);
     });
 
     it("MaxRetryCount is initialized", () => {
@@ -156,10 +156,10 @@ describe("JobCreateBasicDialogComponent ", () => {
 
     it("MaxRetryCount has range validation only", () => {
         const controlName = "maxTaskRetryCount";
-        ControlValidator.validate(constraintsForm, controlName).passes(validators.required).with(null);
-        ControlValidator.validate(constraintsForm, controlName).fails(validators.range).with(-2);
-        ControlValidator.validate(constraintsForm, controlName).fails(validators.range).with(101);
-        ControlValidator.validate(constraintsForm, controlName).passes(validators.range).with(1);
+        validateControl(constraintsForm, controlName).passes(validators.required).with(null);
+        validateControl(constraintsForm, controlName).fails(validators.range).with(-2);
+        validateControl(constraintsForm, controlName).fails(validators.range).with(101);
+        validateControl(constraintsForm, controlName).passes(validators.range).with(1);
     });
 
     it("PoolId is initialized", () => {

@@ -16,11 +16,9 @@ export class ApplicationHomeComponent {
 
     constructor(private sidebarManager: SidebarManager) {
         this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
-            console.log("query: ", query);
             if (query === "") {
                 this.quickFilter = FilterBuilder.none();
             } else {
-                console.log("FilterBuilder.prop(\"id\").startswith(query);");
                 this.quickFilter = FilterBuilder.prop("id").startswith(query);
             }
 

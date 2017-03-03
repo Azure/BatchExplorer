@@ -14,10 +14,10 @@ import { ServerError } from "app/models";
 import { ApplicationService, HttpUploadService } from "app/services";
 import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";
-import { ControlValidator } from "test/utils/helpers";
+import { validateControl } from "test/utils/helpers";
 import { MockedFile } from "test/utils/mocks";
 
-fdescribe("ApplicationCreateDialogComponent ", () => {
+describe("ApplicationCreateDialogComponent ", () => {
     let fixture: ComponentFixture<ApplicationCreateDialogComponent>;
     let component: ApplicationCreateDialogComponent;
     let debugElement: DebugElement;
@@ -53,6 +53,7 @@ fdescribe("ApplicationCreateDialogComponent ", () => {
                 if (applicationId === "activate-fail") {
                     const options = new ResponseOptions({
                         status: 400,
+                        body: JSON.stringify({ message: "blast, we failed" }),
                         statusText: "error, error, error",
                     });
 
@@ -114,18 +115,18 @@ fdescribe("ApplicationCreateDialogComponent ", () => {
         });
 
         it("control has required validation", () => {
-            ControlValidator.validate(applicationForm, "id").fails(validators.required).with("");
-            ControlValidator.validate(applicationForm, "id").passes(validators.required).with("bob");
+            validateControl(applicationForm, "id").fails(validators.required).with("");
+            validateControl(applicationForm, "id").passes(validators.required).with("bob");
         });
 
         it("control has maxLength validation", () => {
-            ControlValidator.validate(applicationForm, "id").fails(validators.maxlength).with("a".repeat(65));
-            ControlValidator.validate(applicationForm, "id").passes(validators.maxlength).with("a".repeat(64));
+            validateControl(applicationForm, "id").fails(validators.maxlength).with("a".repeat(65));
+            validateControl(applicationForm, "id").passes(validators.maxlength).with("a".repeat(64));
         });
 
         it("control has pattern validation", () => {
-            ControlValidator.validate(applicationForm, "id").fails(validators.pattern).with("invalid app id");
-            ControlValidator.validate(applicationForm, "id").passes(validators.pattern).with("valid-id");
+            validateControl(applicationForm, "id").fails(validators.pattern).with("invalid app id");
+            validateControl(applicationForm, "id").passes(validators.pattern).with("valid-id");
         });
     });
 
@@ -136,18 +137,18 @@ fdescribe("ApplicationCreateDialogComponent ", () => {
         });
 
         it("control has required validation", () => {
-            ControlValidator.validate(applicationForm, "version").fails(validators.required).with("");
-            ControlValidator.validate(applicationForm, "version").passes(validators.required).with("1");
+            validateControl(applicationForm, "version").fails(validators.required).with("");
+            validateControl(applicationForm, "version").passes(validators.required).with("1");
         });
 
         it("control has maxLength validation", () => {
-            ControlValidator.validate(applicationForm, "version").fails(validators.maxlength).with("a".repeat(65));
-            ControlValidator.validate(applicationForm, "version").passes(validators.maxlength).with("a".repeat(64));
+            validateControl(applicationForm, "version").fails(validators.maxlength).with("a".repeat(65));
+            validateControl(applicationForm, "version").passes(validators.maxlength).with("a".repeat(64));
         });
 
         it("control has pattern validation", () => {
-            ControlValidator.validate(applicationForm, "version").fails(validators.pattern).with("1 2 1");
-            ControlValidator.validate(applicationForm, "version").passes(validators.pattern).with("1.2.1");
+            validateControl(applicationForm, "version").fails(validators.pattern).with("1 2 1");
+            validateControl(applicationForm, "version").passes(validators.pattern).with("1.2.1");
         });
     });
 
@@ -158,13 +159,13 @@ fdescribe("ApplicationCreateDialogComponent ", () => {
         });
 
         it("control has required validation", () => {
-            ControlValidator.validate(applicationForm, "package").fails(validators.required).with("");
-            ControlValidator.validate(applicationForm, "package").passes(validators.required).with("bob.zip");
+            validateControl(applicationForm, "package").fails(validators.required).with("");
+            validateControl(applicationForm, "package").passes(validators.required).with("bob.zip");
         });
 
         it("control has pattern validation", () => {
-            ControlValidator.validate(applicationForm, "package").fails(validators.pattern).with("file.text");
-            ControlValidator.validate(applicationForm, "package").passes(validators.pattern).with("file.zip");
+            validateControl(applicationForm, "package").fails(validators.pattern).with("file.text");
+            validateControl(applicationForm, "package").passes(validators.pattern).with("file.zip");
         });
     });
 
@@ -208,7 +209,7 @@ fdescribe("ApplicationCreateDialogComponent ", () => {
         });
     });
 
-    fdescribe("Submitting action form", () => {
+    describe("Submitting action form", () => {
         beforeEach(() => {
             applicationForm.controls["id"].setValue("app-5");
             applicationForm.controls["version"].setValue("1.0");
@@ -227,9 +228,8 @@ fdescribe("ApplicationCreateDialogComponent ", () => {
 
         it("Clicking add creates and doesn't close sidebar", (done) => {
             const form = debugElement.query(By.css("bl-create-form")).componentInstance as CreateFormComponent;
-            form.add().subscribe((asd: any) => {
-                console.log("expecting");
-                expect(appServiceSpy.put).toHaveBeenCalledTimes(12);
+            form.add().subscribe(() => {
+                expect(appServiceSpy.put).toHaveBeenCalledTimes(1);
                 expect(appServiceSpy.put).toHaveBeenCalledWith("app-5", "1.0");
 
                 expect(uploadServiceSpy.putBlock).toHaveBeenCalledTimes(1);
@@ -238,6 +238,7 @@ fdescribe("ApplicationCreateDialogComponent ", () => {
                 expect(appServiceSpy.activatePackage).toHaveBeenCalledTimes(1);
                 expect(appServiceSpy.activatePackage).toHaveBeenCalledWith("app-5", "1.0");
 
+                expect(notificationServiceSpy.error).toHaveBeenCalledTimes(0);
                 expect(notificationServiceSpy.success).toHaveBeenCalledTimes(1);
                 expect(notificationServiceSpy.success).toHaveBeenCalledWith(
                     "Application added!",
@@ -245,20 +246,14 @@ fdescribe("ApplicationCreateDialogComponent ", () => {
                 );
 
                 expect(sidebarRefSpy.close).toHaveBeenCalledTimes(0);
+                done();
             });
 
-            let appAddedCalled = false;
             appServiceSpy.onApplicationAdded.subscribe({
                 next: (appId) => {
                     expect(appId).toEqual("app-5");
-                    appAddedCalled = true;
-                },
-                complete: () => {
-                    expect(appAddedCalled).toBe(true);
                 },
             });
-
-            done();
         });
 
         it("If create application throws we handle the error", (done) => {
@@ -268,13 +263,13 @@ fdescribe("ApplicationCreateDialogComponent ", () => {
             const form = debugElement.query(By.css("bl-create-form")).componentInstance as CreateFormComponent;
             form.add().subscribe({
                 next: () => {
-                    expect(true).toBe(false);
+                    fail("call should have failed");
+                    done();
                 },
                 error: (error: ServerError) => {
                     expect(error.statusText).toBe("error, error, error");
                     expect(error.toString()).toBe("400 - blast, we failed");
-                },
-                complete: () => {
+
                     expect(appServiceSpy.put).toHaveBeenCalledTimes(1);
                     expect(appServiceSpy.put).toHaveBeenCalledWith("throw-me", "1.0");
 
@@ -283,20 +278,15 @@ fdescribe("ApplicationCreateDialogComponent ", () => {
                     expect(appServiceSpy.activatePackage).toHaveBeenCalledTimes(0);
                     expect(notificationServiceSpy.success).toHaveBeenCalledTimes(0);
                     expect(sidebarRefSpy.close).toHaveBeenCalledTimes(0);
+                    done();
                 },
             });
 
-            let appAddedCalled = false;
             appServiceSpy.onApplicationAdded.subscribe({
                 next: (appId) => {
-                    appAddedCalled = true;
-                },
-                complete: () => {
-                    expect(appAddedCalled).toBe(false);
+                    fail("onApplicationAdded should not have been called");
                 },
             });
-
-            done();
         });
 
         it("If activate package throws we carry on and notify the user", (done) => {
@@ -305,32 +295,9 @@ fdescribe("ApplicationCreateDialogComponent ", () => {
 
             const form = debugElement.query(By.css("bl-create-form")).componentInstance as CreateFormComponent;
             form.add().subscribe({
-                // next: () => {
-                //     console.log("in next")
-                //     expect(appServiceSpy.put).toHaveBeenCalledTimes(1);
-                //     expect(uploadServiceSpy.putBlock).toHaveBeenCalledTimes(1);
-                //     expect(uploadServiceSpy.commitBlockList).toHaveBeenCalledTimes(1);
-                //     expect(appServiceSpy.activatePackage).toHaveBeenCalledTimes(1);
-                //     expect(notificationServiceSpy.success).toHaveBeenCalledTimes(0);
-                //     expect(notificationServiceSpy.error).toHaveBeenCalledTimes(1);
-                //     expect(notificationServiceSpy.error).toHaveBeenCalledWith(
-                //         "Activation failed",
-                //         "The application package was uploaded into storage successfully, "
-                //             + "but the activation process failed.",
-                //     );
-
-                //     expect(true).toBe(false);
-                // },
-                error: (error: ServerError) => {
-                    expect(true).toBe(false, "shouldnt have caught error here");
-                },
-                complete: () => {
-                    console.log("in complete");
-                    fail("failed");
-                    expect(true).toBe(false);
-                    console.log("after should fail");
-
-                    expect(appServiceSpy.put).toHaveBeenCalledTimes(7);
+                next: () => {
+                    expect(appServiceSpy.put).toHaveBeenCalledTimes(1);
+                    expect(appServiceSpy.put).toHaveBeenCalledWith("activate-fail", "1.0");
                     expect(uploadServiceSpy.putBlock).toHaveBeenCalledTimes(1);
                     expect(uploadServiceSpy.commitBlockList).toHaveBeenCalledTimes(1);
                     expect(appServiceSpy.activatePackage).toHaveBeenCalledTimes(1);
@@ -341,23 +308,20 @@ fdescribe("ApplicationCreateDialogComponent ", () => {
                         "The application package was uploaded into storage successfully, "
                             + "but the activation process failed.",
                     );
+
+                    done();
+                },
+                error: (error: ServerError) => {
+                    fail("call should not have failed");
+                    done();
                 },
             });
 
-            let appAddedCalled = false;
             appServiceSpy.onApplicationAdded.subscribe({
                 next: (appId) => {
                     expect(appId).toEqual("activate-fail");
-                    appAddedCalled = true;
-                },
-                complete: () => {
-                    expect(appAddedCalled).toBe(true);
                 },
             });
-
-            done();
         });
-
-        // todo: move validator into utils folder
     });
 });

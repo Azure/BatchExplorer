@@ -17,7 +17,7 @@ import { Constants } from "app/utils";
     templateUrl: "application-edit-dialog.html",
 })
 export class ApplicationEditDialogComponent {
-    public appplication: Application;
+    public application: Application;
     public packages: List<ApplicationPackage>;
     public applicationForm: FormGroup;
 
@@ -41,7 +41,7 @@ export class ApplicationEditDialogComponent {
     }
 
     public setValue(application: Application) {
-        this.appplication = application;
+        this.application = application;
         this.packages = application.packages || List([]);
         this.applicationForm.patchValue(applicationToEditFormModel(application));
     }
@@ -49,12 +49,12 @@ export class ApplicationEditDialogComponent {
     @autobind()
     public submit(): Observable<any> {
         const jsonData = editApplicationFormToJsonData(this.applicationForm.value);
-        const patchObs = this.applicationService.patch(this.appplication.id, jsonData);
+        const patchObs = this.applicationService.patch(this.application.id, jsonData);
         patchObs.subscribe({
             next: (response: any) => {
                 this.notificationService.success(
                     "Application updated!",
-                    `Application ${this.appplication.id} was successfully updated!`,
+                    `Application ${this.application.id} was successfully updated!`,
                 );
             },
             error: (response: Response) => {

@@ -1,9 +1,7 @@
 import { FormGroup } from "@angular/forms";
 
-export class ControlValidator {
-    public static validate(formGroup: FormGroup, controlName: string) {
-        return new Validate(formGroup, controlName);
-    }
+export function validateControl(formGroup: FormGroup, controlName: string) {
+    return new Validate(formGroup, controlName);
 }
 
 class Validate {
