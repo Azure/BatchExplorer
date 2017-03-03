@@ -114,7 +114,6 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
      * this._loadUpTo(300); //=> Loads bytes 100-300
      */
     private _loadUpTo(newContentLength: number) {
-        console.log("Loading more data for ", this.filename, newContentLength);
         const ocpRange = `bytes=${this.lastContentLength}-${newContentLength}`;
         let obs: Observable<any>;
 
@@ -141,7 +140,6 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
      * Process the properties of the file and check if we need to load more content.
      */
     private _processProperties(file: File) {
-        console.log("GOt properties for ", this.filename, file);
         if (file && file.properties) {
             const newContentLength = file.properties.contentLength;
             if (newContentLength === 0) {
@@ -153,7 +151,6 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
     }
 
     private _processFileContent(result: any, newContentLength: number) {
-        console.log("Got content for", this.filename, result.content.toString());
         this.lastContentLength = newContentLength;
         const newLines = result.content.toString().split("\n");
         let first = "";
