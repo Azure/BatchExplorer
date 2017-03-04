@@ -64,7 +64,7 @@ module.exports = function (config) {
             stats: "errors-only",
         },
         browserDisconnectTimeout: "4000",
-        singleRun: false,
+        singleRun: true,
         mochaReporter: {
             output: "autowatch",
         },
