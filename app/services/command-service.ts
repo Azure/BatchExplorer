@@ -47,12 +47,13 @@ export class CommandService {
             // MouseTrap.reset();
         }
         this._setOnce = true;
-        for (let shortcut of keybindings) {
-            // MouseTrap.bind(shortcut.key, () => {
-            //     this.zone.run(() => {
-            //         this.perform(shortcut.command);
-            //     });
-            // });
-        }
+        // TODO: Need to find a way to clean this up. Might be creating memory leaks in tests.
+        // for (let shortcut of keybindings) {
+        // MouseTrap.bind(shortcut.key, () => {
+        //     this.zone.run(() => {
+        //         this.perform(shortcut.command);
+        //     });
+        // });
+        // }
     }
 }

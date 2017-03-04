@@ -21,26 +21,27 @@ testing.TestBed.initTestEnvironment(
  */
 const testContext = require.context("../test/app", true, /\.spec\.ts/);
 
-let initialValue = null;
-jasmine.getEnv().clearReporters();
-const stream = fs.createWriteStream("test.mem.csv");
-jasmine.getEnv().addReporter({
-    suiteStarted: (result) => {
-        if (initialValue === null) {
-            initialValue = performance.memory.usedJSHeapSize;
+if (process.env.DEBUG_MEM) {
+    let initialValue = null;
+    jasmine.getEnv().clearReporters();
+    const stream = fs.createWriteStream("test.mem.csv");
+    jasmine.getEnv().addReporter({
+        suiteStarted: (result) => {
+            if (initialValue === null) {
+                initialValue = performance.memory.usedJSHeapSize;
+            }
+        },
+        suiteDone: (result) => {
+            const end = performance.memory.usedJSHeapSize;
+            const out = Math.round((end - initialValue) / 1000);
+            console.warn("Memory increase", `${out} kB`, result.fullName);
+            stream.write(`${result.fullName},${out}\n`);
+        },
+        jasmineDone: () => {
+            stream.end();
         }
-    },
-    suiteDone: (result) => {
-        const end = performance.memory.usedJSHeapSize;
-        const out = Math.round((end - initialValue) / 1000);
-        console.warn("Memory increase", `${out} kB`, result.fullName);
-        stream.write(`${result.fullName},${out}\n`);
-    },
-    jasmineDone: () => {
-        console.log("JAsmine is done");
-        stream.end();
-    }
-});
+    });
+}
 
 /*
  * get all the files, for each file, call the context function

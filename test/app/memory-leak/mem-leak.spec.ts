@@ -1,4 +1,5 @@
 // tslint:disable:no-unused-variable
+// tslint:disable:no-jasmine-focus
 import { Component } from "@angular/core";
 import { TestBed, async } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
@@ -37,7 +38,7 @@ import {
 } from "app/components/base/background-task";
 
 export function main() {
-    describe("Memory leak Testing", () => {
+    fdescribe("Memory leak Testing", () => {
         for (let i = 0; i < 100000; i++) {
             describe(`${i}`, () => {
                 beforeEach(async(() => {
@@ -72,6 +73,7 @@ export function main() {
     });
 }
 
+// Uncomment below to focus the above tests
 // main();
 
 @Component({ selector: "bl-cmp", template: "<div></div>" })
