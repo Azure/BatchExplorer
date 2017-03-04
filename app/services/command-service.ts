@@ -1,5 +1,5 @@
 import { Injectable, Injector, NgZone } from "@angular/core";
-import * as MouseTrap from "mousetrap";
+// import * as MouseTrap from "mousetrap";
 
 import * as CommandMap from "app/commands";
 import { CommandBase } from "app/commands/core";
@@ -44,15 +44,15 @@ export class CommandService {
 
     public registerShortcuts(keybindings: KeyBindings[]) {
         if (this._setOnce) {
-            MouseTrap.reset();
+            // MouseTrap.reset();
         }
         this._setOnce = true;
         for (let shortcut of keybindings) {
-            MouseTrap.bind(shortcut.key, () => {
-                this.zone.run(() => {
-                    this.perform(shortcut.command);
-                });
-            });
+            // MouseTrap.bind(shortcut.key, () => {
+            //     this.zone.run(() => {
+            //         this.perform(shortcut.command);
+            //     });
+            // });
         }
     }
 }

@@ -27,7 +27,13 @@ module.exports = function (config) {
         autoWatch: false,
         autoWatchBatchDelay: 1000,
 
-        browsers: ["Electron"],
+        browsers: ["CustomElectron"],
+        customLaunchers: {
+            CustomElectron: {
+                base: "Electron",
+                flags: ["--show", "--enable-precise-memory-info"]
+            }
+        },
         electronOpts: {
             // show: false,
         },

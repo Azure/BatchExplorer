@@ -3,3 +3,4 @@ build/
 dll/
 typings/
 *.log*
+*.mem.csv

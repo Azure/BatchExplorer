@@ -13,8 +13,7 @@ import { StartTaskModule } from "app/components/pool/start-task";
 import { AppComponent } from "./app.component";
 import { DeleteAccountDialogComponent } from "./components/account/action/delete-account-dialog.component";
 import AccountCreateDialogComponent from "./components/account/add/account-create-dialog.component";
-import { AccountFavListComponent, AccountListComponent } from "./components/account/browse";
-import AccountDropDown from "./components/account/browse/account-dropdown.component";
+import { AccountBrowseModule } from "./components/account/browse";
 import { AccountDetailsHomeComponent } from "./components/account/details/account-details-home.component";
 import { AccountDetailsComponent } from "./components/account/details/account-details.component";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
@@ -45,13 +44,7 @@ import { AADUserDropdownComponent } from "./components/user";
 import { BatchLabsErrorHandler } from "./error-handler";
 
 // job actions
-import {
-    DeleteJobDialogComponent,
-    DisableJobDialogComponent,
-    EnableJobDialogComponent,
-    JobCreateBasicDialogComponent,
-    TerminateJobDialogComponent,
-} from "./components/job/action";
+import { JobActionModule } from "./components/job/action";
 
 // pool actions
 import {
@@ -92,9 +85,10 @@ import {
 } from "./services";
 
 const modules = [
+    AccountBrowseModule,
     ApplicationModule,
     PoolDetailsModule, PoolGraphsModule, StartTaskModule,
-    JobDetailsModule,
+    JobDetailsModule, JobActionModule,
     TaskBaseModule, TaskDetailsModule, TaskBrowseModule,
     NodeBrowseModule, NodeConnectModule,
     FileBrowseModule, FileDetailsModule,
@@ -109,20 +103,13 @@ const modules = [
         AccountCreateDialogComponent,
         AccountDetailsComponent,
         AccountDetailsHomeComponent,
-        AccountDropDown,
-        AccountFavListComponent,
         AccountHomeComponent,
-        AccountListComponent,
         AppComponent,
         DeleteAccountDialogComponent,
-        DeleteJobDialogComponent,
         DeletePoolDialogComponent,
         DeleteTaskDialogComponent,
-        DisableJobDialogComponent,
-        EnableJobDialogComponent,
         FileHomeComponent,
         JobAdvancedFilterComponent,
-        JobCreateBasicDialogComponent,
         JobHomeComponent,
         JobListComponent,
         JobStatsPreviewComponent,
@@ -141,32 +128,26 @@ const modules = [
         RerunTaskFormComponent,
         TaskCreateBasicDialogComponent,
         TaskHomeComponent,
-        TerminateJobDialogComponent,
         TerminateTaskDialogComponent,
     ],
     entryComponents: [
         AccountCreateDialogComponent,
         DeleteAccountDialogComponent,
-        DeleteJobDialogComponent,
         DeletePoolDialogComponent,
         DeleteTaskDialogComponent,
-        DisableJobDialogComponent,
-        EnableJobDialogComponent,
-        JobCreateBasicDialogComponent,
         PoolCreateBasicDialogComponent,
         PoolResizeDialogComponent,
         RerunTaskFormComponent,
         TaskCreateBasicDialogComponent,
-        TerminateJobDialogComponent,
         TerminateTaskDialogComponent,
     ],
     imports: [
         BrowserModule,
         FormsModule,
-        MaterialModule.forRoot(),
+        MaterialModule,
         ReactiveFormsModule,
         RouterModule.forRoot(routes, { useHash: true }),
-        BaseModule.forRoot(),
+        BaseModule,
         ...modules,
     ],
     providers: [
