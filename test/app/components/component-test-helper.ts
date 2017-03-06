@@ -1,6 +1,6 @@
+import { DebugElement } from "@angular/core";
 import { ComponentFixture } from "@angular/core/testing";
 import { FormGroup } from "@angular/forms";
-import { MdInput } from "@angular/material";
 
 export class ComponentTestHelper<T> {
     constructor(private fixture: ComponentFixture<T>) {
@@ -11,14 +11,16 @@ export class ComponentTestHelper<T> {
      */
     public expectValidation(
         formGroup: FormGroup,
-        input: MdInput,
+        input: DebugElement,
         name: string,
         value: any,
         validator: string,
         expected: boolean) {
 
-        input.value = value;
+        input.nativeElement.value = value;
+        input.nativeElement.dispatchEvent(new Event("input"));
         this.fixture.detectChanges();
-        expect(formGroup.hasError(validator, [name])).toBe(expected);
+        const msg = `Expected validation "${validator}" to be ${expected}`;
+        expect(formGroup.hasError(validator, [name])).toBe(expected, msg);
     }
 }

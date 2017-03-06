@@ -35,7 +35,10 @@ module.exports = function (config) {
             }
         },
         electronOpts: {
-            // show: false,
+            title: "Banana",
+            "webPreferences": {
+                "blinkFeatures": "PreciseMemoryInfo"
+            }
         },
         // Karma plugins loaded
         plugins: [

@@ -76,6 +76,7 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
     }
 
     public ngOnDestroy() {
+        this.list = null;
         if (this._activeSub) {
             this._activeSub.unsubscribe();
         }

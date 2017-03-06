@@ -72,7 +72,7 @@ describe("Tabs", () => {
     });
 
     it("clicking on a tab label should update the route", async(() => {
-        const labels = fixture.debugElement.queryAll(By.css(".md-tab-label"));
+        const labels = fixture.debugElement.queryAll(By.css(".mat-tab-label"));
         expect(labels.length).toBe(2);
         labels[1].nativeElement.click();
         fixture.detectChanges();

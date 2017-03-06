@@ -129,24 +129,24 @@ fieldset {
                 margin-bottom: 5px;
             }
 
-            md-input, md-input-container {
+            md-input-container {
                 width: 100%;
             }
 
-            md-input.ng-invalid.ng-touched {
+            md-input-container.ng-invalid.ng-touched {
                 label {
                     color: $validation-error-color;
 
-                    .md-placeholder-required {
+                    .mat-placeholder-required {
                         color: $validation-error-color;
                     }
                 }
 
-                .md-input-underline {
+                .mat-input-underline {
                     border-color: $validation-error-color;
                     border-width: 2px;
 
-                    .md-input-ripple.md-focused {
+                    .mat-input-ripple.mat-focused {
                         opacity: 0;
                     }
                 }

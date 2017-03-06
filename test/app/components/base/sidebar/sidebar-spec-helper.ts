@@ -17,12 +17,12 @@ export class FakeComponent {
  */
 @Component({
     template: `
-        <md-sidenav-layout>
+        <md-sidenav-container>
                 <md-sidenav #rightSidebar align="end">
                     <bl-sidebar-content #sidebarContent [sidebar]="rightSidebar"></bl-sidebar-content>
                 </md-sidenav>
                 <div>Content</div>
-        </md-sidenav-layout>
+        </md-sidenav-container>
     `,
 })
 export class AppTestComponent implements AfterViewInit {

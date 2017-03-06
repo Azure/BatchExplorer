@@ -6,11 +6,15 @@
     </div>
     <div *ngIf="enableStartTask">
         <div class="form-element">
-            <md-input formControlName="commandLine" placeholder="Command line"></md-input>
+            <md-input-container>
+                <input mdInput formControlName="commandLine" placeholder="Command line">
+            </md-input-container>
             <bl-error controlName="commandLine" code="required">Command line is a required field</bl-error>
         </div>
         <div class="form-element">
-            <md-input formControlName="maxTaskRetryCount" placeholder="Max retry count" type="number"></md-input>
+            <md-input-container>
+                <input mdInput formControlName="maxTaskRetryCount" placeholder="Max retry count" type="number">
+            </md-input-container>
             <bl-error controlName="maxTaskRetryCount" code="validateRange">Retry count values can range from -1 to 100</bl-error>
         </div>
         <div class="form-element">

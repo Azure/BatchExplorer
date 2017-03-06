@@ -5,7 +5,7 @@
         <form novalidate [formGroup]="applicationForm">
             <div class="form-element">
                 <md-input-container>
-                    <input md-input formControlName="id" placeholder="Application identifier">
+                    <input mdInput formControlName="id" placeholder="Application identifier">
                 </md-input-container>
                 <bl-error controlName="id" code="required">The application identifier is a required field</bl-error>
                 <bl-error controlName="id" code="maxlength">Application identifier has a maximum length of 64 characters</bl-error>
@@ -14,7 +14,7 @@
 
             <div class="form-element">
                 <md-input-container>
-                    <input md-input formControlName="version" placeholder="Package version">
+                    <input mdInput formControlName="version" placeholder="Package version">
                 </md-input-container>
                 <bl-error controlName="version" code="required">The package version is a required field</bl-error>
                 <bl-error controlName="version" code="maxlength">Package version has a maximum length of 64 characters</bl-error>
