@@ -28,7 +28,6 @@ export class NodeAgentSkuMap {
         this._map = map;
     }
 
-
     public getPublisher(publisher: string) {
         return this._map[publisher];
     }

@@ -95,7 +95,6 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
     }
 
     public writeValue(value: any) {
-        console.log("VALue is", value);
         this.form.patchValue(ObjectUtils.compact(value));
     }
 
