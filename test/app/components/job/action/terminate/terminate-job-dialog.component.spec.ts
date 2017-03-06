@@ -4,9 +4,8 @@ import { MdDialogRef } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
-import { AppModule } from "app/app.module";
 import { ActionFormComponent } from "app/components/base/form/action-form";
-import { TerminateJobDialogComponent } from "app/components/job/action";
+import { JobActionModule, TerminateJobDialogComponent } from "app/components/job/action";
 import { ServerError } from "app/models";
 import { JobService } from "app/services";
 
@@ -38,7 +37,7 @@ describe("TerminateJobDialogComponent ", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [AppModule],
+            imports: [JobActionModule],
             providers: [
                 { provide: MdDialogRef, useValue: dialogRefSpy },
                 { provide: JobService, useValue: jobServiceSpy },
