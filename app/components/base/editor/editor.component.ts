@@ -42,10 +42,10 @@ export class EditorComponent {
     }
 
     public init() {
-        this.setOptions(this._options || {});
-        this.setTheme(this._theme);
-        this.setMode(this._mode);
-        this.setReadOnly(this._readOnly);
+        this.options = this._options || {};
+        this.theme = this._theme;
+        this.mode = this._mode;
+        this.readOnly = this._readOnly;
     }
 
     public initEvents() {
@@ -55,59 +55,51 @@ export class EditorComponent {
                 return;
             }
             if (typeof this.oldText !== "undefined") {
-                if (this._durationBeforeCallback === 0) {
-                    this._text = newVal;
-                    this.textChange.emit(newVal);
-                    this.textChanged.emit(newVal);
-                } else {
-                    if (this.timeoutSaving != null) {
-                        clearTimeout(this.timeoutSaving);
-                    }
-
-                    this.timeoutSaving = setTimeout(() => {
-                        this._text = newVal;
-                        this.textChange.emit(newVal);
-                        this.textChanged.emit(newVal);
-                        this.timeoutSaving = null;
-                    }, this._durationBeforeCallback);
-                }
+                this._updateText(newVal);
             }
             this.oldText = newVal;
         });
     }
 
-    @Input() set options(options: any) {
-        this.setOptions(options);
+    private _updateText(newVal: string) {
+        if (this._durationBeforeCallback === 0) {
+            this._text = newVal;
+            this.textChange.emit(newVal);
+            this.textChanged.emit(newVal);
+        } else {
+            if (this.timeoutSaving != null) {
+                clearTimeout(this.timeoutSaving);
+            }
+
+            this.timeoutSaving = setTimeout(() => {
+                this._text = newVal;
+                this.textChange.emit(newVal);
+                this.textChanged.emit(newVal);
+                this.timeoutSaving = null;
+            }, this._durationBeforeCallback);
+        }
     }
 
-    public setOptions(options: any) {
+    @Input()
+    public set options(options: any) {
         this._options = options;
         this._editor.setOptions(options || {});
     }
 
-    @Input() set readOnly(readOnly: any) {
-        this.setReadOnly(readOnly);
-    }
-
-    public setReadOnly(readOnly: any) {
+    @Input()
+    public set readOnly(readOnly: any) {
         this._readOnly = readOnly;
         this._editor.setReadOnly(readOnly);
     }
 
-    @Input() set theme(theme: any) {
-        this.setTheme(theme);
-    }
-
-    public setTheme(theme: any) {
+    @Input()
+    public set theme(theme: any) {
         this._theme = theme;
         this._editor.setTheme(`ace/theme/${theme}`);
     }
 
-    @Input() set mode(mode: any) {
-        this.setMode(mode);
-    }
-
-    public setMode(mode: any) {
+    @Input()
+    public set mode(mode: any) {
         this._mode = mode;
         if (typeof this._mode === "object") {
             this._editor.getSession().setMode(this._mode);
@@ -117,15 +109,11 @@ export class EditorComponent {
     }
 
     @Input()
-    get text() {
+    public get text() {
         return this._text;
     }
 
-    set text(text: string) {
-        this.setText(text);
-    }
-
-    public setText(text: any) {
+    public set text(text: string) {
         if (this._text !== text) {
             if (text == null) {
                 text = "";
@@ -137,23 +125,13 @@ export class EditorComponent {
         }
     }
 
-    @Input() set autoUpdateContent(status: any) {
-        this.setAutoUpdateContent(status);
-    }
-
-    public setAutoUpdateContent(status: any) {
+    @Input()
+    public set autoUpdateContent(status: any) {
         this._autoUpdateContent = status;
     }
 
-    @Input() set durationBeforeCallback(num: number) {
-        this.setDurationBeforeCallback(num);
-    }
-
-    public setDurationBeforeCallback(num: number) {
+    @Input()
+    public set durationBeforeCallback(num: number) {
         this._durationBeforeCallback = num;
-    }
-
-    public getEditor() {
-        return this._editor;
     }
 }
