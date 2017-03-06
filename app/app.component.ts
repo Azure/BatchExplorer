@@ -47,8 +47,8 @@ export class AppComponent implements AfterViewInit, OnInit {
                 this.isAppReady = loadedArray[0] && loadedArray[1];
             });
 
-        accountService.accountLoaded.filter(x => Boolean(x)).first().subscribe(() => {
-            console.log("Account loaded...");
+        // Wait for the first account to be loaded.
+        accountService.currentAccount.filter(x => Boolean(x)).first().subscribe((x) => {
             this._preloadData();
         });
     }
@@ -87,6 +87,6 @@ export class AppComponent implements AfterViewInit, OnInit {
      * Preload some data needed.
      */
     private _preloadData() {
-        // this.accountService.listNodeAgentSkus().fetchAll();
+        this.accountService.listNodeAgentSkus().fetchAll();
     }
 }
