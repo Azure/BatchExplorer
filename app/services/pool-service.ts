@@ -27,7 +27,9 @@ export class PoolService extends ServiceBase {
     }
 
     public add(pool: any, options: any = {}): Observable<any> {
-        return this.callBatchClient(BatchClient.pool.add(pool, options));
+        return this.callBatchClient(BatchClient.pool.add(pool, options), (error) => {
+            log.error("Error adding pool", Object.assign({}, error));
+        });
     }
 
     public list(initialOptions: any = {}): RxListProxy<{}, Pool> {

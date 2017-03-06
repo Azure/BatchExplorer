@@ -58,6 +58,6 @@ export class NodeAgentSkuMap {
 
     public getNodeAgentId(publisher: string, offer: string, sku: string) {
         const data = this.getSku(publisher, offer, sku);
-        return data ? Object.keys(data) : [];
+        return data ? data.nodeAgentId : "";
     }
 }

@@ -46,10 +46,14 @@ export class AppComponent implements AfterViewInit, OnInit {
             .subscribe((loadedArray) => {
                 this.isAppReady = loadedArray[0] && loadedArray[1];
             });
+
+        // Wait for the first account to be loaded.
+        accountService.currentAccount.filter(x => Boolean(x)).first().subscribe((x) => {
+            this._preloadData();
+        });
     }
 
     public ngAfterViewInit() {
-        this._preloadData();
         // Give the reference to the sidebar to the sidebar manager
         this.sidebarManager.sidebar = this.sidebar;
         this.sidebarManager.sidebarContent = this.sidebarContent;
