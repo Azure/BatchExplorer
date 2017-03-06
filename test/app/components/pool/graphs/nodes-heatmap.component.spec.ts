@@ -14,7 +14,7 @@ import { click } from "test/utils/helpers";
 @Component({
     template: `
         <div [style.width]="width" [style.height]="height" [style.position]="'relative'">
-            <bex-nodes-heatmap [poolId]="poolId" [nodes]="nodes"></bex-nodes-heatmap>
+            <bl-nodes-heatmap [poolId]="poolId" [nodes]="nodes"></bl-nodes-heatmap>
         </div>
     `,
 })
@@ -44,9 +44,9 @@ describe("NodesHeatmapLegendComponent", () => {
         TestBed.compileComponents();
         fixture = TestBed.createComponent(TestHeatmapComponent);
         component = fixture.componentInstance;
-        heatmap = fixture.debugElement.query(By.css("bex-nodes-heatmap")).componentInstance;
+        heatmap = fixture.debugElement.query(By.css("bl-nodes-heatmap")).componentInstance;
         fixture.detectChanges();
-        heatmapContainer = fixture.debugElement.query(By.css("bex-nodes-heatmap .heatmap-container"));
+        heatmapContainer = fixture.debugElement.query(By.css("bl-nodes-heatmap .heatmap-container"));
         svg = d3.select(heatmapContainer.nativeElement).select("svg");
         heatmap.containerSizeChanged();
     });

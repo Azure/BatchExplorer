@@ -2,12 +2,12 @@ import { Component } from "@angular/core";
 import { MdDialogRef } from "@angular/material";
 import { autobind } from "core-decorators";
 
-import { BackgroundTaskManager } from "app/components/base/background-task";
+import { BackgroundTaskService } from "app/components/base/background-task";
+import { DeleteTaskAction } from "app/components/task/action";
 import { TaskService } from "app/services";
-import { DeleteTaskAction } from "./";
 
 @Component({
-    selector: "bex-delete-task-dialog",
+    selector: "bl-delete-task-dialog",
     templateUrl: "delete-task-dialog.html",
 })
 export class DeleteTaskDialogComponent {
@@ -17,7 +17,7 @@ export class DeleteTaskDialogComponent {
     constructor(
         public dialogRef: MdDialogRef<DeleteTaskDialogComponent>,
         private taskService: TaskService,
-        private taskManager: BackgroundTaskManager) {
+        private taskManager: BackgroundTaskService) {
     }
 
     @autobind()

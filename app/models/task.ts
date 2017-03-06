@@ -1,16 +1,16 @@
 import { Record } from "immutable";
 import * as moment from "moment";
 
-import { AffinityInformation } from "./affinityInformation";
-import { ApplicationPackageReference } from "./applicationPackageReference";
-import { ComputeNodeInformation } from "./computeNodeInformation";
-import { MultiInstanceSettings } from "./multiInstanceSettings";
-import { NameValuePair } from "./nameValuePair";
-import { ResourceFile } from "./resourceFile";
-import { TaskConstraints } from "./taskConstraints";
-import { TaskDependencies } from "./taskDependencies";
-import { TaskExecutionInformation } from "./taskExecutionInformation";
-import { TaskExitConditions } from "./taskExitConditions";
+import { AffinityInformation } from "./affinity-information";
+import { ApplicationPackageReference } from "./application-package-reference";
+import { ComputeNodeInformation } from "./compute-node-information";
+import { MultiInstanceSettings } from "./multi-instance-settings";
+import { NameValuePair } from "./name-value-pair";
+import { ResourceFile } from "./resource-file";
+import { TaskConstraints } from "./task-constraints";
+import { TaskDependencies } from "./task-dependencies";
+import { TaskExecutionInformation } from "./task-execution-information";
+import { TaskExitConditions } from "./task-exit-conditions";
 
 // tslint:disable:variable-name
 const TaskRecord = Record({

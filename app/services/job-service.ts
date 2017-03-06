@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 
 import { Job } from "app/models";
+import { log } from "app/utils";
 import BatchClient from "../api/batch/batch-client";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
 import { ServiceBase } from "./service-base";
@@ -52,23 +53,23 @@ export class JobService extends ServiceBase {
      */
     public delete(jobId: string, options: any = {}): Observable<{}> {
         return this.callBatchClient(BatchClient.job.delete(jobId, options), (error) => {
-            console.error("Error deleting job: " + jobId, error);
+            log.error("Error deleting job: " + jobId, error);
         });
     }
 
-    public terminate(jobId: string, options: any): Observable<{}> {
+    public terminate(jobId: string, options: any = {}): Observable<{}> {
         return this.callBatchClient(BatchClient.job.terminate(jobId, options));
     }
 
-    public disable(jobId: string, disableTasks: string, options: any): Observable<{}> {
+    public disable(jobId: string, disableTasks: string, options: any = {}): Observable<{}> {
         return this.callBatchClient(BatchClient.job.disable(jobId, disableTasks, options));
     }
 
-    public enable(jobId: string, options: any): Observable<{}> {
+    public enable(jobId: string, options: any = {}): Observable<{}> {
         return this.callBatchClient(BatchClient.job.enable(jobId, options));
     }
 
-    public add(job: any, options: any): Observable<{}> {
+    public add(job: any, options: any = {}): Observable<{}> {
         return this.callBatchClient(BatchClient.job.add(job, options));
     }
 }

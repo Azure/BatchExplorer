@@ -5,8 +5,8 @@ import { Subscription } from "rxjs";
 import { SidebarManager } from "../../base/sidebar";
 
 @Component({
-    selector: "bex-node-home",
-    templateUrl: "./node-home.html",
+    selector: "bl-node-home",
+    templateUrl: "node-home.html",
 })
 export class NodeHomeComponent implements OnInit, OnDestroy {
     public poolId: string;

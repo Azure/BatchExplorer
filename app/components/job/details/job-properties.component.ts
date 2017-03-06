@@ -9,7 +9,7 @@ import {
 } from "app/models/decorators";
 
 @Component({
-    selector: "bex-job-properties",
+    selector: "bl-job-properties",
     templateUrl: "job-properties.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

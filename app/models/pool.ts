@@ -1,10 +1,10 @@
 import { Record } from "immutable";
 import { Duration } from "moment";
 
-import { CloudServiceConfiguration } from "./cloudServiceConfiguration";
-import { ResizeError } from "./resizeError";
-import { StartTask } from "./startTask";
-import { VirtualMachineConfiguration } from "./virtualMachineConfiguration";
+import { CloudServiceConfiguration } from "./cloud-service-configuration";
+import { ResizeError } from "./resize-error";
+import { StartTask } from "./start-task";
+import { VirtualMachineConfiguration } from "./virtual-machine-configuration";
 
 // tslint:disable:variable-name object-literal-sort-keys
 const PoolRecord = Record({

@@ -1,9 +1,9 @@
-<bex-loading [status]="data.newDataStatus | async">
+<bl-loading [status]="data.newDataStatus | async">
     <div *ngIf="application">
         <md-card class="overview">
             <md-card-title-group style="margin: 0px;">
                 <div style="align-items:center;">
-                    <bex-refresh-btn [refresh]="refresh"></bex-refresh-btn>
+                    <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
                 </div>
                 <div style="margin-left:12px; margin-right:auto;">
                     <md-card-title>{{decorator.id}}</md-card-title>
@@ -16,23 +16,23 @@
             </md-card-title-group>
             <md-card-content></md-card-content>
             <md-card-actions layout="row" layout-align="end center">
-                <bex-add-button title="Add package" (click)="addPackage()"></bex-add-button>
-                <bex-edit-button (click)="editApplication()"></bex-edit-button>
-                <bex-delete-button [entity]="application" (click)="deleteApplication()"></bex-delete-button>
+                <bl-add-button title="Add package" (click)="addPackage()"></bl-add-button>
+                <bl-edit-button (click)="editApplication()"></bl-edit-button>
+                <bl-delete-button [entity]="application" (click)="deleteApplication()"></bl-delete-button>
             </md-card-actions>
         </md-card>
-        <bex-application-error-display [application]="application"></bex-application-error-display>
+        <bl-application-error-display [application]="application"></bl-application-error-display>
         <md-card class="details">
-            <bex-tab-group>
-                <bex-tab key="properties">
-                    <bex-tab-label>Properties</bex-tab-label>
-                    <bex-application-properties [application]="application"></bex-application-properties>
-                </bex-tab>
-                <bex-tab key="packages">
-                    <bex-tab-label>Packages</bex-tab-label>
-                    <bex-application-packages [application]="application"></bex-application-packages>
-                </bex-tab>
-            </bex-tab-group>
+            <bl-tab-group>
+                <bl-tab key="properties">
+                    <bl-tab-label>Properties</bl-tab-label>
+                    <bl-application-properties [application]="application"></bl-application-properties>
+                </bl-tab>
+                <bl-tab key="packages">
+                    <bl-tab-label>Packages</bl-tab-label>
+                    <bl-application-packages [application]="application"></bl-application-packages>
+                </bl-tab>
+            </bl-tab-group>
         </md-card>
     </div>
-</bex-loading>
+</bl-loading>

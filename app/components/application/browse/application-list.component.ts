@@ -4,7 +4,7 @@ import { autobind } from "core-decorators";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { BackgroundTaskManager } from "app/components/base/background-task";
+import { BackgroundTaskService } from "app/components/base/background-task";
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListItemStatus } from "app/components/base/quick-list";
 import { ListOrTableBase } from "app/components/base/selectable-list";
@@ -15,7 +15,7 @@ import { Filter } from "app/utils/filter-builder";
 import { DeleteApplicationAction } from "../action";
 
 @Component({
-    selector: "bex-application-list",
+    selector: "bl-application-list",
     templateUrl: "application-list.html",
 })
 export class ApplicationListComponent extends ListOrTableBase implements OnInit, OnDestroy {
@@ -42,7 +42,7 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
         private router: Router,
         private accountService: AccountService,
         private applicationService: ApplicationService,
-        private taskManager: BackgroundTaskManager) {
+        private taskManager: BackgroundTaskService) {
 
         super();
 

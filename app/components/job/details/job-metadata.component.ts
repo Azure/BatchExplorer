@@ -3,7 +3,7 @@ import { Component, Input, ViewContainerRef } from "@angular/core";
 import { Job, NameValuePair } from "app/models";
 
 @Component({
-    selector: "bex-job-metadata",
+    selector: "bl-job-metadata",
     templateUrl: "job-metadata.html",
 })
 export class JobMetadataComponent {

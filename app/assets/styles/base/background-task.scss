@@ -1,10 +1,10 @@
-bex-background-task-tracker {
+bl-background-task-tracker {
     .current-task {
         width: 100%;
         display: flex;
         align-items: center;
 
-        > bex-background-task-tracker-item  {flex: 1;};
+        > bl-background-task-tracker-item  {flex: 1;};
 
         > .other-task-count {
             width: 20px;
@@ -18,7 +18,7 @@ bex-background-task-tracker {
         padding: 5px !important;
     }
 
-    bex-background-task-tracker-item {
+    bl-background-task-tracker-item {
         display: flex;
         align-items: center;
         width: 100%;

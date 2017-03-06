@@ -4,9 +4,9 @@ import { FormBuilder } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { Observable, Subject } from "rxjs";
 
-import { AppModule } from "app/app.module";
 import { CreateFormComponent } from "app/components/base/form/create-form";
 import { SidebarRef } from "app/components/base/sidebar";
+import { JobActionModule } from "app/components/job/action";
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { Pool, ServerError } from "app/models";
 import { JobService, PoolService } from "app/services";
@@ -84,7 +84,7 @@ describe("JobCreateBasicDialogComponent ", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [AppModule],
+            imports: [JobActionModule],
             providers: [
                 { provide: FormBuilder, useValue: new FormBuilder() },
                 { provide: SidebarRef, useValue: sidebarRefSpy },
@@ -202,7 +202,7 @@ describe("JobCreateBasicDialogComponent ", () => {
         const job = Fixtures.job.create({ id: "job-001", poolInfo: { poolId: "pool-002" } });
         component.setValue(job);
 
-        const createForm = de.query(By.css("bex-create-form")).componentInstance as CreateFormComponent;
+        const createForm = de.query(By.css("bl-create-form")).componentInstance as CreateFormComponent;
         createForm.add();
 
         expect(jobServiceSpy.add).toHaveBeenCalledTimes(1);
@@ -224,7 +224,7 @@ describe("JobCreateBasicDialogComponent ", () => {
         const job = Fixtures.job.create({ id: "bad-job-id", poolInfo: { poolId: "pool-002" } });
         component.setValue(job);
 
-        const createForm = de.query(By.css("bex-create-form")).componentInstance as CreateFormComponent;
+        const createForm = de.query(By.css("bl-create-form")).componentInstance as CreateFormComponent;
         createForm.add();
 
         expect(createForm.error).not.toBeNull();

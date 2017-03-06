@@ -18,8 +18,10 @@ module.exports = function (config) {
 
         port: 9876,
 
-        logLevel: config.LOG_DEBUG,
-
+        logLevel: config.LOG_INFO,
+        browserConsoleLogOptions: {
+            level: "log",
+        },
         colors: true,
 
         autoWatch: false,
@@ -29,7 +31,7 @@ module.exports = function (config) {
         customLaunchers: {
             CustomElectron: {
                 base: "Electron",
-                flags: ["--enable-precise-memory-info"]
+                flags: ["--show", "--enable-precise-memory-info"]
             }
         },
         electronOpts: {
@@ -65,7 +67,7 @@ module.exports = function (config) {
             stats: "errors-only",
         },
         browserDisconnectTimeout: "4000",
-        singleRun: false,
+        singleRun: true,
         mochaReporter: {
             output: "autowatch",
         },

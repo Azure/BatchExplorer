@@ -9,10 +9,10 @@ import { SidebarRef } from "app/components/base/sidebar";
 import { Application } from "app/models";
 import { applicationToCreateFormModel } from "app/models/forms";
 import { ApplicationService, CommitBlockListOptions, HttpUploadService, UploadBlockOptions } from "app/services";
-import { Constants, prettyBytes } from "app/utils";
+import { Constants, log, prettyBytes } from "app/utils";
 
 @Component({
-    selector: "bex-application-create-dialog",
+    selector: "bl-application-create-dialog",
     templateUrl: "application-create-dialog.html",
 })
 export class ApplicationCreateDialogComponent {
@@ -122,7 +122,7 @@ export class ApplicationCreateDialogComponent {
                          *          RequestId: 0427d452-dbfe-48ff-80f9-680a26bbff27
                          *          Time:2017-02-13T03:35:27.0685745Z
                          */
-                        console.error("Failed to activate application package :: ", response);
+                        log.error("Failed to activate application package :: ", response);
                         this.notificationService.error(
                             "Activation failed",
                             "The application package was uploaded into storage successfully, "
@@ -216,7 +216,7 @@ export class ApplicationCreateDialogComponent {
                     this._readAndUploadFileBlocks(sasUrl, subject);
                 },
                 error: (error) => {
-                    console.error("ERROR :: ", error);
+                    log.error("PUT block error :: ", error);
                 },
             });
         }

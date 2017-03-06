@@ -5,7 +5,7 @@ import { Job, Task, TaskState } from "app/models";
 import { DateUtils } from "app/utils";
 
 @Component({
-    selector: "bex-task-timeline",
+    selector: "bl-task-timeline",
     templateUrl: "task-timeline.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

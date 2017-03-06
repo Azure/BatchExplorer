@@ -9,9 +9,9 @@ import { Job, Task, TaskState } from "app/models";
 
 @Component({
     template: `
-        <bex-task-timeline [job]="job" [task]="task">
+        <bl-task-timeline [job]="job" [task]="task">
             Additional content info
-        </bex-task-timeline>
+        </bl-task-timeline>
     `,
 })
 class TestComponent {
@@ -49,7 +49,7 @@ describe("TaskTimelineComponent", () => {
         });
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
-        de = fixture.debugElement.query(By.css("bex-task-timeline"));
+        de = fixture.debugElement.query(By.css("bl-task-timeline"));
         component = de.componentInstance;
         fixture.detectChanges();
         stateLinks = de.queryAll(By.css(".state-link"));

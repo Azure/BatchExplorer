@@ -1,4 +1,6 @@
-import { Component, Input, animate, style, transition, trigger } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, animate, style, transition, trigger,
+} from "@angular/core";
 import { Observable } from "rxjs";
 
 export enum SubmitStatus {
@@ -9,8 +11,8 @@ export enum SubmitStatus {
 }
 
 @Component({
-    selector: "bex-submit-btn",
-    templateUrl: "./submit-btn.html",
+    selector: "bl-submit-btn",
+    templateUrl: "submit-btn.html",
     animations: [
         trigger("animateSucessIcon", [
             transition(":enter", [
@@ -19,6 +21,7 @@ export enum SubmitStatus {
             ]),
         ]),
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class SubmitButtonComponent {
     public statuses = SubmitStatus;
@@ -35,11 +38,28 @@ export class SubmitButtonComponent {
     @Input()
     public multiSubmit = true;
 
-    public status = SubmitStatus.Idle;
+    public set status(value: SubmitStatus) {
+        this._status = value;
+        this.changeDetectionRef.markForCheck();
+    }
+
+    public get status() { return this._status; }
+    private _status = SubmitStatus.Idle;
+
+    constructor(private changeDetectionRef: ChangeDetectorRef) {
+
+    }
 
     public onClick() {
         this.status = SubmitStatus.Submitting;
-        this.submit().subscribe({
+
+        const submit = this.submit();
+        if (!submit) {
+            this.status = SubmitStatus.Succeeded;
+            this.done();
+            return;
+        }
+        submit.subscribe({
             complete: () => {
                 this.status = SubmitStatus.Succeeded;
                 this.done();

@@ -3,7 +3,7 @@
     float: right;
 }
 
-[bex-dropdown-btn] {
+[bl-dropdown-btn] {
     position: relative;
     padding: 0 5px;
     color: white;
@@ -23,7 +23,7 @@
     }
 }
 
-[bex-dropdown-content] {
+[bl-dropdown-content] {
     position: absolute;
     z-index: $zindex-dropdown;
     right: 0;

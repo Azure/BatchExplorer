@@ -8,7 +8,7 @@ import { TableComponent } from "app/components/base/table";
 import { Node } from "app/models";
 
 @Component({
-    selector: "bex-node-list-display",
+    selector: "bl-node-list-display",
     templateUrl: "node-list-display.html",
 })
 export class NodeListDisplayComponent  extends ListOrTableBase  {

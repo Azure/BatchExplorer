@@ -11,7 +11,7 @@ import { Filter } from "app/utils/filter-builder";
 import { NodeListDisplayComponent } from "./display";
 
 @Component({
-    selector: "bex-node-list",
+    selector: "bl-node-list",
     templateUrl: "node-list.html",
 })
 export class NodeListComponent extends SelectableList implements OnInit {

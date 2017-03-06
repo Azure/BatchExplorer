@@ -1,18 +1,19 @@
 import { Component, Input } from "@angular/core";
 import { List } from "immutable";
 
-import { BackgroundTask, BackgroundTaskManager } from "./background-task-manager";
+import { BackgroundTask } from "./background-task.model";
+import { BackgroundTaskService } from "./background-task.service";
 
 @Component({
-    selector: "bex-background-task-tracker",
-    templateUrl: "./background-task-tracker.html",
+    selector: "bl-background-task-tracker",
+    templateUrl: "background-task-tracker.html",
 })
 export class BackgroundTaskTrackerComponent {
 
     public currentTask: BackgroundTask;
     public otherTasks: List<BackgroundTask>;
 
-    constructor(public taskManager: BackgroundTaskManager) {
+    constructor(public taskManager: BackgroundTaskService) {
         taskManager.runningTasks.subscribe((tasks) => {
             this.currentTask = tasks.first();
             this.otherTasks = tasks.shift();
@@ -21,8 +22,8 @@ export class BackgroundTaskTrackerComponent {
 }
 
 @Component({
-    selector: "bex-background-task-tracker-item",
-    templateUrl: "./background-task-tracker-item.html",
+    selector: "bl-background-task-tracker-item",
+    templateUrl: "background-task-tracker-item.html",
 })
 export class BackgroundTaskTrackerItemComponent {
     @Input()

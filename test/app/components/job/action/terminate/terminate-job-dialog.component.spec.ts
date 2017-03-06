@@ -4,9 +4,8 @@ import { MdDialogRef } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
-import { AppModule } from "app/app.module";
 import { ActionFormComponent } from "app/components/base/form/action-form";
-import { TerminateJobDialogComponent } from "app/components/job/action";
+import { JobActionModule, TerminateJobDialogComponent } from "app/components/job/action";
 import { ServerError } from "app/models";
 import { JobService } from "app/services";
 
@@ -38,7 +37,7 @@ describe("TerminateJobDialogComponent ", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [AppModule],
+            imports: [JobActionModule],
             providers: [
                 { provide: MdDialogRef, useValue: dialogRefSpy },
                 { provide: JobService, useValue: jobServiceSpy },
@@ -50,7 +49,7 @@ describe("TerminateJobDialogComponent ", () => {
         component = fixture.componentInstance;
         component.jobId = "job-1";
         de = fixture.debugElement;
-        actionForm = de.query(By.css("bex-action-form")).componentInstance;
+        actionForm = de.query(By.css("bl-action-form")).componentInstance;
         fixture.detectChanges();
     });
 
@@ -63,7 +62,7 @@ describe("TerminateJobDialogComponent ", () => {
         actionForm.performActionAndClose();
 
         expect(jobServiceSpy.terminate).toHaveBeenCalledTimes(1);
-        expect(jobServiceSpy.terminate).toHaveBeenCalledWith("job-1", {});
+        expect(jobServiceSpy.terminate).toHaveBeenCalledWith("job-1");
     });
 
     it("Submit should call service and show error if fail", () => {
@@ -72,7 +71,7 @@ describe("TerminateJobDialogComponent ", () => {
         actionForm.performActionAndClose();
 
         expect(jobServiceSpy.terminate).toHaveBeenCalledTimes(1);
-        expect(jobServiceSpy.terminate).toHaveBeenCalledWith("bad-job-id", {});
+        expect(jobServiceSpy.terminate).toHaveBeenCalledWith("bad-job-id");
 
         fixture.detectChanges();
 

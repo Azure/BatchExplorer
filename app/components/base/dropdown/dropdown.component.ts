@@ -1,7 +1,7 @@
 import { Component, ElementRef, HostListener } from "@angular/core";
 
 @Component({
-    selector: "bex-dropdown",
+    selector: "bl-dropdown",
     templateUrl: "dropdown.html",
 })
 export class DropdownComponent {

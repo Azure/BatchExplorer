@@ -3,7 +3,7 @@ import { Component, Input } from "@angular/core";
 import { Pool } from "app/models";
 
 @Component({
-    selector: "bex-pool-nodes-preview",
+    selector: "bl-pool-nodes-preview",
     templateUrl: "pool-nodes-preview.html",
 })
 export class PoolNodesPreviewComponent {

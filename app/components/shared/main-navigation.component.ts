@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 
 @Component({
-    selector: "bex-app-nav",
+    selector: "bl-app-nav",
     templateUrl: "main-navigation.html",
 })
 export class MainNavigationComponent {

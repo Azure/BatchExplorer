@@ -2,7 +2,7 @@ import { Component, Input, OnChanges } from "@angular/core";
 import { AbstractControl, ControlContainer, FormGroupDirective } from "@angular/forms";
 
 @Component({
-    selector: "bex-error",
+    selector: "bl-error",
     template: `<div *ngIf="hasError"><ng-content></ng-content></div>`,
 })
 export class FormErrorComponent implements OnChanges {
@@ -38,7 +38,7 @@ export class FormErrorComponent implements OnChanges {
         for (let segment of this.path) {
             current = current.get(segment);
             if (!current) {
-                throw `Path ${this.path} for bex-error is invalid, there is no control with name '${segment}'`;
+                throw `Path ${this.path} for bl-error is invalid, there is no control with name '${segment}'`;
             }
         }
         return current;

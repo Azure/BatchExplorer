@@ -1,1 +1,1 @@
-export * from "./ad-user-dropdown.component";
+export * from "./aad-user-dropdown.component";

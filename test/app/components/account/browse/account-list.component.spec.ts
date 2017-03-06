@@ -1,8 +1,9 @@
 import { DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { RouterTestingModule } from "@angular/router/testing";
 
-import { AppModule } from "app/app.module";
+import { AccountBrowseModule } from "app/components/account/browse";
 import { AccountListComponent } from "app/components/account/browse";
 import { AccountResource, Subscription } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
@@ -64,7 +65,7 @@ describe("AccountListComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [AppModule],
+            imports: [AccountBrowseModule, RouterTestingModule],
             providers: [
                 { provide: SubscriptionService, useValue: subscriptionService },
                 { provide: AccountService, useValue: accountService },
@@ -100,7 +101,7 @@ describe("AccountListComponent", () => {
         const accountsEl = subscriptionsElList[1].query(By.css(".accounts"));
         expect(accountsEl).not.toBeNull();
 
-        const accountElList = accountsEl.queryAll(By.css("bex-quick-list-item"));
+        const accountElList = accountsEl.queryAll(By.css("bl-quick-list-item"));
         expect(accountElList.length).toBe(2);
 
         expect(accountElList[0].nativeElement.textContent).toContain("Account 1");
@@ -113,7 +114,7 @@ describe("AccountListComponent", () => {
         click(subscriptionsElList[0].query(By.css(".subscription-details")));
         fixture.detectChanges();
 
-        const noItemEl = subscriptionsElList[0].query(By.css(".accounts bex-no-item"));
+        const noItemEl = subscriptionsElList[0].query(By.css(".accounts bl-no-item"));
         expect(noItemEl).not.toBeNull();
         expect(noItemEl.nativeElement.textContent).toContain("No accounts in this subscription");
     });

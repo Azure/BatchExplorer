@@ -5,7 +5,7 @@ import { Notification, NotificationLevel } from "../notification";
 import { NotificationService } from "../notification-service";
 
 @Component({
-    selector: "bex-persistent-notifications-dropdown",
+    selector: "bl-persistent-notifications-dropdown",
     templateUrl: "persistent-notifications-dropdown.html",
 })
 export class PersistentNotificationDropdownComponent {

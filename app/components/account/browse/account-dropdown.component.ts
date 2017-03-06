@@ -4,10 +4,10 @@ import { AccountResource } from "app/models";
 import { AccountService, AccountStatus } from "app/services";
 
 @Component({
-    selector: "bex-account-dropdown",
+    selector: "bl-account-dropdown",
     templateUrl: "account-dropdown.html",
 })
-export default class AccountDropDownComponent implements AfterViewInit {
+export class AccountDropDownComponent implements AfterViewInit {
     public status = AccountStatus;
 
     public selected: AccountResource = null;

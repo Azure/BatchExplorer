@@ -7,6 +7,7 @@ import {
 import { MdSidenav } from "@angular/material";
 import { BehaviorSubject, Observable } from "rxjs";
 
+import { log } from "app/utils";
 import { SidebarContentComponent } from "./sidebar-content";
 import { SidebarRef } from "./sidebar-ref";
 
@@ -60,7 +61,7 @@ export class SidebarManager {
             this.sidebarContent.display(this.referenceMap[id]);
             this.sidebar.open();
         } else {
-            console.error(`Unkown sidebar reference with id '${id}'. Maybe it was closed already"`);
+            log.error(`Unkown sidebar reference with id '${id}'. Maybe it was closed already"`);
         }
     }
 

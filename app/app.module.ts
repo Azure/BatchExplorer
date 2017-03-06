@@ -1,5 +1,5 @@
 import { HashLocationStrategy, LocationStrategy } from "@angular/common";
-import { NgModule } from "@angular/core";
+import { ErrorHandler, NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
@@ -8,12 +8,12 @@ import { RouterModule } from "@angular/router";
 import { routes } from "./app.routes";
 
 // components
+import { NodeConnectModule } from "app/components/node/connect";
 import { StartTaskModule } from "app/components/pool/start-task";
 import { AppComponent } from "./app.component";
 import { DeleteAccountDialogComponent } from "./components/account/action/delete-account-dialog.component";
 import AccountCreateDialogComponent from "./components/account/add/account-create-dialog.component";
-import { AccountFavListComponent, AccountListComponent } from "./components/account/browse";
-import AccountDropDown from "./components/account/browse/account-dropdown.component";
+import { AccountBrowseModule } from "./components/account/browse";
 import { AccountDetailsHomeComponent } from "./components/account/details/account-details-home.component";
 import { AccountDetailsComponent } from "./components/account/details/account-details.component";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
@@ -40,16 +40,11 @@ import { MainNavigationComponent } from "./components/shared/main-navigation.com
 import { TaskBrowseModule } from "./components/task/browse";
 import { TaskDetailsModule } from "./components/task/details";
 import { TaskHomeComponent } from "./components/task/home";
-import { AdUserDropdownComponent } from "./components/user";
+import { AADUserDropdownComponent } from "./components/user";
+import { BatchLabsErrorHandler } from "./error-handler";
 
 // job actions
-import {
-    DeleteJobDialogComponent,
-    DisableJobDialogComponent,
-    EnableJobDialogComponent,
-    JobCreateBasicDialogComponent,
-    TerminateJobDialogComponent,
-} from "./components/job/action";
+import { JobActionModule } from "./components/job/action";
 
 // pool actions
 import {
@@ -75,10 +70,13 @@ import {
     ApplicationService,
     AzureHttpService,
     CommandService,
+    ElectronShell,
     FileService,
+    FileSystemService,
     HttpUploadService,
     JobService,
     NodeService,
+    NodeUserService,
     PoolService,
     SettingsService,
     SubscriptionService,
@@ -87,9 +85,13 @@ import {
 } from "./services";
 
 const modules = [
-    ApplicationModule, PoolDetailsModule, PoolGraphsModule, StartTaskModule,
-    JobDetailsModule, TaskBaseModule, TaskDetailsModule, TaskBrowseModule,
-    NodeBrowseModule, FileBrowseModule, FileDetailsModule,
+    AccountBrowseModule,
+    ApplicationModule,
+    PoolDetailsModule, PoolGraphsModule, StartTaskModule,
+    JobDetailsModule, JobActionModule,
+    TaskBaseModule, TaskDetailsModule, TaskBrowseModule,
+    NodeBrowseModule, NodeConnectModule,
+    FileBrowseModule, FileDetailsModule,
 ];
 
 @NgModule({
@@ -97,25 +99,17 @@ const modules = [
         AppComponent,
     ],
     declarations: [
+        AADUserDropdownComponent,
         AccountCreateDialogComponent,
         AccountDetailsComponent,
         AccountDetailsHomeComponent,
-        AccountDropDown,
-        RerunTaskFormComponent,
-        AccountFavListComponent,
         AccountHomeComponent,
-        AccountListComponent,
-        AdUserDropdownComponent,
         AppComponent,
         DeleteAccountDialogComponent,
-        DeleteJobDialogComponent,
         DeletePoolDialogComponent,
         DeleteTaskDialogComponent,
-        DisableJobDialogComponent,
-        EnableJobDialogComponent,
         FileHomeComponent,
         JobAdvancedFilterComponent,
-        JobCreateBasicDialogComponent,
         JobHomeComponent,
         JobListComponent,
         JobStatsPreviewComponent,
@@ -131,34 +125,29 @@ const modules = [
         PoolNodesPreviewComponent,
         PoolOsPickerComponent,
         PoolResizeDialogComponent,
+        RerunTaskFormComponent,
         TaskCreateBasicDialogComponent,
         TaskHomeComponent,
-        TerminateJobDialogComponent,
         TerminateTaskDialogComponent,
     ],
     entryComponents: [
         AccountCreateDialogComponent,
         DeleteAccountDialogComponent,
-        DeleteJobDialogComponent,
         DeletePoolDialogComponent,
         DeleteTaskDialogComponent,
-        DisableJobDialogComponent,
-        EnableJobDialogComponent,
-        JobCreateBasicDialogComponent,
         PoolCreateBasicDialogComponent,
         PoolResizeDialogComponent,
         RerunTaskFormComponent,
         TaskCreateBasicDialogComponent,
-        TerminateJobDialogComponent,
         TerminateTaskDialogComponent,
     ],
     imports: [
         BrowserModule,
         FormsModule,
-        MaterialModule.forRoot(),
+        MaterialModule,
         ReactiveFormsModule,
         RouterModule.forRoot(routes, { useHash: true }),
-        BaseModule.forRoot(),
+        BaseModule,
         ...modules,
     ],
     providers: [
@@ -168,14 +157,18 @@ const modules = [
         ApplicationService,
         AzureHttpService,
         CommandService,
+        ElectronShell,
         FileService,
+        FileSystemService,
         HttpUploadService,
         JobService,
         PoolService,
         SubscriptionService,
         NodeService,
+        NodeUserService,
         SettingsService,
         TaskService,
+        { provide: ErrorHandler, useClass: BatchLabsErrorHandler },
         ...commands,
     ],
 })

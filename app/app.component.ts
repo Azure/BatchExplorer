@@ -14,7 +14,7 @@ const adalConfig = {
 };
 
 @Component({
-    selector: "bex-app",
+    selector: "bl-app",
     templateUrl: "app.layout.html",
 })
 export class AppComponent implements AfterViewInit, OnInit {

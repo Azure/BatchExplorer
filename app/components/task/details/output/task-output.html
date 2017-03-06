@@ -8,4 +8,6 @@
         <i class="fa fa-plus"></i>
     </div>-->
 </div>
-<bex-file-content [jobId]="jobId" [taskId]="task.id" [filename]="outputFilename"></bex-file-content>
+<div *ngFor="let filename of outputFileNames" [hidden]="filename !== outputFilename">
+    <bl-file-content [jobId]="jobId" [taskId]="task.id" [filename]="filename"></bl-file-content>
+</div>

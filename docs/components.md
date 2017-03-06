@@ -6,7 +6,7 @@ Official documentation from angular https://angular.io/docs/ts/latest/api/core/i
 
 1. Name the file in this format `do-something.component.ts`
 2. Name the class inside `class DoSomethingComponent`
-3. Name the compoennt selector `bex-do-something`
+3. Name the compoennt selector `bl-do-something`
 
 
 Note: TSLint will complain if you don't follow the format for #2 and 3
@@ -88,7 +88,7 @@ Angular2 currently has a [bug/missing feature](https://github.com/angular/angula
 The workaround is to create a TestComponent containing the compoennt you want to test.
 ```typescript
 @Component({
-    template: `<bex-do-something [task]="task"></bex-do-something>`,
+    template: `<bl-do-something [task]="task"></bl-do-something>`,
 })
 class TestJobErrorDisplayComponent {
     public task: Task;

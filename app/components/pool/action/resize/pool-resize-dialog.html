@@ -1,7 +1,7 @@
 <div class="slideout-form content-wrapper">
     <h1>Resize your pool</h1>
     <p>You can manually resize the number of nodes in the pool</p>
-    <bex-action-form [submit]="submit" [sidebarRef]="sidebarRef" [formGroup]="form">
+    <bl-action-form [submit]="submit" [sidebarRef]="sidebarRef" [formGroup]="form">
         <form *ngIf="pool" [formGroup]="form">
             <div class="form-element">
                 <md-input-container>
@@ -9,5 +9,5 @@
                 </md-input-container>
             </div>
         </form>
-    </bex-action-form>
+    </bl-action-form>
 </div>

@@ -24,7 +24,7 @@ export class ScrollableService {
             if (!current) {
                 return null;
             }
-            if (current.nodeName === "BEX-SCROLLABLE") {
+            if (current.nodeName === "BL-SCROLLABLE") {
                 const id = current.getAttributeNode("sid").value;
                 return this._map[id];
             }

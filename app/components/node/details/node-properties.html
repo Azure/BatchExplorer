@@ -1,13 +1,14 @@
-<bex-property-list>
-    <bex-property-group label="General" class="wide">
-        <bex-text-property label="Id" [value]="decorator.id"></bex-text-property>
-        <bex-text-property label="Display name" [value]="decorator.displayName"></bex-text-property>
-        <bex-text-property label="Url" [value]="decorator.url"></bex-text-property>
-        <bex-text-property label="State" [value]="decorator.state"></bex-text-property>
-        <bex-text-property label="Vm Size" [value]="decorator.vmSize"></bex-text-property>
-        <bex-text-property label="Total task run" [value]="decorator.totalTasksRun"></bex-text-property>
-        <bex-text-property label="Ip Adress" [value]="decorator.ipAddress"></bex-text-property>
-        <bex-text-property label="State transition time" [value]="decorator.stateTransitionTime"></bex-text-property>
-        <bex-text-property label="Last boot time" [value]="decorator.lastBootTime"></bex-text-property>
-    </bex-property-group>
-</bex-property-list>
+<bl-property-list>
+    <bl-property-group label="General" class="wide">
+        <bl-text-property label="Id" [value]="decorator.id"></bl-text-property>
+        <bl-text-property label="Display name" [value]="decorator.displayName"></bl-text-property>
+        <bl-text-property label="Url" [value]="decorator.url"></bl-text-property>
+        <bl-text-property label="State" [value]="decorator.state"></bl-text-property>
+        <bl-text-property label="Vm Size" [value]="decorator.vmSize"></bl-text-property>
+        <bl-text-property label="Total task run" [value]="decorator.totalTasksRun"></bl-text-property>
+        <bl-text-property label="Internal Ip Adress" [value]="decorator.ipAddress"></bl-text-property>
+        <bl-text-property label="External Ip Adress" [value]="externalIpAdress" *ngIf="externalIpAdress"></bl-text-property>
+        <bl-text-property label="State transition time" [value]="decorator.stateTransitionTime"></bl-text-property>
+        <bl-text-property label="Last boot time" [value]="decorator.lastBootTime"></bl-text-property>
+    </bl-property-group>
+</bl-property-list>

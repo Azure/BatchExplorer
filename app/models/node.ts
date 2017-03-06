@@ -53,6 +53,7 @@ export class Node extends NodeRecord implements NodeAttributes {
 
 export type NodeState = "creating" | "starting" | "waitingforstarttask" | "starttaskfailed" |
     "idle" | "offline" | "leavingpool" | "rebooting" | "reimaging" | "running" | "unknown" | "unusable";
+
 export const NodeState = {
     creating: "creating" as NodeState,
     starting: "starting" as NodeState,

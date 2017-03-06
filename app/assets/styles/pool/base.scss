@@ -1,11 +1,11 @@
-bex-pool-nodes-preview {
+bl-pool-nodes-preview {
     .resize-error {
         color: $red;
         font-weight: bold;
     }
 }
 
-bex-pool-advanced-filter {
+bl-pool-advanced-filter {
     display: block;
 }
 
@@ -13,13 +13,13 @@ bex-pool-advanced-filter {
 .editable-properties {
     display: flex;
 
-    > bex-property-list, > .no-properties {
+    > bl-property-list, > .no-properties {
         flex: 1;
     }
 }
 
-bex-pool-graphs {
-    bex-banner {
+bl-pool-graphs {
+    bl-banner {
         margin-bottom: 15px;
     }
 }

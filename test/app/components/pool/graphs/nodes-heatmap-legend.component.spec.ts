@@ -1,10 +1,11 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
-import { AppModule } from "app/app.module";
-import { NodesHeatmapLegendComponent } from "app/components/pool/graphs";
+import { NodesHeatmapLegendComponent, PoolGraphsModule } from "app/components/pool/graphs";
 import { HeatmapColor } from "app/components/pool/graphs/heatmap-color";
-import { click } from "test/utils/helpers";
+import { NodeService } from "app/services";
+import {  click, rightClick } from "test/utils/helpers";
+import { ContextMenuServiceMock } from "test/utils/mocks";
 
 const stateTree = [
     { state: "idle", color: "#aaaaaa" },
@@ -28,13 +29,16 @@ describe("NodesHeatmapLegendComponent", () => {
     let component: NodesHeatmapLegendComponent;
     let colors: HeatmapColor;
     let selectedStateSpy: jasmine.Spy;
+    let contextMenuService: ContextMenuServiceMock;
 
     beforeEach(() => {
+        contextMenuService = new ContextMenuServiceMock();
         TestBed.configureTestingModule({
-            imports: [AppModule],
+            imports: [PoolGraphsModule],
             providers: [
                 { provide: "StateTree", useValue: stateTree },
-
+                { provide: NodeService, useValue: null },
+                contextMenuService.asProvider(),
             ],
         });
         fixture = TestBed.createComponent(NodesHeatmapLegendComponent);
@@ -100,5 +104,12 @@ describe("NodesHeatmapLegendComponent", () => {
         expect(selectedStateSpy).toHaveBeenCalledWith(null);
         fixture.detectChanges();
         expect(stateEls[0].classes["highlighted"]).toBe(false, "Should not be highlighted anymore");
+    });
+
+    it("should show context menu when right clicking on a state", () => {
+        const stateEls = fixture.debugElement.queryAll(By.css(".legend-item.state"));
+        rightClick(stateEls[0]);
+
+        expect(contextMenuService.openMenu).toHaveBeenCalledOnce();
     });
 });

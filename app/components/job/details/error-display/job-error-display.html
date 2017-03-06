@@ -1,10 +1,10 @@
-<bex-banner *ngIf="jobFailed" fixMessage="View failed tasks" [fix]="gotoFailedTask" type="warning">
+<bl-banner *ngIf="jobFailed" fixMessage="View failed tasks" [fix]="gotoFailedTask" type="warning">
     <div message>Job was terminated because a task failed.</div>
-</bex-banner>
-<bex-banner *ngIf="jobTimeout" type="warning">
+</bl-banner>
+<bl-banner *ngIf="jobTimeout" type="warning">
     <div message>Job timed out after running for {{jobRunningTime}}.</div>
-</bex-banner>
-<bex-banner *ngIf="schedulingError" type="warning">
+</bl-banner>
+<bl-banner *ngIf="schedulingError" type="warning">
     <div message>{{schedulingError.message}}</div>
     <div code>{{schedulingError.code}}</div>
     <div message>{{schedulingError.message}}</div>
@@ -13,4 +13,4 @@
             <div>{{entry.key}}: {{entry.value}}</div>
         </div>
     </div>
-</bex-banner>
+</bl-banner>

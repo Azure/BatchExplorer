@@ -3,11 +3,11 @@ import { Observable, Subscription } from "rxjs";
 
 import { ScrollableComponent, ScrollableService } from "app/components/base/scrollable";
 import { File, ServerError } from "app/models";
-import { FileService } from "app/services";
-import { Constants } from "app/utils";
+import { FileService, TaskService } from "app/services";
+import { Constants, log } from "app/utils";
 
 @Component({
-    selector: "bex-file-content",
+    selector: "bl-file-content",
     templateUrl: "file-content.html",
 })
 export class FileContentComponent implements OnChanges, AfterViewInit {
@@ -40,6 +40,7 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
 
     constructor(
         private scrollableService: ScrollableService,
+        private taskService: TaskService,
         private fileService: FileService,
         private element: ElementRef) {
 
@@ -60,9 +61,8 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
         this.lines = [];
         this.loading = true;
         this.lastContentLength = 0;
-        this.inter = setInterval(() => {
-            this._updateFileContent();
-        }, 5000);
+        this._updateFileContent();
+        this._setRefreshInterval();
     }
 
     public toggleFollowLog() {
@@ -72,6 +72,17 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
         }
     }
 
+    /**
+     * Set the interval for refresh only if checking a task file.
+     */
+    private _setRefreshInterval() {
+        if (this.poolId || this.nodeId) {
+            return;
+        }
+        this.inter = setInterval(() => {
+            this._updateFileContent();
+        }, 5000);
+    }
     private _updateFileContent() {
         let data;
         if (this.jobId && this.taskId) {
@@ -131,7 +142,9 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
     private _processProperties(file: File) {
         if (file && file.properties) {
             const newContentLength = file.properties.contentLength;
-            if (newContentLength !== this.lastContentLength) {
+            if (newContentLength === 0) {
+                this.loading = false;
+            } else if (newContentLength !== this.lastContentLength) {
                 this._loadUpTo(newContentLength);
             }
         }
@@ -171,7 +184,8 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
             this.notFound = true;
             return;
         }
-        console.error("[FileContent.component] Error is", e.status, e);
+
+        log.error(`[FileContent.component] Error is ${e.status}`, e);
     }
 
     private _scrollToBottom() {

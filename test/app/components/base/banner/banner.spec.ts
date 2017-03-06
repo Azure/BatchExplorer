@@ -8,13 +8,13 @@ import { mouseenter } from "test/utils/helpers";
 
 @Component({
     template: `
-        <bex-banner #banner [fix]="fix1" fixMessage="Main fix" [type]="type">
+        <bl-banner #banner [fix]="fix1" fixMessage="Main fix" [type]="type">
             <div code>Error 404</div>
             <div message>Page not found</div>
             <div details *ngIf="includeDetails">You got to look carefully where you go</div>
             <div *ngIf="includeOtherFixes" [other-fix]="fix2" fixMessage="Second fix"></div>
             <div *ngIf="includeOtherFixes" [other-fix]="fix3" fixMessage="Third fix"></div>
-        </bex-banner>
+        </bl-banner>
     `,
 })
 export class BannerTestComponent {
@@ -53,7 +53,7 @@ describe("Banner", () => {
         component.fix2 = jasmine.createSpy("Fix 2");
         component.fix3 = jasmine.createSpy("Fix 3");
         fixture.detectChanges();
-        bannerElement = fixture.debugElement.query(By.css("bex-banner"));
+        bannerElement = fixture.debugElement.query(By.css("bl-banner"));
         bannerComponent = bannerElement.componentInstance;
     });
 

@@ -13,7 +13,7 @@ import { ApplicationService  } from "app/services";
 import { Constants } from "app/utils";
 
 @Component({
-    selector: "bex-application-edit-dialog",
+    selector: "bl-application-edit-dialog",
     templateUrl: "application-edit-dialog.html",
 })
 export class ApplicationEditDialogComponent {

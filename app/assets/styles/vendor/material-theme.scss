@@ -59,26 +59,26 @@ md-tab-group {
         // set to same height as a tab with the .no-item-message
         min-height: 443px;
 
-        bex-sub-task-display-list {
+        bl-sub-task-display-list {
             &.item-selected {
-                bex-quick-list {
+                bl-quick-list {
                     width: 270px !important;
                 }
             }
 
-            bex-quick-list {
+            bl-quick-list {
                 float: left;
                 margin-top: 10px;
                 margin-bottom: 20px;
             }
         }
 
-        bex-sub-task-properties {
+        bl-sub-task-properties {
             float: right;
             border-left: 1px solid #ddd;
             margin-bottom: 10px;
 
-            bex-property-group {
+            bl-property-group {
                 // todo: override property group css
             }
         }
@@ -150,6 +150,7 @@ md-checkbox[small] {
 md-dialog-container {
     width: auto !important;
     height: auto !important;
+    max-height: 80vh;
 }
 
 

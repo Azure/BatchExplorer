@@ -4,9 +4,11 @@ import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 
+import { ContextMenuModule } from "../context-menu";
 import { NoItemComponent } from "./no-item.component";
 import { QuickListItemComponent } from "./quick-list-item.component";
 import { QuickListComponent, QuickListItemStatusComponent } from "./quick-list.component";
+
 @NgModule({
     declarations: [
         NoItemComponent,
@@ -25,6 +27,7 @@ import { QuickListComponent, QuickListItemStatusComponent } from "./quick-list.c
         FormsModule,
         RouterModule,
         MaterialModule.forRoot(),
+        ContextMenuModule,
     ],
 })
 export class QuickListModule {

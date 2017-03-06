@@ -4,7 +4,7 @@ import { Observable, Subscription } from "rxjs";
 
 import { TaskListDisplayComponent } from "./display";
 
-import { BackgroundTaskManager } from "app/components/base/background-task";
+import { BackgroundTaskService } from "app/components/base/background-task";
 import { LoadingStatus } from "app/components/base/loading";
 import { SelectableList } from "app/components/base/selectable-list";
 import { Task } from "app/models";
@@ -14,8 +14,8 @@ import { Filter } from "app/utils/filter-builder";
 import { DeleteTaskAction } from "../action";
 
 @Component({
-    selector: "bex-task-list",
-    templateUrl: "./task-list.html",
+    selector: "bl-task-list",
+    templateUrl: "task-list.html",
 })
 export class TaskListComponent extends SelectableList implements OnInit {
     public LoadingStatus = LoadingStatus;
@@ -64,7 +64,7 @@ export class TaskListComponent extends SelectableList implements OnInit {
     constructor(
         private taskService: TaskService,
         private changeDetectorRef: ChangeDetectorRef,
-        private taskManager: BackgroundTaskManager) {
+        private taskManager: BackgroundTaskService) {
         super();
 
         this._onTaskAddedSub = taskService.onTaskAdded.subscribe((item: TaskParams) => {

@@ -12,8 +12,8 @@ import { Component } from "@angular/core";
 
 @Component({
     template: `
-        <bex-node-file-list [poolId]="poolId" [nodeId]="nodeId" [folder]="folder" [filter]="filter">
-        </bex-node-file-list>
+        <bl-node-file-list [poolId]="poolId" [nodeId]="nodeId" [folder]="folder" [filter]="filter">
+        </bl-node-file-list>
     `,
 })
 class TestComponent {
@@ -52,7 +52,7 @@ describe("NodeFileListComponent", () => {
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
 
-        component = fixture.debugElement.query(By.css("bex-node-file-list")).componentInstance;
+        component = fixture.debugElement.query(By.css("bl-node-file-list")).componentInstance;
         component.quickList = false;
         component.manualLoading = true;
         testComponent.poolId = "pool-1";

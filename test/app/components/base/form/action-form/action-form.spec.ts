@@ -13,15 +13,15 @@ import { ServerError } from "app/models";
 
 @Component({
     template: `
-        <bex-action-form  class="with-form" [formGroup]="form" [submit]="submit" [dialogRef]="dialogRef" >
+        <bl-action-form  class="with-form" [formGroup]="form" [submit]="submit" [dialogRef]="dialogRef" >
             <div [formGroup]="form" >
                 <input  formControlName="id" />
                 <input  formControlName="state"/>
             </div>
-        </bex-action-form>
+        </bl-action-form>
 
-         <bex-action-form class="without-form" [submit]="submit" [dialogRef]="dialogRef" >
-        </bex-action-form>
+         <bl-action-form class="without-form" [submit]="submit" [dialogRef]="dialogRef" >
+        </bl-action-form>
     `,
 })
 export class FormTestComponent {
@@ -65,7 +65,7 @@ describe("ActionFormComponent", () => {
     let actionButtonComponent: SubmitButtonComponent;
 
     function getErrorElement(): ServerErrorComponent {
-        return actionFormElement.query(By.css("bex-server-error")).componentInstance;
+        return actionFormElement.query(By.css("bl-server-error")).componentInstance;
     }
 
     beforeEach(() => {
@@ -82,10 +82,10 @@ describe("ActionFormComponent", () => {
         TestBed.compileComponents();
         fixture = TestBed.createComponent(FormTestComponent);
         fixture.detectChanges();
-        actionFormElement = fixture.debugElement.query(By.css("bex-action-form.with-form"));
+        actionFormElement = fixture.debugElement.query(By.css("bl-action-form.with-form"));
 
         // Get the buttons
-        actionButton = actionFormElement.query(By.css("bex-submit-btn.submit"));
+        actionButton = actionFormElement.query(By.css("bl-submit-btn.submit"));
         actionButtonComponent = actionButton && actionButton.componentInstance;
     });
 
@@ -96,9 +96,9 @@ describe("ActionFormComponent", () => {
     });
 
     it("buttons should be enabled if form is not defined", () => {
-        const formEl = fixture.debugElement.query(By.css("bex-action-form.without-form"));
+        const formEl = fixture.debugElement.query(By.css("bl-action-form.without-form"));
 
-        actionButton = formEl.query(By.css("bex-submit-btn.submit"));
+        actionButton = formEl.query(By.css("bl-submit-btn.submit"));
 
         expect(actionButton.componentInstance.disabled).toBe(false);
     });

@@ -5,6 +5,7 @@ import { List } from "immutable";
 import { BehaviorSubject } from "rxjs";
 
 import { Node, NodeState } from "app/models";
+import { log } from "app/utils";
 import { HeatmapColor } from "./heatmap-color";
 import { StateTree } from "./state-tree";
 
@@ -45,7 +46,7 @@ const maxNodes = 1000;
 const maxTileSize = 300;
 
 @Component({
-    selector: "bex-nodes-heatmap",
+    selector: "bl-nodes-heatmap",
     templateUrl: "nodes-heatmap.html",
     viewProviders: [
         { provide: "StateTree", useValue: stateTree },
@@ -63,7 +64,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     @Input()
     public set nodes(nodes: List<Node>) {
         if (nodes.size > maxNodes) {
-            console.warn(`Only supporting up to ${maxNodes} nodes for now!`);
+            log.warn(`Only supporting up to ${maxNodes} nodes for now!`);
         }
         this._nodes = List<Node>(nodes.slice(0, maxNodes));
         this._buildNodeMap();

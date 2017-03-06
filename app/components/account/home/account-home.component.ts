@@ -10,7 +10,7 @@ enum ListType {
 };
 
 @Component({
-    selector: "bex-account-home",
+    selector: "bl-account-home",
     templateUrl: "account-home.html",
 })
 export class AccountHomeComponent {

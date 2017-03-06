@@ -4,8 +4,8 @@ import { MdDialogRef } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
-import { AppModule } from "app/app.module";
 import { ActionFormComponent } from "app/components/base/form/action-form";
+import { JobActionModule } from "app/components/job/action";
 import { DisableJobDialogComponent } from "app/components/job/action";
 import { ServerError } from "app/models";
 import { JobService } from "app/services";
@@ -38,7 +38,7 @@ describe("DisableJobDialogComponent ", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [AppModule],
+            imports: [JobActionModule],
             providers: [
                 { provide: MdDialogRef, useValue: dialogRefSpy },
                 { provide: JobService, useValue: jobServiceSpy },
@@ -50,7 +50,7 @@ describe("DisableJobDialogComponent ", () => {
         component = fixture.componentInstance;
         component.jobId = "job-1";
         de = fixture.debugElement;
-        actionForm = de.query(By.css("bex-action-form")).componentInstance;
+        actionForm = de.query(By.css("bl-action-form")).componentInstance;
         fixture.detectChanges();
     });
 
@@ -73,7 +73,7 @@ describe("DisableJobDialogComponent ", () => {
     });
 
     it("updating the task action should update the task action description", () => {
-        const description = de.query(By.css("bex-info-box")).nativeElement;
+        const description = de.query(By.css("bl-info-box")).nativeElement;
         expect(description.textContent).toContain("Terminate running tasks and requeue them.");
 
         component.taskAction = "terminate";

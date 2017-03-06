@@ -6,7 +6,7 @@ import { AccountService } from "app/services";
 import { SidebarRef } from "../../base/sidebar";
 
 @Component({
-    selector: "bex-account-create-dialog",
+    selector: "bl-account-create-dialog",
     templateUrl: "account-create-dialog.html",
 })
 export default class AccountCreateDialogComponent {
@@ -25,7 +25,7 @@ export default class AccountCreateDialogComponent {
         // const account  = Object.assign({}, this.account);
         // this.accountService.add(account).subscribe(
         //     (val) => { this.resetForm(); },
-        //     (error) => { console.error("storeAccount() :: error: ", error); },
+        //     (error) => { log.error("storeAccount() :: error: ", error); },
         //     () => {
         //         this.isSaving = false;
         //         this.sidebarRef.destroy();

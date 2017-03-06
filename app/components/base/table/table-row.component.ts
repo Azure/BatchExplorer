@@ -4,11 +4,12 @@ import {
 import { Router } from "@angular/router";
 
 import { BreadcrumbService } from "app/components/base/breadcrumbs";
+import { ContextMenuService } from "app/components/base/context-menu";
 import { AbstractListItemBase } from "../abstract-list";
 import { TableComponent } from "./table.component";
 
 @Component({
-    selector: "bex-row",
+    selector: "bl-row",
     templateUrl: `
         <template>
             <tr (click)="handleClick($event)" [class.selected]="active || selected" [class.focused]="isFocused">
@@ -29,7 +30,8 @@ export class TableRowComponent extends AbstractListItemBase {
     constructor(
         @Inject(forwardRef(() => TableComponent)) list: TableComponent,
         router: Router,
+        contextmenuService: ContextMenuService,
         breadcrumbService: BreadcrumbService) {
-        super(list, router, breadcrumbService);
+        super(list, router, contextmenuService, breadcrumbService);
     }
 }

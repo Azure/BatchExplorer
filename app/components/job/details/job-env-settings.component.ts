@@ -3,7 +3,7 @@ import { Component, Input, ViewContainerRef } from "@angular/core";
 import { Job, NameValuePair } from "app/models";
 
 @Component({
-    selector: "bex-job-environment-settings",
+    selector: "bl-job-environment-settings",
     templateUrl: "job-env-settings.html",
 })
 

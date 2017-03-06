@@ -3,6 +3,9 @@ import { Router } from "@angular/router";
 import { Subscription } from "rxjs";
 
 import { BreadcrumbService } from "app/components/base/breadcrumbs";
+import { ContextMenuService } from "app/components/base/context-menu";
+import { log } from "app/utils";
+import { ContextMenu } from "../context-menu";
 import { AbstractListBase } from "./abstract-list-base";
 
 /**
@@ -10,6 +13,9 @@ import { AbstractListBase } from "./abstract-list-base";
  * 1. Inject the component inheriting SelectableListBase in the construtor using @Inject and forwardRef
  */
 export class AbstractListItemBase implements OnDestroy, OnInit {
+    @Input()
+    public contextmenu: ContextMenu;
+
     /**
      * Unique key to give to the list used for knowing if the item is selected
      */
@@ -50,6 +56,7 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
     constructor(
         protected list: AbstractListBase,
         private router: Router,
+        private contextmenuService: ContextMenuService,
         private breadcrumbService: BreadcrumbService) {
 
         this._activeSub = list.activatedItemChange.subscribe((event) => {
@@ -63,7 +70,7 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
 
     public ngOnInit() {
         if (!this.key) {
-            console.error(`Every list item needs to have a key. Use this attribute [key]="item.id"`, this);
+            log.error(`Every list item needs to have a key. Use this attribute [key]="item.id"`, this);
         }
         this.selected = this.list.isSelected(this.key);
     }
@@ -119,6 +126,12 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
         this._triggerRouter();
     }
 
+    public openContextMenu() {
+        const menu = this.contextmenu;
+        if (menu) {
+            this.contextmenuService.openMenu(menu);
+        }
+    }
     /**
      * Just trigger the router the item will not be marked as active
      */
