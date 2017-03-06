@@ -29,6 +29,7 @@ export * from "./node";
 export * from "./node-connection-settings";
 export * from "./node-user";
 export * from "./node-agent-sku";
+export * from "./node-agent-sku-map";
 export * from "./pool";
 export * from "./resize-error";
 export * from "./resource-file";

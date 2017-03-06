@@ -49,6 +49,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
 
     public ngAfterViewInit() {
+        this._preloadData();
         // Give the reference to the sidebar to the sidebar manager
         this.sidebarManager.sidebar = this.sidebar;
         this.sidebarManager.sidebarContent = this.sidebarContent;
@@ -76,5 +77,12 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     public goForward() {
         this.location.forward();
+    }
+
+    /**
+     * Preload some data needed.
+     */
+    private _preloadData() {
+        this.accountService.listNodeAgentSkus().fetchAll();
     }
 }

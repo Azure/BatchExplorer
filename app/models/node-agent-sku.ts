@@ -1,9 +1,8 @@
 import { Record } from "immutable";
 
-// tslint:disable:variable-name object-literal-sort-keys
 const NodeAgentSkuRecord = Record({
     id: null,
-    verifiedImageReference: null,
+    verifiedImageReferences: null,
     osType: null,
 });
 
@@ -12,6 +11,6 @@ const NodeAgentSkuRecord = Record({
  */
 export class NodeAgentSku extends NodeAgentSkuRecord {
     public id: string;
-    public verifiedImageReference: any;
+    public verifiedImageReferences: any[];
     public osType: string;
 }
