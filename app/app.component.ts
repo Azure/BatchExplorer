@@ -46,10 +46,14 @@ export class AppComponent implements AfterViewInit, OnInit {
             .subscribe((loadedArray) => {
                 this.isAppReady = loadedArray[0] && loadedArray[1];
             });
+
+        accountService.accountLoaded.filter(x => Boolean(x)).first().subscribe(() => {
+            console.log("Account loaded...");
+            this._preloadData();
+        });
     }
 
     public ngAfterViewInit() {
-        this._preloadData();
         // Give the reference to the sidebar to the sidebar manager
         this.sidebarManager.sidebar = this.sidebar;
         this.sidebarManager.sidebarContent = this.sidebarContent;
@@ -83,6 +87,6 @@ export class AppComponent implements AfterViewInit, OnInit {
      * Preload some data needed.
      */
     private _preloadData() {
-        this.accountService.listNodeAgentSkus().fetchAll();
+        // this.accountService.listNodeAgentSkus().fetchAll();
     }
 }

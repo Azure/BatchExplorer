@@ -5,8 +5,8 @@
         <form novalidate [formGroup]="createPoolForm">
             <div class="form-element">
                 <md-input-container>
-                <input mdInput #idInput formControlName="id" placeholder="Id" maxlength="64">
-                     <md-hint align="end">{{idInput.characterCount}} / 64</md-hint>
+                    <input mdInput #idInput formControlName="id" placeholder="Id" maxlength="64">
+                    <md-hint align="end">{{idInput.characterCount}} / 64</md-hint>
                 </md-input-container>
 
                 <bl-error controlName="id" code="required">Id is a required field</bl-error>
@@ -16,13 +16,13 @@
 
             <div class="form-element">
                 <md-input-container>
-                <input mdInput formControlName="displayName" placeholder="Display name">
+                    <input mdInput formControlName="displayName" placeholder="Display name">
                 </md-input-container>
             </div>
 
             <div class="form-element">
                 <md-input-container>
-                <input mdInput formControlName="targetDedicated" placeholder="Number of virtual machines in pool" type="number">
+                    <input mdInput formControlName="targetDedicated" placeholder="Number of virtual machines in pool" type="number">
                 </md-input-container>
                 <bl-error controlName="targetDedicated" code="required">Target size is a required field</bl-error>
             </div>

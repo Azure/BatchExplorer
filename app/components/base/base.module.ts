@@ -12,6 +12,7 @@ import { BreadcrumbModule } from "./breadcrumbs";
 import { ButtonsModule } from "./buttons";
 import { ContextMenuModule } from "./context-menu";
 import { DropdownModule } from "./dropdown";
+import { EditorModule } from "./editor";
 import { ElapsedTimeComponent } from "./elapsed-time";
 import { FocusSectionModule } from "./focus-section";
 import { FormModule } from "./form";
@@ -37,6 +38,7 @@ const modules = [
     BackgroundTaskModule,
     ContextMenuModule,
     DropdownModule,
+    EditorModule,
     FocusSectionModule,
     InfoBoxModule,
     NotificationModule,

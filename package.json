@@ -99,6 +99,7 @@
     "@angular/platform-browser-dynamic": "~2.4.4",
     "@angular/router": "~3.4.4",
     "azure-batch": "~0.6.0",
+    "brace": "^0.10.0",
     "bunyan": "^1.8.4",
     "core-decorators": "^0.15.0",
     "d3": "^4.4.1",

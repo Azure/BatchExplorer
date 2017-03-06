@@ -1,3 +1,4 @@
+import * as moment from "moment";
 import { BatchRequestOptions } from "./models";
 import { DeleteProxy, GetProxy, ListProxy } from "./shared";
 
@@ -83,6 +84,10 @@ export default class PoolProxy {
      * @param options: Optional Parameters.
      */
     public add(pool: any, options?: any) {
+        pool.enableAutoScale = true;
+        pool.autoScaleFormula = "$targetDedicated=0;";
+        delete pool.targetDedicated;
+        pool.autoScaleEvaluationInterval = moment.duration({ days: 1 });
         return new Promise((resolve, reject) => {
             this.client.pool.add(pool, { poolAddOptions: options }, (error, result) => {
                 if (error) { return reject(error); }
