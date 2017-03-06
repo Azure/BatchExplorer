@@ -5,7 +5,7 @@
         <form novalidate [formGroup]="applicationForm">
             <div class="form-element pad-top">
                 <md-input-container>
-                    <input md-input formControlName="displayName" placeholder="Display name">
+                    <input mdInput formControlName="displayName" placeholder="Display name">
                 </md-input-container>
                 <bl-error controlName="displayName" code="maxlength">Display name has a maximum length of 1024 characters</bl-error>
             </div>
