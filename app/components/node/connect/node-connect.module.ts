@@ -5,11 +5,13 @@ import { commonModules } from "app/common";
 import { DownloadRdpComponent } from "./download-rdp.component";
 import { NodeConnectComponent } from "./node-connect.component";
 import { NodeUserCredentialsFormComponent } from "./node-user-credentials-form.component";
+import { SSHKeyPickerComponent } from "./ssh-key-picker.component";
 
 const components = [
     DownloadRdpComponent,
     NodeConnectComponent,
     NodeUserCredentialsFormComponent,
+    SSHKeyPickerComponent,
 ];
 
 @NgModule({

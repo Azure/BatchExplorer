@@ -35,6 +35,7 @@ export * from "./resize-error";
 export * from "./resource-file";
 export * from "./scheduling-error";
 export * from "./settings";
+export * from "./ssh-public-key";
 export * from "./server-error";
 export * from "./start-task";
 export * from "./subscription";

@@ -87,7 +87,7 @@ md-tab-group {
 
 [md-mini-fab] i, [md-mini-fab] md-icon {
     overflow: hidden;
-    padding: 0 !important;
+    padding: 3px 0 !important;
 }
 
 md-card {
@@ -139,6 +139,11 @@ md-radio-button {
     background: map-get($md-prussian-blue, 700);
 }
 
+button[md-raised-button].small {
+    height: 20px;
+    line-height: 20px;
+    min-width: 50px;
+}
 
 md-checkbox[small] {
     .mat-checkbox-inner-container {
@@ -158,5 +163,16 @@ md-dialog-container {
     md-option {
         height: 30px;
         line-height: 30px;
+    }
+}
+
+md-input-container.bl-textarea {
+    .mat-input-wrapper {
+        background: #f5f5f5;
+    }
+
+    textarea.mat-input-element {
+        resize: none;
+        padding: 5px;
     }
 }

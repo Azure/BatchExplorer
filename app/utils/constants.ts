@@ -64,6 +64,9 @@ export const forms = {
     },
 };
 
+export const SavedDataFilename = {
+    sshPublicKeys: "ssh-pub-keys.json",
+}
 export const localStorageKey = {
     /**
      * LocalStorage key for storing the current user information
