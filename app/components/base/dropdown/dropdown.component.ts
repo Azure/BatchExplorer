@@ -24,14 +24,15 @@ export class DropdownComponent {
 
     @HostListener("document:click", ["$event"])
     public onClick(event: Event) {
-        if (!this.elementRef.nativeElement.contains(event.target)) {
-            this.showDropdown = false;
-            this.forcedOpen = false;
-        }
+        this.showDropdown = false;
+        this.forcedOpen = false;
     }
 
-    public forceOpen() {
+    public forceOpen(event: Event) {
         this.forcedOpen = true;
         this.showDropdown = true;
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
     }
 }
