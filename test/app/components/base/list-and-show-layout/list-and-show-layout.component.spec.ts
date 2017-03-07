@@ -1,4 +1,4 @@
-import { Component, DebugElement } from "@angular/core";
+import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MaterialModule, MdDialog } from "@angular/material";
@@ -43,7 +43,7 @@ fdescribe("ListAndShowLayout", () => {
             crumbs: new BehaviorSubject([]),
         };
         TestBed.configureTestingModule({
-            imports: [BrowserModule, FormsModule, ReactiveFormsModule, MaterialModule, BreadcrumbModule],
+            imports: [FormsModule, ReactiveFormsModule],
             declarations: [
                 TestLayoutComponent,
                 ListAndShowLayoutComponent,
@@ -57,6 +57,7 @@ fdescribe("ListAndShowLayout", () => {
                 { provide: ActivatedRoute, useValue: activatedRouteSpy },
                 { provide: MdDialog, useValue: {} },
             ],
+            schemas: [NO_ERRORS_SCHEMA],
         });
         fixture = TestBed.createComponent(TestLayoutComponent);
         fixture.detectChanges();
@@ -107,12 +108,20 @@ fdescribe("ListAndShowLayout", () => {
         it("clicking on filter should open advanced filter", () => {
             testComponent.includeAdvancedFilter = true;
             fixture.detectChanges();
+            const advFilterContent = "Advanced filter Test";
+            const advancedFilterEl = de.query(By.css(".advanced-filter-content"));
+            expect(advancedFilterEl).not.toBeVisible();
 
             const filterBtn = de.query(By.css(".fa.fa-filter"));
             click(filterBtn);
             fixture.detectChanges();
 
-            expect(de.nativeElement.textContent).toContain("Advanced filter Test");
+            expect(advancedFilterEl).toBeVisible();
+            expect(advancedFilterEl.nativeElement.textContent).toContain("Advanced filter Test");
+
+            click(filterBtn);
+            fixture.detectChanges();
+            expect(advancedFilterEl).not.toBeVisible();
         });
     });
 });
