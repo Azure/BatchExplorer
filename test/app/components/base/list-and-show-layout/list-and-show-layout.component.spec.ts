@@ -12,21 +12,25 @@ import { RefreshButtonComponent } from "app/components/base/refresh-btn";
 import { ScrollableComponent } from "app/components/base/scrollable";
 import { ScrollableService } from "app/components/base/scrollable";
 import { FilterBuilder } from "app/utils/filter-builder";
+import { click } from "test/utils/helpers";
 
 @Component({
     template: `
         <bl-list-and-show-layout quickSearchField="url">
-
+            <div bl-show-advanced-filter *ngIf="includeAdvancedFilter">
+                Advanced filter Test
+            </div>
         </bl-list-and-show-layout>
     `,
 })
 export class TestLayoutComponent {
-
+    public includeAdvancedFilter = false;
 }
 
-describe("ListAndShowLayout", () => {
+fdescribe("ListAndShowLayout", () => {
     let fixture: ComponentFixture<TestLayoutComponent>;
     let de: DebugElement;
+    let testComponent: TestLayoutComponent;
     let layoutComponent: ListAndShowLayoutComponent;
     let quickSearchInput: DebugElement;
     let activatedRouteSpy: any;
@@ -56,11 +60,11 @@ describe("ListAndShowLayout", () => {
         });
         fixture = TestBed.createComponent(TestLayoutComponent);
         fixture.detectChanges();
+        testComponent = fixture.componentInstance;
 
         de = fixture.debugElement;
         layoutComponent = de.query(By.css("bl-list-and-show-layout")).componentInstance;
         quickSearchInput = de.query(By.css(".quicksearch > input"));
-
     });
 
     describe("Filter", () => {
@@ -83,5 +87,32 @@ describe("ListAndShowLayout", () => {
             tick(400);
             expect(layoutComponent.filter.toOData()).toBe("(startswith(url, 'abc') and state eq 'running')");
         }));
+    });
+
+    describe("Advanced Filter", () => {
+        it("should NOT show filter button if there is no advanced filter", () => {
+            testComponent.includeAdvancedFilter = false;
+            fixture.detectChanges();
+
+            expect(de.query(By.css(".fa.fa-filter"))).toBeFalsy();
+        });
+
+        it("should show filter button if there is no advanced filter", () => {
+            testComponent.includeAdvancedFilter = true;
+            fixture.detectChanges();
+
+            expect(de.query(By.css(".fa.fa-filter"))).not.toBeFalsy();
+        });
+
+        it("clicking on filter should open advanced filter", () => {
+            testComponent.includeAdvancedFilter = true;
+            fixture.detectChanges();
+
+            const filterBtn = de.query(By.css(".fa.fa-filter"));
+            click(filterBtn);
+            fixture.detectChanges();
+
+            expect(de.nativeElement.textContent).toContain("Advanced filter Test");
+        });
     });
 });
