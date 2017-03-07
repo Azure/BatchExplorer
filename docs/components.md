@@ -1,4 +1,4 @@
-# Writting a component 
+# Writting a component
 
 Official documentation from angular https://angular.io/docs/ts/latest/api/core/index/Component-decorator.html
 
@@ -12,7 +12,7 @@ Official documentation from angular https://angular.io/docs/ts/latest/api/core/i
 Note: TSLint will complain if you don't follow the format for #2 and 3
 
 ## Component template
-You can either have the template be inline with 
+You can either have the template be inline with
 ```typescript
 @Component({
   ...
@@ -60,7 +60,7 @@ import { Component, Input, OnChanges } from "@angular/core"
 export class DoSomethingComponent implements OnChanges {
   @Input()
   public task: Task;
-  
+
   public onChanges(inputs) {
     if(inputs.task) { // Means the input was changed
       this.doSomething();
@@ -70,7 +70,7 @@ export class DoSomethingComponent implements OnChanges {
 
 ```
 
-Option 2 is the best choice if you want to listen to multiple input (e.g. Both `job` and `task`) and in most case would make the code cleaner 
+Option 2 is the best choice if you want to listen to multiple input (e.g. Both `job` and `task`) and in most case would make the code cleaner
 
 ## Change detection
 You can make the component to only detect changes when one of the input is changed which will improve performance.
@@ -101,6 +101,7 @@ class TestJobErrorDisplayComponent {
 
 Create a file named with the component name `do-something.component.spec.ts` in the `test/app` folder and following the same structure you have in the `app` folder.
 
+** IMPORTANT: in `configureTestingModule` don't import any of our modules as it makes the test use a significant larger amount of memory and time.(For JobErrorDisplayComponent it is 10x slower) Just declare the component you want to test and mock others**
 Here is a snippet of a test component test
 ```typescript
 
@@ -114,7 +115,10 @@ describe("MyComp", () => {
     let component: MyComp;
 
     beforeEach(() => {
-        TestBed.configureTestingModule(); // Import or declare here whatever you'll be testing
+        TestBed.configureTestingModule({
+            imports: [],
+            declarations: [], // Declare components you'll be using as well as some mock component if needed
+        });
         fixture = TestBed.createComponent(MyComp);
         component = fixture.componentInstance;
         fixture.detectChanges();
