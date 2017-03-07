@@ -1,3 +1,6 @@
+import "../test/app/spec-bundle";
+// tslint:disable:no-var-requires
+
 Error.stackTraceLimit = Infinity;
 import "app/utils/extensions";
 import * as fs from "fs";
@@ -9,6 +12,9 @@ testing.TestBed.initTestEnvironment(
     browser.BrowserDynamicTestingModule,
     browser.platformBrowserDynamicTesting()
 );
+
+const webpackRequire = require;
+const chromePerformance = performance;
 
 /*
  * Ok, this is kinda crazy. We can use the context method on
@@ -28,13 +34,13 @@ if (process.env.DEBUG_MEM) {
     jasmine.getEnv().addReporter({
         suiteStarted: (result) => {
             if (initialValue === null) {
-                initialValue = performance.memory.usedJSHeapSize;
+                initialValue = chromePerformance.memory.usedJSHeapSize;
             }
         },
         suiteDone: (result) => {
-            const end = performance.memory.usedJSHeapSize;
-            const out = Math.round((end - initialValue) / 1000);
-            console.warn("Memory increase", `${out} kB`, result.fullName);
+            const end = chromePerformance.memory.usedJSHeapSize;
+            const out = Math.round(end / 1000);
+            console.warn("Memory usage", `${out} kB`, result.fullName);
             stream.write(`${result.fullName},${out}\n`);
         },
         jasmineDone: () => {
@@ -51,20 +57,7 @@ if (process.env.DEBUG_MEM) {
 function requireAll(requireContext) {
     return requireContext.keys().map(requireContext);
 }
-let initialValue = null;
-jasmine.getEnv().clearReporters();
-jasmine.getEnv().addReporter({
-    suiteStarted: (result) => {
-        if (initialValue === null) {
-            initialValue = performance.memory.usedJSHeapSize;
-        }
-    },
-    suiteDone: (result) => {
-        const end = performance.memory.usedJSHeapSize;
-        const out = Math.round((end - initialValue) / 1000);
-        console.warn("Memory increase", `${out} kB`, result.fullName);
-    }
-});
 
 // requires and returns all modules that match
-var modules = requireAll(testContext);
+const modules = requireAll(testContext);
+console.warn(`Running specs from ${modules.length} files`);

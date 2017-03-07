@@ -1,14 +1,16 @@
-import { Component } from "@angular/core";
+import { Component, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
+
 import * as moment from "moment";
 import { Observable } from "rxjs";
 
-import { JobDetailsModule, JobErrorDisplayComponent } from "app/components/job/details";
+import { JobErrorDisplayComponent } from "app/components/job/details";
 import { Job, JobState, JobTerminateReason } from "app/models";
 import { JobService } from "app/services";
 import * as Fixtures from "test/fixture";
+import { BannerMockComponent } from "test/utils/mocks/components";
 
 @Component({
     template: `<bl-job-error-display [job]="job"></bl-job-error-display>`,
@@ -22,17 +24,17 @@ describe("JobErrorDisplayComponent", () => {
     let testComponent: TestJobErrorDisplayComponent;
     let component: JobErrorDisplayComponent;
     let accountServiceSpy: any;
-
     beforeEach(() => {
         accountServiceSpy = {
             currentAccount: Observable.of(Fixtures.account.create()),
         };
         TestBed.configureTestingModule({
-            imports: [JobDetailsModule, RouterTestingModule],
-            declarations: [TestJobErrorDisplayComponent],
+            imports: [RouterTestingModule],
+            declarations: [JobErrorDisplayComponent, TestJobErrorDisplayComponent, BannerMockComponent],
             providers: [
                 { provide: JobService, useValue: null },
             ],
+            schemas: [NO_ERRORS_SCHEMA],
         });
         fixture = TestBed.createComponent(TestJobErrorDisplayComponent);
         testComponent = fixture.componentInstance;
