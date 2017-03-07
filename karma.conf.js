@@ -66,6 +66,7 @@ module.exports = function (config) {
         singleRun: true,
         mochaReporter: {
             output: "autowatch",
+            reportSlowerThan: 200,
         },
     });
 };
