@@ -1,29 +1,38 @@
-<div  class="slideout-form content-wrapper">
+<div class="slideout-form content-wrapper">
     <h1>Create job</h1>
     <p>Adds a job to the selected account</p>
 
     <bl-create-form [formGroup]="createJobForm" [submit]="submit" [sidebarRef]="sidebarRef">
         <form novalidate [formGroup]="createJobForm">
             <div class="form-element">
-                <md-input formControlName="id" placeholder="Id"></md-input>
+                <md-input-container>
+
+                    <input mdInput formControlName="id" placeholder="Id">
+                </md-input-container>
                 <bl-error controlName="id" code="required">Id is a required field</bl-error>
                 <bl-error controlName="id" code="maxlength">Id has a maximum length of 64 characters</bl-error>
                 <bl-error controlName="id" code="pattern">Id can contain any combination of alphanumeric characters including hyphens and underscores</bl-error>
             </div>
 
             <div class="form-element">
-                <md-input formControlName="displayName" placeholder="Display name"></md-input>
+                <md-input-container>
+                    <input mdInput formControlName="displayName" placeholder="Display name">
+                </md-input-container>
                 <bl-error controlName="displayName" code="maxlength">Display name has a maximum length of 1024 characters</bl-error>
             </div>
 
             <div class="form-element">
-                <md-input formControlName="priority" placeholder="Priority" type="number"></md-input>
+                <md-input-container>
+                    <input mdInput formControlName="priority" placeholder="Priority" type="number">
+                </md-input-container>
                 <bl-error controlName="priority" code="validateRange">Priority values can range from -1000 to 1000</bl-error>
             </div>
 
             <div formGroupName="constraints">
                 <div class="form-element">
-                    <md-input formControlName="maxTaskRetryCount" placeholder="Max retry count" type="number"></md-input>
+                    <md-input-container>
+                        <input mdInput formControlName="maxTaskRetryCount" placeholder="Max retry count" type="number">
+                    </md-input-container>
                     <bl-error controlName="maxTaskRetryCount" code="validateRange">Retry count values can range from -1 to 100</bl-error>
                 </div>
             </div>

@@ -46,6 +46,11 @@ export class AppComponent implements AfterViewInit, OnInit {
             .subscribe((loadedArray) => {
                 this.isAppReady = loadedArray[0] && loadedArray[1];
             });
+
+        // Wait for the first account to be loaded.
+        accountService.currentAccount.filter(x => Boolean(x)).first().subscribe((x) => {
+            this._preloadData();
+        });
     }
 
     public ngAfterViewInit() {
@@ -76,5 +81,12 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     public goForward() {
         this.location.forward();
+    }
+
+    /**
+     * Preload some data needed.
+     */
+    private _preloadData() {
+        this.accountService.listNodeAgentSkus().fetchAll();
     }
 }

@@ -1,8 +1,9 @@
 import { DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { RouterTestingModule } from "@angular/router/testing";
 
-import { AppModule } from "app/app.module";
+import { AccountBrowseModule } from "app/components/account/browse";
 import { AccountListComponent } from "app/components/account/browse";
 import { AccountResource, Subscription } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
@@ -64,7 +65,7 @@ describe("AccountListComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [AppModule],
+            imports: [AccountBrowseModule, RouterTestingModule],
             providers: [
                 { provide: SubscriptionService, useValue: subscriptionService },
                 { provide: AccountService, useValue: accountService },

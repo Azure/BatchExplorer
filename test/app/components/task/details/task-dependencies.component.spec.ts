@@ -1,10 +1,10 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { RouterTestingModule } from "@angular/router/testing";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
-import { AppModule } from "app/app.module";
-import { TaskDependenciesComponent } from "app/components/task/details";
+import { TaskDependenciesComponent, TaskDetailsModule } from "app/components/task/details";
 import { Task, TaskState } from "app/models";
 import { TaskService } from "app/services";
 import * as Fixtures from "test/fixture";
@@ -33,7 +33,7 @@ describe("TaskDependenciesComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [AppModule],
+            imports: [TaskDetailsModule, RouterTestingModule],
             providers: [
                 { provide: TaskService, useValue: taskServiceSpy },
             ],

@@ -1,9 +1,9 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
-import { AppModule } from "app/app.module";
-import { NodesHeatmapLegendComponent } from "app/components/pool/graphs";
+import { NodesHeatmapLegendComponent, PoolGraphsModule } from "app/components/pool/graphs";
 import { HeatmapColor } from "app/components/pool/graphs/heatmap-color";
+import { NodeService } from "app/services";
 import {  click, rightClick } from "test/utils/helpers";
 import { ContextMenuServiceMock } from "test/utils/mocks";
 
@@ -34,9 +34,10 @@ describe("NodesHeatmapLegendComponent", () => {
     beforeEach(() => {
         contextMenuService = new ContextMenuServiceMock();
         TestBed.configureTestingModule({
-            imports: [AppModule],
+            imports: [PoolGraphsModule],
             providers: [
                 { provide: "StateTree", useValue: stateTree },
+                { provide: NodeService, useValue: null },
                 contextMenuService.asProvider(),
             ],
         });
