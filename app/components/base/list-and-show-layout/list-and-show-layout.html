@@ -9,7 +9,7 @@
                 <div class="quicksearch">
                     <input [formControl]="quickSearchQuery" placeholder="Search" #quickSearchInput (keydown)="handleKeyPressedInQuickSearch($event)"
                     />
-                    <i class="fa fa-filter fa-2x" (click)="toggleFilter()"></i>
+                    <i class="fa fa-filter fa-2x" (click)="toggleFilter()" *ngIf="advancedFilterContent?.children.length > 0"></i>
                 </div>
                 <hr />
                 <div class="context-button-bar left">
@@ -35,7 +35,7 @@
             <div class="content-wrapper">
                 <div style="position:relative">
                     <ng-content select="[bl-show-content]"></ng-content>
-                    <div class="advanced-filter-content" *ngIf="showAdvancedFilter | async" [@slideIn]="showAdvancedFilter" class="advanced-filter-content">
+                    <div class="advanced-filter-content" [hidden]="!(showAdvancedFilter | async)" [@slideIn]="showAdvancedFilter" class="advanced-filter-content" #advancedFilterContent>
                         <ng-content select="[bl-show-advanced-filter]"></ng-content>
                     </div>
                 </div>
