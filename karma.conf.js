@@ -7,8 +7,6 @@ module.exports = function (config) {
         basePath: ".",
         frameworks: ["jasmine"],
         files: [
-            { pattern: "app/polyfills.browser.ts", watched: false },
-            { pattern: "test/app/spec-bundle.ts", watched: false },
             { pattern: "./config/karma.shim.js", watched: false },
         ],
 
@@ -55,8 +53,6 @@ module.exports = function (config) {
         reporters: ["mocha"],
 
         preprocessors: {
-            "app/polyfills.browser.ts": ["webpack", "sourcemap", "electron"],
-            "test/app/spec-bundle.ts": ["webpack", "sourcemap", "electron"],
             "config/karma.shim.js": ["webpack", "sourcemap", "electron"],
         },
         client: {
