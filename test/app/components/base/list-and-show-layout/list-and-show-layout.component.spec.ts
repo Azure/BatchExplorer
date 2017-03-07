@@ -1,12 +1,12 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MaterialModule, MdDialog } from "@angular/material";
-import { BrowserModule, By } from "@angular/platform-browser";
+import { MdDialog } from "@angular/material";
+import { By } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import { BehaviorSubject } from "rxjs";
 
-import { BreadcrumbModule, BreadcrumbService } from "app/components/base/breadcrumbs";
+import { BreadcrumbService } from "app/components/base/breadcrumbs";
 import { ListAndShowLayoutComponent } from "app/components/base/list-and-show-layout";
 import { RefreshButtonComponent } from "app/components/base/refresh-btn";
 import { ScrollableComponent } from "app/components/base/scrollable";
@@ -27,7 +27,7 @@ export class TestLayoutComponent {
     public includeAdvancedFilter = false;
 }
 
-fdescribe("ListAndShowLayout", () => {
+describe("ListAndShowLayout", () => {
     let fixture: ComponentFixture<TestLayoutComponent>;
     let de: DebugElement;
     let testComponent: TestLayoutComponent;
@@ -108,7 +108,6 @@ fdescribe("ListAndShowLayout", () => {
         it("clicking on filter should open advanced filter", () => {
             testComponent.includeAdvancedFilter = true;
             fixture.detectChanges();
-            const advFilterContent = "Advanced filter Test";
             const advancedFilterEl = de.query(By.css(".advanced-filter-content"));
             expect(advancedFilterEl).not.toBeVisible();
 
