@@ -12,7 +12,7 @@ import { ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { RxMockEntityProxy } from "test/utils/mocks";
 
-describe("DeleteApplicationDialogComponent ", () => {
+xdescribe("DeleteApplicationDialogComponent ", () => {
     let fixture: ComponentFixture<DeleteApplicationDialogComponent>;
     let component: DeleteApplicationDialogComponent;
     let entityProxy: RxMockEntityProxy<any, Application>;
