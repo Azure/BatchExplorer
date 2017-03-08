@@ -11,11 +11,12 @@ import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { Pool, ServerError } from "app/models";
 import { JobService, PoolService } from "app/services";
 import { DataCache, RxBatchListProxy } from "app/services/core";
-import { ComponentTestHelper } from "test/app/components/component-test-helper";
 import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";
+import { validateControl } from "test/utils/helpers";
 
 // Just making test work for now. Need Tim's input to come up with a strategy for testing with proxy data.
+// TODO: hook up MockListProxy.
 export class FakeListProxy {
     public hasMoreItems(): boolean {
         return false;
@@ -38,7 +39,6 @@ export class FakeListProxy {
 
 describe("JobCreateBasicDialogComponent ", () => {
     let fixture: ComponentFixture<JobCreateBasicDialogComponent>;
-    let helper: ComponentTestHelper<JobCreateBasicDialogComponent>;
     let component: JobCreateBasicDialogComponent;
     let sidebarRefSpy: any;
     let jobServiceSpy: any;
@@ -95,7 +95,6 @@ describe("JobCreateBasicDialogComponent ", () => {
         });
 
         fixture = TestBed.createComponent(JobCreateBasicDialogComponent);
-        helper = new ComponentTestHelper<JobCreateBasicDialogComponent>(fixture);
         component = fixture.componentInstance;
         de = fixture.debugElement;
         fixture.detectChanges();
@@ -117,12 +116,10 @@ describe("JobCreateBasicDialogComponent ", () => {
     });
 
     it("JobId has required, pattern, and maxLength validation", () => {
-        const controlName = "id";
-        const input = de.query(By.css("input[formControlName=id]"));
-        helper.expectValidation(baseForm, input, controlName, "", validators.required, true);
-        helper.expectValidation(baseForm, input, controlName, "invalid job id", validators.pattern, true);
-        helper.expectValidation(baseForm, input, controlName, "a".repeat(65), validators.maxlength, true);
-        helper.expectValidation(baseForm, input, controlName, "valid-id", validators.pattern, false);
+        validateControl(baseForm, "id").fails(validators.required).with("");
+        validateControl(baseForm, "id").fails(validators.maxlength).with("a".repeat(65));
+        validateControl(baseForm, "id").fails(validators.pattern).with("invalid job id");
+        validateControl(baseForm, "id").passes(validators.pattern).with("valid-id");
     });
 
     it("DisplayName is initialized", () => {
@@ -133,9 +130,8 @@ describe("JobCreateBasicDialogComponent ", () => {
 
     it("DisplayName has maxLength validation only", () => {
         const controlName = "displayName";
-        const input = de.query(By.css("input[formControlName=displayName]"));
-        helper.expectValidation(baseForm, input, controlName, "a".repeat(1025), validators.maxlength, true);
-        helper.expectValidation(baseForm, input, controlName, null, validators.required, false);
+        validateControl(baseForm, controlName).fails(validators.maxlength).with("a".repeat(1025));
+        validateControl(baseForm, controlName).passes(validators.required).with(null);
     });
 
     it("Priority is initialized", () => {
@@ -146,11 +142,10 @@ describe("JobCreateBasicDialogComponent ", () => {
 
     it("Priority has range validation only", () => {
         const controlName = "priority";
-        const input = de.query(By.css("input[formControlName=priority]"));
-        helper.expectValidation(baseForm, input, controlName, null, validators.required, false);
-        helper.expectValidation(baseForm, input, controlName, -1001, validators.range, true);
-        helper.expectValidation(baseForm, input, controlName, 1001, validators.range, true);
-        helper.expectValidation(baseForm, input, controlName, 500, validators.range, false);
+        validateControl(baseForm, controlName).passes(validators.required).with(null);
+        validateControl(baseForm, controlName).fails(validators.range).with(-1001);
+        validateControl(baseForm, controlName).fails(validators.range).with(1001);
+        validateControl(baseForm, controlName).passes(validators.range).with(500);
     });
 
     it("MaxRetryCount is initialized", () => {
@@ -161,11 +156,10 @@ describe("JobCreateBasicDialogComponent ", () => {
 
     it("MaxRetryCount has range validation only", () => {
         const controlName = "maxTaskRetryCount";
-        const input = de.query(By.css("input[formControlName=maxTaskRetryCount]"));
-        helper.expectValidation(constraintsForm, input, controlName, null, validators.required, false);
-        helper.expectValidation(constraintsForm, input, controlName, -2, validators.range, true);
-        helper.expectValidation(constraintsForm, input, controlName, 101, validators.range, true);
-        helper.expectValidation(constraintsForm, input, controlName, 1, validators.range, false);
+        validateControl(constraintsForm, controlName).passes(validators.required).with(null);
+        validateControl(constraintsForm, controlName).fails(validators.range).with(-2);
+        validateControl(constraintsForm, controlName).fails(validators.range).with(101);
+        validateControl(constraintsForm, controlName).passes(validators.range).with(1);
     });
 
     it("PoolId is initialized", () => {

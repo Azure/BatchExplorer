@@ -9,7 +9,7 @@ import { LoadingStatus } from "app/components/base/loading";
 import { QuickListItemStatus } from "app/components/base/quick-list";
 import { ListOrTableBase } from "app/components/base/selectable-list";
 import { Application } from "app/models";
-import { AccountService, ApplicationService } from "app/services";
+import { ApplicationService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
 import { DeleteApplicationAction } from "../action";
@@ -40,7 +40,6 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
 
     constructor(
         private router: Router,
-        private accountService: AccountService,
         private applicationService: ApplicationService,
         private taskManager: BackgroundTaskService) {
 
