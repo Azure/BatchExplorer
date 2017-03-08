@@ -1,10 +1,8 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
 import { autobind } from "core-decorators";
-import { shell } from "electron";
 
-import { SidebarManager } from "app/components/base/sidebar";
 import { AccountResource, Application } from "app/models";
-import { AccountService } from "app/services";
+import { AccountService, ElectronShell } from "app/services";
 import { ExternalLinks } from "app/utils/constants";
 
 @Component({
@@ -12,32 +10,41 @@ import { ExternalLinks } from "app/utils/constants";
     templateUrl: "application-error-display.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ApplicationErrorDisplayComponent {
+export class ApplicationErrorDisplayComponent implements OnInit {
     @Input()
     public application: Application;
+
+    public get batchAccount() {
+        return this._batchAccount;
+    }
 
     private _batchAccount: AccountResource;
 
     constructor(
         private accountService: AccountService,
-        private sidebarManager: SidebarManager) {
-
-        accountService.currentAccount.subscribe((account) => {
-            this._batchAccount = account;
-        });
+        private changeDetector: ChangeDetectorRef,
+        private shell: ElectronShell) {
     }
 
     public get hasLinkedStorageAccountIssue(): boolean {
-        if (this._batchAccount && this._batchAccount.properties) {
-            return !this._batchAccount.properties.autoStorage
+        if (this._batchAccount) {
+            return !this._batchAccount.properties
+                || !this._batchAccount.properties.autoStorage
                 || !this._batchAccount.properties.autoStorage.storageAccountId;
         }
 
         return false;
     }
 
+    public ngOnInit() {
+        this.accountService.currentAccount.subscribe((account) => {
+            this._batchAccount = account;
+            this.changeDetector.markForCheck();
+        });
+    }
+
     @autobind()
     public setupLinkedStorage() {
-        shell.openExternal(ExternalLinks.setupStorageAccount.format(this._batchAccount.id));
+        this.shell.openExternal(ExternalLinks.setupStorageAccount.format(this._batchAccount.id));
     }
 }

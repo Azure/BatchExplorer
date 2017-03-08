@@ -1,3 +1,4 @@
+import { Component } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
@@ -7,8 +8,6 @@ import { File } from "app/models";
 import { FileService } from "app/services";
 import { Filter, FilterBuilder } from "app/utils/filter-builder";
 import { RxMockListProxy } from "test/utils/mocks";
-
-import { Component } from "@angular/core";
 
 @Component({
     template: `

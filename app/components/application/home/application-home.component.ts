@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { FormBuilder, FormControl } from "@angular/forms";
+import { FormControl } from "@angular/forms";
 
 import { Filter, FilterBuilder } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
@@ -11,11 +11,10 @@ import { ApplicationCreateDialogComponent } from "../action";
 })
 export class ApplicationHomeComponent {
     public quickSearchQuery = new FormControl();
-
     public filter: Filter = FilterBuilder.none();
     public quickFilter: Filter = FilterBuilder.none();
 
-    constructor(private formBuilder: FormBuilder, private sidebarManager: SidebarManager) {
+    constructor(private sidebarManager: SidebarManager) {
         this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
             if (query === "") {
                 this.quickFilter = FilterBuilder.none();
