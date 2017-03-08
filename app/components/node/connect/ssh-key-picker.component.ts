@@ -1,5 +1,5 @@
-import { Component, ElementRef, OnDestroy, ViewChild } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { Component, ElementRef, OnDestroy, ViewChild, forwardRef } from "@angular/core";
+import { FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor } from "@angular/forms";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
@@ -9,8 +9,13 @@ import { SSHKeyService } from "app/services";
 @Component({
     selector: "bl-ssh-key-picker",
     templateUrl: "ssh-key-picker.html",
+    providers: [
+        // tslint:disable:no-forward-ref
+        { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => SSHKeyPickerComponent), multi: true },
+        { provide: NG_VALIDATORS, useExisting: forwardRef(() => SSHKeyPickerComponent), multi: true },
+    ],
 })
-export class SSHKeyPickerComponent implements OnDestroy {
+export class SSHKeyPickerComponent implements OnDestroy, ControlValueAccessor {
     public savedSSHKeys: List<SSHPublicKey> = List([]);
     public sshKeyValue = new FormControl("");
     public sshKeyName = new FormControl("");
@@ -19,17 +24,52 @@ export class SSHKeyPickerComponent implements OnDestroy {
     @ViewChild("nameInput")
     public nameInput: ElementRef;
 
-    private _sub: Subscription;
+    private _subs: Subscription[] = [];
+    private _propagateChange: Function = null;
 
     constructor(private sshKeyService: SSHKeyService) {
-        this._sub = sshKeyService.keys.subscribe((keys) => {
+        this._subs.push(sshKeyService.keys.subscribe((keys) => {
             this.savedSSHKeys = keys;
-        });
+        }));
+        this._subs.push(this.sshKeyValue.valueChanges.subscribe((value) => {
+            if (this._propagateChange) {
+                this._propagateChange(value);
+            }
+        }));
     }
 
     public ngOnDestroy() {
-        this._sub.unsubscribe();
+        this._subs.forEach(x => x.unsubscribe());
     }
+
+
+    public writeValue(value: any) {
+        this.sshKeyValue.patchValue(value);
+    }
+
+    public registerOnChange(fn) {
+        this._propagateChange = fn;
+    }
+
+    public registerOnTouched() {
+        // Do nothing
+    }
+
+    public validate(c: FormControl) {
+        const valid = this.sshKeyValue.valid;
+
+        if (!valid) {
+            return {
+                sshKeyPicker: {
+                    valid: false,
+                    missingSelection: true,
+                },
+            };
+        }
+
+        return null;
+    }
+
 
     public addKey() {
         this.showSaveForm = true;

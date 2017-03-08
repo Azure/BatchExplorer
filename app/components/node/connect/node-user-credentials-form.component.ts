@@ -27,7 +27,7 @@ export class NodeUserCredentialsFormComponent {
             username: [""],
             mode: [CredentialsMode.Password],
             password: [""],
-            sshKey: [""],
+            sshPublicKey: [""],
             isAdmin: [true],
         });
     }
