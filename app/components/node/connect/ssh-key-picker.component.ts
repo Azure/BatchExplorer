@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnDestroy, ViewChild, forwardRef } from "@angular/core";
-import { FormControl, NG_VALUE_ACCESSOR, NG_VALIDATORS, ControlValueAccessor } from "@angular/forms";
+import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
@@ -42,7 +42,6 @@ export class SSHKeyPickerComponent implements OnDestroy, ControlValueAccessor {
         this._subs.forEach(x => x.unsubscribe());
     }
 
-
     public writeValue(value: any) {
         this.sshKeyValue.patchValue(value);
     }
@@ -69,7 +68,6 @@ export class SSHKeyPickerComponent implements OnDestroy, ControlValueAccessor {
 
         return null;
     }
-
 
     public addKey() {
         this.showSaveForm = true;
