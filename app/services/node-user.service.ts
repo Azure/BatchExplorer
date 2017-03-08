@@ -6,13 +6,13 @@ import { ServerError } from "app/models";
 import { log } from "app/utils";
 import { ServiceBase } from "./service-base";
 
-interface UpdateNodeUserAttributes {
+export interface UpdateNodeUserAttributes {
     expiryTime?: Date;
     password?: string;
     sshPublicKey?: string;
 }
 
-interface AddNodeUserAttributes extends UpdateNodeUserAttributes {
+export interface AddNodeUserAttributes extends UpdateNodeUserAttributes {
     name?: string;
     isAdmin?: boolean;
 }

@@ -10,6 +10,7 @@ export * from "./pool-service";
 export * from "./node-service";
 export * from "./node-user.service";
 export * from "./settings-service";
+export * from "./ssh-key.service";
 export * from "./subscription.service";
 export * from "./task-service";
 export * from "./adal";

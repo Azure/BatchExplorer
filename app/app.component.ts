@@ -3,7 +3,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { MdSidenav } from "@angular/material";
 import { Observable } from "rxjs";
 
-import { AccountService, AdalService, CommandService, SettingsService } from "app/services";
+import { AccountService, AdalService, CommandService, SSHKeyService, SettingsService } from "app/services";
 import AccountCreateDialogComponent from "./components/account/add/account-create-dialog.component";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
@@ -33,8 +33,10 @@ export class AppComponent implements AfterViewInit, OnInit {
         private settingsService: SettingsService,
         private commandService: CommandService,
         private adalService: AdalService,
-        private accountService: AccountService) {
+        private accountService: AccountService,
+        private sshKeyService: SSHKeyService) {
         this.settingsService.init();
+        this.sshKeyService.init();
         this.commandService.init();
         this.adalService.init(adalConfig);
         this.accountService.loadInitialData();
