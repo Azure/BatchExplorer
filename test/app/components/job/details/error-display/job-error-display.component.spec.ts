@@ -28,6 +28,7 @@ describe("JobErrorDisplayComponent", () => {
         accountServiceSpy = {
             currentAccount: Observable.of(Fixtures.account.create()),
         };
+
         TestBed.configureTestingModule({
             imports: [RouterTestingModule],
             declarations: [JobErrorDisplayComponent, TestJobErrorDisplayComponent, BannerMockComponent],
@@ -36,6 +37,7 @@ describe("JobErrorDisplayComponent", () => {
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
+
         fixture = TestBed.createComponent(TestJobErrorDisplayComponent);
         testComponent = fixture.componentInstance;
         component = fixture.debugElement.query(By.css("bl-job-error-display")).componentInstance;

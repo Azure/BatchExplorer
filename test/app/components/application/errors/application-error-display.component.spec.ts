@@ -1,14 +1,13 @@
-import { Component } from "@angular/core";
+import { Component, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { RouterTestingModule } from "@angular/router/testing";
 import { BehaviorSubject } from "rxjs";
 
-import { ApplicationModule } from "app/components/application/application.module";
 import { ApplicationErrorDisplayComponent } from "app/components/application/errors";
 import { AccountResource, Application } from "app/models";
 import { AccountService, ElectronShell } from "app/services";
 import * as Fixtures from "test/fixture";
+import { BannerMockComponent } from "test/utils/mocks/components";
 
 @Component({
     template: `<bl-application-error-display [application]="application"></bl-application-error-display>`,
@@ -44,12 +43,12 @@ describe("ApplicationErrorDisplayComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [ApplicationModule, RouterTestingModule],
-            declarations: [TestApplicationErrorDisplayComponent],
+            declarations: [ApplicationErrorDisplayComponent, BannerMockComponent, TestApplicationErrorDisplayComponent],
             providers: [
                 { provide: AccountService, useValue: accountServiceSpy },
                 { provide: ElectronShell, useValue: shellSpy },
             ],
+            schemas: [NO_ERRORS_SCHEMA],
         });
 
         fixture = TestBed.createComponent(TestApplicationErrorDisplayComponent);

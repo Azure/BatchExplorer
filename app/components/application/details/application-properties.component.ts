@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, ViewContainerRef } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 import { Application } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";
@@ -19,10 +19,6 @@ export class ApplicationPropertiesComponent {
     public decorator: ApplicationDecorator = <any>{};
 
     private _application: Application;
-
-    constructor(
-        private viewContainerRef: ViewContainerRef) {
-    }
 
     public refresh(application: Application) {
         if (this.application) {

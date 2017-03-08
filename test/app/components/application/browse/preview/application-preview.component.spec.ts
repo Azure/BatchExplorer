@@ -1,8 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { RouterTestingModule } from "@angular/router/testing";
 
-import { ApplicationModule } from "app/components/application/application.module";
 import { ApplicationPreviewComponent } from "app/components/application/browse/preview";
 import * as Fixtures from "test/fixture";
 
@@ -12,7 +10,7 @@ describe("ApplicationPreviewComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [ApplicationModule, RouterTestingModule],
+            declarations: [ApplicationPreviewComponent],
             providers: [],
         });
 

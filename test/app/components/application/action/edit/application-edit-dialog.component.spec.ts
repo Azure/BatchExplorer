@@ -1,4 +1,4 @@
-import { DebugElement } from "@angular/core";
+import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormBuilder } from "@angular/forms";
 import { Response, ResponseOptions } from "@angular/http";
@@ -6,8 +6,6 @@ import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
 import { ApplicationEditDialogComponent } from "app/components/application/action";
-import { ApplicationModule } from "app/components/application/application.module";
-import { ActionFormComponent } from "app/components/base/form/action-form";
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { ServerError } from "app/models";
@@ -15,23 +13,18 @@ import { ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";
 import { validateControl } from "test/utils/helpers";
+import { CreateFormMockComponent, ServerErrorMockComponent } from "test/utils/mocks/components";
 
 describe("ApplicationEditDialogComponent ", () => {
     let fixture: ComponentFixture<ApplicationEditDialogComponent>;
     let component: ApplicationEditDialogComponent;
     let debugElement: DebugElement;
-    let applicationForm: any;
-    let sidebarRefSpy: any;
     let appServiceSpy: any;
     let notificationServiceSpy: any;
 
     const validators = TestConstants.validators;
 
     beforeEach(() => {
-        sidebarRefSpy = {
-            close: jasmine.createSpy("close"),
-        };
-
         appServiceSpy = {
             patch: jasmine.createSpy("patch").and.callFake((applicationId: string, jsonData: any) => {
                 if (applicationId === "throw-me") {
@@ -53,22 +46,20 @@ describe("ApplicationEditDialogComponent ", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [ApplicationModule],
+            declarations: [ApplicationEditDialogComponent, CreateFormMockComponent, ServerErrorMockComponent],
             providers: [
                 { provide: FormBuilder, useValue: new FormBuilder() },
-                { provide: SidebarRef, useValue: sidebarRefSpy },
+                { provide: SidebarRef, useValue: null },
                 { provide: ApplicationService, useValue: appServiceSpy },
                 { provide: NotificationService, useValue: notificationServiceSpy },
-
             ],
+            schemas: [NO_ERRORS_SCHEMA],
         });
 
         fixture = TestBed.createComponent(ApplicationEditDialogComponent);
         component = fixture.componentInstance;
         debugElement = fixture.debugElement;
         fixture.detectChanges();
-
-        applicationForm = component.applicationForm;
     });
 
     it("Should show title and description", () => {
@@ -85,14 +76,14 @@ describe("ApplicationEditDialogComponent ", () => {
 
         it("control has no required validation", () => {
             const controlId = "displayName";
-            validateControl(applicationForm, controlId).passes(validators.required).with("");
-            validateControl(applicationForm, controlId).passes(validators.required).with(null);
+            validateControl(component.applicationForm, controlId).passes(validators.required).with("");
+            validateControl(component.applicationForm, controlId).passes(validators.required).with(null);
         });
 
         it("control has maxLength validation", () => {
             const controlId = "displayName";
-            validateControl(applicationForm, controlId).fails(validators.maxlength).with("a".repeat(1025));
-            validateControl(applicationForm, controlId).passes(validators.maxlength).with("a".repeat(1024));
+            validateControl(component.applicationForm, controlId).fails(validators.maxlength).with("a".repeat(1025));
+            validateControl(component.applicationForm, controlId).passes(validators.maxlength).with("a".repeat(1024));
         });
     });
 
@@ -104,8 +95,8 @@ describe("ApplicationEditDialogComponent ", () => {
 
         it("control has no validation", () => {
             const controlId = "defaultVersion";
-            validateControl(applicationForm, controlId).passes(validators.required).with("");
-            validateControl(applicationForm, controlId).passes(validators.required).with(null);
+            validateControl(component.applicationForm, controlId).passes(validators.required).with("");
+            validateControl(component.applicationForm, controlId).passes(validators.required).with(null);
         });
     });
 
@@ -116,10 +107,10 @@ describe("ApplicationEditDialogComponent ", () => {
         });
 
         it("control has required validation", () => {
-            validateControl(applicationForm, "allowUpdates").passes(validators.required).with(false);
-            validateControl(applicationForm, "allowUpdates").passes(validators.required).with(true);
-            validateControl(applicationForm, "allowUpdates").fails(validators.required).with(null);
-            validateControl(applicationForm, "allowUpdates").fails(validators.required).with("");
+            validateControl(component.applicationForm, "allowUpdates").passes(validators.required).with(false);
+            validateControl(component.applicationForm, "allowUpdates").passes(validators.required).with(true);
+            validateControl(component.applicationForm, "allowUpdates").fails(validators.required).with(null);
+            validateControl(component.applicationForm, "allowUpdates").fails(validators.required).with("");
         });
     });
 
@@ -148,15 +139,15 @@ describe("ApplicationEditDialogComponent ", () => {
         });
 
         it("sets the display name", () => {
-            expect(applicationForm.controls["displayName"].value).toBe("my monkey");
+            expect(component.applicationForm.controls["displayName"].value).toBe("my monkey");
         });
 
         it("sets the default version", () => {
-            expect(applicationForm.controls["defaultVersion"].value).toBe("1.0.1");
+            expect(component.applicationForm.controls["defaultVersion"].value).toBe("1.0.1");
         });
 
         it("sets allow updates", () => {
-            expect(applicationForm.controls["allowUpdates"].value).toBe(true);
+            expect(component.applicationForm.controls["allowUpdates"].value).toBe(true);
         });
     });
 
@@ -173,8 +164,7 @@ describe("ApplicationEditDialogComponent ", () => {
         });
 
         it("Clicking add updates app but doesn't close sidebar", (done) => {
-            const form = debugElement.query(By.css("bl-action-form")).componentInstance as ActionFormComponent;
-            form.performAction().subscribe(() => {
+            component.submit().subscribe(() => {
                 expect(appServiceSpy.patch).toHaveBeenCalledTimes(1);
                 expect(appServiceSpy.patch).toHaveBeenCalledWith("monkeys-2.0", {
                     displayName: "monkey magic",
@@ -189,7 +179,6 @@ describe("ApplicationEditDialogComponent ", () => {
                     "Application monkeys-2.0 was successfully updated!",
                 );
 
-                expect(sidebarRefSpy.close).toHaveBeenCalledTimes(0);
                 done();
             });
         });
@@ -204,8 +193,7 @@ describe("ApplicationEditDialogComponent ", () => {
 
             fixture.detectChanges();
 
-            const form = debugElement.query(By.css("bl-action-form")).componentInstance as ActionFormComponent;
-            form.performAction().subscribe({
+            component.submit().subscribe({
                 next: () => {
                     fail("call should have failed");
                     done();

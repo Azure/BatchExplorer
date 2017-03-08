@@ -1,3 +1,4 @@
+import { Component, Input, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MdDialog } from "@angular/material";
 import { By } from "@angular/platform-browser";
@@ -5,12 +6,48 @@ import { ActivatedRoute } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Observable } from "rxjs";
 
-import { ApplicationModule } from "app/components/application/application.module";
 import { ApplicationDetailsComponent } from "app/components/application/details";
+import { SidebarManager } from "app/components/base/sidebar";
 import { Application } from "app/models";
-import { AccountService, ApplicationService, ElectronShell } from "app/services";
+import { ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { ActivatedRouteMock, RxMockEntityProxy } from "test/utils/mocks";
+import { LoadingMockComponent } from "test/utils/mocks/components";
+
+// mock application properties component
+@Component({
+    selector: "bl-application-properties",
+    template: "",
+})
+class ApplicationPropertiesMockComponent {
+    @Input()
+    public set application(application: Application) {
+        this._application = application;
+    }
+    public get application() { return this._application; }
+
+    private _application: Application;
+}
+
+// mock application packages component
+@Component({
+    selector: "bl-application-packages",
+    template: "",
+})
+class ApplicationPackagesMockComponent {
+    @Input()
+    public application: Application;
+}
+
+// mock application error component
+@Component({
+    selector: "bl-application-error-display",
+    template: "",
+})
+class ApplicationErrorDisplayMockComponent {
+    @Input()
+    public application: Application;
+}
 
 describe("ApplicationDetailsComponent.breadcrumb()", () => {
     it("has correct breadcrumb name", () => {
@@ -59,14 +96,18 @@ describe("ApplicationDetailsComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [ApplicationModule, RouterTestingModule],
+            imports: [RouterTestingModule],
+            declarations: [
+                ApplicationDetailsComponent, ApplicationPackagesMockComponent, ApplicationPropertiesMockComponent,
+                ApplicationErrorDisplayMockComponent, LoadingMockComponent,
+            ],
             providers: [
                 { provide: MdDialog, useValue: mdDialogSpy },
-                { provide: ApplicationService, useValue: applicationServiceSpy },
-                { provide: AccountService, useValue: accountServiceSpy },
                 { provide: ActivatedRoute, useValue: activatedRouteSpy },
-                { provide: ElectronShell, useValue: null },
+                { provide: SidebarManager, useValue: null },
+                { provide: ApplicationService, useValue: applicationServiceSpy },
             ],
+            schemas: [NO_ERRORS_SCHEMA],
         });
 
         fixture = TestBed.createComponent(ApplicationDetailsComponent);
@@ -119,11 +160,6 @@ describe("ApplicationDetailsComponent", () => {
         });
 
         describe("Delete command is shown and wired up", () => {
-            it("button has correct text", () => {
-                const container = fixture.debugElement.query(By.css("bl-delete-button"));
-                expect(container.nativeElement.textContent).toContain("Delete");
-            });
-
             it("calling delete opens dialog", () => {
                 component.deleteApplication();
                 expect(mdDialogSpy.open).toHaveBeenCalledTimes(1);

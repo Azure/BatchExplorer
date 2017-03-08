@@ -10,8 +10,9 @@
   "scripts": {
     "test": "npm run test-client && npm run test-browser",
     "test-app": "karma start",
-    "test-app-watch": "karma start --auto-watch --no-single-run",
     "test-app:mem": "cross-env DEBUG_MEM=1 npm run test-app",
+    "test-app-watch": "karma start --auto-watch --no-single-run",
+    "test-app-watch:time": "cross-env DEBUG_TIME=1 npm run test-app-watch",
     "test-browser": "npm run test-app",
     "test-browser-watch": "npm run test-app-watch",
     "test-client": "cross-env NODE_ENV=test node test/client/run-jasmine.js",

@@ -34,12 +34,12 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     private _paramsSubscriber: Subscription;
 
     constructor(
-        private dialog: MdDialog,
         private activatedRoute: ActivatedRoute,
-        private viewContainerRef: ViewContainerRef,
-        private sidebarManager: SidebarManager,
         private applicationService: ApplicationService,
-        private router: Router) {
+        private dialog: MdDialog,
+        private router: Router,
+        private sidebarManager: SidebarManager,
+        private viewContainerRef: ViewContainerRef) {
 
         this.data = this.applicationService.get(null);
         this.data.item.subscribe((application) => {

@@ -1,11 +1,10 @@
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { RouterTestingModule } from "@angular/router/testing";
 
-import { ApplicationModule } from "app/components/application/application.module";
 import { ApplicationPackagesComponent } from "app/components/application/details";
-import { ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";
+import { EntityDetailsListMockComponent } from "test/utils/mocks/components";
 
 describe("ApplicationPackagesComponent", () => {
     let fixture: ComponentFixture<ApplicationPackagesComponent>;
@@ -18,10 +17,8 @@ describe("ApplicationPackagesComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [ApplicationModule, RouterTestingModule],
-            providers: [
-                { provide: ApplicationService, useValue: applicationServiceSpy },
-            ],
+            declarations: [ApplicationPackagesComponent, EntityDetailsListMockComponent],
+            schemas: [NO_ERRORS_SCHEMA],
         });
 
         fixture = TestBed.createComponent(ApplicationPackagesComponent);

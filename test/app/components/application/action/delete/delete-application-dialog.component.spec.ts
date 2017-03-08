@@ -1,31 +1,26 @@
-import { DebugElement } from "@angular/core";
+import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MdDialogRef } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
 import { DeleteApplicationDialogComponent } from "app/components/application/action";
-import { ApplicationModule } from "app/components/application/application.module";
-import { ActionFormComponent } from "app/components/base/form/action-form";
+import { BackgroundTaskService } from "app/components/base/background-task";
 import { Application, ServerError } from "app/models";
 import { ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { RxMockEntityProxy } from "test/utils/mocks";
+import { ActionFormMockComponent, ServerErrorMockComponent } from "test/utils/mocks/components";
 
-xdescribe("DeleteApplicationDialogComponent ", () => {
+// TODO: 2 tests excluded below. Needs long running action refactor for testing
+describe("DeleteApplicationDialogComponent ", () => {
     let fixture: ComponentFixture<DeleteApplicationDialogComponent>;
     let component: DeleteApplicationDialogComponent;
     let entityProxy: RxMockEntityProxy<any, Application>;
-    let actionForm: ActionFormComponent;
     let debugElement: DebugElement;
-    let dialogRefSpy: any;
     let appServiceSpy: any;
 
     beforeEach(() => {
-        dialogRefSpy = {
-            close: jasmine.createSpy("DialogClose"),
-        };
-
         entityProxy = new RxMockEntityProxy(Application, {
             item: Fixtures.application.create({ id: "app-1" }),
         });
@@ -49,18 +44,18 @@ xdescribe("DeleteApplicationDialogComponent ", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [ApplicationModule],
+            declarations: [ActionFormMockComponent, DeleteApplicationDialogComponent, ServerErrorMockComponent],
             providers: [
-                { provide: MdDialogRef, useValue: dialogRefSpy },
+                { provide: MdDialogRef, useValue: null },
                 { provide: ApplicationService, useValue: appServiceSpy },
-
+                { provide: BackgroundTaskService, useValue: null },
             ],
+            schemas: [NO_ERRORS_SCHEMA],
         });
 
         fixture = TestBed.createComponent(DeleteApplicationDialogComponent);
         component = fixture.componentInstance;
         component.applicationId = "app-1";
-        actionForm = fixture.debugElement.query(By.css("bl-action-form")).componentInstance;
         debugElement = fixture.debugElement;
         fixture.detectChanges();
     });
@@ -71,20 +66,24 @@ xdescribe("DeleteApplicationDialogComponent ", () => {
         expect(debugElement.nativeElement.textContent).toContain(description);
     });
 
-    it("Submit should call service and close the dialog", () => {
-        actionForm.performActionAndClose();
-
-        expect(appServiceSpy.delete).toHaveBeenCalledTimes(1);
-        expect(appServiceSpy.delete).toHaveBeenCalledWith("app-1");
+    xit("Submit should call service and close the dialog", () => {
+        component.destroyApplication().subscribe(() => {
+            expect(appServiceSpy.delete).toHaveBeenCalledTimes(1);
+            expect(appServiceSpy.delete).toHaveBeenCalledWith("app-1");
+        });
     });
 
-    it("Submit should call service and show error if fails", () => {
+    xit("Submit should call service and show error if fails", () => {
         component.applicationId = "bad-app-id";
         fixture.detectChanges();
 
-        actionForm.performActionAndClose();
+        component.destroyApplication().subscribe({
+            error: () => {
+                expect(appServiceSpy.delete).toHaveBeenCalledTimes(1);
 
-        expect(appServiceSpy.delete).toHaveBeenCalledTimes(1);
-        expect(actionForm.error).not.toBeNull();
+                let actionForm = fixture.debugElement.query(By.css("bl-action-form")).componentInstance;
+                expect(actionForm.error).not.toBeNull();
+            },
+        });
     });
 });

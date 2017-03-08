@@ -1,14 +1,22 @@
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { MdDialog } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Observable } from "rxjs";
 
-import { ApplicationModule } from "app/components/application/application.module";
 import { ApplicationPackageTableComponent } from "app/components/application/details";
+import { BackgroundTaskService } from "app/components/base/background-task";
+import { SidebarManager } from "app/components/base/sidebar";
 import { Application, PackageState } from "app/models";
 import { ApplicationService } from "app/services";
 import { Property } from "app/utils/filter-builder";
 import * as Fixtures from "test/fixture";
+import { NoItemMockComponent } from "test/utils/mocks/components";
+
+import {
+    TableCellComponent, TableColumnComponent, TableComponent, TableHeadComponent,
+} from "app/components/base/table";
 
 const appWithPackagesId: string = "app-2";
 const appWithoutPackagesId: string = "app-1";
@@ -45,10 +53,18 @@ describe("ApplicationPackageTableComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [ApplicationModule, RouterTestingModule],
-            providers: [
-                { provide: ApplicationService, useValue: applicationServiceSpy },
+            imports: [RouterTestingModule],
+            declarations: [
+                ApplicationPackageTableComponent, NoItemMockComponent, TableComponent, TableCellComponent,
+                TableColumnComponent, TableHeadComponent,
             ],
+            providers: [
+                { provide: MdDialog, useValue: null },
+                { provide: ApplicationService, useValue: applicationServiceSpy },
+                { provide: BackgroundTaskService, useValue: null },
+                { provide: SidebarManager, useValue: null },
+            ],
+            schemas: [NO_ERRORS_SCHEMA],
         });
 
         fixture = TestBed.createComponent(ApplicationPackageTableComponent);
@@ -64,7 +80,7 @@ describe("ApplicationPackageTableComponent", () => {
         });
 
         it("should show no item error", () => {
-            const container = fixture.debugElement.query(By.css(".no-item-message"));
+            const container = fixture.debugElement.query(By.css("bl-no-item"));
             expect(container.nativeElement.textContent).toContain("This application contains no package versions");
             expect(container).toBeVisible();
         });
@@ -103,7 +119,7 @@ describe("ApplicationPackageTableComponent", () => {
 
             expect(component.displayedPackages.size).toBe(0);
 
-            const container = fixture.debugElement.query(By.css(".no-item-message"));
+            const container = fixture.debugElement.query(By.css("bl-no-item"));
             expect(container.nativeElement.textContent).toContain("Current filter returned no matches");
             expect(container).toBeVisible();
         });

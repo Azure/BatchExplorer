@@ -1,15 +1,17 @@
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Subject } from "rxjs";
 
-import { ApplicationModule } from "app/components/application/application.module";
 import { ApplicationListComponent } from "app/components/application/browse";
+import { BackgroundTaskService } from "app/components/base/background-task";
 import { Application } from "app/models";
 import { ApplicationService } from "app/services";
 import { FilterBuilder } from "app/utils/filter-builder";
 import * as Fixtures from "test/fixture";
 import { RxMockListProxy } from "test/utils/mocks";
+import { NoItemMockComponent } from "test/utils/mocks/components";
 
 describe("ApplicationListComponent", () => {
     let fixture: ComponentFixture<ApplicationListComponent>;
@@ -33,10 +35,13 @@ describe("ApplicationListComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [ApplicationModule, RouterTestingModule],
+            imports: [RouterTestingModule],
+            declarations: [ApplicationListComponent, NoItemMockComponent],
             providers: [
                 { provide: ApplicationService, useValue: applicationServiceSpy },
+                { provide: BackgroundTaskService, useValue: null },
             ],
+            schemas: [NO_ERRORS_SCHEMA],
         });
 
         fixture = TestBed.createComponent(ApplicationListComponent);

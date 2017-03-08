@@ -1,22 +1,24 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { RouterTestingModule } from "@angular/router/testing";
 
-import { ApplicationModule } from "app/components/application/application.module";
 import { ApplicationPropertiesComponent } from "app/components/application/details";
-import { ApplicationService } from "app/services";
+import {
+    BoolPropertyComponent,
+    PropertyGroupComponent,
+    PropertyListComponent,
+    TextPropertyComponent,
+} from "app/components/base/property-list";
 import * as Fixtures from "test/fixture";
 
 describe("ApplicationPropertiesComponent", () => {
     let fixture: ComponentFixture<ApplicationPropertiesComponent>;
     let component: ApplicationPropertiesComponent;
-    let applicationServiceSpy: any;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [ApplicationModule, RouterTestingModule],
-            providers: [
-                { provide: ApplicationService, useValue: applicationServiceSpy },
+            declarations: [
+                ApplicationPropertiesComponent, BoolPropertyComponent, PropertyGroupComponent,
+                PropertyListComponent, TextPropertyComponent,
             ],
         });
 
