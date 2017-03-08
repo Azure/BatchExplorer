@@ -31,6 +31,16 @@ bl-node-connect {
 bl-node-user-credentials-form {
     display: block;
     margin-bottom: 20px;
+
+    .username-mode-input {
+        display: flex;
+        align-items: center;
+
+        md-input-container {
+            flex: 1;
+            margin-right: 20px;
+        }
+    }
 }
 
 bl-ssh-key-picker > .ssh-key-picker {

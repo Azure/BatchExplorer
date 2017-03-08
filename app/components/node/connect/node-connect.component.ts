@@ -68,8 +68,9 @@ export class NodeConnectComponent implements OnInit {
     @autobind()
     public generateCredentials() {
         const credentials = {
-            username: SecureUtils.username(),
+            name: SecureUtils.username(),
             password: SecureUtils.password(),
+            isAdmin: true,
         };
 
         return this.addOrUpdateUser(credentials).do(() => {
@@ -79,11 +80,7 @@ export class NodeConnectComponent implements OnInit {
 
     @autobind()
     public addOrUpdateUser(credentials) {
-        return this.nodeUserService.addOrUpdateUser(this.pool.id, this.node.id, {
-            name: credentials.username,
-            password: credentials.password,
-            isAdmin: true,
-        }).do(() => {
+        return this.nodeUserService.addOrUpdateUser(this.pool.id, this.node.id, credentials).do(() => {
             this.credentials = credentials;
         });
     }
@@ -93,7 +90,7 @@ export class NodeConnectComponent implements OnInit {
             return "N/A";
         }
         const {ip, port} = this.connectionSettings;
-        return `ssh ${this.credentials.username}@${ip} -p ${port}`;
+        return `ssh ${this.credentials.name}@${ip} -p ${port}`;
     }
 
     @autobind()

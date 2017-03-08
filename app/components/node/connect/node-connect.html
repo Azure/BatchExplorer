@@ -9,12 +9,12 @@
             </div>
         </div>
         <div *ngIf="credentialSource === CredentialSource.Specified && !credentials">
-            <bl-node-user-credentials-form [submit]="addOrUpdateUser" [isWindowsNode]="isWindows"></bl-node-user-credentials-form>
+            <bl-node-user-credentials-form [submit]="addOrUpdateUser" [isLinuxNode]="linux"></bl-node-user-credentials-form>
         </div>
         <div>
             <bl-property-group *ngIf="credentials" class="normal">
                 <div class="warn-text">These credentials are now valid for 24 hours on this node</div>
-                <bl-text-property label="Username" [value]="credentials.username"></bl-text-property>
+                <bl-text-property label="Username" [value]="credentials.name"></bl-text-property>
                 <bl-text-property label="Password" [value]="credentials.password" *ngIf="credentialSource === CredentialSource.Generated"></bl-text-property>
             </bl-property-group>
         </div>
