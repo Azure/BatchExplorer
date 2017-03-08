@@ -1,10 +1,12 @@
-import { Component, DebugElement } from "@angular/core";
+import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
+import { SubmitButtonComponent } from "app/components/base/buttons";
+import { PropertyGroupComponent, TextPropertyComponent } from "app/components/base/property-list";
 import { SidebarRef } from "app/components/base/sidebar";
-import { NodeConnectComponent, NodeConnectModule } from "app/components/node/connect";
+import { NodeConnectComponent } from "app/components/node/connect";
 import { NodeAgentSku } from "app/models";
 import { AccountService, ElectronShell, FileSystemService, NodeService, NodeUserService } from "app/services";
 import * as Fixtures from "test/fixture";
@@ -42,8 +44,10 @@ describe("NodeConnectComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [NodeConnectModule],
-            declarations: [TestComponent],
+            declarations: [
+                NodeConnectComponent, SubmitButtonComponent,
+                TextPropertyComponent, PropertyGroupComponent, TestComponent,
+            ],
             providers: [
                 { provide: SidebarRef, useValue: null },
                 { provide: AccountService, useValue: accountServiceSpy },
@@ -53,6 +57,7 @@ describe("NodeConnectComponent", () => {
                 { provide: FileSystemService, useValue: null },
                 { provide: ElectronShell, useValue: null },
             ],
+            schemas: [NO_ERRORS_SCHEMA],
         });
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
@@ -79,14 +84,14 @@ describe("NodeConnectComponent", () => {
         const button = de.queryAll(By.css("bl-submit-btn"))[0].componentInstance;
         button.submit().subscribe(() => {
             fixture.detectChanges();
-            expect(component.credentials).not.toBeFalsy();
-            expect(component.credentials.username).not.toBeFalsy();
+            expect(component.credentials).not.toBeFalsy("Credentials should be defined");
+            expect(component.credentials.name).not.toBeFalsy();
             expect(component.credentials.password).not.toBeFalsy();
             expect(nodeUserServiceSpy.addOrUpdateUser).toHaveBeenCalledOnce();
 
             const properties = de.query(By.css("bl-property-group"));
             expect(properties).not.toBeFalsy();
-            expect(properties.nativeElement.textContent).toContain(component.credentials.username);
+            expect(properties.nativeElement.textContent).toContain(component.credentials.name);
             expect(properties.nativeElement.textContent).toContain(component.credentials.password);
 
             expect(de.query(By.css("bl-download-rdp"))).not.toBeFalsy();
@@ -106,12 +111,12 @@ describe("NodeConnectComponent", () => {
         });
 
         it("should add the user when form is submitted", () => {
-            component.addOrUpdateUser({ username: "foo", password: "bar", isAdmin: false }).subscribe(() => null);
+            component.addOrUpdateUser({ name: "foo", password: "bar", isAdmin: false }).subscribe(() => null);
             fixture.detectChanges();
             const properties = de.query(By.css("bl-property-group"));
 
             expect(component.credentials).not.toBeFalsy();
-            expect(component.credentials.username).toEqual("foo");
+            expect(component.credentials.name).toEqual("foo");
             expect(component.credentials.password).toEqual("bar");
 
             expect(properties).not.toBeFalsy();

@@ -4,7 +4,7 @@ import { List } from "immutable";
 
 import { SidebarRef } from "app/components/base/sidebar";
 import { Node, NodeAgentSku, NodeConnectionSettings, Pool } from "app/models";
-import { AccountService, NodeService, NodeUserService } from "app/services";
+import { AccountService, AddNodeUserAttributes, NodeService, NodeUserService } from "app/services";
 import { PoolUtils, SecureUtils } from "app/utils";
 
 enum CredentialSource {
@@ -19,7 +19,7 @@ enum CredentialSource {
 export class NodeConnectComponent implements OnInit {
     public CredentialSource = CredentialSource;
     public credentialSource: CredentialSource = null;
-    public credentials = null;
+    public credentials: AddNodeUserAttributes = null;
     public agentSkus: List<NodeAgentSku>;
     public windows = false;
     public linux = false;
