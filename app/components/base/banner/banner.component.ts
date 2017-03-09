@@ -1,4 +1,4 @@
-import { Component, ContentChildren, Directive, Input, QueryList } from "@angular/core";
+import { Component, ContentChildren, Directive, Input, OnChanges, QueryList } from "@angular/core";
 import { Observable } from "rxjs";
 
 export enum ErrorState {
@@ -35,8 +35,14 @@ export class BannerOtherFixDirective {
     selector: "bl-banner",
     templateUrl: "banner.html",
 })
-export class BannerComponent {
+export class BannerComponent implements OnChanges {
     public errorStates = ErrorState;
+
+    /**
+     * Use this to give an unique id to a banner so if you component change above the banner will reset.
+     */
+    @Input()
+    public id: string;
 
     @Input()
     public fixMessage: string;
@@ -55,6 +61,10 @@ export class BannerComponent {
     public state = ErrorState.Error;
 
     public showOtherFixes = false;
+
+    public ngOnChanges(inputs) {
+        this.state = ErrorState.Error;
+    }
 
     public triggerFix(otherFix?: BannerOtherFixDirective) {
         this.showOtherFixes = false;
