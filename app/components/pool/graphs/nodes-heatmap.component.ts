@@ -157,59 +157,86 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
 
     private _updateSvg(groups: any) {
         const z = Math.max(this.dimensions.tileSize - 6, 0);
-        const nodeGroups = groups.enter().append("g").merge(groups)
+        const nodeEnter = groups.enter().append("g")
             .attr("transform", (x) => this._translate(x as any))
+            .attr("width", z)
+            .attr("height", z)
             .attr("class", "node-group")
+            .on("mouseenter", (tile, index, nodes) => {
+                const group = d3.select(nodes[index]);
+                groups.selectAll("text").remove();
+                group.append("text")
+                    .attr("dx", z / 2)
+                    .attr("dy", z / 2)
+                    .attr("text-anchor", "middle")
+                    .text(`${tile.node.runningTasks.size} task running`);
+            })
+            .on("mouseleave", (tile, index, nodes) => {
+                const group = d3.select(nodes[index]);
+                group.selectAll("text").remove();
+            })
             .on("click", (tile) => {
                 this.selectedNodeId.next(tile.node.id);
                 this._updateSvg(groups);
             });
+        nodeEnter.append("g").classed("bg", true);
+        nodeEnter.append("g").classed("tasks", true);
 
-        const maxTaskPerNode = this.pool.maxTasksPerNode;
-        nodeGroups.selectAll("g").remove();
-        const backgroundGroup = nodeGroups.append("g");
-        const runningTaskGroup = nodeGroups.append("g");
-        console.log("Max tax", maxTaskPerNode);
-        const nodeBackground = backgroundGroup.selectAll("rect")
-            .data((d) => [d])
-            .enter().append("rect")
+        const backgroundGroup = groups.select("g.bg");
+        const runningTaskGroup = groups.select("g.tasks");
+
+        this._displayNodeBackground(backgroundGroup, z);
+        this._displayRunningTasks(runningTaskGroup, z);
+    }
+
+    private _displayNodeBackground(backgroundGroup, z) {
+        const nodeBackground = backgroundGroup.selectAll("rect").data((d) => [d]);
+
+        nodeBackground.enter().append("rect")
             .attr("width", z)
             .attr("height", z)
+            .merge(nodeBackground)
             .style("fill", (tile: any) => {
                 return d3.color(this.colors.get(tile.node.state)) as any;
             })
             .style("stroke-width", (tile: any) => {
                 return tile.node.id === this.selectedNodeId.value ? "2px" : "0";
             });
+        nodeBackground.exit().remove();
+    }
 
-
+    private _displayRunningTasks(taskGroup, z) {
+        const maxTaskPerNode = this.pool.maxTasksPerNode;
         const taskWidth = Math.floor(z / maxTaskPerNode);
-        const taskStatus = runningTaskGroup.selectAll("rect")
+
+        const runningTaskRects = taskGroup.selectAll("rect")
             .data((d) => {
                 const node: Node = d.node;
                 if (node.state !== NodeState.running || !node.recentTasks) {
                     return [];
                 }
-                const runningTasks = node.recentTasks.filter(x => x.taskState === TaskState.running).toJS();
-                console.log("Running tasks", node.recentTasks.toJS());
+                return node.runningTasks.map((task, index) => ({ task, index })).toJS();
+            });
 
-                return runningTasks.map((task, index) => ({ task, index }));
-            })
-            .enter().append("rect")
+        runningTaskRects.enter().append("rect")
             .attr("transform", (data) => {
-                console.log("x", data.index);
                 const index = data.index;
                 const x = (maxTaskPerNode - index - 1) * taskWidth + 1;
-                // return `translate(${x},0)`;
                 return `translate(0,${x})`;
             })
-            // .attr("width", taskWidth - 1)
-            // .attr("height", z)
             .attr("width", z)
             .attr("height", taskWidth - 1)
             .style("fill", "#388e3c");
+
+        runningTaskRects.exit().remove();
     }
 
+    /**
+     * Compute the dimension of the heatmap.
+     *  - rows
+     *  - columns
+     *  - tile size
+     */
     private _computeDimensions() {
         const area = this._height * this._width;
         const areaPerTile = area / this._nodes.size;
@@ -230,6 +257,10 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         }
     }
 
+    /**
+     * Compute the best rows and columns from the estimated values
+     * Used by compute dimensions
+     */
     private _computeBestDimension(estimatedRows: number, estimatedColumns: number) {
         const floorRows = Math.floor(estimatedRows);
         const floorColumns = Math.floor(estimatedColumns);
@@ -256,6 +287,9 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         }
     }
 
+    /**
+     * Compute the position of the given tile
+     */
     private _translate(tile: HeatmapTile) {
         const z = this.dimensions.tileSize;
         if (z === 0) {

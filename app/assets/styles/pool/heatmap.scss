@@ -20,6 +20,10 @@ $color-width: 14px;
             stroke: map-get($md-prussian-blue, 500);
         }
 
+        text {
+            font-size: 20px;
+        }
+
         &:hover {
             rect {
                 stroke: map-get($md-prussian-blue, 500);
