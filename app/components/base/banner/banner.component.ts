@@ -38,6 +38,12 @@ export class BannerOtherFixDirective {
 export class BannerComponent {
     public errorStates = ErrorState;
 
+    /**
+     * Use this to give an unique id to a banner so if you component change above the banner will reset.
+     */
+    @Input()
+    public id: string;
+
     @Input()
     public fixMessage: string;
 
@@ -55,6 +61,11 @@ export class BannerComponent {
     public state = ErrorState.Error;
 
     public showOtherFixes = false;
+
+    public ngOnChanges(inputs) {
+        console.log("Changed", inputs);
+        this.state = ErrorState.Error;
+    }
 
     public triggerFix(otherFix?: BannerOtherFixDirective) {
         this.showOtherFixes = false;
