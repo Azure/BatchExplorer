@@ -15,10 +15,11 @@ interface HeatmapTile {
 }
 
 const idleColor = "#edeef2";
+const runningColor = "#388e3c";
 
 const stateTree: StateTree = [
     { state: NodeState.idle, color: idleColor },
-    { state: NodeState.running, color: idleColor },
+    { state: NodeState.running, color: runningColor },
     { state: NodeState.waitingForStartTask, color: "#be93d9" },
     { state: NodeState.offline, color: "#5b5b5b" },
     {
@@ -197,7 +198,13 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             .attr("height", z)
             .merge(nodeBackground)
             .style("fill", (tile: any) => {
-                return d3.color(this.colors.get(tile.node.state)) as any;
+                let color;
+                if (tile.node.state === NodeState.running) {
+                    color = idleColor;
+                } else {
+                    color = this.colors.get(tile.node.state);
+                }
+                return d3.color(color) as any;
             })
             .style("stroke-width", (tile: any) => {
                 return tile.node.id === this.selectedNodeId.value ? "2px" : "0";
@@ -226,7 +233,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             })
             .attr("width", z)
             .attr("height", taskWidth - 1)
-            .style("fill", "#388e3c");
+            .style("fill", runningColor);
 
         runningTaskRects.exit().remove();
     }
