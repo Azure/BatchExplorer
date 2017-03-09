@@ -29,7 +29,6 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     private _nodesSub: Subscription;
 
     constructor(private nodeService: NodeService, private router: Router) {
-
         this.data = nodeService.list(null, {
             maxResults: 1000,
             select: "recentTasks,id,state",
@@ -50,7 +49,6 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     public ngOnChanges(changes) {
         if (changes.pool) {
             this.data.updateParams({ poolId: this.pool.id });
-            // this.data.fetchNext(true);
             this.data.refresh(false);
         }
     }

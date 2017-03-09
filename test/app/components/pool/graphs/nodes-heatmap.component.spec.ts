@@ -6,7 +6,7 @@ import * as d3 from "d3";
 import { List } from "immutable";
 
 import { NodesHeatmapComponent, NodesHeatmapLegendComponent } from "app/components/pool/graphs";
-import { Node, NodeState } from "app/models";
+import { Node, NodeState, Pool } from "app/models";
 import { NodeService } from "app/services";
 import * as Fixture from "test/fixture";
 import { click } from "test/utils/helpers";
@@ -15,7 +15,7 @@ import { ContextMenuServiceMock } from "test/utils/mocks";
 @Component({
     template: `
         <div [style.width]="width" [style.height]="height" [style.position]="'relative'">
-            <bl-nodes-heatmap [poolId]="poolId" [nodes]="nodes"></bl-nodes-heatmap>
+            <bl-nodes-heatmap [pool]="pool" [nodes]="nodes"></bl-nodes-heatmap>
         </div>
     `,
 })
@@ -23,7 +23,7 @@ export class HeatmapMockComponent {
     public width = "700px";
     public height = "500px";
     public nodes: List<Node> = List([]);
-    public poolId = "pool-1";
+    public pool = new Pool({ id: "pool-id", maxTasksPerNode: 1 });
 }
 
 @Component({
@@ -49,7 +49,7 @@ describe("NodesHeatmapLegendComponent", () => {
     beforeEach(() => {
         contextMenuService = new ContextMenuServiceMock();
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule.withRoutes([])],
+            imports: [RouterTestingModule],
             declarations: [
                 HeatmapMockComponent, NodesHeatmapComponent, NodesHeatmapLegendComponent, NodePreviewCardMockComponent,
             ],
@@ -109,14 +109,22 @@ describe("NodesHeatmapLegendComponent", () => {
     it("should create a tile for each node", () => {
         component.nodes = createNodes(7);
         fixture.detectChanges();
-        const rects = svg.selectAll("rect");
-        expect(rects.size()).toBe(7);
-        const size = (heatmap.dimensions.tileSize - 2).toString();
-        rects.each((d, i, group) => {
-            expect(d3.select(group[i]).attr("width")).toBe(size);
-            expect(d3.select(group[i]).attr("height")).toBe(size);
-            expect(d3.select(group[i]).attr("style")).toContain("fill: rgb(107, 163, 203);");
-            expect(d3.select(group[i]).attr("style")).toContain("stroke-width: 0;");
+        const tiles = svg.selectAll("g.node-group");
+        expect(tiles.size()).toBe(7);
+        const size = (heatmap.dimensions.tileSize - 6).toString();
+        tiles.each((d, i, groups) => {
+            const group = d3.select(groups[i]);
+            expect(group.attr("width")).toBe(size);
+            expect(group.attr("height")).toBe(size);
+
+            expect(group.selectAll("g.bg").size()).toBe(1, "Should only 1 background group");
+            const bg = group.select("g.bg");
+
+            expect(bg.selectAll("rect").size()).toBe(1, "Should only have 1 rect");
+            const rect = bg.select("rect");
+            expect(rect).not.toBeFalsy("Should have a rect in bg");
+            expect(rect.attr("style")).toContain("fill: rgb(237, 238, 242);");
+            expect(rect.attr("style")).toContain("stroke-width: 0;");
         });
     });
 
@@ -126,14 +134,14 @@ describe("NodesHeatmapLegendComponent", () => {
         fixture.detectChanges();
         heatmap.containerSizeChanged();
 
-        expect(svg.attr("width")).toBe("0");
+        expect(svg.attr("width")).toBe("0", "Svg width should be 0");
         expect(heatmap.dimensions.rows).toBe(0);
         expect(heatmap.dimensions.columns).toBe(0);
         expect(heatmap.dimensions.tileSize).toBe(0);
 
-        const rects = svg.selectAll("rect");
-        expect(rects.size()).toBe(4);
-        rects.each((d, i, group) => {
+        const tiles = svg.selectAll("g.node-group");
+        expect(tiles.size()).toBe(4);
+        tiles.each((d, i, group) => {
             expect(d3.select(group[i]).attr("width")).toBe("0");
             expect(d3.select(group[i]).attr("height")).toBe("0");
             expect(d3.select(group[i]).attr("transform")).not.toContain("NaN");
@@ -144,9 +152,9 @@ describe("NodesHeatmapLegendComponent", () => {
         component.nodes = createNodes(4);
         fixture.detectChanges();
 
-        const rect = svg.select("rect:nth-child(2)");
+        const group = svg.select("g.node-group:nth-child(2)");
 
-        const el: any = rect.node();
+        const el: any = group.node();
         click(el);
         fixture.detectChanges();
         expect(heatmap.selectedNodeId.value).toEqual("node-2");

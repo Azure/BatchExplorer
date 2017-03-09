@@ -4,7 +4,7 @@ import * as elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";
 import { BehaviorSubject } from "rxjs";
 
-import { Node, NodeState, Pool, TaskState } from "app/models";
+import { Node, NodeState, Pool } from "app/models";
 import { log } from "app/utils";
 import { HeatmapColor } from "./heatmap-color";
 import { StateTree } from "./state-tree";
@@ -139,29 +139,22 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     public redraw() {
         this.colors.updateColors(this.highlightedState);
         this._computeDimensions();
-        const rects = this._svg.selectAll("rect");
-        this._updateSvg(rects);
+        const tiles = this._nodes.map((node, index) => ({ node, index }));
+        const groups = this._svg.selectAll("g.node-group").data(tiles.toJS());
+        groups.exit().remove();
+        this._updateSvg(groups);
     }
 
     private _processNewNodes() {
         if (!this._svg) {
             return;
         }
-        this._computeDimensions();
-
-        const tiles = this._nodes.map((node, index) => ({ node, index }));
-        const groups = this._svg.selectAll("g.node-group").data(tiles.toJS());
-
-        groups.exit().remove();
-        this._updateSvg(groups);
+        this.redraw();
     }
 
     private _updateSvg(groups: any) {
         const z = Math.max(this.dimensions.tileSize - 6, 0);
         const nodeEnter = groups.enter().append("g")
-            .attr("transform", (x) => this._translate(x as any))
-            .attr("width", z)
-            .attr("height", z)
             .attr("class", "node-group")
             .on("mouseenter", (tile, index, nodes) => {
                 const group = d3.select(nodes[index]);
@@ -180,11 +173,13 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
                 this.selectedNodeId.next(tile.node.id);
                 this._updateSvg(groups);
             });
-        nodeEnter.append("g").classed("bg", true);
-        nodeEnter.append("g").classed("tasks", true);
+        nodeEnter.merge(groups)
+            .attr("transform", (x) => this._translate(x as any))
+            .attr("width", z)
+            .attr("height", z);
 
-        const backgroundGroup = groups.select("g.bg");
-        const runningTaskGroup = groups.select("g.tasks");
+        const backgroundGroup = nodeEnter.append("g").classed("bg", true).merge(groups.select("g.bg"));
+        const runningTaskGroup = nodeEnter.append("g").classed("tasks", true).merge(groups.select("g.tasks"));
 
         this._displayNodeBackground(backgroundGroup, z);
         this._displayRunningTasks(runningTaskGroup, z);
@@ -192,11 +187,9 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
 
     private _displayNodeBackground(backgroundGroup, z) {
         const nodeBackground = backgroundGroup.selectAll("rect").data((d) => [d]);
-
-        nodeBackground.enter().append("rect")
+        nodeBackground.enter().append("rect").merge(nodeBackground)
             .attr("width", z)
             .attr("height", z)
-            .merge(nodeBackground)
             .style("fill", (tile: any) => {
                 let color;
                 if (tile.node.state === NodeState.running) {
@@ -209,6 +202,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             .style("stroke-width", (tile: any) => {
                 return tile.node.id === this.selectedNodeId.value ? "2px" : "0";
             });
+
         nodeBackground.exit().remove();
     }
 
