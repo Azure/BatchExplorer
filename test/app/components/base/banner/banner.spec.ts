@@ -1,6 +1,5 @@
-import { Component, DebugElement, ViewChild } from "@angular/core";
+import { Component, DebugElement, NO_ERRORS_SCHEMA, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MaterialModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
 
 import { BannerComponent, BannerOtherFixDirective } from "app/components/base/banner";
@@ -30,7 +29,7 @@ export class BannerTestComponent {
     public fix3: jasmine.Spy;
 }
 
-describe("Banner", () => {
+describe("BannerComponent", () => {
     let fixture: ComponentFixture<BannerTestComponent>;
     let component: BannerTestComponent;
     let bannerElement: DebugElement;
@@ -38,12 +37,8 @@ describe("Banner", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [MaterialModule.forRoot()],
-            declarations: [
-                BannerComponent,
-                BannerOtherFixDirective,
-                BannerTestComponent,
-            ],
+            declarations: [BannerComponent, BannerOtherFixDirective, BannerTestComponent],
+            schemas: [NO_ERRORS_SCHEMA],
         });
 
         TestBed.compileComponents();

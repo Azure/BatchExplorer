@@ -24,6 +24,7 @@ describe("JobErrorDisplayComponent", () => {
     let testComponent: TestJobErrorDisplayComponent;
     let component: JobErrorDisplayComponent;
     let accountServiceSpy: any;
+
     beforeEach(() => {
         accountServiceSpy = {
             currentAccount: Observable.of(Fixtures.account.create()),

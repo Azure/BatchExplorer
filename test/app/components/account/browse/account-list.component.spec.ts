@@ -1,15 +1,16 @@
-import { DebugElement } from "@angular/core";
+import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 
-import { AccountBrowseModule } from "app/components/account/browse";
 import { AccountListComponent } from "app/components/account/browse";
+import { SidebarManager } from "app/components/base/sidebar";
 import { AccountResource, Subscription } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { click } from "test/utils/helpers";
 import { RxMockListProxy } from "test/utils/mocks";
+import { NoItemMockComponent } from "test/utils/mocks/components";
 
 describe("AccountListComponent", () => {
     let fixture: ComponentFixture<AccountListComponent>;
@@ -39,6 +40,7 @@ describe("AccountListComponent", () => {
                     }
                 },
             }),
+
             isAccountFavorite: (accountId) => false,
         };
 
@@ -65,11 +67,14 @@ describe("AccountListComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [AccountBrowseModule, RouterTestingModule],
+            imports: [RouterTestingModule],
+            declarations: [AccountListComponent, NoItemMockComponent],
             providers: [
-                { provide: SubscriptionService, useValue: subscriptionService },
                 { provide: AccountService, useValue: accountService },
+                { provide: SidebarManager, useValue: null },
+                { provide: SubscriptionService, useValue: subscriptionService },
             ],
+            schemas: [NO_ERRORS_SCHEMA],
         });
 
         fixture = TestBed.createComponent(AccountListComponent);

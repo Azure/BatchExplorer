@@ -18,9 +18,6 @@ interface SubscriptionAccount {
     templateUrl: "account-list.html",
 })
 export class AccountListComponent implements OnInit {
-    public subscriptionData: RxListProxy<{}, Subscription>;
-
-    public subscriptionAccounts: { [subId: string]: SubscriptionAccount } = {};
     @Input()
     public set filter(filter: Filter) {
         this._filter = filter;
@@ -28,6 +25,8 @@ export class AccountListComponent implements OnInit {
     }
     public get filter(): Filter { return this._filter; };
 
+    public subscriptionData: RxListProxy<{}, Subscription>;
+    public subscriptionAccounts: { [subId: string]: SubscriptionAccount } = {};
     public subscriptions: List<Subscription>;
     public displayedSubscriptions: List<Subscription>;
 
@@ -35,9 +34,10 @@ export class AccountListComponent implements OnInit {
 
     constructor(
         private accountService: AccountService,
-        private subscriptionService: SubscriptionService,
+        private activatedRoute: ActivatedRoute,
         private sidebarManager: SidebarManager,
-        private activatedRoute: ActivatedRoute) {
+        private subscriptionService: SubscriptionService) {
+
         this.subscriptionData = subscriptionService.list();
         this.subscriptionData.items.subscribe((subscriptions) => {
             const data: any = {};
@@ -49,6 +49,7 @@ export class AccountListComponent implements OnInit {
                 }
                 return 0;
             }));
+
             subscriptions.forEach((subscription) => {
                 if (subscription.subscriptionId in this.subscriptionAccounts) {
                     data[subscription.subscriptionId] = this.subscriptionAccounts[subscription.subscriptionId];
@@ -77,6 +78,7 @@ export class AccountListComponent implements OnInit {
                 subscriptionAccounts.accounts.fetchNext(true);
             }
         }
+
         subscriptionAccounts.expanded = !subscriptionAccounts.expanded;
     }
 
@@ -98,6 +100,7 @@ export class AccountListComponent implements OnInit {
             text = (this._filter.properties[0] as any).value;
             text = text && text.toLowerCase();
         }
+
         this.displayedSubscriptions = List<Subscription>(this.subscriptions.filter((sub) => {
             return !text || sub.displayName.toLowerCase().indexOf(text) !== -1;
         }));

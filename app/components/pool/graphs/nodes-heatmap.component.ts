@@ -55,8 +55,6 @@ const maxTileSize = 300;
     ],
 })
 export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestroy {
-    public colors: HeatmapColor;
-
     @Input()
     public pool: Pool;
 
@@ -73,6 +71,8 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         this._processNewNodes();
     }
     public get nodes() { return this._nodes; };
+
+    public colors: HeatmapColor;
     public selectedNodeId = new BehaviorSubject<string>(null);
     public selectedNode = new BehaviorSubject<Node>(null);
     public highlightedState: string;
@@ -83,13 +83,12 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         columns: 0,
     };
 
-    private _nodes: List<Node>;
-
     private _erd: any;
     private _svg: d3.Selection<any, any, any, any>;
     private _width: number = 0;
     private _height: number = 0;
     private _nodeMap: { [id: string]: Node } = {};
+    private _nodes: List<Node>;
 
     constructor(private elementRef: ElementRef) {
         this.colors = new HeatmapColor(stateTree);
@@ -108,6 +107,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         this._erd = elementResizeDetectorMaker({
             strategy: "scroll",
         });
+
         this._erd.listenTo(this.heatmapEl.nativeElement, (element) => {
             this.containerSizeChanged();
         });
@@ -115,6 +115,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         this._svg = d3.select(this.heatmapEl.nativeElement).append("svg")
             .attr("width", this._width)
             .attr("height", this._height);
+
         this._processNewNodes();
     }
 
@@ -125,8 +126,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     public containerSizeChanged() {
         this._width = this.heatmapEl.nativeElement.offsetWidth;
         this._height = this.heatmapEl.nativeElement.offsetHeight;
-        this._svg.attr("width", this._width)
-            .attr("height", this._height);
+        this._svg.attr("width", this._width).attr("height", this._height);
         this.redraw();
     }
 
@@ -273,6 +273,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         this._nodes.forEach((node) => {
             map[node.id] = node;
         });
+
         this._nodeMap = map;
         this._updateSelectedNode();
     }

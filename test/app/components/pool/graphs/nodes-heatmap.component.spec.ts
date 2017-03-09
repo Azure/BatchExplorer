@@ -1,15 +1,16 @@
-import { Component, DebugElement } from "@angular/core";
+import { Component, DebugElement, Input } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import * as d3 from "d3";
 import { List } from "immutable";
 
-import { NodesHeatmapComponent, PoolGraphsModule } from "app/components/pool/graphs";
+import { NodesHeatmapComponent, NodesHeatmapLegendComponent } from "app/components/pool/graphs";
 import { Node, NodeState } from "app/models";
 import { NodeService } from "app/services";
 import * as Fixture from "test/fixture";
 import { click } from "test/utils/helpers";
+import { ContextMenuServiceMock } from "test/utils/mocks";
 
 @Component({
     template: `
@@ -18,34 +19,52 @@ import { click } from "test/utils/helpers";
         </div>
     `,
 })
-export class TestHeatmapComponent {
+export class HeatmapMockComponent {
     public width = "700px";
     public height = "500px";
     public nodes: List<Node> = List([]);
-
     public poolId = "pool-1";
 }
 
+@Component({
+    selector: "bl-node-preview-card",
+    template: "",
+})
+export class NodePreviewCardMockComponent {
+    @Input()
+    public node: Node;
+
+    @Input()
+    public poolId: string;
+}
+
 describe("NodesHeatmapLegendComponent", () => {
-    let fixture: ComponentFixture<TestHeatmapComponent>;
-    let component: TestHeatmapComponent;
+    let fixture: ComponentFixture<HeatmapMockComponent>;
+    let component: HeatmapMockComponent;
     let heatmap: NodesHeatmapComponent;
     let heatmapContainer: DebugElement;
     let svg: d3.Selection<any, any, any, any>;
+    let contextMenuService: ContextMenuServiceMock;
 
     beforeEach(() => {
+        contextMenuService = new ContextMenuServiceMock();
         TestBed.configureTestingModule({
-            imports: [PoolGraphsModule, RouterTestingModule.withRoutes([])],
-            declarations: [TestHeatmapComponent],
+            imports: [RouterTestingModule.withRoutes([])],
+            declarations: [
+                HeatmapMockComponent, NodesHeatmapComponent, NodesHeatmapLegendComponent, NodePreviewCardMockComponent,
+            ],
             providers: [
                 { provide: NodeService, useValue: {} },
+                contextMenuService.asProvider(),
             ],
         });
+
         TestBed.compileComponents();
-        fixture = TestBed.createComponent(TestHeatmapComponent);
+        fixture = TestBed.createComponent(HeatmapMockComponent);
         component = fixture.componentInstance;
         heatmap = fixture.debugElement.query(By.css("bl-nodes-heatmap")).componentInstance;
         fixture.detectChanges();
+
         heatmapContainer = fixture.debugElement.query(By.css("bl-nodes-heatmap .heatmap-container"));
         svg = d3.select(heatmapContainer.nativeElement).select("svg");
         heatmap.containerSizeChanged();

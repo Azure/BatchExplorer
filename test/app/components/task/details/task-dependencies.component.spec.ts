@@ -1,13 +1,18 @@
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
-import { TaskDependenciesComponent, TaskDetailsModule } from "app/components/task/details";
+import {
+    TableCellComponent, TableColumnComponent, TableComponent, TableHeadComponent,
+} from "app/components/base/table";
+import { TaskDependenciesComponent } from "app/components/task/details";
 import { Task, TaskState } from "app/models";
 import { TaskService } from "app/services";
 import * as Fixtures from "test/fixture";
+import { NoItemMockComponent } from "test/utils/mocks/components";
 
 const taskMap: Map<string, Task> = new Map()
     .set("1", new Task({ id: "1", dependsOn: { taskIds: ["1", "2"]} }))
@@ -33,10 +38,15 @@ describe("TaskDependenciesComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [TaskDetailsModule, RouterTestingModule],
+            imports: [RouterTestingModule],
+            declarations: [
+                NoItemMockComponent, TableCellComponent, TableColumnComponent, TableComponent,
+                TableHeadComponent, TaskDependenciesComponent,
+            ],
             providers: [
                 { provide: TaskService, useValue: taskServiceSpy },
             ],
+            schemas: [NO_ERRORS_SCHEMA],
         });
 
         fixture = TestBed.createComponent(TaskDependenciesComponent);
@@ -48,7 +58,7 @@ describe("TaskDependenciesComponent", () => {
 
     describe("when task has no dependencies", () => {
         it("should show no item error", () => {
-            const container = fixture.debugElement.query(By.css(".no-item-message"));
+            const container = fixture.debugElement.query(By.css("bl-no-item"));
             expect(container.nativeElement.textContent).toContain("This task contains no dependent tasks");
             expect(container).toBeVisible();
         });
