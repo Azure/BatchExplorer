@@ -1,6 +1,4 @@
-import { Record } from "immutable";
-
-import { Partial } from "app/utils";
+import { List, Record } from "immutable";
 
 const NodeRecord = Record({
     id: null,
@@ -14,6 +12,7 @@ const NodeRecord = Record({
     allocationTime: null,
     ipAddress: null,
     affinityId: null,
+    recentTasks: null,
 });
 
 export interface NodeAttributes {
@@ -28,6 +27,7 @@ export interface NodeAttributes {
     allocationTime: Date;
     ipAddress: string;
     affinityId: string;
+    recentTasks: List<any>;
 }
 
 /**
@@ -45,9 +45,12 @@ export class Node extends NodeRecord implements NodeAttributes {
     public allocationTime: Date;
     public ipAddress: string;
     public affinityId: string;
+    public recentTasks: List<any>;
 
     constructor(data: Partial<NodeAttributes>) {
-        super(data);
+        super(Object.assign({}, data, {
+            recentTasks: data.recentTasks && List(data.recentTasks),
+        }));
     }
 }
 

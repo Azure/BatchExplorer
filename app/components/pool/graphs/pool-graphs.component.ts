@@ -4,7 +4,7 @@ import { autobind } from "core-decorators";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
-import { Node, NodeState } from "app/models";
+import { Node, NodeState, Pool } from "app/models";
 import { NodeListParams, NodeService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { StateCounter } from "./state-counter";
@@ -16,7 +16,7 @@ const refreshRate = 5000;
 })
 export class PoolGraphsComponent implements OnChanges, OnDestroy {
     @Input()
-    public poolId: string;
+    public pool: Pool;
 
     public data: RxListProxy<NodeListParams, Node>;
 
@@ -32,7 +32,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
 
         this.data = nodeService.list(null, {
             maxResults: 1000,
-            select: "id,state",
+            select: "recentTasks,id,state",
         });
         this._nodesSub = this.data.items.subscribe((nodes) => {
             if (nodes.size !== 0) {
@@ -48,8 +48,8 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     }
 
     public ngOnChanges(changes) {
-        if (changes.poolId) {
-            this.data.updateParams({ poolId: changes.poolId.currentValue });
+        if (changes.pool) {
+            this.data.updateParams({ poolId: this.pool.id });
             // this.data.fetchNext(true);
             this.data.refresh(false);
         }
@@ -69,12 +69,12 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
 
     @autobind()
     public rebootFailedNodes() {
-        this.nodeService.rebootAll(this.poolId, [NodeState.startTaskFailed]);
+        this.nodeService.rebootAll(this.pool.id, [NodeState.startTaskFailed]);
     }
 
     @autobind()
     public reimageFailedNodes() {
-        this.nodeService.reimageAll(this.poolId, [NodeState.startTaskFailed]);
+        this.nodeService.reimageAll(this.pool.id, [NodeState.startTaskFailed]);
     }
 
     private _scanForProblems() {

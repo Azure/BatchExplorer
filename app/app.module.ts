@@ -170,7 +170,7 @@ const modules = [
         NodeUserService,
         SettingsService,
         TaskService,
-        { provide: ErrorHandler, useClass: BatchLabsErrorHandler },
+        // { provide: ErrorHandler, useClass: BatchLabsErrorHandler },
         ...commands,
     ],
 })

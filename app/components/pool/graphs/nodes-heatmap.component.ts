@@ -4,7 +4,7 @@ import * as elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";
 import { BehaviorSubject } from "rxjs";
 
-import { Node, NodeState } from "app/models";
+import { Node, NodeState, Pool, TaskState } from "app/models";
 import { log } from "app/utils";
 import { HeatmapColor } from "./heatmap-color";
 import { StateTree } from "./state-tree";
@@ -14,9 +14,11 @@ interface HeatmapTile {
     node: Node;
 }
 
+const idleColor = "#edeef2";
+
 const stateTree: StateTree = [
-    { state: NodeState.idle, color: "#6ba3cb" },
-    { state: NodeState.running, color: "#388e3c" },
+    { state: NodeState.idle, color: idleColor },
+    { state: NodeState.running, color: idleColor },
     { state: NodeState.waitingForStartTask, color: "#be93d9" },
     { state: NodeState.offline, color: "#5b5b5b" },
     {
@@ -56,7 +58,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     public colors: HeatmapColor;
 
     @Input()
-    public poolId: string;
+    public pool: Pool;
 
     @ViewChild("heatmap")
     public heatmapEl: ElementRef;
@@ -97,7 +99,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     }
 
     public ngOnChanges(changes) {
-        if (changes.poolId) {
+        if (changes.pool) {
             this.selectedNodeId.next(null);
         }
     }
@@ -147,16 +149,30 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         this._computeDimensions();
 
         const tiles = this._nodes.map((node, index) => ({ node, index }));
-        const rects = this._svg.selectAll("rect").data(tiles.toJS());
+        const groups = this._svg.selectAll("g.node-group").data(tiles.toJS());
 
-        rects.exit().remove();
-        this._updateSvg(rects);
+        groups.exit().remove();
+        this._updateSvg(groups);
     }
 
-    private _updateSvg(rects: any) {
+    private _updateSvg(groups: any) {
         const z = Math.max(this.dimensions.tileSize - 2, 0);
-        rects.enter().append("rect").merge(rects)
+        const nodeGroups = groups.enter().append("g").merge(groups)
             .attr("transform", (x) => this._translate(x as any))
+            .attr("class", "node-group")
+            .on("click", (tile) => {
+                this.selectedNodeId.next(tile.node.id);
+                this._updateSvg(groups);
+            });
+
+        const maxTaskPerNode = this.pool.maxTasksPerNode;
+        nodeGroups.selectAll("g").remove();
+        const backgroundGroup = nodeGroups.append("g");
+        const runningTaskGroup = nodeGroups.append("g");
+        console.log("Max tax", maxTaskPerNode);
+        const nodeBackground = backgroundGroup.selectAll("rect")
+            .data((d) => [d])
+            .enter().append("rect")
             .attr("width", z)
             .attr("height", z)
             .style("fill", (tile: any) => {
@@ -164,11 +180,34 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             })
             .style("stroke-width", (tile: any) => {
                 return tile.node.id === this.selectedNodeId.value ? "2px" : "0";
-            })
-            .on("click", (tile) => {
-                this.selectedNodeId.next(tile.node.id);
-                this._updateSvg(rects);
             });
+
+
+        const taskWidth = Math.floor(z / maxTaskPerNode);
+        const taskStatus = runningTaskGroup.selectAll("rect")
+            .data((d) => {
+                const node: Node = d.node;
+                if (node.state !== NodeState.running || !node.recentTasks) {
+                    return [];
+                }
+                const runningTasks = node.recentTasks.filter(x => x.taskState === TaskState.running).toJS();
+                console.log("Running tasks", node.recentTasks.toJS());
+
+                return runningTasks.map((task, index) => ({ task, index }));
+            })
+            .enter().append("rect")
+            .attr("transform", (data) => {
+                console.log("x", data.index);
+                const index = data.index;
+                const x = index * taskWidth + 1;
+                // return `translate(${x},0)`;
+                return `translate(0,${x})`;
+            })
+            // .attr("width", taskWidth - 1)
+            // .attr("height", z)
+            .attr("width", z)
+            .attr("height", taskWidth - 1)
+            .style("fill", "#388e3c");
     }
 
     private _computeDimensions() {
