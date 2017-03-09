@@ -1,4 +1,4 @@
-import { Component, ContentChildren, Directive, Input, QueryList } from "@angular/core";
+import { Component, ContentChildren, Directive, Input, OnChanges, QueryList } from "@angular/core";
 import { Observable } from "rxjs";
 
 export enum ErrorState {
@@ -35,7 +35,7 @@ export class BannerOtherFixDirective {
     selector: "bl-banner",
     templateUrl: "banner.html",
 })
-export class BannerComponent {
+export class BannerComponent implements OnChanges {
     public errorStates = ErrorState;
 
     /**
@@ -63,7 +63,6 @@ export class BannerComponent {
     public showOtherFixes = false;
 
     public ngOnChanges(inputs) {
-        console.log("Changed", inputs);
         this.state = ErrorState.Error;
     }
 
