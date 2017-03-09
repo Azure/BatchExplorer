@@ -21,8 +21,9 @@ $color-width: 14px;
         }
 
         text {
-            font-size: 20px;
+            font-size: 16px;
             user-select: none;
+            color: $mineshaft-grey;
         }
 
         &:hover {

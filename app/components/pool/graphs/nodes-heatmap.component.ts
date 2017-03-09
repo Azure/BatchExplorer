@@ -160,9 +160,9 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
                 const group = d3.select(nodes[index]);
                 groups.selectAll("text").remove();
                 group.append("text")
-                    .attr("dx", z / 2)
-                    .attr("dy", z / 2)
-                    .attr("text-anchor", "middle")
+                    .attr("dx", 5)
+                    .attr("dy", "1.5em")
+                    .attr("text-anchor", "start")
                     .text(`${tile.node.runningTasks.size} task running`);
             })
             .on("mouseleave", (tile, index, nodes) => {
