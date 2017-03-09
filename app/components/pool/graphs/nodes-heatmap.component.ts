@@ -156,7 +156,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     }
 
     private _updateSvg(groups: any) {
-        const z = Math.max(this.dimensions.tileSize - 2, 0);
+        const z = Math.max(this.dimensions.tileSize - 6, 0);
         const nodeGroups = groups.enter().append("g").merge(groups)
             .attr("transform", (x) => this._translate(x as any))
             .attr("class", "node-group")
@@ -199,7 +199,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             .attr("transform", (data) => {
                 console.log("x", data.index);
                 const index = data.index;
-                const x = index * taskWidth + 1;
+                const x = (maxTaskPerNode - index - 1) * taskWidth + 1;
                 // return `translate(${x},0)`;
                 return `translate(0,${x})`;
             })
