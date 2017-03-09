@@ -1,12 +1,13 @@
-import { Component } from "@angular/core";
+import { Component, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
-import { PoolDetailsModule, PoolErrorDisplayComponent } from "app/components/pool/details";
+import { PoolErrorDisplayComponent } from "app/components/pool/details";
 import { Pool, ResizeErrorCode } from "app/models";
 import { AccountService, PoolService } from "app/services";
 import * as Fixtures from "test/fixture";
+import { BannerMockComponent } from "test/utils/mocks/components";
 
 @Component({
     template: `<bl-pool-error-display [pool]="pool"></bl-pool-error-display>`,
@@ -25,14 +26,18 @@ describe("PoolErrorDisplayComponent", () => {
         accountServiceSpy = {
             currentAccount: Observable.of(Fixtures.account.create()),
         };
+
         TestBed.configureTestingModule({
-            imports: [PoolDetailsModule],
-            declarations: [TestPoolErrorDisplayComponent],
+            declarations: [
+                BannerMockComponent, PoolErrorDisplayComponent, TestPoolErrorDisplayComponent,
+            ],
             providers: [
                 { provide: AccountService, useValue: accountServiceSpy },
                 { provide: PoolService, useValue: null },
             ],
+            schemas: [NO_ERRORS_SCHEMA],
         });
+
         fixture = TestBed.createComponent(TestPoolErrorDisplayComponent);
         testComponent = fixture.componentInstance;
         component = fixture.debugElement.query(By.css("bl-pool-error-display")).componentInstance;

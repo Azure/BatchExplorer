@@ -1,49 +1,28 @@
-import { DebugElement } from "@angular/core";
+import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormBuilder } from "@angular/forms";
-import { By } from "@angular/platform-browser";
 import { Observable, Subject } from "rxjs";
 
-import { CreateFormComponent } from "app/components/base/form/create-form";
+import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
-import { JobActionModule } from "app/components/job/action";
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { Pool, ServerError } from "app/models";
 import { JobService, PoolService } from "app/services";
-import { DataCache, RxBatchListProxy } from "app/services/core";
 import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";
 import { validateControl } from "test/utils/helpers";
-
-// Just making test work for now. Need Tim's input to come up with a strategy for testing with proxy data.
-// TODO: hook up MockListProxy.
-export class FakeListProxy {
-    public hasMoreItems(): boolean {
-        return false;
-    }
-
-    public fetchNext(): Promise<any> {
-        return Promise.resolve({
-            data: [
-                Fixtures.pool.create({ id: "pool-001" }),
-                Fixtures.pool.create({ id: "pool-002" }),
-                Fixtures.pool.create({ id: "pool-003" }),
-            ],
-        });
-    }
-
-    public clone(): FakeListProxy {
-        return null;
-    }
-}
+import { RxMockListProxy } from "test/utils/mocks";
+import { CreateFormMockComponent, ServerErrorMockComponent } from "test/utils/mocks/components";
 
 describe("JobCreateBasicDialogComponent ", () => {
     let fixture: ComponentFixture<JobCreateBasicDialogComponent>;
     let component: JobCreateBasicDialogComponent;
+    let debugElement: DebugElement;
+    let poolListProxy: RxMockListProxy<any, Pool>;
     let sidebarRefSpy: any;
     let jobServiceSpy: any;
     let poolServiceSpy: any;
-    let de: DebugElement;
+    let notificationServiceSpy: any;
     let baseForm: any;
     let constraintsForm: any;
     let poolForm: any;
@@ -51,12 +30,21 @@ describe("JobCreateBasicDialogComponent ", () => {
     const validators = TestConstants.validators;
 
     beforeEach(() => {
+        poolListProxy = new RxMockListProxy(Pool, {
+            cacheKey: "url",
+            items: [
+                Fixtures.pool.create({ id: "pool-001" }),
+                Fixtures.pool.create({ id: "pool-002" }),
+                Fixtures.pool.create({ id: "pool-003" }),
+            ],
+        });
+
         sidebarRefSpy = {
-            close: jasmine.createSpy("SidebarClose"),
+            close: jasmine.createSpy("close"),
         };
 
         jobServiceSpy = {
-            add: jasmine.createSpy("CreateJob").and.callFake((newJobJson, ...args) => {
+            add: jasmine.createSpy("add").and.callFake((newJobJson, ...args) => {
                 if (newJobJson.id === "bad-job-id") {
                     return Observable.throw(ServerError.fromBatch({
                         statusCode: 408,
@@ -67,36 +55,36 @@ describe("JobCreateBasicDialogComponent ", () => {
 
                 return Observable.of({});
             }),
+
             onJobAdded: new Subject(),
         };
 
         poolServiceSpy = {
-            list: jasmine.createSpy("ListPools").and.callFake((...args) => {
-                const cache = new DataCache<Pool>();
-                const proxy = new RxBatchListProxy<{}, Pool>(Pool, {
-                    cache: (params) => cache,
-                    proxyConstructor: (params, options) => new FakeListProxy(),
-                    initialOptions: {},
-                });
+            list: () => poolListProxy,
+        };
 
-                return proxy;
-            }),
+        notificationServiceSpy = {
+            success: jasmine.createSpy("success"),
+
+            error: jasmine.createSpy("error"),
         };
 
         TestBed.configureTestingModule({
-            imports: [JobActionModule],
+            declarations: [CreateFormMockComponent, JobCreateBasicDialogComponent, ServerErrorMockComponent],
             providers: [
                 { provide: FormBuilder, useValue: new FormBuilder() },
                 { provide: SidebarRef, useValue: sidebarRefSpy },
                 { provide: JobService, useValue: jobServiceSpy },
                 { provide: PoolService, useValue: poolServiceSpy },
+                { provide: NotificationService, useValue: notificationServiceSpy },
 
             ],
+            schemas: [NO_ERRORS_SCHEMA],
         });
 
         fixture = TestBed.createComponent(JobCreateBasicDialogComponent);
         component = fixture.componentInstance;
-        de = fixture.debugElement;
+        debugElement = fixture.debugElement;
         fixture.detectChanges();
 
         baseForm = component.createJobForm;
@@ -105,8 +93,8 @@ describe("JobCreateBasicDialogComponent ", () => {
     });
 
     it("Should show title and description", () => {
-        expect(de.nativeElement.textContent).toContain("Create job");
-        expect(de.nativeElement.textContent).toContain("Adds a job to the selected account");
+        expect(debugElement.nativeElement.textContent).toContain("Create job");
+        expect(debugElement.nativeElement.textContent).toContain("Adds a job to the selected account");
     });
 
     it("JobId is initialized", () => {
@@ -192,15 +180,16 @@ describe("JobCreateBasicDialogComponent ", () => {
         expect(poolForm.controls.poolId.value).toEqual("pool-002");
     });
 
-    it("Clicking add creates job and doesnt close form", () => {
+    it("Clicking add creates job and doesnt close form", (done) => {
         const job = Fixtures.job.create({ id: "job-001", poolInfo: { poolId: "pool-002" } });
         component.setValue(job);
+        component.submit().subscribe(() => {
+            expect(jobServiceSpy.add).toHaveBeenCalledTimes(1);
+            expect(notificationServiceSpy.success).toHaveBeenCalledTimes(1);
+            expect(sidebarRefSpy.close).toHaveBeenCalledTimes(0);
 
-        const createForm = de.query(By.css("bl-create-form")).componentInstance as CreateFormComponent;
-        createForm.add();
-
-        expect(jobServiceSpy.add).toHaveBeenCalledTimes(1);
-        expect(sidebarRefSpy.close).toHaveBeenCalledTimes(0);
+            done();
+        });
 
         let jobAddedCalled = false;
         jobServiceSpy.onJobAdded.subscribe({
@@ -214,24 +203,25 @@ describe("JobCreateBasicDialogComponent ", () => {
         });
     });
 
-    it("If create job throws we handle the error", () => {
+    it("If create job throws we handle the error", (done) => {
         const job = Fixtures.job.create({ id: "bad-job-id", poolInfo: { poolId: "pool-002" } });
         component.setValue(job);
-
-        const createForm = de.query(By.css("bl-create-form")).componentInstance as CreateFormComponent;
-        createForm.add();
-
-        expect(createForm.error).not.toBeNull();
-        expect(createForm.error.body.code).toEqual("RandomTestErrorCode");
-        expect(createForm.error.body.message).toEqual("error, error, error");
-
-        let jobAddedCalled = false;
-        jobServiceSpy.onJobAdded.subscribe({
-            next: (newJobId) => {
-                jobAddedCalled = true;
+        component.submit().subscribe({
+            next: () => {
+                fail("call should have failed");
+                done();
             },
-            complete: () => {
-                expect(jobAddedCalled).toBe(false);
+            error: (error: ServerError) => {
+                expect(error.body.message).toBe("error, error, error");
+                expect(error.toString()).toBe("408 - error, error, error");
+
+                done();
+            },
+        });
+
+        jobServiceSpy.onJobAdded.subscribe({
+            next: (appId) => {
+                fail("onJobAdded should not have been called");
             },
         });
     });

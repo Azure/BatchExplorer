@@ -1,9 +1,10 @@
-import { Component, DebugElement } from "@angular/core";
+import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import * as path from "path";
 
-import { DownloadRdpComponent, NodeConnectModule } from "app/components/node/connect";
+import { SubmitButtonComponent } from "app/components/base/buttons";
+import { DownloadRdpComponent } from "app/components/node/connect";
 import { NodeConnectionSettings } from "app/models";
 import { ElectronShell, FileSystemService } from "app/services";
 import { OS } from "app/utils";
@@ -15,15 +16,15 @@ import { OS } from "app/utils";
         </bl-download-rdp>
     `,
 })
-class TestComponent {
+class DownloadRdpMockComponent {
     public rdpContent: string = "full address:s:0.0.0.0";
     public credentials = { username: "foo" };
     public connectionSettings: NodeConnectionSettings;
 }
 
 describe("DownloadRdpComponent", () => {
-    let fixture: ComponentFixture<TestComponent>;
-    let testComponent: TestComponent;
+    let fixture: ComponentFixture<DownloadRdpMockComponent>;
+    let testComponent: DownloadRdpMockComponent;
     let component: DownloadRdpComponent;
     let de: DebugElement;
     let fsServiceSpy;
@@ -35,6 +36,7 @@ describe("DownloadRdpComponent", () => {
                 temp: "temp-folder",
                 downloads: "download-folder",
             },
+
             saveFile: jasmine.createSpy("SaveFile").and.returnValue(Promise.resolve("temp-folder/file.rdp")),
         };
 
@@ -44,14 +46,15 @@ describe("DownloadRdpComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [NodeConnectModule],
-            declarations: [TestComponent],
+            declarations: [DownloadRdpComponent, DownloadRdpMockComponent, SubmitButtonComponent],
             providers: [
                 { provide: FileSystemService, useValue: fsServiceSpy },
                 { provide: ElectronShell, useValue: shellSpy },
             ],
+            schemas: [NO_ERRORS_SCHEMA],
         });
-        fixture = TestBed.createComponent(TestComponent);
+
+        fixture = TestBed.createComponent(DownloadRdpMockComponent);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-download-rdp"));
         component = de.componentInstance;

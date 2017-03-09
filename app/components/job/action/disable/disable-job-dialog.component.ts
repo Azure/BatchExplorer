@@ -23,6 +23,7 @@ export class DisableJobDialogComponent {
     constructor(
         public dialogRef: MdDialogRef<DisableJobDialogComponent>,
         private jobService: JobService) {
+
         this.onChange(this.taskAction);
         this.taskAction = "requeue";
     }

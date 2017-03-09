@@ -19,8 +19,9 @@ export class TaskErrorDisplayComponent {
     @Input()
     public task: Task;
 
-    constructor(private taskService: TaskService, private sidebarManager: SidebarManager) {
-
+    constructor(
+        private taskService: TaskService,
+        private sidebarManager: SidebarManager) {
     }
 
     public get hasCompleted(): Boolean {
