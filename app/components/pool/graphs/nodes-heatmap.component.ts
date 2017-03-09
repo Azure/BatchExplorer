@@ -171,7 +171,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             })
             .on("click", (tile) => {
                 this.selectedNodeId.next(tile.node.id);
-                this._updateSvg(groups);
+                this._updateSvg(this._svg.selectAll("g.node-group"));
             });
         nodeEnter.merge(groups)
             .attr("transform", (x) => this._translate(x as any))

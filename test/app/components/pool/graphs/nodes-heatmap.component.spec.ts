@@ -162,11 +162,10 @@ describe("NodesHeatmapLegendComponent", () => {
 
     it("should clear selection when poolId change", () => {
         heatmap.selectedNodeId.next("node-1");
-        // TOOD fix
-        // component.poolId = "pool-2";
-        // fixture.detectChanges();
-        // expect(heatmap.poolId).toEqual("pool-2");
-        // expect(heatmap.selectedNodeId.value).toBeNull();
+        component.pool = new Pool({ id: "pool-2" });
+        fixture.detectChanges();
+        expect(heatmap.pool.id).toEqual("pool-2");
+        expect(heatmap.selectedNodeId.value).toBeNull();
     });
 });
 
