@@ -1,9 +1,9 @@
-import { Component } from "@angular/core";
+import { Component, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 
-import { FileBrowseModule, NodeFileListComponent } from "app/components/file/browse";
+import { NodeFileListComponent } from "app/components/file/browse";
 import { File } from "app/models";
 import { FileService } from "app/services";
 import { Filter, FilterBuilder } from "app/utils/filter-builder";
@@ -44,10 +44,14 @@ describe("NodeFileListComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [FileBrowseModule, RouterTestingModule],
-            providers: [{ provide: FileService, useValue: nodeServiceSpy }],
-            declarations: [TestComponent],
+            imports: [RouterTestingModule],
+            declarations: [NodeFileListComponent, TestComponent],
+            providers: [
+                { provide: FileService, useValue: nodeServiceSpy },
+            ],
+            schemas: [NO_ERRORS_SCHEMA],
         });
+
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
 

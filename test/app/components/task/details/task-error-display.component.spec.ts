@@ -1,23 +1,25 @@
-import { Component } from "@angular/core";
+import { Component, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
-import { TaskDetailsModule, TaskErrorDisplayComponent } from "app/components/task/details";
+import { SidebarManager } from "app/components/base/sidebar";
+import { TaskErrorDisplayComponent } from "app/components/task/details";
 import { Task, TaskState } from "app/models";
 import { TaskService } from "app/services";
 import * as Fixtures from "test/fixture";
+import { BannerMockComponent } from "test/utils/mocks/components";
 
 @Component({
     template: `<bl-task-error-display jobId="job-1" [task]="task"></bl-task-error-display>`,
 })
-class TestTaskErrorDisplayComponent {
+class TaskErrorDisplayMockComponent {
     public task: Task;
 }
 
 describe("TaskErrorDisplayComponent", () => {
-    let fixture: ComponentFixture<TestTaskErrorDisplayComponent>;
-    let testComponent: TestTaskErrorDisplayComponent;
+    let fixture: ComponentFixture<TaskErrorDisplayMockComponent>;
+    let testComponent: TaskErrorDisplayMockComponent;
     let component: TaskErrorDisplayComponent;
     let accountServiceSpy: any;
 
@@ -25,14 +27,17 @@ describe("TaskErrorDisplayComponent", () => {
         accountServiceSpy = {
             currentAccount: Observable.of(Fixtures.account.create()),
         };
+
         TestBed.configureTestingModule({
-            imports: [TaskDetailsModule],
-            declarations: [TestTaskErrorDisplayComponent],
+            declarations: [BannerMockComponent, TaskErrorDisplayComponent, TaskErrorDisplayMockComponent],
             providers: [
+                { provide: SidebarManager, useValue: null },
                 { provide: TaskService, useValue: null },
             ],
+            schemas: [NO_ERRORS_SCHEMA],
         });
-        fixture = TestBed.createComponent(TestTaskErrorDisplayComponent);
+
+        fixture = TestBed.createComponent(TaskErrorDisplayMockComponent);
         testComponent = fixture.componentInstance;
         component = fixture.debugElement.query(By.css("bl-task-error-display")).componentInstance;
         fixture.detectChanges();
