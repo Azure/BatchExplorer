@@ -101,6 +101,9 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     public ngOnChanges(changes) {
         if (changes.pool) {
             this.selectedNodeId.next(null);
+            if (this._svg) {
+                this._svg.selectAll("g.node-group").remove();
+            }
         }
     }
 
