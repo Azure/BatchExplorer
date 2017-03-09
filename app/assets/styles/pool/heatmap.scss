@@ -14,12 +14,23 @@ $color-width: 14px;
 .heatmap-graph {
     display: flex;
 
-    rect {
+    g.node-group {
         cursor: pointer;
-        stroke: map-get($md-prussian-blue, 500);
+        rect {
+            stroke: map-get($md-prussian-blue, 500);
+        }
+
+        text {
+            font-size: 16px;
+            user-select: none;
+            color: $mineshaft-grey;
+        }
 
         &:hover {
-            fill: map-get($md-prussian-blue, 500) !important;
+            rect {
+                stroke: map-get($md-prussian-blue, 500);
+                fill-opacity: 0.7;
+            }
         }
     }
 

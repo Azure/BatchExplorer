@@ -1,6 +1,7 @@
-import { Record } from "immutable";
+import { List, Record } from "immutable";
 
-import { Partial } from "app/utils";
+import { NodeRecentTask } from "app/models/node-recent-task";
+import { TaskState } from "app/models/task";
 
 const NodeRecord = Record({
     id: null,
@@ -14,6 +15,7 @@ const NodeRecord = Record({
     allocationTime: null,
     ipAddress: null,
     affinityId: null,
+    recentTasks: null,
 });
 
 export interface NodeAttributes {
@@ -28,6 +30,7 @@ export interface NodeAttributes {
     allocationTime: Date;
     ipAddress: string;
     affinityId: string;
+    recentTasks: List<NodeRecentTask>;
 }
 
 /**
@@ -45,9 +48,16 @@ export class Node extends NodeRecord implements NodeAttributes {
     public allocationTime: Date;
     public ipAddress: string;
     public affinityId: string;
+    public recentTasks: List<NodeRecentTask>;
 
     constructor(data: Partial<NodeAttributes>) {
-        super(data);
+        super(Object.assign({}, data, {
+            recentTasks: List(data.recentTasks && data.recentTasks.map(x => new NodeRecentTask(x))),
+        }));
+    }
+
+    public get runningTasks() {
+        return this.recentTasks.filter(x => x.taskState === TaskState.running);
     }
 }
 
