@@ -5,14 +5,14 @@ import { RouterModule } from "@angular/router";
 import { ChartistModule } from "angular2-chartist";
 
 import { BaseModule } from "app/components/base";
+import { HistoryGraphComponent } from "./history-graph";
 import { NodePreviewCardComponent } from "./node-preview-card.component";
 import { NodesHeatmapLegendComponent } from "./nodes-heatmap-legend.component";
 import { NodesHeatmapComponent } from "./nodes-heatmap.component";
 import { PoolGraphsComponent } from "./pool-graphs.component";
-import { RunningTaskHistoryComponent } from "./running-task-history";
 
 const components = [NodePreviewCardComponent, NodesHeatmapComponent,
-    NodesHeatmapLegendComponent, PoolGraphsComponent, RunningTaskHistoryComponent];
+    NodesHeatmapLegendComponent, PoolGraphsComponent, HistoryGraphComponent];
 
 @NgModule({
     declarations: components,

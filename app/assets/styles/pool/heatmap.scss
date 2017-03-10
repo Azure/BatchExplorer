@@ -13,6 +13,9 @@ $legend-width: 160px;
 $color-width: 14px;
 .heatmap-graph {
     display: flex;
+    height: 100%;
+    width: 100%;
+    position: relative;
 
     g.node-group {
         cursor: pointer;
@@ -82,7 +85,8 @@ $color-width: 14px;
     .heatmap-container {
         width: calc(100% - #{$legend-width});
         flex: 1 0 calc(100% - 160px);
-        height: 500px;
+        height: 100%;
+        max-height: 100%;
     }
 }
 

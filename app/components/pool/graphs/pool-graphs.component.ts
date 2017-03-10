@@ -7,7 +7,14 @@ import { Subscription } from "rxjs";
 import { Node, NodeState, Pool } from "app/models";
 import { NodeListParams, NodeService } from "app/services";
 import { RxListProxy } from "app/services/core";
+import { NodesStateHistoryData, RunningTasksHistoryData } from "./history-data";
 import { StateCounter } from "./state-counter";
+
+enum AvailableGraph {
+    Heatmap,
+    AvailableNodes,
+    RunningTasks,
+}
 
 const refreshRate = 5000;
 @Component({
@@ -15,6 +22,7 @@ const refreshRate = 5000;
     templateUrl: "pool-graphs.html",
 })
 export class PoolGraphsComponent implements OnChanges, OnDestroy {
+    public AvailableGraph = AvailableGraph;
     @Input()
     public pool: Pool;
 
@@ -22,6 +30,11 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
 
     public nodes: List<Node> = List([]);
     public startTaskFailedError: any;
+
+    public runningTaskHistory = new RunningTasksHistoryData();
+    public runningNodesHistory = new NodesStateHistoryData([NodeState.running, NodeState.idle]);
+
+    public focusedGraph = AvailableGraph.Heatmap;
 
     private _stateCounter = new StateCounter();
 
@@ -37,6 +50,8 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
             if (nodes.size !== 0) {
                 this.nodes = nodes;
                 this._stateCounter.updateCount(nodes);
+                this.runningNodesHistory.update(this.nodes);
+                this.runningTaskHistory.update(this.nodes);
             }
             this._scanForProblems();
         });
@@ -73,6 +88,10 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     @autobind()
     public reimageFailedNodes() {
         this.nodeService.reimageAll(this.pool.id, [NodeState.startTaskFailed]);
+    }
+
+    public focusGraph(graph: AvailableGraph) {
+        this.focusedGraph = graph;
     }
 
     private _scanForProblems() {

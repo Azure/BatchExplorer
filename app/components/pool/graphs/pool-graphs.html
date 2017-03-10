@@ -4,25 +4,34 @@
     <div [other-fix]="rebootFailedNodes" fixMessage="Reimage failed nodes"></div>
 </bl-banner>
 <div class="charts-previews">
-    <div class="preview">
-        <div class="label">Node running</div>
-        <bl-running-task-history [nodes]="nodes" class="small-preview">
-        </bl-running-task-history>
+    <div class="preview" (click)="focusGraph(AvailableGraph.Heatmap)" [class.focused]="focusedGraph === AvailableGraph.Heatmap">
+        <div class="label">Heatmap</div>
+        <div class="small-preview">
+            <bl-nodes-heatmap [pool]="pool" [nodes]="nodes" [showLegend]="false" [interactive]="false"></bl-nodes-heatmap>
+        </div>
     </div>
-    <div class="preview">
-        <div class="label">Suspended nodes</div>
-        <bl-running-task-history [nodes]="nodes" class="small-preview">
-        </bl-running-task-history>
+    <div class="preview" (click)="focusGraph(AvailableGraph.AvailableNodes)" [class.focused]="focusedGraph === AvailableGraph.AvailableNodes">
+        <div class="label">Node available</div>
+        <bl-history-graph [max]="pool.targetDedicated" class="small-preview" [history]="runningNodesHistory.history">
+        </bl-history-graph>
     </div>
-    <div class="preview">
-        <div class="label">Queued tasks</div>
-        <bl-running-task-history [nodes]="nodes" class="small-preview">
-        </bl-running-task-history>
-    </div>
-    <div class="preview">
+    <div class="preview" (click)="focusGraph(AvailableGraph.RunningTasks)" [class.focused]="focusedGraph === AvailableGraph.RunningTasks">
         <div class="label">Running tasks</div>
-        <bl-running-task-history [nodes]="nodes" class="small-preview">
-        </bl-running-task-history>
+        <bl-history-graph [max]="10" class="small-preview" [history]="runningTaskHistory.history">
+        </bl-history-graph>
     </div>
 </div>
-<bl-nodes-heatmap [pool]="pool" [nodes]="nodes"></bl-nodes-heatmap>
+
+<div class="focused-graph" [ngSwitch]="focusedGraph">
+    <div *ngSwitchCase="AvailableGraph.Heatmap" class="full-display">
+        <bl-nodes-heatmap [pool]="pool" [nodes]="nodes"></bl-nodes-heatmap>
+    </div>
+    <div *ngSwitchCase="AvailableGraph.AvailableNodes" class="full-display">
+        <bl-history-graph [max]="10" class="full-display" [history]="runningNodesHistory.history">
+        </bl-history-graph>
+    </div>
+    <div *ngSwitchCase="AvailableGraph.RunningTasks" class="full-display">
+        <bl-history-graph [max]="10" class="full-display" [history]="runningTaskHistory.history">
+        </bl-history-graph>
+    </div>
+</div>

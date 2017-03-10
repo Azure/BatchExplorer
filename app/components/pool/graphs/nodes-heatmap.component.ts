@@ -59,6 +59,12 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     @Input()
     public pool: Pool;
 
+    @Input()
+    public showLegend: boolean = true;
+
+    @Input()
+    public interactive: boolean = true;
+
     @ViewChild("heatmap")
     public heatmapEl: ElementRef;
 
