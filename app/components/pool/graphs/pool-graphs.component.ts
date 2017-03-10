@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
 import { Router } from "@angular/router";
 import { autobind } from "core-decorators";
-import { List, is } from "immutable";
+import { List } from "immutable";
 import { Subscription } from "rxjs";
 
 import { Node, NodeState, Pool } from "app/models";
