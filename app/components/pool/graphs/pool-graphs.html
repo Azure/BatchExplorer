@@ -7,7 +7,7 @@
     <div class="preview" (click)="focusGraph(AvailableGraph.Heatmap)" [class.focused]="focusedGraph === AvailableGraph.Heatmap">
         <div class="label">Heatmap</div>
         <div class="small-preview">
-            <bl-nodes-heatmap [pool]="pool" [nodes]="nodes" [showLegend]="false" [interactive]="false"></bl-nodes-heatmap>
+            <bl-nodes-heatmap [pool]="pool" [nodes]="nodes" [showLegend]="false" [interactive]="false" [limitNode]="10"></bl-nodes-heatmap>
         </div>
     </div>
     <div class="preview" (click)="focusGraph(AvailableGraph.AvailableNodes)" [class.focused]="focusedGraph === AvailableGraph.AvailableNodes">

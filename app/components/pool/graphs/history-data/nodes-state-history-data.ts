@@ -7,7 +7,6 @@ import { Node } from "app/models";
 
 export class NodesStateHistoryData extends HistoryDataBase {
     public states: Set<string>;
-    private _lastNodes: List<Node> = List([]);
 
     constructor(states: string[]) {
         super();
@@ -15,12 +14,11 @@ export class NodesStateHistoryData extends HistoryDataBase {
     }
 
     public update(nodes: List<Node>) {
-        if (is(this._lastNodes, nodes)) {
+        const time = new Date();
+        if (!this.hasTimePassed(time)) {
             return;
         }
-        this._lastNodes = nodes;
         const count = nodes.filter(x => this.states.has(x.state)).size;
-        const time = new Date();
         this.history = this.history.concat([{
             x: time,
             y: count,
