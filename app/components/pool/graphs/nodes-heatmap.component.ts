@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, ViewChild, HostBinding } from "@angular/core";
 import * as d3 from "d3";
 import * as elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";
@@ -63,6 +63,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     public showLegend: boolean = true;
 
     @Input()
+    @HostBinding("class.interactive")
     public interactive: boolean = true;
 
     @ViewChild("heatmap")
@@ -166,6 +167,9 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         const nodeEnter = groups.enter().append("g")
             .attr("class", "node-group")
             .on("mouseenter", (tile, index, nodes) => {
+                if (!this.interactive) {
+                    return;
+                }
                 const group = d3.select(nodes[index]);
                 groups.selectAll("text").remove();
                 group.append("text")
@@ -179,6 +183,9 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
                 group.selectAll("text").remove();
             })
             .on("click", (tile) => {
+                if (!this.interactive) {
+                    return;
+                }
                 this.selectedNodeId.next(tile.node.id);
                 this._updateSvg(this._svg.selectAll("g.node-group"));
             });

@@ -51,6 +51,9 @@ export class HistoryGraphComponent implements OnChanges {
                     return moment(value).fromNow();
                 },
             },
+            axisY: {
+                onlyInteger: true,
+            },
         };
     }
     public updateData() {

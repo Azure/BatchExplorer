@@ -29,7 +29,11 @@ $color-width: 14px;
             color: $mineshaft-grey;
         }
 
-        &:hover {
+
+    }
+
+    &.interactive {
+        g.node-group:hover {
             rect {
                 stroke: map-get($md-prussian-blue, 500);
                 fill-opacity: 0.7;

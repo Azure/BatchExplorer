@@ -4,11 +4,22 @@ bl-pool-graphs {
         padding-bottom: 10px;
         border-bottom: 1px solid $whitesmoke-darker;
         display: flex;
+        user-select: none;
+
         > .preview {
             cursor: pointer;
+            margin-right: 5px;
             .label {
                 font-size: 11px;
                 line-height: 11px;
+                margin-bottom: 3px;
+            }
+
+            &.focused {
+                .label {
+                    color: map-get($md-prussian-blue, 600);
+                    text-decoration: underline;
+                }
             }
         }
     }
