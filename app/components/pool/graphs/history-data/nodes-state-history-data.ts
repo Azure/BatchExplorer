@@ -1,4 +1,4 @@
-import { List, is } from "immutable";
+import { List } from "immutable";
 import * as moment from "moment";
 
 import { HistoryDataBase } from "./history-data-base";

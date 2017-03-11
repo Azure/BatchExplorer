@@ -1,4 +1,4 @@
-import { List, is } from "immutable";
+import { List } from "immutable";
 
 import { Node } from "app/models";
 import { HistoryDataBase } from "./history-data-base";
