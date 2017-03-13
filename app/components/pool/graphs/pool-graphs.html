@@ -12,12 +12,12 @@
     </div>
     <div class="preview" (click)="focusGraph(AvailableGraph.AvailableNodes)" [class.focused]="focusedGraph === AvailableGraph.AvailableNodes">
         <div class="label">Node available</div>
-        <bl-history-graph [max]="pool.targetDedicated" class="small-preview" [history]="runningNodesHistory.history">
+        <bl-history-graph [max]="pool.targetDedicated" class="small-preview" [history]="runningNodesHistory.history" [interactive]="false">
         </bl-history-graph>
     </div>
     <div class="preview" (click)="focusGraph(AvailableGraph.RunningTasks)" [class.focused]="focusedGraph === AvailableGraph.RunningTasks">
         <div class="label">Running tasks</div>
-        <bl-history-graph [max]="10" class="small-preview" [history]="runningTaskHistory.history">
+        <bl-history-graph [max]="10" class="small-preview" [history]="runningTaskHistory.history" [interactive]="false">
         </bl-history-graph>
     </div>
 </div>

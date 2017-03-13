@@ -12,6 +12,9 @@ export class HistoryGraphComponent implements OnChanges {
     @Input()
     public history: any[] = [];
 
+    @Input()
+    public interactive = true;
+
     public type = "line";
 
     public data: any = [];
@@ -35,9 +38,10 @@ export class HistoryGraphComponent implements OnChanges {
     }
 
     public updateOptions() {
+        const hitRadius = this.interactive ? 10 : 0;
         this.options = {
             responsive: true,
-            elements: { point: { radius: 0, hitRadius: 10, hoverRadius: 10 } },
+            elements: { point: { radius: 0, hitRadius: hitRadius, hoverRadius: hitRadius } },
             legend: {
                 display: false,
             },
@@ -61,6 +65,9 @@ export class HistoryGraphComponent implements OnChanges {
                 xAxes: [{
                     type: "time",
                     display: false,
+                    time: {
+                        tooltipFormat: "hh:mm:ss",
+                    },
                 }],
             },
         };
