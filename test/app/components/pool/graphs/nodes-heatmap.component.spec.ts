@@ -15,7 +15,7 @@ import { ContextMenuServiceMock } from "test/utils/mocks";
 @Component({
     template: `
         <div [style.width]="width" [style.height]="height" [style.position]="'relative'">
-            <bl-nodes-heatmap [pool]="pool" [nodes]="nodes"></bl-nodes-heatmap>
+            <bl-nodes-heatmap [pool]="pool" [nodes]="nodes" [interactive]="interactive"></bl-nodes-heatmap>
         </div>
     `,
 })
@@ -24,6 +24,7 @@ export class HeatmapMockComponent {
     public height = "500px";
     public nodes: List<Node> = List([]);
     public pool = new Pool({ id: "pool-id", maxTasksPerNode: 1 });
+    public interactive = true;
 }
 
 @Component({
@@ -38,9 +39,9 @@ export class NodePreviewCardMockComponent {
     public poolId: string;
 }
 
-describe("NodesHeatmapLegendComponent", () => {
+fdescribe("NodesHeatmapLegendComponent", () => {
     let fixture: ComponentFixture<HeatmapMockComponent>;
-    let component: HeatmapMockComponent;
+    let testComponent: HeatmapMockComponent;
     let heatmap: NodesHeatmapComponent;
     let heatmapContainer: DebugElement;
     let svg: d3.Selection<any, any, any, any>;
@@ -61,7 +62,7 @@ describe("NodesHeatmapLegendComponent", () => {
 
         TestBed.compileComponents();
         fixture = TestBed.createComponent(HeatmapMockComponent);
-        component = fixture.componentInstance;
+        testComponent = fixture.componentInstance;
         heatmap = fixture.debugElement.query(By.css("bl-nodes-heatmap")).componentInstance;
         fixture.detectChanges();
 
@@ -78,7 +79,7 @@ describe("NodesHeatmapLegendComponent", () => {
     });
 
     it("should reszize the svg when container width change", () => {
-        component.width = "800px";
+        testComponent.width = "800px";
         fixture.detectChanges();
         const legendWidth = 160;
 
@@ -89,7 +90,7 @@ describe("NodesHeatmapLegendComponent", () => {
     });
 
     it("Should compute optimal tile dimensions for 1 tile(Max tile size)", () => {
-        component.nodes = List([
+        testComponent.nodes = List([
             Fixture.node.create({ state: NodeState.idle }),
         ]);
         fixture.detectChanges();
@@ -99,7 +100,7 @@ describe("NodesHeatmapLegendComponent", () => {
     });
 
     it("Should compute optimal tile dimensions for 4 tile", () => {
-        component.nodes = createNodes(4);
+        testComponent.nodes = createNodes(4);
         fixture.detectChanges();
         expect(heatmap.dimensions.columns).toBe(2);
         expect(heatmap.dimensions.rows).toBe(2);
@@ -107,7 +108,7 @@ describe("NodesHeatmapLegendComponent", () => {
     });
 
     it("should create a tile for each node", () => {
-        component.nodes = createNodes(7);
+        testComponent.nodes = createNodes(7);
         fixture.detectChanges();
         const tiles = svg.selectAll("g.node-group");
         expect(tiles.size()).toBe(7);
@@ -129,8 +130,8 @@ describe("NodesHeatmapLegendComponent", () => {
     });
 
     it("should not fail when the size of the svg is 0x0", () => {
-        component.width = "160px";
-        component.nodes = createNodes(4);
+        testComponent.width = "160px";
+        testComponent.nodes = createNodes(4);
         fixture.detectChanges();
         heatmap.containerSizeChanged();
 
@@ -149,7 +150,7 @@ describe("NodesHeatmapLegendComponent", () => {
     });
 
     it("click on a tile should select the node", () => {
-        component.nodes = createNodes(4);
+        testComponent.nodes = createNodes(4);
         fixture.detectChanges();
 
         const group = svg.select("g.node-group:nth-child(2)");
@@ -162,10 +163,29 @@ describe("NodesHeatmapLegendComponent", () => {
 
     it("should clear selection when poolId change", () => {
         heatmap.selectedNodeId.next("node-1");
-        component.pool = new Pool({ id: "pool-2" });
+        testComponent.pool = new Pool({ id: "pool-2" });
         fixture.detectChanges();
         expect(heatmap.pool.id).toEqual("pool-2");
         expect(heatmap.selectedNodeId.value).toBeNull();
+    });
+
+    describe("when interactive is off", () => {
+        beforeEach(() => {
+            testComponent.interactive = false;
+            fixture.detectChanges();
+        });
+
+        it("click on a tile should not select the node", () => {
+            testComponent.nodes = createNodes(4);
+            fixture.detectChanges();
+
+            const group = svg.select("g.node-group:nth-child(2)");
+
+            const el: any = group.node();
+            click(el);
+            fixture.detectChanges();
+            expect(heatmap.selectedNodeId.value).toEqual(null);
+        });
     });
 });
 
