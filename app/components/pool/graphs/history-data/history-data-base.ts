@@ -27,7 +27,7 @@ export class HistoryDataBase {
     }
 
     public cleanup() {
-        const maxTime = moment().subtract(this._historySize, "minutes");
+        const maxTime = moment().subtract(this._historySize, "minutes").subtract(10, "seconds");
         while (true) {
             const data = this.history.first();
             const diff = moment(data.x).diff(maxTime);

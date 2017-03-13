@@ -59,19 +59,13 @@ export class HistoryGraphComponent implements OnChanges {
                     },
                 }],
                 xAxes: [{
-                    // type: "time",
                     type: "linear",
                     position: "bottom",
-                    // display: false,
-                    // time: {
-                    //     tooltipFormat: "hh:mm:ss",
-                    // },
                     ticks: {
                         max: 0,
                         min: -100,
                         stepSize: 100,
                         callback: (value) => {
-                            console.log("LAbel for", value);
                             if (value === 0) {
                                 return "0";
                             } else {
@@ -85,16 +79,16 @@ export class HistoryGraphComponent implements OnChanges {
     }
 
     public updateData() {
-        const max = this.historySize * 60 * 1000;
+        const max = this.historySize * 60 * 1000 / 100;
+        const now = moment();
         this.data = [
             {
                 data:
                 [
                     ...this.history.map(x => {
-                        console.log("MAp", moment(x.x).diff(moment()));
-                        const val = moment(x.x).diff(moment());
+                        const val = moment(x.x).diff(now);
                         return {
-                            x: val / max * 100,
+                            x: val / max,
                             y: x.y,
                         };
                     }),
