@@ -4,7 +4,7 @@ import { Node } from "app/models";
 import { HistoryDataBase } from "./history-data-base";
 
 export class RunningTasksHistoryData extends HistoryDataBase {
-    private _latest = 3;
+    private _latest = 2;
 
     public update(nodes: List<Node>) {
         const time = new Date();

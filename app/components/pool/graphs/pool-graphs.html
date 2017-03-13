@@ -27,7 +27,7 @@
         <bl-nodes-heatmap [pool]="pool" [nodes]="nodes"></bl-nodes-heatmap>
     </div>
     <div *ngSwitchCase="AvailableGraph.AvailableNodes" class="full-display">
-        <bl-history-graph [max]="10" class="full-display" [history]="runningNodesHistory.history">
+        <bl-history-graph [max]="pool.targetDedicated" class="full-display" [history]="runningNodesHistory.history">
         </bl-history-graph>
     </div>
     <div *ngSwitchCase="AvailableGraph.RunningTasks" class="full-display">

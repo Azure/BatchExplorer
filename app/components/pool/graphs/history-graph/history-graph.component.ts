@@ -1,5 +1,4 @@
 import { Component, Input, OnChanges } from "@angular/core";
-import * as Chartist from "chartist";
 import * as moment from "moment";
 
 @Component({
@@ -13,9 +12,9 @@ export class HistoryGraphComponent implements OnChanges {
     @Input()
     public history: any[] = [];
 
-    public type = "Line";
+    public type = "line";
 
-    public data: any = {};
+    public data: any = [];
 
     public options = {};
 
@@ -27,6 +26,7 @@ export class HistoryGraphComponent implements OnChanges {
     public ngOnChanges(inputs) {
         if (inputs.history) {
             this.updateData();
+            this.updateOptions();
         }
 
         if (inputs.max) {
@@ -36,34 +36,44 @@ export class HistoryGraphComponent implements OnChanges {
 
     public updateOptions() {
         this.options = {
-            showPoint: false,
-            fullWidth: true,
-            divisor: 2,
-            low: 0,
-            high: this.max,
-            chartPadding: {
-                right: 20,
+            responsive: true,
+            elements: { point: { radius: 0, hitRadius: 10, hoverRadius: 10 } },
+            legend: {
+                display: false,
             },
-            axisX: {
-                type: Chartist.FixedScaleAxis,
-                divisor: 1,
-                labelInterpolationFnc: (value) => {
-                    return moment(value).fromNow();
-                },
+            title: {
+                display: true,
+                text: "Last 10min",
+                position: "bottom",
+                padding: 5,
+                fontStyle: "",
             },
-            axisY: {
-                onlyInteger: true,
+            scales: {
+                yAxes: [{
+                    type: "linear",
+                    ticks: {
+                        max: this.max,
+                        min: 0,
+                        autoSkip: true,
+                        callback: (value) => { if (value % 1 === 0) { return value; } },
+                    },
+                }],
+                xAxes: [{
+                    type: "time",
+                    display: false,
+                }],
             },
         };
     }
     public updateData() {
-        this.data = {
-            series: [
+        this.data = [
+            {
+                data:
                 [
                     { x: moment().subtract(10, "minutes").toDate(), y: null },
                     ...this.history,
                 ],
-            ],
-        };
+            },
+        ];
     }
 }
