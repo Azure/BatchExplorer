@@ -39,7 +39,7 @@ export class NodePreviewCardMockComponent {
     public poolId: string;
 }
 
-fdescribe("NodesHeatmapLegendComponent", () => {
+describe("NodesHeatmapLegendComponent", () => {
     let fixture: ComponentFixture<HeatmapMockComponent>;
     let testComponent: HeatmapMockComponent;
     let heatmap: NodesHeatmapComponent;
