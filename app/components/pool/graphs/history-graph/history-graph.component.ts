@@ -20,7 +20,7 @@ export class HistoryGraphComponent implements OnChanges {
 
     public type = "line";
 
-    public data: any = [];
+    public datasets: Chart.ChartDataSets[] = [];
 
     public options = {};
 
@@ -78,15 +78,19 @@ export class HistoryGraphComponent implements OnChanges {
         };
     }
 
+    /**
+     * Transform the input data into datasets for the chart.
+     */
     public updateData() {
-        const max = this.historySize * 60 * 1000 / 100;
+        const minToMilli = 60 * 1000;
+        const max = this.historySize * minToMilli / 100;
         const now = moment();
-        this.data = [
+        this.datasets = [
             {
                 data:
                 [
                     ...this.history.map(x => {
-                        const val = moment(x.x).diff(now);
+                        const val = moment(x.time).diff(now);
                         return {
                             x: val / max,
                             y: x.y,

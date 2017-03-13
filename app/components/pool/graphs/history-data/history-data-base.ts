@@ -1,7 +1,7 @@
 import * as moment from "moment";
 
 export interface HistoryItem {
-    x: Date;
+    time: Date;
     y: number;
 }
 
@@ -30,7 +30,7 @@ export class HistoryDataBase {
         const maxTime = moment().subtract(this._historySize, "minutes").subtract(10, "seconds");
         while (true) {
             const data = this.history.first();
-            const diff = moment(data.x).diff(maxTime);
+            const diff = moment(data.time).diff(maxTime);
             if (diff < 0) {
                 this.history.shift();
             } else {

@@ -1,5 +1,4 @@
 import { List } from "immutable";
-import * as moment from "moment";
 
 import { HistoryDataBase } from "./history-data-base";
 
@@ -20,7 +19,7 @@ export class NodesStateHistoryData extends HistoryDataBase {
         }
         const count = nodes.filter(x => this.states.has(x.state)).size;
         this.history = this.history.concat([{
-            x: time,
+            time: time,
             y: count,
         }]);
         this.cleanup();

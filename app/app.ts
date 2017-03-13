@@ -13,7 +13,6 @@ import "font-awesome/css/font-awesome.min.css";
 import "roboto-fontface/css/roboto/sass/roboto-fontface.scss";
 import "./assets/styles/main.scss";
 
-
 const platform = platformBrowserDynamic();
 
 platform.bootstrapModule(AppModule).catch(error => {

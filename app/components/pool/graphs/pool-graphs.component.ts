@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import { FormControl } from "@angular/forms";
 import { Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { List } from "immutable";
@@ -9,7 +10,6 @@ import { NodeListParams, NodeService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { NodesStateHistoryData, RunningTasksHistoryData } from "./history-data";
 import { StateCounter } from "./state-counter";
-import { FormControl } from "@angular/forms";
 
 enum AvailableGraph {
     Heatmap,
