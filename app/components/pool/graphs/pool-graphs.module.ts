@@ -1,4 +1,5 @@
 import { NgModule } from "@angular/core";
+import { ReactiveFormsModule } from "@angular/forms";
 import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
@@ -17,7 +18,7 @@ const components = [NodePreviewCardComponent, NodesHeatmapComponent,
 @NgModule({
     declarations: components,
     exports: components,
-    imports: [BrowserModule, MaterialModule, RouterModule, BaseModule, ChartsModule],
+    imports: [BrowserModule, MaterialModule, RouterModule, BaseModule, ChartsModule, ReactiveFormsModule],
 })
 export class PoolGraphsModule {
 

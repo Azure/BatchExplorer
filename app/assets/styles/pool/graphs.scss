@@ -9,6 +9,7 @@ bl-pool-graphs {
         > .preview {
             cursor: pointer;
             margin-right: 5px;
+            flex: 1;
             .label {
                 font-size: 11px;
                 line-height: 11px;
@@ -21,6 +22,10 @@ bl-pool-graphs {
                     text-decoration: underline;
                 }
             }
+        }
+
+        > .config {
+            margin: 10px;
         }
     }
 

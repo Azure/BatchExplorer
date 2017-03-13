@@ -15,6 +15,9 @@ export class HistoryGraphComponent implements OnChanges {
     @Input()
     public interactive = true;
 
+    @Input()
+    public historySize = 10;
+
     public type = "line";
 
     public data: any = [];
@@ -27,7 +30,7 @@ export class HistoryGraphComponent implements OnChanges {
     }
 
     public ngOnChanges(inputs) {
-        if (inputs.history) {
+        if (inputs.history || inputs.historySize) {
             this.updateData();
             this.updateOptions();
         }
@@ -45,40 +48,56 @@ export class HistoryGraphComponent implements OnChanges {
             legend: {
                 display: false,
             },
-            title: {
-                display: true,
-                text: "Last 10min",
-                position: "bottom",
-                padding: 5,
-                fontStyle: "",
-            },
             scales: {
                 yAxes: [{
                     type: "linear",
                     ticks: {
-                        max: this.max,
+                        max: this.max * 1.01, // Need to have max slightly more otherwise the line get's cut.
                         min: 0,
                         autoSkip: true,
                         callback: (value) => { if (value % 1 === 0) { return value; } },
                     },
                 }],
                 xAxes: [{
-                    type: "time",
-                    display: false,
-                    time: {
-                        tooltipFormat: "hh:mm:ss",
+                    // type: "time",
+                    type: "linear",
+                    position: "bottom",
+                    // display: false,
+                    // time: {
+                    //     tooltipFormat: "hh:mm:ss",
+                    // },
+                    ticks: {
+                        max: 0,
+                        min: -100,
+                        stepSize: 100,
+                        callback: (value) => {
+                            console.log("LAbel for", value);
+                            if (value === 0) {
+                                return "0";
+                            } else {
+                                return `${this.historySize}m`;
+                            }
+                        },
                     },
                 }],
             },
         };
     }
+
     public updateData() {
+        const max = this.historySize * 60 * 1000;
         this.data = [
             {
                 data:
                 [
-                    { x: moment().subtract(10, "minutes").toDate(), y: null },
-                    ...this.history,
+                    ...this.history.map(x => {
+                        console.log("MAp", moment(x.x).diff(moment()));
+                        const val = moment(x.x).diff(moment());
+                        return {
+                            x: val / max * 100,
+                            y: x.y,
+                        };
+                    }),
                 ],
             },
         ];

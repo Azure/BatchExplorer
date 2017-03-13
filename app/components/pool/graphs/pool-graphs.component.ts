@@ -9,12 +9,19 @@ import { NodeListParams, NodeService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { NodesStateHistoryData, RunningTasksHistoryData } from "./history-data";
 import { StateCounter } from "./state-counter";
+import { FormControl } from "@angular/forms";
 
 enum AvailableGraph {
     Heatmap,
     AvailableNodes,
     RunningTasks,
 }
+
+const HistoryLength = {
+    OneMinute: 1,
+    TenMinute: 10,
+    OneHour: 60,
+};
 
 const refreshRate = 5000;
 @Component({
@@ -23,6 +30,8 @@ const refreshRate = 5000;
 })
 export class PoolGraphsComponent implements OnChanges, OnDestroy {
     public AvailableGraph = AvailableGraph;
+    public HistoryLength = HistoryLength;
+
     @Input()
     public pool: Pool;
 
@@ -35,6 +44,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     public runningNodesHistory = new NodesStateHistoryData([NodeState.running, NodeState.idle]);
 
     public focusedGraph = AvailableGraph.Heatmap;
+    public selectedHistoryLength = new FormControl(HistoryLength.TenMinute);
 
     private _stateCounter = new StateCounter();
 
@@ -54,6 +64,11 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
                 this.runningTaskHistory.update(this.nodes);
             }
             this._scanForProblems();
+        });
+
+        this.selectedHistoryLength.valueChanges.subscribe((value) => {
+            this.runningNodesHistory.setHistorySize(value);
+            this.runningTaskHistory.setHistorySize(value);
         });
 
         this._refreshInterval = setInterval(() => {
