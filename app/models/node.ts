@@ -1,4 +1,4 @@
-import { List, Record } from "immutable";
+import { Iterable, List, Record } from "immutable";
 
 import { NodeRecentTask } from "app/models/node-recent-task";
 import { TaskState } from "app/models/task";
@@ -30,13 +30,13 @@ export interface NodeAttributes {
     allocationTime: Date;
     ipAddress: string;
     affinityId: string;
-    recentTasks: List<NodeRecentTask>;
+    recentTasks: Array<Partial<NodeRecentTask>>;
 }
 
 /**
  * Class for displaying Batch node information.
  */
-export class Node extends NodeRecord implements NodeAttributes {
+export class Node extends NodeRecord {
     public id: string;
     public state: NodeState;
     public totalTasksRun: number;
@@ -56,7 +56,7 @@ export class Node extends NodeRecord implements NodeAttributes {
         }));
     }
 
-    public get runningTasks() {
+    public get runningTasks(): Iterable<number, NodeRecentTask> {
         return this.recentTasks.filter(x => x.taskState === TaskState.running);
     }
 }

@@ -1,5 +1,5 @@
 <div class="heatmap-graph">
-    <div class="legend noselect">
+    <div class="legend noselect" *ngIf="showLegend">
         <bl-nodes-heatmap-legend [poolId]="pool.id" [nodes]="nodes" [colors]="colors" (selectedStateChange)="selectState($event)"></bl-nodes-heatmap-legend>
         <bl-node-preview-card [poolId]="pool.id" [node]="selectedNode | async" *ngIf="selectedNode | async" (close)="selectedNodeId.next(null)"></bl-node-preview-card>
     </div>

@@ -5,6 +5,7 @@ import { AppModule } from "./app.module";
 import { handleCoreError } from "./error-handler";
 
 // Setup extension methods
+import "chart.js";
 import "hammerjs";
 import "./utils/extensions";
 
