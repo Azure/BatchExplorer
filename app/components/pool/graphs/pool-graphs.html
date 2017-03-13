@@ -30,7 +30,7 @@
 </div>
 
 <div class="focused-graph" [ngSwitch]="focusedGraph">
-    <div *ngSwitchCase="AvailableGraph.Heatmap" class="full-display">
+    <div *ngSwitchCase="AvailableGraph.Heatmap" class="full-display-heatmap">
         <bl-nodes-heatmap [pool]="pool" [nodes]="nodes"></bl-nodes-heatmap>
     </div>
     <div *ngSwitchCase="AvailableGraph.AvailableNodes" class="full-display">

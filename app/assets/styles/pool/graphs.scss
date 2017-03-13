@@ -41,12 +41,15 @@ bl-pool-graphs {
         height: 100%;
     }
 
+    .full-display-heatmap {
+        display: block;
+        width: 100%;
+        height: 600px;
+    }
+
     .focused-graph {
-        // height: 600px;
         width: 100%;
         position: relative;
-
-
     }
 }
 
