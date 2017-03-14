@@ -24,7 +24,7 @@ import {
     templateUrl: "job-details.html",
 })
 export class JobDetailsComponent implements OnInit, OnDestroy {
-    public static breadcrumb({id}, {tab}) {
+    public static breadcrumb({ id }, { tab }) {
         let label = tab ? `Job - ${tab}` : "Job";
         return {
             name: id,

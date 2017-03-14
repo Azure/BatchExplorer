@@ -1,0 +1,15 @@
+bl-gauge {
+    display: block;
+
+    .chart-filled {
+        fill: map-get($md-prussian-blue, 400);
+    }
+
+    .chart-empty {
+        fill: $altoGray;
+    }
+
+    text.val-legend {
+        fill: $alto;
+    }
+}
