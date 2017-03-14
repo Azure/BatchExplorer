@@ -3,6 +3,7 @@ export interface GaugeConfig {
     min?: number;
     max?: number;
     showLabels?: boolean;
+    title?: string;
 }
 
 export const defaultOptions: GaugeConfig = {

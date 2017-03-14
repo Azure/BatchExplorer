@@ -1,4 +1,6 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, ViewChild } from "@angular/core";
+import {
+    AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, Input, OnChanges, ViewChild,
+} from "@angular/core";
 import * as d3 from "d3";
 
 import { GaugeConfig, defaultOptions } from "./gauge-config";
@@ -31,6 +33,7 @@ const padRad = 0.025;
 @Component({
     selector: "bl-gauge",
     templateUrl: "gauge.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GaugeComponent implements AfterViewInit, OnChanges {
     @Input()
@@ -47,7 +50,7 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
         if (typeof value === "string" && value in presetSizes) {
             this._size = presetSizes[value];
         } else if (typeof value === "number") {
-            this._size = 200;
+            this._size = value;
         } else {
             throw invalidSizeMessage(value);
         }
@@ -83,6 +86,7 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
         min: null,
         max: null,
         value: null,
+        title: null,
     };
 
     /**
@@ -110,10 +114,9 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
         if (inputs.value || inputs.percent) {
             this._computePercent();
         }
+
         if (inputs.value) {
-            if (this._svg) {
-                this.redraw();
-            }
+            this.redraw();
         }
 
         if (inputs.options) {
@@ -121,6 +124,7 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
             const current = inputs.options.currentValue;
             const previous = inputs.options.previousValue;
             this._processOptionChange(current, previous);
+            this.redraw();
         }
     }
 
@@ -133,7 +137,7 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
             .attr("height", outerHeight);
 
         const chart = this._chart = this._svg.append("g")
-            .attr("transform", "translate(" + (outerWidth / 2) + ", " + (outerHeight / 2) + ")");
+            .attr("transform", `translate(${margin.left + (width / 2)}, ${margin.top + (height / 2)})`);
         chart.append("path").attr("class", "arc chart-filled");
         chart.append("path").attr("class", "arc chart-empty");
 
@@ -146,6 +150,10 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
     }
 
     public redraw() {
+        if (!this._svg) {
+            return;
+        }
+
         this._animateTo(this.percent);
         if (this.options.showLabels) {
             this._updateLabels();
@@ -153,6 +161,8 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
             this._clearLabels();
         }
     }
+
+    public get dimensions() { return this._dimensions; }
 
     private _animateTo(percent) {
         this._chart.transition().delay(300).ease(d3.easeCubicInOut).duration(1000)
@@ -224,7 +234,6 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
         if (current.showLabels !== previous.showLabels) {
             if (current.showLabels) {
                 this._createLabels();
-                this._updateLabels();
             } else {
                 this._clearLabels();
             }
@@ -262,24 +271,25 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
             .style("font-size", valueFontSize)
             .attr("text-anchor", "middle");
 
-        this._svg.append("text")
+        const title = this._svg.append("text")
             .classed("val-legend", true)
             .attr("dx", centerX)
             .attr("dy", centerY + valueFontSize / 2)
             .attr("text-anchor", "middle")
-            .text("banana");
 
-        this._labels = { min: minLabel, max: maxLabel, value: valueLabel };
+
+        this._labels = { min: minLabel, max: maxLabel, value: valueLabel, title };
     }
 
     /**
      * Update the values of the labels
      */
     private _updateLabels() {
-        const { min, max, value } = this._labels;
+        const { min, max, value, title } = this._labels;
         min.text(this.options.min);
         max.text(this.options.max);
         value.text(Math.floor(this.value * 100) / 100);
+        title.text(this.options.title);
     }
 
     /**
