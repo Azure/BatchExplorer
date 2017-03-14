@@ -87,6 +87,7 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
 
 
     public ngAfterViewInit() {
+        console.log("This", this.elementRef.nativeElement.offsetWidth);
         this.init();
         this.redraw();
     }
@@ -128,13 +129,46 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
     }
 
     public redraw() {
-        this._repaintGauge(this.percent);
+        this._animateTo(this.percent);
+        // this._repaintGauge(this.percent);
         if (this.options.showLabels) {
             this._updateLabels();
         } else {
             this._clearLabels();
         }
     }
+
+    private _oldPercent = 0;
+
+    private _animateTo(percent) {
+        const oldPercent = this._oldPercent;
+        this._chart.transition().delay(300).ease(d3.easeQuadIn).duration(1500)
+            .tween("progress", (_, index, items) => {
+                const sel = items[index];
+                return (percentOfPercent) => {
+                    console.log("percentOf", percentOfPercent);
+                    const progress = oldPercent + percentOfPercent * (percent - oldPercent);
+                    this._oldPercent = progress;
+
+                    this._repaintGauge(progress);
+                    return d3.select(sel).attr("d", this._recalcPointerPos(progress));
+                };
+            });
+    }
+    private _recalcPointerPos(perc) {
+        const { width, radius } = this._dimensions;
+        const thetaRad = percToRad(perc / 2);
+        const centerX = 0;
+        const centerY = 0;
+        const topX = centerX - width * Math.cos(thetaRad);
+        const topY = centerY - width * Math.sin(thetaRad);
+        const leftX = centerX - radius * Math.cos(thetaRad - Math.PI / 2);
+        const leftY = centerY - radius * Math.sin(thetaRad - Math.PI / 2);
+        const rightX = centerX - radius * Math.cos(thetaRad + Math.PI / 2);
+        const rightY = centerY - radius * Math.sin(thetaRad + Math.PI / 2);
+        return "M " + leftX + " " + leftY + " L " + topX + " " + topY + " L " + rightX + " " + rightY;
+    };
+
 
     private _repaintGauge(perc) {
         const ratio = 2 / 3;
