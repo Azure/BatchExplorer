@@ -71,14 +71,6 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
             this.runningTaskHistory.setHistorySize(value);
         });
         this._poll = this.data.startPoll(refreshRate);
-
-        setTimeout(() => {
-            const data2 = nodeService.list(this.pool.id, {
-                maxResults: 1000,
-                select: "recentTasks,id,state",
-            });
-            data2.startPoll(2000);
-        }, 12000);
     }
 
     public ngOnChanges(changes) {
