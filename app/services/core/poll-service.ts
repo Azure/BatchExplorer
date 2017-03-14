@@ -1,10 +1,8 @@
 import { ObjectUtils, SecureUtils } from "app/utils";
 
-
 export class PollService {
     private _pollTrackers: StringMap<StringMap<PollTracker>> = {};
     private _activePoolTrackers: StringMap<PollTracker> = {};
-
 
     public startPoll(key: string, interval: number, callback: Function): PollObservable {
         const tracker = new PollTracker(interval, callback);

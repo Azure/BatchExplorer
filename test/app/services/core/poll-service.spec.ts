@@ -1,8 +1,8 @@
 import { fakeAsync, tick } from "@angular/core/testing";
 
-import { PollService, PollObservable } from "app/services/core";
+import { PollObservable, PollService } from "app/services/core";
 
-fdescribe("PollService", () => {
+describe("PollService", () => {
     let service: PollService;
     let poll1: PollObservable;
     let poll1Spy: jasmine.Spy;
@@ -102,5 +102,4 @@ fdescribe("PollService", () => {
         poll1.destroy();
         poll2.destroy();
     }));
-
 });
