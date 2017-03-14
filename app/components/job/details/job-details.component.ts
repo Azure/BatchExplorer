@@ -36,7 +36,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     public job: Job;
     public decorator: JobDecorator;
     public data: RxEntityProxy<JobParams, Job>;
-    public gaugeValue = 0.3;
+    public gaugeValue = 10;
 
     public gaugeOptions = {
         min: 0,
@@ -79,10 +79,6 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
         setInterval(() => {
             this.gaugeValue = Math.floor(Math.random() * 241);
         }, 5000);
-
-        setInterval(() => {
-            this.gaugeOptions.showLabels = !this.gaugeOptions.showLabels;
-        }, 10000)
     }
 
     public ngOnDestroy() {

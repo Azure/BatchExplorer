@@ -1,5 +1,8 @@
-import { AfterViewInit, Component, ElementRef, ViewChild, Input, OnChanges } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, ViewChild } from "@angular/core";
 import * as d3 from "d3";
+
+import { GaugeConfig, defaultOptions } from "./gauge-config";
+import { degToRad, invalidSizeMessage, percToRad, presetSizes } from "./gauge-utils";
 
 const margin = {
     top: 5,
@@ -8,37 +11,22 @@ const margin = {
     left: 5,
 };
 
-const totalPercent = 2 / 3;
+/**
+ * Capacity of the gauge
+ * 0.5 => This will make half a dnought
+ * 2/3 => Makes a dashboard looking gauge
+ */
+const ratio = 2 / 3;
+
+/**
+ * Angle at which the gauge starts
+ * 180 => Bottom middle
+ * 240 => Left bottom
+ * 270 => Left middle
+ */
+const startingAngle = 240;
+
 const padRad = 0.025;
-
-
-/*
-    Utility methods
-  */
-function percToDeg(perc) {
-    return perc * 360;
-};
-
-function percToRad(perc) {
-    return degToRad(percToDeg(perc));
-};
-
-function degToRad(deg) {
-    return deg * Math.PI / 180;
-};
-
-
-export interface GaugeConfig {
-    min?: number;
-    max?: number;
-    showLabels?: boolean;
-}
-
-const defaultOptions: GaugeConfig = {
-    min: 0,
-    max: 1,
-    showLabels: true,
-};
 
 @Component({
     selector: "bl-gauge",
@@ -54,6 +42,16 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
     }
     public get options() { return this._options; };
 
+    @Input()
+    public set size(value: string | number) {
+        if (typeof value === "string" && value in presetSizes) {
+            this._size = presetSizes[value];
+        } else if (typeof value === "number") {
+            this._size = 200;
+        } else {
+            throw invalidSizeMessage(value);
+        }
+    }
 
     @ViewChild("gauge")
     public gaugeEl: ElementRef;
@@ -62,8 +60,15 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
 
     private _svg: d3.Selection<any, any, any, any>;
     private _chart: d3.Selection<any, any, any, any>;
-    private _arc1: d3.Arc<any, d3.DefaultArcObject>;
-    private _arc2: d3.Arc<any, d3.DefaultArcObject>;
+    /**
+     * Arc representing the filled part of the gauge
+     */
+    private _filledArc: d3.Arc<any, d3.DefaultArcObject>;
+
+    /**
+     * Arc representing the empty part of the gauge
+     */
+    private _emptyArc: d3.Arc<any, d3.DefaultArcObject>;
 
     private _dimensions = {
         width: 0,
@@ -80,19 +85,28 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
         value: null,
     };
 
+    /**
+     * Last value the percentage shown on the gauge was updated to.
+     * This is different from the percent value which represent the actual percentage.
+     * This one is used for smooth transition between values.
+     */
+    private _currentDisplayedPercent = 0;
+
     private _options: GaugeConfig = defaultOptions;
+    private _size: number = presetSizes.small;
 
     constructor(private elementRef: ElementRef) {
     }
 
-
     public ngAfterViewInit() {
-        console.log("This", this.elementRef.nativeElement.offsetWidth);
         this.init();
         this.redraw();
     }
 
     public ngOnChanges(inputs) {
+        if (inputs.size) {
+            this._computeDimensions();
+        }
         if (inputs.value || inputs.percent) {
             this._computePercent();
         }
@@ -103,7 +117,10 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
         }
 
         if (inputs.options) {
-            console.log(inputs.options)
+            this._computePercent();
+            const current = inputs.options.currentValue;
+            const previous = inputs.options.previousValue;
+            this._processOptionChange(current, previous);
         }
     }
 
@@ -122,15 +139,14 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
 
         const chartInset = 10;
 
-        this._arc2 = d3.arc().outerRadius(radius - chartInset).innerRadius(radius - chartInset - barWidth);
-        this._arc1 = d3.arc().outerRadius(radius - chartInset).innerRadius(radius - chartInset - barWidth);
+        this._emptyArc = d3.arc().outerRadius(radius - chartInset).innerRadius(radius - chartInset - barWidth);
+        this._filledArc = d3.arc().outerRadius(radius - chartInset).innerRadius(radius - chartInset - barWidth);
 
         this._createLabels();
     }
 
     public redraw() {
         this._animateTo(this.percent);
-        // this._repaintGauge(this.percent);
         if (this.options.showLabels) {
             this._updateLabels();
         } else {
@@ -138,60 +154,45 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
         }
     }
 
-    private _oldPercent = 0;
-
     private _animateTo(percent) {
-        const oldPercent = this._oldPercent;
-        this._chart.transition().delay(300).ease(d3.easeQuadIn).duration(1500)
+        this._chart.transition().delay(300).ease(d3.easeCubicInOut).duration(1000)
             .tween("progress", (_, index, items) => {
                 const sel = items[index];
                 return (percentOfPercent) => {
-                    console.log("percentOf", percentOfPercent);
+                    const oldPercent = this._currentDisplayedPercent;
                     const progress = oldPercent + percentOfPercent * (percent - oldPercent);
-                    this._oldPercent = progress;
 
                     this._repaintGauge(progress);
-                    return d3.select(sel).attr("d", this._recalcPointerPos(progress));
+                    return d3.select(sel);
                 };
             });
     }
-    private _recalcPointerPos(perc) {
-        const { width, radius } = this._dimensions;
-        const thetaRad = percToRad(perc / 2);
-        const centerX = 0;
-        const centerY = 0;
-        const topX = centerX - width * Math.cos(thetaRad);
-        const topY = centerY - width * Math.sin(thetaRad);
-        const leftX = centerX - radius * Math.cos(thetaRad - Math.PI / 2);
-        const leftY = centerY - radius * Math.sin(thetaRad - Math.PI / 2);
-        const rightX = centerX - radius * Math.cos(thetaRad + Math.PI / 2);
-        const rightY = centerY - radius * Math.sin(thetaRad + Math.PI / 2);
-        return "M " + leftX + " " + leftY + " L " + topX + " " + topY + " L " + rightX + " " + rightY;
-    };
 
-
+    /**
+     * Repaint the arcs of the gauge.
+     * @param perc Percentage we want to show.(This allow for animation instead of using this.percent)
+     */
     private _repaintGauge(perc) {
-        const ratio = 2 / 3;
-        let next_start = totalPercent;
-        let arcStartRad = percToRad(next_start);
+        this._currentDisplayedPercent = perc;
+        let arcStartRad = degToRad(startingAngle);
         let arcEndRad = arcStartRad + percToRad(perc * ratio);
-        next_start += perc * ratio;
 
+        this._filledArc.startAngle(arcStartRad).endAngle(arcEndRad);
 
-        this._arc1.startAngle(arcStartRad).endAngle(arcEndRad);
-
-        arcStartRad = percToRad(next_start);
+        arcStartRad = arcEndRad;
         arcEndRad = arcStartRad + percToRad((1 - perc) * ratio);
 
-        this._arc2.startAngle(arcStartRad + padRad).endAngle(arcEndRad);
+        this._emptyArc.startAngle(arcStartRad + padRad).endAngle(arcEndRad);
 
-
-        this._chart.select(".chart-filled").attr("d", this._arc1);
-        this._chart.select(".chart-empty").attr("d", this._arc2);
+        this._chart.select(".chart-filled").attr("d", this._filledArc);
+        this._chart.select(".chart-empty").attr("d", this._emptyArc);
     }
 
+    /**
+     * Compute all dimensions needed for displaying the gauge.
+     */
     private _computeDimensions() {
-        const outerWidth = this.elementRef.nativeElement.offsetWidth;
+        const outerWidth = this._size;
         const width = outerWidth - margin.left - margin.right;
         const height = width;
         const outerHeight = height + margin.top + margin.bottom;
@@ -200,14 +201,39 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
 
         this._dimensions = {
             width, height, radius, barWidth, outerWidth, outerHeight,
-        }
+        };
     }
 
+    /**
+     * Compute the percent of the gauge filled from the value using the min and max
+     */
     private _computePercent() {
         const { min, max } = this._options;
         this.percent = (this.value - min) / (max - min);
     }
 
+    /**
+     * This function will apply changes to d3 if some options changed
+     * @param current Current options
+     * @param previous Previous options
+     */
+    private _processOptionChange(current: GaugeConfig, previous: GaugeConfig) {
+        current = Object.assign({}, defaultOptions, current);
+        previous = Object.assign({}, defaultOptions, previous);
+
+        if (current.showLabels !== previous.showLabels) {
+            if (current.showLabels) {
+                this._createLabels();
+                this._updateLabels();
+            } else {
+                this._clearLabels();
+            }
+        }
+    }
+
+    /**
+     * Create and position labels
+     */
     private _createLabels() {
         const { width, height, radius, barWidth, outerHeight, outerWidth } = this._dimensions;
         const centerX = outerWidth / 2;
@@ -219,7 +245,8 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
             .classed("min-label", true)
             .attr("dx", centerX - offX)
             .attr("dy", centerY + offY)
-            .attr("text-anchor", "middle")
+            .attr("text-anchor", "middle");
+
         const maxLabel = this._svg.append("text")
             .classed("max-label", true)
             .attr("dx", centerX + offX)
@@ -245,6 +272,9 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
         this._labels = { min: minLabel, max: maxLabel, value: valueLabel };
     }
 
+    /**
+     * Update the values of the labels
+     */
     private _updateLabels() {
         const { min, max, value } = this._labels;
         min.text(this.options.min);
@@ -252,6 +282,9 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
         value.text(Math.floor(this.value * 100) / 100);
     }
 
+    /**
+     * Remove all the labels.
+     */
     private _clearLabels() {
         this._svg.selectAll("text").remove();
     }

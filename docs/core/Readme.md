@@ -30,3 +30,28 @@ export class MyComponent {
 }
 ```
 
+## Gauge
+Gauge is a custom graphical representation that can show a min, max and a value.
+
+![](gauge.png)
+
+Example for the image above
+
+```html
+<bl-gauge [value]=[109] options="gaugeOptions" size="small">
+</bl-gauge>
+```
+
+```typescript
+export class MyComponent {
+    public gaugeOptions = {
+        min: 0,
+        max: 240,
+    }
+}
+```
+| Attr    | Description                                                                                                                  |
+|---------|------------------------------------------------------------------------------------------------------------------------------|
+| size    | Size can be one of the presets `xsmall` `small` `medium` `large` or any number.                                              |
+| value   | value of the gauge                                                                                                           |
+| options | Options for the gauge. See `gauge-config.ts`                                                                                 |

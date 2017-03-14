@@ -1,6 +1,6 @@
 import { NgModule } from "@angular/core";
 
-import { GaugeComponent } from "./gauge.component";
+import { GaugeComponent } from "./gauge";
 
 const components = [GaugeComponent];
 
