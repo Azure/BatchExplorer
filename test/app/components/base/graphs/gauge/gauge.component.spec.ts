@@ -18,7 +18,7 @@ class TestComponent {
     };
 }
 
-fdescribe("GaugeComponent", () => {
+describe("GaugeComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: GaugeComponent;
@@ -44,7 +44,6 @@ fdescribe("GaugeComponent", () => {
         expect(component.dimensions.outerWidth).toBe(300);
         expect(component.dimensions.outerHeight).toBe(310);
     });
-
 
     it("should compute the right dimensions when size is a number", () => {
         testComponent.size = 230;

@@ -275,8 +275,7 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
             .classed("val-legend", true)
             .attr("dx", centerX)
             .attr("dy", centerY + valueFontSize / 2)
-            .attr("text-anchor", "middle")
-
+            .attr("text-anchor", "middle");
 
         this._labels = { min: minLabel, max: maxLabel, value: valueLabel, title };
     }
