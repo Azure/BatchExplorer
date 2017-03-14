@@ -7,7 +7,7 @@ import { Subscription } from "rxjs";
 
 import { Node, NodeState, Pool } from "app/models";
 import { NodeListParams, NodeService } from "app/services";
-import { RxListProxy } from "app/services/core";
+import { PollObservable, RxListProxy } from "app/services/core";
 import { NodesStateHistoryData, RunningTasksHistoryData } from "./history-data";
 import { StateCounter } from "./state-counter";
 
@@ -48,7 +48,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
 
     private _stateCounter = new StateCounter();
 
-    private _refreshInterval: any;
+    private _poll: PollObservable;
     private _nodesSub: Subscription;
 
     constructor(private nodeService: NodeService, private router: Router) {
@@ -70,10 +70,15 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
             this.runningNodesHistory.setHistorySize(value);
             this.runningTaskHistory.setHistorySize(value);
         });
+        this._poll = this.data.startPoll(refreshRate);
 
-        this._refreshInterval = setInterval(() => {
-            this.data.refresh(false);
-        }, refreshRate);
+        setTimeout(() => {
+            const data2 = nodeService.list(this.pool.id, {
+                maxResults: 1000,
+                select: "recentTasks,id,state",
+            });
+            data2.startPoll(2000);
+        }, 12000);
     }
 
     public ngOnChanges(changes) {
@@ -84,7 +89,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     }
 
     public ngOnDestroy() {
-        clearInterval(this._refreshInterval);
+        this._poll.destroy();
         this._nodesSub.unsubscribe();
     }
 

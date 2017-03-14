@@ -142,6 +142,10 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         return this.fetchNext(true);
     }
 
+    protected pollRefresh() {
+        return this.refresh(false);
+    }
+
     // Method to implement in the child class
     protected abstract handleChanges(params: TParams, options: {});
     protected abstract fetchNextItems(): Observable<any>;

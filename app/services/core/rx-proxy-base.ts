@@ -3,8 +3,9 @@ import { BehaviorSubject, Observable, Subject, Subscription } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { ServerError } from "app/models";
-import { Constants, exists, log } from "app/utils";
+import { Constants, ObjectUtils, exists, log } from "app/utils";
 import { DataCache } from "./data-cache";
+import { PollObservable } from "./poll-service";
 
 export interface FetchDataOptions {
     getData: () => Observable<any>;
@@ -33,7 +34,7 @@ export interface RxProxyBaseConfig<TParams, TEntity> {
 /**
  * Base proxy for List and Entity proxies
  */
-export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
+export abstract class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
     /**
      * Status that keep track of any loading
      */
@@ -69,6 +70,7 @@ export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
     private _deletedSub: Subscription;
     private _deleted = new Subject<string>();
     private _logIgnoreError: number[];
+    private _pollObservable: PollObservable;
 
     constructor(protected type: Type<TEntity>, config: RxProxyBaseConfig<TParams, TEntity>) {
         this.getCache = config.cache;
@@ -93,6 +95,9 @@ export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
     public set params(params: TParams) {
         this._params = params;
         this.cache = this.getCache(params);
+        if (this._pollObservable) {
+            this._pollObservable.updateKey(this._key());
+        }
         this.markLoadingNewData();
         this.abortFetch();
     }
@@ -103,6 +108,9 @@ export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
 
     public setOptions(options: TOptions, clearItems = true) {
         this._options = Object.assign({}, options);
+        if (this._pollObservable) {
+            this._pollObservable.updateKey(this._key());
+        }
         if (this.queryInProgress()) {
             this.abortFetch();
         }
@@ -117,6 +125,28 @@ export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
      */
     public get options() {
         return this._options;
+    }
+
+    /**
+     * Start refreshing the data of this RxProxy every given interval
+     * You can only have ONE poll per entity.
+     * @param interval {number} Interval in milliseconds.
+     */
+    public startPoll(interval: number): PollObservable {
+        if (this._pollObservable) {
+            return this._pollObservable;
+        }
+
+        this._pollObservable = this.cache.pollService.startPoll(this._key(), interval, () => {
+            return this.pollRefresh();
+        });
+        return this._pollObservable;
+    }
+
+    private _key() {
+        const paramsKey = ObjectUtils.serialize(this._params);
+        const optionsKey = ObjectUtils.serialize(this._options);
+        return `${paramsKey}|${optionsKey}`;
     }
 
     protected set cache(cache: DataCache<TEntity>) {
@@ -199,4 +229,6 @@ export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
             this._deletedSub.unsubscribe();
         }
     }
+
+    protected abstract pollRefresh(): Observable<any>;
 }

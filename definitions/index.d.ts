@@ -24,3 +24,6 @@ declare module "mousetrap" {
     function trigger(key: string);
     function reset();
 }
+
+
+type StringMap<V> = { [key: string]: V };
