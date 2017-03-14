@@ -42,6 +42,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
 
     public runningTaskHistory = new RunningTasksHistoryData();
     public runningNodesHistory = new NodesStateHistoryData([NodeState.running, NodeState.idle]);
+    public maxRunningTasks = 0;
 
     public focusedGraph = AvailableGraph.Heatmap;
     public selectedHistoryLength = new FormControl(HistoryLength.TenMinute);
@@ -77,6 +78,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
         if (changes.pool) {
             this.data.updateParams({ poolId: this.pool.id });
             this.data.refresh(false);
+            this.maxRunningTasks = this.pool ? this.pool.targetDedicated * this.pool.maxTasksPerNode : 0;
         }
     }
 
