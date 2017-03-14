@@ -16,6 +16,7 @@ import { EditorModule } from "./editor";
 import { ElapsedTimeComponent } from "./elapsed-time";
 import { FocusSectionModule } from "./focus-section";
 import { FormModule } from "./form";
+import { GraphsModule } from "./graphs";
 import { InfoBoxModule } from "./info-box";
 import {
     DeleteSelectedItemsDialogComponent, EntityDetailsListComponent, ListAndShowLayoutComponent, ListLoadingComponent,
@@ -43,6 +44,7 @@ const modules = [
     InfoBoxModule,
     NotificationModule,
     PropertyListModule,
+    GraphsModule,
     QuickListModule,
     SidebarModule,
     TableModule,

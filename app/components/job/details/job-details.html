@@ -14,6 +14,8 @@
                 <p>Pool: {{decorator.executionInfo.poolId}}</p>
                 <p>Start time: {{decorator.executionInfo.startTime}}</p>
                 <p>End time: {{decorator.executionInfo.endTime}}</p>
+
+                <bl-gauge [value]="gaugeValue" [options]="gaugeOptions" style="width: 200px"></bl-gauge>
             </md-card-content>
             <md-card-actions layout="row" layout-align="end center">
                 <bl-add-task-button title="Add task" [job]="job" (click)="addTask()"></bl-add-task-button>
