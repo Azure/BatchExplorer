@@ -143,12 +143,6 @@ export abstract class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity
         return this._pollObservable;
     }
 
-    private _key() {
-        const paramsKey = ObjectUtils.serialize(this._params);
-        const optionsKey = ObjectUtils.serialize(this._options);
-        return `${paramsKey}|${optionsKey}`;
-    }
-
     protected set cache(cache: DataCache<TEntity>) {
         this._cache = cache;
         this._clearDeleteSub();
@@ -231,4 +225,10 @@ export abstract class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity
     }
 
     protected abstract pollRefresh(): Observable<any>;
+
+    private _key() {
+        const paramsKey = ObjectUtils.serialize(this._params);
+        const optionsKey = ObjectUtils.serialize(this._options);
+        return `${paramsKey}|${optionsKey}`;
+    }
 }
