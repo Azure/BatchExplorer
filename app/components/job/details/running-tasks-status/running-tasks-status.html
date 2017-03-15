@@ -1,0 +1,5 @@
+<div class="toggle-job-pool-tasks">
+    <div class="option" [class.active]="!showAllPoolTasks" (click)="updateShowAllPoolTasks(false)">Only Job</div>
+    <div class="option" [class.active]="showAllPoolTasks" (click)="updateShowAllPoolTasks(true)">Pool</div>
+</div>
+<bl-gauge [value]="runningTasksCount" [options]="gaugeOptions"></bl-gauge>

@@ -11,6 +11,7 @@ import { JobDetailsComponent } from "./job-details.component";
 import { JobEnvironmentSettingsComponent } from "./job-env-settings.component";
 import { JobMetadataComponent } from "./job-metadata.component";
 import { JobPropertiesComponent } from "./job-properties.component";
+import { RunningTasksStatusComponent } from "./running-tasks-status";
 
 const components = [
     JobErrorDisplayComponent,
@@ -19,6 +20,7 @@ const components = [
     JobEnvironmentSettingsComponent,
     JobMetadataComponent,
     JobPropertiesComponent,
+    RunningTasksStatusComponent,
 ];
 
 @NgModule({
