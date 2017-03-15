@@ -73,6 +73,13 @@ export class Job extends JobRecord {
             executionInfo: data.executionInfo && new JobExecutionInformation(data.executionInfo),
         }));
     }
+
+    /**
+     * Return the pool used by this job.
+     */
+    public get poolId() {
+        return this.executionInfo && this.executionInfo.poolId;
+    }
 }
 
 export type JobState = "active" | "disabling" | "disabled" | "enabling" | "terminating" | "completed" | "deleting";

@@ -3,14 +3,14 @@ import {
 } from "@angular/core";
 import * as d3 from "d3";
 
-import { GaugeConfig, defaultOptions } from "./gauge-config";
-import { degToRad, invalidSizeMessage, percToRad, presetSizes } from "./gauge-utils";
+import { GaugeConfig, GaugeLabel, defaultOptions } from "./gauge-config";
+import { degToRad, getLabelFor, invalidSizeMessage, percToRad, presetSizes } from "./gauge-utils";
 
 const margin = {
-    top: 5,
-    right: 5,
-    bottom: 15,
-    left: 5,
+    top: 0,
+    right: 0,
+    bottom: 0,
+    left: 0,
 };
 
 /**
@@ -141,10 +141,8 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
         chart.append("path").attr("class", "arc chart-filled");
         chart.append("path").attr("class", "arc chart-empty");
 
-        const chartInset = 10;
-
-        this._emptyArc = d3.arc().outerRadius(radius - chartInset).innerRadius(radius - chartInset - barWidth);
-        this._filledArc = d3.arc().outerRadius(radius - chartInset).innerRadius(radius - chartInset - barWidth);
+        this._emptyArc = d3.arc().outerRadius(radius).innerRadius(radius - barWidth);
+        this._filledArc = d3.arc().outerRadius(radius).innerRadius(radius - barWidth);
 
         this._createLabels();
     }
@@ -165,7 +163,7 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
     public get dimensions() { return this._dimensions; }
 
     private _animateTo(percent) {
-        this._chart.transition().delay(300).ease(d3.easeCubicInOut).duration(1000)
+        this._chart.transition().delay(300).ease(d3.easeCubicInOut).duration(500)
             .tween("progress", (_, index, items) => {
                 const sel = items[index];
                 return (percentOfPercent) => {
@@ -208,7 +206,6 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
         const outerHeight = height + margin.top + margin.bottom;
         const radius = width / 2;
         const barWidth = 40 * width / 300;
-
         this._dimensions = {
             width, height, radius, barWidth, outerWidth, outerHeight,
         };
@@ -219,7 +216,8 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
      */
     private _computePercent() {
         const { min, max } = this._options;
-        this.percent = (this.value - min) / (max - min);
+        const diff = max - min;
+        this.percent = (this.value - min) / (diff || 1);
     }
 
     /**
@@ -285,9 +283,17 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
      */
     private _updateLabels() {
         const { min, max, value, title } = this._labels;
-        min.text(this.options.min);
-        max.text(this.options.max);
-        value.text(Math.floor(this.value * 100) / 100);
+        const minLabel = getLabelFor(this.options.labels, "min", this.options.min);
+        const maxLabel = getLabelFor(this.options.labels, "max", this.options.max);
+        const valueLabel = getLabelFor(this.options.labels, "value", Math.floor(this.value * 100) / 100);
+
+        min.text(minLabel.value);
+        max.text(maxLabel.value);
+        value.text(valueLabel.value);
+
+        this._setTooltip(min, minLabel);
+        this._setTooltip(max, maxLabel);
+        this._setTooltip(value, valueLabel);
         title.text(this.options.title);
     }
 
@@ -296,5 +302,13 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
      */
     private _clearLabels() {
         this._svg.selectAll("text").remove();
+    }
+
+    private _setTooltip(el, label: GaugeLabel) {
+        if (label.tooltip) {
+            el.append("title").text(label.tooltip);
+        } else {
+            el.selectAll("title").remove();
+        }
     }
 }

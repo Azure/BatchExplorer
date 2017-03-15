@@ -1,20 +1,25 @@
 <bl-loading [status]="data.newDataStatus | async">
     <div *ngIf="job">
         <md-card class="overview">
-            <md-card-title-group style="margin: 0px;">
-                <div style="align-items:center;">
-                    <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+            <div class="main-content">
+                <div class="info">
+                    <md-card-title-group style="margin: 0px;">
+                        <div style="align-items:center;">
+                            <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+                        </div>
+                        <div style="margin-left:12px; margin-right:auto;">
+                            <md-card-title>{{decorator.id}}</md-card-title>
+                            <md-card-subtitle><i class="fa" [ngClass]="decorator.stateIcon"></i> {{decorator.state}}</md-card-subtitle>
+                        </div>
+                    </md-card-title-group>
+                    <div class="additional-info">
+                        Pool: <a [routerLink]="['/pools', job.poolId]">{{job.poolId}}</a>
+                    </div>
                 </div>
-                <div style="margin-left:12px; margin-right:auto;">
-                    <md-card-title>{{decorator.id}}</md-card-title>
-                    <md-card-subtitle><i class="fa" [ngClass]="decorator.stateIcon"></i> {{decorator.state}}</md-card-subtitle>
-                </div>
-            </md-card-title-group>
-            <md-card-content>
-                <p>Pool: {{decorator.executionInfo.poolId}}</p>
-                <p>Start time: {{decorator.executionInfo.startTime}}</p>
-                <p>End time: {{decorator.executionInfo.endTime}}</p>
-            </md-card-content>
+                <md-card-content>
+                    <bl-job-progress-status [job]="job" [poolId]="job.poolId"></bl-job-progress-status>
+                </md-card-content>
+            </div>
             <md-card-actions layout="row" layout-align="end center">
                 <bl-add-task-button title="Add task" [job]="job" (click)="addTask()"></bl-add-task-button>
                 <bl-terminate-button [entity]="job" (click)="terminateJob()"></bl-terminate-button>
@@ -31,13 +36,13 @@
                     <bl-tab-label>Properties</bl-tab-label>
                     <bl-job-properties [job]="job"></bl-job-properties>
                 </bl-tab>
-                <bl-tab  key="envs">
+                <bl-tab key="envs">
                     <bl-tab-label>Environment Settings</bl-tab-label>
                     <div class="tab-padding">
                         <bl-job-environment-settings [job]="job"></bl-job-environment-settings>
                     </div>
                 </bl-tab>
-                <bl-tab  key="metadata">
+                <bl-tab key="metadata">
                     <bl-tab-label>Metadata</bl-tab-label>
                     <div class="tab-padding">
                         <bl-job-metadata [job]="job"></bl-job-metadata>
@@ -45,7 +50,8 @@
                 </bl-tab>
                 <bl-tab key="tasks">
                     <bl-tab-label>Tasks</bl-tab-label>
-                    <bl-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/jobs', job.id, 'tasks']" [loadMore]="list.loadMore" [filterPlaceholder]="filterPlaceholderText">
+                    <bl-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/jobs', job.id, 'tasks']" [loadMore]="list.loadMore"
+                        [filterPlaceholder]="filterPlaceholderText">
                         <bl-task-list [jobId]="job.id" [filter]="listWrapper.filter" [quickList]="false" #list [manualLoading]="true"></bl-task-list>
                     </bl-entity-details-list>
                 </bl-tab>

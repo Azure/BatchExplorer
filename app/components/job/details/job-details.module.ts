@@ -10,6 +10,7 @@ import { JobDetailsHomeComponent } from "./job-details-home.component";
 import { JobDetailsComponent } from "./job-details.component";
 import { JobEnvironmentSettingsComponent } from "./job-env-settings.component";
 import { JobMetadataComponent } from "./job-metadata.component";
+import { JobProgressStatusComponent } from "./job-progress-status";
 import { JobPropertiesComponent } from "./job-properties.component";
 
 const components = [
@@ -19,6 +20,7 @@ const components = [
     JobEnvironmentSettingsComponent,
     JobMetadataComponent,
     JobPropertiesComponent,
+    JobProgressStatusComponent,
 ];
 
 @NgModule({

@@ -1,0 +1,59 @@
+bl-job-details {
+    .overview > .main-content {
+        display: flex;
+
+        > .info {
+            flex: 1;
+        }
+    }
+
+}
+
+bl-job-progress-status {
+    display: block;
+
+    padding-top: 5px;
+
+    .running-task-status {
+        display: flex;
+    }
+
+    .running {
+        width: 220px;
+        height: 180px;
+    }
+
+    .queued, .completed {
+        text-align: center;
+        margin: 98px 10px 0;
+
+        > .value {
+            font-size: 20px;
+        }
+
+        > .label {
+            color: $alto;
+        }
+    }
+
+    bl-gauge {
+        margin: 0 10px;
+    }
+
+    .toggle-job-pool-tasks {
+        margin: 0 10px;
+        display: flex;
+        font-size: 11px;
+        justify-content: space-between;
+
+        > .option {
+            cursor: pointer;
+
+            &.active {
+                color: map-get($md-prussian-blue, 600);
+                text-decoration: underline;
+            }
+        }
+    }
+
+}

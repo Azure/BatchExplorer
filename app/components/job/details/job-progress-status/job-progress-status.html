@@ -1,0 +1,17 @@
+<div class="running-task-status">
+    <!--<div class="queued">
+        <div class="value">309</div>
+        <div class="label">Queued</div>
+    </div>-->
+    <div class="running">
+        <div class="toggle-job-pool-tasks">
+            <div class="option" [class.active]="!showAllPoolTasks" (click)="updateShowAllPoolTasks(false)">Only Job</div>
+            <div class="option" [class.active]="showAllPoolTasks" (click)="updateShowAllPoolTasks(true)">Pool</div>
+        </div>
+        <bl-gauge [value]="runningTasksCount" [options]="gaugeOptions"></bl-gauge>
+    </div>
+    <!--<div class="completed">
+        <div class="value">124</div>
+        <div  class="label">Completed</div>
+    </div>-->
+</div>

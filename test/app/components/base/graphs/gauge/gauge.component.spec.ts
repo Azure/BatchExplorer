@@ -42,7 +42,7 @@ describe("GaugeComponent", () => {
         fixture.detectChanges();
 
         expect(component.dimensions.outerWidth).toBe(300);
-        expect(component.dimensions.outerHeight).toBe(310);
+        expect(component.dimensions.outerHeight).toBe(300);
     });
 
     it("should compute the right dimensions when size is a number", () => {
@@ -50,13 +50,13 @@ describe("GaugeComponent", () => {
         fixture.detectChanges();
 
         expect(component.dimensions.outerWidth).toBe(230);
-        expect(component.dimensions.outerHeight).toBe(240);
+        expect(component.dimensions.outerHeight).toBe(230);
     });
 
     it("should have created a svg with the right size", () => {
         expect(svg.empty()).toBeFalsy("There should be a svg");
         expect(svg.attr("width")).toBe("200");
-        expect(svg.attr("height")).toBe("210");
+        expect(svg.attr("height")).toBe("200");
     });
 
     it("svg contains a chart should be centered and a square", () => {
@@ -143,6 +143,41 @@ describe("GaugeComponent", () => {
             expect(maxLabel.empty()).toBe(true);
             expect(valLabel.empty()).toBe(true);
             expect(valLegend.empty()).toBe(true);
+        });
+
+        it("should add a tooltip if labels tooltip is provided", () => {
+            testComponent.options = {
+                min: 0,
+                max: 100,
+                title: "Test gauge",
+                labels: {
+                    min: { tooltip: "Min tooltip" },
+                },
+            };
+            fixture.detectChanges();
+            expect(minLabel.text()).toContain("0");
+            const tooltip = minLabel.select("title");
+            expect(tooltip.empty()).toBe(false);
+            expect(tooltip.text()).toEqual("Min tooltip");
+
+            expect(maxLabel.select("title").empty()).toBe(true);
+            expect(valLabel.select("title").empty()).toBe(true);
+        });
+
+        it("should override label value if provided in the labels option", () => {
+            testComponent.options = {
+                min: 0,
+                max: 100,
+                title: "Test gauge",
+                labels: {
+                    min: { value: "Start" },
+                },
+            };
+            fixture.detectChanges();
+
+            expect(minLabel.text()).toBe("Start");
+            expect(maxLabel.text()).toBe("100");
+            expect(valLabel.text()).toBe("10");
         });
     });
 });
