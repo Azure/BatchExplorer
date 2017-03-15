@@ -1,4 +1,5 @@
 import { DataCache } from "./data-cache";
+import { PollService } from "./poll-service";
 
 export interface TargetedDataCacheOptions<TParams> {
     /**
@@ -14,6 +15,8 @@ const defaultOptions: TargetedDataCacheOptions<any> = {
 export class TargetedDataCache<TParams, TEntity> {
     private _caches = new Map<string, DataCache<TEntity>>();
     private _options: TargetedDataCacheOptions<TParams>;
+
+    private _pollService = new PollService();
 
     constructor(options: TargetedDataCacheOptions<TParams> = {}, private _uniqueField = "id") {
         this._options = Object.assign({}, defaultOptions, options);
@@ -31,6 +34,7 @@ export class TargetedDataCache<TParams, TEntity> {
         let cache = this._caches.get(key);
         if (!cache) {
             cache = new DataCache<TEntity>(this._uniqueField);
+            cache.pollService = this._pollService;
             this._caches.set(key, cache);
         }
         return cache;

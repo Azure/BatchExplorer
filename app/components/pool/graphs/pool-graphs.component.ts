@@ -7,7 +7,7 @@ import { Subscription } from "rxjs";
 
 import { Node, NodeState, Pool } from "app/models";
 import { NodeListParams, NodeService } from "app/services";
-import { RxListProxy } from "app/services/core";
+import { PollObservable, RxListProxy } from "app/services/core";
 import { NodesStateHistoryData, RunningTasksHistoryData } from "./history-data";
 import { StateCounter } from "./state-counter";
 
@@ -42,13 +42,14 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
 
     public runningTaskHistory = new RunningTasksHistoryData();
     public runningNodesHistory = new NodesStateHistoryData([NodeState.running, NodeState.idle]);
+    public maxRunningTasks = 0;
 
     public focusedGraph = AvailableGraph.Heatmap;
     public selectedHistoryLength = new FormControl(HistoryLength.TenMinute);
 
     private _stateCounter = new StateCounter();
 
-    private _refreshInterval: any;
+    private _poll: PollObservable;
     private _nodesSub: Subscription;
 
     constructor(private nodeService: NodeService, private router: Router) {
@@ -70,21 +71,19 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
             this.runningNodesHistory.setHistorySize(value);
             this.runningTaskHistory.setHistorySize(value);
         });
-
-        this._refreshInterval = setInterval(() => {
-            this.data.refresh(false);
-        }, refreshRate);
+        this._poll = this.data.startPoll(refreshRate);
     }
 
     public ngOnChanges(changes) {
         if (changes.pool) {
             this.data.updateParams({ poolId: this.pool.id });
             this.data.refresh(false);
+            this.maxRunningTasks = this.pool ? this.pool.targetDedicated * this.pool.maxTasksPerNode : 0;
         }
     }
 
     public ngOnDestroy() {
-        clearInterval(this._refreshInterval);
+        this._poll.destroy();
         this._nodesSub.unsubscribe();
     }
 

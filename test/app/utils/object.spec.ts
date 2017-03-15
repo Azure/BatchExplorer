@@ -43,4 +43,12 @@ describe("Object extensions", () => {
         expect(nil(null)).toBe(true);
         expect(nil(undefined)).toBe(true);
     });
+
+    it("serialize object", () => {
+        const s1 = ObjectUtils.serialize({ a: 1, b: 2 });
+        const s2 = ObjectUtils.serialize({ b: 2, a: 1 });
+        const s3 = ObjectUtils.serialize({ b: 3, a: 1 });
+        expect(s1).toEqual(s2);
+        expect(s1).not.toEqual(s3);
+    });
 });

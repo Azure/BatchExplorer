@@ -60,6 +60,10 @@ export abstract class RxEntityProxy<TParams, TEntity> extends RxProxyBase<TParam
         return this.fetch();
     }
 
+    protected pollRefresh() {
+        return this.refresh();
+    }
+
     protected abstract getData(): Observable<any>;
 }
 
