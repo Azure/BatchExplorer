@@ -1,18 +1,25 @@
 <bl-loading [status]="data.newDataStatus | async">
     <div *ngIf="job">
         <md-card class="overview">
-            <md-card-title-group style="margin: 0px;">
-                <div style="align-items:center;">
-                    <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+            <div class="main-content">
+                <div class="info">
+                    <md-card-title-group style="margin: 0px;">
+                        <div style="align-items:center;">
+                            <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+                        </div>
+                        <div style="margin-left:12px; margin-right:auto;">
+                            <md-card-title>{{decorator.id}}</md-card-title>
+                            <md-card-subtitle><i class="fa" [ngClass]="decorator.stateIcon"></i> {{decorator.state}}</md-card-subtitle>
+                        </div>
+                    </md-card-title-group>
+                    <div class="additional-info">
+                        Pool: <a [routerLink]="['/pools', job.poolId]">{{job.poolId}}</a>
+                    </div>
                 </div>
-                <div style="margin-left:12px; margin-right:auto;">
-                    <md-card-title>{{decorator.id}}</md-card-title>
-                    <md-card-subtitle><i class="fa" [ngClass]="decorator.stateIcon"></i> {{decorator.state}}</md-card-subtitle>
-                </div>
-            </md-card-title-group>
-            <md-card-content>
-                <bl-running-tasks-status [job]="job" [poolId]="job.poolId"></bl-running-tasks-status>
-            </md-card-content>
+                <md-card-content>
+                    <bl-running-tasks-status [job]="job" [poolId]="job.poolId"></bl-running-tasks-status>
+                </md-card-content>
+            </div>
             <md-card-actions layout="row" layout-align="end center">
                 <bl-add-task-button title="Add task" [job]="job" (click)="addTask()"></bl-add-task-button>
                 <bl-terminate-button [entity]="job" (click)="terminateJob()"></bl-terminate-button>

@@ -1,10 +1,40 @@
+bl-job-details {
+    .overview > .main-content {
+        display: flex;
+
+        > .info {
+            flex: 1;
+        }
+    }
+
+}
+
 bl-running-tasks-status {
     display: block;
-    width: 220px;
-    height: 220px;
-    background: $whitesmoke-darker;
-    box-shadow: 1px 1px 5px 0 #d5d5d5 !important;
+
     padding-top: 5px;
+
+    .running-task-status {
+        display: flex;
+    }
+
+    .running {
+        width: 220px;
+        height: 180px;
+    }
+
+    .queued, .completed {
+        text-align: center;
+        margin: 98px 10px 0;
+
+        > .value {
+            font-size: 20px;
+        }
+
+        > .label {
+            color: $alto;
+        }
+    }
 
     bl-gauge {
         margin: 0 10px;
@@ -25,4 +55,5 @@ bl-running-tasks-status {
             }
         }
     }
+
 }
