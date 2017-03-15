@@ -3,16 +3,14 @@ import * as storage from "electron-json-storage";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import { AccountKeys, AccountResource, NodeAgentSku } from "app/models";
+import { AccountKeys, AccountResource } from "app/models";
 import { log } from "app/utils";
 import { AzureHttpService } from "./azure-http.service";
-import { SubscriptionService } from "./subscription.service";
-
-import { BatchClientService } from "./batch-client.service";
 import {
-    DataCache, DataCacheTracker, RxArmEntityProxy, RxArmListProxy, RxBatchListProxy,
+    DataCache, DataCacheTracker, RxArmEntityProxy, RxArmListProxy,
     RxEntityProxy, RxListProxy, getOnceProxy,
 } from "./core";
+import { SubscriptionService } from "./subscription.service";
 
 const lastSelectedAccountStorageKey = "last-account-selected-name";
 
@@ -46,11 +44,9 @@ export class AccountService {
     private _currentAccountValid: BehaviorSubject<AccountStatus> = new BehaviorSubject(AccountStatus.Invalid);
     private _accountLoaded = new BehaviorSubject<boolean>(false);
     private _accountCache = new DataCache<AccountResource>();
-    private _cache = new DataCache<any>();
     private _currentAccountId = new BehaviorSubject<string>(null);
 
     constructor(
-        private batchClient: BatchClientService,
         private applicationRef: ApplicationRef,
         private zone: NgZone,
         private azure: AzureHttpService,
@@ -133,14 +129,6 @@ export class AccountService {
         return this.azure.post(`${accountId}/listKeys`).map(response => new AccountKeys(response.json()));
     }
 
-    public listNodeAgentSkus(initialOptions: any = {}): RxListProxy<{}, NodeAgentSku> {
-        return new RxBatchListProxy<{}, NodeAgentSku>(NodeAgentSku, this.batchClient, {
-            cache: (params) => this._cache,
-            proxyConstructor: (client, params, options) => client.account.listNodeAgentSkus(options),
-            initialOptions,
-        });
-    }
-
     public favoriteAccount(accountId: string): Observable<any> {
         if (this.isAccountFavorite(accountId)) {
             return Observable.of(true);
@@ -180,7 +168,7 @@ export class AccountService {
     }
 
     public validateCurrentAccount() {
-        this._currentAccountValid.next(AccountStatus.Loading);
+        this._currentAccountValid.next(AccountStatus.Valid);
 
         // Try to list pools from an account(need to get at least 1 pool)
         // BatchClient.pool.list({ maxResults: 1 }).fetchNext().then(() => {

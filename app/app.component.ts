@@ -3,7 +3,7 @@ import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { MdSidenav } from "@angular/material";
 import { Observable } from "rxjs";
 
-import { AccountService, AdalService, CommandService, SSHKeyService, SettingsService } from "app/services";
+import { AccountService, AdalService, CommandService, NodeService, SSHKeyService, SettingsService } from "app/services";
 import AccountCreateDialogComponent from "./components/account/add/account-create-dialog.component";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
@@ -34,6 +34,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         private commandService: CommandService,
         private adalService: AdalService,
         private accountService: AccountService,
+        private nodeService: NodeService,
         private sshKeyService: SSHKeyService) {
         this.settingsService.init();
         this.sshKeyService.init();
@@ -89,6 +90,7 @@ export class AppComponent implements AfterViewInit, OnInit {
      * Preload some data needed.
      */
     private _preloadData() {
-        this.accountService.listNodeAgentSkus().fetchAll();
+        console.log("appcompone", this.nodeService);
+        this.nodeService.listNodeAgentSkus().fetchAll();
     }
 }

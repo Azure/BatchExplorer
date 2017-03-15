@@ -3,7 +3,7 @@ import { List } from "immutable";
 import { AsyncSubject, Observable } from "rxjs";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
-import { Node, NodeConnectionSettings, NodeState } from "app/models";
+import { Node, NodeConnectionSettings, NodeState, NodeAgentSku } from "app/models";
 import { ArrayUtils, ObservableUtils, log } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 import { BatchClientService } from "./batch-client.service";
@@ -33,6 +33,8 @@ export class NodeService extends ServiceBase {
     private _cache = new TargetedDataCache<NodeListParams, Node>({
         key: ({ poolId }) => poolId,
     });
+
+    private _nodeAgentSkusCache = new DataCache<any>();
 
     constructor(private taskManager: BackgroundTaskService, batchService: BatchClientService) {
         super(batchService);
@@ -171,6 +173,14 @@ export class NodeService extends ServiceBase {
         });
 
         return observable;
+    }
+
+    public listNodeAgentSkus(initialOptions: any = {}): RxListProxy<{}, NodeAgentSku> {
+        return new RxBatchListProxy<{}, NodeAgentSku>(NodeAgentSku, this.batchService, {
+            cache: (params) => this._nodeAgentSkusCache,
+            proxyConstructor: (client, params, options) => client.account.listNodeAgentSkus(options),
+            initialOptions,
+        });
     }
 
     private _performOnNodeChunk(nodes: Node[], callback: any) {

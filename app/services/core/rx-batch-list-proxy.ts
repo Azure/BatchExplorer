@@ -2,7 +2,7 @@ import { Type } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { ServerError } from "app/models";
-import { BatchClientService } from "app/services";
+import { BatchClientService } from "../batch-client.service";
 import { CachedKeyList } from "./query-cache";
 import { RxListProxy, RxListProxyConfig } from "./rx-list-proxy";
 
