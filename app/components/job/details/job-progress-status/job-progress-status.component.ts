@@ -10,10 +10,10 @@ import { PollObservable, RxEntityProxy, RxListProxy } from "app/services/core";
 const refreshRate = 5000;
 
 @Component({
-    selector: "bl-running-tasks-status",
-    templateUrl: "running-tasks-status.html",
+    selector: "bl-job-progress-status",
+    templateUrl: "job-progress-status.html",
 })
-export class RunningTasksStatusComponent implements OnChanges, OnDestroy {
+export class JobProgressStatusComponent implements OnChanges, OnDestroy {
     @Input()
     public job: Job;
 
@@ -36,24 +36,26 @@ export class RunningTasksStatusComponent implements OnChanges, OnDestroy {
 
     constructor(private poolService: PoolService, private nodeService: NodeService) {
         this.poolData = poolService.get(null);
-
         this.data = nodeService.list(null, {
             maxResults: 1000,
             select: "recentTasks,id,state",
         });
+
         this.updateGaugeOptions();
+
+        this._subs.push(this.poolData.item.subscribe((pool) => {
+            console.log("Got new pool...", pool && pool.toJS());
+            this.pool = pool;
+            this.maxRunningTasks = pool ? pool.targetDedicated * pool.maxTasksPerNode : 1;
+            this.updateGaugeOptions();
+        }));
+
         this._subs.push(this.data.items.subscribe((nodes) => {
             if (this.nodes.size !== nodes.size) {
                 this.poolData.refresh();
             }
             this.nodes = nodes;
             this.countRunningTasks();
-            this.updateGaugeOptions();
-        }));
-
-        this._subs.push(this.poolData.item.subscribe((pool) => {
-            this.pool = pool;
-            this.maxRunningTasks = pool ? pool.targetDedicated * pool.maxTasksPerNode : 1;
             this.updateGaugeOptions();
         }));
 
