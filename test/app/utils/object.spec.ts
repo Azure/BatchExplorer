@@ -50,7 +50,7 @@ describe("Object extensions", () => {
         const s3 = ObjectUtils.serialize({ b: 3, a: 1 });
         expect(s1).toEqual(s2);
         expect(s1).not.toEqual(s3);
-        expect(ObjectUtils.serialize(null)).not.toEqual("");
-        expect(ObjectUtils.serialize(undefined)).not.toEqual("");
+        expect(ObjectUtils.serialize(null)).toEqual("");
+        expect(ObjectUtils.serialize(undefined)).toEqual("");
     });
 });

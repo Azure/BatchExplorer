@@ -5,9 +5,9 @@ import { By } from "@angular/platform-browser";
 import { JobProgressStatusComponent } from "app/components/job/details/job-progress-status";
 import { Job, Node, Pool, TaskState } from "app/models";
 import { NodeService, PoolService } from "app/services";
+import { click } from "test/utils/helpers";
 import { RxMockEntityProxy, RxMockListProxy } from "test/utils/mocks";
 import { GaugeMockComponent } from "test/utils/mocks/components";
-import { click } from "test/utils/helpers";
 
 @Component({
     template: `<bl-job-progress-status [job]="job" [poolId]="poolId"></bl-job-progress-status>`,
@@ -18,7 +18,7 @@ class TestComponent {
     public poolId: string;
 }
 
-fdescribe("JobProgressStatusComponent", () => {
+describe("JobProgressStatusComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let component: JobProgressStatusComponent;
     let gaugeComponent: GaugeMockComponent;
@@ -92,7 +92,7 @@ fdescribe("JobProgressStatusComponent", () => {
         expect(gaugeComponent.value).toBe(4);
     });
 
-    it("banan", () => {
+    it("Show options to switch between job and pool tasks", () => {
         const options = de.queryAll(By.css(".toggle-job-pool-tasks > .option"));
         expect(options.length).toBe(2);
         expect(options[0].nativeElement.textContent).toContain("Only Job");
