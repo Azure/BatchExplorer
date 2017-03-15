@@ -5,10 +5,10 @@ import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { AccountKeys, AccountResource, NodeAgentSku } from "app/models";
 import { log } from "app/utils";
-import BatchClient from "../api/batch/batch-client";
 import { AzureHttpService } from "./azure-http.service";
 import { SubscriptionService } from "./subscription.service";
 
+import { BatchClientService } from "./batch-client.service";
 import {
     DataCache, DataCacheTracker, RxArmEntityProxy, RxArmListProxy, RxBatchListProxy,
     RxEntityProxy, RxListProxy, getOnceProxy,
@@ -50,6 +50,7 @@ export class AccountService {
     private _currentAccountId = new BehaviorSubject<string>(null);
 
     constructor(
+        private batchClient: BatchClientService,
         private applicationRef: ApplicationRef,
         private zone: NgZone,
         private azure: AzureHttpService,
@@ -60,13 +61,13 @@ export class AccountService {
 
         this._currentAccount.subscribe((selection) => {
             if (selection) {
-                const {account, keys} = selection;
+                const { account, keys } = selection;
                 localStorage.setItem(lastSelectedAccountStorageKey, account.id);
-                BatchClient.setOptions({
-                    account: account.name,
-                    key: keys.primary,
-                    url: "https://" + account.properties.accountEndpoint,
-                });
+                // BatchClient.setOptions({
+                //     account: account.name,
+                //     key: keys.primary,
+                //     url: "https://" + account.properties.accountEndpoint,
+                // });
                 this.validateCurrentAccount();
                 this.applicationRef.tick();
             } else {
@@ -119,7 +120,7 @@ export class AccountService {
     public getAccount(accountId: string): RxEntityProxy<AccountParams, AccountResource> {
         return new RxArmEntityProxy<AccountParams, AccountResource>(AccountResource, this.azure, {
             cache: () => this._accountCache,
-            uri: ({id}) => `${id}`,
+            uri: ({ id }) => `${id}`,
             initialParams: { id: accountId },
         });
     }
@@ -133,9 +134,9 @@ export class AccountService {
     }
 
     public listNodeAgentSkus(initialOptions: any = {}): RxListProxy<{}, NodeAgentSku> {
-        return new RxBatchListProxy<{}, NodeAgentSku>(NodeAgentSku, {
+        return new RxBatchListProxy<{}, NodeAgentSku>(NodeAgentSku, this.batchClient, {
             cache: (params) => this._cache,
-            proxyConstructor: (params, options) => BatchClient.account.listNodeAgentSkus(options),
+            proxyConstructor: (client, params, options) => client.account.listNodeAgentSkus(options),
             initialOptions,
         });
     }
@@ -182,13 +183,13 @@ export class AccountService {
         this._currentAccountValid.next(AccountStatus.Loading);
 
         // Try to list pools from an account(need to get at least 1 pool)
-        BatchClient.pool.list({ maxResults: 1 }).fetchNext().then(() => {
-            this._currentAccountValid.next(AccountStatus.Valid);
-        }).catch((error) => {
-            const {account: {name, properties}} = this._currentAccount.getValue();
-            log.error(`Could not connect to account '${name}' at '${properties.accountEndpoint}'`, error);
-            this._currentAccountValid.next(AccountStatus.Invalid);
-        });
+        // BatchClient.pool.list({ maxResults: 1 }).fetchNext().then(() => {
+        //     this._currentAccountValid.next(AccountStatus.Valid);
+        // }).catch((error) => {
+        //     const {account: {name, properties}} = this._currentAccount.getValue();
+        //     log.error(`Could not connect to account '${name}' at '${properties.accountEndpoint}'`, error);
+        //     this._currentAccountValid.next(AccountStatus.Invalid);
+        // });
     }
 
     public loadInitialData() {

@@ -13,6 +13,7 @@ export * from "./settings-service";
 export * from "./ssh-key.service";
 export * from "./subscription.service";
 export * from "./task-service";
+export * from "./batch-client.service";
 export * from "./adal";
 
 // This needs to be last(as it does dynamic inject which problably have dependencies on above services)

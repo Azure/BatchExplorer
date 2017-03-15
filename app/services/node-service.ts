@@ -6,7 +6,8 @@ import { BackgroundTaskService } from "app/components/base/background-task";
 import { Node, NodeConnectionSettings, NodeState } from "app/models";
 import { ArrayUtils, ObservableUtils, log } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
-import BatchClient from "../api/batch/batch-client";
+import { BatchClientService } from "./batch-client.service";
+
 import {
     DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache,
     getOnceProxy,
@@ -30,12 +31,13 @@ export interface PoolListOptions extends CommonListOptions {
 export class NodeService extends ServiceBase {
     private _basicProperties: string = "id,state,schedulingState,vmSize";
     private _cache = new TargetedDataCache<NodeListParams, Node>({
-        key: ({poolId}) => poolId,
+        key: ({ poolId }) => poolId,
     });
 
-    constructor(private taskManager: BackgroundTaskService) {
-        super();
+    constructor(private taskManager: BackgroundTaskService, batchService: BatchClientService) {
+        super(batchService);
     }
+
     public get basicProperties(): string {
         return this._basicProperties;
     }
@@ -45,10 +47,10 @@ export class NodeService extends ServiceBase {
     }
 
     public list(initialPoolId: string, initialOptions: PoolListOptions = {}): RxListProxy<NodeListParams, Node> {
-        return new RxBatchListProxy<NodeListParams, Node>(​​​Node, {
-            cache: ({poolId}) => this.getCache(poolId),
-            proxyConstructor: ({poolId}, options) => {
-                return BatchClient.node.list(poolId, options);
+        return new RxBatchListProxy<NodeListParams, Node>(​​​Node, this.batchService, {
+            cache: ({ poolId }) => this.getCache(poolId),
+            proxyConstructor: (client, { poolId }, options) => {
+                return client.node.list(poolId, options);
             },
             initialParams: { poolId: initialPoolId },
             initialOptions,
@@ -69,10 +71,10 @@ export class NodeService extends ServiceBase {
     }
 
     public get(initialPoolId: string, initialNodeId: string, options: any): RxEntityProxy<NodeParams, Node> {
-        return new RxBatchEntityProxy<NodeParams, Node>(​​​Node, {
-            cache: ({poolId}) => this.getCache(poolId),
-            getFn: (params: NodeParams) => {
-                return BatchClient.node.get(params.poolId, params.id, options);
+        return new RxBatchEntityProxy<NodeParams, Node>(​​​Node, this.batchService, {
+            cache: ({ poolId }) => this.getCache(poolId),
+            getFn: (client, params: NodeParams) => {
+                return client.node.get(params.poolId, params.id, options);
             },
             initialParams: { poolId: initialPoolId, id: initialNodeId },
         });
@@ -87,7 +89,7 @@ export class NodeService extends ServiceBase {
     }
 
     public reboot(poolId: string, nodeId: string): Observable<any> {
-        let observable = this.callBatchClient(BatchClient.node.reboot(poolId, nodeId, {}));
+        let observable = this.callBatchClient((client) => client.node.reboot(poolId, nodeId, {}));
         observable.subscribe({
             error: (error) => {
                 log.error("Error rebooting node: " + nodeId, Object.assign({}, error));
@@ -120,13 +122,13 @@ export class NodeService extends ServiceBase {
     }
 
     public getRemoteDesktop(poolId: string, nodeId: string, options: any = {}): Observable<FileContentResult> {
-        return this.callBatchClient(BatchClient.node.getRemoteDesktop(poolId, nodeId, options), (error) => {
+        return this.callBatchClient((client) => client.node.getRemoteDesktop(poolId, nodeId, options), (error) => {
             log.error("Error downloading RDP file for node " + nodeId, Object.assign({}, error));
         });
     }
 
     public getRemoteLoginSettings(poolId: string, nodeId: string, options = {}): Observable<NodeConnectionSettings> {
-        return this.callBatchClient(BatchClient.node.getRemoteLoginSettings(poolId, nodeId, options))
+        return this.callBatchClient((client) => client.node.getRemoteLoginSettings(poolId, nodeId, options))
             .map((response: any) => {
                 return new NodeConnectionSettings(response.data);
             });
@@ -161,8 +163,7 @@ export class NodeService extends ServiceBase {
     }
 
     public reimage(poolId: string, nodeId: string): Observable<any> {
-        let observable = this.callBatchClient(
-            BatchClient.node.reimage(poolId, nodeId, {}));
+        let observable = this.callBatchClient((client) => client.node.reimage(poolId, nodeId, {}));
         observable.subscribe({
             error: (error) => {
                 log.error("Error reimaging node: " + nodeId, Object.assign({}, error));

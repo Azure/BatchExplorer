@@ -13,7 +13,7 @@ export interface ListProxyEntity {
  * List proxy, handle continuation tokens
  */
 export class ListProxy {
-    private nextLink: string;
+    public nextLink: string;
     private items: any[];
 
     private reachEnd = false;

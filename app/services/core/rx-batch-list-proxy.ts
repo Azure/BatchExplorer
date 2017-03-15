@@ -2,6 +2,7 @@ import { Type } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { ServerError } from "app/models";
+import { BatchClientService } from "app/services";
 import { CachedKeyList } from "./query-cache";
 import { RxListProxy, RxListProxyConfig } from "./rx-list-proxy";
 
@@ -10,7 +11,7 @@ const defaultOptions = {
 };
 
 export interface RxBatchListProxyConfig<TParams, TEntity> extends RxListProxyConfig<TParams, TEntity> {
-    proxyConstructor: (params: TParams, options: any) => any;
+    proxyConstructor: (client: any, params: TParams, options: any) => any;
     initialOptions?: any;
 }
 
@@ -18,21 +19,26 @@ export interface RxBatchListProxyConfig<TParams, TEntity> extends RxListProxyCon
  * List proxy implementation to use the batch client proxy
  */
 export class RxBatchListProxy<TParams, TEntity> extends RxListProxy<TParams, TEntity> {
-    private _proxyConstructor: (params: TParams, options: any) => any;
-    private _clientProxy: any;
+    private _nextLink = null;
+    private _proxyConstructor: (client: any, params: TParams, options: any) => any;
 
-    constructor(type: Type<TEntity>, config: RxBatchListProxyConfig<TParams, TEntity>) {
+    constructor(
+        type: Type<TEntity>,
+        private batchClient: BatchClientService,
+        config: RxBatchListProxyConfig<TParams, TEntity>) {
         super(type, config);
         this._proxyConstructor = config.proxyConstructor;
-        this._clientProxy = config.proxyConstructor(this._params, this._computeOptions(this._options));
     }
 
     protected handleChanges(params: any, options: any) {
-        this._clientProxy = this._proxyConstructor(params, this._computeOptions(options));
+        // Nothing to do
     }
 
     protected fetchNextItems(): Observable<any> {
-        return Observable.fromPromise(this._clientProxy.fetchNext()).catch((error) => {
+        const client = this._clientProxy();
+        return Observable.fromPromise(client.fetchNext()).do(() => {
+            this._nextLink = client.nextLink;
+        }).catch((error) => {
             return Observable.throw(ServerError.fromBatch(error));
         });
     }
@@ -42,7 +48,7 @@ export class RxBatchListProxy<TParams, TEntity> extends RxListProxy<TParams, TEn
     }
 
     protected hasMoreItems(): boolean {
-        return this._clientProxy.hasMoreItems();
+        return this._clientProxy().hasMoreItems();
     }
 
     protected queryCacheKey(): string {
@@ -50,14 +56,20 @@ export class RxBatchListProxy<TParams, TEntity> extends RxListProxy<TParams, TEn
     }
 
     protected putQueryCacheData(): any {
-        return this._clientProxy.clone();
+        return this._nextLink;
     }
 
     protected getQueryCacheData(queryCache: CachedKeyList): any {
-        this._clientProxy = queryCache.data;
+        this._nextLink = queryCache.data;
     }
 
     private _computeOptions(options: any) {
         return Object.assign({}, defaultOptions, options);
+    }
+
+    private _clientProxy() {
+        const proxy = this._proxyConstructor(this.batchClient, this._params, this._computeOptions(this._options));
+        proxy.nextLink = this._nextLink;
+        return proxy;
     }
 }
