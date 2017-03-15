@@ -3,8 +3,8 @@ import {
 } from "@angular/core";
 import * as d3 from "d3";
 
-import { GaugeConfig, defaultOptions } from "./gauge-config";
-import { degToRad, invalidSizeMessage, percToRad, presetSizes } from "./gauge-utils";
+import { GaugeConfig, GaugeLabel, defaultOptions } from "./gauge-config";
+import { degToRad, getLabelFor, invalidSizeMessage, percToRad, presetSizes } from "./gauge-utils";
 
 const margin = {
     top: 0,
@@ -209,7 +209,6 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
         this._dimensions = {
             width, height, radius, barWidth, outerWidth, outerHeight,
         };
-        console.log("Dimensions are", this._dimensions);
     }
 
     /**
@@ -284,9 +283,17 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
      */
     private _updateLabels() {
         const { min, max, value, title } = this._labels;
-        min.text(this.options.min);
-        max.text(this.options.max);
-        value.text(Math.floor(this.value * 100) / 100);
+        const minLabel = getLabelFor(this.options.labels, "min", this.options.min);
+        const maxLabel = getLabelFor(this.options.labels, "max", this.options.max);
+        const valueLabel = getLabelFor(this.options.labels, "value", Math.floor(this.value * 100) / 100);
+
+        min.text(minLabel.value);
+        max.text(maxLabel.value);
+        value.text(valueLabel.value);
+
+        this._setTooltip(min, minLabel);
+        this._setTooltip(max, maxLabel);
+        this._setTooltip(value, valueLabel);
         title.text(this.options.title);
     }
 
@@ -295,5 +302,13 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
      */
     private _clearLabels() {
         this._svg.selectAll("text").remove();
+    }
+
+    private _setTooltip(el, label: GaugeLabel) {
+        if (label.tooltip) {
+            el.append("title").text(label.tooltip);
+        } else {
+            el.selectAll("title").remove();
+        }
     }
 }

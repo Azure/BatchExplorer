@@ -3,7 +3,7 @@ import { List } from "immutable";
 import { Subscription } from "rxjs";
 
 import { GaugeConfig } from "app/components/base/graphs/gauge";
-import { Node, Pool, Job } from "app/models";
+import { Job, Node, Pool } from "app/models";
 import { NodeListParams, NodeService, PoolParams, PoolService } from "app/services";
 import { PollObservable, RxEntityProxy, RxListProxy } from "app/services/core";
 
@@ -90,6 +90,11 @@ export class RunningTasksStatusComponent implements OnChanges, OnDestroy {
             min: 0,
             max: this.maxRunningTasks,
             title: "Running tasks",
+            labels: {
+                max: {
+                    tooltip: `This pool allows for a total of ${this.maxRunningTasks} tasks to run simultaneously.`,
+                },
+            },
         };
     }
 

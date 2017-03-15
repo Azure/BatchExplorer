@@ -1,3 +1,4 @@
+import { GaugeLabel, GaugeLabels } from "./gauge-config";
 
 export const presetSizes = {
     xsmall: 100,
@@ -6,9 +7,6 @@ export const presetSizes = {
     large: 400,
 };
 
-/*
-    Utility methods
-  */
 export function percToDeg(perc) {
     return perc * 360;
 };
@@ -24,4 +22,15 @@ export function degToRad(deg) {
 export function invalidSizeMessage(value) {
     const sizes = Object.keys(presetSizes).join(",");
     return `Invalid size "${value}" for Gauge, use on of ${sizes} or a fixed number.`;
+}
+
+export function getLabelFor(labels: GaugeLabels, attr: keyof GaugeLabels, defaultValue: any): GaugeLabel {
+    if (labels && labels[attr]) {
+        return Object.assign({}, { value: defaultValue }, labels[attr]);
+
+    } else {
+        return {
+            value: defaultValue,
+        };
+    }
 }
