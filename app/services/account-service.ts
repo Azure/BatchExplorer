@@ -82,6 +82,7 @@ export class AccountService {
     }
 
     public selectAccount(accountId: string) {
+        this._currentAccountValid.next(AccountStatus.Loading);
         this._currentAccountId.next(accountId);
         const current = this._currentAccount.getValue();
         if (current && current.account.id === accountId) {
@@ -164,15 +165,6 @@ export class AccountService {
 
     public validateCurrentAccount() {
         this._currentAccountValid.next(AccountStatus.Valid);
-
-        // Try to list pools from an account(need to get at least 1 pool)
-        // BatchClient.pool.list({ maxResults: 1 }).fetchNext().then(() => {
-        //     this._currentAccountValid.next(AccountStatus.Valid);
-        // }).catch((error) => {
-        //     const {account: {name, properties}} = this._currentAccount.getValue();
-        //     log.error(`Could not connect to account '${name}' at '${properties.accountEndpoint}'`, error);
-        //     this._currentAccountValid.next(AccountStatus.Invalid);
-        // });
     }
 
     public loadInitialData() {
