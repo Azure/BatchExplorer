@@ -45,6 +45,9 @@ export class UserAuthorization {
      */
     public authorize(silent = false): Observable<AuthorizeResult> {
         this._waitingForAuth = true;
+        if (this._subject) {
+            return this._subject.asObservable();
+        }
         this._subject = new AsyncSubject();
         const authWindow = this._createAuthWindow();
         authWindow.loadURL(this._buildUrl(silent));
@@ -94,7 +97,6 @@ export class UserAuthorization {
             scope: "user_impersonation+openid",
             nonce: SecureUtils.uuid(),
             state: SecureUtils.uuid(),
-            // resource: "https://batch.core.windows.net/",
         };
 
         if (silent) {
@@ -159,6 +161,7 @@ export class UserAuthorization {
         } else {
             this._subject.next(params as AuthorizeResult);
             this._subject.complete();
+            this._subject = null;
         }
     }
 

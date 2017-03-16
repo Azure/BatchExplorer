@@ -153,11 +153,14 @@ export class AdalService {
      * @return Observable with access token object
      */
     private _retrieveNewAccessToken(resource: string): Observable<AccessToken> {
+        console.log("Retrieving new");
         if (resource in this._currentAccessTokens && this._currentAccessTokens[resource].refresh_token) {
+            console.log("Will use refresh", resource);
             return this._useRefreshToken(resource, this._currentAccessTokens[resource].refresh_token);
         }
 
         if (resource in this._newAccessTokenSubject) {
+            console.log("Already quering", resource);
             return this._newAccessTokenSubject[resource].asObservable();
         }
 
@@ -166,13 +169,14 @@ export class AdalService {
         this._authorizeUser.authorizeTrySilentFirst().subscribe({
             next: (result: AuthorizeResult) => {
                 this._processUserToken(result.id_token);
+                console.log("Auth user...", resource);
 
                 this._accessTokenService.redeem(resource, result.code).subscribe({
                     next: (token) => {
                         this._processAccessToken(resource, token);
                         subject.next(token);
                         subject.complete();
-                        console.log("GOt token,,,", token);
+                        console.log("GOt token for", resource, token);
                         delete this._newAccessTokenSubject[resource];
                     },
                     error: (e) => {
