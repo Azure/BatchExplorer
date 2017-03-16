@@ -8,6 +8,20 @@ import { baseUrl, objectToParams } from "./adal-constants";
 
 const contentType = "application/x-www-form-urlencoded";
 
+export type AccessTokenError = "invalid_grant";
+export const AccessTokenError = {
+    invalid_grant: "invalid_grant",
+};
+
+export interface AccessTokenErrorResult {
+    error: AccessTokenError;
+    error_description: string;
+    error_codes: number[];
+    timestamp: string;
+    trace_id: string;
+    correlation_id: string;
+}
+
 /**
  * This service handle the retrival of the access token to auth AAD queries
  */
