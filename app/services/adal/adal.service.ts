@@ -51,7 +51,7 @@ export class AdalService {
         this._userAuthorization = new UserAuthorization(config);
         this._accessTokenService = new AccessTokenService(config, this.http);
         this._retrieveUserFromLocalStorage();
-        // this._retrieveAccessTokenFromLocalStorage();
+        this._retrieveAccessTokenFromLocalStorage();
         if (this._currentUser.getValue()) {
             if (!remote.getCurrentWindow().isVisible()) {
                 remote.getCurrentWindow().show();
