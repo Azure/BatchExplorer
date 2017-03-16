@@ -182,6 +182,7 @@ export class AdalService {
                     error: (e) => {
                         subject.error(e);
                         delete this._newAccessTokenSubject[resource];
+                        log.error("Error redeem auth code for token", e);
                     },
                 });
             },

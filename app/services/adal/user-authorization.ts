@@ -45,7 +45,9 @@ export class UserAuthorization {
      */
     public authorize(silent = false): Observable<AuthorizeResult> {
         this._waitingForAuth = true;
+        console.log("Auth1", silent);
         if (this._subject) {
+            console.log("Subkect exists already...");
             return this._subject.asObservable();
         }
         this._subject = new AsyncSubject();
@@ -63,6 +65,7 @@ export class UserAuthorization {
      */
     public authorizeTrySilentFirst(): Observable<AuthorizeResult> {
         return this.authorize(true).catch((error, source) => {
+            console.log("Caught this._subject error", error);
             return this.authorize(false);
         });
     }
@@ -149,19 +152,21 @@ export class UserAuthorization {
      * @param url Url used for callback
      */
     private _handleCallback(url: string) {
-        if (!this._isRedirectUrl(url)) {
+        if (!this._isRedirectUrl(url) || !this._subject) {
             return;
         }
 
         this._closeWindow();
         const params = this._getRedirectUrlParams(url);
         this._waitingForAuth = false;
+        const subject = this._subject;
+        this._subject = null;
+
         if ((<any>params).error) {
-            this._subject.error(params as AuthorizeError);
+            subject.error(params as AuthorizeError);
         } else {
-            this._subject.next(params as AuthorizeResult);
-            this._subject.complete();
-            this._subject = null;
+            subject.next(params as AuthorizeResult);
+            subject.complete();
         }
     }
 
