@@ -1,5 +1,6 @@
 import { Record } from "immutable";
 import * as moment from "moment";
+import { exists } from "app/utils";
 
 const AccessTokenRecord = Record({
     access_token: null,
@@ -32,26 +33,13 @@ export interface AccessTokenAttributes {
 
 export class AccessToken extends AccessTokenRecord {
     public static isValidToken(data: AccessTokenAttributes) {
-        console.log("Valid token...", data.access_token
-            && data.refresh_token
-            && data.token_type
-            && data.expires_in
-            && data.expires_on
-            && data.ext_expires_in
-            && data.not_before, data.access_token
-            , data.refresh_token
-            , data.token_type
-            , data.expires_in
-            , data.expires_on
-            , data.ext_expires_in
-            , data.not_before);
-        return data.access_token
-            && data.refresh_token
-            && data.token_type
-            && data.expires_in
-            && data.expires_on
-            && data.ext_expires_in
-            && data.not_before;
+        return exists(data.access_token)
+            && exists(data.refresh_token)
+            && exists(data.token_type)
+            && exists(data.expires_in)
+            && exists(data.expires_on)
+            && exists(data.ext_expires_in)
+            && exists(data.not_before);
     }
 
     public access_token: string;
