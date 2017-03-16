@@ -98,10 +98,7 @@ export class AdalService {
     }
 
     public accessTokenData(resource: string = defaultResource): Observable<AccessToken> {
-        console.log("Token data for ", resource);
-
         if (resource in this._currentAccessTokens) {
-            console.log("ALready has token", resource);
             const token = this._currentAccessTokens[resource];
             const expireIn = moment(token.expires_on).diff(moment());
             if (expireIn > AdalService.refreshMargin) {
@@ -168,14 +165,11 @@ export class AdalService {
      * @return Observable with access token object
      */
     private _retrieveNewAccessToken(resource: string): Observable<AccessToken> {
-        console.log("Retrieving new");
         if (resource in this._currentAccessTokens && this._currentAccessTokens[resource].refresh_token) {
-            console.log("Will use refresh", resource);
             return this._useRefreshToken(resource, this._currentAccessTokens[resource].refresh_token);
         }
 
         if (resource in this._newAccessTokenSubject) {
-            console.log("Already quering", resource);
             return this._newAccessTokenSubject[resource].asObservable();
         }
 
@@ -185,14 +179,12 @@ export class AdalService {
             next: (result: AuthorizeResult) => {
                 this.zone.run(() => {
                     this._processUserToken(result.id_token);
-                    console.log("Auth user...", resource, result);
 
                     this._accessTokenService.redeem(resource, result.code).subscribe({
                         next: (token) => {
                             this._processAccessToken(resource, token);
                             subject.next(token);
                             subject.complete();
-                            console.log("GOt token for", resource, token.toJS());
                             delete this._newAccessTokenSubject[resource];
                         },
                         error: (e) => {

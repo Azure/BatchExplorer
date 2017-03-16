@@ -78,7 +78,10 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
     }
 
     public ngOnInit() {
-        this.data.fetchNext();
+        console.time("Fetch next job");
+        this.data.fetchNext().subscribe(() => {
+            console.timeEnd("Fetch next job");
+        });
     }
 
     public ngOnDestroy() {
@@ -87,7 +90,10 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
 
     @autobind()
     public refresh(): Observable<any> {
-        return this.data.refresh();
+        console.time("Refresh job");
+        return this.data.refresh().do(() => {
+            console.timeEnd("Refresh job");
+        });
     }
 
     public jobStatus(job: Job): QuickListItemStatus {

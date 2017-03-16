@@ -90,7 +90,6 @@ export class AppComponent implements AfterViewInit, OnInit {
      * Preload some data needed.
      */
     private _preloadData() {
-        console.log("appcompone", this.nodeService);
         this.nodeService.listNodeAgentSkus().fetchAll();
     }
 }

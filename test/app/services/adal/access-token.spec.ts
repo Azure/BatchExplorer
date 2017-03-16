@@ -44,5 +44,5 @@ describe("AccessToken", () => {
         expect(AccessToken.isValidToken(token1 as any)).toBe(false);
         expect(AccessToken.isValidToken(token2 as any)).toBe(false);
         expect(AccessToken.isValidToken(token3)).toBe(true);
-    })
+    });
 });

@@ -22,12 +22,9 @@ export class BatchClientService {
         if (!this._currentAccountId) {
             throw "No account currently selected....";
         }
-        console.log("================ GET BATCH CLIENT =============================");
         return Observable.combineLatest(this.adal.accessTokenFor(resource), this.currentAccount)
             .first()
             .map(([token, account]) => {
-                console.log("================ GOT BATCH CLIENT TOKEN =============================");
-                console.log(token);
                 const url = `https://${account.properties.accountEndpoint}`;
                 return this.getForAADToken(url, token);
             }).share();

@@ -20,9 +20,7 @@ export class BatchClientProxyFactory {
     private _currentSharedKeyOptions: SharedKeyOptions = {} as any;
     private _currentSharedKeyClient: BatchClientProxy = null;
 
-
     public getForAADToken(accountUrl: string, token: string): BatchClientProxy {
-        console.log("Banana", accountUrl, token);
         if (!token) {
             throw "BatchClientProxy AAD token cannot be null or undefined";
         }

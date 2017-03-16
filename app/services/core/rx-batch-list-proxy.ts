@@ -2,10 +2,10 @@ import { Type } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { ServerError } from "app/models";
+import { exists } from "app/utils";
 import { BatchClientService } from "../batch-client.service";
 import { CachedKeyList } from "./query-cache";
 import { RxListProxy, RxListProxyConfig } from "./rx-list-proxy";
-import { exists } from "app/utils";
 
 const defaultOptions = {
     maxResults: 50,
@@ -38,11 +38,9 @@ export class RxBatchListProxy<TParams, TEntity> extends RxListProxy<TParams, TEn
 
     protected fetchNextItems(): Observable<any> {
         return this._clientProxy().flatMap((client) => {
-            console.log("Got here...", client);
             return Observable.fromPromise(client.fetchNext()).do(() => {
                 this._nextLink = client.nextLink;
             }).catch((error) => {
-                console.log("Error is", error);
                 return Observable.throw(ServerError.fromBatch(error));
             });
         }).share();
@@ -54,7 +52,6 @@ export class RxBatchListProxy<TParams, TEntity> extends RxListProxy<TParams, TEn
     }
 
     protected hasMoreItems(): boolean {
-        console.log("HAs more ....", !this._loadedFirst || exists(this._nextLink), this._loadedFirst , exists(this._nextLink), this._nextLink);
         return !this._loadedFirst || exists(this._nextLink);
     }
 

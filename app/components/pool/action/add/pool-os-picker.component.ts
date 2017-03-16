@@ -55,7 +55,6 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
     private _nodeAgentSkuMap: NodeAgentSkuMap = new NodeAgentSkuMap();
 
     constructor(private formBuilder: FormBuilder, private nodeService: NodeService) {
-        console.log("pOolOSPCIk", this.nodeService);
         this.accountData = this.nodeService.listNodeAgentSkus();
         this.accountData.items.subscribe((result) => {
             this._buildNodeAgentSkuMap(result);

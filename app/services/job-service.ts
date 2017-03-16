@@ -39,7 +39,7 @@ export class JobService extends ServiceBase {
     }
 
     public get(jobId: string, options: any = {}): RxEntityProxy<JobParams, Job> {
-        return new RxBatchEntityProxy(Job,this.batchService,  {
+        return new RxBatchEntityProxy(Job, this.batchService, {
             cache: () => this._cache,
             getFn: (client, params: JobParams) => {
                 return client.job.get(params.id, options);

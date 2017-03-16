@@ -19,7 +19,6 @@ export class AccessTokenService {
      * Retrieve the access token using the given authorization code
      */
     public redeem(resource: string, authorizationCode: string): Observable<AccessToken> {
-        console.log("Reedeem", resource);
         const obs = this.http.post(this._buildUrl(),
             this._redeemBody(resource, authorizationCode),
             this._options()).share()
@@ -39,7 +38,6 @@ export class AccessTokenService {
     }
 
     public refresh(resource: string, refreshToken: string): Observable<AccessToken> {
-        console.log("Refresh", resource);
         const obs = this.http.post(this._buildUrl(), this._refreshBody(resource, refreshToken), this._options()).share()
             .map((response) => {
                 const data = response.json();

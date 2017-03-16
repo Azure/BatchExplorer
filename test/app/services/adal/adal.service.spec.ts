@@ -78,7 +78,7 @@ describe("AdalService", () => {
         localStorage.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(token));
         const tmpService = new AdalService(http, zoneSpy);
         tmpService.init(config);
-        expect((<any>tmpService)._currentAccessTokens).toEqual({})
+        expect((<any>tmpService)._currentAccessTokens).toEqual({});
     });
 
     it("should load the token from local storage if present and not expired", () => {
