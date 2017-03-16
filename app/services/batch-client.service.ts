@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { remote } from "electron";
 import { Observable } from "rxjs";
-import { AccountService } from "./account-service";
+import { AccountService } from "./account.service";
 import { AdalService } from "./adal";
 
 const batchClientFactory = (<any>remote.getCurrentWindow()).batchClientFactory;

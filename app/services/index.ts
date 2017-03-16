@@ -1,4 +1,4 @@
-export * from "./account-service";
+export * from "./account.service";
 export * from "./application-service";
 export * from "./azure-http.service";
 export * from "./electron";

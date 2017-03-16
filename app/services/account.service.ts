@@ -1,4 +1,4 @@
-import { ApplicationRef, Injectable, NgZone } from "@angular/core";
+import { Injectable } from "@angular/core";
 import * as storage from "electron-json-storage";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
@@ -36,6 +36,11 @@ export interface SelectedAccount {
 @Injectable()
 export class AccountService {
     public accountLoaded: Observable<boolean>;
+
+    /**
+     * This represent the value of the current accountId.
+     * This change value immediately after calling #selectAccount
+     */
     public currentAccountId: Observable<string>;
 
     private _accountJsonFileName: string = "account-favorites";
@@ -47,8 +52,6 @@ export class AccountService {
     private _currentAccountId = new BehaviorSubject<string>(null);
 
     constructor(
-        private applicationRef: ApplicationRef,
-        private zone: NgZone,
         private azure: AzureHttpService,
         private subscriptionService: SubscriptionService) {
 
@@ -60,7 +63,6 @@ export class AccountService {
                 const { account } = selection;
                 localStorage.setItem(lastSelectedAccountStorageKey, account.id);
                 this.validateCurrentAccount();
-                this.applicationRef.tick();
             } else {
                 this._currentAccountValid.next(AccountStatus.Invalid);
             }
@@ -73,8 +75,18 @@ export class AccountService {
         return this._accountFavorites.asObservable();
     }
 
+    /**
+     * @returns the current account.
+     * If the current loaded account match the currentAccountId it will return immediately
+     * otherwise this will wait for the account with currentAccountId to be loaded
+     */
     public get currentAccount(): Observable<AccountResource> {
-        return this._currentAccount.map(x => x && x.account);
+        return this._currentAccountId.flatMap((id) => {
+            return this._currentAccount
+                .filter(x => x && x.account && x.account.id === id)
+                .first()
+                .map(x => x && x.account);
+        }).share();
     }
 
     public get currentAccountValid(): Observable<AccountStatus> {
