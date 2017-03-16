@@ -1,31 +1,36 @@
 import { Injectable } from "@angular/core";
 import { remote } from "electron";
 import { Observable } from "rxjs";
-
-import { AccountResource } from "app/models";
 import { AccountService } from "./account-service";
 import { AdalService } from "./adal";
 
 const batchClientFactory = (<any>remote.getCurrentWindow()).batchClientFactory;
 
+const resource = "https://batch.core.windows.net/";
+
 @Injectable()
 export class BatchClientService {
-    private _currentAccount: AccountResource;
+    private _currentAccountId: string;
 
     constructor(private adal: AdalService, private accountService: AccountService) {
-        accountService.currentAccount.subscribe((account) => {
-            this._currentAccount = account;
+        accountService.currentAccountId.subscribe((id) => {
+            this._currentAccountId = id;
         });
     }
 
     public get(): Observable<any> {
-        if (!this._currentAccount) {
+        if (!this._currentAccountId) {
             throw "No account currently selected....";
         }
-
-        return this.adal.accessToken.map((token) => {
-            return this.getForAADToken(this._currentAccount.properties.accountEndpoint, token);
-        }).share();
+        console.log("================ GET BATCH CLIENT =============================");
+        return Observable.combineLatest(this.adal.accessTokenFor(resource), this.currentAccount)
+            .first()
+            .map(([token, account]) => {
+                console.log("================ GOT BATCH CLIENT TOKEN =============================");
+                console.log(token);
+                const url = `https://${account.properties.accountEndpoint}`;
+                return this.getForAADToken(url, token);
+            }).share();
     }
 
     public getForAADToken(accountUrl: string, token: string) {
@@ -34,5 +39,9 @@ export class BatchClientService {
 
     public getForSharedKey(accountUrl: string, token: string) {
         return batchClientFactory.getForSharedKey(accountUrl, token);
+    }
+
+    private get currentAccount() {
+        return this.accountService.currentAccount.filter(x => Boolean(x)).first();
     }
 }

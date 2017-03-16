@@ -19,6 +19,8 @@ export interface AuthorizationResult {
     state: string;
 }
 
+const defaultResource = "https://management.core.windows.net/";
+
 @Injectable()
 export class AdalService {
     /**
@@ -33,9 +35,9 @@ export class AdalService {
     private _authorizeUser: UserAuthorization;
     private _accessTokenService: AccessTokenService;
     private _userDecoder: UserDecoder;
-    private _newAccessTokenSubject: AsyncSubject<any> = null;
+    private _newAccessTokenSubject: StringMap<AsyncSubject<any>> = {};
 
-    private _currentAccessToken: AccessToken = null;
+    private _currentAccessTokens: StringMap<AccessToken> = {};
 
     private _currentUser = new BehaviorSubject<AADUser>(null);
 
@@ -50,7 +52,7 @@ export class AdalService {
         this._accessTokenService = new AccessTokenService(config, this.http);
         this._retrieveUserFromLocalStorage();
         this._retrieveAccessTokenFromLocalStorage();
-        if (this._currentUser.getValue() && this._currentAccessToken) {
+        if (this._currentUser.getValue()) {
             if (!remote.getCurrentWindow().isVisible()) {
                 remote.getCurrentWindow().show();
             }
@@ -58,21 +60,21 @@ export class AdalService {
     }
 
     public login(): Observable<any> {
-        if (this._currentUser.getValue() && this._currentAccessToken) {
+        if (this._currentUser.getValue()) {
             return Observable.of({});
         }
-        const obs = this._retrieveNewAccessToken();
-        obs.subscribe({
-            next: () => {
-                if (!remote.getCurrentWindow().isVisible()) {
-                    remote.getCurrentWindow().show();
-                }
-            },
-            error: () => {
-                log.error("Error login");
-            },
-        });
-        return obs;
+        // const obs = this._retrieveNewAccessToken(resource);
+        // obs.subscribe({
+        //     next: () => {
+        //         if (!remote.getCurrentWindow().isVisible()) {
+        //             remote.getCurrentWindow().show();
+        //         }
+        //     },
+        //     error: () => {
+        //         log.error("Error login");
+        //     },
+        // });
+        // return obs;
     }
 
     public logout(): void {
@@ -82,24 +84,32 @@ export class AdalService {
         if (remote.getCurrentWindow().isVisible()) {
             remote.getCurrentWindow().hide();
         }
-        this._currentAccessToken = null;
+        this._currentAccessTokens = {};
         this._currentUser.next(null);
         this._authorizeUser.logout();
     }
 
     public get accessToken(): Observable<string> {
-        return this.accessTokenData.map(x => x.access_token);
+        return this.accessTokenFor();
     }
 
-    public get accessTokenData(): Observable<AccessToken> {
-        if (this._currentAccessToken) {
-            const expireIn = moment(this._currentAccessToken.expires_on).diff(moment());
+    public accessTokenFor(resource: string = defaultResource) {
+        return this.accessTokenData(resource).map(x => x.access_token);
+    }
+
+    public accessTokenData(resource: string = defaultResource): Observable<AccessToken> {
+        console.log("Token data for ", resource);
+
+        if (resource in this._currentAccessTokens) {
+            console.log("ALready has token", resource);
+            const token = this._currentAccessTokens[resource];
+            const expireIn = moment(token.expires_on).diff(moment());
             if (expireIn > AdalService.refreshMargin) {
-                return Observable.of(this._currentAccessToken);
+                return Observable.of(token);
             }
         }
 
-        return this._retrieveNewAccessToken();
+        return this._retrieveNewAccessToken(resource);
     }
 
     /**
@@ -129,7 +139,7 @@ export class AdalService {
                 if (token.hasExpired()) {
                     localStorage.removeItem(Constants.localStorageKey.currentUser);
                 } else {
-                    this._currentAccessToken = token;
+                    // this._currentAccessTokens = token;
                 }
             } catch (e) {
                 localStorage.removeItem(Constants.localStorageKey.currentUser);
@@ -142,46 +152,49 @@ export class AdalService {
      * Will set the currentAccesToken.
      * @return Observable with access token object
      */
-    private _retrieveNewAccessToken(): Observable<AccessToken> {
-        if (this._currentAccessToken && this._currentAccessToken.refresh_token) {
-            return this._useRefreshToken(this._currentAccessToken.refresh_token);
+    private _retrieveNewAccessToken(resource: string): Observable<AccessToken> {
+        if (resource in this._currentAccessTokens && this._currentAccessTokens[resource].refresh_token) {
+            return this._useRefreshToken(resource, this._currentAccessTokens[resource].refresh_token);
         }
-        if (this._newAccessTokenSubject) {
-            return this._newAccessTokenSubject.asObservable();
+
+        if (resource in this._newAccessTokenSubject) {
+            return this._newAccessTokenSubject[resource].asObservable();
         }
-        const subject = this._newAccessTokenSubject = new AsyncSubject();
-        (<any>subject)._uida = Math.floor(Math.random() * 100);
+
+        const subject = this._newAccessTokenSubject[resource] = new AsyncSubject();
+
         this._authorizeUser.authorizeTrySilentFirst().subscribe({
             next: (result: AuthorizeResult) => {
                 this._processUserToken(result.id_token);
 
-                this._accessTokenService.redeem(result.code).subscribe({
+                this._accessTokenService.redeem(resource, result.code).subscribe({
                     next: (token) => {
-                        this._processAccessToken(token);
+                        this._processAccessToken(resource, token);
                         subject.next(token);
                         subject.complete();
-                        this._newAccessTokenSubject = null;
+                        console.log("GOt token,,,", token);
+                        delete this._newAccessTokenSubject[resource];
                     },
                     error: (e) => {
                         subject.error(e);
-                        this._newAccessTokenSubject = null;
+                        delete this._newAccessTokenSubject[resource];
                     },
                 });
             },
             error: (error) => {
                 subject.error(error);
-                this._newAccessTokenSubject = null;
+                delete this._newAccessTokenSubject[resource];
                 log.error("Error auth", error);
             },
         });
         return subject;
     }
 
-    private _useRefreshToken(refreshToken: string) {
-        const obs = this._accessTokenService.refresh(refreshToken);
+    private _useRefreshToken(resource: string, refreshToken: string) {
+        const obs = this._accessTokenService.refresh(resource, refreshToken);
         obs.subscribe({
             next: (token) => {
-                this._processAccessToken(token);
+                this._processAccessToken(resource, token);
             },
             error: (error) => {
                 log.error("Error refreshing token");
@@ -199,8 +212,8 @@ export class AdalService {
         localStorage.setItem(Constants.localStorageKey.currentUser, JSON.stringify(user));
     }
 
-    private _processAccessToken(token: AccessToken) {
-        this._currentAccessToken = token;
+    private _processAccessToken(resource: string, token: AccessToken) {
+        this._currentAccessTokens[resource] = token;
         localStorage.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(token));
     }
 }

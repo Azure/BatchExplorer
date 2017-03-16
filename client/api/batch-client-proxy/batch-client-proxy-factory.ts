@@ -22,6 +22,7 @@ export class BatchClientProxyFactory {
 
 
     public getForAADToken(accountUrl: string, token: string): BatchClientProxy {
+        console.log("Banana", accountUrl, token);
         if (!token) {
             throw "BatchClientProxy AAD token cannot be null or undefined";
         }

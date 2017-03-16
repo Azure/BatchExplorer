@@ -35,12 +35,15 @@ export class RxBatchListProxy<TParams, TEntity> extends RxListProxy<TParams, TEn
     }
 
     protected fetchNextItems(): Observable<any> {
-        const client = this._clientProxy();
-        return Observable.fromPromise(client.fetchNext()).do(() => {
-            this._nextLink = client.nextLink;
-        }).catch((error) => {
-            return Observable.throw(ServerError.fromBatch(error));
-        });
+        return this._clientProxy().flatMap((client) => {
+            console.log("Got here...", client);
+            return Observable.fromPromise(client.fetchNext()).do(() => {
+                this._nextLink = client.nextLink;
+            }).catch((error) => {
+                console.log("Error is", error);
+                return Observable.throw(ServerError.fromBatch(error));
+            });
+        }).share();
     }
 
     protected processResponse(response: any) {
@@ -48,7 +51,7 @@ export class RxBatchListProxy<TParams, TEntity> extends RxListProxy<TParams, TEn
     }
 
     protected hasMoreItems(): boolean {
-        return this._clientProxy().hasMoreItems();
+        return this._nextLink !== null;
     }
 
     protected queryCacheKey(): string {
@@ -68,8 +71,10 @@ export class RxBatchListProxy<TParams, TEntity> extends RxListProxy<TParams, TEn
     }
 
     private _clientProxy() {
-        const proxy = this._proxyConstructor(this.batchClient, this._params, this._computeOptions(this._options));
-        proxy.nextLink = this._nextLink;
-        return proxy;
+        return this.batchClient.get().map((client) => {
+            const proxy = this._proxyConstructor(client, this._params, this._computeOptions(this._options));
+            proxy.nextLink = this._nextLink;
+            return proxy;
+        }).share();
     }
 }

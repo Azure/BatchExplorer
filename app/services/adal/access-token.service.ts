@@ -18,8 +18,12 @@ export class AccessTokenService {
     /**
      * Retrieve the access token using the given authorization code
      */
-    public redeem(authorizationCode: string): Observable<AccessToken> {
-        const obs = this.http.post(this._buildUrl(), this._redeemBody(authorizationCode), this._options()).share()
+    public redeem(resource: string, authorizationCode: string): Observable<AccessToken> {
+        console.log("Reedeem", resource);
+        const obs = this.http.post(this._buildUrl(),
+            this._redeemBody(resource, authorizationCode),
+            this._options()).share()
+
             .map((response) => {
                 const data = response.json();
                 return this._processResponse(data);
@@ -34,8 +38,9 @@ export class AccessTokenService {
         return obs;
     }
 
-    public refresh(refreshToken: string): Observable<AccessToken> {
-        const obs = this.http.post(this._buildUrl(), this._refreshBody(refreshToken), this._options()).share()
+    public refresh(resource: string, refreshToken: string): Observable<AccessToken> {
+        console.log("Refresh", resource);
+        const obs = this.http.post(this._buildUrl(), this._refreshBody(resource, refreshToken), this._options()).share()
             .map((response) => {
                 const data = response.json();
                 return this._processResponse(data);
@@ -53,23 +58,23 @@ export class AccessTokenService {
         return `${baseUrl}/${this.config.tenant}/oauth2/token`;
     }
 
-    private _redeemBody(authorizationCode: string) {
+    private _redeemBody(resource: string, authorizationCode: string) {
         const params = {
             grant_type: "authorization_code",
             client_id: this.config.clientId,
             code: authorizationCode,
-            resource: "https://management.core.windows.net/",
+            resource: resource,
             redirect_uri: this.config.redirectUri,
         };
         return objectToParams(params);
     }
 
-    private _refreshBody(refresh_token: string) {
+    private _refreshBody(resource, refresh_token: string) {
         const params = {
             grant_type: "refresh_token",
             client_id: this.config.clientId,
             refresh_token: refresh_token,
-            resource: "https://management.core.windows.net/",
+            resource: resource,
             redirect_uri: this.config.redirectUri,
         };
         return objectToParams(params);

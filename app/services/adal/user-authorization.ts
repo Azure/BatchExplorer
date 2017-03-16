@@ -94,7 +94,7 @@ export class UserAuthorization {
             scope: "user_impersonation+openid",
             nonce: SecureUtils.uuid(),
             state: SecureUtils.uuid(),
-            resource: "https://management.core.windows.net/",
+            // resource: "https://batch.core.windows.net/",
         };
 
         if (silent) {
