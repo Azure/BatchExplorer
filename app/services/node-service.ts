@@ -3,7 +3,7 @@ import { List } from "immutable";
 import { AsyncSubject, Observable } from "rxjs";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
-import { Node, NodeConnectionSettings, NodeState, NodeAgentSku } from "app/models";
+import { Node, NodeAgentSku, NodeConnectionSettings, NodeState } from "app/models";
 import { ArrayUtils, ObservableUtils, log } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 import { BatchClientService } from "./batch-client.service";

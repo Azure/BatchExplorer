@@ -9,7 +9,6 @@ import { BatchError, ServerError } from "app/models";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy } from "app/services/core";
 import { BatchClientServiceMock } from "test/utils/mocks";
 import { FakeModel } from "./fake-model";
-import { exists } from "app/utils";
 
 const data = [
     [

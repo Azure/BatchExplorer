@@ -1,5 +1,6 @@
 import { Record } from "immutable";
 import * as moment from "moment";
+
 import { exists } from "app/utils";
 
 const AccessTokenRecord = Record({

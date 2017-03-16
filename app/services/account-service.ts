@@ -57,13 +57,8 @@ export class AccountService {
 
         this._currentAccount.subscribe((selection) => {
             if (selection) {
-                const { account, keys } = selection;
+                const { account } = selection;
                 localStorage.setItem(lastSelectedAccountStorageKey, account.id);
-                // BatchClient.setOptions({
-                //     account: account.name,
-                //     key: keys.primary,
-                //     url: "https://" + account.properties.accountEndpoint,
-                // });
                 this.validateCurrentAccount();
                 this.applicationRef.tick();
             } else {
