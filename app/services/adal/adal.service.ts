@@ -32,7 +32,7 @@ export class AdalService {
     public currentUser: Observable<AADUser>;
 
     private _config: AdalConfig;
-    private _authorizeUser: UserAuthorization;
+    private _userAuthorization: UserAuthorization;
     private _accessTokenService: AccessTokenService;
     private _userDecoder: UserDecoder;
     private _newAccessTokenSubject: StringMap<AsyncSubject<any>> = {};
@@ -48,10 +48,10 @@ export class AdalService {
 
     public init(config: AdalConfig) {
         this._config = config;
-        this._authorizeUser = new UserAuthorization(config);
+        this._userAuthorization = new UserAuthorization(config);
         this._accessTokenService = new AccessTokenService(config, this.http);
         this._retrieveUserFromLocalStorage();
-        this._retrieveAccessTokenFromLocalStorage();
+        // this._retrieveAccessTokenFromLocalStorage();
         if (this._currentUser.getValue()) {
             if (!remote.getCurrentWindow().isVisible()) {
                 remote.getCurrentWindow().show();
@@ -63,18 +63,18 @@ export class AdalService {
         if (this._currentUser.getValue()) {
             return Observable.of({});
         }
-        // const obs = this._retrieveNewAccessToken(resource);
-        // obs.subscribe({
-        //     next: () => {
-        //         if (!remote.getCurrentWindow().isVisible()) {
-        //             remote.getCurrentWindow().show();
-        //         }
-        //     },
-        //     error: () => {
-        //         log.error("Error login");
-        //     },
-        // });
-        // return obs;
+        const obs = this._retrieveNewAccessToken(defaultResource);
+        obs.subscribe({
+            next: () => {
+                if (!remote.getCurrentWindow().isVisible()) {
+                    remote.getCurrentWindow().show();
+                }
+            },
+            error: () => {
+                log.error("Error login");
+            },
+        });
+        return obs;
     }
 
     public logout(): void {
@@ -86,7 +86,7 @@ export class AdalService {
         }
         this._currentAccessTokens = {};
         this._currentUser.next(null);
-        this._authorizeUser.logout();
+        this._userAuthorization.logout();
     }
 
     public get accessToken(): Observable<string> {
@@ -174,52 +174,36 @@ export class AdalService {
         }
 
         const subject = this._newAccessTokenSubject[resource] = new AsyncSubject();
-        this._loadNewAccessToken(resource);
+        this._redeemNewAccessToken(resource);
         return subject;
     }
 
     /**
-     * Load a new access token.
+     * Load a new access token from the authorization code given at login
      */
-    private _loadNewAccessToken(resource: string, forceReLogin = false) {
-        const subject = this._newAccessTokenSubject[resource];
+    private _redeemNewAccessToken(resource: string, forceReLogin = false) {
+        this._authorizeUser(forceReLogin)
+            .do((result) => this._processUserToken(result.id_token))
+            .flatMap((result: AuthorizeResult) => {
+                return this._accessTokenService.redeem(resource, result.code);
+            })
+            .subscribe({
+                next: (token) => {
+                    this.zone.run(() => this._processAccessToken(resource, token));
+                },
+                error: (e: Response) => {
+                    log.error("Error redeem auth code for token", e);
+                    this._processAccessTokenError(resource, e);
+                },
+            });
+    }
 
-        let obs;
-
+    private _authorizeUser(forceReLogin) {
         if (forceReLogin) {
-            obs = this._authorizeUser.authorize(false);
+            return this._userAuthorization.authorize(false);
         } else {
-            obs = this._authorizeUser.authorizeTrySilentFirst();
+            return this._userAuthorization.authorizeTrySilentFirst();
         }
-        obs.subscribe({
-            next: (result: AuthorizeResult) => {
-                this.zone.run(() => {
-                    this._processUserToken(result.id_token);
-
-                    this._accessTokenService.redeem(resource, result.code).subscribe({
-                        next: (token) => {
-                            this._processAccessToken(resource, token);
-                            delete this._newAccessTokenSubject[resource];
-                            subject.next(token);
-                            subject.complete();
-                        },
-                        error: (e: Response) => {
-                            log.error("Error redeem auth code for token", e);
-                            if (this._processAccessTokenError(resource, e)) {
-                                return;
-                            }
-                            delete this._newAccessTokenSubject[resource];
-                            subject.error(e);
-                        },
-                    });
-                });
-            },
-            error: (error) => {
-                delete this._newAccessTokenSubject[resource];
-                subject.error(error);
-                log.error("Error auth", error);
-            },
-        });
     }
 
     private _useRefreshToken(resource: string, refreshToken: string) {
@@ -247,12 +231,22 @@ export class AdalService {
     private _processAccessToken(resource: string, token: AccessToken) {
         this._currentAccessTokens[resource] = token;
         localStorage.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(this._currentAccessTokens));
+
+        // Notify
+        const subject = this._newAccessTokenSubject[resource];
+        delete this._newAccessTokenSubject[resource];
+        subject.next(token);
+        subject.complete();
     }
 
     private _processAccessTokenError(resource: string, error: Response) {
         const data: AccessTokenErrorResult = error.json();
         if (data.error === AccessTokenError.invalid_grant) {
-            this._loadNewAccessToken(resource, true);
+            this._redeemNewAccessToken(resource, true);
         }
+
+        const subject = this._newAccessTokenSubject[resource];
+        delete this._newAccessTokenSubject[resource];
+        subject.error(error);
     }
 }
