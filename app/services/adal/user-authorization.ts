@@ -45,9 +45,7 @@ export class UserAuthorization {
      */
     public authorize(silent = false): Observable<AuthorizeResult> {
         this._waitingForAuth = true;
-        console.log("Auth1", silent);
         if (this._subject) {
-            console.log("Subkect exists already...");
             return this._subject.asObservable();
         }
         this._subject = new AsyncSubject();
@@ -65,7 +63,6 @@ export class UserAuthorization {
      */
     public authorizeTrySilentFirst(): Observable<AuthorizeResult> {
         return this.authorize(true).catch((error, source) => {
-            console.log("Caught this._subject error", error);
             return this.authorize(false);
         });
     }
