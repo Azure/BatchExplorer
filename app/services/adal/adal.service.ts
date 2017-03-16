@@ -182,6 +182,8 @@ export class AdalService {
      * Load a new access token from the authorization code given at login
      */
     private _redeemNewAccessToken(resource: string, forceReLogin = false) {
+        const subject = this._newAccessTokenSubject[resource];
+
         this._authorizeUser(forceReLogin)
             .do((result) => this._processUserToken(result.id_token))
             .flatMap((result: AuthorizeResult) => {
@@ -189,11 +191,20 @@ export class AdalService {
             })
             .subscribe({
                 next: (token) => {
-                    this.zone.run(() => this._processAccessToken(resource, token));
+                    this.zone.run(() => {
+                        this._processAccessToken(resource, token);
+                        delete this._newAccessTokenSubject[resource];
+                        subject.next(token);
+                        subject.complete();
+                    });
                 },
                 error: (e: Response) => {
                     log.error("Error redeem auth code for token", e);
-                    this._processAccessTokenError(resource, e);
+                    if (this._processAccessTokenError(resource, e)) {
+                        return;
+                    }
+                    delete this._newAccessTokenSubject[resource];
+                    subject.error(e);
                 },
             });
     }
@@ -231,12 +242,6 @@ export class AdalService {
     private _processAccessToken(resource: string, token: AccessToken) {
         this._currentAccessTokens[resource] = token;
         localStorage.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(this._currentAccessTokens));
-
-        // Notify
-        const subject = this._newAccessTokenSubject[resource];
-        delete this._newAccessTokenSubject[resource];
-        subject.next(token);
-        subject.complete();
     }
 
     private _processAccessTokenError(resource: string, error: Response) {
@@ -244,9 +249,5 @@ export class AdalService {
         if (data.error === AccessTokenError.invalid_grant) {
             this._redeemNewAccessToken(resource, true);
         }
-
-        const subject = this._newAccessTokenSubject[resource];
-        delete this._newAccessTokenSubject[resource];
-        subject.error(error);
     }
 }

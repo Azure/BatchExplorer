@@ -40,30 +40,30 @@ describe("AccountService", () => {
         expect(currentAccount).toBeUndefined();
 
         accountService.selectAccount("account-1");
-        // expect(currentAccountId).toEqual("account-1", "Account id should have been updated immediately");
-        // expect(currentAccount).not.toBeUndefined();
-        // expect(currentAccount.id).toBe("account-1");
+        expect(currentAccountId).toEqual("account-1", "Account id should have been updated immediately");
+        expect(currentAccount).not.toBeUndefined();
+        expect(currentAccount.id).toBe("account-1");
     });
 
-    // it("currentAccount should not return anything after selectAccount is called until done loading", fakeAsync(() => {
-    //     accountService.selectAccount("account-1");
-    //     expect(currentAccount).not.toBeUndefined();
-    //     expect(currentAccount.id).toBe("account-1");
+    it("currentAccount should not return anything after selectAccount is called until done loading", fakeAsync(() => {
+        accountService.selectAccount("account-1");
+        expect(currentAccount).not.toBeUndefined();
+        expect(currentAccount.id).toBe("account-1");
 
-    //     let accountSubject = new AsyncSubject();
-    //     accountService.getOnce = jasmine.createSpy("getOnce").and.returnValue(accountSubject);
+        let accountSubject = new AsyncSubject();
+        accountService.getOnce = jasmine.createSpy("getOnce").and.returnValue(accountSubject);
 
-    //     accountService.selectAccount("account-2");
-    //     currentAccount = undefined;
-    //     subs.push(accountService.currentAccount.subscribe((x) => currentAccount = x));
-    //     expect(currentAccountId).toEqual("account-2", "Account id should have been updated immediately");
-    //     expect(currentAccount).toBeUndefined();
+        accountService.selectAccount("account-2");
+        currentAccount = undefined;
+        subs.push(accountService.currentAccount.subscribe((x) => currentAccount = x));
+        expect(currentAccountId).toEqual("account-2", "Account id should have been updated immediately");
+        expect(currentAccount).toBeUndefined();
 
-    //     accountSubject.next(new AccountResource({ id: "account-2" }));
-    //     accountSubject.complete();
-    //     tick();
+        accountSubject.next(new AccountResource({ id: "account-2" }));
+        accountSubject.complete();
+        tick();
 
-    //     expect(currentAccount).not.toBeUndefined();
-    //     expect(currentAccount.id).toBe("account-2");
-    // }));
+        expect(currentAccount).not.toBeUndefined();
+        expect(currentAccount.id).toBe("account-2");
+    }));
 });
