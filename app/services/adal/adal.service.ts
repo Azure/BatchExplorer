@@ -133,20 +133,35 @@ export class AdalService {
      */
     private _retrieveAccessTokenFromLocalStorage() {
         const tokenStr = localStorage.getItem(Constants.localStorageKey.currentAccessToken);
-        if (tokenStr) {
-            try {
-                const token = new AccessToken(JSON.parse(tokenStr));
-                if (token.hasExpired()) {
-                    localStorage.removeItem(Constants.localStorageKey.currentUser);
-                } else {
-                    // this._currentAccessTokens = token;
-                }
-            } catch (e) {
-                localStorage.removeItem(Constants.localStorageKey.currentUser);
+        if (!tokenStr) {
+            return;
+        }
+        try {
+            const data = JSON.parse(tokenStr);
+            const tokens = this._processSerializedTokens(data);
+            if (Object.keys(tokens).length === 0) {
+                localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
+            } else {
+                this._currentAccessTokens = tokens;
             }
+        } catch (e) {
+            localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
         }
     }
 
+    private _processSerializedTokens(data: any): StringMap<AccessToken> {
+        const tokens = {};
+        for (let resource of Object.keys(data)) {
+            if (!AccessToken.isValidToken(data[resource])) {
+                continue;
+            }
+            const token = new AccessToken(data[resource]);
+            if (!token.hasExpired()) {
+                tokens[resource] = token;
+            }
+        }
+        return tokens;
+    }
     /**
      * Retrieve a new access token using the refresh token if available or authorize the user and use authorization code
      * Will set the currentAccesToken.
@@ -170,14 +185,14 @@ export class AdalService {
             next: (result: AuthorizeResult) => {
                 this.zone.run(() => {
                     this._processUserToken(result.id_token);
-                    console.log("Auth user...", resource);
+                    console.log("Auth user...", resource, result);
 
                     this._accessTokenService.redeem(resource, result.code).subscribe({
                         next: (token) => {
                             this._processAccessToken(resource, token);
                             subject.next(token);
                             subject.complete();
-                            console.log("GOt token for", resource, token);
+                            console.log("GOt token for", resource, token.toJS());
                             delete this._newAccessTokenSubject[resource];
                         },
                         error: (e) => {
@@ -221,6 +236,6 @@ export class AdalService {
 
     private _processAccessToken(resource: string, token: AccessToken) {
         this._currentAccessTokens[resource] = token;
-        localStorage.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(token));
+        localStorage.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(this._currentAccessTokens));
     }
 }
