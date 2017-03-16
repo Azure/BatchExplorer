@@ -5,6 +5,7 @@ import { ServerError } from "app/models";
 import { BatchClientService } from "../batch-client.service";
 import { CachedKeyList } from "./query-cache";
 import { RxListProxy, RxListProxyConfig } from "./rx-list-proxy";
+import { exists } from "app/utils";
 
 const defaultOptions = {
     maxResults: 50,
@@ -20,6 +21,7 @@ export interface RxBatchListProxyConfig<TParams, TEntity> extends RxListProxyCon
  */
 export class RxBatchListProxy<TParams, TEntity> extends RxListProxy<TParams, TEntity> {
     private _nextLink = null;
+    private _loadedFirst = false;
     private _proxyConstructor: (client: any, params: TParams, options: any) => any;
 
     constructor(
@@ -31,7 +33,7 @@ export class RxBatchListProxy<TParams, TEntity> extends RxListProxy<TParams, TEn
     }
 
     protected handleChanges(params: any, options: any) {
-        // Nothing to do
+        this._loadedFirst = false;
     }
 
     protected fetchNextItems(): Observable<any> {
@@ -47,11 +49,13 @@ export class RxBatchListProxy<TParams, TEntity> extends RxListProxy<TParams, TEn
     }
 
     protected processResponse(response: any) {
+        this._loadedFirst = true;
         return response.data;
     }
 
     protected hasMoreItems(): boolean {
-        return this._nextLink !== null;
+        console.log("HAs more ....", !this._loadedFirst || exists(this._nextLink), this._loadedFirst , exists(this._nextLink), this._nextLink);
+        return !this._loadedFirst || exists(this._nextLink);
     }
 
     protected queryCacheKey(): string {
@@ -63,6 +67,7 @@ export class RxBatchListProxy<TParams, TEntity> extends RxListProxy<TParams, TEn
     }
 
     protected getQueryCacheData(queryCache: CachedKeyList): any {
+        this._loadedFirst = true;
         this._nextLink = queryCache.data;
     }
 
@@ -74,6 +79,7 @@ export class RxBatchListProxy<TParams, TEntity> extends RxListProxy<TParams, TEn
         return this.batchClient.get().map((client) => {
             const proxy = this._proxyConstructor(client, this._params, this._computeOptions(this._options));
             proxy.nextLink = this._nextLink;
+            proxy.loadedFirst = this._loadedFirst;
             return proxy;
         }).share();
     }

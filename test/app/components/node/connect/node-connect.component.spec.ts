@@ -8,7 +8,7 @@ import { PropertyGroupComponent, TextPropertyComponent } from "app/components/ba
 import { SidebarRef } from "app/components/base/sidebar";
 import { NodeConnectComponent } from "app/components/node/connect";
 import { NodeAgentSku } from "app/models";
-import { AccountService, ElectronShell, FileSystemService, NodeService, NodeUserService } from "app/services";
+import { ElectronShell, FileSystemService, NodeService, NodeUserService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { RxMockListProxy } from "test/utils/mocks";
 
@@ -24,19 +24,16 @@ describe("NodeConnectComponent", () => {
     let component: NodeConnectComponent;
     let de: DebugElement;
 
-    let accountServiceSpy;
     let nodeServiceSpy;
     let nodeUserServiceSpy;
 
     beforeEach(() => {
-        accountServiceSpy = {
-            listNodeAgentSkus: jasmine.createSpy("").and.returnValue(new RxMockListProxy(NodeAgentSku, {
-                items: [],
-            })),
-        };
 
         nodeServiceSpy = {
             getRemoteDesktop: jasmine.createSpy("").and.returnValue(Observable.of({ content: "banana" })),
+            listNodeAgentSkus: jasmine.createSpy("").and.returnValue(new RxMockListProxy(NodeAgentSku, {
+                items: [],
+            })),
         };
 
         nodeUserServiceSpy = {
@@ -50,7 +47,6 @@ describe("NodeConnectComponent", () => {
             ],
             providers: [
                 { provide: SidebarRef, useValue: null },
-                { provide: AccountService, useValue: accountServiceSpy },
                 { provide: NodeService, useValue: nodeServiceSpy },
                 { provide: NodeUserService, useValue: nodeUserServiceSpy },
                 { provide: NodeUserService, useValue: nodeUserServiceSpy },

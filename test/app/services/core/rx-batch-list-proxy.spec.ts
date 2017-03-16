@@ -7,7 +7,9 @@ import { List, OrderedSet } from "immutable";
 import { LoadingStatus } from "app/components/base/loading";
 import { BatchError, ServerError } from "app/models";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy } from "app/services/core";
+import { BatchClientServiceMock } from "test/utils/mocks";
 import { FakeModel } from "./fake-model";
+import { exists } from "app/utils";
 
 const data = [
     [
@@ -27,17 +29,15 @@ const updatedData = [[
     { id: "3", state: "completed", name: "Fake3" },
 ]];
 
-let mockProxyIdCounter = 0;
-
-class MockClientProxy {
+class MockListProxy {
     public fetchNext: jasmine.Spy;
     public data: any[];
-    public page = 0;
-    public id: number;
+    public nextLink: any;
+    public loadedFirst: any;
+
     private _options: any;
 
     constructor(options: any) {
-        this.id = mockProxyIdCounter++;
         this.options = options;
         this.fetchNext = jasmine.createSpy("fetchNext").and.callFake(() => {
             if (!this.data) {
@@ -46,7 +46,13 @@ class MockClientProxy {
                     message: { value: "Very bad stuff." },
                 });
             }
-            return Promise.resolve({ data: this.data[this.page++] });
+            const pageData = this.data[this.page];
+            this.nextLink++;
+            if (this.nextLink === this.data.length) {
+                this.nextLink = null;
+            }
+            this.loadedFirst = true;
+            return Promise.resolve({ data: pageData });
         });
     }
 
@@ -59,35 +65,42 @@ class MockClientProxy {
         } else {
             this.data = null;
         }
-        this.page = 0;
-    }
-
-    public clone() {
-        const clone = new MockClientProxy(this._options);
-        clone.page = this.page;
-        clone.id = this.id;
-        return clone;
+        this.nextLink = 0;
+        this.loadedFirst = false;
     }
 
     public hasMoreItems() {
-        return this.page < this.data.length;
+        return !this.loadedFirst || this.nextLink < this.data.length;
+    }
+
+    public get page() {
+        if (!this.loadedFirst) {
+            return 0;
+        } else if (this.nextLink) {
+            return this.nextLink;
+        } else {
+            return this.data.length;
+        }
     }
 }
 
 describe("RxBatchListProxy", () => {
     let proxy: RxBatchListProxy<{}, FakeModel>;
     let cache: DataCache<FakeModel>;
-    let clientProxy: MockClientProxy;
+    let clientProxy: MockListProxy;
     let hasMore = true;
     let items: List<FakeModel>;
     let status: LoadingStatus;
     let error: ServerError;
+    let batchClientServiceSpy;
+
     beforeEach(() => {
         cache = new DataCache<FakeModel>();
-        clientProxy = new MockClientProxy({});
-        proxy = new RxBatchListProxy(FakeModel, {
+        clientProxy = new MockListProxy({});
+        batchClientServiceSpy = new BatchClientServiceMock(null);
+        proxy = new RxBatchListProxy(FakeModel, batchClientServiceSpy, {
             cache: () => cache,
-            proxyConstructor: (params, options) => {
+            proxyConstructor: (client, params, options) => {
                 clientProxy.options = options;
                 return clientProxy;
             },
@@ -179,7 +192,7 @@ describe("RxBatchListProxy", () => {
         });
 
         it("should NOT add the item if already present and update exiting one", (done) => {
-            const entityProxy = new RxBatchEntityProxy<any, FakeModel>(FakeModel, {
+            const entityProxy = new RxBatchEntityProxy<any, FakeModel>(FakeModel, batchClientServiceSpy, {
                 cache: () => cache,
                 getFn: () => Promise.resolve({ data: { id: "2", state: "running", name: "Fake2" } }),
             });
@@ -196,7 +209,7 @@ describe("RxBatchListProxy", () => {
         });
 
         it("should add the item if NOT already present", (done) => {
-            const entityProxy = new RxBatchEntityProxy<any, FakeModel>(FakeModel, {
+            const entityProxy = new RxBatchEntityProxy<any, FakeModel>(FakeModel, batchClientServiceSpy, {
                 cache: () => cache,
                 getFn: () => Promise.resolve({ data: { id: "4", state: "running", name: "Fake4" } }),
             });
@@ -225,8 +238,8 @@ describe("RxBatchListProxy", () => {
         });
 
         it("a new proxy with the same query should use the same keys and not load anything", (done) => {
-            const otherClientProxy = new MockClientProxy({});
-            let otherProxy = new RxBatchListProxy(FakeModel, {
+            const otherClientProxy = new MockListProxy({});
+            let otherProxy = new RxBatchListProxy(FakeModel, batchClientServiceSpy, {
                 cache: () => cache,
                 proxyConstructor: (params, options) => {
                     otherClientProxy.options = options;
@@ -238,10 +251,6 @@ describe("RxBatchListProxy", () => {
             otherProxy.status.subscribe((x) => otherStatus = x);
             otherProxy.fetchNext().subscribe(() => {
                 expect(items).toEqualImmutable(List(data[0].map((x) => new FakeModel(x))));
-                const currentClientProxy: MockClientProxy = (otherProxy as any)._clientProxy;
-                expect(currentClientProxy.id).toEqual(clientProxy.id,
-                    "Should be a clone of the client proxy used the first time");
-                expect(currentClientProxy.fetchNext).not.toHaveBeenCalled();
                 expect(otherClientProxy.fetchNext).not.toHaveBeenCalled();
 
                 expect(otherStatus).toBe(LoadingStatus.Ready);

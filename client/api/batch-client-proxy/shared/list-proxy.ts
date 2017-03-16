@@ -16,7 +16,7 @@ export class ListProxy {
     public nextLink: string;
     private items: any[];
 
-    private reachEnd = false;
+    private loadedFirst = false;
     private currentPromise: Promise<BatchResult> = null;
 
     constructor(private entity: ListProxyEntity, private params: any[], private options: any) {
@@ -26,7 +26,7 @@ export class ListProxy {
     }
 
     public hasMoreItems(): boolean {
-        return !this.reachEnd;
+        return !this.loadedFirst || !!(this.nextLink);
     }
 
     public fetchNext(id: string): Promise<BatchResult> {
@@ -56,7 +56,7 @@ export class ListProxy {
         const clone = new ListProxy(this.entity, this.params, this.options);
         clone.nextLink = this.nextLink;
         clone.items = this.items;
-        clone.reachEnd = this.reachEnd;
+        clone.loadedFirst = this.loadedFirst;
         clone.currentPromise = this.currentPromise;
         return clone;
     }
@@ -83,10 +83,9 @@ export class ListProxy {
         }
 
         if (result) {
+            this.loadedFirst = true;
+
             this.nextLink = result.odatanextLink;
-            if (!this.nextLink || !this.fetchNext) {
-                this.reachEnd = true;
-            }
 
             this.items.concat(result);
 

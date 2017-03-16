@@ -6,6 +6,8 @@ import { AccessToken, AdalService } from "app/services/adal";
 import { Constants } from "app/utils";
 import { mockStorage } from "test/utils/mocks";
 
+const resource1 = "http://example.com";
+
 const sampleUser: AADUser = {
     aud: "94ef904d-c21a-4972-9244-b4d6a12b8e13",
     iss: "https://sts.windows.net/72f788bf-86f1-41af-21ab-2d7cd011db47/",
@@ -32,17 +34,22 @@ describe("AdalService", () => {
     let http: any = {};
     let currentUser: AADUser;
     const config = { tenant: "common", clientId: "abc", redirectUri: "http://localhost" };
+    let zoneSpy;
 
     beforeEach(() => {
+        zoneSpy = {
+            run: jasmine.createSpy("Zone.run").and.callFake((callback) => callback()),
+        };
+
         mockStorage(localStorage);
-        service = new AdalService(http);
+        service = new AdalService(http, zoneSpy);
         service.currentUser.subscribe(x => currentUser = x);
         service.init(config);
     });
 
     it("when there is no item in the localstorage it should not set the id_token", () => {
         localStorage.removeItem(Constants.localStorageKey.currentUser);
-        const tmpService = new AdalService(http);
+        const tmpService = new AdalService(http, zoneSpy);
         tmpService.init(config);
         let user: AADUser = null;
         tmpService.currentUser.subscribe(x => user = x);
@@ -51,7 +58,7 @@ describe("AdalService", () => {
 
     it("when localstorage has currentUser it should load it", () => {
         localStorage.setItem(Constants.localStorageKey.currentUser, JSON.stringify(sampleUser));
-        const tmpService = new AdalService(http);
+        const tmpService = new AdalService(http, zoneSpy);
         tmpService.init(config);
         let user: AADUser = null;
         tmpService.currentUser.subscribe(x => user = x);
@@ -61,26 +68,39 @@ describe("AdalService", () => {
 
     it("doesn't set the access token if not in localstorage", () => {
         localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
-        const tmpService = new AdalService(http);
+        const tmpService = new AdalService(http, zoneSpy);
         tmpService.init(config);
-        expect((<any>tmpService)._currentAccessToken).toBeNull();
+        expect((<any>tmpService)._currentAccessTokens).toEqual({});
     });
 
     it("if token in local storage is expired it doesn't set it", () => {
-        const token = { access_token: "sometoken", expires_on: moment().subtract(1, "hour") };
+        const token = { [resource1]: { access_token: "sometoken", expires_on: moment().subtract(1, "hour") } };
         localStorage.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(token));
-        const tmpService = new AdalService(http);
+        const tmpService = new AdalService(http, zoneSpy);
         tmpService.init(config);
-        expect((<any>tmpService)._currentAccessToken).toBeNull();
+        expect((<any>tmpService)._currentAccessTokens).toEqual({})
     });
 
     it("should load the token from local storage if present and not expired", () => {
-        const token = { access_token: "sometoken", expires_on: moment().add(1, "hour") };
+        const token = {
+            [resource1]: {
+                access_token: "sometoken",
+                expires_on: moment().add(1, "hour").toDate(),
+                expires_in: 3600,
+                token_type: "Bearer",
+                ext_expires_in: 3600,
+                not_before: moment().add(1, "hour").toDate(),
+                refresh_token: "foorefresh",
+            },
+        };
         localStorage.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(token));
-        const tmpService = new AdalService(http);
+        const tmpService = new AdalService(http, zoneSpy);
         tmpService.init(config);
-        expect((<any>tmpService)._currentAccessToken).not.toBeNull();
-        expect((<any>tmpService)._currentAccessToken.access_token).toEqual("sometoken");
+        const tokens = (<any>tmpService)._currentAccessTokens;
+        expect(tokens).not.toBeNull();
+        expect(Object.keys(tokens).length).toBe(1);
+        expect(resource1 in tokens).toBe(true);
+        expect(tokens[resource1].access_token).toEqual("sometoken");
     });
 
     describe("accessTokenData", () => {
@@ -93,8 +113,10 @@ describe("AdalService", () => {
         let token: AccessToken;
 
         beforeEach(() => {
-            refreshedToken = { access_token: "refreshedToken", expires_on: moment().add(1, "hour") };
-            newToken = { access_token: "newToken", expires_on: moment().add(1, "hour") };
+            refreshedToken = new AccessToken({
+                access_token: "refreshedToken", expires_on: moment().add(1, "hour").toDate()
+            } as any);
+            newToken = new AccessToken({ access_token: "newToken", expires_on: moment().add(1, "hour") } as any);
             let authorizeResult = {
                 id_token: "someidtoken",
                 code: "somecode",
@@ -112,33 +134,47 @@ describe("AdalService", () => {
         });
 
         it("should use the cached token if not expired", () => {
-            (service as any)._currentAccessToken = {
+            (service as any)._currentAccessTokens[resource1] = new AccessToken({
                 access_token: "initialtoken",
                 expires_on: moment().add(1, "hour"),
-            };
-            service.accessTokenData.subscribe(x => token = x);
+            } as any);
+            service.accessTokenData(resource1).subscribe(x => token = x);
             expect(token).not.toBeNull();
             expect(token.access_token).toEqual("initialtoken");
         });
 
         it("should reload a new token if the token is expiring before the safe margin", () => {
-            (service as any)._currentAccessToken = {
+            (service as any)._currentAccessTokens[resource1] = new AccessToken({
                 access_token: "initialtoken",
                 expires_on: moment().add(1, "minute"),
                 refresh_token: "somerefreshtoken",
-            };
-            service.accessTokenData.subscribe(x => token = x);
+            } as any);
+            service.accessTokenData(resource1).subscribe(x => token = x);
             expect(redeemSpy).not.toHaveBeenCalled();
             expect(refreshSpy).toHaveBeenCalledOnce();
-            expect(refreshSpy).toHaveBeenCalledWith("somerefreshtoken");
+            expect(refreshSpy).toHaveBeenCalledWith(resource1, "somerefreshtoken");
 
             expect(token).not.toBeNull();
             expect(token.access_token).toEqual("refreshedToken");
         });
 
+        it("should load a new token if getting a token for another resource", () => {
+            (service as any)._currentAccessTokens[resource1] = new AccessToken({
+                access_token: "initialtoken",
+                expires_on: moment().add(1, "hour"),
+            } as any);
+            service.accessTokenData("http://other-resource.com").subscribe(x => token = x);
+            expect(redeemSpy).toHaveBeenCalled();
+            expect(redeemSpy).toHaveBeenCalledWith("http://other-resource.com", "somecode");
+            expect(refreshSpy).not.toHaveBeenCalled();
+
+            expect(token).not.toBeNull();
+            expect(token.access_token).toEqual("newToken");
+        });
+
         describe("when there is no token cached", () => {
             beforeEach(() => {
-                service.accessTokenData.subscribe(x => token = x);
+                service.accessTokenData(resource1).subscribe(x => token = x);
             });
 
             it("should authorize the user", () => {
@@ -154,7 +190,7 @@ describe("AdalService", () => {
             it("should redeem a new token", () => {
                 expect(refreshSpy).not.toHaveBeenCalled();
                 expect(redeemSpy).toHaveBeenCalledOnce();
-                expect(redeemSpy).toHaveBeenCalledWith("somecode");
+                expect(redeemSpy).toHaveBeenCalledWith(resource1, "somecode");
                 expect(token.access_token).toEqual("newToken");
             });
         });
