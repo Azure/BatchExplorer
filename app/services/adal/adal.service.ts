@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, NgZone } from "@angular/core";
 import { Http } from "@angular/http";
 import { remote } from "electron";
 import * as moment from "moment";
@@ -41,7 +41,7 @@ export class AdalService {
 
     private _currentUser = new BehaviorSubject<AADUser>(null);
 
-    constructor(private http: Http) {
+    constructor(private http: Http, private zone: NgZone) {
         this._userDecoder = new UserDecoder();
         this.currentUser = this._currentUser.asObservable();
     }
@@ -168,22 +168,24 @@ export class AdalService {
 
         this._authorizeUser.authorizeTrySilentFirst().subscribe({
             next: (result: AuthorizeResult) => {
-                this._processUserToken(result.id_token);
-                console.log("Auth user...", resource);
+                this.zone.run(() => {
+                    this._processUserToken(result.id_token);
+                    console.log("Auth user...", resource);
 
-                this._accessTokenService.redeem(resource, result.code).subscribe({
-                    next: (token) => {
-                        this._processAccessToken(resource, token);
-                        subject.next(token);
-                        subject.complete();
-                        console.log("GOt token for", resource, token);
-                        delete this._newAccessTokenSubject[resource];
-                    },
-                    error: (e) => {
-                        subject.error(e);
-                        delete this._newAccessTokenSubject[resource];
-                        log.error("Error redeem auth code for token", e);
-                    },
+                    this._accessTokenService.redeem(resource, result.code).subscribe({
+                        next: (token) => {
+                            this._processAccessToken(resource, token);
+                            subject.next(token);
+                            subject.complete();
+                            console.log("GOt token for", resource, token);
+                            delete this._newAccessTokenSubject[resource];
+                        },
+                        error: (e) => {
+                            subject.error(e);
+                            delete this._newAccessTokenSubject[resource];
+                            log.error("Error redeem auth code for token", e);
+                        },
+                    });
                 });
             },
             error: (error) => {
