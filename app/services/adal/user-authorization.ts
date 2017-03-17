@@ -43,7 +43,7 @@ export class UserAuthorization {
      * @returns Observable with the successfull AuthorizeResult.
      *      If silent is true and the access fail the observable will return and error of type AuthorizeError
      */
-    public authorize(silent = false): Observable<AuthorizeResult> {
+    public authorize(tenantId: string, silent = false): Observable<AuthorizeResult> {
         silent = false;
         this._waitingForAuth = true;
         if (this._subject) {
@@ -51,7 +51,7 @@ export class UserAuthorization {
         }
         this._subject = new AsyncSubject();
         const authWindow = this._createAuthWindow();
-        authWindow.loadURL(this._buildUrl(silent));
+        authWindow.loadURL(this._buildUrl(tenantId, silent));
         this._setupEvents();
         if (!silent) {
             authWindow.show();
@@ -62,9 +62,9 @@ export class UserAuthorization {
     /**
      * This will try to do authorize silently first and if it fails show the login window to the user
      */
-    public authorizeTrySilentFirst(): Observable<AuthorizeResult> {
-        return this.authorize(true).catch((error, source) => {
-            return this.authorize(false);
+    public authorizeTrySilentFirst(tenantId: string): Observable<AuthorizeResult> {
+        return this.authorize(tenantId, true).catch((error, source) => {
+            return this.authorize(tenantId, false);
         });
     }
 
@@ -75,7 +75,7 @@ export class UserAuthorization {
         this._waitingForAuth = true;
         this._subject = new AsyncSubject();
         const url = AdalConstants.logoutUrl(this.config.tenant, {
-            post_logout_redirect_uri: encodeURIComponent(this._buildUrl(false)),
+            post_logout_redirect_uri: encodeURIComponent(this._buildUrl(this.config.tenant, false)),
         });
         const authWindow = this._createAuthWindow();
 
@@ -90,7 +90,7 @@ export class UserAuthorization {
      * Return the url used to authorize
      * @param silent @see #authorize
      */
-    private _buildUrl(silent: boolean): string {
+    private _buildUrl(tenantId, silent: boolean): string {
         const params: AdalConstants.AuthorizeUrlParams = {
             response_type: "id_token+code",
             redirect_uri: encodeURIComponent(this.config.redirectUri),
@@ -98,15 +98,13 @@ export class UserAuthorization {
             scope: "user_impersonation+openid",
             nonce: SecureUtils.uuid(),
             state: SecureUtils.uuid(),
-            // resource: "https://management.core.windows.net/",
-            // resource: "https://microsoft.onmicrosoft.com/batchuitest",
-            resource: "https://batchlabs.onmicrosoft.com/test-app",
+            resource: "https://management.core.windows.net/",
         };
 
         if (silent) {
             params.prompt = AuthorizePromptType.none;
         }
-        return AdalConstants.authorizeUrl(this.config.tenant, params);
+        return AdalConstants.authorizeUrl(tenantId, params);
     }
 
     /**
@@ -174,7 +172,7 @@ export class UserAuthorization {
      * If the given url is the final redirect_uri
      */
     private _isRedirectUrl(url: string) {
-        return url.match(/http:\/\/localhost\/.*/);
+        return url.startsWith(this.config.redirectUri);
     }
 
     /**

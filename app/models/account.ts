@@ -1,5 +1,7 @@
 import { Record } from "immutable";
 
+import { Subscription } from "./subscription";
+
 const AccountRecord = Record({
     id: null,
     name: null,
@@ -16,6 +18,7 @@ const AccountRecord = Record({
             lastKeySync: null,
         },
     },
+    subscription: null,
 });
 
 export type AccountProvisingState = "Succeeded";
@@ -43,4 +46,5 @@ export class AccountResource extends AccountRecord {
     public location: string;
     public type: string;
     public properties: AccountResourceProperties;
+    public subscription: Subscription;
 }

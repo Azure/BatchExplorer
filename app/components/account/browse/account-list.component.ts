@@ -40,8 +40,7 @@ export class AccountListComponent implements OnInit, OnDestroy {
         private sidebarManager: SidebarManager,
         private subscriptionService: SubscriptionService) {
 
-        this.subscriptionData = subscriptionService.list();
-        this._sub = this.subscriptionData.items.subscribe((subscriptions) => {
+        this._sub = subscriptionService.subscriptions.subscribe((subscriptions) => {
             const data: any = {};
             this.subscriptions = List<Subscription>(subscriptions.sort((a, b) => {
                 if (a.displayName < b.displayName) {

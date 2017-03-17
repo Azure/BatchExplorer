@@ -1,16 +1,17 @@
 import { Injectable, NgZone } from "@angular/core";
-import { Http, Response } from "@angular/http";
+import { Http, Response, RequestOptions, Headers } from "@angular/http";
 import { remote } from "electron";
 import * as moment from "moment";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { AADUser } from "app/models";
-import { Constants, log } from "app/utils";
+import { Constants, log, ObservableUtils } from "app/utils";
 import { AccessToken } from "./access-token";
 import { AccessTokenError, AccessTokenErrorResult, AccessTokenService } from "./access-token.service";
 import { AdalConfig } from "./adal-config";
 import { AuthorizeResult, UserAuthorization } from "./user-authorization";
 import { UserDecoder } from "./user-decoder";
+import { TokenCache } from "app/services/adal/token-cache";
 
 export interface AuthorizationResult {
     code: string;
@@ -20,6 +21,11 @@ export interface AuthorizationResult {
 }
 
 const defaultResource = "https://management.core.windows.net/";
+
+const resources = [
+    "https://management.core.windows.net/",
+    "https://batch.core.windows.net/",
+];
 
 @Injectable()
 export class AdalService {
@@ -31,19 +37,23 @@ export class AdalService {
 
     public currentUser: Observable<AADUser>;
 
+    public tenantsIds: Observable<string[]>;
+
     private _config: AdalConfig;
     private _userAuthorization: UserAuthorization;
     private _accessTokenService: AccessTokenService;
     private _userDecoder: UserDecoder;
     private _newAccessTokenSubject: StringMap<AsyncSubject<any>> = {};
 
-    private _currentAccessTokens: StringMap<AccessToken> = {};
+    private _tokenCache = new TokenCache();
 
     private _currentUser = new BehaviorSubject<AADUser>(null);
+    private _tenantsIds = new BehaviorSubject<string[]>([]);
 
     constructor(private http: Http, private zone: NgZone) {
         this._userDecoder = new UserDecoder();
         this.currentUser = this._currentUser.asObservable();
+        this.tenantsIds = this._tenantsIds.asObservable();
     }
 
     public init(config: AdalConfig) {
@@ -51,7 +61,7 @@ export class AdalService {
         this._userAuthorization = new UserAuthorization(config);
         this._accessTokenService = new AccessTokenService(config, this.http);
         this._retrieveUserFromLocalStorage();
-        this._retrieveAccessTokenFromLocalStorage();
+        this._tokenCache.init();
         if (this._currentUser.getValue()) {
             if (!remote.getCurrentWindow().isVisible()) {
                 remote.getCurrentWindow().show();
@@ -60,21 +70,35 @@ export class AdalService {
     }
 
     public login(): Observable<any> {
-        if (this._currentUser.getValue()) {
-            return Observable.of({});
-        }
-        const obs = this._retrieveNewAccessToken(defaultResource);
-        obs.subscribe({
-            next: () => {
-                if (!remote.getCurrentWindow().isVisible()) {
-                    remote.getCurrentWindow().show();
+        console.log("Login...");
+        // if (this._currentUser.getValue()) {
+        //     return Observable.of({});
+        // }
+        this._loadTenantIds().subscribe((ids) => {
+            console.log("Tenants", ids);
+            this._tenantsIds.next(ids);
+            const queries: Array<() => Observable<any>> = [];
+            for (let tenantId of ids) {
+                for (let resource of resources) {
+                    queries.push(() => this._retrieveNewAccessToken(tenantId, resource));
                 }
-            },
-            error: () => {
-                log.error("Error login");
-            },
+            }
+            ObservableUtils.queue(...queries);
         });
-        return obs;
+        return Observable.of({});
+
+        // const obs = this._retrieveNewAccessToken(defaultResource);
+        // obs.subscribe({
+        //     next: () => {
+        //         if (!remote.getCurrentWindow().isVisible()) {
+        //             remote.getCurrentWindow().show();
+        //         }
+        //     },
+        //     error: () => {
+        //         log.error("Error login");
+        //     },
+        // });
+        // return obs;
     }
 
     public logout(): void {
@@ -84,29 +108,35 @@ export class AdalService {
         if (remote.getCurrentWindow().isVisible()) {
             remote.getCurrentWindow().hide();
         }
-        this._currentAccessTokens = {};
+        this._tokenCache.clear();
         this._currentUser.next(null);
         this._userAuthorization.logout();
     }
 
     public get accessToken(): Observable<string> {
-        return this.accessTokenFor();
+        return this.accessTokenFor("common"); // TODO fix
     }
 
-    public accessTokenFor(resource: string = defaultResource) {
-        return this.accessTokenData(resource).map(x => x.access_token);
+    public accessTokenFor(tenantId: string, resource: string = defaultResource) {
+        return this.accessTokenData(tenantId, resource).map(x => x.access_token);
     }
 
-    public accessTokenData(resource: string = defaultResource): Observable<AccessToken> {
-        if (resource in this._currentAccessTokens) {
-            const token = this._currentAccessTokens[resource];
+    /**
+     *
+     * @param tenantId
+     * @param resource
+     */
+    public accessTokenData(tenantId: string, resource: string = defaultResource): Observable<AccessToken> {
+        if (this._tokenCache.hasToken(tenantId, resource)) {
+            console.log("Has token data for", tenantId);
+            const token = this._tokenCache.getToken(tenantId, resource);
             const expireIn = moment(token.expires_on).diff(moment());
             if (expireIn > AdalService.refreshMargin) {
                 return Observable.of(token);
             }
         }
 
-        return this._retrieveNewAccessToken(resource);
+        return this._retrieveNewAccessToken(tenantId, resource);
     }
 
     /**
@@ -126,47 +156,15 @@ export class AdalService {
     }
 
     /**
-     * Look into the local storage to see if there is still an access token
-     */
-    private _retrieveAccessTokenFromLocalStorage() {
-        const tokenStr = localStorage.getItem(Constants.localStorageKey.currentAccessToken);
-        if (!tokenStr) {
-            return;
-        }
-        try {
-            const data = JSON.parse(tokenStr);
-            const tokens = this._processSerializedTokens(data);
-            if (Object.keys(tokens).length === 0) {
-                localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
-            } else {
-                this._currentAccessTokens = tokens;
-            }
-        } catch (e) {
-            localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
-        }
-    }
-
-    private _processSerializedTokens(data: any): StringMap<AccessToken> {
-        const tokens = {};
-        for (let resource of Object.keys(data)) {
-            if (!AccessToken.isValidToken(data[resource])) {
-                continue;
-            }
-            const token = new AccessToken(data[resource]);
-            if (!token.hasExpired()) {
-                tokens[resource] = token;
-            }
-        }
-        return tokens;
-    }
-    /**
      * Retrieve a new access token using the refresh token if available or authorize the user and use authorization code
      * Will set the currentAccesToken.
      * @return Observable with access token object
      */
-    private _retrieveNewAccessToken(resource: string): Observable<AccessToken> {
-        if (resource in this._currentAccessTokens && this._currentAccessTokens[resource].refresh_token) {
-            return this._useRefreshToken(resource, this._currentAccessTokens[resource].refresh_token);
+    private _retrieveNewAccessToken(tenantId: string, resource: string): Observable<AccessToken> {
+
+        const token = this._tokenCache.getToken(tenantId, resource);
+        if (token && token.refresh_token) {
+            return this._useRefreshToken(tenantId, resource, token.refresh_token);
         }
 
         if (resource in this._newAccessTokenSubject) {
@@ -174,25 +172,29 @@ export class AdalService {
         }
 
         const subject = this._newAccessTokenSubject[resource] = new AsyncSubject();
-        this._redeemNewAccessToken(resource);
+        this._redeemNewAccessToken(tenantId, resource);
         return subject;
     }
 
     /**
      * Load a new access token from the authorization code given at login
      */
-    private _redeemNewAccessToken(resource: string, forceReLogin = false) {
+    private _redeemNewAccessToken(tenantId: string, resource: string, forceReLogin = false) {
+        console.log("redeem new token data for", tenantId);
+
         const subject = this._newAccessTokenSubject[resource];
 
-        this._authorizeUser(forceReLogin)
+        this._authorizeUser(tenantId, forceReLogin)
             .do((result) => this._processUserToken(result.id_token))
             .flatMap((result: AuthorizeResult) => {
-                return this._accessTokenService.redeem(resource, result.code);
+                const tid = tenantId === "common" ? this._currentUser.value.tid : tenantId;
+                console.log("Redeem new token", tenantId, this._currentUser.value.tid);
+                return this._accessTokenService.redeem(resource, tid, result.code);
             })
             .subscribe({
                 next: (token) => {
                     this.zone.run(() => {
-                        this._processAccessToken(resource, token);
+                        this._processAccessToken(tenantId, resource, token);
                         delete this._newAccessTokenSubject[resource];
                         subject.next(token);
                         subject.complete();
@@ -200,7 +202,7 @@ export class AdalService {
                 },
                 error: (e: Response) => {
                     log.error(`Error redeem auth code for a token for resource ${resource}`, e);
-                    if (this._processAccessTokenError(resource, e)) {
+                    if (this._processAccessTokenError(tenantId, resource, e)) {
                         return;
                     }
                     delete this._newAccessTokenSubject[resource];
@@ -209,19 +211,19 @@ export class AdalService {
             });
     }
 
-    private _authorizeUser(forceReLogin) {
+    private _authorizeUser(tenantId, forceReLogin) {
         if (forceReLogin) {
-            return this._userAuthorization.authorize(false);
+            return this._userAuthorization.authorize(tenantId, false);
         } else {
-            return this._userAuthorization.authorizeTrySilentFirst();
+            return this._userAuthorization.authorizeTrySilentFirst(tenantId);
         }
     }
 
-    private _useRefreshToken(resource: string, refreshToken: string) {
-        const obs = this._accessTokenService.refresh(resource, refreshToken);
+    private _useRefreshToken(tenantId: string, resource: string, refreshToken: string) {
+        const obs = this._accessTokenService.refresh(resource, tenantId, refreshToken);
         obs.subscribe({
             next: (token) => {
-                this._processAccessToken(resource, token);
+                this._processAccessToken(tenantId, resource, token);
             },
             error: (error) => {
                 log.error("Error refreshing token");
@@ -239,15 +241,26 @@ export class AdalService {
         localStorage.setItem(Constants.localStorageKey.currentUser, JSON.stringify(user));
     }
 
-    private _processAccessToken(resource: string, token: AccessToken) {
-        this._currentAccessTokens[resource] = token;
-        localStorage.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(this._currentAccessTokens));
+    private _processAccessToken(tenantId: string, resource: string, token: AccessToken) {
+        this._tokenCache.storeToken(tenantId, resource, token);
     }
 
-    private _processAccessTokenError(resource: string, error: Response) {
+    private _processAccessTokenError(tenantId: string, resource: string, error: Response) {
         const data: AccessTokenErrorResult = error.json();
         if (data.error === AccessTokenError.invalid_grant) {
-            this._redeemNewAccessToken(resource, true);
+            // TODO check
+            // this._redeemNewAccessToken(tenantId, resource, true);
         }
+    }
+
+    private _loadTenantIds(): Observable<string[]> {
+        return this.accessTokenData("common").flatMap((token) => {
+            const options = new RequestOptions();
+            options.headers = new Headers();
+            options.headers.append("Authorization", `${token.token_type} ${token.access_token}`);
+            return this.http.get(`https://management.azure.com/tenants?api-version=${Constants.ApiVersion.arm}`, options);
+        }).map(response => {
+            return response.json().value.map(x => x.tenantId);
+        });
     }
 }

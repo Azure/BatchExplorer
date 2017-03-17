@@ -33,6 +33,16 @@ export interface SelectedAccount {
     keys: AccountKeys;
 }
 
+
+function getSubscriptionIdFromAccountId(accountId: string) {
+    const regex = /subscriptions\/(.*)\//;
+    const out = regex.exec(accountId);
+    if (!out || out.length === 0) {
+        return null;
+    } else {
+        return out[0];
+    }
+}
 @Injectable()
 export class AccountService {
     public accountLoaded: Observable<boolean>;
@@ -103,7 +113,7 @@ export class AccountService {
 
         const accountObs = this.getOnce(accountId);
         const keyObs = this.getAccountKeys(accountId);
-        DataCacheTracker.clearAllCaches(this._accountCache, this.subscriptionService.cache);
+        DataCacheTracker.clearAllCaches(this._accountCache);
         Observable.forkJoin(accountObs, keyObs).subscribe(([account, keys]) => {
             this._currentAccount.next({ account, keys });
             if (!this._accountLoaded.getValue()) {
@@ -118,6 +128,7 @@ export class AccountService {
             uri: ({ subscriptionId }) => `/subscriptions/${subscriptionId}/resources`,
             initialParams: { subscriptionId: initalSubscriptionId },
             initialOptions: { filter: "resourceType eq 'Microsoft.Batch/batchAccounts'" },
+            subscription: this.subscriptionService.get(initalSubscriptionId), // TODO
         });
     }
 
@@ -126,6 +137,7 @@ export class AccountService {
             cache: () => this._accountCache,
             uri: ({ id }) => `${id}`,
             initialParams: { id: accountId },
+            subscription: this.subscriptionService.get(getSubscriptionIdFromAccountId(accountId)),
         });
     }
 
@@ -134,7 +146,11 @@ export class AccountService {
     }
 
     public getAccountKeys(accountId: string): Observable<AccountKeys> {
-        return this.azure.post(`${accountId}/listKeys`).map(response => new AccountKeys(response.json()));
+        const subId = getSubscriptionIdFromAccountId(accountId);
+        return this.subscriptionService.get(subId)
+            .flatMap((sub) => this.azure.post(sub, `${accountId}/listKeys`))
+            .map(response => new AccountKeys(response.json()))
+            .share();
     }
 
     public favoriteAccount(accountId: string): Observable<any> {

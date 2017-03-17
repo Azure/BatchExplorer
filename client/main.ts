@@ -1,7 +1,7 @@
 // tslint:disable-next-line
 /// <reference path="../definitions/index.d.ts"/>
 
-import { BrowserWindow, app } from "electron";
+import { BrowserWindow, app, protocol } from "electron";
 import * as path from "path";
 
 import { BatchClientProxyFactory } from "./api/batch-client-proxy";
@@ -19,8 +19,22 @@ const devServerUrl = "http://localhost:3178/index.html";
 // Webpack build output
 const buildFileUrl = `file://${__dirname}/../../build/index.html`;
 
+const authWindowsToClose: Electron.BrowserWindow[] = [];
+
 // Create the browser window.
 function createWindow() {
+
+    protocol.registerStringProtocol("urn", (request, callback) => {
+        console.log("Registered urn...", request);
+        // Close all auth windows that need to be closed
+        while (authWindowsToClose.length) {
+            authWindowsToClose.shift().close();
+        }
+
+        // Doesn't matter how the protocol is handled; error is fine
+        callback();
+    });
+
     /**
      * Setting the icon here will only work in Win and Linux. To set the icon on OS-X, use
      * electron-packager and set the icon using the --icon switch. It will need to be in .icns
@@ -75,3 +89,4 @@ app.on("activate", () => {
         createWindow();
     }
 });
+

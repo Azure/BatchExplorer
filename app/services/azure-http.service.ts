@@ -5,7 +5,7 @@ import {
 } from "@angular/http";
 import { Observable } from "rxjs";
 
-import { ServerError } from "app/models";
+import { ServerError, Subscription } from "app/models";
 import { Constants } from "app/utils";
 import { AccessToken, AdalService } from "./adal";
 
@@ -27,6 +27,8 @@ const providersApiVersion = {
     "Microsoft.Batch": Constants.ApiVersion.armBatch,
 };
 
+type SubscriptionOrTenant = Subscription | string;
+
 /**
  * Wrapper around the http service so call the azure ARM api.
  * Set the Authorization header and the api version
@@ -36,35 +38,40 @@ export class AzureHttpService {
     constructor(private http: Http, private adal: AdalService) {
     }
 
-    public request(uri: string, options: RequestOptionsArgs): Observable<Response> {
-        return this.adal.accessTokenData().flatMap((accessToken) => {
-            options = this._setupRequestOptions(uri, options, accessToken);
-            return this.http.request(this._computeUrl(uri), options)
-                .retryWhen(attempts => this._retryWhen(attempts))
-                .catch((error) => {
-                    return Observable.throw(ServerError.fromARM(error));
-                });
-        }).share();
+    public request(
+        subscriptionOrTenant: SubscriptionOrTenant,
+        uri: string,
+        options: RequestOptionsArgs): Observable<Response> {
+
+        return this.adal.accessTokenData(this._getTenantId(subscriptionOrTenant))
+            .flatMap((accessToken) => {
+                options = this._setupRequestOptions(uri, options, accessToken);
+                return this.http.request(this._computeUrl(uri), options)
+                    .retryWhen(attempts => this._retryWhen(attempts))
+                    .catch((error) => {
+                        return Observable.throw(ServerError.fromARM(error));
+                    });
+            }).share();
     }
 
-    public get(uri: string, options?: RequestOptionsArgs) {
-        return this.request(uri, mergeOptions(options, RequestMethod.Get));
+    public get(subscription: SubscriptionOrTenant, uri: string, options?: RequestOptionsArgs) {
+        return this.request(subscription, uri, mergeOptions(options, RequestMethod.Get));
     }
 
-    public post(uri: string, body?: any, options?: RequestOptionsArgs) {
-        return this.request(uri, mergeOptions(options, RequestMethod.Post, body));
+    public post(subscription: SubscriptionOrTenant, uri: string, body?: any, options?: RequestOptionsArgs) {
+        return this.request(subscription, uri, mergeOptions(options, RequestMethod.Post, body));
     }
 
-    public put(uri: string, options?: RequestOptionsArgs) {
-        return this.request(uri, mergeOptions(options, RequestMethod.Put));
+    public put(subscription: SubscriptionOrTenant, uri: string, options?: RequestOptionsArgs) {
+        return this.request(subscription, uri, mergeOptions(options, RequestMethod.Put));
     }
 
-    public patch(uri: string, body: any, options?: RequestOptionsArgs) {
-        return this.request(uri, mergeOptions(options, RequestMethod.Patch, body));
+    public patch(subscription: SubscriptionOrTenant, uri: string, body: any, options?: RequestOptionsArgs) {
+        return this.request(subscription, uri, mergeOptions(options, RequestMethod.Patch, body));
     }
 
-    public delete(uri: string, options?: RequestOptionsArgs) {
-        return this.request(uri, mergeOptions(options, RequestMethod.Delete));
+    public delete(subscription: Subscription, uri: string, options?: RequestOptionsArgs) {
+        return this.request(subscription, uri, mergeOptions(options, RequestMethod.Delete));
     }
 
     public apiVersion(uri: string) {
@@ -79,6 +86,17 @@ export class AzureHttpService {
             }
         }
         return apiVersion;
+    }
+
+    private _getTenantId(subscriptionOrTenant: SubscriptionOrTenant): string {
+        if (subscriptionOrTenant instanceof Subscription) {
+            return subscriptionOrTenant.tenantId;
+        } else if (typeof subscriptionOrTenant === "string") {
+            return subscriptionOrTenant;
+        } else {
+            throw "Invalid param in azure http service"
+            + `Expected Subscription or tenant id but got ${subscriptionOrTenant}`;
+        }
     }
 
     private _setupRequestOptions(
