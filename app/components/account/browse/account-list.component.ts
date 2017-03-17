@@ -1,17 +1,17 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { List } from "immutable";
-import { Subscription as RxjsSubscription } from "rxjs";
+import { Observable, Subscription as RxjsSubscription } from "rxjs";
 
 import { AccountResource, Subscription } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
-import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
 
 interface SubscriptionAccount {
     expanded: boolean;
-    accounts: RxListProxy<any, AccountResource>;
+    loading: boolean;
+    accounts: Observable<List<AccountResource>>;
 }
 
 @Component({
@@ -26,7 +26,6 @@ export class AccountListComponent implements OnInit, OnDestroy {
     }
     public get filter(): Filter { return this._filter; };
 
-    public subscriptionData: RxListProxy<{}, Subscription>;
     public subscriptionAccounts: { [subId: string]: SubscriptionAccount } = {};
     public subscriptions: List<Subscription>;
     public displayedSubscriptions: List<Subscription>;
@@ -68,7 +67,6 @@ export class AccountListComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        this.subscriptionData.fetchNext(true);
     }
 
     public ngOnDestroy() {
@@ -80,7 +78,8 @@ export class AccountListComponent implements OnInit, OnDestroy {
         if (!subscriptionAccounts.expanded) {
             if (!subscriptionAccounts.accounts) {
                 subscriptionAccounts.accounts = this.accountService.list(subscriptionId);
-                subscriptionAccounts.accounts.fetchNext(true);
+                subscriptionAccounts.loading = true;
+                subscriptionAccounts.accounts.subscribe(() => subscriptionAccounts.loading = false));
             }
         }
 

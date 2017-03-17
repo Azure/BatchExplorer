@@ -19,13 +19,12 @@ export class SubscriptionService {
     public load(): Observable<any> {
         const obs = this.adal.tenantsIds.filter(ids => ids.length > 0).first().flatMap((tenantIds) => {
             console.log("using tenantids", tenantIds);
-            return Observable.combineLatest(tenantIds.map(tenantId => this.azure.get(tenantId, "subscriptions")));
+            return Observable.combineLatest(tenantIds.map(tenantId => this._loadSubscriptionsForTenant(tenantId)));
         });
         obs.subscribe({
             next: (tenantSubscriptions) => {
-                const subscriptionsData = tenantSubscriptions.map(x => x.json().value).flatten();
-                const subscriptions = subscriptionsData.map(x => new Subscription(x));
-                console.log("SUbs", tenantSubscriptions.map(x => x.json()), subscriptionsData);
+                const subscriptions = tenantSubscriptions.flatten();
+                console.log("SUbs", subscriptions, subscriptions.map(x => x.toJS()));
                 this._subscriptions.next(List(subscriptions));
             },
             error: (error) => {
@@ -36,8 +35,21 @@ export class SubscriptionService {
     }
 
     public get(subscriptionId: string): Observable<Subscription> {
+        console.log("Get for subId", subscriptionId);
         return this.subscriptions.first().map(subscriptions => {
-            return subscriptions.filter(x => x.id === subscriptionId).first();
+            console.log("subscriptions", subscriptions.toJS());
+            return subscriptions.filter(x => x.subscriptionId === subscriptionId).first();
         });
+    }
+
+    private _loadSubscriptionsForTenant(tenantId: string): Observable<Subscription[]> {
+        return this.azure.get(tenantId, "subscriptions").map(response => {
+            const subscriptionData = response.json().value;
+            return subscriptionData.map(x => this._createSubscription(tenantId, x);
+        });
+    }
+
+    private _createSubscription(tenantId: string, data: any): Subscription {
+        return new Subscription(Object.assign({}, data, { tenantId }));
     }
 }

@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { RequestOptions, URLSearchParams } from "@angular/http";
 import * as storage from "electron-json-storage";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
@@ -122,14 +123,22 @@ export class AccountService {
         });
     }
 
-    public list(initalSubscriptionId: string): RxListProxy<AccountListParams, AccountResource> {
-        return new RxArmListProxy<AccountListParams, AccountResource>(AccountResource, this.azure, {
-            cache: (params) => this._accountCache,
-            uri: ({ subscriptionId }) => `/subscriptions/${subscriptionId}/resources`,
-            initialParams: { subscriptionId: initalSubscriptionId },
-            initialOptions: { filter: "resourceType eq 'Microsoft.Batch/batchAccounts'" },
-            subscription: this.subscriptionService.get(initalSubscriptionId), // TODO
-        });
+    public list(subscriptionId: string): Observable<List<Account>> {
+        const search = new URLSearchParams();
+        search.set("$filter", "resourceType eq 'Microsoft.Batch/batchAccounts'");
+        const options = new RequestOptions({ search });
+        return this.subscriptionService.get(subscriptionId)
+            .flatMap((subscription) => {
+                console.log("got sub", subscription.toJS());
+                return this.azure.get(subscription, `/subscriptions/${subscriptionId}/resources`, options)
+                    .map(response => {
+                        return List(response.json().value.map((data) => {
+                            console.log("Map accounts", data);
+                            return new AccountResource(Object.assign({}, data, { subscription }));
+                        }));
+                    });
+            })
+            .share();
     }
 
     public getAccount(accountId: string): RxEntityProxy<AccountParams, AccountResource> {
