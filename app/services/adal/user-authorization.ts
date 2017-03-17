@@ -44,7 +44,6 @@ export class UserAuthorization {
      *      If silent is true and the access fail the observable will return and error of type AuthorizeError
      */
     public authorize(tenantId: string, silent = false): Observable<AuthorizeResult> {
-        silent = false;
         this._waitingForAuth = true;
         if (this._subject) {
             return this._subject.asObservable();

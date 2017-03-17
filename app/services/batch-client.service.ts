@@ -22,12 +22,13 @@ export class BatchClientService {
         if (!this._currentAccountId) {
             throw "No account currently selected....";
         }
-        return Observable.combineLatest(this.adal.accessTokenFor(resource), this.currentAccount)
-            .first()
-            .map(([token, account]) => {
+
+        return this.currentAccount.flatMap((account) => {
+            return this.adal.accessTokenFor(account.subscription.tenantId, resource).map((token) => {
                 const url = `https://${account.properties.accountEndpoint}`;
                 return this.getForAADToken(url, token);
-            }).share();
+            });
+        }).share();
     }
 
     public getForAADToken(accountUrl: string, token: string) {

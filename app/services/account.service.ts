@@ -4,12 +4,11 @@ import * as storage from "electron-json-storage";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import { AccountKeys, AccountResource } from "app/models";
+import { AccountKeys, AccountResource, Subscription } from "app/models";
 import { log } from "app/utils";
 import { AzureHttpService } from "./azure-http.service";
 import {
-    DataCache, DataCacheTracker, RxArmEntityProxy, RxArmListProxy,
-    RxEntityProxy, RxListProxy, getOnceProxy,
+    DataCache, DataCacheTracker,
 } from "./core";
 import { SubscriptionService } from "./subscription.service";
 
@@ -34,14 +33,14 @@ export interface SelectedAccount {
     keys: AccountKeys;
 }
 
-
 function getSubscriptionIdFromAccountId(accountId: string) {
-    const regex = /subscriptions\/(.*)\//;
+    const regex = /subscriptions\/(.*)\/resourceGroups/;
     const out = regex.exec(accountId);
-    if (!out || out.length === 0) {
+
+    if (!out || out.length < 2) {
         return null;
     } else {
-        return out[0];
+        return out[1];
     }
 }
 @Injectable()
@@ -112,7 +111,7 @@ export class AccountService {
             return;
         }
 
-        const accountObs = this.getOnce(accountId);
+        const accountObs = this.getAccount(accountId);
         const keyObs = this.getAccountKeys(accountId);
         DataCacheTracker.clearAllCaches(this._accountCache);
         Observable.forkJoin(accountObs, keyObs).subscribe(([account, keys]) => {
@@ -127,13 +126,12 @@ export class AccountService {
         const search = new URLSearchParams();
         search.set("$filter", "resourceType eq 'Microsoft.Batch/batchAccounts'");
         const options = new RequestOptions({ search });
+
         return this.subscriptionService.get(subscriptionId)
             .flatMap((subscription) => {
-                console.log("got sub", subscription.toJS());
                 return this.azure.get(subscription, `/subscriptions/${subscriptionId}/resources`, options)
                     .map(response => {
                         return List(response.json().value.map((data) => {
-                            console.log("Map accounts", data);
                             return new AccountResource(Object.assign({}, data, { subscription }));
                         }));
                     });
@@ -141,17 +139,16 @@ export class AccountService {
             .share();
     }
 
-    public getAccount(accountId: string): RxEntityProxy<AccountParams, AccountResource> {
-        return new RxArmEntityProxy<AccountParams, AccountResource>(AccountResource, this.azure, {
-            cache: () => this._accountCache,
-            uri: ({ id }) => `${id}`,
-            initialParams: { id: accountId },
-            subscription: this.subscriptionService.get(getSubscriptionIdFromAccountId(accountId)),
-        });
-    }
-
-    public getOnce(accountId: string) {
-        return getOnceProxy(this.getAccount(accountId));
+    public getAccount(accountId: string): Observable<AccountResource> {
+        return this.subscriptionService.get(getSubscriptionIdFromAccountId(accountId))
+            .flatMap((subscription) => {
+                return this.azure.get(subscription, accountId)
+                    .map(response => {
+                        const data = response.json();
+                        return this._createAccount(subscription, data);
+                    });
+            })
+            .share();
     }
 
     public getAccountKeys(accountId: string): Observable<AccountKeys> {
@@ -168,7 +165,7 @@ export class AccountService {
         }
 
         const subject = new AsyncSubject();
-        this.getOnce(accountId).subscribe({
+        this.getAccount(accountId).subscribe({
             next: (account) => {
                 this._accountFavorites.next(this._accountFavorites.getValue().push(account));
                 this._saveAccountFavorites();
@@ -251,5 +248,9 @@ export class AccountService {
         });
 
         return sub;
+    }
+
+    private _createAccount(subscription: Subscription, data: any): AccountResource {
+        return new AccountResource(Object.assign({}, data, { subscription }));
     }
 }

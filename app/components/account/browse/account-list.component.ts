@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { Component, Input, OnDestroy } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { List } from "immutable";
 import { Observable, Subscription as RxjsSubscription } from "rxjs";
@@ -18,7 +18,7 @@ interface SubscriptionAccount {
     selector: "bl-account-list",
     templateUrl: "account-list.html",
 })
-export class AccountListComponent implements OnInit, OnDestroy {
+export class AccountListComponent implements OnDestroy {
     @Input()
     public set filter(filter: Filter) {
         this._filter = filter;
@@ -27,7 +27,7 @@ export class AccountListComponent implements OnInit, OnDestroy {
     public get filter(): Filter { return this._filter; };
 
     public subscriptionAccounts: { [subId: string]: SubscriptionAccount } = {};
-    public subscriptions: List<Subscription>;
+    public subscriptions: List<Subscription> = List([]);
     public displayedSubscriptions: List<Subscription>;
 
     private _filter: Filter;
@@ -66,9 +66,6 @@ export class AccountListComponent implements OnInit, OnDestroy {
         });
     }
 
-    public ngOnInit() {
-    }
-
     public ngOnDestroy() {
         this._sub.unsubscribe();
     }
@@ -79,7 +76,7 @@ export class AccountListComponent implements OnInit, OnDestroy {
             if (!subscriptionAccounts.accounts) {
                 subscriptionAccounts.accounts = this.accountService.list(subscriptionId);
                 subscriptionAccounts.loading = true;
-                subscriptionAccounts.accounts.subscribe(() => subscriptionAccounts.loading = false));
+                subscriptionAccounts.accounts.subscribe(() => subscriptionAccounts.loading = false);
             }
         }
 

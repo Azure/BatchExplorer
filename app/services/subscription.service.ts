@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { List } from "immutable";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, AsyncSubject } from "rxjs";
 
 import { Subscription } from "app/models";
 import { log } from "app/utils";
@@ -11,9 +11,10 @@ import { AzureHttpService } from "./azure-http.service";
 export class SubscriptionService {
     public subscriptions: Observable<List<Subscription>>;
     private _subscriptions = new BehaviorSubject<List<Subscription>>(List([]));
+    private _subscriptionsLoaded = new AsyncSubject();
 
     constructor(private azure: AzureHttpService, private adal: AdalService) {
-        this.subscriptions = this._subscriptions.asObservable();
+        this.subscriptions = this._subscriptionsLoaded.flatMap(() => this._subscriptions.asObservable());
     }
 
     public load(): Observable<any> {
@@ -26,6 +27,8 @@ export class SubscriptionService {
                 const subscriptions = tenantSubscriptions.flatten();
                 console.log("SUbs", subscriptions, subscriptions.map(x => x.toJS()));
                 this._subscriptions.next(List(subscriptions));
+                this._subscriptionsLoaded.next(true);
+                this._subscriptionsLoaded.complete();
             },
             error: (error) => {
                 log.error("Error loading subscriptions", error);
@@ -45,7 +48,7 @@ export class SubscriptionService {
     private _loadSubscriptionsForTenant(tenantId: string): Observable<Subscription[]> {
         return this.azure.get(tenantId, "subscriptions").map(response => {
             const subscriptionData = response.json().value;
-            return subscriptionData.map(x => this._createSubscription(tenantId, x);
+            return subscriptionData.map(x => this._createSubscription(tenantId, x));
         });
     }
 

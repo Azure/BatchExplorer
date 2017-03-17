@@ -2,8 +2,8 @@ import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 
 import { Application, ApplicationPackage } from "app/models";
-import { AccountService } from "app/services";
-import { AzureHttpService } from "./azure-http.service";
+import { AccountService } from "./account.service";
+import { ArmHttpService } from "./arm-http.service";
 import { DataCache, RxArmEntityProxy, RxArmListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
 import { ServiceBase } from "./service-base";
 
@@ -33,7 +33,7 @@ export class ApplicationService extends ServiceBase {
     private _cache = new DataCache<Application>();
 
     constructor(
-        private azure: AzureHttpService,
+        private arm: ArmHttpService,
         private accountService: AccountService) {
 
         super();
@@ -51,7 +51,7 @@ export class ApplicationService extends ServiceBase {
      * @param initialOptions: options for the list query
      */
     public list(initialOptions: any = {}): RxListProxy<ApplicationListParams, Application> {
-        return new RxArmListProxy<ApplicationListParams, Application>(Application, this.azure, {
+        return new RxArmListProxy<ApplicationListParams, Application>(Application, this.arm, {
             cache: (params) => this._cache,
             uri: () => `${this._currentAccountId}/applications`,
             initialOptions: initialOptions,
@@ -64,9 +64,9 @@ export class ApplicationService extends ServiceBase {
      * @param applicationId: id of the application
      */
     public get(applicationId: string): RxEntityProxy<ApplicationParams, Application> {
-        return new RxArmEntityProxy<ApplicationParams, Application>(Application, this.azure, {
+        return new RxArmEntityProxy<ApplicationParams, Application>(Application, this.arm, {
             cache: () => this._cache,
-            uri: ({ id}) => `${this._currentAccountId}/applications/${id}`,
+            uri: ({ id }) => `${this._currentAccountId}/applications/${id}`,
             initialParams: {
                 id: applicationId,
             },
@@ -83,7 +83,7 @@ export class ApplicationService extends ServiceBase {
      * @param version: selected package version
      */
     public put(applicationId: string, version: string): Observable<ApplicationPackage> {
-        return this.azure
+        return this.arm
             .put(`${this._currentAccountId}/applications/${applicationId}/versions/${version}`)
             .map(response => new ApplicationPackage(response.json()));
     }
@@ -94,7 +94,7 @@ export class ApplicationService extends ServiceBase {
      * @param jsonData: json data containing the application patch data
      */
     public patch(applicationId: string, jsonData: any): Observable<any> {
-        return this.azure.patch(
+        return this.arm.patch(
             `${this._currentAccountId}/applications/${applicationId}`,
             {
                 allowUpdates: jsonData.allowUpdates,
@@ -109,7 +109,7 @@ export class ApplicationService extends ServiceBase {
      * @param applicationId: id of the application
      */
     public delete(applicationId: string): Observable<any> {
-        return this.azure.delete(`${this._currentAccountId}/applications/${applicationId}`);
+        return this.arm.delete(`${this._currentAccountId}/applications/${applicationId}`);
     }
 
     /**
@@ -120,7 +120,7 @@ export class ApplicationService extends ServiceBase {
      * @param version: selected package version
      */
     public activatePackage(applicationId: string, version: string): Observable<any> {
-        return this.azure.post(
+        return this.arm.post(
             `${this._currentAccountId}/applications/${applicationId}/versions/${version}/activate`,
             {
                 format: "zip",
@@ -135,7 +135,7 @@ export class ApplicationService extends ServiceBase {
      * @param version: selected package version
      */
     public getPackage(applicationId: string, version: string): Observable<ApplicationPackage> {
-        return this.azure
+        return this.arm
             .get(`${this._currentAccountId}/applications/${applicationId}/versions/${version}`)
             .map(response => new ApplicationPackage(response.json()));
     }
@@ -146,6 +146,6 @@ export class ApplicationService extends ServiceBase {
      * @param version: selected package version
      */
     public deletePackage(applicationId: string, version: string): Observable<any> {
-        return this.azure.delete(`${this._currentAccountId}/applications/${applicationId}/versions/${version}`);
+        return this.arm.delete(`${this._currentAccountId}/applications/${applicationId}/versions/${version}`);
     }
 }

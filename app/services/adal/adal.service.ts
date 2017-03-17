@@ -1,17 +1,17 @@
 import { Injectable, NgZone } from "@angular/core";
-import { Http, Response, RequestOptions, Headers } from "@angular/http";
+import { Headers, Http, RequestOptions, Response } from "@angular/http";
 import { remote } from "electron";
 import * as moment from "moment";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { AADUser } from "app/models";
-import { Constants, log, ObservableUtils } from "app/utils";
+import { Constants, ObservableUtils, log } from "app/utils";
 import { AccessToken } from "./access-token";
 import { AccessTokenError, AccessTokenErrorResult, AccessTokenService } from "./access-token.service";
 import { AdalConfig } from "./adal-config";
+import { TokenCache } from "./token-cache";
 import { AuthorizeResult, UserAuthorization } from "./user-authorization";
 import { UserDecoder } from "./user-decoder";
-import { TokenCache } from "app/services/adal/token-cache";
 
 export interface AuthorizationResult {
     code: string;
@@ -111,10 +111,6 @@ export class AdalService {
         this._tokenCache.clear();
         this._currentUser.next(null);
         this._userAuthorization.logout();
-    }
-
-    public get accessToken(): Observable<string> {
-        return this.accessTokenFor("common"); // TODO fix
     }
 
     public accessTokenFor(tenantId: string, resource: string = defaultResource) {

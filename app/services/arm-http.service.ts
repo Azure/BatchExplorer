@@ -4,10 +4,9 @@ import {
 } from "@angular/http";
 import { Observable } from "rxjs";
 
-import { AccountService, AzureHttpService } from "app/services";
-import { Constants } from "app/utils";
+import { AccountService } from "./account.service";
 import { AdalService } from "./adal";
-
+import { AzureHttpService } from "./azure-http.service";
 
 function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?: any): RequestOptionsArgs {
     const options = original || new RequestOptions();
