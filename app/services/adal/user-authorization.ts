@@ -44,6 +44,7 @@ export class UserAuthorization {
      *      If silent is true and the access fail the observable will return and error of type AuthorizeError
      */
     public authorize(silent = false): Observable<AuthorizeResult> {
+        silent = false;
         this._waitingForAuth = true;
         if (this._subject) {
             return this._subject.asObservable();
@@ -97,13 +98,14 @@ export class UserAuthorization {
             scope: "user_impersonation+openid",
             nonce: SecureUtils.uuid(),
             state: SecureUtils.uuid(),
-            resource: "https://management.core.windows.net/",
+            // resource: "https://management.core.windows.net/",
+            // resource: "https://microsoft.onmicrosoft.com/batchuitest",
+            resource: "https://batchlabs.onmicrosoft.com/test-app",
         };
 
         if (silent) {
             params.prompt = AuthorizePromptType.none;
         }
-
         return AdalConstants.authorizeUrl(this.config.tenant, params);
     }
 
@@ -139,7 +141,7 @@ export class UserAuthorization {
             },
         });
         // Uncomment to debug auth errors
-        // this._authWindow.webContents.openDevTools();
+        this._authWindow.webContents.openDevTools();
         this._authWindow.setMenu(null);
         return this._authWindow;
     }

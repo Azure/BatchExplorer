@@ -199,7 +199,7 @@ export class AdalService {
                     });
                 },
                 error: (e: Response) => {
-                    log.error("Error redeem auth code for token", e);
+                    log.error(`Error redeem auth code for a token for resource ${resource}`, e);
                     if (this._processAccessTokenError(resource, e)) {
                         return;
                     }

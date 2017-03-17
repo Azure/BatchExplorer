@@ -8,8 +8,11 @@ import AccountCreateDialogComponent from "./components/account/add/account-creat
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
 const adalConfig = {
-    tenant: "microsoft.onmicrosoft.com",
-    clientId: "94ef904d-c21a-4672-9946-b4d6a12b8e13",
+    tenant: "common",
+    // tenant: "timotheeguerinoutlook.onmicrosoft.com",
+    // clientId: "94ef904d-c21a-4672-9946-b4d6a12b8e13", // In MS dir
+    // clientId: "f5f820a7-e06b-4d86-b946-ab093ab866a0", // Batch labs test in MS dir
+    clientId: "9188baf1-f5b8-4cf6-ac5b-6ab24efe409f", // In batch labs dir
     redirectUri: "http://localhost",
 };
 
