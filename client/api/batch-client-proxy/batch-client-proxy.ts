@@ -13,18 +13,17 @@ export interface Options {
     url: string;
 }
 
-export default class BatchClientProxy {
-    private _serviceClient: any;
+export class BatchClientProxy {
     private _account: AccountProxy;
     private _file: FileProxy;
     private _job: JobProxy;
     private _pool: PoolProxy;
     private _task: TaskProxy;
     private _node: NodeProxy;
+    private _serviceClient: any;
 
-    public setOptions(options: Options) {
-        const credentials = new batch.SharedKeyCredentials(options.account, options.key);
-        this._serviceClient = new batch.ServiceClient(credentials, options.url);
+    constructor(url, credentials) {
+        this._serviceClient = new batch.ServiceClient(credentials, url);
 
         this._account = new AccountProxy(this._serviceClient);
         this._file = new FileProxy(this._serviceClient);

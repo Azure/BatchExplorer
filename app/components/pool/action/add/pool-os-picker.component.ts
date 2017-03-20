@@ -5,7 +5,7 @@ import {
 
 import { NodeAgentSku, NodeAgentSkuMap } from "app/models";
 import { PoolOSPickerModel, PoolOsSources } from "app/models/forms";
-import { AccountService } from "app/services";
+import { NodeService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { ObjectUtils } from "app/utils";
 
@@ -54,8 +54,8 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
     private _propagateChange: Function = null;
     private _nodeAgentSkuMap: NodeAgentSkuMap = new NodeAgentSkuMap();
 
-    constructor(private formBuilder: FormBuilder, private accountService: AccountService) {
-        this.accountData = this.accountService.listNodeAgentSkus();
+    constructor(private formBuilder: FormBuilder, private nodeService: NodeService) {
+        this.accountData = this.nodeService.listNodeAgentSkus();
         this.accountData.items.subscribe((result) => {
             this._buildNodeAgentSkuMap(result);
         });

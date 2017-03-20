@@ -4,7 +4,7 @@
 import { BrowserWindow, app } from "electron";
 import * as path from "path";
 
-import BatchClientProxy from "./api/batch-client-proxy/batch-client-proxy";
+import { BatchClientProxyFactory } from "./api/batch-client-proxy";
 import { renderLogger } from "./logger";
 
 app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
@@ -39,7 +39,7 @@ function createWindow() {
     const url = process.env.HOT ? devServerUrl : buildFileUrl;
 
     mainWindow.loadURL(url);
-    mainWindow.batchClient = new BatchClientProxy();
+    mainWindow.batchClientFactory = new BatchClientProxyFactory();
     mainWindow.logger = renderLogger;
 
     // Open the DevTools.

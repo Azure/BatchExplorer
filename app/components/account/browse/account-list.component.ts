@@ -1,6 +1,7 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { List } from "immutable";
+import { Subscription as RxjsSubscription } from "rxjs";
 
 import { AccountResource, Subscription } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
@@ -17,7 +18,7 @@ interface SubscriptionAccount {
     selector: "bl-account-list",
     templateUrl: "account-list.html",
 })
-export class AccountListComponent implements OnInit {
+export class AccountListComponent implements OnInit, OnDestroy {
     @Input()
     public set filter(filter: Filter) {
         this._filter = filter;
@@ -31,6 +32,7 @@ export class AccountListComponent implements OnInit {
     public displayedSubscriptions: List<Subscription>;
 
     private _filter: Filter;
+    private _sub: RxjsSubscription;
 
     constructor(
         private accountService: AccountService,
@@ -39,7 +41,7 @@ export class AccountListComponent implements OnInit {
         private subscriptionService: SubscriptionService) {
 
         this.subscriptionData = subscriptionService.list();
-        this.subscriptionData.items.subscribe((subscriptions) => {
+        this._sub = this.subscriptionData.items.subscribe((subscriptions) => {
             const data: any = {};
             this.subscriptions = List<Subscription>(subscriptions.sort((a, b) => {
                 if (a.displayName < b.displayName) {
@@ -68,6 +70,10 @@ export class AccountListComponent implements OnInit {
 
     public ngOnInit() {
         this.subscriptionData.fetchNext(true);
+    }
+
+    public ngOnDestroy() {
+        this._sub.unsubscribe();
     }
 
     public toggleExpandSubscription(subscriptionId: string) {

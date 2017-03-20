@@ -29,7 +29,6 @@ export class AccountDropDownComponent implements AfterViewInit {
         });
     }
 
-    // todo: where do i hold the selected account now that we are binding to the server observable data?
     public selectAccount(account: AccountResource): void {
         this.accountService.selectAccount(account.id);
     }

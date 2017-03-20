@@ -1,18 +1,16 @@
-import { ApplicationRef, Injectable, NgZone } from "@angular/core";
+import { Injectable } from "@angular/core";
 import * as storage from "electron-json-storage";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import { AccountKeys, AccountResource, NodeAgentSku } from "app/models";
+import { AccountKeys, AccountResource } from "app/models";
 import { log } from "app/utils";
-import BatchClient from "../api/batch/batch-client";
 import { AzureHttpService } from "./azure-http.service";
-import { SubscriptionService } from "./subscription.service";
-
 import {
-    DataCache, DataCacheTracker, RxArmEntityProxy, RxArmListProxy, RxBatchListProxy,
+    DataCache, DataCacheTracker, RxArmEntityProxy, RxArmListProxy,
     RxEntityProxy, RxListProxy, getOnceProxy,
 } from "./core";
+import { SubscriptionService } from "./subscription.service";
 
 const lastSelectedAccountStorageKey = "last-account-selected-name";
 
@@ -38,6 +36,11 @@ export interface SelectedAccount {
 @Injectable()
 export class AccountService {
     public accountLoaded: Observable<boolean>;
+
+    /**
+     * This represent the value of the current accountId.
+     * This change value immediately after calling #selectAccount
+     */
     public currentAccountId: Observable<string>;
 
     private _accountJsonFileName: string = "account-favorites";
@@ -46,12 +49,9 @@ export class AccountService {
     private _currentAccountValid: BehaviorSubject<AccountStatus> = new BehaviorSubject(AccountStatus.Invalid);
     private _accountLoaded = new BehaviorSubject<boolean>(false);
     private _accountCache = new DataCache<AccountResource>();
-    private _cache = new DataCache<any>();
     private _currentAccountId = new BehaviorSubject<string>(null);
 
     constructor(
-        private applicationRef: ApplicationRef,
-        private zone: NgZone,
         private azure: AzureHttpService,
         private subscriptionService: SubscriptionService) {
 
@@ -60,15 +60,9 @@ export class AccountService {
 
         this._currentAccount.subscribe((selection) => {
             if (selection) {
-                const {account, keys} = selection;
+                const { account } = selection;
                 localStorage.setItem(lastSelectedAccountStorageKey, account.id);
-                BatchClient.setOptions({
-                    account: account.name,
-                    key: keys.primary,
-                    url: "https://" + account.properties.accountEndpoint,
-                });
                 this.validateCurrentAccount();
-                this.applicationRef.tick();
             } else {
                 this._currentAccountValid.next(AccountStatus.Invalid);
             }
@@ -81,8 +75,18 @@ export class AccountService {
         return this._accountFavorites.asObservable();
     }
 
+    /**
+     * @returns the current account.
+     * If the current loaded account match the currentAccountId it will return immediately
+     * otherwise this will wait for the account with currentAccountId to be loaded
+     */
     public get currentAccount(): Observable<AccountResource> {
-        return this._currentAccount.map(x => x && x.account);
+        return this._currentAccountId.flatMap((id) => {
+            return this._currentAccount
+                .filter(x => x && x.account && x.account.id === id)
+                .first()
+                .map(x => x && x.account);
+        }).share();
     }
 
     public get currentAccountValid(): Observable<AccountStatus> {
@@ -90,6 +94,7 @@ export class AccountService {
     }
 
     public selectAccount(accountId: string) {
+        this._currentAccountValid.next(AccountStatus.Loading);
         this._currentAccountId.next(accountId);
         const current = this._currentAccount.getValue();
         if (current && current.account.id === accountId) {
@@ -119,7 +124,7 @@ export class AccountService {
     public getAccount(accountId: string): RxEntityProxy<AccountParams, AccountResource> {
         return new RxArmEntityProxy<AccountParams, AccountResource>(AccountResource, this.azure, {
             cache: () => this._accountCache,
-            uri: ({id}) => `${id}`,
+            uri: ({ id }) => `${id}`,
             initialParams: { id: accountId },
         });
     }
@@ -130,14 +135,6 @@ export class AccountService {
 
     public getAccountKeys(accountId: string): Observable<AccountKeys> {
         return this.azure.post(`${accountId}/listKeys`).map(response => new AccountKeys(response.json()));
-    }
-
-    public listNodeAgentSkus(initialOptions: any = {}): RxListProxy<{}, NodeAgentSku> {
-        return new RxBatchListProxy<{}, NodeAgentSku>(NodeAgentSku, {
-            cache: (params) => this._cache,
-            proxyConstructor: (params, options) => BatchClient.account.listNodeAgentSkus(options),
-            initialOptions,
-        });
     }
 
     public favoriteAccount(accountId: string): Observable<any> {
@@ -179,16 +176,7 @@ export class AccountService {
     }
 
     public validateCurrentAccount() {
-        this._currentAccountValid.next(AccountStatus.Loading);
-
-        // Try to list pools from an account(need to get at least 1 pool)
-        BatchClient.pool.list({ maxResults: 1 }).fetchNext().then(() => {
-            this._currentAccountValid.next(AccountStatus.Valid);
-        }).catch((error) => {
-            const {account: {name, properties}} = this._currentAccount.getValue();
-            log.error(`Could not connect to account '${name}' at '${properties.accountEndpoint}'`, error);
-            this._currentAccountValid.next(AccountStatus.Invalid);
-        });
+        this._currentAccountValid.next(AccountStatus.Valid);
     }
 
     public loadInitialData() {
