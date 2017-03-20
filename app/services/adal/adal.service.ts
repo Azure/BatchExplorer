@@ -242,7 +242,8 @@ export class AdalService {
             const options = new RequestOptions();
             options.headers = new Headers();
             options.headers.append("Authorization", `${token.token_type} ${token.access_token}`);
-            return this.http.get(`${Constants.ServiceUrl.arm}?api-version=${Constants.ApiVersion.arm}`, options);
+            const url = `${Constants.ServiceUrl.arm}/tenants?api-version=${Constants.ApiVersion.arm}`;
+            return this.http.get(url, options);
         }).map(response => {
             return response.json().value.map(x => x.tenantId);
         });
