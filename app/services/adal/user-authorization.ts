@@ -45,6 +45,9 @@ export class UserAuthorization {
      */
     public authorize(silent = false): Observable<AuthorizeResult> {
         this._waitingForAuth = true;
+        if (this._subject) {
+            return this._subject.asObservable();
+        }
         this._subject = new AsyncSubject();
         const authWindow = this._createAuthWindow();
         authWindow.loadURL(this._buildUrl(silent));
@@ -147,18 +150,21 @@ export class UserAuthorization {
      * @param url Url used for callback
      */
     private _handleCallback(url: string) {
-        if (!this._isRedirectUrl(url)) {
+        if (!this._isRedirectUrl(url) || !this._subject) {
             return;
         }
 
         this._closeWindow();
         const params = this._getRedirectUrlParams(url);
         this._waitingForAuth = false;
+        const subject = this._subject;
+        this._subject = null;
+
         if ((<any>params).error) {
-            this._subject.error(params as AuthorizeError);
+            subject.error(params as AuthorizeError);
         } else {
-            this._subject.next(params as AuthorizeResult);
-            this._subject.complete();
+            subject.next(params as AuthorizeResult);
+            subject.complete();
         }
     }
 

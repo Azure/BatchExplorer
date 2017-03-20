@@ -8,7 +8,7 @@ export interface AuthorizeUrlParams {
     scope: string;
     nonce?: string;
     state?: string;
-    resource: string;
+    resource?: string;
     prompt?: string;
 }
 

@@ -4,6 +4,7 @@ import {
 } from "@angular/core/testing";
 
 import { DataCache, RxBatchEntityProxy, RxEntityProxy } from "app/services/core";
+import { BatchClientServiceMock } from "test/utils/mocks";
 import { FakeModel } from "./fake-model";
 
 const data = [
@@ -16,11 +17,14 @@ describe("RxEnity proxy", () => {
     let proxy: RxEntityProxy<any, FakeModel>;
     let cache: DataCache<FakeModel>;
     let dataSpy: jasmine.Spy;
-
+    let batchClientServiceSpy;
+    let batchClient;
     beforeEach(() => {
+        batchClient = "some-client";
         cache = new DataCache<FakeModel>();
         dataSpy = jasmine.createSpy("").and.returnValues(...data.map(x => Promise.resolve({ data: x })));
-        proxy = new RxBatchEntityProxy(FakeModel, {
+        batchClientServiceSpy = new BatchClientServiceMock(batchClient);
+        proxy = new RxBatchEntityProxy(FakeModel, batchClientServiceSpy, {
             cache: (params) => cache,
             getFn: dataSpy,
             initialParams: { id: "1" },
@@ -34,7 +38,7 @@ describe("RxEnity proxy", () => {
         tick();
         expect(item).toEqualImmutable(new FakeModel(data[0]));
         expect(dataSpy).toHaveBeenCalledTimes(1);
-        expect(dataSpy).toHaveBeenCalledWith({ id: "1" });
+        expect(dataSpy).toHaveBeenCalledWith(batchClient, { id: "1" });
     }));
 
     it("Update the data when refreshing", fakeAsync(() => {
@@ -61,7 +65,7 @@ describe("RxEnity proxy", () => {
         proxy.fetch();
         tick();
         expect(item).toEqualImmutable(new FakeModel(data[0]));
-        expect(dataSpy).toHaveBeenCalledWith({ id: "2" });
+        expect(dataSpy).toHaveBeenCalledWith(batchClient, { id: "2" });
     }));
 
     it("Update the cache should update the item", fakeAsync(() => {
@@ -71,7 +75,7 @@ describe("RxEnity proxy", () => {
         tick();
         expect(item).toEqualImmutable(new FakeModel(data[0]));
         expect(dataSpy).toHaveBeenCalledTimes(1);
-        expect(dataSpy).toHaveBeenCalledWith({ id: "1" });
+        expect(dataSpy).toHaveBeenCalledWith(batchClient, { id: "1" });
 
         cache.addItem(new FakeModel(data[2]));
         tick();
@@ -85,7 +89,7 @@ describe("RxEnity proxy", () => {
 
         it("should not send to delete if loading for the first time and I get a 404", fakeAsync(() => {
             fakeClient = () => Promise.reject({ statusCode: 404 });
-            proxy = new RxBatchEntityProxy(FakeModel, {
+            proxy = new RxBatchEntityProxy(FakeModel, batchClientServiceSpy, {
                 cache: (params) => cache,
                 getFn: fakeClient,
                 initialParams: { id: "1" },
@@ -109,7 +113,7 @@ describe("RxEnity proxy", () => {
                     return Promise.resolve({ data: data[0] });
                 }
             };
-            const otherProxy = new RxBatchEntityProxy(FakeModel, {
+            const otherProxy = new RxBatchEntityProxy(FakeModel, batchClientServiceSpy, {
                 cache: (params) => cache,
                 getFn: fakeClient,
                 initialParams: { id: "1" },
@@ -138,7 +142,7 @@ describe("RxEnity proxy", () => {
                     return Promise.resolve({ data: data[0] });
                 }
             };
-            proxy = new RxBatchEntityProxy(FakeModel, {
+            proxy = new RxBatchEntityProxy(FakeModel, batchClientServiceSpy, {
                 cache: (params) => cache,
                 getFn: fakeClient,
                 initialParams: { id: "1" },

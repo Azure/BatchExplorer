@@ -8,7 +8,7 @@ import { ServerError } from "app/models";
 import { AdalService, AzureHttpService } from "app/services";
 import { Constants } from "app/utils";
 
-describe("MyComp", () => {
+describe("AzureHttpService", () => {
     let service: AzureHttpService;
     let adalSpy: any;
     let injector: Injector;
@@ -26,7 +26,7 @@ describe("MyComp", () => {
     beforeEach(() => {
 
         adalSpy = {
-            accessTokenData: Observable.of({ accessToken: "abc" }),
+            accessTokenData: () => Observable.of({ accessToken: "abc" }),
         };
 
         injector = ReflectiveInjector.resolveAndCreate([

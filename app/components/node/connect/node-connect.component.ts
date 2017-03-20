@@ -4,7 +4,7 @@ import { List } from "immutable";
 
 import { SidebarRef } from "app/components/base/sidebar";
 import { Node, NodeAgentSku, NodeConnectionSettings, Pool } from "app/models";
-import { AccountService, AddNodeUserAttributes, NodeService, NodeUserService } from "app/services";
+import { AddNodeUserAttributes, NodeService, NodeUserService } from "app/services";
 import { PoolUtils, SecureUtils } from "app/utils";
 
 enum CredentialSource {
@@ -49,13 +49,12 @@ export class NodeConnectComponent implements OnInit {
 
     constructor(
         public sidebarRef: SidebarRef<any>,
-        private accountService: AccountService,
         private nodeUserService: NodeUserService,
         private nodeService: NodeService) {
     }
 
     public ngOnInit() {
-        const data = this.accountService.listNodeAgentSkus();
+        const data = this.nodeService.listNodeAgentSkus();
         data.fetchAll().subscribe(() => {
             data.items.first().subscribe((agentSkus) => {
                 this.agentSkus = agentSkus;

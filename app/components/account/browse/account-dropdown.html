@@ -1,5 +1,5 @@
 <bl-dropdown class="account-dropdown">
-    <div bl-dropdown-btn [routerLink]="['/accounts/', (accountService.currentAccount | async)?.id]" [class.invalid]="currentAccountValid === status.Invalid">
+    <div bl-dropdown-btn [routerLink]="['/accounts/', accountService.currentAccountId | async]" [class.invalid]="currentAccountValid === status.Invalid">
         {{selectedAccountAlias}}
 
         <i *ngIf="currentAccountValid === status.Invalid" class="fa fa-warning"></i>

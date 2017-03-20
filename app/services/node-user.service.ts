@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
-import BatchClient from "app/api/batch/batch-client";
 import { Observable } from "rxjs";
 
 import { ServerError } from "app/models";
 import { log } from "app/utils";
+import { BatchClientService } from "./batch-client.service";
 import { ServiceBase } from "./service-base";
 
 export interface UpdateNodeUserAttributes {
@@ -19,14 +19,18 @@ export interface AddNodeUserAttributes extends UpdateNodeUserAttributes {
 
 @Injectable()
 export class NodeUserService extends ServiceBase {
+    constructor(batchService: BatchClientService) {
+        super(batchService);
+    }
+
     public addUser(poolId: string, nodeId: string, user: AddNodeUserAttributes): Observable<{}> {
-        return this.callBatchClient(BatchClient.node.addUser(poolId, nodeId, user), (error) => {
+        return this.callBatchClient((client) => client.node.addUser(poolId, nodeId, user), (error) => {
             log.error("Error adding a new user to node: " + nodeId, Object.assign({}, error));
         });
     }
 
     public updateUser(poolId: string, nodeId: string, username: string, user: AddNodeUserAttributes): Observable<{}> {
-        return this.callBatchClient(BatchClient.node.updateUser(poolId, nodeId, username, user), (error) => {
+        return this.callBatchClient((client) => client.node.updateUser(poolId, nodeId, username, user), (error) => {
             log.error("Error updating user to node: " + nodeId, Object.assign({}, error));
         });
     }
@@ -45,7 +49,7 @@ export class NodeUserService extends ServiceBase {
     }
 
     public deleteUser(poolId: string, nodeId: string, username: string): Observable<{}> {
-        return this.callBatchClient(BatchClient.node.deleteUser(poolId, nodeId, username), (error) => {
+        return this.callBatchClient((client) => client.node.deleteUser(poolId, nodeId, username), (error) => {
             log.error("Error removing user to node: " + nodeId, Object.assign({}, error));
         });
     }

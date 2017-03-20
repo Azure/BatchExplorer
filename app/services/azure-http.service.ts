@@ -37,7 +37,7 @@ export class AzureHttpService {
     }
 
     public request(uri: string, options: RequestOptionsArgs): Observable<Response> {
-        return this.adal.accessTokenData.flatMap((accessToken) => {
+        return this.adal.accessTokenData().flatMap((accessToken) => {
             options = this._setupRequestOptions(uri, options, accessToken);
             return this.http.request(this._computeUrl(uri), options)
                 .retryWhen(attempts => this._retryWhen(attempts))

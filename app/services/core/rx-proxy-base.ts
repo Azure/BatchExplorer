@@ -176,7 +176,7 @@ export abstract class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity
         }
         this._status.next(LoadingStatus.Loading);
 
-        const obs = options.getData();
+        const obs = this._currentObservable = options.getData();
         this._currentQuerySub = obs.subscribe((response) => {
             options.next(response);
             this._status.next(LoadingStatus.Ready);
