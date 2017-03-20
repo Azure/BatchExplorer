@@ -4,19 +4,14 @@ import { MdSidenav } from "@angular/material";
 import { Observable } from "rxjs";
 
 import {
-    AccountService, AdalService, CommandService, NodeService, SSHKeyService, SettingsService, SubscriptionService
+    AccountService, AdalService, CommandService, NodeService, SSHKeyService, SettingsService, SubscriptionService,
 } from "app/services";
 import AccountCreateDialogComponent from "./components/account/add/account-create-dialog.component";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
 const adalConfig = {
     tenant: "common",
-    // tenant: "timotheeguerinoutlook.onmicrosoft.com",
-    // clientId: "94ef904d-c21a-4672-9946-b4d6a12b8e13", // In MS dir
-    // clientId: "f5f820a7-e06b-4d86-b946-ab093ab866a0", // Batch labs test in MS dir
-    // clientId: "9188baf1-f5b8-4cf6-ac5b-6ab24efe409f", // In batch labs dir
-    clientId: "04b07795-8ddb-461a-bbee-02f9e1bf7b46", // Storage explorer....
-    // redirectUri: "http://localhost",
+    clientId: "04b07795-8ddb-461a-bbee-02f9e1bf7b46", // Azure CLI
     redirectUri: "urn:ietf:wg:oauth:2.0:oob",
 };
 

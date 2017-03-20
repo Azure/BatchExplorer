@@ -23,7 +23,7 @@ describe("Array extensions", () => {
         });
     });
 
-    fdescribe("#flatten()", () => {
+    describe("#flatten()", () => {
         it("should flatten", () => {
             expect([[1, 2], [3, 4]].flatten()).toEqual([1, 2, 3, 4]);
         });

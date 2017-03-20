@@ -2,7 +2,6 @@ import { Type } from "@angular/core";
 import { RequestOptions, URLSearchParams } from "@angular/http";
 import { Observable } from "rxjs";
 
-import { Subscription } from "app/models";
 import { ObjectUtils, exists } from "app/utils";
 import { ArmHttpService } from "../arm-http.service";
 import { CachedKeyList } from "./query-cache";

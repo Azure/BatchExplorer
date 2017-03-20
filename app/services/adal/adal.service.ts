@@ -242,14 +242,13 @@ export class AdalService {
             const options = new RequestOptions();
             options.headers = new Headers();
             options.headers.append("Authorization", `${token.token_type} ${token.access_token}`);
-            return this.http.get(`https://management.azure.com/tenants?api-version=${Constants.ApiVersion.arm}`, options);
+            return this.http.get(`${Constants.ServiceUrl.arm}?api-version=${Constants.ApiVersion.arm}`, options);
         }).map(response => {
             return response.json().value.map(x => x.tenantId);
         });
     }
 
     private _clearUserSpecificCache() {
-        console.log("Celar user specific cache");
         localStorage.removeItem(Constants.localStorageKey.subscriptions);
         localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
         localStorage.removeItem(Constants.localStorageKey.selectedAccountId);

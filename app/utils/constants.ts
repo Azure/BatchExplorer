@@ -111,3 +111,7 @@ export const ODataFields = {
     state: "state",
     taskExitCode: "executionInfo/exitCode",
 };
+
+export const ServiceUrl = {
+    arm: "https://management.azure.com",
+};

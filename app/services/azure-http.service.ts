@@ -11,7 +11,7 @@ import { AccessToken, AdalService } from "./adal";
 
 const apiVersionParams = "api-version";
 const apiVersion = Constants.ApiVersion.arm;
-const baseUrl = "https://management.azure.com";
+const baseUrl = Constants.ServiceUrl.arm;
 
 function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?: any): RequestOptionsArgs {
     const options = original || new RequestOptions();

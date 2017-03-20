@@ -1,5 +1,5 @@
 import { HashLocationStrategy, LocationStrategy } from "@angular/common";
-import { ErrorHandler, NgModule } from "@angular/core";
+import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
@@ -41,7 +41,6 @@ import { TaskBrowseModule } from "./components/task/browse";
 import { TaskDetailsModule } from "./components/task/details";
 import { TaskHomeComponent } from "./components/task/home";
 import { AADUserDropdownComponent } from "./components/user";
-import { BatchLabsErrorHandler } from "./error-handler";
 
 // job actions
 import { JobActionModule } from "./components/job/action";
@@ -68,8 +67,8 @@ import {
     AccountService,
     AdalService,
     ApplicationService,
-    AzureHttpService,
     ArmHttpService,
+    AzureHttpService,
     BatchClientService,
     CommandService,
     ElectronShell,

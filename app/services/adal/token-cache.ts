@@ -20,7 +20,6 @@ export class TokenCache {
         return tenantTokens && tenantTokens[resource];
     }
 
-
     public storeToken(tenantId: string, resource: string, token: AccessToken) {
         if (!(tenantId in this._tokens)) {
             this._tokens[tenantId] = {};
@@ -70,10 +69,10 @@ export class TokenCache {
                 }
                 const token = new AccessToken(tenant[resource]);
                 if (!token.hasExpired()) {
-                    if (!(tenant in tokens)) {
-                        tokens[tenant] = {};
+                    if (!(tenantId in tokens)) {
+                        tokens[tenantId] = {};
                     }
-                    tokens[tenant][resource] = token;
+                    tokens[tenantId][resource] = token;
                 }
             }
         }

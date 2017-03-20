@@ -18,7 +18,7 @@ describe("AccountService", () => {
             cache: new DataCache<any>(),
         };
         accountService = new AccountService({} as any, subscriptionServiceSpy);
-        accountService.getOnce = jasmine.createSpy("getOnce").and.returnValue(Observable.of(account1));
+        accountService.getAccount = jasmine.createSpy("getAccount").and.returnValue(Observable.of(account1));
         accountService.getAccountKeys = jasmine.createSpy("getAccountKeys").and.returnValue(Observable.of({}));
         subs.push(accountService.currentAccountId.subscribe(x => currentAccountId = x));
         subs.push(accountService.currentAccount.subscribe(x => currentAccount = x));
@@ -51,7 +51,7 @@ describe("AccountService", () => {
         expect(currentAccount.id).toBe("account-1");
 
         let accountSubject = new AsyncSubject();
-        accountService.getOnce = jasmine.createSpy("getOnce").and.returnValue(accountSubject);
+        accountService.getAccount = jasmine.createSpy("getOnce").and.returnValue(accountSubject);
 
         accountService.selectAccount("account-2");
         currentAccount = undefined;

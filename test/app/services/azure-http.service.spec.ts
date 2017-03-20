@@ -48,7 +48,7 @@ describe("AzureHttpService", () => {
                 body: JSON.stringify({}),
             })) as any);
         });
-        const output = service.get("some-uri");
+        const output = service.get("tenant-1", "some-uri");
         subscribeResponse(output);
 
         // Exponential backoff

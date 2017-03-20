@@ -2,14 +2,13 @@ import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
+import { Observable } from "rxjs";
 
 import { AccountListComponent } from "app/components/account/browse";
 import { SidebarManager } from "app/components/base/sidebar";
-import { AccountResource, Subscription } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { click } from "test/utils/helpers";
-import { RxMockListProxy } from "test/utils/mocks";
 import { NoItemMockComponent } from "test/utils/mocks/components";
 
 describe("AccountListComponent", () => {
@@ -22,48 +21,44 @@ describe("AccountListComponent", () => {
 
     beforeEach(() => {
         accountService = {
-            list: (subId) => new RxMockListProxy<any, AccountResource>(AccountResource, {
-                initialParams: { subscriptionId: subId },
-                items: ({subscriptionId}) => {
-                    switch (subscriptionId) {
-                        case "sub-1":
-                            return [
-                                Fixtures.account.create({ id: "account-1", name: "Account 1", location: "westus" }),
-                                Fixtures.account.create({ id: "account-2", name: "Account 2", location: "eastus" }),
-                            ];
-                        case "sub-2":
-                            return [
-                                Fixtures.account.create({ id: "account-3", name: "Account 3", location: "centralus" }),
-                            ];
-                        default:
-                            return [];
-                    }
-                },
-            }),
+            list: (subscriptionId) => {
+                switch (subscriptionId) {
+                    case "sub-1":
+                        return Observable.of([
+                            Fixtures.account.create({ id: "account-1", name: "Account 1", location: "westus" }),
+                            Fixtures.account.create({ id: "account-2", name: "Account 2", location: "eastus" }),
+                        ]);
+                    case "sub-2":
+                        return Observable.of([
+                            Fixtures.account.create({ id: "account-3", name: "Account 3", location: "centralus" }),
+                        ]);
+                    default:
+                        return Observable.of([]);
+                }
+            },
 
             isAccountFavorite: (accountId) => false,
         };
 
         subscriptionService = {
-            list: () => new RxMockListProxy<{}, Subscription>(Subscription, {
-                items: [
-                    Fixtures.subscription.create({
-                        id: "/subsccriptions/sub-1",
-                        subscriptionId: "sub-1",
-                        displayName: "My test subscription",
-                    }),
-                    Fixtures.subscription.create({
-                        id: "/subsccriptions/sub-2",
-                        subscriptionId: "sub-2",
-                        displayName: "Someone test subscription",
-                    }),
-                    Fixtures.subscription.create({
-                        id: "/subsccriptions/sub-3",
-                        subscriptionId: "sub-3",
-                        displayName: "His test subscription",
-                    }),
-                ],
-            }),
+            subscriptions: Observable.of([
+                Fixtures.subscription.create({
+                    id: "/subsccriptions/sub-1",
+                    subscriptionId: "sub-1",
+                    displayName: "My test subscription",
+                }),
+                Fixtures.subscription.create({
+                    id: "/subsccriptions/sub-2",
+                    subscriptionId: "sub-2",
+                    displayName: "Someone test subscription",
+                }),
+                Fixtures.subscription.create({
+                    id: "/subsccriptions/sub-3",
+                    subscriptionId: "sub-3",
+                    displayName: "His test subscription",
+                }),
+            ],
+            ),
         };
 
         TestBed.configureTestingModule({
