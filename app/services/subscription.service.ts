@@ -19,7 +19,7 @@ export class SubscriptionService {
 
     public load(): Observable<any> {
         const obs = this.adal.tenantsIds.filter(ids => ids.length > 0).first().flatMap((tenantIds) => {
-            console.log("using tenantids", tenantIds);
+            console.log("================= LOADING SUBS using tenantids", tenantIds);
             return Observable.combineLatest(tenantIds.map(tenantId => this._loadSubscriptionsForTenant(tenantId)));
         });
         obs.subscribe({

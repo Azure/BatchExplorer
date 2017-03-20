@@ -3,7 +3,9 @@ import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { MdSidenav } from "@angular/material";
 import { Observable } from "rxjs";
 
-import { AccountService, AdalService, CommandService, NodeService, SSHKeyService, SettingsService, SubscriptionService } from "app/services";
+import {
+    AccountService, AdalService, CommandService, NodeService, SSHKeyService, SettingsService, SubscriptionService
+} from "app/services";
 import AccountCreateDialogComponent from "./components/account/add/account-create-dialog.component";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 

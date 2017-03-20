@@ -123,9 +123,11 @@ export class AdalService {
      * @param resource
      */
     public accessTokenData(tenantId: string, resource: string = defaultResource): Observable<AccessToken> {
+        console.log("--------------- accessTokenData for", tenantId);
         if (this._tokenCache.hasToken(tenantId, resource)) {
-            console.log("Has token data for", tenantId);
             const token = this._tokenCache.getToken(tenantId, resource);
+            console.log("toke exists", tenantId, token.access_token);
+
             const expireIn = moment(token.expires_on).diff(moment());
             if (expireIn > AdalService.refreshMargin) {
                 return Observable.of(token);
@@ -164,12 +166,16 @@ export class AdalService {
         }
 
         if (resource in this._newAccessTokenSubject) {
-            return this._newAccessTokenSubject[resource].asObservable();
+            return this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)].asObservable();
         }
 
-        const subject = this._newAccessTokenSubject[resource] = new AsyncSubject();
+        const subject = this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)] = new AsyncSubject();
         this._redeemNewAccessToken(tenantId, resource);
         return subject;
+    }
+
+    private _tenantResourceKey(tenantId: string, resource: string) {
+        return `${tenantId}|${resource}`;
     }
 
     /**
@@ -178,7 +184,7 @@ export class AdalService {
     private _redeemNewAccessToken(tenantId: string, resource: string, forceReLogin = false) {
         console.log("redeem new token data for", tenantId);
 
-        const subject = this._newAccessTokenSubject[resource];
+        const subject = this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)];
 
         this._authorizeUser(tenantId, forceReLogin)
             .do((result) => this._processUserToken(result.id_token))
@@ -191,7 +197,7 @@ export class AdalService {
                 next: (token) => {
                     this.zone.run(() => {
                         this._processAccessToken(tenantId, resource, token);
-                        delete this._newAccessTokenSubject[resource];
+                        delete this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)];
                         subject.next(token);
                         subject.complete();
                     });
@@ -201,7 +207,7 @@ export class AdalService {
                     if (this._processAccessTokenError(tenantId, resource, e)) {
                         return;
                     }
-                    delete this._newAccessTokenSubject[resource];
+                    delete this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)];
                     subject.error(e);
                 },
             });

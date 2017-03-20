@@ -22,7 +22,7 @@ export class TokenCache {
 
 
     public storeToken(tenantId: string, resource: string, token: AccessToken) {
-        console.log("Store", tenantId, resource, token.toJS(), this._tokens);
+        console.log("Store", tenantId, resource, token.access_token);
         if (!(tenantId in this._tokens)) {
             this._tokens[tenantId] = {};
         }
