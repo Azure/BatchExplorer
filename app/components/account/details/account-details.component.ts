@@ -24,6 +24,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
     public accountId: string;
     public loading: boolean = true;
+    public loadingError: any;
 
     private _paramsSubscriber: Subscription;
 
@@ -42,10 +43,14 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
             this.accountId = params["id"];
             this.selectAccount(this.accountId);
             this.loading = true;
-            this.accountService.getAccount(this.accountId).subscribe((x) => {
-                console.log("Account", x && x.toJS());
-                this.account = x;
-                this.loading = false;
+            this.accountService.getAccount(this.accountId).subscribe({
+                next: (x) => {
+                    this.account = x;
+                    this.loading = false;
+                },
+                error: (error) => {
+                    this.loadingError = error;
+                },
             });
         });
     }

@@ -41,6 +41,7 @@ function getSubscriptionIdFromAccountId(accountId: string) {
         return out[1];
     }
 }
+
 @Injectable()
 export class AccountService {
     public accountLoaded: Observable<boolean>;
@@ -102,21 +103,27 @@ export class AccountService {
     }
 
     public selectAccount(accountId: string) {
-        this._currentAccountValid.next(AccountStatus.Loading);
-        this._currentAccountId.next(accountId);
-        const current = this._currentAccount.getValue();
-        if (current && current.account.id === accountId) {
+        const current = this._currentAccountId.value;
+        if (current === accountId) {
             return;
         }
-
+        this._currentAccountId.next(accountId);
+        this._currentAccountValid.next(AccountStatus.Loading);
         const accountObs = this.getAccount(accountId);
         const keyObs = this.getAccountKeys(accountId);
         DataCacheTracker.clearAllCaches(this._accountCache);
-        Observable.forkJoin(accountObs, keyObs).subscribe(([account, keys]) => {
-            this._currentAccount.next({ account, keys });
-            if (!this._accountLoaded.getValue()) {
-                this._accountLoaded.next(true);
-            }
+        Observable.forkJoin(accountObs, keyObs).subscribe({
+            next: ([account, keys]) => {
+                this._currentAccount.next({ account, keys });
+                if (!this._accountLoaded.getValue()) {
+                    this._accountLoaded.next(true);
+                }
+                this._currentAccountValid.next(AccountStatus.Valid);
+            },
+            error: (error) => {
+                log.error(`Error loading account ${accountId}`, error);
+                this._currentAccountValid.next(AccountStatus.Invalid);
+            },
         });
     }
 
@@ -147,6 +154,17 @@ export class AccountService {
                     });
             })
             .share();
+    }
+
+    public getNameFromAccountId(accountId: string): string {
+        const regex = /batchAccounts\/(.*)/;
+        const out = regex.exec(accountId);
+
+        if (!out || out.length < 2) {
+            return null;
+        } else {
+            return out[1];
+        }
     }
 
     public getAccountKeys(accountId: string): Observable<AccountKeys> {
