@@ -1,18 +1,16 @@
 import { Injectable } from "@angular/core";
+import { RequestOptions, URLSearchParams } from "@angular/http";
 import * as storage from "electron-json-storage";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import { AccountKeys, AccountResource } from "app/models";
-import { log } from "app/utils";
+import { AccountKeys, AccountResource, Subscription } from "app/models";
+import { Constants, log } from "app/utils";
 import { AzureHttpService } from "./azure-http.service";
 import {
-    DataCache, DataCacheTracker, RxArmEntityProxy, RxArmListProxy,
-    RxEntityProxy, RxListProxy, getOnceProxy,
+    DataCache, DataCacheTracker,
 } from "./core";
 import { SubscriptionService } from "./subscription.service";
-
-const lastSelectedAccountStorageKey = "last-account-selected-name";
 
 export enum AccountStatus {
     Valid,
@@ -31,6 +29,17 @@ export interface AccountParams {
 export interface SelectedAccount {
     account: AccountResource;
     keys: AccountKeys;
+}
+
+function getSubscriptionIdFromAccountId(accountId: string) {
+    const regex = /subscriptions\/(.*)\/resourceGroups/;
+    const out = regex.exec(accountId);
+
+    if (!out || out.length < 2) {
+        return null;
+    } else {
+        return out[1];
+    }
 }
 
 @Injectable()
@@ -61,7 +70,7 @@ export class AccountService {
         this._currentAccount.subscribe((selection) => {
             if (selection) {
                 const { account } = selection;
-                localStorage.setItem(lastSelectedAccountStorageKey, account.id);
+                localStorage.setItem(Constants.localStorageKey.selectedAccountId, account.id);
                 this.validateCurrentAccount();
             } else {
                 this._currentAccountValid.next(AccountStatus.Invalid);
@@ -83,7 +92,7 @@ export class AccountService {
     public get currentAccount(): Observable<AccountResource> {
         return this._currentAccountId.flatMap((id) => {
             return this._currentAccount
-                .filter(x => x && x.account && x.account.id === id)
+                .filter(x => x && id && x.account && x.account.id.toLowerCase() === id.toLowerCase())
                 .first()
                 .map(x => x && x.account);
         }).share();
@@ -94,47 +103,76 @@ export class AccountService {
     }
 
     public selectAccount(accountId: string) {
-        this._currentAccountValid.next(AccountStatus.Loading);
-        this._currentAccountId.next(accountId);
-        const current = this._currentAccount.getValue();
-        if (current && current.account.id === accountId) {
+        const current = this._currentAccountId.value;
+        if (current === accountId) {
             return;
         }
-
-        const accountObs = this.getOnce(accountId);
+        this._currentAccountId.next(accountId);
+        this._currentAccountValid.next(AccountStatus.Loading);
+        const accountObs = this.getAccount(accountId);
         const keyObs = this.getAccountKeys(accountId);
-        DataCacheTracker.clearAllCaches(this._accountCache, this.subscriptionService.cache);
-        Observable.forkJoin(accountObs, keyObs).subscribe(([account, keys]) => {
-            this._currentAccount.next({ account, keys });
-            if (!this._accountLoaded.getValue()) {
-                this._accountLoaded.next(true);
-            }
+        DataCacheTracker.clearAllCaches(this._accountCache);
+        Observable.forkJoin(accountObs, keyObs).subscribe({
+            next: ([account, keys]) => {
+                this._currentAccount.next({ account, keys });
+                if (!this._accountLoaded.getValue()) {
+                    this._accountLoaded.next(true);
+                }
+                this._currentAccountValid.next(AccountStatus.Valid);
+            },
+            error: (error) => {
+                log.error(`Error loading account ${accountId}`, error);
+                this._currentAccountValid.next(AccountStatus.Invalid);
+            },
         });
     }
 
-    public list(initalSubscriptionId: string): RxListProxy<AccountListParams, AccountResource> {
-        return new RxArmListProxy<AccountListParams, AccountResource>(AccountResource, this.azure, {
-            cache: (params) => this._accountCache,
-            uri: ({ subscriptionId }) => `/subscriptions/${subscriptionId}/resources`,
-            initialParams: { subscriptionId: initalSubscriptionId },
-            initialOptions: { filter: "resourceType eq 'Microsoft.Batch/batchAccounts'" },
-        });
+    public list(subscriptionId: string): Observable<List<Account>> {
+        const search = new URLSearchParams();
+        search.set("$filter", "resourceType eq 'Microsoft.Batch/batchAccounts'");
+        const options = new RequestOptions({ search });
+
+        return this.subscriptionService.get(subscriptionId)
+            .flatMap((subscription) => {
+                return this.azure.get(subscription, `/subscriptions/${subscriptionId}/resources`, options)
+                    .map(response => {
+                        return List(response.json().value.map((data) => {
+                            return new AccountResource(Object.assign({}, data, { subscription }));
+                        }));
+                    });
+            })
+            .share();
     }
 
-    public getAccount(accountId: string): RxEntityProxy<AccountParams, AccountResource> {
-        return new RxArmEntityProxy<AccountParams, AccountResource>(AccountResource, this.azure, {
-            cache: () => this._accountCache,
-            uri: ({ id }) => `${id}`,
-            initialParams: { id: accountId },
-        });
+    public getAccount(accountId: string): Observable<AccountResource> {
+        return this.subscriptionService.get(getSubscriptionIdFromAccountId(accountId))
+            .flatMap((subscription) => {
+                return this.azure.get(subscription, accountId)
+                    .map(response => {
+                        const data = response.json();
+                        return this._createAccount(subscription, data);
+                    });
+            })
+            .share();
     }
 
-    public getOnce(accountId: string) {
-        return getOnceProxy(this.getAccount(accountId));
+    public getNameFromAccountId(accountId: string): string {
+        const regex = /batchAccounts\/(.*)/;
+        const out = regex.exec(accountId);
+
+        if (!out || out.length < 2) {
+            return null;
+        } else {
+            return out[1];
+        }
     }
 
     public getAccountKeys(accountId: string): Observable<AccountKeys> {
-        return this.azure.post(`${accountId}/listKeys`).map(response => new AccountKeys(response.json()));
+        const subId = getSubscriptionIdFromAccountId(accountId);
+        return this.subscriptionService.get(subId)
+            .flatMap((sub) => this.azure.post(sub, `${accountId}/listKeys`))
+            .map(response => new AccountKeys(response.json()))
+            .share();
     }
 
     public favoriteAccount(accountId: string): Observable<any> {
@@ -143,7 +181,7 @@ export class AccountService {
         }
 
         const subject = new AsyncSubject();
-        this.getOnce(accountId).subscribe({
+        this.getAccount(accountId).subscribe({
             next: (account) => {
                 this._accountFavorites.next(this._accountFavorites.getValue().push(account));
                 this._saveAccountFavorites();
@@ -180,7 +218,7 @@ export class AccountService {
     }
 
     public loadInitialData() {
-        const selectedAccountId = localStorage.getItem(lastSelectedAccountStorageKey);
+        const selectedAccountId = localStorage.getItem(Constants.localStorageKey.selectedAccountId);
         if (selectedAccountId) {
             this.selectAccount(selectedAccountId);
         }
@@ -226,5 +264,9 @@ export class AccountService {
         });
 
         return sub;
+    }
+
+    private _createAccount(subscription: Subscription, data: any): AccountResource {
+        return new AccountResource(Object.assign({}, data, { subscription }));
     }
 }

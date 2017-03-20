@@ -1,24 +1,24 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { Component, Input, OnDestroy } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { List } from "immutable";
-import { Subscription as RxjsSubscription } from "rxjs";
+import { Observable, Subscription as RxjsSubscription } from "rxjs";
 
 import { AccountResource, Subscription } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
-import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
 
 interface SubscriptionAccount {
     expanded: boolean;
-    accounts: RxListProxy<any, AccountResource>;
+    loading: boolean;
+    accounts: Observable<List<AccountResource>>;
 }
 
 @Component({
     selector: "bl-account-list",
     templateUrl: "account-list.html",
 })
-export class AccountListComponent implements OnInit, OnDestroy {
+export class AccountListComponent implements OnDestroy {
     @Input()
     public set filter(filter: Filter) {
         this._filter = filter;
@@ -26,9 +26,8 @@ export class AccountListComponent implements OnInit, OnDestroy {
     }
     public get filter(): Filter { return this._filter; };
 
-    public subscriptionData: RxListProxy<{}, Subscription>;
     public subscriptionAccounts: { [subId: string]: SubscriptionAccount } = {};
-    public subscriptions: List<Subscription>;
+    public subscriptions: List<Subscription> = List([]);
     public displayedSubscriptions: List<Subscription>;
 
     private _filter: Filter;
@@ -40,8 +39,7 @@ export class AccountListComponent implements OnInit, OnDestroy {
         private sidebarManager: SidebarManager,
         private subscriptionService: SubscriptionService) {
 
-        this.subscriptionData = subscriptionService.list();
-        this._sub = this.subscriptionData.items.subscribe((subscriptions) => {
+        this._sub = subscriptionService.subscriptions.subscribe((subscriptions) => {
             const data: any = {};
             this.subscriptions = List<Subscription>(subscriptions.sort((a, b) => {
                 if (a.displayName < b.displayName) {
@@ -68,10 +66,6 @@ export class AccountListComponent implements OnInit, OnDestroy {
         });
     }
 
-    public ngOnInit() {
-        this.subscriptionData.fetchNext(true);
-    }
-
     public ngOnDestroy() {
         this._sub.unsubscribe();
     }
@@ -81,7 +75,8 @@ export class AccountListComponent implements OnInit, OnDestroy {
         if (!subscriptionAccounts.expanded) {
             if (!subscriptionAccounts.accounts) {
                 subscriptionAccounts.accounts = this.accountService.list(subscriptionId);
-                subscriptionAccounts.accounts.fetchNext(true);
+                subscriptionAccounts.loading = true;
+                subscriptionAccounts.accounts.subscribe(() => subscriptionAccounts.loading = false);
             }
         }
 

@@ -32,11 +32,11 @@ export class AccessTokenService {
     /**
      * Retrieve the access token using the given authorization code
      */
-    public redeem(resource: string, authorizationCode: string): Observable<AccessToken> {
-        const obs = this.http.post(this._buildUrl(),
+    public redeem(resource: string, tenantId: string, authorizationCode: string): Observable<AccessToken> {
+        const obs = this.http.post(this._buildUrl(tenantId),
             this._redeemBody(resource, authorizationCode),
-            this._options()).share()
-
+            this._options())
+            .share()
             .map((response) => {
                 const data = response.json();
                 return this._processResponse(data);
@@ -51,8 +51,12 @@ export class AccessTokenService {
         return obs;
     }
 
-    public refresh(resource: string, refreshToken: string): Observable<AccessToken> {
-        const obs = this.http.post(this._buildUrl(), this._refreshBody(resource, refreshToken), this._options()).share()
+    public refresh(resource: string, tenantId: string, refreshToken: string): Observable<AccessToken> {
+        const obs = this.http.post(
+            this._buildUrl(tenantId),
+            this._refreshBody(resource, refreshToken),
+            this._options())
+            .share()
             .map((response) => {
                 const data = response.json();
                 return this._processResponse(data);
@@ -66,8 +70,8 @@ export class AccessTokenService {
         return obs;
     }
 
-    private _buildUrl() {
-        return `${baseUrl}/${this.config.tenant}/oauth2/token`;
+    private _buildUrl(tenantId: string) {
+        return `${baseUrl}/${tenantId}/oauth2/token`;
     }
 
     private _redeemBody(resource: string, authorizationCode: string) {

@@ -27,9 +27,8 @@ export function authorizeUrl(tenant: string, params: AuthorizeUrlParams) {
     return `${baseUrl}/${tenant}/oauth2/authorize?${query}`;
 }
 
-export function logoutUrl(tenant: string, params: LogoutParams) {
-    const query = objectToParams(params);
-    return `${baseUrl}/${tenant}/oauth2/logout?${query}`;
+export function logoutUrl(tenant: string) {
+    return `${baseUrl}/${tenant}/oauth2/logout`;
 }
 
 export function objectToParams(object): string {

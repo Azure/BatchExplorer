@@ -78,6 +78,16 @@ export const localStorageKey = {
      * LocalStorage key for storing the access token(For AAD request)
      */
     currentAccessToken: "current_access_token",
+
+    /**
+     * Subscriptions cached
+     */
+    subscriptions: "subscriptions",
+
+    /**
+     * Last batch account selected.
+     */
+    selectedAccountId: "selected-account-id",
 };
 
 export const sessionStorageKey = {
@@ -100,4 +110,8 @@ export const ExternalLinks = {
 export const ODataFields = {
     state: "state",
     taskExitCode: "executionInfo/exitCode",
+};
+
+export const ServiceUrl = {
+    arm: "https://management.azure.com",
 };

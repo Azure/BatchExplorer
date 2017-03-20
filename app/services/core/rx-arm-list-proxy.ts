@@ -3,7 +3,7 @@ import { RequestOptions, URLSearchParams } from "@angular/http";
 import { Observable } from "rxjs";
 
 import { ObjectUtils, exists } from "app/utils";
-import { AzureHttpService } from "../azure-http.service";
+import { ArmHttpService } from "../arm-http.service";
 import { CachedKeyList } from "./query-cache";
 import { RxListProxy, RxListProxyConfig } from "./rx-list-proxy";
 
@@ -16,7 +16,7 @@ export class RxArmListProxy<TParams, TEntity> extends RxListProxy<TParams, TEnti
     private _loadedFirst = false;
     private _nextLink = null;
 
-    constructor(type: Type<TEntity>, private azure: AzureHttpService, config: RxArmListProxyConfig<TParams, TEntity>) {
+    constructor(type: Type<TEntity>, private arm: ArmHttpService, config: RxArmListProxyConfig<TParams, TEntity>) {
         super(type, config);
         this._provideUri = config.uri;
     }
@@ -28,9 +28,11 @@ export class RxArmListProxy<TParams, TEntity> extends RxListProxy<TParams, TEnti
 
     protected fetchNextItems(): Observable<any> {
         if (this._nextLink) {
-            return this.azure.get(this._nextLink);
+            return this.arm.get(this._nextLink);
         } else {
-            return this.azure.get(this._provideUri(this._params, this._options), this._requestOptions());
+            return this.arm.get(
+                this._provideUri(this._params, this._options),
+                this._requestOptions());
         }
     }
 

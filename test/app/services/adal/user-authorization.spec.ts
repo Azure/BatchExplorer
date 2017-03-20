@@ -56,7 +56,7 @@ describe("UserAuthorization", () => {
         beforeEach(() => {
             result = null;
             error = null;
-            const obs = userAuthorization.authorize();
+            const obs = userAuthorization.authorize("tenant-1");
             obs.subscribe(
                 (out) => result = out,
                 (e) => error = e,
@@ -68,7 +68,7 @@ describe("UserAuthorization", () => {
             const args = fakeWindow.loadURL.calls.mostRecent().args;
             expect(args.length).toBe(1);
             const url = args[0];
-            expect(url).toContain("https://login.microsoftonline.com/common/oauth2/authorize");
+            expect(url).toContain("https://login.microsoftonline.com/tenant-1/oauth2/authorize");
             expect(url).toContain("&resource=https://management.core.windows.net/");
             expect(url).toContain("?response_type=id_token+code");
             expect(url).toContain("&scope=user_impersonation+openid");
@@ -102,11 +102,42 @@ describe("UserAuthorization", () => {
 
             expect(fakeWindow.destroy).toHaveBeenCalledTimes(1);
         });
+
+        it("should only authorize 1 tenant at the time and queue the others", () => {
+            const obs1 = userAuthorization.authorize("tenant-1");
+            const obs2 = userAuthorization.authorize("tenant-2");
+            const tenant1Spy = jasmine.createSpy("Tenant-1");
+            const tenant2Spy = jasmine.createSpy("Tenant-2");
+            obs1.subscribe(tenant1Spy);
+            obs2.subscribe(tenant2Spy);
+
+            expect(tenant1Spy).not.toHaveBeenCalled();
+            expect(tenant2Spy).not.toHaveBeenCalled();
+
+            const newUrl1 = "http://localhost/#id_token=sometoken&code=somecode";
+            fakeWindow.webContents.notify("did-get-redirect-request", [{}, "", newUrl1]);
+
+            // Should have set tenant-1
+            expect(result).not.toBeNull();
+            expect(result.id_token).toEqual("sometoken");
+            expect(result.code).toEqual("somecode");
+
+            expect(tenant1Spy).toHaveBeenCalled();
+            expect(tenant1Spy).toHaveBeenCalledWith({ id_token: "sometoken", code: "somecode" });
+
+            expect(tenant2Spy).not.toHaveBeenCalled();
+
+            // Should now authorize for tenant-2
+            const newUrl2 = "http://localhost/#id_token=sometoken2&code=somecode2";
+            fakeWindow.webContents.notify("did-get-redirect-request", [{}, "", newUrl2]);
+            expect(tenant2Spy).toHaveBeenCalled();
+            expect(tenant2Spy).toHaveBeenCalledWith({ id_token: "sometoken2", code: "somecode2" });
+        });
     });
 
     describe("Authorize silently", () => {
         beforeEach(() => {
-            userAuthorization.authorize(true);
+            userAuthorization.authorize("tenant-1", true);
         });
 
         it("should set the prompt=none params", () => {
@@ -136,7 +167,7 @@ describe("UserAuthorization", () => {
             error = null;
             currentAuthObs = null;
             callAuth = () => {
-                const obs = userAuthorization.authorizeTrySilentFirst();
+                const obs = userAuthorization.authorizeTrySilentFirst("tenant-1");
                 obs.subscribe(
                     (out) => result = out,
                     (e) => error = e,
@@ -154,7 +185,7 @@ describe("UserAuthorization", () => {
             expect(error).toBeNull();
 
             expect(userAuthorization.authorize).toHaveBeenCalledOnce();
-            expect(userAuthorization.authorize).toHaveBeenCalledWith(true);
+            expect(userAuthorization.authorize).toHaveBeenCalledWith("tenant-1", true);
         });
 
         it("Should call silent false if silent true return sucessfully", () => {
@@ -167,8 +198,8 @@ describe("UserAuthorization", () => {
             expect(error).toBeNull();
 
             expect(userAuthorization.authorize).toHaveBeenCalledTimes(2);
-            expect(userAuthorization.authorize).toHaveBeenCalledWith(true);
-            expect(userAuthorization.authorize).toHaveBeenCalledWith(false);
+            expect(userAuthorization.authorize).toHaveBeenCalledWith("tenant-1", true);
+            expect(userAuthorization.authorize).toHaveBeenCalledWith("tenant-1", false);
         });
 
         it("Should return error if both silent true and false return an error", () => {

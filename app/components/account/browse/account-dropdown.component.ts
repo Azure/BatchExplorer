@@ -10,7 +10,7 @@ import { AccountService, AccountStatus } from "app/services";
 export class AccountDropDownComponent implements AfterViewInit {
     public status = AccountStatus;
 
-    public selected: AccountResource = null;
+    public selectedId: string;
     public selectedAccountAlias: string = "";
     public showDropdown = false;
     public currentAccountValid = AccountStatus.Loading;
@@ -19,10 +19,10 @@ export class AccountDropDownComponent implements AfterViewInit {
         private accountService: AccountService,
         private changeDetection: ChangeDetectorRef) {
 
-        accountService.currentAccount.subscribe((account) => {
-            if (account) {
-                this.selected = account;
-                this.selectedAccountAlias = account.name;
+        accountService.currentAccountId.subscribe((accountId) => {
+            if (accountId) {
+                this.selectedId = accountId;
+                this.selectedAccountAlias = accountService.getNameFromAccountId(accountId);
             } else {
                 this.selectedAccountAlias = "No account selected!";
             }

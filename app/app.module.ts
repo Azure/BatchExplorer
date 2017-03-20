@@ -41,7 +41,6 @@ import { TaskBrowseModule } from "./components/task/browse";
 import { TaskDetailsModule } from "./components/task/details";
 import { TaskHomeComponent } from "./components/task/home";
 import { AADUserDropdownComponent } from "./components/user";
-import { BatchLabsErrorHandler } from "./error-handler";
 
 // job actions
 import { JobActionModule } from "./components/job/action";
@@ -64,10 +63,12 @@ import {
 import { TaskBaseModule } from "./components/task/base";
 
 // services
+import { BatchLabsErrorHandler } from "app/error-handler";
 import {
     AccountService,
     AdalService,
     ApplicationService,
+    ArmHttpService,
     AzureHttpService,
     BatchClientService,
     CommandService,
@@ -158,6 +159,7 @@ const modules = [
         AdalService,
         ApplicationService,
         AzureHttpService,
+        ArmHttpService,
         CommandService,
         ElectronShell,
         FileService,

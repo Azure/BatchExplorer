@@ -3,14 +3,16 @@ import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { MdSidenav } from "@angular/material";
 import { Observable } from "rxjs";
 
-import { AccountService, AdalService, CommandService, NodeService, SSHKeyService, SettingsService } from "app/services";
+import {
+    AccountService, AdalService, CommandService, NodeService, SSHKeyService, SettingsService, SubscriptionService,
+} from "app/services";
 import AccountCreateDialogComponent from "./components/account/add/account-create-dialog.component";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
 const adalConfig = {
-    tenant: "microsoft.onmicrosoft.com",
-    clientId: "94ef904d-c21a-4672-9946-b4d6a12b8e13",
-    redirectUri: "http://localhost",
+    tenant: "common",
+    clientId: "04b07795-8ddb-461a-bbee-02f9e1bf7b46", // Azure CLI
+    redirectUri: "urn:ietf:wg:oauth:2.0:oob",
 };
 
 @Component({
@@ -34,6 +36,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         private commandService: CommandService,
         private adalService: AdalService,
         private accountService: AccountService,
+        private subscriptionService: SubscriptionService,
         private nodeService: NodeService,
         private sshKeyService: SSHKeyService) {
         this.settingsService.init();
@@ -64,6 +67,7 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     public ngOnInit() {
         this.adalService.login();
+        this.subscriptionService.load();
     }
 
     public open() {

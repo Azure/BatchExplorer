@@ -25,13 +25,20 @@ export interface AuthorizeError {
     error_description: string;
 }
 
+interface AuthorizeQueueItem {
+    tenantId: string;
+    silent: boolean;
+    subject: AsyncSubject<any>;
+}
+
 /**
  * This will open a new window at the /authorize endpoint to get the user
  */
 export class UserAuthorization {
     private _authWindow: Electron.BrowserWindow;
-    private _subject: AsyncSubject<AuthorizeResult>;
     private _waitingForAuth = false;
+    private _authorizeQueue: AuthorizeQueueItem[] = [];
+    private _currentAuthorization: AuthorizeQueueItem = null;
 
     constructor(private config: AdalConfig) {
     }
@@ -43,27 +50,22 @@ export class UserAuthorization {
      * @returns Observable with the successfull AuthorizeResult.
      *      If silent is true and the access fail the observable will return and error of type AuthorizeError
      */
-    public authorize(silent = false): Observable<AuthorizeResult> {
-        this._waitingForAuth = true;
-        if (this._subject) {
-            return this._subject.asObservable();
+    public authorize(tenantId: string, silent = false): Observable<AuthorizeResult> {
+        if (this._isAuthorizingTenant(tenantId)) {
+            return this._getTenantSubject(tenantId).asObservable();
         }
-        this._subject = new AsyncSubject();
-        const authWindow = this._createAuthWindow();
-        authWindow.loadURL(this._buildUrl(silent));
-        this._setupEvents();
-        if (!silent) {
-            authWindow.show();
-        }
-        return this._subject.asObservable();
+        const subject = new AsyncSubject();
+        this._authorizeQueue.push({ tenantId, silent, subject });
+        this._authorizeNext();
+        return subject.asObservable();
     }
 
     /**
      * This will try to do authorize silently first and if it fails show the login window to the user
      */
-    public authorizeTrySilentFirst(): Observable<AuthorizeResult> {
-        return this.authorize(true).catch((error, source) => {
-            return this.authorize(false);
+    public authorizeTrySilentFirst(tenantId: string): Observable<AuthorizeResult> {
+        return this.authorize(tenantId, true).catch((error, source) => {
+            return this.authorize(tenantId, false);
         });
     }
 
@@ -72,24 +74,35 @@ export class UserAuthorization {
      */
     public logout(): Observable<any> {
         this._waitingForAuth = true;
-        this._subject = new AsyncSubject();
-        const url = AdalConstants.logoutUrl(this.config.tenant, {
-            post_logout_redirect_uri: encodeURIComponent(this._buildUrl(false)),
-        });
+        const subject = new AsyncSubject();
+        const url = AdalConstants.logoutUrl(this.config.tenant);
         const authWindow = this._createAuthWindow();
 
         authWindow.loadURL(url);
         this._setupEvents();
         authWindow.show();
-        return this._subject.asObservable();
+        return subject.asObservable();
+    }
 
+    private _authorizeNext() {
+        if (this._currentAuthorization || this._authorizeQueue.length === 0) {
+            return;
+        }
+        this._waitingForAuth = true;
+        const { tenantId, silent } = this._currentAuthorization = this._authorizeQueue.shift();
+        const authWindow = this._createAuthWindow();
+        authWindow.loadURL(this._buildUrl(tenantId, silent));
+        this._setupEvents();
+        if (!silent) {
+            authWindow.show();
+        }
     }
 
     /**
      * Return the url used to authorize
      * @param silent @see #authorize
      */
-    private _buildUrl(silent: boolean): string {
+    private _buildUrl(tenantId, silent: boolean): string {
         const params: AdalConstants.AuthorizeUrlParams = {
             response_type: "id_token+code",
             redirect_uri: encodeURIComponent(this.config.redirectUri),
@@ -103,8 +116,7 @@ export class UserAuthorization {
         if (silent) {
             params.prompt = AuthorizePromptType.none;
         }
-
-        return AdalConstants.authorizeUrl(this.config.tenant, params);
+        return AdalConstants.authorizeUrl(tenantId, params);
     }
 
     /**
@@ -112,9 +124,6 @@ export class UserAuthorization {
      */
     private _setupEvents() {
         const authWindow = this._authWindow;
-        authWindow.webContents.on("will-navigate", (event, url) => {
-            this._handleCallback(url);
-        });
 
         authWindow.webContents.on("did-get-redirect-request", (event, oldUrl, newUrl) => {
             this._handleCallback(newUrl);
@@ -150,29 +159,30 @@ export class UserAuthorization {
      * @param url Url used for callback
      */
     private _handleCallback(url: string) {
-        if (!this._isRedirectUrl(url) || !this._subject) {
+        if (!this._isRedirectUrl(url) || !this._currentAuthorization) {
             return;
         }
 
         this._closeWindow();
         const params = this._getRedirectUrlParams(url);
         this._waitingForAuth = false;
-        const subject = this._subject;
-        this._subject = null;
+        const auth = this._currentAuthorization;
+        this._currentAuthorization = null;
 
         if ((<any>params).error) {
-            subject.error(params as AuthorizeError);
+            auth.subject.error(params as AuthorizeError);
         } else {
-            subject.next(params as AuthorizeResult);
-            subject.complete();
+            auth.subject.next(params as AuthorizeResult);
+            auth.subject.complete();
         }
+        this._authorizeNext();
     }
 
     /**
      * If the given url is the final redirect_uri
      */
     private _isRedirectUrl(url: string) {
-        return url.match(/http:\/\/localhost\/.*/);
+        return url.startsWith(this.config.redirectUri);
     }
 
     /**
@@ -186,6 +196,22 @@ export class UserAuthorization {
             params[key] = value;
         }
         return <any>params;
+    }
+
+    private _isAuthorizingTenant(tenantId: string) {
+        return Boolean(this._getTenantAuthorization(tenantId));
+    }
+
+    private _getTenantAuthorization(tenantId: string): AuthorizeQueueItem {
+        if (this._currentAuthorization && this._currentAuthorization.tenantId === tenantId) {
+            return this._currentAuthorization;
+        }
+        return this._authorizeQueue.filter(x => x.tenantId === tenantId).first();
+    }
+
+    private _getTenantSubject(tenantId: string): AsyncSubject<any> {
+        const auth = this._getTenantAuthorization(tenantId);
+        return auth && auth.subject;
     }
 
     private _closeWindow() {
