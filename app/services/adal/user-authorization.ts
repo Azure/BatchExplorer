@@ -148,7 +148,7 @@ export class UserAuthorization {
             },
         });
         // Uncomment to debug auth errors
-        this._authWindow.webContents.openDevTools();
+        // this._authWindow.webContents.openDevTools();
         this._authWindow.setMenu(null);
         return this._authWindow;
     }

@@ -70,7 +70,7 @@ export class AdalService {
     }
 
     public login(): Observable<any> {
-        this._loadTenantIds().subscribe((ids) => {
+        const obs = this._loadTenantIds().flatMap((ids) => {
             this._tenantsIds.next(ids);
             const queries: Array<() => Observable<any>> = [];
             for (let tenantId of ids) {
@@ -78,9 +78,19 @@ export class AdalService {
                     queries.push(() => this._retrieveNewAccessToken(tenantId, resource));
                 }
             }
-            ObservableUtils.queue(...queries);
+            return ObservableUtils.queue(...queries);
         });
-        return Observable.of({});
+        obs.subscribe({
+            next: () => {
+                if (!remote.getCurrentWindow().isVisible()) {
+                    remote.getCurrentWindow().show();
+                }
+            },
+            error: (error) => {
+                log.error("Error login", error);
+            },
+        });
+        return obs;
     }
 
     public logout(): void {
