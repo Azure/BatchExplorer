@@ -230,7 +230,7 @@ footer {
 }
 
 .no-entity-home {
-    height: 100%;
+    height: calc(100vh - #{$header-height});
     width: 100%;
     display: flex;
     flex-direction: column;
