@@ -70,12 +70,7 @@ export class AdalService {
     }
 
     public login(): Observable<any> {
-        console.log("Login...");
-        // if (this._currentUser.getValue()) {
-        //     return Observable.of({});
-        // }
         this._loadTenantIds().subscribe((ids) => {
-            console.log("Tenants", ids);
             this._tenantsIds.next(ids);
             const queries: Array<() => Observable<any>> = [];
             for (let tenantId of ids) {
@@ -86,19 +81,6 @@ export class AdalService {
             ObservableUtils.queue(...queries);
         });
         return Observable.of({});
-
-        // const obs = this._retrieveNewAccessToken(defaultResource);
-        // obs.subscribe({
-        //     next: () => {
-        //         if (!remote.getCurrentWindow().isVisible()) {
-        //             remote.getCurrentWindow().show();
-        //         }
-        //     },
-        //     error: () => {
-        //         log.error("Error login");
-        //     },
-        // });
-        // return obs;
     }
 
     public logout(): void {
@@ -110,6 +92,7 @@ export class AdalService {
         }
         this._tokenCache.clear();
         this._currentUser.next(null);
+        this._clearUserSpecificCache();
         this._userAuthorization.logout();
     }
 
@@ -123,10 +106,8 @@ export class AdalService {
      * @param resource
      */
     public accessTokenData(tenantId: string, resource: string = defaultResource): Observable<AccessToken> {
-        console.log("--------------- accessTokenData for", tenantId);
         if (this._tokenCache.hasToken(tenantId, resource)) {
             const token = this._tokenCache.getToken(tenantId, resource);
-            console.log("toke exists", tenantId, token.access_token);
 
             const expireIn = moment(token.expires_on).diff(moment());
             if (expireIn > AdalService.refreshMargin) {
@@ -182,15 +163,12 @@ export class AdalService {
      * Load a new access token from the authorization code given at login
      */
     private _redeemNewAccessToken(tenantId: string, resource: string, forceReLogin = false) {
-        console.log("redeem new token data for", tenantId);
-
         const subject = this._newAccessTokenSubject[this._tenantResourceKey(tenantId, resource)];
 
         this._authorizeUser(tenantId, forceReLogin)
             .do((result) => this._processUserToken(result.id_token))
             .flatMap((result: AuthorizeResult) => {
                 const tid = tenantId === "common" ? this._currentUser.value.tid : tenantId;
-                console.log("Redeem new token", tenantId, this._currentUser.value.tid);
                 return this._accessTokenService.redeem(resource, tid, result.code);
             })
             .subscribe({
@@ -239,6 +217,10 @@ export class AdalService {
      */
     private _processUserToken(idToken: string) {
         const user = this._userDecoder.decode(idToken);
+        const prevUser = this._currentUser.value;
+        if (!prevUser || prevUser.unique_name !== user.unique_name) {
+            this._clearUserSpecificCache();
+        }
         this._currentUser.next(user);
         localStorage.setItem(Constants.localStorageKey.currentUser, JSON.stringify(user));
     }
@@ -264,5 +246,12 @@ export class AdalService {
         }).map(response => {
             return response.json().value.map(x => x.tenantId);
         });
+    }
+
+    private _clearUserSpecificCache() {
+        console.log("Celar user specific cache");
+        localStorage.removeItem(Constants.localStorageKey.subscriptions);
+        localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
+        localStorage.removeItem(Constants.localStorageKey.selectedAccountId);
     }
 }

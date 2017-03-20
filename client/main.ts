@@ -25,7 +25,6 @@ const authWindowsToClose: Electron.BrowserWindow[] = [];
 function createWindow() {
 
     protocol.registerStringProtocol("urn", (request, callback) => {
-        console.log("Registered urn...", request);
         // Close all auth windows that need to be closed
         while (authWindowsToClose.length) {
             authWindowsToClose.shift().close();

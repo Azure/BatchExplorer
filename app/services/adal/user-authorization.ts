@@ -75,9 +75,7 @@ export class UserAuthorization {
     public logout(): Observable<any> {
         this._waitingForAuth = true;
         const subject = new AsyncSubject();
-        const url = AdalConstants.logoutUrl(this.config.tenant, {
-            post_logout_redirect_uri: encodeURIComponent(this._buildUrl(this.config.tenant, false)),
-        });
+        const url = AdalConstants.logoutUrl(this.config.tenant);
         const authWindow = this._createAuthWindow();
 
         authWindow.loadURL(url);

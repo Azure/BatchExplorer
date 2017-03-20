@@ -43,7 +43,7 @@ export class AzureHttpService {
         uri: string,
         options: RequestOptionsArgs): Observable<Response> {
 
-        return this.adal.accessTokenData(this._getTenantId(subscriptionOrTenant))
+        return this.adal.accessTokenData(this._getTenantId(subscriptionOrTenant, uri))
             .flatMap((accessToken) => {
                 options = this._setupRequestOptions(uri, options, accessToken);
                 return this.http.request(this._computeUrl(uri), options)
@@ -88,13 +88,13 @@ export class AzureHttpService {
         return apiVersion;
     }
 
-    private _getTenantId(subscriptionOrTenant: SubscriptionOrTenant): string {
+    private _getTenantId(subscriptionOrTenant: SubscriptionOrTenant, uri: string): string {
         if (subscriptionOrTenant instanceof Subscription) {
             return subscriptionOrTenant.tenantId;
         } else if (typeof subscriptionOrTenant === "string") {
             return subscriptionOrTenant;
         } else {
-            throw "Invalid param in azure http service"
+            throw `Invalid param in azure http service for uri "${uri}". `
             + `Expected Subscription or tenant id but got ${subscriptionOrTenant}`;
         }
     }

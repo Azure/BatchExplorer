@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { List } from "immutable";
-import { BehaviorSubject, Observable, AsyncSubject } from "rxjs";
+import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { Subscription } from "app/models";
-import { log } from "app/utils";
+import { Constants, log } from "app/utils";
 import { AdalService } from "./adal";
 import { AzureHttpService } from "./azure-http.service";
 
@@ -15,20 +15,19 @@ export class SubscriptionService {
 
     constructor(private azure: AzureHttpService, private adal: AdalService) {
         this.subscriptions = this._subscriptionsLoaded.flatMap(() => this._subscriptions.asObservable());
+        this._loadCachedSubscriptions();
     }
 
     public load(): Observable<any> {
         const obs = this.adal.tenantsIds.filter(ids => ids.length > 0).first().flatMap((tenantIds) => {
-            console.log("================= LOADING SUBS using tenantids", tenantIds);
             return Observable.combineLatest(tenantIds.map(tenantId => this._loadSubscriptionsForTenant(tenantId)));
         });
         obs.subscribe({
             next: (tenantSubscriptions) => {
                 const subscriptions = tenantSubscriptions.flatten();
-                console.log("SUbs", subscriptions, subscriptions.map(x => x.toJS()));
                 this._subscriptions.next(List(subscriptions));
-                this._subscriptionsLoaded.next(true);
-                this._subscriptionsLoaded.complete();
+                this._cacheSubscriptions();
+                this._markSubscriptionsAsLoaded();
             },
             error: (error) => {
                 log.error("Error loading subscriptions", error);
@@ -37,10 +36,12 @@ export class SubscriptionService {
         return obs;
     }
 
+    /**
+     * Get the subscription with the given object.
+     * @param subscriptionId Id of the subscription(UUID)
+     */
     public get(subscriptionId: string): Observable<Subscription> {
-        console.log("Get for subId", subscriptionId);
         return this.subscriptions.first().map(subscriptions => {
-            console.log("subscriptions", subscriptions.toJS());
             return subscriptions.filter(x => x.subscriptionId === subscriptionId).first();
         });
     }
@@ -54,5 +55,36 @@ export class SubscriptionService {
 
     private _createSubscription(tenantId: string, data: any): Subscription {
         return new Subscription(Object.assign({}, data, { tenantId }));
+    }
+
+    private _cacheSubscriptions() {
+        localStorage.setItem(Constants.localStorageKey.subscriptions, JSON.stringify(this._subscriptions.value.toJS()));
+    }
+
+    private _loadCachedSubscriptions() {
+        const str = localStorage.getItem(Constants.localStorageKey.subscriptions);
+
+        try {
+            const data = JSON.parse(str);
+            const subscriptions = data.map(x => new Subscription(x));
+
+            if (Object.keys(subscriptions).length === 0) {
+                localStorage.removeItem(Constants.localStorageKey.subscriptions);
+            } else {
+                this._subscriptions.next(List<Subscription>(subscriptions));
+                this._markSubscriptionsAsLoaded();
+            }
+        } catch (e) {
+            this._clearCachedSubscriptions();
+        }
+    }
+
+    private _clearCachedSubscriptions() {
+        localStorage.removeItem(Constants.localStorageKey.subscriptions);
+    }
+
+    private _markSubscriptionsAsLoaded() {
+        this._subscriptionsLoaded.next(true);
+        this._subscriptionsLoaded.complete();
     }
 }

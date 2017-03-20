@@ -5,14 +5,12 @@ import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { AccountKeys, AccountResource, Subscription } from "app/models";
-import { log } from "app/utils";
+import { Constants, log } from "app/utils";
 import { AzureHttpService } from "./azure-http.service";
 import {
     DataCache, DataCacheTracker,
 } from "./core";
 import { SubscriptionService } from "./subscription.service";
-
-const lastSelectedAccountStorageKey = "last-account-selected-name";
 
 export enum AccountStatus {
     Valid,
@@ -71,7 +69,7 @@ export class AccountService {
         this._currentAccount.subscribe((selection) => {
             if (selection) {
                 const { account } = selection;
-                localStorage.setItem(lastSelectedAccountStorageKey, account.id);
+                localStorage.setItem(Constants.localStorageKey.selectedAccountId, account.id);
                 this.validateCurrentAccount();
             } else {
                 this._currentAccountValid.next(AccountStatus.Invalid);
@@ -202,7 +200,7 @@ export class AccountService {
     }
 
     public loadInitialData() {
-        const selectedAccountId = localStorage.getItem(lastSelectedAccountStorageKey);
+        const selectedAccountId = localStorage.getItem(Constants.localStorageKey.selectedAccountId);
         if (selectedAccountId) {
             this.selectAccount(selectedAccountId);
         }
