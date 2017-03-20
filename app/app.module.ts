@@ -1,5 +1,5 @@
 import { HashLocationStrategy, LocationStrategy } from "@angular/common";
-import { NgModule } from "@angular/core";
+import { ErrorHandler, NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
@@ -85,6 +85,7 @@ import {
     TaskService,
     commands,
 } from "./services";
+import { BatchLabsErrorHandler } from "app/error-handler";
 
 const modules = [
     AccountBrowseModule,
@@ -173,7 +174,7 @@ const modules = [
         BatchClientService,
         SettingsService,
         TaskService,
-        // { provide: ErrorHandler, useClass: BatchLabsErrorHandler },
+        { provide: ErrorHandler, useClass: BatchLabsErrorHandler },
         ...commands,
     ],
 })
