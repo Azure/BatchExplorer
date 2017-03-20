@@ -63,6 +63,7 @@ import {
 import { TaskBaseModule } from "./components/task/base";
 
 // services
+import { BatchLabsErrorHandler } from "app/error-handler";
 import {
     AccountService,
     AdalService,
@@ -85,7 +86,6 @@ import {
     TaskService,
     commands,
 } from "./services";
-import { BatchLabsErrorHandler } from "app/error-handler";
 
 const modules = [
     AccountBrowseModule,

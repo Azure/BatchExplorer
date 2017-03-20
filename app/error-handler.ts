@@ -3,12 +3,10 @@ import { DebugContext } from "@angular/core/src/linker/debug_context";
 import { log } from "app/utils";
 import { remote } from "electron";
 
-
 export const ERROR_TYPE = "ngType";
 export const ERROR_COMPONENT_TYPE = "ngComponentType";
 export const ERROR_DEBUG_CONTEXT = "ngDebugContext";
 export const ERROR_ORIGINAL_ERROR = "ngOriginalError";
-
 
 export function getType(error: Error): Function {
     return (error as any)[ERROR_TYPE];
