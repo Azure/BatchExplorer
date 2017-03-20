@@ -17,6 +17,7 @@ describe("AccountService", () => {
         subscriptionServiceSpy = {
             cache: new DataCache<any>(),
         };
+
         accountService = new AccountService({} as any, subscriptionServiceSpy);
         accountService.getAccount = jasmine.createSpy("getAccount").and.returnValue(Observable.of(account1));
         accountService.getAccountKeys = jasmine.createSpy("getAccountKeys").and.returnValue(Observable.of({}));
@@ -66,4 +67,10 @@ describe("AccountService", () => {
         expect(currentAccount).not.toBeUndefined();
         expect(currentAccount.id).toBe("account-2");
     }));
+
+    it("select account should be case insensitive", () => {
+        accountService.selectAccount("ACCOUNT-1");
+        expect(currentAccount).not.toBeUndefined();
+        expect(currentAccount.id).toBe("account-1");
+    });
 });

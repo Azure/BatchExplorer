@@ -92,7 +92,7 @@ export class AccountService {
     public get currentAccount(): Observable<AccountResource> {
         return this._currentAccountId.flatMap((id) => {
             return this._currentAccount
-                .filter(x => x && x.account && x.account.id === id)
+                .filter(x => x && id && x.account && x.account.id.toLowerCase() === id.toLowerCase())
                 .first()
                 .map(x => x && x.account);
         }).share();
