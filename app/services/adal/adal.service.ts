@@ -1,11 +1,11 @@
 import { Injectable, NgZone } from "@angular/core";
 import { Headers, Http, RequestOptions, Response } from "@angular/http";
-import { remote } from "electron";
 import * as moment from "moment";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { AADUser } from "app/models";
 import { Constants, ObservableUtils, log } from "app/utils";
+import { ElectronRemote } from "../electron";
 import { AccessToken } from "./access-token";
 import { AccessTokenError, AccessTokenErrorResult, AccessTokenService } from "./access-token.service";
 import { AdalConfig } from "./adal-config";
@@ -50,7 +50,7 @@ export class AdalService {
     private _currentUser = new BehaviorSubject<AADUser>(null);
     private _tenantsIds = new BehaviorSubject<string[]>([]);
 
-    constructor(private http: Http, private zone: NgZone) {
+    constructor(private http: Http, private zone: NgZone, private remote: ElectronRemote) {
         this._userDecoder = new UserDecoder();
         this.currentUser = this._currentUser.asObservable();
         this.tenantsIds = this._tenantsIds.asObservable();
@@ -58,14 +58,12 @@ export class AdalService {
 
     public init(config: AdalConfig) {
         this._config = config;
-        this._userAuthorization = new UserAuthorization(config);
+        this._userAuthorization = new UserAuthorization(config, this.remote);
         this._accessTokenService = new AccessTokenService(config, this.http);
         this._retrieveUserFromLocalStorage();
         this._tokenCache.init();
-        if (this._currentUser.getValue()) {
-            if (!remote.getCurrentWindow().isVisible()) {
-                remote.getCurrentWindow().show();
-            }
+        if (this._currentUser.value) {
+            this._showMainWindow();
         }
     }
 
@@ -82,9 +80,7 @@ export class AdalService {
         });
         obs.subscribe({
             next: () => {
-                if (!remote.getCurrentWindow().isVisible()) {
-                    remote.getCurrentWindow().show();
-                }
+                this._showMainWindow();
             },
             error: (error) => {
                 log.error("Error login", error);
@@ -97,8 +93,8 @@ export class AdalService {
         localStorage.removeItem(Constants.localStorageKey.currentUser);
         localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
 
-        if (remote.getCurrentWindow().isVisible()) {
-            remote.getCurrentWindow().hide();
+        if (this.remote.getCurrentWindow().isVisible()) {
+            this.remote.getCurrentWindow().hide();
         }
         this._tokenCache.clear();
         this._currentUser.next(null);
@@ -263,5 +259,12 @@ export class AdalService {
         localStorage.removeItem(Constants.localStorageKey.subscriptions);
         localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
         localStorage.removeItem(Constants.localStorageKey.selectedAccountId);
+    }
+
+    private _showMainWindow() {
+        if (!this.remote.getCurrentWindow().isVisible()) {
+            this.remote.getCurrentWindow().show();
+        }
+        this.remote.getSplashScreen().destroy();
     }
 }

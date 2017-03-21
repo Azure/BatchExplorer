@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { AADUser } from "app/models";
 import { AccessToken, AdalService } from "app/services/adal";
 import { Constants } from "app/utils";
-import { mockStorage } from "test/utils/mocks";
+import { MockElectronRemote, mockStorage } from "test/utils/mocks";
 
 const tenant1 = "tenant1";
 const resource1 = "http://example.com";
@@ -36,21 +36,22 @@ describe("AdalService", () => {
     let currentUser: AADUser;
     const config = { tenant: "common", clientId: "abc", redirectUri: "http://localhost" };
     let zoneSpy;
+    let remoteSpy: MockElectronRemote;
 
     beforeEach(() => {
         zoneSpy = {
             run: jasmine.createSpy("Zone.run").and.callFake((callback) => callback()),
         };
-
+        remoteSpy =  new MockElectronRemote();
         mockStorage(localStorage);
-        service = new AdalService(http, zoneSpy);
+        service = new AdalService(http, zoneSpy, remoteSpy);
         service.currentUser.subscribe(x => currentUser = x);
         service.init(config);
     });
 
     it("when there is no item in the localstorage it should not set the id_token", () => {
         localStorage.removeItem(Constants.localStorageKey.currentUser);
-        const tmpService = new AdalService(http, zoneSpy);
+        const tmpService = new AdalService(http, zoneSpy, remoteSpy);
         tmpService.init(config);
         let user: AADUser = null;
         tmpService.currentUser.subscribe(x => user = x);
@@ -59,7 +60,7 @@ describe("AdalService", () => {
 
     it("when localstorage has currentUser it should load it", () => {
         localStorage.setItem(Constants.localStorageKey.currentUser, JSON.stringify(sampleUser));
-        const tmpService = new AdalService(http, zoneSpy);
+        const tmpService = new AdalService(http, zoneSpy, remoteSpy);
         tmpService.init(config);
         let user: AADUser = null;
         tmpService.currentUser.subscribe(x => user = x);
@@ -108,7 +109,7 @@ describe("AdalService", () => {
         });
 
         it("should reload a new token if the token is expiring before the safe margin", () => {
-            (service as any)._tokenCache.storeToken(tenant1, resource1,  new AccessToken({
+            (service as any)._tokenCache.storeToken(tenant1, resource1, new AccessToken({
                 access_token: "initialtoken",
                 expires_on: moment().add(1, "minute"),
                 refresh_token: "somerefreshtoken",
@@ -123,7 +124,7 @@ describe("AdalService", () => {
         });
 
         it("should load a new token if getting a token for another resource", () => {
-            (service as any)._tokenCache.storeToken(tenant1, resource1,  new AccessToken({
+            (service as any)._tokenCache.storeToken(tenant1, resource1, new AccessToken({
                 access_token: "initialtoken",
                 expires_on: moment().add(1, "hour"),
             } as any));
@@ -137,7 +138,7 @@ describe("AdalService", () => {
         });
 
         it("should load a new token if getting a token for another tenant", () => {
-            (service as any)._tokenCache.storeToken(tenant1, resource1,  new AccessToken({
+            (service as any)._tokenCache.storeToken(tenant1, resource1, new AccessToken({
                 access_token: "initialtoken",
                 expires_on: moment().add(1, "hour"),
             } as any));

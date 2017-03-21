@@ -2,8 +2,10 @@ import { remote } from "electron";
 import { AsyncSubject, Observable } from "rxjs";
 
 import { SecureUtils } from "app/utils";
+import { ElectronRemote } from "../electron";
 import { AdalConfig } from "./adal-config";
 import * as AdalConstants from "./adal-constants";
+
 const { BrowserWindow } = remote;
 
 type AuthorizePromptType = "login" | "none" | "consent";
@@ -40,7 +42,7 @@ export class UserAuthorization {
     private _authorizeQueue: AuthorizeQueueItem[] = [];
     private _currentAuthorization: AuthorizeQueueItem = null;
 
-    constructor(private config: AdalConfig) {
+    constructor(private config: AdalConfig, private remoteService: ElectronRemote) {
     }
 
     /**
@@ -95,6 +97,7 @@ export class UserAuthorization {
         this._setupEvents();
         if (!silent) {
             authWindow.show();
+            this.remoteService.getSplashScreen().hide();
         }
     }
 
@@ -133,7 +136,8 @@ export class UserAuthorization {
             this._authWindow = null;
             // If the user closed manualy then we need to also close the main window
             if (this._waitingForAuth) {
-                remote.getCurrentWindow().destroy();
+                this.remoteService.getCurrentWindow().destroy();
+                this.remoteService.getSplashScreen().destroy();
             }
         });
     }
@@ -216,7 +220,11 @@ export class UserAuthorization {
 
     private _closeWindow() {
         if (this._authWindow) {
+            if (this._authWindow.isVisible()) {
+                this.remoteService.getSplashScreen().show();
+            }
             this._authWindow.destroy();
+            this._authWindow = null;
         }
     }
 }

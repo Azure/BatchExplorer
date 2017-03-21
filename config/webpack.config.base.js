@@ -3,6 +3,7 @@ const helpers = require("./helpers");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CheckerPlugin = require("awesome-typescript-loader").CheckerPlugin;
 const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 const isDevServer = helpers.isWebpackDevServer();
 const METADATA = {
@@ -64,6 +65,9 @@ const baseConfig = {
     },
     plugins: [
         new CheckerPlugin(),
+        new CopyWebpackPlugin([
+            { from: "./client/splash-screen/**/*" },
+        ]),
         new CommonsChunkPlugin({
             name: "polyfills",
             chunks: ["polyfills"],

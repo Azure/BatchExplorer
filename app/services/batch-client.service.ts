@@ -1,18 +1,19 @@
 import { Injectable } from "@angular/core";
-import { remote } from "electron";
+import { BatchClientProxyFactory, SharedKeyOptions } from "client/api";
 import { Observable } from "rxjs";
 import { AccountService } from "./account.service";
 import { AdalService } from "./adal";
-
-const batchClientFactory = (<any>remote.getCurrentWindow()).batchClientFactory;
+import { ElectronRemote } from "./electron";
 
 const resource = "https://batch.core.windows.net/";
 
 @Injectable()
 export class BatchClientService {
     private _currentAccountId: string;
+    private _batchClientFactory: BatchClientProxyFactory;
 
-    constructor(private adal: AdalService, private accountService: AccountService) {
+    constructor(private adal: AdalService, private accountService: AccountService, private remote: ElectronRemote) {
+        this._batchClientFactory = remote.getBatchClientFactory();
         accountService.currentAccountId.subscribe((id) => {
             this._currentAccountId = id;
         });
@@ -32,11 +33,11 @@ export class BatchClientService {
     }
 
     public getForAADToken(accountUrl: string, token: string) {
-        return batchClientFactory.getForAADToken(accountUrl, token);
+        return this._batchClientFactory.getForAADToken(accountUrl, token);
     }
 
-    public getForSharedKey(accountUrl: string, token: string) {
-        return batchClientFactory.getForSharedKey(accountUrl, token);
+    public getForSharedKey(options: SharedKeyOptions) {
+        return this._batchClientFactory.getForSharedKey(options);
     }
 
     private get currentAccount() {

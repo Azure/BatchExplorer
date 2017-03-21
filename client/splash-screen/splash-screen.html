@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<style>
+    body {
+        background: #00416f;
+        width: 100vw;
+        height: 100vh;
+        font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif
+    }
+
+    body {
+        overflow: hidden;
+        user-select: none;
+    }
+
+    .bubbles {
+        width: 100px;
+        height: 100px;
+        margin: auto;
+        position: relative;
+    }
+
+    .flask {
+        width: 100px;
+        height: 100px;
+        margin: auto;
+    }
+
+    .message {
+        color: #d5d5d5;
+        margin: auto;
+        width: 100px;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    .bubble {
+        width: 20px;
+        height: 20px;
+        background: #d5d5d5;
+        border-radius: 10px;
+        position: absolute;
+    }
+
+    .x1 {
+        left: 35px;
+        transform: scale(0.9);
+        opacity: 0.2;
+        animation: moveclouds 7s linear infinite, sideWays 4s ease-in-out infinite alternate;
+    }
+
+    .x2 {
+        left: 30px;
+        transform: scale(0.6);
+        opacity: 0.5;
+        animation: moveclouds 15s linear infinite, sideWays 5s ease-in-out infinite alternate;
+    }
+
+    .x3 {
+        left: 50px;
+        transform: scale(0.8);
+        opacity: 0.3;
+        animation: moveclouds 12s linear infinite, sideWays 4s ease-in-out infinite alternate;
+    }
+
+    .x4 {
+        left: 40px;
+        transform: scale(0.75);
+        opacity: 0.35;
+        animation: moveclouds 10s linear infinite, sideWays 2s ease-in-out infinite alternate;
+    }
+
+    .x5 {
+        left: 45px;
+        transform: scale(0.8);
+        opacity: 0.3;
+        animation: moveclouds 5s linear infinite, sideWays 1s ease-in-out infinite alternate;
+    }
+
+    @keyframes moveclouds {
+        0% {
+            top: 100px;
+            transform: scale(0.6);
+        }
+        100% {
+            top: -50px;
+            transform: scale(1.5);
+        }
+    }
+
+    @keyframes sideWays {
+        0% {
+            margin-left: 0px;
+        }
+        100% {
+            margin-left: 10px;
+        }
+    }
+</style>
+<html>
+
+<body>
+    <div class="bubbles">
+        <div class="bubble x1"></div>
+        <div class="bubble x2"></div>
+        <div class="bubble x3"></div>
+        <div class="bubble x4"></div>
+        <div class="bubble x5"></div>
+    </div>
+
+    <div class="flask">
+        <img src="./flask.svg"></img>
+    </div>
+
+    <div class="message">
+        Batch labs
+    </div>
+</body>
+
+</html>
