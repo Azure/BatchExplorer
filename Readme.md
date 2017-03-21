@@ -6,16 +6,17 @@
 ## Getting started
 **Install node.js version `6.9` or greater.**
 
-Clone the repo `git clone https://github.com/Azure/BatchLabs`
+#### 1. Clone the repo
+- At stable branch `git clone -b stable https://github.com/Azure/BatchLabs`
+- Or for the latest changes `git clone https://github.com/Azure/BatchLabs`
 
-Install the dependencies
+#### 2. Install the dependencies
 ```
 npm install
 npm install -g gulp (Optional)
 ```
 
-
-Run the application
+#### 3. Build and run the application
 ```
 npm run build
 npm run electron
