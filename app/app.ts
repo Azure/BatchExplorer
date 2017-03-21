@@ -20,5 +20,3 @@ platform.bootstrapModule(AppModule).catch(error => {
     log.error("Bootstrapping failed :: ", error);
     handleCoreError(error);
 });
-
-log.error("Banana are bood", { wut: "is this" });
