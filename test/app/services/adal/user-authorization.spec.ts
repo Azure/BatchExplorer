@@ -1,53 +1,24 @@
-import { Observable, Subject } from "rxjs";
+import { Observable } from "rxjs";
 
 import {
     AuthorizeError, AuthorizeResult, UserAuthorization,
 } from "app/services/adal/user-authorization";
-
-class MockBrowserWindow {
-
-    public loadURL = jasmine.createSpy("loadUrl");
-    public show = jasmine.createSpy("show");
-    public destroy = jasmine.createSpy("destroy");
-
-    public on = jasmine.createSpy("on").and.callFake((event: string, callback: Function) => {
-        if (!(event in this._events)) {
-            this._events[event] = new Subject();
-        }
-        this._events[event].subscribe((data) => {
-            callback(...data.args);
-        });
-    });
-
-    public webContents = {
-        on: jasmine.createSpy("webcontents.on").and.callFake((event: string, callback: Function) => {
-            this.on(`webcontents.${event}`, callback);
-        }),
-        notify: (event: string, data: any) => {
-            this.notify(`webcontents.${event}`, data);
-        },
-    };
-
-    private _events: { [key: string]: Subject<any> } = {};
-
-    public notify(event: string, args: any[]) {
-        if (event in this._events) {
-            this._events[event].next({ args: args });
-        }
-    }
-
-}
+import { MockBrowserWindow, MockElectronRemote } from "test/utils/mocks";
 
 describe("UserAuthorization", () => {
     let userAuthorization: UserAuthorization;
     let fakeWindow: MockBrowserWindow;
+    let remoteSpy: MockElectronRemote;
 
     beforeEach(() => {
+        remoteSpy = new MockElectronRemote();
         const config = { tenant: "common", clientId: "abc", redirectUri: "http://localhost" };
-        userAuthorization = new UserAuthorization(config);
+        userAuthorization = new UserAuthorization(config, remoteSpy);
         fakeWindow = new MockBrowserWindow();
-        (<any>userAuthorization)._createAuthWindow = jasmine.createSpy("CreateAuthWindow").and.returnValue(fakeWindow);
-        (<any>userAuthorization)._authWindow = fakeWindow;
+        (<any>userAuthorization)._createAuthWindow = jasmine.createSpy("CreateAuthWindow").and.callFake(() => {
+            (<any>userAuthorization)._authWindow = fakeWindow;
+            return fakeWindow;
+        });
     });
 
     describe("Authorize", () => {
@@ -77,8 +48,12 @@ describe("UserAuthorization", () => {
             expect(url).not.toContain("&prompt=none");
         });
 
-        it("shoud call show", () => {
-            expect(fakeWindow.show).toHaveBeenCalledTimes(1);
+        it("window should be visible", () => {
+            expect(fakeWindow.isVisible()).toBe(true);
+        });
+
+        it("should have hidden the splash screen", () => {
+            expect(remoteSpy.splashScreen.hide).toHaveBeenCalledOnce();
         });
 
         it("Should return the id token and code when sucessfull", () => {
@@ -90,6 +65,7 @@ describe("UserAuthorization", () => {
             expect(error).toBeNull();
 
             expect(fakeWindow.destroy).toHaveBeenCalledTimes(1);
+            expect(remoteSpy.splashScreen.show).toHaveBeenCalledOnce();
         });
 
         it("Should error when the url redirect returns an error", () => {
@@ -147,8 +123,8 @@ describe("UserAuthorization", () => {
             expect(url).toContain("&prompt=none");
         });
 
-        it("shoud not call show", () => {
-            expect(fakeWindow.show).not.toHaveBeenCalled();
+        it("shoud not be visible", () => {
+            expect(fakeWindow.isVisible()).toBe(false);
         });
     });
 
