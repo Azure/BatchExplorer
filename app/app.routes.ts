@@ -6,13 +6,11 @@ import { Constants } from "app/utils";
 import { AccountDetailsHomeComponent } from "./components/account/details/account-details-home.component";
 import { AccountDetailsComponent } from "./components/account/details/account-details.component";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
-import { ApplicationDefaultComponent } from "./components/application/details/application-default.component";
-import { ApplicationDetailsComponent } from "./components/application/details/application-details.component";
+import { ApplicationDefaultComponent, ApplicationDetailsComponent } from "./components/application/details";
 import { ApplicationHomeComponent } from "./components/application/home/application-home.component";
 import { FileDetailsComponent } from "./components/file/details/file-details.component";
 import { FileHomeComponent } from "./components/file/home";
-import { JobDetailsHomeComponent } from "./components/job/details/job-details-home.component";
-import { JobDetailsComponent } from "./components/job/details/job-details.component";
+import { JobDefaultComponent, JobDetailsComponent } from "./components/job/details";
 import { JobHomeComponent } from "./components/job/home/job-home.component";
 import { NoNodeSelectedComponent, NodeDetailsComponent } from "./components/node/details";
 import { NodeHomeComponent } from "./components/node/home";
@@ -37,7 +35,7 @@ export const routes: Routes = [
         path: "jobs",
         component: JobHomeComponent,
         children: [
-            { path: "", component: JobDetailsHomeComponent }, // jobs/
+            { path: "", component: JobDefaultComponent }, // jobs/
             { path: ":id", component: JobDetailsComponent }, // jobs/{job.id}
         ],
     },

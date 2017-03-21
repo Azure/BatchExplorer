@@ -10,7 +10,7 @@ import { Component } from "@angular/core";
     `,
 })
 
-export class JobDetailsHomeComponent {
+export class JobDefaultComponent {
     public static breadcrumb() {
         return { name: "Jobs" };
     }

@@ -11,7 +11,6 @@ bl-job-details {
 
 bl-job-progress-status {
     display: block;
-
     padding-top: 5px;
 
     .running-task-status {
@@ -20,7 +19,7 @@ bl-job-progress-status {
 
     .running {
         width: 220px;
-        height: 180px;
+        height: 130px;
     }
 
     .queued, .completed {
@@ -43,7 +42,7 @@ bl-job-progress-status {
     .toggle-job-pool-tasks {
         margin: 0 10px;
         display: flex;
-        font-size: 11px;
+        font-size: 12px;
         justify-content: space-between;
 
         > .option {
@@ -51,7 +50,7 @@ bl-job-progress-status {
 
             &.active {
                 color: map-get($md-prussian-blue, 600);
-                text-decoration: underline;
+                font-weight: bold;
             }
         }
     }
