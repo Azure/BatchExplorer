@@ -1,4 +1,4 @@
-<bex-loading [status]="data.newDataStatus | async">
+<bl-loading [status]="loading">
     <div *ngIf="account">
         <md-card class="overview">
             <md-card-title-group style="margin: 0px;">
@@ -10,7 +10,7 @@
             <md-card-content>
             </md-card-content>
             <md-card-actions layout="row" layout-align="end center">
-                <!--<bex-delete-button [entity]="account" (click)="deleteAccount()"></bex-delete-button>-->
+                <!--<bl-delete-button [entity]="account" (click)="deleteAccount()"></bl-delete-button>-->
             </md-card-actions>
         </md-card>
         <div class="account-links">
@@ -25,4 +25,4 @@
             </md-card>
         </div>
 	</div>
-</bex-loading>
+</bl-loading>

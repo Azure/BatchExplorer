@@ -2,6 +2,7 @@ import { Map } from "immutable";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 
 import { ObjectUtils, SecureUtils } from "app/utils";
+import { PollService } from "./poll-service";
 import { QueryCache } from "./query-cache";
 
 export class DataCacheTracker {
@@ -39,6 +40,7 @@ export class DataCache<T> {
     public deleted: Observable<string>;
 
     public queryCache = new QueryCache();
+    public pollService = new PollService();
 
     private _items = new BehaviorSubject<Map<string, T>>(Map<string, T>({}));
     private _deleted = new Subject<string>();

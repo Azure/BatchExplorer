@@ -1,19 +1,13 @@
-<!--<bex-list-and-show-layout #layout (listScrolledToBottom)="fileList.loadMore()" [list]="fileList">-->
-<bex-list-and-show-layout #layout>
-    <div bex-list-buttons>
+<bl-list-and-show-layout #layout quickSearchField="name">
+    <div bl-list-buttons>
     </div>
-    <div bex-list-content>
-        <bex-focus-section>
-            <!--<bex-node-list #nodeList [poolId]="poolId" [filter]="layout.filter" [quickList]="!(layout.showAdvancedFilter | async)"></bex-node-list>-->
-            <bex-task-file-list #fileList *ngIf="isJob" [jobId]="jobId" [taskId]="taskId" [filter]="layout.filter" [quickList]="true"></bex-task-file-list>
-            <bex-node-file-list #fileList *ngIf="isPool" [poolId]="poolId" [nodeId]="nodeId" [filter]="layout.filter" [quickList]="true"></bex-node-file-list>
-        </bex-focus-section>
+    <div bl-list-content>
+        <bl-focus-section>
+            <bl-task-file-list #fileList *ngIf="isJob" [jobId]="jobId" [taskId]="taskId" [filter]="layout.filter" [quickList]="true"></bl-task-file-list>
+            <bl-node-file-list #fileList *ngIf="isPool" [poolId]="poolId" [nodeId]="nodeId" [filter]="layout.filter" [quickList]="true"></bl-node-file-list>
+        </bl-focus-section>
     </div>
-    <div bex-show-content>
+    <div bl-show-content>
         <router-outlet></router-outlet>
     </div>
-    <!--<div bex-show-advanced-filter>
-        <bex-node-advanced-filter (change)="layout.advancedFilterChanged($event)">
-        </bex-node-advanced-filter>
-    </div>-->
-</bex-list-and-show-layout>
+</bl-list-and-show-layout>

@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 
 @Component({
-    selector: "bex-no-node-selected",
+    selector: "bl-no-node-selected",
     template: `
         <div class="no-entity-home">
             <i class="fa fa-database"></i>

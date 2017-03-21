@@ -4,11 +4,11 @@
 
 Start the browser test watch
 ```
-npm run test-browser-watch
+npm run test-app-watch
 ```
 This will now run the test whenever a change is made to the browser code or the test.
 
-If you want to focus on a test/module you can add a `f` in front of `describe` or `it` to only run this section/test. For example: 
+If you want to focus on a test/module you can add a `f` in front of `describe` or `it` to only run this section/test. For example:
 
 ```typescript
 describe("MyModuleA", () => {
@@ -38,7 +38,7 @@ npm run test-client-watch
 
 | Description                              | Single run             | Watch                        |
 |------------------------------------------|------------------------|------------------------------|
-| Run the test for the browser environment | `npm run test-browser` | `npm run test-browser-watch` |
+| Run the test for the browser environment | `npm run test-app`     | `npm run test-app-watch` |
 | Run the test for the node environemnt    | `npm run test-client`  | `npm run test-client-watch`  |
 | Run all the tests                        | `npm run test`         |                              |
 | Run the lint                             | `npm run lint`         |                              |

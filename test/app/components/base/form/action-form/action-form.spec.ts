@@ -9,18 +9,19 @@ import { AsyncSubject } from "rxjs";
 import { SubmitButtonComponent } from "app/components/base/buttons";
 import { ActionFormComponent } from "app/components/base/form/action-form";
 import { ServerErrorComponent } from "app/components/base/form/server-error";
+import { ServerError } from "app/models";
 
 @Component({
     template: `
-        <bex-action-form  class="with-form" [formGroup]="form" [submit]="submit" [dialogRef]="dialogRef" >
+        <bl-action-form  class="with-form" [formGroup]="form" [submit]="submit" [dialogRef]="dialogRef" >
             <div [formGroup]="form" >
                 <input  formControlName="id" />
                 <input  formControlName="state"/>
             </div>
-        </bex-action-form>
+        </bl-action-form>
 
-         <bex-action-form class="without-form" [submit]="submit" [dialogRef]="dialogRef" >
-        </bex-action-form>
+         <bl-action-form class="without-form" [submit]="submit" [dialogRef]="dialogRef" >
+        </bl-action-form>
     `,
 })
 export class FormTestComponent {
@@ -48,7 +49,7 @@ export class FormTestComponent {
         const sub = new AsyncSubject();
         if (this.form.value.id === "error") {
             const value = "Id already exists\nRequestId:abc-def\ntime:2016-12-08T18";
-            sub.error({ code: "IdExists", message: { value } });
+            sub.error(ServerError.fromBatch({ statusCode: 408, code: "IdExists", message: { value } }));
         } else {
             sub.next(true);
             sub.complete();
@@ -64,7 +65,7 @@ describe("ActionFormComponent", () => {
     let actionButtonComponent: SubmitButtonComponent;
 
     function getErrorElement(): ServerErrorComponent {
-        return actionFormElement.query(By.css("bex-server-error")).componentInstance;
+        return actionFormElement.query(By.css("bl-server-error")).componentInstance;
     }
 
     beforeEach(() => {
@@ -81,10 +82,10 @@ describe("ActionFormComponent", () => {
         TestBed.compileComponents();
         fixture = TestBed.createComponent(FormTestComponent);
         fixture.detectChanges();
-        actionFormElement = fixture.debugElement.query(By.css("bex-action-form.with-form"));
+        actionFormElement = fixture.debugElement.query(By.css("bl-action-form.with-form"));
 
         // Get the buttons
-        actionButton = actionFormElement.query(By.css("bex-submit-btn.submit"));
+        actionButton = actionFormElement.query(By.css("bl-submit-btn.submit"));
         actionButtonComponent = actionButton && actionButton.componentInstance;
     });
 
@@ -95,9 +96,9 @@ describe("ActionFormComponent", () => {
     });
 
     it("buttons should be enabled if form is not defined", () => {
-        const formEl = fixture.debugElement.query(By.css("bex-action-form.without-form"));
+        const formEl = fixture.debugElement.query(By.css("bl-action-form.without-form"));
 
-        actionButton = formEl.query(By.css("bex-submit-btn.submit"));
+        actionButton = formEl.query(By.css("bl-submit-btn.submit"));
 
         expect(actionButton.componentInstance.disabled).toBe(false);
     });
@@ -146,7 +147,6 @@ describe("ActionFormComponent", () => {
             expect(fixture.componentInstance.dialogRef.close).not.toHaveBeenCalled();
             const error = getErrorElement();
             expect(error.error).not.toBeNull();
-
         });
     });
 });

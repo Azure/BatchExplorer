@@ -1,13 +1,16 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 
 @Component({
-    selector: "bex-property-group",
+    selector: "bl-property-group",
     templateUrl: "property-group.html",
 })
 export class PropertyGroupComponent {
     @Output()
     public collapsedChange = new EventEmitter();
 
+    /**
+     * If a label is specified the group will be collapsable
+     */
     @Input()
     public label: string;
 

@@ -1,6 +1,6 @@
 <div class="dialog-form">
     <h2>Delete job</h2>
-    <bex-action-form [submit]="destroyJob" [dialogRef]="dialogRef">
+    <bl-action-form [submit]="destroyJob" [dialogRef]="dialogRef" actionColor="warn">
         <div class="message">
             <p>Do you want to delete the job: '<b>{{jobId}}</b>'?</p>
             <p>
@@ -8,5 +8,5 @@
                 Clicking OK will delete this job, its tasks, and any related resources permanently.
             </p>
         </div>
-    </bex-action-form>
+    </bl-action-form>
 </div>

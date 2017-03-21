@@ -4,7 +4,7 @@ import { LoadingStatus } from "app/components/base/loading";
 import { Filter } from "app/utils/filter-builder";
 
 @Component({
-    selector: "bex-no-item",
+    selector: "bl-no-item",
     template: `
         <div class="no-item-message" *ngIf="status !== loadingStatuses.Loading && itemCount === 0">
             <ng-content select="[icon]"></ng-content>

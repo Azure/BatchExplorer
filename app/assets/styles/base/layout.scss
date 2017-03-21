@@ -230,7 +230,7 @@ footer {
 }
 
 .no-entity-home {
-    height: 100%;
+    height: calc(100vh - #{$header-height});
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -256,6 +256,10 @@ footer {
 
 .no-userinteract {
     pointer-events: none;
+}
+
+.warn-text {
+    color: $yellow-dark;
 }
 
 .route-home {
@@ -328,14 +332,23 @@ ul.list-point {
 
 .back-nav {
     float: left;
-    margin-top: 2px;
-    .fa {
+    > .back, > .forward {
+        padding-top: 2px;
+        display:  inline-block;
+        width: 30px;
+        height: $header-height;
         color: $whiteSmoke;
-        font-size: 26px;
         cursor: pointer;
-        margin: 0 5px;
+        text-align: center;
+
         &:hover {
+            background: $header-hover;
             color: map-get($md-prussian-blue, 300);
+        }
+
+        > .fa {
+            font-size: 26px;
+            margin: 0 5px;
         }
     }
 }

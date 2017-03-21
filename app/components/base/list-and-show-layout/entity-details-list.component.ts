@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { Observable } from "rxjs";
 
@@ -9,7 +9,7 @@ import { FilterBuilder } from "app/utils/filter-builder";
  * Adds a search box and a refresh button
  */
 @Component({
-    selector: "bex-entity-details-list",
+    selector: "bl-entity-details-list",
     templateUrl: "entity-details-list.html",
 })
 export class EntityDetailsListComponent {
@@ -38,6 +38,9 @@ export class EntityDetailsListComponent {
     public showRefreshButton: boolean = true;
 
     @Input()
+    public showFilterIcon: boolean = true;
+
+    @Input()
     public refreshButtonHoverText: string = "Refresh";
 
     @Input()
@@ -49,6 +52,12 @@ export class EntityDetailsListComponent {
     @Input()
     public enableAdvancedFilter = true;
 
+    @Input()
+    public quickSearchField = "id";
+
+    @Output()
+    public onAddEntity: EventEmitter<Event> = new EventEmitter<Event>();
+
     public filter = FilterBuilder.none();
     public searchQuery = new FormControl();
 
@@ -57,8 +66,12 @@ export class EntityDetailsListComponent {
             if (query === "") {
                 this.filter = FilterBuilder.none();
             } else {
-                this.filter = FilterBuilder.prop("id").startswith(query);
+                this.filter = FilterBuilder.prop(this.quickSearchField).startswith(query);
             }
         });
+    }
+
+    public onAdd(event: Event) {
+        this.onAddEntity.emit(event);
     }
 }

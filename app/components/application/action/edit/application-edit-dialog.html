@@ -1,0 +1,30 @@
+<div  class="slideout-form content-wrapper">
+    <h1>Edit application</h1>
+    <p>Update the display name, default version, or locked status of your application</p>
+    <bl-action-form [submit]="submit" [formGroup]="applicationForm" [sidebarRef]="sidebarRef" submitText="Update">
+        <form novalidate [formGroup]="applicationForm">
+            <div class="form-element pad-top">
+                <md-input-container>
+                    <input mdInput formControlName="displayName" placeholder="Display name">
+                </md-input-container>
+                <bl-error controlName="displayName" code="maxlength">Display name has a maximum length of 1024 characters</bl-error>
+            </div>
+
+            <div class="form-element">
+                <md-select formControlName="defaultVersion" placeholder="Default version">
+                    <md-option value="">No default version</md-option>
+                    <md-option *ngFor="let package of packages" value="{{package.version}}">{{package.version}}</md-option>
+                </md-select>
+            </div>
+
+            <div class="form-element pad-top">
+                <h5>Allow updates</h5>
+                <p>When set to 'No', package versions cannot be updated or deleted. Only new versions can be added.</p>
+                <md-radio-group formControlName="allowUpdates">
+                    <md-radio-button [value]="true">Yes</md-radio-button>
+                    <md-radio-button [value]="false">No</md-radio-button>
+                </md-radio-group>
+            </div>
+        </form>
+    </bl-action-form>
+</div>

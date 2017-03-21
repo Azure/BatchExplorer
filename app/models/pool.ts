@@ -1,12 +1,11 @@
 import { Record } from "immutable";
 import { Duration } from "moment";
 
-import { CloudServiceConfiguration } from "./cloudServiceConfiguration";
-import { ResizeError } from "./resizeError";
-import { StartTask } from "./startTask";
-import { VirtualMachineConfiguration } from "./virtualMachineConfiguration";
+import { CloudServiceConfiguration } from "./cloud-service-configuration";
+import { ResizeError } from "./resize-error";
+import { StartTask } from "./start-task";
+import { VirtualMachineConfiguration } from "./virtual-machine-configuration";
 
-// tslint:disable:variable-name object-literal-sort-keys
 const PoolRecord = Record({
     allocationState: null,
     allocationStateTransitionTime: null,
@@ -34,10 +33,37 @@ const PoolRecord = Record({
     metadata: [],
 });
 
+export interface PoolAttributes {
+    allocationState: string;
+    allocationStateTransitionTime: Date;
+    applicationPackageReferences: any[];
+    certificateReferences: any[];
+    cloudServiceConfiguration: Partial<CloudServiceConfiguration>;
+    creationTime: Date;
+    currentDedicated: number;
+    displayName: string;
+    enableAutoscale: boolean;
+    enableInterNodeCommunication: boolean;
+    id: string;
+    lastModified: Date;
+    maxTasksPerNode: number;
+    resizeError: Partial<ResizeError>;
+    resizeTimeout: Duration;
+    state: string;
+    stateTransitionTime: Date;
+    targetDedicated: number;
+    taskSchedulingPolicy: any;
+    url: string;
+    virtualMachineConfiguration: Partial<VirtualMachineConfiguration>;
+    vmSize: string;
+    startTask: StartTask;
+    metadata: any[];
+}
+
 /**
  * Class for displaying Batch pool information.
  */
-export class Pool extends PoolRecord {
+export class Pool extends PoolRecord implements PoolAttributes {
     public allocationState: string;
     public allocationStateTransitionTime: Date;
     public applicationPackageReferences: any[];
@@ -63,7 +89,7 @@ export class Pool extends PoolRecord {
     public startTask: StartTask;
     public metadata: any[];
 
-    constructor(data: any = {}) {
+    constructor(data: Partial<PoolAttributes> = {}) {
         super(Object.assign({}, data, {
             resizeError: data.resizeError && new ResizeError(data.resizeError),
             startTask: data.startTask && new StartTask(data.startTask),

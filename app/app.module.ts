@@ -1,5 +1,5 @@
 import { HashLocationStrategy, LocationStrategy } from "@angular/common";
-import { NgModule } from "@angular/core";
+import { ErrorHandler, NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
@@ -8,15 +8,16 @@ import { RouterModule } from "@angular/router";
 import { routes } from "./app.routes";
 
 // components
+import { NodeConnectModule } from "app/components/node/connect";
 import { StartTaskModule } from "app/components/pool/start-task";
 import { AppComponent } from "./app.component";
 import { DeleteAccountDialogComponent } from "./components/account/action/delete-account-dialog.component";
 import AccountCreateDialogComponent from "./components/account/add/account-create-dialog.component";
-import { AccountFavListComponent, AccountListComponent } from "./components/account/browse";
-import AccountDropDown from "./components/account/browse/account-dropdown.component";
+import { AccountBrowseModule } from "./components/account/browse";
 import { AccountDetailsHomeComponent } from "./components/account/details/account-details-home.component";
 import { AccountDetailsComponent } from "./components/account/details/account-details.component";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
+import { ApplicationModule } from "./components/application/application.module";
 import { BaseModule } from "./components/base";
 import { FileBrowseModule } from "./components/file/browse";
 import { FileDetailsModule } from "./components/file/details";
@@ -39,16 +40,10 @@ import { MainNavigationComponent } from "./components/shared/main-navigation.com
 import { TaskBrowseModule } from "./components/task/browse";
 import { TaskDetailsModule } from "./components/task/details";
 import { TaskHomeComponent } from "./components/task/home";
-import { AdUserDropdownComponent } from "./components/user";
+import { AADUserDropdownComponent } from "./components/user";
 
 // job actions
-import {
-    DeleteJobDialogComponent,
-    DisableJobDialogComponent,
-    EnableJobDialogComponent,
-    JobCreateBasicDialogComponent,
-    TerminateJobDialogComponent,
-} from "./components/job/action";
+import { JobActionModule } from "./components/job/action";
 
 // pool actions
 import {
@@ -68,15 +63,25 @@ import {
 import { TaskBaseModule } from "./components/task/base";
 
 // services
+import { BatchLabsErrorHandler } from "app/error-handler";
 import {
     AccountService,
     AdalService,
+    ApplicationService,
+    ArmHttpService,
     AzureHttpService,
+    BatchClientService,
     CommandService,
+    ElectronRemote,
+    ElectronShell,
     FileService,
+    FileSystemService,
+    HttpUploadService,
     JobService,
     NodeService,
+    NodeUserService,
     PoolService,
+    SSHKeyService,
     SettingsService,
     SubscriptionService,
     TaskService,
@@ -84,10 +89,12 @@ import {
 } from "./services";
 
 const modules = [
+    AccountBrowseModule,
+    ApplicationModule,
     PoolDetailsModule, PoolGraphsModule, StartTaskModule,
-    JobDetailsModule,
+    JobDetailsModule, JobActionModule,
     TaskBaseModule, TaskDetailsModule, TaskBrowseModule,
-    NodeBrowseModule,
+    NodeBrowseModule, NodeConnectModule,
     FileBrowseModule, FileDetailsModule,
 ];
 
@@ -96,25 +103,17 @@ const modules = [
         AppComponent,
     ],
     declarations: [
+        AADUserDropdownComponent,
         AccountCreateDialogComponent,
         AccountDetailsComponent,
         AccountDetailsHomeComponent,
-        AccountDropDown,
-        RerunTaskFormComponent,
         AccountHomeComponent,
-        AccountFavListComponent,
-        AccountListComponent,
-        AdUserDropdownComponent,
         AppComponent,
         DeleteAccountDialogComponent,
-        DeleteJobDialogComponent,
         DeletePoolDialogComponent,
         DeleteTaskDialogComponent,
-        DisableJobDialogComponent,
-        EnableJobDialogComponent,
         FileHomeComponent,
         JobAdvancedFilterComponent,
-        JobCreateBasicDialogComponent,
         JobHomeComponent,
         JobListComponent,
         JobStatsPreviewComponent,
@@ -130,49 +129,54 @@ const modules = [
         PoolNodesPreviewComponent,
         PoolOsPickerComponent,
         PoolResizeDialogComponent,
+        RerunTaskFormComponent,
         TaskCreateBasicDialogComponent,
         TaskHomeComponent,
-        TerminateJobDialogComponent,
         TerminateTaskDialogComponent,
     ],
     entryComponents: [
         AccountCreateDialogComponent,
         DeleteAccountDialogComponent,
-        DeleteJobDialogComponent,
         DeletePoolDialogComponent,
         DeleteTaskDialogComponent,
-        DisableJobDialogComponent,
-        EnableJobDialogComponent,
-        JobCreateBasicDialogComponent,
         PoolCreateBasicDialogComponent,
         PoolResizeDialogComponent,
         RerunTaskFormComponent,
         TaskCreateBasicDialogComponent,
-        TerminateJobDialogComponent,
         TerminateTaskDialogComponent,
     ],
     imports: [
         BrowserModule,
         FormsModule,
-        MaterialModule.forRoot(),
+        MaterialModule,
         ReactiveFormsModule,
         RouterModule.forRoot(routes, { useHash: true }),
-        BaseModule.forRoot(),
+        BaseModule,
         ...modules,
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         AccountService,
         AdalService,
+        ApplicationService,
         AzureHttpService,
+        ArmHttpService,
         CommandService,
+        ElectronRemote,
+        ElectronShell,
         FileService,
+        FileSystemService,
+        HttpUploadService,
         JobService,
         PoolService,
         SubscriptionService,
+        SSHKeyService,
         NodeService,
+        NodeUserService,
+        BatchClientService,
         SettingsService,
         TaskService,
+        { provide: ErrorHandler, useClass: BatchLabsErrorHandler },
         ...commands,
     ],
 })

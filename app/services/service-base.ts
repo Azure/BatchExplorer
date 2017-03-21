@@ -1,5 +1,8 @@
 import { BehaviorSubject, Observable } from "rxjs";
 
+import { ServerError } from "app/models";
+import { BatchClientService } from "./batch-client.service";
+
 export interface CommonListOptions {
     filter?: string;
     select?: string;
@@ -18,18 +21,30 @@ export class ServiceBase {
         return this._loading.asObservable();
     }
 
+    constructor(protected batchService?: BatchClientService) { }
+
     public setLoadingState(loading: boolean) {
         this._loading.next(loading);
     }
 
-    protected callBatchClient(promise: any, errorCallback: (error: any) => void): Observable<any> {
-        const observable = Observable.fromPromise<any>(promise);
-        observable.subscribe({
-            error: (error) => {
-                errorCallback(Object.assign({}, error));
-            },
-        });
+    /**
+     * Helper function to call an action on the batch client library.
+     * This will handle converting the Batch error to a ServerError.
+     * @param promise Promise returned by the batch client
+     * @param  errorCallback Optional error callback if want to log
+     */
+    protected callBatchClient<T>(
+        promise: (client: any) => Promise<any>,
+        errorCallback?: (error: any) => void): Observable<T> {
 
-        return observable;
+        return this.batchService.get().flatMap((client) => {
+            return Observable.fromPromise<T>(promise(client)).catch((err) => {
+                const serverError = ServerError.fromBatch(err);
+                if (errorCallback) {
+                    errorCallback(serverError);
+                }
+                return Observable.throw(serverError);
+            });
+        }).share();
     }
 }

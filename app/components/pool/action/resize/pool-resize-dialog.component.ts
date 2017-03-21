@@ -2,14 +2,14 @@ import { Component, Input } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { autobind } from "core-decorators";
 
-import { NotificationManager } from "app/components/base/notifications";
+import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { Pool } from "app/models";
 import { PoolService } from "app/services";
 import { CustomValidators } from "app/utils";
 
 @Component({
-    selector: "bex-pool-resize-dialog",
+    selector: "bl-pool-resize-dialog",
     templateUrl: "pool-resize-dialog.html",
 })
 export class PoolResizeDialogComponent {
@@ -30,7 +30,7 @@ export class PoolResizeDialogComponent {
     constructor(
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<PoolResizeDialogComponent>,
-        private notificationManager: NotificationManager,
+        private notificationService: NotificationService,
         private poolService: PoolService) {
         this.form = this.formBuilder.group({
             targetDedicated: [0, [Validators.required, CustomValidators.number, CustomValidators.min(0)]],
@@ -45,7 +45,7 @@ export class PoolResizeDialogComponent {
 
         obs.subscribe({
             complete: () => {
-                this.notificationManager.success("Pool resize started!",
+                this.notificationService.success("Pool resize started!",
                     `Pool '${id}' will resize to ${targetDedicated} nodes!`);
             },
             error: () => null,

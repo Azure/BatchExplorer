@@ -1,0 +1,10 @@
+// File having all the z-index important in the app so we know the vertical sturcture of it.
+
+// For the loading icon
+$zindex-loading: 1000;
+
+// For a notification
+$zindex-notification: 9900;
+
+// For a header dropdown
+$zindex-dropdown: 9997;

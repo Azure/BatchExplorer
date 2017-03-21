@@ -7,10 +7,10 @@ import { click } from "test/utils/helpers";
 
 @Component({
     template: `
-        <bex-property-group label="Main group" [collapsed]="collapsed" [warningMessage]="warningMessage">
+        <bl-property-group label="Main group" [collapsed]="collapsed" [warningMessage]="warningMessage">
             <div collapsed-preview>Preview of content</div>
             Some content
-        </bex-property-group>
+        </bl-property-group>
     `,
 })
 class TestGroupComponent {
@@ -36,7 +36,7 @@ describe("TextPropertyComponent", () => {
         section = de.query(By.css("section"));
         fixture.detectChanges();
         header = de.query(By.css(".group-header"));
-        group = de.query(By.css("bex-property-group")).componentInstance;
+        group = de.query(By.css("bl-property-group")).componentInstance;
     });
 
     it("Should show the group title", () => {

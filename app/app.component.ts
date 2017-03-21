@@ -1,25 +1,27 @@
 import { Location } from "@angular/common";
 import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { MdSidenav } from "@angular/material";
-import { BehaviorSubject, Observable } from "rxjs";
+import { Observable } from "rxjs";
 
-import { AccountService, AdalService, CommandService, SettingsService } from "app/services";
+import {
+    AccountService, AdalService, CommandService, NodeService, SSHKeyService, SettingsService, SubscriptionService,
+} from "app/services";
 import AccountCreateDialogComponent from "./components/account/add/account-create-dialog.component";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
 const adalConfig = {
-    tenant: "microsoft.onmicrosoft.com",
-    clientId: "94ef904d-c21a-4672-9946-b4d6a12b8e13",
-    redirectUri: "http://localhost",
+    tenant: "common",
+    clientId: "04b07795-8ddb-461a-bbee-02f9e1bf7b46", // Azure CLI
+    redirectUri: "urn:ietf:wg:oauth:2.0:oob",
 };
 
 @Component({
-    selector: "bex-app",
+    selector: "bl-app",
     templateUrl: "app.layout.html",
 })
 export class AppComponent implements AfterViewInit, OnInit {
     public hasAccount: Observable<boolean>;
-    public isAppReady = new BehaviorSubject<boolean>(false);
+    public isAppReady = false;
 
     @ViewChild("rightSidebar")
     private sidebar: MdSidenav;
@@ -33,8 +35,12 @@ export class AppComponent implements AfterViewInit, OnInit {
         private settingsService: SettingsService,
         private commandService: CommandService,
         private adalService: AdalService,
-        private accountService: AccountService) {
+        private accountService: AccountService,
+        private subscriptionService: SubscriptionService,
+        private nodeService: NodeService,
+        private sshKeyService: SSHKeyService) {
         this.settingsService.init();
+        this.sshKeyService.init();
         this.commandService.init();
         this.adalService.init(adalConfig);
         this.accountService.loadInitialData();
@@ -44,8 +50,13 @@ export class AppComponent implements AfterViewInit, OnInit {
         Observable
             .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)
             .subscribe((loadedArray) => {
-                this.isAppReady.next(loadedArray[0] && loadedArray[1]);
+                this.isAppReady = loadedArray[0] && loadedArray[1];
             });
+
+        // Wait for the first account to be loaded.
+        accountService.currentAccount.filter(x => Boolean(x)).first().subscribe((x) => {
+            this._preloadData();
+        });
     }
 
     public ngAfterViewInit() {
@@ -56,6 +67,7 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     public ngOnInit() {
         this.adalService.login();
+        this.subscriptionService.load();
     }
 
     public open() {
@@ -76,5 +88,12 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     public goForward() {
         this.location.forward();
+    }
+
+    /**
+     * Preload some data needed.
+     */
+    private _preloadData() {
+        this.nodeService.listNodeAgentSkus().fetchAll();
     }
 }

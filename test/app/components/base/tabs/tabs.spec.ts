@@ -9,16 +9,16 @@ import { TabsModule } from "app/components/base/tabs";
 
 @Component({
     template: `
-        <bex-tab-group>
-            <bex-tab key="first">
-                <bex-tab-label>First label</bex-tab-label>
+        <bl-tab-group>
+            <bl-tab key="first">
+                <bl-tab-label>First label</bl-tab-label>
                 Content 1
-            </bex-tab>
-            <bex-tab key="second">
-                <bex-tab-label>Second label</bex-tab-label>
+            </bl-tab>
+            <bl-tab key="second">
+                <bl-tab-label>Second label</bl-tab-label>
                 Content 2
-            </bex-tab>
-        </bex-tab-group>
+            </bl-tab>
+        </bl-tab-group>
     `,
 })
 export class TabTestComponent {
@@ -72,7 +72,7 @@ describe("Tabs", () => {
     });
 
     it("clicking on a tab label should update the route", async(() => {
-        const labels = fixture.debugElement.queryAll(By.css(".md-tab-label"));
+        const labels = fixture.debugElement.queryAll(By.css(".mat-tab-label"));
         expect(labels.length).toBe(2);
         labels[1].nativeElement.click();
         fixture.detectChanges();

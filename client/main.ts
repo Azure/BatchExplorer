@@ -1,11 +1,13 @@
 // tslint:disable-next-line
 /// <reference path="../definitions/index.d.ts"/>
 
-import { BrowserWindow, app } from "electron";
+import { BrowserWindow, app, protocol } from "electron";
 import * as path from "path";
 
-import BatchClientProxy from "./api/batch-client-proxy/batch-client-proxy";
+import { BatchClientProxyFactory } from "./api/batch-client-proxy";
+import { Constants } from "./client-constants";
 import { renderLogger } from "./logger";
+import { SplashScreen } from "./splash-screen";
 
 app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 
@@ -14,13 +16,27 @@ app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 let mainWindow: any;
 
 // Webpack dev server url when using HOT=1
-const devServerUrl = "http://localhost:3178/index.html";
+const devServerUrl = Constants.urls.main.dev;
 
 // Webpack build output
-const buildFileUrl = `file://${__dirname}/../../build/index.html`;
+const buildFileUrl = Constants.urls.main.prod;
+
+const authWindowsToClose: Electron.BrowserWindow[] = [];
+const splashScreen = new SplashScreen();
 
 // Create the browser window.
 function createWindow() {
+    splashScreen.create();
+    protocol.registerStringProtocol("urn", (request, callback) => {
+        // Close all auth windows that need to be closed
+        while (authWindowsToClose.length) {
+            authWindowsToClose.shift().close();
+        }
+
+        // Doesn't matter how the protocol is handled; error is fine
+        callback();
+    });
+
     /**
      * Setting the icon here will only work in Win and Linux. To set the icon on OS-X, use
      * electron-packager and set the icon using the --icon switch. It will need to be in .icns
@@ -28,7 +44,7 @@ function createWindow() {
      */
     mainWindow = new BrowserWindow({
         height: 1000,
-        icon: __dirname + "/../assets/images/labs.ico",
+        icon: Constants.urls.icon,
         width: 1600,
         show: true, // Don't show the window until the user authenticated, comment to debug auth problems,
         webPreferences: {
@@ -39,8 +55,9 @@ function createWindow() {
     const url = process.env.HOT ? devServerUrl : buildFileUrl;
 
     mainWindow.loadURL(url);
-    mainWindow.batchClient = new BatchClientProxy();
+    mainWindow.batchClientFactory = new BatchClientProxyFactory();
     mainWindow.logger = renderLogger;
+    mainWindow.splashScreen = splashScreen;
 
     // Open the DevTools.
     mainWindow.webContents.openDevTools();

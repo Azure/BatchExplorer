@@ -1,26 +1,24 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnDestroy } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { List } from "immutable";
+import { Observable, Subscription as RxjsSubscription } from "rxjs";
 
 import { AccountResource, Subscription } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
-import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
 
 interface SubscriptionAccount {
     expanded: boolean;
-    accounts: RxListProxy<any, AccountResource>;
+    loading: boolean;
+    accounts: Observable<List<AccountResource>>;
 }
 
 @Component({
-    selector: "bex-account-list",
+    selector: "bl-account-list",
     templateUrl: "account-list.html",
 })
-export class AccountListComponent implements OnInit {
-    public subscriptionData: RxListProxy<{}, Subscription>;
-
-    public subscriptionAccounts: { [subId: string]: SubscriptionAccount } = {};
+export class AccountListComponent implements OnDestroy {
     @Input()
     public set filter(filter: Filter) {
         this._filter = filter;
@@ -28,19 +26,20 @@ export class AccountListComponent implements OnInit {
     }
     public get filter(): Filter { return this._filter; };
 
-    public subscriptions: List<Subscription>;
+    public subscriptionAccounts: { [subId: string]: SubscriptionAccount } = {};
+    public subscriptions: List<Subscription> = List([]);
     public displayedSubscriptions: List<Subscription>;
 
     private _filter: Filter;
+    private _sub: RxjsSubscription;
 
     constructor(
         private accountService: AccountService,
-        private subscriptionService: SubscriptionService,
+        private activatedRoute: ActivatedRoute,
         private sidebarManager: SidebarManager,
-        private activatedRoute: ActivatedRoute) {
-        this.subscriptionData = subscriptionService.list();
-        this.subscriptionData.setOptions({ filter: "startswith(subscriptionId, \"Bat\")" });
-        this.subscriptionData.items.subscribe((subscriptions) => {
+        private subscriptionService: SubscriptionService) {
+
+        this._sub = subscriptionService.subscriptions.subscribe((subscriptions) => {
             const data: any = {};
             this.subscriptions = List<Subscription>(subscriptions.sort((a, b) => {
                 if (a.displayName < b.displayName) {
@@ -50,6 +49,7 @@ export class AccountListComponent implements OnInit {
                 }
                 return 0;
             }));
+
             subscriptions.forEach((subscription) => {
                 if (subscription.subscriptionId in this.subscriptionAccounts) {
                     data[subscription.subscriptionId] = this.subscriptionAccounts[subscription.subscriptionId];
@@ -66,8 +66,8 @@ export class AccountListComponent implements OnInit {
         });
     }
 
-    public ngOnInit() {
-        this.subscriptionData.fetchNext(true);
+    public ngOnDestroy() {
+        this._sub.unsubscribe();
     }
 
     public toggleExpandSubscription(subscriptionId: string) {
@@ -75,9 +75,11 @@ export class AccountListComponent implements OnInit {
         if (!subscriptionAccounts.expanded) {
             if (!subscriptionAccounts.accounts) {
                 subscriptionAccounts.accounts = this.accountService.list(subscriptionId);
-                subscriptionAccounts.accounts.fetchNext(true);
+                subscriptionAccounts.loading = true;
+                subscriptionAccounts.accounts.subscribe(() => subscriptionAccounts.loading = false);
             }
         }
+
         subscriptionAccounts.expanded = !subscriptionAccounts.expanded;
     }
 
@@ -99,6 +101,7 @@ export class AccountListComponent implements OnInit {
             text = (this._filter.properties[0] as any).value;
             text = text && text.toLowerCase();
         }
+
         this.displayedSubscriptions = List<Subscription>(this.subscriptions.filter((sub) => {
             return !text || sub.displayName.toLowerCase().indexOf(text) !== -1;
         }));

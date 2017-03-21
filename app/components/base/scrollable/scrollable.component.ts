@@ -23,7 +23,7 @@ enum Orientation {
 
 @Component({
     encapsulation: ViewEncapsulation.None,
-    selector: "bex-scrollable",
+    selector: "bl-scrollable",
     templateUrl: "scrollable.html",
 })
 export class ScrollableComponent implements OnDestroy, AfterViewInit {

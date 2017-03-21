@@ -5,8 +5,8 @@ import { JobState } from "app/models";
 import { Filter } from "app/utils/filter-builder";
 
 @Component({
-    selector: "bex-job-advanced-filter",
-    templateUrl: "./job-advanced-filter.html",
+    selector: "bl-job-advanced-filter",
+    templateUrl: "job-advanced-filter.html",
 })
 export class JobAdvancedFilterComponent {
 

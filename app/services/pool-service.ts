@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 
+import { Pool } from "app/models";
 import { log } from "app/utils";
-import BatchClient from "../api/batch/batch-client";
-import { Pool } from "../models";
+import { BatchClientService } from "./batch-client.service";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
 import { ServiceBase } from "./service-base";
 
@@ -22,28 +22,32 @@ export class PoolService extends ServiceBase {
     private _basicProperties: string = "id,displayName,state,allocationState";
     private _cache = new DataCache<Pool>();
 
+    constructor(batchService: BatchClientService) {
+        super(batchService);
+    }
+
     public get basicProperties(): string {
         return this._basicProperties;
     }
 
     public add(pool: any, options: any = {}): Observable<any> {
-        return Observable.fromPromise<any>(BatchClient.pool.add(pool, options));
+        return this.callBatchClient((client) => client.pool.add(pool, options), (error) => {
+            log.error("Error adding pool", Object.assign({}, error));
+        });
     }
 
     public list(initialOptions: any = {}): RxListProxy<{}, Pool> {
-        return new RxBatchListProxy<{}, Pool>(Pool, {
+        return new RxBatchListProxy<{}, Pool>(Pool, this.batchService, {
             cache: () => this._cache,
-            proxyConstructor: (params, options) => BatchClient.pool.list(options),
+            proxyConstructor: (client, params, options) => client.pool.list(options),
             initialOptions,
         });
     }
 
     public get(poolId: string, options: any = {}): RxEntityProxy<PoolParams, Pool> {
-        return new RxBatchEntityProxy<PoolParams, Pool>(Pool, {
+        return new RxBatchEntityProxy<PoolParams, Pool>(Pool, this.batchService, {
             cache: () => this._cache,
-            getFn: (params: PoolParams) => {
-                return BatchClient.pool.get(params.id, options);
-            },
+            getFn: (client, params: PoolParams) => client.pool.get(params.id, options),
             initialParams: { id: poolId },
         });
     }
@@ -56,8 +60,7 @@ export class PoolService extends ServiceBase {
      * This will start the delete process
      */
     public delete(poolId: string, options: any = {}): Observable<any> {
-        let observable = Observable.fromPromise<any>(
-            BatchClient.pool.delete(poolId, options));
+        let observable = this.callBatchClient((client) => client.pool.delete(poolId, options));
         observable.subscribe({
             error: (error) => {
                 log.error("Error deleting pool: " + poolId, Object.assign({}, error));
@@ -75,8 +78,7 @@ export class PoolService extends ServiceBase {
     }
 
     public resize(poolId: string, targetDedicated: number, options: any = {}) {
-        let observable = Observable.fromPromise<any>(
-            BatchClient.pool.resize(poolId, targetDedicated, options));
+        let observable = this.callBatchClient((client) => client.pool.resize(poolId, targetDedicated, options));
         observable.subscribe({
             error: (error) => {
                 log.error("Error resizing pool: " + poolId, Object.assign({}, error));
@@ -87,13 +89,13 @@ export class PoolService extends ServiceBase {
     }
 
     public patch(poolId: string, attributes: any, options: any = {}) {
-        return this.callBatchClient(BatchClient.pool.patch(poolId, attributes, options), (error) => {
+        return this.callBatchClient((client) => client.pool.patch(poolId, attributes, options), (error) => {
             log.error("Error patching pool: " + poolId, error);
         });
     }
 
     public replaceProperties(poolId: string, attributes: any, options: any = {}) {
-        return this.callBatchClient(BatchClient.pool.replaceProperties(poolId, attributes, options), (error) => {
+        return this.callBatchClient((client) => client.pool.replaceProperties(poolId, attributes, options), (error) => {
             log.error("Error updating pool: " + poolId, error);
         });
     }

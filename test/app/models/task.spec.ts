@@ -22,7 +22,6 @@ describe("Task Model", () => {
             expect(new Task({ executionInfo: { startTime: null } }).didTimeout).toBe(false);
             expect(new Task({ constraints: {} }).didTimeout).toBe(false);
         });
-        // maxWallClockTime: moment.duration("PT4M"
 
         it("Should return false if there is no maxWallClockTime", () => {
             expect(new Task({ executionInfo: {}, constraints: {} }).didTimeout).toBe(false);

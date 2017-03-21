@@ -3,18 +3,18 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import * as moment from "moment";
 
-import { TaskDetailsModule } from "app/components/task/details";
-import { TaskTimelineComponent } from "app/components/task/details/task-timeline";
+import { ElapsedTimeComponent } from "app/components/base/elapsed-time";
+import { TaskTimelineComponent, TaskTimelineStateComponent } from "app/components/task/details/task-timeline";
 import { Job, Task, TaskState } from "app/models";
 
 @Component({
     template: `
-        <bex-task-timeline [job]="job" [task]="task">
+        <bl-task-timeline [job]="job" [task]="task">
             Additional content info
-        </bex-task-timeline>
+        </bl-task-timeline>
     `,
 })
-class TestComponent {
+class TaskTimelineMockComponent {
     public job = new Job({ id: "job-1", jobPreparationTask: { id: "task" } });
     public task: Task = new Task();
 }
@@ -36,20 +36,22 @@ function createTask(state: string, timeout = "PT6M") {
 }
 
 describe("TaskTimelineComponent", () => {
-    let fixture: ComponentFixture<TestComponent>;
-    let testComponent: TestComponent;
+    let fixture: ComponentFixture<TaskTimelineMockComponent>;
+    let testComponent: TaskTimelineMockComponent;
     let component: TaskTimelineComponent;
-    let de: DebugElement;
     let stateLinks: DebugElement[];
+    let de: DebugElement;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [TaskDetailsModule],
-            declarations: [TestComponent],
+            declarations: [
+                ElapsedTimeComponent, TaskTimelineComponent, TaskTimelineMockComponent, TaskTimelineStateComponent,
+            ],
         });
-        fixture = TestBed.createComponent(TestComponent);
+
+        fixture = TestBed.createComponent(TaskTimelineMockComponent);
         testComponent = fixture.componentInstance;
-        de = fixture.debugElement.query(By.css("bex-task-timeline"));
+        de = fixture.debugElement.query(By.css("bl-task-timeline"));
         component = de.componentInstance;
         fixture.detectChanges();
         stateLinks = de.queryAll(By.css(".state-link"));

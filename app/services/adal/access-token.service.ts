@@ -1,11 +1,26 @@
 import { Headers, Http, RequestOptions } from "@angular/http";
 import { Observable } from "rxjs";
 
+import { log } from "app/utils";
 import { AccessToken } from "./access-token";
 import { AdalConfig } from "./adal-config";
 import { baseUrl, objectToParams } from "./adal-constants";
 
 const contentType = "application/x-www-form-urlencoded";
+
+export type AccessTokenError = "invalid_grant";
+export const AccessTokenError = {
+    invalid_grant: "invalid_grant",
+};
+
+export interface AccessTokenErrorResult {
+    error: AccessTokenError;
+    error_description: string;
+    error_codes: number[];
+    timestamp: string;
+    trace_id: string;
+    correlation_id: string;
+}
 
 /**
  * This service handle the retrival of the access token to auth AAD queries
@@ -17,8 +32,11 @@ export class AccessTokenService {
     /**
      * Retrieve the access token using the given authorization code
      */
-    public redeem(authorizationCode: string): Observable<AccessToken> {
-        const obs = this.http.post(this._buildUrl(), this._redeemBody(authorizationCode), this._options()).share()
+    public redeem(resource: string, tenantId: string, authorizationCode: string): Observable<AccessToken> {
+        const obs = this.http.post(this._buildUrl(tenantId),
+            this._redeemBody(resource, authorizationCode),
+            this._options())
+            .share()
             .map((response) => {
                 const data = response.json();
                 return this._processResponse(data);
@@ -26,15 +44,19 @@ export class AccessTokenService {
 
         obs.subscribe({
             error: (error) => {
-                console.error("Error redeem the auth code for access token", error);
+                log.error("Error redeem the auth code for access token", error);
             },
         });
 
         return obs;
     }
 
-    public refresh(refreshToken: string): Observable<AccessToken> {
-        const obs = this.http.post(this._buildUrl(), this._refreshBody(refreshToken), this._options()).share()
+    public refresh(resource: string, tenantId: string, refreshToken: string): Observable<AccessToken> {
+        const obs = this.http.post(
+            this._buildUrl(tenantId),
+            this._refreshBody(resource, refreshToken),
+            this._options())
+            .share()
             .map((response) => {
                 const data = response.json();
                 return this._processResponse(data);
@@ -42,33 +64,33 @@ export class AccessTokenService {
 
         obs.subscribe({
             error: (error) => {
-                console.error("Error refresh access token", error);
+                log.error("Error refresh access token", error);
             },
         });
         return obs;
     }
 
-    private _buildUrl() {
-        return `${baseUrl}/${this.config.tenant}/oauth2/token`;
+    private _buildUrl(tenantId: string) {
+        return `${baseUrl}/${tenantId}/oauth2/token`;
     }
 
-    private _redeemBody(authorizationCode: string) {
+    private _redeemBody(resource: string, authorizationCode: string) {
         const params = {
             grant_type: "authorization_code",
             client_id: this.config.clientId,
             code: authorizationCode,
-            resource: "https://management.core.windows.net/",
+            resource: resource,
             redirect_uri: this.config.redirectUri,
         };
         return objectToParams(params);
     }
 
-    private _refreshBody(refresh_token: string) {
+    private _refreshBody(resource, refresh_token: string) {
         const params = {
             grant_type: "refresh_token",
             client_id: this.config.clientId,
             refresh_token: refresh_token,
-            resource: "https://management.core.windows.net/",
+            resource: resource,
             redirect_uri: this.config.redirectUri,
         };
         return objectToParams(params);

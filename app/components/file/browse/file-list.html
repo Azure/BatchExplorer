@@ -1,9 +1,9 @@
-<div *ngIf="!notFound">
-    <bex-file-list-display [files]="data.items | async" [status]="status" [quickList]="quickList" [baseUrl]="baseUrl" [filter]="filter"></bex-file-list-display>
-    <!--<bex-loading [status]="status | async">
-    </bex-loading>-->
-    <bex-list-loading [manualLoading]="manualLoading" [data]="data"></bex-list-loading>
+<div *ngIf="!nodeNotFound">
+    <bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
+    <bl-file-list-display [files]="data.items | async" [status]="status | async" [quickList]="quickList" [baseUrl]="baseUrl"
+        [filter]="filter"></bl-file-list-display>
+    <bl-list-loading [manualLoading]="manualLoading" [data]="data" [status]="status | async"></bl-list-loading>
 </div>
-<div *ngIf="notFound" class="notfound-message">
+<div *ngIf="nodeNotFound" class="notfound-message">
     Files for this task were not found. The node may no longer be availble.
 </div>

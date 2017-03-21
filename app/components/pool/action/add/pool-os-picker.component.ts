@@ -3,27 +3,27 @@ import {
     ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators,
 } from "@angular/forms";
 
-import { NodeAgentSku } from "app/models";
+import { NodeAgentSku, NodeAgentSkuMap } from "app/models";
 import { PoolOSPickerModel, PoolOsSources } from "app/models/forms";
-import { AccountService } from "app/services";
+import { NodeService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { ObjectUtils } from "app/utils";
 
 // tslint:disable:no-forward-ref
 
 const cloudServiceOsFamilies = [{
-    id: 2,
+    id: "2",
     name: "Windows Server 2008 R2 SP1",
 }, {
-    id: 3,
+    id: "3",
     name: "Windows Server 2012",
 }, {
-    id: 4,
+    id: "4",
     name: "Windows Server 2012 R2",
 }].reverse(); // Reverse so we have most recent first
 
 @Component({
-    selector: "bex-pool-os-picker",
+    selector: "bl-pool-os-picker",
     templateUrl: "pool-os-picker.html",
     providers: [
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => PoolOsPickerComponent), multi: true },
@@ -52,18 +52,17 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
     public cloudServiceOsFamilies = cloudServiceOsFamilies;
 
     private _propagateChange: Function = null;
-    private _nodeAgentSkuMap: any = {};
+    private _nodeAgentSkuMap: NodeAgentSkuMap = new NodeAgentSkuMap();
 
-    constructor(private formBuilder: FormBuilder, private accountService: AccountService) {
-
+    constructor(private formBuilder: FormBuilder, private nodeService: NodeService) {
+        this.accountData = this.nodeService.listNodeAgentSkus();
+        this.accountData.items.subscribe((result) => {
+            this._buildNodeAgentSkuMap(result);
+        });
+        this.accountData.fetchNext();
     }
 
     public ngOnInit() {
-        this.accountData = this.accountService.listNodeAgentSkus({});
-        this.accountData.fetchNext(true).subscribe((result) => {
-            this._buildNodeAgentSkuMap(result);
-        });
-
         this.source = this.formBuilder.control(this.selectedSource, Validators.required);
         this.publisher = this.formBuilder.control("", Validators.required);
         this.offer = this.formBuilder.control("", Validators.required);
@@ -125,19 +124,19 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
     }
 
     public get vmPublishers() {
-        return Object.keys(this._nodeAgentSkuMap);
+        return this._nodeAgentSkuMap.getPublishers();
     }
 
     public get vmOffers() {
-        return Object.keys(this._nodeAgentSkuMap[this.selectedPublisher]);
+        return this._nodeAgentSkuMap.getOffers(this.selectedPublisher);
     }
 
     public get vmSkus() {
-        return Object.keys(this._nodeAgentSkuMap[this.selectedPublisher][this.selectedOffer]);
+        return this._nodeAgentSkuMap.getSkus(this.selectedPublisher, this.selectedOffer);
     }
 
     public get vmNodeAgentId() {
-        return this._nodeAgentSkuMap[this.selectedPublisher][this.selectedOffer][this.selectedSku].nodeAgentId;
+        return this._nodeAgentSkuMap.getNodeAgentId(this.selectedPublisher, this.selectedOffer, this.selectedSku);
     }
 
     private _setupEvent() {
@@ -159,25 +158,6 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
     }
 
     private _buildNodeAgentSkuMap(nodeAgentSkus: any) {
-        let map = {};
-        for (let sku of nodeAgentSkus.data) {
-            for (let imageReference of sku.verifiedImageReferences) {
-                if (!map[imageReference.publisher]) {
-                    map[imageReference.publisher] = {};
-                }
-
-                if (!map[imageReference.publisher][imageReference.offer]) {
-                    map[imageReference.publisher][imageReference.offer] = {};
-                }
-
-                if (!map[imageReference.publisher][imageReference.offer][imageReference.sku]) {
-                    map[imageReference.publisher][imageReference.offer][imageReference.sku] = {
-                        nodeAgentId: sku.id,
-                        osType: sku.osType,
-                    };
-                }
-            }
-        }
-        this._nodeAgentSkuMap = map;
+        this._nodeAgentSkuMap = new NodeAgentSkuMap(nodeAgentSkus);
     }
 }

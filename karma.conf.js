@@ -7,8 +7,6 @@ module.exports = function (config) {
         basePath: ".",
         frameworks: ["jasmine"],
         files: [
-            { pattern: "app/polyfills.browser.ts", watched: false },
-            { pattern: "test/app/spec-bundle.ts", watched: false },
             { pattern: "./config/karma.shim.js", watched: false },
         ],
 
@@ -19,15 +17,26 @@ module.exports = function (config) {
         port: 9876,
 
         logLevel: config.LOG_INFO,
-
+        browserConsoleLogOptions: {
+            level: "log",
+        },
         colors: true,
 
         autoWatch: false,
         autoWatchBatchDelay: 1000,
 
-        browsers: ["Electron"],
+        browsers: ["CustomElectron"],
+        customLaunchers: {
+            CustomElectron: {
+                base: "Electron",
+                flags: ["--show", "--enable-precise-memory-info"]
+            }
+        },
         electronOpts: {
-            // show: false,
+            title: "Banana",
+            "webPreferences": {
+                "blinkFeatures": "PreciseMemoryInfo"
+            }
         },
         // Karma plugins loaded
         plugins: [
@@ -37,7 +46,6 @@ module.exports = function (config) {
             "karma-sourcemap-loader",
             "karma-mocha-reporter",
             "karma-electron",
-            "karma-electron-launcher",
             "karma-webpack",
         ],
 
@@ -45,8 +53,6 @@ module.exports = function (config) {
         reporters: ["mocha"],
 
         preprocessors: {
-            "app/polyfills.browser.ts": ["webpack", "sourcemap", "electron"],
-            "test/app/spec-bundle.ts": ["webpack", "sourcemap", "electron"],
             "config/karma.shim.js": ["webpack", "sourcemap", "electron"],
         },
         client: {
@@ -57,9 +63,10 @@ module.exports = function (config) {
             stats: "errors-only",
         },
         browserDisconnectTimeout: "4000",
-        singleRun: false,
+        singleRun: true,
         mochaReporter: {
             output: "autowatch",
+            reportSlowerThan: 200,
         },
     });
 };

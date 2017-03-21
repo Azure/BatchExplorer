@@ -1,6 +1,6 @@
 $spinner-color: $blue-medium;
 
-bex-loading {
+bl-loading {
     display: block;
 
     .loading-content {
@@ -19,7 +19,7 @@ bex-loading {
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 1000;
+    z-index: $zindex-loading;
     min-height: 100px;
 
     &.relative {

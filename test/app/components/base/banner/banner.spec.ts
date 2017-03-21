@@ -1,6 +1,5 @@
-import { Component, DebugElement, ViewChild } from "@angular/core";
+import { Component, DebugElement, NO_ERRORS_SCHEMA, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MaterialModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
 
 import { BannerComponent, BannerOtherFixDirective } from "app/components/base/banner";
@@ -8,13 +7,13 @@ import { mouseenter } from "test/utils/helpers";
 
 @Component({
     template: `
-        <bex-banner #banner [fix]="fix1" fixMessage="Main fix" [type]="type">
+        <bl-banner #banner [fix]="fix1" fixMessage="Main fix" [type]="type">
             <div code>Error 404</div>
             <div message>Page not found</div>
             <div details *ngIf="includeDetails">You got to look carefully where you go</div>
             <div *ngIf="includeOtherFixes" [other-fix]="fix2" fixMessage="Second fix"></div>
             <div *ngIf="includeOtherFixes" [other-fix]="fix3" fixMessage="Third fix"></div>
-        </bex-banner>
+        </bl-banner>
     `,
 })
 export class BannerTestComponent {
@@ -30,7 +29,7 @@ export class BannerTestComponent {
     public fix3: jasmine.Spy;
 }
 
-describe("Banner", () => {
+describe("BannerComponent", () => {
     let fixture: ComponentFixture<BannerTestComponent>;
     let component: BannerTestComponent;
     let bannerElement: DebugElement;
@@ -38,12 +37,8 @@ describe("Banner", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [MaterialModule.forRoot()],
-            declarations: [
-                BannerComponent,
-                BannerOtherFixDirective,
-                BannerTestComponent,
-            ],
+            declarations: [BannerComponent, BannerOtherFixDirective, BannerTestComponent],
+            schemas: [NO_ERRORS_SCHEMA],
         });
 
         TestBed.compileComponents();
@@ -53,20 +48,20 @@ describe("Banner", () => {
         component.fix2 = jasmine.createSpy("Fix 2");
         component.fix3 = jasmine.createSpy("Fix 3");
         fixture.detectChanges();
-        bannerElement = fixture.debugElement.query(By.css("bex-banner"));
+        bannerElement = fixture.debugElement.query(By.css("bl-banner"));
         bannerComponent = bannerElement.componentInstance;
     });
 
     it("should be of error type by default", () => {
         expect(bannerComponent.type).toBe("error");
-        expect(bannerElement.query(By.css("md-card")).nativeElement.className).toBe("error");
+        expect(bannerElement.query(By.css("md-card")).nativeElement.className).toContain("error");
     });
 
     it("should be of warning type when changed", () => {
         component.type = "warning";
         fixture.detectChanges();
         expect(bannerComponent.type).toBe("warning");
-        expect(bannerElement.query(By.css("md-card")).nativeElement.className).toBe("warning");
+        expect(bannerElement.query(By.css("md-card")).nativeElement.className).toContain("warning");
     });
 
     describe("When there is details", () => {

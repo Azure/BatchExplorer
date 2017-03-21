@@ -9,10 +9,12 @@ import { RxListProxy } from "app/services/core";
 import { Filter, FilterBuilder, Property } from "app/utils/filter-builder";
 
 @Component({
-    selector: "bex-node-file-list",
+    selector: "bl-node-file-list",
     templateUrl: "file-list.html",
 })
 export class NodeFileListComponent implements OnInit, OnChanges {
+    public LoadingStatus = LoadingStatus;
+
     /**
      * If set to true it will display the quick list view, if false will use the table view
      */
@@ -49,6 +51,7 @@ export class NodeFileListComponent implements OnInit, OnChanges {
     constructor(private fileService: FileService) {
         this.notFound = false;
         this.data = this.fileService.listFromComputeNode(null, null, true, {});
+        this.status = this.data.status;
     }
 
     public ngOnInit() {
@@ -73,7 +76,6 @@ export class NodeFileListComponent implements OnInit, OnChanges {
                 filter: filter.toOData(),
             };
         }
-        this.status = this.data.status;
         this.data.updateParams({ poolId: this.poolId, nodeId: this.nodeId });
         this.data.setOptions(options); // This clears the previous list objects
         this.notFound = false;

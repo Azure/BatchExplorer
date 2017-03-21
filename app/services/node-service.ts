@@ -2,12 +2,17 @@ import { Injectable } from "@angular/core";
 import { List } from "immutable";
 import { AsyncSubject, Observable } from "rxjs";
 
-import { BackgroundTaskManager } from "app/components/base/background-task";
+import { BackgroundTaskService } from "app/components/base/background-task";
+import { Node, NodeAgentSku, NodeConnectionSettings, NodeState } from "app/models";
 import { ArrayUtils, ObservableUtils, log } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
-import BatchClient from "../api/batch/batch-client";
-import { Node, NodeState } from "../models";
-import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache } from "./core";
+import { BatchClientService } from "./batch-client.service";
+
+import {
+    DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache,
+    getOnceProxy,
+} from "./core";
+import { FileContentResult } from "./file-service";
 import { CommonListOptions, ServiceBase } from "./service-base";
 
 export interface NodeListParams {
@@ -26,12 +31,15 @@ export interface PoolListOptions extends CommonListOptions {
 export class NodeService extends ServiceBase {
     private _basicProperties: string = "id,state,schedulingState,vmSize";
     private _cache = new TargetedDataCache<NodeListParams, Node>({
-        key: ({poolId}) => poolId,
+        key: ({ poolId }) => poolId,
     });
 
-    constructor(private taskManager: BackgroundTaskManager) {
-        super();
+    private _nodeAgentSkusCache = new DataCache<any>();
+
+    constructor(private taskManager: BackgroundTaskService, batchService: BatchClientService) {
+        super(batchService);
     }
+
     public get basicProperties(): string {
         return this._basicProperties;
     }
@@ -41,10 +49,10 @@ export class NodeService extends ServiceBase {
     }
 
     public list(initialPoolId: string, initialOptions: PoolListOptions = {}): RxListProxy<NodeListParams, Node> {
-        return new RxBatchListProxy<NodeListParams, Node>(​​​Node, {
-            cache: ({poolId}) => this.getCache(poolId),
-            proxyConstructor: ({poolId}, options) => {
-                return BatchClient.node.list(poolId, options);
+        return new RxBatchListProxy<NodeListParams, Node>(​​​Node, this.batchService, {
+            cache: ({ poolId }) => this.getCache(poolId),
+            proxyConstructor: (client, { poolId }, options) => {
+                return client.node.list(poolId, options);
             },
             initialParams: { poolId: initialPoolId },
             initialOptions,
@@ -65,18 +73,25 @@ export class NodeService extends ServiceBase {
     }
 
     public get(initialPoolId: string, initialNodeId: string, options: any): RxEntityProxy<NodeParams, Node> {
-        return new RxBatchEntityProxy<NodeParams, Node>(​​​Node, {
-            cache: ({poolId}) => this.getCache(poolId),
-            getFn: (params: NodeParams) => {
-                return BatchClient.node.get(params.poolId, params.id, options);
+        return new RxBatchEntityProxy<NodeParams, Node>(​​​Node, this.batchService, {
+            cache: ({ poolId }) => this.getCache(poolId),
+            getFn: (client, params: NodeParams) => {
+                return client.node.get(params.poolId, params.id, options);
             },
-            initialParams: { poolId: initialPoolId },
+            initialParams: { poolId: initialPoolId, id: initialNodeId },
         });
     }
 
+    /**
+     * Get a node once and forget.
+     * You don't need to cleanup the subscription.
+     */
+    public getOnce(poolId: string, nodeId: string, options: any): Observable<Node> {
+        return getOnceProxy(this.get(poolId, nodeId, options));
+    }
+
     public reboot(poolId: string, nodeId: string): Observable<any> {
-        let observable = Observable.fromPromise<any>(
-            BatchClient.node.reboot(poolId, nodeId, {}));
+        let observable = this.callBatchClient((client) => client.node.reboot(poolId, nodeId, {}));
         observable.subscribe({
             error: (error) => {
                 log.error("Error rebooting node: " + nodeId, Object.assign({}, error));
@@ -108,6 +123,19 @@ export class NodeService extends ServiceBase {
         });
     }
 
+    public getRemoteDesktop(poolId: string, nodeId: string, options: any = {}): Observable<FileContentResult> {
+        return this.callBatchClient((client) => client.node.getRemoteDesktop(poolId, nodeId, options), (error) => {
+            log.error("Error downloading RDP file for node " + nodeId, Object.assign({}, error));
+        });
+    }
+
+    public getRemoteLoginSettings(poolId: string, nodeId: string, options = {}): Observable<NodeConnectionSettings> {
+        return this.callBatchClient((client) => client.node.getRemoteLoginSettings(poolId, nodeId, options))
+            .map((response: any) => {
+                return new NodeConnectionSettings(response.data);
+            });
+    }
+
     public performOnEachNode(
         taskName: string,
         poolId: string,
@@ -115,7 +143,6 @@ export class NodeService extends ServiceBase {
         callback: (node: Node) => Observable<any>) {
 
         this.taskManager.startTask(taskName, (bTask) => {
-            let subject = new AsyncSubject();
             const options: any = {
                 maxResults: 1000,
             };
@@ -123,7 +150,7 @@ export class NodeService extends ServiceBase {
                 options.filter = FilterBuilder.or(...states.map(x => FilterBuilder.prop("state").eq(x))).toOData();
             }
             bTask.progress.next(1);
-            this.listAll(poolId, options).subscribe((nodes) => {
+            return this.listAll(poolId, options).cascade((nodes) => {
                 const chunks = ArrayUtils.chunk<Node>(nodes.toJS(), 100);
                 const chunkFuncs = chunks.map((chunk, i) => {
                     return () => {
@@ -132,15 +159,13 @@ export class NodeService extends ServiceBase {
                     };
                 });
 
-                ObservableUtils.queue(...chunkFuncs).subscribe(() => subject.complete());
+                return ObservableUtils.queue(...chunkFuncs);
             });
-            return subject.asObservable();
         });
     }
 
     public reimage(poolId: string, nodeId: string): Observable<any> {
-        let observable = Observable.fromPromise<any>(
-            BatchClient.node.reimage(poolId, nodeId, {}));
+        let observable = this.callBatchClient((client) => client.node.reimage(poolId, nodeId, {}));
         observable.subscribe({
             error: (error) => {
                 log.error("Error reimaging node: " + nodeId, Object.assign({}, error));
@@ -148,6 +173,14 @@ export class NodeService extends ServiceBase {
         });
 
         return observable;
+    }
+
+    public listNodeAgentSkus(initialOptions: any = {}): RxListProxy<{}, NodeAgentSku> {
+        return new RxBatchListProxy<{}, NodeAgentSku>(NodeAgentSku, this.batchService, {
+            cache: (params) => this._nodeAgentSkusCache,
+            proxyConstructor: (client, params, options) => client.account.listNodeAgentSkus(options),
+            initialOptions,
+        });
     }
 
     private _performOnNodeChunk(nodes: Node[], callback: any) {

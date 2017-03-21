@@ -9,15 +9,16 @@ import { AsyncSubject } from "rxjs";
 import { SubmitButtonComponent } from "app/components/base/buttons";
 import { CreateFormComponent } from "app/components/base/form/create-form";
 import { ServerErrorComponent } from "app/components/base/form/server-error";
+import { ServerError } from "app/models";
 
 @Component({
     template: `
-        <bex-create-form [formGroup]="form" [submit]="submit" [sidebarRef]="sidebarRef" >
+        <bl-create-form [formGroup]="form" [submit]="submit" [sidebarRef]="sidebarRef" >
             <div [formGroup]="form">
                 <input  formControlName="id" />
                 <input  formControlName="state"/>
             </div>
-        </bex-create-form>
+        </bl-create-form>
     `,
 })
 export class FormTestComponent {
@@ -45,7 +46,7 @@ export class FormTestComponent {
         const sub = new AsyncSubject();
         if (this.form.value.id === "error") {
             const value = "Id already exists\nRequestId:abc-def\ntime:2016-12-08T18";
-            sub.error({ code: "IdExists", message: { value } });
+            sub.error(ServerError.fromBatch({ statusCode: 408, code: "IdExists", message: { value } }));
         } else {
             sub.next(true);
             sub.complete();
@@ -80,11 +81,11 @@ describe("CreateFormComponent", () => {
         TestBed.compileComponents();
         fixture = TestBed.createComponent(FormTestComponent);
         fixture.detectChanges();
-        createFormElement = fixture.debugElement.query(By.css("bex-create-form"));
+        createFormElement = fixture.debugElement.query(By.css("bl-create-form"));
 
         // Get the buttons
-        addButton = createFormElement.query(By.css("bex-submit-btn.add"));
-        addAndCloseButton = createFormElement.query(By.css("bex-submit-btn.add-and-close"));
+        addButton = createFormElement.query(By.css("bl-submit-btn.add"));
+        addAndCloseButton = createFormElement.query(By.css("bl-submit-btn.add-and-close"));
         addButtonComponent = addButton && addButton.componentInstance;
         addAndCloseButtonComponent = addAndCloseButton && addAndCloseButton.componentInstance;
     });

@@ -30,6 +30,7 @@ export class DateUtils {
         if (!date) {
             return "";
         }
+
         const momentDate = moment(date);
         if (DateUtils.withinRange(momentDate, prettyDateRelativeRange, "days")) {
             return momentDate.fromNow();
@@ -45,5 +46,15 @@ export class DateUtils {
     public static prettyDuration(duration: moment.Duration) {
         duration = moment.duration(duration);
         return (duration as any).format("d[d] h[h] mm[m] ss[s]");
+    }
+
+    /**
+     * Returns a full date and time
+     * @example Feb 14th, 2017, 14:03:01
+     */
+    public static fullDateAndTime(date: Date | moment.Moment) {
+        return date
+            ? moment(date).format("MMM Do, YYYY, HH:mm:ss")
+            : "";
     }
 }

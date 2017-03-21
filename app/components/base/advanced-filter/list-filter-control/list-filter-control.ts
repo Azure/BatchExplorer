@@ -141,7 +141,7 @@ export class ListFilterControl extends AdvancedFilterControlBase {
 }
 
 @Component({
-    selector: "bex-adv-filter-list",
+    selector: "bl-adv-filter-list",
     templateUrl: "list-filter-control.html",
 })
 export class AdvancedFilterListComponent {

@@ -3,7 +3,7 @@ import { Component, Input } from "@angular/core";
 import { Pool, StartTask } from "app/models";
 
 @Component({
-    selector: "bex-start-task-properties",
+    selector: "bl-start-task-properties",
     templateUrl: "start-task-properties.html",
 })
 export class StartTaskPropertiesComponent {

@@ -11,6 +11,12 @@ interface Array<T> {
      * If array is empty returns undefined
      */
     last(): T;
+
+    /**
+     * Convert an array of array into an single array.
+     * @example [[1, 2], [3, 4]] => [1, 2, 3, 4];
+     */
+    flatten(): any[];
 }
 
 // First, checks if it isn't implemented yet.
@@ -22,5 +28,11 @@ if (!Array.prototype.first) {
 if (!Array.prototype.last) {
     Array.prototype.last = function () {
         return this[this.length - 1];
+    };
+}
+
+if (!Array.prototype.flatten) {
+    Array.prototype.flatten = function () {
+        return [].concat(...this);
     };
 }

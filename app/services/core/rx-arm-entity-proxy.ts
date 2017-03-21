@@ -1,7 +1,7 @@
 import { Type } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { AzureHttpService } from "../azure-http.service";
+import { ArmHttpService } from "../arm-http.service";
 import { RxEntityProxy, RxEntityProxyConfig } from "./rx-entity-proxy";
 
 export interface RxArmEntityProxyConfig<TParams, TEntity> extends RxEntityProxyConfig<TParams, TEntity> {
@@ -16,7 +16,7 @@ export class RxArmEntityProxy<TParams, TEntity> extends RxEntityProxy<TParams, T
 
     constructor(
         type: Type<TEntity>,
-        private azure: AzureHttpService,
+        private arm: ArmHttpService,
         config: RxArmEntityProxyConfig<TParams, TEntity>) {
 
         super(type, config);
@@ -24,7 +24,8 @@ export class RxArmEntityProxy<TParams, TEntity> extends RxEntityProxy<TParams, T
     }
 
     protected getData(): Observable<any> {
-        return this.azure.get(this._computeURI()).map(x => x.json());
+        return this.arm.get(this._computeURI())
+            .map(x => x.json());
     }
 
     private _computeURI(): string {

@@ -4,23 +4,24 @@ import { MaterialModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
 
 import { ServerErrorComponent } from "app/components/base/form/server-error";
-import { BatchError } from "app/models";
+import { ServerError } from "app/models";
 
 @Component({
     template: `
-       <bex-server-error #errorComponent [error]="error"></bex-server-error>
+       <bl-server-error #errorComponent [error]="error"></bl-server-error>
     `,
 })
 export class ServerErrorTestComponent {
     public error = null;
 }
 
-const fakeError: BatchError = {
+const fakeError = ServerError.fromBatch({
+    statusCode: 408,
     code: "FakeErrorCode",
     message: {
         value: "There was a fake error\nRequestId:abc-def-ghi\nTime:time:2016-12-08T18:23:14",
     },
-};
+});
 
 describe("ServerErrorComponent", () => {
     let fixture: ComponentFixture<ServerErrorTestComponent>;
@@ -39,7 +40,7 @@ describe("ServerErrorComponent", () => {
         TestBed.compileComponents();
         fixture = TestBed.createComponent(ServerErrorTestComponent);
         fixture.detectChanges();
-        serverErrorElement = fixture.debugElement.query(By.css("bex-server-error"));
+        serverErrorElement = fixture.debugElement.query(By.css("bl-server-error"));
         serverErrorComponent = serverErrorElement.componentInstance;
     });
 

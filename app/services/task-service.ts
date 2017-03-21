@@ -3,8 +3,9 @@ import { List } from "immutable";
 import { Observable, Subject } from "rxjs";
 
 import { SubtaskInformation, Task } from "app/models";
+import { log } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
-import BatchClient from "../api/batch/batch-client";
+import { BatchClientService } from "./batch-client.service";
 import {
     DataCache,
     RxBatchEntityProxy,
@@ -41,15 +42,19 @@ export class TaskService extends ServiceBase {
 
     private _basicProperties: string = "id,state,dependsOn";
     private _cache = new TargetedDataCache<TaskListParams, Task>({
-        key: ({jobId}) => jobId,
+        key: ({ jobId }) => jobId,
     });
 
     private _subTaskCache = new TargetedDataCache<SubtaskListParams, SubtaskInformation>({
-        key: ({jobId, taskId}) => `${jobId​​​}/${taskId}`,
+        key: ({ jobId, taskId }) => `${jobId​​​}/${taskId}`,
     });
 
     public get basicProperties(): string {
         return this._basicProperties;
+    }
+
+    constructor(batchService: BatchClientService) {
+        super(batchService);
     }
 
     public getCache(jobId: string): DataCache<Task> {
@@ -57,10 +62,10 @@ export class TaskService extends ServiceBase {
     }
 
     public list(initialJobId: string, initialOptions: TaskListOptions = {}): RxListProxy<TaskListParams, Task> {
-        return new RxBatchListProxy<TaskListParams, Task>(Task, {
-            cache: ({jobId}) => this.getCache(jobId),
-            proxyConstructor: ({jobId}, options) => {
-                return BatchClient.task.list(jobId, options);
+        return new RxBatchListProxy<TaskListParams, Task>(Task, this.batchService, {
+            cache: ({ jobId }) => this.getCache(jobId),
+            proxyConstructor: (client, { jobId }, options) => {
+                return client.task.list(jobId, options);
             },
             initialParams: { jobId: initialJobId },
             initialOptions,
@@ -72,10 +77,10 @@ export class TaskService extends ServiceBase {
         initialTaskId: string,
         initialOptions: any = {}): RxListProxy<SubtaskListParams, SubtaskInformation> {
 
-        return new RxBatchListProxy<SubtaskListParams, SubtaskInformation>(SubtaskInformation, {
-            cache: ({jobId, taskId}) => this._subTaskCache.getCache({ jobId, taskId }),
-            proxyConstructor: ({jobId, taskId}, options) => {
-                return BatchClient.task.listSubtasks(jobId, taskId, options);
+        return new RxBatchListProxy<SubtaskListParams, SubtaskInformation>(SubtaskInformation, this.batchService, {
+            cache: ({ jobId, taskId }) => this._subTaskCache.getCache({ jobId, taskId }),
+            proxyConstructor: (client, { jobId, taskId }, options) => {
+                return client.task.listSubtasks(jobId, taskId, options);
             },
             initialParams: { jobId: initialJobId, taskId: initialTaskId },
             initialOptions,
@@ -83,10 +88,10 @@ export class TaskService extends ServiceBase {
     }
 
     public get(initialJobId: string, taskId: string, options: any = {}): RxEntityProxy<TaskParams, Task> {
-        return new RxBatchEntityProxy(Task, {
-            cache: ({jobId}) => this.getCache(jobId),
-            getFn: (params: TaskParams) => {
-                return BatchClient.task.get(params.jobId, params.id, options);
+        return new RxBatchEntityProxy(Task, this.batchService, {
+            cache: ({ jobId }) => this.getCache(jobId),
+            getFn: (client, params: TaskParams) => {
+                return client.task.get(params.jobId, params.id, options);
             },
             initialParams: { id: taskId, jobId: initialJobId },
         });
@@ -118,30 +123,30 @@ export class TaskService extends ServiceBase {
         });
     }
 
-    public terminate(jobId: string, taskId: string, options: any): Observable<void> {
-        return Observable.fromPromise<any>(BatchClient.task.terminate(jobId, taskId, options));
+    public terminate(jobId: string, taskId: string, options: any): Observable<{}> {
+        return this.callBatchClient((client) => client.task.terminate(jobId, taskId, options));
     }
 
     /**
      * Starts the deletion process
      */
-    public delete(jobId: string, taskId: string, options: any = {}): Observable<void> {
-        return this.callBatchClient(BatchClient.task.delete(jobId, taskId, options), (error) => {
-            console.error(`Error deleting task: ${taskId}, for job: ${jobId}`, error);
+    public delete(jobId: string, taskId: string, options: any = {}): Observable<{}> {
+        return this.callBatchClient((client) => client.task.delete(jobId, taskId, options), (error) => {
+            log.error(`Error deleting task: ${taskId}, for job: ${jobId}`, error);
         });
     }
 
-    public add(jobId: string, task: any, options: any): Observable<void> {
-        return Observable.fromPromise<any>(BatchClient.task.add(jobId, task, options));
+    public add(jobId: string, task: any, options: any): Observable<{}> {
+        return this.callBatchClient((client) => client.task.add(jobId, task, options));
     }
 
     /**
      * Reactivate a task
      * https://msdn.microsoft.com/en-us/library/azure/mt742660.aspx?f=255&MSPPError=-2147217396
      */
-    public reactivate(jobId: string, taskId: string, options: any = {}): Observable<void> {
-        return this.callBatchClient(BatchClient.task.reactivate(jobId, taskId, options), (error) => {
-            console.error(`Error reactivating task: ${taskId}, for job: ${jobId}`, error);
+    public reactivate(jobId: string, taskId: string, options: any = {}): Observable<{}> {
+        return this.callBatchClient((client) => client.task.reactivate(jobId, taskId, options), (error) => {
+            log.error(`Error reactivating task: ${taskId}, for job: ${jobId}`, error);
         });
     }
 }

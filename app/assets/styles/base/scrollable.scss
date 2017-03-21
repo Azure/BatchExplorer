@@ -1,4 +1,4 @@
-bex-scrollable {
+bl-scrollable {
     position: relative;
     overflow: hidden;
     display: flex;
@@ -77,7 +77,7 @@ bex-scrollable {
         background-clip: padding-box;
 
         &:active {
-            background-color: $emperorGray;
+            background-color: $emperor-grey;
         }
     }
 

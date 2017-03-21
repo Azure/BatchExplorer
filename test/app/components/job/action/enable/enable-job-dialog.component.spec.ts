@@ -1,22 +1,19 @@
-import { DebugElement } from "@angular/core";
+import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MdDialogRef } from "@angular/material";
-import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
-import { AppModule } from "app/app.module";
-import { ActionFormComponent } from "app/components/base/form/action-form";
 import { EnableJobDialogComponent } from "app/components/job/action";
-import { BatchError } from "app/models";
+import { ServerError } from "app/models";
 import { JobService } from "app/services";
+import { ActionFormMockComponent, ServerErrorMockComponent } from "test/utils/mocks/components";
 
 describe("EnableJobDialogComponent ", () => {
     let fixture: ComponentFixture<EnableJobDialogComponent>;
     let component: EnableJobDialogComponent;
     let dialogRefSpy: any;
     let jobServiceSpy: any;
-    let de: DebugElement;
-    let actionForm: ActionFormComponent;
+    let debugElement: DebugElement;
 
     beforeEach(() => {
         dialogRefSpy = {
@@ -26,10 +23,11 @@ describe("EnableJobDialogComponent ", () => {
         jobServiceSpy = {
             enable: jasmine.createSpy("EnableJob").and.callFake((jobid, ...args) => {
                 if (jobid === "bad-job-id") {
-                    return Observable.throw(<BatchError>{
+                    return Observable.throw(ServerError.fromBatch({
+                        statusCode: 408,
                         code: "RandomTestErrorCode",
                         message: { value: "Some random test error happened enabling job" },
-                    });
+                    }));
                 }
 
                 return Observable.of({});
@@ -37,45 +35,53 @@ describe("EnableJobDialogComponent ", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [AppModule],
+            declarations: [
+                ActionFormMockComponent, EnableJobDialogComponent, ServerErrorMockComponent,
+            ],
             providers: [
                 { provide: MdDialogRef, useValue: dialogRefSpy },
                 { provide: JobService, useValue: jobServiceSpy },
-
             ],
+            schemas: [NO_ERRORS_SCHEMA],
         });
 
         fixture = TestBed.createComponent(EnableJobDialogComponent);
         component = fixture.componentInstance;
         component.jobId = "job-1";
-        de = fixture.debugElement;
-        actionForm = de.query(By.css("bex-action-form")).componentInstance;
+        debugElement = fixture.debugElement;
         fixture.detectChanges();
     });
 
     it("Should show title and job id", () => {
-        expect(de.nativeElement.textContent).toContain("Enable job");
-        expect(de.nativeElement.textContent).toContain("job-1");
+        expect(debugElement.nativeElement.textContent).toContain("Enable job");
+        expect(debugElement.nativeElement.textContent).toContain("job-1");
     });
 
-    it("Submit should call service and close the dialog", () => {
-        actionForm.performActionAndClose();
+    it("Submit should call service and close the dialog", (done) => {
+        component.ok().subscribe(() => {
+            expect(jobServiceSpy.enable).toHaveBeenCalledTimes(1);
+            expect(jobServiceSpy.enable).toHaveBeenCalledWith("job-1", {});
 
-        expect(jobServiceSpy.enable).toHaveBeenCalledTimes(1);
-        expect(jobServiceSpy.enable).toHaveBeenCalledWith("job-1", {});
+            done();
+        });
     });
 
-    it("Submit should call service and show error if fail", () => {
+    it("Submit should call service and show error if fail", (done) => {
         component.jobId = "bad-job-id";
         fixture.detectChanges();
-        actionForm.performActionAndClose();
 
-        expect(jobServiceSpy.enable).toHaveBeenCalledTimes(1);
-        expect(jobServiceSpy.enable).toHaveBeenCalledWith("bad-job-id", {});
+        component.ok().subscribe({
+            next: () => {
+                fail("call should have failed");
+                done();
+            },
+            error: (error: ServerError) => {
+                expect(jobServiceSpy.enable).toHaveBeenCalledTimes(1);
+                expect(jobServiceSpy.enable).toHaveBeenCalledWith("bad-job-id", {});
+                expect(error.body.message).toBe("Some random test error happened enabling job");
 
-        fixture.detectChanges();
-
-        expect(actionForm.error).not.toBeNull();
-        expect(actionForm.error.message.value).toContain("Some random test error happened enabling job");
+                done();
+            },
+        });
     });
 });

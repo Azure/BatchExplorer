@@ -3,16 +3,16 @@ import { List } from "immutable";
 import { Observable } from "rxjs";
 
 import { Notification } from "./notification";
-import { NotificationManager } from "./notification-manager";
+import { NotificationService } from "./notification-service";
 
 @Component({
-    selector: "bex-notification-container",
+    selector: "bl-notification-container",
     templateUrl: "notification-container.html",
 })
 export class NotificationContainerComponent {
     public notifications: Observable<List<Notification>>;
 
-    constructor(private notificationManager: NotificationManager) {
-        this.notifications = notificationManager.notifications;
+    constructor(private notificationService: NotificationService) {
+        this.notifications = notificationService.notifications;
     }
 }

@@ -48,6 +48,17 @@ export class ObjectUtils {
         }
         return out;
     }
+
+    /**
+     * Serialize a simple object to a form that is supposed to be always the same.
+     */
+    public static serialize(obj: { [key: string]: any }) {
+        if (!obj) { return ""; }
+
+        return Object.keys(obj)
+            .sort()
+            .map(x => `${x}:${obj[x]}`).join(",");
+    }
 }
 
 /**

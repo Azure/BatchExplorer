@@ -9,7 +9,7 @@ import { DateUtils } from "app/utils";
 import { ODataFields } from "app/utils/constants";
 
 @Component({
-    selector: "bex-job-error-display",
+    selector: "bl-job-error-display",
     templateUrl: "job-error-display.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

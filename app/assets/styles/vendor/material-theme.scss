@@ -4,19 +4,19 @@
 
 // Include the base styles for Angular Material core. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
-@include md-core();
+@include mat-core();
 
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue.
-$primary: md-palette($md-prussian-blue);
-$accent:  md-palette($md-grey, A200, A100, A400);
+$primary: mat-palette($md-prussian-blue);
+$accent:  mat-palette($mat-grey, A200, A100, A400);
 
 // The warn palette is optional (defaults to red).
-$warn:    md-palette($md-red);
+$warn:    mat-palette($mat-red);
 
 // Create the theme object (a Sass map containing all of the palettes).
-$theme: md-light-theme($primary, $accent, $warn);
+$theme: mat-light-theme($primary, $accent, $warn);
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
@@ -25,37 +25,6 @@ $theme: md-light-theme($primary, $accent, $warn);
 
 // TODO: can we pull in the material scss classes into the project?
 // really want to be able to override the styles more easily.
-
-// overrides
-md-list, md-nav-list {
-    padding-top: 0 !important;
-
-    md-list-item {
-        .md-list-item {
-            height: auto !important;
-            font-family: $baseFontFamily !important;
-            margin-bottom: 10px !important;
-            padding: 0 !important;
-
-            .md-list-text {
-                padding-left: 8px;
-                padding-right: 0;
-
-                a {
-                    text-overflow: ellipsis;
-                }
-
-                h4 {
-                    font-size: $h4FontSize;
-                }
-
-                p {
-                    font-size: $baseFontSize !important;
-                }
-            }
-        }
-    }
-}
 
 [md-mini-fab] {
     width: 30px !important;
@@ -69,15 +38,15 @@ md-list, md-nav-list {
 }
 
 md-tab-group {
-    .md-tab-label {
+    .mat-tab-label {
         opacity: 0.8 !important;
         border-right: 1px solid #ddd;
 
-        &.md-tab-label-active {
+        &.mat-tab-label-active {
             background-color: map-get($md-prussian-blue, 100);
         }
 
-        &.md-tab-disabled {
+        &.mat-tab-disabled {
             color: #bbb;
         }
 
@@ -86,30 +55,30 @@ md-tab-group {
         }
     }
 
-    .md-tab-body-content {
+    .mat-tab-body-content {
         // set to same height as a tab with the .no-item-message
         min-height: 443px;
 
-        bex-sub-task-display-list {
+        bl-sub-task-display-list {
             &.item-selected {
-                bex-quick-list {
+                bl-quick-list {
                     width: 270px !important;
                 }
             }
 
-            bex-quick-list {
+            bl-quick-list {
                 float: left;
                 margin-top: 10px;
                 margin-bottom: 20px;
             }
         }
 
-        bex-sub-task-properties {
+        bl-sub-task-properties {
             float: right;
             border-left: 1px solid #ddd;
             margin-bottom: 10px;
 
-            bex-property-group {
+            bl-property-group {
                 // todo: override property group css
             }
         }
@@ -118,12 +87,18 @@ md-tab-group {
 
 [md-mini-fab] i, [md-mini-fab] md-icon {
     overflow: hidden;
-    padding: 0 !important;
+    padding: 3px 0 !important;
 }
 
 md-card {
     transition: none !important;
     box-shadow: 1px 1px 5px 0 #d5d5d5 !important;
+
+    md-card-subtitle {
+        div {
+            display: inline;
+        }
+    }
 
     &.overview {
         padding: 18px !important;
@@ -149,24 +124,29 @@ md-card {
 md-radio-button {
     margin-right: 15px;
 
-    &.md-radio-checked {
-        .md-radio-outer-circle {
+    &.mat-radio-checked {
+        .mat-radio-outer-circle {
             border-color: map-get($md-prussian-blue, 400);
         }
 
-        .md-radio-inner-circle {
+        .mat-radio-inner-circle {
             background: map-get($md-prussian-blue, 400);
         }
     }
 }
 
-[md-raised-button].md-primary.md-button-focus {
+[md-raised-button].mat-primary.mat-button-focus {
     background: map-get($md-prussian-blue, 700);
 }
 
+button[md-raised-button].small {
+    height: 20px;
+    line-height: 20px;
+    min-width: 50px;
+}
 
 md-checkbox[small] {
-    .md-checkbox-inner-container {
+    .mat-checkbox-inner-container {
         width: 14px;
         height: 14px;
     }
@@ -175,11 +155,24 @@ md-checkbox[small] {
 md-dialog-container {
     width: auto !important;
     height: auto !important;
+    max-height: 80vh;
 }
 
 
-.md-select-content {
+.mat-select-content {
     md-option {
         height: 30px;
+        line-height: 30px;
+    }
+}
+
+md-input-container.bl-textarea {
+    .mat-input-wrapper {
+        background: #f5f5f5;
+    }
+
+    textarea.mat-input-element {
+        resize: none;
+        padding: 5px;
     }
 }

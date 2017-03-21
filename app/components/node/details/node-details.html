@@ -1,9 +1,9 @@
-<bex-loading [status]="data.newDataStatus | async">
-    <div *ngIf="node">
+<bl-loading [status]="data.newDataStatus | async">
+    <div *ngIf="pool && node">
         <md-card class="overview">
             <md-card-title-group style="margin: 0px;">
                 <div style="align-items:center;">
-                    <bex-refresh-btn [refresh]="refresh"></bex-refresh-btn>
+                    <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
                 </div>
                 <div style="margin-left:12px; margin-right:auto;">
                     <md-card-title>{{node.id}}</md-card-title>
@@ -14,25 +14,22 @@
                 <p>Pool: {{poolId}}</p>
             </md-card-content>
             <md-card-actions layout="row" layout-align="end center">
+                <button md-button (click)="connect()">
+                    <i class="fa fa-plug"></i> Connect
+                </button>
             </md-card-actions>
         </md-card>
         <md-card class="details">
-            <bex-tab-group>
-                <bex-tab key="properties">
-                    <bex-tab-label>Properties</bex-tab-label>
-                    <bex-node-properties [node]="node"></bex-node-properties>
-                </bex-tab>
-                <bex-tab key="recent-tasks">
-                    <bex-tab-label>Recent tasks</bex-tab-label>
-                    <div class="tab-padding">
-                        Some tasks
-                    </div>
-                </bex-tab>
-                <bex-tab key="files">
-                    <bex-tab-label>Files</bex-tab-label>
-                    <bex-node-file-browse [poolId]="poolId" [node]="node"></bex-node-file-browse>
-                </bex-tab>
-            </bex-tab-group>
+            <bl-tab-group>
+                <bl-tab key="properties">
+                    <bl-tab-label>Properties</bl-tab-label>
+                    <bl-node-properties [pool]="pool" [node]="node"></bl-node-properties>
+                </bl-tab>
+                <bl-tab key="files">
+                    <bl-tab-label>Files</bl-tab-label>
+                    <bl-node-file-browse [poolId]="poolId" [node]="node"></bl-node-file-browse>
+                </bl-tab>
+            </bl-tab-group>
         </md-card>
     </div>
-</bex-loading>
+</bl-loading>

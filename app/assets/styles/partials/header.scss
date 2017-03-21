@@ -28,7 +28,7 @@
 
 .account-dropdown {
     $account-dropdown-width: 240px;
-    [bex-dropdown-btn] {
+    [bl-dropdown-btn] {
         width: $account-dropdown-width;
         border-left: 1px solid $navigation-background;
         border-right: 1px solid $navigation-background;
@@ -43,7 +43,7 @@
         }
     }
 
-    [bex-dropdown-content] {
+    [bl-dropdown-content] {
         width: $account-dropdown-width;
 
         .url {
@@ -70,7 +70,7 @@
 
 .bookmarks-container {
     position: fixed;
-    z-index: 1000;
+    z-index: $zindex-dropdown;
     right: 0;
     top: $header-height;
     background-color: $navigation-background;

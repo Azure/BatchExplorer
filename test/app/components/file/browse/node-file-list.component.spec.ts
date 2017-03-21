@@ -1,19 +1,18 @@
+import { Component, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 
-import { FileBrowseModule, NodeFileListComponent } from "app/components/file/browse";
+import { NodeFileListComponent } from "app/components/file/browse";
 import { File } from "app/models";
 import { FileService } from "app/services";
 import { Filter, FilterBuilder } from "app/utils/filter-builder";
 import { RxMockListProxy } from "test/utils/mocks";
 
-import { Component } from "@angular/core";
-
 @Component({
     template: `
-        <bex-node-file-list [poolId]="poolId" [nodeId]="nodeId" [folder]="folder" [filter]="filter">
-        </bex-node-file-list>
+        <bl-node-file-list [poolId]="poolId" [nodeId]="nodeId" [folder]="folder" [filter]="filter">
+        </bl-node-file-list>
     `,
 })
 class TestComponent {
@@ -45,14 +44,18 @@ describe("NodeFileListComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [FileBrowseModule, RouterTestingModule],
-            providers: [{ provide: FileService, useValue: nodeServiceSpy }],
-            declarations: [TestComponent],
+            imports: [RouterTestingModule],
+            declarations: [NodeFileListComponent, TestComponent],
+            providers: [
+                { provide: FileService, useValue: nodeServiceSpy },
+            ],
+            schemas: [NO_ERRORS_SCHEMA],
         });
+
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
 
-        component = fixture.debugElement.query(By.css("bex-node-file-list")).componentInstance;
+        component = fixture.debugElement.query(By.css("bl-node-file-list")).componentInstance;
         component.quickList = false;
         component.manualLoading = true;
         testComponent.poolId = "pool-1";

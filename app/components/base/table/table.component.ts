@@ -1,33 +1,38 @@
 import { Component, ContentChildren, Input, QueryList } from "@angular/core";
+import { Router } from "@angular/router";
 
-import { SelectableListBase } from "../selectable-list/selectable-list-base";
+import { AbstractListBase } from "../abstract-list";
 import { TableRowComponent } from "./table-row.component";
 
 @Component({
-    selector: "bex-table",
+    selector: "bl-table",
     templateUrl: "table.html",
 })
-export class TableComponent extends SelectableListBase {
+export class TableComponent extends AbstractListBase {
     @ContentChildren(TableRowComponent)
     public items: QueryList<TableRowComponent>;
+
+    constructor(router: Router) {
+        super(router, null);
+    }
 }
 
 @Component({
-    selector: "bex-thead",
+    selector: "bl-thead",
     template: `<tr><ng-content></ng-content></tr>`,
 })
 export class TableHeadComponent {
 }
 
 @Component({
-    selector: "bex-column",
+    selector: "bl-column",
     template: `<ng-content></ng-content>`,
 })
 export class TableColumnComponent {
 }
 
 @Component({
-    selector: "bex-cell",
+    selector: "bl-cell",
     template: `
         <div *ngIf="value" class="cell-value" title="{{value}}">{{value}}</div>
         <ng-content *ngIf="!value"></ng-content>

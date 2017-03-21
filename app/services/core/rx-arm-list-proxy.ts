@@ -2,8 +2,8 @@ import { Type } from "@angular/core";
 import { RequestOptions, URLSearchParams } from "@angular/http";
 import { Observable } from "rxjs";
 
-import { ObjectUtils } from "app/utils";
-import { AzureHttpService } from "../azure-http.service";
+import { ObjectUtils, exists } from "app/utils";
+import { ArmHttpService } from "../arm-http.service";
 import { CachedKeyList } from "./query-cache";
 import { RxListProxy, RxListProxyConfig } from "./rx-list-proxy";
 
@@ -16,7 +16,7 @@ export class RxArmListProxy<TParams, TEntity> extends RxListProxy<TParams, TEnti
     private _loadedFirst = false;
     private _nextLink = null;
 
-    constructor(type: Type<TEntity>, private azure: AzureHttpService, config: RxArmListProxyConfig<TParams, TEntity>) {
+    constructor(type: Type<TEntity>, private arm: ArmHttpService, config: RxArmListProxyConfig<TParams, TEntity>) {
         super(type, config);
         this._provideUri = config.uri;
     }
@@ -28,20 +28,23 @@ export class RxArmListProxy<TParams, TEntity> extends RxListProxy<TParams, TEnti
 
     protected fetchNextItems(): Observable<any> {
         if (this._nextLink) {
-            return this.azure.get(this._nextLink);
+            return this.arm.get(this._nextLink);
         } else {
-            return this.azure.get(this._provideUri(this._params, this._options), this._requestOptions());
+            return this.arm.get(
+                this._provideUri(this._params, this._options),
+                this._requestOptions());
         }
     }
 
     protected processResponse(response: any) {
+        const body = response.json();
         this._loadedFirst = true;
-        this._nextLink = response.nextLink;
-        return response.json().value;
+        this._nextLink = body.nextLink;
+        return body.value;
     }
 
     protected hasMoreItems(): boolean {
-        return !this._loadedFirst || this._nextLink !== null;
+        return !this._loadedFirst || exists(this._nextLink);
     }
 
     protected queryCacheKey(): string {
@@ -53,6 +56,7 @@ export class RxArmListProxy<TParams, TEntity> extends RxListProxy<TParams, TEnti
     }
 
     protected getQueryCacheData(queryCache: CachedKeyList): any {
+        this._loadedFirst = true;
         this._nextLink = queryCache.data;
     }
 
@@ -61,6 +65,11 @@ export class RxArmListProxy<TParams, TEntity> extends RxListProxy<TParams, TEnti
         if (this._options.filter) {
             search.set("$filter", this._options.filter);
         }
+
+        if (this._options.select) {
+            search.set("$select", this._options.select);
+        }
+
         for (let key of Object.keys(ObjectUtils.except(this._options, ["filter"]))) {
             search.set(key, this._options[key]);
         }
@@ -68,6 +77,5 @@ export class RxArmListProxy<TParams, TEntity> extends RxListProxy<TParams, TEnti
         return new RequestOptions({
             search,
         });
-
     }
 }

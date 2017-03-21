@@ -1,4 +1,5 @@
 @import "./material-colors";
+@import "./zindex";
 
 $orient: #00528c;
 $regal-blue: #00416f;
@@ -23,6 +24,7 @@ $buttonBrown        :  #c45151;
 $crail              :  #c14848;
 $vanillaIce         :  #efd0d0;
 
+$yellow-light: #ffc267;
 $yellow: #f4ad42;
 $yellow-dark: #e39014;
 
@@ -60,7 +62,7 @@ $dusty-grey         :  #9e9e9e;
 $genericGray        :  #757575;
 $dove-grey          :  #666666;
 $scorpion           :  #5b5b5b;
-$emperorGray        :  #535353;
+$emperor-grey        :  #535353;
 $mineshaft-grey     :  #333333;
 $mineShaftGray      :  $mineshaft-grey;
 

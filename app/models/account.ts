@@ -1,5 +1,7 @@
 import { Record } from "immutable";
 
+import { Subscription } from "./subscription";
+
 const AccountRecord = Record({
     id: null,
     name: null,
@@ -11,7 +13,12 @@ const AccountRecord = Record({
         coreQuota: null,
         poolQuota: null,
         provisioningState: null,
+        autoStorage: {
+            storageAccountId: null,
+            lastKeySync: null,
+        },
     },
+    subscription: null,
 });
 
 export type AccountProvisingState = "Succeeded";
@@ -19,12 +26,18 @@ export const AccountProvisingState = {
     Succeeded: "Succeeded" as AccountProvisingState,
 };
 
+export interface AutoStorageAccount {
+    storageAccountId: string;
+    lastKeySync: Date;
+}
+
 export interface AccountResourceProperties {
     accountEndpoint: string;
-    activeJobAndJobScheduleQuota: number;
+    provisioningState: AccountProvisingState;
     coreQuota: number;
     poolQuota: number;
-    provisioningState: AccountProvisingState;
+    activeJobAndJobScheduleQuota: number;
+    autoStorage: AutoStorageAccount;
 }
 
 export class AccountResource extends AccountRecord {
@@ -33,4 +46,5 @@ export class AccountResource extends AccountRecord {
     public location: string;
     public type: string;
     public properties: AccountResourceProperties;
+    public subscription: Subscription;
 }

@@ -36,7 +36,7 @@ export default class FileProxy {
     public getComputeNodeFileProperties(
         poolId: string, nodeId: string, filename: string, options?: BatchRequestOptions) {
         return new Promise((resolve, reject) => {
-            this.client.file.getNodeFilePropertiesFromComputeNode(poolId, nodeId, filename, options,
+            this.client.file.getPropertiesFromComputeNode(poolId, nodeId, filename, options,
                 (error, result, request, response) => {
                     if (error) { return reject(error); }
                     const headers = response.headers;
@@ -88,7 +88,7 @@ export default class FileProxy {
 
     public getTaskFileProperties(jobId: string, taskId: string, filename: string, options?: BatchRequestOptions) {
         return new Promise((resolve, reject) => {
-            this.client.file.getNodeFilePropertiesFromTask(jobId, taskId, filename, options,
+            this.client.file.getPropertiesFromTask(jobId, taskId, filename, options,
                 (error, result, request, response) => {
                     if (error) { return reject(error); }
                     const headers = response.headers;
@@ -97,7 +97,7 @@ export default class FileProxy {
                         isDirectory: headers["ocp-batch-file-isdirectory"],
                         url: headers["ocp-batch-file-url"],
                         properties: {
-                            contentLength: headers["content-length"],
+                            contentLength: parseInt(headers["content-length"], 10),
                             contentType: headers["content-type"],
                             creationTime: headers["ocp-creation-time"],
                             lastModified: headers["lastModified"],

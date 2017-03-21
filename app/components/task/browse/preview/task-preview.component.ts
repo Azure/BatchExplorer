@@ -3,12 +3,12 @@ import { Component, Input } from "@angular/core";
 import { TaskState } from "app/models";
 
 @Component({
-    selector: "bex-task-preview",
+    selector: "bl-task-preview",
     templateUrl: "task-preview.html",
 })
 
 /**
- * Display preview infomration about a task.
+ * Display preview information about a task.
  * Handles both task and subTask
  */
 export class TaskPreviewComponent {

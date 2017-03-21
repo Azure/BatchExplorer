@@ -2,12 +2,18 @@ import { Component } from "@angular/core";
 import { MdDialogRef } from "@angular/material";
 
 @Component({
-    selector: "bex-delete-selected-items-dialog",
+    selector: "bl-delete-selected-items-dialog",
     template: `
         <div class="confirmation-dialog">
+            <h2>Delete {{ entityName || "items" }}</h2>
             <div class="message">
-                You are about to delete all the selected items this include:
-                <ul class="list-point"><li *ngFor="let item of items">{{item}}</li></ul>
+                <p>You are about to delete the selected items, including:</p>
+                <ul class="list-point">
+                    <li *ngFor="let item of items">
+                        <span *ngIf="parentId">{{ parentId }} - {{item}}</span>
+                        <span *ngIf="!parentId">{{item}}</span>
+                    </li>
+                </ul>
             </div>
             <div class="buttons">
                 <button md-raised-button (click)="dialogRef.close(true)" color="warn">
@@ -18,11 +24,13 @@ import { MdDialogRef } from "@angular/material";
         </div>
     `,
 })
-export class DeletePoolDialogComponent {
-    public poolId: string;
+export class DeleteSelectedItemsDialogComponent {
+    public parentId: string;
+
+    public entityName: string;
 
     public items: string[];
 
-    constructor(public dialogRef: MdDialogRef<DeletePoolDialogComponent>) {
+    constructor(public dialogRef: MdDialogRef<DeleteSelectedItemsDialogComponent>) {
     }
 }

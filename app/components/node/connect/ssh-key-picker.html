@@ -1,0 +1,35 @@
+<div class="form-element ssh-key-picker">
+    <md-input-container class="bl-textarea">
+        <textarea mdInput placeholder="SSH public key" [formControl]="sshKeyValue"></textarea>
+    </md-input-container>
+    <div class="saved-keys">
+        <div *ngIf="!showSaveForm">
+            <div class="saved-keys-btns">
+                <button md-raised-button color="primary" class="small add-key-btn" (click)="addKey()"><i class="fa fa-save"></i> Save this key</button>
+            </div>
+            <div class="saved-keys-wrapper">
+                <div class="key" *ngFor="let key of savedSSHKeys" (click)="selectKey(key)">
+                    <span class="label">{{key.name}}</span>
+                    <i class="fa fa-times" title="Delete" (click)="deleteKey(key)"></i>
+                </div>
+
+                <div class="no-key" *ngIf="savedSSHKeys.size === 0">
+                    <div>
+                        <i class="fa fa-key"></i>
+                    </div>
+                    No saved public keys
+                </div>
+            </div>
+        </div>
+        <div [hidden]="!showSaveForm" class="save-key-form">
+            <md-input-container>
+                <input mdInput placeholder="Name" [formControl]="sshKeyName" #nameInput>
+            </md-input-container>
+
+            <div class="btn-container">
+                <button md-mini-fab color="primary" class="small save-key-btn" (click)="saveKey()"><i class="fa fa-check"></i> </button>
+                <button md-mini-fab color="warn" class="small" (click)="cancelAddKey()"><i class="fa fa-times"></i> </button>
+            </div>
+        </div>
+    </div>
+</div>

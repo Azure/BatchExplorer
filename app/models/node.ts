@@ -1,7 +1,8 @@
+import { Iterable, List, Record } from "immutable";
 
-import { Record } from "immutable";
+import { NodeRecentTask } from "app/models/node-recent-task";
+import { TaskState } from "app/models/task";
 
-// tslint:disable:variable-name object-literal-sort-keys
 const NodeRecord = Record({
     id: null,
     state: null,
@@ -14,14 +15,30 @@ const NodeRecord = Record({
     allocationTime: null,
     ipAddress: null,
     affinityId: null,
+    recentTasks: null,
 });
+
+export interface NodeAttributes {
+    id: string;
+    state: NodeState;
+    totalTasksRun: number;
+    schedulingState: string;
+    vmSize: string;
+    url: string;
+    stateTransitionTime: Date;
+    lastBootTime: Date;
+    allocationTime: Date;
+    ipAddress: string;
+    affinityId: string;
+    recentTasks: Array<Partial<NodeRecentTask>>;
+}
 
 /**
  * Class for displaying Batch node information.
  */
 export class Node extends NodeRecord {
     public id: string;
-    public state: string;
+    public state: NodeState;
     public totalTasksRun: number;
     public schedulingState: string;
     public vmSize: string;
@@ -31,6 +48,17 @@ export class Node extends NodeRecord {
     public allocationTime: Date;
     public ipAddress: string;
     public affinityId: string;
+    public recentTasks: List<NodeRecentTask>;
+
+    constructor(data: Partial<NodeAttributes>) {
+        super(Object.assign({}, data, {
+            recentTasks: List(data.recentTasks && data.recentTasks.map(x => new NodeRecentTask(x))),
+        }));
+    }
+
+    public get runningTasks(): Iterable<number, NodeRecentTask> {
+        return this.recentTasks.filter(x => x.taskState === TaskState.running);
+    }
 }
 
 export type NodeState = "creating" | "starting" | "waitingforstarttask" | "starttaskfailed" |

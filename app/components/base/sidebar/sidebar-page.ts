@@ -9,18 +9,16 @@ import {
     ViewChild,
     ViewEncapsulation,
 } from "@angular/core";
-import {
-    ComponentPortal,
-    PortalHostDirective,
-} from "@angular/material";
+import { ComponentPortal, PortalHostDirective } from "@angular/material";
 
+import { log } from "app/utils";
 import { SidebarInjector } from "./sidebar-injector";
 import { SidebarManager } from "./sidebar-manager";
 import { SidebarRef } from "./sidebar-ref";
 
 @Component({
     encapsulation: ViewEncapsulation.None,
-    selector: "bex-sidebar-page",
+    selector: "bl-sidebar-page",
     template: `
         <div [hidden]="!display">
                 <template portalHost></template>
@@ -45,7 +43,7 @@ export class SidebarPageComponent implements OnDestroy {
 
     public attachComponent<T>(componentType: Type<T>, sidebarRef: SidebarRef<T>) {
         if (this.hasAttached()) {
-            console.error("Error component already attached!");
+            log.error("Error component already attached!");
         }
 
         const sidebarInjector = new SidebarInjector(sidebarRef, this.injector);

@@ -1,13 +1,13 @@
-import { Component, Input, OnDestroy, ViewContainerRef } from "@angular/core";
+import { Component, Input, ViewContainerRef } from "@angular/core";
 
 import { ResourceFile, Task } from "app/models";
 
 @Component({
-    selector: "bex-task-resource-files",
+    selector: "bl-task-resource-files",
     templateUrl: "task-resource-files.html",
 })
 
-export class TaskResourceFilesComponent implements OnDestroy {
+export class TaskResourceFilesComponent {
     @Input()
     public set task(task: Task) {
         this._task = task;
@@ -27,9 +27,5 @@ export class TaskResourceFilesComponent implements OnDestroy {
         if (this.task) {
             this.resourceFiles = this.task.resourceFiles || [];
         }
-    }
-
-    public ngOnDestroy() {
-        /* tab hide */
     }
 }

@@ -1,8 +1,9 @@
 import { Injectable } from "@angular/core";
-import { Job } from "app/models";
 import { Observable, Subject } from "rxjs";
 
-import BatchClient from "../api/batch/batch-client";
+import { Job } from "app/models";
+import { log } from "app/utils";
+import { BatchClientService } from "./batch-client.service";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
 import { ServiceBase } from "./service-base";
 
@@ -21,23 +22,27 @@ export class JobService extends ServiceBase {
     private _basicProperties: string = "id,displayName,state,creationTime,poolInfo";
     private _cache = new DataCache<Job>();
 
+    constructor(batchService: BatchClientService) {
+        super(batchService);
+    }
+
     public get basicProperties(): string {
         return this._basicProperties;
     }
 
     public list(initialOptions: any = {}): RxListProxy<{}, Job> {
-        return new RxBatchListProxy<{}, Job>(Job, {
+        return new RxBatchListProxy<{}, Job>(Job, this.batchService, {
             cache: () => this._cache,
-            proxyConstructor: (params, options) => BatchClient.job.list(options),
+            proxyConstructor: (client, params, options) => client.job.list(options),
             initialOptions,
         });
     }
 
     public get(jobId: string, options: any = {}): RxEntityProxy<JobParams, Job> {
-        return new RxBatchEntityProxy(Job, {
+        return new RxBatchEntityProxy(Job, this.batchService, {
             cache: () => this._cache,
-            getFn: (params: JobParams) => {
-                return BatchClient.job.get(params.id, options);
+            getFn: (client, params: JobParams) => {
+                return client.job.get(params.id, options);
             },
             initialParams: { id: jobId },
         });
@@ -50,37 +55,25 @@ export class JobService extends ServiceBase {
     /**
      * Starts the deletion process
      */
-    public delete(jobId: string, options: any = {}): Observable<void> {
-        const observable = Observable.fromPromise<any>(BatchClient.job.delete(jobId, options));
-        observable.subscribe({
-            error: (error) => {
-                console.error("Error deleting job: " + jobId, error);
-            },
+    public delete(jobId: string, options: any = {}): Observable<{}> {
+        return this.callBatchClient((client) => client.job.delete(jobId, options), (error) => {
+            log.error("Error deleting job: " + jobId, error);
         });
-
-        return observable;
     }
 
-    /**
-     * Once delete has completed we call this to remove it from the cache
-     */
-    public notifyJobDeleted(jobId) {
-        this._cache.deleteItemByKey(jobId);
+    public terminate(jobId: string, options: any = {}): Observable<{}> {
+        return this.callBatchClient((client) => client.job.terminate(jobId, options));
     }
 
-    public terminate(jobId: string, options: any): Observable<void> {
-        return Observable.fromPromise<any>(BatchClient.job.terminate(jobId, options));
+    public disable(jobId: string, disableTasks: string, options: any = {}): Observable<{}> {
+        return this.callBatchClient((client) => client.job.disable(jobId, disableTasks, options));
     }
 
-    public disable(jobId: string, disableTasks: string, options: any): Observable<void> {
-        return Observable.fromPromise<any>(BatchClient.job.disable(jobId, disableTasks, options));
+    public enable(jobId: string, options: any = {}): Observable<{}> {
+        return this.callBatchClient((client) => client.job.enable(jobId, options));
     }
 
-    public enable(jobId: string, options: any): Observable<void> {
-        return Observable.fromPromise<any>(BatchClient.job.enable(jobId, options));
-    }
-
-    public add(job: any, options: any): Observable<void> {
-        return Observable.fromPromise<any>(BatchClient.job.add(job, options));
+    public add(job: any, options: any = {}): Observable<{}> {
+        return this.callBatchClient((client) => client.job.add(job, options));
     }
 }

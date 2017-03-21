@@ -1,5 +1,10 @@
+import "../test/app/spec-bundle";
+import * as moment from "moment";
+// tslint:disable:no-var-requires
+
 Error.stackTraceLimit = Infinity;
 import "app/utils/extensions";
+import * as fs from "fs";
 
 const testing = require("@angular/core/testing");
 const browser = require("@angular/platform-browser-dynamic/testing");
@@ -8,6 +13,9 @@ testing.TestBed.initTestEnvironment(
     browser.BrowserDynamicTestingModule,
     browser.platformBrowserDynamicTesting()
 );
+
+const webpackRequire = require;
+const chromePerformance = performance;
 
 /*
  * Ok, this is kinda crazy. We can use the context method on
@@ -20,6 +28,51 @@ testing.TestBed.initTestEnvironment(
  */
 const testContext = require.context("../test/app", true, /\.spec\.ts/);
 
+if (process.env.DEBUG_MEM) {
+    let initialValue = null;
+    const stream = fs.createWriteStream("test.mem.csv");
+    jasmine.getEnv().clearReporters();
+    jasmine.getEnv().addReporter({
+        suiteStarted: (result) => {
+            if (initialValue === null) {
+                initialValue = chromePerformance.memory.usedJSHeapSize;
+            }
+        },
+        suiteDone: (result) => {
+            const end = chromePerformance.memory.usedJSHeapSize;
+            const out = Math.round(end / 1000);
+            console.warn("Memory usage", `${out} kB`, result.fullName);
+            stream.write(`${result.fullName},${out}\n`);
+        },
+        jasmineDone: () => {
+            stream.end();
+        }
+    });
+}
+
+/**
+ * TODO: override the default jasmine reporter to show results with timings like:
+ * ActivatePackageDialogComponent
+ *   √ Should show title and application id (865ms)
+ *   √ Submit should call service and close the dialog (194ms)
+ *   √ Submit should call service and show error if fails (929ms)
+ */
+if (process.env.DEBUG_TIME) {
+    let timer = null;
+    jasmine.getEnv().clearReporters();
+    jasmine.getEnv().addReporter({
+        specStarted: (result) => {
+            timer = moment.utc();
+        },
+        specDone: (result) => {
+            let ms = moment.duration(moment.utc().diff(timer)).milliseconds();
+            if (result.status !== "disabled") {
+                console.warn(`${result.description}, executed in: ${ms}ms`);
+            }
+        },
+    });
+}
+
 /*
  * get all the files, for each file, call the context function
  * that will require the file and load it up here. Context will
@@ -30,4 +83,5 @@ function requireAll(requireContext) {
 }
 
 // requires and returns all modules that match
-var modules = requireAll(testContext);
+const modules = requireAll(testContext);
+console.warn(`Running specs from ${modules.length} files`);

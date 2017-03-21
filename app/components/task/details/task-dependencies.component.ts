@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { List } from "immutable";
 import { BehaviorSubject } from "rxjs";
 
@@ -6,10 +6,10 @@ import { Task, TaskDependencies, TaskDependency } from "app/models";
 import { TaskService } from "app/services";
 
 @Component({
-    selector: "bex-task-dependencies",
+    selector: "bl-task-dependencies",
     templateUrl: "task-dependencies.html",
 })
-export class TaskDependenciesComponent implements OnDestroy {
+export class TaskDependenciesComponent {
     @Input()
     public set jobId(value: string) {
         this._jobId = (value && value.trim());
@@ -59,10 +59,6 @@ export class TaskDependenciesComponent implements OnDestroy {
         } else {
             this.hasMore = false;
         }
-    }
-
-    public ngOnDestroy() {
-        /* tab hide */
     }
 
     private _refresh(task: Task) {

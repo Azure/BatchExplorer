@@ -4,16 +4,15 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 
 import { AccountResource } from "app/models";
-import { AccountParams, AccountService } from "app/services";
-import { RxEntityProxy } from "app/services/core";
+import { AccountService } from "app/services";
 import { DeleteAccountDialogComponent } from "../action/delete-account-dialog.component";
 
 @Component({
-    selector: "bex-account-details",
+    selector: "bl-account-details",
     templateUrl: "account-details.html",
 })
 export class AccountDetailsComponent implements OnInit, OnDestroy {
-    public static breadcrumb({id}) {
+    public static breadcrumb({ id }) {
         let name = "";
         if (id) {
             const split = id.split("/");
@@ -22,20 +21,11 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         return { name: name, label: "Account" };
     }
     public account: AccountResource;
-    public data: RxEntityProxy<AccountParams, AccountResource>;
 
-    public set accountId(id: string) {
-        this._accountId = id;
-        this.data.params = { id };
-        this.data.fetch();
-        this.selectAccount(id);
-    }
+    public accountId: string;
+    public loading: boolean = true;
+    public loadingError: any;
 
-    public get accountId() {
-        return this._accountId;
-    }
-
-    private _accountId: string;
     private _paramsSubscriber: Subscription;
 
     constructor(
@@ -45,13 +35,24 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         private accountService: AccountService,
         private zone: NgZone,
         private viewContainerRef: ViewContainerRef) {
-        this.data = accountService.getAccount(null);
-        this.data.item.subscribe(account => this.account = account);
 
     }
 
     public ngOnInit() {
-        this._paramsSubscriber = this.activatedRoute.params.subscribe(params => this.accountId = params["id"]);
+        this._paramsSubscriber = this.activatedRoute.params.subscribe(params => {
+            this.accountId = params["id"];
+            this.selectAccount(this.accountId);
+            this.loading = true;
+            this.accountService.getAccount(this.accountId).subscribe({
+                next: (x) => {
+                    this.account = x;
+                    this.loading = false;
+                },
+                error: (error) => {
+                    this.loadingError = error;
+                },
+            });
+        });
     }
 
     public ngOnDestroy() {

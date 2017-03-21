@@ -1,9 +1,9 @@
-bex-banner {
+bl-banner {
     display: block;
     margin-top: 10px;
 }
 
-bex-banner > md-card {
+bl-banner > md-card.mat-card {
     color: $whiteSmoke-darker;
     padding: 0;
 
@@ -59,7 +59,7 @@ bex-banner > md-card {
                 border-left: none;
                 border-top-left-radius: 0;
                 border-bottom-left-radius: 0;
-                padding: 5px 5px 5px 8px;
+                padding: 3px 5px 5px 6px;
                 margin-left: -3px;
             }
         }
@@ -120,11 +120,11 @@ bex-banner > md-card {
     }
 }
 
-bex-banner > md-card.error {
+bl-banner > md-card.error {
     @include banner-scheme($red, $red-dark);
 }
 
-bex-banner > md-card.warning {
+bl-banner > md-card.warning {
     @include banner-scheme($yellow, $yellow-dark);
 }
 

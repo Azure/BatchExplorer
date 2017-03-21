@@ -10,20 +10,23 @@ import { BackgroundTaskModule } from "./background-task";
 import { BannerComponent, BannerOtherFixDirective } from "./banner";
 import { BreadcrumbModule } from "./breadcrumbs";
 import { ButtonsModule } from "./buttons";
+import { ContextMenuModule } from "./context-menu";
 import { DropdownModule } from "./dropdown";
+import { EditorModule } from "./editor";
 import { ElapsedTimeComponent } from "./elapsed-time";
 import { FocusSectionModule } from "./focus-section";
 import { FormModule } from "./form";
+import { GraphsModule } from "./graphs";
 import { InfoBoxModule } from "./info-box";
 import {
-    DeletePoolDialogComponent, EntityDetailsListComponent, ListAndShowLayoutComponent, ListLoadingComponent,
+    DeleteSelectedItemsDialogComponent, EntityDetailsListComponent, ListAndShowLayoutComponent, ListLoadingComponent,
 } from "./list-and-show-layout";
 import { LoadingComponent, SimpleLoadingComponent } from "./loading";
 import { NotificationModule } from "./notifications";
 import { PropertyListModule } from "./property-list";
 import { QuickListModule } from "./quick-list";
 import { RefreshButtonComponent } from "./refresh-btn";
-import { ScrollableComponent, ScrollableService } from "./scrollable";
+import { ScrollableModule } from "./scrollable";
 import { SidebarModule } from "./sidebar";
 import { TableModule } from "./table";
 import { TabsModule } from "./tabs";
@@ -34,16 +37,20 @@ const modules = [
     BreadcrumbModule,
     ButtonsModule,
     BackgroundTaskModule,
+    ContextMenuModule,
     DropdownModule,
+    EditorModule,
     FocusSectionModule,
     InfoBoxModule,
     NotificationModule,
     PropertyListModule,
+    GraphsModule,
     QuickListModule,
     SidebarModule,
     TableModule,
     TabsModule,
     FormModule,
+    ScrollableModule,
 ];
 
 // Add subcomponnent not in a module here
@@ -55,16 +62,15 @@ const components = [
     ListAndShowLayoutComponent,
     SimpleLoadingComponent,
     LoadingComponent,
-    ScrollableComponent,
     RefreshButtonComponent,
     ListLoadingComponent,
-    DeletePoolDialogComponent,
+    DeleteSelectedItemsDialogComponent,
 ];
 
 @NgModule({
     declarations: components,
     entryComponents: [
-        DeletePoolDialogComponent,
+        DeleteSelectedItemsDialogComponent,
     ],
     exports: [...modules, ...components],
     imports: [
@@ -76,7 +82,6 @@ const components = [
         ...modules,
     ],
     providers: [
-        ScrollableService,
     ],
 })
 export class BaseModule {

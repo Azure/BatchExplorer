@@ -3,7 +3,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Observable } from "rxjs";
 
 import { FormBaseComponent } from "app/components/base/form";
-import { NotificationManager } from "app/components/base/notifications";
+import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { RangeValidatorDirective } from "app/components/base/validation";
 import { Task } from "app/models";
@@ -13,7 +13,7 @@ import { TaskService } from "app/services";
 import { Constants } from "app/utils";
 
 @Component({
-    selector: "bex-task-create-basic-dialog",
+    selector: "bl-task-create-basic-dialog",
     templateUrl: "task-create-basic-dialog.html",
 })
 export class TaskCreateBasicDialogComponent extends FormBaseComponent<Task, CreateTaskModel> {
@@ -30,7 +30,7 @@ export class TaskCreateBasicDialogComponent extends FormBaseComponent<Task, Crea
         private formBuilder: FormBuilder,
         private sidebarRef: SidebarRef<TaskCreateBasicDialogComponent>,
         protected taskService: TaskService,
-        private notificationManager: NotificationManager) {
+        private notificationService: NotificationService) {
         super();
 
         const validation = Constants.forms.validation;
@@ -64,7 +64,7 @@ export class TaskCreateBasicDialogComponent extends FormBaseComponent<Task, Crea
         const observable = this.taskService.add(this.jobId, jsonData, {});
         observable.subscribe({
             next: () => {
-                this.notificationManager.success("Task added!", `Task '${id}' was created successfully!`);
+                this.notificationService.success("Task added!", `Task '${id}' was created successfully!`);
                 this.taskService.onTaskAdded.next(onAddedParams);
             },
             error: (error) => null,

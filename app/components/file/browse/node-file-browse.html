@@ -1,7 +1,7 @@
-<bex-loading [status]="data.status | async">
+<bl-loading [status]="data.status | async">
     <div>
-        <bex-entity-details-list #listWrapper [refresh]="list.refresh" [filterPlaceholder]="quicksearchPlaceholder" [showAddButton]="false"
-            [enableAdvancedFilter]="false">
+        <bl-entity-details-list #listWrapper [refresh]="list.refresh" [filterPlaceholder]="quicksearchPlaceholder" [showAddButton]="false"
+            [enableAdvancedFilter]="false" quickSearchField="name">
             <div pre-quicksearch class="folders">
                 <md-select placeholder="Filter by folder" [(ngModel)]="currentFolder">
                     <md-option [value]="null">All</md-option>
@@ -11,8 +11,8 @@
                 </md-select>
             </div>
 
-            <bex-node-file-list #list [poolId]="poolId" [nodeId]="node.id" [filter]="listWrapper.filter" [quickList]="false" [folder]="currentFolder">
-            </bex-node-file-list>
-            </bex-entity-details-list>
+            <bl-node-file-list #list [poolId]="poolId" [nodeId]="node.id" [filter]="listWrapper.filter" [quickList]="false" [folder]="currentFolder">
+            </bl-node-file-list>
+            </bl-entity-details-list>
     </div>
-</bex-loading>
+</bl-loading>

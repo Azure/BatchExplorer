@@ -30,8 +30,8 @@
     "arrow-return-shorthand": [true],
 
     // Codelyzer rules(Angular2)
-    "directive-selector": [true, "attribute", "bex", "camelCase"],
-    "component-selector": [true, "element", "bex", "kebab-case"],
+    "directive-selector": [true, "attribute", "bl", "camelCase"],
+    "component-selector": [true, "element", "bl", "kebab-case"],
     "use-input-property-decorator": true,
     "use-output-property-decorator": true,
     "use-host-property-decorator": true,
@@ -41,7 +41,7 @@
     "no-forward-ref": true,
     "use-life-cycle-interface": true,
     "use-pipe-transform-interface": true,
-    "pipe-naming": [false, "camelCase", "bex"],
+    "pipe-naming": [false, "camelCase", "bl"],
     "component-class-suffix": true,
     "directive-class-suffix": true,
     "import-destructuring-spacing": true,

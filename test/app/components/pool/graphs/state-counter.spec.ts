@@ -7,6 +7,7 @@ import * as Fixtures from "test/fixture";
 describe("Statecounter", () => {
     let counter: StateCounter;
     let nodes: Node[];
+
     beforeEach(() => {
         counter = new StateCounter();
         nodes = [
@@ -46,5 +47,4 @@ describe("Statecounter", () => {
         expect(counter.get(NodeState.leavingPool).getValue()).toBe(0);
         expect(counter.get(NodeState.rebooting).getValue()).toBe(1);
     });
-
 });

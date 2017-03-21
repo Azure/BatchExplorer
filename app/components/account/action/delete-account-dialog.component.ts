@@ -4,7 +4,7 @@ import { MdDialogRef } from "@angular/material";
 import { AccountService } from "app/services";
 
 @Component({
-    selector: "bex-delete-account-dialog",
+    selector: "bl-delete-account-dialog",
     templateUrl: "delete-account-dialog.html",
 })
 export class DeleteAccountDialogComponent {
@@ -19,7 +19,7 @@ export class DeleteAccountDialogComponent {
     public destroyAccount() {
         alert("Not supported yet!");
         // this.accountService.delete(this.accountId).subscribe({
-        //     error: (error) => { console.error("destroyAccount() :: error: ", error); },
+        //     error: (error) => { log.error("destroyAccount() :: error: ", error); },
         //     complete: () => this.dialogRef.close(), // todo: clear current selection, show notification
         // });
     }

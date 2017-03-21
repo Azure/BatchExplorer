@@ -12,8 +12,8 @@ import { SidebarManager } from "../../base/sidebar";
 import { DeleteTaskDialogComponent, TaskCreateBasicDialogComponent, TerminateTaskDialogComponent } from "../action";
 
 @Component({
-    selector: "bex-task-details",
-    templateUrl: "./task-details.html",
+    selector: "bl-task-details",
+    templateUrl: "task-details.html",
 })
 export class TaskDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({id}, {tab}) {
@@ -32,8 +32,6 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
     public task: Task;
     public decorator: TaskDecorator;
     public job: Job;
-
-    public outputFilename: "stdout.txt" | "stderr.txt" = "stdout.txt";
 
     public get hasMultiInstanceSettings() {
         return this.task && Boolean(this.task.multiInstanceSettings);

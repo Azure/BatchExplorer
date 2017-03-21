@@ -11,8 +11,8 @@ import { SubtaskListParams, TaskService } from "app/services";
 import { RxListProxy } from "app/services/core";
 
 @Component({
-    selector: "bex-task-sub-tasks-tab",
-    templateUrl: "./task-sub-tasks-tab.html",
+    selector: "bl-task-sub-tasks-tab",
+    templateUrl: "task-sub-tasks-tab.html",
 })
 export class TaskSubTasksTabComponent extends SelectableList {
     @Input()

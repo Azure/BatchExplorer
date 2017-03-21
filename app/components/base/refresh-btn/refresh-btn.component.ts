@@ -9,7 +9,7 @@ export enum RefreshStatus {
 }
 
 @Component({
-    selector: "bex-refresh-btn",
+    selector: "bl-refresh-btn",
     templateUrl: "refresh-btn.html",
     animations: [
         trigger("animateSucessIcon", [
@@ -19,7 +19,6 @@ export enum RefreshStatus {
             ]),
         ]),
     ],
-
 })
 export class RefreshButtonComponent {
     public statuses = RefreshStatus;

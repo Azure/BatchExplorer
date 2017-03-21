@@ -1,5 +1,7 @@
 const DefinePlugin = require("webpack/lib/DefinePlugin");
 const config = require("./webpack.config.base");
+const webpack = require("webpack");
+const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 
 const ENV = "test";
 
@@ -9,11 +11,11 @@ delete config.entry;
 config.devtool = "inline-source-map";
 
 // Karma webpack doesn't support CommonChunkPlugin yet https://github.com/webpack-contrib/karma-webpack/issues/24
-config.plugins = [
+config.plugins = config.plugins.filter(x => !(x instanceof CommonsChunkPlugin)).concat([
     new DefinePlugin({
         "ENV": JSON.stringify(ENV),
     }),
-];
+]);
 config.module.rules = config.module.rules.concat(
     [
         {

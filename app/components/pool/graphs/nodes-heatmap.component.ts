@@ -1,10 +1,13 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, ViewChild } from "@angular/core";
+import {
+    AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input, OnChanges, OnDestroy, ViewChild,
+} from "@angular/core";
 import * as d3 from "d3";
 import * as elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";
 import { BehaviorSubject } from "rxjs";
 
-import { Node, NodeState } from "app/models";
+import { Node, NodeState, Pool } from "app/models";
+import { log } from "app/utils";
 import { HeatmapColor } from "./heatmap-color";
 import { StateTree } from "./state-tree";
 
@@ -13,9 +16,12 @@ interface HeatmapTile {
     node: Node;
 }
 
+const idleColor = "#edeef2";
+const runningColor = "#388e3c";
+
 const stateTree: StateTree = [
-    { state: NodeState.idle, color: "#6ba3cb" },
-    { state: NodeState.running, color: "#388e3c" },
+    { state: NodeState.idle, color: idleColor },
+    { state: NodeState.running, color: runningColor },
     { state: NodeState.waitingForStartTask, color: "#be93d9" },
     { state: NodeState.offline, color: "#5b5b5b" },
     {
@@ -45,17 +51,26 @@ const maxNodes = 1000;
 const maxTileSize = 300;
 
 @Component({
-    selector: "bex-nodes-heatmap",
+    selector: "bl-nodes-heatmap",
     templateUrl: "nodes-heatmap.html",
     viewProviders: [
         { provide: "StateTree", useValue: stateTree },
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestroy {
-    public colors: HeatmapColor;
+    @Input()
+    public pool: Pool;
 
     @Input()
-    public poolId: string;
+    public showLegend: boolean = true;
+
+    @Input()
+    @HostBinding("class.interactive")
+    public interactive: boolean = true;
+
+    @Input()
+    public limitNode: number = null;
 
     @ViewChild("heatmap")
     public heatmapEl: ElementRef;
@@ -63,13 +78,15 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     @Input()
     public set nodes(nodes: List<Node>) {
         if (nodes.size > maxNodes) {
-            console.warn(`Only supporting up to ${maxNodes} nodes for now!`);
+            log.warn(`Only supporting up to ${maxNodes} nodes for now!`);
         }
-        this._nodes = List<Node>(nodes.slice(0, maxNodes));
+        this._nodes = List<Node>(nodes.slice(0, this.limitNode || maxNodes));
         this._buildNodeMap();
         this._processNewNodes();
     }
     public get nodes() { return this._nodes; };
+
+    public colors: HeatmapColor;
     public selectedNodeId = new BehaviorSubject<string>(null);
     public selectedNode = new BehaviorSubject<Node>(null);
     public highlightedState: string;
@@ -80,13 +97,12 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         columns: 0,
     };
 
-    private _nodes: List<Node>;
-
     private _erd: any;
     private _svg: d3.Selection<any, any, any, any>;
     private _width: number = 0;
     private _height: number = 0;
     private _nodeMap: { [id: string]: Node } = {};
+    private _nodes: List<Node>;
 
     constructor(private elementRef: ElementRef) {
         this.colors = new HeatmapColor(stateTree);
@@ -96,8 +112,11 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     }
 
     public ngOnChanges(changes) {
-        if (changes.poolId) {
+        if (changes.pool) {
             this.selectedNodeId.next(null);
+            if (this._svg) {
+                this._svg.selectAll("g.node-group").remove();
+            }
         }
     }
 
@@ -105,6 +124,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         this._erd = elementResizeDetectorMaker({
             strategy: "scroll",
         });
+
         this._erd.listenTo(this.heatmapEl.nativeElement, (element) => {
             this.containerSizeChanged();
         });
@@ -112,6 +132,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         this._svg = d3.select(this.heatmapEl.nativeElement).append("svg")
             .attr("width", this._width)
             .attr("height", this._height);
+
         this._processNewNodes();
     }
 
@@ -122,8 +143,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     public containerSizeChanged() {
         this._width = this.heatmapEl.nativeElement.offsetWidth;
         this._height = this.heatmapEl.nativeElement.offsetHeight;
-        this._svg.attr("width", this._width)
-            .attr("height", this._height);
+        this._svg.attr("width", this._width).attr("height", this._height);
         this.redraw();
     }
 
@@ -135,41 +155,111 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     public redraw() {
         this.colors.updateColors(this.highlightedState);
         this._computeDimensions();
-        const rects = this._svg.selectAll("rect");
-        this._updateSvg(rects);
+        const tiles = this._nodes.map((node, index) => ({ node, index }));
+        const groups = this._svg.selectAll("g.node-group").data(tiles.toJS());
+        groups.exit().remove();
+        this._updateSvg(groups);
     }
 
     private _processNewNodes() {
         if (!this._svg) {
             return;
         }
-        this._computeDimensions();
-
-        const tiles = this._nodes.map((node, index) => ({ node, index }));
-        const rects = this._svg.selectAll("rect").data(tiles.toJS());
-
-        rects.exit().remove();
-        this._updateSvg(rects);
+        this.redraw();
     }
 
-    private _updateSvg(rects: any) {
-        const z = Math.max(this.dimensions.tileSize - 2, 0);
-        rects.enter().append("rect").merge(rects)
+    private _updateSvg(groups: any) {
+        const z = Math.max(this.dimensions.tileSize - 6, 0);
+        const nodeEnter = groups.enter().append("g")
+            .attr("class", "node-group")
+            .on("mouseenter", (tile, index, nodes) => {
+                if (!this.interactive) {
+                    return;
+                }
+                const group = d3.select(nodes[index]);
+                groups.selectAll("text").remove();
+                group.append("text")
+                    .attr("dx", 5)
+                    .attr("dy", "1.5em")
+                    .attr("text-anchor", "start")
+                    .text(`${tile.node.runningTasks.size} task running`);
+            })
+            .on("mouseleave", (tile, index, nodes) => {
+                const group = d3.select(nodes[index]);
+                group.selectAll("text").remove();
+            })
+            .on("click", (tile) => {
+                if (!this.interactive) {
+                    return;
+                }
+                this.selectedNodeId.next(tile.node.id);
+                this._updateSvg(this._svg.selectAll("g.node-group"));
+            });
+        nodeEnter.merge(groups)
             .attr("transform", (x) => this._translate(x as any))
+            .attr("width", z)
+            .attr("height", z);
+
+        const backgroundGroup = nodeEnter.append("g").classed("bg", true).merge(groups.select("g.bg"));
+        const runningTaskGroup = nodeEnter.append("g").classed("tasks", true).merge(groups.select("g.tasks"));
+
+        this._displayNodeBackground(backgroundGroup, z);
+        this._displayRunningTasks(runningTaskGroup, z);
+    }
+
+    private _displayNodeBackground(backgroundGroup, z) {
+        const nodeBackground = backgroundGroup.selectAll("rect").data((d) => [d]);
+        nodeBackground.enter().append("rect").merge(nodeBackground)
             .attr("width", z)
             .attr("height", z)
             .style("fill", (tile: any) => {
-                return d3.color(this.colors.get(tile.node.state)) as any;
+                let color;
+                if (tile.node.state === NodeState.running) {
+                    color = idleColor;
+                } else {
+                    color = this.colors.get(tile.node.state);
+                }
+                return d3.color(color) as any;
             })
             .style("stroke-width", (tile: any) => {
                 return tile.node.id === this.selectedNodeId.value ? "2px" : "0";
-            })
-            .on("click", (tile) => {
-                this.selectedNodeId.next(tile.node.id);
-                this._updateSvg(rects);
             });
+
+        nodeBackground.exit().remove();
     }
 
+    private _displayRunningTasks(taskGroup, z) {
+        const maxTaskPerNode = this.pool.maxTasksPerNode;
+        const taskWidth = Math.floor(z / maxTaskPerNode);
+
+        const runningTaskRects = taskGroup.selectAll("rect")
+            .data((d) => {
+                const node: Node = d.node;
+                if (node.state !== NodeState.running || !node.recentTasks) {
+                    return [];
+                }
+                return node.runningTasks.map((task, index) => ({ task, index })).toJS();
+            });
+
+        runningTaskRects.enter().append("rect")
+            .attr("transform", (data) => {
+                const index = data.index;
+                const x = (maxTaskPerNode - index - 1) * taskWidth + 1;
+                return `translate(0,${x})`;
+            })
+            .attr("width", z)
+            .attr("height", taskWidth - 1)
+            .style("fill", runningColor);
+
+        runningTaskRects.exit().remove();
+    }
+
+    /**
+     * Compute the dimension of the heatmap.
+     *  - rows
+     *  - columns
+     *  - tile size
+     */
     private _computeDimensions() {
         const area = this._height * this._width;
         const areaPerTile = area / this._nodes.size;
@@ -190,6 +280,10 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         }
     }
 
+    /**
+     * Compute the best rows and columns from the estimated values
+     * Used by compute dimensions
+     */
     private _computeBestDimension(estimatedRows: number, estimatedColumns: number) {
         const floorRows = Math.floor(estimatedRows);
         const floorColumns = Math.floor(estimatedColumns);
@@ -216,6 +310,9 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         }
     }
 
+    /**
+     * Compute the position of the given tile
+     */
     private _translate(tile: HeatmapTile) {
         const z = this.dimensions.tileSize;
         if (z === 0) {
@@ -233,6 +330,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         this._nodes.forEach((node) => {
             map[node.id] = node;
         });
+
         this._nodeMap = map;
         this._updateSelectedNode();
     }

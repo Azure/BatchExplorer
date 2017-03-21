@@ -2,8 +2,10 @@ import { Type } from "@angular/core";
 import { BehaviorSubject, Observable, Subject, Subscription } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
-import { Constants, exists, log } from "app/utils";
+import { ServerError } from "app/models";
+import { Constants, ObjectUtils, exists, log } from "app/utils";
 import { DataCache } from "./data-cache";
+import { PollObservable } from "./poll-service";
 
 export interface FetchDataOptions {
     getData: () => Observable<any>;
@@ -32,11 +34,16 @@ export interface RxProxyBaseConfig<TParams, TEntity> {
 /**
  * Base proxy for List and Entity proxies
  */
-export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
+export abstract class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
     /**
      * Status that keep track of any loading
      */
     public status: Observable<LoadingStatus>;
+
+    /**
+     * Contains the current error if any.
+     */
+    public error: Observable<ServerError>;
 
     /**
      * Push observable that send a notification if the item has been deleted.
@@ -51,6 +58,7 @@ export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
 
     protected _status = new BehaviorSubject<LoadingStatus>(LoadingStatus.Loading);
     protected _newDataStatus = new BehaviorSubject<LoadingStatus>(LoadingStatus.Loading);
+    protected _error = new BehaviorSubject<ServerError>(null);
 
     protected getCache: (params: TParams) => DataCache<TEntity>;
     protected _params: TParams;
@@ -62,16 +70,21 @@ export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
     private _deletedSub: Subscription;
     private _deleted = new Subject<string>();
     private _logIgnoreError: number[];
+    private _pollObservable: PollObservable;
 
     constructor(protected type: Type<TEntity>, config: RxProxyBaseConfig<TParams, TEntity>) {
         this.getCache = config.cache;
         this._logIgnoreError = exists(config.logIgnoreError) ? config.logIgnoreError : [Constants.HttpCode.NotFound];
         this.status = this._status.asObservable();
         this.newDataStatus = this._newDataStatus.asObservable();
+        this.error = this._error.asObservable();
 
         this.status.subscribe((status) => {
+            if (status === LoadingStatus.Loading) {
+                this._error.next(null);
+            }
             // If we were loading and the last request status change to ready or error
-            if (this._newDataStatus.getValue() === LoadingStatus.Loading && status !== LoadingStatus.Loading) {
+            if (this._newDataStatus.value === LoadingStatus.Loading && status !== LoadingStatus.Loading) {
                 this._newDataStatus.next(status);
             }
         });
@@ -82,6 +95,9 @@ export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
     public set params(params: TParams) {
         this._params = params;
         this.cache = this.getCache(params);
+        if (this._pollObservable) {
+            this._pollObservable.updateKey(this._key());
+        }
         this.markLoadingNewData();
         this.abortFetch();
     }
@@ -92,9 +108,16 @@ export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
 
     public setOptions(options: TOptions, clearItems = true) {
         this._options = Object.assign({}, options);
+        if (this._pollObservable) {
+            this._pollObservable.updateKey(this._key());
+        }
         if (this.queryInProgress()) {
             this.abortFetch();
         }
+    }
+
+    public patchOptions(options: TOptions, clearItems = true) {
+        this.setOptions(Object.assign({}, this._options, options), clearItems);
     }
 
     /**
@@ -102,6 +125,22 @@ export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
      */
     public get options() {
         return this._options;
+    }
+
+    /**
+     * Start refreshing the data of this RxProxy every given interval
+     * You can only have ONE poll per entity.
+     * @param interval {number} Interval in milliseconds.
+     */
+    public startPoll(interval: number): PollObservable {
+        if (this._pollObservable) {
+            return this._pollObservable;
+        }
+
+        this._pollObservable = this.cache.pollService.startPoll(this._key(), interval, () => {
+            return this.pollRefresh();
+        });
+        return this._pollObservable;
     }
 
     protected set cache(cache: DataCache<TEntity>) {
@@ -137,21 +176,22 @@ export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
         }
         this._status.next(LoadingStatus.Loading);
 
-        const obs = options.getData();
+        const obs = this._currentObservable = options.getData();
         this._currentQuerySub = obs.subscribe((response) => {
             options.next(response);
             this._status.next(LoadingStatus.Ready);
             this.abortFetch();
-        }, (error) => {
+        }, (error: ServerError) => {
             // We need to clone the error otherwise it only logs the stacktrace
             // and not the actual error returned by the server which is not helpful
-            if (error && error.statusCode && !this._logIgnoreError.includes(error.statusCode)) {
+            if (error && error.status && !this._logIgnoreError.includes(error.status)) {
                 log.error("Error in RxProxy", Object.assign({}, error));
             }
             if (options.error) {
                 options.error(error);
             }
             this._status.next(LoadingStatus.Error);
+            this._error.next(error);
             this.abortFetch();
         });
         return obs;
@@ -182,5 +222,13 @@ export class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
         if (this._deletedSub) {
             this._deletedSub.unsubscribe();
         }
+    }
+
+    protected abstract pollRefresh(): Observable<any>;
+
+    private _key() {
+        const paramsKey = ObjectUtils.serialize(this._params);
+        const optionsKey = ObjectUtils.serialize(this._options);
+        return `${paramsKey}|${optionsKey}`;
     }
 }

@@ -14,8 +14,8 @@ import { DeletePoolDialogComponent, PoolResizeDialogComponent } from "../action"
 import { PoolCreateBasicDialogComponent } from "../action";
 
 @Component({
-    selector: "bex-pool-details",
-    templateUrl: "./pool-details.html",
+    selector: "bl-pool-details",
+    templateUrl: "pool-details.html",
 })
 export class PoolDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({id}, {tab}) {
@@ -109,8 +109,10 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
                 osName = "Windows Server 2008 R2 SP1";
             } else if (osFamily === 3) {
                 osName = "Windows Server 2012";
-            } else {
+            } else if (osFamily === 4) {
                 osName = "Windows Server 2012 R2";
+            } else {
+                osName = "Windows Server 2016";
             }
 
             return osName;
@@ -133,6 +135,16 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         }
 
         return "linux";
+    }
+
+    public get nodesTooltipMessage() {
+        if (this.pool.resizeError) {
+            return "There was a resize error";
+        } else if (this.pool.currentDedicated !== this.pool.targetDedicated) {
+            return `Pool is resizing from ${this.pool.currentDedicated} to ${this.pool.targetDedicated} nodes`;
+        } else {
+            return `Pool has ${this.pool.currentDedicated} nodes`;
+        }
     }
 
     public get lastResize(): string {

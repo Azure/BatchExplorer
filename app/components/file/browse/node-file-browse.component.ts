@@ -20,7 +20,7 @@ export interface Folder {
  * Component for browsing node files.
  */
 @Component({
-    selector: "bex-node-file-browse",
+    selector: "bl-node-file-browse",
     templateUrl: "node-file-browse.html",
 })
 export class NodeFileBrowseComponent implements OnChanges {

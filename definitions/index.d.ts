@@ -29,3 +29,6 @@ declare type Environment = "production" | "development" | "test";
 
 // Gloval variables set by webpack
 declare const ENV: Environment;
+
+
+type StringMap<V> = { [key: string]: V };

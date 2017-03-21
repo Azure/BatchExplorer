@@ -1,9 +1,9 @@
-<bex-loading [status]="data.newDataStatus | async">
+<bl-loading [status]="data.newDataStatus | async">
     <div *ngIf="pool">
         <md-card class="overview">
             <md-card-title-group style="margin: 0px;">
                 <div style="align-items:center;">
-                    <bex-refresh-btn [refresh]="refreshPool"></bex-refresh-btn>
+                    <bl-refresh-btn [refresh]="refreshPool"></bl-refresh-btn>
                 </div>
                 <div style="margin-left:12px; margin-right:auto;">
                     <md-card-title>{{pool.id}}</md-card-title>
@@ -16,9 +16,9 @@
                         Once we fix that, use the nodes-preview component instead
 
                         This is tracked at https://github.com/angular/material2/issues/1157
-                        <bex-pool-nodes-preview [pool]="pool"></bex-pool-nodes-preview>
+                        <bl-pool-nodes-preview [pool]="pool"></bl-pool-nodes-preview>
                     -->
-                    <h4>{{pool.currentDedicated}} / {{pool.targetDedicated}}</h4>
+                    <h4 [title]="nodesTooltipMessage">{{pool.currentDedicated}} / {{pool.targetDedicated}}</h4>
                     <h5>Nodes</h5>
                 </div>
             </md-card-title-group>
@@ -28,36 +28,36 @@
                 <p><i class="fa fa-{{poolOsIcon}}" aria-hidden="true"></i> {{poolOs}}</p>
             </md-card-content>
             <md-card-actions layout="row" layout-align="end center">
-                <bex-add-button title="Add job" (click)="addJob()"></bex-add-button>
-                <bex-resize-button (click)="resizePool()"></bex-resize-button>
-                <bex-clone-button (click)="clonePool()"></bex-clone-button>
-                <bex-delete-button [entity]="pool" (click)="deletePool()"></bex-delete-button>
+                <bl-add-button title="Add job" (click)="addJob()"></bl-add-button>
+                <bl-resize-button (click)="resizePool()"></bl-resize-button>
+                <bl-clone-button (click)="clonePool()"></bl-clone-button>
+                <bl-delete-button [entity]="pool" (click)="deletePool()"></bl-delete-button>
             </md-card-actions>
         </md-card>
-        <bex-pool-error-display [pool]="pool"></bex-pool-error-display>
+        <bl-pool-error-display [pool]="pool"></bl-pool-error-display>
         <md-card class="details">
-            <bex-tab-group>
-                <bex-tab key="heatmap">
-                    <bex-tab-label>Heatmap</bex-tab-label>
-                    <bex-pool-graphs [poolId]="poolId"></bex-pool-graphs>
-                </bex-tab>
-                <bex-tab key="nodes">
-                    <bex-tab-label>Nodes</bex-tab-label>
-                    <bex-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/pools', poolId, 'nodes']" [filterPlaceholder]="filterPlaceholderText">
-                        <bex-node-list #list [poolId]="poolId" [filter]="listWrapper.filter" [quickList]="false" [manualLoading]="true"></bex-node-list>
-                    </bex-entity-details-list>
-                </bex-tab>
-                <bex-tab key="startTask">
-                    <bex-tab-label>Start Task</bex-tab-label>
+            <bl-tab-group>
+                <bl-tab key="graphs">
+                    <bl-tab-label>Graphs</bl-tab-label>
+                    <bl-pool-graphs [pool]="pool"></bl-pool-graphs>
+                </bl-tab>
+                <bl-tab key="nodes">
+                    <bl-tab-label>Nodes</bl-tab-label>
+                    <bl-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/pools', poolId, 'nodes']" [filterPlaceholder]="filterPlaceholderText">
+                        <bl-node-list #list [poolId]="poolId" [filter]="listWrapper.filter" [quickList]="false" [manualLoading]="true"></bl-node-list>
+                    </bl-entity-details-list>
+                </bl-tab>
+                <bl-tab key="startTask">
+                    <bl-tab-label>Start Task</bl-tab-label>
                     <div class="tab-padding">
-                        <bex-start-task-properties [pool]="pool"></bex-start-task-properties>
+                        <bl-start-task-properties [pool]="pool"></bl-start-task-properties>
                     </div>
-                </bex-tab>
-                <bex-tab key="properties">
-                    <bex-tab-label>Properties</bex-tab-label>
-                    <bex-pool-properties [pool]="pool"></bex-pool-properties>
-                </bex-tab>
-            </bex-tab-group>
+                </bl-tab>
+                <bl-tab key="properties">
+                    <bl-tab-label>Properties</bl-tab-label>
+                    <bl-pool-properties [pool]="pool"></bl-pool-properties>
+                </bl-tab>
+            </bl-tab-group>
         </md-card>
     </div>
-</bex-loading>
+</bl-loading>

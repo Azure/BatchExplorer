@@ -1,16 +1,50 @@
-bex-property-group {
+$label-value-margin: 5px;
+$clipboard-width: 30px;
+$group-padding: 28px;
+
+@mixin group-sizing($group-width) {
+    $property-width: $group-width - 2 * $group-padding;
+    $label-width: $group-width / 4;
+    $value-width: $property-width - $label-width - $label-value-margin - $clipboard-width;
+
+    section {
+        width: $property-width;
+        label, > table td.label {
+            width: $label-width !important;
+            min-width: $label-width;
+        }
+        .value {
+            width: $value-width;
+        }
+    }
+}
+
+bl-property-group {
+    $label-font-size: 13px;
+    $value-font-size: 12px;
     $group-width: 750px;
-    $group-padding: 28px;
     $property-width: $group-width - 2 * $group-padding;
     $label-width: 200px;
-    $label-value-margin: 5px;
-    $clipboard-width: 30px;
     $value-width: $property-width - $label-width - $label-value-margin - $clipboard-width;
+    $property-height: 24px;
+
+    // Default value
+    &.wide {
+        @include group-sizing(750);
+    }
+
+    &.normal {
+        @include group-sizing(650);
+    }
+
+    &.compact {
+        @include group-sizing(550);
+    }
+
 
     display: block;
     position: relative;
     padding: 0 $group-padding;
-    // width: $group-width;
     width: 100%;
 
     &:not(:last-child) {
@@ -59,18 +93,18 @@ bex-property-group {
     section {
         width: $property-width;
         padding: 0;
-        margin: 0 0 0.7em;
+        margin: 0 0 5px;
         display: flex;
         position: relative;
 
         &.one-line {
-            height: 34px;
+            height: $property-height;
             align-items: center;
         }
 
         label, > table td.label {
             color: $genericGray;
-            font-size: 13px;
+            font-size: $label-font-size;
             width: $label-width !important;
             min-width: $label-width;
             padding: 6px 0;
@@ -79,12 +113,13 @@ bex-property-group {
             font-weight: bold;
         }
 
-        .value, bex-tp-cell {
+        .value, bl-tp-cell {
             color: $mineShaftGray;
             background-color: $whitesmoke-darker;
-            padding: 8px;
+            font-size: $value-font-size;
+            padding: 3px 8px;
             width: $value-width;
-            height: 34px;
+            height: $property-height;
             margin: 0;
             text-overflow: ellipsis;
             white-space: nowrap;
@@ -112,7 +147,7 @@ bex-property-group {
         }
 
         .clipboard {
-            font-size: 1.5em;
+            font-size: 16px;
             color: $genericGray;
             cursor: pointer;
             margin-left: 10px;
@@ -132,7 +167,7 @@ bex-property-group {
             max-width: $table-width;
             table-layout: fixed;
 
-            [tp-column], bex-tp-cell {
+            [tp-column], bl-tp-cell {
                 display: table-cell;
                 color: $mineShaftGray;
                 background-color: $whitesmoke-darker;
@@ -142,12 +177,12 @@ bex-property-group {
 
             [tp-column] {
                 font-weight: bold;
-                font-size: 13px;
+                font-size: $label-font-size;
             }
         }
     }
 
-    bex-table-property {
+    bl-table-property {
         section {
             display: block;
         }
@@ -156,13 +191,13 @@ bex-property-group {
             > td.label {
                 padding: 5px;
                 padding-left: 20px;
-                font-size: 11px;
+                font-size: $value-font-size;
                 height: 23px;
             }
 
-            bex-tp-cell {
+            bl-tp-cell {
                 cursor: pointer;
-                font-size: 11px;
+                font-size: $value-font-size;
                 height: 23px;
                 position: relative;
                 padding: 0;

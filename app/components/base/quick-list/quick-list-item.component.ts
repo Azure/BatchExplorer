@@ -4,14 +4,15 @@ import {
 import { Router } from "@angular/router";
 
 import { BreadcrumbService } from "app/components/base/breadcrumbs";
-import { SelectableListItemBase } from "../selectable-list/selectable-list-item-base";
+import { ContextMenuService } from "app/components/base/context-menu";
+import { AbstractListItemBase } from "../abstract-list";
 import { QuickListComponent } from "./quick-list.component";
 
 @Component({
-    selector: "bex-quick-list-item",
+    selector: "bl-quick-list-item",
     templateUrl: "quick-list-item.html",
 })
-export class QuickListItemComponent extends SelectableListItemBase implements OnInit {
+export class QuickListItemComponent extends AbstractListItemBase implements OnInit {
     public get routerLinkActiveClass() {
         return this.routerLink ? "selected" : null;
     }
@@ -20,7 +21,8 @@ export class QuickListItemComponent extends SelectableListItemBase implements On
     constructor(
         @Inject(forwardRef(() => QuickListComponent)) list: QuickListComponent,
         router: Router,
+        contextmenuService: ContextMenuService,
         breadcrumbService: BreadcrumbService) {
-        super(list, router, breadcrumbService);
+        super(list, router, contextmenuService, breadcrumbService);
     }
 }

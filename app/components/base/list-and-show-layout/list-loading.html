@@ -1,9 +1,9 @@
 <div *ngIf="manualLoading">
-    <bex-loading [status]="data.newDataStatus | async" *ngIf="data.hasMore | async"></bex-loading>
+    <bl-loading [status]="status || (data.newDataStatus | async)" *ngIf="data.hasMore | async"></bl-loading>
     <div class="load-more-btn" *ngIf="(data.newDataStatus | async) === loadingStatuses.Ready && data.hasMore | async">
-        <bex-loading-button [loading]="loadingMore" (click)="loadMore()">Load more</bex-loading-button>
+        <bl-loading-button [loading]="loadingMore" (click)="loadMore()">Load more</bl-loading-button>
     </div>
 </div>
 <div *ngIf="!manualLoading">
-    <bex-loading [status]="data.status | async" *ngIf="data.hasMore | async"></bex-loading>
+    <bl-loading [status]="status || (data.status | async)" *ngIf="data.hasMore | async"></bl-loading>
 </div>

@@ -8,7 +8,7 @@ import { TaskService } from "app/services";
 import { DateUtils, ObservableUtils } from "app/utils";
 
 @Component({
-    selector: "bex-task-error-display",
+    selector: "bl-task-error-display",
     templateUrl: "task-error-display.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -19,8 +19,9 @@ export class TaskErrorDisplayComponent {
     @Input()
     public task: Task;
 
-    constructor(private taskService: TaskService, private sidebarManager: SidebarManager) {
-
+    constructor(
+        private taskService: TaskService,
+        private sidebarManager: SidebarManager) {
     }
 
     public get hasCompleted(): Boolean {

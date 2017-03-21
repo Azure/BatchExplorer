@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 
 @Component({
-    selector: "bex-account-details-home",
+    selector: "bl-account-details-home",
     template: `
         <div class="no-entity-home">
             <i class="fa fa-user"></i>

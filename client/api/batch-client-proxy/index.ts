@@ -1,3 +1,2 @@
-import BatchClientProxy from "./batch-client-proxy";
-
-export default BatchClientProxy;
+export * from "./batch-client-proxy-factory";
+export * from "./batch-client-proxy";

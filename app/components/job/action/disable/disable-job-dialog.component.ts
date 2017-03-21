@@ -5,7 +5,7 @@ import { autobind } from "core-decorators";
 import { JobService } from "app/services";
 
 @Component({
-    selector: "bex-disable-job-dialog",
+    selector: "bl-disable-job-dialog",
     templateUrl: "disable-job-dialog.html",
 })
 export class DisableJobDialogComponent {
@@ -23,6 +23,7 @@ export class DisableJobDialogComponent {
     constructor(
         public dialogRef: MdDialogRef<DisableJobDialogComponent>,
         private jobService: JobService) {
+
         this.onChange(this.taskAction);
         this.taskAction = "requeue";
     }
