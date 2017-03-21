@@ -1,10 +1,12 @@
-import { remote } from "electron";
+import * as electron from "electron";
 import { AsyncSubject, Observable } from "rxjs";
 
 import { SecureUtils } from "app/utils";
+import { ElectronRemote } from "../electron";
 import { AdalConfig } from "./adal-config";
 import * as AdalConstants from "./adal-constants";
-const { BrowserWindow } = remote;
+
+const { BrowserWindow } = electron.remote;
 
 type AuthorizePromptType = "login" | "none" | "consent";
 const AuthorizePromptType = {
@@ -40,7 +42,7 @@ export class UserAuthorization {
     private _authorizeQueue: AuthorizeQueueItem[] = [];
     private _currentAuthorization: AuthorizeQueueItem = null;
 
-    constructor(private config: AdalConfig) {
+    constructor(private config: AdalConfig, private remote: ElectronRemote) {
     }
 
     /**
@@ -91,11 +93,12 @@ export class UserAuthorization {
         this._waitingForAuth = true;
         const { tenantId, silent } = this._currentAuthorization = this._authorizeQueue.shift();
         const authWindow = this._createAuthWindow();
+        console.log("Auth next ", authWindow);
         authWindow.loadURL(this._buildUrl(tenantId, silent));
         this._setupEvents();
         if (!silent) {
             authWindow.show();
-            (remote.getCurrentWindow() as any).splashScreen.hide();
+            this.remote.getSplashScreen().hide();
         }
     }
 
@@ -134,8 +137,8 @@ export class UserAuthorization {
             this._authWindow = null;
             // If the user closed manualy then we need to also close the main window
             if (this._waitingForAuth) {
-                remote.getCurrentWindow().destroy();
-                (remote.getCurrentWindow() as any).splashScreen.close();
+                this.remote.getCurrentWindow().destroy();
+                this.remote.getSplashScreen().destroy();
             }
         });
     }
@@ -219,7 +222,7 @@ export class UserAuthorization {
     private _closeWindow() {
         if (this._authWindow) {
             if (this._authWindow.isVisible()) {
-                (remote.getCurrentWindow() as any).splashScreen.show();
+                this.remote.getSplashScreen().show();
             }
             this._authWindow.destroy();
             this._authWindow = null;
