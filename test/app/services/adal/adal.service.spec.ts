@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { AADUser } from "app/models";
 import { AccessToken, AdalService } from "app/services/adal";
 import { Constants } from "app/utils";
-import { mockStorage, MockElectronRemote } from "test/utils/mocks";
+import { MockElectronRemote, mockStorage } from "test/utils/mocks";
 
 const tenant1 = "tenant1";
 const resource1 = "http://example.com";

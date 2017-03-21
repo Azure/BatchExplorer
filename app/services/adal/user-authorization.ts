@@ -93,7 +93,6 @@ export class UserAuthorization {
         this._waitingForAuth = true;
         const { tenantId, silent } = this._currentAuthorization = this._authorizeQueue.shift();
         const authWindow = this._createAuthWindow();
-        console.log("Auth next ", authWindow);
         authWindow.loadURL(this._buildUrl(tenantId, silent));
         this._setupEvents();
         if (!silent) {
