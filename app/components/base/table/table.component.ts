@@ -12,8 +12,8 @@ export class TableComponent extends AbstractListBase {
     @ContentChildren(TableRowComponent)
     public items: QueryList<TableRowComponent>;
 
-    constructor(router: Router) {
-        super(router, null);
+    constructor() {
+        super(null);
     }
 }
 

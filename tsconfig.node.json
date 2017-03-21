@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "es2015",
+    "target": "ES6", // Uglify doesn't support es6 yet so we can't have the prod build use es6 https://github.com/mishoo/UglifyJS2/issues/448
+    "module": "commonjs",
     "lib": [
       "es6",
       "es2016",
@@ -17,17 +17,6 @@
     "listEmittedFiles": true, // debug option
     "listFiles": true, // debug option
     "outDir": "build/client",
-    // Base Url only applies to typescript compilation so tsc knows where the modules are.
-    // This means absolute path only works in the browser environment you need to use relative import for the code in side the client folder
-    // Node.js doesn't support custom load path yet
-    "baseUrl": ".",
-    // "noUnusedLocals": true, // TODO enable instead of tslint no-unused-vars
-    "paths": {
-      "*": [
-        "*",
-        "app/scripts/*"
-      ]
-    },
     "types": [
       "node",
       "electron",
@@ -44,12 +33,6 @@
   ],
   // This is not actually used for building but to let the editor know what files use this config
   "include": [
-    "./client/**/*.ts",
-    "./app/**/*.ts",
-    "./test/**/*.ts"
-  ],
-  "awesomeTypescriptLoaderOptions": {
-    "forkChecker": true,
-    "useWebpackText": true
-  }
+    "./client/**/*.ts"
+  ]
 }

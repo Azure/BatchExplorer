@@ -94,6 +94,10 @@ module.exports = merge(config, {
 
         new DefinePlugin({
             "ENV": JSON.stringify(ENV),
+            "process.env": {
+                "ENV": JSON.stringify(ENV),
+                "NODE_ENV": JSON.stringify(ENV),
+            }
         }),
 
         /**
@@ -106,7 +110,7 @@ module.exports = merge(config, {
         // NOTE: To debug prod builds uncomment //debug lines and comment //prod lines
         new UglifyJsPlugin({
             // Bug when beautify is disabled "Can't resolve all parameters for t"
-            beautify: true, //debug
+            // beautify: true, //debug
             // mangle: false, //debug
             // compress: {
             //   screw_ie8: true,
@@ -118,13 +122,13 @@ module.exports = merge(config, {
             // output: {
             //     comments: true
             // }, // Debug
-
-            // beautify: false, //prod
+            beautify: false, //prod
             output: {
                 comments: false
             }, //prod
             mangle: {
-                screw_ie8: true
+                screw_ie8: true,
+                keep_fnames: true,
             }, //prod
             compress: {
                 screw_ie8: true,

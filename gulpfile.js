@@ -3,7 +3,7 @@ const childProcess = require("child_process");
 const gulp = require("gulp");
 const sourcemaps = require("gulp-sourcemaps");
 const ts = require("gulp-typescript");
-const tsProject = ts.createProject("tsconfig.json");
+const tsProject = ts.createProject("tsconfig.node.json");
 const merge = require("merge2");
 const path = require("path");
 

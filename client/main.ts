@@ -1,7 +1,4 @@
-// tslint:disable-next-line
-/// <reference path="../definitions/index.d.ts"/>
-
-import { BrowserWindow, app, protocol } from "electron";
+import { BrowserWindow, app } from "electron";
 import * as path from "path";
 
 import { BatchClientProxyFactory } from "./api/batch-client-proxy";
