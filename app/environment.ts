@@ -5,5 +5,5 @@ import {
 import { Environment } from "app/utils/constants";
 
 if (ENV === Environment.prod) {
-    // enableProdMode();
+    enableProdMode();
 }

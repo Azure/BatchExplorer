@@ -57,7 +57,10 @@ function createWindow() {
     mainWindow.splashScreen = splashScreen;
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools();
+    console.log("Environement is", process.env.NODE_ENV, process.env.ENV);
+    if (process.env.NODE_ENV !== "production") {
+        mainWindow.webContents.openDevTools();
+    }
 
     // Clear out the main window when the app is closed
     mainWindow.on("closed", () => {
