@@ -1,6 +1,8 @@
 import { BrowserWindow } from "electron";
+import { Constants } from "../client-constants";
 
-const splashScreenFileUrl = `file://${__dirname}/../../client/splash-screen.html`;
+const urls = Constants.urls.splash;
+const url = process.env.HOT ? urls.dev : urls.prod;
 
 export class SplashScreen {
     private _window: Electron.BrowserWindow;
@@ -13,7 +15,7 @@ export class SplashScreen {
             titleBarStyle: "hidden",
             frame: false,
         });
-        this._window.loadURL(splashScreenFileUrl);
+        this._window.loadURL(url);
     }
 
     public show() {

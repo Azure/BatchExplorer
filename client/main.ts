@@ -5,6 +5,7 @@ import { BrowserWindow, app, protocol } from "electron";
 import * as path from "path";
 
 import { BatchClientProxyFactory } from "./api/batch-client-proxy";
+import { Constants } from "./client-constants";
 import { renderLogger } from "./logger";
 import { SplashScreen } from "./splash-screen";
 
@@ -15,20 +16,17 @@ app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 let mainWindow: any;
 
 // Webpack dev server url when using HOT=1
-const devServerUrl = "http://localhost:3178/index.html";
+const devServerUrl = Constants.urls.main.dev;
 
 // Webpack build output
-const buildFileUrl = `file://${__dirname}/../../build/index.html`;
+const buildFileUrl = Constants.urls.main.prod;
 
 const authWindowsToClose: Electron.BrowserWindow[] = [];
 const splashScreen = new SplashScreen();
 
-
-
 // Create the browser window.
 function createWindow() {
     splashScreen.create();
-
     protocol.registerStringProtocol("urn", (request, callback) => {
         // Close all auth windows that need to be closed
         while (authWindowsToClose.length) {
