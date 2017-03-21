@@ -32,6 +32,10 @@ export class SubTaskDisplayListComponent extends SelectableList {
     @ViewChild(QuickListComponent)
     public list: QuickListComponent;
 
+    constructor() {
+        super();
+    }
+
     public taskStatus(task: SubtaskInformation): QuickListItemStatus {
         if (task.state === TaskState.completed && task.exitCode !== 0) {
             return QuickListItemStatus.warning;

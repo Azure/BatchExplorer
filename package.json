@@ -9,7 +9,7 @@
   "main": "index.js",
   "scripts": {
     "clean": "rimraf build/* dll/*",
-    "test": "npm run test-client && npm run test-browser",
+    "test": "npm run test-client && npm run test-app",
     "test-app": "karma start",
     "test-app:mem": "cross-env DEBUG_MEM=1 npm run test-app",
     "test-app-watch": "karma start --auto-watch --no-single-run",

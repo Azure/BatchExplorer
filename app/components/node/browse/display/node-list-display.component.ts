@@ -11,7 +11,7 @@ import { Node } from "app/models";
     selector: "bl-node-list-display",
     templateUrl: "node-list-display.html",
 })
-export class NodeListDisplayComponent  extends ListOrTableBase  {
+export class NodeListDisplayComponent extends ListOrTableBase {
     @Input()
     public quickList: boolean;
 
@@ -32,6 +32,10 @@ export class NodeListDisplayComponent  extends ListOrTableBase  {
 
     @ViewChild(TableComponent)
     public table: TableComponent;
+
+    constructor() {
+        super();
+    }
 
     public isErrorState(node: any) {
         if (node.state === "startTaskFailed") {

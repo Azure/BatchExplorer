@@ -109,8 +109,7 @@ module.exports = merge(config, {
          */
         // NOTE: To debug prod builds uncomment //debug lines and comment //prod lines
         new UglifyJsPlugin({
-            // Bug when beautify is disabled "Can't resolve all parameters for t"
-            // beautify: true, //debug
+            beautify: true, // debug
             // mangle: false, //debug
             // compress: {
             //   screw_ie8: true,
@@ -122,7 +121,8 @@ module.exports = merge(config, {
             // output: {
             //     comments: true
             // }, // Debug
-            beautify: false, //prod
+
+            // beautify: false, //prod
             output: {
                 comments: false
             }, //prod
