@@ -95,6 +95,7 @@ export class UserAuthorization {
         this._setupEvents();
         if (!silent) {
             authWindow.show();
+            (remote.getCurrentWindow() as any).splashScreen.hide();
         }
     }
 
@@ -134,6 +135,7 @@ export class UserAuthorization {
             // If the user closed manualy then we need to also close the main window
             if (this._waitingForAuth) {
                 remote.getCurrentWindow().destroy();
+                (remote.getCurrentWindow() as any).splashScreen.close();
             }
         });
     }
@@ -216,7 +218,11 @@ export class UserAuthorization {
 
     private _closeWindow() {
         if (this._authWindow) {
+            if (this._authWindow.isVisible()) {
+                (remote.getCurrentWindow() as any).splashScreen.show();
+            }
             this._authWindow.destroy();
+            this._authWindow = null;
         }
     }
 }

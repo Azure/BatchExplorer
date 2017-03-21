@@ -11,5 +11,6 @@
     "build/**": true,
     "dll/**": true
   },
-  "tslint.jsEnable": true
+"tslint.jsEnable": true,
+"vsicons.presets.angular": true
 }

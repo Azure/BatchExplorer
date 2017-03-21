@@ -62,10 +62,8 @@ export class AdalService {
         this._accessTokenService = new AccessTokenService(config, this.http);
         this._retrieveUserFromLocalStorage();
         this._tokenCache.init();
-        if (this._currentUser.getValue()) {
-            if (!remote.getCurrentWindow().isVisible()) {
-                remote.getCurrentWindow().show();
-            }
+        if (this._currentUser.value) {
+            this._showMainWindow();
         }
     }
 
@@ -82,9 +80,7 @@ export class AdalService {
         });
         obs.subscribe({
             next: () => {
-                if (!remote.getCurrentWindow().isVisible()) {
-                    remote.getCurrentWindow().show();
-                }
+                this._showMainWindow();
             },
             error: (error) => {
                 log.error("Error login", error);
@@ -263,5 +259,12 @@ export class AdalService {
         localStorage.removeItem(Constants.localStorageKey.subscriptions);
         localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
         localStorage.removeItem(Constants.localStorageKey.selectedAccountId);
+    }
+
+    private _showMainWindow() {
+        if (!remote.getCurrentWindow().isVisible()) {
+            remote.getCurrentWindow().show();
+        }
+        (remote.getCurrentWindow() as any).splashScreen.destroy();
     }
 }

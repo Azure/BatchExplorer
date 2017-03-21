@@ -17,16 +17,24 @@ export class SplashScreen {
     }
 
     public show() {
-        this._window.show();
+        if (!this._window) {
+            this.create();
+        }
+        if (!this._window.isVisible()) {
+            this._window.show();
+        }
     }
 
     public hide() {
-        this._window.hide();
+        if (this._window) {
+            this._window.hide();
+        }
     }
 
     public destroy() {
         if (this._window) {
             this._window.close();
+            this._window = null;
         }
     }
 }

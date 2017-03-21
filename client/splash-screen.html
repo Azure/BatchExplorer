@@ -12,12 +12,10 @@
     }
 
     .bubbles {
-        /*padding: 100px 0*/
         width: 100px;
         height: 100px;
         margin: auto;
         position: relative;
-        border: 1px solid red;
     }
 
     .flask{
@@ -28,7 +26,7 @@
 
     .message {
         color: #d5d5d5;
-        margin-left: 100px;
+        margin: auto;
         width: 100px;
         text-align: center;
     }
@@ -36,7 +34,6 @@
     .bubble {
         width: 20px;
         height: 20px;
-        /*background: #00528c;*/
         background: #d5d5d5;
         border-radius: 10px;
         position: absolute;
@@ -46,28 +43,28 @@
         left: 35px;
         transform: scale(0.9);
         opacity: 0.2;
-        animation: moveclouds 10s linear infinite, sideWays 4s ease-in-out infinite alternate;
+        animation: moveclouds 7s linear infinite, sideWays 4s ease-in-out infinite alternate;
     }
 
     .x2 {
         left: 30px;
         transform: scale(0.6);
         opacity: 0.5;
-        animation: moveclouds 20s linear infinite, sideWays 5s ease-in-out infinite alternate;
+        animation: moveclouds 15s linear infinite, sideWays 5s ease-in-out infinite alternate;
     }
 
     .x3 {
         left: 50px;
         transform: scale(0.8);
         opacity: 0.3;
-        animation: moveclouds 15s linear infinite, sideWays 4s ease-in-out infinite alternate;
+        animation: moveclouds 12s linear infinite, sideWays 4s ease-in-out infinite alternate;
     }
 
     .x4 {
         left: 40px;
         transform: scale(0.75);
         opacity: 0.35;
-        animation: moveclouds 13s linear infinite, sideWays 2s ease-in-out infinite alternate;
+        animation: moveclouds 10s linear infinite, sideWays 2s ease-in-out infinite alternate;
     }
 
     .x5 {
@@ -80,9 +77,11 @@
     @keyframes moveclouds {
         0% {
             top: 100px;
+            transform: scale(0.6);
         }
         100% {
             top: -50px;
+            transform: scale(1.5);
         }
     }
 

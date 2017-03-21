@@ -92,6 +92,7 @@ export class BatchLabsErrorHandler implements ErrorHandler {
 export function handleCoreError(error) {
     const window = remote.getCurrentWindow();
     if (!window.isVisible()) {
+        console.log("Show because of error");
         window.show();
     }
 }
