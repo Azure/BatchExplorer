@@ -44,7 +44,7 @@ function createWindow() {
      */
     mainWindow = new BrowserWindow({
         height: 1000,
-        icon: __dirname + "/../assets/images/labs.ico",
+        icon: Constants.urls.icon,
         width: 1600,
         show: false, // Don't show the window until the user authenticated, comment to debug auth problems,
         webPreferences: {

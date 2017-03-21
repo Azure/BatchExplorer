@@ -12,6 +12,8 @@ export class SplashScreen {
         this._window = new BrowserWindow({
             height: 300,
             width: 300,
+            icon: Constants.urls.icon,
+            resizable: false,
             titleBarStyle: "hidden",
             frame: false,
         });

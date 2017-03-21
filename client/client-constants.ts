@@ -7,6 +7,7 @@ const urls = {
         dev: `file://${__dirname}/../../client/splash-screen/splash-screen.html`,
         prod: `file://${__dirname}/../../build/client/splash-screen/splash-screen.html`,
     },
+    icon: __dirname + "/../assets/images/labs.ico",
 };
 
 export const Constants = {
