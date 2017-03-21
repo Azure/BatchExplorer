@@ -43,7 +43,7 @@ function createWindow() {
         height: 1000,
         icon: Constants.urls.icon,
         width: 1600,
-        show: true, // Don't show the window until the user authenticated, comment to debug auth problems,
+        show: false, // Don't show the window until the user authenticated, comment to debug auth problems,
         webPreferences: {
             webSecurity: false,
         },
