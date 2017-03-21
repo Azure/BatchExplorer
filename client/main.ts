@@ -1,4 +1,4 @@
-import { BrowserWindow, app } from "electron";
+import { BrowserWindow, app, protocol } from "electron";
 import * as path from "path";
 
 import { BatchClientProxyFactory } from "./api/batch-client-proxy";

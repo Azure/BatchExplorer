@@ -117,3 +117,7 @@ export const Environment = {
     dev: "developement" as Environment,
     test: "test" as Environment,
 };
+
+export const ServiceUrl = {
+    arm: "https://management.azure.com",
+};
