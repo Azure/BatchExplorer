@@ -18,6 +18,10 @@ npm install -g gulp (Optional)
 
 #### 3. Build and run the application
 ```
+npm run build:prod
+npm run electron:prod
+
+# To debug errors
 npm run build
 npm run electron
 ```

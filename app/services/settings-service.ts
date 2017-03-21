@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, NgZone } from "@angular/core";
 import * as storage from "electron-json-storage";
 import { BehaviorSubject, Observable } from "rxjs";
 
@@ -20,7 +20,7 @@ export class SettingsService {
     private _filename = "settings";
     private _keybindingsFilename = "keybindings";
 
-    constructor() {
+    constructor(private zone: NgZone) {
         this.settingsObs = this._settingsSubject.asObservable();
         this.keybindings = this._keybindings.asObservable();
         this.hasSettingsLoaded = this._hasSettingsLoaded.asObservable();
@@ -38,13 +38,15 @@ export class SettingsService {
         });
 
         storage.get(this._keybindingsFilename, (error, data: KeyBindings[]) => {
-            // If the file has never been init create it
-            if (!Array.isArray(data)) {
-                storage.set(this._keybindingsFilename, [], () => {
-                    log.error("Error saving the initial keybinding settings.");
-                });
-            }
-            this._keybindings.next(defaultKeybindings.concat(data));
+            this.zone.run(() => {
+                // If the file has never been init create it
+                if (!Array.isArray(data)) {
+                    storage.set(this._keybindingsFilename, [], () => {
+                        log.error("Error saving the initial keybinding settings.");
+                    });
+                }
+                this._keybindings.next(defaultKeybindings.concat(data));
+            });
         });
     }
 }
