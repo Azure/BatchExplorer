@@ -57,7 +57,6 @@ function createWindow() {
     mainWindow.splashScreen = splashScreen;
 
     // Open the DevTools.
-    console.log("Environement is", process.env.NODE_ENV, process.env.ENV);
     if (process.env.NODE_ENV !== "production") {
         mainWindow.webContents.openDevTools();
     }
