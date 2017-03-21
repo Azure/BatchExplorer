@@ -5,7 +5,7 @@ import {
 } from "app/services/adal/user-authorization";
 import { MockBrowserWindow, MockElectronRemote } from "test/utils/mocks";
 
-fdescribe("UserAuthorization", () => {
+describe("UserAuthorization", () => {
     let userAuthorization: UserAuthorization;
     let fakeWindow: MockBrowserWindow;
     let remoteSpy: MockElectronRemote;
@@ -52,6 +52,10 @@ fdescribe("UserAuthorization", () => {
             expect(fakeWindow.isVisible()).toBe(true);
         });
 
+        it("should have hidden the splash screen", () => {
+            expect(remoteSpy.splashScreen.hide).toHaveBeenCalledOnce();
+        });
+
         it("Should return the id token and code when sucessfull", () => {
             const newUrl = "http://localhost/#id_token=sometoken&code=somecode";
             fakeWindow.webContents.notify("did-get-redirect-request", [{}, "", newUrl]);
@@ -61,6 +65,7 @@ fdescribe("UserAuthorization", () => {
             expect(error).toBeNull();
 
             expect(fakeWindow.destroy).toHaveBeenCalledTimes(1);
+            expect(remoteSpy.splashScreen.show).toHaveBeenCalledOnce();
         });
 
         it("Should error when the url redirect returns an error", () => {
