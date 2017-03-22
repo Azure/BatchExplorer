@@ -68,12 +68,12 @@ const modules = [
         // imported in specific area modules
     ],
     imports: [
-        BaseModule,
         BrowserModule,
         FormsModule,
         MaterialModule,
         ReactiveFormsModule,
         RouterModule.forRoot(routes, { useHash: true }),
+        BaseModule,
         ...modules,
     ],
     providers: [
