@@ -4,19 +4,21 @@
 **Note: BatchLabs is in beta. We don't provide any installer/packaged binaries as of now. You will need to build this app yourself.**
 
 ## Getting started
-**Install node.js version `6.9` or greater.**
+#### 1. Prerequisites
+- **Install node.js version `6.9` or greater.**
+- Install yarn `npm install -g yarn`
 
-#### 1. Clone the repo
+#### 2. Clone the repo
 - At stable branch `git clone -b stable https://github.com/Azure/BatchLabs`
 - Or for the latest changes `git clone https://github.com/Azure/BatchLabs`
 
-#### 2. Install the dependencies
+#### 3. Install the dependencies
 ```
-npm install
+yarn install
 npm install -g gulp (Optional)
 ```
 
-#### 3. Build and run the application
+#### 4. Build and run the application
 ```
 npm run build:prod
 npm run electron:prod
@@ -30,6 +32,7 @@ npm run electron
 [Dev docs](docs/readme.md)
 
 For developers, you can set up a development environment as follows:
+** Use `yarn install` instead of `npm install` this will makes sure everybody has the same exact set of depenencies [Migrating from npm to yarn](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)**
 
 Start the dev server
 ```
