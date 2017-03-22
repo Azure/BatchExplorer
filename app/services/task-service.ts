@@ -16,6 +16,7 @@ import {
     getOnceProxy,
 } from "./core";
 import { CommonListOptions, ServiceBase } from "./service-base";
+import { TaskCreateDto } from "app/models/dtos";
 
 export interface TaskListParams {
     jobId?: string;
@@ -136,7 +137,7 @@ export class TaskService extends ServiceBase {
         });
     }
 
-    public add(jobId: string, task: any, options: any): Observable<{}> {
+    public add(jobId: string, task: TaskCreateDto, options: any): Observable<{}> {
         return this.callBatchClient((client) => client.task.add(jobId, task, options));
     }
 

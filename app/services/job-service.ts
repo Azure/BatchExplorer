@@ -6,6 +6,7 @@ import { log } from "app/utils";
 import { BatchClientService } from "./batch-client.service";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
 import { ServiceBase } from "./service-base";
+import { JobCreateDto } from "app/models/dtos";
 
 export interface JobParams {
     id?: string;
@@ -73,7 +74,7 @@ export class JobService extends ServiceBase {
         return this.callBatchClient((client) => client.job.enable(jobId, options));
     }
 
-    public add(job: any, options: any = {}): Observable<{}> {
+    public add(job: JobCreateDto, options: any = {}): Observable<{}> {
         return this.callBatchClient((client) => client.job.add(job, options));
     }
 }

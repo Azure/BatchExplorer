@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 
 import { Pool } from "app/models";
+import { PoolCreateDto } from "app/models/dtos";
 import { log } from "app/utils";
 import { BatchClientService } from "./batch-client.service";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
@@ -30,7 +31,7 @@ export class PoolService extends ServiceBase {
         return this._basicProperties;
     }
 
-    public add(pool: any, options: any = {}): Observable<any> {
+    public add(pool: PoolCreateDto, options: any = {}): Observable<any> {
         return this.callBatchClient((client) => client.pool.add(pool, options), (error) => {
             log.error("Error adding pool", Object.assign({}, error));
         });
