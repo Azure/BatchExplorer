@@ -24,14 +24,6 @@ export class FileHomeComponent implements OnInit, OnDestroy {
     private _dataSub: Subscription;
     private _paramsSubscriber: Subscription;
 
-    @HostBinding("style.display") get display() {
-        return "block";
-    }
-
-    @HostBinding("style.position") get position() {
-        return "absolute";
-    }
-
     constructor(
         private sidebarManager: SidebarManager,
         private activatedRoute: ActivatedRoute) {
