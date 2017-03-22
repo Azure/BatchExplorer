@@ -3,11 +3,12 @@ branches:
     - master
 install:
     - ps: Install-Product node 6.9.1 x64
-    - npm install -g npm --silent
-    - npm install --force
+    - npm install -g npm -s
+    - npm install -g yarn -s
+    - yarn install
 
 build_script:
-    - npm run build --silent
+    - npm run build -s
 
 test_script:
-    - npm run test --silent
+    - npm run test -s
