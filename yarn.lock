@@ -45,8 +45,8 @@
     "@types/node" "*"
 
 "@types/chart.js@^2.4.0":
-  version "2.4.1"
-  resolved "https://registry.yarnpkg.com/@types/chart.js/-/chart.js-2.4.1.tgz#310c3cf2cadd817781803257b714a2a0227b43bf"
+  version "2.4.2"
+  resolved "https://registry.yarnpkg.com/@types/chart.js/-/chart.js-2.4.2.tgz#093e4d4bf9564a6b37a5977d6f0900f46cefba67"
   dependencies:
     "@types/jquery" "*"
 
