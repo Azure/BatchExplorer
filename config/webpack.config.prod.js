@@ -110,7 +110,7 @@ module.exports = merge(config, {
         // NOTE: To debug prod builds uncomment //debug lines and comment //prod lines
         new UglifyJsPlugin({
             beautify: true, // debug
-            // mangle: false, //debug
+            mangle: false, //debug
             // compress: {
             //   screw_ie8: true,
             //   keep_fnames: true,
@@ -126,10 +126,10 @@ module.exports = merge(config, {
             output: {
                 comments: false
             }, //prod
-            mangle: {
-                screw_ie8: true,
-                keep_fnames: true,
-            }, //prod
+            // mangle: {
+            //     screw_ie8: true,
+            //     keep_fnames: true,
+            // }, //prod
             compress: {
                 screw_ie8: true,
                 warnings: false,
