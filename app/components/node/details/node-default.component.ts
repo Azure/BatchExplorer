@@ -9,7 +9,7 @@ import { Component } from "@angular/core";
         </div>
     `,
 })
-export class NoNodeSelectedComponent {
+export class NodeDefaultComponent {
     public static breadcrumb(params, queryParams) {
         return { name: "Nodes" };
     }

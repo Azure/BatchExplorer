@@ -14,7 +14,10 @@
     </bl-property-group>
 
     <bl-property-group label="Application packages" class="wide" [collapsed]="true">
-        <bl-table-property label="Package references">
+        <div collapsed-preview>
+            <span>{{appPackages?.length}} application package reference</span>
+        </div>
+        <bl-table-property *ngIf="appPackages.length > 0" label="Package references">
             <bl-table-property-header>
                 <div tp-column>Application</div>
                 <div tp-column>Version</div>
@@ -24,6 +27,9 @@
                 <bl-tp-cell [value]="package.version"></bl-tp-cell>
             </bl-table-property-row>
         </bl-table-property>
+        <bl-no-item [itemCount]="appPackages.length" [slimline]="true">
+            <span no-filter>This task contains no application package references</span>
+        </bl-no-item>
     </bl-property-group>
 
     <bl-property-group label="Compute node" class="wide" [collapsed]="true">
@@ -39,6 +45,16 @@
         <bl-text-property label="Max task retry count" [value]="constraints.maxTaskRetryCount"></bl-text-property>
         <bl-text-property label="Max wall-clock time" [value]="constraints.maxWallClockTime"></bl-text-property>
         <bl-text-property label="Retention time" [value]="constraints.retentionTime"></bl-text-property>
+    </bl-property-group>
+
+    <bl-property-group label="Environment settings" class="wide" [collapsed]="true">
+        <div collapsed-preview>
+            <span>{{environmentSettings?.length}} environment settings</span>
+        </div>
+        <bl-text-property *ngFor="let setting of environmentSettings" label="{{setting.name}}" [value]="setting.value"></bl-text-property>
+        <bl-no-item [itemCount]="environmentSettings.length" [slimline]="true">
+            <span no-filter>This task contains no environment settings</span>
+        </bl-no-item>
     </bl-property-group>
 
     <bl-property-group label="Execution information" class="wide" [collapsed]="true">
