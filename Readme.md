@@ -1,7 +1,7 @@
 # BatchLabs
 [![Build Status](https://travis-ci.org/Azure/BatchLabs.svg?branch=master)](https://travis-ci.org/Azure/BatchLabs)
 
-**Note: this is in early development and there is no production build available.**
+**Note: BatchLabs is in beta. We don't provide any installer/packaged binaries as of now. You will need to build this app yourself.**
 
 ## Getting started
 **Install node.js version `6.9` or greater.**
@@ -18,6 +18,10 @@ npm install -g gulp (Optional)
 
 #### 3. Build and run the application
 ```
+npm run build:prod
+npm run electron:prod
+
+# To debug errors
 npm run build
 npm run electron
 ```

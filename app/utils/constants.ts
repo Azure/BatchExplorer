@@ -112,6 +112,12 @@ export const ODataFields = {
     taskExitCode: "executionInfo/exitCode",
 };
 
+export const Environment = {
+    prod: "production" as Environment,
+    dev: "developement" as Environment,
+    test: "test" as Environment,
+};
+
 export const ServiceUrl = {
     arm: "https://management.azure.com",
 };

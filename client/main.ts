@@ -1,6 +1,3 @@
-// tslint:disable-next-line
-/// <reference path="../definitions/index.d.ts"/>
-
 import { BrowserWindow, app, protocol } from "electron";
 import * as path from "path";
 
@@ -60,7 +57,9 @@ function createWindow() {
     mainWindow.splashScreen = splashScreen;
 
     // Open the DevTools.
-    mainWindow.webContents.openDevTools();
+    if (process.env.NODE_ENV !== "production") {
+        mainWindow.webContents.openDevTools();
+    }
 
     // Clear out the main window when the app is closed
     mainWindow.on("closed", () => {

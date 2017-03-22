@@ -3,12 +3,14 @@ const path = require("path");
 const webpack = require("webpack");
 const merge = require("webpack-merge");
 const helpers = require("./helpers");
+const DefinePlugin = require("webpack/lib/DefinePlugin");
 const DllBundlesPlugin = require("webpack-dll-bundles-plugin").DllBundlesPlugin;
 const AddAssetHtmlPlugin = require("add-asset-html-webpack-plugin");
 
 const webpackMergeDll = merge.strategy({ plugins: "replace" });
 const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 
+const ENV = "development";
 const host = "localhost";
 const port = process.env.PORT || 3178;
 
@@ -25,7 +27,28 @@ module.exports = merge(config, {
         sourceMapFilename: "[name].js.map",
         chunkFilename: "[id].chunk.js",
     },
+    module: {
+        rules: [
+            {
+                test: /\.scss$/,
+                loader: "style-loader!css-loader!sass-loader",
+                exclude: [helpers.root("app", "components")]
+            },
+            {
+                test: /\.scss$/,
+                use: ["to-string-loader", "css-loader", "sass-loader"],
+                include: [helpers.root("app", "components")]
+            },
+            {
+                test: /node_modules.*\.css$/,
+                loader: "style-loader!css-loader",
+            }
+        ],
+    },
     plugins: [
+        new DefinePlugin({
+            "ENV": JSON.stringify(ENV),
+        }),
         new DllBundlesPlugin({
             bundles: {
                 polyfills: [
