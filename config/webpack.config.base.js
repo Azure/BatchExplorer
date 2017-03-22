@@ -30,16 +30,6 @@ const baseConfig = {
                 exclude: [/node_modules/],
             },
             {
-                test: /\.scss$/,
-                loader: "style-loader!css-loader!sass-loader",
-                exclude: [helpers.root("app", "components")]
-            },
-            {
-                test: /\.scss$/,
-                use: ["to-string-loader", "css-loader", "sass-loader"],
-                include: [helpers.root("app", "components")]
-            },
-            {
                 test: /\.html$/,
                 loader: "raw-loader",
                 exclude: [/node_modules/, helpers.root("app/index.html")],
@@ -48,10 +38,6 @@ const baseConfig = {
                 test: /\.json$/,
                 loader: "raw-loader",
                 exclude: [],
-            },
-            {
-                test: /node_modules.*\.css$/,
-                loader: "style-loader!css-loader",
             },
             {
                 test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
