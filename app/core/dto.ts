@@ -4,6 +4,9 @@ const primitives = new Set(["Array", "Number", "String", "Object", "Boolean"]);
 
 const attrMetadataKey = "dto:attrs";
 
+function metadataForDto<T>(dto: Dto<T>) {
+    return Reflect.getMetadata(attrMetadataKey, dto.constructor) || {};
+}
 /**
  * Dto should be the base class for all dto.
  * It will only assign defined attributes.
@@ -11,7 +14,7 @@ const attrMetadataKey = "dto:attrs";
 export class Dto<T> {
     constructor(data: AttrOf<T>) {
         console.log("Setting dto", data);
-        const attrs = this._attrMetadata;
+        const attrs = metadataForDto(this);
         for (let key of Object.keys(attrs)) {
             const type = attrs[key];
             if (!(key in data)) {
@@ -23,6 +26,7 @@ export class Dto<T> {
             }
 
             if (type && !primitives.has(type.name)) {
+                console.log("typs is")
                 this[key] = new type(value);
             } else {
                 this[key] = value;
@@ -31,9 +35,9 @@ export class Dto<T> {
         console.log("set dto", this);
     }
 
-    public toJS(): AttrOf<T> {
+    public toJS?(): AttrOf<T> {
         let output: any = {};
-        const attrs = this._attrMetadata;
+        const attrs = metadataForDto(this);
         for (let key of Object.keys(attrs)) {
             if (!(key in this)) {
                 continue;
@@ -50,17 +54,16 @@ export class Dto<T> {
         }
         return output;
     }
-
-    private get _attrMetadata() {
-        return Reflect.getMetadata(attrMetadataKey, this.constructor) || {};
-    }
 }
 
 export function DtoAttr<T>() {
     return (target, attr, descriptor?: TypedPropertyDescriptor<T>) => {
         const ctr = target.constructor;
         const type = Reflect.getMetadata("design:type", target, attr);
-
+        if (!type) {
+            throw `Cannot retrieve the type for DtoAttr ${target.constructor.name}#${attr}`
+            + "Check your nested type is defined in another file or above this DtoAttr";
+        }
         const metadata = Reflect.getMetadata(attrMetadataKey, ctr) || {};
         metadata[attr] = type;
         Reflect.defineMetadata(attrMetadataKey, metadata, ctr);
