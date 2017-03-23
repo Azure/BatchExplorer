@@ -1,5 +1,5 @@
 <div [formGroup]="form">
-    <div class="form-element" class="source">
+    <div class="form-element element-spacer">
         <h4>Select an operating system configuration</h4>
         <div class="infrastructure">
             <md-radio-group formControlName="source">
@@ -10,7 +10,7 @@
     </div>
 
     <div *ngIf="selectedSource === PoolOsSources.PaaS">
-        <div formGroupName="cloudServiceConfiguration">
+        <div formGroupName="cloudServiceConfiguration" class="serviceReference">
             <div class="form-element">
                 <md-select formControlName="osFamily" placeholder="Operating System">
                     <md-option *ngFor="let osFamily of cloudServiceOsFamilies" [value]="osFamily.id">{{osFamily.name}}</md-option>

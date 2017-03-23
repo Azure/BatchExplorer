@@ -169,5 +169,14 @@ bl-no-item {
                 font-size: 5em;
             }
         }
+
+        &.slim {
+            height: 30px;
+            font-size: 1.05em;
+            align-items: left;
+            justify-content: left;
+            color: $genericGray;
+            display: block;
+        }
     }
 }

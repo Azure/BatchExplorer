@@ -1,33 +1,35 @@
 import { NgModule } from "@angular/core";
 
 import { commonModules } from "app/common";
+import { BaseModule } from "app/components/base";
 import { FileBrowseModule } from "app/components/file/browse";
 import { FileDetailsModule } from "app/components/file/details";
 import { TaskBrowseModule } from "app/components/task/browse";
-
 import { JobErrorDisplayComponent } from "./error-display";
-import { JobDetailsHomeComponent } from "./job-details-home.component";
+import { JobConfigurationComponent } from "./job-configuration.component";
+import { JobDefaultComponent } from "./job-default.component";
 import { JobDetailsComponent } from "./job-details.component";
-import { JobEnvironmentSettingsComponent } from "./job-env-settings.component";
-import { JobMetadataComponent } from "./job-metadata.component";
 import { JobProgressStatusComponent } from "./job-progress-status";
-import { JobPropertiesComponent } from "./job-properties.component";
 
 const components = [
-    JobErrorDisplayComponent,
-    JobDetailsHomeComponent,
+    JobConfigurationComponent,
+    JobDefaultComponent,
     JobDetailsComponent,
-    JobEnvironmentSettingsComponent,
-    JobMetadataComponent,
-    JobPropertiesComponent,
+    JobErrorDisplayComponent,
     JobProgressStatusComponent,
+];
+
+const modules = [
+    BaseModule, FileBrowseModule, FileDetailsModule, TaskBrowseModule,
 ];
 
 @NgModule({
     declarations: components,
     exports: components,
-    imports: [...commonModules,
-        FileBrowseModule, FileDetailsModule, TaskBrowseModule],
+    imports: [
+        ...commonModules,
+        ...modules,
+    ],
 })
 export class JobDetailsModule {
 }

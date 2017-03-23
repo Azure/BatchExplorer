@@ -6,7 +6,6 @@ import { Observable } from "rxjs";
 import {
     AccountService, AdalService, CommandService, NodeService, SSHKeyService, SettingsService, SubscriptionService,
 } from "app/services";
-import AccountCreateDialogComponent from "./components/account/add/account-create-dialog.component";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
 const adalConfig = {
@@ -72,10 +71,6 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     public open() {
         this.sidebar.open();
-    }
-
-    public addAccount() {
-        this.sidebarManager.open("add-account", AccountCreateDialogComponent);
     }
 
     public logout() {

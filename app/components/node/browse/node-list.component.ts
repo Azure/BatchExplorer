@@ -69,6 +69,7 @@ export class NodeListComponent extends SelectableList implements OnInit {
         this.data = this.nodeService.list(this.poolId);
         this.status = this.data.status;
         this.data.setOptions({}); // This clears the previous list objects
+
         return this.data.fetchNext(true);
     }
 

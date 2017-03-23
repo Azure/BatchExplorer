@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
-import { ExitOptions, Job, Task } from "app/models";
+import { ExitOptions, Job, NameValuePair, Task } from "app/models";
 import { TaskDecorator } from "app/models/decorators";
 import { JobAction, TaskFailureAction } from "app/models/job-action";
 
 @Component({
-    selector: "bl-task-properties",
-    templateUrl: "task-properties.html",
+    selector: "bl-task-configuration",
+    templateUrl: "task-configuration.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskPropertiesComponent {
+export class TaskConfigurationComponent {
     @Input()
     public job: Job;
 
@@ -21,13 +21,8 @@ export class TaskPropertiesComponent {
             this.hasEndTime = Boolean(this.task.executionInfo.endTime);
         }
 
-        this.decorator = new TaskDecorator(task);
-        this.appPackages = this.decorator.applicationPackageReferences || [];
-        this.constraints = this.decorator.constraints || {};
-        this.executionInfo = this.decorator.executionInfo || {};
-        this.nodeInfo = this.decorator.nodeInfo || {};
-
         this.processExitConditionData();
+        this._refresh(task);
     }
     public get task() { return this._task; }
 
@@ -36,6 +31,7 @@ export class TaskPropertiesComponent {
     public constraints: any;
     public executionInfo: any;
     public exitConditionData: any;
+    public environmentSettings: NameValuePair[] = [];
     public nodeInfo: any;
     public hasStartTime: boolean;
     public hasEndTime: boolean;
@@ -86,6 +82,18 @@ export class TaskPropertiesComponent {
             schedulingError: this._jobActionString(this._task.exitConditions.schedulingError),
             default: this._jobActionString(this._task.exitConditions.default),
         };
+    }
+
+    private _refresh(task: Task) {
+        if (task) {
+            this.environmentSettings = task.environmentSettings || [];
+
+            this.decorator = new TaskDecorator(task);
+            this.appPackages = this.decorator.applicationPackageReferences || [];
+            this.constraints = this.decorator.constraints || {};
+            this.executionInfo = this.decorator.executionInfo || {};
+            this.nodeInfo = this.decorator.nodeInfo || {};
+        }
     }
 
     private _jobActionString(exitOptions: ExitOptions) {

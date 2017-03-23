@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input, ViewContainerRef } from "@angular/core";
 
-import { Job } from "app/models";
+import { Job, NameValuePair } from "app/models";
 import {
     JobDecorator,
     JobManagerTaskDecorator,
@@ -9,11 +9,11 @@ import {
 } from "app/models/decorators";
 
 @Component({
-    selector: "bl-job-properties",
-    templateUrl: "job-properties.html",
+    selector: "bl-job-configuration",
+    templateUrl: "job-configuration.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class JobPropertiesComponent {
+export class JobConfigurationComponent {
     @Input()
     public set job(job: Job) {
         this._job = job;
@@ -32,6 +32,8 @@ export class JobPropertiesComponent {
     public managerTask: JobManagerTaskDecorator;
     public prepTask: JobPreparationTaskDecorator;
     public releaseTask: JobReleaseTaskDecorator;
+    public environmentSettings: NameValuePair[] = [];
+    public jobMetadata: NameValuePair[] = [];
     public poolInfo: any = {};
     public hasStartTime: boolean;
     public hasEndTime: boolean;
@@ -51,6 +53,8 @@ export class JobPropertiesComponent {
             this.prepTask = this.decorator.jobPreparationTask;
             this.releaseTask = this.decorator.jobReleaseTask;
             this.poolInfo = this.decorator.poolInfo || {};
+            this.environmentSettings = this.job.commonEnvironmentSettings || [];
+            this.jobMetadata = this.job.metadata || [];
         }
     }
 }

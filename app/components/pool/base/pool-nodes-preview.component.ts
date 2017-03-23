@@ -10,6 +10,12 @@ export class PoolNodesPreviewComponent {
     @Input()
     public pool: Pool;
 
+    @Input()
+    public tooltipPosition: string = "below";
+
+    @Input()
+    public largeIcon: boolean = false;
+
     public get tooltipMessage() {
         if (this.pool.resizeError) {
             return "There was a resize error";

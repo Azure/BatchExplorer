@@ -1,8 +1,0 @@
-<bl-property-list>
-    <bl-property-group label="Environment settings" class="wide">
-        <bl-text-property *ngFor="let setting of environmentSettings" label="{{setting.name}}" [value]="setting.value"></bl-text-property>
-    </bl-property-group>
-</bl-property-list>
-<bl-no-item [itemCount]="environmentSettings.length">
-    <span no-filter>This task contains no environment settings</span>
-</bl-no-item>

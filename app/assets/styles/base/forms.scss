@@ -117,6 +117,10 @@ fieldset {
             width: 100%;
             margin: 10px 0;
 
+            &.element-spacer {
+                margin-bottom: 15px;
+            }
+
             &.pad-top {
                 margin-top: 20px;
             }
@@ -159,7 +163,7 @@ fieldset {
             md-select {
                 height: 2em;
                 margin-top: 5px;
-                width: 33%;
+                width: 40%;
             }
 
             .input-summary {

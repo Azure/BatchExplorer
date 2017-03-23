@@ -3,23 +3,20 @@ import { Routes } from "@angular/router";
 
 import { Constants } from "app/utils";
 // component imports for routing
-import { AccountDetailsHomeComponent } from "./components/account/details/account-details-home.component";
-import { AccountDetailsComponent } from "./components/account/details/account-details.component";
+import { AccountDefaultComponent, AccountDetailsComponent } from "./components/account/details";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
-import { ApplicationDefaultComponent } from "./components/application/details/application-default.component";
-import { ApplicationDetailsComponent } from "./components/application/details/application-details.component";
+import { ApplicationDefaultComponent, ApplicationDetailsComponent } from "./components/application/details";
 import { ApplicationHomeComponent } from "./components/application/home/application-home.component";
 import { FileDetailsComponent } from "./components/file/details/file-details.component";
 import { FileHomeComponent } from "./components/file/home";
-import { JobDetailsHomeComponent } from "./components/job/details/job-details-home.component";
-import { JobDetailsComponent } from "./components/job/details/job-details.component";
+import { JobDefaultComponent, JobDetailsComponent } from "./components/job/details";
 import { JobHomeComponent } from "./components/job/home/job-home.component";
-import { NoNodeSelectedComponent, NodeDetailsComponent } from "./components/node/details";
+import { NodeDefaultComponent, NodeDetailsComponent } from "./components/node/details";
 import { NodeHomeComponent } from "./components/node/home";
 import { PoolDetailsComponent } from "./components/pool/details";
-import { PoolDetailsHomeComponent } from "./components/pool/details";
+import { PoolDefaultComponent } from "./components/pool/details";
 import { PoolHomeComponent } from "./components/pool/home/pool-home.component";
-import { NoTaskSelectedComponent, TaskDetailsComponent } from "./components/task/details";
+import { TaskDefaultComponent, TaskDetailsComponent } from "./components/task/details";
 import { TaskHomeComponent } from "./components/task/home";
 
 // set up the routing table
@@ -29,7 +26,7 @@ export const routes: Routes = [
         component: AccountHomeComponent,
         path: "accounts",
         children: [
-            { path: "", component: AccountDetailsHomeComponent }, // accounts/
+            { path: "", component: AccountDefaultComponent }, // accounts/
             { path: ":id", component: AccountDetailsComponent }, // accounts/{account.id}
         ],
     },
@@ -37,7 +34,7 @@ export const routes: Routes = [
         path: "jobs",
         component: JobHomeComponent,
         children: [
-            { path: "", component: JobDetailsHomeComponent }, // jobs/
+            { path: "", component: JobDefaultComponent }, // jobs/
             { path: ":id", component: JobDetailsComponent }, // jobs/{job.id}
         ],
     },
@@ -45,7 +42,7 @@ export const routes: Routes = [
         path: "pools",
         component: PoolHomeComponent,
         children: [
-            { path: "", component: PoolDetailsHomeComponent }, // pools/
+            { path: "", component: PoolDefaultComponent }, // pools/
             { path: ":id", component: PoolDetailsComponent }, // pools/{pool.id}
         ],
     },
@@ -61,7 +58,7 @@ export const routes: Routes = [
         path: "pools/:poolId/nodes",
         component: NodeHomeComponent,
         children: [
-            { path: "", component: NoNodeSelectedComponent }, // pools/{pool.id}/nodes
+            { path: "", component: NodeDefaultComponent }, // pools/{pool.id}/nodes
             { path: ":id", component: NodeDetailsComponent }, // pools/{pool.id}/nodes/{node.id}
         ],
     },
@@ -69,7 +66,7 @@ export const routes: Routes = [
         path: "jobs/:jobId/tasks",
         component: TaskHomeComponent,
         children: [
-            { path: "", component: NoTaskSelectedComponent }, // jobs/{job.id}/tasks
+            { path: "", component: TaskDefaultComponent }, // jobs/{job.id}/tasks
             { path: ":id", component: TaskDetailsComponent }, // jobs/{job.id}/tasks/{task.id}
         ],
     },

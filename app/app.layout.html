@@ -30,16 +30,9 @@
                 <md-sidenav #rightSidebar align="end">
                     <bl-sidebar-content #sidebarContent [sidebar]="rightSidebar"></bl-sidebar-content>
                 </md-sidenav>
-                <!--[hidden]="!(hasAccount | async)"-->
                 <div>
                     <router-outlet></router-outlet>
                 </div>
-                <!--<div *ngIf="!(hasAccount | async)" class="no-account">
-                    <md-card (click)="addAccount()">
-                        <i class="fa fa-user fa-lg"></i>
-                        <div>Add a batch account</div>
-                    </md-card>
-                </div>-->
             </md-sidenav-container>
         </div>
     </section>

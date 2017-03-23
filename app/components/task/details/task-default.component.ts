@@ -9,7 +9,7 @@ import { Component } from "@angular/core";
         </div>
     `,
 })
-export class NoTaskSelectedComponent {
+export class TaskDefaultComponent {
     public static breadcrumb(params, queryParams) {
         return { name: "Tasks" };
     }
