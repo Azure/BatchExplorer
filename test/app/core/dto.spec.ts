@@ -22,7 +22,7 @@ class FakeDto extends Dto<FakeDto> {
     public nested?: FakeNestedDto;
 }
 
-fdescribe("Dto", () => {
+describe("Dto", () => {
     it("should not set attributes not in the list", () => {
         const dto = new FakeDto({ id: "foo", other: "wrong", other2: { nested: true } } as any);
         expect(dto.id).toEqual("foo");
