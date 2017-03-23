@@ -32,7 +32,7 @@ export class PoolService extends ServiceBase {
     }
 
     public add(pool: PoolCreateDto, options: any = {}): Observable<any> {
-        return this.callBatchClient((client) => client.pool.add(pool, options), (error) => {
+        return this.callBatchClient((client) => client.pool.add(pool.toJS(), options), (error) => {
             log.error("Error adding pool", Object.assign({}, error));
         });
     }

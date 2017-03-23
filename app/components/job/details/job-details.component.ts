@@ -119,7 +119,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
 
     public cloneJob() {
         const ref = this.sidebarManager.open("add-basic-pool", JobCreateBasicDialogComponent);
-        ref.component.setValue(this.job);
+        ref.component.setValueFromEntity(this.job);
     }
 
     public enableJob() {

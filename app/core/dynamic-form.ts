@@ -1,7 +1,8 @@
 import { Type } from "@angular/core";
 import { FormGroup } from "@angular/forms";
+import { Dto } from "app/core";
 
-export abstract class DynamicForm<TEntity, TDto> {
+export abstract class DynamicForm<TEntity, TDto extends Dto<TDto>> {
     public originalData: TDto;
     public form: FormGroup;
 
@@ -16,7 +17,7 @@ export abstract class DynamicForm<TEntity, TDto> {
     }
 
     public getCurrentValue(): TDto {
-        return Object.assign({}, this.originalData, this.formToDto(this.form.value));
+        return new this.dtoType(Object.assign({}, this.originalData, this.formToDto(this.form.value)));
     }
 
     public abstract formToDto(value: any): TDto;

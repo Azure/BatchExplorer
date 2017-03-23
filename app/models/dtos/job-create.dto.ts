@@ -1,16 +1,34 @@
+import { Dto, DtoAttr } from "app/core";
 import { EnvironmentSetting, MetaDataDto } from "./metadata.dto";
 import { PoolCreateDto } from "./pool-create.dto";
 
-export interface JobCreateDto {
-    id: string;
-    displayName?: string;
-    priority?: number;
-    constraints?: any;
-    jobManagerTask?: any;
-    jobPreparationTask?: any;
-    jobReleaseTask?: any;
-    commonEnvironmentSettings?: EnvironmentSetting[];
-    poolInfo: {
+export class JobCreateDto extends Dto<JobCreateDto> {
+    @DtoAttr()
+    public id: string;
+
+    @DtoAttr()
+    public displayName?: string;
+
+    @DtoAttr()
+    public priority?: number;
+
+    @DtoAttr()
+    public constraints?: any;
+
+    @DtoAttr()
+    public jobManagerTask?: any;
+
+    @DtoAttr()
+    public jobPreparationTask?: any;
+
+    @DtoAttr()
+    public jobReleaseTask?: any;
+
+    @DtoAttr()
+    public commonEnvironmentSettings?: EnvironmentSetting[];
+
+    @DtoAttr()
+    public poolInfo: {
         poolId?: string;
         autoPoolSpecification: {
             autoPoolIdPrefix?: string;
@@ -19,8 +37,16 @@ export interface JobCreateDto {
             pool?: PoolCreateDto;
         };
     };
-    usesTaskDependencies?: boolean;
-    onAllTasksComplete?: string;
-    onTaskFailure?: string;
-    metadata?: MetaDataDto[];
+
+    @DtoAttr()
+    public usesTaskDependencies?: boolean;
+
+    @DtoAttr()
+    public onAllTasksComplete?: string;
+
+    @DtoAttr()
+    public onTaskFailure?: string;
+
+    @DtoAttr()
+    public metadata?: MetaDataDto[];
 }

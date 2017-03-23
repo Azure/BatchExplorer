@@ -75,6 +75,6 @@ export class JobService extends ServiceBase {
     }
 
     public add(job: JobCreateDto, options: any = {}): Observable<{}> {
-        return this.callBatchClient((client) => client.job.add(job, options));
+        return this.callBatchClient((client) => client.job.add(job.toJS(), options));
     }
 }
