@@ -1,4 +1,4 @@
-import { Pool } from "app/models";
+import { PoolCreateDto } from "app/models/dtos";
 
 export enum PoolOsSources {
     PaaS,
@@ -30,13 +30,13 @@ export interface CreatePoolModel {
     os: PoolOSPickerModel;
 }
 
-export function createPoolToData(output: CreatePoolModel): any {
+export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
     let data: any = {
         id: output.id,
         displayName: output.displayName,
         vmSize: output.vmSize,
-        targetDedicated: output.targetDedicated,
-        maxTasksPerNode: output.maxTasksPerNode,
+        targetDedicated: Number(output.targetDedicated),
+        maxTasksPerNode: Number(output.maxTasksPerNode),
         enableInterNodeCommunication: output.enableInterNodeCommunication,
     };
 
@@ -56,7 +56,7 @@ export function createPoolToData(output: CreatePoolModel): any {
  * Take an existing pool and create the data for a new form with that pool data.
  * Used to clone a pool
  */
-export function poolToFormModel(pool: Pool): CreatePoolModel {
+export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
     return {
         id: pool.id,
         displayName: pool.displayName,
@@ -66,7 +66,7 @@ export function poolToFormModel(pool: Pool): CreatePoolModel {
         enableInterNodeCommunication: pool.enableInterNodeCommunication,
         os: {
             source: pool.cloudServiceConfiguration ? PoolOsSources.PaaS : PoolOsSources.IaaS,
-            cloudServiceConfiguration: pool.cloudServiceConfiguration,
+            cloudServiceConfiguration: pool.cloudServiceConfiguration as any,
             virtualMachineConfiguration: pool.virtualMachineConfiguration,
         },
     };
