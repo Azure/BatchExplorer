@@ -3,7 +3,8 @@ node_js:
     - '6.9.4'
 
 install:
-  - npm install
+  - npm install -g yarn
+  - yarn install
 
 before_script:
   - export DISPLAY=:99.0
@@ -18,3 +19,4 @@ script:
 branches:
   only:
   - master
+  - stable
