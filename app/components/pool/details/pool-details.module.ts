@@ -12,7 +12,7 @@ import { StartTaskModule } from "app/components/pool/start-task";
 
 const components = [
     PoolConfigurationComponent, PoolDefaultComponent, PoolDetailsComponent,
-    PoolErrorDisplayComponent, PoolNodesPreviewComponent
+    PoolErrorDisplayComponent, PoolNodesPreviewComponent,
 ];
 
 @NgModule({
