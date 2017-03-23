@@ -6,10 +6,10 @@ import { NodeService } from "app/services";
 import { PoolUtils } from "app/utils";
 
 @Component({
-    selector: "bl-node-properties",
-    templateUrl: "node-properties.html",
+    selector: "bl-node-configuration",
+    templateUrl: "node-configuration.html",
 })
-export class NodePropertiesComponent implements OnChanges {
+export class NodeConfigurationComponent implements OnChanges {
     @Input()
     public pool: Pool;
 

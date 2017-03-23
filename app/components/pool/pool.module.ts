@@ -1,7 +1,6 @@
 import { NgModule } from "@angular/core";
 
 import { commonModules } from "app/common";
-import { PoolNodesPreviewComponent } from "app/components/pool/base/pool-nodes-preview.component";
 import { PoolAdvancedFilterComponent } from "app/components/pool/browse/filter";
 import { PoolListComponent } from "app/components/pool/browse/pool-list.component";
 import { PoolDetailsModule } from "app/components/pool/details";
@@ -18,7 +17,7 @@ import {
 
 const components = [
     DeletePoolDialogComponent, PoolAdvancedFilterComponent, PoolCreateBasicDialogComponent,
-    PoolHomeComponent, PoolListComponent, PoolNodesPreviewComponent, PoolOsPickerComponent,
+    PoolHomeComponent, PoolListComponent, PoolOsPickerComponent,
     PoolResizeDialogComponent,
 ];
 

@@ -1,4 +1,10 @@
 bl-pool-nodes-preview {
+    > div.large {
+        span {
+            font-size: 1.5em;
+        }
+    }
+
     .resize-error {
         color: $red;
         font-weight: bold;

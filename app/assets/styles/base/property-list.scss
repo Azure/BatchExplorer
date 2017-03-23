@@ -8,11 +8,14 @@ $group-padding: 28px;
     $value-width: $property-width - $label-width - $label-value-margin - $clipboard-width;
 
     section {
-        width: $property-width;
+        // add an extra 10px to make room for the copy button
+        width: $property-width + 10px;
+
         label, > table td.label {
             width: $label-width !important;
             min-width: $label-width;
         }
+
         .value {
             width: $value-width;
         }

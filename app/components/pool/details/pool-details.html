@@ -10,20 +10,10 @@
                     <md-card-subtitle>{{pool.vmSize}}, {{pool.allocationState}}</md-card-subtitle>
                 </div>
                 <div>
-                    <!--
-                        Want to add this but there is some recursive call or something going
-                        on in the getTooltip method causing stack overflows.
-                        Once we fix that, use the nodes-preview component instead
-
-                        This is tracked at https://github.com/angular/material2/issues/1157
-                        <bl-pool-nodes-preview [pool]="pool"></bl-pool-nodes-preview>
-                    -->
-                    <h4 [title]="nodesTooltipMessage">{{pool.currentDedicated}} / {{pool.targetDedicated}}</h4>
-                    <h5>Nodes</h5>
+                    <bl-pool-nodes-preview [pool]="pool" [largeIcon]="true"></bl-pool-nodes-preview>
                 </div>
             </md-card-title-group>
             <md-card-content>
-                <!-- TODO: Use Moment for date formatting -->
                 <p>Last resized {{lastResize}}</p>
                 <p><i class="fa fa-{{poolOsIcon}}" aria-hidden="true"></i> {{poolOs}}</p>
             </md-card-content>
@@ -41,11 +31,9 @@
                     <bl-tab-label>Graphs</bl-tab-label>
                     <bl-pool-graphs [pool]="pool"></bl-pool-graphs>
                 </bl-tab>
-                <bl-tab key="nodes">
-                    <bl-tab-label>Nodes</bl-tab-label>
-                    <bl-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/pools', poolId, 'nodes']" [filterPlaceholder]="filterPlaceholderText">
-                        <bl-node-list #list [poolId]="poolId" [filter]="listWrapper.filter" [quickList]="false" [manualLoading]="true"></bl-node-list>
-                    </bl-entity-details-list>
+                <bl-tab key="configuration">
+                    <bl-tab-label>Configuration</bl-tab-label>
+                    <bl-pool-configuration [pool]="pool"></bl-pool-configuration>
                 </bl-tab>
                 <bl-tab key="startTask">
                     <bl-tab-label>Start Task</bl-tab-label>
@@ -53,9 +41,11 @@
                         <bl-start-task-properties [pool]="pool"></bl-start-task-properties>
                     </div>
                 </bl-tab>
-                <bl-tab key="properties">
-                    <bl-tab-label>Properties</bl-tab-label>
-                    <bl-pool-properties [pool]="pool"></bl-pool-properties>
+                <bl-tab key="nodes">
+                    <bl-tab-label>Nodes</bl-tab-label>
+                    <bl-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/pools', poolId, 'nodes']" [filterPlaceholder]="filterPlaceholderText">
+                        <bl-node-list #list [poolId]="poolId" [filter]="listWrapper.filter" [quickList]="false" [manualLoading]="true"></bl-node-list>
+                    </bl-entity-details-list>
                 </bl-tab>
             </bl-tab-group>
         </md-card>

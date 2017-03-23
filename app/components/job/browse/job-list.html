@@ -25,6 +25,7 @@
         <bl-cell>{{job.poolInfo?.poolId}}</bl-cell>
     </bl-row>
 </bl-table>
+
 <bl-no-item [itemCount]="(data.items | async).size" [filter]="filter" [status]="status | async">
     <i icon class="fa fa-tasks"></i>
     <span no-filter>No jobs</span>
