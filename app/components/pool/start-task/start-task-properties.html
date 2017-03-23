@@ -1,40 +1,41 @@
-<div *ngIf="!edit" class="editable-properties">
-    <bl-property-list *ngIf="startTask">
-        <bl-property-group label="General" class="wide">
-            <bl-text-property label="Command line" [value]="startTask.commandLine"></bl-text-property>
-            <bl-text-property label="Max retry count" [value]="startTask.maxTaskRetryCount"></bl-text-property>
-            <bl-bool-property label="Run elevated" [value]="startTask.runElevated" YesNo="true"></bl-bool-property>
-            <bl-bool-property label="Wait for success" [value]="startTask.waitForSuccess" YesNo="true"></bl-bool-property>
+<button md-mini-fab color="primary" *ngIf="!edit" style="float:right; margin:20px;" (click)="edit = true" title="Edit start task">
+    <i class="fa fa-pencil"></i>
+</button>
 
-            <bl-table-property label="Resource files">
-                <bl-table-property-header>
-                    <div tp-column>Blob source</div>
-                    <div tp-column>File path</div>
-                </bl-table-property-header>
-                <bl-table-property-row *ngFor="let file of startTask.resourceFiles">
-                    <bl-tp-cell [value]="file.blobSource"></bl-tp-cell>
-                    <bl-tp-cell [value]="file.filePath"></bl-tp-cell>
-                </bl-table-property-row>
-            </bl-table-property>
-            <bl-table-property label="Environment settings">
-                <bl-table-property-header>
-                    <div tp-column>Key</div>
-                    <div tp-column>Value</div>
-                </bl-table-property-header>
-                <bl-table-property-row *ngFor="let setting of startTask.environmentSettings">
-                    <bl-tp-cell [value]="setting.key"></bl-tp-cell>
-                    <bl-tp-cell [value]="setting.value"></bl-tp-cell>
-                </bl-table-property-row>
-            </bl-table-property>
-        </bl-property-group>
-    </bl-property-list>
+<bl-property-list *ngIf="startTask && !edit">
+    <bl-property-group label="General" class="wide">
+        <bl-text-property label="Command line" [value]="startTask.commandLine"></bl-text-property>
+        <bl-text-property label="Max retry count" [value]="startTask.maxTaskRetryCount"></bl-text-property>
+        <bl-bool-property label="Run elevated" [value]="startTask.runElevated" YesNo="true"></bl-bool-property>
+        <bl-bool-property label="Wait for success" [value]="startTask.waitForSuccess" YesNo="true"></bl-bool-property>
 
-    <div *ngIf="!startTask" class="no-properties">
-        Pool doesn't have a start task
-    </div>
+        <bl-table-property label="Resource files">
+            <bl-table-property-header>
+                <div tp-column>Blob source</div>
+                <div tp-column>File path</div>
+            </bl-table-property-header>
+            <bl-table-property-row *ngFor="let file of startTask.resourceFiles">
+                <bl-tp-cell [value]="file.blobSource"></bl-tp-cell>
+                <bl-tp-cell [value]="file.filePath"></bl-tp-cell>
+            </bl-table-property-row>
+        </bl-table-property>
+        <bl-table-property label="Environment settings">
+            <bl-table-property-header>
+                <div tp-column>Key</div>
+                <div tp-column>Value</div>
+            </bl-table-property-header>
+            <bl-table-property-row *ngFor="let setting of startTask.environmentSettings">
+                <bl-tp-cell [value]="setting.key"></bl-tp-cell>
+                <bl-tp-cell [value]="setting.value"></bl-tp-cell>
+            </bl-table-property-row>
+        </bl-table-property>
+    </bl-property-group>
+</bl-property-list>
 
-    <button md-mini-fab color="primary" (click)="edit = true" mdTooltip="Edit">
-        <i class="fa fa-pencil"></i>
-    </button>
+<bl-no-item [itemCount]="startTask ? 1 : 0" *ngIf="!edit">
+    <span no-filter>This pool doesn't have a start task</span>
+</bl-no-item>
+
+<div class="tab-padding">
+    <bl-start-task-edit-form [pool]="pool" *ngIf="edit" (close)="edit=false"></bl-start-task-edit-form>
 </div>
-<bl-start-task-edit-form [pool]="pool" *ngIf="edit" (close)="edit=false"></bl-start-task-edit-form>

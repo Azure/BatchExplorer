@@ -20,6 +20,16 @@
         <bl-text-property label="Max wall-clock time" [value]="constraints.maxWallClockTime"></bl-text-property>
     </bl-property-group>
 
+    <bl-property-group label="Environment settings" class="wide" [collapsed]="true">
+        <div collapsed-preview>
+            <span>{{environmentSettings?.length}} environment settings</span>
+        </div>
+        <bl-text-property *ngFor="let setting of environmentSettings" label="{{setting.name}}" [value]="setting.value"></bl-text-property>
+        <bl-no-item [itemCount]="environmentSettings.length" [slimline]="true">
+            <span no-filter>This job contains no environment settings</span>
+        </bl-no-item>
+    </bl-property-group>
+
     <bl-property-group label="Execution information" class="wide" [collapsed]="true">
         <div collapsed-preview>
             <span *ngIf="!hasStartTime">Job not started</span>
@@ -41,6 +51,7 @@
     </bl-property-group>
 
     <bl-property-group *ngIf="job.jobPreparationTask" label="Job preparation task" class="wide" [collapsed]="true">
+        <div collapsed-preview></div>
         <bl-text-property label="Id" [value]="prepTask.id"></bl-text-property>
         <bl-text-property label="Command line" [value]="prepTask.commandLine"></bl-text-property>
         <bl-text-property label="Max task retry count" [value]="prepTask.constraints.maxTaskRetryCount"></bl-text-property>
@@ -72,6 +83,7 @@
     </bl-property-group>
 
     <bl-property-group *ngIf="job.jobReleaseTask" label="Job release task" class="wide" [collapsed]="true">
+        <div collapsed-preview></div>
         <bl-text-property label="Id" [value]="releaseTask.id"></bl-text-property>
         <bl-text-property label="Command line" [value]="releaseTask.commandLine"></bl-text-property>
         <bl-text-property label="Max wall-clock time" [value]="releaseTask.maxWallClockTime"></bl-text-property>
@@ -97,5 +109,15 @@
                 <bl-tp-cell [value]="setting.value"></bl-tp-cell>
             </bl-table-property-row>
         </bl-table-property>
+    </bl-property-group>
+
+    <bl-property-group label="Metadata" class="wide" [collapsed]="true">
+        <div collapsed-preview>
+            <span>{{jobMetadata?.length}} meta items</span>
+        </div>
+        <bl-text-property *ngFor="let metaItem of jobMetadata" label="{{metaItem.name}}" [value]="metaItem.value"></bl-text-property>
+        <bl-no-item [itemCount]="jobMetadata.length" [slimline]="true">
+            <span no-filter>This job contains no metadata</span>
+        </bl-no-item>
     </bl-property-group>
 </bl-property-list>

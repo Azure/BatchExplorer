@@ -1,11 +1,9 @@
 import { Component, NgZone, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
-import { MdDialog, MdDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Subscription } from "rxjs/Subscription";
 
 import { AccountResource } from "app/models";
 import { AccountService } from "app/services";
-import { DeleteAccountDialogComponent } from "../action/delete-account-dialog.component";
 
 @Component({
     selector: "bl-account-details",
@@ -29,7 +27,6 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     private _paramsSubscriber: Subscription;
 
     constructor(
-        private dialog: MdDialog,
         private router: Router,
         private activatedRoute: ActivatedRoute,
         private accountService: AccountService,
@@ -57,21 +54,6 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._paramsSubscriber.unsubscribe();
-    }
-
-    public deleteAccount() {
-        if (!this.account) {
-            return;
-        }
-        let config = new MdDialogConfig();
-        config.viewContainerRef = this.viewContainerRef;
-
-        const dialogRef = this.dialog.open(DeleteAccountDialogComponent, config);
-        dialogRef.componentInstance.accountId = this.accountId;
-        dialogRef.componentInstance.accountName = this.account.name;
-        dialogRef.afterClosed().subscribe(() => {
-            this.router.navigate(["/accounts"]);
-        });
     }
 
     public selectAccount(accountId: string): void {

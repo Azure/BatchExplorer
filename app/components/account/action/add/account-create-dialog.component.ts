@@ -2,14 +2,14 @@ import { Component } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { Router } from "@angular/router";
 
+import { SidebarRef } from "app/components/base/sidebar";
 import { AccountService } from "app/services";
-import { SidebarRef } from "../../base/sidebar";
 
 @Component({
     selector: "bl-account-create-dialog",
     templateUrl: "account-create-dialog.html",
 })
-export default class AccountCreateDialogComponent {
+export class AccountCreateDialogComponent {
     public isSaving: boolean = false;
 
     constructor(
@@ -21,16 +21,5 @@ export default class AccountCreateDialogComponent {
 
     public onSubmit() {
         alert("Not supported yet!");
-        // this.isSaving = true;
-        // const account  = Object.assign({}, this.account);
-        // this.accountService.add(account).subscribe(
-        //     (val) => { this.resetForm(); },
-        //     (error) => { log.error("storeAccount() :: error: ", error); },
-        //     () => {
-        //         this.isSaving = false;
-        //         this.sidebarRef.destroy();
-        //         this.router.navigate(["/accounts", account.id]);
-        //     },
-        // );
     }
 }

@@ -16,7 +16,6 @@ export class PoolErrorDisplayComponent {
     public pool: Pool;
 
     constructor(private poolService: PoolService, private accountService: AccountService) {
-
     }
 
     public get hasResizeError(): boolean {

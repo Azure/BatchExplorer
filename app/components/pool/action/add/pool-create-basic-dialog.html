@@ -27,7 +27,7 @@
                 <bl-error controlName="targetDedicated" code="required">Target size is a required field</bl-error>
             </div>
 
-            <div class="form-element">
+            <div class="form-element element-spacer">
                 <md-select formControlName="vmSize" placeholder="VM size">
                     <md-option *ngFor="let vmSize of vmSizes" value="{{vmSize}}">{{vmSize}}</md-option>
                 </md-select>
