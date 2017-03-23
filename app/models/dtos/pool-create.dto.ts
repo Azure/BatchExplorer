@@ -1,23 +1,20 @@
-import { Type } from "@angular/core";
-
 import { MetaDataDto } from "./metadata.dto";
 
-type AttrOf<T> = {
-    [P in keyof T]: T[P];
-};
+const primitives = new Set(["Array", "Number", "String", "Object", "Boolean"]);
+
 
 export class DtoBase<T> {
     constructor(data: AttrOf<T>) {
         const attrs = this._attrMetadata;
-        console.log("Assign data", data);
+        console.log("Assign data", data, attrs);
         for (let key of Object.keys(attrs)) {
             const type = attrs[key];
             if (!(key in data)) {
                 continue;
             }
             const value = (data as any)[key];
-            console.log("Assign value for", key, value, type);
-            if (type) {
+            console.log("Assign value for", key, value, type.name);
+            if (type && !primitives.has(type.name)) {
                 this[key] = new type(value);
             } else {
                 this[key] = value;
@@ -27,7 +24,7 @@ export class DtoBase<T> {
     }
 
     public toJS(): AttrOf<T> {
-        let output = {};
+        let output: any = {};
         const attrs = this._attrMetadata;
         for (let key of Object.keys(attrs)) {
             if (!(key in this)) {
@@ -43,26 +40,21 @@ export class DtoBase<T> {
         return output;
     }
 
-    private get _metadata() {
-        return (this.constructor as any)._metadata || {};
-    }
-
     private get _attrMetadata() {
-        return this._metadata.attrs || {};
+        return Reflect.getMetadata("dto:attrs", this.constructor) || {};
     }
 }
 
-function DtoAttr(attrType: Type<any> = null) {
-    return (cls, attr, other?) => {
-        // console.log(cls, attr, other);
-        const ctr = cls.constructor;
-        if (!ctr._metadata) {
-            ctr._metadata = {};
-        }
-        if (!ctr._metadata.attrs) {
-            ctr._metadata.attrs = {};
-        }
-        ctr._metadata.attrs[attr] = attrType;
+
+function DtoAttr<T>() {
+    return (target, attr, descriptor?: TypedPropertyDescriptor<T>) => {
+        const ctr = target.constructor;
+        const type = Reflect.getMetadata("design:type", target, attr);
+        console.log(target, attr, type);
+
+        const metadata = Reflect.getMetadata("dto:attrs", ctr) || {};
+        metadata[attr] = type;
+        Reflect.defineMetadata("dto:attrs", metadata, ctr);
     };
 }
 
@@ -84,7 +76,7 @@ export class PoolCreateDto extends DtoBase<PoolCreateDto> {
     @DtoAttr()
     public vmSize?: string;
 
-    @DtoAttr(CloudServiceConfiguration)
+    @DtoAttr()
     public cloudServiceConfiguration?: CloudServiceConfiguration;
 
     @DtoAttr()

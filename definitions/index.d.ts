@@ -32,3 +32,7 @@ declare const ENV: Environment;
 
 
 type StringMap<V> = { [key: string]: V };
+
+type AttrOf<T> = {
+    [P in keyof T]: T[P];
+};
