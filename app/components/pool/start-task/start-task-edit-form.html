@@ -1,5 +1,5 @@
 <div class="edit-form">
-    <h2>Edit start task for pool {{pool.id}}</h2>
+    <h2>Edit start task for pool: {{pool.id}}</h2>
     <bl-action-form [formGroup]="form" [submit]="submit" submitText="Update" (done)="close.emit()">
         <form novalidate [formGroup]="form">
             <bl-start-task-picker formControlName="startTask"></bl-start-task-picker>
