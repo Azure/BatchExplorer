@@ -18,7 +18,6 @@ export interface CreateTaskModel {
     runElevated: boolean;
     multiInstanceSettings: any;
     applicationPackageReferences: any[];
-    dependsOn: any;
 }
 
 export function createTaskFormToJsonData(formData: CreateTaskModel): any {
@@ -37,17 +36,18 @@ export function createTaskFormToJsonData(formData: CreateTaskModel): any {
             maxTaskRetryCount: formData.constraints.maxTaskRetryCount,
             retentionTime: retentionTime,
         },
-        runElevated: this.runElevated,
+        runElevated: formData.runElevated,
         multiInstanceSettings: null,
         applicationPackageReferences: null,
-        dependsOn: null,
     };
+
+    console.log("Data here...", data.dependsOn);
 
     return data;
 }
 
 export function taskToFormModel(task: TaskCreateDto): CreateTaskModel {
-    return {
+    const out: any = {
         id: task.id,
         displayName: task.displayName,
         commandLine: task.commandLine,
@@ -55,14 +55,26 @@ export function taskToFormModel(task: TaskCreateDto): CreateTaskModel {
         resourceFiles: task.resourceFiles,
         environmentSettings: task.environmentSettings,
         affinityInfo: task.affinityInfo,
-        constraints: {
-            maxWallClockTime: task.constraints.maxWallClockTime.toISOString(),
-            maxTaskRetryCount: task.constraints.maxTaskRetryCount,
-            retentionTime: task.constraints.retentionTime.toISOString(),
-        },
+
         runElevated: task.runElevated,
         multiInstanceSettings: task.multiInstanceSettings,
         applicationPackageReferences: task.applicationPackageReferences,
-        dependsOn: task.dependsOn,
     };
+
+    if (task.constraints) {
+        out.constraints = {
+            maxWallClockTime: durationToString(task.constraints.maxWallClockTime),
+            maxTaskRetryCount: task.constraints.maxTaskRetryCount,
+            retentionTime: durationToString(task.constraints.retentionTime),
+        };
+    }
+    return out;
+}
+
+function durationToString(duration: moment.Duration) {
+    if (duration) {
+        return (duration as any).toISOString();
+    } else {
+        return null;
+    }
 }

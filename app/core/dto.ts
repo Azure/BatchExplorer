@@ -10,6 +10,7 @@ const attrMetadataKey = "dto:attrs";
  */
 export class Dto<T> {
     constructor(data: AttrOf<T>) {
+        console.log("Setting dto", data);
         const attrs = this._attrMetadata;
         for (let key of Object.keys(attrs)) {
             const type = attrs[key];
@@ -27,6 +28,7 @@ export class Dto<T> {
                 this[key] = value;
             }
         }
+        console.log("set dto", this);
     }
 
     public toJS(): AttrOf<T> {

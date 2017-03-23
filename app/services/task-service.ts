@@ -138,7 +138,8 @@ export class TaskService extends ServiceBase {
     }
 
     public add(jobId: string, task: TaskCreateDto, options: any): Observable<{}> {
-        return this.callBatchClient((client) => client.task.add(jobId, task, options));
+        console.log("Add task", task.toJS());
+        return this.callBatchClient((client) => client.task.add(jobId, task.toJS(), options));
     }
 
     /**

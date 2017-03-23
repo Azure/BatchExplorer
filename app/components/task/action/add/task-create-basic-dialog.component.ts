@@ -1,8 +1,8 @@
 import { Component } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
-import { autobind } from "@types/core-decorators";
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { RangeValidatorDirective } from "app/components/base/validation";

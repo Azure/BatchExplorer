@@ -1,6 +1,7 @@
 import { Type } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { Dto } from "app/core";
+import { FormUtils } from "app/utils";
 
 export abstract class DynamicForm<TEntity, TDto extends Dto<TDto>> {
     public originalData: TDto;
@@ -10,6 +11,11 @@ export abstract class DynamicForm<TEntity, TDto extends Dto<TDto>> {
     public setValue(value: TDto) {
         this.originalData = value;
         this.form.patchValue(this.dtoToForm(value));
+    }
+
+    public disable(path: string | string[]) {
+        const control = FormUtils.getControl(this.form, path);
+        control.disable();
     }
 
     public setValueFromEntity(value: TEntity) {

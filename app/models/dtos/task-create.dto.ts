@@ -24,6 +24,9 @@ export class TaskCreateDto extends Dto<TaskCreateDto> {
     public affinityInfo?: any;
 
     @DtoAttr()
+    public constraints?: ConstraintDto;
+
+    @DtoAttr()
     public runElevated?: boolean;
 
     @DtoAttr()
@@ -45,4 +48,10 @@ export interface ResourceFileDto {
 export interface ApplicationPackageReferenceDto {
     applicationId: string;
     version?: string;
+}
+
+export interface ConstraintDto {
+    maxWallClockTime?: moment.Duration;
+    maxTaskRetryCount?: number;
+    retentionTime?: moment.Duration;
 }

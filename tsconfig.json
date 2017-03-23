@@ -32,8 +32,7 @@
       "node",
       "electron",
       "jasmine",
-      "hammerjs",
-      "moment-duration-format"
+      "hammerjs"
     ],
     "typeRoots": [
       "./node_modules/@types"
