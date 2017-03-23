@@ -87,7 +87,7 @@ describe("JobCreateBasicDialogComponent ", () => {
         debugElement = fixture.debugElement;
         fixture.detectChanges();
 
-        baseForm = component.createJobForm;
+        baseForm = component.form;
         constraintsForm = component.constraintsGroup;
         poolForm = component.poolInfoGroup;
     });

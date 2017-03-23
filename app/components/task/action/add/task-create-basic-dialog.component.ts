@@ -1,13 +1,14 @@
 import { Component } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
-import { FormBaseComponent } from "app/components/base/form";
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { RangeValidatorDirective } from "app/components/base/validation";
+import { DynamicForm } from "app/core";
 import { Task } from "app/models";
-import { CreateTaskModel } from "app/models/forms";
+import { TaskCreateDto } from "app/models/dtos";
 import { createTaskFormToJsonData, taskToFormModel } from "app/models/forms";
 import { TaskService } from "app/services";
 import { Constants } from "app/utils";
@@ -16,7 +17,7 @@ import { Constants } from "app/utils";
     selector: "bl-task-create-basic-dialog",
     templateUrl: "task-create-basic-dialog.html",
 })
-export class TaskCreateBasicDialogComponent extends FormBaseComponent<Task, CreateTaskModel> {
+export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreateDto> {
     public jobId: string;
     public constraintsGroup: FormGroup;
     public resourceFiles: FormArray;
@@ -31,7 +32,7 @@ export class TaskCreateBasicDialogComponent extends FormBaseComponent<Task, Crea
         private sidebarRef: SidebarRef<TaskCreateBasicDialogComponent>,
         protected taskService: TaskService,
         private notificationService: NotificationService) {
-        super();
+        super(TaskCreateDto);
 
         const validation = Constants.forms.validation;
         this.constraintsGroup = this.formBuilder.group({
@@ -55,13 +56,21 @@ export class TaskCreateBasicDialogComponent extends FormBaseComponent<Task, Crea
         });
     }
 
-    public execute(): Observable<any> {
-        const value = this.form.getRawValue();
-        const id = value.id;
+    public dtoToForm(task: TaskCreateDto) {
+        return taskToFormModel(task);
+    }
 
-        const jsonData = createTaskFormToJsonData(value);
+    public formToDto(data: any): TaskCreateDto {
+        return createTaskFormToJsonData(data);
+    }
+
+    @autobind()
+    public submit(): Observable<any> {
+        const task = this.getCurrentValue();
+        const id = task.id;
+
         const onAddedParams = { jobId: this.jobId, id };
-        const observable = this.taskService.add(this.jobId, jsonData, {});
+        const observable = this.taskService.add(this.jobId, task, {});
         observable.subscribe({
             next: () => {
                 this.notificationService.success("Task added!", `Task '${id}' was created successfully!`);
@@ -71,9 +80,5 @@ export class TaskCreateBasicDialogComponent extends FormBaseComponent<Task, Crea
         });
 
         return observable;
-    }
-
-    protected entityToForm(task: Task) {
-        return taskToFormModel(task);
     }
 }
