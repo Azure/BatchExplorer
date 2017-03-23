@@ -3,6 +3,7 @@ import { List } from "immutable";
 import { Observable, Subject } from "rxjs";
 
 import { SubtaskInformation, Task } from "app/models";
+import { TaskCreateDto } from "app/models/dtos";
 import { log } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 import { BatchClientService } from "./batch-client.service";
@@ -16,7 +17,6 @@ import {
     getOnceProxy,
 } from "./core";
 import { CommonListOptions, ServiceBase } from "./service-base";
-import { TaskCreateDto } from "app/models/dtos";
 
 export interface TaskListParams {
     jobId?: string;
@@ -138,7 +138,6 @@ export class TaskService extends ServiceBase {
     }
 
     public add(jobId: string, task: TaskCreateDto, options: any): Observable<{}> {
-        console.log("Add task", task.toJS());
         return this.callBatchClient((client) => client.task.add(jobId, task.toJS(), options));
     }
 

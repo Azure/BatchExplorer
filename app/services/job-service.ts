@@ -2,11 +2,11 @@ import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 
 import { Job } from "app/models";
+import { JobCreateDto } from "app/models/dtos";
 import { log } from "app/utils";
 import { BatchClientService } from "./batch-client.service";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
 import { ServiceBase } from "./service-base";
-import { JobCreateDto } from "app/models/dtos";
 
 export interface JobParams {
     id?: string;

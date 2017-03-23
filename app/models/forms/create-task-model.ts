@@ -41,8 +41,6 @@ export function createTaskFormToJsonData(formData: CreateTaskModel): any {
         applicationPackageReferences: null,
     };
 
-    console.log("Data here...", data.dependsOn);
-
     return data;
 }
 

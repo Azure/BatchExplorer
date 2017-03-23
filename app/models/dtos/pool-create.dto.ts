@@ -3,8 +3,6 @@ import { CloudServiceConfiguration } from "./cloud-service-configuration.dto";
 import { MetaDataDto } from "./metadata.dto";
 import { VirtualMachineConfiguration } from "./virtual-machine-configuration.dto";
 
-
-
 export class PoolCreateDto extends Dto<PoolCreateDto> {
     @DtoAttr()
     public id: string;
@@ -64,4 +62,3 @@ export class PoolCreateDto extends Dto<PoolCreateDto> {
     @DtoAttr()
     public metadata: MetaDataDto[];
 }
-

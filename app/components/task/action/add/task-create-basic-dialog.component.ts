@@ -56,7 +56,6 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
         });
     }
 
-
     public dtoToForm(task: TaskCreateDto) {
         return taskToFormModel(task);
     }
