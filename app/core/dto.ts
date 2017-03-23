@@ -13,7 +13,6 @@ function metadataForDto<T>(dto: Dto<T>) {
  */
 export class Dto<T> {
     constructor(data: AttrOf<T>) {
-        console.log("Setting dto", data);
         const attrs = metadataForDto(this);
         for (let key of Object.keys(attrs)) {
             const type = attrs[key];
@@ -26,13 +25,11 @@ export class Dto<T> {
             }
 
             if (type && !primitives.has(type.name)) {
-                console.log("typs is")
                 this[key] = new type(value);
             } else {
                 this[key] = value;
             }
         }
-        console.log("set dto", this);
     }
 
     public toJS?(): AttrOf<T> {

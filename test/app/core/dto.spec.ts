@@ -1,7 +1,4 @@
-
-
 import { Dto, DtoAttr } from "app/core";
-
 
 class FakeNestedDto extends Dto<FakeNestedDto> {
     @DtoAttr()
