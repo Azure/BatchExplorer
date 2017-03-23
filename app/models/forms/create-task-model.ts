@@ -1,4 +1,4 @@
-import { Task } from "app/models";
+import { TaskCreateDto } from "app/models/dtos";
 
 export interface TaskConstraintsModel {
     maxWallClockTime: string;
@@ -46,7 +46,7 @@ export function createTaskFormToJsonData(formData: CreateTaskModel): any {
     return data;
 }
 
-export function taskToFormModel(task: Task): CreateTaskModel {
+export function taskToFormModel(task: TaskCreateDto): CreateTaskModel {
     return {
         id: task.id,
         displayName: task.displayName,

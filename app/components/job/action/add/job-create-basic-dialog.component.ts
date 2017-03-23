@@ -20,7 +20,6 @@ import { Constants } from "app/utils";
 })
 export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto> implements OnInit {
     public poolsData: RxListProxy<{}, Pool>;
-    public createJobForm: FormGroup;
     public constraintsGroup: FormGroup;
     public poolInfoGroup: FormGroup;
 
@@ -45,7 +44,7 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
             poolId: ["", Validators.required],
         });
 
-        this.createJobForm = this.formBuilder.group({
+        this.form = this.formBuilder.group({
             id: ["", [
                 Validators.required,
                 Validators.maxLength(validation.maxLength.id),
@@ -64,7 +63,7 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
     public ngOnInit() {
         this.poolsData.fetchNext().subscribe((result) => {
             if (result.data && result.data.length > 0) {
-                this.createJobForm.value.poolId = result.data[0].id;
+                this.form.value.poolId = result.data[0].id;
             }
         });
     }
@@ -79,10 +78,11 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
 
     @autobind()
     public submit(): Observable<any> {
-        const observable = this.jobService.add(this.getCurrentValue(), {});
+        const job = this.getCurrentValue();
+        const observable = this.jobService.add(job, {});
         observable.subscribe({
             next: () => {
-                const id = this.createJobForm.value.id;
+                const id = job.id;
                 this.jobService.onJobAdded.next(id);
                 this.notificationService.success("Job added!", `Job '${id}' was created successfully!`);
             },
@@ -93,6 +93,6 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
     }
 
     public preSelectPool(poolId: string) {
-        this.createJobForm.patchValue({ poolInfo: { poolId } });
+        this.form.patchValue({ poolInfo: { poolId } });
     }
 }
