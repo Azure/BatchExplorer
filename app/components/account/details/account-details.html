@@ -22,6 +22,11 @@
                 <i class="fa fa-database fa-lg"></i>
                 <div>Pools</div>
             </md-card>
+
+            <md-card class="link" routerLink="/applications" (click)="selectAccount(account.id)">
+                <i class="fa fa-file-archive-o fa-lg"></i>
+                <div>Applications</div>
+            </md-card>
         </div>
 	</div>
 </bl-loading>
