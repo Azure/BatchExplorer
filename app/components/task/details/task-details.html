@@ -49,12 +49,11 @@
                     </div>
                 </bl-tab>
                 <bl-tab key="files">
-                    <bl-tab-label>Node Files</bl-tab-label>
+                    <bl-tab-label>Task Outputs</bl-tab-label>
                     <div class="tab-padding">
-                        <bl-entity-details-list #listWrapper [refresh]="list.refresh" [filterPlaceholder]="filterPlaceholderText" [showAddButton]="false"
-                            quickSearchField="name">
+                        <bl-entity-details-list #listWrapper [refresh]="list.refresh" [filterPlaceholder]="filterPlaceholderText" [showAddButton]="false" quickSearchField="name">
                             <bl-task-file-list #list [jobId]="jobId" [taskId]="taskId" [filter]="listWrapper.filter" [quickList]="false"></bl-task-file-list>
-                            </bl-entity-details-list>
+                        </bl-entity-details-list>
                     </div>
                 </bl-tab>
                 <bl-tab key="subtasks" [disabled]="!hasMultiInstanceSettings">
