@@ -41,9 +41,11 @@
                 </bl-tab>
                 <bl-tab key="nodes">
                     <bl-tab-label>Nodes</bl-tab-label>
-                    <bl-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/pools', poolId, 'nodes']" [filterPlaceholder]="filterPlaceholderText">
-                        <bl-node-list #list [poolId]="poolId" [filter]="listWrapper.filter" [quickList]="false" [manualLoading]="true"></bl-node-list>
-                    </bl-entity-details-list>
+                    <div class="tab-padding">
+                        <bl-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/pools', poolId, 'nodes']" [filterPlaceholder]="filterPlaceholderText">
+                            <bl-node-list #list [poolId]="poolId" [filter]="listWrapper.filter" [quickList]="false" [manualLoading]="true"></bl-node-list>
+                        </bl-entity-details-list>
+                    </div>
                 </bl-tab>
             </bl-tab-group>
         </md-card>

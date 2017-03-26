@@ -38,10 +38,12 @@
                 </bl-tab>
                 <bl-tab key="tasks">
                     <bl-tab-label>Tasks</bl-tab-label>
-                    <bl-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/jobs', job.id, 'tasks']" [loadMore]="list.loadMore"
-                        [filterPlaceholder]="filterPlaceholderText">
-                        <bl-task-list [jobId]="job.id" [filter]="listWrapper.filter" [quickList]="false" #list [manualLoading]="true"></bl-task-list>
-                    </bl-entity-details-list>
+                    <div class="tab-padding">
+                        <bl-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/jobs', job.id, 'tasks']" [loadMore]="list.loadMore"
+                            [filterPlaceholder]="filterPlaceholderText">
+                            <bl-task-list [jobId]="job.id" [filter]="listWrapper.filter" [quickList]="false" #list [manualLoading]="true"></bl-task-list>
+                        </bl-entity-details-list>
+                    </div>
                 </bl-tab>
             </bl-tab-group>
         </md-card>

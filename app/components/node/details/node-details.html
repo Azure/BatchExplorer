@@ -27,7 +27,9 @@
                 </bl-tab>
                 <bl-tab key="files">
                     <bl-tab-label>Files</bl-tab-label>
-                    <bl-node-file-browse [poolId]="poolId" [node]="node"></bl-node-file-browse>
+                    <div class="tab-padding">
+                        <bl-node-file-browse [poolId]="poolId" [node]="node"></bl-node-file-browse>
+                    </div>
                 </bl-tab>
             </bl-tab-group>
         </md-card>
