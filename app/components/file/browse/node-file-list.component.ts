@@ -96,6 +96,8 @@ export class NodeFileListComponent implements OnInit, OnChanges {
         const quickSearch = filter && filter.value;
 
         const name = [this.folder, quickSearch].filter(x => Boolean(x)).join("/");
+
+        console.log("build filter", this.folder, quickSearch, name);
         if (name) {
             return FilterBuilder.prop("name").startswith(name);
         } else {

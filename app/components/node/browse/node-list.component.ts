@@ -36,7 +36,6 @@ export class NodeListComponent extends SelectableList implements OnInit {
     @Input()
     public set filter(filter: Filter) {
         this._filter = filter;
-
         if (filter.isEmpty()) {
             this.data.setOptions({});
         } else {

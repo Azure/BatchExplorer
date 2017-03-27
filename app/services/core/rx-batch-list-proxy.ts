@@ -33,6 +33,7 @@ export class RxBatchListProxy<TParams, TEntity> extends RxListProxy<TParams, TEn
     }
 
     protected handleChanges(params: any, options: any) {
+        this._nextLink = null;
         this._loadedFirst = false;
     }
 
