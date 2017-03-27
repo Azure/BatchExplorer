@@ -41,7 +41,7 @@ export class SplashScreen {
 
     public destroy() {
         if (this._window) {
-            this._window.close();
+            this._window.destroy();
             this._window = null;
         }
         this.clearMessage();

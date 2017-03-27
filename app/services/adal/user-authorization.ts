@@ -136,8 +136,8 @@ export class UserAuthorization {
             this._authWindow = null;
             // If the user closed manualy then we need to also close the main window
             if (this._waitingForAuth) {
-                this.remoteService.getCurrentWindow().destroy();
                 this.remoteService.getSplashScreen().destroy();
+                this.remoteService.getCurrentWindow().destroy();
             }
         });
     }
