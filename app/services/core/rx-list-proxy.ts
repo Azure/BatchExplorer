@@ -70,8 +70,8 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
                 return this.fetchNextItems();
             },
             next: (response: any) => {
-                this._hasMore.next(this.hasMoreItems());
                 const keys = OrderedSet(this.newItems(this.processResponse(response)));
+                this._hasMore.next(this.hasMoreItems());
                 const currentKeys = this._itemKeys.getValue();
                 if (currentKeys.size === 0) {
                     this.cache.queryCache.cacheQuery(this._options.filter, keys, this.putQueryCacheData());

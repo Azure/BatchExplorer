@@ -56,7 +56,7 @@ export class NodeFileListComponent implements OnInit, OnChanges {
 
     public ngOnInit() {
         return;
-    }
+   }
 
     public ngOnChanges(inputs) {
         if (inputs.poolId || inputs.nodeId || inputs.folder || inputs.filter) {
