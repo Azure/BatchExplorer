@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
 
 import { AccountResource } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
-import { Filter, Property } from "app/utils/filter-builder";
+import { Filter, FilterBuilder, Property } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
 
 interface SubscriptionAccount {
@@ -29,13 +29,14 @@ export class AccountListComponent {
 
     public displayedAccounts: Observable<List<AccountResource>>;
 
-    private _filter: Filter;
+    private _filter: Filter = FilterBuilder.none();
 
     constructor(
         private accountService: AccountService,
         private activatedRoute: ActivatedRoute,
         private sidebarManager: SidebarManager,
         private subscriptionService: SubscriptionService) {
+        this._updateDisplayedAccounts();
     }
 
     @autobind()
@@ -77,6 +78,13 @@ export class AccountListComponent {
                     }
                 }
                 return true;
+            }).sort((a, b) => {
+                if (a.name < b.name) {
+                    return -1;
+                } else if (a.name > b.name) {
+                    return 1;
+                }
+                return 0;
             }));
         });
     }
