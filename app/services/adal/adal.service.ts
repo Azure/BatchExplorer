@@ -68,7 +68,10 @@ export class AdalService {
     }
 
     public login(): Observable<any> {
+        this.remote.getSplashScreen().updateMessage("Login to azure active directory");
         const obs = this._loadTenantIds().flatMap((ids) => {
+            this.remote.getSplashScreen().updateMessage("Retrieving access tokens");
+
             this._tenantsIds.next(ids);
             const queries: Array<() => Observable<any>> = [];
             for (let tenantId of ids) {

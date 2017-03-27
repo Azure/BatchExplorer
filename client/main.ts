@@ -24,6 +24,7 @@ const splashScreen = new SplashScreen();
 // Create the browser window.
 function createWindow() {
     splashScreen.create();
+    splashScreen.updateMessage("Loading app");
     protocol.registerStringProtocol("urn", (request, callback) => {
         // Close all auth windows that need to be closed
         while (authWindowsToClose.length) {
