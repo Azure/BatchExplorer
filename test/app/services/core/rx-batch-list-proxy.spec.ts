@@ -167,7 +167,7 @@ describe("RxBatchListProxy", () => {
         expect(hasMore).toBe(false);
     }));
 
-    fit("should return hasMore false if there is only 1 page of data after first fetch", fakeAsync(() => {
+    it("should return hasMore false if there is only 1 page of data after first fetch", fakeAsync(() => {
         proxy.setOptions({ filter: "filter2" });
         proxy.fetchNext();
         tick();
