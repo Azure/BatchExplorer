@@ -9,7 +9,6 @@ import { SidebarManager } from "app/components/base/sidebar";
 import { AccountService, SubscriptionService } from "app/services";
 import { FilterBuilder } from "app/utils/filter-builder";
 import * as Fixtures from "test/fixture";
-import { click } from "test/utils/helpers";
 import { NoItemMockComponent } from "test/utils/mocks/components";
 
 const sub1 = Fixtures.subscription.create({
@@ -30,7 +29,7 @@ const sub3 = Fixtures.subscription.create({
     displayName: "His test subscription",
 });
 
-fdescribe("AccountListComponent", () => {
+describe("AccountListComponent", () => {
     let fixture: ComponentFixture<AccountListComponent>;
     let component: AccountListComponent;
     let de: DebugElement;
@@ -77,13 +76,11 @@ fdescribe("AccountListComponent", () => {
         expect(accountsElList[0].nativeElement.textContent).toContain("Account 2");
         expect(accountsElList[0].nativeElement.textContent).toContain("eastus");
 
-
         expect(accountsElList[1].nativeElement.textContent).toContain("Account 3");
         expect(accountsElList[1].nativeElement.textContent).toContain("canada");
 
         expect(accountsElList[2].nativeElement.textContent).toContain("Batch 1");
         expect(accountsElList[2].nativeElement.textContent).toContain("westus");
-
 
         expect(accountsElList[3].nativeElement.textContent).toContain("Zoo Account 4");
         expect(accountsElList[3].nativeElement.textContent).toContain("eastus");

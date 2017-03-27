@@ -5,7 +5,7 @@ import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { AccountKeys, AccountResource, Subscription } from "app/models";
-import { Constants, ObservableUtils, log } from "app/utils";
+import { Constants, log } from "app/utils";
 import { AzureHttpService } from "./azure-http.service";
 import {
     DataCache, DataCacheTracker,
