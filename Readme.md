@@ -13,13 +13,13 @@
 - Or for the latest changes `git clone https://github.com/Azure/BatchLabs`
 
 #### 3. Install the dependencies
-```
+```bash
 yarn install
 npm install -g gulp (Optional)
 ```
 
 #### 4. Build and run the application
-```
+```bash
 npm run build:prod
 npm run electron:prod
 
@@ -32,19 +32,19 @@ npm run electron
 [Dev docs](docs/readme.md)
 
 For developers, you can set up a development environment as follows:
-** Use `yarn install` instead of `npm install` this will makes sure everybody has the same exact set of depenencies [Migrating from npm to yarn](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)**
+**Use `yarn install` instead of `npm install` this will makes sure everybody has the same exact set of depenencies [Migrating from npm to yarn](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)**
 
 Start the dev server
-```
+```bash
 npm run dev-server
 ```
 
 Start electron
-```
-// In the command line
+```bash
+# In the command line
 npm run dev-electron
 
-// In VSCode just press F5
+# In VSCode just press F5
 ```
 
 The dev-server and dev-electron support hot reload for a better development experience. Simply saving a file will cause the UI to refresh to your updated changes.

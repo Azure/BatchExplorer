@@ -6,6 +6,7 @@ import { LoadingStatus } from "app/components/base/loading";
 import { CachedKeyList } from "./query-cache";
 import { RxEntityProxy } from "./rx-entity-proxy";
 import { RxProxyBase, RxProxyBaseConfig } from "./rx-proxy-base";
+import { log } from "app/utils";
 
 export interface RxListProxyConfig<TParams, TEntity> extends RxProxyBaseConfig<TParams, TEntity> {
     initialOptions?: any;
@@ -117,16 +118,15 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
      */
     public loadNewItem(entityProxy: RxEntityProxy<any, TEntity>): Observable<any> {
         const obs = entityProxy.fetch();
-        obs.subscribe(() => {
-            entityProxy.item.first().subscribe((newItem) => {
-                if (!newItem) { return; }
-                const key = this.cache.getItemKey(newItem);
-                const itemKeys = this._itemKeys;
-                if (itemKeys.value.has(key)) {
-                    return;
-                }
-                this._itemKeys.next(OrderedSet(OrderedSet([key]).concat(this._itemKeys.value)));
-            });
+        obs.subscribe({
+            next: () => {
+                entityProxy.item.first().subscribe((newItem) => {
+                    this._addItemToList(newItem);
+                });
+            }, error: (error) => {
+                log.error("Error loading new item into RxListProxy",
+                    { error, params: this._params, options: this._options });
+            },
         });
         return obs;
     }
@@ -173,5 +173,22 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         this._hasMore.next(this.hasMoreItems());
         this._status.next(LoadingStatus.Ready);
         return true;
+    }
+
+    /**
+     * Add the given item to the list and the query cache.
+     * @param newItem newItem to be added
+     */
+    private _addItemToList(newItem: TEntity) {
+        if (!newItem) { return; }
+
+        const key = this.cache.getItemKey(newItem);
+        const itemKeys = this._itemKeys;
+        if (itemKeys.value.has(key)) {
+            return;
+        }
+
+        this._itemKeys.next(OrderedSet(OrderedSet([key]).concat(this._itemKeys.value)));
+        this._cache.queryCache.addKeyToQuery(null, key);
     }
 }
