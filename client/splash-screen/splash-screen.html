@@ -110,7 +110,6 @@
         const message = document.getElementById("message");
         const {ipcRenderer} = require("electron");
         ipcRenderer.on("update-message", (event, arg) => {
-            console.log(arg) // prints "pong"
             message.innerHTML = arg;
         })
     })
