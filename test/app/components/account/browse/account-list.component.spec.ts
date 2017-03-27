@@ -85,13 +85,15 @@ fdescribe("AccountListComponent", () => {
         expect(accountsElList[2].nativeElement.textContent).toContain("westus");
 
 
-        expect(accountsElList[4].nativeElement.textContent).toContain("Zoo Account 4");
-        expect(accountsElList[4].nativeElement.textContent).toContain("eastus");
+        expect(accountsElList[3].nativeElement.textContent).toContain("Zoo Account 4");
+        expect(accountsElList[3].nativeElement.textContent).toContain("eastus");
     });
 
     it("should filter by name", () => {
         component.filter = FilterBuilder.and(FilterBuilder.prop("id").startswith("zoO"));
         fixture.detectChanges();
+        accountsElList = de.queryAll(By.css("bl-quick-list-item"));
+
         expect(accountsElList.length).toBe(1);
 
         expect(accountsElList[0].nativeElement.textContent).toContain("Zoo Account 4");
@@ -100,7 +102,9 @@ fdescribe("AccountListComponent", () => {
     it("should filter by subscription", () => {
         component.filter = FilterBuilder.and(FilterBuilder.prop("subscriptionId").eq("sub-1"));
         fixture.detectChanges();
-        expect(accountsElList.length).toBe(3);
+        accountsElList = de.queryAll(By.css("bl-quick-list-item"));
+
+        expect(accountsElList.length).toBe(2);
 
         expect(accountsElList[0].nativeElement.textContent).toContain("Account 2");
         expect(accountsElList[1].nativeElement.textContent).toContain("Batch 1");
@@ -112,6 +116,8 @@ fdescribe("AccountListComponent", () => {
             FilterBuilder.prop("subscriptionId").eq("sub-1"),
         );
         fixture.detectChanges();
+        accountsElList = de.queryAll(By.css("bl-quick-list-item"));
+
         expect(accountsElList.length).toBe(1);
 
         expect(accountsElList[0].nativeElement.textContent).toContain("Account 2");
