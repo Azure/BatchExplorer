@@ -28,13 +28,10 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
     public inter;
 
     public followingLog = false;
-
     public lastContentLength = 0;
     public notFound = false;
-
     public lines = [];
     public loading = true;
-
     public scrollable: ScrollableComponent;
     public currentSubscription: Subscription;
 
@@ -43,7 +40,6 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
         private taskService: TaskService,
         private fileService: FileService,
         private element: ElementRef) {
-
     }
 
     public ngAfterViewInit() {
@@ -54,9 +50,11 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
         if (this.inter) {
             clearInterval(this.inter);
         }
+
         if (this.currentSubscription) {
             this.currentSubscription.unsubscribe();
         }
+
         this.notFound = false;
         this.lines = [];
         this.loading = true;
@@ -83,6 +81,7 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
             this._updateFileContent();
         }, 5000);
     }
+
     private _updateFileContent() {
         let data;
         if (this.jobId && this.taskId) {
