@@ -1,0 +1,16 @@
+<!-- TODO: MAKE THESE TABS DYNAMIC WITH A COLLECTION -->
+<div class="file-tabs pad-bottom">
+    <div class="file-tab" [class.active]="selectedTab === 'node'" (click)="selectedTab = 'node'">
+        Files on node
+    </div>
+    <div class="file-tab" [class.active]="selectedTab === 'files'" (click)="selectedTab = 'files'">
+        Saved output files
+    </div>
+    <div class="file-tab" [class.active]="selectedTab === 'logs'" (click)="selectedTab = 'logs'">
+        Saved logs
+    </div>
+</div>
+
+<bl-entity-details-list #listWrapper [refresh]="list.refresh" [filterPlaceholder]="filterPlaceholderText" [showAddButton]="false" quickSearchField="name">
+    <bl-task-file-list #list [jobId]="jobId" [taskId]="taskId" [filter]="listWrapper.filter" [quickList]="false"></bl-task-file-list>
+</bl-entity-details-list>
