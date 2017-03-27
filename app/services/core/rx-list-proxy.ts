@@ -3,10 +3,10 @@ import { List, OrderedSet } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
+import { log } from "app/utils";
 import { CachedKeyList } from "./query-cache";
 import { RxEntityProxy } from "./rx-entity-proxy";
 import { RxProxyBase, RxProxyBaseConfig } from "./rx-proxy-base";
-import { log } from "app/utils";
 
 export interface RxListProxyConfig<TParams, TEntity> extends RxProxyBaseConfig<TParams, TEntity> {
     initialOptions?: any;
@@ -34,7 +34,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         }).switch();
 
         this.deleted.subscribe((deletedKey) => {
-            this._itemKeys.next(OrderedSet<string>(this._itemKeys.getValue().filter((key) => key !== deletedKey)));
+            this._itemKeys.next(OrderedSet<string>(this._itemKeys.value.filter((key) => key !== deletedKey)));
         });
     }
 
@@ -73,7 +73,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
             next: (response: any) => {
                 const keys = OrderedSet(this.newItems(this.processResponse(response)));
                 this._hasMore.next(this.hasMoreItems());
-                const currentKeys = this._itemKeys.getValue();
+                const currentKeys = this._itemKeys.value;
                 if (currentKeys.size === 0) {
                     this.cache.queryCache.cacheQuery(this._options.filter, keys, this.putQueryCacheData());
                 }
@@ -117,12 +117,10 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
      * The cache system will handle updating it already.
      */
     public loadNewItem(entityProxy: RxEntityProxy<any, TEntity>): Observable<any> {
-        const obs = entityProxy.fetch();
+        const obs = entityProxy.fetch().flatMap(() => entityProxy.item.first());
         obs.subscribe({
-            next: () => {
-                entityProxy.item.first().subscribe((newItem) => {
-                    this._addItemToList(newItem);
-                });
+            next: (newItem) => {
+                this._addItemToList(newItem);
             }, error: (error) => {
                 log.error("Error loading new item into RxListProxy",
                     { error, params: this._params, options: this._options });
