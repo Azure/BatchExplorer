@@ -6,6 +6,7 @@ const url = process.env.HOT ? urls.dev : urls.prod;
 
 export class SplashScreen {
     private _window: Electron.BrowserWindow;
+    private _currentMessage = "";
 
     public create() {
         this.destroy();
@@ -18,6 +19,9 @@ export class SplashScreen {
             frame: false,
         });
         this._window.loadURL(url);
+        this._window.webContents.once("dom-ready", () => {
+            this._sendMessageToWindow();
+        });
     }
 
     public show() {
@@ -39,6 +43,22 @@ export class SplashScreen {
         if (this._window) {
             this._window.close();
             this._window = null;
+        }
+        this.clearMessage();
+    }
+
+    public updateMessage(message: string) {
+        this._currentMessage = message;
+        this._sendMessageToWindow();
+    }
+
+    public clearMessage() {
+        this.updateMessage("");
+    }
+
+    private _sendMessageToWindow() {
+        if (this._window) {
+            this._window.webContents.send("update-message", this._currentMessage);
         }
     }
 }
