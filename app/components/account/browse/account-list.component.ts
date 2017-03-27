@@ -1,9 +1,10 @@
-import { Component, Input, OnDestroy } from "@angular/core";
+import { Component, Input } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+import { autobind } from "core-decorators";
 import { List } from "immutable";
-import { Observable, Subscription as RxjsSubscription } from "rxjs";
+import { Observable } from "rxjs";
 
-import { AccountResource, Subscription } from "app/models";
+import { AccountResource } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
 import { Filter, Property } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
@@ -18,7 +19,7 @@ interface SubscriptionAccount {
     selector: "bl-account-list",
     templateUrl: "account-list.html",
 })
-export class AccountListComponent implements OnDestroy {
+export class AccountListComponent {
     @Input()
     public set filter(filter: Filter) {
         this._filter = filter;
@@ -29,7 +30,6 @@ export class AccountListComponent implements OnDestroy {
     public displayedAccounts: Observable<List<AccountResource>>;
 
     private _filter: Filter;
-    private _sub: RxjsSubscription;
 
     constructor(
         private accountService: AccountService,
@@ -38,8 +38,9 @@ export class AccountListComponent implements OnDestroy {
         private subscriptionService: SubscriptionService) {
     }
 
-    public ngOnDestroy() {
-        this._sub.unsubscribe();
+    @autobind()
+    public refresh(): Observable<any> {
+        return this.accountService.load();
     }
 
     public isAccountFavorite(accountId: string) {
@@ -62,6 +63,8 @@ export class AccountListComponent implements OnDestroy {
                 switch (name) {
                     case "id":
                         return (x) => value === "" || x.name.toLowerCase().startsWith(value.toLowerCase());
+                    case "subscriptionId":
+                        return (x) => value === "" || x.subscription.subscriptionId === value;
                     default:
                         return () => true;
                 }

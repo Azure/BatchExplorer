@@ -1,3 +1,14 @@
+bl-account-home {
+    [pre-quicksearch] {
+        margin-right: 10px;
+        > md-select {
+            .mat-select-trigger {
+                height: 26px;
+            }
+        }
+    }
+}
+
 bl-account-list {
     .subscription {
         > .subscription-details {

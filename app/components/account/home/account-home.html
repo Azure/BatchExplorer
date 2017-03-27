@@ -1,8 +1,16 @@
-<bl-list-and-show-layout #layout>
+<bl-list-and-show-layout #layout [list]="list">
     <div bl-list-buttons>
     </div>
+    <div pre-quicksearch>
+        <md-select placeholder="Subscriptions" [formControl]="subscriptionId">
+            <md-option [value]="null">All</md-option>
+            <md-option *ngFor="let subscription of subscriptionService.subscriptions | async" [value]="subscription.subscriptionId">
+                {{subscription.displayName}}
+            </md-option>
+        </md-select>
+    </div>
     <div bl-list-content>
-        <bl-account-list [filter]="layout.filter"></bl-account-list>
+        <bl-account-list #list [filter]="layout.filter"></bl-account-list>
     </div>
     <div bl-show-content>
         <router-outlet></router-outlet>
