@@ -2,12 +2,7 @@
     <div bl-list-buttons>
     </div>
     <div bl-list-content>
-        <md-radio-group [(ngModel)]="showType" class="flex-center">
-            <md-radio-button [value]="ListType.Favourite">Favourite</md-radio-button>
-            <md-radio-button [value]="ListType.All">All</md-radio-button>
-        </md-radio-group>
-        <bl-account-fav-list [filter]="layout.filter" *ngIf="showType === ListType.Favourite"></bl-account-fav-list>
-        <bl-account-list [filter]="layout.filter" *ngIf="showType === ListType.All"></bl-account-list>
+        <bl-account-list [filter]="layout.filter"></bl-account-list>
     </div>
     <div bl-show-content>
         <router-outlet></router-outlet>

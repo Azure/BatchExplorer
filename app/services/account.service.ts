@@ -5,7 +5,7 @@ import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { AccountKeys, AccountResource, Subscription } from "app/models";
-import { Constants, log } from "app/utils";
+import { Constants, ObservableUtils, log } from "app/utils";
 import { AzureHttpService } from "./azure-http.service";
 import {
     DataCache, DataCacheTracker,
@@ -45,6 +45,8 @@ function getSubscriptionIdFromAccountId(accountId: string) {
 @Injectable()
 export class AccountService {
     public accountLoaded: Observable<boolean>;
+    public accountsLoaded: Observable<boolean>;
+    public accounts: Observable<List<AccountResource>>;
 
     /**
      * This represent the value of the current accountId.
@@ -59,6 +61,8 @@ export class AccountService {
     private _accountLoaded = new BehaviorSubject<boolean>(false);
     private _accountCache = new DataCache<AccountResource>();
     private _currentAccountId = new BehaviorSubject<string>(null);
+    private _accounts = new BehaviorSubject<List<AccountResource>>(List([]));
+    private _accountsLoaded = new BehaviorSubject<boolean>(false);
 
     constructor(
         private azure: AzureHttpService,
@@ -66,7 +70,7 @@ export class AccountService {
 
         this.accountLoaded = this._accountLoaded.asObservable();
         this._accountLoaded.next(true);
-
+        this.accounts = this._accounts.asObservable();
         this._currentAccount.subscribe((selection) => {
             if (selection) {
                 const { account } = selection;
@@ -125,6 +129,27 @@ export class AccountService {
                 this._currentAccountValid.next(AccountStatus.Invalid);
             },
         });
+    }
+
+    public load() {
+        const obs = this.subscriptionService.subscriptions.flatMap((subscriptions) => {
+            const accountObs = subscriptions.map((subscription) => {
+                return this.list(subscription.subscriptionId);
+            }).toArray();
+            return Observable.combineLatest(...accountObs);
+        });
+
+        obs.subscribe({
+            next: (accountsPerSubscriptions) => {
+                const accounts = accountsPerSubscriptions.map(x => x.toArray()).flatten();
+                this._accounts.next(List(accounts));
+                this._accountsLoaded.next(true);
+            },
+            error: (error) => {
+                log.error("Error loading accounts", error);
+            },
+        });
+        return obs;
     }
 
     public list(subscriptionId: string): Observable<List<Account>> {
