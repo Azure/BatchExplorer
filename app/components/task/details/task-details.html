@@ -53,6 +53,7 @@
                     <div class="tab-padding">
                         <bl-entity-details-list #listWrapper [refresh]="list.refresh" [filterPlaceholder]="filterPlaceholderText" [showAddButton]="false" quickSearchField="name">
                             <bl-task-file-list #list [jobId]="jobId" [taskId]="taskId" [filter]="listWrapper.filter" [quickList]="false"></bl-task-file-list>
+                            <!-- maybe add a storage files here with a *ngIf? -->
                         </bl-entity-details-list>
                     </div>
                 </bl-tab>

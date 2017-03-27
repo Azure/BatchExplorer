@@ -22,8 +22,6 @@ const validStates = [
     templateUrl: "file-list.html",
 })
 export class TaskFileListComponent implements OnInit, OnChanges {
-    public LoadingStatus = LoadingStatus;
-
     /**
      * If set to true it will display the quick list view, if false will use the table view
      */
@@ -43,9 +41,9 @@ export class TaskFileListComponent implements OnInit, OnChanges {
     public list: TaskFileListComponent;
 
     public data: RxListProxy<TaskFileListParams, File>;
-
-    public nodeNotFound: boolean;
     public status = new BehaviorSubject(LoadingStatus.Loading);
+    public LoadingStatus = LoadingStatus;
+    public nodeNotFound: boolean;
 
     constructor(
         private fileService: FileService,
@@ -97,6 +95,7 @@ export class TaskFileListComponent implements OnInit, OnChanges {
                 this.nodeNotFound = false;
                 return null;
             }
+
             this.nodeService.getOnce(task.nodeInfo.poolId, task.nodeInfo.nodeId, {}).subscribe({
                 next: (node: Node) => {
                     this.nodeNotFound = false;
