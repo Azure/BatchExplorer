@@ -56,7 +56,7 @@ export class NodeFileListComponent implements OnInit, OnChanges {
 
     public ngOnInit() {
         return;
-    }
+   }
 
     public ngOnChanges(inputs) {
         if (inputs.poolId || inputs.nodeId || inputs.folder || inputs.filter) {
@@ -96,7 +96,6 @@ export class NodeFileListComponent implements OnInit, OnChanges {
         const quickSearch = filter && filter.value;
 
         const name = [this.folder, quickSearch].filter(x => Boolean(x)).join("/");
-
         if (name) {
             return FilterBuilder.prop("name").startswith(name);
         } else {
