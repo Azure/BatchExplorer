@@ -32,11 +32,11 @@ export class StorageService extends ServiceBase {
         super(batchService);
     }
 
-    public getTaskFileCache(params: BlobListParams): DataCache<File> {
+    public getBlobCache(params: BlobListParams): DataCache<File> {
         return this._blobFileCache.getCache(params);
     }
 
-    public listFromTask(jobIdParam: string, taskIdParam: string, initialOptions: any = {}): any {
+    public listTaskBlobs(jobIdParam: string, taskIdParam: string, initialOptions: any = {}): any {
         // return new RxBatchListProxy<TaskFileListParams, File>(File, this.batchService, {
         //     cache: (params) => this.getTaskFileCache(params),
         //     proxyConstructor: (client, params, options) => {
