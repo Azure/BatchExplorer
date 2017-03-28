@@ -21,3 +21,62 @@ bl-pool-os-picker {
         }
     }
 }
+
+
+bl-vm-size-picker {
+    .vm-size-list {
+        margin-top: 10px;
+        > .vm-size {
+            display: inline-block;
+            width: 120px;
+            border: 1px solid #d5d5d5;
+            border-radius: 3px;
+
+            margin: 5px;
+            cursor: pointer;
+
+            &:hover {
+                background-color: $whitesmoke-darker;
+            }
+
+            &.active {
+                border-color: map-get($md-prussian-blue, 300);
+
+                > .title {
+                    background: map-get($md-prussian-blue, 300);
+                    border-color: map-get($md-prussian-blue, 300);
+                    color: $whitesmoke;
+                }
+
+                > .pricing {
+                    border-color: map-get($md-prussian-blue, 300);
+                }
+            }
+
+            > .title {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                padding: 5px;
+                border-bottom: 1px solid #d5d5d5;
+                text-align: center;
+                white-space: nowrap;
+            }
+
+            > .pricing {
+                text-align: center;
+                font-size: 20px;
+                border-bottom: 1px solid #d5d5d5;
+                padding: 10px;
+            }
+
+            > .details {
+                text-align: center;
+                padding: 5px;
+
+                .label {
+                    color: $silver-grey;
+                }
+            }
+        }
+    }
+}

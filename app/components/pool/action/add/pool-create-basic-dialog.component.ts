@@ -8,7 +8,7 @@ import { SidebarRef } from "app/components/base/sidebar";
 import { DynamicForm } from "app/core";
 import { Pool, VmSize } from "app/models";
 import { PoolCreateDto } from "app/models/dtos";
-import { PoolOsSources, createPoolToData, poolToFormModel } from "app/models/forms";
+import { createPoolToData, poolToFormModel } from "app/models/forms";
 import { PoolService, VmSizeService } from "app/services";
 import { List } from "immutable";
 
@@ -19,10 +19,7 @@ import { List } from "immutable";
 export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreateDto> implements OnDestroy {
     public createPoolForm: FormGroup;
 
-    public OS_CONFIGURATION_TYPES = {
-        PaaS: "Windows PaaS",
-        IaaS: "Gallery IaaS",
-    };
+    public osSource: string;
 
     public vmSizes: Observable<List<VmSize>>;
 
@@ -48,18 +45,14 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             displayName: "",
             targetDedicated: [0, Validators.required],
             os: this._osControl,
-            vmSize: ["standard_d1", Validators.required],
+            vmSize: ["Standard_D1", Validators.required],
             maxTasksPerNode: 1,
             enableInterNodeCommunication: false,
         });
 
         this.vmSizes = vmSizeService.virtualMachineSizes;
         this._sub = this._osControl.valueChanges.subscribe((value) => {
-            if (value.source === PoolOsSources.IaaS) {
-                this.vmSizes = vmSizeService.virtualMachineSizes;
-            } else {
-                this.vmSizes = vmSizeService.cloudServiceSizes;
-            }
+            this.osSource = value.source;
         });
     }
 
