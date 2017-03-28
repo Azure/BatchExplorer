@@ -12,7 +12,7 @@ export function computeUrl(subscriptionId: string) {
 }
 
 const githubRaw = "https://raw.githubusercontent.com";
-const excludedVmsSizesUrl = `${githubRaw}/Azure/BatchLabs-data/feature/vm-sizes/data/vm-sizes-excluded.json`;
+const excludedVmsSizesUrl = `${githubRaw}/Azure/BatchLabs-data/master/data/vm-sizes-excluded.json`;
 
 interface ExcludedSizes {
     all: string[];
@@ -60,7 +60,6 @@ export class VmSizeService {
         this.arm.get(url).subscribe({
             next: (response: Response) => {
                 const data = response.json();
-                console.log("VM sizes", data);
                 const sizes = data.value.map(x => new VmSize(x));
                 this._sizes.next(List<VmSize>(sizes));
             },

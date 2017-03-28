@@ -8,7 +8,7 @@ import { SidebarRef } from "app/components/base/sidebar";
 import { DynamicForm } from "app/core";
 import { Pool, VmSize } from "app/models";
 import { PoolCreateDto } from "app/models/dtos";
-import { createPoolToData, poolToFormModel, PoolOsSources } from "app/models/forms";
+import { PoolOsSources, createPoolToData, poolToFormModel } from "app/models/forms";
 import { PoolService, VmSizeService } from "app/services";
 import { List } from "immutable";
 
