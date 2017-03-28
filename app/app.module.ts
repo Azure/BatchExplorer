@@ -48,6 +48,7 @@ import {
     SettingsService,
     SubscriptionService,
     TaskService,
+    VmSizeService,
     commands,
 } from "./services";
 
@@ -98,6 +99,7 @@ const modules = [
         SSHKeyService,
         SubscriptionService,
         TaskService,
+        VmSizeService,
         { provide: ErrorHandler, useClass: BatchLabsErrorHandler },
         ...commands,
     ],
