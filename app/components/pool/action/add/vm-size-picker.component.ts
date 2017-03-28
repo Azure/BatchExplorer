@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
+    ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { Subscription } from "rxjs";
 
@@ -9,7 +9,6 @@ import { PoolOsSources } from "app/models/forms";
 import { VmSizeService } from "app/services";
 import { StringUtils, prettyBytes } from "app/utils";
 import { List } from "immutable";
-
 
 const categoriesDisplayName = {
     standard: "General purpose",
@@ -43,7 +42,7 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     private _sizeSub: Subscription;
     private _categorySub: Subscription;
 
-    constructor(private formBuilder: FormBuilder, private vmSizeService: VmSizeService) {
+    constructor(private vmSizeService: VmSizeService) {
     }
 
     public ngOnInit() {
@@ -96,7 +95,9 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
 
     public pickSize(size: VmSize) {
         this.pickedSize = size.name;
-        this._propagateChange(size.name);
+        if (this._propagateChange) {
+            this._propagateChange(size.name);
+        }
     }
 
     public categoryLabelName(categoryName: string) {
