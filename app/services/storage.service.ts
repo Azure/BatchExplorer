@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import * as storage from "azure-storage";
+// import { Observable } from "rxjs";
 
 import { File } from "app/models";
 import { Constants } from "app/utils";
@@ -37,6 +38,20 @@ export class StorageService extends ServiceBase {
     }
 
     public listBlobsForTask(jobIdParam: string, taskIdParam: string, initialOptions: any = {}): any {
+        // const blobSvc = storage.createBlobService(
+        //     "andrew1973",
+        //     "TrQHCI9J3+U/4mbKQU6k0wLGIbfo/M8J5p9RfWllVSaOyHDMm18Um/hkhEDPDJI2Sl+4cQtfFLCQ0/riQ3102w==",
+        // );
+
+        // blobSvc.listBlobsSegmented("job-5f95d414-862e-49b5-816a-15e4ce50860e", null, (error, result, response) => {
+        //     if (!error) {
+        //         // result.entries contains the entries
+        //         // if not all blobs were returned, result.continuationToken has the continuation token.
+        //         console.log("*** listBlobsSegmented ***");
+        //         console.log(result);
+        //     }
+        // });
+
         // return new RxBatchListProxy<TaskFileListParams, File>(File, this.batchService, {
         //     cache: (params) => this.getTaskFileCache(params),
         //     proxyConstructor: (client, params, options) => {

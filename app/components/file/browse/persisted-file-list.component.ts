@@ -28,7 +28,7 @@ export class PersistedFileListComponent implements OnInit, OnChanges {
     @ViewChild(PersistedFileListComponent)
     public blobList: PersistedFileListComponent;
 
-    public data: RxListProxy<TaskFileListParams, File>;
+    // public data: RxListProxy<TaskFileListParams, File>;
     public status = new BehaviorSubject(LoadingStatus.Loading);
     public LoadingStatus = LoadingStatus;
     public noBlobsFound = false;
@@ -37,7 +37,7 @@ export class PersistedFileListComponent implements OnInit, OnChanges {
         private fileService: FileService,
         private storageService: StorageService) {
 
-        this.data = this.storageService.listBlobsForTask(null, null);
+        const result = this.storageService.listBlobsForTask(null, null);
         // this.data.status.subscribe((status) => {
         //     this.status.next(status);
         // });
@@ -64,9 +64,9 @@ export class PersistedFileListComponent implements OnInit, OnChanges {
 
     @autobind()
     public loadMore(): Observable<any> {
-        if (this.data) {
-            return this.data.fetchNext();
-        }
+        // if (this.data) {
+        //     return this.data.fetchNext();
+        // }
 
         return new Observable(null);
     }
