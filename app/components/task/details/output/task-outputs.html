@@ -1,4 +1,3 @@
-<!-- TODO: MAKE THESE TABS DYNAMIC WITH A COLLECTION -->
 <div class="file-tabs pad-bottom">
     <div class="file-tab" [class.active]="selectedTab === 'node'" (click)="selectedTab = 'node'">
         Files on node
@@ -8,6 +7,14 @@
     </div>
 </div>
 
-<bl-entity-details-list #listWrapper [refresh]="list.refresh" [filterPlaceholder]="filterPlaceholderText" [showAddButton]="false" quickSearchField="name">
-    <bl-task-file-list #list [jobId]="jobId" [taskId]="taskId" [filter]="listWrapper.filter" [quickList]="false"></bl-task-file-list>
+<!-- list any task outputs on the node -->
+<bl-entity-details-list *ngIf="selectedTab === 'node'" #nodeListWrapper [refresh]="nodeList.refresh" filterPlaceholder="Filter by file name"
+    [showAddButton]="false" quickSearchField="name">
+    <bl-task-file-list #nodeList [jobId]="jobId" [taskId]="taskId" [filter]="nodeListWrapper.filter" [quickList]="false"></bl-task-file-list>
+</bl-entity-details-list>
+
+<!-- list any task outputs that have been persisted to storage -->
+<bl-entity-details-list *ngIf="selectedTab === 'files'" #blobListWrapper [refresh]="blobList.refresh" filterPlaceholder="Filter by blob name"
+    [showAddButton]="false" quickSearchField="name">
+    <bl-persisted-file-list #blobList [jobId]="jobId" [taskId]="taskId" [filter]="blobListWrapper.filter" [quickList]="false"></bl-persisted-file-list>
 </bl-entity-details-list>

@@ -4,15 +4,15 @@ import { BehaviorSubject, Observable } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { File, Node, Task } from "app/models";
-import { FileService, NodeService, TaskFileListParams, TaskService } from "app/services";
+import { FileService, StorageService, TaskFileListParams } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
 
 @Component({
     selector: "bl-persisted-file-list",
-    templateUrl: "file-list.html",
+    templateUrl: "persisted-file-list.html",
 })
-export class TaskFileListComponent implements OnInit, OnChanges {
+export class PersistedFileListComponent implements OnInit, OnChanges {
     @Input()
     public quickList: boolean;
 
@@ -25,24 +25,22 @@ export class TaskFileListComponent implements OnInit, OnChanges {
     @Input()
     public filter: Filter;
 
-    @ViewChild(TaskFileListComponent)
-    public list: TaskFileListComponent;
+    @ViewChild(PersistedFileListComponent)
+    public blobList: PersistedFileListComponent;
 
     public data: RxListProxy<TaskFileListParams, File>;
     public status = new BehaviorSubject(LoadingStatus.Loading);
     public LoadingStatus = LoadingStatus;
-    public nodeNotFound: boolean;
+    public noBlobsFound = false;
 
     constructor(
         private fileService: FileService,
-        private nodeService: NodeService,
-        private taskService: TaskService) {
-        this.nodeNotFound = false;
+        private storageService: StorageService) {
 
-        this.data = this.fileService.listFromTask(null, null, true, {});
-        this.data.status.subscribe((status) => {
-            this.status.next(status);
-        });
+        this.data = this.storageService.listBlobsForTask(null, null);
+        // this.data.status.subscribe((status) => {
+        //     this.status.next(status);
+        // });
     }
 
     public ngOnInit() {
@@ -58,7 +56,7 @@ export class TaskFileListComponent implements OnInit, OnChanges {
     @autobind()
     public refresh(): Observable<any> {
         if (this.jobId && this.taskId) {
-            this._loadIfNodeExists();
+            this._loadFiles();
         }
 
         return Observable.of(true);
@@ -69,6 +67,7 @@ export class TaskFileListComponent implements OnInit, OnChanges {
         if (this.data) {
             return this.data.fetchNext();
         }
+
         return new Observable(null);
     }
 
@@ -76,34 +75,11 @@ export class TaskFileListComponent implements OnInit, OnChanges {
         return ["/jobs", this.jobId, "tasks", this.taskId];
     }
 
-    private _loadIfNodeExists() {
-        this.status.next(LoadingStatus.Loading);
-        this.taskService.getOnce(this.jobId, this.taskId).cascade((task: Task) => {
-            if (!task.nodeInfo) {
-                this.nodeNotFound = false;
-                return null;
-            }
-
-            this.nodeService.getOnce(task.nodeInfo.poolId, task.nodeInfo.nodeId, {}).subscribe({
-                next: (node: Node) => {
-                    this.nodeNotFound = false;
-
-                    if (validStates.includes(node.state)) {
-                        this._loadFiles();
-                    }
-                },
-                error: (error) => {
-                    this.nodeNotFound = true;
-                    this.status.next(LoadingStatus.Error);
-                },
-            });
-        });
-    }
-
     private _loadFiles() {
-        this.data.updateParams({ jobId: this.jobId, taskId: this.taskId });
-        this.data.setOptions(this._buildOptions());
-        this.data.fetchNext(true);
+        this.noBlobsFound = true;
+        // this.data.updateParams({ jobId: this.jobId, taskId: this.taskId });
+        // this.data.setOptions(this._buildOptions());
+        // this.data.fetchNext(true);
     }
 
     private _buildOptions() {

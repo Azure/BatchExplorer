@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { File } from "app/models";
 import { Constants } from "app/utils";
 import { BatchClientService } from "./batch-client.service";
-import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache } from "./core";
+import { DataCache, TargetedDataCache } from "./core";
 import { ServiceBase } from "./service-base";
 
 export interface BlobListParams {
@@ -12,7 +12,7 @@ export interface BlobListParams {
     taskId?: string;
 }
 
-export interface TaskFileParams extends BlobListParams {
+export interface BlobFileParams extends BlobListParams {
     filename: string;
 }
 
@@ -36,7 +36,7 @@ export class StorageService extends ServiceBase {
         return this._blobFileCache.getCache(params);
     }
 
-    public listTaskBlobs(jobIdParam: string, taskIdParam: string, initialOptions: any = {}): any {
+    public listBlobsForTask(jobIdParam: string, taskIdParam: string, initialOptions: any = {}): any {
         // return new RxBatchListProxy<TaskFileListParams, File>(File, this.batchService, {
         //     cache: (params) => this.getTaskFileCache(params),
         //     proxyConstructor: (client, params, options) => {

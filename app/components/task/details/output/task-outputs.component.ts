@@ -12,8 +12,4 @@ export class TaskOutputsComponent {
     public taskId: string;
 
     public selectedTab: string = "node";
-
-    public get filterPlaceholderText() {
-        return "Filter by file name";
-    }
 }

@@ -38,7 +38,7 @@ export class TaskFileListComponent implements OnInit, OnChanges {
     public filter: Filter;
 
     @ViewChild(TaskFileListComponent)
-    public list: TaskFileListComponent;
+    public nodeList: TaskFileListComponent;
 
     public data: RxListProxy<TaskFileListParams, File>;
     public status = new BehaviorSubject(LoadingStatus.Loading);
