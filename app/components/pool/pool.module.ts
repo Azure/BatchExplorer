@@ -13,11 +13,12 @@ import {
     PoolCreateBasicDialogComponent,
     PoolOsPickerComponent,
     PoolResizeDialogComponent,
+    VmSizePickerComponent,
 } from "app/components/pool/action";
 
 const components = [
     DeletePoolDialogComponent, PoolAdvancedFilterComponent, PoolCreateBasicDialogComponent,
-    PoolHomeComponent, PoolListComponent, PoolOsPickerComponent,
+    PoolHomeComponent, PoolListComponent, PoolOsPickerComponent, VmSizePickerComponent,
     PoolResizeDialogComponent,
 ];
 

@@ -2,7 +2,7 @@
 @import "../theme/variables";
 @import "../theme/mixins";
 
-html, body {
+html, body, button {
     margin: 0;
     padding: 0;
     border: 0;
@@ -56,7 +56,7 @@ blockquote {
     small {
         display: block;
         line-height: $baseLineHeight;
-        color: $silverGray;
+        color: $silver-grey;
 
         &:before {
             content: "\2014 \00A0";
