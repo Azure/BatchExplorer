@@ -35,20 +35,15 @@ export class VmSizeService {
             if (!excluded) {
                 return sizes;
             }
-            const a = this._filterSizes(sizes, excluded.all.concat(excluded.paas));
-            console.log("CS", a.map(x => x.name).toJS());
-            return a;
+            return this._filterSizes(sizes, excluded.all.concat(excluded.paas));
         }).share();
-        this.cloudServiceSizes.subscribe();
+
         this.virtualMachineSizes = obs.map(([sizes, excluded]) => {
             if (!excluded) {
                 return sizes;
             }
-            const a = this._filterSizes(sizes, excluded.all.concat(excluded.iaas));
-            console.log("VM", a.map(x => x.name).toJS());
-            return a;
+            return this._filterSizes(sizes, excluded.all.concat(excluded.iaas));
         }).share();
-        this.virtualMachineSizes.subscribe();
     }
 
     public init() {
