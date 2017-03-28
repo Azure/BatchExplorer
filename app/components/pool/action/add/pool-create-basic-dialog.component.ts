@@ -6,11 +6,10 @@ import { Observable, Subscription } from "rxjs";
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { DynamicForm } from "app/core";
-import { Pool, VmSize } from "app/models";
+import { Pool } from "app/models";
 import { PoolCreateDto } from "app/models/dtos";
-import { createPoolToData, poolToFormModel } from "app/models/forms";
+import { PoolOsSources, createPoolToData, poolToFormModel } from "app/models/forms";
 import { PoolService, VmSizeService } from "app/services";
-import { List } from "immutable";
 
 @Component({
     selector: "bl-pool-create-basic-dialog",
@@ -19,9 +18,7 @@ import { List } from "immutable";
 export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreateDto> implements OnDestroy {
     public createPoolForm: FormGroup;
 
-    public osSource: string;
-
-    public vmSizes: Observable<List<VmSize>>;
+    public osSource: PoolOsSources = PoolOsSources.IaaS;
 
     private _osControl: FormControl;
     private _sub: Subscription;
@@ -49,8 +46,6 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             maxTasksPerNode: 1,
             enableInterNodeCommunication: false,
         });
-
-        this.vmSizes = vmSizeService.virtualMachineSizes;
         this._sub = this._osControl.valueChanges.subscribe((value) => {
             this.osSource = value.source;
         });

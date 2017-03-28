@@ -2,7 +2,7 @@
 <md-tab-group class="form-tabs">
     <md-tab *ngFor="let category of categoryNames" [label]="categoryLabelName(category)">
         <div class="vm-size-list">
-            <div *ngFor="let size of categories[category]" class="vm-size" (click)="pickSize(size)" [class.active]="size.name === pickedSize">
+            <button *ngFor="let size of categories[category]" class="vm-size" (click)="pickSize(size)" [class.active]="size.name === pickedSize">
                 <div class="title" [title]="size.name">{{prettyTitle(size.name)}}</div>
                 <!--TODO link to billing data-->
                 <!--<div class="pricing">
@@ -26,7 +26,7 @@
                         <span class="label">Temp disk</span>
                     </div>
                 </div>
-            </div>
+            </button>
         </div>
     </md-tab>
 </md-tab-group>
