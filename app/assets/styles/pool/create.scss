@@ -3,14 +3,15 @@ bl-pool-os-picker {
         margin: 0;
     }
 
-    .serviceReference {
+    .service-ref {
         display: flex;
     }
 
-    .imageReference {
+    .image-ref {
         display: flex;
+        margin-top: 10px;
 
-        > .form-element {
+        > .image-ref-element {
             width: 30%;
             margin-right: 10px;
 

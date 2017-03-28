@@ -100,6 +100,7 @@ export const sessionStorageKey = {
 export const ApiVersion = {
     arm: "2016-09-01",
     armBatch: "2015-12-01",
+    compute: "2017-03-30",
 };
 
 export const ExternalLinks = {
