@@ -67,6 +67,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     public ngOnInit() {
         this.adalService.login();
         this.subscriptionService.load();
+        this.accountService.load();
     }
 
     public open() {
