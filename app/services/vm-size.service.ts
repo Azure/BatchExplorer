@@ -12,19 +12,28 @@ export function computeUrl(subscriptionId: string) {
 }
 
 const githubRaw = "https://raw.githubusercontent.com";
-const excludedVmsSizesUrl = `${githubRaw}/Azure/BatchLabs-data/master/data/vm-sizes-excluded.json`;
+const excludedVmsSizesUrl = `${githubRaw}/Azure/BatchLabs-data/master/data/vm-sizes.json`;
+
+interface VmSizeData {
+    category: StringMap<string[]>;
+    excluded: ExcludedSizes;
+}
 
 interface ExcludedSizes {
     all: string[];
     paas: string[];
     iaas: string[];
 }
+
 @Injectable()
 export class VmSizeService {
     public cloudServiceSizes: Observable<List<VmSize>>;
     public virtualMachineSizes: Observable<List<VmSize>>;
+    public vmSizeCategories: Observable<StringMap<string[]>>;
+
     private _sizes = new BehaviorSubject<List<VmSize>>(List([]));
     private _excludedSizes = new BehaviorSubject<ExcludedSizes>(null);
+    private _vmSizeCategories = new BehaviorSubject<StringMap<string[]>>(null);
 
     private _currentAccount: AccountResource;
 
@@ -44,6 +53,8 @@ export class VmSizeService {
             }
             return this._filterSizes(sizes, excluded.all.concat(excluded.iaas));
         }).share();
+
+        this.vmSizeCategories = this._vmSizeCategories.asObservable();
     }
 
     public init() {
@@ -51,7 +62,7 @@ export class VmSizeService {
             this._currentAccount = account;
             this.load();
         });
-        this.loadExcludedPattern();
+        this.loadVmSizeData();
     }
 
     public load() {
@@ -69,11 +80,12 @@ export class VmSizeService {
         });
     }
 
-    public loadExcludedPattern() {
+    public loadVmSizeData() {
         this.http.get(excludedVmsSizesUrl).subscribe({
             next: (response: Response) => {
-                const data = response.json();
-                this._excludedSizes.next(data);
+                const data: VmSizeData = response.json();
+                this._vmSizeCategories.next(data.category);
+                this._excludedSizes.next(data.excluded);
             },
             error: (error) => {
                 log.error("Error loading excluded vm sizes from github", error);
