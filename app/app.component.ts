@@ -4,7 +4,8 @@ import { MdSidenav } from "@angular/material";
 import { Observable } from "rxjs";
 
 import {
-    AccountService, AdalService, CommandService, NodeService, SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
+    AccountService, AdalService, CommandService, NodeService,
+    SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
 } from "app/services";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
