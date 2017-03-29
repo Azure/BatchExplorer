@@ -8,7 +8,7 @@ export enum PoolOsSources {
 export interface PoolOSPickerModel {
     source: PoolOsSources;
     cloudServiceConfiguration: {
-        osFamily: number,
+        osFamily: string,
     };
     virtualMachineConfiguration: {
         nodeAgentSKUId: string,

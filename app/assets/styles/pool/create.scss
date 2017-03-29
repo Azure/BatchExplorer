@@ -30,28 +30,71 @@ bl-pool-os-picker {
         background: $white;
         outline: none;
         text-align: center;
+        user-select: none;
 
         margin: 5px;
         cursor: pointer;
 
-        > .icon {
-            margin-top: 10px;
-            > img {
-                width: 100px;
-                height: 100px;
-                margin: auto;
+        &:focus {
+            background-color: $whitesmoke-darker;
+        }
+
+        &.active {
+            border-color: map-get($md-prussian-blue, 300);
+
+            .icon {
+                background: map-get($md-prussian-blue, 300);
+                border-color: map-get($md-prussian-blue, 300);
+                color: $whitesmoke;
+            }
+
+            .select-version {
+                color: map-get($md-prussian-blue, 500);
+                font-weight: bold;
+            }
+
+        }
+
+        > .main {
+            &:hover {
+                background-color: $whitesmoke-darker;
+            }
+
+            > .icon {
+                padding: 10px 0;
+                > img {
+                    width: 100px;
+                    height: 100px;
+                    margin: auto;
+                    -webkit-user-drag: none;
+                }
+            }
+
+            > .title {
+                margin-top: 5px;
+                border-bottom: 1px solid #d5d5d5;
+                font-size: 16px;
+                height: 36px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
             }
         }
 
-        > .title {
-            margin-top: 5px;
-            margin-bottom: 10px;
-            border-bottom: 1px solid #d5d5d5;
-            font-size: 16px;
-        }
-
         > .select-version {
-            margin-bottom: 5px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            padding: 5px;
+            color: $silver-grey;
+
+            &:hover {
+                background-color: $whitesmoke-darker;
+            }
+
+            .fa {
+                margin-left: 5px;
+            }
         }
     }
 }

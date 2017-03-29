@@ -1,30 +1,34 @@
 <h3>Select an operating system configuration</h3>
-<!-- TOOD IMPORTANT CHECK ICON LICENSING -->
-<md-tab-group class="form-tabs" [formGroup]="form">
-    <!--<div class="element-spacer">
-        <div class="infrastructure">
-            <md-radio-group formControlName="source">
-                <md-radio-button [value]="PoolOsSources.IaaS">Virtual Machine</md-radio-button>
-                <md-radio-button [value]="PoolOsSources.PaaS">Cloud Service (Windows only)</md-radio-button>
-            </md-radio-group>
-        </div>
-    </div>-->
-    <md-tab label="Virtual machine" formGroupName="virtualMachineConfiguration" title="selectedSource === PoolOsSources.IaaS">
-        <div class="offer" *ngFor="let offer of vmOffers">
-            <div class="icon"><img src="./assets/images/icons/{{iconNameFor(offer)}}.svg"></div>
-            <div class="title">{{offer.name}}</div>
-            <div class="select-version" [mdMenuTriggerFor]="menu">Select Version</div>
+<md-tab-group class="form-tabs">
+    <md-tab label="Virtual machine" title="selectedSource === PoolOsSources.IaaS">
+        <div class="offer" *ngFor="let offer of vmOffers" [class.active]="offer.name === selectedOffer">
+            <div class="main" (click)="pickOffer(offer)">
+                <div class="icon"><img src="./assets/images/icons/{{iconNameFor(offer)}}.svg"></div>
+                <div class="title">{{offer.name}}</div>
+            </div>
+            <div class="select-version" [mdMenuTriggerFor]="menu">
+                <span *ngIf="offer.name !== selectedOffer">Select Version<i class="fa fa-caret-down"></i></span>
+                <span *ngIf="offer.name === selectedOffer">{{selectedSku}}</span>
+            </div>
             <md-menu #menu="mdMenu">
-                <button md-menu-item *ngFor="let sku of offer.skus">{{sku.name}}</button>
+                <button md-menu-item *ngFor="let sku of offer.skus" (click)="pickSku(offer, sku)">{{sku.name}}</button>
             </md-menu>
         </div>
-        <p *ngIf="selectedSku">Based on your selection node agent '{{vmNodeAgentId}}'' will be used</p>
+        <p *ngIf="selectedSku">Based on your selection node agent '{{selectedNodeAgentId}}'' will be used</p>
     </md-tab>
-    <md-tab label="Cloud Service (Windows only)" title="selectedSource === PoolOsSources.PaaS">
-        <div formGroupName="cloudServiceConfiguration" class="service-ref">
-            <md-select formControlName="osFamily" placeholder="Operating System">
-                <md-option *ngFor="let osFamily of cloudServiceOsFamilies" [value]="osFamily.id">{{osFamily.name}}</md-option>
-            </md-select>
+    <md-tab label="Cloud Service (Windows only)">
+        <div class="offer" [class.active]="value?.source === PoolOsSources.PaaS">
+            <div class="main" (click)="pickCloudService()">
+                <div class="icon"><img src="./assets/images/icons/windows.svg"></div>
+                <div class="title">Windows Server</div>
+            </div>
+            <div class="select-version" [mdMenuTriggerFor]="menu">
+                <span *ngIf="value?.source !== PoolOsSources.PaaS">Select Version<i class="fa fa-caret-down"></i></span>
+                <span *ngIf="value?.source === PoolOsSources.PaaS">{{selectedFamilyName}}</span>
+            </div>
+            <md-menu #menu="mdMenu">
+                <button md-menu-item *ngFor="let osFamily of cloudServiceOsFamilies" (click)="pickCloudService(osFamily.id)">{{osFamily.name}}</button>
+            </md-menu>
         </div>
     </md-tab>
 </md-tab-group>

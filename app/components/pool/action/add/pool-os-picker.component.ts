@@ -1,26 +1,25 @@
 import { Component, OnInit, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators,
+    ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 
-import { NodeAgentSku, NodeAgentSkuMap, Offer } from "app/models";
+import { NodeAgentSku, NodeAgentSkuMap, Offer, Sku } from "app/models";
 import { PoolOSPickerModel, PoolOsSources } from "app/models/forms";
 import { NodeService } from "app/services";
 import { RxListProxy } from "app/services/core";
-import { ObjectUtils } from "app/utils";
 
 const cloudServiceOsFamilies = [{
     id: "2",
-    name: "Windows Server 2008 R2 SP1",
+    name: "2008 R2 SP1",
 }, {
     id: "3",
-    name: "Windows Server 2012",
+    name: "2012",
 }, {
     id: "4",
-    name: "Windows Server 2012 R2",
+    name: "2012 R2",
 }, {
     id: "5",
-    name: "Windows Server 2016",
+    name: "2016",
 }].reverse(); // Reverse so we have most recent first
 
 // tslint:disable:no-forward-ref
@@ -33,25 +32,21 @@ const cloudServiceOsFamilies = [{
     ],
 })
 export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
-    public form: FormGroup;
-    public cloudServiceConfigurationGroup: FormGroup;
-    public virtualMachineConfigurationGroup: FormGroup;
+    public value: PoolOSPickerModel;
 
-    public source: FormControl;
-    public publisher: FormControl;
-    public offer: FormControl;
-    public sku: FormControl;
-    public nodeAgentSKUId: FormControl;
     public accountData: RxListProxy<{}, NodeAgentSku>;
-
-    public selectedSource = PoolOsSources.IaaS;
-    public selectedPublisher: string = null;
-    public selectedOffer: string = null;
-    public selectedSku: string = null;
 
     // Shared to the view
     public PoolOsSources = PoolOsSources;
     public cloudServiceOsFamilies = cloudServiceOsFamilies;
+
+    // VM
+    public selectedOffer: string;
+    public selectedSku: string;
+    public selectedNodeAgentId: string;
+
+    // Cloud service
+    public selectedFamilyName: string;
 
     private _propagateChange: Function = null;
     private _nodeAgentSkuMap: NodeAgentSkuMap = new NodeAgentSkuMap();
@@ -61,43 +56,14 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
         this.accountData.items.subscribe((result) => {
             this._buildNodeAgentSkuMap(result);
         });
-        this.accountData.fetchNext();
     }
 
     public ngOnInit() {
-        this.source = this.formBuilder.control(this.selectedSource, Validators.required);
-        this.publisher = this.formBuilder.control("", Validators.required);
-        this.offer = this.formBuilder.control("", Validators.required);
-        this.sku = this.formBuilder.control("", Validators.required);
-        this.nodeAgentSKUId = this.formBuilder.control("", Validators.required);
-
-        this.cloudServiceConfigurationGroup = this.formBuilder.group({
-            osFamily: ["", Validators.required],
-        });
-        this.virtualMachineConfigurationGroup = this.formBuilder.group({
-            nodeAgentSKUId: this.nodeAgentSKUId,
-            imageReference: this.formBuilder.group({
-                publisher: this.publisher,
-                offer: this.offer,
-                sku: this.sku,
-            }),
-        });
-        this.form = this.formBuilder.group({
-            source: this.source,
-            cloudServiceConfiguration: this.cloudServiceConfigurationGroup,
-            virtualMachineConfiguration: this.virtualMachineConfigurationGroup,
-        });
-        this.form.valueChanges.subscribe((val: PoolOSPickerModel) => {
-            if (this._propagateChange) {
-                this._propagateChange(val);
-            }
-        });
-
-        this._setupEvent();
+        this.accountData.fetchNext();
     }
 
     public writeValue(value: any) {
-        this.form.patchValue(ObjectUtils.compact(value));
+        this.value = value;
     }
 
     public registerOnChange(fn) {
@@ -109,9 +75,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
     }
 
     public validate(c: FormControl) {
-        const valid = this.selectedSource === PoolOsSources.PaaS
-            ? this.cloudServiceConfigurationGroup.valid
-            : this.virtualMachineConfigurationGroup.valid;
+        const valid = this.value;
 
         if (!valid) {
             return {
@@ -123,6 +87,44 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
         }
 
         return null;
+    }
+
+    public pickOffer(offer: Offer) {
+        this.pickSku(offer, offer.skus.first());
+    }
+
+    public pickSku(offer: Offer, sku: Sku) {
+        this.value = {
+            source: PoolOsSources.IaaS,
+            virtualMachineConfiguration: {
+                nodeAgentSKUId: sku.nodeAgentId,
+                imageReference: {
+                    publisher: offer.publisher,
+                    offer: offer.name,
+                    sku: sku.name,
+                },
+            },
+            cloudServiceConfiguration: null,
+        };
+        this._updateSelection();
+        if (this._propagateChange) {
+            this._propagateChange(this.value);
+        }
+    }
+
+    public pickCloudService(version = null) {
+        const osFamily = version || cloudServiceOsFamilies.first().id;
+        this.value = {
+            source: PoolOsSources.PaaS,
+            cloudServiceConfiguration: {
+                osFamily,
+            },
+            virtualMachineConfiguration: null,
+        };
+        this._updateSelection();
+        if (this._propagateChange) {
+            this._propagateChange(this.value);
+        }
     }
 
     public iconNameFor(offer: Offer) {
@@ -148,38 +150,21 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
         }
     }
 
-    // public get vmPublishers() {
-    //     return this._nodeAgentSkuMap.getPublishers();
-    // }
-
     public get vmOffers() {
         return this._nodeAgentSkuMap.offers;
     }
 
-    // public get vmSkus() {
-    //     return this._nodeAgentSkuMap.getSkus(this.selectedPublisher, this.selectedOffer);
-    // }
+    private _updateSelection() {
+        const vmConfig = this.value && this.value.virtualMachineConfiguration;
+        const ref = vmConfig && vmConfig.imageReference;
+        this.selectedOffer = ref && ref.offer;
+        this.selectedSku = ref && ref.sku;
+        this.selectedNodeAgentId = vmConfig && vmConfig.nodeAgentSKUId;
 
-    // public get vmNodeAgentId() {
-    //     return this._nodeAgentSkuMap.getNodeAgentId(this.selectedPublisher, this.selectedOffer, this.selectedSku);
-    // }
-
-    private _setupEvent() {
-        this.source.valueChanges.subscribe((value) => {
-            this.selectedSource = Number(value);
-        });
-        this.publisher.valueChanges.subscribe((value) => {
-            this.selectedPublisher = value;
-            this.offer.patchValue(null);
-        });
-        this.offer.valueChanges.subscribe((value) => {
-            this.selectedOffer = value;
-            this.sku.patchValue(null);
-        });
-        this.sku.valueChanges.subscribe((value) => {
-            this.selectedSku = value;
-            // this.nodeAgentSKUId.patchValue(value && this.vmNodeAgentId);
-        });
+        const csConfig = this.value && this.value.cloudServiceConfiguration;
+        const familyId = csConfig && csConfig.osFamily;
+        const item = cloudServiceOsFamilies.filter(x => x.id === familyId).first();
+        this.selectedFamilyName = item && item.name;
     }
 
     private _buildNodeAgentSkuMap(nodeAgentSkus: any) {
