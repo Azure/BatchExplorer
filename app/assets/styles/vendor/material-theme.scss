@@ -159,8 +159,9 @@ md-dialog-container {
 }
 
 
-.mat-select-content {
-    md-option {
+.mat-select-content, .mat-menu-content {
+    padding: 4px 0;
+    md-option, .mat-menu-item {
         height: 30px;
         line-height: 30px;
     }
