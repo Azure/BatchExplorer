@@ -1,7 +1,7 @@
 import { BehaviorSubject, Observable } from "rxjs";
 
 import { ServerError } from "app/models";
-import { BatchClientService } from "./batch-client.service";
+import { BatchClientService } from "./";
 
 export interface CommonListOptions {
     filter?: string;
@@ -21,7 +21,8 @@ export class ServiceBase {
         return this._loading.asObservable();
     }
 
-    constructor(protected batchService?: BatchClientService) { }
+    constructor(
+        protected batchService?: BatchClientService) { }
 
     public setLoadingState(loading: boolean) {
         this._loading.next(loading);
@@ -37,12 +38,17 @@ export class ServiceBase {
         promise: (client: any) => Promise<any>,
         errorCallback?: (error: any) => void): Observable<T> {
 
+        if (!this.batchService) {
+            throw new Error("batchService not set in ServiceBase");
+        }
+
         return this.batchService.get().flatMap((client) => {
             return Observable.fromPromise<T>(promise(client)).catch((err) => {
                 const serverError = ServerError.fromBatch(err);
                 if (errorCallback) {
                     errorCallback(serverError);
                 }
+
                 return Observable.throw(serverError);
             });
         }).share();

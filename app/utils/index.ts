@@ -10,6 +10,8 @@ export * from "./object";
 export * from "./os";
 export * from "./pool-utils";
 export * from "./secure";
+export * from "./shared-key-utils";
+export * from "./storage-utils";
 
 import * as constants from "./constants";
 export const Constants = constants;

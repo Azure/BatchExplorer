@@ -37,7 +37,6 @@ export class PersistedFileListComponent implements OnInit, OnChanges {
         private fileService: FileService,
         private storageService: StorageService) {
 
-        const result = this.storageService.listBlobsForTask(null, null);
         // this.data.status.subscribe((status) => {
         //     this.status.next(status);
         // });
@@ -77,6 +76,10 @@ export class PersistedFileListComponent implements OnInit, OnChanges {
 
     private _loadFiles() {
         this.noBlobsFound = true;
+        this.storageService.listBlobsForTask(this.jobId, this.taskId).subscribe((result) => {
+            console.log(result);
+        });
+
         // this.data.updateParams({ jobId: this.jobId, taskId: this.taskId });
         // this.data.setOptions(this._buildOptions());
         // this.data.fetchNext(true);

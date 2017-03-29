@@ -2,6 +2,7 @@ import { BrowserWindow, app, protocol } from "electron";
 import * as path from "path";
 
 import { BatchClientProxyFactory } from "./api/batch-client-proxy";
+import { StorageClientProxyFactory } from "./api/storage-client-proxy";
 import { Constants } from "./client-constants";
 import { renderLogger } from "./logger";
 import { SplashScreen } from "./splash-screen";
@@ -53,6 +54,7 @@ function createWindow() {
 
     mainWindow.loadURL(url);
     mainWindow.batchClientFactory = new BatchClientProxyFactory();
+    mainWindow.storageClientFactory = new StorageClientProxyFactory();
     mainWindow.logger = renderLogger;
     mainWindow.splashScreen = splashScreen;
 
