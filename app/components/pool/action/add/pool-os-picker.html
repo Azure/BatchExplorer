@@ -3,7 +3,8 @@
     <md-tab label="Virtual machine" title="selectedSource === PoolOsSources.IaaS" class="banana">
         <div class="offer" *ngFor="let offer of vmOffers" [class.active]="offer.name === selectedOffer">
             <div class="main" (click)="pickOffer(offer)">
-                <div class="icon"><img src="./assets/images/icons/{{iconNameFor(offer)}}.svg"></div>
+                <div class="icon" *ngIf="iconNameFor(offer).src === 'svg'"><img src="./assets/images/icons/{{iconNameFor(offer).name}}.svg"></div>
+                <div class="icon" *ngIf="iconNameFor(offer).src === 'fa'"><i class="fa fa-{{iconNameFor(offer).name}}"></i></div>
                 <div class="title">{{offer.name}}</div>
             </div>
             <button class="select-version" [mdMenuTriggerFor]="menu">
@@ -19,7 +20,7 @@
     <md-tab label="Cloud Service (Windows only)">
         <div class="offer" [class.active]="value?.source === PoolOsSources.PaaS">
             <div class="main" (click)="pickCloudService()">
-                <div class="icon"><img src="./assets/images/icons/windows.svg"></div>
+                <div class="icon"><i class="fa fa-windows"></i></div>
                 <div class="title">Windows Server</div>
             </div>
             <button class="select-version" [mdMenuTriggerFor]="menu">

@@ -42,10 +42,10 @@ bl-pool-os-picker {
         &.active {
             border-color: map-get($md-prussian-blue, 300);
 
-            .icon {
+            > .main > .icon {
                 background: map-get($md-prussian-blue, 300);
                 border-color: map-get($md-prussian-blue, 300);
-                color: $whitesmoke;
+                color: map-get($md-prussian-blue, 50);
             }
 
             .select-version {
@@ -63,10 +63,15 @@ bl-pool-os-picker {
             > .icon {
                 padding: 10px 0;
                 height: 120px;
+                font-size: 100px;
+                color: map-get($md-prussian-blue, 300);
+                display: flex;
+                align-items: center;
+                justify-content: center;
 
                 > img {
                     width: 100px;
-                    height: 100px;
+                    // height: 100px;
                     margin: auto;
                     -webkit-user-drag: none;
                 }

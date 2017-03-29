@@ -22,6 +22,34 @@ const cloudServiceOsFamilies = [{
     name: "2016",
 }].reverse(); // Reverse so we have most recent first
 
+// const iconMapping = {
+//     "UbuntuServer": "linux",
+//     "CentOS": "linux",
+//     "CentOS-HPC": "linux",
+//     "WindowsServer": "windows",
+//     "Debian": "linux",
+//     "Oracle-Linux": "linux",
+//     "linux-data-science-vm": "linux",
+//     "openSUSE-Leap": "linux",
+//     "SLES": "linux",
+//     "SLES-HPC": "linux",
+//     "standard-data-science-vm": "windows",
+// };
+
+const iconMapping = {
+    "UbuntuServer": { src: "svg", name: "ubuntu" },
+    "CentOS": { src: "svg", name: "centos" },
+    "CentOS-HPC": { src: "svg", name: "centos" },
+    "WindowsServer": { src: "fa", name: "windows" },
+    "Debian": { src: "svg", name: "debian" },
+    "Oracle-Linux": { src: "svg", name: "oracle" },
+    "linux-data-science-vm": { src: "fa", name: "linux" },
+    "openSUSE-Leap": { src: "svg", name: "suse" },
+    "SLES": { src: "svg", name: "suse" },
+    "SLES-HPC": { src: "svg", name: "suse" },
+    "standard-data-science-vm": { src: "fa", name: "windows" },
+};
+
 // tslint:disable:no-forward-ref
 @Component({
     selector: "bl-pool-os-picker",
@@ -129,21 +157,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
     }
 
     public iconNameFor(offer: Offer) {
-        const mapping = {
-            "UbuntuServer": "ubuntu",
-            "CentOS": "centos",
-            "CentOS-HPC": "centos",
-            "WindowsServer": "windows",
-            "Debian": "debian",
-            "Oracle-Linux": "linux",
-            "linux-data-science-vm": "azurescience",
-            "openSUSE-Leap": "suse",
-            "SLES": "suse",
-            "SLES-HPC": "suse",
-            "standard-data-science-vm": "azurescience",
-        };
-
-        const icon = mapping[offer.name];
+        const icon = iconMapping[offer.name];
         if (icon) {
             return icon;
         } else {
