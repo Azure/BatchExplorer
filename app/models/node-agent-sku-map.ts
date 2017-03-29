@@ -1,63 +1,75 @@
 import { List } from "immutable";
 
+import { ObjectUtils } from "app/utils";
 import { NodeAgentSku } from "./node-agent-sku";
 
+export interface Sku {
+    name: string;
+    nodeAgentId: string;
+    osType: string;
+}
+
+export interface Offer {
+    name: string;
+    publisher: string;
+    skus: Sku[];
+}
+
 export class NodeAgentSkuMap {
-    private _map: any;
+    public offers: Offer[];
 
     constructor(skus: List<NodeAgentSku> = List([])) {
-        let map = {};
+        let offers: StringMap<Offer> = {};
         skus.forEach((sku) => {
             for (let imageReference of sku.verifiedImageReferences) {
-                if (!map[imageReference.publisher]) {
-                    map[imageReference.publisher] = {};
-                }
-
-                if (!map[imageReference.publisher][imageReference.offer]) {
-                    map[imageReference.publisher][imageReference.offer] = {};
-                }
-
-                if (!map[imageReference.publisher][imageReference.offer][imageReference.sku]) {
-                    map[imageReference.publisher][imageReference.offer][imageReference.sku] = {
-                        nodeAgentId: sku.id,
-                        osType: sku.osType,
+                if (!(imageReference.offer in offers)) {
+                    offers[imageReference.offer] = {
+                        name: imageReference.offer,
+                        publisher: imageReference.publisher,
+                        skus: [],
                     };
                 }
+                const offer = offers[imageReference.offer];
+                offer.skus.push({
+                    name: imageReference.sku,
+                    nodeAgentId: sku.id,
+                    osType: sku.osType,
+                });
             }
         });
-        this._map = map;
+        this.offers = ObjectUtils.values(offers);
     }
 
-    public getPublisher(publisher: string) {
-        return this._map[publisher];
-    }
+    // public getPublisher(publisher: string) {
+    //     return this._map[publisher];
+    // }
 
-    public getOffer(publisher: string, offer: string) {
-        const data = this._map[publisher];
-        return data && data[offer];
-    }
+    // public offer(publisher: string, offer: string) {
+    //     const data = this._map[publisher];
+    //     return data && data[offer];
+    // }
 
-    public getSku(publisher: string, offer: string, sku: string) {
-        const data = this.getOffer(publisher, offer);
-        return data && data[sku];
-    }
+    // public getSku(publisher: string, offer: string, sku: string) {
+    //     const data = this.getOffer(publisher, offer);
+    //     return data && data[sku];
+    // }
 
-    public getPublishers() {
-        return Object.keys(this._map);
-    }
+    // public getPublishers() {
+    //     return Object.keys(this._map);
+    // }
 
-    public getOffers(publisher: string) {
-        const data = this.getPublisher(publisher);
-        return data ? Object.keys(data) : [];
-    }
+    // public getOffers(publisher: string) {
+    //     const data = this.getPublisher(publisher);
+    //     return data ? Object.keys(data) : [];
+    // }
 
-    public getSkus(publisher: string, offer: string) {
-        const data = this.getOffer(publisher, offer);
-        return data ? Object.keys(data) : [];
-    }
+    // public getSkus(publisher: string, offer: string) {
+    //     const data = this.getOffer(publisher, offer);
+    //     return data ? Object.keys(data) : [];
+    // }
 
-    public getNodeAgentId(publisher: string, offer: string, sku: string) {
-        const data = this.getSku(publisher, offer, sku);
-        return data ? data.nodeAgentId : "";
-    }
+    // public getNodeAgentId(publisher: string, offer: string, sku: string) {
+    //     const data = this.getSku(publisher, offer, sku);
+    //     return data ? data.nodeAgentId : "";
+    // }
 }

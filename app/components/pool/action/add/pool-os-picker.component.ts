@@ -3,7 +3,7 @@ import {
     ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators,
 } from "@angular/forms";
 
-import { NodeAgentSku, NodeAgentSkuMap } from "app/models";
+import { NodeAgentSku, NodeAgentSkuMap, Offer } from "app/models";
 import { PoolOSPickerModel, PoolOsSources } from "app/models/forms";
 import { NodeService } from "app/services";
 import { RxListProxy } from "app/services/core";
@@ -125,21 +125,44 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
         return null;
     }
 
-    public get vmPublishers() {
-        return this._nodeAgentSkuMap.getPublishers();
+    public iconNameFor(offer: Offer) {
+        const mapping = {
+            "UbuntuServer": "ubuntu",
+            "CentOS": "centos",
+            "CentOS-HPC": "centos",
+            "WindowsServer": "windows",
+            "Debian": "debian",
+            "Oracle-Linux": "linux",
+            "linux-data-science-vm": "azurescience",
+            "openSUSE-Leap": "suse",
+            "SLES": "suse",
+            "SLES-HPC": "suse",
+            "standard-data-science-vm": "azurescience",
+        };
+
+        const icon = mapping[offer.name];
+        if (icon) {
+            return icon;
+        } else {
+            return "";
+        }
     }
+
+    // public get vmPublishers() {
+    //     return this._nodeAgentSkuMap.getPublishers();
+    // }
 
     public get vmOffers() {
-        return this._nodeAgentSkuMap.getOffers(this.selectedPublisher);
+        return this._nodeAgentSkuMap.offers;
     }
 
-    public get vmSkus() {
-        return this._nodeAgentSkuMap.getSkus(this.selectedPublisher, this.selectedOffer);
-    }
+    // public get vmSkus() {
+    //     return this._nodeAgentSkuMap.getSkus(this.selectedPublisher, this.selectedOffer);
+    // }
 
-    public get vmNodeAgentId() {
-        return this._nodeAgentSkuMap.getNodeAgentId(this.selectedPublisher, this.selectedOffer, this.selectedSku);
-    }
+    // public get vmNodeAgentId() {
+    //     return this._nodeAgentSkuMap.getNodeAgentId(this.selectedPublisher, this.selectedOffer, this.selectedSku);
+    // }
 
     private _setupEvent() {
         this.source.valueChanges.subscribe((value) => {
@@ -155,7 +178,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
         });
         this.sku.valueChanges.subscribe((value) => {
             this.selectedSku = value;
-            this.nodeAgentSKUId.patchValue(value && this.vmNodeAgentId);
+            // this.nodeAgentSKUId.patchValue(value && this.vmNodeAgentId);
         });
     }
 
