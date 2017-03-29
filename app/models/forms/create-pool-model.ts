@@ -66,7 +66,7 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
         enableInterNodeCommunication: pool.enableInterNodeCommunication,
         os: {
             source: pool.cloudServiceConfiguration ? PoolOsSources.PaaS : PoolOsSources.IaaS,
-            cloudServiceConfiguration: pool.cloudServiceConfiguration as any,
+            cloudServiceConfiguration: pool.cloudServiceConfiguration,
             virtualMachineConfiguration: pool.virtualMachineConfiguration,
         },
     };

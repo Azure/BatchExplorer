@@ -1,15 +1,15 @@
 <h3>Select an operating system configuration</h3>
 <md-tab-group class="form-tabs">
-    <md-tab label="Virtual machine" title="selectedSource === PoolOsSources.IaaS">
+    <md-tab label="Virtual machine" title="selectedSource === PoolOsSources.IaaS" class="banana">
         <div class="offer" *ngFor="let offer of vmOffers" [class.active]="offer.name === selectedOffer">
             <div class="main" (click)="pickOffer(offer)">
                 <div class="icon"><img src="./assets/images/icons/{{iconNameFor(offer)}}.svg"></div>
                 <div class="title">{{offer.name}}</div>
             </div>
-            <div class="select-version" [mdMenuTriggerFor]="menu">
+            <button class="select-version" [mdMenuTriggerFor]="menu">
                 <span *ngIf="offer.name !== selectedOffer">Select Version<i class="fa fa-caret-down"></i></span>
                 <span *ngIf="offer.name === selectedOffer">{{selectedSku}}</span>
-            </div>
+            </button>
             <md-menu #menu="mdMenu">
                 <button md-menu-item *ngFor="let sku of offer.skus" (click)="pickSku(offer, sku)">{{sku.name}}</button>
             </md-menu>
@@ -22,10 +22,10 @@
                 <div class="icon"><img src="./assets/images/icons/windows.svg"></div>
                 <div class="title">Windows Server</div>
             </div>
-            <div class="select-version" [mdMenuTriggerFor]="menu">
+            <button class="select-version" [mdMenuTriggerFor]="menu">
                 <span *ngIf="value?.source !== PoolOsSources.PaaS">Select Version<i class="fa fa-caret-down"></i></span>
                 <span *ngIf="value?.source === PoolOsSources.PaaS">{{selectedFamilyName}}</span>
-            </div>
+            </button>
             <md-menu #menu="mdMenu">
                 <button md-menu-item *ngFor="let osFamily of cloudServiceOsFamilies" (click)="pickCloudService(osFamily.id)">{{osFamily.name}}</button>
             </md-menu>

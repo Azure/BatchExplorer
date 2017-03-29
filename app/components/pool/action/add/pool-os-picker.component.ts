@@ -64,6 +64,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
 
     public writeValue(value: any) {
         this.value = value;
+        this._updateSelection();
     }
 
     public registerOnChange(fn) {
