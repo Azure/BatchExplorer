@@ -15,18 +15,18 @@ export class BlobStorageClientProxy {
      * http://azure.github.io/azure-storage-node/BlobService.html#listBlobsSegmentedWithPrefix__anchor
      *
      * @param container - name of the storage container
-     * @param prefix - The prefix of the blob name. In our case it is the taskId prefix:
-     *      (/${taskId}/$TaskOutput|$TaskLog/${namePrefixFilter})
+     * @param blobPrefix - The prefix of the blob name. In our case it is the taskId prefix:
+     *  "${taskId}/$TaskOutput|$TaskLog/${namePrefixFilter}"
      * @param continuationToken - any token that was returned from the last call
      */
     public listBlobsWithPrefix(
         container: string,
-        prefix: string,
+        blobPrefix: string,
         continuationToken?: any,
         options?: StorageRequestOptions): Promise<BlobStorageResult> {
 
         return new Promise((resolve, reject) => {
-            this._blobService.listBlobsSegmentedWithPrefix(container, prefix, continuationToken, options,
+            this._blobService.listBlobsSegmentedWithPrefix(container, blobPrefix, continuationToken, options,
                 (error, result, response) => {
                 if (error) {
                     reject(error);
@@ -34,7 +34,7 @@ export class BlobStorageClientProxy {
                     resolve({
                         data: result.entries.map((blob) =>  {
                             return {
-                                name: blob.name.replace(prefix, ""),
+                                name: blob.name.replace(blobPrefix, ""),
                                 url: `${container}/${blob.name}`,
                                 isDirectory: false,
                                 properties: {
@@ -50,9 +50,5 @@ export class BlobStorageClientProxy {
                 }
             });
         });
-    }
-
-    private _mapBlobResults(blobs: storage.BlobService.BlobResult[]) {
-
     }
 }

@@ -187,13 +187,16 @@ export abstract class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity
             if (error && error.status && !this._logIgnoreError.includes(error.status)) {
                 log.error("Error in RxProxy", Object.assign({}, error));
             }
+
             if (options.error) {
                 options.error(error);
             }
+
             this._status.next(LoadingStatus.Error);
             this._error.next(error);
             this.abortFetch();
         });
+
         return obs;
     }
 

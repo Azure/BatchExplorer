@@ -3,6 +3,7 @@ import { List, OrderedSet } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
+import { log } from "app/utils";
 import { CachedKeyList } from "./query-cache";
 import { RxEntityProxy } from "./rx-entity-proxy";
 import { RxProxyBase, RxProxyBaseConfig } from "./rx-proxy-base";
@@ -86,7 +87,8 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
 
                 this._lastRequest = { params: this._params, options: this._options };
             },
-            error: () => {
+            error: (error) => {
+                log.error("RxListProxy.fetchNext().error: ", error);
                 this._hasMore.next(false);
             },
         });

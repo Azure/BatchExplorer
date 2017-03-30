@@ -3,8 +3,8 @@ import { autobind } from "core-decorators";
 import { BehaviorSubject, Observable } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
-import { File, Node, Task } from "app/models";
-import { FileService, StorageService, TaskFileListParams } from "app/services";
+import { File } from "app/models";
+import { BlobListParams, FileService, StorageService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
 
@@ -28,18 +28,25 @@ export class PersistedFileListComponent implements OnInit, OnChanges {
     @ViewChild(PersistedFileListComponent)
     public blobList: PersistedFileListComponent;
 
-    // public data: RxListProxy<TaskFileListParams, File>;
+    public data: RxListProxy<BlobListParams, File>;
     public status = new BehaviorSubject(LoadingStatus.Loading);
     public LoadingStatus = LoadingStatus;
-    public noBlobsFound = false;
+    // public noBlobsFound = false;
 
     constructor(
         private fileService: FileService,
         private storageService: StorageService) {
 
-        // this.data.status.subscribe((status) => {
-        //     this.status.next(status);
-        // });
+        this.data = this.storageService.listBlobsForTask(null, null, null);
+        // note: testing only
+        this.data.items.subscribe((items) => {
+            console.log("this.data.items.subscribe :: ", items);
+        });
+
+        this.data.status.subscribe((status) => {
+            console.log("this.data.status.subscribe :: ", status);
+            this.status.next(status);
+        });
     }
 
     public ngOnInit() {
@@ -63,26 +70,23 @@ export class PersistedFileListComponent implements OnInit, OnChanges {
 
     @autobind()
     public loadMore(): Observable<any> {
-        // if (this.data) {
-        //     return this.data.fetchNext();
-        // }
+        if (this.data) {
+            return this.data.fetchNext();
+        }
 
         return new Observable(null);
     }
 
+    // TODO: this is wrong now
     public get baseUrl() {
         return ["/jobs", this.jobId, "tasks", this.taskId];
     }
 
     private _loadFiles() {
-        this.noBlobsFound = true;
-        this.storageService.listBlobsForTask(this.jobId, this.taskId).subscribe((result) => {
-            console.log(result);
-        });
-
-        // this.data.updateParams({ jobId: this.jobId, taskId: this.taskId });
-        // this.data.setOptions(this._buildOptions());
-        // this.data.fetchNext(true);
+        console.log("calling _loadFiles()...fetchNext()");
+        this.data.updateParams({ jobId: this.jobId, taskId: this.taskId, outputKind: "$TaskOutput" });
+        this.data.setOptions(this._buildOptions());
+        this.data.fetchNext(true);
     }
 
     private _buildOptions() {

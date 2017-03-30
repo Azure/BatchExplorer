@@ -24,10 +24,11 @@ export class StorageClientService {
             throw "No account currently selected....";
         }
 
-        // TODO: pretty sure this aint right, based on what is in the batch client service
+        // TODO: pretty sure this aint right, based on what is in the batch client service, but it could be :)
+        // Need to read this from the accound and set an error condition if auto storage not available
         return Observable.of(this.getForSharedKey({
             account: "andrew1973",
-            key: "TrQHCI9J3+U/4mbKQU6k0wLGIbfo/M8J5p9RfWllVSaOyHDMm18Um/hkhEDPDJI2Sl+4cQtfFLCQ0/riQ3102w=="
+            key: "TrQHCI9J3+U/4mbKQU6k0wLGIbfo/M8J5p9RfWllVSaOyHDMm18Um/hkhEDPDJI2Sl+4cQtfFLCQ0/riQ3102w==",
         }));
     }
 

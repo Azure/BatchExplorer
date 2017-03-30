@@ -2,79 +2,76 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { File, ServerError } from "app/models";
-import { StorageUtils, log } from "app/utils";
-import { BlobStorageClientProxy } from "client/api";
-// import { DataCache, TargetedDataCache } from "./core";
+import { Constants, StorageUtils, log } from "app/utils";
+import { DataCache, RxListProxy, RxStorageListProxy, TargetedDataCache } from "./core";
 import { StorageClientService } from "./storage-client.service";
 
-// export interface BlobListParams {
-//     jobId?: string;
-//     taskId?: string;
-// }
+export interface BlobListParams {
+    jobId?: string;
+    taskId?: string;
+    outputKind?: string;
+}
 
-// export interface BlobFileParams extends BlobListParams {
-//     filename: string;
-// }
+// List of error we don't want to log for files
+const fileIgnoredErrors = [
+    Constants.HttpCode.NotFound,
+    Constants.HttpCode.Conflict,
+];
 
 @Injectable()
 export class StorageService {
-    // TODO: might want a cache if we make a RxStorageListProxy
+    private _taskFileCache = new TargetedDataCache<BlobListParams, File>({
+        key: ({ jobId, taskId, outputKind }) => jobId + "/" + taskId + "/" + outputKind,
+    }, "url");
 
     constructor(private storageService: StorageClientService) {
     }
 
-    /**
-     * List blobs in the linked storage account that match the container name and prefix
-     * @param jobIdParam - jobId that will be turned into a safe container name
-     * @param prefixParam - The filter prefix of the blob. In our case it is taskId/OutputKind/nameFilter
-     *  example: 1001/$TaskOutput, 1001/$TaskLog, 1001/$TaskOutput/filenameprefix
-     * @param initialOptions - any other options to pass to the service
-     */
-    public listBlobsForTask(jobIdParam: string, prefixParam: string): Observable<File[]> {
-        const initialOptions: any = {};
-        const observable = Observable
-            .fromPromise(StorageUtils.getSafeContainerName(jobIdParam))
-            .cascade((safeContainerName) => {
-
-            // TODO: result needs to be mapped into File records.
-            // Transform here or in the nodeJs client?
-
-            return this._callServiceClient((client: BlobStorageClientProxy) =>
-                client.listBlobsWithPrefix(safeContainerName, prefixParam, null, initialOptions), (error) => {
-                /**
-                 * TODO: 404 error with:
-                 * statusCode: 404
-                 * code:"ContainerNotFound"
-                 * message:"The specified container does not exist.
-                 *  ↵RequestId:abb823a6-0001-0024-703f-a8ab78000000
-                 *  ↵Time:2017-03-29T03:52:10.8822916Z"
-                 * name:"StorageError"
-                 */
-                // tslint:disable-next-line
-                log.error(`Error getting blobs from container: ${safeContainerName}, with prefix: ${prefixParam}`, error);
-            });
-        });
-
-        return observable;
+    public getBlobFileCache(params: BlobListParams): DataCache<File> {
+        return this._taskFileCache.getCache(params);
     }
 
     /**
-     * Testing if i need this or not
+     * List blobs in the linked storage account that match the container name and prefix
+     * @param jobIdParam - The ID of the job that will be turned into a safe container name
+     * @param taskIdParam - The ID of the task, this will be the initial prefix of the blob path
+     * @param outputKindParam - taskId subfolder name for the type of file: '$TaskOutput' or '$TaskLog'
      */
-    private _callServiceClient<T>(
-        promise: (client: any) => Promise<any>,
-        errorCallback?: (error: any) => void): Observable<T> {
+    public listBlobsForTask(jobIdParam: string, taskIdParam: string, outputKindParam: string):
+        RxListProxy<BlobListParams, File> {
 
-        return this.storageService.get().flatMap((client) => {
-            return Observable.fromPromise<T>(promise(client)).catch((err) => {
-                log.error("_callServiceClient error :: ", err);
-                const serverError = ServerError.fromBatch(err);
-                if (errorCallback) {
-                    errorCallback(serverError);
+        const initialOptions: any = {};
+        return new RxStorageListProxy<BlobListParams, File>(File, this.storageService, {
+            cache: (params) => this.getBlobFileCache(params),
+            proxyConstructor: (client, params, options) => {
+                // The filter prefix of the blob. eg: 10011/$TaskOutput/name-starts-with
+                let blobPrefixFilter = `${params.taskId}/${params.outputKind}`;
+                if (options.filter) {
+                    blobPrefixFilter += this._getBlobNameFilter(options.filter);
                 }
 
-                return Observable.throw(serverError);
-            });
-        }).share();
+                // NOTE: the null parameter is for the continuationToken, dont know what to do with that just yet.
+                return StorageUtils.getSafeContainerName(params.jobId).then((safeContainerName) => {
+                    return client.listBlobsWithPrefix(safeContainerName, blobPrefixFilter, null, initialOptions);
+                });
+            },
+            initialParams: { jobId: jobIdParam, taskId: taskIdParam, outputKind: outputKindParam},
+            initialOptions,
+            logIgnoreError: fileIgnoredErrors,
+        });
+    }
+
+    /**
+     * Get the filter text. It will be in the OData format: startswith(name, 'filtertext')
+     * Note, we could change the filter to just return the filter string rather than the
+     * OData filter string.
+     */
+    private _getBlobNameFilter(filter: any): string {
+        const filterMatch = /startswith\(name,\s*'([^']*)'\)/.exec(filter);
+        if (filterMatch && filterMatch.length >= 1) {
+            return `/${filterMatch[1]}`;
+        }
+
+        return null;
     }
 }

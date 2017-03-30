@@ -1,12 +1,15 @@
-<div *ngIf="!noBlobsFound">
+<div>
     <bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
     <bl-file-list-display [files]="data.items | async" [status]="status | async" [quickList]="quickList" [baseUrl]="baseUrl"
         [filter]="filter"></bl-file-list-display>
+
     <bl-list-loading [manualLoading]="manualLoading" [data]="data" [status]="status | async"></bl-list-loading>
 </div>
 
-<div *ngIf="noBlobsFound" class="notfound-message">
+<!--<div *ngIf="noBlobsFound" class="notfound-message">
     No blobs were found for this task.
-</div>
+</div>-->
 
+<!-- add error panel based on size of data -->
 <!-- auto storage warning as well -->
+<!-- fix up [baseUrl]="baseUrl" -->
