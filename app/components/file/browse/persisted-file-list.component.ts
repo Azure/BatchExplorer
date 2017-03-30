@@ -44,7 +44,6 @@ export class PersistedFileListComponent implements OnInit, OnChanges {
         });
 
         this.data.status.subscribe((status) => {
-            console.log("this.data.status.subscribe :: ", status);
             this.status.next(status);
         });
     }

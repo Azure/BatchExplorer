@@ -45,7 +45,7 @@ export class StorageService {
             cache: (params) => this.getBlobFileCache(params),
             proxyConstructor: (client, params, options) => {
                 // The filter prefix of the blob. eg: 10011/$TaskOutput/name-starts-with
-                let blobPrefixFilter = `${params.taskId}/${params.outputKind}`;
+                let blobPrefixFilter = `${params.taskId}/${params.outputKind}/`;
                 if (options.filter) {
                     blobPrefixFilter += this._getBlobNameFilter(options.filter);
                 }
@@ -69,7 +69,7 @@ export class StorageService {
     private _getBlobNameFilter(filter: any): string {
         const filterMatch = /startswith\(name,\s*'([^']*)'\)/.exec(filter);
         if (filterMatch && filterMatch.length >= 1) {
-            return `/${filterMatch[1]}`;
+            return `${filterMatch[1]}`;
         }
 
         return null;

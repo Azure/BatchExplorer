@@ -34,7 +34,7 @@ export class BlobStorageClientProxy {
                     resolve({
                         data: result.entries.map((blob) =>  {
                             return {
-                                name: blob.name.replace(blobPrefix, ""),
+                                name: blob.name.replace(blobPrefix, ""), // TODO: needs work
                                 url: `${container}/${blob.name}`,
                                 isDirectory: false,
                                 properties: {

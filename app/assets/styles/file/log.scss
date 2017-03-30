@@ -46,6 +46,7 @@
             padding-right: 1em;
         }
     }
+
     .line-content {
         white-space: pre-wrap;
     }
@@ -73,12 +74,14 @@
     }
 }
 
-
 .notfound-message {
     background: $mineshaft-grey;
     color: $whiteSmoke;
     padding: 20px;
     font-size: 16px;
     text-align: center;
-    margin-top: 30px;
+
+    &.top-margin {
+        margin-top: 30px;
+    }
 }
