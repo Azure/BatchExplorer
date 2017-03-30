@@ -1,11 +1,10 @@
 import { BrowserWindow } from "electron";
 
-export class AuthenticationWindow {
-    private _window: Electron.BrowserWindow;
+import { UniqueWindow } from "../core";
 
-    public create() {
-        this.destroy();
-        this._window = new BrowserWindow({
+export class AuthenticationWindow extends UniqueWindow {
+    public createWindow() {
+        const window = new BrowserWindow({
             width: 800, height: 700, show: false,
             center: true,
             webPreferences: {
@@ -15,7 +14,8 @@ export class AuthenticationWindow {
 
         // Uncomment to debug auth errors
         // this._window.webContents.openDevTools();
-        this._window.setMenu(null);
+        window.setMenu(null);
+        return window;
     }
 
     public loadURL(url: string) {
@@ -23,32 +23,6 @@ export class AuthenticationWindow {
             throw "AuthenticationWindow not created. Cannot call loadURL";
         }
         this._window.loadURL(url);
-    }
-
-    public isVisible(): boolean {
-        return this._window && this._window.isVisible();
-    }
-
-    public show() {
-        if (!this._window) {
-            this.create();
-        }
-        if (!this._window.isVisible()) {
-            this._window.show();
-        }
-    }
-
-    public hide() {
-        if (this._window) {
-            this._window.hide();
-        }
-    }
-
-    public destroy() {
-        if (this._window) {
-            this._window.destroy();
-            this._window = null;
-        }
     }
 
     public onRedirect(callback: (newUrl: string) => void) {

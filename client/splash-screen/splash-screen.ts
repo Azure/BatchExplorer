@@ -1,16 +1,29 @@
 import { BrowserWindow } from "electron";
 import { Constants } from "../client-constants";
+import { UniqueWindow } from "../core";
 
 const urls = Constants.urls.splash;
 const url = process.env.HOT ? urls.dev : urls.prod;
 
-export class SplashScreen {
-    private _window: Electron.BrowserWindow;
+export class SplashScreen extends UniqueWindow {
     private _currentMessage = "";
 
-    public create() {
-        this.destroy();
-        this._window = new BrowserWindow({
+    public updateMessage(message: string) {
+        this._currentMessage = message;
+        this._sendMessageToWindow();
+    }
+
+    public destroy() {
+        super.destroy();
+        this.clearMessage();
+    }
+
+    public clearMessage() {
+        this.updateMessage("");
+    }
+
+    protected createWindow() {
+        const window = new BrowserWindow({
             height: 300,
             width: 300,
             icon: Constants.urls.icon,
@@ -18,42 +31,11 @@ export class SplashScreen {
             titleBarStyle: "hidden",
             frame: false,
         });
-        this._window.loadURL(url);
-        this._window.webContents.once("dom-ready", () => {
+        window.loadURL(url);
+        window.webContents.once("dom-ready", () => {
             this._sendMessageToWindow();
         });
-    }
-
-    public show() {
-        if (!this._window) {
-            this.create();
-        }
-        if (!this._window.isVisible()) {
-            this._window.show();
-        }
-    }
-
-    public hide() {
-        if (this._window) {
-            this._window.hide();
-        }
-    }
-
-    public destroy() {
-        if (this._window) {
-            this._window.destroy();
-            this._window = null;
-        }
-        this.clearMessage();
-    }
-
-    public updateMessage(message: string) {
-        this._currentMessage = message;
-        this._sendMessageToWindow();
-    }
-
-    public clearMessage() {
-        this.updateMessage("");
+        return window;
     }
 
     private _sendMessageToWindow() {

@@ -1,7 +1,6 @@
 import { AsyncSubject, Observable } from "rxjs";
 
 import { SecureUtils } from "app/utils";
-import { AuthenticationWindow } from "client/authentication";
 import { ElectronRemote } from "../electron";
 import { AdalConfig } from "./adal-config";
 import * as AdalConstants from "./adal-constants";
