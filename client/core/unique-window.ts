@@ -9,15 +9,29 @@ export abstract class UniqueWindow {
         this._window = this.createWindow();
     }
 
-    public isVisible(): boolean {
-        return this._window && this._window.isVisible();
+    /**
+     * @returns if the window is created
+     */
+    public exists() {
+        return Boolean(this._window);
     }
 
-    public show() {
+    /**
+     * @returns true if the window exists and is visible
+     */
+    public isVisible(): boolean {
+        return Boolean(this._window && this._window.isVisible());
+    }
+
+    /**
+     * Display the window only if not already visible
+     * @param focus If we should focus on the window if it is already visible. @default false
+     */
+    public show(focus: boolean = false) {
         if (!this._window) {
             this.create();
         }
-        if (!this._window.isVisible()) {
+        if (focus || !this._window.isVisible()) {
             this._window.show();
         }
     }
