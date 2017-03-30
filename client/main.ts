@@ -2,6 +2,7 @@ import { BrowserWindow, app, protocol } from "electron";
 import * as path from "path";
 
 import { BatchClientProxyFactory } from "./api/batch-client-proxy";
+import { AuthenticationWindow } from "./authentication";
 import { Constants } from "./client-constants";
 import { renderLogger } from "./logger";
 import { SplashScreen } from "./splash-screen";
@@ -20,6 +21,7 @@ const buildFileUrl = Constants.urls.main.prod;
 
 const authWindowsToClose: Electron.BrowserWindow[] = [];
 const splashScreen = new SplashScreen();
+const authenticationWindow = new AuthenticationWindow();
 
 // Create the browser window.
 function createWindow() {
@@ -44,7 +46,7 @@ function createWindow() {
         height: 1000,
         icon: Constants.urls.icon,
         width: 1600,
-        show: false, // Don't show the window until the user authenticated, comment to debug auth problems,
+        show: true, // Don't show the window until the user authenticated, comment to debug auth problems,
         webPreferences: {
             webSecurity: false,
         },
@@ -56,6 +58,7 @@ function createWindow() {
     mainWindow.batchClientFactory = new BatchClientProxyFactory();
     mainWindow.logger = renderLogger;
     mainWindow.splashScreen = splashScreen;
+    mainWindow.authenticationWindow = authenticationWindow;
 
     // Open the DevTools.
     if (process.env.NODE_ENV !== "production") {
