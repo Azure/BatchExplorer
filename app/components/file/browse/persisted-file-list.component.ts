@@ -1,16 +1,17 @@
-import { Component, Input, OnChanges, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit } from "@angular/core";
 import { autobind } from "core-decorators";
 import { BehaviorSubject, Observable } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
-import { File } from "app/models";
-import { BlobListParams, FileService, StorageService } from "app/services";
+import { File, ServerError } from "app/models";
+import { BlobListParams, StorageService } from "app/services";
 import { RxListProxy } from "app/services/core";
-import { Filter } from "app/utils/filter-builder";
+import { Property } from "app/utils/filter-builder";
 
 @Component({
     selector: "bl-persisted-file-list",
     templateUrl: "persisted-file-list.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PersistedFileListComponent implements OnInit, OnChanges {
     @Input()
@@ -23,24 +24,23 @@ export class PersistedFileListComponent implements OnInit, OnChanges {
     public taskId: string;
 
     @Input()
-    public filter: Filter;
+    public outputKind: string;
 
-    @ViewChild(PersistedFileListComponent)
-    public blobList: PersistedFileListComponent;
+    @Input()
+    public filter: Property;
 
     public data: RxListProxy<BlobListParams, File>;
     public status = new BehaviorSubject(LoadingStatus.Loading);
     public LoadingStatus = LoadingStatus;
-    // public noBlobsFound = false;
+    public containerNotFound: boolean;
 
-    constructor(
-        private fileService: FileService,
-        private storageService: StorageService) {
+    constructor(private storageService: StorageService) {
+        this.data = this.storageService.listBlobsForTask(null, null, null, (error: ServerError) => {
+            if (error && error.body.code === "ContainerNotFound") {
+                this.containerNotFound = true;
+            }
 
-        this.data = this.storageService.listBlobsForTask(null, null, null);
-        // note: testing only
-        this.data.items.subscribe((items) => {
-            console.log("this.data.items.subscribe :: ", items);
+            return false;
         });
 
         this.data.status.subscribe((status) => {
@@ -81,17 +81,21 @@ export class PersistedFileListComponent implements OnInit, OnChanges {
         return ["/jobs", this.jobId, "tasks", this.taskId];
     }
 
+    public get filterPlaceholder() {
+        return "Filter by blob name (case sensitive)";
+    }
+
     private _loadFiles() {
-        console.log("calling _loadFiles()...fetchNext()");
-        this.data.updateParams({ jobId: this.jobId, taskId: this.taskId, outputKind: "$TaskOutput" });
+        this.containerNotFound = false;
+        this.data.updateParams({ jobId: this.jobId, taskId: this.taskId, outputKind: this.outputKind });
         this.data.setOptions(this._buildOptions());
         this.data.fetchNext(true);
     }
 
     private _buildOptions() {
-        if (this.filter && !this.filter.isEmpty()) {
+        if (this.filter && this.filter.value) {
             return {
-                filter: this.filter.toOData(),
+                filter: this.filter.value,
             };
         } else {
             return {};

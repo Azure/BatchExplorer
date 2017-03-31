@@ -23,12 +23,21 @@ export interface RxProxyBaseConfig<TParams, TEntity> {
      * This allow the use of targeted data cache which depends on some params.
      */
     cache: (params: TParams) => DataCache<TEntity>;
+
     initialParams?: TParams;
+
     /**
-     * List of error code not to log in the console
+     * List of error code not to log in the console.
      * @default [404]
      */
     logIgnoreError?: number[];
+
+    /**
+     * Optional callback for handling any expected errors we may encounter so they
+     * don't result in a debug bl-server-error component. This way we can show a custom
+     * error message to the user.
+     */
+    errorCallback?: (error: ServerError) => boolean;
 }
 
 /**
@@ -72,7 +81,7 @@ export abstract class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity
     private _logIgnoreError: number[];
     private _pollObservable: PollObservable;
 
-    constructor(protected type: Type<TEntity>, config: RxProxyBaseConfig<TParams, TEntity>) {
+    constructor(protected type: Type<TEntity>, protected config: RxProxyBaseConfig<TParams, TEntity>) {
         this.getCache = config.cache;
         this._logIgnoreError = exists(config.logIgnoreError) ? config.logIgnoreError : [Constants.HttpCode.NotFound];
         this.status = this._status.asObservable();
@@ -83,6 +92,7 @@ export abstract class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity
             if (status === LoadingStatus.Loading) {
                 this._error.next(null);
             }
+
             // If we were loading and the last request status change to ready or error
             if (this._newDataStatus.value === LoadingStatus.Loading && status !== LoadingStatus.Loading) {
                 this._newDataStatus.next(status);
@@ -188,12 +198,19 @@ export abstract class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity
                 log.error("Error in RxProxy", Object.assign({}, error));
             }
 
-            if (options.error) {
-                options.error(error);
+            // if we dont have a callback, or the rethrow response is true, then handle error os normal
+            if (!this.config.errorCallback || this.config.errorCallback(error)) {
+                if (options.error) {
+                    options.error(error);
+                }
+
+                this._status.next(LoadingStatus.Error);
+                this._error.next(error);
+            } else {
+                // error callback returned false so act like the error never happened
+                this._status.next(LoadingStatus.Ready);
             }
 
-            this._status.next(LoadingStatus.Error);
-            this._error.next(error);
             this.abortFetch();
         });
 

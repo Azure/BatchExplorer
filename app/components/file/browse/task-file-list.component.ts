@@ -3,7 +3,7 @@ import { autobind } from "core-decorators";
 import { BehaviorSubject, Observable } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
-import { File, Node, NodeState, Task } from "app/models";
+import { File, Node, NodeState, ServerError, Task } from "app/models";
 import { FileService, NodeService, TaskFileListParams, TaskService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
@@ -37,21 +37,26 @@ export class TaskFileListComponent implements OnInit, OnChanges {
     @Input()
     public filter: Filter;
 
-    @ViewChild(TaskFileListComponent)
-    public nodeList: TaskFileListComponent;
-
     public data: RxListProxy<TaskFileListParams, File>;
     public status = new BehaviorSubject(LoadingStatus.Loading);
     public LoadingStatus = LoadingStatus;
+    public fileCleanupOperation: boolean;
     public nodeNotFound: boolean;
 
     constructor(
         private fileService: FileService,
         private nodeService: NodeService,
         private taskService: TaskService) {
-        this.nodeNotFound = false;
 
-        this.data = this.fileService.listFromTask(null, null, true, {});
+        this.data = this.fileService.listFromTask(null, null, true, {}, (error: ServerError) => {
+            console.log(error);
+            if (error && error.body.code === "OperationInvalidForCurrentState") {
+                this.fileCleanupOperation = true;
+            }
+
+            return false;
+        });
+
         this.data.status.subscribe((status) => {
             this.status.next(status);
         });
@@ -81,6 +86,7 @@ export class TaskFileListComponent implements OnInit, OnChanges {
         if (this.data) {
             return this.data.fetchNext();
         }
+
         return new Observable(null);
     }
 
@@ -88,7 +94,14 @@ export class TaskFileListComponent implements OnInit, OnChanges {
         return ["/jobs", this.jobId, "tasks", this.taskId];
     }
 
+    public get filterPlaceholder() {
+        return "Filter by file name";
+    }
+
     private _loadIfNodeExists() {
+        this.fileCleanupOperation = false;
+        this.nodeNotFound = false;
+
         this.status.next(LoadingStatus.Loading);
         this.taskService.getOnce(this.jobId, this.taskId).cascade((task: Task) => {
             if (!task.nodeInfo) {

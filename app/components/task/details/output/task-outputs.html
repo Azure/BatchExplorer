@@ -1,20 +1,26 @@
 <div class="file-tabs pad-bottom">
-    <div class="file-tab" [class.active]="selectedTab === 'node'" (click)="selectedTab = 'node'">
-        Files on node
-    </div>
-    <div class="file-tab" [class.active]="selectedTab === 'files'" (click)="selectedTab = 'files'">
-        Persisted outputs
+    <div class="file-tab" *ngFor="let tab of outputTabs" [class.active]="tab.key === selectedTab" (click)="selectedTab = tab.key">
+        {{tab.label}}
     </div>
 </div>
 
 <!-- list any task outputs on the node -->
-<bl-entity-details-list *ngIf="selectedTab === 'node'" #nodeListWrapper [refresh]="nodeList.refresh" filterPlaceholder="Filter by file name"
+<bl-entity-details-list *ngIf="selectedTab === 'node'" #nodeWrapper [refresh]="nodeList.refresh" [filterPlaceholder]="nodeList.filterPlaceholder"
     [showAddButton]="false" quickSearchField="name">
-    <bl-task-file-list #nodeList [jobId]="jobId" [taskId]="taskId" [filter]="nodeListWrapper.filter" [quickList]="false"></bl-task-file-list>
+    <bl-task-file-list #nodeList [jobId]="jobId" [taskId]="taskId" [filter]="nodeWrapper.filter" [quickList]="false">
+    </bl-task-file-list>
 </bl-entity-details-list>
 
-<!-- list any task outputs that have been persisted to storage -->
-<bl-entity-details-list *ngIf="selectedTab === 'files'" #blobListWrapper [refresh]="blobList.refresh" filterPlaceholder="Filter by blob name"
-    [showAddButton]="false" quickSearchField="name">
-    <bl-persisted-file-list #blobList [jobId]="jobId" [taskId]="taskId" [filter]="blobListWrapper.filter" [quickList]="false"></bl-persisted-file-list>
+<!-- list any persisted task outputs -->
+<bl-entity-details-list *ngIf="selectedTab === 'outputs'" #outputWrapper [refresh]="outputList.refresh" [filterPlaceholder]="outputList.filterPlaceholder"
+    [showAddButton]="false">
+    <bl-persisted-file-list #outputList [jobId]="jobId" [taskId]="taskId" outputKind="$TaskOutput" [filter]="outputWrapper.filter" [quickList]="false">
+    </bl-persisted-file-list>
+</bl-entity-details-list>
+
+<!-- list any persisted task logs -->
+<bl-entity-details-list *ngIf="selectedTab === 'logs'" #logWrapper [refresh]="logList.refresh" [filterPlaceholder]="logList.filterPlaceholder"
+    [showAddButton]="false">
+    <bl-persisted-file-list #logList [jobId]="jobId" [taskId]="taskId" outputKind="$TaskLog" [filter]="logWrapper.filter" [quickList]="false">
+    </bl-persisted-file-list>
 </bl-entity-details-list>

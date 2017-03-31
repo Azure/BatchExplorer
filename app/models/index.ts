@@ -39,6 +39,7 @@ export * from "./settings";
 export * from "./ssh-public-key";
 export * from "./server-error";
 export * from "./start-task";
+export * from "./storage-error";
 export * from "./subscription";
 export * from "./subtask-information";
 export * from "./task";

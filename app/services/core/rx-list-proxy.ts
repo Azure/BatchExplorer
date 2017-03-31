@@ -3,7 +3,6 @@ import { List, OrderedSet } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
-import { log } from "app/utils";
 import { CachedKeyList } from "./query-cache";
 import { RxEntityProxy } from "./rx-entity-proxy";
 import { RxProxyBase, RxProxyBaseConfig } from "./rx-proxy-base";
@@ -49,6 +48,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         if (clearItems) {
             this._itemKeys.next(OrderedSet([]));
         }
+
         this._hasMore.next(true);
     }
 
@@ -88,7 +88,6 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
                 this._lastRequest = { params: this._params, options: this._options };
             },
             error: (error) => {
-                log.error("RxListProxy.fetchNext().error: ", error);
                 this._hasMore.next(false);
             },
         });
@@ -98,6 +97,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         if (!this.hasMoreItems()) {
             return Observable.of(true);
         }
+
         const subject = new AsyncSubject();
         subject.next(true);
         this.fetchNext().subscribe({
@@ -109,6 +109,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
             },
             error: (e) => subject.error(e),
         });
+
         return subject.asObservable();
     }
 
@@ -130,6 +131,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
                 this._itemKeys.next(OrderedSet(OrderedSet([key]).concat(this._itemKeys.value)));
             });
         });
+
         return obs;
     }
 
@@ -165,15 +167,18 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         if (this._itemKeys.value.size !== 0 || forceNew) {
             return false;
         }
+
         const cachedList = this.cache.queryCache.getKeys(this._options.filter);
         if (!cachedList) {
             return false;
         }
+
         this.getQueryCacheData(cachedList);
         this._itemKeys.next(cachedList.keys);
         this._lastRequest = { params: this._params, options: this._options };
         this._hasMore.next(this.hasMoreItems());
         this._status.next(LoadingStatus.Ready);
+
         return true;
     }
 }

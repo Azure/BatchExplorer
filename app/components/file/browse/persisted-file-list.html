@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="!containerNotFound">
     <bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
     <bl-file-list-display [files]="data.items | async" [status]="status | async" [quickList]="quickList" [baseUrl]="baseUrl"
         [filter]="filter"></bl-file-list-display>
@@ -6,13 +6,10 @@
     <bl-list-loading [manualLoading]="manualLoading" [data]="data" [status]="status | async"></bl-list-loading>
 </div>
 
-<!--<div *ngIf="noBlobsFound" class="notfound-message">
-    No blobs were found for this task.
-</div>-->
+<div *ngIf="containerNotFound" class="notfound-message top-margin">
+    No storage container was found for this job.
+</div>
 
-<!-- add error panel based on size of data -->
+<!-- set up link to open file -->
 <!-- auto storage warning as well -->
 <!-- fix up [baseUrl]="baseUrl" -->
-<!-- case insensitive searching -->
-<!-- fix prefix wiping the start of the filename off -->
-<!-- normalize from portal URL -->

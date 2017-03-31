@@ -28,6 +28,7 @@ export class RxStorageListProxy<TParams, TEntity> extends RxListProxy<TParams, T
         type: Type<TEntity>,
         private storageClient: StorageClientService,
         config: RxStorageListProxyConfig<TParams, TEntity>) {
+
         super(type, config);
         this._proxyConstructor = config.proxyConstructor;
     }
@@ -41,9 +42,9 @@ export class RxStorageListProxy<TParams, TEntity> extends RxListProxy<TParams, T
             return Observable.fromPromise(client).do(() => {
                 this._nextLink = client.nextLink;
                 // TODO: need to handle the continuation token somehow
+                // nextLink is from BatchAPI, storage doesn't use this
             }).catch((error) => {
-                // TODO: Make a ServerError.fromStorage
-                return Observable.throw(ServerError.fromBatch(error));
+                return Observable.throw(ServerError.fromStorage(error));
             });
         }).share();
     }

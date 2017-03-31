@@ -17,16 +17,23 @@ export class BlobStorageClientProxy {
      * @param container - name of the storage container
      * @param blobPrefix - The prefix of the blob name. In our case it is the taskId prefix:
      *  "${taskId}/$TaskOutput|$TaskLog/${namePrefixFilter}"
-     * @param continuationToken - any token that was returned from the last call
+     * @param filter - optional text for filtering further than the blob prefix
+     * @param continuationToken - token that was returned from the last call, if any
      */
     public listBlobsWithPrefix(
         container: string,
         blobPrefix: string,
+        filter?: string,
         continuationToken?: any,
         options?: StorageRequestOptions): Promise<BlobStorageResult> {
 
+        // we want to keep the filter and prefix separate for mapping files in the response.
+        const prefix = filter
+            ? blobPrefix + filter
+            : blobPrefix;
+
         return new Promise((resolve, reject) => {
-            this._blobService.listBlobsSegmentedWithPrefix(container, blobPrefix, continuationToken, options,
+            this._blobService.listBlobsSegmentedWithPrefix(container, prefix, continuationToken, options,
                 (error, result, response) => {
                 if (error) {
                     reject(error);
