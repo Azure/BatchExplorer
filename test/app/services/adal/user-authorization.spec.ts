@@ -3,22 +3,18 @@ import { Observable } from "rxjs";
 import {
     AuthorizeError, AuthorizeResult, UserAuthorization,
 } from "app/services/adal/user-authorization";
-import { MockBrowserWindow, MockElectronRemote } from "test/utils/mocks";
+import { MockAuthenticationWindow, MockElectronRemote } from "test/utils/mocks";
 
 describe("UserAuthorization", () => {
     let userAuthorization: UserAuthorization;
-    let fakeWindow: MockBrowserWindow;
     let remoteSpy: MockElectronRemote;
+    let fakeAuthWindow: MockAuthenticationWindow;
 
     beforeEach(() => {
         remoteSpy = new MockElectronRemote();
         const config = { tenant: "common", clientId: "abc", redirectUri: "http://localhost" };
         userAuthorization = new UserAuthorization(config, remoteSpy);
-        fakeWindow = new MockBrowserWindow();
-        (<any>userAuthorization)._createAuthWindow = jasmine.createSpy("CreateAuthWindow").and.callFake(() => {
-            (<any>userAuthorization)._authWindow = fakeWindow;
-            return fakeWindow;
-        });
+        fakeAuthWindow = remoteSpy.authenticationWindow;
     });
 
     describe("Authorize", () => {
@@ -35,8 +31,8 @@ describe("UserAuthorization", () => {
         });
 
         it("Should have called loadurl", () => {
-            expect(fakeWindow.loadURL).toHaveBeenCalledTimes(1);
-            const args = fakeWindow.loadURL.calls.mostRecent().args;
+            expect(fakeAuthWindow.loadURL).toHaveBeenCalledTimes(1);
+            const args = fakeAuthWindow.loadURL.calls.mostRecent().args;
             expect(args.length).toBe(1);
             const url = args[0];
             expect(url).toContain("https://login.microsoftonline.com/tenant-1/oauth2/authorize");
@@ -49,7 +45,7 @@ describe("UserAuthorization", () => {
         });
 
         it("window should be visible", () => {
-            expect(fakeWindow.isVisible()).toBe(true);
+            expect(fakeAuthWindow.isVisible()).toBe(true);
         });
 
         it("should have hidden the splash screen", () => {
@@ -58,25 +54,25 @@ describe("UserAuthorization", () => {
 
         it("Should return the id token and code when sucessfull", () => {
             const newUrl = "http://localhost/#id_token=sometoken&code=somecode";
-            fakeWindow.webContents.notify("did-get-redirect-request", [{}, "", newUrl]);
+            fakeAuthWindow.notifyRedirect(newUrl);
             expect(result).not.toBeNull();
             expect(result.id_token).toEqual("sometoken");
             expect(result.code).toEqual("somecode");
             expect(error).toBeNull();
 
-            expect(fakeWindow.destroy).toHaveBeenCalledTimes(1);
+            expect(fakeAuthWindow.destroy).toHaveBeenCalledTimes(1);
             expect(remoteSpy.splashScreen.show).toHaveBeenCalledOnce();
         });
 
         it("Should error when the url redirect returns an error", () => {
             const newUrl = "http://localhost/#error=someerror&error_description=There was an error";
-            fakeWindow.webContents.notify("did-get-redirect-request", [{}, "", newUrl]);
+            fakeAuthWindow.notifyRedirect(newUrl);
             expect(result).toBeNull();
             expect(error).not.toBeNull();
             expect(error.error).toEqual("someerror");
             expect(error.error_description).toEqual("There was an error");
 
-            expect(fakeWindow.destroy).toHaveBeenCalledTimes(1);
+            expect(fakeAuthWindow.destroy).toHaveBeenCalledTimes(1);
         });
 
         it("should only authorize 1 tenant at the time and queue the others", () => {
@@ -91,13 +87,14 @@ describe("UserAuthorization", () => {
             expect(tenant2Spy).not.toHaveBeenCalled();
 
             const newUrl1 = "http://localhost/#id_token=sometoken&code=somecode";
-            fakeWindow.webContents.notify("did-get-redirect-request", [{}, "", newUrl1]);
+            fakeAuthWindow.notifyRedirect(newUrl1);
 
             // Should have set tenant-1
             expect(result).not.toBeNull();
             expect(result.id_token).toEqual("sometoken");
             expect(result.code).toEqual("somecode");
 
+            expect(fakeAuthWindow.destroy).toHaveBeenCalledOnce();
             expect(tenant1Spy).toHaveBeenCalled();
             expect(tenant1Spy).toHaveBeenCalledWith({ id_token: "sometoken", code: "somecode" });
 
@@ -105,9 +102,11 @@ describe("UserAuthorization", () => {
 
             // Should now authorize for tenant-2
             const newUrl2 = "http://localhost/#id_token=sometoken2&code=somecode2";
-            fakeWindow.webContents.notify("did-get-redirect-request", [{}, "", newUrl2]);
+            fakeAuthWindow.notifyRedirect(newUrl2);
+
             expect(tenant2Spy).toHaveBeenCalled();
             expect(tenant2Spy).toHaveBeenCalledWith({ id_token: "sometoken2", code: "somecode2" });
+            expect(fakeAuthWindow.destroy).toHaveBeenCalledTimes(2);
         });
     });
 
@@ -117,14 +116,14 @@ describe("UserAuthorization", () => {
         });
 
         it("should set the prompt=none params", () => {
-            const args = fakeWindow.loadURL.calls.mostRecent().args;
+            const args = fakeAuthWindow.loadURL.calls.mostRecent().args;
             expect(args.length).toBe(1);
             const url = args[0];
             expect(url).toContain("&prompt=none");
         });
 
         it("shoud not be visible", () => {
-            expect(fakeWindow.isVisible()).toBe(false);
+            expect(fakeAuthWindow.isVisible()).toBe(false);
         });
     });
 
