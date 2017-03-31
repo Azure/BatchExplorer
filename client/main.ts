@@ -8,6 +8,9 @@ app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 function createWindow() {
     windows.splashScreen.create();
     windows.splashScreen.updateMessage("Loading app");
+
+    // windows.main.debugCrash(); // Uncomment to debug any login/bootrstrap problems(Window doesn't show up)
+
     windows.main.create();
     protocol.registerStringProtocol("urn", (request, callback) => {
         // Doesn't matter how the protocol is handled; error is fine

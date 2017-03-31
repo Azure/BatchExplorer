@@ -28,6 +28,7 @@
     }],
     "object-literal-sort-keys": false,
     "arrow-return-shorthand": [true],
+    "ban": [true, ["main", "debugCrash"]],
 
     // Codelyzer rules(Angular2)
     "directive-selector": [true, "attribute", "bl", "camelCase"],
