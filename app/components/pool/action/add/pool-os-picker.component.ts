@@ -34,7 +34,7 @@ const cloudServiceOsFamilies = [{
 //     "SLES": "linux",
 //     "SLES-HPC": "linux",
 //     "standard-data-science-vm": "windows",
-// };
+// };p
 
 // const iconMapping = {
 //     "UbuntuServer": { src: "svg", name: "ubuntu" },
