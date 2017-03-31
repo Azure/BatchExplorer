@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
@@ -7,19 +7,17 @@ import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { RangeValidatorDirective } from "app/components/base/validation";
 import { DynamicForm } from "app/core";
-import { Job, Pool } from "app/models";
+import { Job } from "app/models";
 import { JobCreateDto } from "app/models/dtos";
 import { createJobFormToJsonData, jobToFormModel } from "app/models/forms";
 import { JobService, PoolService } from "app/services";
-import { RxListProxy } from "app/services/core";
 import { Constants } from "app/utils";
 
 @Component({
     selector: "bl-job-create-basic-dialog",
     templateUrl: "job-create-basic-dialog.html",
 })
-export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto> implements OnInit {
-    public poolsData: RxListProxy<{}, Pool>;
+export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto> {
     public constraintsGroup: FormGroup;
     public poolInfoGroup: FormGroup;
 
@@ -31,7 +29,6 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
         private notificationService: NotificationService) {
         super(JobCreateDto);
 
-        this.poolsData = this.poolService.list();
         const validation = Constants.forms.validation;
         this.constraintsGroup = this.formBuilder.group({
             maxTaskRetryCount: [
@@ -57,14 +54,6 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
             ],
             constraints: this.constraintsGroup,
             poolInfo: this.poolInfoGroup,
-        });
-    }
-
-    public ngOnInit() {
-        this.poolsData.fetchNext().subscribe((result) => {
-            if (result.data && result.data.length > 0) {
-                this.form.value.poolId = result.data[0].id;
-            }
         });
     }
 

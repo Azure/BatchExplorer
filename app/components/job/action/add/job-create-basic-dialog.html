@@ -39,9 +39,10 @@
 
             <div formGroupName="poolInfo">
                 <div class="form-element">
-                    <md-select formControlName="poolId" placeholder="Pool">
+                    <bl-pool-picker formControlName="poolId"></bl-pool-picker>
+                    <!--<md-select formControlName="poolId" placeholder="Pool">
                         <md-option *ngFor="let pool of poolsData.items | async" [value]="pool.id">{{pool.id}}</md-option>
-                    </md-select>
+                    </md-select>-->
                     <bl-error controlName="poolId" code="required">You must select a pool for this job to run on</bl-error>
                 </div>
             </div>
