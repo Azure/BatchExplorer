@@ -69,6 +69,7 @@ module.exports = merge(config, {
                     "moment",
                     "inflection",
                     "d3",
+                    "chart.js",
                 ],
             },
             dllDir: helpers.root("dll"),

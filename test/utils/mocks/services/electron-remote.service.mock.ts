@@ -2,9 +2,11 @@ import { Subject } from "rxjs";
 
 import { ElectronRemote } from "app/services";
 import { BatchClientProxyFactory } from "client/api";
+import { AuthenticationWindow } from "client/authentication";
 import { SplashScreen } from "client/splash-screen";
 
 export class MockElectronRemote extends ElectronRemote {
+    public authenticationWindow: MockAuthenticationWindow;
     public currentWindow: MockBrowserWindow;
     public splashScreen: MockSplashScreen;
 
@@ -12,10 +14,15 @@ export class MockElectronRemote extends ElectronRemote {
         super();
         this.currentWindow = new MockBrowserWindow();
         this.splashScreen = new MockSplashScreen();
+        this.authenticationWindow = new MockAuthenticationWindow();
     }
 
     public getCurrentWindow(): Electron.BrowserWindow {
         return this.currentWindow as any;
+    }
+
+    public getAuthenticationWindow(): AuthenticationWindow {
+        return this.authenticationWindow as any;
     }
 
     public getSplashScreen(): SplashScreen {
@@ -25,7 +32,6 @@ export class MockElectronRemote extends ElectronRemote {
     public getBatchClientFactory(): BatchClientProxyFactory {
         return null;
     }
-
 }
 
 export class MockBrowserWindow {
@@ -77,13 +83,60 @@ export class MockBrowserWindow {
     }
 }
 
-export class MockSplashScreen {
+export class MockUniqueWindow {
+    public create: jasmine.Spy;
     public show: jasmine.Spy;
     public hide: jasmine.Spy;
     public destroy: jasmine.Spy;
+    private _visible: boolean = false;
+
     constructor() {
-        this.show = jasmine.createSpy("show");
-        this.hide = jasmine.createSpy("hide");
+        this.create = jasmine.createSpy("create");
+        this.show = jasmine.createSpy("show").and.callFake(() => this._visible = true);
+        this.hide = jasmine.createSpy("hide").and.callFake(() => this._visible = false);
         this.destroy = jasmine.createSpy("destroy");
+    }
+
+    public isVisible() {
+        return this._visible;
+    }
+}
+
+export class MockSplashScreen extends MockUniqueWindow {
+}
+
+export class MockAuthenticationWindow extends MockUniqueWindow {
+    public loadURL: jasmine.Spy;
+    private _onRedirectCallbacks = [];
+    private _onCloseCallbacks = [];
+
+    constructor() {
+        super();
+
+        this.loadURL = jasmine.createSpy("loadURL");
+        this.destroy = this.destroy.and.callFake(() => {
+            this._onRedirectCallbacks = [];
+            this._onCloseCallbacks = [];
+        });
+    }
+
+    public onRedirect(callback) {
+        this._onRedirectCallbacks.push(callback);
+    }
+
+    public onClose(callback) {
+        this._onCloseCallbacks.push(callback);
+    }
+
+    public notifyRedirect(newUrl) {
+        for (let callback of this._onRedirectCallbacks) {
+            callback(newUrl);
+        }
+    }
+
+    public notifyClose() {
+        for (let callback of this._onCloseCallbacks) {
+            callback();
+        }
     }
 }
