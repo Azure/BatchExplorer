@@ -6,6 +6,7 @@ import { LoadingStatus } from "app/components/base/loading";
 import { File, Node, NodeState, ServerError, Task } from "app/models";
 import { FileService, NodeService, TaskFileListParams, TaskService } from "app/services";
 import { RxListProxy } from "app/services/core";
+import { Constants } from "app/utils";
 import { Filter } from "app/utils/filter-builder";
 
 /**
@@ -49,8 +50,7 @@ export class TaskFileListComponent implements OnInit, OnChanges {
         private taskService: TaskService) {
 
         this.data = this.fileService.listFromTask(null, null, true, {}, (error: ServerError) => {
-            console.log(error);
-            if (error && error.body.code === "OperationInvalidForCurrentState") {
+            if (error && error.body.code === Constants.APIErrorCodes.operationInvalidForCurrentState) {
                 this.fileCleanupOperation = true;
             }
 

@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 
 import { File, ServerError } from "app/models";
-import { Constants, StorageUtils, log } from "app/utils";
+import { Constants, StorageUtils } from "app/utils";
 import { DataCache, RxListProxy, RxStorageListProxy, TargetedDataCache } from "./core";
 import { StorageClientService } from "./storage-client.service";
 
@@ -35,6 +35,7 @@ export class StorageService {
      * @param jobIdParam - The ID of the job that will be turned into a safe container name
      * @param taskIdParam - The ID of the task, this will be the initial prefix of the blob path
      * @param outputKindParam - taskId subfolder name for the type of file: '$TaskOutput' or '$TaskLog'
+     * @param callback - callback for interrogating the server error to see if we want to handle it.
      */
     public listBlobsForTask(
         jobIdParam: string,

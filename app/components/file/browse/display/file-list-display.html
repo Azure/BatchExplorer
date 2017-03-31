@@ -15,7 +15,7 @@
             <bl-column>Name</bl-column>
             <bl-column>Content Length</bl-column>
         </bl-thead>
-        <bl-row *ngFor="let file of files | fileDirectoryFilter" [routerLink]="baseUrl.concat(['files', file.name])" [key]="file.url">
+        <bl-row *ngFor="let file of files | fileDirectoryFilter" [routerLink]="urlToFile(file.name)" [key]="file.url">
             <bl-cell>{{file.name}}</bl-cell>
             <bl-cell>{{file.properties.contentLength}}</bl-cell>
         </bl-row>

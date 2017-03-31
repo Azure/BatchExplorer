@@ -1,6 +1,6 @@
 <div *ngIf="!containerNotFound">
     <bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
-    <bl-file-list-display [files]="data.items | async" [status]="status | async" [quickList]="quickList" [baseUrl]="baseUrl"
+    <bl-file-list-display [files]="data.items | async" [status]="status | async" [quickList]="quickList" [baseUrl]="baseUrl" [isBlob]="true"
         [filter]="filter"></bl-file-list-display>
 
     <bl-list-loading [manualLoading]="manualLoading" [data]="data" [status]="status | async"></bl-list-loading>
@@ -13,3 +13,5 @@
 <!-- set up link to open file -->
 <!-- auto storage warning as well -->
 <!-- fix up [baseUrl]="baseUrl" -->
+<!-- change FileListDisplayComponent to use a different path for blobs -->
+<!-- FileHomeComponent && FileDetailsComponent needs to handle files from storage -->

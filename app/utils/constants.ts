@@ -42,6 +42,7 @@ export const FileUrlStrings = {
 export const FileSourceTypes = {
     Job: "job",
     Pool: "pool",
+    Storage: "storage",
 };
 
 export const forms = {
@@ -120,4 +121,9 @@ export const Environment = {
 
 export const ServiceUrl = {
     arm: "https://management.azure.com",
+};
+
+export const APIErrorCodes = {
+    containerNotFound: "ContainerNotFound",
+    operationInvalidForCurrentState: "OperationInvalidForCurrentState",
 };

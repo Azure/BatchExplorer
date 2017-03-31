@@ -2,7 +2,6 @@
 import { Routes } from "@angular/router";
 
 import { Constants } from "app/utils";
-// component imports for routing
 import { AccountDefaultComponent, AccountDetailsComponent } from "./components/account/details";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
 import { ApplicationDefaultComponent, ApplicationDetailsComponent } from "./components/application/details";

@@ -6,6 +6,7 @@ import { LoadingStatus } from "app/components/base/loading";
 import { File, ServerError } from "app/models";
 import { BlobListParams, StorageService } from "app/services";
 import { RxListProxy } from "app/services/core";
+import { Constants } from "app/utils";
 import { Property } from "app/utils/filter-builder";
 
 @Component({
@@ -36,7 +37,7 @@ export class PersistedFileListComponent implements OnInit, OnChanges {
 
     constructor(private storageService: StorageService) {
         this.data = this.storageService.listBlobsForTask(null, null, null, (error: ServerError) => {
-            if (error && error.body.code === "ContainerNotFound") {
+            if (error && error.body.code === Constants.APIErrorCodes.containerNotFound) {
                 this.containerNotFound = true;
             }
 
@@ -76,9 +77,8 @@ export class PersistedFileListComponent implements OnInit, OnChanges {
         return new Observable(null);
     }
 
-    // TODO: this is wrong now
     public get baseUrl() {
-        return ["/jobs", this.jobId, "tasks", this.taskId];
+        return ["/jobs", this.jobId, "tasks", this.taskId, "storage"];
     }
 
     public get filterPlaceholder() {
