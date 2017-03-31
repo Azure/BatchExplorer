@@ -4,7 +4,7 @@
         <div class="offer" *ngFor="let offer of vmOffers" [class.active]="offer.name === selectedOffer">
             <div class="main" (click)="pickOffer(offer)">
                 <div class="icon" *ngIf="iconNameFor(offer).src === 'svg'"><img src="./assets/images/icons/{{iconNameFor(offer).name}}.svg"></div>
-                <div class="icon" *ngIf="iconNameFor(offer).src === 'fa'"><i class="fa fa-{{iconNameFor(offer).name}}"></i></div>
+                <div class="icon" *ngIf="iconNameFor(offer).src === 'fa'"><i class="{{iconNameFor(offer).name}}"></i></div>
                 <div class="title">{{offer.name}}</div>
             </div>
             <button class="select-version" [mdMenuTriggerFor]="menu">
