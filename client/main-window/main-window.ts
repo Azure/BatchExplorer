@@ -13,13 +13,18 @@ const devServerUrl = Constants.urls.main.dev;
 const buildFileUrl = Constants.urls.main.prod;
 
 export class MainWindow extends UniqueWindow {
+    private _showWindowOnstart = false;
+
+    public debugCrash() {
+        this._showWindowOnstart = true;
+    }
 
     protected createWindow() {
         const window = new BrowserWindow({
             height: 1000,
             icon: Constants.urls.icon,
             width: 1600,
-            show: false, // Don't show the window until the user authenticated, comment to debug auth problems,
+            show: this._showWindowOnstart, // Don't show the window until the user authenticated
             webPreferences: {
                 webSecurity: false,
             },
