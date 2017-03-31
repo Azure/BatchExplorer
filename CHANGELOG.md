@@ -1,6 +1,8 @@
 # Version 0.2.0(Beta)
+[All items](https://github.com/Azure/BatchLabs/milestone/1?closed=1)
 
 ### Features
+* Production build [PR 173](https://github.com/Azure/BatchLabs/pull/173)
 * Improve the VM size experience to show info about each vm size [PR 277](https://github.com/Azure/BatchLabs/pull/277)
 * Load all the VM sizes [PR 275](https://github.com/Azure/BatchLabs/pull/275)
 * Load all account on start: improve account selection experience by removing the need to click on the subscription first [PR 273](https://github.com/Azure/BatchLabs/pull/273)
