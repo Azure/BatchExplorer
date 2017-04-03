@@ -47,7 +47,7 @@ export class StorageService {
         const initialOptions: any = {};
         return new RxStorageListProxy<BlobListParams, File>(File, this.storageClient, {
             cache: (params) => this.getBlobFileCache(params),
-            proxyConstructor: (client, params, options) => {
+            getData: (client, params, options) => {
                 // the prefix of the blob, eg: 10011/$TaskOutput/
                 const prefix = `${params.taskId}/${params.outputKind}/`;
                 const filter = options.filter ? options.filter : null;

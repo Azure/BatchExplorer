@@ -6,34 +6,11 @@ export interface SubtleCryptoWrapper {
 
 export class SharedKeyUtils {
     public static getSubtleCrypto(): SubtleCryptoWrapper {
-
-        if ((<any>window).crypto && (<any>window).crypto.subtle) {
-            return {
-                subtle: ((<any>window).crypto.subtle),
-                isLegacyApi: false,
-                subtleVersion: "window.crypto",
-            };
-        } else if ((<any>window).crypto && (<any>window).crypto.webkitSubtle) {
-            // Apples Safari browser still provides the Web Cryptography API via a prefixed name.
-            // Instead of using window.crypto.subtle you would use window.crypto.webkitSubtle.
-            return {
-                subtle: ((<any>window).crypto.webkitSubtle),
-                isLegacyApi: true,
-                subtleVersion: "window.webkitSubtle",
-            };
-        } else if ((<any>window).msCrypto) {
-            return {
-                subtle: ((<any>window).msCrypto.subtle),
-                isLegacyApi: true,
-                subtleVersion: "window.msCrypto",
-            };
-        } else {
-            return {
-                subtle: ((<any>window).msrCrypto.subtle),
-                isLegacyApi: true,
-                subtleVersion: "window.msrCrypto",
-            };
-        }
+        return {
+            subtle: (window.crypto.subtle),
+            isLegacyApi: false,
+            subtleVersion: "window.crypto",
+        };
     }
 
     /**
