@@ -1,9 +1,9 @@
 import { List, Record } from "immutable";
 import { Duration } from "moment";
 
-import { Constants } from "app/utils";
+import { ModelUtils } from "app/utils";
 import { CloudServiceConfiguration } from "./cloud-service-configuration";
-import { MetadataAttributes, Metadata } from "./metadata";
+import { Metadata, MetadataAttributes } from "./metadata";
 import { ResizeError } from "./resize-error";
 import { StartTask } from "./start-task";
 import { VirtualMachineConfiguration } from "./virtual-machine-configuration";
@@ -102,12 +102,9 @@ export class Pool extends PoolRecord {
             startTask: data.startTask && new StartTask(data.startTask),
             metadata: List(data.metadata && data.metadata.map(x => new Metadata(x))),
         }));
-        const tagsMeta = this.metadata.filter(x => x.name === Constants.MetadataInternalKey.tags).first();
-        if (tagsMeta) {
-            this.tags = List<string>(tagsMeta.value.split(","));
-        }
-    }
 
+        this.tags = ModelUtils.tagsFromMetadata(this.metadata);
+    }
 }
 
 export type PoolState = "active" | "upgrading" | "deleting";

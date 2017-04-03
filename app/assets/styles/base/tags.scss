@@ -1,9 +1,9 @@
 .tag-list {
     display: flex;
     align-items: center;
-    font-size: 11px;
 
     .tag {
+        font-size: 11px;
         color: white;
         background: map-get($md-prussian-blue, 300);
         padding: 2px 5px;

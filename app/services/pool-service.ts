@@ -3,7 +3,7 @@ import { Observable, Subject } from "rxjs";
 
 import { Pool } from "app/models";
 import { PoolCreateDto } from "app/models/dtos";
-import { log, Constants } from "app/utils";
+import { log, Constants, ModelUtils } from "app/utils";
 import { BatchClientService } from "./batch-client.service";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
 import { ServiceBase } from "./service-base";
@@ -103,10 +103,8 @@ export class PoolService extends ServiceBase {
     }
 
     public updateTags(pool: Pool, tags: List<string>) {
-        const metadata = pool.metadata.filter(x => x.name !== Constants.MetadataInternalKey.tags).toJS();
-        metadata.push({ name: Constants.MetadataInternalKey.tags, value: tags.join(",") });
         const attributes = {
-            metadata,
+            metadata: ModelUtils.updateMetadataWithTags(pool.metadata, tags),
         };
         return this.patch(pool.id, attributes);
     }
