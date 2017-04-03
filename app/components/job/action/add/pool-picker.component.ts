@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
-import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, FormControl } from "@angular/forms";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
@@ -7,6 +7,7 @@ import { Pool } from "app/models";
 import { PoolService, VmSizeService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { PoolUtils } from "app/utils";
+import { FilterBuilder } from "app/utils/filter-builder";
 
 // tslint:disable:no-forward-ref
 @Component({
@@ -22,13 +23,27 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
     public poolsData: RxListProxy<{}, Pool>;
     public pools: List<Pool> = List([]);
     public poolCores: StringMap<number> = {};
+
+    public searchInput = new FormControl();
+
     private _propagateChange: Function = null;
-    private _sub: Subscription;
+    private _subs: Subscription[] = [];
 
     constructor(private poolService: PoolService, private vmSizeService: VmSizeService) {
-        this.poolsData = this.poolService.list();
-        this._sub = Observable.combineLatest(this.poolsData.items, this.vmSizeService.sizes)
+        this.poolsData = this.poolService.list(this._computeOptions());
+
+        this._subs.push(this.searchInput.valueChanges.debounceTime(400).distinctUntilChanged()
+            .subscribe((query: string) => {
+                this.poolsData.setOptions(this._computeOptions(query));
+                this.poolsData.fetchNext();
+            }));
+
+        this._subs.push(Observable.combineLatest(this.poolsData.items, this.vmSizeService.sizes)
             .subscribe(([pools, sizes]) => {
+                // for (let i = 0; i < 2; i++) {
+                //     pools = List<Pool>(pools.concat(pools));
+                // }
+                console.log("# of pools", pools.size);
                 this.pools = pools;
                 const poolCores = {};
 
@@ -40,7 +55,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
                 });
 
                 this.poolCores = poolCores;
-            });
+            }));
     }
 
     public ngOnInit() {
@@ -48,7 +63,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
     }
 
     public ngOnDestroy() {
-        this._sub.unsubscribe();
+        this._subs.forEach(x => x.unsubscribe());
     }
 
     public writeValue(value: any) {
@@ -81,5 +96,13 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
     public poolCoreCount(pool: Pool) {
         const cores = this.poolCores[pool.id] || 1;
         return cores * pool.targetDedicated;
+    }
+
+    private _computeOptions(query: string = null) {
+        let options: any = { maxResults: 20 };
+        if (query) {
+            options.filter = FilterBuilder.prop("id").startswith(query.clearWhitespace()).toOData();
+        }
+        return options;
     }
 }

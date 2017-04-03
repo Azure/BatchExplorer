@@ -2,6 +2,19 @@ bl-pool-picker {
     display: block;
     position: relative;
 
+    .search-input {
+        margin: 0 5px 0 10px;
+    }
+
+    .has-more {
+        color: $dusty-grey;
+        text-align: right;
+    }
+
+    .pool-list {
+        min-height: 100px;
+    }
+
     .pool, .auto-pool {
         display: inline-block;
         position: relative;
@@ -52,6 +65,7 @@ bl-pool-picker {
 
             > .info {
                 padding: 5px;
+                text-align: left;
 
                 > .title {
                     overflow: hidden;

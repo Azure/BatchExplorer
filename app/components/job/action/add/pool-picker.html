@@ -1,4 +1,7 @@
-<h3>Pick a pool for this job</h3>
+<div class="flex-center">
+    <h3>Pick a pool for this job</h3>
+    <input class="search-input" placeholder="Filter" [formControl]="searchInput"/>
+</div>
 <bl-loading [status]="poolsData.status | async">
     <div class="pool-list">
         <button class="pool" *ngFor="let pool of pools, trackBy: pool?.id" (click)="pickPool(pool)" [class.active]="pool.id === pickedPool">
@@ -23,6 +26,9 @@
                 </div>
             </div>
         </button>
+        <div *ngIf="pools.size > 0 && (poolsData.hasMore | async)" class="has-more">
+            There is more pools available for selection, use the search above.
+        </div>
         <!--TODO uncomment and wire to auto pool when supporting
         <button class="auto-pool">
             <div class="pool-wrapper">
