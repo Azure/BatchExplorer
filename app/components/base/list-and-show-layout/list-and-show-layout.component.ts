@@ -101,13 +101,17 @@ export class ListAndShowLayoutComponent implements AfterViewInit, OnChanges, OnD
     public ngOnChanges(inputs) {
         if (inputs.list) {
             this._clearListSubs();
-            this._activatedItemSub = this.list.activatedItemChange.subscribe((x) => {
-                this._itemActivated(x);
-            });
+            if (this.list.activatedItemChange) {
+                this._activatedItemSub = this.list.activatedItemChange.subscribe((x) => {
+                    this._itemActivated(x);
+                });
+            }
 
-            this._selectedItemsSub = this.list.selectedItemsChange.subscribe((items) => {
-                this.selectedItems = items;
-            });
+            if (this.list.selectedItemsChange) {
+                this._selectedItemsSub = this.list.selectedItemsChange.subscribe((items) => {
+                    this.selectedItems = items;
+                });
+            }
 
             this.deleteSelectedIsEnabled = Boolean(this.list.deleteSelected);
         }

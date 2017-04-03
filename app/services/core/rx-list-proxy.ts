@@ -3,6 +3,7 @@ import { List, OrderedSet } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
+import { log } from "app/utils";
 import { CachedKeyList } from "./query-cache";
 import { RxEntityProxy } from "./rx-entity-proxy";
 import { RxProxyBase, RxProxyBaseConfig } from "./rx-proxy-base";
@@ -33,7 +34,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         }).switch();
 
         this.deleted.subscribe((deletedKey) => {
-            this._itemKeys.next(OrderedSet<string>(this._itemKeys.getValue().filter((key) => key !== deletedKey)));
+            this._itemKeys.next(OrderedSet<string>(this._itemKeys.value.filter((key) => key !== deletedKey)));
         });
     }
 
@@ -70,9 +71,9 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
                 return this.fetchNextItems();
             },
             next: (response: any) => {
-                this._hasMore.next(this.hasMoreItems());
                 const keys = OrderedSet(this.newItems(this.processResponse(response)));
-                const currentKeys = this._itemKeys.getValue();
+                this._hasMore.next(this.hasMoreItems());
+                const currentKeys = this._itemKeys.value;
                 if (currentKeys.size === 0) {
                     this.cache.queryCache.cacheQuery(this._options.filter, keys, this.putQueryCacheData());
                 }
@@ -116,17 +117,14 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
      * The cache system will handle updating it already.
      */
     public loadNewItem(entityProxy: RxEntityProxy<any, TEntity>): Observable<any> {
-        const obs = entityProxy.fetch();
-        obs.subscribe(() => {
-            entityProxy.item.first().subscribe((newItem) => {
-                if (!newItem) { return; }
-                const key = this.cache.getItemKey(newItem);
-                const itemKeys = this._itemKeys;
-                if (itemKeys.value.has(key)) {
-                    return;
-                }
-                this._itemKeys.next(OrderedSet(OrderedSet([key]).concat(this._itemKeys.value)));
-            });
+        const obs = entityProxy.fetch().flatMap(() => entityProxy.item.first());
+        obs.subscribe({
+            next: (newItem) => {
+                this._addItemToList(newItem);
+            }, error: (error) => {
+                log.error("Error loading new item into RxListProxy",
+                    { error, params: this._params, options: this._options });
+            },
         });
         return obs;
     }
@@ -173,5 +171,22 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         this._hasMore.next(this.hasMoreItems());
         this._status.next(LoadingStatus.Ready);
         return true;
+    }
+
+    /**
+     * Add the given item to the list and the query cache.
+     * @param newItem newItem to be added
+     */
+    private _addItemToList(newItem: TEntity) {
+        if (!newItem) { return; }
+
+        const key = this.cache.getItemKey(newItem);
+        const itemKeys = this._itemKeys;
+        if (itemKeys.value.has(key)) {
+            return;
+        }
+
+        this._itemKeys.next(OrderedSet(OrderedSet([key]).concat(this._itemKeys.value)));
+        this._cache.queryCache.addKeyToQuery(null, key);
     }
 }

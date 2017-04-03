@@ -1,6 +1,6 @@
 <div [formGroup]="form">
-    <div class="form-element" class="source">
-        <h4>Select an operating system configuration</h4>
+    <div class="element-spacer">
+        <h3>Select an operating system configuration</h3>
         <div class="infrastructure">
             <md-radio-group formControlName="source">
                 <md-radio-button [value]="PoolOsSources.IaaS">Virtual Machine</md-radio-button>
@@ -10,30 +10,28 @@
     </div>
 
     <div *ngIf="selectedSource === PoolOsSources.PaaS">
-        <div formGroupName="cloudServiceConfiguration">
-            <div class="form-element">
-                <md-select formControlName="osFamily" placeholder="Operating System">
-                    <md-option *ngFor="let osFamily of cloudServiceOsFamilies" [value]="osFamily.id">{{osFamily.name}}</md-option>
-                </md-select>
-            </div>
+        <div formGroupName="cloudServiceConfiguration" class="service-ref">
+            <md-select formControlName="osFamily" placeholder="Operating System">
+                <md-option *ngFor="let osFamily of cloudServiceOsFamilies" [value]="osFamily.id">{{osFamily.name}}</md-option>
+            </md-select>
         </div>
     </div>
 
     <div formGroupName="virtualMachineConfiguration" *ngIf="selectedSource === PoolOsSources.IaaS">
-        <div formGroupName="imageReference" class="imageReference">
-            <div class="form-element">
+        <div formGroupName="imageReference" class="image-ref">
+            <div class="image-ref-element">
                 <md-select formControlName="publisher" placeholder="Publisher">
                     <md-option *ngFor="let publisher of vmPublishers" [value]="publisher">{{publisher}}</md-option>
                 </md-select>
             </div>
 
-            <div class="form-element" *ngIf="selectedPublisher">
+            <div class="image-ref-element" *ngIf="selectedPublisher">
                 <md-select formControlName="offer" placeholder="Offer">
                     <md-option *ngFor="let offer of vmOffers" [value]="offer">{{offer}}</md-option>
                 </md-select>
             </div>
 
-            <div class="form-element" *ngIf="selectedOffer">
+            <div class="image-ref-element" *ngIf="selectedOffer">
                 <md-select formControlName="sku" placeholder="Sku">
                     <md-option *ngFor="let sku of vmSkus" [value]="sku">{{sku}}</md-option>
                 </md-select>

@@ -11,7 +11,7 @@
                             <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
                         </div>
                         <div style="margin-left:12px; margin-right:auto;">
-                            <md-card-title>{{task.id}} <span *ngIf="!!task.displayName"> - {{task.displayName}} - {{taskId}}</span> </md-card-title>
+                            <md-card-title>{{task.id}} <span *ngIf="!!task.displayName"> - {{task.displayName}}</span> </md-card-title>
                             <md-card-subtitle><i class="fa" [ngClass]="decorator.stateIcon"></i> {{task.state}}</md-card-subtitle>
                         </div>
                     </md-card-title-group>
@@ -38,15 +38,9 @@
                         <bl-task-output [jobId]="jobId" [task]="task"></bl-task-output>
                     </div>
                 </bl-tab>
-                <bl-tab key="properties">
-                    <bl-tab-label>Properties</bl-tab-label>
-                    <bl-task-properties [job]="job" [task]="task"></bl-task-properties>
-                </bl-tab>
-                <bl-tab key="envs">
-                    <bl-tab-label>Environment Settings</bl-tab-label>
-                    <div class="tab-padding">
-                        <bl-task-environment-settings [task]="task"></bl-task-environment-settings>
-                    </div>
+                <bl-tab key="configuration">
+                    <bl-tab-label>Configuration</bl-tab-label>
+                    <bl-task-configuration [job]="job" [task]="task"></bl-task-configuration>
                 </bl-tab>
                 <bl-tab key="resource-files">
                     <bl-tab-label>Resource Files</bl-tab-label>
@@ -55,12 +49,12 @@
                     </div>
                 </bl-tab>
                 <bl-tab key="files">
-                    <bl-tab-label>Node Files</bl-tab-label>
+                    <bl-tab-label>Task Outputs</bl-tab-label>
                     <div class="tab-padding">
-                        <bl-entity-details-list #listWrapper [refresh]="list.refresh" [filterPlaceholder]="filterPlaceholderText" [showAddButton]="false"
-                            quickSearchField="name">
+                        <bl-entity-details-list #listWrapper [refresh]="list.refresh" [filterPlaceholder]="filterPlaceholderText" [showAddButton]="false" quickSearchField="name">
                             <bl-task-file-list #list [jobId]="jobId" [taskId]="taskId" [filter]="listWrapper.filter" [quickList]="false"></bl-task-file-list>
-                            </bl-entity-details-list>
+                            <!-- maybe add a storage files here with a *ngIf? -->
+                        </bl-entity-details-list>
                     </div>
                 </bl-tab>
                 <bl-tab key="subtasks" [disabled]="!hasMultiInstanceSettings">

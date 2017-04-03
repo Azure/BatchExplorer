@@ -88,7 +88,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
 
     public clonePool() {
         const ref = this.sidebarManager.open("add-basic-pool", PoolCreateBasicDialogComponent);
-        ref.component.setValue(this.pool);
+        ref.component.setValueFromEntity(this.pool);
     }
 
     public resizePool() {

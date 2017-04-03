@@ -24,6 +24,7 @@ bl-resourcefile-picker {
                 border-bottom: 2px solid map-get($md-prussian-blue, 500);
             }
         }
+
         .delete-file-btn {
             width: 24px !important;
             height: 24px !important;
@@ -34,6 +35,7 @@ bl-resourcefile-picker {
 
             .fa {
                 color: $whiteSmoke;
+                padding: 0 !important;
             }
         }
     }

@@ -26,6 +26,17 @@ export class QueryCache {
         this.cleanCache();
     }
 
+    public addKeyToQuery(filter: string, key: string) {
+        if (!filter) {
+            filter = noQueryKey;
+        }
+        const query = this._cache[filter];
+        if (!query) {
+            return;
+        }
+        query.keys = query.keys.add(key);
+    }
+
     public getKeys(filter: string): CachedKeyList {
         if (!filter) {
             filter = noQueryKey;

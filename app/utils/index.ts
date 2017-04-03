@@ -10,6 +10,7 @@ export * from "./object";
 export * from "./os";
 export * from "./pool-utils";
 export * from "./secure";
+export * from "./string-utils";
 
 import * as constants from "./constants";
 export const Constants = constants;

@@ -37,7 +37,7 @@ $theme: mat-light-theme($primary, $accent, $warn);
     margin-top: -25px;
 }
 
-md-tab-group {
+md-tab-group:not(.form-tabs) {
     .mat-tab-label {
         opacity: 0.8 !important;
         border-right: 1px solid #ddd;
@@ -175,4 +175,8 @@ md-input-container.bl-textarea {
         resize: none;
         padding: 5px;
     }
+}
+
+.mat-select-placeholder {
+    margin-top: 6px;
 }

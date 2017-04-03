@@ -8,11 +8,14 @@ $group-padding: 28px;
     $value-width: $property-width - $label-width - $label-value-margin - $clipboard-width;
 
     section {
-        width: $property-width;
+        // add an extra 10px to make room for the copy button
+        width: $property-width + 10px;
+
         label, > table td.label {
             width: $label-width !important;
             min-width: $label-width;
         }
+
         .value {
             width: $value-width;
         }
@@ -162,7 +165,7 @@ bl-property-group {
         }
 
         > table {
-            $table-width: $property-width - $clipboard-width + 1;
+            $table-width: $property-width - $clipboard-width + 15;
             width: $table-width;
             max-width: $table-width;
             table-layout: fixed;
@@ -192,18 +195,18 @@ bl-property-group {
                 padding: 5px;
                 padding-left: 20px;
                 font-size: $value-font-size;
-                height: 23px;
+                height: 20px;
             }
 
             bl-tp-cell {
                 cursor: pointer;
                 font-size: $value-font-size;
-                height: 23px;
+                height: 20px;
                 position: relative;
                 padding: 0;
 
                 .cell-value {
-                    padding: 5px 8px;
+                    padding: 4px 8px;
                     text-overflow: ellipsis;
                     overflow: hidden;
                 }

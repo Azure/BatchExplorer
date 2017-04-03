@@ -12,21 +12,21 @@ const outputFileNames = ["stdout.txt", "stderr.txt"];
     templateUrl: "task-output.html",
 })
 export class TaskOutputComponent implements OnChanges, OnDestroy {
-    public outputFileNames = outputFileNames;
     @Input()
     public jobId: string;
 
     @Input()
     public task: Task;
 
+    public outputFileNames = outputFileNames;
     public outputFilename: "stdout.txt" | "stderr.txt" = "stdout.txt";
-
     public fileSizes: { [filename: string]: string } = {};
 
     private _dataSubs: Subscription[] = [];
-    constructor(private fileService: FileService) {
 
+    constructor(private fileService: FileService) {
     }
+
     public ngOnChanges(inputs) {
         if (inputs.jobId || inputs.task) {
             this._updateFileData();
@@ -47,6 +47,7 @@ export class TaskOutputComponent implements OnChanges, OnDestroy {
                     this.fileSizes[filename] = prettyBytes(props && props.contentLength);
                 }
             }));
+
             data.fetch();
         });
     }

@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 
 import { Job } from "app/models";
+import { JobCreateDto } from "app/models/dtos";
 import { log } from "app/utils";
 import { BatchClientService } from "./batch-client.service";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
@@ -73,7 +74,7 @@ export class JobService extends ServiceBase {
         return this.callBatchClient((client) => client.job.enable(jobId, options));
     }
 
-    public add(job: any, options: any = {}): Observable<{}> {
-        return this.callBatchClient((client) => client.job.add(job, options));
+    public add(job: JobCreateDto, options: any = {}): Observable<{}> {
+        return this.callBatchClient((client) => client.job.add(job.toJS(), options));
     }
 }

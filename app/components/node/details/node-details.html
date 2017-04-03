@@ -21,13 +21,15 @@
         </md-card>
         <md-card class="details">
             <bl-tab-group>
-                <bl-tab key="properties">
-                    <bl-tab-label>Properties</bl-tab-label>
-                    <bl-node-properties [pool]="pool" [node]="node"></bl-node-properties>
+                <bl-tab key="configuration">
+                    <bl-tab-label>Configuration</bl-tab-label>
+                    <bl-node-configuration [pool]="pool" [node]="node"></bl-node-configuration>
                 </bl-tab>
                 <bl-tab key="files">
                     <bl-tab-label>Files</bl-tab-label>
-                    <bl-node-file-browse [poolId]="poolId" [node]="node"></bl-node-file-browse>
+                    <div class="tab-padding">
+                        <bl-node-file-browse [poolId]="poolId" [node]="node"></bl-node-file-browse>
+                    </div>
                 </bl-tab>
             </bl-tab-group>
         </md-card>

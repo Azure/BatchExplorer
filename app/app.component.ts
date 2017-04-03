@@ -4,9 +4,9 @@ import { MdSidenav } from "@angular/material";
 import { Observable } from "rxjs";
 
 import {
-    AccountService, AdalService, CommandService, NodeService, SSHKeyService, SettingsService, SubscriptionService,
+    AccountService, AdalService, CommandService, NodeService,
+    SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
 } from "app/services";
-import AccountCreateDialogComponent from "./components/account/add/account-create-dialog.component";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
 const adalConfig = {
@@ -38,10 +38,12 @@ export class AppComponent implements AfterViewInit, OnInit {
         private accountService: AccountService,
         private subscriptionService: SubscriptionService,
         private nodeService: NodeService,
-        private sshKeyService: SSHKeyService) {
+        private sshKeyService: SSHKeyService,
+        private vmSizeService: VmSizeService) {
         this.settingsService.init();
         this.sshKeyService.init();
         this.commandService.init();
+        this.vmSizeService.init();
         this.adalService.init(adalConfig);
         this.accountService.loadInitialData();
 
@@ -68,14 +70,11 @@ export class AppComponent implements AfterViewInit, OnInit {
     public ngOnInit() {
         this.adalService.login();
         this.subscriptionService.load();
+        this.accountService.load();
     }
 
     public open() {
         this.sidebar.open();
-    }
-
-    public addAccount() {
-        this.sidebarManager.open("add-account", AccountCreateDialogComponent);
     }
 
     public logout() {

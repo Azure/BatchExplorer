@@ -49,4 +49,5 @@ export * from "./task-execution-information";
 export * from "./task-exit-conditions";
 export * from "./task-scheduling-policy";
 export * from "./virtual-machine-configuration";
+export * from "./vm-size";
 export * from "./windows-configuration";

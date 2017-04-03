@@ -1,30 +1,34 @@
-import { Component } from "@angular/core";
-import { FormBuilder } from "@angular/forms";
+import { Component, OnDestroy, ViewChild } from "@angular/core";
+import { FormControl } from "@angular/forms";
+import { Subscription } from "rxjs";
 
-import { SidebarManager } from "../../base/sidebar";
-import AccountCreateDialogComponent from "../add/account-create-dialog.component";
-
-enum ListType {
-    Favourite,
-    All,
-};
+import { ListAndShowLayoutComponent } from "app/components/base/list-and-show-layout";
+import { SubscriptionService } from "app/services";
+import { FilterBuilder } from "app/utils/filter-builder";
 
 @Component({
     selector: "bl-account-home",
     templateUrl: "account-home.html",
 })
-export class AccountHomeComponent {
-    public ListType = ListType;
+export class AccountHomeComponent implements OnDestroy {
 
-    public showType: ListType = ListType.All;
+    @ViewChild("layout")
+    public layout: ListAndShowLayoutComponent;
 
-    constructor(private formBuilder: FormBuilder, private sidebarManager: SidebarManager) {
+    public subscriptionId = new FormControl();
+
+    private _sub: Subscription;
+
+    constructor(public subscriptionService: SubscriptionService) {
+        this._sub = this.subscriptionId.valueChanges.subscribe((subscriptionId) => {
+            const filter = subscriptionId
+                ? FilterBuilder.prop("subscriptionId").eq(subscriptionId)
+                : FilterBuilder.none();
+            this.layout.advancedFilterChanged(filter);
+        });
     }
 
-    public addAccount() {
-        const ref = this.sidebarManager.open("add-account", AccountCreateDialogComponent);
-        ref.afterCompletition.subscribe(() => {
-            //
-        });
+    public ngOnDestroy() {
+        this._sub.unsubscribe();
     }
 }

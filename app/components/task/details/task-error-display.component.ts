@@ -57,6 +57,6 @@ export class TaskErrorDisplayComponent {
     public rerunDifferent() {
         const ref = this.sidebarManager.open("rerun-task", RerunTaskFormComponent);
         ref.component.jobId = this.jobId;
-        ref.component.patchValue(this.task);
+        ref.component.setValueFromEntity(this.task);
     }
 }

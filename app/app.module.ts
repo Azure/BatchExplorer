@@ -5,65 +5,28 @@ import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 
+// application router
 import { routes } from "./app.routes";
 
 // components
-import { NodeConnectModule } from "app/components/node/connect";
-import { StartTaskModule } from "app/components/pool/start-task";
-import { AppComponent } from "./app.component";
-import { DeleteAccountDialogComponent } from "./components/account/action/delete-account-dialog.component";
-import AccountCreateDialogComponent from "./components/account/add/account-create-dialog.component";
-import { AccountBrowseModule } from "./components/account/browse";
-import { AccountDetailsHomeComponent } from "./components/account/details/account-details-home.component";
-import { AccountDetailsComponent } from "./components/account/details/account-details.component";
-import { AccountHomeComponent } from "./components/account/home/account-home.component";
-import { ApplicationModule } from "./components/application/application.module";
-import { BaseModule } from "./components/base";
-import { FileBrowseModule } from "./components/file/browse";
-import { FileDetailsModule } from "./components/file/details";
-import { FileHomeComponent } from "./components/file/home";
-import { JobStatsPreviewComponent } from "./components/job/base/job-stats-preview";
-import { JobAdvancedFilterComponent } from "./components/job/browse/filter/job-advanced-filter.component";
-import { JobListComponent } from "./components/job/browse/job-list.component";
-import { JobDetailsModule } from "./components/job/details";
-import { JobHomeComponent } from "./components/job/home/job-home.component";
-import { NodeBrowseModule } from "./components/node/browse";
-import { NoNodeSelectedComponent, NodeDetailsComponent, NodePropertiesComponent } from "./components/node/details";
-import { NodeHomeComponent } from "./components/node/home";
-import { PoolNodesPreviewComponent } from "./components/pool/base/pool-nodes-preview.component";
-import { PoolAdvancedFilterComponent } from "./components/pool/browse/filter";
-import { PoolListComponent } from "./components/pool/browse/pool-list.component";
-import { PoolDetailsModule } from "./components/pool/details";
-import { PoolGraphsModule } from "./components/pool/graphs";
-import { PoolHomeComponent } from "./components/pool/home/pool-home.component";
-import { MainNavigationComponent } from "./components/shared/main-navigation.component";
-import { TaskBrowseModule } from "./components/task/browse";
-import { TaskDetailsModule } from "./components/task/details";
-import { TaskHomeComponent } from "./components/task/home";
-import { AADUserDropdownComponent } from "./components/user";
+import { AppComponent } from "app/app.component";
+import { MainNavigationComponent } from "app/components/shared/main-navigation.component";
+import { AADUserDropdownComponent } from "app/components/user";
 
-// job actions
-import { JobActionModule } from "./components/job/action";
+// extenal modules
+import { AccountModule } from "app/components/account/account.module";
+import { ApplicationModule } from "app/components/application/application.module";
+import { BaseModule } from "app/components/base";
+import { FileModule } from "app/components/file/file.module";
+import { JobModule } from "app/components/job/job.module";
+import { NodeModule } from "app/components/node/node.module";
+import { PoolModule } from "app/components/pool/pool.module";
+import { TaskModule } from "app/components/task/task.module";
 
-// pool actions
-import {
-    DeletePoolDialogComponent,
-    PoolCreateBasicDialogComponent,
-    PoolOsPickerComponent,
-    PoolResizeDialogComponent,
-} from "./components/pool/action";
-
-// task actions
-import {
-    DeleteTaskDialogComponent,
-    RerunTaskFormComponent,
-    TaskCreateBasicDialogComponent,
-    TerminateTaskDialogComponent,
-} from "./components/task/action";
-import { TaskBaseModule } from "./components/task/base";
+// unhandled application error handler
+import { BatchLabsErrorHandler } from "app/error-handler";
 
 // services
-import { BatchLabsErrorHandler } from "app/error-handler";
 import {
     AccountService,
     AdalService,
@@ -85,17 +48,12 @@ import {
     SettingsService,
     SubscriptionService,
     TaskService,
+    VmSizeService,
     commands,
 } from "./services";
 
 const modules = [
-    AccountBrowseModule,
-    ApplicationModule,
-    PoolDetailsModule, PoolGraphsModule, StartTaskModule,
-    JobDetailsModule, JobActionModule,
-    TaskBaseModule, TaskDetailsModule, TaskBrowseModule,
-    NodeBrowseModule, NodeConnectModule,
-    FileBrowseModule, FileDetailsModule,
+    AccountModule, ApplicationModule, FileModule, JobModule, NodeModule, PoolModule, TaskModule,
 ];
 
 @NgModule({
@@ -104,46 +62,11 @@ const modules = [
     ],
     declarations: [
         AADUserDropdownComponent,
-        AccountCreateDialogComponent,
-        AccountDetailsComponent,
-        AccountDetailsHomeComponent,
-        AccountHomeComponent,
         AppComponent,
-        DeleteAccountDialogComponent,
-        DeletePoolDialogComponent,
-        DeleteTaskDialogComponent,
-        FileHomeComponent,
-        JobAdvancedFilterComponent,
-        JobHomeComponent,
-        JobListComponent,
-        JobStatsPreviewComponent,
         MainNavigationComponent,
-        NodeDetailsComponent,
-        NodePropertiesComponent,
-        NodeHomeComponent,
-        NoNodeSelectedComponent,
-        PoolAdvancedFilterComponent,
-        PoolCreateBasicDialogComponent,
-        PoolHomeComponent,
-        PoolListComponent,
-        PoolNodesPreviewComponent,
-        PoolOsPickerComponent,
-        PoolResizeDialogComponent,
-        RerunTaskFormComponent,
-        TaskCreateBasicDialogComponent,
-        TaskHomeComponent,
-        TerminateTaskDialogComponent,
     ],
     entryComponents: [
-        AccountCreateDialogComponent,
-        DeleteAccountDialogComponent,
-        DeletePoolDialogComponent,
-        DeleteTaskDialogComponent,
-        PoolCreateBasicDialogComponent,
-        PoolResizeDialogComponent,
-        RerunTaskFormComponent,
-        TaskCreateBasicDialogComponent,
-        TerminateTaskDialogComponent,
+        // imported in specific area modules
     ],
     imports: [
         BrowserModule,
@@ -161,6 +84,7 @@ const modules = [
         ApplicationService,
         AzureHttpService,
         ArmHttpService,
+        BatchClientService,
         CommandService,
         ElectronRemote,
         ElectronShell,
@@ -168,14 +92,14 @@ const modules = [
         FileSystemService,
         HttpUploadService,
         JobService,
-        PoolService,
-        SubscriptionService,
-        SSHKeyService,
         NodeService,
         NodeUserService,
-        BatchClientService,
+        PoolService,
         SettingsService,
+        SSHKeyService,
+        SubscriptionService,
         TaskService,
+        VmSizeService,
         { provide: ErrorHandler, useClass: BatchLabsErrorHandler },
         ...commands,
     ],

@@ -32,28 +32,18 @@
         <bl-job-error-display [job]="job"></bl-job-error-display>
         <md-card class="details">
             <bl-tab-group>
-                <bl-tab key="properties">
-                    <bl-tab-label>Properties</bl-tab-label>
-                    <bl-job-properties [job]="job"></bl-job-properties>
-                </bl-tab>
-                <bl-tab key="envs">
-                    <bl-tab-label>Environment Settings</bl-tab-label>
-                    <div class="tab-padding">
-                        <bl-job-environment-settings [job]="job"></bl-job-environment-settings>
-                    </div>
-                </bl-tab>
-                <bl-tab key="metadata">
-                    <bl-tab-label>Metadata</bl-tab-label>
-                    <div class="tab-padding">
-                        <bl-job-metadata [job]="job"></bl-job-metadata>
-                    </div>
+                <bl-tab key="configuration">
+                    <bl-tab-label>Configuration</bl-tab-label>
+                    <bl-job-configuration [job]="job"></bl-job-configuration>
                 </bl-tab>
                 <bl-tab key="tasks">
                     <bl-tab-label>Tasks</bl-tab-label>
-                    <bl-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/jobs', job.id, 'tasks']" [loadMore]="list.loadMore"
-                        [filterPlaceholder]="filterPlaceholderText">
-                        <bl-task-list [jobId]="job.id" [filter]="listWrapper.filter" [quickList]="false" #list [manualLoading]="true"></bl-task-list>
-                    </bl-entity-details-list>
+                    <div class="tab-padding">
+                        <bl-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/jobs', job.id, 'tasks']" [loadMore]="list.loadMore"
+                            [filterPlaceholder]="filterPlaceholderText">
+                            <bl-task-list [jobId]="job.id" [filter]="listWrapper.filter" [quickList]="false" #list [manualLoading]="true"></bl-task-list>
+                        </bl-entity-details-list>
+                    </div>
                 </bl-tab>
             </bl-tab-group>
         </md-card>

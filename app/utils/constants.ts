@@ -100,6 +100,7 @@ export const sessionStorageKey = {
 export const ApiVersion = {
     arm: "2016-09-01",
     armBatch: "2015-12-01",
+    compute: "2017-03-30",
 };
 
 export const ExternalLinks = {
@@ -110,6 +111,12 @@ export const ExternalLinks = {
 export const ODataFields = {
     state: "state",
     taskExitCode: "executionInfo/exitCode",
+};
+
+export const Environment = {
+    prod: "production" as Environment,
+    dev: "developement" as Environment,
+    test: "test" as Environment,
 };
 
 export const ServiceUrl = {

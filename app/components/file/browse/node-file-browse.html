@@ -1,7 +1,7 @@
 <bl-loading [status]="data.status | async">
     <div>
         <bl-entity-details-list #listWrapper [refresh]="list.refresh" [filterPlaceholder]="quicksearchPlaceholder" [showAddButton]="false"
-            [enableAdvancedFilter]="false" quickSearchField="name">
+            [enableAdvancedFilter]="false" quickSearchField="name" [loadMore]="list.loadMore">
             <div pre-quicksearch class="folders">
                 <md-select placeholder="Filter by folder" [(ngModel)]="currentFolder">
                     <md-option [value]="null">All</md-option>
@@ -11,8 +11,8 @@
                 </md-select>
             </div>
 
-            <bl-node-file-list #list [poolId]="poolId" [nodeId]="node.id" [filter]="listWrapper.filter" [quickList]="false" [folder]="currentFolder">
+            <bl-node-file-list #list [poolId]="poolId" [nodeId]="node.id" [filter]="listWrapper.filter" [quickList]="false" [folder]="currentFolder" [manualLoading]="true">
             </bl-node-file-list>
-            </bl-entity-details-list>
+        </bl-entity-details-list>
     </div>
 </bl-loading>

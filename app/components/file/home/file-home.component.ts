@@ -1,4 +1,4 @@
-import { Component, HostBinding, OnDestroy, OnInit } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
 
@@ -23,14 +23,6 @@ export class FileHomeComponent implements OnInit, OnDestroy {
 
     private _dataSub: Subscription;
     private _paramsSubscriber: Subscription;
-
-    @HostBinding("style.display") get display() {
-        return "block";
-    }
-
-    @HostBinding("style.position") get position() {
-        return "absolute";
-    }
 
     constructor(
         private sidebarManager: SidebarManager,

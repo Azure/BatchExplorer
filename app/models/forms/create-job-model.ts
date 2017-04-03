@@ -1,4 +1,5 @@
-import { Job } from "app/models";
+
+import { JobCreateDto } from "app/models/dtos";
 
 export interface JobConstraintsModel {
     maxWallClockTime: string;
@@ -6,7 +7,7 @@ export interface JobConstraintsModel {
 }
 
 export interface PoolInfoModel {
-    poolId: string;
+    poolId?: string;
 }
 
 export interface CreateJobModel {
@@ -18,7 +19,7 @@ export interface CreateJobModel {
     jobPreparationTask: any;
     jobReleaseTask: any;
     commonEnvironmentSettings: any;
-    poolInfo: PoolInfoModel;
+    poolInfo?: PoolInfoModel;
     onAllTasksComplete: string;
     onTaskFailure: string;
     metadata: any;
@@ -35,24 +36,15 @@ export function createJobFormToJsonData(formData: CreateJobModel): any {
             maxWallClockTime: maxWallClockTime,
             maxTaskRetryCount: formData.constraints.maxTaskRetryCount,
         },
-        jobManagerTask: null,
-        jobPreparationTask: null,
-        jobReleaseTask: null,
-        commonEnvironmentSettings: null,
         poolInfo: {
             poolId: formData.poolInfo.poolId,
-            autoPoolSpecification: null,
         },
-        onAllTasksComplete: null,
-        onTaskFailure: null,
-        metadata: null,
-        usesTaskDependencies: false,
     };
 
     return data;
 }
 
-export function jobToFormModel(job: Job): CreateJobModel {
+export function jobToFormModel(job: JobCreateDto): CreateJobModel {
     return {
         id: job.id,
         displayName: job.displayName,

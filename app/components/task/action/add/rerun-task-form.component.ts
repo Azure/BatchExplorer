@@ -32,7 +32,7 @@ export class RerunTaskFormComponent extends TaskCreateBasicDialogComponent {
 
         return ObservableUtils.queue(
             () => this.taskService.delete(this.jobId, id).catch(() => Observable.of({})),
-            () => super.execute(),
+            () => super.submit(),
         );
     }
 }

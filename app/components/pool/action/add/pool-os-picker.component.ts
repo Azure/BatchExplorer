@@ -9,8 +9,6 @@ import { NodeService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { ObjectUtils } from "app/utils";
 
-// tslint:disable:no-forward-ref
-
 const cloudServiceOsFamilies = [{
     id: "2",
     name: "Windows Server 2008 R2 SP1",
@@ -20,8 +18,12 @@ const cloudServiceOsFamilies = [{
 }, {
     id: "4",
     name: "Windows Server 2012 R2",
+}, {
+    id: "5",
+    name: "Windows Server 2016",
 }].reverse(); // Reverse so we have most recent first
 
+// tslint:disable:no-forward-ref
 @Component({
     selector: "bl-pool-os-picker",
     templateUrl: "pool-os-picker.html",

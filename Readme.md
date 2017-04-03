@@ -1,22 +1,31 @@
 # BatchLabs
 [![Build Status](https://travis-ci.org/Azure/BatchLabs.svg?branch=master)](https://travis-ci.org/Azure/BatchLabs)
 
-**Note: this is in early development and there is no production build available.**
+**Note: BatchLabs is in beta. We don't provide any installer/packaged binaries as of now. You will need to build this app yourself.**
+
+This is the readme for master branch is contains the latest changes. Stable might be slightly different [Stable readme](https://github.com/Azure/BatchLabs/tree/stable)
 
 ## Getting started
-**Install node.js version `6.9` or greater.**
+#### 1. Prerequisites
+- **Install node.js version `6.9` or greater.**
+- Install yarn `npm install -g yarn`
 
-Clone the repo `git clone https://github.com/Azure/BatchLabs`
+#### 2. Clone the repo
+- At stable branch `git clone -b stable https://github.com/Azure/BatchLabs`
+- Or for the latest changes `git clone https://github.com/Azure/BatchLabs`
 
-Install the dependencies
-```
-npm install
+#### 3. Install the dependencies
+```bash
+yarn install
 npm install -g gulp (Optional)
 ```
 
+#### 4. Build and run the application
+```bash
+npm run build:prod
+npm run electron:prod
 
-Run the application
-```
+# To debug errors
 npm run build
 npm run electron
 ```
@@ -25,18 +34,19 @@ npm run electron
 [Dev docs](docs/readme.md)
 
 For developers, you can set up a development environment as follows:
+**Use `yarn install` instead of `npm install` this will makes sure everybody has the same exact set of depenencies [Migrating from npm to yarn](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)**
 
 Start the dev server
-```
+```bash
 npm run dev-server
 ```
 
 Start electron
-```
-// In the command line
+```bash
+# In the command line
 npm run dev-electron
 
-// In VSCode just press F5
+# In VSCode just press F5
 ```
 
 The dev-server and dev-electron support hot reload for a better development experience. Simply saving a file will cause the UI to refresh to your updated changes.

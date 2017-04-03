@@ -156,18 +156,27 @@ bl-no-item {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        color: $silverGray;
+        color: $silver-grey;
         font-size: 1.5em;
         line-height: 1em;
 
         .fa {
             font-size: 8em;
             margin-bottom: 20px;
-            color: $silverGray;
+            color: $silver-grey;
 
             &.small {
                 font-size: 5em;
             }
+        }
+
+        &.slim {
+            height: 30px;
+            font-size: 1.05em;
+            align-items: left;
+            justify-content: left;
+            color: $genericGray;
+            display: block;
         }
     }
 }
