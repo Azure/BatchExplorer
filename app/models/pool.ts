@@ -102,7 +102,6 @@ export class Pool extends PoolRecord {
             startTask: data.startTask && new StartTask(data.startTask),
             metadata: List(data.metadata && data.metadata.map(x => new Metadata(x))),
         }));
-        console.log("new pool", data);
         const tagsMeta = this.metadata.filter(x => x.name === Constants.MetadataInternalKey.tags).first();
         if (tagsMeta) {
             this.tags = List<string>(tagsMeta.value.split(","));

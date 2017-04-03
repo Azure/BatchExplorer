@@ -7,9 +7,11 @@
             </span>
             <div class="no-tags" *ngIf="tags.size === 0">{{noTagsMessage}}</div>
         </div>
-        <md-input-container *ngIf="isEditing">
-            <input mdInput placeholder="Tags(Comma separated)" [(ngModel)]="tagEditString">
-        </md-input-container>
+        <form (submit)="triggerSave()">
+            <md-input-container *ngIf="isEditing">
+                <input mdInput placeholder="Tags(Comma separated)" [(ngModel)]="tagEditString" [ngModelOptions]="{standalone: true}">
+            </md-input-container>
+        </form>
     </div>
     <div class="tags-control" *ngIf="editable">
         <button class="edit" mdTooltip="Edit tags" (click)="edit()" *ngIf="!isEditing && !saving">
