@@ -1,0 +1,26 @@
+<div class="main">
+    <div class="tags">
+        <div class="tag-list" *ngIf="!isEditing">
+            <span class="tag" *ngFor="let tag of displayTags">{{tag}}</span>
+            <span class="expand-tags" *ngIf="tags.size > maxTags" [mdTooltip]="tags.join(', ')">
+                <i class="fa fa-ellipsis-h"></i>
+            </span>
+            <div class="no-tags" *ngIf="tags.size === 0">{{noTagsMessage}}</div>
+        </div>
+        <md-input-container *ngIf="isEditing">
+            <input mdInput placeholder="Tags(Comma separated)" [(ngModel)]="tagEditString">
+        </md-input-container>
+    </div>
+    <div class="tags-control" *ngIf="editable">
+        <button class="edit" mdTooltip="Edit tags" (click)="edit()" *ngIf="!isEditing && !saving">
+            <i class="fa fa-pencil"></i>
+        </button>
+        <button class="save" mdTooltip="Save" (click)="triggerSave()" *ngIf="isEditing">
+            <i class="fa fa-check"></i>
+        </button>
+        <button class="cancel" mdTooltip="Cancel" (click)="cancel()" *ngIf="isEditing">
+            <i class="fa fa-times"></i>
+        </button>
+        <i class="fa fa-spinner fa-spin" *ngIf="saving"></i>
+    </div>
+</div>

@@ -23,6 +23,7 @@ export * from "./job-release-task";
 export * from "./job-stats";
 export * from "./key-bindings";
 export * from "./list-result";
+export * from "./metadata";
 export * from "./multi-instance-settings";
 export * from "./name-value-pair";
 export * from "./node";

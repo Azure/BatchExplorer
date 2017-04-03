@@ -1,0 +1,75 @@
+.tag-list {
+    display: flex;
+    align-items: center;
+    font-size: 11px;
+
+    .tag {
+        color: white;
+        background: map-get($md-prussian-blue, 300);
+        padding: 2px 5px;
+        border-radius: 3px;
+
+        &:not(:last-child) {
+            margin-right: 5px;
+        }
+    }
+
+    .expand-tags {
+        font-size: 16px;
+        color: map-get($md-prussian-blue, 300);
+        padding: 0 5px;
+        border-radius: 3px;
+
+        &:hover {
+            color: map-get($md-prussian-blue, 50);
+            background: map-get($md-prussian-blue, 300);
+        }
+    }
+}
+
+bl-tags {
+
+    .no-tags {
+        color: $mineshaft-grey;
+    }
+
+    .main {
+        display: flex;
+        align-items: center;
+
+        input {
+            min-width: 200px;
+        }
+    }
+
+    .tags-control {
+        margin: 0 5px;
+
+        button {
+            background: none;
+        }
+
+        .fa-pencil {
+            cursor: pointer;
+            color: map-get($md-prussian-blue, 500);
+
+            &:hover {
+                color: map-get($md-prussian-blue, 300);
+            }
+        }
+
+        .fa-check, .fa-times {
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .fa-check:hover {
+            color: $green;
+        }
+
+        .fa-times:hover {
+            color: $red-light;
+        }
+    }
+
+}

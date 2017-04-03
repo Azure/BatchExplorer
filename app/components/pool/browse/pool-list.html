@@ -1,10 +1,13 @@
 <bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
-<bl-quick-list #list *ngIf="quickList" >
+<bl-quick-list #list *ngIf="quickList">
     <bl-quick-list-item *ngFor="let pool of data.items | async" [routerLink]="['/pools/', pool.id]" [key]="pool.id" [contextmenu]="contextmenu(pool)">
         <bl-quick-list-item-status [status]="poolStatus(pool)" [tooltip]="poolStatusText(pool)">
         </bl-quick-list-item-status>
         <h4 bl-quick-list-item-title>{{pool.id}}</h4>
-        <p bl-quick-list-item-field>{{pool.state}}, {{pool.allocationState}}</p>
+        <div bl-quick-list-item-field>
+            {{pool.state}}, {{pool.allocationState}}
+            <bl-tags [tags]="pool.tags" [maxTags]="3"></bl-tags>
+        </div>
 
         <div bl-quick-list-item-preview>
             <bl-pool-nodes-preview [pool]="pool"></bl-pool-nodes-preview>

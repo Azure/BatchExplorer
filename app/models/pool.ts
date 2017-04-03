@@ -1,7 +1,9 @@
-import { Record } from "immutable";
+import { List, Record } from "immutable";
 import { Duration } from "moment";
 
+import { Constants } from "app/utils";
 import { CloudServiceConfiguration } from "./cloud-service-configuration";
+import { MetadataAttributes, Metadata } from "./metadata";
 import { ResizeError } from "./resize-error";
 import { StartTask } from "./start-task";
 import { VirtualMachineConfiguration } from "./virtual-machine-configuration";
@@ -30,7 +32,7 @@ const PoolRecord = Record({
     virtualMachineConfiguration: null,
     vmSize: null,
     startTask: null,
-    metadata: [],
+    metadata: List([]),
 });
 
 export interface PoolAttributes {
@@ -57,13 +59,13 @@ export interface PoolAttributes {
     virtualMachineConfiguration: Partial<VirtualMachineConfiguration>;
     vmSize: string;
     startTask: StartTask;
-    metadata: any[];
+    metadata: MetadataAttributes[];
 }
 
 /**
  * Class for displaying Batch pool information.
  */
-export class Pool extends PoolRecord implements PoolAttributes {
+export class Pool extends PoolRecord {
     public allocationState: string;
     public allocationStateTransitionTime: Date;
     public applicationPackageReferences: any[];
@@ -87,14 +89,26 @@ export class Pool extends PoolRecord implements PoolAttributes {
     public virtualMachineConfiguration: VirtualMachineConfiguration;
     public vmSize: string;
     public startTask: StartTask;
-    public metadata: any[];
+    public metadata: List<Metadata>;
+
+    /**
+     * Tags are computed from the metadata using an internal key
+     */
+    public tags: List<string> = List([]);
 
     constructor(data: Partial<PoolAttributes> = {}) {
         super(Object.assign({}, data, {
             resizeError: data.resizeError && new ResizeError(data.resizeError),
             startTask: data.startTask && new StartTask(data.startTask),
+            metadata: List(data.metadata && data.metadata.map(x => new Metadata(x))),
         }));
+        console.log("new pool", data);
+        const tagsMeta = this.metadata.filter(x => x.name === Constants.MetadataInternalKey.tags).first();
+        if (tagsMeta) {
+            this.tags = List<string>(tagsMeta.value.split(","));
+        }
     }
+
 }
 
 export type PoolState = "active" | "upgrading" | "deleting";
