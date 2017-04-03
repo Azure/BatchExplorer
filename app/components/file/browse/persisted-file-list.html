@@ -1,4 +1,4 @@
-<div *ngIf="!containerNotFound">
+<div *ngIf="!containerNotFound && hasAutoStorage">
     <bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
     <bl-file-list-display [files]="data.items | async" [status]="status | async" [quickList]="quickList" [baseUrl]="baseUrl" [isBlob]="true"
         [filter]="filter"></bl-file-list-display>
@@ -10,8 +10,13 @@
     No storage container was found for this job.
 </div>
 
+<div *ngIf="!hasAutoStorage" class="notfound-message top-margin">
+    No linked storage account configured for this Batch account.
+</div>
+
 <!-- set up link to open file -->
-<!-- auto storage warning as well -->
 <!-- fix up [baseUrl]="baseUrl" -->
 <!-- change FileListDisplayComponent to use a different path for blobs -->
 <!-- FileHomeComponent && FileDetailsComponent needs to handle files from storage -->
+<!-- Find out the other ARM storage provider, other than Microsoft.ClassicStorage -->
+<!-- ResourceTypes tests -->

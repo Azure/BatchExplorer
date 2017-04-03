@@ -37,7 +37,7 @@ export interface RxProxyBaseConfig<TParams, TEntity> {
      * don't result in a debug bl-server-error component. This way we can show a custom
      * error message to the user.
      */
-    errorCallback?: (error: ServerError) => boolean;
+    onError?: (error: ServerError) => boolean;
 }
 
 /**
@@ -199,7 +199,7 @@ export abstract class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity
             }
 
             // if we dont have a callback, or the rethrow response is true, then handle error os normal
-            if (!this.config.errorCallback || this.config.errorCallback(error)) {
+            if (!this.config.onError || this.config.onError(error)) {
                 if (options.error) {
                     options.error(error);
                 }

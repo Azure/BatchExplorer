@@ -67,7 +67,7 @@ export class FileService extends ServiceBase {
         initialNodeId: string,
         recursive = true,
         initialOptions: any = {},
-        callback?: (error: ServerError) => boolean): RxListProxy<NodeFileListParams, File> {
+        onError?: (error: ServerError) => boolean): RxListProxy<NodeFileListParams, File> {
         return new RxBatchListProxy<NodeFileListParams, File>(File, this.batchService, {
             cache: (params) => this.getNodeFileCache(params),
             proxyConstructor: (client, params, options) => {
@@ -76,7 +76,7 @@ export class FileService extends ServiceBase {
             initialParams: { poolId: initialPoolId, nodeId: initialNodeId },
             initialOptions,
             logIgnoreError: fileIgnoredErrors,
-            errorCallback: callback,
+            onError: onError,
         });
     }
 
@@ -109,7 +109,7 @@ export class FileService extends ServiceBase {
         initialTaskId: string,
         recursive = true,
         initialOptions: any = {},
-        callback?: (error: ServerError) => boolean): RxListProxy<TaskFileListParams, File> {
+        onError?: (error: ServerError) => boolean): RxListProxy<TaskFileListParams, File> {
         return new RxBatchListProxy<TaskFileListParams, File>(File, this.batchService, {
             cache: (params) => this.getTaskFileCache(params),
             proxyConstructor: (client, params, options) => {
@@ -118,7 +118,7 @@ export class FileService extends ServiceBase {
             initialParams: { jobId: initialJobId, taskId: initialTaskId },
             initialOptions,
             logIgnoreError: fileIgnoredErrors,
-            errorCallback: callback,
+            onError: onError,
         });
     }
 

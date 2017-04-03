@@ -45,7 +45,7 @@ export class PersistedFileListComponent implements OnInit, OnChanges {
         });
 
         this.data.status.subscribe((status) => {
-            this.status.next(status);
+            this.status.next(this.hasAutoStorage ? status : LoadingStatus.Ready);
         });
     }
 
@@ -70,7 +70,7 @@ export class PersistedFileListComponent implements OnInit, OnChanges {
 
     @autobind()
     public loadMore(): Observable<any> {
-        if (this.data) {
+        if (this.data && this.hasAutoStorage) {
             return this.data.fetchNext();
         }
 
@@ -85,11 +85,17 @@ export class PersistedFileListComponent implements OnInit, OnChanges {
         return "Filter by blob name (case sensitive)";
     }
 
+    public get hasAutoStorage(): boolean {
+        return this.storageService.hasAutoStorage;
+    }
+
     private _loadFiles() {
         this.containerNotFound = false;
-        this.data.updateParams({ jobId: this.jobId, taskId: this.taskId, outputKind: this.outputKind });
-        this.data.setOptions(this._buildOptions());
-        this.data.fetchNext(true);
+        if (this.hasAutoStorage) {
+            this.data.updateParams({ jobId: this.jobId, taskId: this.taskId, outputKind: this.outputKind });
+            this.data.setOptions(this._buildOptions());
+            this.data.fetchNext(true);
+        }
     }
 
     private _buildOptions() {

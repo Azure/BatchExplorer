@@ -25,6 +25,7 @@ function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?
 
 const providersApiVersion = {
     "Microsoft.Batch": Constants.ApiVersion.armBatch,
+    "Microsoft.ClassicStorage": Constants.ApiVersion.armClassicStorage,
 };
 
 type SubscriptionOrTenant = Subscription | string;

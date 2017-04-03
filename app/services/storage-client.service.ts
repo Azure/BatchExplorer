@@ -1,42 +1,74 @@
 import { Injectable } from "@angular/core";
 import { StorageAccountSharedKeyOptions, StorageClientProxyFactory } from "client/api";
 import { Observable } from "rxjs";
+
+import { StorageKeys } from "app/models";
+import { ResourceUtils } from "app/utils";
 import { AccountService } from "./account.service";
-import { AdalService } from "./adal";
+import { ArmHttpService } from "./arm-http.service";
 import { ElectronRemote } from "./electron";
+
+export interface AutoStorageSettings {
+    lastKeySync: Date;
+    storageAccountId: string;
+}
 
 @Injectable()
 export class StorageClientService {
     private _currentAccountId: string;
     private _storageClientFactory: StorageClientProxyFactory;
+    private _autoStorageSettings: AutoStorageSettings;
 
-    constructor(private adal: AdalService, private accountService: AccountService, private remote: ElectronRemote) {
+    constructor(
+        private accountService: AccountService,
+        private arm: ArmHttpService,
+        private remote: ElectronRemote) {
+
         this._storageClientFactory = remote.getStorageClientFactory();
 
-        // todo: change me to use the account not just the ID as we need the storageAccountId
-        accountService.currentAccountId.subscribe((id) => {
-            this._currentAccountId = id;
+        // TODO: this might need some tweaking, though it works currently
+        this.accountService.currentAccount.subscribe((account) => {
+            this._autoStorageSettings = account.properties && account.properties.autoStorage;
+            this._currentAccountId = account.id;
         });
     }
 
     public get(): Observable<any> {
         if (!this._currentAccountId) {
-            throw "No account currently selected....";
+            throw "No account currently selected ...";
         }
 
-        // TODO: pretty sure this aint right, based on what is in the batch client service, but it could be :)
-        // Need to read this from the accound and set an error condition if auto storage not available
-        return Observable.of(this.getForSharedKey({
-            account: "andrew1973",
-            key: "TrQHCI9J3+U/4mbKQU6k0wLGIbfo/M8J5p9RfWllVSaOyHDMm18Um/hkhEDPDJI2Sl+4cQtfFLCQ0/riQ3102w==",
-        }));
+        if (!this._autoStorageSettings) {
+            throw "No linked storage account configured for this Batch account.";
+        }
+
+        // TODO: want to store these keys in a cache as the request takes about a second or 2 each time.
+        // can invalidate cache if _autoStorageSettings.lastKeySync is greater than the last time we got one.
+        const url = `${this._autoStorageSettings.storageAccountId}/listkeys`;
+        return this.arm.post(url, JSON.stringify({}))
+            .map(response => new StorageKeys(response.json()))
+            .cascade((keys) => {
+                return Observable.of(this.getForSharedKey({
+                    account: this.getStorageAccountName(this._autoStorageSettings.storageAccountId),
+                    key: keys.primaryKey,
+                }));
+            });
     }
 
     public getForSharedKey(options: StorageAccountSharedKeyOptions) {
         return this._storageClientFactory.getBlobServiceForSharedKey(options);
     }
 
-    private get currentAccount() {
-        return this.accountService.currentAccount.filter(x => Boolean(x)).first();
+    public get hasAutoStorage(): boolean {
+        return Boolean(this._autoStorageSettings);
+    }
+
+    private getStorageAccountName(storageAccountId: string): string {
+        const accountName = ResourceUtils.getAccountNameFromResourceId(storageAccountId);
+        if (!accountName) {
+            throw "Unable to get account name from storage account id: " + storageAccountId;
+        }
+
+        return accountName;
     }
 }

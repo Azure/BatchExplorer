@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { Observable } from "rxjs";
 
 import { File, ServerError } from "app/models";
 import { Constants, StorageUtils } from "app/utils";
@@ -23,7 +24,7 @@ export class StorageService {
         key: ({ jobId, taskId, outputKind }) => jobId + "/" + taskId + "/" + outputKind,
     }, "url");
 
-    constructor(private storageService: StorageClientService) {
+    constructor(private storageClient: StorageClientService) {
     }
 
     public getBlobFileCache(params: BlobListParams): DataCache<File> {
@@ -41,10 +42,10 @@ export class StorageService {
         jobIdParam: string,
         taskIdParam: string,
         outputKindParam: string,
-        callback?: (error: ServerError) => boolean): RxListProxy<BlobListParams, File> {
+        onError?: (error: ServerError) => boolean): RxListProxy<BlobListParams, File> {
 
         const initialOptions: any = {};
-        return new RxStorageListProxy<BlobListParams, File>(File, this.storageService, {
+        return new RxStorageListProxy<BlobListParams, File>(File, this.storageClient, {
             cache: (params) => this.getBlobFileCache(params),
             proxyConstructor: (client, params, options) => {
                 // the prefix of the blob, eg: 10011/$TaskOutput/
@@ -59,7 +60,11 @@ export class StorageService {
             initialParams: { jobId: jobIdParam, taskId: taskIdParam, outputKind: outputKindParam},
             initialOptions,
             logIgnoreError: storageIgnoredErrors,
-            errorCallback: callback,
+            onError: onError,
         });
+    }
+
+    public get hasAutoStorage(): boolean {
+        return this.storageClient.hasAutoStorage;
     }
 }
