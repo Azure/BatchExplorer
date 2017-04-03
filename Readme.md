@@ -3,6 +3,8 @@
 
 **Note: BatchLabs is in beta. We don't provide any installer/packaged binaries as of now. You will need to build this app yourself.**
 
+This is the readme for master branch is contains the latest changes. Stable might be slightly different [Stable readme](https://github.com/Azure/BatchLabs/tree/stable)
+
 ## Getting started
 #### 1. Prerequisites
 - **Install node.js version `6.9` or greater.**
