@@ -9,7 +9,7 @@
         </div>
         <form (submit)="triggerSave()">
             <md-input-container *ngIf="isEditing">
-                <input mdInput placeholder="Tags(Comma separated)" [(ngModel)]="tagEditString" [ngModelOptions]="{standalone: true}">
+                <input #editInput mdInput placeholder="Tags(Comma separated)" [(ngModel)]="tagEditString" [ngModelOptions]="{standalone: true}">
             </md-input-container>
         </form>
     </div>

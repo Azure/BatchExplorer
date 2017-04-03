@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from "@angular/core";
+import { Component, Input, OnChanges, ElementRef, ViewChild } from "@angular/core";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
@@ -34,6 +34,9 @@ export class TagsComponent implements OnChanges {
 
     public displayTags: List<string> = List([]);
 
+    @ViewChild("editInput")
+    private _editInput: ElementRef;
+
     public ngOnChanges(inputs) {
         if (inputs.tags || inputs.maxTags) {
             this.displayTags = List<string>(this.tags.slice(0, this.maxTags));
@@ -43,6 +46,9 @@ export class TagsComponent implements OnChanges {
     public edit() {
         this._resetTagEditStr();
         this.isEditing = true;
+        setTimeout(() => {
+            this._editInput.nativeElement.focus()
+        });
     }
 
     public triggerSave() {
