@@ -51,16 +51,16 @@ const cloudServiceOsFamilies = [{
 // };
 
 const iconMapping = {
-    "UbuntuServer": { src: "fa", name: "icon-ubuntu" },
+    "UbuntuServer": { src: "fa", name: "fl-ubuntu" },
     "CentOS": { src: "fa", name: "icon-centos" },
     "CentOS-HPC": { src: "fa", name: "icon-centos" },
     "WindowsServer": { src: "fa", name: "fa fa-windows" },
-    "Debian": { src: "fa", name: "icon-debian" },
+    "Debian": { src: "fa", name: "fl-debian" },
     "Oracle-Linux": { src: "fa", name: "icon-oracle" },
     "linux-data-science-vm": { src: "fa", name: "fa fa-linux" },
-    "openSUSE-Leap": { src: "fa", name: "icon-suse" },
-    "SLES": { src: "fa", name: "icon-suse" },
-    "SLES-HPC": { src: "fa", name: "icon-suse" },
+    "openSUSE-Leap": { src: "fa", name: "fl-opensuse" },
+    "SLES": { src: "fa", name: "fl-opensuse" },
+    "SLES-HPC": { src: "fa", name: "fl-opensuse" },
     "standard-data-science-vm": { src: "fa", name: "fa fa-windows" },
 };
 
