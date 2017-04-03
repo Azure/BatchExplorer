@@ -3,12 +3,11 @@ import { Observable, Subject } from "rxjs";
 
 import { Job } from "app/models";
 import { JobCreateDto } from "app/models/dtos";
-import { log, ModelUtils } from "app/utils";
+import { ModelUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
 import { ServiceBase } from "./service-base";
-import { Constants } from "client/client-constants";
 
 export interface JobParams {
     id?: string;

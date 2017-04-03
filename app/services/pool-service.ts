@@ -3,11 +3,11 @@ import { Observable, Subject } from "rxjs";
 
 import { Pool } from "app/models";
 import { PoolCreateDto } from "app/models/dtos";
-import { log, Constants, ModelUtils } from "app/utils";
+import { ModelUtils, log } from "app/utils";
+import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
 import { ServiceBase } from "./service-base";
-import { List } from "immutable/dist/immutable-nonambient";
 
 export interface PoolParams {
     id?: string;

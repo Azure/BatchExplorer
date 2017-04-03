@@ -1,6 +1,5 @@
 import { Record } from "immutable";
 
-
 const MetadataRecord = Record({
     name: null,
     value: null,

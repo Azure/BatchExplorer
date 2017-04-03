@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, ElementRef, ViewChild } from "@angular/core";
+import { Component, ElementRef, Input, OnChanges, ViewChild } from "@angular/core";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
@@ -47,7 +47,7 @@ export class TagsComponent implements OnChanges {
         this._resetTagEditStr();
         this.isEditing = true;
         setTimeout(() => {
-            this._editInput.nativeElement.focus()
+            this._editInput.nativeElement.focus();
         });
     }
 
