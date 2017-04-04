@@ -1,8 +1,9 @@
 import { Location } from "@angular/common";
 import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
-import { MdSidenav } from "@angular/material";
+import { MdIconRegistry, MdSidenav } from "@angular/material";
 import { Observable } from "rxjs";
 
+import { registerIcons } from "app/config";
 import {
     AccountService, AdalService, CommandService, NodeService,
     SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
@@ -31,6 +32,7 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     constructor(
         private location: Location,
+        mdIconRegistry: MdIconRegistry,
         private sidebarManager: SidebarManager,
         private settingsService: SettingsService,
         private commandService: CommandService,
@@ -59,6 +61,8 @@ export class AppComponent implements AfterViewInit, OnInit {
         accountService.currentAccount.filter(x => Boolean(x)).first().subscribe((x) => {
             this._preloadData();
         });
+
+        registerIcons(mdIconRegistry);
     }
 
     public ngAfterViewInit() {

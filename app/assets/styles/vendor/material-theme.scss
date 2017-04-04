@@ -121,6 +121,12 @@ md-card {
     }
 }
 
+.mat-icon {
+    display: inline !important;
+    width: auto !important; // Keep even if the warning says it is ignored
+    height: auto !important;
+}
+
 md-radio-button {
     margin-right: 15px;
 
