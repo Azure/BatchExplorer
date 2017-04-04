@@ -171,7 +171,7 @@ describe("JobCreateBasicDialogComponent ", () => {
 
     it("Can clone job into form", () => {
         const job = Fixtures.job.create({ id: "job-001", poolInfo: { poolId: "pool-002" } });
-        component.setValue(job);
+        component.setValueFromEntity(job);
 
         expect(baseForm.controls.id.value).toEqual("job-001");
         expect(baseForm.controls.displayName.value).toEqual("display name");
@@ -182,7 +182,7 @@ describe("JobCreateBasicDialogComponent ", () => {
 
     it("Clicking add creates job and doesnt close form", (done) => {
         const job = Fixtures.job.create({ id: "job-001", poolInfo: { poolId: "pool-002" } });
-        component.setValue(job);
+        component.setValueFromEntity(job);
         component.submit().subscribe(() => {
             expect(jobServiceSpy.add).toHaveBeenCalledTimes(1);
             expect(notificationServiceSpy.success).toHaveBeenCalledTimes(1);
@@ -205,7 +205,7 @@ describe("JobCreateBasicDialogComponent ", () => {
 
     it("If create job throws we handle the error", (done) => {
         const job = Fixtures.job.create({ id: "bad-job-id", poolInfo: { poolId: "pool-002" } });
-        component.setValue(job);
+        component.setValueFromEntity(job);
         component.submit().subscribe({
             next: () => {
                 fail("call should have failed");

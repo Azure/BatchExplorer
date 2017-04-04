@@ -3,7 +3,8 @@ import { Observable, Subject } from "rxjs";
 
 import { Job } from "app/models";
 import { JobCreateDto } from "app/models/dtos";
-import { log } from "app/utils";
+import { ModelUtils, log } from "app/utils";
+import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
 import { ServiceBase } from "./service-base";
@@ -76,5 +77,18 @@ export class JobService extends ServiceBase {
 
     public add(job: JobCreateDto, options: any = {}): Observable<{}> {
         return this.callBatchClient((client) => client.job.add(job.toJS(), options));
+    }
+
+    public patch(jobId: string, attributes: any, options: any = {}) {
+        return this.callBatchClient((client) => client.job.patch(jobId, attributes, options), (error) => {
+            log.error(`Error patching job: ${jobId}`, error);
+        });
+    }
+
+    public updateTags(job: Job, tags: List<string>) {
+        const attributes = {
+            metadata: ModelUtils.updateMetadataWithTags(job.metadata, tags),
+        };
+        return this.patch(job.id, attributes);
     }
 }

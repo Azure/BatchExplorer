@@ -3,7 +3,8 @@ import { Observable, Subject } from "rxjs";
 
 import { Pool } from "app/models";
 import { PoolCreateDto } from "app/models/dtos";
-import { log } from "app/utils";
+import { ModelUtils, log } from "app/utils";
+import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
 import { ServiceBase } from "./service-base";
@@ -99,5 +100,12 @@ export class PoolService extends ServiceBase {
         return this.callBatchClient((client) => client.pool.replaceProperties(poolId, attributes, options), (error) => {
             log.error("Error updating pool: " + poolId, error);
         });
+    }
+
+    public updateTags(pool: Pool, tags: List<string>) {
+        const attributes = {
+            metadata: ModelUtils.updateMetadataWithTags(pool.metadata, tags),
+        };
+        return this.patch(pool.id, attributes);
     }
 }
