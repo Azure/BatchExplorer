@@ -100,4 +100,13 @@ export default class JobProxy {
             });
         });
     }
+
+    public patch(jobId: string, attributes: any, options?: any) {
+        return new Promise((resolve, reject) => {
+            this.client.job.patch(jobId, attributes, { }, (error, result) => {
+                if (error) { return reject(error); }
+                return resolve();
+            });
+        });
+    }
 }

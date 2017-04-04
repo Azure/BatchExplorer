@@ -1,5 +1,6 @@
-import { Record } from "immutable";
+import { List, Record } from "immutable";
 
+import { ModelUtils } from "app/utils";
 import { AllTasksCompleteAction, TaskFailureAction } from "./job-action";
 import { JobConstraints } from "./job-constraints";
 import { JobExecutionInformation } from "./job-execution-information";
@@ -7,6 +8,7 @@ import { JobManagerTask } from "./job-manager-task";
 import { JobPreparationTask } from "./job-preparation-task";
 import { JobReleaseTask } from "./job-release-task";
 import { JobStats } from "./job-stats";
+import { Metadata } from "./metadata";
 import { NameValuePair } from "./name-value-pair";
 
 const JobRecord = Record({
@@ -30,7 +32,7 @@ const JobRecord = Record({
     jobReleaseTask: null,
     commonEnvironmentSettings: null,
     poolInfo: null,
-    metadata: null,
+    metadata: List([]),
     executionInfo: null,
     stats: null,
     schedulingError: null,
@@ -61,9 +63,14 @@ export class Job extends JobRecord {
     public jobReleaseTask: JobReleaseTask;
     public commonEnvironmentSettings: NameValuePair[];
     public poolInfo: any;
-    public metadata: NameValuePair[];
+    public metadata: List<Metadata>;
     public executionInfo: JobExecutionInformation;
     public stats: JobStats;
+
+    /**
+     * Tags are computed from the metadata using an internal key
+     */
+    public tags: List<string> = List([]);
 
     constructor(data: any = {}) {
         super(Object.assign({}, data, {
@@ -71,7 +78,9 @@ export class Job extends JobRecord {
             jobReleaseTask: data.jobReleaseTask && new JobReleaseTask(data.jobReleaseTask),
             jobManagerTask: data.jobManagerTask && new JobManagerTask(data.jobManagerTask),
             executionInfo: data.executionInfo && new JobExecutionInformation(data.executionInfo),
+            metadata: List(data.metadata && data.metadata.map(x => new Metadata(x))),
         }));
+        this.tags = ModelUtils.tagsFromMetadata(this.metadata);
     }
 
     /**

@@ -6,6 +6,7 @@ export * from "./logger";
 export * from "./observable";
 export * from "./form-utils";
 export * from "./misc";
+export * from "./model-utils";
 export * from "./object";
 export * from "./os";
 export * from "./pool-utils";
