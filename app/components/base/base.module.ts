@@ -30,6 +30,7 @@ import { ScrollableModule } from "./scrollable";
 import { SidebarModule } from "./sidebar";
 import { TableModule } from "./table";
 import { TabsModule } from "./tabs";
+import { TagsModule } from "./tags";
 
 // Add submodules there
 const modules = [
@@ -49,6 +50,7 @@ const modules = [
     SidebarModule,
     TableModule,
     TabsModule,
+    TagsModule,
     FormModule,
     ScrollableModule,
 ];

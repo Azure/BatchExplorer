@@ -122,3 +122,7 @@ export const Environment = {
 export const ServiceUrl = {
     arm: "https://management.azure.com",
 };
+
+export const MetadataInternalKey = {
+    tags: "_bl_tags",
+};
