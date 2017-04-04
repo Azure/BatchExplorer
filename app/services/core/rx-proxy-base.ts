@@ -168,7 +168,6 @@ export abstract class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity
      * Create a new item of type TEntity and adds it to the cache
      */
     protected newItem(data: any): string {
-        console.log("proxybase.newItem: ", data);
         const item = new this.type(data);
         return this.cache.addItem(item, this._options && this._options.select);
     }

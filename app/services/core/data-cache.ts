@@ -75,10 +75,10 @@ export class DataCache<T> {
      * @return the unique key for the item you added
      */
     public addItem(item: T, select?: string): string {
-        console.log("addItem: ", item, select);
         const key = this.getItemKey(item);
         const newItems = this._items.getValue().merge({ [key]: this._computeNewItem(item, key, select) });
         this._items.next(newItems);
+
         return key;
     }
 
@@ -133,7 +133,6 @@ export class DataCache<T> {
     }
 
     public getItemKey(item: T) {
-        console.log("getItemKey: ", this._uniqueField, item);
         return item[this._uniqueField].toString();
     }
 

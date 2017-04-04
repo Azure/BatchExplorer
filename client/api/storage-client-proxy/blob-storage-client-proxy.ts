@@ -59,13 +59,14 @@ export class BlobStorageClientProxy {
         });
     }
 
-    public getBlobProperties(container: string, blobname: string, options?: StorageRequestOptions) {
+    // TODO: commment header
+    public getBlobProperties(
+        container: string,
+        blobname: string,
+        options?: StorageRequestOptions): Promise<BlobStorageResult> {
+
         return new Promise((resolve, reject) => {
             this._blobService.getBlobProperties(container, blobname, options, (error, result, response) => {
-                console.log("### :: error :: ", error);
-                console.log("### :: result :: ", result);
-                console.log("### :: response :: ", response);
-
                 if (error) {
                     reject(error);
                 } else {
@@ -87,10 +88,3 @@ export class BlobStorageClientProxy {
         });
     }
 }
-
-                    // properties: {
-                    //     contentLength: parseInt(headers["content-length"], 10),
-                    //     contentType: headers["content-type"],
-                    //     creationTime: headers["ocp-creation-time"],
-                    //     lastModified: headers["lastModified"],
-                    // },

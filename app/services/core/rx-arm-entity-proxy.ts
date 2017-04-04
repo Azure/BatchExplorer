@@ -6,7 +6,7 @@ import { RxEntityProxy, RxEntityProxyConfig } from "./rx-entity-proxy";
 
 export interface RxArmEntityProxyConfig<TParams, TEntity> extends RxEntityProxyConfig<TParams, TEntity> {
     /**
-     * Get function(Ususally call the client proxy)
+     * Get function(usually call the client proxy)
      */
     uri: string | ((params: TParams) => string);
 }

@@ -7,10 +7,9 @@ import { RxEntityProxy, RxEntityProxyConfig } from "./rx-entity-proxy";
 
 export interface RxStorageEntityProxyConfig<TParams, TEntity> extends RxEntityProxyConfig<TParams, TEntity> {
     /**
-     * Get function(Ususally call the client proxy)
+     * Get function(usually call the client proxy)
      */
     getFn: (client: any, params: TParams) => Promise<any>;
-
 }
 
 export class RxStorageEntityProxy<TParams, TEntity> extends RxEntityProxy<TParams, TEntity> {
