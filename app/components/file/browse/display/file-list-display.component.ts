@@ -3,6 +3,7 @@ import { List } from "immutable";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
+import { prettyBytes } from "app/utils";
 
 @Component({
     selector: "bl-file-list-display",
@@ -32,6 +33,10 @@ export class FileListDisplayComponent {
      */
     @Input()
     public isBlob: boolean = false;
+
+    public prettyFileSize(size: string) {
+        return prettyBytes(parseInt(size, 10));
+    }
 
     /**
      * Handle linking to files from blob storage as well as the task and node API

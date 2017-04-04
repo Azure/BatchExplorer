@@ -3,10 +3,12 @@ import { ActivatedRoute } from "@angular/router";
 import { autobind } from "core-decorators";
 import { remote } from "electron";
 import { writeFile } from "fs";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
+import { File } from "app/models";
 import { FileService, StorageService } from "app/services";
-import { Constants, FileUrlUtils } from "app/utils";
+import { RxEntityProxy } from "app/services/core";
+import { Constants, FileUrlUtils, prettyBytes } from "app/utils";
 
 @Component({
     selector: "bl-file-details",
@@ -23,12 +25,13 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     public poolId: string;
     public url: string;
     public filename: string;
-    public contentSize: number;
+    public contentSize: string;
     public downloadEnabled: boolean;
     public outputKind: string;
 
     private _sourceType: string;
     private _paramsSubscribers: Subscription[] = [];
+    private _propertyProxy: RxEntityProxy<any, File>;
 
     constructor(
         private route: ActivatedRoute,
@@ -40,6 +43,7 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     public ngOnInit() {
         this._paramsSubscribers.push(this.route.data.subscribe((data) => {
             this._sourceType = data["type"];
+            console.log("source type: ", this._sourceType);
         }));
 
         this._paramsSubscribers.push(this.route.params.subscribe((params) => {
@@ -49,41 +53,8 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
             this.nodeId = params["nodeId"];
             this.outputKind = params["outputKind"];
             this.filename = params["filename"];
-
-            if (this._sourceType === Constants.FileSourceTypes.Job) {
-                let propertiesProxy = this.fileService.getFilePropertiesFromTask(
-                    this.jobId, this.taskId, this.filename);
-
-                propertiesProxy.fetch().subscribe((details: any) => {
-                    this.url = decodeURIComponent(details.url);
-                    this.contentSize = details.properties.contentLength;
-                });
-            } else if (this._sourceType === Constants.FileSourceTypes.Pool) {
-                let propertiesProxy = this.fileService.getFilePropertiesFromComputeNode(
-                    this.poolId, this.nodeId, this.filename);
-
-                propertiesProxy.fetch().subscribe((details: any) => {
-                    this.url = decodeURIComponent(details.url);
-                    this.contentSize = details.properties.contentLength;
-                });
-
-                this.downloadEnabled = true;
-            } else {
-                // it's a blob
-                let propertiesProxy
-                    = this.storageService.getBlobProperties(this.jobId, this.taskId, this.outputKind, this.filename);
-
-                propertiesProxy.fetch().subscribe((details: any) => {
-                    console.log("propertiesProxy.fetch(): ", details);
-                    this.url = decodeURIComponent(details.url);
-                    this.contentSize = details.properties.contentLength;
-                });
-            }
+            this._loadFileProperties();
         }));
-    }
-
-    public update() {
-        return;
     }
 
     public ngOnDestroy() {
@@ -92,7 +63,7 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public refresh() {
-        return;
+        return Observable.of({});
     }
 
     public downloadFile() {
@@ -106,6 +77,40 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         if (localPath) {
             this._saveFile(localPath);
         }
+    }
+
+    private _loadFileProperties(): void {
+        if (this._sourceType === Constants.FileSourceTypes.Job) {
+            // it's a file from a job's task
+            this._propertyProxy = this.fileService.getFilePropertiesFromTask(
+                this.jobId, this.taskId, this.filename);
+
+        } else if (this._sourceType === Constants.FileSourceTypes.Pool) {
+            // it's a file from a node
+            this.downloadEnabled = true;
+            this._propertyProxy = this.fileService.getFilePropertiesFromComputeNode(
+                this.poolId, this.nodeId, this.filename);
+
+        } else if (this._sourceType === Constants.FileSourceTypes.Blob) {
+            // it's a file from blob storage
+            this._propertyProxy = this.storageService.getBlobProperties(
+                this.jobId,
+                this.taskId,
+                this.outputKind,
+                this.filename,
+            );
+        } else {
+            throw "Unrecognised source type: " + this._sourceType;
+        }
+
+        this._propertyProxy.fetch().subscribe((details: any) => {
+            console.log("this.url: ", this.url);
+
+            this.contentSize = prettyBytes(details.properties.contentLength);
+            this.url = decodeURIComponent(details.url);
+        });
+
+        this._propertyProxy = null;
     }
 
     private _saveFile(fileName) {
