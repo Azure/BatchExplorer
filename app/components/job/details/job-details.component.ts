@@ -2,7 +2,8 @@ import { Component, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
 import { MdDialog, MdDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
-import { Subscription } from "rxjs/Subscription";
+import { List } from "immutable";
+import { Subscription } from "rxjs";
 
 import { Job } from "app/models";
 import { JobDecorator } from "app/models/decorators";
@@ -130,6 +131,13 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
         dialogRef.componentInstance.jobId = this.job.id;
         dialogRef.afterClosed().subscribe((obj) => {
             this.refresh();
+        });
+    }
+
+    @autobind()
+    public updateTags(tags: List<string>) {
+        return this.jobService.updateTags(this.job, tags).flatMap(() => {
+            return this.data.refresh();
         });
     }
 }

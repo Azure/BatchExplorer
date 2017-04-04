@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
 import { MdDialog, MdDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
+import { List } from "immutable";
 import * as Moment from "moment";
 import { Subscription } from "rxjs";
 
@@ -18,7 +19,7 @@ import { PoolCreateBasicDialogComponent } from "../action";
     templateUrl: "pool-details.html",
 })
 export class PoolDetailsComponent implements OnInit, OnDestroy {
-    public static breadcrumb({id}, {tab}) {
+    public static breadcrumb({ id }, { tab }) {
         let label = tab ? `Pool - ${tab}` : "Pool";
         return {
             name: id,
@@ -149,5 +150,12 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
 
     public get lastResize(): string {
         return Moment(this.pool.allocationStateTransitionTime).fromNow();
+    }
+
+    @autobind()
+    public updateTags(newTags: List<string>) {
+        return this.poolService.updateTags(this.pool, newTags).flatMap(() => {
+            return this.data.refresh();
+        });
     }
 }
