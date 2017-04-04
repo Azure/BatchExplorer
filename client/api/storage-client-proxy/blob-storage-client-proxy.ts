@@ -14,11 +14,12 @@ export class BlobStorageClientProxy {
      * taskId and the OutputKind of the task output.
      * http://azure.github.io/azure-storage-node/BlobService.html#listBlobsSegmentedWithPrefix__anchor
      *
-     * @param container - name of the storage container
-     * @param blobPrefix - The prefix of the blob name. In our case it is the taskId prefix:
+     * @param {string} container - Name of the storage container
+     * @param {string} blobPrefix - The prefix of the blob name. In our case it is the taskId prefix:
      *  "${taskId}/$TaskOutput|$TaskLog/${namePrefixFilter}"
-     * @param filter - optional text for filtering further than the blob prefix
-     * @param continuationToken - token that was returned from the last call, if any
+     * @param {string} filter - Optional text for filtering further than the blob prefix
+     * @param {string} continuationToken - Token that was returned from the last call, if any
+     * @param {string} options - Optional request options
      */
     public listBlobsWithPrefix(
         container: string,
@@ -45,7 +46,7 @@ export class BlobStorageClientProxy {
                                 url: `${container}/${blob.name}`,
                                 isDirectory: false,
                                 properties: {
-                                    contentLength: blob.contentLength,
+                                    contentLength: parseInt(blob.contentLength, 10),
                                     contentType: blob.contentSettings.contentType,
                                     creationTime: null,
                                     lastModified: blob.lastModified,
@@ -59,7 +60,15 @@ export class BlobStorageClientProxy {
         });
     }
 
-    // TODO: commment header
+    /**
+     * Returns all user-defined metadata, standard HTTP properties, and system
+     * properties for the blob.
+     * http://azure.github.io/azure-storage-node/BlobService.html#getBlobProperties__anchor
+     *
+     * @param {string} container - Name of the storage container
+     * @param {string} blobname - Full path to blob from the container root: "1001/$TaskOutput|myblob.txt"
+     * @param {string} options - Optional request options
+     */
     public getBlobProperties(
         container: string,
         blobname: string,
@@ -76,7 +85,7 @@ export class BlobStorageClientProxy {
                             url: `${container}/${blobname}`,
                             isDirectory: false,
                             properties: {
-                                contentLength: result.contentLength,
+                                contentLength: parseInt(result.contentLength, 10),
                                 contentType: result.contentSettings.contentType,
                                 creationTime: null,
                                 lastModified: result.lastModified,
