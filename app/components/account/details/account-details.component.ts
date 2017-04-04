@@ -59,8 +59,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public refresh() {
-        // TODO: this.accountService.refresh(accountId)
-        return Observable.of({});
+        return this.accountService.refresh();
     }
 
     public selectAccount(accountId: string): void {
