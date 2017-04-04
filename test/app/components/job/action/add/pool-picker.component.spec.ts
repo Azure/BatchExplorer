@@ -26,7 +26,7 @@ const pool1 = new Pool({ id: "pool-1", targetDedicated: 3, virtualMachineConfigu
 const pool2 = new Pool({ id: "pool-2", targetDedicated: 1, virtualMachineConfiguration: config });
 const pool3 = new Pool({ id: "pool-3", targetDedicated: 19, virtualMachineConfiguration: config });
 
-fdescribe("PoolPickerComponenent", () => {
+describe("PoolPickerComponenent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: PoolPickerComponent;
@@ -87,7 +87,6 @@ fdescribe("PoolPickerComponenent", () => {
         fixture.detectChanges();
         const pools = de.queryAll(By.css(".pool-list .pool"));
         expect(pools.length).toBe(3);
-        console.log("adadw", component.pickedPool);
         expect(pools[2].classes["active"]).toBe(true);
     }));
 });
