@@ -25,7 +25,6 @@ describe("JobCreateBasicDialogComponent ", () => {
     let notificationServiceSpy: any;
     let baseForm: any;
     let constraintsForm: any;
-    let poolForm: any;
 
     const validators = TestConstants.validators;
 
@@ -149,23 +148,23 @@ describe("JobCreateBasicDialogComponent ", () => {
         validateControl(constraintsForm, controlName).passes(validators.range).with(1);
     });
 
-    it("PoolId is initialized", () => {
-        const control = poolForm.controls.poolId;
+    it("Pool is initialized", () => {
+        const control = baseForm.controls.poolInfo;
         expect(control).not.toBeNull();
         expect(control.validator).not.toBeNull();
     });
 
-    it("PoolId has required validation only", () => {
-        poolForm.patchValue({ poolId: "my-pool" });
-        expect(poolForm.hasError(validators.required, ["poolId"])).toBe(false);
+    it("Pool has required validation only", () => {
+        baseForm.patchValue({ pool: { poolId: "my-pool" } });
+        expect(baseForm.hasError(validators.required, ["poolInfo"])).toBe(false);
 
-        poolForm.patchValue({ poolId: "" });
-        expect(poolForm.hasError(validators.required, ["poolId"])).toBe(true);
+        baseForm.patchValue({ pool: null });
+        expect(baseForm.hasError(validators.required, ["poolInfo"])).toBe(true);
     });
 
     it("Can patch poolId directly", () => {
         component.preSelectPool("pool-002");
-        expect(poolForm.controls["poolId"].value).toEqual("pool-002");
+        expect(baseForm.controls.poolInfo.value).toEqual({ poolId: "pool-002" });
     });
 
     it("Can clone job into form", () => {
@@ -176,7 +175,7 @@ describe("JobCreateBasicDialogComponent ", () => {
         expect(baseForm.controls.displayName.value).toEqual("display name");
         expect(baseForm.controls.priority.value).toEqual(1);
         expect(constraintsForm.controls.maxTaskRetryCount.value).toEqual(3);
-        expect(poolForm.controls.poolId.value).toEqual("pool-002");
+        expect(baseForm.controls.poolInfo.value).toEqual({poolId: "pool-002"});
     });
 
     it("Clicking add creates job and doesnt close form", (done) => {

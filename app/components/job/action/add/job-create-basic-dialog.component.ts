@@ -48,7 +48,7 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
                 new RangeValidatorDirective(validation.range.priority.min, validation.range.priority.max).validator,
             ],
             constraints: this.constraintsGroup,
-            poolInfo: [{}, Validators.required],
+            poolInfo: [null, Validators.required],
         });
     }
 
