@@ -2,7 +2,10 @@
     <div *ngIf="account">
         <md-card class="overview">
             <md-card-title-group style="margin: 0px;">
-                <div style="margin-left:0px; margin-right:auto;">
+                <div style="align-items:center;">
+                    <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+                </div>
+                <div style="margin-left:12px; margin-right:auto;">
                     <md-card-title>{{account.name}}</md-card-title>
                     <md-card-subtitle><i class="fa fa-link"></i> {{account.properties.accountEndpoint}}</md-card-subtitle>
                 </div>
@@ -28,5 +31,5 @@
                 <div>Applications</div>
             </md-card>
         </div>
-	</div>
+    </div>
 </bl-loading>
