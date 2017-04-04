@@ -36,33 +36,33 @@ const cloudServiceOsFamilies = [{
 //     "standard-data-science-vm": "windows",
 // };p
 
-// const iconMapping = {
-//     "UbuntuServer": { src: "svg", name: "ubuntu" },
-//     "CentOS": { src: "svg", name: "centos" },
-//     "CentOS-HPC": { src: "svg", name: "centos" },
-//     "WindowsServer": { src: "fa", name: "windows" },
-//     "Debian": { src: "svg", name: "debian" },
-//     "Oracle-Linux": { src: "svg", name: "oracle" },
-//     "linux-data-science-vm": { src: "fa", name: "linux" },
-//     "openSUSE-Leap": { src: "svg", name: "suse" },
-//     "SLES": { src: "svg", name: "suse" },
-//     "SLES-HPC": { src: "svg", name: "suse" },
-//     "standard-data-science-vm": { src: "fa", name: "windows" },
-// };
-
 const iconMapping = {
-    "UbuntuServer": { src: "fa", name: "fl-ubuntu" },
-    "CentOS": { src: "fa", name: "icon-centos" },
-    "CentOS-HPC": { src: "fa", name: "icon-centos" },
+    "UbuntuServer": { src: "svg", name: "ubuntu" },
+    "CentOS": { src: "svg", name: "centos" },
+    "CentOS-HPC": { src: "svg", name: "centos" },
     "WindowsServer": { src: "fa", name: "fa fa-windows" },
-    "Debian": { src: "fa", name: "fl-debian" },
-    "Oracle-Linux": { src: "fa", name: "icon-oracle" },
+    "Debian": { src: "svg", name: "debian" },
+    "Oracle-Linux": { src: "svg", name: "oracle" },
     "linux-data-science-vm": { src: "fa", name: "fa fa-linux" },
-    "openSUSE-Leap": { src: "fa", name: "fl-opensuse" },
-    "SLES": { src: "fa", name: "fl-opensuse" },
-    "SLES-HPC": { src: "fa", name: "fl-opensuse" },
+    "openSUSE-Leap": { src: "svg", name: "suse" },
+    "SLES": { src: "svg", name: "suse" },
+    "SLES-HPC": { src: "svg", name: "suse" },
     "standard-data-science-vm": { src: "fa", name: "fa fa-windows" },
 };
+
+// const iconMapping = {
+//     "UbuntuServer": { src: "fa", name: "fl-ubuntu" },
+//     "CentOS": { src: "fa", name: "icon-centos" },
+//     "CentOS-HPC": { src: "fa", name: "icon-centos" },
+//     "WindowsServer": { src: "fa", name: "fa fa-windows" },
+//     "Debian": { src: "fa", name: "fl-debian" },
+//     "Oracle-Linux": { src: "fa", name: "icon-oracle" },
+//     "linux-data-science-vm": { src: "fa", name: "fa fa-linux" },
+//     "openSUSE-Leap": { src: "fa", name: "fl-opensuse" },
+//     "SLES": { src: "fa", name: "fl-opensuse" },
+//     "SLES-HPC": { src: "fa", name: "fl-opensuse" },
+//     "standard-data-science-vm": { src: "fa", name: "fa fa-windows" },
+// };
 
 // tslint:disable:no-forward-ref
 @Component({

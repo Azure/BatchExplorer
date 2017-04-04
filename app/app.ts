@@ -11,10 +11,8 @@ import "hammerjs";
 import "./utils/extensions";
 
 import "font-awesome/css/font-awesome.min.css";
-import "font-mfizz/font/font-mfizz.css";
 import "roboto-fontface/css/roboto/roboto-fontface.css";
 import "./assets/styles/main.scss";
-import "./assets/vendor/font-linux/font-linux.css";
 import "./environment";
 
 (remote.getCurrentWindow() as any).splashScreen.updateMessage("Initializing app");
