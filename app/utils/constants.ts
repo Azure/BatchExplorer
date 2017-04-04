@@ -42,7 +42,7 @@ export const FileUrlStrings = {
 export const FileSourceTypes = {
     Job: "job",
     Pool: "pool",
-    Storage: "storage",
+    Blob: "blob",
 };
 
 export const forms = {

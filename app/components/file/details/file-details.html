@@ -17,8 +17,9 @@
         </md-card-actions>
     </md-card>
     <md-card class="details">
-        <bl-file-content *ngIf="jobId && taskId" [jobId]="jobId" [taskId]="taskId" [filename]="filename"></bl-file-content>
         <bl-file-content *ngIf="poolId && nodeId" [poolId]="poolId" [nodeId]="nodeId" [filename]="filename"></bl-file-content>
+        <bl-file-content *ngIf="jobId && taskId && !outputKind" [jobId]="jobId" [taskId]="taskId" [filename]="filename"></bl-file-content>
+        <div *ngIf="jobId && taskId && outputKind">IT'S A BLOB ... </div>
     </md-card>
 </div>
 

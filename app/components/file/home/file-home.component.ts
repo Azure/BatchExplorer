@@ -14,11 +14,13 @@ export class FileHomeComponent implements OnInit, OnDestroy {
 
     public isPool: boolean;
     public isJob: boolean;
+    public isBlob: boolean;
 
     public poolId: string;
     public nodeId: string;
     public jobId: string;
     public taskId: string;
+    public outputKind: string;
     public filename: string;
 
     private _dataSub: Subscription;
@@ -34,6 +36,7 @@ export class FileHomeComponent implements OnInit, OnDestroy {
             const type = data["type"];
             this.isJob = type === Constants.FileSourceTypes.Job;
             this.isPool = type === Constants.FileSourceTypes.Pool;
+            this.isBlob = type === Constants.FileSourceTypes.Blob;
         });
 
         this._paramsSubscriber = this.activatedRoute.params.subscribe((params) => {
@@ -41,6 +44,7 @@ export class FileHomeComponent implements OnInit, OnDestroy {
             this.taskId = params["taskId"];
             this.poolId = params["poolId"];
             this.nodeId = params["nodeId"];
+            this.outputKind = params["outputKind"];
             this.filename = params["filename"];
         });
     }

@@ -3,13 +3,24 @@ import { Observable } from "rxjs";
 
 import { File, ServerError } from "app/models";
 import { Constants, StorageUtils } from "app/utils";
-import { DataCache, RxListProxy, RxStorageListProxy, TargetedDataCache } from "./core";
+import {
+    DataCache,
+    RxEntityProxy,
+    RxListProxy,
+    RxStorageEntityProxy,
+    RxStorageListProxy,
+    TargetedDataCache,
+} from "./core";
 import { StorageClientService } from "./storage-client.service";
 
 export interface BlobListParams {
     jobId?: string;
     taskId?: string;
     outputKind?: string;
+}
+
+export interface BlobFileParams extends BlobListParams {
+    filename?: string;
 }
 
 // List of error we don't want to log for storage requests
@@ -46,7 +57,7 @@ export class StorageService {
 
         const initialOptions: any = {};
         return new RxStorageListProxy<BlobListParams, File>(File, this.storageClient, {
-            cache: (params) => this.getBlobFileCache(params),
+            cache: (params) =>  this.getBlobFileCache(params),
             getData: (client, params, options) => {
                 // the prefix of the blob, eg: 10011/$TaskOutput/
                 const prefix = `${params.taskId}/${params.outputKind}/`;
@@ -61,6 +72,31 @@ export class StorageService {
             initialOptions,
             logIgnoreError: storageIgnoredErrors,
             onError: onError,
+        });
+    }
+
+    public getBlobProperties(
+        jobIdParam: string,
+        taskIdParam: string,
+        outputKindParam: string,
+        filenameParam: string): RxEntityProxy<BlobFileParams, File> {
+
+        const initialOptions: any = {};
+        return new RxStorageEntityProxy<BlobFileParams, File>(File, this.storageClient, {
+            cache: (params) => this.getBlobFileCache(params),
+            getFn: (client, params) => {
+                const blobName = `/${params.taskId}/${params.outputKind}/${params.filename}`;
+                return StorageUtils.getSafeContainerName(params.jobId).then((safeContainerName) => {
+                    return client.listBlobsWithPrefix(safeContainerName, blobName, initialOptions);
+                });
+            },
+            initialParams: {
+                jobId: jobIdParam,
+                taskId: taskIdParam,
+                outputKind: outputKindParam,
+                filename: filenameParam,
+            },
+            logIgnoreError: storageIgnoredErrors,
         });
     }
 

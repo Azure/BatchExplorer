@@ -20,7 +20,7 @@ export interface RxStorageListProxyConfig<TParams, TEntity> extends RxListProxyC
  * List proxy implementation to use the storage client proxy
  */
 export class RxStorageListProxy<TParams, TEntity> extends RxListProxy<TParams, TEntity> {
-    private _nextLink = null;
+    private _continuationToken = null;
     private _loadedFirst = false;
     private _getData: (client: any, params: TParams, options: any) => any;
 
@@ -39,10 +39,8 @@ export class RxStorageListProxy<TParams, TEntity> extends RxListProxy<TParams, T
 
     protected fetchNextItems(): Observable<any> {
         return this._clientProxy().flatMap((client) => {
-            return Observable.fromPromise(client).do(() => {
-                this._nextLink = client.nextLink;
-                // TODO: need to handle the continuation token somehow
-                // nextLink is from BatchAPI, storage doesn't use this
+            return Observable.fromPromise(client).do((result: any) => {
+                this._continuationToken = result.continuationToken;
             }).catch((error) => {
                 return Observable.throw(ServerError.fromStorage(error));
             });
@@ -55,7 +53,7 @@ export class RxStorageListProxy<TParams, TEntity> extends RxListProxy<TParams, T
     }
 
     protected hasMoreItems(): boolean {
-        return !this._loadedFirst || exists(this._nextLink);
+        return !this._loadedFirst || exists(this._continuationToken);
     }
 
     protected queryCacheKey(): string {
@@ -63,12 +61,12 @@ export class RxStorageListProxy<TParams, TEntity> extends RxListProxy<TParams, T
     }
 
     protected putQueryCacheData(): any {
-        return this._nextLink;
+        return this._continuationToken;
     }
 
     protected getQueryCacheData(queryCache: CachedKeyList): any {
         this._loadedFirst = true;
-        this._nextLink = queryCache.data;
+        this._continuationToken = queryCache.data;
     }
 
     private _computeOptions(options: any) {

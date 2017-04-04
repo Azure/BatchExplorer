@@ -1,7 +1,6 @@
 <bl-focus-section>
     <bl-quick-list *ngIf="quickList">
-        <bl-quick-list-item *ngFor="let file of files| fileDirectoryFilter" [routerLink]="baseUrl.concat(['files', file.name])"
-            [key]="file.url">
+        <bl-quick-list-item *ngFor="let file of files| fileDirectoryFilter" [routerLink]="urlToFile(file.name)" [key]="file.url">
             <bl-quick-list-item-status [status]="" [tooltip]="">
             </bl-quick-list-item-status>
 

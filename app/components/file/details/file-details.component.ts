@@ -5,7 +5,7 @@ import { remote } from "electron";
 import { writeFile } from "fs";
 import { Subscription } from "rxjs";
 
-import { FileService } from "app/services";
+import { FileService, StorageService } from "app/services";
 import { Constants, FileUrlUtils } from "app/utils";
 
 @Component({
@@ -25,11 +25,15 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     public filename: string;
     public contentSize: number;
     public downloadEnabled: boolean;
+    public outputKind: string;
 
     private _sourceType: string;
     private _paramsSubscribers: Subscription[] = [];
 
-    constructor(private route: ActivatedRoute, private fileService: FileService) {
+    constructor(
+        private route: ActivatedRoute,
+        private fileService: FileService,
+        private storageService: StorageService) {
         this.downloadEnabled = false;
     }
 
@@ -43,7 +47,9 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
             this.taskId = params["taskId"];
             this.poolId = params["poolId"];
             this.nodeId = params["nodeId"];
+            this.outputKind = params["outputKind"];
             this.filename = params["filename"];
+
             if (this._sourceType === Constants.FileSourceTypes.Job) {
                 let propertiesProxy = this.fileService.getFilePropertiesFromTask(
                     this.jobId, this.taskId, this.filename);
@@ -52,7 +58,7 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
                     this.url = decodeURIComponent(details.url);
                     this.contentSize = details.properties.contentLength;
                 });
-            } else {
+            } else if (this._sourceType === Constants.FileSourceTypes.Pool) {
                 let propertiesProxy = this.fileService.getFilePropertiesFromComputeNode(
                     this.poolId, this.nodeId, this.filename);
 
@@ -62,9 +68,18 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
                 });
 
                 this.downloadEnabled = true;
+            } else {
+                // it's a blob
+                let propertiesProxy
+                    = this.storageService.getBlobProperties(this.jobId, this.taskId, this.outputKind, this.filename);
+
+                propertiesProxy.fetch().subscribe((details: any) => {
+                    console.log("propertiesProxy.fetch(): ", details);
+                    this.url = decodeURIComponent(details.url);
+                    this.contentSize = details.properties.contentLength;
+                });
             }
         }));
-
     }
 
     public update() {

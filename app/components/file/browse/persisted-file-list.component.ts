@@ -78,7 +78,7 @@ export class PersistedFileListComponent implements OnInit, OnChanges {
     }
 
     public get baseUrl() {
-        return ["/jobs", this.jobId, "tasks", this.taskId, "storage"];
+        return ["/jobs", this.jobId, "tasks", this.taskId, this.outputKind];
     }
 
     public get filterPlaceholder() {

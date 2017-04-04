@@ -42,10 +42,12 @@ export abstract class RxEntityProxy<TParams, TEntity> extends RxProxyBase<TParam
                 return this.getData();
             },
             next: (response: any) => {
+                console.log("entity proxy.fetch()", response);
                 const key = this.newItem(response);
                 this._itemKey.next(key);
             },
             error: (error: ServerError) => {
+                console.log("entity proxy.error", error);
                 // If there is a 404 delete the item from the cache as it doesn't exist anymore
                 if (error.status === HttpCode.NotFound) {
                     this._itemKey.next(null);

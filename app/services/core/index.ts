@@ -8,5 +8,6 @@ export * from "./rx-batch-entity-proxy";
 export * from "./rx-batch-list-proxy";
 export * from "./rx-entity-proxy";
 export * from "./rx-list-proxy";
+export * from "./rx-storage-entity-proxy";
 export * from "./rx-storage-list-proxy";
 export * from "./targeted-data-cache";

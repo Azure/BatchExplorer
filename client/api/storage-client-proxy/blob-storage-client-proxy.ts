@@ -41,7 +41,7 @@ export class BlobStorageClientProxy {
                     resolve({
                         data: result.entries.map((blob) =>  {
                             return {
-                                name: blob.name.replace(blobPrefix, ""), // TODO: needs work
+                                name: blob.name.replace(blobPrefix, ""),
                                 url: `${container}/${blob.name}`,
                                 isDirectory: false,
                                 properties: {
@@ -58,4 +58,39 @@ export class BlobStorageClientProxy {
             });
         });
     }
+
+    public getBlobProperties(container: string, blobname: string, options?: StorageRequestOptions) {
+        return new Promise((resolve, reject) => {
+            this._blobService.getBlobProperties(container, blobname, options, (error, result, response) => {
+                console.log("### :: error :: ", error);
+                console.log("### :: result :: ", result);
+                console.log("### :: response :: ", response);
+
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve({
+                        data: {
+                            name: blobname,
+                            url: `${container}/${blobname}`,
+                            isDirectory: false,
+                            properties: {
+                                contentLength: result.contentLength,
+                                contentType: result.contentSettings.contentType,
+                                creationTime: null,
+                                lastModified: result.lastModified,
+                            },
+                        },
+                    });
+                }
+            });
+        });
+    }
 }
+
+                    // properties: {
+                    //     contentLength: parseInt(headers["content-length"], 10),
+                    //     contentType: headers["content-type"],
+                    //     creationTime: headers["ocp-creation-time"],
+                    //     lastModified: headers["lastModified"],
+                    // },

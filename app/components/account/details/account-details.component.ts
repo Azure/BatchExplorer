@@ -1,7 +1,6 @@
 import { Component, NgZone, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "core-decorators";
-import { Observable, Subscription } from "rxjs";
+import { Subscription } from "rxjs/Subscription";
 
 import { AccountResource } from "app/models";
 import { AccountService } from "app/services";
@@ -55,12 +54,6 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._paramsSubscriber.unsubscribe();
-    }
-
-    @autobind()
-    public refresh() {
-        // TODO: this.accountService.refresh(accountId)
-        return Observable.of({});
     }
 
     public selectAccount(accountId: string): void {
