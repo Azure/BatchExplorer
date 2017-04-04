@@ -1,7 +1,7 @@
 import { Component, NgZone, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
-import { Observable, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 
 import { AccountResource } from "app/models";
 import { AccountService } from "app/services";
