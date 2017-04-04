@@ -46,9 +46,7 @@ export class TagsComponent implements OnChanges {
     public edit() {
         this._resetTagEditStr();
         this.isEditing = true;
-        setTimeout(() => {
-            this._editInput.nativeElement.focus();
-        });
+        this._editInput.nativeElement.focus();
     }
 
     public triggerSave() {
