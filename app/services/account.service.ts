@@ -112,23 +112,34 @@ export class AccountService {
             return;
         }
         this._currentAccountId.next(accountId);
+        this.refresh();
+    }
+
+    /**
+     * Refresh the current account
+     */
+    public refresh(): Observable<any> {
+        const accountId = this._currentAccountId.value;
         this._currentAccountValid.next(AccountStatus.Loading);
+
         const accountObs = this.getAccount(accountId);
         const keyObs = this.getAccountKeys(accountId);
         DataCacheTracker.clearAllCaches(this._accountCache);
-        Observable.forkJoin(accountObs, keyObs).subscribe({
+        const obs = Observable.forkJoin(accountObs, keyObs);
+        obs.subscribe({
             next: ([account, keys]) => {
                 this._currentAccount.next({ account, keys });
-                if (!this._accountLoaded.getValue()) {
+                if (!this._accountLoaded.value) {
                     this._accountLoaded.next(true);
                 }
                 this._currentAccountValid.next(AccountStatus.Valid);
             },
             error: (error) => {
-                log.error(`Error loading account ${accountId}`, error);
+                log.error(`Error Loading account ${accountId}`, error);
                 this._currentAccountValid.next(AccountStatus.Invalid);
             },
         });
+        return obs;
     }
 
     public load() {
