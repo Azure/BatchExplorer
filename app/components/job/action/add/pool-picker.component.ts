@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
-import { ControlValueAccessor, NG_VALIDATORS, NG_VALUE_ACCESSOR, FormControl } from "@angular/forms";
+import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
@@ -40,10 +40,6 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
 
         this._subs.push(Observable.combineLatest(this.poolsData.items, this.vmSizeService.sizes)
             .subscribe(([pools, sizes]) => {
-                // for (let i = 0; i < 2; i++) {
-                //     pools = List<Pool>(pools.concat(pools));
-                // }
-                console.log("# of pools", pools.size);
                 this.pools = pools;
                 const poolCores = {};
 

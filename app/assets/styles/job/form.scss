@@ -16,10 +16,12 @@ bl-pool-picker {
     }
 
     .pool, .auto-pool {
-        display: inline-block;
+        display: inline-flex;
+        flex-direction: column;
+        justify-content: center;
         position: relative;
         width: 150px;
-        height: 50px;
+        height: 70px;
         padding: 0;
         margin: 5px;
         vertical-align: top;
@@ -48,11 +50,15 @@ bl-pool-picker {
                     color: map-get($md-prussian-blue, 50);
                 }
             }
+
+            > .pool-tags .tag {
+                color: map-get($md-prussian-blue, 700);
+                background-color: map-get($md-prussian-blue, 50);
+            }
         }
 
         > .pool-wrapper {
             display: flex;
-            height: 100%;
             width: 100%;
 
             > .icon {
@@ -77,7 +83,16 @@ bl-pool-picker {
                     color: $dusty-grey;
                 }
             }
+        }
 
+        > .pool-tags {
+            margin: 0 5px;
+            overflow: hidden;
+
+            .tag {
+                line-height: 11px;
+                margin-right: 3px;
+            }
         }
     }
 
