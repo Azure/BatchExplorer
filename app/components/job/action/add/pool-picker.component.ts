@@ -63,6 +63,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
     }
 
     public writeValue(poolInfo: any) {
+        console.log("Write value pool", poolInfo);
         this.pickedPool = poolInfo && poolInfo.poolId;
     }
 

@@ -89,7 +89,6 @@ describe("JobCreateBasicDialogComponent ", () => {
 
         baseForm = component.form;
         constraintsForm = component.constraintsGroup;
-        poolForm = component.poolInfoGroup;
     });
 
     it("Should show title and description", () => {
