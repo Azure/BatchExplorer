@@ -100,7 +100,7 @@ export class StorageService {
         });
     }
 
-    public get hasAutoStorage(): boolean {
+    public get hasAutoStorage(): Observable<boolean> {
         return this.storageClient.hasAutoStorage;
     }
 }

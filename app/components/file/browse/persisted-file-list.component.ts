@@ -45,7 +45,13 @@ export class PersistedFileListComponent implements OnInit, OnChanges {
         });
 
         this.data.status.subscribe((status) => {
-            this.status.next(this.hasAutoStorage ? status : LoadingStatus.Ready);
+            this.status.next(status);
+        });
+
+        storageService.hasAutoStorage.subscribe((hasAutoStorage) => {
+            if (!hasAutoStorage) {
+                this.status.next(LoadingStatus.Ready);
+            }
         });
     }
 
@@ -85,7 +91,7 @@ export class PersistedFileListComponent implements OnInit, OnChanges {
         return "Filter by blob name (case sensitive)";
     }
 
-    public get hasAutoStorage(): boolean {
+    public get hasAutoStorage(): Observable<boolean> {
         return this.storageService.hasAutoStorage;
     }
 
