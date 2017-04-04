@@ -39,37 +39,4 @@ export class NodeAgentSkuMap {
         });
         this.offers = ObjectUtils.values(offers);
     }
-
-    // public getPublisher(publisher: string) {
-    //     return this._map[publisher];
-    // }
-
-    // public offer(publisher: string, offer: string) {
-    //     const data = this._map[publisher];
-    //     return data && data[offer];
-    // }
-
-    // public getSku(publisher: string, offer: string, sku: string) {
-    //     const data = this.getOffer(publisher, offer);
-    //     return data && data[sku];
-    // }
-
-    // public getPublishers() {
-    //     return Object.keys(this._map);
-    // }
-
-    // public getOffers(publisher: string) {
-    //     const data = this.getPublisher(publisher);
-    //     return data ? Object.keys(data) : [];
-    // }
-
-    // public getSkus(publisher: string, offer: string) {
-    //     const data = this.getOffer(publisher, offer);
-    //     return data ? Object.keys(data) : [];
-    // }
-
-    // public getNodeAgentId(publisher: string, offer: string, sku: string) {
-    //     const data = this.getSku(publisher, offer, sku);
-    //     return data ? data.nodeAgentId : "";
-    // }
 }

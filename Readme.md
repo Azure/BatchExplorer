@@ -102,4 +102,4 @@ npm run dev-electron
 ## License
 
 Batch labs is licensed under MIT [See license](LICENSE)
-Some icons are under CC [See license](app/assets/images/icons/LICENSE)
+Some icons are under Creative Commons Attribution-ShareAlike 3.0 Unported [See license](app/assets/images/logos/LICENSE)
