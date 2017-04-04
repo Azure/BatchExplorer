@@ -62,8 +62,8 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
         this._subs.forEach(x => x.unsubscribe());
     }
 
-    public writeValue(value: any) {
-        this.pickedPool = value;
+    public writeValue(poolInfo: any) {
+        this.pickedPool = poolInfo && poolInfo.poolId;
     }
 
     public validate() {
@@ -81,7 +81,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
     public pickPool(pool: Pool) {
         this.pickedPool = pool.id;
         if (this._propagateChange) {
-            this._propagateChange(pool.id);
+            this._propagateChange({ poolId: pool.id });
         }
     }
 

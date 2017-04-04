@@ -4,7 +4,7 @@
 </div>
 <bl-loading [status]="poolsData.status | async">
     <div class="pool-list">
-        <div tabindex="0" class="pool" *ngFor="let pool of pools, trackBy: pool?.id" (click)="pickPool(pool)" [class.active]="pool.id === pickedPool">
+        <button class="pool" *ngFor="let pool of pools, trackBy: pool?.id" (click)="pickPool(pool)" [class.active]="pool.id === pickedPool">
             <div class="pool-wrapper">
                 <div class="icon">
                     <i class="fa fa-{{iconForPool(pool)}}"></i>
@@ -28,16 +28,16 @@
             <div class="pool-tags">
                 <bl-tags [tags]="pool.tags" [maxTags]="3"></bl-tags>
             </div>
-        </div>
+        </button>
         <div *ngIf="pools.size > 0 && (poolsData.hasMore | async)" class="has-more">
             There is more pools available for selection, use the search above.
         </div>
         <!--TODO uncomment and wire to auto pool when supporting
-        <div tabindex="0" class="auto-pool">
+        <button class="auto-pool">
             <div class="pool-wrapper">
                 <div class="icon"><i class="fa fa-plus"></i></div>
                 <div class="info">Auto pool</div>
             </div>
-        </div tabindex="0">-->
+        </button>-->
     </div>
 </bl-loading>

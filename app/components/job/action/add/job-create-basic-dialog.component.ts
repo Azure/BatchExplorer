@@ -19,7 +19,6 @@ import { Constants } from "app/utils";
 })
 export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto> {
     public constraintsGroup: FormGroup;
-    public poolInfoGroup: FormGroup;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -37,10 +36,6 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
             ],
         });
 
-        this.poolInfoGroup = this.formBuilder.group({
-            poolId: ["", Validators.required],
-        });
-
         this.form = this.formBuilder.group({
             id: ["", [
                 Validators.required,
@@ -53,7 +48,7 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
                 new RangeValidatorDirective(validation.range.priority.min, validation.range.priority.max).validator,
             ],
             constraints: this.constraintsGroup,
-            poolInfo: this.poolInfoGroup,
+            poolInfo: [{}, Validators.required],
         });
     }
 
