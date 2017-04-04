@@ -155,10 +155,10 @@ describe("JobCreateBasicDialogComponent ", () => {
     });
 
     it("Pool has required validation only", () => {
-        baseForm.patchValue({ pool: { poolId: "my-pool" } });
+        baseForm.patchValue({ poolInfo: { poolId: "my-pool" } });
         expect(baseForm.hasError(validators.required, ["poolInfo"])).toBe(false);
 
-        baseForm.patchValue({ pool: null });
+        baseForm.patchValue({ poolInfo: null });
         expect(baseForm.hasError(validators.required, ["poolInfo"])).toBe(true);
     });
 
