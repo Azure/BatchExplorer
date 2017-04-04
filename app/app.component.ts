@@ -9,6 +9,7 @@ import {
     SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
 } from "app/services";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
+import { DomSanitizer } from "@angular/platform-browser";
 
 const adalConfig = {
     tenant: "common",
@@ -33,6 +34,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     constructor(
         private location: Location,
         mdIconRegistry: MdIconRegistry,
+        sanitizer: DomSanitizer,
         private sidebarManager: SidebarManager,
         private settingsService: SettingsService,
         private commandService: CommandService,
@@ -62,7 +64,7 @@ export class AppComponent implements AfterViewInit, OnInit {
             this._preloadData();
         });
 
-        registerIcons(mdIconRegistry);
+        registerIcons(mdIconRegistry, sanitizer);
     }
 
     public ngAfterViewInit() {

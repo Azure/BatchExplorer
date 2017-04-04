@@ -4,8 +4,9 @@
         <div class="offer" *ngFor="let offer of vmOffers" [class.active]="offer.name === selectedOffer">
             <div class="main" (click)="pickOffer(offer)">
                 <div class="icon" *ngIf="iconNameFor(offer).src === 'svg'">
-                    <img src="./assets/images/logos/{{iconNameFor(offer).name}}.svg"></div>
-                    <md-icon svgIcon="iconNameFor(offer).name"></md-icon>
+                    <!--<img src="./assets/images/logos/{{iconNameFor(offer).name}}.svg"></div>-->
+                    <md-icon [svgIcon]="iconNameFor(offer).name"></md-icon>
+                </div>
                 <div class="icon" *ngIf="iconNameFor(offer).src === 'fa'">
                     <!--<i class="{{iconNameFor(offer).name}}"></i>-->
                     <md-icon [fontIcon]="iconNameFor(offer).name"></md-icon>
