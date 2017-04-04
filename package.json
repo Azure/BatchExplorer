@@ -105,7 +105,7 @@
     "@angular/platform-browser": "~2.4.4",
     "@angular/platform-browser-dynamic": "~2.4.4",
     "@angular/router": "~3.4.4",
-    "azure-batch": "~0.6.0",
+    "azure-batch": "1.0.0-preview",
     "brace": "^0.10.0",
     "bunyan": "^1.8.4",
     "chart.js": "^2.5.0",
