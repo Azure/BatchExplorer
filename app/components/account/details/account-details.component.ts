@@ -1,6 +1,7 @@
 import { Component, NgZone, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Subscription } from "rxjs/Subscription";
+import { autobind } from "core-decorators";
+import { Observable, Subscription } from "rxjs";
 
 import { AccountResource } from "app/models";
 import { AccountService } from "app/services";
@@ -16,10 +17,11 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
             const split = id.split("/");
             name = split[split.length - 1];
         }
+
         return { name: name, label: "Account" };
     }
-    public account: AccountResource;
 
+    public account: AccountResource;
     public accountId: string;
     public loading: boolean = true;
     public loadingError: any;
@@ -32,7 +34,6 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         private accountService: AccountService,
         private zone: NgZone,
         private viewContainerRef: ViewContainerRef) {
-
     }
 
     public ngOnInit() {
@@ -54,6 +55,12 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._paramsSubscriber.unsubscribe();
+    }
+
+    @autobind()
+    public refresh() {
+        // TODO: this.accountService.refresh(accountId)
+        return Observable.of({});
     }
 
     public selectAccount(accountId: string): void {

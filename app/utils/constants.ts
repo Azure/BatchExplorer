@@ -100,7 +100,8 @@ export const sessionStorageKey = {
 
 export const ApiVersion = {
     arm: "2016-09-01",
-    armClassicStorage: "2015-06-01",
+    armClassicStorage: "2016-11-01",
+    armStorage: "2016-12-01",
     armBatch: "2015-12-01",
 };
 
