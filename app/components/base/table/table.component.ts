@@ -1,6 +1,7 @@
 import { AfterViewInit, Component, ContentChild, ContentChildren, Input, QueryList } from "@angular/core";
 import { Router } from "@angular/router";
 
+import { FocusSectionComponent } from "app/components/base/focus-section";
 import { log } from "app/utils";
 import { AbstractListBase } from "../abstract-list";
 import { TableColumnComponent } from "./table-column.component";
@@ -44,40 +45,29 @@ export class TableHeadComponent implements AfterViewInit {
     selector: "bl-table",
     templateUrl: "table.html",
 })
-export class TableComponent extends AbstractListBase implements AfterViewInit {
+export class TableComponent extends AbstractListBase {
     @ContentChild(TableHeadComponent)
     public head: TableHeadComponent;
 
     @ContentChildren(TableRowComponent)
     public items: QueryList<TableRowComponent>;
-    public displayRows: TableRowComponent[] = [];
 
     private _sortingColumn: TableColumnComponent;
 
-    constructor(router: Router) {
-        super(router, null);
-    }
-
-    public ngAfterViewInit() {
-        super.ngAfterViewInit();
-        this.items.changes.subscribe(() => {
-            this._updateDisplayRows();
-        });
-        setTimeout(() => {
-            this._updateDisplayRows();
-        });
+    constructor(router: Router, focusSection: FocusSectionComponent) {
+        super(router, focusSection);
     }
 
     public sort(column: TableColumnComponent) {
         this._sortingColumn = column;
-        this._updateDisplayRows();
+        this.displayItems = this.updateDisplayedItems();
     }
 
-    private _updateDisplayRows() {
+    protected updateDisplayedItems() {
         const column = this._sortingColumn;
         const rows = this.items.toArray();
         if (!column) {
-            this.displayRows = rows;
+            this.displayItems = rows;
             return;
         }
         const index = this.head.getColumnIndex(column);
@@ -95,6 +85,6 @@ export class TableComponent extends AbstractListBase implements AfterViewInit {
             }
             return 0;
         });
-        this.displayRows = sortedRows;
+        return sortedRows;
     }
 }
