@@ -2,7 +2,7 @@
 <md-tab-group class="form-tabs">
     <md-tab *ngFor="let category of categoryNames" [label]="categoryLabelName(category)">
         <bl-focus-section>
-            <bl-table *ngIf="!quickList">
+            <bl-table *ngIf="!quickList" [activeItem]="pickedSize" (activeItemChange)="pickSize($event)">
                 <bl-thead>
                     <bl-column [sortable]="true">Name</bl-column>
                     <bl-column [sortable]="true">Cores</bl-column>

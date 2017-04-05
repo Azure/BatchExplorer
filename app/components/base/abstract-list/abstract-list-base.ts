@@ -1,5 +1,5 @@
 import {
-    AfterViewInit, ContentChildren, EventEmitter, OnDestroy, Output, QueryList,
+    AfterViewInit, ContentChildren, EventEmitter, Input, OnDestroy, Output, QueryList,
 } from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
 import { autobind } from "core-decorators";
@@ -29,6 +29,11 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      */
     public displayItems: AbstractListItemBase[] = [];
 
+    @Input()
+    public set activeItem(key) {
+        console.log("Set activated item", key);
+        this.setActiveItem(key);
+    }
     /**
      * When the list of selected item change.
      */
@@ -40,6 +45,9 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      */
     @Output()
     public activatedItemChange = new EventEmitter<ActivatedItemChangeEvent>();
+
+    @Output()
+    public activeItemChange = new EventEmitter<string>();
 
     public set selectedItems(items: string[]) {
         let map = {};
@@ -67,6 +75,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         this._subs.push(this._activeItemKey.subscribe(x => {
             this.selectedItems = x ? [x.key] : [];
             this.activatedItemChange.emit(x);
+            this.activeItemChange.emit(x && x.key);
             if (this.listFocused) {
                 this.focusedItem = x.key;
             }
