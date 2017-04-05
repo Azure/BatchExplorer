@@ -3,13 +3,13 @@ import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { MdIconRegistry, MdSidenav } from "@angular/material";
 import { Observable } from "rxjs";
 
+import { DomSanitizer } from "@angular/platform-browser";
 import { registerIcons } from "app/config";
 import {
     AccountService, AdalService, CommandService, NodeService,
     SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
 } from "app/services";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
-import { DomSanitizer } from "@angular/platform-browser";
 
 const adalConfig = {
     tenant: "common",

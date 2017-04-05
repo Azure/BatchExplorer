@@ -1,9 +1,6 @@
 <div class="main" (click)="onClickTile()">
-    <div class="icon" *ngIf="icon.src === 'svg'">
-        <md-icon [svgIcon]="icon.name"></md-icon>
-    </div>
-    <div class="icon" *ngIf="icon.src === 'fa'">
-        <md-icon [fontIcon]="icon.name"></md-icon>
+    <div class="icon">
+        <bl-icon [icon]="icon"></bl-icon>
     </div>
     <div class="title">
         <ng-content></ng-content>

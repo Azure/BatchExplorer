@@ -95,7 +95,6 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
     }
 
     public pickSku(offer: Offer, sku: Sku) {
-        console.log("SKLU", sku);
         this.value = {
             source: PoolOsSources.IaaS,
             virtualMachineConfiguration: {

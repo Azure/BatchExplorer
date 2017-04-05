@@ -1,26 +1,12 @@
-import { Component, EventEmitter, HostBinding, Input, Output } from "@angular/core";
+import { Component, EventEmitter, HostBinding, Input, OnChanges, Output } from "@angular/core";
 import { Sku } from "app/models";
-
-const iconMapping = {
-    "UbuntuServer": { src: "svg", name: "ubuntu" },
-    "CentOS": { src: "svg", name: "centos" },
-    "CentOS-HPC": { src: "svg", name: "centos" },
-    "WindowsServer": { src: "fa", name: "fa-windows" },
-    "Debian": { src: "svg", name: "debian" },
-    "Oracle-Linux": { src: "svg", name: "oracle" },
-    "linux-data-science-vm": { src: "fa", name: "fa-linux" },
-    "openSUSE-Leap": { src: "svg", name: "suse" },
-    "SLES": { src: "svg", name: "suse" },
-    "SLES-HPC": { src: "svg", name: "suse" },
-    "standard-data-science-vm": { src: "fa", name: "fa-windows" },
-};
-
+import { PoolUtils } from "app/utils";
 
 @Component({
     selector: "bl-os-offer-tile",
     templateUrl: "os-offer-tile.html",
 })
-export class OsOfferTileComponent {
+export class OsOfferTileComponent implements OnChanges {
     @HostBinding("class.active")
     @Input()
     public active: boolean;
@@ -40,20 +26,19 @@ export class OsOfferTileComponent {
     @Output()
     public pickSku = new EventEmitter();
 
+    public icon: any;
+
+    public ngOnChanges(inputs) {
+        if (inputs.name) {
+            this.icon = PoolUtils.iconForOffer(this.name);
+        }
+    }
+
     public onClickTile() {
         this.pickOffer.emit();
     }
 
     public onClickSku(sku) {
         this.pickSku.emit(sku);
-    }
-
-    public get icon() {
-        const icon = iconMapping[this.name];
-        if (icon) {
-            return icon;
-        } else {
-            return { src: "fa", name: "" }; // TODO find unknown icon
-        }
     }
 }
