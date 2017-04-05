@@ -13,6 +13,9 @@ export * from "./pool-utils";
 export * from "./secure";
 export * from "./string-utils";
 
+import * as icons from "./icons";
+export const Icons = icons;
+
 import * as constants from "./constants";
 export const Constants = constants;
 

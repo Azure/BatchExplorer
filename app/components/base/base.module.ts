@@ -5,6 +5,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 
 // components
+import { IconComponent } from "app/components/base/icon";
 import { AdvancedFilterModule } from "./advanced-filter";
 import { BackgroundTaskModule } from "./background-task";
 import { BannerComponent, BannerOtherFixDirective } from "./banner";
@@ -61,6 +62,7 @@ const components = [
     BannerOtherFixDirective,
     ElapsedTimeComponent,
     EntityDetailsListComponent,
+    IconComponent,
     ListAndShowLayoutComponent,
     SimpleLoadingComponent,
     LoadingComponent,
