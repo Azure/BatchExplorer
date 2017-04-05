@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges, OnInit } from "@angular/core";
+import { Component, Input, OnChanges, OnDestroy, OnInit } from "@angular/core";
 import { autobind } from "core-decorators";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { File, ServerError } from "app/models";
@@ -12,9 +12,8 @@ import { Property } from "app/utils/filter-builder";
 @Component({
     selector: "bl-persisted-file-list",
     templateUrl: "persisted-file-list.html",
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PersistedFileListComponent implements OnInit, OnChanges {
+export class PersistedFileListComponent implements OnInit, OnChanges, OnDestroy {
     @Input()
     public quickList: boolean;
 
@@ -34,8 +33,12 @@ export class PersistedFileListComponent implements OnInit, OnChanges {
     public status = new BehaviorSubject(LoadingStatus.Loading);
     public LoadingStatus = LoadingStatus;
     public containerNotFound: boolean;
+    public hasAuto: boolean = false;
+
+    private _subscriber: Subscription;
 
     constructor(private storageService: StorageService) {
+        console.log("constructor");
         this.data = this.storageService.listBlobsForTask(null, null, null, (error: ServerError) => {
             if (error && error.body.code === Constants.APIErrorCodes.containerNotFound) {
                 this.containerNotFound = true;
@@ -48,7 +51,9 @@ export class PersistedFileListComponent implements OnInit, OnChanges {
             this.status.next(status);
         });
 
-        storageService.hasAutoStorage.subscribe((hasAutoStorage) => {
+        this._subscriber = storageService.hasAutoStorage.subscribe((hasAutoStorage) => {
+            console.log("hasAutoStorage.subscribe :: ", hasAutoStorage);
+            this.hasAuto = hasAutoStorage;
             if (!hasAutoStorage) {
                 this.status.next(LoadingStatus.Ready);
             }
@@ -56,18 +61,26 @@ export class PersistedFileListComponent implements OnInit, OnChanges {
     }
 
     public ngOnInit() {
+        console.log("ngOnInit");
         return;
     }
 
     public ngOnChanges(inputs) {
+        console.log("ngOnChanges, ", inputs);
         if (inputs.jobId || inputs.taskId || inputs.filter) {
             this.refresh();
         }
     }
 
+    public ngOnDestroy() {
+        console.log("ngOnDestroy: ", this.outputKind);
+        this._subscriber.unsubscribe();
+    }
+
     @autobind()
     public refresh(): Observable<any> {
-        if (this.jobId && this.taskId) {
+        console.log("refresh");
+        if (this.jobId && this.taskId && this.outputKind) {
             this._loadFiles();
         }
 
@@ -76,7 +89,8 @@ export class PersistedFileListComponent implements OnInit, OnChanges {
 
     @autobind()
     public loadMore(): Observable<any> {
-        if (this.data && this.hasAutoStorage) {
+        if (this.data && this.hasAuto) {
+            console.log("loadMore");
             return this.data.fetchNext();
         }
 
@@ -91,13 +105,15 @@ export class PersistedFileListComponent implements OnInit, OnChanges {
         return "Filter by blob name (case sensitive)";
     }
 
-    public get hasAutoStorage(): Observable<boolean> {
-        return this.storageService.hasAutoStorage;
-    }
+    // public get hasAutoStorage(): Observable<boolean> {
+    //     return this.storageService.hasAutoStorage;
+    // }
 
     private _loadFiles() {
         this.containerNotFound = false;
-        if (this.hasAutoStorage) {
+        console.log("_loadFiles(): before bool check: ", this.hasAuto);
+
+        if (this.hasAuto) {
             this.data.updateParams({ jobId: this.jobId, taskId: this.taskId, outputKind: this.outputKind });
             this.data.setOptions(this._buildOptions());
             this.data.fetchNext(true);

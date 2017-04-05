@@ -85,9 +85,9 @@ export class StorageService {
         return new RxStorageEntityProxy<BlobFileParams, File>(File, this.storageClient, {
             cache: (params) => this.getBlobFileCache(params),
             getFn: (client, params) => {
-                const blobName = `${params.taskId}/${params.outputKind}/${params.filename}`;
+                const blobPrefix = `${params.taskId}/${params.outputKind}/`;
                 return StorageUtils.getSafeContainerName(params.jobId).then((safeContainerName) => {
-                    return client.getBlobProperties(safeContainerName, blobName, initialOptions);
+                    return client.getBlobProperties(safeContainerName, params.filename, blobPrefix, initialOptions);
                 });
             },
             initialParams: {

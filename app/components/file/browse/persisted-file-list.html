@@ -1,4 +1,4 @@
-<div *ngIf="!containerNotFound && hasAutoStorage | async">
+<div *ngIf="!containerNotFound && hasAuto">
     <bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
     <bl-file-list-display [files]="data.items | async" [status]="status | async" [quickList]="quickList" [baseUrl]="baseUrl" [isBlob]="true"
         [filter]="filter"></bl-file-list-display>
@@ -10,7 +10,7 @@
     No storage container was found for this job.
 </div>
 
-<div *ngIf="!hasAutoStorage | async" class="notfound-message top-margin">
+<div *ngIf="!hasAuto" class="notfound-message top-margin">
     No linked storage account configured for this Batch account.
 </div>
 

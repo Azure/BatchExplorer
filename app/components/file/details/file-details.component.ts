@@ -53,6 +53,7 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
             this.nodeId = params["nodeId"];
             this.outputKind = params["outputKind"];
             this.filename = params["filename"];
+            console.log("loading for: ", this.filename);
             this._loadFileProperties();
         }));
     }

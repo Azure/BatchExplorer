@@ -28,7 +28,6 @@ export class StorageClientService {
     private _storageClientFactory: StorageClientProxyFactory;
     private _storageKeyMap: StringMap<StorageKeyCachedItem> = {};
 
-
     constructor(
         private accountService: AccountService,
         private arm: ArmHttpService,
@@ -36,12 +35,11 @@ export class StorageClientService {
 
         this._storageClientFactory = remote.getStorageClientFactory();
 
-
-        // TODO: this might need some tweaking, though it works currently
         this.accountService.currentAccountId.subscribe(x => this._currentAccountId = x);
         this.hasAutoStorage = this.accountService.currentAccount.map((account) => {
             return Boolean(account.properties && account.properties.autoStorage);
-        });
+        }).share();
+
         this.accountService.currentAccount.subscribe((account) => {
             this._checkAndSetCachedItem(account.properties && account.properties.autoStorage);
         });
@@ -52,6 +50,7 @@ export class StorageClientService {
             throw "No account currently selected ...";
         }
 
+        console.log("IN GET");
         return this.accountService.currentAccount.first().flatMap((account) => {
             const settings = account.properties && account.properties.autoStorage;
             const cachedItem = this._getCachedItem(settings.storageAccountId);

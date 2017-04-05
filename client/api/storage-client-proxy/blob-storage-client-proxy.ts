@@ -66,23 +66,26 @@ export class BlobStorageClientProxy {
      * http://azure.github.io/azure-storage-node/BlobService.html#getBlobProperties__anchor
      *
      * @param {string} container - Name of the storage container
-     * @param {string} blobname - Full path to blob from the container root: "1001/$TaskOutput|myblob.txt"
+     * @param {string} blobName - Name of the blob file: "myblob.txt"
+     * @param {string} blobPrefix - Optional prefix to the blob from the container root: "1001/$TaskOutput/"
      * @param {string} options - Optional request options
      */
     public getBlobProperties(
         container: string,
-        blobname: string,
+        blobName: string,
+        blobPrefix: string = "",
         options?: StorageRequestOptions): Promise<BlobStorageResult> {
 
+        const blobPath = blobPrefix + blobName;
         return new Promise((resolve, reject) => {
-            this._blobService.getBlobProperties(container, blobname, options, (error, result, response) => {
+            this._blobService.getBlobProperties(container, blobPath, options, (error, result, response) => {
                 if (error) {
                     reject(error);
                 } else {
                     resolve({
                         data: {
-                            name: blobname,
-                            url: `${container}/${blobname}`,
+                            name: blobName,
+                            url: `${container}/${blobName}`,
                             isDirectory: false,
                             properties: {
                                 contentLength: parseInt(result.contentLength, 10),
