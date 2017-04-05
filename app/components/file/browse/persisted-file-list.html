@@ -1,4 +1,4 @@
-<div *ngIf="!containerNotFound && hasAuto">
+<div *ngIf="!containerNotFound && hasAutoStorage | async">
     <bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
     <bl-file-list-display [files]="data.items | async" [status]="status | async" [quickList]="quickList" [baseUrl]="baseUrl" [isBlob]="true"
         [filter]="filter"></bl-file-list-display>
@@ -10,13 +10,14 @@
     No storage container was found for this job.
 </div>
 
-<div *ngIf="!hasAuto" class="notfound-message top-margin">
+<div *ngIf="!hasAutoStorage | async" class="notfound-message top-margin">
     No linked storage account configured for this Batch account.
 </div>
 
 <!-- FileDetailsComponent & FileContentComponent needs to handle files from storage -->
 <!-- ResourceTypes tests -->
 <!-- click on disabled download button still tries to download -->
+<!-- check that refreshing account keys calls off to get new keys -->
 <!-- feature/application-refresh branch for tim off master -->
 <!-- tim to check out quicklist highlighting -->
-<!-- why when the app refreshes does the quicklist not wait until the account has loaded -->
+

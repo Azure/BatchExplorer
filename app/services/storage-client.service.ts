@@ -50,7 +50,6 @@ export class StorageClientService {
             throw "No account currently selected ...";
         }
 
-        console.log("IN GET");
         return this.accountService.currentAccount.first().flatMap((account) => {
             const settings = account.properties && account.properties.autoStorage;
             const cachedItem = this._getCachedItem(settings.storageAccountId);
