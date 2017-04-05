@@ -1,51 +1,100 @@
-import { Component, ContentChildren, Input, QueryList } from "@angular/core";
+import { AfterViewInit, Component, ContentChild, ContentChildren, Input, QueryList } from "@angular/core";
 import { Router } from "@angular/router";
 
+import { log } from "app/utils";
 import { AbstractListBase } from "../abstract-list";
+import { TableColumnComponent } from "./table-column.component";
 import { TableRowComponent } from "./table-row.component";
-
-@Component({
-    selector: "bl-table",
-    templateUrl: "table.html",
-})
-export class TableComponent extends AbstractListBase {
-    @ContentChildren(TableRowComponent)
-    public items: QueryList<TableRowComponent>;
-
-    constructor(router: Router) {
-        super(router, null);
-    }
-}
 
 @Component({
     selector: "bl-thead",
     template: `<tr><ng-content></ng-content></tr>`,
 })
-export class TableHeadComponent {
+export class TableHeadComponent implements AfterViewInit {
+    @ContentChildren(TableColumnComponent)
+    public items: QueryList<TableColumnComponent>;
+
+    private _columnIndexMap: StringMap<number>;
+
+    public ngAfterViewInit() {
+        this.items.changes.subscribe(() => {
+            this._updateColumnIndexMap();
+        });
+        this._updateColumnIndexMap();
+    }
+
+    public getColumnIndex(column: TableColumnComponent) {
+        if (!(column.id in this._columnIndexMap)) {
+            return -1;
+        }
+        return this._columnIndexMap[column.id];
+    }
+
+    private _updateColumnIndexMap() {
+        const map = {};
+        this.items.forEach((column, index) => {
+            map[column.id] = index;
+        });
+        console.log("Update index map", map);
+        this._columnIndexMap = map;
+    }
 }
 
 @Component({
-    selector: "bl-column",
-    template: `<ng-content></ng-content>`,
+    selector: "bl-table",
+    templateUrl: "table.html",
 })
-export class TableColumnComponent {
-}
+export class TableComponent extends AbstractListBase implements AfterViewInit {
+    @ContentChild(TableHeadComponent)
+    public head: TableHeadComponent;
 
-@Component({
-    selector: "bl-cell",
-    template: `
-        <div *ngIf="value" class="cell-value" title="{{value}}">{{value}}</div>
-        <ng-content *ngIf="!value"></ng-content>
-    `,
-})
-export class TableCellComponent {
-    @Input()
-    public set value(value: string) {
-        this._value = value;
-    }
-    public get value() {
-        return this._value;
+    @ContentChildren(TableRowComponent)
+    public items: QueryList<TableRowComponent>;
+    public displayRows: TableRowComponent[] = [];
+
+    private _sortingColumn: TableColumnComponent;
+
+    constructor(router: Router) {
+        super(router, null);
     }
 
-    private _value: string;
+    public ngAfterViewInit() {
+        super.ngAfterViewInit();
+        this.items.changes.subscribe(() => {
+            this._updateDisplayRows();
+        });
+        setTimeout(() => {
+            this._updateDisplayRows();
+        });
+    }
+
+    public sort(column: TableColumnComponent) {
+        this._sortingColumn = column;
+        this._updateDisplayRows();
+    }
+
+    private _updateDisplayRows() {
+        const column = this._sortingColumn;
+        const rows = this.items.toArray();
+        if (!column) {
+            this.displayRows = rows;
+            return;
+        }
+        const index = this.head.getColumnIndex(column);
+        if (index === -1) {
+            log.error("Error column is not in the table", column);
+            return;
+        }
+        const sortedRows = rows.sort((a: TableRowComponent, b: TableRowComponent) => {
+            const aValue = a.data[index];
+            const bValue = b.data[index];
+            if (aValue < bValue) {
+                return -1;
+            } else if (aValue > bValue) {
+                return 1;
+            }
+            return 0;
+        });
+        this.displayRows = sortedRows;
+    }
 }

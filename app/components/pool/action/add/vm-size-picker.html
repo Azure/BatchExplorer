@@ -2,12 +2,8 @@
 <md-tab-group class="form-tabs">
     <md-tab *ngFor="let category of categoryNames" [label]="categoryLabelName(category)">
         <div class="vm-size-list">
-            <button *ngFor="let size of categories[category]" class="vm-size" (click)="pickSize(size)" [class.active]="size.name === pickedSize">
+            <!--<button *ngFor="let size of categories[category]" class="vm-size" (click)="pickSize(size)" [class.active]="size.name === pickedSize">
                 <div class="title" [title]="size.name">{{prettyTitle(size.name)}}</div>
-                <!--TODO link to billing data-->
-                <!--<div class="pricing">
-                    $50/mo
-                </div>-->
                 <div class="details">
                     <div>
                         <span class="value">{{size.numberOfCores}} </span>
@@ -26,7 +22,22 @@
                         <span class="label">Temp disk</span>
                     </div>
                 </div>
-            </button>
+            </button>-->
         </div>
+
+        <bl-table *ngIf="!quickList">
+            <bl-thead>
+                <bl-column [sortable]="true">Name</bl-column>
+                <bl-column [sortable]="true">Cores</bl-column>
+                <bl-column [sortable]="true">Ram</bl-column>
+                <bl-column [sortable]="true">OS Disk</bl-column>
+            </bl-thead>
+            <bl-row *ngFor="let size of categories[category]" [key]="size.name">
+                <bl-cell [value]="size.name">{{size.name}}</bl-cell>
+                <bl-cell [value]="size.numberOfCores">{{size.numberOfCores}}</bl-cell>
+                <bl-cell [value]="size.memoryInMB">{{prettyMb(size.memoryInMB)}}</bl-cell>
+                <bl-cell [value]="size.osDiskSizeInMB">{{prettyMb(size.osDiskSizeInMB)}}</bl-cell>
+            </bl-row>
+        </bl-table>
     </md-tab>
 </md-tab-group>
