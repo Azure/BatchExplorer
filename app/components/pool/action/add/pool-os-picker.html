@@ -1,6 +1,6 @@
 <h3>Select an operating system configuration</h3>
 <md-tab-group class="form-tabs">
-    <md-tab label="Virtual machine" title="selectedSource === PoolOsSources.IaaS" class="banana">
+    <md-tab label="Distributions" title="selectedSource === PoolOsSources.IaaS" class="banana">
         <bl-os-offer-tile *ngFor="let offer of vmOffers" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickOffer(offer)" (pickSku)="pickSku(offer, $event)"
             [active]="offer.name === selectedOffer" [selectedSku]="selectedSku">
             {{offer.name}}
@@ -15,6 +15,9 @@
         <p *ngIf="selectedSku">Based on your selection node agent '{{selectedNodeAgentId}}'' will be used</p>
     </md-tab>
     <md-tab label="Data science VM">
-
+        <bl-os-offer-tile *ngFor="let offer of dataScienceOffers" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickOffer(offer)" (pickSku)="pickSku(offer, $event)"
+            [active]="offer.name === selectedOffer" [selectedSku]="selectedSku">
+            {{offer.name}}
+        </bl-os-offer-tile>
     </md-tab>
 </md-tab-group>

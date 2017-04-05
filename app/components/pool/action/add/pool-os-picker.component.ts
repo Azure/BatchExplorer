@@ -130,7 +130,11 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
     }
 
     public get vmOffers() {
-        return this._nodeAgentSkuMap.offers;
+        return this._nodeAgentSkuMap.vmOffers;
+    }
+
+    public get dataScienceOffers() {
+        return this._nodeAgentSkuMap.dataScienceOffers;
     }
 
     private _updateSelection() {

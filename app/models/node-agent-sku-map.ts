@@ -3,6 +3,15 @@ import { List } from "immutable";
 import { ObjectUtils } from "app/utils";
 import { NodeAgentSku } from "./node-agent-sku";
 
+const dataScienceVms = {
+    "linux-data-science-vm": {
+        osType: "linux",
+    },
+    "standard-data-science-vm": {
+        osType: "windows",
+    },
+};
+
 export interface Sku {
     name: string;
     nodeAgentId: string;
@@ -16,7 +25,9 @@ export interface Offer {
 }
 
 export class NodeAgentSkuMap {
-    public offers: Offer[];
+    public allOffers: Offer[];
+    public vmOffers: Offer[];
+    public dataScienceOffers: Offer[];
 
     constructor(skus: List<NodeAgentSku> = List([])) {
         let offers: StringMap<Offer> = {};
@@ -37,6 +48,8 @@ export class NodeAgentSkuMap {
                 });
             }
         });
-        this.offers = ObjectUtils.values(offers);
+        this.allOffers = ObjectUtils.values(offers);
+        this.vmOffers = this.allOffers.filter(x => !(x.name in dataScienceVms));
+        this.dataScienceOffers = this.allOffers.filter(x => (x.name in dataScienceVms));
     }
 }
