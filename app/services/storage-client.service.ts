@@ -38,7 +38,7 @@ export class StorageClientService {
         this.accountService.currentAccountId.subscribe(x => this._currentAccountId = x);
         this.hasAutoStorage = this.accountService.currentAccount.map((account) => {
             return Boolean(account.properties && account.properties.autoStorage);
-        }).share();
+        });
 
         this.accountService.currentAccount.subscribe((account) => {
             this._checkAndSetCachedItem(account.properties && account.properties.autoStorage);
