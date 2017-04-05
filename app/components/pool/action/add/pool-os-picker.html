@@ -1,41 +1,20 @@
 <h3>Select an operating system configuration</h3>
 <md-tab-group class="form-tabs">
     <md-tab label="Virtual machine" title="selectedSource === PoolOsSources.IaaS" class="banana">
-        <div class="offer" *ngFor="let offer of vmOffers" [class.active]="offer.name === selectedOffer">
-            <div class="main" (click)="pickOffer(offer)">
-                <div class="icon" *ngIf="iconNameFor(offer).src === 'svg'">
-                    <!--<img src="./assets/images/logos/{{iconNameFor(offer).name}}.svg"></div>-->
-                    <md-icon [svgIcon]="iconNameFor(offer).name"></md-icon>
-                </div>
-                <div class="icon" *ngIf="iconNameFor(offer).src === 'fa'">
-                    <!--<i class="{{iconNameFor(offer).name}}"></i>-->
-                    <md-icon [fontIcon]="iconNameFor(offer).name"></md-icon>
-                </div>
-                <div class="title">{{offer.name}}</div>
-            </div>
-            <button class="select-version" [mdMenuTriggerFor]="menu">
-                <span *ngIf="offer.name !== selectedOffer">Select Version<i class="fa fa-caret-down"></i></span>
-                <span *ngIf="offer.name === selectedOffer">{{selectedSku}}</span>
-            </button>
-            <md-menu #menu="mdMenu">
-                <button md-menu-item *ngFor="let sku of offer.skus" (click)="pickSku(offer, sku)">{{sku.name}}</button>
-            </md-menu>
-        </div>
+        <bl-os-offer-tile *ngFor="let offer of vmOffers" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickOffer(offer)" (pickSku)="pickSku(offer, $event)"
+            [active]="offer.name === selectedOffer" [selectedSku]="selectedSku">
+            {{offer.name}}
+        </bl-os-offer-tile>
+
+
+        <bl-os-offer-tile name="WindowsServer" [skus]="cloudServiceOsFamilies" (pickOffer)="pickCloudService()" (pickSku)="pickCloudService($event.id)"
+            [active]="value?.source === PoolOsSources.PaaS" [selectedSku]="selectedFamilyName">
+            <div>Windows Server</div>
+            <div>(Cloud Service)</div>
+        </bl-os-offer-tile>
         <p *ngIf="selectedSku">Based on your selection node agent '{{selectedNodeAgentId}}'' will be used</p>
     </md-tab>
-    <md-tab label="Cloud Service (Windows only)">
-        <div class="offer" [class.active]="value?.source === PoolOsSources.PaaS">
-            <div class="main" (click)="pickCloudService()">
-                <div class="icon"><i class="fa fa-windows"></i></div>
-                <div class="title">Windows Server</div>
-            </div>
-            <button class="select-version" [mdMenuTriggerFor]="menu">
-                <span *ngIf="value?.source !== PoolOsSources.PaaS">Select Version<i class="fa fa-caret-down"></i></span>
-                <span *ngIf="value?.source === PoolOsSources.PaaS">{{selectedFamilyName}}</span>
-            </button>
-            <md-menu #menu="mdMenu">
-                <button md-menu-item *ngFor="let osFamily of cloudServiceOsFamilies" (click)="pickCloudService(osFamily.id)">{{osFamily.name}}</button>
-            </md-menu>
-        </div>
+    <md-tab label="Data science VM">
+
     </md-tab>
 </md-tab-group>
