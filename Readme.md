@@ -98,3 +98,8 @@ Run dev electron(To use the dev server you need to run this)
 ```
 npm run dev-electron
 ```
+
+## License
+
+Batch labs is licensed under MIT [See license](LICENSE)
+Some icons are under Creative Commons Attribution-ShareAlike 3.0 Unported [See license](app/assets/images/logos/LICENSE)

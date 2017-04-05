@@ -1,4 +1,20 @@
+import { Icon, IconSources } from "app/components/base/icon";
 import { Pool } from "app/models";
+import * as Icons from "./icons";
+
+const iconMapping = {
+    "UbuntuServer": Icons.ubuntu,
+    "CentOS": Icons.centos,
+    "CentOS-HPC": Icons.centos,
+    "WindowsServer": Icons.windows,
+    "Debian": Icons.debian,
+    "Oracle-Linux": Icons.oracle,
+    "linux-data-science-vm": Icons.linux,
+    "openSUSE-Leap": Icons.openSUSE,
+    "SLES": Icons.openSUSE,
+    "SLES-HPC": Icons.openSUSE,
+    "standard-data-science-vm": Icons.windows,
+};
 
 export class PoolUtils {
 
@@ -44,5 +60,14 @@ export class PoolUtils {
 
     public static isOfferWindows(offer: string) {
         return /^.*Windows.*$/.test(offer);
+    }
+
+    public static iconForOffer(offerName: string) {
+        const icon = iconMapping[offerName];
+        if (icon) {
+            return icon;
+        } else {
+            return new Icon(IconSources.fa, "fa-microchip");
+        }
     }
 }

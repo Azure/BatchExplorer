@@ -60,9 +60,12 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         const id = this.form.value.id;
         const data = this.getCurrentValue();
         const obs = this.poolService.add(data);
-        obs.do(() => {
-            this.poolService.onPoolAdded.next(id);
-            this.notificationService.success("Pool added!", `Pool '${id}' was created successfully!`);
+        obs.subscribe({
+            next: () => {
+                this.poolService.onPoolAdded.next(id);
+                this.notificationService.success("Pool added!", `Pool '${id}' was created successfully!`);
+            },
+            error: () => null,
         });
 
         return obs;
