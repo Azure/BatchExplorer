@@ -1,5 +1,6 @@
 import {
-    AfterViewInit, Component, ContentChildren, Inject, QueryList, TemplateRef, ViewChild, forwardRef,
+    AfterViewInit, ChangeDetectionStrategy, Component, ContentChildren, Inject,
+    QueryList, TemplateRef, ViewChild, forwardRef,
 } from "@angular/core";
 import { Router } from "@angular/router";
 
@@ -18,6 +19,7 @@ import { TableComponent } from "./table.component";
             </tr>
         </template>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableRowComponent extends AbstractListItemBase implements AfterViewInit {
     @ViewChild(TemplateRef)

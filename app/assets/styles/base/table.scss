@@ -77,8 +77,15 @@ bl-table {
                 color: #f5f5f5;
             }
 
-            &:hover > .sort-icon {
+            &:hover:not(.sorting) > .sort-icon {
                 color: $genericGray;
+            }
+        }
+
+        &.sorting {
+            color: map-get($md-prussian-blue, 500);
+            > .sort-icon {
+                color: map-get($md-prussian-blue, 500);
             }
         }
     }
@@ -94,8 +101,6 @@ bl-table {
             width: 95%;
             overflow: hidden;
             text-overflow: ellipsis;
-            position: absolute;
-            top: 11px;
         }
     }
 

@@ -1,11 +1,9 @@
-import { Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 @Component({
     selector: "bl-cell",
-    template: `
-        <div *ngIf="value" class="cell-value" title="{{value}}">{{value}}</div>
-        <ng-content *ngIf="!value"></ng-content>
-    `,
+    templateUrl: "table-cell.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableCellComponent {
     @Input()

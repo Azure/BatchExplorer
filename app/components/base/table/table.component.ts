@@ -4,7 +4,7 @@ import { Router } from "@angular/router";
 import { FocusSectionComponent } from "app/components/base/focus-section";
 import { log } from "app/utils";
 import { AbstractListBase } from "../abstract-list";
-import { TableColumnComponent } from "./table-column.component";
+import { TableColumnComponent, SortDirection } from "./table-column.component";
 import { TableRowComponent } from "./table-row.component";
 
 @Component({
@@ -59,6 +59,10 @@ export class TableComponent extends AbstractListBase {
     }
 
     public sort(column: TableColumnComponent) {
+        if (this._sortingColumn) {
+            this._sortingColumn.isSorting = false;
+        }
+        column.isSorting = true;
         this._sortingColumn = column;
         this.displayItems = this.updateDisplayedItems();
     }
@@ -85,6 +89,11 @@ export class TableComponent extends AbstractListBase {
             }
             return 0;
         });
+
+        const desc = column.sortDirection === SortDirection.Desc;
+        if (desc) {
+            return sortedRows.reverse();
+        }
         return sortedRows;
     }
 }

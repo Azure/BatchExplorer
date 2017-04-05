@@ -1,7 +1,9 @@
-import { Component, HostBinding, HostListener, Inject, Input, forwardRef } from "@angular/core";
+import {
+    ChangeDetectionStrategy, Component, HostBinding, HostListener, Inject, Input, forwardRef,
+} from "@angular/core";
 
-import { TableComponent } from "./table.component";
 import { SecureUtils } from "app/utils";
+import { TableComponent } from "./table.component";
 
 export enum SortDirection {
     Asc,
@@ -17,6 +19,8 @@ export enum SortDirection {
             <span *ngIf="sortDirection === SortDirection.Desc" class="fa fa-arrow-down"></span>
         </span>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
+
 })
 export class TableColumnComponent {
     public SortDirection = SortDirection;
@@ -42,7 +46,18 @@ export class TableColumnComponent {
         if (!this.sortable) {
             return;
         }
+
+        if (this.isSorting) {
+            this._invertOrder();
+        }
         this._table.sort(this);
     }
 
+    private _invertOrder() {
+        if (this.sortDirection) {
+            this.sortDirection = SortDirection.Asc;
+        } else {
+            this.sortDirection = SortDirection.Desc;
+        }
+    }
 }
