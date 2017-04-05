@@ -8,6 +8,13 @@ const ImageReferenceRecord = Record({
     version: null,
 });
 
+export interface ImageReferenceAttributes {
+    publisher: string;
+    offer: string;
+    sku: string;
+    version: string;
+}
+
 /**
  * Class for displaying Batch ImageReference information.
  */
@@ -16,4 +23,8 @@ export class ImageReference extends ImageReferenceRecord {
     public offer: string;
     public sku: string;
     public version: string;
+
+    constructor(data: ImageReferenceAttributes) {
+        super(data);
+    }
 }

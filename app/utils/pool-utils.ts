@@ -70,4 +70,13 @@ export class PoolUtils {
             return new Icon(IconSources.fa, "fa-microchip");
         }
     }
+
+    public static iconForPool(pool: Pool) {
+        if (pool.virtualMachineConfiguration) {
+            const ref = pool.virtualMachineConfiguration.imageReference;
+            return this.iconForOffer(ref && ref.offer);
+        } else {
+            return this.iconForOffer("WindowsServer");
+        }
+    }
 }

@@ -27,7 +27,19 @@ interface ExcludedSizes {
 
 @Injectable()
 export class VmSizeService {
+    /**
+     * All sizes
+     */
+    public sizes: Observable<List<VmSize>>;
+
+    /**
+     * Only cloud services sizes supported
+     */
     public cloudServiceSizes: Observable<List<VmSize>>;
+
+    /**
+     * Only virtual machine sizes supported
+     */
     public virtualMachineSizes: Observable<List<VmSize>>;
     public vmSizeCategories: Observable<StringMap<string[]>>;
 
@@ -39,6 +51,7 @@ export class VmSizeService {
 
     constructor(private arm: ArmHttpService, private http: Http, private accountService: AccountService) {
         const obs = Observable.combineLatest(this._sizes, this._excludedSizes);
+        this.sizes = this._sizes.asObservable();
 
         this.cloudServiceSizes = obs.map(([sizes, excluded]) => {
             if (!excluded) {
@@ -93,6 +106,11 @@ export class VmSizeService {
         });
     }
 
+    public get(vmSize: string): Observable<VmSize> {
+        return this._sizes.map(sizes => {
+            return sizes.filter(x => x.name.toLowerCase() === vmSize.toLowerCase()).first();
+        });
+    }
     /**
      * Filter the given list of vm sizes by excluding any patching the given patterns.
      * @param sizes Sizes to filter

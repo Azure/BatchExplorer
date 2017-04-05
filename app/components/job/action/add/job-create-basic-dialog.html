@@ -37,13 +37,9 @@
                 </div>
             </div>
 
-            <div formGroupName="poolInfo">
-                <div class="form-element">
-                    <md-select formControlName="poolId" placeholder="Pool">
-                        <md-option *ngFor="let pool of poolsData.items | async" [value]="pool.id">{{pool.id}}</md-option>
-                    </md-select>
-                    <bl-error controlName="poolId" code="required">You must select a pool for this job to run on</bl-error>
-                </div>
+            <div class="form-element">
+                <bl-pool-picker formControlName="poolInfo"></bl-pool-picker>
+                <bl-error controlName="poolInfo" code="required">You must select a pool for this job to run on</bl-error>
             </div>
         </form>
     </bl-create-form>

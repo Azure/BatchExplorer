@@ -6,7 +6,7 @@ import { CloudServiceConfiguration } from "./cloud-service-configuration";
 import { Metadata, MetadataAttributes } from "./metadata";
 import { ResizeError } from "./resize-error";
 import { StartTask } from "./start-task";
-import { VirtualMachineConfiguration } from "./virtual-machine-configuration";
+import { VirtualMachineConfiguration, VirtualMachineConfigurationAttributes } from "./virtual-machine-configuration";
 
 const PoolRecord = Record({
     allocationState: null,
@@ -56,7 +56,7 @@ export interface PoolAttributes {
     targetDedicated: number;
     taskSchedulingPolicy: any;
     url: string;
-    virtualMachineConfiguration: Partial<VirtualMachineConfiguration>;
+    virtualMachineConfiguration: Partial<VirtualMachineConfigurationAttributes>;
     vmSize: string;
     startTask: StartTask;
     metadata: MetadataAttributes[];
