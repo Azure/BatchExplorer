@@ -86,7 +86,7 @@ fieldset {
         width: 45px;
         height: 45px;
         padding: 10px;
-        background-color: $silverGray;
+        background-color: $silver-grey;
 
         i {
             color: map-get($md-prussian-blue, 400);
@@ -99,8 +99,15 @@ fieldset {
     }
 }
 
+.large-slideout-form {
+    width: 800px;
+}
+
 .slideout-form, .edit-form {
     width: 640px;
+}
+
+.slideout-form, .large-slideout-form, .edit-form {
 
     &.content-wrapper {
         padding: 0;
@@ -161,7 +168,6 @@ fieldset {
             }
 
             md-select {
-                height: 2em;
                 margin-top: 5px;
                 width: 40%;
             }
@@ -206,4 +212,24 @@ bl-create-form {
 .form-element md-checkbox {
     display: block;
     margin: 10px 0;
+}
+
+md-tab-group.form-tabs {
+    .mat-tab-label {
+        min-width: auto;
+        line-height: 32px;
+        height: 32px;
+    }
+}
+
+
+input.search-input {
+    flex: 1 0 auto;
+    padding: 5px;
+    color: $emperor-grey;
+    font-size: 1.1em;
+
+    background-color: $athensGrey;
+    border: none;
+    outline: none;
 }

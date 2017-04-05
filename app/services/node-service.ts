@@ -175,7 +175,7 @@ export class NodeService extends ServiceBase {
         return observable;
     }
 
-    public listNodeAgentSkus(initialOptions: any = {}): RxListProxy<{}, NodeAgentSku> {
+    public listNodeAgentSkus(initialOptions: any = {maxResults: 1000}): RxListProxy<{}, NodeAgentSku> {
         return new RxBatchListProxy<{}, NodeAgentSku>(NodeAgentSku, this.batchService, {
             cache: (params) => this._nodeAgentSkusCache,
             proxyConstructor: (client, params, options) => client.account.listNodeAgentSkus(options),

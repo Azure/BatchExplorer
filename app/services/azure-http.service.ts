@@ -27,6 +27,7 @@ const providersApiVersion = {
     "Microsoft.Batch": Constants.ApiVersion.armBatch,
     "Microsoft.ClassicStorage": Constants.ApiVersion.armClassicStorage,
     "Microsoft.Storage": Constants.ApiVersion.armStorage,
+    "Microsoft.Compute": Constants.ApiVersion.compute,
 };
 
 type SubscriptionOrTenant = Subscription | string;

@@ -1,4 +1,5 @@
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
+import { remote } from "electron";
 
 import { log } from "app/utils";
 import { AppModule } from "./app.module";
@@ -14,6 +15,7 @@ import "roboto-fontface/css/roboto/roboto-fontface.css";
 import "./assets/styles/main.scss";
 import "./environment";
 
+(remote.getCurrentWindow() as any).splashScreen.updateMessage("Initializing app");
 const platform = platformBrowserDynamic();
 
 platform.bootstrapModule(AppModule).catch(error => {

@@ -1,12 +1,9 @@
-import { remote } from "electron";
 import { AsyncSubject, Observable } from "rxjs";
 
 import { SecureUtils } from "app/utils";
 import { ElectronRemote } from "../electron";
 import { AdalConfig } from "./adal-config";
 import * as AdalConstants from "./adal-constants";
-
-const { BrowserWindow } = remote;
 
 type AuthorizePromptType = "login" | "none" | "consent";
 const AuthorizePromptType = {
@@ -37,7 +34,6 @@ interface AuthorizeQueueItem {
  * This will open a new window at the /authorize endpoint to get the user
  */
 export class UserAuthorization {
-    private _authWindow: Electron.BrowserWindow;
     private _waitingForAuth = false;
     private _authorizeQueue: AuthorizeQueueItem[] = [];
     private _currentAuthorization: AuthorizeQueueItem = null;
@@ -78,7 +74,8 @@ export class UserAuthorization {
         this._waitingForAuth = true;
         const subject = new AsyncSubject();
         const url = AdalConstants.logoutUrl(this.config.tenant);
-        const authWindow = this._createAuthWindow();
+        const authWindow = this.remoteService.getAuthenticationWindow();
+        authWindow.create();
 
         authWindow.loadURL(url);
         this._setupEvents();
@@ -92,7 +89,8 @@ export class UserAuthorization {
         }
         this._waitingForAuth = true;
         const { tenantId, silent } = this._currentAuthorization = this._authorizeQueue.shift();
-        const authWindow = this._createAuthWindow();
+        const authWindow = this.remoteService.getAuthenticationWindow();
+        authWindow.create();
         authWindow.loadURL(this._buildUrl(tenantId, silent));
         this._setupEvents();
         if (!silent) {
@@ -126,35 +124,17 @@ export class UserAuthorization {
      * Setup event listener on the current window
      */
     private _setupEvents() {
-        const authWindow = this._authWindow;
+        const authWindow = this.remoteService.getAuthenticationWindow();
 
-        authWindow.webContents.on("did-get-redirect-request", (event, oldUrl, newUrl) => {
-            this._handleCallback(newUrl);
-        });
+        authWindow.onRedirect(newUrl => this._handleCallback(newUrl));
 
-        authWindow.on("close", (event) => {
-            this._authWindow = null;
+        authWindow.onClose(() => {
             // If the user closed manualy then we need to also close the main window
             if (this._waitingForAuth) {
-                this.remoteService.getCurrentWindow().destroy();
                 this.remoteService.getSplashScreen().destroy();
+                this.remoteService.getCurrentWindow().destroy();
             }
         });
-    }
-
-    private _createAuthWindow(): Electron.BrowserWindow {
-        this._closeWindow();
-        this._authWindow = new BrowserWindow({
-            width: 800, height: 700, show: false,
-            center: true,
-            webPreferences: {
-                nodeIntegration: false,
-            },
-        });
-        // Uncomment to debug auth errors
-        // this._authWindow.webContents.openDevTools();
-        this._authWindow.setMenu(null);
-        return this._authWindow;
     }
 
     /**
@@ -219,12 +199,12 @@ export class UserAuthorization {
     }
 
     private _closeWindow() {
-        if (this._authWindow) {
-            if (this._authWindow.isVisible()) {
+        const window = this.remoteService.getAuthenticationWindow();
+        if (window) {
+            if (window.isVisible()) {
                 this.remoteService.getSplashScreen().show();
             }
-            this._authWindow.destroy();
-            this._authWindow = null;
+            window.destroy();
         }
     }
 }

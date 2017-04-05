@@ -40,7 +40,7 @@ module.exports = merge(config, {
                 include: [helpers.root("app", "components")]
             },
             {
-                test: /node_modules.*\.css$/,
+                test: /\.css$/,
                 loader: "style-loader!css-loader",
             }
         ],
@@ -69,6 +69,7 @@ module.exports = merge(config, {
                     "moment",
                     "inflection",
                     "d3",
+                    "chart.js",
                 ],
             },
             dllDir: helpers.root("dll"),

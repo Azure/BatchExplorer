@@ -10,15 +10,17 @@ import { StartTaskModule } from "app/components/pool/start-task";
 
 import {
     DeletePoolDialogComponent,
+    OsOfferTileComponent,
     PoolCreateBasicDialogComponent,
     PoolOsPickerComponent,
     PoolResizeDialogComponent,
+    VmSizePickerComponent,
 } from "app/components/pool/action";
 
 const components = [
     DeletePoolDialogComponent, PoolAdvancedFilterComponent, PoolCreateBasicDialogComponent,
-    PoolHomeComponent, PoolListComponent, PoolOsPickerComponent,
-    PoolResizeDialogComponent,
+    PoolHomeComponent, PoolListComponent, PoolOsPickerComponent, VmSizePickerComponent,
+    PoolResizeDialogComponent, OsOfferTileComponent,
 ];
 
 const modules = [

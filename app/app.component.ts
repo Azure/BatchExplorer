@@ -1,10 +1,13 @@
 import { Location } from "@angular/common";
 import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
-import { MdSidenav } from "@angular/material";
+import { MdIconRegistry, MdSidenav } from "@angular/material";
 import { Observable } from "rxjs";
 
+import { DomSanitizer } from "@angular/platform-browser";
+import { registerIcons } from "app/config";
 import {
-    AccountService, AdalService, CommandService, NodeService, SSHKeyService, SettingsService, SubscriptionService,
+    AccountService, AdalService, CommandService, NodeService,
+    SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
 } from "app/services";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
@@ -30,6 +33,8 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     constructor(
         private location: Location,
+        mdIconRegistry: MdIconRegistry,
+        sanitizer: DomSanitizer,
         private sidebarManager: SidebarManager,
         private settingsService: SettingsService,
         private commandService: CommandService,
@@ -37,10 +42,12 @@ export class AppComponent implements AfterViewInit, OnInit {
         private accountService: AccountService,
         private subscriptionService: SubscriptionService,
         private nodeService: NodeService,
-        private sshKeyService: SSHKeyService) {
+        private sshKeyService: SSHKeyService,
+        private vmSizeService: VmSizeService) {
         this.settingsService.init();
         this.sshKeyService.init();
         this.commandService.init();
+        this.vmSizeService.init();
         this.adalService.init(adalConfig);
         this.accountService.loadInitialData();
 
@@ -56,6 +63,8 @@ export class AppComponent implements AfterViewInit, OnInit {
         accountService.currentAccount.filter(x => Boolean(x)).first().subscribe((x) => {
             this._preloadData();
         });
+
+        registerIcons(mdIconRegistry, sanitizer);
     }
 
     public ngAfterViewInit() {
@@ -67,6 +76,7 @@ export class AppComponent implements AfterViewInit, OnInit {
     public ngOnInit() {
         this.adalService.login();
         this.subscriptionService.load();
+        this.accountService.load();
     }
 
     public open() {

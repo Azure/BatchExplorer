@@ -164,6 +164,14 @@ describe("RxBatchListProxy", () => {
         proxy.fetchNext();
         tick();
         expect(items).toEqualImmutable(List(updatedData[0].map((x) => new FakeModel(x))));
+        expect(hasMore).toBe(false);
+    }));
+
+    it("should return hasMore false if there is only 1 page of data after first fetch", fakeAsync(() => {
+        proxy.setOptions({ filter: "filter2" });
+        proxy.fetchNext();
+        tick();
+        expect(hasMore).toBe(false);
     }));
 
     it("Should remove item from the list when the cache call onItemDeleted", fakeAsync(() => {

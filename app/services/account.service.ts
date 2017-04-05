@@ -45,6 +45,8 @@ function getSubscriptionIdFromAccountId(accountId: string) {
 @Injectable()
 export class AccountService {
     public accountLoaded: Observable<boolean>;
+    public accountsLoaded: Observable<boolean>;
+    public accounts: Observable<List<AccountResource>>;
 
     /**
      * @returns the current account.
@@ -66,6 +68,8 @@ export class AccountService {
     private _accountLoaded = new BehaviorSubject<boolean>(false);
     private _accountCache = new DataCache<AccountResource>();
     private _currentAccountId = new BehaviorSubject<string>(null);
+    private _accounts = new BehaviorSubject<List<AccountResource>>(List([]));
+    private _accountsLoaded = new BehaviorSubject<boolean>(false);
 
     constructor(
         private azure: AzureHttpService,
@@ -73,7 +77,7 @@ export class AccountService {
 
         this.accountLoaded = this._accountLoaded.asObservable();
         this._accountLoaded.next(true);
-
+        this.accounts = this._accounts.asObservable();
         this._currentAccount.subscribe((selection) => {
             if (selection) {
                 const { account } = selection;
@@ -108,23 +112,55 @@ export class AccountService {
             return;
         }
         this._currentAccountId.next(accountId);
+        this.refresh();
+    }
+
+    /**
+     * Refresh the current account
+     */
+    public refresh(): Observable<any> {
+        const accountId = this._currentAccountId.value;
         this._currentAccountValid.next(AccountStatus.Loading);
+
         const accountObs = this.getAccount(accountId);
         const keyObs = this.getAccountKeys(accountId);
         DataCacheTracker.clearAllCaches(this._accountCache);
-        Observable.forkJoin(accountObs, keyObs).subscribe({
+        const obs = Observable.forkJoin(accountObs, keyObs);
+        obs.subscribe({
             next: ([account, keys]) => {
                 this._currentAccount.next({ account, keys });
-                if (!this._accountLoaded.getValue()) {
+                if (!this._accountLoaded.value) {
                     this._accountLoaded.next(true);
                 }
                 this._currentAccountValid.next(AccountStatus.Valid);
             },
             error: (error) => {
-                log.error(`Error loading account ${accountId}`, error);
+                log.error(`Error Loading account ${accountId}`, error);
                 this._currentAccountValid.next(AccountStatus.Invalid);
             },
         });
+        return obs;
+    }
+
+    public load() {
+        const obs = this.subscriptionService.subscriptions.flatMap((subscriptions) => {
+            const accountObs = subscriptions.map((subscription) => {
+                return this.list(subscription.subscriptionId);
+            }).toArray();
+            return Observable.combineLatest(...accountObs);
+        });
+
+        obs.subscribe({
+            next: (accountsPerSubscriptions) => {
+                const accounts = accountsPerSubscriptions.map(x => x.toArray()).flatten();
+                this._accounts.next(List(accounts));
+                this._accountsLoaded.next(true);
+            },
+            error: (error) => {
+                log.error("Error loading accounts", error);
+            },
+        });
+        return obs;
     }
 
     public list(subscriptionId: string): Observable<List<Account>> {

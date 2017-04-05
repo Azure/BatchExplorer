@@ -25,12 +25,19 @@
         margin: auto;
     }
 
-    .message {
+    .title {
         color: #d5d5d5;
         margin: auto;
         width: 100px;
         font-size: 20px;
         text-align: center;
+    }
+
+    #message {
+        color: #d5d5d5;
+        font-size: 12px;
+        position: absolute;
+        bottom: 5px;
     }
 
     .bubble {
@@ -98,6 +105,17 @@
 </style>
 <html>
 
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const message = document.getElementById("message");
+        const {ipcRenderer} = require("electron");
+        ipcRenderer.on("update-message", (event, arg) => {
+            message.innerHTML = arg;
+        })
+    })
+
+</script>
+
 <body>
     <div class="bubbles">
         <div class="bubble x1"></div>
@@ -111,8 +129,11 @@
         <img src="./flask.svg"></img>
     </div>
 
-    <div class="message">
+    <div class="title">
         Batch labs
+    </div>
+
+    <div id="message">
     </div>
 </body>
 

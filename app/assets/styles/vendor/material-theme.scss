@@ -37,7 +37,7 @@ $theme: mat-light-theme($primary, $accent, $warn);
     margin-top: -25px;
 }
 
-md-tab-group {
+md-tab-group:not(.form-tabs) {
     .mat-tab-label {
         opacity: 0.8 !important;
         border-right: 1px solid #ddd;
@@ -121,6 +121,11 @@ md-card {
     }
 }
 
+md-icon.mat-icon {
+    width: auto;
+    height: auto;
+}
+
 md-radio-button {
     margin-right: 15px;
 
@@ -159,8 +164,9 @@ md-dialog-container {
 }
 
 
-.mat-select-content {
-    md-option {
+.mat-select-content, .mat-menu-content {
+    padding: 4px 0;
+    md-option, .mat-menu-item {
         height: 30px;
         line-height: 30px;
     }

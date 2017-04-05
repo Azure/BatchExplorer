@@ -2,11 +2,14 @@
     <section class="list-view">
         <div class="left-pane">
             <div class="bl-breadcrumbs">
-                 <bl-breadcrumb-group>
+                <bl-breadcrumb-group>
                 </bl-breadcrumb-group>
             </div>
             <div class="bl-quick-filter-content">
                 <div class="quicksearch">
+                    <div class="pre-quicksearch">
+                        <ng-content select="[pre-quicksearch]"></ng-content>
+                    </div>
                     <input [formControl]="quickSearchQuery" placeholder="Search" #quickSearchInput (keydown)="handleKeyPressedInQuickSearch($event)"
                     />
                     <i class="fa fa-filter fa-2x" (click)="toggleFilter()" *ngIf="advancedFilterContent?.children.length > 0"></i>
@@ -35,7 +38,8 @@
             <div class="content-wrapper">
                 <div style="position:relative">
                     <ng-content select="[bl-show-content]"></ng-content>
-                    <div class="advanced-filter-content" [hidden]="!(showAdvancedFilter | async)" [@slideIn]="showAdvancedFilter" class="advanced-filter-content" #advancedFilterContent>
+                    <div class="advanced-filter-content" [hidden]="!(showAdvancedFilter | async)" [@slideIn]="showAdvancedFilter" class="advanced-filter-content"
+                        #advancedFilterContent>
                         <ng-content select="[bl-show-advanced-filter]"></ng-content>
                     </div>
                 </div>

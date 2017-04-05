@@ -38,6 +38,7 @@ bl-quick-list {
         cursor: pointer;
         display: flex;
         width: 100%;
+        height: 56px;
         white-space: nowrap;
 
         &.selected {
@@ -64,8 +65,13 @@ bl-quick-list {
             min-width: 0;
 
             [bl-quick-list-item-title], [bl-quick-list-item-field] {
+                display: flex;
                 overflow: hidden;
                 text-overflow: ellipsis;
+
+                > bl-tags {
+                    margin-left: 5px;
+                }
             }
         }
 
@@ -156,14 +162,14 @@ bl-no-item {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        color: $silverGray;
+        color: $silver-grey;
         font-size: 1.5em;
         line-height: 1em;
 
         .fa {
             font-size: 8em;
             margin-bottom: 20px;
-            color: $silverGray;
+            color: $silver-grey;
 
             &.small {
                 font-size: 5em;
