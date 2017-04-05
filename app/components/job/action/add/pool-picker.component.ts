@@ -86,7 +86,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
     }
 
     public iconForPool(pool: Pool) {
-        return PoolUtils.isLinux(pool) ? "linux" : "windows";
+        return PoolUtils.iconForPool(pool);
     }
 
     public poolCoreCount(pool: Pool) {

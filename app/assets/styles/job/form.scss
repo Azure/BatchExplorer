@@ -1,4 +1,7 @@
 bl-pool-picker {
+    $tile-width: 150px;
+    $tile-height: 70px;
+
     display: block;
     position: relative;
 
@@ -20,8 +23,8 @@ bl-pool-picker {
         flex-direction: column;
         justify-content: center;
         position: relative;
-        width: 150px;
-        height: 70px;
+        width: $tile-width;
+        height: $tile-height;
         padding: 0;
         margin: 5px;
         vertical-align: top;
@@ -59,19 +62,27 @@ bl-pool-picker {
 
         > .pool-wrapper {
             display: flex;
-            width: 100%;
+            align-items: flex-start;
+            width: $tile-width;
 
             > .icon {
                 color: map-get($md-prussian-blue, 300);
                 font-size: 30px;
+                height: 30px;
                 margin: 5px;
                 display: flex;
                 align-items: center;
+
+                svg {
+                    width: 40px;
+                    height: 40px;
+                }
             }
 
             > .info {
-                padding: 5px;
+                padding: 0 5px;
                 text-align: left;
+                overflow: hidden;
 
                 > .title {
                     overflow: hidden;
