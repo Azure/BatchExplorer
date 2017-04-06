@@ -11,8 +11,8 @@
 
     <bl-table *ngIf="!quickList">
         <bl-thead>
-            <bl-column>Name</bl-column>
-            <bl-column>Content Length</bl-column>
+            <bl-column style="width: 60%">Name</bl-column>
+            <bl-column style="width: 40%">Content Length</bl-column>
         </bl-thead>
         <bl-row *ngFor="let file of files | fileDirectoryFilter" [routerLink]="urlToFile(file.name)" [key]="file.url">
             <bl-cell>{{file.name}}</bl-cell>

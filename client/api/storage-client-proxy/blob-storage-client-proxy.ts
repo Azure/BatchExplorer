@@ -19,7 +19,7 @@ export class BlobStorageClientProxy {
      *  "${taskId}/$TaskOutput|$TaskLog/${namePrefixFilter}"
      * @param {string} filter - Optional text for filtering further than the blob prefix
      * @param {string} continuationToken - Token that was returned from the last call, if any
-     * @param {string} options - Optional request options
+     * @param {StorageRequestOptions} options - Optional request parameters
      */
     public listBlobsWithPrefix(
         container: string,
@@ -68,7 +68,7 @@ export class BlobStorageClientProxy {
      * @param {string} container - Name of the storage container
      * @param {string} blobName - Name of the blob file: "myblob.txt"
      * @param {string} blobPrefix - Optional prefix to the blob from the container root: "1001/$TaskOutput/"
-     * @param {string} options - Optional request options
+     * @param {StorageRequestOptions} options - Optional request parameters
      */
     public getBlobProperties(
         container: string,
@@ -94,6 +94,27 @@ export class BlobStorageClientProxy {
                                 lastModified: result.lastModified,
                             },
                         },
+                    });
+                }
+            });
+        });
+    }
+
+    /**
+     * Downloads a blob into a text string.
+     * http://azure.github.io/azure-storage-node/BlobService.html#getBlobToText__anchor
+     * @param {string} container - Name of the storage container
+     * @param {string} blob - Fully prefixed blob path: "1001/$TaskOutput/myblob.txt"
+     * @param {StorageRequestOptions} options - Optional request parameters
+     */
+    public getBlobContent(container: string, blob: string, options?: StorageRequestOptions) {
+        return new Promise((resolve, reject) => {
+            this._blobService.getBlobToText(container, blob, options, (error, text, blockBlob, response) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve({
+                        content: text,
                     });
                 }
             });

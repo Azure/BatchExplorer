@@ -8,7 +8,7 @@ import { Observable, Subscription } from "rxjs";
 import { File } from "app/models";
 import { FileService, StorageService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
-import { Constants, FileUrlUtils, prettyBytes } from "app/utils";
+import { Constants, FileUrlUtils, log, prettyBytes } from "app/utils";
 
 @Component({
     selector: "bl-file-details",
@@ -43,7 +43,6 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     public ngOnInit() {
         this._paramsSubscribers.push(this.route.data.subscribe((data) => {
             this._sourceType = data["type"];
-            console.log("source type: ", this._sourceType);
         }));
 
         this._paramsSubscribers.push(this.route.params.subscribe((params) => {
@@ -53,7 +52,7 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
             this.nodeId = params["nodeId"];
             this.outputKind = params["outputKind"];
             this.filename = params["filename"];
-            console.log("loading for: ", this.filename);
+
             this._loadFileProperties();
         }));
     }
@@ -83,6 +82,7 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     private _loadFileProperties(): void {
         if (this._sourceType === Constants.FileSourceTypes.Job) {
             // it's a file from a job's task
+            this.downloadEnabled = true;
             this._propertyProxy = this.fileService.getFilePropertiesFromTask(
                 this.jobId, this.taskId, this.filename);
 
@@ -105,8 +105,6 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         }
 
         this._propertyProxy.fetch().subscribe((details: any) => {
-            console.log("this.url: ", this.url);
-
             this.contentSize = prettyBytes(details.properties.contentLength);
             this.url = decodeURIComponent(details.url);
         });
@@ -114,8 +112,8 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         this._propertyProxy = null;
     }
 
-    private _saveFile(fileName) {
-        if (fileName === undefined) {
+    private _saveFile(filename) {
+        if (filename === undefined) {
             return;
         }
 
@@ -123,14 +121,30 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         if (obj.type === Constants.FileSourceTypes.Job) {
             this.fileService.getFileContentFromTask(
                 this.jobId, this.taskId, this.filename).subscribe((data) => {
-                    writeFile(fileName, data.content);
+                    this._writeToFile(filename, data.content);
                 });
-        } else {
+
+        } else if (this._sourceType === Constants.FileSourceTypes.Pool) {
             this.fileService.getFileContentFromComputeNode(
                 this.poolId, this.nodeId, this.filename).subscribe((data) => {
-                    writeFile(fileName, data.content);
+                    this._writeToFile(filename, data.content);
                 });
-        }
 
+        } else if (this._sourceType === Constants.FileSourceTypes.Blob) {
+            console.log("IMPLEMENT ME PLEASE >>>");
+
+        } else {
+            throw "Unrecognised source type: " + this._sourceType;
+        }
+    }
+
+    private _writeToFile(filename: string, data: any): void {
+        writeFile(filename, data.content, (error) => {
+            // Callback to get rid of the following console error
+            // DeprecationWarning: Calling an asynchronous function without callback is deprecated.
+            if (error) {
+                log.error("[FileDetails.component] writeFile error:", error);
+            }
+        });
     }
 }
