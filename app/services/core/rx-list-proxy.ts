@@ -18,7 +18,6 @@ export interface ListOptionsBase extends OptionsBase {
     [key: string]: any;
 }
 
-
 export interface RxListProxyConfig<TParams, TEntity> extends RxProxyBaseConfig<TParams, TEntity> {
     initialOptions?: any;
 }
