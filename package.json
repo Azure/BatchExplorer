@@ -111,7 +111,7 @@
     "chart.js": "^2.5.0",
     "core-decorators": "~0.17.0",
     "d3": "~4.7.3",
-    "electron-json-storage": "^2.0.3",
+    "electron-json-storage": "~3.0.4",
     "element-resize-detector": "^1.1.9",
     "extract-text-webpack-plugin": "~2.1.0",
     "font-awesome": "^4.7.0",

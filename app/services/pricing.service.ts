@@ -1,16 +1,16 @@
 import { Injectable } from "@angular/core";
-import * as storage from "electron-json-storage";
 import { List } from "immutable";
 import * as moment from "moment";
-import { AsyncSubject, Observable } from "rxjs";
+import { Observable } from "rxjs";
 
 import { Headers, RequestOptions } from "@angular/http";
 import { SpecCost } from "app/models";
-import { ArmHttpService } from "app/services";
 import { SecureUtils, log } from "app/utils";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { AccountService } from "./account.service";
+import { ArmHttpService } from "./arm-http.service";
 import { GithubDataService } from "./github-data.service";
+import { LocalFileStorage } from "./local-file-storage.service";
 
 const resourceIdsPath = "data/vm-resource-ids.json";
 const hardwaremapFilename = "hardware-map.json";
@@ -48,6 +48,7 @@ export class PricingService {
     constructor(
         private arm: ArmHttpService,
         private githubData: GithubDataService,
+        private localFileStorage: LocalFileStorage,
         private accountService: AccountService) {
 
         this.hardwareMap = this._hardwareMap.filter(x => x !== null);
@@ -63,7 +64,6 @@ export class PricingService {
             return this.accountService.currentAccount.flatMap((account) => {
                 const subId = account.subscription.subscriptionId;
 
-                console.log("Specs", specs);
                 const options = new RequestOptions();
                 options.headers = new Headers();
                 options.headers.append("x-ms-client-request-id", SecureUtils.uuid());
@@ -122,34 +122,26 @@ export class PricingService {
             } else {
                 return this._loadResourceIdsFromGithub();
             }
-        })
+        });
     }
 
     private _loadResourceIdsFromStorage(): Observable<HardwareMap> {
-        const sub = new AsyncSubject();
-        storage.get(hardwaremapFilename, (error, data: { lastSync: string, map: HardwareMap }) => {
-            if (error) {
-                log.error("Error retrieving hardwaremap locally");
-                sub.error(error);
-            }
+        return this.localFileStorage.get(hardwaremapFilename).map((data: { lastSync: string, map: HardwareMap }) => {
             // If wrong format
             if (!data.lastSync || !data.map) {
-                sub.next(null);
-                sub.complete();
-                return;
+                return null;
             }
 
             const lastSync = moment(data.lastSync);
             const weekOld = moment().subtract(7, "days");
             if (lastSync.isBefore(weekOld)) {
-                sub.next(null);
-                sub.complete();
-                return;
+                return null;
             }
-            sub.next(data.map);
-            sub.complete();
+            return data.map;
+        }).catch((error) => {
+            log.error("Error retrieving hardwaremap locally", error);
+            return null;
         });
-        return sub;
     }
 
     private _loadResourceIdsFromGithub(): Observable<boolean> {
@@ -188,7 +180,6 @@ export class PricingService {
             }
         }
 
-        console.log("Built map", hardwareMap);
         this._hardwareMap.next(hardwareMap);
         this._saveHardwareMap(hardwareMap);
     }
@@ -198,10 +189,10 @@ export class PricingService {
             lastSync: new Date().toISOString(),
             map,
         };
-        storage.set(hardwaremapFilename, data, (error) => {
-            if (error) {
+        this.localFileStorage.set(hardwaremapFilename, data).subscribe({
+            error: (error) => {
                 log.error("Error saving harwaremap", error);
-            }
+            },
         });
     }
 }
