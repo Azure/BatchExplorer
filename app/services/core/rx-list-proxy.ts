@@ -6,13 +6,24 @@ import { LoadingStatus } from "app/components/base/loading";
 import { log } from "app/utils";
 import { CachedKeyList } from "./query-cache";
 import { RxEntityProxy } from "./rx-entity-proxy";
-import { RxProxyBase, RxProxyBaseConfig } from "./rx-proxy-base";
+import { OptionsBase, RxProxyBase, RxProxyBaseConfig } from "./rx-proxy-base";
+
+export interface ListOptionsBase extends OptionsBase {
+    maxResults?: number;
+    filter?: string;
+
+    /**
+     * Other options
+     */
+    [key: string]: any;
+}
+
 
 export interface RxListProxyConfig<TParams, TEntity> extends RxProxyBaseConfig<TParams, TEntity> {
     initialOptions?: any;
 }
 
-export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams, any, TEntity> {
+export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams, ListOptionsBase, TEntity> {
     public items: Observable<List<TEntity>>;
     public hasMore: Observable<boolean>;
 
@@ -27,8 +38,12 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         this._hasMore.next(true);
         this.hasMore = this._hasMore.asObservable();
 
-        this.items = this._itemKeys.map((keys) => {
+        this.items = this._itemKeys.map((itemKeys) => {
             return this.cache.items.map((items) => {
+                let keys: any = itemKeys;
+                if (this._options.maxResults) {
+                    keys = itemKeys.slice(0, this._options.maxResults);
+                }
                 return List<TEntity>(keys.map((x) => items.get(x)));
             });
         }).switch();
@@ -43,7 +58,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         this.handleChanges(this._params, this._options);
     }
 
-    public setOptions(options: {}, clearItems = true) {
+    public setOptions(options: ListOptionsBase, clearItems = true) {
         super.setOptions(options);
         this.handleChanges(this._params, this._options);
         if (clearItems) {
