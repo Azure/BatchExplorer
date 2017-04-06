@@ -42,9 +42,7 @@ export class VmSizeDecorator {
         } else {
             this.price = -1;
         }
-
     }
-
 
     public prettyMb(megaBytes: number) {
         return prettyBytes(megaBytes * 1000 * 1000, 0);

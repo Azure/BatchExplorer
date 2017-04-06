@@ -1,6 +1,8 @@
 import { Injectable } from "@angular/core";
+import * as storage from "electron-json-storage";
 import { List } from "immutable";
-import { Observable } from "rxjs";
+import * as moment from "moment";
+import { AsyncSubject, Observable } from "rxjs";
 
 import { Headers, RequestOptions } from "@angular/http";
 import { SpecCost } from "app/models";
@@ -11,6 +13,7 @@ import { AccountService } from "./account.service";
 import { GithubDataService } from "./github-data.service";
 
 const resourceIdsPath = "data/vm-resource-ids.json";
+const hardwaremapFilename = "hardware-map.json";
 
 interface PricingResource {
     ResourceId: string;
@@ -112,6 +115,44 @@ export class PricingService {
     }
 
     private _loadResourceIds() {
+        this._loadResourceIdsFromStorage().cascade((map) => {
+            if (map) {
+                this._hardwareMap.next(map);
+                return true;
+            } else {
+                return this._loadResourceIdsFromGithub();
+            }
+        })
+    }
+
+    private _loadResourceIdsFromStorage(): Observable<HardwareMap> {
+        const sub = new AsyncSubject();
+        storage.get(hardwaremapFilename, (error, data: { lastSync: string, map: HardwareMap }) => {
+            if (error) {
+                log.error("Error retrieving hardwaremap locally");
+                sub.error(error);
+            }
+            // If wrong format
+            if (!data.lastSync || !data.map) {
+                sub.next(null);
+                sub.complete();
+                return;
+            }
+
+            const lastSync = moment(data.lastSync);
+            const weekOld = moment().subtract(7, "days");
+            if (lastSync.isBefore(weekOld)) {
+                sub.next(null);
+                sub.complete();
+                return;
+            }
+            sub.next(data.map);
+            sub.complete();
+        });
+        return sub;
+    }
+
+    private _loadResourceIdsFromGithub(): Observable<boolean> {
         const obs = this.githubData.get(resourceIdsPath);
         obs.subscribe({
             next: (response) => {
@@ -121,7 +162,7 @@ export class PricingService {
                 log.error("Error loading resource ids for pricing", error);
             },
         });
-        return obs;
+        return obs.map(x => true);
     }
 
     private _buildHardwareMap(data: StringMap<StringMap<StringMap<PricingResource>>>) {
@@ -149,5 +190,18 @@ export class PricingService {
 
         console.log("Built map", hardwareMap);
         this._hardwareMap.next(hardwareMap);
+        this._saveHardwareMap(hardwareMap);
+    }
+
+    private _saveHardwareMap(map: HardwareMap) {
+        const data = {
+            lastSync: new Date().toISOString(),
+            map,
+        };
+        storage.set(hardwaremapFilename, data, (error) => {
+            if (error) {
+                log.error("Error saving harwaremap", error);
+            }
+        });
     }
 }
