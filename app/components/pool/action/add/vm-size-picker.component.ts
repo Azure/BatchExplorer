@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnDestroy, OnInit, forwardRef } from "@ang
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { Map, List } from "immutable";
+import { List, Map } from "immutable";
 import { Subscription } from "rxjs";
 
 import { SpecCost, VmSize } from "app/models";
@@ -163,7 +163,6 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
         }
         categories["Other"] = remainingSizes.map(x => new VmSizeDecorator(x, this.prices));
         this.categories = categories;
-        console.log("Categories", categories);
 
         // Move standard to the first position
         const names = ["standard"].concat(Object.keys(categories).filter(x => x !== "standard"));

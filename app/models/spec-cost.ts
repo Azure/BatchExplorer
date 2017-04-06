@@ -7,7 +7,6 @@ const SpecCostRecord = Record({
     currencyCode: null,
 });
 
-
 export interface SpecCostAttributes {
     id: string;
     statusCode: number;
