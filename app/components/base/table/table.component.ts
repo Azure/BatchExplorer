@@ -1,10 +1,12 @@
-import { AfterViewInit, Component, ContentChild, ContentChildren, Input, QueryList } from "@angular/core";
+import {
+    AfterViewInit, ChangeDetectorRef, Component, ContentChild, ContentChildren, Optional, QueryList,
+} from "@angular/core";
 import { Router } from "@angular/router";
 
 import { FocusSectionComponent } from "app/components/base/focus-section";
 import { log } from "app/utils";
 import { AbstractListBase } from "../abstract-list";
-import { TableColumnComponent, SortDirection } from "./table-column.component";
+import { SortDirection, TableColumnComponent } from "./table-column.component";
 import { TableRowComponent } from "./table-row.component";
 
 @Component({
@@ -36,7 +38,6 @@ export class TableHeadComponent implements AfterViewInit {
         this.items.forEach((column, index) => {
             map[column.id] = index;
         });
-        console.log("Update index map", map);
         this._columnIndexMap = map;
     }
 }
@@ -54,8 +55,11 @@ export class TableComponent extends AbstractListBase {
 
     private _sortingColumn: TableColumnComponent;
 
-    constructor(router: Router, focusSection: FocusSectionComponent) {
-        super(router, focusSection);
+    /**
+     * To enable keyboard navigation in the list it must be inside a focus section
+     */
+    constructor(router: Router, changeDetection: ChangeDetectorRef, @Optional() focusSection?: FocusSectionComponent) {
+        super(router, changeDetection, focusSection);
     }
 
     public sort(column: TableColumnComponent) {

@@ -1,5 +1,5 @@
 import {
-    AfterViewInit, ContentChildren, EventEmitter, Input, OnDestroy, Output, QueryList,
+    AfterViewInit, ChangeDetectorRef, ContentChildren, EventEmitter, Input, OnDestroy, Output, QueryList,
 } from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
 import { autobind } from "core-decorators";
@@ -31,9 +31,9 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
 
     @Input()
     public set activeItem(key) {
-        console.log("Set activated item", key);
         this.setActiveItem(key);
     }
+
     /**
      * When the list of selected item change.
      */
@@ -71,7 +71,11 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     private _activeItemKey = new BehaviorSubject<ActivatedItemChangeEvent>(null);
     private _subs: Subscription[] = [];
 
-    constructor(private router: Router, private focusSection: FocusSectionComponent) {
+    constructor(
+        private router: Router,
+        private changeDetection: ChangeDetectorRef,
+        private focusSection: FocusSectionComponent) {
+
         this._subs.push(this._activeItemKey.subscribe(x => {
             this.selectedItems = x ? [x.key] : [];
             this.activatedItemChange.emit(x);
@@ -107,12 +111,12 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
             });
         }
 
-        this.items.changes.subscribe(() => {
+        this._subs.push(this.items.changes.subscribe(() => {
             this._updateDisplayItems();
-        });
-        setTimeout(() => {
-            this._updateDisplayItems();
-        });
+        }));
+        this._updateDisplayItems();
+        this.changeDetection.detectChanges();
+
     }
 
     public ngOnDestroy() {
@@ -291,7 +295,6 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
             return this.isActive(item.key);
         }
     }
-
 
     private _updateDisplayItems() {
         if (this.computeDisplayedItems) {

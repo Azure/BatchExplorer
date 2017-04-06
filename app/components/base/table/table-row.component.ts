@@ -51,7 +51,6 @@ export class TableRowComponent extends AbstractListItemBase implements AfterView
 
     private _updateData() {
         const map = {};
-        console.log("update cell data", this.cells);
         this.cells.forEach((cell, index) => {
             map[index] = cell.value;
         });

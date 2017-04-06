@@ -6,14 +6,16 @@
                 <bl-thead>
                     <bl-column [sortable]="true">Name</bl-column>
                     <bl-column [sortable]="true">Cores</bl-column>
-                    <bl-column [sortable]="true">Ram</bl-column>
+                    <bl-column [sortable]="true">RAM</bl-column>
                     <bl-column [sortable]="true">OS Disk</bl-column>
+                    <bl-column [sortable]="true">Resource/Temp Disk</bl-column>
                 </bl-thead>
                 <bl-row *ngFor="let size of categories[category]" [key]="size.name">
-                    <bl-cell [value]="size.name"></bl-cell>
+                    <bl-cell [value]="size.name">{{prettyTitle(size.name)}}</bl-cell>
                     <bl-cell [value]="size.numberOfCores">{{size.numberOfCores}}</bl-cell>
                     <bl-cell [value]="size.memoryInMB">{{prettyMb(size.memoryInMB)}}</bl-cell>
                     <bl-cell [value]="size.osDiskSizeInMB">{{prettyMb(size.osDiskSizeInMB)}}</bl-cell>
+                    <bl-cell [value]="size.resourceDiskSizeInMB">{{prettyMb(size.resourceDiskSizeInMB)}}</bl-cell>
                 </bl-row>
             </bl-table>
         </bl-focus-section>
