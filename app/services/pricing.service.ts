@@ -58,6 +58,11 @@ export class PricingService {
         return this._loadResourceIds();
     }
 
+    /**
+     * Get the prices for all vms for a given region
+     * @param region Account location
+     * @param os OS for the VM.
+     */
     public getPrices(region: string, os: "linux" | "windows"): Observable<List<SpecCost>> {
         return this._getResourceFor(region, os).flatMap((specs) => {
 
