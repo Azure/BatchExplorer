@@ -100,44 +100,6 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         });
     }
 
-    // TODO: Move all of these to pool decorator
-    public get poolOs(): string {
-        if (this.pool.cloudServiceConfiguration) {
-            let osName: string;
-            let osFamily = this.pool.cloudServiceConfiguration.osFamily;
-
-            if (osFamily === 2) {
-                osName = "Windows Server 2008 R2 SP1";
-            } else if (osFamily === 3) {
-                osName = "Windows Server 2012";
-            } else if (osFamily === 4) {
-                osName = "Windows Server 2012 R2";
-            } else {
-                osName = "Windows Server 2016";
-            }
-
-            return osName;
-        }
-
-        if (this.pool.virtualMachineConfiguration.imageReference.publisher ===
-            "MicrosoftWindowsServer") {
-            let osName = "Windows Server";
-            osName += this.pool.virtualMachineConfiguration.imageReference.sku;
-
-            return osName;
-        }
-
-        return "Linux";
-    }
-
-    public get poolOsIcon(): string {
-        if (this.poolOs.includes("Windows")) {
-            return "windows";
-        }
-
-        return "linux";
-    }
-
     public get nodesTooltipMessage() {
         if (this.pool.resizeError) {
             return "There was a resize error";

@@ -5,19 +5,15 @@ bl-account-details {
 
         .link {
             display: inline-block;
-            width: 200px;
-            height: 200px;
+            width: 30%;
+            min-width: 210px;
             font-size: 2em;
             color: $scorpion;
             text-align: center;
             cursor: pointer;
-            i {
-                margin: 20px 0;
-                font-size: 3em;
-            }
 
-            &:not(:last-child) {
-                margin-right: 46px;
+            .account-card-content {
+                height: 300px;
             }
         }
     }

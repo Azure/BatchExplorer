@@ -105,6 +105,43 @@ export class Pool extends PoolRecord {
 
         this.tags = ModelUtils.tagsFromMetadata(this.metadata);
     }
+
+    public get osName(): string {
+        if (this.cloudServiceConfiguration) {
+            let osName: string;
+            let osFamily = this.cloudServiceConfiguration.osFamily;
+
+            if (osFamily === 2) {
+                osName = "Windows Server 2008 R2 SP1";
+            } else if (osFamily === 3) {
+                osName = "Windows Server 2012";
+            } else if (osFamily === 4) {
+                osName = "Windows Server 2012 R2";
+            } else {
+                osName = "Windows Server 2016";
+            }
+
+            return osName;
+        }
+
+        if (this.virtualMachineConfiguration.imageReference.publisher ===
+            "MicrosoftWindowsServer") {
+            let osName = "Windows Server";
+            osName += this.virtualMachineConfiguration.imageReference.sku;
+
+            return osName;
+        }
+
+        return "Linux";
+    }
+
+    public get osIconName(): string {
+        if (this.osName.includes("Windows")) {
+            return "windows";
+        }
+
+        return "linux";
+    }
 }
 
 export type PoolState = "active" | "upgrading" | "deleting";
