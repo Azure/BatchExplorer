@@ -1,11 +1,24 @@
 <bl-server-error [error]="error"></bl-server-error>
 <div class="content">
-    <ng-content></ng-content>
+    <div *ngIf="_pageStack.length > 0">
+        <button md-raised-button color="primary" (click)="closePage()">Back</button>
+    </div>
+    <template [ngTemplateOutlet]="currentPage.content" *ngIf="currentPage"></template>
     <div class="loading-overlay" *ngIf="loading"></div>
 </div>
-
-<div class="button-bar">
-    <bl-submit-btn *ngIf="multiUse" [submit]="performAction" [multiSubmit]="true" [disabled]="!formGroup.valid" class="add">Add</bl-submit-btn>
-    <bl-submit-btn *ngIf="sidebarRef" [submit]="performActionAndClose" [multiSubmit]="true" [disabled]="!formGroup.valid" class="add-and-close">{{addAndCloseText}}</bl-submit-btn>
-    <button type="button" [disabled]="isSaving" (click)="close()" class="close" md-raised-button>Close</button>
+<div class="form-footer">
+    <div class="summary"></div>
+    <div class="form-buttons">
+        <div *ngIf="isMainWindow">
+            <bl-submit-btn *ngIf="multiUse" [submit]="performAction" [multiSubmit]="true" [disabled]="!formGroup.valid" class="add">Add</bl-submit-btn>
+            <bl-submit-btn *ngIf="sidebarRef" [submit]="performActionAndClose" [multiSubmit]="true" [disabled]="!formGroup.valid" class="add-and-close">{{addAndCloseText}}</bl-submit-btn>
+            <span style="display: inline-block">
+                <button type="button" [disabled]="isSaving" (click)="close()" class="close" md-raised-button>Close</button>
+            </span>
+        </div>
+        <div *ngIf="!isMainWindow">
+            <button md-raised-button color="primary" (click)="cancelPage()">Cancel</button>
+            <button md-raised-button color="primary" (click)="closePage()">Select</button>
+        </div>
+    </div>
 </div>

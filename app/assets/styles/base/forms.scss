@@ -193,8 +193,17 @@ fieldset {
 }
 
 bl-create-form {
+    display: block;
+    width: 800px;
+    height: $contentview-height;
+    $footer-height: 60px;
+    overflow: hidden;
+
     > .content {
+        overflow: auto;
         position: relative;
+        height: calc(100% - #{$footer-height});
+        padding: 10px 20px;
 
         > .loading-overlay {
             position: absolute;
@@ -207,6 +216,46 @@ bl-create-form {
         }
     }
 
+    > .form-footer {
+        height: $footer-height;
+        box-shadow: 0 0 40px -10px #a5a5a5;
+        // background: map-get($md-prussian-blue, 500);
+        padding: 5px;
+        display: flex;
+        align-items: center;
+
+        > .summary {
+            margin: 0 5px;
+            flex: 1;
+            font-size: 16px;
+        }
+
+        > .form-buttons {
+            margin: 0 5px;
+        }
+    }
+
+    .nested-form-btn {
+        border: 1px dashed $dusty-grey;
+        width: 270px;
+        height: 89px;
+        background: transparent;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        color: $dusty-grey;
+        cursor: pointer;
+        border-radius: 3px;
+
+        &:hover {
+            border-color: map-get($md-prussian-blue, 300);
+        }
+
+        .fa {
+            font-size: 30px;
+            margin: 0 20px;
+        }
+    }
 }
 
 .form-element md-checkbox {
