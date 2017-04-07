@@ -1,4 +1,5 @@
 import { PoolCreateDto } from "app/models/dtos";
+import * as moment from "moment";
 
 export enum PoolOsSources {
     PaaS,
@@ -23,7 +24,10 @@ export interface PoolOSPickerModel {
 export interface CreatePoolModel {
     id: string;
     displayName: string;
-    targetDedicated: string;
+    targetDedicated: number;
+    enableAutoScale: boolean;
+    autoScaleFormula: string;
+    autoScaleEvaluationInterval: number;
     vmSize: string;
     maxTasksPerNode: string;
     enableInterNodeCommunication: boolean;
@@ -35,10 +39,20 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
         id: output.id,
         displayName: output.displayName,
         vmSize: output.vmSize,
-        targetDedicated: Number(output.targetDedicated),
-        maxTasksPerNode: Number(output.maxTasksPerNode),
+        targetDedicated: output.targetDedicated,
+        enableAutoScale: output.enableAutoScale,
+        autoScaleFormula: output.autoScaleFormula,
+        autoScaleEvaluationInterval: moment.duration({ minutes: output.autoScaleEvaluationInterval }),
+        maxTasksPerNode: output.maxTasksPerNode,
         enableInterNodeCommunication: output.enableInterNodeCommunication,
     };
+
+    if (output.enableAutoScale) {
+        delete data.targetDedicated;
+    } else {
+        delete data.autoScaleFormula;
+        delete data.autoScaleEvaluationInterval;
+    }
 
     if (output.os.source === PoolOsSources.PaaS) {
         data.cloudServiceConfiguration = output.os.cloudServiceConfiguration;
@@ -61,7 +75,10 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
         id: pool.id,
         displayName: pool.displayName,
         vmSize: pool.vmSize,
-        targetDedicated: pool.targetDedicated.toString(),
+        targetDedicated: pool.targetDedicated,
+        enableAutoScale: pool.enableAutoScale,
+        autoScaleFormula: pool.autoScaleFormula,
+        autoScaleEvaluationInterval: pool.autoScaleEvaluationInterval.asMinutes(),
         maxTasksPerNode: pool.maxTasksPerNode.toString(),
         enableInterNodeCommunication: pool.enableInterNodeCommunication,
         os: {

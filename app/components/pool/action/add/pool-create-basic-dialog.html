@@ -21,10 +21,25 @@
             </div>
 
             <div class="form-element">
-                <md-input-container>
-                    <input mdInput formControlName="targetDedicated" placeholder="Number of virtual machines in pool" type="number">
-                </md-input-container>
-                <bl-error controlName="targetDedicated" code="required">Target size is a required field</bl-error>
+                <h4>Select a scale mode</h4>
+                <div class="infrastructure">
+                    <md-radio-group formControlName="enableAutoScale">
+                        <md-radio-button [value]=false>Fixed</md-radio-button>
+                        <md-radio-button [value]=true>Auto Scale</md-radio-button>
+                    </md-radio-group>
+                </div>
+                <div [hidden]="form.controls.enableAutoScale.value">
+                    <md-input-container>
+                        <input mdInput formControlName="targetDedicated" placeholder="Number of virtual machines in pool" type="number" />
+                    </md-input-container>
+                    <bl-error controlName="targetDedicated" code="required">Target size is a required field</bl-error>
+                </div>
+                <div [hidden]="!form.controls.enableAutoScale.value">
+                    <bl-autoscale-formula-picker formControlName="autoScaleFormula"></bl-autoscale-formula-picker>
+                    <md-input-container>
+                        <input mdInput formControlName="autoScaleEvaluationInterval" placeholder="Evaluation interval" type="number" />
+                    </md-input-container>
+                </div>
             </div>
 
             <div class="form-element">

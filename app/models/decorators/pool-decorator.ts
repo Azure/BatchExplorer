@@ -13,7 +13,7 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     public creationTime: string;
     public currentDedicated: string;
     public displayName: string;
-    public enableAutoscale: string;
+    public enableAutoScale: string;
     public enableInterNodeCommunication: string;
     public id: string;
     public lastModified: string;
@@ -23,6 +23,8 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     public state: string;
     public stateTransitionTime: string;
     public targetDedicated: string;
+    public autoScaleFormula: string;
+    public autoScaleEvaluationInterval: string;
     public taskSchedulingPolicy: TaskSchedulingPolicyDecorator;
     public url: string;
     public virtualMachineConfiguration: VirtualMachineConfigurationDecorator;
@@ -30,7 +32,6 @@ export class PoolDecorator extends DecoratorBase<Pool> {
 
     constructor(private pool?: Pool) {
         super(pool);
-
         this.allocationState = this.stateField(pool.allocationState);
         this.allocationStateTransitionTime = this.dateField(pool.allocationStateTransitionTime);
         this.cloudServiceConfiguration =
@@ -38,7 +39,7 @@ export class PoolDecorator extends DecoratorBase<Pool> {
         this.creationTime = this.dateField(pool.creationTime);
         this.currentDedicated = this.stringField(pool.currentDedicated);
         this.displayName = this.stringField(pool.displayName);
-        this.enableAutoscale = this.booleanField(pool.enableAutoscale);
+        this.enableAutoScale = this.booleanField(pool.enableAutoScale);
         this.enableInterNodeCommunication = this.booleanField(pool.enableInterNodeCommunication);
         this.id = this.stringField(pool.id);
         this.lastModified = this.dateField(pool.lastModified);
@@ -48,6 +49,8 @@ export class PoolDecorator extends DecoratorBase<Pool> {
         this.state = this.stateField(pool.state);
         this.stateTransitionTime = this.dateField(pool.stateTransitionTime);
         this.targetDedicated = this.stringField(pool.targetDedicated);
+        this.autoScaleFormula = this.stringField(pool.autoScaleFormula);
+        this.autoScaleEvaluationInterval = this.timespanField(pool.autoScaleEvaluationInterval);
         this.taskSchedulingPolicy =
             new TaskSchedulingPolicyDecorator(pool.taskSchedulingPolicy);
         this.url = this.stringField(pool.url);

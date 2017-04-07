@@ -1,5 +1,6 @@
+import * as moment from "moment";
 import { BatchRequestOptions } from "./models";
-import { DeleteProxy, GetProxy, ListProxy } from "./shared";
+import { DeleteProxy, GetProxy, ListProxy, ProxyUtil } from "./shared";
 
 export default class PoolProxy {
     private _getProxy: GetProxy;
@@ -84,6 +85,7 @@ export default class PoolProxy {
      */
     public add(pool: any, options?: any) {
         return new Promise((resolve, reject) => {
+            pool = ProxyUtil.decoratePool(pool);
             this.client.pool.add(pool, { poolAddOptions: options }, (error, result) => {
                 if (error) { return reject(error); }
                 return resolve();

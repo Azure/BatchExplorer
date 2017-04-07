@@ -5,6 +5,7 @@ export * from "./affinity-information";
 export * from "./application";
 export * from "./application-package";
 export * from "./application-package-reference";
+export * from "./autoscale-formula";
 export * from "./batch-error";
 export * from "./cloud-service-configuration";
 export * from "./compute-node-information";
