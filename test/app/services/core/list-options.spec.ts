@@ -29,6 +29,17 @@ describe("ListOptions", () => {
         expect(options.original).toEqual({ maxItems: 5, param1: "bar" });
     });
 
+    describe("#isEmpty", () => {
+        it("should return true when no params given", () => {
+            expect(new ListOptions({}).isEmpty()).toBe(true);
+        });
+
+        it("should return false when some params", () => {
+            expect(new ListOptions({ filter: "foo" }).isEmpty()).toBe(false);
+            expect(new ListOptions({ param1: "bar" }).isEmpty()).toBe(false);
+        });
+    });
+
     describe("#maxResults", () => {
         it("should return null if pageSize and maxItems not provided", () => {
             const options = new ListOptions({});
@@ -67,6 +78,6 @@ describe("ListOptions", () => {
                 filter: "myFilter", pageSize: 10,
                 param1: "newFoo", param2: "bar", param3: "Other",
             });
-        })
-    })
+        });
+    });
 });
