@@ -125,6 +125,7 @@ export class AccountService {
         const accountObs = this.getAccount(accountId);
         const keyObs = this.getAccountKeys(accountId);
         DataCacheTracker.clearAllCaches(this._accountCache);
+
         const obs = Observable.forkJoin(accountObs, keyObs);
         obs.subscribe({
             next: ([account, keys]) => {
@@ -132,6 +133,7 @@ export class AccountService {
                 if (!this._accountLoaded.value) {
                     this._accountLoaded.next(true);
                 }
+
                 this._currentAccountValid.next(AccountStatus.Valid);
             },
             error: (error) => {
@@ -139,6 +141,7 @@ export class AccountService {
                 this._currentAccountValid.next(AccountStatus.Invalid);
             },
         });
+
         return obs;
     }
 
@@ -147,6 +150,7 @@ export class AccountService {
             const accountObs = subscriptions.map((subscription) => {
                 return this.list(subscription.subscriptionId);
             }).toArray();
+
             return Observable.combineLatest(...accountObs);
         });
 
@@ -160,6 +164,7 @@ export class AccountService {
                 log.error("Error loading accounts", error);
             },
         });
+
         return obs;
     }
 

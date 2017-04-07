@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit, ViewChild } from "@angular/core";
+import { Component, Input, OnChanges, OnInit } from "@angular/core";
 import { autobind } from "core-decorators";
 import { BehaviorSubject, Observable } from "rxjs";
 
@@ -52,9 +52,11 @@ export class TaskFileListComponent implements OnInit, OnChanges {
         this.data = this.fileService.listFromTask(null, null, true, {}, (error: ServerError) => {
             if (error && error.body.code === Constants.APIErrorCodes.operationInvalidForCurrentState) {
                 this.fileCleanupOperation = true;
+                return false;
             }
 
-            return false;
+            // carry on throwing error
+            return true;
         });
 
         this.data.status.subscribe((status) => {

@@ -5,7 +5,8 @@ import { remote } from "electron";
 import { writeFile } from "fs";
 import { Observable, Subscription } from "rxjs";
 
-import { File } from "app/models";
+import { NotificationService } from "app/components/base/notifications";
+import { File, ServerError } from "app/models";
 import { FileService, StorageService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
 import { Constants, FileUrlUtils, log, prettyBytes } from "app/utils";
@@ -36,8 +37,9 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     constructor(
         private route: ActivatedRoute,
         private fileService: FileService,
+        private notificationService: NotificationService,
         private storageService: StorageService) {
-        this.downloadEnabled = false;
+        this.downloadEnabled = true;
     }
 
     public ngOnInit() {
@@ -82,13 +84,11 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     private _loadFileProperties(): void {
         if (this._sourceType === Constants.FileSourceTypes.Job) {
             // it's a file from a job's task
-            this.downloadEnabled = true;
             this._propertyProxy = this.fileService.getFilePropertiesFromTask(
                 this.jobId, this.taskId, this.filename);
 
         } else if (this._sourceType === Constants.FileSourceTypes.Pool) {
             // it's a file from a node
-            this.downloadEnabled = true;
             this._propertyProxy = this.fileService.getFilePropertiesFromComputeNode(
                 this.poolId, this.nodeId, this.filename);
 
@@ -112,8 +112,8 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         this._propertyProxy = null;
     }
 
-    private _saveFile(filename) {
-        if (filename === undefined) {
+    private _saveFile(pathToFile) {
+        if (pathToFile === undefined) {
             return;
         }
 
@@ -121,17 +121,25 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         if (obj.type === Constants.FileSourceTypes.Job) {
             this.fileService.getFileContentFromTask(
                 this.jobId, this.taskId, this.filename).subscribe((data) => {
-                    this._writeToFile(filename, data.content);
+                    this._writeToFile(pathToFile, data.content);
                 });
 
         } else if (this._sourceType === Constants.FileSourceTypes.Pool) {
             this.fileService.getFileContentFromComputeNode(
                 this.poolId, this.nodeId, this.filename).subscribe((data) => {
-                    this._writeToFile(filename, data.content);
+                    this._writeToFile(pathToFile, data.content);
                 });
 
         } else if (this._sourceType === Constants.FileSourceTypes.Blob) {
-            console.log("IMPLEMENT ME PLEASE >>>");
+            const blobName = `${this.taskId}/${this.outputKind}/${this.filename}`;
+            this.storageService.saveBlobToFile(this.jobId, blobName, pathToFile).subscribe({
+                error: (error: ServerError) => {
+                    this.notificationService.error(
+                        "Download failed",
+                        `${this.filename} failed to download. ${error.body.message}`,
+                    );
+                },
+            });
 
         } else {
             throw "Unrecognised source type: " + this._sourceType;

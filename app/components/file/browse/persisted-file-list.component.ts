@@ -33,16 +33,24 @@ export class PersistedFileListComponent implements OnChanges, OnDestroy {
     public status = new BehaviorSubject(LoadingStatus.Loading);
     public LoadingStatus = LoadingStatus;
     public containerNotFound: boolean;
+    public authFailed: boolean;
 
     private _subscriber: Subscription;
 
     constructor(private storageService: StorageService) {
         this.data = this.storageService.listBlobsForTask(null, null, null, (error: ServerError) => {
+            let handled = false;
             if (error && error.body.code === Constants.APIErrorCodes.containerNotFound) {
                 this.containerNotFound = true;
+                handled = true;
+            } else if (error && error.body.code === Constants.APIErrorCodes.authenticationFailed) {
+                this.authFailed = true;
+                // try refreshing the keys cache so we get them from the API again.
+                this.storageService.clearCurrentStorageKeys();
+                handled = true;
             }
 
-            return false;
+            return !handled;
         });
 
         this.data.status.subscribe((status) => {
@@ -97,6 +105,7 @@ export class PersistedFileListComponent implements OnChanges, OnDestroy {
     }
 
     private _loadFiles() {
+        this.authFailed = false;
         this.containerNotFound = false;
         if (this.hasAutoStorage) {
             this.data.updateParams({ jobId: this.jobId, taskId: this.taskId, outputKind: this.outputKind });

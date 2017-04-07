@@ -129,6 +129,7 @@ export const ServiceUrl = {
 export const APIErrorCodes = {
     containerNotFound: "ContainerNotFound",
     operationInvalidForCurrentState: "OperationInvalidForCurrentState",
+    authenticationFailed: "AuthenticationFailed",
 };
 
 export const MetadataInternalKey = {

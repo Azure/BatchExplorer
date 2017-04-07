@@ -9,7 +9,7 @@ import { TaskFileListComponent } from "./task-file-list.component";
 
 const components = [
     FileDirectoryFilter, FileListDisplayComponent, NodeFileBrowseComponent, NodeFileListComponent,
-    PersistedFileListComponent, TaskFileListComponent
+    PersistedFileListComponent, TaskFileListComponent,
 ];
 
 @NgModule({

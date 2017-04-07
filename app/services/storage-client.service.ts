@@ -25,6 +25,7 @@ export class StorageClientService {
     public hasAutoStorage: Observable<boolean>;
 
     private _currentAccountId: string;
+    private _currentStorageAccountId: string;
     private _storageClientFactory: StorageClientProxyFactory;
     private _storageKeyMap: StringMap<StorageKeyCachedItem> = {};
 
@@ -42,6 +43,8 @@ export class StorageClientService {
 
         this.accountService.currentAccount.subscribe((account) => {
             this._checkAndSetCachedItem(account.properties && account.properties.autoStorage);
+            this._currentStorageAccountId = account.properties &&
+                account.properties.autoStorage && account.properties.autoStorage.storageAccountId;
         });
     }
 
@@ -56,13 +59,11 @@ export class StorageClientService {
 
             // check if we have keys or if the lastKeySync date has changed
             if (cachedItem.keys && this._checkLastKeySync(cachedItem, settings)) {
-                console.log("returning keys from cache");
                 return Observable.of(this.getForSharedKey({
                     account: cachedItem.storageAccountName,
                     key: cachedItem.keys.primaryKey,
                 }));
             } else {
-                console.log("no keys, calling API /listkeys");
                 const url = `${settings.storageAccountId}/listkeys`;
                 return this.arm.post(url, JSON.stringify({}))
                     .map(response => new StorageKeys(response.json()))
@@ -79,6 +80,13 @@ export class StorageClientService {
 
     public getForSharedKey(options: StorageAccountSharedKeyOptions) {
         return this._storageClientFactory.getBlobServiceForSharedKey(options);
+    }
+
+    public clearCurrentStorageKeys() {
+        let cachedItem = this._getCachedItem(this._currentStorageAccountId);
+        if (cachedItem) {
+            cachedItem.keys = null;
+        }
     }
 
     /**
@@ -117,12 +125,9 @@ export class StorageClientService {
      * @param [settings] the current account auto storage settings
      */
     private _checkLastKeySync(cachedItem: StorageKeyCachedItem, settings: AutoStorageSettings): boolean {
-        console.log(`settings: ${settings.lastKeySync}, cached: ${cachedItem.settings.lastKeySync}`);
         if (settings.lastKeySync > cachedItem.settings.lastKeySync) {
             // update the lastKeySync value and return false so the keys are reloaded.
             this._storageKeyMap[settings.storageAccountId].settings.lastKeySync = settings.lastKeySync;
-            console.log("lastKeySync has changed, updating and returning false");
-
             return false;
         }
 

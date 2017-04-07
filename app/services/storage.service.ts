@@ -127,10 +127,37 @@ export class StorageService {
     }
 
     /**
+     * Downloads a blob into a text string.
+     * @param jobId - The ID of the job that will be turned into a safe container name
+     * @param blobName - Fully prefixed blob path: "1001/$TaskOutput/myblob.txt"
+     * @param fileName - The local path to the file to be downloaded.
+     * @param options - Optional parameters, rangeStart & rangeEnd for partial contents
+     */
+    public saveBlobToFile(
+        jobId: string,
+        blobName: string,
+        fileName: string,
+        options: any = {}): Observable<BlobContentResult> {
+
+        return this._callStorageClient((client) => {
+            return StorageUtils.getSafeContainerName(jobId).then((safeContainerName) => {
+                return client.getBlobToLocalFile(safeContainerName, blobName, fileName, options);
+            });
+        });
+    }
+
+    /**
      * Allow access to the hasAutoStorage observable in the base client
      */
     public get hasAutoStorage(): Observable<boolean> {
         return this.storageClient.hasAutoStorage;
+    }
+
+    /**
+     * Allow a component to refresh the access keys
+     */
+    public clearCurrentStorageKeys(): void {
+        this.storageClient.clearCurrentStorageKeys();
     }
 
     /**

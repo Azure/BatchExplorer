@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy } from "@angular/core";
 import { Observable, Subscription } from "rxjs";
 
 import { ScrollableComponent, ScrollableService } from "app/components/base/scrollable";
@@ -10,7 +10,7 @@ import { Constants, log } from "app/utils";
     selector: "bl-file-content",
     templateUrl: "file-content.html",
 })
-export class FileContentComponent implements OnChanges, AfterViewInit {
+export class FileContentComponent implements OnChanges, OnDestroy, AfterViewInit {
     @Input()
     public jobId: string;
 
@@ -70,6 +70,11 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
 
         this._updateFileContent();
         this._setRefreshInterval();
+    }
+
+    public ngOnDestroy() {
+        // clear the refresh when the user navigates away
+        clearInterval(this._refreshInterval);
     }
 
     public toggleFollowLog() {

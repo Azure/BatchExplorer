@@ -120,4 +120,27 @@ export class BlobStorageClientProxy {
             });
         });
     }
+
+    /**
+     * Downloads a blob into a file.
+     * http://azure.github.io/azure-storage-node/BlobService.html#getBlobToLocalFile__anchor
+     * Note: this returns a SpeedSummary object that can list the percent complete. Can't see any
+     * implementation of this in the docs. Might be useful at some point.
+     * @param {string} container - Name of the storage container
+     * @param {string} blob - Fully prefixed blob path: "1001/$TaskOutput/myblob.txt"
+     * @param {string} localFileName - The local path to the file to be downloaded.
+     * @param {StorageRequestOptions} options - Optional request parameters
+     */
+    public getBlobToLocalFile(container: string, blob: string, localFileName: string, options?: StorageRequestOptions) {
+        return new Promise((resolve, reject) => {
+            this._blobService.getBlobToLocalFile(container, blob, localFileName, options, (error, result, response) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    // resolve with no content
+                    resolve({ });
+                }
+            });
+        });
+    }
 }

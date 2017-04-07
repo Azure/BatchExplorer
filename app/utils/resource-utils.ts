@@ -151,7 +151,7 @@ export class ResourceUtils {
         result.resources = [];
         result.resourceMap = {};
 
-        // TODO: Fix me
+        // tslint:disable-next-line
         while (tokens = ResourceUtils.regExpResourceTypeExtractor.exec(resources)) {
             if (!tokens) {
                 throw new Error("Invalid resource id: " + id);
