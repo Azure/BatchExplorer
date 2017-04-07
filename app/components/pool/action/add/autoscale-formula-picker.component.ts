@@ -32,6 +32,7 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
     };
     private _subs: Subscription[];
     private _propagateChange: Function;
+    private _propagateTouch: Function;
 
     constructor(private autoscaleFormulaService: AutoscaleFormulaService, elRef: ElementRef) { }
 
@@ -43,6 +44,7 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
         this.savedAutoscaleFormulas = List([]);
         this._subs  = [];
         this._propagateChange = null;
+        this._propagateTouch = null;
         this._subs.push(this.autoscaleFormulaService.formulas.subscribe((formulas) => {
             this.savedAutoscaleFormulas = formulas;
         }));
@@ -60,24 +62,16 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
         this._propagateChange = fn;
     }
 
-    public registerOnTouched() {
-        // Do nothing
+    public registerOnTouched(fn) {
+        this._propagateTouch = fn;
     }
 
     public validate(c: FormControl) {
-        if (!this.autoscaleFormulaValue) {
-            return {
-                autoscaleFormulaPicker: {
-                    valid: false,
-                    missingSelection: true,
-                },
-            };
-        }
         return null;
     }
 
     public textEditorOnChange($event) {
-        if (this._propagateChange && this.autoscaleFormulaValue) {
+        if (this._propagateChange && this.autoscaleFormulaValue !== null) {
             this._propagateChange(this.autoscaleFormulaValue);
         }
     }
@@ -87,6 +81,7 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
     }
 
     public textEditorOnBlur() {
+        this._propagateTouch();
         this.isTextEditorFocused = false;
     }
 
