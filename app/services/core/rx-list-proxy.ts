@@ -4,15 +4,15 @@ import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { log } from "app/utils";
-import { CachedKeyList } from "./query-cache";
+import { ListOptions, ListOptionsAttributes } from "./list-options";
 import { RxEntityProxy } from "./rx-entity-proxy";
 import { RxProxyBase, RxProxyBaseConfig } from "./rx-proxy-base";
 
 export interface RxListProxyConfig<TParams, TEntity> extends RxProxyBaseConfig<TParams, TEntity> {
-    initialOptions?: any;
+    initialOptions?: ListOptionsAttributes;
 }
 
-export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams, any, TEntity> {
+export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams, ListOptions, TEntity> {
     public items: Observable<List<TEntity>>;
     public hasMore: Observable<boolean>;
 
@@ -22,13 +22,17 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
 
     constructor(type: Type<TEntity>, config: RxListProxyConfig<TParams, TEntity>) {
         super(type, config);
-        this._options = config.initialOptions || {};
+        this._options = new ListOptions(config.initialOptions || {});
         this.params = config.initialParams;
         this._hasMore.next(true);
         this.hasMore = this._hasMore.asObservable();
 
-        this.items = this._itemKeys.map((keys) => {
+        this.items = this._itemKeys.map((itemKeys) => {
             return this.cache.items.map((items) => {
+                let keys: any = itemKeys;
+                if (this._options.maxItems) {
+                    keys = itemKeys.slice(0, this._options.maxItems);
+                }
                 return List<TEntity>(keys.map((x) => items.get(x)));
             });
         }).switch();
@@ -43,13 +47,17 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         this.handleChanges(this._params, this._options);
     }
 
-    public setOptions(options: {}, clearItems = true) {
-        super.setOptions(options);
+    public setOptions(options: ListOptionsAttributes, clearItems = true) {
+        super.setOptions(new ListOptions(options));
         this.handleChanges(this._params, this._options);
         if (clearItems) {
             this._itemKeys.next(OrderedSet([]));
         }
         this._hasMore.next(true);
+    }
+
+    public patchOptions(options: ListOptionsAttributes, clearItems = true) {
+        this.setOptions(this._options.merge(new ListOptions(options)).original);
     }
 
     /**
@@ -62,9 +70,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
             return Observable.of({ data: [] });
         }
 
-        if (this._tryLoadFromQueryCache(forceNew)) {
-            return Observable.of({ data: [] });
-        }
+        this._tryLoadFromQueryCache(forceNew);
 
         return this.fetchData({
             getData: () => {
@@ -75,7 +81,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
                 this._hasMore.next(this.hasMoreItems());
                 const currentKeys = this._itemKeys.value;
                 if (currentKeys.size === 0) {
-                    this.cache.queryCache.cacheQuery(this._options.filter, keys, this.putQueryCacheData());
+                    this.cache.queryCache.cacheQuery(this._options.filter, keys, null);
                 }
 
                 const last = this._lastRequest;
@@ -150,8 +156,6 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
     protected abstract processResponse(response: any): any[];
     protected abstract hasMoreItems(): boolean;
     protected abstract queryCacheKey(): string;
-    protected abstract putQueryCacheData(): any;
-    protected abstract getQueryCacheData(queryCache: CachedKeyList): any;
 
     /**
      * This will try to load keys from the query cache
@@ -165,7 +169,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         if (!cachedList) {
             return false;
         }
-        this.getQueryCacheData(cachedList);
+        // this.getQueryCacheData(cachedList);
         this._itemKeys.next(cachedList.keys);
         this._lastRequest = { params: this._params, options: this._options };
         this._hasMore.next(this.hasMoreItems());

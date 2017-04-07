@@ -9,11 +9,11 @@ import { FilterBuilder } from "app/utils/filter-builder";
 import { BatchClientService } from "./batch-client.service";
 
 import {
-    DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache,
-    getOnceProxy,
+    DataCache, ListOptionsAttributes, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy,
+    TargetedDataCache, getOnceProxy,
 } from "./core";
 import { FileContentResult } from "./file-service";
-import { CommonListOptions, ServiceBase } from "./service-base";
+import { ServiceBase } from "./service-base";
 
 export interface NodeListParams {
     poolId?: string;
@@ -23,7 +23,7 @@ export interface NodeParams extends NodeListParams {
     id?: string;
 }
 
-export interface PoolListOptions extends CommonListOptions {
+export interface PoolListOptions extends ListOptionsAttributes {
 
 }
 
@@ -61,7 +61,7 @@ export class NodeService extends ServiceBase {
 
     public listAll(poolId: string, options: PoolListOptions = {}): Observable<List<Node>> {
         const subject = new AsyncSubject();
-        options.maxResults = 1000;
+        options.pageSize = 1000;
         const data = this.list(poolId, options);
         const sub = data.items.subscribe((x) => subject.next(x));
         data.fetchAll().subscribe(() => {
@@ -144,7 +144,7 @@ export class NodeService extends ServiceBase {
 
         this.taskManager.startTask(taskName, (bTask) => {
             const options: any = {
-                maxResults: 1000,
+                pageSize: 1000,
             };
             if (states) {
                 options.filter = FilterBuilder.or(...states.map(x => FilterBuilder.prop("state").eq(x))).toOData();
@@ -175,7 +175,7 @@ export class NodeService extends ServiceBase {
         return observable;
     }
 
-    public listNodeAgentSkus(initialOptions: any = {maxResults: 1000}): RxListProxy<{}, NodeAgentSku> {
+    public listNodeAgentSkus(initialOptions: any = { pageSize: 1000 }): RxListProxy<{}, NodeAgentSku> {
         return new RxBatchListProxy<{}, NodeAgentSku>(NodeAgentSku, this.batchService, {
             cache: (params) => this._nodeAgentSkusCache,
             proxyConstructor: (client, params, options) => client.account.listNodeAgentSkus(options),

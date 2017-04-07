@@ -1,5 +1,5 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { List } from "immutable";
@@ -9,7 +9,6 @@ import { VmSizePickerComponent } from "app/components/pool/action/add";
 import { VmSize } from "app/models";
 import { PoolOsSources } from "app/models/forms";
 import { VmSizeService } from "app/services";
-import { click } from "test/utils/helpers";
 
 @Component({
     template: `<bl-vm-size-picker [(ngModel)]="vmSize" [osSource]="osSource"></bl-vm-size-picker>`,
@@ -74,28 +73,26 @@ describe("VmSizePickerComponent", () => {
         const tabs = de.queryAll(By.css("md-tab"));
         expect(tabs.length).toBe(3);
 
-        const tab1Sizes = tabs[0].queryAll(By.css(".vm-size"));
-        expect(tab1Sizes.length).toBe(3);
+        const tab1Sizes = tabs[0].queryAll(By.css("bl-table bl-row"));
+        expect(tab1Sizes.length).toBe(3, "First tab should have 3 rows");
         expect(tab1Sizes[0].nativeElement.textContent).toContain("Standard A1");
         expect(tab1Sizes[1].nativeElement.textContent).toContain("Standard A2");
         expect(tab1Sizes[2].nativeElement.textContent).toContain("Standard A3");
 
-        const tab2Sizes = tabs[1].queryAll(By.css(".vm-size"));
-        expect(tab2Sizes.length).toBe(2);
+        const tab2Sizes = tabs[1].queryAll(By.css("bl-table bl-row"));
+        expect(tab2Sizes.length).toBe(2, "Second tab should have 2 rows");
         expect(tab2Sizes[0].nativeElement.textContent).toContain("Standard C1");
         expect(tab2Sizes[1].nativeElement.textContent).toContain("Standard C2");
 
-        const tab3Sizes = tabs[2].queryAll(By.css(".vm-size"));
-        expect(tab3Sizes.length).toBe(1);
+        const tab3Sizes = tabs[2].queryAll(By.css("bl-table bl-row"));
+        expect(tab3Sizes.length).toBe(1, "Third tab should have 1 rows");
         expect(tab3Sizes[0].nativeElement.textContent).toContain("Standard O1");
     });
 
-    it("should select the size if click on it", () => {
-        const tabs = de.queryAll(By.css("md-tab"));
-        const tab1Sizes = tabs[0].queryAll(By.css(".vm-size"));
-        click(tab1Sizes[1]);
+    it("should select the size if click on it", fakeAsync(() => {
+        component.pickSize("Standard_A2");
+        tick();
         fixture.detectChanges();
         expect(testComponent.vmSize).toEqual("Standard_A2");
-        expect(tab1Sizes[1].classes["active"]).toBe(true);
-    });
+    }));
 });

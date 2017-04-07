@@ -5,7 +5,7 @@ import { Observable, Subscription } from "rxjs";
 
 import { Pool } from "app/models";
 import { PoolService, VmSizeService } from "app/services";
-import { RxListProxy } from "app/services/core";
+import { ListOptionsAttributes, RxListProxy } from "app/services/core";
 import { PoolUtils } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 
@@ -95,7 +95,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
     }
 
     private _computeOptions(query: string = null) {
-        let options: any = { maxResults: 20 };
+        let options: ListOptionsAttributes = { maxItems: 20 };
         if (query) {
             options.filter = FilterBuilder.prop("id").startswith(query.clearWhitespace()).toOData();
         }
