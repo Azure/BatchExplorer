@@ -76,21 +76,22 @@ describe("NodeFileListComponent", () => {
 
     describe("setup the filter correctly", () => {
         it("doesn't filter when both folder and filter are empty", () => {
-            expect(listProxy.options).toEqual({});
+            expect(listProxy.options.original).toEqual({});
+            expect(listProxy.options.isEmpty()).toBe(true);
         });
 
         it("filter by folder when folder is specify and filter is empty", () => {
             testComponent.folder = "startup";
             fixture.detectChanges();
 
-            expect(listProxy.options).toEqual({ filter: `startswith(name, 'startup')` });
+            expect(listProxy.options.filter).toEqual(`startswith(name, 'startup')`);
         });
 
         it("use the filter when provided and folder is not there", () => {
             testComponent.filter = FilterBuilder.prop("name").startswith("something");
             fixture.detectChanges();
 
-            expect(listProxy.options).toEqual({ filter: `startswith(name, 'something')` });
+            expect(listProxy.options.filter).toEqual(`startswith(name, 'something')`);
         });
 
         it("merge the folder and filter when both are provided", () => {
@@ -98,7 +99,7 @@ describe("NodeFileListComponent", () => {
             testComponent.filter = FilterBuilder.prop("name").startswith("something");
             fixture.detectChanges();
 
-            expect(listProxy.options).toEqual({ filter: `startswith(name, 'startup/something')` });
+            expect(listProxy.options.filter).toEqual( `startswith(name, 'startup/something')`);
         });
     });
 });

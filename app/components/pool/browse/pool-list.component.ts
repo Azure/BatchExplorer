@@ -47,7 +47,7 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         this._filter = filter;
 
         if (filter.isEmpty()) {
-            this.data.setOptions({});
+            this.data.setOptions({ pageSize: 5 });
         } else {
             this.data.setOptions({ filter: filter.toOData() });
         }

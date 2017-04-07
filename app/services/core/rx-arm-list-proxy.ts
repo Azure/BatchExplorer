@@ -2,7 +2,7 @@ import { Type } from "@angular/core";
 import { RequestOptions, URLSearchParams } from "@angular/http";
 import { Observable } from "rxjs";
 
-import { ObjectUtils, exists } from "app/utils";
+import { exists } from "app/utils";
 import { ArmHttpService } from "../arm-http.service";
 import { CachedKeyList } from "./query-cache";
 import { RxListProxy, RxListProxyConfig } from "./rx-list-proxy";
@@ -61,8 +61,9 @@ export class RxArmListProxy<TParams, TEntity> extends RxListProxy<TParams, TEnti
     }
 
     private _requestOptions(): RequestOptions {
+        const options = this._options;
         const search = new URLSearchParams();
-        if (this._options.filter) {
+        if (options.filter) {
             search.set("$filter", this._options.filter);
         }
 
@@ -70,8 +71,13 @@ export class RxArmListProxy<TParams, TEntity> extends RxListProxy<TParams, TEnti
             search.set("$select", this._options.select);
         }
 
-        for (let key of Object.keys(ObjectUtils.except(this._options, ["filter"]))) {
-            search.set(key, this._options[key]);
+        if (this._options.pageSize || this._options.maxItems) {
+            const value = this._options.pageSize || this._options.maxItems;
+            search.set("maxResults", value.toString());
+        }
+
+        for (let key of Object.keys(options.attributes)) {
+            search.set(key, options.attributes[key]);
         }
 
         return new RequestOptions({

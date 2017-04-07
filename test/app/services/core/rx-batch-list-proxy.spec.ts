@@ -243,27 +243,6 @@ describe("RxBatchListProxy", () => {
             expect(queryCache).not.toBeFalsy();
             expect(queryCache.keys).toEqualImmutable(OrderedSet(["1", "2", "3"]));
         });
-
-        it("a new proxy with the same query should use the same keys and not load anything", (done) => {
-            const otherClientProxy = new MockListProxy({});
-            let otherProxy = new RxBatchListProxy(FakeModel, batchClientServiceSpy, {
-                cache: () => cache,
-                proxyConstructor: (params, options) => {
-                    otherClientProxy.options = options;
-                    return otherClientProxy;
-                },
-                initialOptions: { filter: "filter1" },
-            });
-            let otherStatus: LoadingStatus;
-            otherProxy.status.subscribe((x) => otherStatus = x);
-            otherProxy.fetchNext().subscribe(() => {
-                expect(items).toEqualImmutable(List(data[0].map((x) => new FakeModel(x))));
-                expect(otherClientProxy.fetchNext).not.toHaveBeenCalled();
-
-                expect(otherStatus).toBe(LoadingStatus.Ready);
-                done();
-            });
-        });
     });
 
     describe("when first call returns an error", () => {
