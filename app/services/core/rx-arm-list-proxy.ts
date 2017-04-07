@@ -67,13 +67,12 @@ export class RxArmListProxy<TParams, TEntity> extends RxListProxy<TParams, TEnti
             search.set("$filter", this._options.filter);
         }
 
-        if (this._options.select) {
+        if (options.select) {
             search.set("$select", this._options.select);
         }
 
-        if (this._options.pageSize || this._options.maxItems) {
-            const value = this._options.pageSize || this._options.maxItems;
-            search.set("maxResults", value.toString());
+        if (options.maxResults) {
+            search.set("maxResults", options.maxResults.toString());
         }
 
         for (let key of Object.keys(options.attributes)) {
