@@ -43,7 +43,7 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
         enableAutoScale: output.enableAutoScale,
         autoScaleFormula: output.autoScaleFormula,
         autoScaleEvaluationInterval: moment.duration({ minutes: output.autoScaleEvaluationInterval }),
-        maxTasksPerNode: output.maxTasksPerNode,
+        maxTasksPerNode: Number(output.maxTasksPerNode),
         enableInterNodeCommunication: output.enableInterNodeCommunication,
     };
 

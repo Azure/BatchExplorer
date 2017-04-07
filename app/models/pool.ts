@@ -17,7 +17,7 @@ const PoolRecord = Record({
     creationTime: null,
     currentDedicated: 0,
     displayName: null,
-    enableAutoScale: null,
+    enableAutoScale: false,
     enableInterNodeCommunication: false,
     id: null,
     lastModified: null,
