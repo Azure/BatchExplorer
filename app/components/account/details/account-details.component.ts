@@ -20,6 +20,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         }
         return { name: name, label: "Account" };
     }
+
     public account: AccountResource;
 
     public accountId: string;
@@ -32,6 +33,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     public poolData: RxListProxy<{}, Pool>;
 
     private _paramsSubscriber: Subscription;
+    private initialOptions = { maxResults: 10 };
 
     constructor(
         private router: Router,
@@ -54,17 +56,17 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
                     this.account = x;
                     this.loading = false;
 
-                    let initalOptions = { maxResults: 10 };
-
-                    this.applicationData = this.applicationService.list(initalOptions);
+                    console.log("loading data!");
+                    this.applicationData = this.applicationService.list(this.initialOptions);
                     this.applicationData.fetchNext();
-                    this.jobData = this.jobService.list(initalOptions);
+                    this.jobData = this.jobService.list(this.initialOptions);
                     this.jobData.fetchNext();
-                    this.poolData = this.poolService.list(initalOptions);
+                    this.poolData = this.poolService.list(this.initialOptions);
                     this.poolData.fetchNext();
                 },
                 error: (error) => {
                     this.loadingError = error;
+                    console.log(this.loadingError);
                 },
             });
         });
