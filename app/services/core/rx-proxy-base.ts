@@ -105,7 +105,11 @@ export abstract class RxProxyBase<TParams, TOptions extends ProxyOptions, TEntit
     }
 
     public setOptions(options: TOptions, clearItems = true) {
-        this._options = new ProxyOptions(options) as any;
+        if (this._options instanceof ProxyOptions) {
+            this._options = options;
+        } else {
+            this._options = new ProxyOptions(options) as any;
+        }
         if (this._pollObservable) {
             this._pollObservable.updateKey(this._key());
         }
