@@ -54,17 +54,10 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
                 next: (x) => {
                     this.account = x;
                     this.loading = false;
-
-                    console.log("loading data for account", this.accountId);
                     this.applicationData = this.applicationService.list(this.initialOptions);
                     this.applicationData.fetchNext();
                     this.jobData = this.jobService.list(this.initialOptions);
-                    let j = this.jobData.fetchNext();
-                    j.subscribe({
-                        next: (js) => {
-                            console.log(js);
-                        },
-                    });
+                    this.jobData.fetchNext();
                     this.poolData = this.poolService.list(this.initialOptions);
                     this.poolData.fetchNext();
                 },

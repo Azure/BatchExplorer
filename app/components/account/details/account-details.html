@@ -21,16 +21,20 @@
                     <md-card-title><h2>Job status</h2></md-card-title>
                 </md-card-header>
                 <md-card-content class="account-card-content">
-                    <p *ngIf="(jobData.items | async).size === 0"
-                        style="text-align: left">
-                        There are no jobs in the account. Click <a href="">here</a> to add one.
-                    </p>
-                    <bl-table>
-                        <bl-row *ngFor="let job of (jobData.items | async)" [routerLink]="['/jobs/', job.id]" [key]="job.id">
-                            <bl-cell>{{job.id}}</bl-cell>
-                            <bl-cell style="text-align: right; color:steelblue">{{job.state}}</bl-cell>
-                        </bl-row>
-                    </bl-table>
+                    <div>
+                        <bl-loading [status]="jobData.status | async">
+                            <p *ngIf="(jobData.items | async).size === 0 && !loading"
+                                style="text-align: left">
+                                There are no jobs in the account. Click <a href="">here</a> to add one.
+                            </p>
+                            <bl-table>
+                                <bl-row *ngFor="let job of (jobData.items | async)" [routerLink]="['/jobs/', job.id]" [key]="job.id">
+                                    <bl-cell>{{job.id}}</bl-cell>
+                                    <bl-cell style="text-align: right; color:steelblue">{{job.state}}</bl-cell>
+                                </bl-row>
+                            </bl-table>
+                        </bl-loading>
+                    </div>
                 </md-card-content>
                 <md-card-actions>
                     <button routerLink="/jobs" (click)="selectAccount(account.id)" md-button>View all jobs</button>
@@ -42,19 +46,23 @@
                     <md-card-title><h2>Pool status</h2></md-card-title>
                 </md-card-header>
                 <md-card-content class="account-card-content">
-                    <p *ngIf="(poolData.items | async).size === 0"
-                        style="text-align: left">
-                        There are no pools in the account. Click <a href="">here</a> to add one.
-                    </p>
-                    <bl-table>
-                        <bl-row *ngFor="let pool of (poolData.items | async).slice(0, 10)" [routerLink]="['/pools/', pool.id]" [key]="pool.id">
-                            <bl-cell>{{pool.id}}</bl-cell>
-                            <bl-cell><i aria-hidden="true" class="fa fa-{{pool.osIconName}}"></i></bl-cell>
-                            <bl-cell style="text-align: right">
-                                <bl-pool-nodes-preview [pool]="pool"></bl-pool-nodes-preview>
-                            </bl-cell>
-                        </bl-row>
-                    </bl-table>
+                    <div>
+                        <bl-loading [status]="poolData.status | async">
+                            <p *ngIf="(poolData.items | async).size === 0 && !loading"
+                                style="text-align: left">
+                                There are no pools in the account. Click <a href="">here</a> to add one.
+                            </p>
+                            <bl-table>
+                                <bl-row *ngFor="let pool of (poolData.items | async).slice(0, 10)" [routerLink]="['/pools/', pool.id]" [key]="pool.id">
+                                    <bl-cell>{{pool.id}}</bl-cell>
+                                    <bl-cell><i aria-hidden="true" class="fa fa-{{pool.osIconName}}"></i></bl-cell>
+                                    <bl-cell style="text-align: right">
+                                        <bl-pool-nodes-preview [pool]="pool"></bl-pool-nodes-preview>
+                                    </bl-cell>
+                                </bl-row>
+                            </bl-table>
+                        </bl-loading>
+                    </div>
                 </md-card-content>
                 <md-card-actions>
                     <button md-button>View all pools</button>
@@ -66,15 +74,19 @@
                     <md-card-title><h2>App packages</h2></md-card-title>
                 </md-card-header>
                 <md-card-content class="account-card-content">
-                    <p *ngIf="(applicationData.items | async).size === 0"
-                        style="text-align: left">
-                        There are no application packages in the account. Click <a href="">here</a> to add one.
-                    </p>
-                    <bl-table>
-                        <bl-row *ngFor="let app of (applicationData.items | async).slice(0, 10)" [routerLink]="['/applications/', app.id]" [key]="app.id">
-                            <bl-cell>{{app.id}}</bl-cell>
-                        </bl-row>
-                    </bl-table>
+                    <div>
+                        <bl-loading [status]="applicationData.status | async">
+                            <p *ngIf="(applicationData.items | async).size === 0 && !loading"
+                                style="text-align: left">
+                                There are no application packages in the account. Click <a href="">here</a> to add one.
+                            </p>
+                            <bl-table>
+                                <bl-row *ngFor="let app of (applicationData.items | async).slice(0, 10)" [routerLink]="['/applications/', app.id]" [key]="app.id">
+                                    <bl-cell>{{app.id}}</bl-cell>
+                                </bl-row>
+                            </bl-table>
+                        </bl-loading>
+                    </div>
                 </md-card-content>
                 <md-card-actions>
                     <button md-button>View all packages</button>
