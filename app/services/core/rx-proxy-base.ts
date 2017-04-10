@@ -6,15 +6,12 @@ import { ServerError } from "app/models";
 import { Constants, ObjectUtils, exists, log } from "app/utils";
 import { DataCache } from "./data-cache";
 import { PollObservable } from "./poll-service";
+import { OptionsBase, ProxyOptions } from "./proxy-options";
 
 export interface FetchDataOptions {
     getData: () => Observable<any>;
     next: (response: any) => void;
     error?: (error: any) => void;
-}
-
-export interface OptionsBase {
-    select?: string;
 }
 
 export interface RxProxyBaseConfig<TParams, TEntity> {
@@ -34,7 +31,7 @@ export interface RxProxyBaseConfig<TParams, TEntity> {
 /**
  * Base proxy for List and Entity proxies
  */
-export abstract class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity> {
+export abstract class RxProxyBase<TParams, TOptions extends ProxyOptions, TEntity> {
     /**
      * Status that keep track of any loading
      */
@@ -96,6 +93,8 @@ export abstract class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity
         this._params = params;
         this.cache = this.getCache(params);
         if (this._pollObservable) {
+            console.log("Update params", this._key());
+
             this._pollObservable.updateKey(this._key());
         }
         this.markLoadingNewData();
@@ -107,8 +106,10 @@ export abstract class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity
     }
 
     public setOptions(options: TOptions, clearItems = true) {
-        this._options = options;
+        console.log("Instance of ", options, options.original);
+        this._options = new ProxyOptions(options) as any;
         if (this._pollObservable) {
+            console.log("Update options", this._key());
             this._pollObservable.updateKey(this._key());
         }
         if (this.queryInProgress()) {
@@ -133,6 +134,7 @@ export abstract class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity
      * @param interval {number} Interval in milliseconds.
      */
     public startPoll(interval: number): PollObservable {
+        console.log("Start pooll", this._key());
         if (this._pollObservable) {
             return this._pollObservable;
         }
@@ -228,7 +230,7 @@ export abstract class RxProxyBase<TParams, TOptions extends OptionsBase, TEntity
 
     private _key() {
         const paramsKey = ObjectUtils.serialize(this._params);
-        const optionsKey = ObjectUtils.serialize(this._options);
+        const optionsKey = ObjectUtils.serialize(this._options.original);
         return `${paramsKey}|${optionsKey}`;
     }
 }

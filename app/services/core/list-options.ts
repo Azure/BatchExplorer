@@ -1,5 +1,5 @@
 import { ObjectUtils } from "app/utils";
-import { OptionsBase } from "./rx-proxy-base";
+import { OptionsBase, ProxyOptions } from "./proxy-options";
 
 export interface ListOptionsAttributes extends OptionsBase {
     /**
@@ -24,43 +24,22 @@ export interface ListOptionsAttributes extends OptionsBase {
     [key: string]: any;
 }
 
-export class ListOptions {
+export class ListOptions extends ProxyOptions {
     public pageSize: number;
     public maxItems: number;
     public filter: string;
-    public select: string;
-
-    public attributes: { [key: string]: any };
 
     public original: ListOptionsAttributes;
 
-    constructor(attributes: ListOptionsAttributes) {
-        this.pageSize = attributes.pageSize;
-        this.maxItems = attributes.maxItems;
-        this.filter = attributes.filter;
-        this.select = attributes.select;
-        this.attributes = ObjectUtils.except(attributes, ["select", "filter", "maxItems", "pageSize"]);
-        this.original = attributes;
+    constructor(attributes: ListOptionsAttributes | ListOptions) {
+        super(attributes);
+        this.pageSize = this.original.pageSize;
+        this.maxItems = this.original.maxItems;
+        this.filter = this.original.filter;
     }
 
-    public isEmpty(): boolean {
-        return !this.original || Object.keys(this.original).length === 0;
-    }
-
-    /**
-     * Merge other list options with this one and return the newly built options
-     * @param other Other options to merge(Anything given there will override this)
-     */
-    public merge(other: ListOptions): ListOptions {
-        return new ListOptions(Object.assign({}, this.original, other.original));
-    }
-
-    /**
-     * Similar to #merge() but the given options are used as default.
-     * This means it will only merge if the attribute is not defined localy.
-     */
-    public mergeDefault(defaults: ListOptions): ListOptions {
-        return defaults.merge(this);
+    protected specialAttributes(): string[] {
+        return super.specialAttributes().concat(["filter", "maxItems", "pageSize"]);
     }
 
     /**
