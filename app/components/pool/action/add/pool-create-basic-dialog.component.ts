@@ -45,6 +45,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             vmSize: ["Standard_D1", Validators.required],
             maxTasksPerNode: 1,
             enableInterNodeCommunication: false,
+            startTask: null,
         });
         this._sub = this._osControl.valueChanges.subscribe((value) => {
             this.osSource = value.source;

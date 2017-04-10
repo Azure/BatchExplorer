@@ -235,8 +235,8 @@ bl-create-form {
         }
     }
 
-    .nested-form-btn {
-        border: 1px dashed $dusty-grey;
+    .picker-btn {
+        border: 2px dashed $dusty-grey;
         width: 270px;
         height: 89px;
         background: transparent;
@@ -245,10 +245,12 @@ bl-create-form {
         align-items: center;
         color: $dusty-grey;
         cursor: pointer;
-        border-radius: 3px;
+        border-radius: 5px;
+        outline: none;
 
-        &:hover {
-            border-color: map-get($md-prussian-blue, 300);
+        &:hover, &:focus {
+            border: 2px dashed map-get($md-prussian-blue, 300);
+            color: map-get($md-prussian-blue, 300);
         }
 
         .fa {

@@ -38,7 +38,7 @@
 
             <div>
                 <h3>Start task</h3>
-                <button class="nested-form-btn" (click)="startTask.activate()">
+                <button class="picker-btn" (click)="startTask.activate()">
                    <i class="fa fa-plus"></i> Add a start task
                 </button>
             </div>
@@ -46,6 +46,6 @@
     </bl-form-page>
 
     <bl-form-page #startTask>
-        Banana
+        <bl-start-task-picker formControlName="startTask"></bl-start-task-picker>
     </bl-form-page>
 </bl-create-form>

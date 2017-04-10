@@ -35,8 +35,13 @@ export class StartTaskEditFormComponent {
         private poolService: PoolService,
         private notificationService: NotificationService) {
         this.form = formBuilder.group({
+            enableStartTask: [false],
             startTask: [null],
         });
+    }
+
+    public get enableStartTask() {
+        return this.form.controls["enableStartTask"].value;
     }
 
     @autobind()
