@@ -107,78 +107,70 @@ fieldset {
     width: 640px;
 }
 
-.slideout-form, .large-slideout-form, .edit-form {
+.slideout-form, .large-slideout-form, .edit-form, bl-create-form {
 
     &.content-wrapper {
         padding: 0;
     }
 
-    form {
-        opacity: 1;
+    .form-element {
+        width: 100%;
+        margin: 10px 0;
 
-        &.saving {
-            opacity: 0.25;
+        &.element-spacer {
+            margin-bottom: 15px;
         }
 
-        .form-element {
+        &.pad-top {
+            margin-top: 20px;
+        }
+
+        // pretty sure most of what is in here can be set in the HTML with: dividerColor="<color>"
+
+        input[type=file] {
             width: 100%;
-            margin: 10px 0;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
 
-            &.element-spacer {
-                margin-bottom: 15px;
-            }
+        md-input-container {
+            width: 100%;
+        }
 
-            &.pad-top {
-                margin-top: 20px;
-            }
+        md-input-container.ng-invalid.ng-touched {
+            label {
+                color: $validation-error-color;
 
-            // pretty sure most of what is in here can be set in the HTML with: dividerColor="<color>"
-
-            input[type=file] {
-                width: 100%;
-                margin-top: 5px;
-                margin-bottom: 5px;
-            }
-
-            md-input-container {
-                width: 100%;
-            }
-
-            md-input-container.ng-invalid.ng-touched {
-                label {
-                    color: $validation-error-color;
-
-                    .mat-placeholder-required {
-                        color: $validation-error-color;
-                    }
-                }
-
-                .mat-input-underline {
-                    border-color: $validation-error-color;
-                    border-width: 2px;
-
-                    .mat-input-ripple.mat-focused {
-                        opacity: 0;
-                    }
-                }
-
-                md-hint {
+                .mat-placeholder-required {
                     color: $validation-error-color;
                 }
             }
 
-            md-select {
-                margin-top: 5px;
-                width: 40%;
+            .mat-input-underline {
+                border-color: $validation-error-color;
+                border-width: 2px;
+
+                .mat-input-ripple.mat-focused {
+                    opacity: 0;
+                }
             }
 
-            .input-summary {
-                margin-top: 15px;
-                padding-bottom: 5px;
+            md-hint {
+                color: $validation-error-color;
+            }
+        }
 
-                p {
-                    margin-bottom: 10px;
-                }
+        md-select {
+            margin-top: 5px;
+            width: 40%;
+        }
+
+        .input-summary {
+            margin-top: 15px;
+            padding-bottom: 5px;
+
+            p {
+                margin-bottom: 10px;
             }
         }
     }

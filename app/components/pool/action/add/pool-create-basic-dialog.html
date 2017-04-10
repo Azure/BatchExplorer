@@ -1,6 +1,5 @@
 <bl-create-form [formGroup]="form" [submit]="submit" [sidebarRef]="sidebarRef">
-    <bl-form-page main-form-page>
-        <h1>Add a pool to the account</h1>
+    <bl-form-page main-form-page name="Add a pool to the account">
         <p>Pools allow you to provision compute nodes to do work</p>
         <form novalidate [formGroup]="form">
             <div class="form-element">
@@ -45,7 +44,7 @@
         </form>
     </bl-form-page>
 
-    <bl-form-page #startTask>
+    <bl-form-page #startTask name="Start task">
         <bl-start-task-picker formControlName="startTask"></bl-start-task-picker>
     </bl-form-page>
 </bl-create-form>

@@ -1,9 +1,12 @@
 <bl-server-error [error]="error"></bl-server-error>
-<div class="content">
-    <div *ngIf="_pageStack.length > 0">
-        <button md-raised-button color="primary" (click)="closePage()">Back</button>
+<div class="content" *ngIf="currentPage">
+    <div class="header">
+        <div *ngIf="_pageStack.length > 0">
+            <button md-raised-button color="primary" (click)="closePage()">Back</button>
+        </div>
+        <h1>{{currentPage.name}}</h1>
     </div>
-    <template [ngTemplateOutlet]="currentPage.content" *ngIf="currentPage"></template>
+    <template [ngTemplateOutlet]="currentPage.content"></template>
     <div class="loading-overlay" *ngIf="loading"></div>
 </div>
 <div class="form-footer">
