@@ -57,7 +57,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         this._hasMore.next(true);
     }
 
-    public patchOptions(options: ListOptionsAttributes, clearItems = true) {
+    public patchOptions(options: ListOptionsAttributes | ListOptions, clearItems = true) {
         this.setOptions(this._options.merge(new ListOptions(options)).original);
     }
 
