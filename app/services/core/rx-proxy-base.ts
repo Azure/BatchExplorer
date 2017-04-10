@@ -6,7 +6,7 @@ import { ServerError } from "app/models";
 import { Constants, ObjectUtils, exists, log } from "app/utils";
 import { DataCache } from "./data-cache";
 import { PollObservable } from "./poll-service";
-import { OptionsBase, ProxyOptions } from "./proxy-options";
+import { ProxyOptions } from "./proxy-options";
 
 export interface FetchDataOptions {
     getData: () => Observable<any>;
@@ -93,7 +93,6 @@ export abstract class RxProxyBase<TParams, TOptions extends ProxyOptions, TEntit
         this._params = params;
         this.cache = this.getCache(params);
         if (this._pollObservable) {
-            console.log("Update params", this._key());
 
             this._pollObservable.updateKey(this._key());
         }
@@ -106,10 +105,8 @@ export abstract class RxProxyBase<TParams, TOptions extends ProxyOptions, TEntit
     }
 
     public setOptions(options: TOptions, clearItems = true) {
-        console.log("Instance of ", options, options.original);
         this._options = new ProxyOptions(options) as any;
         if (this._pollObservable) {
-            console.log("Update options", this._key());
             this._pollObservable.updateKey(this._key());
         }
         if (this.queryInProgress()) {
@@ -134,7 +131,6 @@ export abstract class RxProxyBase<TParams, TOptions extends ProxyOptions, TEntit
      * @param interval {number} Interval in milliseconds.
      */
     public startPoll(interval: number): PollObservable {
-        console.log("Start pooll", this._key());
         if (this._pollObservable) {
             return this._pollObservable;
         }

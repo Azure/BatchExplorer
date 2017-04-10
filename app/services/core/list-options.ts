@@ -1,4 +1,3 @@
-import { ObjectUtils } from "app/utils";
 import { OptionsBase, ProxyOptions } from "./proxy-options";
 
 export interface ListOptionsAttributes extends OptionsBase {
