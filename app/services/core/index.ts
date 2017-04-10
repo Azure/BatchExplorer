@@ -1,7 +1,4 @@
 export * from "./data-cache";
-export * from "./long-running-action";
-export * from "./poll-service";
-export * from "./query-cache";
 export * from "./rx-arm-entity-proxy";
 export * from "./rx-arm-list-proxy";
 export * from "./rx-batch-entity-proxy";

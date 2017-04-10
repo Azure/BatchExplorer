@@ -4,8 +4,9 @@ import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
 import { AccountResource, VmSize } from "app/models";
-import { AccountService, ArmHttpService } from "app/services";
 import { StringUtils, log } from "app/utils";
+import { AccountService } from "./account.service";
+import { ArmHttpService } from "./arm-http.service";
 
 export function computeUrl(subscriptionId: string) {
     return `subscriptions/${subscriptionId}/providers/Microsoft.Compute`;
