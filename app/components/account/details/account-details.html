@@ -26,7 +26,7 @@
                         There are no jobs in the account. Click <a href="">here</a> to add one.
                     </p>
                     <bl-table>
-                        <bl-row *ngFor="let job of (jobData.items | async).slice(0, 10)" [routerLink]="['/jobs/', job.id]" [key]="job.id">
+                        <bl-row *ngFor="let job of (jobData.items | async)" [routerLink]="['/jobs/', job.id]" [key]="job.id">
                             <bl-cell>{{job.id}}</bl-cell>
                             <bl-cell style="text-align: right; color:steelblue">{{job.state}}</bl-cell>
                         </bl-row>
@@ -37,7 +37,7 @@
                 </md-card-actions>
             </md-card>
 
-            <!--<md-card class="link" routerLink="/pools" (click)="selectAccount(account.id)">
+            <md-card class="link" routerLink="/pools" (click)="selectAccount(account.id)">
                 <md-card-header>
                     <md-card-title><h2>Pool status</h2></md-card-title>
                 </md-card-header>
@@ -79,7 +79,7 @@
                 <md-card-actions>
                     <button md-button>View all packages</button>
                 </md-card-actions>
-            </md-card>-->
+            </md-card>
         </div>
     </div>
 </bl-loading>
