@@ -70,6 +70,24 @@ bl-table {
         font-size: 0.9em;
         font-weight: bold;
         white-space: nowrap;
+
+        &.sortable {
+            cursor: pointer;
+            > .sort-icon {
+                color: #f5f5f5;
+            }
+
+            &:hover:not(.sorting) > .sort-icon {
+                color: $genericGray;
+            }
+        }
+
+        &.sorting {
+            color: map-get($md-prussian-blue, 500);
+            > .sort-icon {
+                color: map-get($md-prussian-blue, 500);
+            }
+        }
     }
 
     bl-cell {
@@ -83,8 +101,6 @@ bl-table {
             width: 95%;
             overflow: hidden;
             text-overflow: ellipsis;
-            position: absolute;
-            top: 11px;
         }
     }
 

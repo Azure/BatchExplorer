@@ -57,15 +57,15 @@ describe("ApplicationListComponent", () => {
     describe("filters displayed applications", () => {
         it("listProxy doesnt filter", () => {
             component.filter = FilterBuilder.and(FilterBuilder.prop("id").startswith("app-1"), FilterBuilder.none());
-            expect(component.data.options).toEqual({});
-            expect(listProxy.options).toEqual({});
+            expect(component.data.options.isEmpty()).toBe(true);
+            expect(listProxy.options.isEmpty()).toBe(true);
         });
 
         it("applied filter does client filtering", () => {
             component.filter = FilterBuilder.and(FilterBuilder.prop("id").startswith("app-1"), FilterBuilder.none());
             fixture.detectChanges();
 
-            expect(listProxy.options).toEqual({});
+            expect(listProxy.options.isEmpty()).toBe(true);
             expect(component.displayedApplications.size).toEqual(1);
             expect(component.applications.size).toEqual(3);
         });

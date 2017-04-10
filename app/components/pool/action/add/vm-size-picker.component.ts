@@ -93,10 +93,12 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
         return null;
     }
 
-    public pickSize(size: VmSize) {
-        this.pickedSize = size.name;
+    public pickSize(size: string) {
+        this.pickedSize = size;
         if (this._propagateChange) {
-            this._propagateChange(size.name);
+            setTimeout(() => {
+                this._propagateChange(size);
+            });
         }
     }
 
