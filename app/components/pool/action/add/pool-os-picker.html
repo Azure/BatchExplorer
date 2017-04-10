@@ -1,4 +1,3 @@
-<h3>Select an operating system configuration</h3>
 <md-tab-group class="form-tabs">
     <md-tab label="Distributions" title="selectedSource === PoolOsSources.IaaS" class="banana">
         <bl-os-offer-tile *ngFor="let offer of vmOffers" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickOffer(offer)" (pickSku)="pickSku(offer, $event)"

@@ -4,9 +4,9 @@
         <div *ngIf="_pageStack.length > 0">
             <button md-raised-button color="primary" (click)="closePage()">Back</button>
         </div>
-        <h1>{{currentPage.name}}</h1>
+        <h1>{{currentPage.title}}</h1>
     </div>
-    <form (submit)="closePageOrSubmit()">
+    <form novalidate (submit)="closePageOrSubmit()">
         <template [ngTemplateOutlet]="currentPage.content"></template>
     </form>
     <div class="loading-overlay" *ngIf="loading"></div>

@@ -1,3 +1,9 @@
 <template>
-    <ng-content></ng-content>
+    <div class="form-section" *ngFor="let section of sections; let i = index">
+        <div class="section-title" *ngIf="section.name">
+            <span class="step-index">{{i + 1}}</span>
+            <h2>{{section.name}}</h2>
+        </div>
+        <template [ngTemplateOutlet]="section.content"></template>
+    </div>
 </template>

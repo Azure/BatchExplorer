@@ -291,3 +291,24 @@ input.search-input {
         }
     }
 }
+
+.form-section {
+    > .section-title {
+        display: flex;
+        align-items: center;
+
+        > .step-index {
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+            background: map-get($md-prussian-blue, 300);
+            border-radius: 99%;
+            font-size: 20px;
+            color: $whitesmoke;
+            margin-right: 10px;
+        }
+
+        margin-bottom: 5px;
+    }
+}
