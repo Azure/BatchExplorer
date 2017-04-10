@@ -226,30 +226,6 @@ bl-create-form {
             margin: 0 5px;
         }
     }
-
-    .picker-btn {
-        border: 2px dashed $dusty-grey;
-        width: 270px;
-        height: 89px;
-        background: transparent;
-        font-size: 16px;
-        display: flex;
-        align-items: center;
-        color: $dusty-grey;
-        cursor: pointer;
-        border-radius: 5px;
-        outline: none;
-
-        &:hover, &:focus {
-            border: 2px dashed map-get($md-prussian-blue, 300);
-            color: map-get($md-prussian-blue, 300);
-        }
-
-        .fa {
-            font-size: 30px;
-            margin: 0 20px;
-        }
-    }
 }
 
 .form-element md-checkbox {
@@ -275,4 +251,43 @@ input.search-input {
     background-color: $athensGrey;
     border: none;
     outline: none;
+}
+
+
+.form-picker {
+    border: 2px dashed $dusty-grey;
+    width: 270px;
+    height: 80px;
+    background: transparent;
+    font-size: 16px;
+    color: $dusty-grey;
+    cursor: pointer;
+    border-radius: 5px;
+    outline: none;
+    overflow: hidden;
+
+    &:hover, &:focus {
+        border-color: map-get($md-prussian-blue, 300);
+        color: map-get($md-prussian-blue, 300);
+    }
+
+    &.has-value {
+        border-style: solid;
+    }
+
+    .fa {
+        font-size: 30px;
+        margin: 0 20px;
+    }
+
+    > .no-value-content {
+        display: flex;
+        align-items: center;
+    }
+
+    > .content {
+        > .subtitle {
+            font-size: 13px;
+        }
+    }
 }

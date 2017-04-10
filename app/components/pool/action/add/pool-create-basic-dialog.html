@@ -37,14 +37,15 @@
 
             <div>
                 <h3>Start task</h3>
-                <button class="picker-btn" (click)="startTask.activate()">
-                   <i class="fa fa-plus"></i> Add a start task
-                </button>
+                <bl-form-picker [page]="startTaskPage" [value]="startTask">
+                    <div no-value-title>Add a start task</div>
+                    <div value-title>{{startTask?.commandLine}}</div>
+                </bl-form-picker>
             </div>
         </form>
     </bl-form-page>
 
-    <bl-form-page #startTask name="Start task">
+    <bl-form-page #startTaskPage name="Start task">
         <bl-start-task-picker formControlName="startTask"></bl-start-task-picker>
     </bl-form-page>
 </bl-create-form>

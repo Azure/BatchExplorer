@@ -6,7 +6,7 @@ import { RouterModule } from "@angular/router";
 
 import { ButtonsModule } from "../buttons";
 import { ActionFormComponent } from "./action-form";
-import { CreateFormComponent, FormPageComponent, FormSectionComponent } from "./create-form";
+import { CreateFormComponent, FormPageComponent, FormPickerComponent, FormSectionComponent } from "./create-form";
 import { FormErrorComponent } from "./form-error";
 import { ServerErrorComponent } from "./server-error";
 
@@ -23,6 +23,7 @@ const components = [
     ServerErrorComponent,
     FormPageComponent,
     FormSectionComponent,
+    FormPickerComponent,
 ];
 
 @NgModule({

@@ -79,4 +79,8 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     public formToDto(data: any): PoolCreateDto {
         return createPoolToData(data);
     }
+
+    public get startTask() {
+        return this.form.controls.startTask.value;
+    }
 }

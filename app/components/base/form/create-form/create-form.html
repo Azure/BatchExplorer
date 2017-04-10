@@ -6,7 +6,9 @@
         </div>
         <h1>{{currentPage.name}}</h1>
     </div>
-    <template [ngTemplateOutlet]="currentPage.content"></template>
+    <form (submit)="closePageOrSubmit()">
+        <template [ngTemplateOutlet]="currentPage.content"></template>
+    </form>
     <div class="loading-overlay" *ngIf="loading"></div>
 </div>
 <div class="form-footer">

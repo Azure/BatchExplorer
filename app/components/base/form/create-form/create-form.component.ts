@@ -55,7 +55,26 @@ export class CreateFormComponent extends FormBase implements AfterViewInit {
             log.error("Error trying to close the last form page open");
             return;
         }
+        const picker = this.currentPage.openedWith;
         this.currentPage = this._pageStack.pop();
+        if (picker) {
+            setTimeout(() => {
+                picker.focus();
+            });
+        }
+    }
+
+    public closePageOrSubmit() {
+        if (this._pageStack.length === 0) {
+            return this.add();
+        }
+        const picker = this.currentPage.openedWith;
+        this.currentPage = this._pageStack.pop();
+        if (picker) {
+            setTimeout(() => {
+                picker.focus();
+            });
+        }
     }
 
     public cancelPage() {
