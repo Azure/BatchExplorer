@@ -10,3 +10,4 @@ export * from "./long-running-action";
 export * from "./query-cache";
 export * from "./poll-service";
 export * from "./list-options";
+export * from "./proxy-options";
