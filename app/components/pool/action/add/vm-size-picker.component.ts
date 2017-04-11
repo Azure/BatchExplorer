@@ -2,13 +2,13 @@ import { Component, Input, OnChanges, OnDestroy, OnInit, forwardRef } from "@ang
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
+import { List, Map } from "immutable";
 import { Subscription } from "rxjs";
 
-import { VmSize } from "app/models";
+import { SpecCost, VmSize } from "app/models";
 import { PoolOsSources } from "app/models/forms";
-import { VmSizeService } from "app/services";
+import { AccountService, PricingService, VmSizeService } from "app/services";
 import { StringUtils, prettyBytes } from "app/utils";
-import { List } from "immutable";
 
 const categoriesDisplayName = {
     standard: "General purpose",
@@ -18,6 +18,40 @@ const categoriesDisplayName = {
     gpu: "GPU",
     hpc: "High performance compute",
 };
+
+export class VmSizeDecorator {
+    public title: string;
+    public prettyCores: string;
+    public prettyRAM: string;
+    public prettyOSDiskSize: string;
+    public prettyResourceDiskSize: string;
+    public price: number;
+    public prettyPrice: string;
+
+    constructor(public vmSize: VmSize, prices: Map<string, SpecCost>) {
+        this.title = this.prettyTitle(vmSize.name);
+        this.prettyCores = this.prettyMb(vmSize.numberOfCores);
+        this.prettyRAM = this.prettyMb(vmSize.memoryInMB);
+        this.prettyOSDiskSize = this.prettyMb(vmSize.osDiskSizeInMB);
+        this.prettyResourceDiskSize = this.prettyMb(vmSize.resourceDiskSizeInMB);
+
+        const price = prices.get(vmSize.name.toLowerCase());
+        if (price) {
+            this.price = price.amount;
+            this.prettyPrice = `${price.currencyCode} ${price.amount.toFixed(2)}`;
+        } else {
+            this.price = -1;
+        }
+    }
+
+    public prettyMb(megaBytes: number) {
+        return prettyBytes(megaBytes * 1000 * 1000, 0);
+    }
+
+    public prettyTitle(vmSize: string) {
+        return vmSize.replace(/_/g, " ");
+    }
+}
 
 // tslint:disable:no-forward-ref
 @Component({
@@ -34,7 +68,8 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     public pickedSize: string;
 
     public categoryNames: string[];
-    public categories: StringMap<VmSize[]>;
+    public categories: StringMap<VmSizeDecorator[]>;
+    public prices: Map<string, SpecCost> = Map<string, SpecCost>({});
 
     private _propagateChange: Function = null;
     private _categories: StringMap<string[]> = {};
@@ -42,7 +77,10 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     private _sizeSub: Subscription;
     private _categorySub: Subscription;
 
-    constructor(private vmSizeService: VmSizeService) {
+    constructor(
+        private vmSizeService: VmSizeService,
+        private accountService: AccountService,
+        private pricingService: PricingService) {
     }
 
     public ngOnInit() {
@@ -50,6 +88,7 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
             this._categories = categories;
             this._categorizeSizes();
         });
+        this._loadPrices();
     }
 
     public ngOnChanges(inputs) {
@@ -114,23 +153,15 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
         return `${name} (${count})`;
     }
 
-    public prettyMb(megaBytes: number) {
-        return prettyBytes(megaBytes * 1000 * 1000, 0);
-    }
-
-    public prettyTitle(vmSize: string) {
-        return vmSize.replace(/_/g, " ");
-    }
-
     private _categorizeSizes() {
         let remainingSizes = this._vmSizes.toArray();
         const categories = {};
         for (let category of Object.keys(this._categories)) {
             const { match, remain } = this._getSizeForCategory(remainingSizes, this._categories[category]);
             remainingSizes = remain;
-            categories[category] = match;
+            categories[category] = match.map(x => new VmSizeDecorator(x, this.prices));
         }
-        categories["Other"] = remainingSizes;
+        categories["Other"] = remainingSizes.map(x => new VmSizeDecorator(x, this.prices));
         this.categories = categories;
 
         // Move standard to the first position
@@ -159,5 +190,17 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
             }
         }
         return false;
+    }
+
+    private _loadPrices() {
+        this.accountService.currentAccount.flatMap((account) => {
+            const os = "linux"; // TODO update this.
+            return this.pricingService.getPrices(account.location, os);
+        }).subscribe((prices: List<SpecCost>) => {
+            const map: StringMap<SpecCost> = {};
+            prices.forEach(x => map[x.id] = x);
+            this.prices = Map(map);
+            this._categorizeSizes();
+        });
     }
 }

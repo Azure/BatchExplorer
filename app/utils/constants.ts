@@ -121,6 +121,7 @@ export const Environment = {
 
 export const ServiceUrl = {
     arm: "https://management.azure.com",
+    githubRaw: "https://raw.githubusercontent.com",
 };
 
 export const MetadataInternalKey = {
