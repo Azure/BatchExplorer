@@ -84,7 +84,9 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit {
         this.instance.setValue(this._value);
     }
   }
+  // tslint:disable-next-line:no-empty
   public onChange(_) { }
+  // tslint:disable-next-line:no-empty
   public onTouched() { }
   public registerOnChange(fn) { this.onChange = fn; }
   public registerOnTouched(fn) { this.onTouched = fn; }

@@ -1,4 +1,3 @@
-import * as moment from "moment";
 import { BatchRequestOptions } from "./models";
 import { DeleteProxy, GetProxy, ListProxy, ProxyUtil } from "./shared";
 

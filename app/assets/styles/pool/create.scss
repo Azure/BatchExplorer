@@ -172,12 +172,9 @@ bl-vm-size-picker {
     }
 }
 
-
-
-
-bl-autoscale-formula-picker  {
+bl-autoscale-formula-picker {
     display: flex;
-    > .autoscale-formula-picker{
+    > .autoscale-formula-picker {
         display: flex;
         > div {
             flex: 1;
@@ -188,7 +185,7 @@ bl-autoscale-formula-picker  {
             display:block;
             padding:0 2px;
             transform:matrix(0.75, 0, 0, 0.75, 0, 0);
-            transform-origin:0px 0px;
+            transform-origin:0 0;
         }
 
         .editor-active {
@@ -242,7 +239,6 @@ bl-autoscale-formula-picker  {
                         color: map-get($md-prussian-blue, 400);
                     }
                 }
-
             }
 
             .save-formula-form {

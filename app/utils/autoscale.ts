@@ -38,4 +38,3 @@ CodeMirror.defineMode("autoscale", () => {
 });
 
 CodeMirror.registerHelper("hintWords", "autoscale", variables);
-

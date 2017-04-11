@@ -46,7 +46,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         private sshKeyService: SSHKeyService,
         private pricingService: PricingService,
         private vmSizeService: VmSizeService) {
-	this.autoscaleFormulaService.init();
+        this.autoscaleFormulaService.init();
         this.settingsService.init();
         this.sshKeyService.init();
         this.commandService.init();
