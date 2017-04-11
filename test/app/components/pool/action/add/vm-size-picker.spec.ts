@@ -8,7 +8,7 @@ import { Observable } from "rxjs";
 import { VmSizePickerComponent } from "app/components/pool/action/add";
 import { VmSize } from "app/models";
 import { PoolOsSources } from "app/models/forms";
-import { VmSizeService } from "app/services";
+import { AccountService, PricingService, VmSizeService } from "app/services";
 
 @Component({
     template: `<bl-vm-size-picker [(ngModel)]="vmSize" [osSource]="osSource"></bl-vm-size-picker>`,
@@ -24,6 +24,8 @@ describe("VmSizePickerComponent", () => {
     let component: VmSizePickerComponent;
     let de: DebugElement;
     let vmSizeServiceSpy;
+    let accountServiceSpy;
+    let pricingServiceSpy;
 
     beforeEach(() => {
         vmSizeServiceSpy = {
@@ -48,10 +50,23 @@ describe("VmSizePickerComponent", () => {
                 new VmSize({ name: "Standard_C2" }),
             ])),
         };
+
+        accountServiceSpy = {
+
+        };
+
+        pricingServiceSpy = {
+
+        };
+
         TestBed.configureTestingModule({
             imports: [FormsModule],
             declarations: [VmSizePickerComponent, TestComponent],
-            providers: [{ provide: VmSizeService, useValue: vmSizeServiceSpy }],
+            providers: [
+                { provide: VmSizeService, useValue: vmSizeServiceSpy },
+                { provide: AccountService, useValue: accountServiceSpy },
+                { provide: PricingService, useValue: pricingServiceSpy },
+            ],
             schemas: [NO_ERRORS_SCHEMA],
         });
         fixture = TestBed.createComponent(TestComponent);
