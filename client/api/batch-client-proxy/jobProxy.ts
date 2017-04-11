@@ -23,7 +23,7 @@ export default class JobProxy {
      * @param jobId: The id of the job.
      * @param options: Optional Parameters.
      */
-    public get(jobId: string, options?: models.JobGetOptions) {
+    public get(jobId: string, options?: models.JobGetOptions): Promise<any> {
         return mapGet(this.client.job.get(jobId, wrapOptions({ jobGetOptions: options })));
     }
 
@@ -33,7 +33,7 @@ export default class JobProxy {
      * @param jobId: The id of the job to terminate.
      * @param options: Optional Parameters.
      */
-    public delete(jobId: string, options?: any) {
+    public delete(jobId: string, options?: any): Promise<any> {
         return this.client.job.deleteMethod(jobId, wrapOptions(options));
     }
 
@@ -43,7 +43,7 @@ export default class JobProxy {
      * @param jobId: The id of the job to terminate.
      * @param options: Optional Parameters.
      */
-    public terminate(jobId: string, options?: any) {
+    public terminate(jobId: string, options?: any): Promise<any> {
         return this.client.job.terminate(jobId, wrapOptions(options));
     }
 
@@ -55,7 +55,7 @@ export default class JobProxy {
      *  Possible values include: 'requeue', 'terminate', 'wait'
      * @param options: Optional Parameters.
      */
-    public disable(jobId: string, disableTasks: string, options?: any) {
+    public disable(jobId: string, disableTasks: string, options?: any): Promise<any> {
         return this.client.job.disable(jobId, disableTasks, wrapOptions(options));
     }
 
@@ -65,7 +65,7 @@ export default class JobProxy {
      * @param jobId: The id of the job to enable.
      * @param options: Optional Parameters.
      */
-    public enable(jobId: string, options?: any) {
+    public enable(jobId: string, options?: any): Promise<any> {
         return this.client.job.enable(jobId, wrapOptions(options));
     }
 
@@ -75,11 +75,11 @@ export default class JobProxy {
      * @param job: The job object
      * @param options: Optional Parameters.
      */
-    public add(job: any, options?: any) {
+    public add(job: any, options?: any): Promise<any> {
         return this.client.job.add(job, wrapOptions(options));
     }
 
-    public patch(jobId: string, attributes: any, options?: any) {
+    public patch(jobId: string, attributes: any, options?: any): Promise<any> {
         return this.client.job.patch(jobId, attributes, wrapOptions(options));
     }
 }

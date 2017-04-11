@@ -1,6 +1,7 @@
 import { ServiceClient } from "azure-batch";
 
 import * as models from "./batch-models";
+import { BatchResult } from "./models";
 import { ListProxy, mapGet, wrapOptions } from "./shared";
 
 export default class TaskProxy {
@@ -25,7 +26,7 @@ export default class TaskProxy {
      * @param taskId: The id of the task.
      * @param options: Optional Parameters.
      */
-    public get(jobId: string, taskId: string, options?: models.TaskGetOptions) {
+    public get(jobId: string, taskId: string, options?: models.TaskGetOptions): Promise<BatchResult> {
         return mapGet(this.client.task.get(jobId, taskId, wrapOptions({ taskGetOptions: options })));
     }
 
@@ -52,7 +53,7 @@ export default class TaskProxy {
      * @param taskId: The id of the task to delete.
      * @param options: Optional Parameters.
      */
-    public delete(jobId: string, taskId: string, options?: any) {
+    public delete(jobId: string, taskId: string, options?: any): Promise<any> {
         return this.client.task.deleteMethod(jobId, taskId, wrapOptions(options));
     }
 
@@ -63,8 +64,8 @@ export default class TaskProxy {
      * @param taskId: The id of the task to terminate.
      * @param options: Optional Parameters.
      */
-    public terminate(jobId: string, taskId: string, options?: any) {
-        this.client.task.terminate(jobId, taskId, wrapOptions(options));
+    public terminate(jobId: string, taskId: string, options?: any): Promise<any> {
+        return this.client.task.terminate(jobId, taskId, wrapOptions(options));
     }
 
     /**
@@ -74,11 +75,11 @@ export default class TaskProxy {
      * @param task: The task to be added.
      * @param options: Optional Parameters.
      */
-    public add(jobId: string, task: any, options?: any) {
+    public add(jobId: string, task: any, options?: any): Promise<any> {
         return this.client.task.add(jobId, task, wrapOptions(options));
     }
 
-    public reactivate(jobId: string, task: any, options?: any) {
-        this.client.task.reactivate(jobId, task, wrapOptions(options));
+    public reactivate(jobId: string, task: any, options?: any): Promise<any> {
+        return this.client.task.reactivate(jobId, task, wrapOptions(options));
     }
 }

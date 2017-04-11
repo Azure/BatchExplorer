@@ -6,7 +6,7 @@ export default class FileProxy {
     constructor(private client: ServiceClient) {
     }
 
-    public getComputeNodeFile(poolId: string, nodeId: string, filename: string, options?: any) {
+    public getComputeNodeFile(poolId: string, nodeId: string, filename: string, options?: any): Promise<any> {
         return new Promise((resolve, reject) => {
             this.client.file.getFromComputeNode(
                 poolId, nodeId, filename, wrapOptions(options), (error, result, request, response) => {
@@ -32,7 +32,7 @@ export default class FileProxy {
     }
 
     public getComputeNodeFileProperties(
-        poolId: string, nodeId: string, filename: string, options?: any) {
+        poolId: string, nodeId: string, filename: string, options?: any): Promise<any> {
         return new Promise((resolve, reject) => {
             this.client.file.getPropertiesFromComputeNode(poolId, nodeId, filename, wrapOptions(options),
                 (error, result, request, response) => {
@@ -56,7 +56,7 @@ export default class FileProxy {
         });
     }
 
-    public getTaskFile(jobId: string, taskId: string, filename: string, options?: any) {
+    public getTaskFile(jobId: string, taskId: string, filename: string, options?: any): Promise<any> {
         return new Promise((resolve, reject) => {
             this.client.file.getFromTask(jobId, taskId, filename, wrapOptions(options),
                 (error, result, request, response) => {
@@ -81,7 +81,7 @@ export default class FileProxy {
         });
     }
 
-    public getTaskFileProperties(jobId: string, taskId: string, filename: string, options?: any) {
+    public getTaskFileProperties(jobId: string, taskId: string, filename: string, options?: any): Promise<any> {
         return new Promise((resolve, reject) => {
             this.client.file.getPropertiesFromTask(jobId, taskId, filename, wrapOptions(options),
                 (error, result, request, response) => {

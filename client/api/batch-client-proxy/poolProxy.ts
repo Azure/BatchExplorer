@@ -1,6 +1,7 @@
 import { ServiceClient } from "azure-batch";
 
 import * as models from "./batch-models";
+import { BatchResult } from "./models";
 import { ListProxy, mapGet, wrapOptions } from "./shared";
 
 export default class PoolProxy {
@@ -22,7 +23,7 @@ export default class PoolProxy {
      * @param poolId: The id of the pool.
      * @param options: Optional Parameters.
      */
-    public get(poolId: string, options?: models.PoolGetOptions) {
+    public get(poolId: string, options?: models.PoolGetOptions): Promise<BatchResult> {
         return mapGet(this.client.pool.get(poolId, wrapOptions({ poolGetOptions: options })));
     }
 
@@ -32,7 +33,7 @@ export default class PoolProxy {
      * @param poolId: The id of the pool to delete.
      * @param options: Optional Parameters.
      */
-    public delete(poolId: string, options?: any) {
+    public delete(poolId: string, options?: any): Promise<any> {
         return this.client.pool.deleteMethod(poolId, wrapOptions(options));
     }
 
@@ -43,18 +44,18 @@ export default class PoolProxy {
      * @param targetDedicated: The desired number of nodes in the pool
      * @param options: Optional Parameters.
      */
-    public resize(poolId: string, targetDedicated: number, options?: any) {
+    public resize(poolId: string, targetDedicated: number, options?: any): Promise<any> {
         let resizeBody: any = {};
         resizeBody.targetDedicated = Number(targetDedicated);
 
         return this.client.pool.resize(poolId, resizeBody, wrapOptions(options));
     }
 
-    public patch(poolId: string, attributes: any, options?: any) {
+    public patch(poolId: string, attributes: any, options?: any): Promise<any> {
         return this.client.pool.patch(poolId, attributes, wrapOptions(options));
     }
 
-    public replaceProperties(poolId: string, attributes: any, options?: any) {
+    public replaceProperties(poolId: string, attributes: any, options?: any): Promise<any> {
         return this.client.pool.updateProperties(poolId, attributes, wrapOptions(options));
     }
 
@@ -64,7 +65,7 @@ export default class PoolProxy {
      * @param pool: The pool object
      * @param options: Optional Parameters.
      */
-    public add(pool: any, options?: any) {
-        this.client.pool.add(pool, wrapOptions(options));
+    public add(pool: any, options?: any): Promise<any> {
+        return this.client.pool.add(pool, wrapOptions(options));
     }
 }
