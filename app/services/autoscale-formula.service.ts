@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { AutoscaleFormula } from "app/models";
 import { Constants, log } from "app/utils";
-import * as storage from "electron-json-storage";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
+import { LocalFileStorage } from "./local-file-storage.service";
 
 const filename = Constants.SavedDataFilename.autosacleFormula;
 
@@ -13,7 +13,7 @@ export class AutoscaleFormulaService {
 
     private _formulas = new BehaviorSubject<List<AutoscaleFormula>>(List([]));
 
-    constructor() {
+    constructor(private localFileStorage: LocalFileStorage) {
         this.formulas = this._formulas.asObservable();
     }
 
@@ -38,35 +38,24 @@ export class AutoscaleFormulaService {
 
     public loadInitialData(): Observable<List<AutoscaleFormula>> {
         const sub = new AsyncSubject();
-        storage.get(filename, (error, data) => {
-            if (error) {
-                log.error("Error retrieving autoscale formulas");
-                sub.error(error);
-            }
-            if (Array.isArray(data)) {
-                sub.next(List(data));
-            } else {
-                sub.next(List([]));
-            }
-            sub.complete();
+        return this.localFileStorage.get(filename).map(data => {
+            return Array.isArray(data) ? List(data) : List([]);
+        }).catch((error) => {
+            log.error("Error retrieving autoscale formulas");
+            sub.error(error);
+            return null;
         });
-        return sub.asObservable();
     }
 
     private _saveAutoscaleFormulas(formulas: List<AutoscaleFormula> = null): Observable<any> {
         let sub = new AsyncSubject();
-
         formulas = formulas === null ? this._formulas.value : formulas;
-        storage.set(filename, formulas.toJS(), (error) => {
-            if (error) {
+        this.localFileStorage.set(filename, formulas.toJS()).subscribe({
+            error: (error) => {
                 log.error("Error saving accounts", error);
                 sub.error(error);
-            }
-
-            sub.next(true);
-            sub.complete();
+            },
         });
-
         return sub;
     }
 }

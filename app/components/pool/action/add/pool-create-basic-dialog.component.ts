@@ -80,14 +80,12 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     }
 
     public changeScaleModeTab(event) {
-        if (event) {
-            if (event.index === 0) {
-                this.form.controls.enableAutoScale.setValue(false);
-            } else if (event.index === 1) {
-                this.form.controls.enableAutoScale.setValue(true);
-            }
-            this.form.controls.autoScaleFormula.updateValueAndValidity();
+        if (event.index === 0) {
+            this.form.controls.enableAutoScale.setValue(false);
+        } else if (event.index === 1) {
+            this.form.controls.enableAutoScale.setValue(true);
         }
+        this.form.controls.autoScaleFormula.updateValueAndValidity();
     }
 
     private invalidAutoscaleFormula() {
