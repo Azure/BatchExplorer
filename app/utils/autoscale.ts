@@ -1,11 +1,20 @@
 import * as CodeMirror from "codemirror";
 
 const variables = [
-    "ActiveTasks", "CPUPercent", "CurrentDedicated", "DiskBytes",
-    "DiskReadBytes", "DiskReadOps", "DiskWriteBytes", "DiskWriteOps",
-    "FailedTasks", "MemoryBytes", "NetworkInBytes", "NetworkOutBytes",
-    "PendingTasks", "RunningTasks", "SampleNodeCount", "SucceededTasks",
-    "TargetDedicated", "$WallClockSeconds",
+    "$ActiveTasks", "$CPUPercent", "$CurrentDedicated", "$DiskBytes",
+    "$DiskReadBytes", "$DiskReadOps", "$DiskWriteBytes", "$DiskWriteOps",
+    "$FailedTasks", "$MemoryBytes", "$NetworkInBytes", "$NetworkOutBytes",
+    "$PendingTasks", "$RunningTasks", "$SampleNodeCount", "$SucceededTasks",
+    "$TargetDedicated", "$WallClockSeconds",
+];
+
+const mathFunc = [
+    "avg", "len", "lg", "ln", "log", "max", "min", "norm",
+    "percentile", "rand", "range", "std", "stop", "sum", "time", "val",
+];
+
+const systemFunc = [
+    "GetSample", "GetSamplePeriod", "Count", "HistoryBeginTime", "GetSamplePercent",
 ];
 
 // tslint:disable-next-line:max-line-length
@@ -37,4 +46,25 @@ CodeMirror.defineMode("autoscale", () => {
     };
 });
 
-CodeMirror.registerHelper("hintWords", "autoscale", variables);
+CodeMirror.registerHelper("hint", "autoscale", (editor) => {
+    let cur = editor.getCursor();
+    let curLine = editor.getLine(cur.line);
+    let start = cur.ch;
+    let end = start;
+    while (end < curLine.length && /[\w$]+/.test(curLine.charAt(end))) { ++end; };
+    while (start && /[\w$]+/.test(curLine.charAt(start - 1))) { --start; };
+    let curWord = start !== end && curLine.slice(start, end).replace("$", "\\$");
+    let regex = new RegExp("^" + curWord, "i");
+    const results = variables.filter((item) => {
+        return item.match(regex);
+    }).concat(mathFunc.filter((item) => {
+        return item.match(regex);
+    })).concat(systemFunc.filter((item) => {
+        return item.match(regex);
+    }));
+    return {
+        list: (!curWord ? [] : results).sort(),
+        from: CodeMirror.Pos(cur.line, start),
+        to: CodeMirror.Pos(cur.line, end),
+    };
+});

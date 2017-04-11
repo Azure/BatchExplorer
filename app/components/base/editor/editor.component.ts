@@ -65,9 +65,9 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit {
             this.blur.emit();
         });
 
-        this.instance.on("inputRead", (editor, change) => {
-            if (change.text[0] === "$") {
-                this.instance.showHint();
+        this.instance.on("change", (editor, change) => {
+            if (change.origin !== "complete") {
+                this.instance.showHint({ hint: CodeMirror.hint.autoscale, completeSingle: false });
             }
         });
     }
