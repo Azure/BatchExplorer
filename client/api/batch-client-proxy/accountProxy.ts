@@ -1,5 +1,4 @@
-import { BatchRequestOptions } from "./models";
-import { ListProxy }  from "./shared";
+import { ListProxy, wrapOptions } from "./shared";
 
 export default class AccountProxy {
     constructor(private client: any) {
@@ -10,12 +9,12 @@ export default class AccountProxy {
      * http://azure.github.io/azure-sdk-for-node/azure-batch/latest/Account.html#listNodeAgentSkus
      * @param options: Optional Parameters.
      */
-    public listNodeAgentSkus(options?: BatchRequestOptions) {
+    public listNodeAgentSkus(options?: any) {
         const entity = {
             list: this.client.account.listNodeAgentSkus.bind(this.client.account),
             listNext: this.client.account.listNodeAgentSkusNext.bind(this.client.account),
         };
 
-        return new ListProxy(entity, null, {});
+        return new ListProxy(entity, null, wrapOptions({}));
     }
 }

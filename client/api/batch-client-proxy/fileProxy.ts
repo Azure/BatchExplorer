@@ -1,17 +1,15 @@
-import { BatchRequestOptions } from "./models";
-import { GetProxy, ListProxy } from "./shared";
+import { ServiceClient } from "azure-batch";
+import { ListProxy, wrapOptions } from "./shared";
 
 export default class FileProxy {
-    private _getProxy: GetProxy;
 
-    constructor(private client: any) {
-        this._getProxy = new GetProxy(this.client.file);
+    constructor(private client: ServiceClient) {
     }
 
-    public getComputeNodeFile(poolId: string, nodeId: string, filename: string, options?: BatchRequestOptions) {
+    public getComputeNodeFile(poolId: string, nodeId: string, filename: string, options?: any) {
         return new Promise((resolve, reject) => {
             this.client.file.getFromComputeNode(
-                poolId, nodeId, filename, options, (error, result, request, response) => {
+                poolId, nodeId, filename, wrapOptions(options), (error, result, request, response) => {
                     if (error) { return reject(error); }
                     if (result) {
                         const chunks = [];
@@ -34,9 +32,9 @@ export default class FileProxy {
     }
 
     public getComputeNodeFileProperties(
-        poolId: string, nodeId: string, filename: string, options?: BatchRequestOptions) {
+        poolId: string, nodeId: string, filename: string, options?: any) {
         return new Promise((resolve, reject) => {
-            this.client.file.getPropertiesFromComputeNode(poolId, nodeId, filename, options,
+            this.client.file.getPropertiesFromComputeNode(poolId, nodeId, filename, wrapOptions(options),
                 (error, result, request, response) => {
                     if (error) { return reject(error); }
                     const headers = response.headers;
@@ -58,37 +56,34 @@ export default class FileProxy {
         });
     }
 
-    public get some() {
-        return this.client.file;
-    }
-
-    public getTaskFile(jobId: string, taskId: string, filename: string, options?: BatchRequestOptions) {
+    public getTaskFile(jobId: string, taskId: string, filename: string, options?: any) {
         return new Promise((resolve, reject) => {
-            this.client.file.getFromTask(jobId, taskId, filename, options, (error, result, request, response) => {
-                if (error) { return reject(error); }
-                if (result) {
-                    const chunks = [];
-                    result.on("data", (chunk) => {
-                        chunks.push(chunk);
-                    });
-
-                    result.on("end", () => {
-                        resolve({
-                            result,
-                            content: Buffer.concat(chunks),
-                            request,
-                            response,
+            this.client.file.getFromTask(jobId, taskId, filename, wrapOptions(options),
+                (error, result, request, response) => {
+                    if (error) { return reject(error); }
+                    if (result) {
+                        const chunks = [];
+                        result.on("data", (chunk) => {
+                            chunks.push(chunk);
                         });
-                    });
 
-                }
-            });
+                        result.on("end", () => {
+                            resolve({
+                                result,
+                                content: Buffer.concat(chunks),
+                                request,
+                                response,
+                            });
+                        });
+
+                    }
+                });
         });
     }
 
-    public getTaskFileProperties(jobId: string, taskId: string, filename: string, options?: BatchRequestOptions) {
+    public getTaskFileProperties(jobId: string, taskId: string, filename: string, options?: any) {
         return new Promise((resolve, reject) => {
-            this.client.file.getPropertiesFromTask(jobId, taskId, filename, options,
+            this.client.file.getPropertiesFromTask(jobId, taskId, filename, wrapOptions(options),
                 (error, result, request, response) => {
                     if (error) { return reject(error); }
                     const headers = response.headers;
@@ -117,7 +112,7 @@ export default class FileProxy {
      * @param taskId: The id of the task whose files you want to list.
      * @param options: Optional Parameters.
      */
-    public listFromTask(jobId: string, taskId: string, recursive = true, options?: BatchRequestOptions) {
+    public listFromTask(jobId: string, taskId: string, recursive = true, options?: any) {
         const entity = {
             list: this.client.file.listFromTask.bind(this.client.file),
             listNext: this.client.file.listFromTaskNext.bind(this.client.file),
@@ -125,7 +120,7 @@ export default class FileProxy {
 
         return new ListProxy(entity,
             [jobId, taskId],
-            { recursive: recursive, fileListFromTaskOptions: options });
+            wrapOptions({ recursive: recursive, fileListFromTaskOptions: options }));
     }
 
     /**
@@ -135,7 +130,7 @@ export default class FileProxy {
      * @param nodeId: The id of the compute node whose files you want to list.
      * @param options: Optional Parameters.
      */
-    public listFromComputeNode(poolId: string, nodeId: string, recursive = true, options?: BatchRequestOptions) {
+    public listFromComputeNode(poolId: string, nodeId: string, recursive = true, options?: any) {
         const entity = {
             list: this.client.file.listFromComputeNode.bind(this.client.file),
             listNext: this.client.file.listFromComputeNodeNext.bind(this.client.file),
@@ -143,6 +138,6 @@ export default class FileProxy {
 
         return new ListProxy(entity,
             [poolId, nodeId],
-            { recursive, fileListFromComputeNodeOptions: options });
+            wrapOptions({ recursive, fileListFromComputeNodeOptions: options }));
     }
 }

@@ -1,7 +1,7 @@
 import { ServiceClient } from "azure-batch";
 
 import * as models from "./batch-models";
-import { ListProxy, wrapOptions } from "./shared";
+import { ListProxy, mapGet, wrapOptions } from "./shared";
 
 export default class NodeProxy {
 
@@ -13,7 +13,7 @@ export default class NodeProxy {
     }
 
     public get(poolId: string, nodeId: string, options?: any) {
-        return this.client.computeNodeOperations.get(poolId, nodeId, wrapOptions(options));
+        return mapGet(this.client.computeNodeOperations.get(poolId, nodeId, wrapOptions(options)));
     }
 
     /**

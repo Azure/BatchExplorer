@@ -1,7 +1,7 @@
 import { ServiceClient } from "azure-batch";
 
 import * as models from "./batch-models";
-import { ListProxy, wrapOptions } from "./shared";
+import { ListProxy, mapGet, wrapOptions } from "./shared";
 
 export default class TaskProxy {
 
@@ -26,7 +26,7 @@ export default class TaskProxy {
      * @param options: Optional Parameters.
      */
     public get(jobId: string, taskId: string, options?: models.TaskGetOptions) {
-        return this.client.task.get(jobId, taskId, wrapOptions({ taskGetOptions: options }));
+        return mapGet(this.client.task.get(jobId, taskId, wrapOptions({ taskGetOptions: options })));
     }
 
     /**

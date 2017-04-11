@@ -1,7 +1,7 @@
 import { ServiceClient } from "azure-batch";
 
 import * as models from "./batch-models";
-import { ListProxy, wrapOptions } from "./shared";
+import { ListProxy, mapGet, wrapOptions } from "./shared";
 
 export default class PoolProxy {
 
@@ -23,7 +23,7 @@ export default class PoolProxy {
      * @param options: Optional Parameters.
      */
     public get(poolId: string, options?: models.PoolGetOptions) {
-        return this.client.pool.get(poolId, wrapOptions({ poolGetOptions: options }));
+        return mapGet(this.client.pool.get(poolId, wrapOptions({ poolGetOptions: options })));
     }
 
     /**
