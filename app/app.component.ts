@@ -7,7 +7,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { registerIcons } from "app/config";
 import {
     AccountService, AdalService, AutoscaleFormulaService, CommandService, NodeService,
-    SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
+    PricingService, SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
 } from "app/services";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
@@ -44,29 +44,32 @@ export class AppComponent implements AfterViewInit, OnInit {
         private subscriptionService: SubscriptionService,
         private nodeService: NodeService,
         private sshKeyService: SSHKeyService,
+        private pricingService: PricingService,
         private vmSizeService: VmSizeService) {
-            this.autoscaleFormulaService.init();
-            this.settingsService.init();
-            this.sshKeyService.init();
-            this.commandService.init();
-            this.vmSizeService.init();
-            this.adalService.init(adalConfig);
-            this.accountService.loadInitialData();
+	this.autoscaleFormulaService.init();
+        this.settingsService.init();
+        this.sshKeyService.init();
+        this.commandService.init();
+        // Init the pricing when good to go.
+        // this.pricingService.init();
+        this.vmSizeService.init();
+        this.adalService.init(adalConfig);
+        this.accountService.loadInitialData();
 
-            this.hasAccount = accountService.currentAccount.map((x) => Boolean(x));
+        this.hasAccount = accountService.currentAccount.map((x) => Boolean(x));
 
-            Observable
-                .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)
-                .subscribe((loadedArray) => {
-                    this.isAppReady = loadedArray[0] && loadedArray[1];
-                });
-
-            // Wait for the first account to be loaded.
-            accountService.currentAccount.filter(x => Boolean(x)).first().subscribe((x) => {
-                this._preloadData();
+        Observable
+            .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)
+            .subscribe((loadedArray) => {
+                this.isAppReady = loadedArray[0] && loadedArray[1];
             });
 
-            registerIcons(mdIconRegistry, sanitizer);
+        // Wait for the first account to be loaded.
+        accountService.currentAccount.filter(x => Boolean(x)).first().subscribe((x) => {
+            this._preloadData();
+        });
+
+        registerIcons(mdIconRegistry, sanitizer);
     }
 
     public ngAfterViewInit() {
