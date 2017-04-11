@@ -2,7 +2,10 @@
     <div class="form-section" *ngFor="let section of sections; let i = index">
         <div class="section-title" *ngIf="section.name">
             <span class="step-index">{{i + 1}}</span>
-            <h2>{{section.name}}</h2>
+            <div class="step-header">
+                <h3>{{section.name}}</h3>
+                <p>{{section.subtitle}}</p>
+            </div>
         </div>
         <div class="section-wrapper">
             <div class="section-bar">

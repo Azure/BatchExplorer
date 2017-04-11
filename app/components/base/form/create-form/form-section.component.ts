@@ -8,6 +8,9 @@ export class FormSectionComponent {
     @Input()
     public name: string;
 
+    @Input()
+    public subtitle: string;
+
     @ViewChild(TemplateRef)
     public content: TemplateRef<any>;
 }

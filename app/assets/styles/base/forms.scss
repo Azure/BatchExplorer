@@ -2,6 +2,13 @@
 @import "../theme/variables";
 @import "../theme/mixins";
 
+.header {
+    h1 {
+        padding: 8px;
+        margin-bottom: 4px;
+    }
+}
+
 .required-alert, bl-error {
     color: $validation-error-color;
 }
@@ -293,9 +300,12 @@ input.search-input {
 }
 
 .form-section {
+    margin-left: 8px;
+
     > .section-title {
         display: flex;
         align-items: center;
+
 
         > .step-index {
             width: 30px;
@@ -304,10 +314,19 @@ input.search-input {
             text-align: center;
             background: map-get($md-prussian-blue, 300);
             border-radius: 99%;
-            font-size: 20px;
+            font-size: 14px;
             color: $whitesmoke;
             margin-right: 10px;
         }
+
+        > .step-header {
+            padding-top: 8px;
+
+            h3 {
+                color: black;
+            }
+        }
+
 
         margin-bottom: 5px;
     }
