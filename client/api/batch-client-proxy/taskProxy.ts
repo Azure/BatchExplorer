@@ -1,13 +1,11 @@
-import { BatchRequestOptions } from "./models";
-import { ActionProxy, DeleteProxy, GetProxy, ListProxy } from "./shared";
+import { ServiceClient } from "azure-batch";
+
+import * as models from "./batch-models";
+import { ListProxy, wrapOptions } from "./shared";
 
 export default class TaskProxy {
-    private _getProxy: GetProxy;
-    private _deleteProxy: DeleteProxy;
 
-    constructor(private client: any) {
-        this._getProxy = new GetProxy(this.client.task);
-        this._deleteProxy = new DeleteProxy(this.client.task);
+    constructor(private client: ServiceClient) {
     }
 
     /**
@@ -16,8 +14,8 @@ export default class TaskProxy {
      * @param jobId: The id of the job.
      * @param options: Optional Parameters.
      */
-    public list(jobId: string, options?: BatchRequestOptions) {
-        return new ListProxy(this.client.task, [jobId], { taskListOptions: options });
+    public list(jobId: string, options?: models.TaskListOptions) {
+        return new ListProxy(this.client.task, [jobId], wrapOptions({ taskListOptions: options }));
     }
 
     /**
@@ -27,8 +25,8 @@ export default class TaskProxy {
      * @param taskId: The id of the task.
      * @param options: Optional Parameters.
      */
-    public get(jobId: string, taskId: string, options?: BatchRequestOptions) {
-        return this._getProxy.execute([jobId, taskId], { taskGetOptions: options });
+    public get(jobId: string, taskId: string, options?: models.TaskGetOptions) {
+        return this.client.task.get(jobId, taskId, wrapOptions({ taskGetOptions: options }));
     }
 
     /**
@@ -38,13 +36,13 @@ export default class TaskProxy {
      * @param taskId: The id of the task.
      * @param options: Optional Parameters.
      */
-    public listSubtasks(jobId: string, taskId: string, options?: BatchRequestOptions) {
+    public listSubtasks(jobId: string, taskId: string, options?: models.TaskListSubtasksOptions) {
         const entity = {
             list: this.client.task.listSubtasks.bind(this.client.task),
         };
 
         // returns all of the tasklets, there is no nextLink data
-        return new ListProxy(entity, [jobId, taskId], { taskListSubtasksOptions: options });
+        return new ListProxy(entity, [jobId, taskId], wrapOptions({ taskListSubtasksOptions: options }));
     }
 
     /**
@@ -55,7 +53,7 @@ export default class TaskProxy {
      * @param options: Optional Parameters.
      */
     public delete(jobId: string, taskId: string, options?: any) {
-        return this._deleteProxy.execute([jobId, taskId], { taskDeleteMethodOptions: options });
+        return this.client.task.deleteMethod(jobId, taskId, wrapOptions(options));
     }
 
     /**
@@ -66,11 +64,7 @@ export default class TaskProxy {
      * @param options: Optional Parameters.
      */
     public terminate(jobId: string, taskId: string, options?: any) {
-        const entity = {
-            action: this.client.task.terminate.bind(this.client.task),
-        };
-
-        return new ActionProxy(entity).execute([jobId, taskId], { taskTerminateOptions: options });
+        this.client.task.terminate(jobId, taskId, wrapOptions(options));
     }
 
     /**
@@ -81,20 +75,10 @@ export default class TaskProxy {
      * @param options: Optional Parameters.
      */
     public add(jobId: string, task: any, options?: any) {
-        return new Promise((resolve, reject) => {
-            this.client.task.add(jobId, task, { taskAddOptions: options }, (error, result) => {
-                if (error) { return reject(error); }
-                return resolve();
-            });
-        });
+        return this.client.task.add(jobId, task, wrapOptions(options));
     }
 
     public reactivate(jobId: string, task: any, options?: any) {
-        return new Promise((resolve, reject) => {
-            this.client.task.reactivate(jobId, task, (error, result) => {
-                if (error) { return reject(error); }
-                return resolve();
-            });
-        });
+        this.client.task.reactivate(jobId, task, wrapOptions(options));
     }
 }

@@ -1,19 +1,19 @@
-import { BatchRequestOptions } from "./models";
-import { GetProxy, ListProxy } from "./shared";
+import { ServiceClient } from "azure-batch";
+
+import * as models from "./batch-models";
+import { ListProxy, wrapOptions } from "./shared";
 
 export default class NodeProxy {
-    private _getProxy: GetProxy;
 
-    constructor(private client: any) {
-        this._getProxy = new GetProxy(this.client.computeNodeOperations);
+    constructor(private client: ServiceClient) {
     }
 
-    public list(poolId: string, options?: BatchRequestOptions) {
-        return new ListProxy(this.client.computeNodeOperations, [poolId], { computeNodeListOptions: options });
+    public list(poolId: string, options?: models.ComputeNodeListOptions) {
+        return new ListProxy(this.client.computeNodeOperations, [poolId], wrapOptions(options));
     }
 
-    public get(poolId: string, nodeId: string, options?: BatchRequestOptions) {
-        return this._getProxy.execute([poolId, nodeId], { computeNodeGetOptions: options });
+    public get(poolId: string, nodeId: string, options?: any) {
+        return this.client.computeNodeOperations.get(poolId, nodeId, wrapOptions(options));
     }
 
     /**
@@ -24,12 +24,7 @@ export default class NodeProxy {
      * @param options: Optional Parameters.
      */
     public reboot(poolId: string, nodeId: string, options?: any) {
-        return new Promise((resolve, reject) => {
-            this.client.computeNodeOperations.reboot(poolId, nodeId, options, (error, result) => {
-                if (error) { return reject(error); }
-                return resolve();
-            });
-        });
+        this.client.computeNodeOperations.reboot(poolId, nodeId, wrapOptions(options));
     }
 
     /**
@@ -40,12 +35,7 @@ export default class NodeProxy {
      * @param options: Optional Parameters.
      */
     public reimage(poolId: string, nodeId: string, options?: any) {
-        return new Promise((resolve, reject) => {
-            this.client.computeNodeOperations.reimage(poolId, nodeId, options, (error, result) => {
-                if (error) { return reject(error); }
-                return resolve();
-            });
-        });
+        this.client.computeNodeOperations.reimage(poolId, nodeId, wrapOptions(options));
     }
 
     /**
@@ -56,12 +46,7 @@ export default class NodeProxy {
      * @param user: The user account to be created.
      */
     public addUser(poolId: string, nodeId: string, user: any, options?: any) {
-        return new Promise((resolve, reject) => {
-            this.client.computeNodeOperations.addUser(poolId, nodeId, user, options, (error, result) => {
-                if (error) { return reject(error); }
-                return resolve();
-            });
-        });
+        this.client.computeNodeOperations.addUser(poolId, nodeId, user, wrapOptions(options));
     }
 
     /**
@@ -72,12 +57,7 @@ export default class NodeProxy {
      * @param user: The user account to be updated.
      */
     public updateUser(poolId: string, nodeId: string, username: string, user: any, options?: any) {
-        return new Promise((resolve, reject) => {
-            this.client.computeNodeOperations.updateUser(poolId, nodeId, username, user, options, (error, result) => {
-                if (error) { return reject(error); }
-                return resolve();
-            });
-        });
+        return this.client.computeNodeOperations.updateUser(poolId, nodeId, username, user, wrapOptions(options));
     }
 
     /**
@@ -88,18 +68,14 @@ export default class NodeProxy {
      * @param userName: The username of the account to delete
      */
     public deleteUser(poolId: string, nodeId: string, userName: string, options?: any) {
-        return new Promise((resolve, reject) => {
-            this.client.computeNodeOperations.deleteUser(poolId, nodeId, userName, options, (error, result) => {
-                if (error) { return reject(error); }
-                return resolve();
-            });
-        });
+        return this.client.computeNodeOperations.deleteUser(poolId, nodeId, userName, wrapOptions(options));
     }
 
-    public getRemoteDesktop(poolId: string, nodeId: string, options?: BatchRequestOptions) {
+    public getRemoteDesktop(poolId: string, nodeId: string, options?: any) {
         return new Promise((resolve, reject) => {
             this.client.computeNodeOperations.getRemoteDesktop(
-                poolId, nodeId, options, (error, result, request, response) => {
+                poolId, nodeId, wrapOptions({ computeNodeGetRemoteDesktopOptions: options }),
+                (error, result, request, response) => {
                     if (error) { return reject(error); }
                     if (result) {
                         const chunks = [];
@@ -127,13 +103,6 @@ export default class NodeProxy {
      * @param nodeId: The id of the node to get the info
      */
     public getRemoteLoginSettings(poolId: string, nodeId: string, options?: any) {
-        return new Promise((resolve, reject) => {
-            this.client.computeNodeOperations.getRemoteLoginSettings(poolId, nodeId, options, (error, result) => {
-                if (error) { return reject(error); }
-                return resolve({
-                    data: result,
-                });
-            });
-        });
+        return this.client.computeNodeOperations.getRemoteLoginSettings(poolId, nodeId, wrapOptions(options));
     }
 }
