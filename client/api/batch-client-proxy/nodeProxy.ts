@@ -104,6 +104,6 @@ export default class NodeProxy {
      * @param nodeId: The id of the node to get the info
      */
     public getRemoteLoginSettings(poolId: string, nodeId: string, options?: any): Promise<any> {
-        return this.client.computeNodeOperations.getRemoteLoginSettings(poolId, nodeId, wrapOptions(options));
+        return mapGet(this.client.computeNodeOperations.getRemoteLoginSettings(poolId, nodeId, wrapOptions(options)));
     }
 }

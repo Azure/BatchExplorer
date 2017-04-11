@@ -4,11 +4,12 @@
  */
 import { BatchResult } from "../models";
 
-export function wrapOptions<T>(options: T): T {
-    (options as any).customHeaders = {
+export function wrapOptions<T>(options?: T): T {
+    const newOptions: any = options || {};
+    newOptions.customHeaders = {
         some: "header",
     };
-    return options;
+    return newOptions;
 }
 
 export function mapGet(promise: Promise<any>): Promise<BatchResult> {
