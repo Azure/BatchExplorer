@@ -13,6 +13,7 @@ export interface AutoscaleFormulaAttributes {
     name: string;
     value: string;
 }
+
 export class AutoscaleFormula extends AutoscaleFormulaRecord implements AutoscaleFormulaAttributes {
     public id: string;
     public name: string;

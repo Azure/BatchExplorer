@@ -39,19 +39,16 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
         id: output.id,
         displayName: output.displayName,
         vmSize: output.vmSize,
-        targetDedicated: output.targetDedicated,
         enableAutoScale: output.enableAutoScale,
-        autoScaleFormula: output.autoScaleFormula,
-        autoScaleEvaluationInterval: moment.duration({ minutes: output.autoScaleEvaluationInterval }),
         maxTasksPerNode: Number(output.maxTasksPerNode),
         enableInterNodeCommunication: output.enableInterNodeCommunication,
     };
 
     if (output.enableAutoScale) {
-        delete data.targetDedicated;
+        data.autoScaleFormula = output.autoScaleFormula;
+        data.autoScaleEvaluationInterval = moment.duration({ minutes: output.autoScaleEvaluationInterval });
     } else {
-        delete data.autoScaleFormula;
-        delete data.autoScaleEvaluationInterval;
+        data.targetDedicated = output.targetDedicated;
     }
 
     if (output.os.source === PoolOsSources.PaaS) {
