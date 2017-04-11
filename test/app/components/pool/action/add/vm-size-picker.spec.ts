@@ -6,7 +6,7 @@ import { List } from "immutable";
 import { Observable } from "rxjs";
 
 import { VmSizePickerComponent } from "app/components/pool/action/add";
-import { VmSize } from "app/models";
+import { VmSize, AccountResource } from "app/models";
 import { PoolOsSources } from "app/models/forms";
 import { AccountService, PricingService, VmSizeService } from "app/services";
 
@@ -52,11 +52,11 @@ describe("VmSizePickerComponent", () => {
         };
 
         accountServiceSpy = {
-
+            currentAccount: Observable.of(new AccountResource({ location: "westus" })),
         };
 
         pricingServiceSpy = {
-
+            getPrices: () => Observable.of([]),
         };
 
         TestBed.configureTestingModule({
