@@ -4,6 +4,12 @@
             <span class="step-index">{{i + 1}}</span>
             <h2>{{section.name}}</h2>
         </div>
-        <template [ngTemplateOutlet]="section.content"></template>
+        <div class="section-wrapper">
+            <div class="section-bar">
+            </div>
+            <div class="section-content">
+                <template [ngTemplateOutlet]="section.content"></template>
+            </div>
+        </div>
     </div>
 </template>

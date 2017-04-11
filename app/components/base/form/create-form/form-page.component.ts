@@ -25,11 +25,6 @@ export class FormPageComponent {
     // tslint:disable-next-line:no-forward-ref
     constructor( @Inject(forwardRef(() => CreateFormComponent)) private form: CreateFormComponent) { }
 
-
-    public ngAfterViewInit() {
-        console.log("First section", this.sections.first && this.sections.first.name);
-    }
-
     public activate(picker?: FormPickerComponent) {
         this.openedWith = picker;
         this.form.openPage(this);
