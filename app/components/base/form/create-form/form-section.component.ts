@@ -6,7 +6,10 @@ import { Component, Input, TemplateRef, ViewChild } from "@angular/core";
 })
 export class FormSectionComponent {
     @Input()
-    public name: string;
+    public title: string;
+
+    @Input()
+    public subtitle: string;
 
     @ViewChild(TemplateRef)
     public content: TemplateRef<any>;
