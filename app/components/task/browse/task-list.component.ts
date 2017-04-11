@@ -58,7 +58,7 @@ export class TaskListComponent extends SelectableList implements OnInit {
 
     private _filter: Filter;
     private _jobId: string;
-    private _baseOptions = { maxResults: 25 };
+    private _baseOptions = { pageSize: 25 };
     private _onTaskAddedSub: Subscription;
 
     constructor(
