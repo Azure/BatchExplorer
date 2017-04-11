@@ -3,8 +3,7 @@ import { Http } from "@angular/http";
 import { Constants } from "app/utils";
 
 // Update branch to test before merging to master
-// const branch = "master";
-const branch = "feature/pricing";
+const branch = "master";
 
 const repoUrl = `${Constants.ServiceUrl.githubRaw}/Azure/BatchLabs-data/${branch}`;
 
