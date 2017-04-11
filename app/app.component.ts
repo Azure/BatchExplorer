@@ -48,7 +48,8 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.settingsService.init();
         this.sshKeyService.init();
         this.commandService.init();
-        this.pricingService.init();
+        // Init the pricing when good to go.
+        // this.pricingService.init();
         this.vmSizeService.init();
         this.adalService.init(adalConfig);
         this.accountService.loadInitialData();

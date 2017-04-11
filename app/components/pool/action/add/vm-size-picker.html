@@ -5,7 +5,7 @@
             <bl-table [activeItem]="pickedSize" (activeItemChange)="pickSize($event)">
                 <bl-thead>
                     <bl-column [sortable]="true">Name</bl-column>
-                    <bl-column [sortable]="true">Price per node(Monthly)</bl-column>
+                    <!--<bl-column [sortable]="true">Price per node(Monthly)</bl-column>-->
                     <bl-column [sortable]="true">Cores</bl-column>
                     <bl-column [sortable]="true">RAM</bl-column>
                     <bl-column [sortable]="true">OS Disk</bl-column>
@@ -13,7 +13,7 @@
                 </bl-thead>
                 <bl-row *ngFor="let size of categories[category]" [key]="size.vmSize.name">
                     <bl-cell [value]="size.vmSize.name">{{size.title}}</bl-cell>
-                    <bl-cell [value]="size.price">{{size.prettyPrice}}</bl-cell>
+                    <!--<bl-cell [value]="size.price">{{size.prettyPrice}}</bl-cell>-->
                     <bl-cell [value]="size.vmSize.numberOfCores"></bl-cell>
                     <bl-cell [value]="size.vmSize.memoryInMB">{{size.prettyRAM}}</bl-cell>
                     <bl-cell [value]="size.vmSize.osDiskSizeInMB">{{size.prettyOSDiskSize}}</bl-cell>
