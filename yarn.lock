@@ -2218,12 +2218,11 @@ electron-is-dev@^0.1.0:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/electron-is-dev/-/electron-is-dev-0.1.2.tgz#8a1043e32b3a1da1c3f553dce28ce764246167e3"
 
-electron-json-storage@^2.0.3:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/electron-json-storage/-/electron-json-storage-2.1.1.tgz#38aaa24d95a3fbd2825698cfd27c57cd2a74d86e"
+electron-json-storage@~3.0.4:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/electron-json-storage/-/electron-json-storage-3.0.4.tgz#3b4e3e95e979eb1743edf55174f8daf69416c6fd"
   dependencies:
     async "^2.0.0"
-    exists-file "^2.1.0"
     lodash "^4.0.1"
     mkdirp "^0.5.1"
     rimraf "^2.5.1"
@@ -2430,10 +2429,6 @@ execall@^1.0.0:
   resolved "https://registry.yarnpkg.com/execall/-/execall-1.0.0.tgz#73d0904e395b3cab0658b08d09ec25307f29bb73"
   dependencies:
     clone-regexp "^1.0.0"
-
-exists-file@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/exists-file/-/exists-file-2.1.0.tgz#66ea39b7855a9d8ad2ff485d974f04a93bb888f8"
 
 exit-hook@^1.0.0:
   version "1.1.1"

@@ -39,11 +39,17 @@ export class DataCache<T> {
     public items: Observable<Map<string, T>>;
     public deleted: Observable<string>;
 
+    /**
+     * Notification when the cache is being cleared
+     */
+    public cleared: Observable<void>;
+
     public queryCache = new QueryCache();
     public pollService = new PollService();
 
     private _items = new BehaviorSubject<Map<string, T>>(Map<string, T>({}));
     private _deleted = new Subject<string>();
+    private _cleared = new Subject<void>();
 
     /**
      * @param _uniqueField Each record should have a unqiue field. This is used to update the cache.
@@ -52,11 +58,13 @@ export class DataCache<T> {
         this.id = SecureUtils.uuid();
         this.items = this._items.asObservable();
         this.deleted = this._deleted.asObservable();
+        this.cleared = this._cleared.asObservable();
         DataCacheTracker.registerCache(this);
     }
 
     public clear() {
         this.queryCache.clearCache();
+        this._cleared.next();
         this._items.next(Map<string, T>({}));
     }
 

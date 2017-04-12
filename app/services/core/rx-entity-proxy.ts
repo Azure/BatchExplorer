@@ -82,6 +82,7 @@ export function getOnceProxy<TEntity>(getProxy: RxEntityProxy<any, TEntity>): Ob
                 sub.unsubscribe();
                 obs.next(item);
                 obs.complete();
+                getProxy.dispose();
             }
         },
         error: errorCallback,

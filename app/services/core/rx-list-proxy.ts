@@ -40,6 +40,10 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         this.deleted.subscribe((deletedKey) => {
             this._itemKeys.next(OrderedSet<string>(this._itemKeys.value.filter((key) => key !== deletedKey)));
         });
+
+        this._cacheCleared.subscribe((deletedKey) => {
+            this._itemKeys.next(OrderedSet<string>([]));
+        });
     }
 
     public updateParams(params: TParams) {

@@ -70,10 +70,12 @@ export abstract class RxProxyBase<TParams, TOptions extends ProxyOptions, TEntit
     protected _params: TParams;
     protected _cache: DataCache<TEntity>;
     protected _options: TOptions;
+    protected _cacheCleared = new Subject<void>();
 
     private _currentQuerySub: Subscription = null;
     private _currentObservable: Observable<any>;
     private _deletedSub: Subscription;
+    private _cacheClearedSub: Subscription;
     private _deleted = new Subject<string>();
     private _logIgnoreError: number[];
     private _pollObservable: PollObservable;
@@ -155,11 +157,24 @@ export abstract class RxProxyBase<TParams, TOptions extends ProxyOptions, TEntit
         return this._pollObservable;
     }
 
+    /**
+     * This will release any reference used by the RxProxy.
+     * You NEED to call this in ngOnDestroy
+     * otherwise internal subscribe will never get cleared and the list porxy will not get GC
+     */
+    public dispose() {
+        this._clearDeleteSub();
+    }
+
     protected set cache(cache: DataCache<TEntity>) {
         this._cache = cache;
         this._clearDeleteSub();
         this._deletedSub = cache.deleted.subscribe((x) => {
             this._deleted.next(x);
+        });
+
+        this._cacheClearedSub = cache.cleared.subscribe((x) => {
+            this._cacheCleared.next(x);
         });
     }
 

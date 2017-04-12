@@ -7,13 +7,13 @@ import { AccountResource, VmSize } from "app/models";
 import { StringUtils, log } from "app/utils";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
+import { GithubDataService } from "./github-data.service";
 
 export function computeUrl(subscriptionId: string) {
     return `subscriptions/${subscriptionId}/providers/Microsoft.Compute`;
 }
 
-const githubRaw = "https://raw.githubusercontent.com";
-const excludedVmsSizesUrl = `${githubRaw}/Azure/BatchLabs-data/master/data/vm-sizes.json`;
+const excludedVmsSizesPath = "data/vm-sizes.json";
 
 interface VmSizeData {
     category: StringMap<string[]>;
@@ -50,7 +50,10 @@ export class VmSizeService {
 
     private _currentAccount: AccountResource;
 
-    constructor(private arm: ArmHttpService, private http: Http, private accountService: AccountService) {
+    constructor(
+        private arm: ArmHttpService, private http: Http,
+        private githubData: GithubDataService, private accountService: AccountService) {
+
         const obs = Observable.combineLatest(this._sizes, this._excludedSizes);
         this.sizes = this._sizes.asObservable();
 
@@ -95,7 +98,7 @@ export class VmSizeService {
     }
 
     public loadVmSizeData() {
-        this.http.get(excludedVmsSizesUrl).subscribe({
+        this.githubData.get(excludedVmsSizesPath).subscribe({
             next: (response: Response) => {
                 const data: VmSizeData = response.json();
                 this._vmSizeCategories.next(data.category);
