@@ -17,7 +17,7 @@ import { Constants, log, prettyBytes } from "app/utils";
 })
 export class ApplicationCreateDialogComponent {
     public file: File;
-    public applicationForm: FormGroup;
+    public form: FormGroup;
     public blockCount: number = 0;
     public progress: string;
     public title: string = "Create application package";
@@ -38,7 +38,7 @@ export class ApplicationCreateDialogComponent {
         private notificationService: NotificationService) {
 
         const validation = Constants.forms.validation;
-        this.applicationForm = this.formBuilder.group({
+        this.form = this.formBuilder.group({
             id: ["", [
                 Validators.required,
                 Validators.maxLength(validation.maxLength.applicationName),
@@ -58,7 +58,7 @@ export class ApplicationCreateDialogComponent {
 
     public setValue(application: Application, version?: string) {
         // TODO: need to disable appId and version fields if they are supplied
-        this.applicationForm.patchValue(applicationToCreateFormModel(application, version));
+        this.form.patchValue(applicationToCreateFormModel(application, version));
         if (version) {
             this.title = "Update selected package";
             this.description = "Select a new package to overwrite the existing version";
@@ -69,19 +69,19 @@ export class ApplicationCreateDialogComponent {
 
     public fileSelected(changeEvent: Event) {
         const element = <any>changeEvent.srcElement;
-        this.applicationForm.controls["package"].markAsTouched();
+        this.form.controls["package"].markAsTouched();
 
         if (element.files.length > 0) {
             this.file = element.files[0];
-            this.applicationForm.controls["package"].setValue(this.file.name);
+            this.form.controls["package"].setValue(this.file.name);
         } else {
             this.file = null;
-            this.applicationForm.controls["package"].setValue(null);
+            this.form.controls["package"].setValue(null);
         }
     }
 
     public hasValidFile(): boolean {
-        return this.file && this.applicationForm.controls["package"].valid;
+        return this.file && this.form.controls["package"].valid;
     }
 
     public prettyFileSize(size: number) {
@@ -90,7 +90,7 @@ export class ApplicationCreateDialogComponent {
 
     @autobind()
     public submit(): Observable<any> {
-        const formData = this.applicationForm.value;
+        const formData = this.form.value;
 
         /**
          * Todo:
