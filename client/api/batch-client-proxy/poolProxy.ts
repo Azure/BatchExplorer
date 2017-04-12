@@ -66,7 +66,7 @@ export default class PoolProxy {
      * @param options: Optional Parameters.
      */
     public add(pool: any, options?: any): Promise<any> {
-    	pool = ProxyUtil.decoratePool(pool);
+        pool = ProxyUtil.decoratePool(pool);
         return this.client.pool.add(pool, wrapOptions(options));
     }
 }
