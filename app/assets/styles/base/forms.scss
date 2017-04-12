@@ -202,7 +202,7 @@ bl-create-form {
         overflow: auto;
         position: relative;
         height: calc(100% - #{$footer-height});
-        padding: 10px 5px;
+        padding: 10px 5px 100px;
 
         > .loading-overlay {
             position: absolute;
@@ -213,6 +213,7 @@ bl-create-form {
             bottom: 0;
             right: 0;
         }
+
     }
 
     > .form-footer {
