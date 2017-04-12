@@ -174,22 +174,21 @@ bl-vm-size-picker {
 
 bl-autoscale-formula-picker {
     display: flex;
+    .CodeMirror pre.CodeMirror-placeholder { @extend .mat-input-placeholder; }
+
+    &.ng-invalid.ng-touched .mat-input-underline {
+        border-color: #aa3939;
+        border-width: 2px;
+    }
+
     > .autoscale-formula-picker {
         display: flex;
         > div {
             flex: 1;
         }
 
-        .autoscale-formula-label {
-            color:rgba(0, 0, 0, 0.380392);
-            display:block;
-            padding:0 2px;
-            transform:matrix(0.75, 0, 0, 0.75, 0, 0);
-            transform-origin:0 0;
-        }
-
-        .editor-active {
-            color: #003153;
+        .mat-input-underline {
+            position: relative;
         }
 
         > .saved-formulas {

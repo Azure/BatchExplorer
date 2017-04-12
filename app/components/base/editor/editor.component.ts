@@ -3,6 +3,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import "app/utils/autoscale";
 import * as CodeMirror from "codemirror";
 import "codemirror/addon/display/autorefresh";
+import "codemirror/addon/display/placeholder";
 import "codemirror/addon/hint/show-hint";
 
 @Component({
@@ -14,12 +15,19 @@ import "codemirror/addon/hint/show-hint";
         useExisting: forwardRef(() => EditorComponent),
         multi: true,
     }],
-    template: `<textarea #host></textarea>`,
+    template: `
+        <textarea #host placeholder="enter autoscale formula" placeholder="Please enter {{label}}"></textarea>
+        <div class="mat-input-underline" [class.mat-focused]="isFocused">
+            <span class="mat-input-ripple"></span>
+        </div>
+    `,
 })
 
 export class EditorComponent implements ControlValueAccessor, AfterViewInit {
     @Input()
     public config;
+    @Input()
+    public label: string;
     @Output()
     public change = new EventEmitter();
     @Output()
@@ -32,7 +40,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit {
 
     @Output()
     public instance = null;
-
+    public isFocused = false;
     private _value = "";
 
     get value() { return this._value; };
@@ -58,10 +66,12 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit {
         });
 
         this.instance.on("focus", () => {
+            this.isFocused = true;
             this.focus.emit();
         });
 
         this.instance.on("blur", () => {
+            this.isFocused = false;
             this.blur.emit();
         });
 

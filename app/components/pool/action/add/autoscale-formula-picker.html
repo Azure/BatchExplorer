@@ -1,12 +1,10 @@
 <div class="form-element autoscale-formula-picker">
     <div class="bl-textarea">
-        <span class="autoscale-formula-label" [class.editor-active]="isTextEditorFocused">Autoscale Formula</span>
         <bl-editor  [(ngModel)]="autoscaleFormulaValue"
+                    [label]="'Autoscale Formula'"
                     [config]="config"
                     (change)="textEditorOnChange()"
-                    (focus)="textEditorOnfocus()"
-                    (blur)="textEditorOnBlur()"
-                    ></bl-editor>
+                    (blur)="textEditorOnBlur()"></bl-editor>
     </div>
     <div class="saved-formulas">
         <div *ngIf="!showSaveForm">

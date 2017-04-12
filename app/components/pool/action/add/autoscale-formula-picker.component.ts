@@ -13,14 +13,13 @@ import { Subscription } from "rxjs";
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => AutoscaleFormulaPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => AutoscaleFormulaPickerComponent), multi: true },
     ],
-    styles: [ ":host /deep/ .CodeMirror { display:block;width:100%; height:200px;}" ],
+    styles: [ ":host /deep/ .CodeMirror { display:block;width:100%; height:195px; }" ],
 })
 export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, ControlValueAccessor {
     public savedAutoscaleFormulas: List<AutoscaleFormula>;
     public autoscaleFormulaValue: string;
     public autoscaleFormulaName: FormControl;
     public showSaveForm: Boolean;
-    public isTextEditorFocused: Boolean;
     @ViewChild("nameInput")
     public nameInput: ElementRef;
     public config = {
@@ -40,7 +39,6 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
         this.autoscaleFormulaValue = "";
         this.autoscaleFormulaName = new FormControl("");
         this.showSaveForm = false;
-        this.isTextEditorFocused = false;
         this.savedAutoscaleFormulas = List([]);
         this._subs  = [];
         this._propagateChange = null;
@@ -76,13 +74,8 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
         }
     }
 
-    public textEditorOnfocus() {
-        this.isTextEditorFocused = true;
-    }
-
     public textEditorOnBlur() {
         this._propagateTouch();
-        this.isTextEditorFocused = false;
     }
 
     public addFormula() {
