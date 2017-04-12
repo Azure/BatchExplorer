@@ -21,7 +21,6 @@
                 </div>
                 <bl-task-timeline [job]="job" [task]="task"></bl-task-timeline>
             </div>
-
             <md-card-actions layout="row" layout-align="end center">
                 <bl-add-button (click)="addTask()"></bl-add-button>
                 <bl-terminate-button [entity]="task" (click)="terminateTask()"></bl-terminate-button>
@@ -32,10 +31,10 @@
         <bl-task-error-display [jobId]="jobId" [task]="task"></bl-task-error-display>
         <md-card class="details">
             <bl-tab-group>
-                <bl-tab key="output">
+                <bl-tab key="logs">
                     <bl-tab-label>Log Output</bl-tab-label>
                     <div class="tab-padding">
-                        <bl-task-output [jobId]="jobId" [task]="task"></bl-task-output>
+                        <bl-task-log [jobId]="jobId" [task]="task"></bl-task-log>
                     </div>
                 </bl-tab>
                 <bl-tab key="configuration">
@@ -48,16 +47,13 @@
                         <bl-task-resource-files [task]="task"></bl-task-resource-files>
                     </div>
                 </bl-tab>
-                <bl-tab key="files">
+                <bl-tab key="outputs">
                     <bl-tab-label>Task Outputs</bl-tab-label>
                     <div class="tab-padding">
-                        <bl-entity-details-list #listWrapper [refresh]="list.refresh" [filterPlaceholder]="filterPlaceholderText" [showAddButton]="false" quickSearchField="name">
-                            <bl-task-file-list #list [jobId]="jobId" [taskId]="taskId" [filter]="listWrapper.filter" [quickList]="false"></bl-task-file-list>
-                            <!-- maybe add a storage files here with a *ngIf? -->
-                        </bl-entity-details-list>
+                        <bl-task-outputs [jobId]="jobId" [taskId]="taskId"></bl-task-outputs>
                     </div>
                 </bl-tab>
-                <bl-tab key="subtasks" [disabled]="!hasMultiInstanceSettings">
+                <bl-tab key="sub-tasks" [disabled]="!hasMultiInstanceSettings">
                     <bl-tab-label>Sub Tasks</bl-tab-label>
                     <div class="tab-padding">
                         <bl-task-sub-tasks-tab [jobId]="job.id" [taskId]="task.id"></bl-task-sub-tasks-tab>

@@ -1,6 +1,7 @@
 import { Response } from "@angular/http";
 
 import { BatchError } from "./batch-error";
+import { StorageError } from "./storage-error";
 
 interface ServerErrorAttributes {
     status: number;
@@ -12,6 +13,7 @@ interface ServerErrorAttributes {
 interface ServerErrorBodyAttributes {
     code?: string;
     message?: string;
+    requestId?: string;
     values?: any[];
 }
 
@@ -26,6 +28,22 @@ export class ServerError {
             message: error.message && error.message.value,
             values: error.body && error.body.values,
         };
+
+        return new ServerError({
+            status: error.statusCode,
+            body: body,
+            original: error,
+        });
+    }
+
+    public static fromStorage(error: StorageError) {
+        const body = {
+            code: error.code,
+            message: error.message,
+            requestId: error.requestId,
+            values: null,
+        };
+
         return new ServerError({
             status: error.statusCode,
             body: body,

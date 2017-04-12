@@ -1,4 +1,4 @@
-<div class="log-console" *ngIf="!notFound">
+<div class="log-console" *ngIf="!nodeNotFound && !fileContentFailure">
     <div class="follow-log-btn" [class.following]="followingLog" (click)="toggleFollowLog()">
         <i class="fa fa-circle"></i>
         <span>Follow log</span>
@@ -15,6 +15,11 @@
         <span>Follow log</span>
     </div>
 </div>
-<div *ngIf="notFound" class="notfound-message">
+
+<div *ngIf="nodeNotFound" class="notfound-message">
     The node this task ran on was not found.
+</div>
+
+<div *ngIf="fileContentFailure" class="notfound-message">
+    The contents of the file was unable to be read. Try downloading the file.
 </div>

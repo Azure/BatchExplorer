@@ -86,6 +86,7 @@ export class DataCache<T> {
         const key = this.getItemKey(item);
         const newItems = this._items.getValue().merge({ [key]: this._computeNewItem(item, key, select) });
         this._items.next(newItems);
+
         return key;
     }
 
@@ -96,13 +97,13 @@ export class DataCache<T> {
      */
     public addItems(items: T[], select?: string): string[] {
         const newItems: { [key: string]: T } = {};
-
         const keys = [];
         for (let item of items) {
             const key = this.getItemKey(item);
             keys.push(key);
             newItems[key] = this._computeNewItem(item, key, select);
         }
+
         this._items.next(this._items.getValue().merge(newItems));
         return keys;
     }
