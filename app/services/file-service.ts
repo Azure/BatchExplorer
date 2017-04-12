@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { File } from "app/models";
+import { File, ServerError } from "app/models";
 import { Constants } from "app/utils";
 import { BatchClientService } from "./batch-client.service";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache } from "./core";
@@ -66,7 +66,8 @@ export class FileService extends ServiceBase {
         initialPoolId: string,
         initialNodeId: string,
         recursive = true,
-        initialOptions: any = {}): RxListProxy<NodeFileListParams, File> {
+        initialOptions: any = {},
+        onError?: (error: ServerError) => boolean): RxListProxy<NodeFileListParams, File> {
         return new RxBatchListProxy<NodeFileListParams, File>(File, this.batchService, {
             cache: (params) => this.getNodeFileCache(params),
             proxyConstructor: (client, params, options) => {
@@ -75,6 +76,7 @@ export class FileService extends ServiceBase {
             initialParams: { poolId: initialPoolId, nodeId: initialNodeId },
             initialOptions,
             logIgnoreError: fileIgnoredErrors,
+            onError: onError,
         });
     }
 
@@ -106,7 +108,8 @@ export class FileService extends ServiceBase {
         initialJobId: string,
         initialTaskId: string,
         recursive = true,
-        initialOptions: any = {}): RxListProxy<TaskFileListParams, File> {
+        initialOptions: any = {},
+        onError?: (error: ServerError) => boolean): RxListProxy<TaskFileListParams, File> {
         return new RxBatchListProxy<TaskFileListParams, File>(File, this.batchService, {
             cache: (params) => this.getTaskFileCache(params),
             proxyConstructor: (client, params, options) => {
@@ -115,6 +118,7 @@ export class FileService extends ServiceBase {
             initialParams: { jobId: initialJobId, taskId: initialTaskId },
             initialOptions,
             logIgnoreError: fileIgnoredErrors,
+            onError: onError,
         });
     }
 

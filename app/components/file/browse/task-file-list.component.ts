@@ -1,11 +1,12 @@
-import { Component, Input, OnChanges, OnInit, ViewChild } from "@angular/core";
+import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
 import { autobind } from "core-decorators";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
-import { File, Node, NodeState, Task } from "app/models";
+import { File, Node, NodeState, ServerError, Task } from "app/models";
 import { FileService, NodeService, TaskFileListParams, TaskService } from "app/services";
 import { RxListProxy } from "app/services/core";
+import { Constants } from "app/utils";
 import { Filter } from "app/utils/filter-builder";
 
 /**
@@ -21,7 +22,7 @@ const validStates = [
     selector: "bl-task-file-list",
     templateUrl: "file-list.html",
 })
-export class TaskFileListComponent implements OnInit, OnChanges {
+export class TaskFileListComponent implements OnChanges, OnDestroy {
     /**
      * If set to true it will display the quick list view, if false will use the table view
      */
@@ -37,34 +38,43 @@ export class TaskFileListComponent implements OnInit, OnChanges {
     @Input()
     public filter: Filter;
 
-    @ViewChild(TaskFileListComponent)
-    public list: TaskFileListComponent;
-
     public data: RxListProxy<TaskFileListParams, File>;
     public status = new BehaviorSubject(LoadingStatus.Loading);
     public LoadingStatus = LoadingStatus;
+    public fileCleanupOperation: boolean;
     public nodeNotFound: boolean;
+
+    private _statuSub: Subscription;
 
     constructor(
         private fileService: FileService,
         private nodeService: NodeService,
         private taskService: TaskService) {
-        this.nodeNotFound = false;
 
-        this.data = this.fileService.listFromTask(null, null, true, {});
-        this.data.status.subscribe((status) => {
+        this.data = this.fileService.listFromTask(null, null, true, {}, (error: ServerError) => {
+            if (error && error.body.code === Constants.APIErrorCodes.operationInvalidForCurrentState) {
+                this.fileCleanupOperation = true;
+                return false;
+            }
+
+            // carry on throwing error
+            return true;
+        });
+
+        this._statuSub = this.data.status.subscribe((status) => {
             this.status.next(status);
         });
-    }
-
-    public ngOnInit() {
-        return;
     }
 
     public ngOnChanges(inputs) {
         if (inputs.jobId || inputs.taskId || inputs.filter) {
             this.refresh();
         }
+    }
+
+    public ngOnDestroy() {
+        this.status.unsubscribe();
+        this._statuSub.unsubscribe();
     }
 
     @autobind()
@@ -81,6 +91,7 @@ export class TaskFileListComponent implements OnInit, OnChanges {
         if (this.data) {
             return this.data.fetchNext();
         }
+
         return new Observable(null);
     }
 
@@ -88,7 +99,14 @@ export class TaskFileListComponent implements OnInit, OnChanges {
         return ["/jobs", this.jobId, "tasks", this.taskId];
     }
 
+    public get filterPlaceholder() {
+        return "Filter by file name";
+    }
+
     private _loadIfNodeExists() {
+        this.fileCleanupOperation = false;
+        this.nodeNotFound = false;
+
         this.status.next(LoadingStatus.Loading);
         this.taskService.getOnce(this.jobId, this.taskId).cascade((task: Task) => {
             if (!task.nodeInfo) {

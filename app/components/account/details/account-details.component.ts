@@ -17,10 +17,11 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
             const split = id.split("/");
             name = split[split.length - 1];
         }
+
         return { name: name, label: "Account" };
     }
-    public account: AccountResource;
 
+    public account: AccountResource;
     public accountId: string;
     public loading: boolean = true;
     public loadingError: any;
@@ -33,7 +34,6 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         private accountService: AccountService,
         private zone: NgZone,
         private viewContainerRef: ViewContainerRef) {
-
     }
 
     public ngOnInit() {
