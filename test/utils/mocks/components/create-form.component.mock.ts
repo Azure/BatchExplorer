@@ -10,7 +10,6 @@ import { Component, Input } from "@angular/core";
 export class CreateFormMockComponent {
 }
 
-
 @Component({
     selector: "bl-form-page",
     template: `

@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ViewChild, forwardRef, TemplateRef } from "@angular/core";
+import { Component, ElementRef, Input, ViewChild, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from "@angular/forms";
 
 import { log } from "app/utils";
@@ -63,8 +63,6 @@ export class FormPickerComponent implements ControlValueAccessor, Validator {
     public focus() {
         this._button.nativeElement.focus();
     }
-
-
 
     public writeValue(value: any) {
         this.nestedValue.patchValue(value);

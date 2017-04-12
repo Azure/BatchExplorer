@@ -1,7 +1,6 @@
-import { Component, DebugElement, ViewChild, NO_ERRORS_SCHEMA } from "@angular/core";
+import { Component, DebugElement, NO_ERRORS_SCHEMA, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from "@angular/forms";
-import { MaterialModule } from "@angular/material";
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { autobind } from "core-decorators";
 import { AsyncSubject } from "rxjs";
@@ -18,11 +17,11 @@ import { click } from "test/utils/helpers";
     template: `
         <bl-create-form [formGroup]="form" [submit]="submit" [sidebarRef]="sidebarRef" >
             <bl-form-page title="Main page" subtitle="Main subtitle" [formGroup]="form">
-                <bl-form-section title="General" subtitle="General information">
+                <bl-form-section title="General section" subtitle="General information">
                     <input  formControlName="id" />
                     <input  formControlName="state"/>
                 </bl-form-section>
-                <bl-form-section title="Secondary" subtitle="Secondary information">
+                <bl-form-section title="Secondary section" subtitle="Secondary information">
                     <bl-form-picker formControlName="pickedValue" #picker name="Nested page title">
                         <div no-value-title>Pick something</div>
                         <div value-title>Got something</div>
@@ -70,7 +69,7 @@ export class FormTestComponent {
     }
 }
 
-fdescribe("CreateFormComponent", () => {
+describe("CreateFormComponent", () => {
     let fixture: ComponentFixture<FormTestComponent>;
     let component: FormTestComponent;
     let de: DebugElement;
@@ -200,7 +199,19 @@ fdescribe("CreateFormComponent", () => {
         });
     });
 
-    fdescribe("Picker", () => {
+    it("Should have 2 sections", () => {
+        const sections = de.queryAll(By.css(".form-section"));
+        expect(sections.length).toBe(2);
+        const sectionTitles = sections.map(x => x.query(By.css(".section-title")));
+        expect(sectionTitles[0].nativeElement.textContent).toContain("1");
+        expect(sectionTitles[0].nativeElement.textContent).toContain("General section");
+        expect(sectionTitles[0].nativeElement.textContent).toContain("General information");
+        expect(sectionTitles[1].nativeElement.textContent).toContain("2");
+        expect(sectionTitles[1].nativeElement.textContent).toContain("Secondary section");
+        expect(sectionTitles[1].nativeElement.textContent).toContain("Secondary information");
+    });
+
+    describe("Picker", () => {
         let pickerEl: DebugElement;
         let picker: FormPickerComponent;
 

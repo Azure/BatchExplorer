@@ -42,7 +42,6 @@ export class CreateFormComponent extends FormBase implements AfterViewInit {
     }
 
     public openPage(page: FormPageComponent) {
-        console.log("OPening page...", page);
         if (page === this.currentPage) {
             log.error("Error trying to open form page already open");
             return;
@@ -65,7 +64,6 @@ export class CreateFormComponent extends FormBase implements AfterViewInit {
         if (this._pageStack.length === 0) {
             return this.add();
         }
-        console.log("Submit...");
         this.currentPage.submit.emit();
         this.closePage();
     }
