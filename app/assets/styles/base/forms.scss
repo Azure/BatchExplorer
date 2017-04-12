@@ -2,13 +2,6 @@
 @import "../theme/variables";
 @import "../theme/mixins";
 
-.header {
-    h1 {
-        padding: 8px;
-        margin-bottom: 4px;
-    }
-}
-
 .required-alert, bl-error {
     color: $validation-error-color;
 }
@@ -197,6 +190,16 @@ bl-create-form {
     height: $contentview-height;
     $footer-height: 60px;
     overflow: hidden;
+
+    .header {
+        h1 {
+            padding: 0 8px;
+        }
+
+        p {
+            padding: 0 10px;
+        }
+    }
 
     > .content {
         overflow: auto;
