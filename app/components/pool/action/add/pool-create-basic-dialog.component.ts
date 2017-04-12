@@ -29,7 +29,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         private notificationService: NotificationService) {
         super(PoolCreateDto);
 
-        this._osControl = this.formBuilder.control([{}, Validators.required]);
+        this._osControl = this.formBuilder.control({}, Validators.required);
 
         this.form = formBuilder.group({
             id: ["", [

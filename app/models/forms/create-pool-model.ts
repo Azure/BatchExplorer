@@ -28,6 +28,7 @@ export interface CreatePoolModel {
     maxTasksPerNode: string;
     enableInterNodeCommunication: boolean;
     os: PoolOSPickerModel;
+    startTask: any;
 }
 
 export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
@@ -38,6 +39,7 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
         targetDedicated: Number(output.targetDedicated),
         maxTasksPerNode: Number(output.maxTasksPerNode),
         enableInterNodeCommunication: output.enableInterNodeCommunication,
+        startTask: output.startTask,
     };
 
     if (output.os.source === PoolOsSources.PaaS) {
