@@ -51,10 +51,6 @@ export class CreateFormComponent extends FormBase implements AfterViewInit {
     }
 
     public closePage() {
-        if (this._pageStack.length === 0) {
-            log.error("Error trying to close the last form page open");
-            return;
-        }
         const picker = this.currentPage.openedWith;
         this.currentPage = this._pageStack.pop();
         if (picker) {
@@ -68,17 +64,15 @@ export class CreateFormComponent extends FormBase implements AfterViewInit {
         if (this._pageStack.length === 0) {
             return this.add();
         }
-        const picker = this.currentPage.openedWith;
-        this.currentPage = this._pageStack.pop();
-        if (picker) {
-            setTimeout(() => {
-                picker.focus();
-            });
-        }
+        console.log("Submit...");
+        this.currentPage.submit.emit();
+        this.closePage();
     }
 
     public cancelPage() {
         // TODO reset form input
+        this.currentPage.cancel.emit();
+        this.currentPage.formGroup.reset();
         this.closePage();
     }
 

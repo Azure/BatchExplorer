@@ -35,9 +35,10 @@ export class StartTaskPickerComponent implements ControlValueAccessor {
 
 
     public writeValue(value: any) {
-        console.log("Start taskv a", value);
         if (value) {
             this.form.patchValue(value);
+        } else {
+            this.form.reset();
         }
     }
 

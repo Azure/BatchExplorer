@@ -1,7 +1,8 @@
 import {
-    Component, ContentChildren, Inject, Input, QueryList, TemplateRef, ViewChild, forwardRef,
+    Component, ContentChildren, EventEmitter, Inject, Input, Output, QueryList, TemplateRef, ViewChild, forwardRef,
 } from "@angular/core";
 
+import { AbstractControl } from "@angular/forms";
 import { CreateFormComponent } from "./create-form.component";
 import { FormPickerComponent } from "./form-picker.component";
 import { FormSectionComponent } from "./form-section.component";
@@ -13,6 +14,15 @@ import { FormSectionComponent } from "./form-section.component";
 export class FormPageComponent {
     @Input()
     public title: string;
+
+    @Input()
+    public formGroup: AbstractControl;
+
+    @Output()
+    public cancel = new EventEmitter();
+
+    @Output()
+    public submit = new EventEmitter();
 
     @ViewChild(TemplateRef)
     public content: TemplateRef<any>;

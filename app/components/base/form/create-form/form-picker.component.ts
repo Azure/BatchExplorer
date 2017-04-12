@@ -31,21 +31,34 @@ export class FormPickerComponent implements ControlValueAccessor, Validator {
 
     private _propagateChange: (value: any) => void;
 
-    constructor() {
-        this.nestedValue.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((value) => {
-            if (this._propagateChange) {
-                this._propagateChange(value);
-            }
-            this.hasValue = Boolean(value);
-        });
-    }
-
     public openPicker() {
-        const page = this.page || this._page;
+        const page = this._getPage();
         if (!page) {
             log.error("FormPicker: Page is input is not defined", page);
         }
         page.activate(this);
+    }
+
+    public clearPicker(event: MouseEvent) {
+        event.stopPropagation();
+        this.nestedValue.setValue(null);
+        const page = this._getPage();
+        this.hasValue = false;
+        if (page) {
+            page.formGroup.reset();
+        }
+    }
+
+    public nestedFormSubmit() {
+        console.log("Submited wth", this.nestedValue.value);
+        this.hasValue = Boolean(this.nestedValue.value);
+        if (this._propagateChange) {
+            this._propagateChange(this.nestedValue.value);
+        }
+    }
+
+    public nestedFormCanceled() {
+        // TODO
     }
 
     public focus() {
@@ -68,5 +81,9 @@ export class FormPickerComponent implements ControlValueAccessor, Validator {
 
     public validate(c: FormControl) {
         return null;
+    }
+
+    private _getPage() {
+        return this.page || this._page;
     }
 }
