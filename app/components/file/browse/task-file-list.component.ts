@@ -1,6 +1,6 @@
-import { Component, Input, OnChanges, OnInit } from "@angular/core";
+import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
 import { autobind } from "core-decorators";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { File, Node, NodeState, ServerError, Task } from "app/models";
@@ -22,7 +22,7 @@ const validStates = [
     selector: "bl-task-file-list",
     templateUrl: "file-list.html",
 })
-export class TaskFileListComponent implements OnInit, OnChanges {
+export class TaskFileListComponent implements OnChanges, OnDestroy {
     /**
      * If set to true it will display the quick list view, if false will use the table view
      */
@@ -44,6 +44,8 @@ export class TaskFileListComponent implements OnInit, OnChanges {
     public fileCleanupOperation: boolean;
     public nodeNotFound: boolean;
 
+    private _statuSub: Subscription;
+
     constructor(
         private fileService: FileService,
         private nodeService: NodeService,
@@ -59,19 +61,20 @@ export class TaskFileListComponent implements OnInit, OnChanges {
             return true;
         });
 
-        this.data.status.subscribe((status) => {
+        this._statuSub = this.data.status.subscribe((status) => {
             this.status.next(status);
         });
-    }
-
-    public ngOnInit() {
-        return;
     }
 
     public ngOnChanges(inputs) {
         if (inputs.jobId || inputs.taskId || inputs.filter) {
             this.refresh();
         }
+    }
+
+    public ngOnDestroy() {
+        this.status.unsubscribe();
+        this._statuSub.unsubscribe();
     }
 
     @autobind()

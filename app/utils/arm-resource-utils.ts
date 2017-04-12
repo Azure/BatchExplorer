@@ -6,7 +6,7 @@ import { log } from "app/utils";
  * Class for parsing and testing Batch and ARM resource ID's.
  * From: MsPortalFx.ViewModels.Services.ResourceTypes.ts
  */
-export class ResourceUtils {
+export class ArmResourceUtils {
     /*
      * Returns the account name from a resource id
      */
@@ -38,7 +38,7 @@ export class ResourceUtils {
      * @return Boolean true if the ID is a resource ID, otherwise false.
      */
     public static isResourceId(id: string): boolean {
-        return ResourceUtils.regExpResourceId.test(id);
+        return ArmResourceUtils.regExpResourceId.test(id);
     }
 
     /**
@@ -49,7 +49,7 @@ export class ResourceUtils {
      * @return Boolean true if the ID is a resource group ID, otherwise false.
      */
     public static isSubscriptionId(id: string): boolean {
-        return ResourceUtils.regExpSubscriptionId.test(id);
+        return ArmResourceUtils.regExpSubscriptionId.test(id);
     }
 
     /**
@@ -60,7 +60,7 @@ export class ResourceUtils {
      * @return Boolean true if the ID is a resource group ID, otherwise false.
      */
     public static isResourceGroupId(id: string): boolean {
-        return ResourceUtils.regExpResourceGroupId.test(id);
+        return ArmResourceUtils.regExpResourceGroupId.test(id);
     }
 
     /**
@@ -73,7 +73,7 @@ export class ResourceUtils {
      * @return Boolean true if the ID is a deployment ID, otherwise false.
      */
     public static isDeploymentId(id: string): boolean {
-        return ResourceUtils.regExpDeploymentResourceId.test(id) || ResourceUtils.regExpDeploymentId.test(id);
+        return ArmResourceUtils.regExpDeploymentResourceId.test(id) || ArmResourceUtils.regExpDeploymentId.test(id);
     }
 
     /**
@@ -83,7 +83,7 @@ export class ResourceUtils {
      * @return Boolean true if the ID is a tag ID, otherwise false.
      */
     public static isTagId(id: string): boolean {
-        return ResourceUtils.regExpTagId.test(id);
+        return ArmResourceUtils.regExpTagId.test(id);
     }
 
     // - matches (/{type}/{instance})+
@@ -123,7 +123,7 @@ export class ResourceUtils {
         }
 
         // extract the subscription id and resource group id, if available.
-        let tokens = ResourceUtils.regExpSubscriptionAndResourceGroupExtractor.exec(id);
+        let tokens = ArmResourceUtils.regExpSubscriptionAndResourceGroupExtractor.exec(id);
         const tokensLength = tokens && tokens.length;
 
         const result = new ResourceDescriptor();
@@ -135,7 +135,7 @@ export class ResourceUtils {
         id = "/providers/Microsoft.Resources" + id;
 
         // extract the provider and resources. produces [ id, provider, resources ]
-        tokens = ResourceUtils.regExpProviderExtractor.exec(id);
+        tokens = ArmResourceUtils.regExpProviderExtractor.exec(id);
         if (!tokens) {
             throw new Error("Invalid resource id: " + id);
         }
@@ -152,7 +152,7 @@ export class ResourceUtils {
         result.resourceMap = {};
 
         // tslint:disable-next-line
-        while (tokens = ResourceUtils.regExpResourceTypeExtractor.exec(resources)) {
+        while (tokens = ArmResourceUtils.regExpResourceTypeExtractor.exec(resources)) {
             if (!tokens) {
                 throw new Error("Invalid resource id: " + id);
             }

@@ -10,7 +10,7 @@ export * from "./model-utils";
 export * from "./object";
 export * from "./os";
 export * from "./pool-utils";
-export * from "./resource-utils";
+export * from "./arm-resource-utils";
 export * from "./secure";
 export * from "./shared-key-utils";
 export * from "./storage-utils";

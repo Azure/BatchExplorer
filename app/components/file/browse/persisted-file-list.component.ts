@@ -35,7 +35,8 @@ export class PersistedFileListComponent implements OnChanges, OnDestroy {
     public containerNotFound: boolean;
     public authFailed: boolean;
 
-    private _subscriber: Subscription;
+    private _autoStorageSub: Subscription;
+    private _statuSub: Subscription;
 
     constructor(private storageService: StorageService) {
         this.data = this.storageService.listBlobsForTask(null, null, null, (error: ServerError) => {
@@ -53,11 +54,11 @@ export class PersistedFileListComponent implements OnChanges, OnDestroy {
             return !handled;
         });
 
-        this.data.status.subscribe((status) => {
+        this._statuSub = this.data.status.subscribe((status) => {
             this.status.next(status);
         });
 
-        this._subscriber = storageService.hasAutoStorage.subscribe((hasAutoStorage) => {
+        this._autoStorageSub = storageService.hasAutoStorage.subscribe((hasAutoStorage) => {
             if (!hasAutoStorage) {
                 this.status.next(LoadingStatus.Ready);
             }
@@ -71,7 +72,9 @@ export class PersistedFileListComponent implements OnChanges, OnDestroy {
     }
 
     public ngOnDestroy() {
-        this._subscriber.unsubscribe();
+        this.status.unsubscribe();
+        this._autoStorageSub.unsubscribe();
+        this._statuSub.unsubscribe();
     }
 
     @autobind()

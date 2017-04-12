@@ -3,7 +3,7 @@ import { StorageAccountSharedKeyOptions, StorageClientProxyFactory } from "clien
 import { Observable } from "rxjs";
 
 import { AutoStorageAccount, StorageKeys } from "app/models";
-import { ResourceUtils } from "app/utils";
+import { ArmResourceUtils } from "app/utils";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
 import { ElectronRemote } from "./electron";
@@ -94,7 +94,7 @@ export class StorageClientService {
      * @param [storageAccountId] the full resource id for the storage account.
      */
     private getStorageAccountName(storageAccountId: string): string {
-        const accountName = ResourceUtils.getAccountNameFromResourceId(storageAccountId);
+        const accountName = ArmResourceUtils.getAccountNameFromResourceId(storageAccountId);
         if (!accountName) {
             throw "Unable to get account name from storage account id: " + storageAccountId;
         }
