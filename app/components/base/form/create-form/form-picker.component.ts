@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ViewChild, forwardRef } from "@angular/core";
+import { Component, ElementRef, Input, ViewChild, forwardRef, TemplateRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from "@angular/forms";
 
 import { log } from "app/utils";
@@ -26,6 +26,9 @@ export class FormPickerComponent implements ControlValueAccessor, Validator {
     @ViewChild("button")
     private _button: ElementRef;
 
+    @ViewChild("page")
+    private _page: FormPageComponent;
+
     private _propagateChange: (value: any) => void;
 
     constructor() {
@@ -38,10 +41,11 @@ export class FormPickerComponent implements ControlValueAccessor, Validator {
     }
 
     public openPicker() {
-        if (!this.page) {
-            log.error("FormPicker: Page is input is not defined");
+        const page = this.page || this._page;
+        if (!page) {
+            log.error("FormPicker: Page is input is not defined", page);
         }
-        this.page.activate(this);
+        page.activate(this);
     }
 
     public focus() {

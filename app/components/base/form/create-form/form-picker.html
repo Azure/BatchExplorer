@@ -6,4 +6,10 @@
         <div class="title"><ng-content select="[value-title]"></ng-content></div>
         <div class="subtitle"><ng-content select="[value-subtitle]"></ng-content></div>
     </div>
+
+    <bl-form-page #page [title]="name">
+        <bl-form-section>
+            <ng-content select="[nested-form]"></ng-content>
+        </bl-form-section>
+    </bl-form-page>
 </button>

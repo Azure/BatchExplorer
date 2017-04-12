@@ -1,4 +1,3 @@
-<bl-server-error [error]="error"></bl-server-error>
 <div class="content" *ngIf="currentPage">
     <div class="header">
         <div *ngIf="_pageStack.length > 0">
@@ -6,6 +5,7 @@
         </div>
         <h1>{{currentPage.title}}</h1>
     </div>
+    <bl-server-error [error]="error"></bl-server-error>
     <form novalidate (keyup.enter)="closePageOrSubmit()">
         <template [ngTemplateOutlet]="currentPage.content"></template>
     </form>

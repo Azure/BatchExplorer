@@ -43,13 +43,10 @@
             <bl-form-picker [page]="startTaskPage" formControlName="startTask" #startTaskPicker>
                 <div no-value-title>Add a start task</div>
                 <div value-title>{{startTask?.commandLine}}</div>
+                <div nested-form>
+                    <bl-start-task-picker [formControl]="startTaskPicker.nestedValue"></bl-start-task-picker>
+                </div>
             </bl-form-picker>
-        </bl-form-section>
-    </bl-form-page>
-
-    <bl-form-page #startTaskPage title="Start task">
-        <bl-form-section>
-            <bl-start-task-picker [formControl]="startTaskPicker.nestedValue"></bl-start-task-picker>
         </bl-form-section>
     </bl-form-page>
 </bl-create-form>
