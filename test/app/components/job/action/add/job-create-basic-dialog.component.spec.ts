@@ -12,7 +12,7 @@ import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";
 import { validateControl } from "test/utils/helpers";
 import { RxMockListProxy } from "test/utils/mocks";
-import { CreateFormMockComponent, ServerErrorMockComponent } from "test/utils/mocks/components";
+import { ServerErrorMockComponent, createFormMockComponents } from "test/utils/mocks/components";
 
 describe("JobCreateBasicDialogComponent ", () => {
     let fixture: ComponentFixture<JobCreateBasicDialogComponent>;
@@ -69,7 +69,7 @@ describe("JobCreateBasicDialogComponent ", () => {
         };
 
         TestBed.configureTestingModule({
-            declarations: [CreateFormMockComponent, JobCreateBasicDialogComponent, ServerErrorMockComponent],
+            declarations: [...createFormMockComponents, JobCreateBasicDialogComponent, ServerErrorMockComponent],
             providers: [
                 { provide: FormBuilder, useValue: new FormBuilder() },
                 { provide: SidebarRef, useValue: sidebarRefSpy },
@@ -92,7 +92,6 @@ describe("JobCreateBasicDialogComponent ", () => {
 
     it("Should show title and description", () => {
         expect(debugElement.nativeElement.textContent).toContain("Create job");
-        expect(debugElement.nativeElement.textContent).toContain("Adds a job to the selected account");
     });
 
     it("JobId is initialized", () => {
@@ -175,7 +174,7 @@ describe("JobCreateBasicDialogComponent ", () => {
         expect(baseForm.controls.displayName.value).toEqual("display name");
         expect(baseForm.controls.priority.value).toEqual(1);
         expect(constraintsForm.controls.maxTaskRetryCount.value).toEqual(3);
-        expect(baseForm.controls.poolInfo.value).toEqual({poolId: "pool-002"});
+        expect(baseForm.controls.poolInfo.value).toEqual({ poolId: "pool-002" });
     });
 
     it("Clicking add creates job and doesnt close form", (done) => {

@@ -16,6 +16,9 @@ export class FormPageComponent {
     public title: string;
 
     @Input()
+    public subtitle: string;
+
+    @Input()
     public formGroup: AbstractControl;
 
     @Output()

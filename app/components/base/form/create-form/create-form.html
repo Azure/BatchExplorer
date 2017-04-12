@@ -4,6 +4,7 @@
             <button md-raised-button color="primary" (click)="closePage()">Back</button>
         </div>
         <h1>{{currentPage.title}}</h1>
+        <p>{{currentPage.subtitle}}</p>
     </div>
     <bl-server-error [error]="error"></bl-server-error>
     <form novalidate (keyup.enter)="closePageOrSubmit()">

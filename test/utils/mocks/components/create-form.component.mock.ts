@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
 
 @Component({
     selector: "bl-create-form",
@@ -9,3 +9,21 @@ import { Component } from "@angular/core";
 })
 export class CreateFormMockComponent {
 }
+
+
+@Component({
+    selector: "bl-form-page",
+    template: `
+        <h2>{{title}}</h2>
+        <p>{{subtitle}}</p>
+        <ng-content></ng-content>
+    `,
+})
+export class FormPageMockComponent {
+    @Input()
+    public title: string;
+    @Input()
+    public subtitle: string;
+}
+
+export const createFormMockComponents = [CreateFormMockComponent, FormPageMockComponent];

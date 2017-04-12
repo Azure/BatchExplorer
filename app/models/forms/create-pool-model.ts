@@ -71,5 +71,6 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
             cloudServiceConfiguration: pool.cloudServiceConfiguration,
             virtualMachineConfiguration: pool.virtualMachineConfiguration,
         },
+        startTask: pool.startTask,
     };
 };

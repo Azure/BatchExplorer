@@ -31,10 +31,13 @@ Each page is composed of multiple section(If only have 1 section do not provide 
 ```html
 <bl-create-form [formGroup]="form" [submit]="submit" [sidebarRef]="sidebarRef">
     <bl-form-page title="This form is for adding a new entity" [formGroup]="form">
+        <!-- This section will have the #1 next to it -->
         <bl-form-section title="General" subtitle="Main info">
             <input formControlName="mainInput1"></input>
             <input formControlName="mainInput2"></input>
         </bl-form-section>
+
+        <!-- This section will have the #2 next to it -->
         <bl-form-section title="Secondary" subtitle="Secondary info">
             <input formControlName="secondInput"></input>
         </bl-form-section>
