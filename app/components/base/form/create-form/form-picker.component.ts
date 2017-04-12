@@ -50,7 +50,6 @@ export class FormPickerComponent implements ControlValueAccessor, Validator {
     }
 
     public nestedFormSubmit() {
-        console.log("Submited wth", this.nestedValue.value);
         this.hasValue = Boolean(this.nestedValue.value);
         if (this._propagateChange) {
             this._propagateChange(this.nestedValue.value);

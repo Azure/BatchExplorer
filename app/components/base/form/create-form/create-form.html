@@ -23,8 +23,8 @@
             </span>
         </div>
         <div *ngIf="!isMainWindow">
-            <button md-raised-button color="primary" (click)="cancelPage()">Cancel</button>
-            <button md-raised-button color="primary" (click)="closePageOrSubmit()">Select</button>
+            <button md-raised-button class="cancel" color="primary" (click)="cancelPage()">Cancel</button>
+            <button md-raised-button class="select" color="primary" (click)="closePageOrSubmit()">Select</button>
         </div>
     </div>
 </div>

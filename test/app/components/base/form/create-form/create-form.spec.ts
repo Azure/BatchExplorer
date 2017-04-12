@@ -1,23 +1,37 @@
-import { Component, DebugElement, ViewChild } from "@angular/core";
+import { Component, DebugElement, ViewChild, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angular/forms";
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators, FormsModule } from "@angular/forms";
 import { MaterialModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { autobind } from "core-decorators";
 import { AsyncSubject } from "rxjs";
 
 import { SubmitButtonComponent } from "app/components/base/buttons";
-import { CreateFormComponent } from "app/components/base/form/create-form";
+import {
+    CreateFormComponent, FormPageComponent, FormPickerComponent, FormSectionComponent,
+} from "app/components/base/form/create-form";
 import { ServerErrorComponent } from "app/components/base/form/server-error";
 import { ServerError } from "app/models";
+import { click } from "test/utils/helpers";
 
 @Component({
     template: `
         <bl-create-form [formGroup]="form" [submit]="submit" [sidebarRef]="sidebarRef" >
-            <div [formGroup]="form">
-                <input  formControlName="id" />
-                <input  formControlName="state"/>
-            </div>
+            <bl-form-page title="Main page" subtitle="Main subtitle" [formGroup]="form">
+                <bl-form-section title="General" subtitle="General information">
+                    <input  formControlName="id" />
+                    <input  formControlName="state"/>
+                </bl-form-section>
+                <bl-form-section title="Secondary" subtitle="Secondary information">
+                    <bl-form-picker formControlName="pickedValue" #picker name="Nested page title">
+                        <div no-value-title>Pick something</div>
+                        <div value-title>Got something</div>
+                        <div nested-form>
+                            <input class="nested-input" [formControl]="picker.nestedValue"/>
+                        </div>
+                    </bl-form-picker>
+                </bl-form-section>
+            </bl-form-page>
         </bl-create-form>
     `,
 })
@@ -37,6 +51,7 @@ export class FormTestComponent {
         this.form = formBuilder.group({
             id: ["", Validators.required],
             state: [""],
+            pickedValue: [""],
         });
     }
 
@@ -55,8 +70,10 @@ export class FormTestComponent {
     }
 }
 
-describe("CreateFormComponent", () => {
+fdescribe("CreateFormComponent", () => {
     let fixture: ComponentFixture<FormTestComponent>;
+    let component: FormTestComponent;
+    let de: DebugElement;
     let createFormElement: DebugElement;
     let addButton: DebugElement;
     let addAndCloseButton: DebugElement;
@@ -69,19 +86,25 @@ describe("CreateFormComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [ReactiveFormsModule, MaterialModule.forRoot()],
+            imports: [FormsModule, ReactiveFormsModule],
             declarations: [
                 SubmitButtonComponent,
                 FormTestComponent,
                 ServerErrorComponent,
                 CreateFormComponent,
+                FormPageComponent,
+                FormSectionComponent,
+                FormPickerComponent,
             ],
+            schemas: [NO_ERRORS_SCHEMA],
         });
 
         TestBed.compileComponents();
         fixture = TestBed.createComponent(FormTestComponent);
+        component = fixture.componentInstance;
         fixture.detectChanges();
         createFormElement = fixture.debugElement.query(By.css("bl-create-form"));
+        de = fixture.debugElement;
 
         // Get the buttons
         addButton = createFormElement.query(By.css("bl-submit-btn.add"));
@@ -174,6 +197,71 @@ describe("CreateFormComponent", () => {
             expect(error.nativeElement.textContent).toContain("abc-def");
             expect(error.nativeElement.textContent).toContain("2016-12-08T18");
             expect(true).toBe(true);
+        });
+    });
+
+    fdescribe("Picker", () => {
+        let pickerEl: DebugElement;
+        let picker: FormPickerComponent;
+
+        beforeEach(() => {
+            pickerEl = de.query(By.css("bl-form-picker"));
+            picker = pickerEl.componentInstance;
+        });
+
+        it("Should show the no value message first", () => {
+            expect(pickerEl.nativeElement.textContent).toContain("Pick something");
+        });
+
+        it("Should not show the new page", () => {
+            expect(pickerEl.nativeElement.textContent).not.toContain("Nested page title");
+        });
+
+        it("Should not show the input", () => {
+            expect(de.query(By.css("inputnested-input"))).toBeFalsy();
+        });
+
+        describe("When clicking on picker", () => {
+            beforeEach(() => {
+                click(pickerEl.query(By.css("button")));
+                fixture.detectChanges();
+                picker.nestedValue.setValue("Some");
+            });
+
+            it("should open a new page when clicking", () => {
+                expect(de.nativeElement.textContent).not.toContain("Main page");
+                expect(de.nativeElement.textContent).toContain("Nested page title");
+            });
+
+            it("should have the input", () => {
+                const input = de.query(By.css("input.nested-input"));
+                expect(input).not.toBeFalsy();
+                expect(input.nativeElement.value).toBe("Some");
+            });
+
+            it("click cancel should close the page and not set", () => {
+                const cancelButton = de.query(By.css(".form-buttons .cancel"));
+                click(cancelButton);
+                fixture.detectChanges();
+
+                expect(de.nativeElement.textContent).toContain("Main page");
+                expect(de.nativeElement.textContent).not.toContain("Nested page title");
+
+                expect(pickerEl.nativeElement.textContent).toContain("Pick something");
+                expect(component.form.value.pickedValue).toBe("");
+            });
+
+            it("click select should close the page and set value", () => {
+                const cancelButton = de.query(By.css(".form-buttons .select"));
+                click(cancelButton);
+                fixture.detectChanges();
+
+                expect(de.nativeElement.textContent).toContain("Main page");
+                expect(de.nativeElement.textContent).not.toContain("Nested page title");
+
+                expect(pickerEl.nativeElement.textContent).toContain("Got something");
+                expect(component.form.value.pickedValue).toBe("Some");
+            });
         });
     });
 });

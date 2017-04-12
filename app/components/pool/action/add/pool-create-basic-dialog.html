@@ -40,7 +40,7 @@
         </bl-form-section>
 
         <bl-form-section title="Start Task" subtitle="Additional startup configuration run on each node as it joins the pool">
-            <bl-form-picker [page]="startTaskPage" formControlName="startTask" #startTaskPicker>
+            <bl-form-picker formControlName="startTask" #startTaskPicker>
                 <div no-value-title>Add a start task</div>
                 <div value-title>{{startTask?.commandLine}}</div>
                 <div nested-form>
