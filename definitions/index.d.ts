@@ -1,8 +1,4 @@
 // tslint:disable
-declare module "azure-batch" {
-    export const SharedKeyCredentials: any;
-    export const ServiceClient: any;
-}
 
 declare module "element-resize-detector" {
     module ElementResizeDetectorMaker {
