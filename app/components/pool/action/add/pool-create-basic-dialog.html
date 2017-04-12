@@ -39,8 +39,8 @@
             </div>
         </bl-form-section>
 
-        <bl-form-section name="Start Task" subtitle="Additional startup configuration run on each node as it joins the pool">
-            <bl-form-picker [page]="startTaskPage" [value]="startTask">
+        <bl-form-section title="Start Task" subtitle="Additional startup configuration run on each node as it joins the pool">
+            <bl-form-picker [page]="startTaskPage" formControlName="startTask" #startTaskPicker>
                 <div no-value-title>Add a start task</div>
                 <div value-title>{{startTask?.commandLine}}</div>
             </bl-form-picker>
@@ -49,7 +49,7 @@
 
     <bl-form-page #startTaskPage title="Start task">
         <bl-form-section>
-            <bl-start-task-picker formControlName="startTask"></bl-start-task-picker>
+            <bl-start-task-picker [formControl]="startTaskPicker.nestedValue"></bl-start-task-picker>
         </bl-form-section>
     </bl-form-page>
 </bl-create-form>

@@ -16,8 +16,6 @@ import { PoolService, VmSizeService } from "app/services";
     templateUrl: "pool-create-basic-dialog.html",
 })
 export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreateDto> implements OnDestroy {
-    public createPoolForm: FormGroup;
-
     public osSource: PoolOsSources = PoolOsSources.IaaS;
 
     private _osControl: FormControl;
@@ -33,7 +31,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
 
         this._osControl = this.formBuilder.control([{}, Validators.required]);
 
-        this.form = this.formBuilder.group({
+        this.form = formBuilder.group({
             id: ["", [
                 Validators.required,
                 Validators.maxLength(64),
@@ -47,6 +45,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             enableInterNodeCommunication: false,
             startTask: null,
         });
+
         this._sub = this._osControl.valueChanges.subscribe((value) => {
             this.osSource = value.source;
         });
