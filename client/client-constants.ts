@@ -5,6 +5,9 @@ import * as path from "path";
  */
 const root = path.join(__dirname, "../..");
 
+// tslint:disable-next-line:no-var-requires
+const packageConfig = require(`${root}/package.json`);
+
 const urls = {
     main: {
         dev: "http://localhost:3178/index.html",
@@ -20,4 +23,5 @@ const urls = {
 export const Constants = {
     root,
     urls,
+    version: packageConfig.version,
 };

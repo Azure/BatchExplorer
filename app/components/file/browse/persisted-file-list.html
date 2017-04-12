@@ -1,0 +1,23 @@
+<div *ngIf="!containerNotFound && !authFailed && hasAutoStorage | async">
+    <bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
+    <bl-file-list-display [files]="data.items | async" [status]="status | async" [quickList]="quickList" [baseUrl]="baseUrl" [isBlob]="true"
+        [filter]="filter"></bl-file-list-display>
+
+    <bl-list-loading [manualLoading]="manualLoading" [data]="data" [status]="status | async"></bl-list-loading>
+</div>
+
+<div *ngIf="authFailed" class="notfound-message top-margin">
+    Authentication failed while accessing your storage account. Make sure you have access to the linked auto storage account for this Batch account.
+    If you know you have access and have recently refrehsed your storage keys, try clicking reload.
+    <p style="margin-top: 15px;">
+        <button type="button" (click)="refresh()" md-raised-button>Reload data</button>
+    </p>
+</div>
+
+<div *ngIf="containerNotFound" class="notfound-message top-margin">
+    No storage container was found for this job.
+</div>
+
+<div *ngIf="!hasAutoStorage | async" class="notfound-message top-margin">
+    No linked storage account configured for this Batch account.
+</div>

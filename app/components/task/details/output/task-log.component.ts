@@ -8,10 +8,10 @@ import { prettyBytes } from "app/utils";
 const outputFileNames = ["stdout.txt", "stderr.txt"];
 
 @Component({
-    selector: "bl-task-output",
-    templateUrl: "task-output.html",
+    selector: "bl-task-log",
+    templateUrl: "task-log.html",
 })
-export class TaskOutputComponent implements OnChanges, OnDestroy {
+export class TaskLogComponent implements OnChanges, OnDestroy {
     @Input()
     public jobId: string;
 

@@ -1,5 +1,6 @@
 import { Injectable } from "@angular/core";
 import { BatchClientProxyFactory } from "client/api";
+import { StorageClientProxyFactory } from "client/api";
 import { AuthenticationWindow } from "client/authentication";
 import { SplashScreen } from "client/splash-screen";
 import { remote } from "electron";
@@ -27,6 +28,10 @@ export class ElectronRemote {
 
     public getBatchClientFactory(): BatchClientProxyFactory {
         return this._currentWindow().batchClientFactory;
+    }
+
+    public getStorageClientFactory(): StorageClientProxyFactory {
+        return this._currentWindow().storageClientFactory;
     }
 
     private _currentWindow(): any {

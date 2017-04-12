@@ -84,10 +84,6 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
         this._paramsSubscribers.forEach(x => x.unsubscribe());
     }
 
-    public get filterPlaceholderText() {
-        return "Filter by file name";
-    }
-
     @autobind()
     public refresh() {
         return this.data.refresh();
@@ -117,11 +113,6 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
         const dialogRef = this.dialog.open(DeleteTaskDialogComponent, config);
         dialogRef.componentInstance.jobId = this.job.id;
         dialogRef.componentInstance.taskId = this.taskId;
-        dialogRef.afterClosed().subscribe((obj: any) => {
-            // if (obj && this.jobId === obj.jobId && this.taskId === obj.taskId) {
-            //     this.router.navigate([`/jobs/${this.jobId}/tasks`]);
-            // }
-        });
     }
 
     public cloneTask() {
