@@ -1,4 +1,4 @@
-<button #button class="form-picker" (click)="openPicker()" [class.has-value]="value">
+<button #button class="form-picker" (click)="openPicker()" [class.has-value]="hasValue">
     <div *ngIf="!hasValue" class="no-value-content">
         <i class="fa fa-plus"></i> <ng-content select="[no-value-title]"></ng-content>
     </div>
