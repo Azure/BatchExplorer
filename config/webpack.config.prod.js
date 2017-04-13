@@ -48,29 +48,16 @@ module.exports = merge(config, {
     },
     module: {
         rules: [
-            /**
-             * Extract CSS files from node_modules and the assets directory to external CSS file
-             */
+             {
+                test: /\.scss$/,
+                loader: "style-loader!css-loader!sass-loader",
+                exclude: [helpers.root("app", "components")],
+            },
             {
                 test: /\.css$/,
-                loader: ExtractTextPlugin.extract({
-                    fallback: "style-loader",
-                    use: "css-loader"
-                }),
-                include: [/node_modules/,  helpers.root("app", "styles")]
-            },
-            /**
-             * Extract and compile SCSS files from .node_modules and the assets directory to external CSS file
-             */
-            {
-                test: /\.scss$/,
-                loader: ExtractTextPlugin.extract({
-                    fallback: "style-loader",
-                    use: "css-loader!sass-loader"
-                }),
-                include: [/node_modules/, helpers.root("app", "styles")]
-            },
-
+                loader: "style-loader!css-loader",
+                exclude: [helpers.root("app", "components")],
+            }
         ]
 
     },
