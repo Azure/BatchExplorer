@@ -1,7 +1,7 @@
 // Themes
-@import "./theme/variables";
-@import "./theme/mixins";
-@import "./theme/type";
+@import "app/styles/variables";
+@import "app/styles/mixins";
+@import "app/styles/common/type";
 
 // Base styles
 @import "./base/banner";
@@ -23,7 +23,6 @@
 @import "./base/advanced-filter";
 @import "./base/server-error";
 @import "./base/table";
-@import "./base/tags";
 
 // Account styles
 @import "./account/details";

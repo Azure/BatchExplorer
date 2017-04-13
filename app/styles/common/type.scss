@@ -1,5 +1,9 @@
-@import "variables";
-@import "mixins";
+@import "../variables";
+@import "../mixins";
+
+/**
+ * This file contains default override for native elements(a, p h1,h2,etc.)
+ */
 
 body {
     font-family: $baseFontFamily;
@@ -34,7 +38,7 @@ h1, h2, h3, h4, h5, h6 {
     display: block;
     color: $headings-color;
     font-weight: 300;
-    
+
     small {
         font-weight: normal;
         line-height: 1;
@@ -54,4 +58,4 @@ h5 { font-size: $h5FontSize; }
 h6 {
     font-size: $h6FontSize;
     line-height: 19px;
-} 
+}
