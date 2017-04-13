@@ -1,15 +1,17 @@
 bl-account-details {
-    .account-links {
-        margin: 15px auto;
-        text-align: center;
+    .account-cards {
+        margin: 0 auto;
+        text-align: justify;
 
-        .link {
+        .account-card {
             display: inline-block;
-            width: 30%;
+            width: calc(33% - 4px);
             min-width: 210px;
             font-size: 2em;
             color: $scorpion;
-            text-align: center;
+            text-align: justify;
+            margin-top: 8px;
+            margin-right: 4px;
 
             .account-card-content {
                 height: 300px;

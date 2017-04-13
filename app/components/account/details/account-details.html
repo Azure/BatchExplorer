@@ -15,8 +15,8 @@
             <md-card-actions layout="row" layout-align="end center">
             </md-card-actions>
         </md-card>
-        <div class="account-links">
-            <md-card class="link">
+        <div class="account-cards">
+            <md-card class="account-card">
                 <md-card-header>
                     <md-card-title><h2>Job status</h2></md-card-title>
                 </md-card-header>
@@ -41,7 +41,7 @@
                 </md-card-actions>
             </md-card>
 
-            <md-card class="link" routerLink="/pools" (click)="selectAccount(account.id)">
+            <md-card class="account-card" routerLink="/pools" (click)="selectAccount(account.id)">
                 <md-card-header>
                     <md-card-title><h2>Pool status</h2></md-card-title>
                 </md-card-header>
@@ -69,7 +69,7 @@
                 </md-card-actions>
             </md-card>
 
-            <md-card class="link" routerLink="/applications" (click)="selectAccount(account.id)">
+            <md-card class="account-card" routerLink="/applications" (click)="selectAccount(account.id)">
                 <md-card-header>
                     <md-card-title><h2>App packages</h2></md-card-title>
                 </md-card-header>
@@ -92,6 +92,7 @@
                     <button md-button>View all packages</button>
                 </md-card-actions>
             </md-card>
+            <span style="width:100%;display:inline-block"></span>
         </div>
     </div>
 </bl-loading>
