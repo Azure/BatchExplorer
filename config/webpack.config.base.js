@@ -30,6 +30,11 @@ const baseConfig = {
                 exclude: [/node_modules/],
             },
             {
+                test: /\.scss$/,
+                use: ["to-string-loader", "css-loader", "sass-loader"],
+                include: [helpers.root("app", "components")]
+            },
+            {
                 test: /\.html$/,
                 loader: "raw-loader",
                 exclude: [/node_modules/, helpers.root("app/index.html")],
@@ -51,6 +56,7 @@ const baseConfig = {
     },
     plugins: [
         new CheckerPlugin(),
+
         new CopyWebpackPlugin([
             { from: "./client/splash-screen/**/*" },
         ]),

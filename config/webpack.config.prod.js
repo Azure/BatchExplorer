@@ -57,7 +57,7 @@ module.exports = merge(config, {
                     fallback: "style-loader",
                     use: "css-loader"
                 }),
-                include: [/node_modules/, helpers.root("app", "assets", "styles"), helpers.root("app", "styles"), helpers.root("app", "components")]
+                include: [/node_modules/,  helpers.root("app", "styles")]
             },
             /**
              * Extract and compile SCSS files from .node_modules and the assets directory to external CSS file
@@ -68,7 +68,7 @@ module.exports = merge(config, {
                     fallback: "style-loader",
                     use: "css-loader!sass-loader"
                 }),
-                include: [/node_modules/, helpers.root("app", "assets", "styles"), helpers.root("app", "styles"), helpers.root("app", "components")]
+                include: [/node_modules/, helpers.root("app", "styles")]
             },
 
         ]

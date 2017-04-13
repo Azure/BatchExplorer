@@ -35,11 +35,6 @@ module.exports = merge(config, {
                 exclude: [helpers.root("app", "components")]
             },
             {
-                test: /\.scss$/,
-                use: ["to-string-loader", "css-loader", "sass-loader"],
-                include: [helpers.root("app", "components")]
-            },
-            {
                 test: /\.css$/,
                 loader: "style-loader!css-loader",
             }
