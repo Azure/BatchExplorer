@@ -4,8 +4,8 @@ import * as MouseTrap from "mousetrap";
 import * as CommandMap from "app/commands";
 import { CommandBase } from "app/commands/core";
 import { KeyBindings } from "app/models";
-import { SettingsService } from "app/services";
 import { ObjectUtils } from "app/utils";
+import { SettingsService } from "./settings-service";
 
 export const commands: any[] = ObjectUtils.values(<any>CommandMap).filter((x: any) => x.id !== undefined);
 

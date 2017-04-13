@@ -3,6 +3,7 @@ import { List } from "immutable";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
+import { prettyBytes } from "app/utils";
 
 @Component({
     selector: "bl-file-list-display",
@@ -27,10 +28,30 @@ export class FileListDisplayComponent {
     @Input()
     public baseUrl: any[];
 
+    /**
+     * If true then create link to /blobs/filename rather than /files/filename
+     */
+    @Input()
+    public isBlob: boolean = false;
+
+    public prettyFileSize(size: string) {
+        return prettyBytes(parseInt(size, 10));
+    }
+
+    /**
+     * Handle linking to files from blob storage as well as the task and node API
+     * @param fileName - name if the file
+     */
+    public urlToFile(fileName: string) {
+        const filePathPart = this.isBlob ? "blobs" : "files";
+        return this.baseUrl.concat([filePathPart, fileName]);
+    }
+
     public isErrorState(file: any) {
         // if (node.state === "startTaskFailed") {
         //     return true;
         // }
+
         return false;
     }
 }

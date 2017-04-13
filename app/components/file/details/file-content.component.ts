@@ -1,16 +1,16 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy } from "@angular/core";
 import { Observable, Subscription } from "rxjs";
 
 import { ScrollableComponent, ScrollableService } from "app/components/base/scrollable";
 import { File, ServerError } from "app/models";
-import { FileService, TaskService } from "app/services";
+import { FileService, StorageService, TaskService } from "app/services";
 import { Constants, log } from "app/utils";
 
 @Component({
     selector: "bl-file-content",
     templateUrl: "file-content.html",
 })
-export class FileContentComponent implements OnChanges, AfterViewInit {
+export class FileContentComponent implements OnChanges, OnDestroy, AfterViewInit {
     @Input()
     public jobId: string;
 
@@ -25,17 +25,24 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
 
     @Input()
     public filename: string;
-    public inter;
+
+    @Input()
+    public outputKind: string;
 
     public followingLog = false;
     public lastContentLength = 0;
-    public notFound = false;
     public lines = [];
     public loading = true;
     public scrollable: ScrollableComponent;
     public currentSubscription: Subscription;
 
+    public nodeNotFound = false;
+    public fileContentFailure = false;
+
+    private _refreshInterval;
+
     constructor(
+        private storageService: StorageService,
         private scrollableService: ScrollableService,
         private taskService: TaskService,
         private fileService: FileService,
@@ -47,20 +54,27 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
     }
 
     public ngOnChanges(inputs) {
-        if (this.inter) {
-            clearInterval(this.inter);
+        if (this._refreshInterval) {
+            clearInterval(this._refreshInterval);
         }
 
         if (this.currentSubscription) {
             this.currentSubscription.unsubscribe();
         }
 
-        this.notFound = false;
         this.lines = [];
         this.loading = true;
         this.lastContentLength = 0;
+        this.nodeNotFound = false;
+        this.fileContentFailure = false;
+
         this._updateFileContent();
         this._setRefreshInterval();
+    }
+
+    public ngOnDestroy() {
+        // clear the refresh when the user navigates away
+        clearInterval(this._refreshInterval);
     }
 
     public toggleFollowLog() {
@@ -70,6 +84,18 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
         }
     }
 
+    public get isJob() {
+        return this.jobId && this.taskId && !this.outputKind;
+    }
+
+    public get isPool() {
+        return this.poolId && this.nodeId;
+    }
+
+    public get isBlob() {
+        return this.jobId && this.taskId && this.outputKind;
+    }
+
     /**
      * Set the interval for refresh only if checking a task file.
      */
@@ -77,19 +103,20 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
         if (this.poolId || this.nodeId) {
             return;
         }
-        this.inter = setInterval(() => {
+
+        this._refreshInterval = setInterval(() => {
             this._updateFileContent();
         }, 5000);
     }
 
     private _updateFileContent() {
         let data;
-        if (this.jobId && this.taskId) {
-            data = this.fileService.getFilePropertiesFromTask(
-                this.jobId, this.taskId, this.filename);
-        } else if (this.poolId && this.nodeId) {
-            data = this.fileService.getFilePropertiesFromComputeNode(
-                this.poolId, this.nodeId, this.filename);
+        if (this.isJob) {
+            data = this.fileService.getFilePropertiesFromTask(this.jobId, this.taskId, this.filename);
+        } else if (this.isPool) {
+            data = this.fileService.getFilePropertiesFromComputeNode(this.poolId, this.nodeId, this.filename);
+        } else if (this.isBlob) {
+            data = this.storageService.getBlobProperties(this.jobId, this.taskId, this.outputKind, this.filename);
         } else {
             return;
         }
@@ -113,16 +140,22 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
      * this._loadUpTo(300); //=> Loads bytes 100-300
      */
     private _loadUpTo(newContentLength: number) {
-        const ocpRange = `bytes=${this.lastContentLength}-${newContentLength}`;
         let obs: Observable<any>;
+        const ocpRange = `bytes=${this.lastContentLength}-${newContentLength}`;
 
-        if (this.jobId && this.taskId) {
+        if (this.isJob) {
             obs = this.fileService.getFileContentFromTask(this.jobId, this.taskId, this.filename, {
                 fileGetFromTaskOptions: { ocpRange },
             });
-        } else if (this.poolId && this.nodeId) {
+        } else if (this.isPool) {
             obs = this.fileService.getFileContentFromComputeNode(this.poolId, this.nodeId, this.filename, {
                 fileGetFromComputeNodeOptions: { ocpRange },
+            });
+        } else if (this.isBlob) {
+            const blobName = `${this.taskId}/${this.outputKind}/${this.filename}`;
+            obs = this.storageService.getBlobContent(this.jobId, blobName, {
+                rangeStart: this.lastContentLength,
+                rangeEnd: newContentLength,
             });
         } else {
             return;
@@ -130,8 +163,8 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
 
         this.currentSubscription = obs.subscribe((result) => {
             this._processFileContent(result, newContentLength);
-        }, (e) => {
-            this._processError(e);
+        }, (error) => {
+            this._processError(error);
         });
     }
 
@@ -156,17 +189,20 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
         if (newLines.length > 1) {
             first = newLines.shift();
         }
+
         if (this.lines.length === 0) {
             this.lines = [first];
         } else {
             this.lines[this.lines.length - 1] += first;
         }
+
         this.lines = this.lines.concat(newLines);
         if (this.followingLog) {
             setTimeout(() => {
                 this._scrollToBottom();
             });
         }
+
         this.loading = false;
         this.currentSubscription = null;
     }
@@ -175,12 +211,16 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
         this.currentSubscription = null;
         this.loading = false;
 
-        clearInterval(this.inter);
+        clearInterval(this._refreshInterval);
         if (e.status === Constants.HttpCode.NotFound) {
-            this.notFound = true;
+            this.nodeNotFound = true;
             return;
         } else if (e.status === Constants.HttpCode.Conflict) {
-            this.notFound = true;
+            this.nodeNotFound = true;
+            return;
+        } else if (!e.status && e.body.message.startsWith("An incorrect number of bytes")) {
+            // gets an undefined error code for binary files.
+            this.fileContentFailure = true;
             return;
         }
 
@@ -189,7 +229,8 @@ export class FileContentComponent implements OnChanges, AfterViewInit {
 
     private _scrollToBottom() {
         if (this.scrollable) {
-            this.scrollable.scrollToBottom(); // TODO make a scrollToBottom
+            // TODO: make a scrollToBottom
+            this.scrollable.scrollToBottom();
         }
     }
 }

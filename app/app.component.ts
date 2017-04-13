@@ -6,8 +6,8 @@ import { Observable } from "rxjs";
 import { DomSanitizer } from "@angular/platform-browser";
 import { registerIcons } from "app/config";
 import {
-    AccountService, AdalService, CommandService, NodeService,
-    SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
+    AccountService, AdalService, CommandService,
+    NodeService, PricingService, SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
 } from "app/services";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
@@ -43,10 +43,13 @@ export class AppComponent implements AfterViewInit, OnInit {
         private subscriptionService: SubscriptionService,
         private nodeService: NodeService,
         private sshKeyService: SSHKeyService,
+        private pricingService: PricingService,
         private vmSizeService: VmSizeService) {
         this.settingsService.init();
         this.sshKeyService.init();
         this.commandService.init();
+        // Init the pricing when good to go.
+        // this.pricingService.init();
         this.vmSizeService.init();
         this.adalService.init(adalConfig);
         this.accountService.loadInitialData();

@@ -8,3 +8,4 @@
 
 ## How to
 * [Context Menu](context-menu.md)
+* [Store user data/Cache data](store-user-data.md)

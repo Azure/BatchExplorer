@@ -40,6 +40,10 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         this.deleted.subscribe((deletedKey) => {
             this._itemKeys.next(OrderedSet<string>(this._itemKeys.value.filter((key) => key !== deletedKey)));
         });
+
+        this._cacheCleared.subscribe((deletedKey) => {
+            this._itemKeys.next(OrderedSet<string>([]));
+        });
     }
 
     public updateParams(params: TParams) {
@@ -53,10 +57,11 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         if (clearItems) {
             this._itemKeys.next(OrderedSet([]));
         }
+
         this._hasMore.next(true);
     }
 
-    public patchOptions(options: ListOptionsAttributes, clearItems = true) {
+    public patchOptions(options: ListOptionsAttributes | ListOptions, clearItems = true) {
         this.setOptions(this._options.merge(new ListOptions(options)).original);
     }
 
@@ -93,7 +98,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
 
                 this._lastRequest = { params: this._params, options: this._options };
             },
-            error: () => {
+            error: (error) => {
                 this._hasMore.next(false);
             },
         });
@@ -103,6 +108,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         if (!this.hasMoreItems()) {
             return Observable.of(true);
         }
+
         const subject = new AsyncSubject();
         subject.next(true);
         this.fetchNext().subscribe({
@@ -114,6 +120,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
             },
             error: (e) => subject.error(e),
         });
+
         return subject.asObservable();
     }
 
@@ -132,6 +139,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
                     { error, params: this._params, options: this._options });
             },
         });
+
         return obs;
     }
 
@@ -165,15 +173,17 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         if (this._itemKeys.value.size !== 0 || forceNew) {
             return false;
         }
+
         const cachedList = this.cache.queryCache.getKeys(this._options.filter);
         if (!cachedList) {
             return false;
         }
-        // this.getQueryCacheData(cachedList);
+
         this._itemKeys.next(cachedList.keys);
         this._lastRequest = { params: this._params, options: this._options };
         this._hasMore.next(this.hasMoreItems());
         this._status.next(LoadingStatus.Ready);
+
         return true;
     }
 

@@ -1,3 +1,5 @@
+// import { ArrayUtils } from "app/utils/array";
+
 // tslint:disable:only-arrow-functions
 interface String {
     /**
@@ -16,6 +18,11 @@ interface String {
      * '1'.padStart(5, '0') = 00001
      */
     padStart(maxLength: number, padString?: string);
+
+   /**
+    * Trims all occurrences of the given set of strings off the end of the input.
+    */
+    trimEnd(...values: string[]);
 }
 
 // First, checks if it isn't implemented yet.
@@ -52,5 +59,24 @@ if (!String.prototype.padStart) {
         }
 
         return str;
+    };
+}
+
+if (!String.prototype.trimEnd) {
+    String.prototype.trimEnd = function (...values: string[]) {
+        let input = String(this) || "";
+        while (input) {
+            let match = values.find((value) => {
+                return value && input.endsWith(value);
+            });
+
+            if (!match) {
+                break;
+            }
+
+            input = input.substr(0, input.length - match.length);
+        }
+
+        return input;
     };
 }
