@@ -21,11 +21,6 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
         return { name: name, label: "Account" };
     }
-<<<<<<< HEAD
-
-    public account: AccountResource;
-=======
->>>>>>> master
 
     public account: AccountResource;
     public accountId: string;
