@@ -1,5 +1,3 @@
-@import "../theme/mixins";
-
 .content-wrapper {
     position: relative;
 
@@ -10,7 +8,7 @@
         left: 0;
         right: 0;
         top: 100px;
-        
+
         &.loading {
             visibility: visible;
             display: block;
