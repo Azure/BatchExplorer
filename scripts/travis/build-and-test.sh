@@ -9,7 +9,7 @@ cd $(dirname $0)/../..
 # Normal build
 # npm run build -s
 
-if [ "${TRAVIS_PULL_REQUEST}" = "false" ] || ["${TRAVIS_BRANCH}" = "master"]; then
+if [ "${TRAVIS_PULL_REQUEST}" = "false" ] || [ "${TRAVIS_BRANCH}" = "master" ]; then
 	npm run build:prod
 fi
 
