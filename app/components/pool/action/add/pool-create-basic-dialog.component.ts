@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from "@angular/core";
-import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable, Subscription } from "rxjs";
 
@@ -16,8 +16,6 @@ import { PoolService, VmSizeService } from "app/services";
     templateUrl: "pool-create-basic-dialog.html",
 })
 export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreateDto> implements OnDestroy {
-    public createPoolForm: FormGroup;
-
     public osSource: PoolOsSources = PoolOsSources.IaaS;
 
     private _osControl: FormControl;
@@ -32,7 +30,6 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         super(PoolCreateDto);
 
         this._osControl = this.formBuilder.control([{}, Validators.required]);
-
         this.form = this.formBuilder.group({
             id: ["", [
                 Validators.required,
@@ -40,7 +37,10 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
                 Validators.pattern("^[\\w\\_-]+$"),
             ]],
             displayName: "",
-            targetDedicated: [0, Validators.required],
+            targetDedicated: [0, this.invalidTargetDedicated()],
+            enableAutoScale: false,
+            autoScaleFormula: [null, this.invalidAutoscaleFormula()],
+            autoScaleEvaluationInterval: null,
             os: this._osControl,
             vmSize: ["Standard_D1", Validators.required],
             maxTasksPerNode: 1,
@@ -77,5 +77,32 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
 
     public formToDto(data: any): PoolCreateDto {
         return createPoolToData(data);
+    }
+
+    public changeScaleModeTab(event) {
+        if (event.index === 0) {
+            this.form.controls.enableAutoScale.setValue(false);
+        } else if (event.index === 1) {
+            this.form.controls.enableAutoScale.setValue(true);
+        }
+        this.form.controls.autoScaleFormula.updateValueAndValidity();
+    }
+
+    private invalidAutoscaleFormula() {
+        return (control: FormControl): {[key: string]: any} => {
+            if (!this.form || !this.form.controls.enableAutoScale.value) {
+                return null;
+            }
+            return control.value ? null : { invalidAutoscaleFormula: true };
+        };
+    }
+
+    private invalidTargetDedicated() {
+        return (control: FormControl): {[key: string]: any} => {
+            if (!this.form || this.form.controls.enableAutoScale.value) {
+                return null;
+            }
+            return control.value !== null ? null : { invalidTargetDedicated: true };
+        };
     }
 }

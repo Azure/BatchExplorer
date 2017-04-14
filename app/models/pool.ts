@@ -17,7 +17,7 @@ const PoolRecord = Record({
     creationTime: null,
     currentDedicated: 0,
     displayName: null,
-    enableAutoscale: false,
+    enableAutoScale: false,
     enableInterNodeCommunication: false,
     id: null,
     lastModified: null,
@@ -27,6 +27,8 @@ const PoolRecord = Record({
     state: null,
     stateTransitionTime: null,
     targetDedicated: 0,
+    autoScaleEvaluationInterval: null,
+    autoScaleFormula: null,
     taskSchedulingPolicy: null,
     url: null,
     virtualMachineConfiguration: null,
@@ -74,7 +76,7 @@ export class Pool extends PoolRecord {
     public creationTime: Date;
     public currentDedicated: number;
     public displayName: string;
-    public enableAutoscale: boolean;
+    public enableAutoScale: boolean;
     public enableInterNodeCommunication: boolean;
     public id: string;
     public lastModified: Date;
@@ -84,6 +86,8 @@ export class Pool extends PoolRecord {
     public state: string;
     public stateTransitionTime: Date;
     public targetDedicated: number;
+    public autoScaleFormula: string;
+    public autoScaleEvaluationInterval: Duration;
     public taskSchedulingPolicy: any;
     public url: string;
     public virtualMachineConfiguration: VirtualMachineConfiguration;
