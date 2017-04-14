@@ -13,7 +13,7 @@ import { Subscription } from "rxjs";
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => AutoscaleFormulaPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => AutoscaleFormulaPickerComponent), multi: true },
     ],
-    styles: [ ":host /deep/ .CodeMirror { display:block;width:100%; height:195px; }" ],
+    styleUrls: [ "autoscale-formula-picker" ],
 })
 export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, ControlValueAccessor {
     public savedAutoscaleFormulas: List<AutoscaleFormula>;
