@@ -18,3 +18,4 @@ branches:
   only:
   - master
   - stable
+  - feature/travis-prod-build
