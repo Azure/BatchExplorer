@@ -38,7 +38,10 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
                 Validators.pattern("^[\\w\\_-]+$"),
             ]],
             displayName: "",
-            targetDedicated: [0, Validators.required],
+            targetDedicated: [0, this.invalidTargetDedicated()],
+            enableAutoScale: false,
+            autoScaleFormula: [null, this.invalidAutoscaleFormula()],
+            autoScaleEvaluationInterval: null,
             os: this._osControl,
             vmSize: ["Standard_D1", Validators.required],
             maxTasksPerNode: 1,
@@ -81,5 +84,32 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
 
     public get startTask() {
         return this.form.controls.startTask.value;
+    }
+
+    public changeScaleModeTab(event) {
+        if (event.index === 0) {
+            this.form.controls.enableAutoScale.setValue(false);
+        } else if (event.index === 1) {
+            this.form.controls.enableAutoScale.setValue(true);
+        }
+        this.form.controls.autoScaleFormula.updateValueAndValidity();
+    }
+
+    private invalidAutoscaleFormula() {
+        return (control: FormControl): { [key: string]: any } => {
+            if (!this.form || !this.form.controls.enableAutoScale.value) {
+                return null;
+            }
+            return control.value ? null : { invalidAutoscaleFormula: true };
+        };
+    }
+
+    private invalidTargetDedicated() {
+        return (control: FormControl): { [key: string]: any } => {
+            if (!this.form || this.form.controls.enableAutoScale.value) {
+                return null;
+            }
+            return control.value !== null ? null : { invalidTargetDedicated: true };
+        };
     }
 }

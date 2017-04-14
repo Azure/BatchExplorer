@@ -110,6 +110,7 @@
     "brace": "^0.10.0",
     "bunyan": "^1.8.4",
     "chart.js": "^2.5.0",
+    "codemirror": "^5.25.0",
     "core-decorators": "~0.17.0",
     "d3": "~4.7.3",
     "electron-json-storage": "~3.0.4",
