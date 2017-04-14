@@ -6,8 +6,8 @@ import { Observable } from "rxjs";
 import { DomSanitizer } from "@angular/platform-browser";
 import { registerIcons } from "app/config";
 import {
-    AccountService, AdalService, CommandService,
-    NodeService, PricingService, SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
+    AccountService, AdalService, AutoscaleFormulaService, CommandService, NodeService,
+    PricingService, SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
 } from "app/services";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
@@ -36,6 +36,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         mdIconRegistry: MdIconRegistry,
         sanitizer: DomSanitizer,
         private sidebarManager: SidebarManager,
+        private autoscaleFormulaService: AutoscaleFormulaService,
         private settingsService: SettingsService,
         private commandService: CommandService,
         private adalService: AdalService,
@@ -45,6 +46,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         private sshKeyService: SSHKeyService,
         private pricingService: PricingService,
         private vmSizeService: VmSizeService) {
+        this.autoscaleFormulaService.init();
         this.settingsService.init();
         this.sshKeyService.init();
         this.commandService.init();

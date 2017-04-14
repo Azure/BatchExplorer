@@ -1,0 +1,40 @@
+<div class="form-element autoscale-formula-picker">
+    <div class="bl-textarea">
+        <bl-editor  [(ngModel)]="autoscaleFormulaValue"
+                    [label]="'Autoscale Formula'"
+                    [config]="config"
+                    (change)="textEditorOnChange()"
+                    (blur)="textEditorOnBlur()"></bl-editor>
+    </div>
+    <div class="saved-formulas">
+        <div *ngIf="!showSaveForm">
+            <div class="saved-formulas-btns">
+                <button md-raised-button color="primary" class="small add-formula-btn" (click)="addFormula()">
+                    <i class="fa fa-save"></i> Save Autoscale Formula
+                </button>
+            </div>
+            <div class="saved-formulas-wrapper">
+                <div class="formula" *ngFor="let formula of savedAutoscaleFormulas" (click)="selectFormula(formula)">
+                    <span class="label">{{formula.name}}</span>
+                    <i class="fa fa-times" title="Delete" (click)="deleteFormula(formula)"></i>
+                </div>
+                <div class="no-formula" *ngIf="savedAutoscaleFormulas.size === 0">
+                    <div>
+                        <i class="fa fa-file-code-o"></i>
+                    </div>
+                    No saved autoscale formulas
+                </div>
+            </div>
+        </div>
+        <div [hidden]="!showSaveForm" class="save-formula-form">
+            <md-input-container>
+                <input mdInput placeholder="Name" [formControl]="autoscaleFormulaName" #nameInput>
+            </md-input-container>
+
+            <div class="btn-container">
+                <button md-mini-fab color="primary" class="small save-formula-btn" (click)="saveFormula()"><i class="fa fa-check"></i></button>
+                <button md-mini-fab color="warn" class="small" (click)="cancelAddFormula()"><i class="fa fa-times"></i> </button>
+            </div>
+        </div>
+    </div>
+</div>
