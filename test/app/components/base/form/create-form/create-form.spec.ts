@@ -7,8 +7,9 @@ import { AsyncSubject } from "rxjs";
 
 import { SubmitButtonComponent } from "app/components/base/buttons";
 import {
-    CreateFormComponent, FormPageComponent, FormPickerComponent, FormSectionComponent,
+    CreateFormComponent, FormPageComponent, FormSectionComponent,
 } from "app/components/base/form/create-form";
+import { FormPickerComponent } from "app/components/base/form/form-picker";
 import { ServerErrorComponent } from "app/components/base/form/server-error";
 import { ServerError } from "app/models";
 import { click } from "test/utils/helpers";

@@ -6,8 +6,9 @@ import { RouterModule } from "@angular/router";
 
 import { ButtonsModule } from "../buttons";
 import { ActionFormComponent } from "./action-form";
-import { CreateFormComponent, FormPageComponent, FormPickerComponent, FormSectionComponent } from "./create-form";
+import { CreateFormComponent, FormPageComponent, FormSectionComponent } from "./create-form";
 import { FormErrorComponent } from "./form-error";
+import {  FormPickerComponent } from "./form-picker";
 import { ServerErrorComponent } from "./server-error";
 
 // components

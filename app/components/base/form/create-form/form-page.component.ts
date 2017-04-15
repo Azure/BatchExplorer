@@ -12,18 +12,30 @@ import { FormSectionComponent } from "./form-section.component";
     templateUrl: "form-page.html",
 })
 export class FormPageComponent {
+    /**
+     * Title of the page. It will be shown when this page is the current page of a form.
+     */
     @Input()
     public title: string;
 
+    /**
+     * Subtitle of the page. It will be shown when this page is the current page of a form.
+     */
     @Input()
     public subtitle: string;
 
     @Input()
     public formGroup: AbstractControl;
 
+    /**
+     * Event that will trigger when user click cancel or back.
+     */
     @Output()
     public cancel = new EventEmitter();
 
+    /**
+     * Event that will trigger when user click select or submit.
+     */
     @Output()
     public submit = new EventEmitter();
 
@@ -33,11 +45,18 @@ export class FormPageComponent {
     @ContentChildren(FormSectionComponent)
     public sections: QueryList<FormSectionComponent>;
 
+    /**
+     * Reference to the picker that opened the page if applicable
+     */
     public openedWith: FormPickerComponent;
 
     // tslint:disable-next-line:no-forward-ref
     constructor( @Inject(forwardRef(() => CreateFormComponent)) private form: CreateFormComponent) { }
 
+    /**
+     * Open the given page. It will push on top of the page stack.
+     * @param picker If opening from a picker
+     */
     public activate(picker?: FormPickerComponent) {
         this.openedWith = picker;
         this.form.openPage(this);
