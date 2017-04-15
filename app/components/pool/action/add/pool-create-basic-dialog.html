@@ -17,9 +17,10 @@
                     <input mdInput formControlName="displayName" placeholder="Display name">
                 </md-input-container>
             </div>
+        </bl-form-section>
 
+        <bl-form-section title="Scale" subtitle="Number of nodes in your pool using a fix number or a auto scaling forumla">
             <div class="form-element">
-                <h4>Select a scale mode</h4>
                 <md-tab-group class="form-tabs" (selectChange)="changeScaleModeTab($event)">
                     <md-tab label="Fixed" class="banana">
                         <md-input-container>
