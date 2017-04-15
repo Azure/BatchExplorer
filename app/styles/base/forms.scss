@@ -103,78 +103,70 @@ fieldset {
     width: 640px;
 }
 
-.slideout-form, .large-slideout-form, .edit-form {
+.slideout-form, .large-slideout-form, .edit-form, bl-create-form {
 
     &.content-wrapper {
         padding: 0;
     }
 
-    form {
-        opacity: 1;
+    .form-element {
+        width: 100%;
+        margin: 10px 0;
 
-        &.saving {
-            opacity: 0.25;
+        &.element-spacer {
+            margin-bottom: 15px;
         }
 
-        .form-element {
+        &.pad-top {
+            margin-top: 20px;
+        }
+
+        // pretty sure most of what is in here can be set in the HTML with: dividerColor="<color>"
+
+        input[type=file] {
             width: 100%;
-            margin: 10px 0;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
 
-            &.element-spacer {
-                margin-bottom: 15px;
-            }
+        md-input-container {
+            width: 100%;
+        }
 
-            &.pad-top {
-                margin-top: 20px;
-            }
+        md-input-container.ng-invalid.ng-touched {
+            label {
+                color: $validation-error-color;
 
-            // pretty sure most of what is in here can be set in the HTML with: dividerColor="<color>"
-
-            input[type=file] {
-                width: 100%;
-                margin-top: 5px;
-                margin-bottom: 5px;
-            }
-
-            md-input-container {
-                width: 100%;
-            }
-
-            md-input-container.ng-invalid.ng-touched {
-                label {
-                    color: $validation-error-color;
-
-                    .mat-placeholder-required {
-                        color: $validation-error-color;
-                    }
-                }
-
-                .mat-input-underline {
-                    border-color: $validation-error-color;
-                    border-width: 2px;
-
-                    .mat-input-ripple.mat-focused {
-                        opacity: 0;
-                    }
-                }
-
-                md-hint {
+                .mat-placeholder-required {
                     color: $validation-error-color;
                 }
             }
 
-            md-select {
-                margin-top: 5px;
-                width: 40%;
+            .mat-input-underline {
+                border-color: $validation-error-color;
+                border-width: 2px;
+
+                .mat-input-ripple.mat-focused {
+                    opacity: 0;
+                }
             }
 
-            .input-summary {
-                margin-top: 15px;
-                padding-bottom: 5px;
+            md-hint {
+                color: $validation-error-color;
+            }
+        }
 
-                p {
-                    margin-bottom: 10px;
-                }
+        md-select {
+            margin-top: 5px;
+            width: 40%;
+        }
+
+        .input-summary {
+            margin-top: 15px;
+            padding-bottom: 5px;
+
+            p {
+                margin-bottom: 10px;
             }
         }
     }
@@ -189,8 +181,27 @@ fieldset {
 }
 
 bl-create-form {
+    display: block;
+    width: 800px;
+    height: $contentview-height;
+    $footer-height: 60px;
+    overflow: hidden;
+
+    .header {
+        h1 {
+            padding: 0 8px;
+        }
+
+        p {
+            padding: 0 10px;
+        }
+    }
+
     > .content {
+        overflow: auto;
         position: relative;
+        height: calc(100% - #{$footer-height});
+        padding: 10px 5px 100px;
 
         > .loading-overlay {
             position: absolute;
@@ -201,8 +212,27 @@ bl-create-form {
             bottom: 0;
             right: 0;
         }
+
     }
 
+    > .form-footer {
+        height: $footer-height;
+        box-shadow: 0 0 40px -10px #a5a5a5;
+        // background: map-get($md-prussian-blue, 500);
+        padding: 5px;
+        display: flex;
+        align-items: center;
+
+        > .summary {
+            margin: 0 5px;
+            flex: 1;
+            font-size: 16px;
+        }
+
+        > .form-buttons {
+            margin: 0 5px;
+        }
+    }
 }
 
 .form-element md-checkbox {

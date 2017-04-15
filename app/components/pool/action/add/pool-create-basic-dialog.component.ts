@@ -29,8 +29,9 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         private notificationService: NotificationService) {
         super(PoolCreateDto);
 
-        this._osControl = this.formBuilder.control([{}, Validators.required]);
-        this.form = this.formBuilder.group({
+        this._osControl = this.formBuilder.control({}, Validators.required);
+
+        this.form = formBuilder.group({
             id: ["", [
                 Validators.required,
                 Validators.maxLength(64),
@@ -45,7 +46,9 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             vmSize: ["Standard_D1", Validators.required],
             maxTasksPerNode: 1,
             enableInterNodeCommunication: false,
+            startTask: null,
         });
+
         this._sub = this._osControl.valueChanges.subscribe((value) => {
             this.osSource = value.source;
         });
@@ -79,6 +82,10 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         return createPoolToData(data);
     }
 
+    public get startTask() {
+        return this.form.controls.startTask.value;
+    }
+
     public changeScaleModeTab(event) {
         if (event.index === 0) {
             this.form.controls.enableAutoScale.setValue(false);
@@ -89,7 +96,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     }
 
     private invalidAutoscaleFormula() {
-        return (control: FormControl): {[key: string]: any} => {
+        return (control: FormControl): { [key: string]: any } => {
             if (!this.form || !this.form.controls.enableAutoScale.value) {
                 return null;
             }
@@ -98,7 +105,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     }
 
     private invalidTargetDedicated() {
-        return (control: FormControl): {[key: string]: any} => {
+        return (control: FormControl): { [key: string]: any } => {
             if (!this.form || this.form.controls.enableAutoScale.value) {
                 return null;
             }

@@ -18,7 +18,6 @@ export class StartTaskPickerComponent implements ControlValueAccessor {
 
     constructor(formBuilder: FormBuilder) {
         this.form = formBuilder.group({
-            enableStartTask: [false],
             commandLine: ["", Validators.required],
             maxTaskRetryCount: ["0"],
             runElevated: [false],
@@ -29,25 +28,16 @@ export class StartTaskPickerComponent implements ControlValueAccessor {
 
         this.form.valueChanges.subscribe((val: any) => {
             if (this._propagateChange) {
-                this._propagateChange(val.enableStartTask ? val : null);
+                this._propagateChange(val);
             }
         });
     }
 
-    public get enableStartTask() {
-        return this.form.controls["enableStartTask"].value;
-    }
-
     public writeValue(value: any) {
         if (value) {
-            this.form.patchValue({
-                enableStartTask: true,
-                ...value,
-            });
+            this.form.patchValue(value);
         } else {
-            this.form.patchValue({
-                enableStartTask: false,
-            });
+            this.form.reset();
         }
     }
 
