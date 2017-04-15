@@ -40,6 +40,7 @@ export class FormBase {
 
     public loading = false;
     public error: ServerError = null;
+    public showError = false;
 
     @autobind()
     public performAction(): Observable<any> {
@@ -49,10 +50,12 @@ export class FormBase {
             next: () => {
                 this.loading = false;
                 this.error = null;
+                this.showError = false;
             },
             error: (e: ServerError) => {
                 this.loading = false;
                 this.error = e;
+                this.showError = true;
             },
         });
         return obs;
@@ -83,5 +86,9 @@ export class FormBase {
         } else if (this.sidebarRef) {
             this.sidebarRef.destroy();
         }
+    }
+
+    public toggleShowError() {
+        this.showError = !this.showError;
     }
 }

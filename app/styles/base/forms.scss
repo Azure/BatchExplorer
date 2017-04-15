@@ -215,6 +215,13 @@ bl-create-form {
 
     }
 
+    > .form-server-error {
+        position: absolute;
+        bottom: $footer-height;
+        width: 100%;
+        z-index: 100;
+    }
+
     > .form-footer {
         height: $footer-height;
         box-shadow: 0 0 40px -10px #a5a5a5;
@@ -222,6 +229,12 @@ bl-create-form {
         padding: 5px;
         display: flex;
         align-items: center;
+
+        > .toggle-error-btn {
+            button {
+                font-size: 26px;
+            }
+        }
 
         > .summary {
             margin: 0 5px;
