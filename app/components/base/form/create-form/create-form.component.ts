@@ -2,7 +2,7 @@ import { AfterViewInit, ChangeDetectorRef, Component, ContentChildren, Input, Qu
 
 import { log } from "app/utils";
 import { FormBase } from "../form-base";
-import { FormPageComponent } from "./form-page.component";
+import { FormPageComponent } from "../form-page";
 
 @Component({
     selector: "bl-create-form",
