@@ -4,8 +4,9 @@ import {
 } from "@angular/core";
 
 import { AbstractControl } from "@angular/forms";
-import { CreateFormComponent, FormSectionComponent } from "../create-form";
+import { CreateFormComponent } from "../create-form";
 import { FormPickerComponent } from "../form-picker";
+import { FormSectionComponent } from "../form-section";
 
 @Component({
     selector: "bl-form-page",
