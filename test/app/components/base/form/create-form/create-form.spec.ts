@@ -178,7 +178,7 @@ describe("CreateFormComponent", () => {
         });
 
         it("should show an error when submit return error", () => {
-            expect(testComponent.createForm.showError).toBe(true);
+            expect(component.showError).toBe(true);
             expect(fixture.componentInstance.sidebarRef.destroy).not.toHaveBeenCalled();
             const error = getErrorElement();
             expect(error).not.toBe(null);
