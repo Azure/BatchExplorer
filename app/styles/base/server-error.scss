@@ -3,17 +3,12 @@ bl-server-error {
 
     &.error-in-list {
         margin: 10px 0;
-
-        > .error-banner {
-            border-radius: 0;
-        }
     }
 }
 
 .error-banner {
     background: $red;
     color: $whiteSmoke;
-    border-radius: 4px;
     > .content {
         padding: 10px;
     }
