@@ -71,8 +71,9 @@ export class FormTestComponent {
 
 describe("CreateFormComponent", () => {
     let fixture: ComponentFixture<FormTestComponent>;
-    let component: FormTestComponent;
+    let testComponent: FormTestComponent;
     let de: DebugElement;
+    let component: CreateFormComponent;
     let createFormElement: DebugElement;
     let addButton: DebugElement;
     let addAndCloseButton: DebugElement;
@@ -100,10 +101,11 @@ describe("CreateFormComponent", () => {
 
         TestBed.compileComponents();
         fixture = TestBed.createComponent(FormTestComponent);
-        component = fixture.componentInstance;
+        testComponent = fixture.componentInstance;
         fixture.detectChanges();
-        createFormElement = fixture.debugElement.query(By.css("bl-create-form"));
         de = fixture.debugElement;
+        createFormElement = de.query(By.css("bl-create-form"));
+        component = createFormElement.componentInstance;
 
         // Get the buttons
         addButton = createFormElement.query(By.css("bl-submit-btn.add"));
@@ -176,6 +178,7 @@ describe("CreateFormComponent", () => {
         });
 
         it("should show an error when submit return error", () => {
+            expect(testComponent.createForm.showError).toBe(true);
             expect(fixture.componentInstance.sidebarRef.destroy).not.toHaveBeenCalled();
             const error = getErrorElement();
             expect(error).not.toBe(null);
@@ -196,6 +199,27 @@ describe("CreateFormComponent", () => {
             expect(error.nativeElement.textContent).toContain("abc-def");
             expect(error.nativeElement.textContent).toContain("2016-12-08T18");
             expect(true).toBe(true);
+        });
+
+        it("should toggle the error when clicking the warning button", () => {
+            const toggleBtn = de.query(By.css(".toggle-error-btn > button"));
+            expect(toggleBtn).not.toBeFalsy();
+
+            // Toggle hidden
+            click(toggleBtn);
+            fixture.detectChanges();
+
+            expect(component.showError).toBe(false);
+            let error = getErrorElement();
+            expect(error).toBe(null);
+
+            // Toggle visible again
+            click(toggleBtn);
+            fixture.detectChanges();
+
+            expect(component.showError).toBe(true);
+            error = getErrorElement();
+            expect(error).not.toBe(null);
         });
     });
 
@@ -259,7 +283,7 @@ describe("CreateFormComponent", () => {
                 expect(de.nativeElement.textContent).not.toContain("Nested page title");
 
                 expect(pickerEl.nativeElement.textContent).toContain("Pick something");
-                expect(component.form.value.pickedValue).toBe("");
+                expect(testComponent.form.value.pickedValue).toBe("");
             });
 
             it("click select should close the page and set value", () => {
@@ -271,7 +295,7 @@ describe("CreateFormComponent", () => {
                 expect(de.nativeElement.textContent).not.toContain("Nested page title");
 
                 expect(pickerEl.nativeElement.textContent).toContain("Got something");
-                expect(component.form.value.pickedValue).toBe("Some");
+                expect(testComponent.form.value.pickedValue).toBe("Some");
             });
         });
     });
