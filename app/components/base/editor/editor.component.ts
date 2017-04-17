@@ -1,5 +1,5 @@
 import {
-    AfterViewInit, Component, EventEmitter, HostListener, Input, Output, ViewChild, forwardRef,
+    AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output, ViewChild, forwardRef,
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import "app/utils/autoscale";
@@ -24,6 +24,7 @@ import "codemirror/addon/hint/show-hint";
             <span class="mat-input-ripple"></span>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class EditorComponent implements ControlValueAccessor, AfterViewInit {
@@ -51,7 +52,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit {
     @Input() set value(v) {
         if (v !== this._value) {
             this._value = v;
-            this.onChange(v);
+            // this.onChange(v);
         }
     }
 
@@ -64,31 +65,30 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit {
         this.instance = CodeMirror.fromTextArea(this.host.nativeElement, config);
         this.instance.setValue(this._value);
 
-        this.instance.on("change", () => {
+        this.instance.on("change", (editor, change) => {
             this.updateValue(this.instance.getValue());
+
+            if (change.origin !== "complete" && change.origin !== "setValue") {
+                this.instance.showHint({ hint: CodeMirror.hint.autoscale, completeSingle: false });
+            }
         });
 
         this.instance.on("focus", () => {
             this.isFocused = true;
             this.focus.emit();
+            this.onTouched();
         });
 
         this.instance.on("blur", () => {
             this.isFocused = false;
             this.blur.emit();
         });
-
-        this.instance.on("change", (editor, change) => {
-            if (change.origin !== "complete" && change.origin !== "setValue") {
-                this.instance.showHint({ hint: CodeMirror.hint.autoscale, completeSingle: false });
-            }
-        });
     }
 
     public updateValue(value) {
+        console.log("Wriitng value.", value);
         this.value = value;
-        this.onTouched();
-        this.change.emit(value);
+        // this.change.emit(value);
     }
 
     public writeValue(value) {
@@ -104,8 +104,8 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit {
         event.stopPropagation();
     }
 
-    // tslint:disable-next-line:no-empty
-    public onChange(_) { }
+    public onChange: Function = () => null;
+
     // tslint:disable-next-line:no-empty
     public onTouched() { }
     public registerOnChange(fn) { this.onChange = fn; }
