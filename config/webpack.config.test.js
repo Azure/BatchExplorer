@@ -22,7 +22,6 @@ config.module.rules = config.module.rules.concat(
         {
             test: /\.scss$/,
             loader: "style-loader!css-loader!sass-loader",
-            exclude: [helpers.root("app", "components")]
         },
         {
             test: /node_modules.*\.css$/,

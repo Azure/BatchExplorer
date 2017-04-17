@@ -38,11 +38,10 @@ Prefer use of the angular2 `styleUrls` attribute on the component decorator.
 Add a style file in the same folder as your component(If the folder is getting to crowded maybe move each component in its own sub folder)
 
 ```ts
-import { ViewEncapsulation } from "@angular/core";
+import "./do-something.scss";
+
 @Component({
     ...
-    styleUrls: ["do-something.scss"],
-    encapsulation: ViewEncapsulation.None, // Set enapsulation to none so angular doesn't modify the styles
 });
 ```
 

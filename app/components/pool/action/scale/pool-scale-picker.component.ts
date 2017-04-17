@@ -12,7 +12,6 @@ import { Subscription } from "rxjs";
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => PoolScalePickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => PoolScalePickerComponent), multi: true },
     ],
-    styleUrls: ["autoscale-formula-picker"],
 })
 export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor {
     public form: FormGroup;

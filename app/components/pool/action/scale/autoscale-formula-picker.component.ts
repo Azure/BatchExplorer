@@ -5,6 +5,8 @@ import { AutoscaleFormulaService } from "app/services";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
+import "./autoscale-formula-picker.scss";
+
 @Component({
     selector: "bl-autoscale-formula-picker",
     templateUrl: "autoscale-formula-picker.html",
@@ -13,8 +15,6 @@ import { Subscription } from "rxjs";
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => AutoscaleFormulaPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => AutoscaleFormulaPickerComponent), multi: true },
     ],
-    styleUrls: ["autoscale-formula-picker"],
-    encapsulation: ViewEncapsulation.None,
 })
 export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, ControlValueAccessor {
     public savedAutoscaleFormulas: List<AutoscaleFormula>;
