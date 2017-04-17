@@ -1,12 +1,15 @@
 import { Component, Input } from "@angular/core";
-import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { FormBuilder, FormControl } from "@angular/forms";
 import { autobind } from "core-decorators";
+import * as moment from "moment";
+import { Observable } from "rxjs";
 
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { Pool } from "app/models";
+import { PoolEnableAutoScaleDto } from "app/models/dtos";
+import { PoolScaleModel } from "app/models/forms";
 import { PoolService } from "app/services";
-import { CustomValidators } from "app/utils";
 
 @Component({
     selector: "bl-pool-resize-dialog",
@@ -17,13 +20,17 @@ export class PoolResizeDialogComponent {
     public set pool(pool: Pool) {
         if (pool) {
             this._pool = pool;
-            this.form.patchValue({
+            const interval = pool.autoScaleEvaluationInterval ? pool.autoScaleEvaluationInterval.asMinutes() : 15;
+            this.scale.patchValue(<PoolScaleModel>{
                 targetDedicated: pool.targetDedicated,
+                enableAutoScale: pool.enableAutoScale,
+                autoScaleFormula: pool.autoScaleFormula,
+                autoScaleEvaluationInterval: interval,
             });
         }
     }
     public get pool() { return this._pool; }
-    public form: FormGroup;
+    public scale: FormControl;
 
     private _pool: Pool;
 
@@ -32,24 +39,51 @@ export class PoolResizeDialogComponent {
         public sidebarRef: SidebarRef<PoolResizeDialogComponent>,
         private notificationService: NotificationService,
         private poolService: PoolService) {
-        this.form = this.formBuilder.group({
-            targetDedicated: [0, [Validators.required, CustomValidators.number, CustomValidators.min(0)]],
+        this.scale = this.formBuilder.control({
+            scale: [null],
         });
     }
 
     @autobind()
     public submit() {
         const id = this.pool.id;
-        const targetDedicated = this.form.value.targetDedicated;
-        const obs = this.poolService.resize(id, targetDedicated, {});
+        const value: PoolScaleModel = this.scale.value;
+        let obs;
+        if (value.enableAutoScale) {
+            obs = this._enableAutoScale(value);
+        } else {
+            const targetDedicated = value.targetDedicated;
+            obs = this._disableAutoScale().flatMap(() => this.poolService.resize(id, targetDedicated));
+        }
 
-        obs.subscribe({
-            complete: () => {
+        const finalObs = obs.flatMap(() => this.poolService.getOnce(this.pool.id)).share();
+        finalObs.subscribe({
+            next: (pool) => {
                 this.notificationService.success("Pool resize started!",
-                    `Pool '${id}' will resize to ${targetDedicated} nodes!`);
+                    `Pool '${id}' will resize to ${pool.targetDedicated} nodes!`);
             },
             error: () => null,
         });
-        return obs;
+        return finalObs;
+    }
+
+    private _enableAutoScale(value: PoolScaleModel) {
+        if (this.pool.enableAutoScale) {
+            return Observable.of({});
+        } else {
+            const dto = new PoolEnableAutoScaleDto({
+                autoScaleFormula: value.autoScaleFormula,
+                autoScaleEvaluationInterval: moment.duration(value.autoScaleEvaluationInterval, "minutes") as any,
+            });
+            return this.poolService.enableAutoScale(this.pool.id, dto);
+        }
+    }
+
+    private _disableAutoScale() {
+        if (this.pool.enableAutoScale) {
+            return this.poolService.disableAutoScale(this.pool.id).delay(1000);
+        } else {
+            return Observable.of({});
+        }
     }
 }

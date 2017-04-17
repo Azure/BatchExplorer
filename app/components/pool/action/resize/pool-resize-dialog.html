@@ -1,13 +1,9 @@
 <div class="slideout-form content-wrapper">
     <h1>Resize your pool</h1>
     <p>You can manually resize the number of nodes in the pool</p>
-    <bl-action-form [submit]="submit" [sidebarRef]="sidebarRef" [formGroup]="form">
-        <form *ngIf="pool" [formGroup]="form">
-            <div class="form-element">
-                <md-input-container>
-                    <input mdInput type="number" placeholder="Target Dedicated" formControlName="targetDedicated" min="0">
-                </md-input-container>
-            </div>
+    <bl-action-form [submit]="submit" [sidebarRef]="sidebarRef" [formGroup]="scale">
+        <form *ngIf="pool">
+            <bl-pool-scale-picker [formControl]="scale"> </bl-pool-scale-picker>
         </form>
     </bl-action-form>
 </div>

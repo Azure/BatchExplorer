@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 
 import { Pool } from "app/models";
-import { PoolCreateDto } from "app/models/dtos";
+import { PoolCreateDto, PoolEnableAutoScaleDto } from "app/models/dtos";
 import { ModelUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";
@@ -80,14 +80,9 @@ export class PoolService extends ServiceBase {
     }
 
     public resize(poolId: string, targetDedicated: number, options: any = {}) {
-        let observable = this.callBatchClient((client) => client.pool.resize(poolId, targetDedicated, options));
-        observable.subscribe({
-            error: (error) => {
-                log.error("Error resizing pool: " + poolId, Object.assign({}, error));
-            },
+        return this.callBatchClient((client) => client.pool.resize(poolId, targetDedicated, options), (error) => {
+            log.error("Error resizing pool: " + poolId, Object.assign({}, error));
         });
-
-        return observable;
     }
 
     public patch(poolId: string, attributes: any, options: any = {}) {
@@ -107,5 +102,17 @@ export class PoolService extends ServiceBase {
             metadata: ModelUtils.updateMetadataWithTags(pool.metadata, tags),
         };
         return this.patch(pool.id, attributes);
+    }
+
+    public enableAutoScale(poolId: string, autoscaleParams: PoolEnableAutoScaleDto) {
+        return this.callBatchClient((client) => client.pool.enableAutoScale(poolId, autoscaleParams), (error) => {
+            log.error("Error enabling autoscale for pool: " + poolId, error);
+        });
+    }
+
+    public disableAutoScale(poolId: string) {
+        return this.callBatchClient((client) => client.pool.disableAutoScale(poolId), (error) => {
+            log.error("Error disabling autoscale for pool: " + poolId, error);
+        });
     }
 }

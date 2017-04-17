@@ -69,4 +69,17 @@ export default class PoolProxy {
         pool = ProxyUtil.decoratePool(pool);
         return this.client.pool.add(pool, wrapOptions(options));
     }
+
+    public enableAutoScale(
+        poolId: string,
+        attributes: models.PoolEnableAutoScaleParameter,
+        options?: any): Promise<any> {
+        attributes = ProxyUtil.decoratePool(attributes);
+
+        return this.client.pool.enableAutoScale(poolId, attributes, wrapOptions(options));
+    }
+
+    public disableAutoScale(poolId: string, options?: any): Promise<any> {
+        return this.client.pool.disableAutoScale(poolId, wrapOptions(options));
+    }
 }

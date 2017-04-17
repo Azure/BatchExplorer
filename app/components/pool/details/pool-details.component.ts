@@ -3,7 +3,6 @@ import { MdDialog, MdDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { List } from "immutable";
-import * as Moment from "moment";
 import { Subscription } from "rxjs";
 
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
@@ -115,10 +114,6 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         } else {
             return `Pool has ${this.pool.currentDedicated} nodes`;
         }
-    }
-
-    public get lastResize(): string {
-        return Moment(this.pool.allocationStateTransitionTime).fromNow();
     }
 
     @autobind()

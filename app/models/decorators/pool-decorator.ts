@@ -1,5 +1,6 @@
 import { Pool } from "app/models";
 import { DecoratorBase } from "app/utils/decorators";
+import * as moment from "moment";
 import { CloudServiceConfigurationDecorator } from "./cloud-service-configuration-decorator";
 import { TaskSchedulingPolicyDecorator } from "./task-scheduling-policy-decorator";
 import { VirtualMachineConfigurationDecorator } from "./virtual-machine-configuration-decorator";
@@ -31,6 +32,7 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     public vmSize: string;
     public poolOs: string;
     public poolOsIcon: string;
+    public lastResized: string;
 
     constructor(private pool?: Pool) {
         super(pool);
@@ -62,6 +64,8 @@ export class PoolDecorator extends DecoratorBase<Pool> {
 
         this.poolOs = this._computePoolOs();
         this.poolOsIcon = this._computePoolOsIcon(this.poolOs);
+
+        this.lastResized = moment(this.pool.allocationStateTransitionTime).fromNow();
     }
 
     private _computePoolOs(): string {
