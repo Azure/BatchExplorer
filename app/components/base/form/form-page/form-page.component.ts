@@ -1,6 +1,6 @@
 import {
     Component, ContentChildren, EventEmitter, Inject, Input, Output, QueryList,
-    TemplateRef, ViewChild, ViewEncapsulation, forwardRef,
+    TemplateRef, ViewChild, forwardRef,
 } from "@angular/core";
 
 import { AbstractControl } from "@angular/forms";
@@ -8,11 +8,11 @@ import { CreateFormComponent } from "../create-form";
 import { FormPickerComponent } from "../form-picker";
 import { FormSectionComponent } from "../form-section";
 
+import "./form-page.scss";
+
 @Component({
     selector: "bl-form-page",
     templateUrl: "form-page.html",
-    styleUrls: ["form-page.scss"],
-    encapsulation: ViewEncapsulation.None,
 })
 export class FormPageComponent {
     /**

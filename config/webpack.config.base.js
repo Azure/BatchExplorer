@@ -30,16 +30,6 @@ const baseConfig = {
                 exclude: [/node_modules/],
             },
             {
-                test: /\.css$/,
-                use: ["to-string-loader", "css-loader"],
-                include: [helpers.root("app", "components")]
-            },
-            {
-                test: /\.scss$/,
-                use: ["to-string-loader", "css-loader", "sass-loader"],
-                include: [helpers.root("app", "components")]
-            },
-            {
                 test: /\.html$/,
                 loader: "raw-loader",
                 exclude: [/node_modules/, helpers.root("app/index.html")],

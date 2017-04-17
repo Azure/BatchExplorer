@@ -1,14 +1,14 @@
-import { Component, ElementRef, Input, OnChanges, ViewChild, ViewEncapsulation } from "@angular/core";
+import { Component, ElementRef, Input, OnChanges, ViewChild } from "@angular/core";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
 import { log } from "app/utils";
 
+import "./tags.scss";
+
 @Component({
     selector: "bl-tags",
     templateUrl: "tags.html",
-    styleUrls: ["tags.scss"],
-    encapsulation: ViewEncapsulation.None,
 })
 export class TagsComponent implements OnChanges {
     @Input()

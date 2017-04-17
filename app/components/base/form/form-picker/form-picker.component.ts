@@ -1,19 +1,19 @@
-import { Component, ElementRef, Input, ViewChild, ViewEncapsulation, forwardRef } from "@angular/core";
+import { Component, ElementRef, Input, ViewChild, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from "@angular/forms";
 
 import { log } from "app/utils";
 import { FormPageComponent } from "../form-page";
 
+import "./form-picker.scss";
+
 @Component({
     selector: "bl-form-picker",
     templateUrl: "form-picker.html",
-    styleUrls: ["form-picker.scss"],
     providers: [
         // tslint:disable:no-forward-ref
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => FormPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => FormPickerComponent), multi: true },
     ],
-    encapsulation: ViewEncapsulation.None,
 })
 export class FormPickerComponent implements ControlValueAccessor, Validator {
     @Input()
