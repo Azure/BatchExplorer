@@ -7,26 +7,26 @@ import { autobind } from "core-decorators";
 import { AsyncSubject } from "rxjs";
 
 import { SubmitButtonComponent } from "app/components/base/buttons";
-import { ActionFormComponent } from "app/components/base/form/action-form";
+import { SimpleFormComponent } from "app/components/base/form/simple-form";
 import { ServerErrorComponent } from "app/components/base/form/server-error";
 import { ServerError } from "app/models";
 
 @Component({
     template: `
-        <bl-action-form  class="with-form" [formGroup]="form" [submit]="submit" [dialogRef]="dialogRef" >
+        <bl-simple-form  class="with-form" [formGroup]="form" [submit]="submit" [dialogRef]="dialogRef" >
             <div [formGroup]="form" >
                 <input  formControlName="id" />
                 <input  formControlName="state"/>
             </div>
-        </bl-action-form>
+        </bl-simple-form>
 
-         <bl-action-form class="without-form" [submit]="submit" [dialogRef]="dialogRef" >
-        </bl-action-form>
+         <bl-simple-form class="without-form" [submit]="submit" [dialogRef]="dialogRef" >
+        </bl-simple-form>
     `,
 })
 export class FormTestComponent {
     @ViewChild("banner")
-    public actionForm: ActionFormComponent;
+    public actionForm: SimpleFormComponent;
 
     public form: FormGroup;
 
@@ -58,7 +58,7 @@ export class FormTestComponent {
     }
 }
 
-describe("ActionFormComponent", () => {
+describe("SimpleFormComponent", () => {
     let fixture: ComponentFixture<FormTestComponent>;
     let actionFormElement: DebugElement;
     let actionButton: DebugElement;
@@ -75,14 +75,14 @@ describe("ActionFormComponent", () => {
                 SubmitButtonComponent,
                 FormTestComponent,
                 ServerErrorComponent,
-                ActionFormComponent,
+                SimpleFormComponent,
             ],
         });
 
         TestBed.compileComponents();
         fixture = TestBed.createComponent(FormTestComponent);
         fixture.detectChanges();
-        actionFormElement = fixture.debugElement.query(By.css("bl-action-form.with-form"));
+        actionFormElement = fixture.debugElement.query(By.css("bl-simple-form.with-form"));
 
         // Get the buttons
         actionButton = actionFormElement.query(By.css("bl-submit-btn.submit"));
@@ -96,7 +96,7 @@ describe("ActionFormComponent", () => {
     });
 
     it("buttons should be enabled if form is not defined", () => {
-        const formEl = fixture.debugElement.query(By.css("bl-action-form.without-form"));
+        const formEl = fixture.debugElement.query(By.css("bl-simple-form.without-form"));
 
         actionButton = formEl.query(By.css("bl-submit-btn.submit"));
 

@@ -43,7 +43,7 @@ export class FormBase {
     public showError = false;
 
     @autobind()
-    public performAction(): Observable<any> {
+    public save(): Observable<any> {
         this.loading = true;
         const obs = this.submit();
         obs.subscribe({
@@ -62,8 +62,8 @@ export class FormBase {
     }
 
     @autobind()
-    public performActionAndClose(): Observable<any> {
-        const obs = this.performAction();
+    public saveAndClose(): Observable<any> {
+        const obs = this.save();
         obs.subscribe({
             complete: () => {
                 setTimeout(() => {

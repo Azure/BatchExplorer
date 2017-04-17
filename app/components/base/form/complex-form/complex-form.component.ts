@@ -9,11 +9,16 @@ import { FormPageComponent } from "../form-page";
     templateUrl: "complex-form.html",
 })
 export class ComplexFormComponent extends FormBase implements AfterViewInit {
+    /**
+     * If the form should allow multi use. \
+     * If true the form will have a "Save" AND a "Save and Close" button.
+     * If false the form will only have a "Save" button
+     */
     @Input()
     public multiUse = true;
 
     @Input()
-    public actionName = "Add";
+    public actionName = "Save";
 
     @ContentChildren(FormPageComponent)
     public pages: QueryList<FormPageComponent>;
@@ -62,25 +67,16 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
 
     public closePageOrSubmit() {
         if (this._pageStack.length === 0) {
-            return this.add();
+            return this.save();
         }
         this.currentPage.submit.emit();
         this.closePage();
     }
 
     public cancelPage() {
-        // TODO reset form input
         this.currentPage.cancel.emit();
         this.currentPage.formGroup.reset();
         this.closePage();
-    }
-
-    public add() {
-        return this.performAction();
-    }
-
-    public addAndClose() {
-        return this.performActionAndClose();
     }
 
     public get addAndCloseText() {

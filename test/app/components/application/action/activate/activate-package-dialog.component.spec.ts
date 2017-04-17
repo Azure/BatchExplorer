@@ -69,7 +69,7 @@ describe("ActivatePackageDialogComponent ", () => {
             error: () => {
                 expect(appServiceSpy.activatePackage).toHaveBeenCalledTimes(1);
 
-                let actionForm = fixture.debugElement.query(By.css("bl-action-form")).componentInstance;
+                let actionForm = fixture.debugElement.query(By.css("bl-simple-form")).componentInstance;
                 expect(actionForm.error).not.toBeNull();
             },
         });

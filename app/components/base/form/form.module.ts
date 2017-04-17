@@ -5,7 +5,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 
 import { ButtonsModule } from "../buttons";
-import { ActionFormComponent } from "./action-form";
+import { SimpleFormComponent } from "./simple-form";
 import { ComplexFormComponent } from "./complex-form";
 import { FormErrorComponent } from "./form-error";
 import { FormPageComponent } from "./form-page";
@@ -20,7 +20,7 @@ const modules = [
 
 // Add subcomponnent not in a module here
 const components = [
-    ActionFormComponent,
+    SimpleFormComponent,
     ComplexFormComponent,
     FormErrorComponent,
     ServerErrorComponent,

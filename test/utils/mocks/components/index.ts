@@ -1,4 +1,4 @@
-export * from "./action-form.component.mock";
+export * from "./simple-form.component.mock";
 export * from "./banner.component.mock";
 export * from "./complex-form.component.mock";
 export * from "./entity-details-list.component.mock";

@@ -3,4 +3,4 @@ export * from "./form-page";
 export * from "./form-picker";
 export * from "./form-section";
 export * from "./complex-form";
-export * from "./action-form";
+export * from "./simple-form";
