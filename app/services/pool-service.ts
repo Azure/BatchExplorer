@@ -110,8 +110,8 @@ export class PoolService extends ServiceBase {
         });
     }
 
-    public disableAutoscale(poolId: string) {
-        return this.callBatchClient((client) => client.pool.disableAutoscale(poolId), (error) => {
+    public disableAutoScale(poolId: string) {
+        return this.callBatchClient((client) => client.pool.disableAutoScale(poolId), (error) => {
             log.error("Error disabling autoscale for pool: " + poolId, error);
         });
     }

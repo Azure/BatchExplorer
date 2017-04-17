@@ -16,6 +16,8 @@ import { Subscription } from "rxjs";
 export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor {
     public form: FormGroup;
 
+    public selectedModeTab = 0;
+
     private _propagateChange: Function;
     private _sub: Subscription;
 
@@ -39,7 +41,12 @@ export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor
     }
 
     public writeValue(value: any) {
-        this.form.patchValue(value || {});
+        value = value || {};
+        this.form.patchValue(value);
+        if (value.enableAutoScale) {
+            this.selectedModeTab = 1;
+        }
+        console.log("FOrm", this.form.value);
     }
 
     public registerOnChange(fn) {
@@ -62,6 +69,8 @@ export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor
     }
 
     public changeScaleModeTab(event) {
+        this.selectedModeTab = event.index;
+
         if (event.index === 0) {
             this.form.patchValue({ enableAutoScale: false });
         } else if (event.index === 1) {

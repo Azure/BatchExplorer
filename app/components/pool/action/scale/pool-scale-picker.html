@@ -1,5 +1,5 @@
 <div [formGroup]="form">
-    <md-tab-group class="form-tabs" (selectChange)="changeScaleModeTab($event)">
+    <md-tab-group class="form-tabs" [selectedIndex]="selectedModeTab" (selectChange)="changeScaleModeTab($event)">
         <md-tab label="Fixed">
             <md-input-container>
                 <input mdInput formControlName="targetDedicated" placeholder="Number of virtual machines in pool" type="number" />

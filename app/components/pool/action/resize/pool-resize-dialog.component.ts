@@ -7,9 +7,9 @@ import { Observable } from "rxjs";
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { Pool } from "app/models";
+import { PoolEnableAutoScaleDto } from "app/models/dtos";
 import { PoolScaleModel } from "app/models/forms";
 import { PoolService } from "app/services";
-import { PoolEnableAutoScaleDto } from "app/models/dtos";
 
 @Component({
     selector: "bl-pool-resize-dialog",
@@ -20,11 +20,12 @@ export class PoolResizeDialogComponent {
     public set pool(pool: Pool) {
         if (pool) {
             this._pool = pool;
-            this.scale.patchValue({
+            const interval = pool.autoScaleEvaluationInterval ? pool.autoScaleEvaluationInterval.asMinutes() : 15;
+            this.scale.patchValue(<PoolScaleModel>{
                 targetDedicated: pool.targetDedicated,
                 enableAutoScale: pool.enableAutoScale,
-                autoscaleForumla: pool.autoScaleFormula,
-                autoScaleFormulaInterval: pool.autoScaleEvaluationInterval,
+                autoScaleFormula: pool.autoScaleFormula,
+                autoScaleEvaluationInterval: interval,
             });
         }
     }
@@ -79,10 +80,8 @@ export class PoolResizeDialogComponent {
     }
 
     private _disableAutoScale() {
-        console.log("Disable autoscale");
         if (this.pool.enableAutoScale) {
-            console.log("Acctually disabling autoscale");
-            return this.poolService.disableAutoscale(this.pool.id);
+            return this.poolService.disableAutoScale(this.pool.id).delay(1000);
         } else {
             return Observable.of({});
         }
