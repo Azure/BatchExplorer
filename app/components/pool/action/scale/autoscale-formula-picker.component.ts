@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation, forwardRef } from "@angular/core";
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { AutoscaleFormula } from "app/models";
 import { AutoscaleFormulaService } from "app/services";
