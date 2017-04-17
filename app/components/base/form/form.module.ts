@@ -6,7 +6,7 @@ import { RouterModule } from "@angular/router";
 
 import { ButtonsModule } from "../buttons";
 import { ActionFormComponent } from "./action-form";
-import { CreateFormComponent } from "./create-form";
+import { ComplexFormComponent } from "./complex-form";
 import { FormErrorComponent } from "./form-error";
 import { FormPageComponent } from "./form-page";
 import {  FormPickerComponent } from "./form-picker";
@@ -21,7 +21,7 @@ const modules = [
 // Add subcomponnent not in a module here
 const components = [
     ActionFormComponent,
-    CreateFormComponent,
+    ComplexFormComponent,
     FormErrorComponent,
     ServerErrorComponent,
     FormPageComponent,

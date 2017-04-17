@@ -7,7 +7,7 @@ import { AsyncSubject } from "rxjs";
 
 import { SubmitButtonComponent } from "app/components/base/buttons";
 import {
-    CreateFormComponent, FormPageComponent, FormPickerComponent, FormSectionComponent,
+    ComplexFormComponent, FormPageComponent, FormPickerComponent, FormSectionComponent,
 } from "app/components/base/form";
 import { ServerErrorComponent } from "app/components/base/form/server-error";
 import { ServerError } from "app/models";
@@ -15,7 +15,7 @@ import { click } from "test/utils/helpers";
 
 @Component({
     template: `
-        <bl-create-form [formGroup]="form" [submit]="submit" [sidebarRef]="sidebarRef" >
+        <bl-complex-form [formGroup]="form" [submit]="submit" [sidebarRef]="sidebarRef" >
             <bl-form-page title="Main page" subtitle="Main subtitle" [formGroup]="form">
                 <bl-form-section title="General section" subtitle="General information">
                     <input  formControlName="id" />
@@ -31,12 +31,12 @@ import { click } from "test/utils/helpers";
                     </bl-form-picker>
                 </bl-form-section>
             </bl-form-page>
-        </bl-create-form>
+        </bl-complex-form>
     `,
 })
 export class FormTestComponent {
     @ViewChild("banner")
-    public createForm: CreateFormComponent;
+    public createForm: ComplexFormComponent;
 
     public form: FormGroup;
 
@@ -69,11 +69,11 @@ export class FormTestComponent {
     }
 }
 
-describe("CreateFormComponent", () => {
+describe("ComplexFormComponent", () => {
     let fixture: ComponentFixture<FormTestComponent>;
     let testComponent: FormTestComponent;
     let de: DebugElement;
-    let component: CreateFormComponent;
+    let component: ComplexFormComponent;
     let createFormElement: DebugElement;
     let addButton: DebugElement;
     let addAndCloseButton: DebugElement;
@@ -91,7 +91,7 @@ describe("CreateFormComponent", () => {
                 SubmitButtonComponent,
                 FormTestComponent,
                 ServerErrorComponent,
-                CreateFormComponent,
+                ComplexFormComponent,
                 FormPageComponent,
                 FormSectionComponent,
                 FormPickerComponent,
@@ -104,7 +104,7 @@ describe("CreateFormComponent", () => {
         testComponent = fixture.componentInstance;
         fixture.detectChanges();
         de = fixture.debugElement;
-        createFormElement = de.query(By.css("bl-create-form"));
+        createFormElement = de.query(By.css("bl-complex-form"));
         component = createFormElement.componentInstance;
 
         // Get the buttons

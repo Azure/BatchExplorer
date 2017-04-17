@@ -103,7 +103,7 @@ fieldset {
     width: 640px;
 }
 
-.slideout-form, .large-slideout-form, .edit-form, bl-create-form {
+.slideout-form, .large-slideout-form, .edit-form, bl-complex-form {
 
     &.content-wrapper {
         padding: 0;
@@ -180,7 +180,7 @@ fieldset {
     }
 }
 
-bl-create-form {
+bl-complex-form {
     display: block;
     width: 800px;
     height: $contentview-height;

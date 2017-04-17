@@ -5,10 +5,10 @@ import { FormBase } from "../form-base";
 import { FormPageComponent } from "../form-page";
 
 @Component({
-    selector: "bl-create-form",
-    templateUrl: "create-form.html",
+    selector: "bl-complex-form",
+    templateUrl: "complex-form.html",
 })
-export class CreateFormComponent extends FormBase implements AfterViewInit {
+export class ComplexFormComponent extends FormBase implements AfterViewInit {
     @Input()
     public multiUse = true;
 
@@ -30,7 +30,7 @@ export class CreateFormComponent extends FormBase implements AfterViewInit {
     public ngAfterViewInit() {
         const page = this.pages.first;
         if (!page) {
-            throw "Expect form to have at least 1 page. Add bl-form-page in the bl-create-form";
+            throw "Expect form to have at least 1 page. Add bl-form-page in the bl-complex-form";
         }
         this.currentPage = page;
         this.mainPage = page;
