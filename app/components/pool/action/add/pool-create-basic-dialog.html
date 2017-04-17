@@ -21,21 +21,7 @@
 
         <bl-form-section title="Scale" subtitle="Number of nodes in your pool using a fix number or a auto scaling forumla">
             <div class="form-element">
-                <md-tab-group class="form-tabs" (selectChange)="changeScaleModeTab($event)">
-                    <md-tab label="Fixed" class="banana">
-                        <md-input-container>
-                            <input mdInput formControlName="targetDedicated" placeholder="Number of virtual machines in pool" type="number" />
-                        </md-input-container>
-                        <bl-error controlName="targetDedicated" code="invalidTargetDedicated">Target size is a required field</bl-error>
-                    </md-tab>
-                    <md-tab label="Auto Scale" class="banana">
-                        <bl-autoscale-formula-picker formControlName="autoScaleFormula"></bl-autoscale-formula-picker>
-                        <bl-error controlName="autoScaleFormula" code="invalidAutoscaleFormula">Auto scale formula is a required field</bl-error>
-                        <md-input-container>
-                            <input mdInput formControlName="autoScaleEvaluationInterval" placeholder="Evaluation interval" type="number" />
-                        </md-input-container>
-                    </md-tab>
-                </md-tab-group>
+                <bl-pool-scale-picker formControlName="scale"></bl-pool-scale-picker>
             </div>
         </bl-form-section>
 

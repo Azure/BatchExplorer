@@ -21,13 +21,17 @@ export interface PoolOSPickerModel {
     };
 }
 
-export interface CreatePoolModel {
-    id: string;
-    displayName: string;
-    targetDedicated: number;
+export interface PoolScaleModel {
     enableAutoScale: boolean;
     autoScaleFormula: string;
     autoScaleEvaluationInterval: number;
+    targetDedicated: number;
+}
+
+export interface CreatePoolModel {
+    id: string;
+    displayName: string;
+    scale: PoolScaleModel;
     vmSize: string;
     maxTasksPerNode: string;
     enableInterNodeCommunication: boolean;
@@ -36,21 +40,22 @@ export interface CreatePoolModel {
 }
 
 export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
+    const outputScale: PoolScaleModel = output.scale || {} as any;
     let data: any = {
         id: output.id,
         displayName: output.displayName,
         vmSize: output.vmSize,
-        enableAutoScale: output.enableAutoScale,
+        enableAutoScale: outputScale.enableAutoScale,
         maxTasksPerNode: Number(output.maxTasksPerNode),
         enableInterNodeCommunication: output.enableInterNodeCommunication,
         startTask: output.startTask,
     };
 
-    if (output.enableAutoScale) {
-        data.autoScaleFormula = output.autoScaleFormula;
-        data.autoScaleEvaluationInterval = moment.duration({ minutes: output.autoScaleEvaluationInterval });
+    if (outputScale.enableAutoScale) {
+        data.autoScaleFormula = outputScale.autoScaleFormula;
+        data.autoScaleEvaluationInterval = moment.duration({ minutes: outputScale.autoScaleEvaluationInterval });
     } else {
-        data.targetDedicated = output.targetDedicated;
+        data.targetDedicated = outputScale.targetDedicated;
     }
 
     if (output.os.source === PoolOsSources.PaaS) {
@@ -74,10 +79,12 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
         id: pool.id,
         displayName: pool.displayName,
         vmSize: pool.vmSize,
-        targetDedicated: pool.targetDedicated,
-        enableAutoScale: pool.enableAutoScale,
-        autoScaleFormula: pool.autoScaleFormula,
-        autoScaleEvaluationInterval: pool.autoScaleEvaluationInterval.asMinutes(),
+        scale: {
+            targetDedicated: pool.targetDedicated,
+            enableAutoScale: pool.enableAutoScale,
+            autoScaleFormula: pool.autoScaleFormula,
+            autoScaleEvaluationInterval: pool.autoScaleEvaluationInterval.asMinutes(),
+        },
         maxTasksPerNode: pool.maxTasksPerNode.toString(),
         enableInterNodeCommunication: pool.enableInterNodeCommunication,
         os: {
