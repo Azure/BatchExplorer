@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
+import { Component, OnDestroy, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
@@ -14,7 +14,7 @@ import { Subscription } from "rxjs";
     ],
     styleUrls: ["autoscale-formula-picker"],
 })
-export class PoolScalePickerComponent implements OnInit, OnDestroy, ControlValueAccessor {
+export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor {
     public form: FormGroup;
 
     private _propagateChange: Function;
@@ -35,9 +35,6 @@ export class PoolScalePickerComponent implements OnInit, OnDestroy, ControlValue
         });
     }
 
-    public ngOnInit() {
-    }
-
     public ngOnDestroy() {
         this._sub.unsubscribe();
     }
@@ -55,8 +52,14 @@ export class PoolScalePickerComponent implements OnInit, OnDestroy, ControlValue
     }
 
     public validate(c: FormControl) {
-        // TODO return validity
-        return null;
+        const valid = this.form.valid;
+        if (valid) {
+            return null;
+        }
+
+        return {
+            scalePicker: this.form.errors,
+        };
     }
 
     public changeScaleModeTab(event) {

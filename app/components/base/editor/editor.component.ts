@@ -91,9 +91,8 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit {
     }
 
     public updateValue(value) {
-        console.log("Wriitng value.", value);
         this.value = value;
-        // this.change.emit(value);
+        this.change.emit(value);
     }
 
     public writeValue(value) {
