@@ -1,4 +1,7 @@
-import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild, forwardRef } from "@angular/core";
+import {
+    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter,
+    HostListener, Input, Output, ViewChild, forwardRef,
+} from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import "app/utils/autoscale";
 import * as CodeMirror from "codemirror";
@@ -9,18 +12,20 @@ import "codemirror/addon/hint/show-hint";
 @Component({
     selector: "bl-editor",
     providers: [
-    {
-        provide: NG_VALUE_ACCESSOR,
-        // tslint:disable-next-line:no-forward-ref
-        useExisting: forwardRef(() => EditorComponent),
-        multi: true,
-    }],
+        {
+            provide: NG_VALUE_ACCESSOR,
+            // tslint:disable-next-line:no-forward-ref
+            useExisting: forwardRef(() => EditorComponent),
+            multi: true,
+        }],
     template: `
-        <textarea #host placeholder="enter autoscale formula" placeholder="Please enter {{label}}"></textarea>
-        <div class="mat-input-underline" [class.mat-focused]="isFocused">
-            <span class="mat-input-ripple"></span>
+        <textarea #host placeholder="enter autoscale formula" placeholder="Please enter {{label}}">
+        </textarea>
+        <div class="mat-input-underline">
+            <span class="mat-input-ripple" [class.mat-focused]="isFocused"></span>
         </div>
     `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
 export class EditorComponent implements ControlValueAccessor, AfterViewInit {
@@ -52,6 +57,8 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit {
         }
     }
 
+    constructor(private changeDetector: ChangeDetectorRef) { }
+
     public ngAfterViewInit() {
         this.config = this.config || {};
         this.codemirrorInit(this.config);
@@ -61,43 +68,50 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit {
         this.instance = CodeMirror.fromTextArea(this.host.nativeElement, config);
         this.instance.setValue(this._value);
 
-        this.instance.on("change", () => {
+        this.instance.on("change", (editor, change) => {
             this.updateValue(this.instance.getValue());
+
+            if (change.origin !== "complete" && change.origin !== "setValue") {
+                this.instance.showHint({ hint: CodeMirror.hint.autoscale, completeSingle: false });
+            }
         });
 
         this.instance.on("focus", () => {
             this.isFocused = true;
             this.focus.emit();
+            this.onTouched();
+            this.changeDetector.markForCheck();
         });
 
         this.instance.on("blur", () => {
             this.isFocused = false;
             this.blur.emit();
-        });
-
-        this.instance.on("change", (editor, change) => {
-            if (change.origin !== "complete" && change.origin !== "setValue") {
-                this.instance.showHint({ hint: CodeMirror.hint.autoscale, completeSingle: false });
-            }
+            this.changeDetector.markForCheck();
         });
     }
 
-  public updateValue(value) {
-    this.value = value;
-    this.onTouched();
-    this.change.emit(value);
-  }
-
-  public writeValue(value) {
-    this._value = value || "";
-    if (this.instance) {
-        this.instance.setValue(this._value);
+    public updateValue(value) {
+        this.value = value;
+        this.change.emit(value);
     }
-  }
-  // tslint:disable-next-line:no-empty
-  public onChange(_) { }
-  // tslint:disable-next-line:no-empty
-  public onTouched() { }
-  public registerOnChange(fn) { this.onChange = fn; }
-  public registerOnTouched(fn) { this.onTouched = fn; }
+
+    public writeValue(value) {
+        this._value = value || "";
+        if (this.instance) {
+            this.instance.setValue(this._value);
+        }
+    }
+
+    @HostListener("keyup.enter", ["$event"])
+    public onEnter(event: KeyboardEvent) {
+        // Prevent forms from being submitted when focussed in editor and pressing enter.
+        event.stopPropagation();
+    }
+
+    public onChange: Function = () => null;
+
+    // tslint:disable-next-line:no-empty
+    public onTouched() { }
+    public registerOnChange(fn) { this.onChange = fn; }
+    public registerOnTouched(fn) { this.onTouched = fn; }
 }

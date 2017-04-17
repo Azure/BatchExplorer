@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, forwardRef } from "@angular/core";
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, ViewEncapsulation, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { AutoscaleFormula } from "app/models";
 import { AutoscaleFormulaService } from "app/services";
@@ -13,7 +13,8 @@ import { Subscription } from "rxjs";
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => AutoscaleFormulaPickerComponent), multi: true },
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => AutoscaleFormulaPickerComponent), multi: true },
     ],
-    styleUrls: [ "autoscale-formula-picker" ],
+    styleUrls: ["autoscale-formula-picker"],
+    encapsulation: ViewEncapsulation.None,
 })
 export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, ControlValueAccessor {
     public savedAutoscaleFormulas: List<AutoscaleFormula>;
@@ -40,7 +41,7 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
         this.autoscaleFormulaName = new FormControl("");
         this.showSaveForm = false;
         this.savedAutoscaleFormulas = List([]);
-        this._subs  = [];
+        this._subs = [];
         this._propagateChange = null;
         this._propagateTouch = null;
         this._subs.push(this.autoscaleFormulaService.formulas.subscribe((formulas) => {

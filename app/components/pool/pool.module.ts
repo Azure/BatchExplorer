@@ -15,13 +15,14 @@ import {
     PoolCreateBasicDialogComponent,
     PoolOsPickerComponent,
     PoolResizeDialogComponent,
+    PoolScalePickerComponent,
     VmSizePickerComponent,
 } from "app/components/pool/action";
 
 const components = [
     AutoscaleFormulaPickerComponent, DeletePoolDialogComponent, PoolAdvancedFilterComponent,
     PoolCreateBasicDialogComponent, PoolHomeComponent, PoolListComponent, PoolOsPickerComponent,
-    VmSizePickerComponent, PoolResizeDialogComponent, OsOfferTileComponent,
+    PoolScalePickerComponent, VmSizePickerComponent, PoolResizeDialogComponent, OsOfferTileComponent,
 ];
 
 const modules = [

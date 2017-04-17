@@ -3,28 +3,34 @@
 .CodeMirror {
     display:block;
     width:100%;
-    height:195px;
-}
-
-.ng-invalid.ng-touched .mat-input-underline {
-    border-color: #aa3939;
-    border-width: 2px;
+    border-right: 1px solid $altoGray;
 }
 
 .autoscale-formula-picker {
     display: flex;
-    > div {
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+
+    > .editor {
         flex: 1;
+        min-width: 100px;
     }
 
     .mat-input-underline {
         position: relative;
+        margin-top: 0;
     }
 
     > .saved-formulas {
         width: 210px;
         flex: 0 0 170px;
         padding: 1em 0;
+        border-bottom: 1px solid $altoGray;
+
+        > .saved-formulas-container {
+            height: 100%;
+        }
 
         .saved-formulas-btns {
             height: 28px;
@@ -32,7 +38,7 @@
         }
 
         .saved-formulas-wrapper {
-            height: 120px;
+            height: 100%;
             overflow: auto;
             border-top: 1px solid #d5d5d5;
             border-bottom: 1px solid #d5d5d5;
