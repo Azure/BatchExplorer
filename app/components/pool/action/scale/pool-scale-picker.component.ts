@@ -46,7 +46,6 @@ export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor
         if (value.enableAutoScale) {
             this.selectedModeTab = 1;
         }
-        console.log("FOrm", this.form.value);
     }
 
     public registerOnChange(fn) {

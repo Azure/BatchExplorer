@@ -14,7 +14,7 @@
                 </div>
             </md-card-title-group>
             <md-card-content>
-                <p>Last resized {{lastResize}}</p>
+                <p>Last resized {{poolDecorator.lastResized}}</p>
                 <p><i class="fa fa-{{poolDecorator.poolOsIcon}}" aria-hidden="true"></i> {{poolDecorator.poolOs}}</p>
                 <bl-tags [tags]="pool.tags" [editable]="true" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
             </md-card-content>
