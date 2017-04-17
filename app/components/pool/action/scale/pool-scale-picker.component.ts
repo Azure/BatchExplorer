@@ -1,8 +1,7 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, forwardRef } from "@angular/core";
-import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, FormGroup, FormBuilder } from "@angular/forms";
-import { AutoscaleFormula } from "app/models";
-import { AutoscaleFormulaService } from "app/services";
-import { List } from "immutable";
+import { Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
+import {
+    ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR,
+} from "@angular/forms";
 import { Subscription } from "rxjs";
 
 @Component({
@@ -68,7 +67,6 @@ export class PoolScalePickerComponent implements OnInit, OnDestroy, ControlValue
         }
         this.form.controls.autoScaleFormula.updateValueAndValidity();
     }
-
 
     private _invalidAutoscaleFormula() {
         return (control: FormControl): { [key: string]: any } => {
