@@ -7,7 +7,7 @@ import { Component, Input } from "@angular/core";
         <ng-content></ng-content>
     `,
 })
-export class CreateFormMockComponent {
+export class ComplexFormMockComponent {
 }
 
 @Component({
@@ -25,4 +25,4 @@ export class FormPageMockComponent {
     public subtitle: string;
 }
 
-export const createFormMockComponents = [CreateFormMockComponent, FormPageMockComponent];
+export const complexFormMockComponents = [ComplexFormMockComponent, FormPageMockComponent];
