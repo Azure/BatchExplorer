@@ -1,4 +1,6 @@
-import { AfterViewInit, Component, EventEmitter, Input, Output, ViewChild, forwardRef } from "@angular/core";
+import {
+    AfterViewInit, Component, EventEmitter, HostListener, Input, Output, ViewChild, forwardRef,
+} from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import "app/utils/autoscale";
 import * as CodeMirror from "codemirror";
@@ -9,14 +11,15 @@ import "codemirror/addon/hint/show-hint";
 @Component({
     selector: "bl-editor",
     providers: [
-    {
-        provide: NG_VALUE_ACCESSOR,
-        // tslint:disable-next-line:no-forward-ref
-        useExisting: forwardRef(() => EditorComponent),
-        multi: true,
-    }],
+        {
+            provide: NG_VALUE_ACCESSOR,
+            // tslint:disable-next-line:no-forward-ref
+            useExisting: forwardRef(() => EditorComponent),
+            multi: true,
+        }],
     template: `
-        <textarea #host placeholder="enter autoscale formula" placeholder="Please enter {{label}}"></textarea>
+        <textarea #host placeholder="enter autoscale formula" placeholder="Please enter {{label}}">
+        </textarea>
         <div class="mat-input-underline" [class.mat-focused]="isFocused">
             <span class="mat-input-ripple"></span>
         </div>
@@ -82,22 +85,29 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit {
         });
     }
 
-  public updateValue(value) {
-    this.value = value;
-    this.onTouched();
-    this.change.emit(value);
-  }
-
-  public writeValue(value) {
-    this._value = value || "";
-    if (this.instance) {
-        this.instance.setValue(this._value);
+    public updateValue(value) {
+        this.value = value;
+        this.onTouched();
+        this.change.emit(value);
     }
-  }
-  // tslint:disable-next-line:no-empty
-  public onChange(_) { }
-  // tslint:disable-next-line:no-empty
-  public onTouched() { }
-  public registerOnChange(fn) { this.onChange = fn; }
-  public registerOnTouched(fn) { this.onTouched = fn; }
+
+    public writeValue(value) {
+        this._value = value || "";
+        if (this.instance) {
+            this.instance.setValue(this._value);
+        }
+    }
+
+    @HostListener("keyup.enter", ["$event"])
+    public onEnter(event: KeyboardEvent) {
+        // Prevent forms from being submitted when focussed in editor and pressing enter.
+        event.stopPropagation();
+    }
+
+    // tslint:disable-next-line:no-empty
+    public onChange(_) { }
+    // tslint:disable-next-line:no-empty
+    public onTouched() { }
+    public registerOnChange(fn) { this.onChange = fn; }
+    public registerOnTouched(fn) { this.onTouched = fn; }
 }
