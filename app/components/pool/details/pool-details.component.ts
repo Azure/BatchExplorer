@@ -8,6 +8,7 @@ import { Subscription } from "rxjs";
 
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { Pool } from "app/models";
+import { PoolDecorator } from "app/models/decorators";
 import { PoolParams, PoolService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
 import { SidebarManager } from "../../base/sidebar";
@@ -28,10 +29,16 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
     }
 
     public poolId: string;
-    public pool: Pool;
+    public poolDecorator: PoolDecorator;
+    public set pool(pool: Pool) {
+        this._pool = pool;
+        this.poolDecorator = pool && new PoolDecorator(pool);
+    }
+    public get pool() { return this._pool; };
     public data: RxEntityProxy<PoolParams, Pool>;
 
     private _paramsSubscriber: Subscription;
+    private _pool: Pool;
 
     constructor(
         private router: Router,
@@ -98,44 +105,6 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         this.sidebarManager.onClosed.subscribe(() => {
             this.refreshPool();
         });
-    }
-
-    // TODO: Move all of these to pool decorator
-    public get poolOs(): string {
-        if (this.pool.cloudServiceConfiguration) {
-            let osName: string;
-            let osFamily = this.pool.cloudServiceConfiguration.osFamily;
-
-            if (osFamily === 2) {
-                osName = "Windows Server 2008 R2 SP1";
-            } else if (osFamily === 3) {
-                osName = "Windows Server 2012";
-            } else if (osFamily === 4) {
-                osName = "Windows Server 2012 R2";
-            } else {
-                osName = "Windows Server 2016";
-            }
-
-            return osName;
-        }
-
-        if (this.pool.virtualMachineConfiguration.imageReference.publisher ===
-            "MicrosoftWindowsServer") {
-            let osName = "Windows Server";
-            osName += this.pool.virtualMachineConfiguration.imageReference.sku;
-
-            return osName;
-        }
-
-        return "Linux";
-    }
-
-    public get poolOsIcon(): string {
-        if (this.poolOs.includes("Windows")) {
-            return "windows";
-        }
-
-        return "linux";
     }
 
     public get nodesTooltipMessage() {

@@ -29,6 +29,8 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     public url: string;
     public virtualMachineConfiguration: VirtualMachineConfigurationDecorator;
     public vmSize: string;
+    public poolOs: string;
+    public poolOsIcon: string;
 
     constructor(private pool?: Pool) {
         super(pool);
@@ -57,37 +59,41 @@ export class PoolDecorator extends DecoratorBase<Pool> {
         this.virtualMachineConfiguration =
             new VirtualMachineConfigurationDecorator(pool.virtualMachineConfiguration || <any>{});
         this.vmSize = this.stringField(pool.vmSize);
+
+        this.poolOs = this._computePoolOs();
+        this.poolOsIcon = this._computePoolOsIcon(this.poolOs);
     }
 
-    public get poolOs(): string {
-        if (this.pool.cloudServiceConfiguration) {
-            let osName: string;
-            let osFamily = this.pool.cloudServiceConfiguration.osFamily;
+    private _computePoolOs(): string {
+        const { cloudServiceConfiguration, virtualMachineConfiguration } = this.pool;
+        if (cloudServiceConfiguration) {
+            let osFamily = cloudServiceConfiguration.osFamily;
 
             if (osFamily === 2) {
-                osName = "Windows Server 2008 R2 SP1";
+                return "Windows Server 2008 R2 SP1";
             } else if (osFamily === 3) {
-                osName = "Windows Server 2012";
+                return "Windows Server 2012";
             } else {
-                osName = "Windows Server 2012 R2";
+                return "Windows Server 2012 R2";
+            }
+        }
+
+        if (virtualMachineConfiguration) {
+            if (virtualMachineConfiguration.imageReference.publisher ===
+                "MicrosoftWindowsServer") {
+                return `Windows Server ${virtualMachineConfiguration.imageReference.sku}`;
             }
 
-            return osName;
+            const { offer, sku } = virtualMachineConfiguration.imageReference;
+
+            return `${offer} ${sku}`;
         }
 
-        if (this.pool.virtualMachineConfiguration.imageReference.publisher ===
-            "MicrosoftWindowsServer") {
-            let osName = "Windows Server";
-            osName += this.pool.virtualMachineConfiguration.imageReference.sku;
-
-            return osName;
-        }
-
-        return "Linux";
+        return "Unknown";
     }
 
-    public get poolOsIcon(): string {
-        if (this.poolOs.includes("Windows")) {
+    private _computePoolOsIcon(os): string {
+        if (os.includes("Windows")) {
             return "windows";
         }
 
