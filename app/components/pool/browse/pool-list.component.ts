@@ -1,5 +1,5 @@
 import {
-    Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild,
+    Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, ChangeDetectionStrategy,
 } from "@angular/core";
 import { MdDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -23,6 +23,7 @@ import { DeletePoolTask } from "../action/delete";
 @Component({
     selector: "bl-pool-list",
     templateUrl: "pool-list.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PoolListComponent extends ListOrTableBase implements OnInit, OnDestroy {
     public LoadingStatus = LoadingStatus;

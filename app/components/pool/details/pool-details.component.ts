@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
+import { Component, OnDestroy, OnInit, ViewContainerRef, ChangeDetectionStrategy } from "@angular/core";
 import { MdDialog, MdDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
@@ -17,6 +17,7 @@ import { PoolCreateBasicDialogComponent } from "../action";
 @Component({
     selector: "bl-pool-details",
     templateUrl: "pool-details.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PoolDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({ id }, { tab }) {
