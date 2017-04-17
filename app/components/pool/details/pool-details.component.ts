@@ -19,7 +19,7 @@ import { PoolCreateBasicDialogComponent } from "../action";
     selector: "bl-pool-details",
     templateUrl: "pool-details.html",
 })
-export class PoolDetailsComponent implements OnInit, OnChanges, OnDestroy {
+export class PoolDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({ id }, { tab }) {
         let label = tab ? `Pool - ${tab}` : "Pool";
         return {
@@ -29,12 +29,16 @@ export class PoolDetailsComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     public poolId: string;
-    public pool: Pool;
     public poolDecorator: PoolDecorator;
-
+    public set pool(pool: Pool) {
+        this._pool = pool;
+        this.poolDecorator = pool && new PoolDecorator(pool);
+    }
+    public get pool() { return this._pool; };
     public data: RxEntityProxy<PoolParams, Pool>;
 
     private _paramsSubscriber: Subscription;
+    private _pool: Pool;
 
     constructor(
         private router: Router,
@@ -62,12 +66,6 @@ export class PoolDetailsComponent implements OnInit, OnChanges, OnDestroy {
             this.data.params = { id: this.poolId };
             this.data.fetch();
         });
-    }
-
-    public ngOnChanges(inputs) {
-        if (inputs.pool) {
-            this.poolDecorator = new PoolDecorator(this.pool);
-        }
     }
 
     public ngOnDestroy() {

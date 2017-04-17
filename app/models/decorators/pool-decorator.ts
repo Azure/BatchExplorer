@@ -78,14 +78,18 @@ export class PoolDecorator extends DecoratorBase<Pool> {
             }
         }
 
-        if (virtualMachineConfiguration.imageReference.publisher ===
-            "MicrosoftWindowsServer") {
-            return `Windows Server ${virtualMachineConfiguration.imageReference.sku}`;
+        if (virtualMachineConfiguration) {
+            if (virtualMachineConfiguration.imageReference.publisher ===
+                "MicrosoftWindowsServer") {
+                return `Windows Server ${virtualMachineConfiguration.imageReference.sku}`;
+            }
+
+            const { offer, sku } = virtualMachineConfiguration.imageReference;
+
+            return `${offer} ${sku}`;
         }
 
-        const { offer, sku } = virtualMachineConfiguration.imageReference;
-
-        return `${offer} ${sku}`;
+        return "Unknown";
     }
 
     private _computePoolOsIcon(os): string {
