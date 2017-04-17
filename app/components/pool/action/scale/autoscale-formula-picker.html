@@ -1,5 +1,5 @@
 <div class="autoscale-formula-picker">
-    <div class="bl-textarea">
+    <div class="editor">
         <bl-editor  [(ngModel)]="autoscaleFormulaValue"
                     [label]="'Autoscale Formula'"
                     [config]="config"
@@ -7,7 +7,7 @@
                     (blur)="textEditorOnBlur()"></bl-editor>
     </div>
     <div class="saved-formulas">
-        <div *ngIf="!showSaveForm">
+        <div *ngIf="!showSaveForm" class="saved-formulas-container">
             <div class="saved-formulas-btns">
                 <button md-raised-button color="primary" class="small add-formula-btn" (click)="addFormula()">
                     <i class="fa fa-save"></i> Save Autoscale Formula

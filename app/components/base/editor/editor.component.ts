@@ -1,5 +1,6 @@
 import {
-    AfterViewInit, ChangeDetectionStrategy, Component, EventEmitter, HostListener, Input, Output, ViewChild, forwardRef,
+    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter,
+    HostListener, Input, Output, ViewChild, forwardRef,
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import "app/utils/autoscale";
@@ -20,8 +21,8 @@ import "codemirror/addon/hint/show-hint";
     template: `
         <textarea #host placeholder="enter autoscale formula" placeholder="Please enter {{label}}">
         </textarea>
-        <div class="mat-input-underline" [class.mat-focused]="isFocused">
-            <span class="mat-input-ripple"></span>
+        <div class="mat-input-underline">
+            <span class="mat-input-ripple" [class.mat-focused]="isFocused"></span>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -52,9 +53,11 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit {
     @Input() set value(v) {
         if (v !== this._value) {
             this._value = v;
-            // this.onChange(v);
+            this.onChange(v);
         }
     }
+
+    constructor(private changeDetector: ChangeDetectorRef) { }
 
     public ngAfterViewInit() {
         this.config = this.config || {};
@@ -77,11 +80,13 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit {
             this.isFocused = true;
             this.focus.emit();
             this.onTouched();
+            this.changeDetector.markForCheck();
         });
 
         this.instance.on("blur", () => {
             this.isFocused = false;
             this.blur.emit();
+            this.changeDetector.markForCheck();
         });
     }
 
