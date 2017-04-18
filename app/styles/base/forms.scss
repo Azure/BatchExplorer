@@ -182,10 +182,33 @@ fieldset {
 
 bl-complex-form {
     display: block;
-    width: 800px;
-    height: $contentview-height;
+    // height: $contentview-height;
     $footer-height: 60px;
     overflow: hidden;
+
+    &.small {
+        width: 500px;
+    }
+
+    &.medium {
+        width: 600px;
+    }
+
+    &.large {
+        width: 800px;
+    }
+
+    &.sticky-footer {
+        height: 100%;
+
+        > .content {
+            padding-bottom: 100px;
+        }
+
+        > .form-footer {
+            box-shadow: 0 0 40px -10px #a5a5a5;
+        }
+    }
 
     .header {
         h1 {
@@ -201,7 +224,7 @@ bl-complex-form {
         overflow: auto;
         position: relative;
         height: calc(100% - #{$footer-height});
-        padding: 10px 5px 100px;
+        padding: 10px 5px;
 
         > .loading-overlay {
             position: absolute;
@@ -224,7 +247,7 @@ bl-complex-form {
 
     > .form-footer {
         height: $footer-height;
-        box-shadow: 0 0 40px -10px #a5a5a5;
+
         // background: map-get($md-prussian-blue, 500);
         padding: 5px;
         display: flex;

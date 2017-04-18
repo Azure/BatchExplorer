@@ -1,8 +1,10 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ContentChildren, Input, QueryList } from "@angular/core";
+import { AfterViewInit, ChangeDetectorRef, Component, ContentChildren, Input, QueryList, HostBinding } from "@angular/core";
 
 import { log } from "app/utils";
 import { FormBase } from "../form-base";
 import { FormPageComponent } from "../form-page";
+
+export type FormSize = "small" | "medium" | "large";
 
 @Component({
     selector: "bl-complex-form",
@@ -19,6 +21,14 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
 
     @Input()
     public actionName = "Save";
+
+    @Input()
+    @HostBinding("class")
+    public size: FormSize = "large";
+
+    @Input()
+    @HostBinding("class.sticky-footer")
+    public stickyFooter: boolean = true;
 
     @ContentChildren(FormPageComponent)
     public pages: QueryList<FormPageComponent>;
@@ -79,7 +89,14 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
         this.closePage();
     }
 
-    public get addAndCloseText() {
+    public get saveAndCloseText() {
         return this.multiUse ? `${this.actionName} and close` : this.actionName;
+    }
+
+    /**
+     * Enabled if the formGroup is valid or there is no formGroup
+     */
+    public get submitEnabled() {
+        return !this.formGroup || this.formGroup.valid;
     }
 }

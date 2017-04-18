@@ -4,6 +4,7 @@ import { MdDialogRef } from "@angular/material";
 import { Observable } from "rxjs";
 
 import { SidebarRef } from "app/components/base/sidebar";
+import { FormSize } from "../complex-form";
 
 
 /**
@@ -28,6 +29,13 @@ export class SimpleFormComponent {
 
     @Input()
     public actionName = "Save";
+
+
+    @Input()
+    public size: FormSize = "large";
+
+    @Input()
+    public stickyFooter: boolean = true;
 
     /**
      * Dialog ref if the form is used in the dialog.
@@ -55,11 +63,4 @@ export class SimpleFormComponent {
 
     @Input()
     public actionColor = "primary";
-
-    /**
-     * Enabled if the formGroup is valid or there is no formGroup
-     */
-    public get submitEnabled() {
-        return !this.formGroup || this.formGroup.valid;
-    }
 }
