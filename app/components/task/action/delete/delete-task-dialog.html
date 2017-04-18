@@ -1,11 +1,8 @@
-<div class="dialog-form">
-    <h2>Delete task</h2>
-    <bl-simple-form [submit]="destroyTask" [dialogRef]="dialogRef">
-        <div class="message">
-            <p>Do you want to delete task: '<b>{{taskId}}</b>'?</p>
-            <p>
-                All of the task's files in the directory on the compute node where it ran will also be deleted.
-            </p>
-        </div>
-    </bl-simple-form>
-</div>
+<bl-simple-form [submit]="destroyTask" [dialogRef]="dialogRef" [stickyFooter]="false"  [multiUse]="false" size="small" title="Delete task">
+    <div class="message">
+        <p>Do you want to delete task: '<b>{{taskId}}</b>'?</p>
+        <p>
+            All of the task's files in the directory on the compute node where it ran will also be deleted.
+        </p>
+    </div>
+</bl-simple-form>
