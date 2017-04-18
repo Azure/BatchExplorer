@@ -79,4 +79,43 @@ export class PoolUtils {
             return this.iconForOffer("WindowsServer");
         }
     }
+
+    public static osName(pool: Pool): string {
+        if (pool.cloudServiceConfiguration) {
+            let osName: string;
+            let osFamily = pool.cloudServiceConfiguration.osFamily;
+
+            if (osFamily === 2) {
+                osName = "Windows Server 2008 R2 SP1";
+            } else if (osFamily === 3) {
+                osName = "Windows Server 2012";
+            } else if (osFamily === 4) {
+                osName = "Windows Server 2012 R2";
+            } else {
+                osName = "Windows Server 2016";
+            }
+
+            return osName;
+        }
+
+        if (pool.virtualMachineConfiguration.imageReference.publisher ===
+            "MicrosoftWindowsServer") {
+            let osName = "Windows Server".concat(pool.virtualMachineConfiguration.imageReference.sku);
+            return osName;
+        } else {
+            let osName = pool.virtualMachineConfiguration.imageReference.publisher;
+            osName = osName.concat(pool.virtualMachineConfiguration.imageReference.offer, " ",
+            pool.virtualMachineConfiguration.imageReference.sku, " ",
+            pool.virtualMachineConfiguration.imageReference.version);
+            return osName;
+        }
+    }
+
+    // public get osIconName(): string {
+    //     if (this.osName.includes("Windows")) {
+    //         return "windows";
+    //     }
+
+    //     return "linux";
+    // }
 }
