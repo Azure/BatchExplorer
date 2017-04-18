@@ -7,7 +7,7 @@ import { Observable } from "rxjs";
 import { DisableJobDialogComponent } from "app/components/job/action";
 import { ServerError } from "app/models";
 import { JobService } from "app/services";
-import { ActionFormMockComponent, InfoBoxMockComponent, ServerErrorMockComponent } from "test/utils/mocks/components";
+import { InfoBoxMockComponent, ServerErrorMockComponent, SimpleFormMockComponent } from "test/utils/mocks/components";
 
 describe("DisableJobDialogComponent ", () => {
     let fixture: ComponentFixture<DisableJobDialogComponent>;
@@ -39,7 +39,7 @@ describe("DisableJobDialogComponent ", () => {
         dispatcher = new MdUniqueSelectionDispatcher();
         TestBed.configureTestingModule({
             declarations: [
-                ActionFormMockComponent, DisableJobDialogComponent, InfoBoxMockComponent, MdRadioButton,
+                SimpleFormMockComponent, DisableJobDialogComponent, InfoBoxMockComponent, MdRadioButton,
                 MdRadioGroup, ServerErrorMockComponent,
             ],
             providers: [

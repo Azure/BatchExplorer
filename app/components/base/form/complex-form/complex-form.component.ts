@@ -1,19 +1,36 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ContentChildren, Input, QueryList } from "@angular/core";
+import {
+    AfterViewInit, ChangeDetectorRef, Component, ContentChildren, HostBinding, Input, QueryList,
+} from "@angular/core";
 
 import { log } from "app/utils";
 import { FormBase } from "../form-base";
 import { FormPageComponent } from "../form-page";
 
+export type FormSize = "small" | "medium" | "large";
+
 @Component({
-    selector: "bl-create-form",
-    templateUrl: "create-form.html",
+    selector: "bl-complex-form",
+    templateUrl: "complex-form.html",
 })
-export class CreateFormComponent extends FormBase implements AfterViewInit {
+export class ComplexFormComponent extends FormBase implements AfterViewInit {
+    /**
+     * If the form should allow multi use. \
+     * If true the form will have a "Save" AND a "Save and Close" button.
+     * If false the form will only have a "Save" button
+     */
     @Input()
     public multiUse = true;
 
     @Input()
-    public actionName = "Add";
+    public actionName = "Save";
+
+    @Input()
+    @HostBinding("class")
+    public size: FormSize = "large";
+
+    @Input()
+    @HostBinding("class.sticky-footer")
+    public stickyFooter: boolean = true;
 
     @ContentChildren(FormPageComponent)
     public pages: QueryList<FormPageComponent>;
@@ -30,7 +47,7 @@ export class CreateFormComponent extends FormBase implements AfterViewInit {
     public ngAfterViewInit() {
         const page = this.pages.first;
         if (!page) {
-            throw "Expect form to have at least 1 page. Add bl-form-page in the bl-create-form";
+            throw "Expect form to have at least 1 page. Add bl-form-page in the bl-complex-form";
         }
         this.currentPage = page;
         this.mainPage = page;
@@ -62,28 +79,26 @@ export class CreateFormComponent extends FormBase implements AfterViewInit {
 
     public closePageOrSubmit() {
         if (this._pageStack.length === 0) {
-            return this.add();
+            return this.save();
         }
         this.currentPage.submit.emit();
         this.closePage();
     }
 
     public cancelPage() {
-        // TODO reset form input
         this.currentPage.cancel.emit();
         this.currentPage.formGroup.reset();
         this.closePage();
     }
 
-    public add() {
-        return this.performAction();
-    }
-
-    public addAndClose() {
-        return this.performActionAndClose();
-    }
-
-    public get addAndCloseText() {
+    public get saveAndCloseText() {
         return this.multiUse ? `${this.actionName} and close` : this.actionName;
+    }
+
+    /**
+     * Enabled if the formGroup is valid or there is no formGroup
+     */
+    public get submitEnabled() {
+        return !this.formGroup || this.formGroup.valid;
     }
 }

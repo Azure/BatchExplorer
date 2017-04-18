@@ -1,6 +1,6 @@
 <div class="edit-form">
     <h2>Edit start task for pool: {{pool.id}}</h2>
-    <bl-action-form [formGroup]="form" [submit]="submit" submitText="Update" (done)="close.emit()">
+    <bl-simple-form [formGroup]="form" [submit]="submit" saveText="Update" (done)="close.emit()">
         <form novalidate [formGroup]="form">
             <div class="form-element">
                 <md-slide-toggle formControlName="enableStartTask" color="primary">
@@ -11,5 +11,5 @@
                 <bl-start-task-picker formControlName="startTask"></bl-start-task-picker>
             </div>
         </form>
-    </bl-action-form>
+    </bl-simple-form>
 </div>
