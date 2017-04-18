@@ -1,13 +1,18 @@
 import { Component, Input } from "@angular/core";
 
 @Component({
-    selector: "bl-create-form",
+    selector: "bl-complex-form",
     template: `
         <bl-server-error [error]="error"></bl-server-error>
         <ng-content></ng-content>
     `,
 })
-export class CreateFormMockComponent {
+export class ComplexFormMockComponent {
+    @Input()
+    public submit: () => any;
+
+    @Input()
+    public containerRef;
 }
 
 @Component({
@@ -25,4 +30,4 @@ export class FormPageMockComponent {
     public subtitle: string;
 }
 
-export const createFormMockComponents = [CreateFormMockComponent, FormPageMockComponent];
+export const complexFormMockComponents = [ComplexFormMockComponent, FormPageMockComponent];

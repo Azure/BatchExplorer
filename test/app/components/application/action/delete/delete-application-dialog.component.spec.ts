@@ -10,7 +10,7 @@ import { Application, ServerError } from "app/models";
 import { ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { RxMockEntityProxy } from "test/utils/mocks";
-import { ActionFormMockComponent, ServerErrorMockComponent } from "test/utils/mocks/components";
+import { ServerErrorMockComponent, SimpleFormMockComponent } from "test/utils/mocks/components";
 
 // TODO: 2 tests excluded below. Needs long running action refactor for testing
 describe("DeleteApplicationDialogComponent ", () => {
@@ -44,7 +44,7 @@ describe("DeleteApplicationDialogComponent ", () => {
         };
 
         TestBed.configureTestingModule({
-            declarations: [ActionFormMockComponent, DeleteApplicationDialogComponent, ServerErrorMockComponent],
+            declarations: [SimpleFormMockComponent, DeleteApplicationDialogComponent, ServerErrorMockComponent],
             providers: [
                 { provide: MdDialogRef, useValue: null },
                 { provide: ApplicationService, useValue: appServiceSpy },
@@ -81,7 +81,7 @@ describe("DeleteApplicationDialogComponent ", () => {
             error: () => {
                 expect(appServiceSpy.delete).toHaveBeenCalledTimes(1);
 
-                let actionForm = fixture.debugElement.query(By.css("bl-action-form")).componentInstance;
+                let actionForm = fixture.debugElement.query(By.css("bl-simple-form")).componentInstance;
                 expect(actionForm.error).not.toBeNull();
             },
         });
