@@ -5,13 +5,13 @@ import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 
 import { ButtonsModule } from "../buttons";
-import { SimpleFormComponent } from "./simple-form";
 import { ComplexFormComponent } from "./complex-form";
 import { FormErrorComponent } from "./form-error";
 import { FormPageComponent } from "./form-page";
 import {  FormPickerComponent } from "./form-picker";
 import { FormSectionComponent } from "./form-section";
 import { ServerErrorComponent } from "./server-error";
+import { SimpleFormComponent } from "./simple-form";
 
 // components
 // Add submodules there

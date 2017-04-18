@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
 import { TerminateJobDialogComponent } from "app/components/job/action";
 import { ServerError } from "app/models";
 import { JobService } from "app/services";
-import { SimpleFormMockComponent, ServerErrorMockComponent } from "test/utils/mocks/components";
+import { ServerErrorMockComponent, SimpleFormMockComponent } from "test/utils/mocks/components";
 
 describe("TerminateJobDialogComponent ", () => {
     let fixture: ComponentFixture<TerminateJobDialogComponent>;

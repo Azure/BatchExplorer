@@ -10,7 +10,7 @@ import { Application, ServerError } from "app/models";
 import { ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { RxMockEntityProxy } from "test/utils/mocks";
-import { SimpleFormMockComponent, ServerErrorMockComponent } from "test/utils/mocks/components";
+import { ServerErrorMockComponent, SimpleFormMockComponent } from "test/utils/mocks/components";
 
 // TODO: 2 tests excluded below. Needs long running action refactor for testing
 describe("DeleteApplicationDialogComponent ", () => {
