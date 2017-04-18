@@ -15,7 +15,7 @@ import { click } from "test/utils/helpers";
 
 @Component({
     template: `
-        <bl-complex-form [formGroup]="form" [submit]="submit" [sidebarRef]="sidebarRef" >
+        <bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef" >
             <bl-form-page title="Main page" subtitle="Main subtitle" [formGroup]="form">
                 <bl-form-section title="General section" subtitle="General information">
                     <input  formControlName="id" />

@@ -7,23 +7,23 @@ import { Observable } from "rxjs";
 import { ServerError } from "app/models";
 import { SidebarRef } from "../sidebar";
 
+export type ContainerRef = MdDialogRef<any> | SidebarRef<any> | GenericContainer;
+export interface GenericContainer {
+    /**
+     * Method to destroy the container
+     */
+    destroy();
+}
 export class FormBase {
     @Output()
     public done = new EventEmitter();
 
     /**
-     * Dialog ref if the form is used in the dialog.
+     * Dialog ref, sidebar ref or any other kind of container that has a destroy method on it.
      * If provided this will add a add and close button option that will close the sidebar when the form is submitted.
      */
     @Input()
-    public dialogRef: MdDialogRef<any>;
-
-    /**
-     * Sidebar ref if the form is used in the sidebar.
-     * If provided this will add a add and close button option that will close the sidebar when the form is submitted.
-     */
-    @Input()
-    public sidebarRef: SidebarRef<any>;
+    public containerRef: ContainerRef;
 
     /**
      * Submit method.
@@ -81,10 +81,13 @@ export class FormBase {
 
     public close() {
         this.done.emit();
-        if (this.dialogRef) {
-            this.dialogRef.close();
-        } else if (this.sidebarRef) {
-            this.sidebarRef.destroy();
+        const container = this.containerRef;
+        if (container instanceof MdDialogRef) {
+            container.close();
+        } else if (container instanceof SidebarRef) {
+            container.destroy();
+        } else {
+            container.destroy();
         }
     }
 

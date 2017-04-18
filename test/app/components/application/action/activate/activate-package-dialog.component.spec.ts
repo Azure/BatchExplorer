@@ -7,7 +7,7 @@ import { Observable } from "rxjs";
 import { ActivatePackageDialogComponent } from "app/components/application/action";
 import { ServerError } from "app/models";
 import { ApplicationService } from "app/services";
-import { ActionFormMockComponent, ServerErrorMockComponent } from "test/utils/mocks/components";
+import { ServerErrorMockComponent, SimpleFormMockComponent } from "test/utils/mocks/components";
 
 describe("ActivatePackageDialogComponent ", () => {
     let fixture: ComponentFixture<ActivatePackageDialogComponent>;
@@ -32,7 +32,7 @@ describe("ActivatePackageDialogComponent ", () => {
 
         TestBed.configureTestingModule({
             imports: [],
-            declarations: [ActionFormMockComponent, ActivatePackageDialogComponent, ServerErrorMockComponent],
+            declarations: [SimpleFormMockComponent, ActivatePackageDialogComponent, ServerErrorMockComponent],
             providers: [
                 { provide: MdDialogRef, useValue: null },
                 { provide: ApplicationService, useValue: appServiceSpy },

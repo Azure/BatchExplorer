@@ -1,10 +1,9 @@
 import { Component, Input } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { MdDialogRef } from "@angular/material";
 import { Observable } from "rxjs";
 
-import { SidebarRef } from "app/components/base/sidebar";
 import { FormSize } from "../complex-form";
+import { ContainerRef } from "../form-base";
 
 
 /**
@@ -38,18 +37,11 @@ export class SimpleFormComponent {
     public stickyFooter: boolean = true;
 
     /**
-     * Dialog ref if the form is used in the dialog.
+     * Dialog ref, sidebar ref or generic container if the form is used in a dialog, sidebar or any other container.
      * If provided this will add a add and close button option that will close the sidebar when the form is submitted.
      */
     @Input()
-    public dialogRef: MdDialogRef<any>;
-
-    /**
-     * Sidebar ref if the form is used in the sidebar.
-     * If provided this will add a add and close button option that will close the sidebar when the form is submitted.
-     */
-    @Input()
-    public sidebarRef: SidebarRef<any>;
+    public containerRef: ContainerRef;
 
     /**
      * Submit method.

@@ -1,4 +1,6 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ContentChildren, Input, QueryList, HostBinding } from "@angular/core";
+import {
+    AfterViewInit, ChangeDetectorRef, Component, ContentChildren, HostBinding, Input, QueryList,
+} from "@angular/core";
 
 import { log } from "app/utils";
 import { FormBase } from "../form-base";

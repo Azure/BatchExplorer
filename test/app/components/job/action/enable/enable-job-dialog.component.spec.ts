@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
 import { EnableJobDialogComponent } from "app/components/job/action";
 import { ServerError } from "app/models";
 import { JobService } from "app/services";
-import { ActionFormMockComponent, ServerErrorMockComponent } from "test/utils/mocks/components";
+import { SimpleFormMockComponent, ServerErrorMockComponent } from "test/utils/mocks/components";
 
 describe("EnableJobDialogComponent ", () => {
     let fixture: ComponentFixture<EnableJobDialogComponent>;
@@ -36,7 +36,7 @@ describe("EnableJobDialogComponent ", () => {
 
         TestBed.configureTestingModule({
             declarations: [
-                ActionFormMockComponent, EnableJobDialogComponent, ServerErrorMockComponent,
+                SimpleFormMockComponent, EnableJobDialogComponent, ServerErrorMockComponent,
             ],
             providers: [
                 { provide: MdDialogRef, useValue: dialogRefSpy },

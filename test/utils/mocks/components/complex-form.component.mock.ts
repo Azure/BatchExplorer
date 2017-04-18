@@ -8,6 +8,11 @@ import { Component, Input } from "@angular/core";
     `,
 })
 export class ComplexFormMockComponent {
+    @Input()
+    public submit: () => any;
+
+    @Input()
+    public containerRef;
 }
 
 @Component({
