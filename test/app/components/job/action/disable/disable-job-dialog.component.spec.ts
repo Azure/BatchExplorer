@@ -1,6 +1,6 @@
 import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MdDialogRef, MdRadioButton, MdRadioGroup, MdUniqueSelectionDispatcher } from "@angular/material";
+import { MdDialogRef, MdRadioButton, MdRadioGroup } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
@@ -15,7 +15,6 @@ describe("DisableJobDialogComponent ", () => {
     let debugElement: DebugElement;
     let dialogRefSpy: any;
     let jobServiceSpy: any;
-    let dispatcher: MdUniqueSelectionDispatcher;
 
     beforeEach(() => {
         dialogRefSpy = {
@@ -36,7 +35,6 @@ describe("DisableJobDialogComponent ", () => {
             }),
         };
 
-        dispatcher = new MdUniqueSelectionDispatcher();
         TestBed.configureTestingModule({
             declarations: [
                 SimpleFormMockComponent, DisableJobDialogComponent, InfoBoxMockComponent, MdRadioButton,
@@ -45,8 +43,6 @@ describe("DisableJobDialogComponent ", () => {
             providers: [
                 { provide: MdDialogRef, useValue: dialogRefSpy },
                 { provide: JobService, useValue: jobServiceSpy },
-                { provide: MdUniqueSelectionDispatcher, useValue: dispatcher },
-
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });

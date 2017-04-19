@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es5",  // Uglify doesn't support es6 yet so we can't have the prod build use es6 https://github.com/mishoo/UglifyJS2/issues/448
+    "target": "es5", // Uglify doesn't support es6 yet so we can't have the prod build use es6 https://github.com/mishoo/UglifyJS2/issues/448
     "module": "es2015",
     "lib": [
+      "dom",
       "es6",
+      "es2015",
       "es2016",
-      "dom"
+      "es2017"
     ],
     "removeComments": false,
     "emitDecoratorMetadata": true,
