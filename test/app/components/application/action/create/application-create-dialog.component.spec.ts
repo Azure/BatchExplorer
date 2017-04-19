@@ -14,7 +14,7 @@ import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";
 import { validateControl } from "test/utils/helpers";
 import { MockedFile } from "test/utils/mocks";
-import { ServerErrorMockComponent, createFormMockComponents } from "test/utils/mocks/components";
+import { ServerErrorMockComponent, complexFormMockComponents } from "test/utils/mocks/components";
 
 describe("ApplicationCreateDialogComponent ", () => {
     let fixture: ComponentFixture<ApplicationCreateDialogComponent>;
@@ -76,7 +76,7 @@ describe("ApplicationCreateDialogComponent ", () => {
         };
 
         TestBed.configureTestingModule({
-            declarations: [...createFormMockComponents, ApplicationCreateDialogComponent, ServerErrorMockComponent],
+            declarations: [...complexFormMockComponents, ApplicationCreateDialogComponent, ServerErrorMockComponent],
             providers: [
                 { provide: FormBuilder, useValue: new FormBuilder() },
                 { provide: SidebarRef, useValue: null },

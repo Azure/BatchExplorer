@@ -4,7 +4,7 @@ import {
 } from "@angular/core";
 
 import { AbstractControl } from "@angular/forms";
-import { CreateFormComponent } from "../create-form";
+import { ComplexFormComponent } from "../complex-form";
 import { FormPickerComponent } from "../form-picker";
 import { FormSectionComponent } from "../form-section";
 
@@ -54,7 +54,7 @@ export class FormPageComponent {
     public openedWith: FormPickerComponent;
 
     // tslint:disable-next-line:no-forward-ref
-    constructor( @Inject(forwardRef(() => CreateFormComponent)) private form: CreateFormComponent) { }
+    constructor( @Inject(forwardRef(() => ComplexFormComponent)) private form: ComplexFormComponent) { }
 
     /**
      * Open the given page. It will push on top of the page stack.

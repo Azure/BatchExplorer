@@ -1,4 +1,4 @@
-<div [class.resize-error]="pool.resizeError" [class.large]="largeIcon" md-tooltip="{{tooltipMessage}}" tooltip-position="{{tooltipPosition}}">
+<div md-tooltip="{{tooltipMessage}}" tooltip-position="{{tooltipPosition}}">
     <i class="fa fa-tv" [ngClass]="largeIcon ? 'fa-2' : ''"></i>
     <span>{{pool.currentDedicated}}</span>
     <span *ngIf="pool.currentDedicated !== pool.targetDedicated">

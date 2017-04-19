@@ -20,7 +20,7 @@ import { SidebarRef } from "./sidebar-ref";
     encapsulation: ViewEncapsulation.None,
     selector: "bl-sidebar-page",
     template: `
-        <div [hidden]="!display">
+        <div [hidden]="!display" style="height: 100%">
                 <template portalHost></template>
         </div>
     `,
