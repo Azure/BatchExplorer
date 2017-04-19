@@ -1,7 +1,7 @@
 <div  class="slideout-form content-wrapper">
     <h1>Edit application</h1>
     <p>Update the display name, default version, or locked status of your application</p>
-    <bl-action-form [submit]="submit" [formGroup]="applicationForm" [sidebarRef]="sidebarRef" submitText="Update">
+    <bl-simple-form [submit]="submit" [formGroup]="applicationForm" [containerRef]="sidebarRef" saveText="Update">
         <form novalidate [formGroup]="applicationForm">
             <div class="form-element pad-top">
                 <md-input-container>
@@ -26,5 +26,5 @@
                 </md-radio-group>
             </div>
         </form>
-    </bl-action-form>
+    </bl-simple-form>
 </div>

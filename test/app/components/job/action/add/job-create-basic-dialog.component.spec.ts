@@ -12,7 +12,7 @@ import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";
 import { validateControl } from "test/utils/helpers";
 import { RxMockListProxy } from "test/utils/mocks";
-import { ServerErrorMockComponent, createFormMockComponents } from "test/utils/mocks/components";
+import { ServerErrorMockComponent, complexFormMockComponents } from "test/utils/mocks/components";
 
 describe("JobCreateBasicDialogComponent ", () => {
     let fixture: ComponentFixture<JobCreateBasicDialogComponent>;
@@ -69,7 +69,7 @@ describe("JobCreateBasicDialogComponent ", () => {
         };
 
         TestBed.configureTestingModule({
-            declarations: [...createFormMockComponents, JobCreateBasicDialogComponent, ServerErrorMockComponent],
+            declarations: [...complexFormMockComponents, JobCreateBasicDialogComponent, ServerErrorMockComponent],
             providers: [
                 { provide: FormBuilder, useValue: new FormBuilder() },
                 { provide: SidebarRef, useValue: sidebarRefSpy },
