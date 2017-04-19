@@ -95,8 +95,6 @@ CodeMirror.registerHelper("hint", "autoscale", (editor) => {
         return item.match(regex);
     })).concat(timeInterval.filter((item) => {
         return item.match(regex);
-    })).concat(keywords.filter((item) => {
-        return item.match(regex);
     }));
     return {
         list: (!curWord ? [] : results).sort(),
