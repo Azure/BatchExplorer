@@ -37,7 +37,7 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
     constructor(private poolService: PoolService, private nodeService: NodeService) {
         this.poolData = poolService.get(null);
         this.data = nodeService.list(null, {
-            maxResults: 1000,
+            pageSize: 1000,
             select: "recentTasks,id,state",
         });
 

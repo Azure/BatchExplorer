@@ -1,5 +1,5 @@
-import { AccessToken } from "app/services";
 import { Constants } from "app/utils";
+import { AccessToken } from "./access-token";
 
 /**
  * Hellper class to storage the access tokens in memory and in the localstorage.

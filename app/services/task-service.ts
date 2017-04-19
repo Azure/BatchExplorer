@@ -9,6 +9,7 @@ import { FilterBuilder } from "app/utils/filter-builder";
 import { BatchClientService } from "./batch-client.service";
 import {
     DataCache,
+    ListOptionsAttributes,
     RxBatchEntityProxy,
     RxBatchListProxy,
     RxEntityProxy,
@@ -16,7 +17,7 @@ import {
     TargetedDataCache,
     getOnceProxy,
 } from "./core";
-import { CommonListOptions, ServiceBase } from "./service-base";
+import { ServiceBase } from "./service-base";
 
 export interface TaskListParams {
     jobId?: string;
@@ -31,7 +32,7 @@ export interface SubtaskListParams {
     taskId?: string;
 }
 
-export interface TaskListOptions extends CommonListOptions {
+export interface TaskListOptions extends ListOptionsAttributes {
 }
 
 @Injectable()
@@ -111,7 +112,7 @@ export class TaskService extends ServiceBase {
     public getMultiple(jobId: string, taskIds: string[], properties?: string): Observable<List<Task>> {
         let options: TaskListOptions = {
             filter: FilterBuilder.or(...taskIds.map(id => FilterBuilder.prop("id").eq(id))).toOData(),
-            maxResults: taskIds.length,
+            pageSize: taskIds.length,
         };
 
         if (properties) {

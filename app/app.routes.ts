@@ -2,7 +2,6 @@
 import { Routes } from "@angular/router";
 
 import { Constants } from "app/utils";
-// component imports for routing
 import { AccountDefaultComponent, AccountDetailsComponent } from "./components/account/details";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
 import { ApplicationDefaultComponent, ApplicationDetailsComponent } from "./components/application/details";
@@ -82,6 +81,14 @@ export const routes: Routes = [
         path: "jobs/:jobId/tasks/:taskId/files/:filename",
         component: FileHomeComponent,
         data: { type: Constants.FileSourceTypes.Job },
+        children: [
+            { path: "", component: FileDetailsComponent },
+        ],
+    },
+    {
+        path: "jobs/:jobId/tasks/:taskId/:outputKind/blobs/:filename",
+        component: FileHomeComponent,
+        data: { type: Constants.FileSourceTypes.Blob },
         children: [
             { path: "", component: FileDetailsComponent },
         ],

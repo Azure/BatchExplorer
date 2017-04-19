@@ -1,11 +1,13 @@
 import { Location } from "@angular/common";
 import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
-import { MdSidenav } from "@angular/material";
+import { MdIconRegistry, MdSidenav } from "@angular/material";
 import { Observable } from "rxjs";
 
+import { DomSanitizer } from "@angular/platform-browser";
+import { registerIcons } from "app/config";
 import {
-    AccountService, AdalService, CommandService, NodeService,
-    SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
+    AccountService, AdalService, AutoscaleFormulaService, CommandService, NodeService,
+    PricingService, SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
 } from "app/services";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
@@ -31,7 +33,10 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     constructor(
         private location: Location,
+        mdIconRegistry: MdIconRegistry,
+        sanitizer: DomSanitizer,
         private sidebarManager: SidebarManager,
+        private autoscaleFormulaService: AutoscaleFormulaService,
         private settingsService: SettingsService,
         private commandService: CommandService,
         private adalService: AdalService,
@@ -39,10 +44,14 @@ export class AppComponent implements AfterViewInit, OnInit {
         private subscriptionService: SubscriptionService,
         private nodeService: NodeService,
         private sshKeyService: SSHKeyService,
+        private pricingService: PricingService,
         private vmSizeService: VmSizeService) {
+        this.autoscaleFormulaService.init();
         this.settingsService.init();
         this.sshKeyService.init();
         this.commandService.init();
+        // Init the pricing when good to go.
+        // this.pricingService.init();
         this.vmSizeService.init();
         this.adalService.init(adalConfig);
         this.accountService.loadInitialData();
@@ -59,6 +68,8 @@ export class AppComponent implements AfterViewInit, OnInit {
         accountService.currentAccount.filter(x => Boolean(x)).first().subscribe((x) => {
             this._preloadData();
         });
+
+        registerIcons(mdIconRegistry, sanitizer);
     }
 
     public ngAfterViewInit() {

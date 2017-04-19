@@ -18,4 +18,4 @@ import "hammerjs";
 import "moment-duration-format";
 import "../utils/matchers";
 
-import "../../app/assets/styles/main.scss";
+import "../../app/styles/main.scss";

@@ -1,5 +1,5 @@
 <bl-loading [status]="data.newDataStatus | async">
-    <div *ngIf="pool">
+    <div *ngIf="pool && poolDecorator">
         <md-card class="overview">
             <md-card-title-group style="margin: 0px;">
                 <div style="align-items:center;">
@@ -14,8 +14,9 @@
                 </div>
             </md-card-title-group>
             <md-card-content>
-                <p>Last resized {{lastResize}}</p>
-                <p><i class="fa fa-{{poolOsIcon}}" aria-hidden="true"></i> {{poolOs}}</p>
+                <p>Last resized {{poolDecorator.lastResized}}</p>
+                <p><i class="fa fa-{{poolDecorator.poolOsIcon}}" aria-hidden="true"></i> {{poolDecorator.poolOs}}</p>
+                <bl-tags [tags]="pool.tags" [editable]="true" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
             </md-card-content>
             <md-card-actions layout="row" layout-align="end center">
                 <bl-add-button title="Add job" (click)="addJob()"></bl-add-button>

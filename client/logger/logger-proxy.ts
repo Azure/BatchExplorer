@@ -7,7 +7,7 @@ import { Constants } from "../client-constants";
 mkdirp.sync(path.join(Constants.root, "logs"));
 
 export const logger = bunyan.createLogger({
-    name: "BatchExplorer Main",
+    name: "BatchLabs Main",
     level: "debug",
     streams: [
         { stream: process.stderr },
@@ -21,7 +21,7 @@ export const logger = bunyan.createLogger({
 });
 
 export const renderLogger = bunyan.createLogger({
-    name: "BatchExplorer Render",
+    name: "BatchLabs Render",
     level: "debug",
     streams: [
         { stream: process.stderr },

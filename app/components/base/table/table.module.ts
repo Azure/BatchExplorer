@@ -3,11 +3,10 @@ import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 
 import { FocusSectionModule } from "../focus-section";
+import { TableCellComponent } from "./table-cell.component";
+import { TableColumnComponent } from "./table-column.component";
 import { TableRowComponent } from "./table-row.component";
-
 import {
-    TableCellComponent,
-    TableColumnComponent,
     TableComponent,
     TableHeadComponent,
 } from "./table.component";

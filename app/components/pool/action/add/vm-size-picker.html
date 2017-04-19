@@ -1,32 +1,24 @@
-<h3>Choose a virtual machine size</h3>
 <md-tab-group class="form-tabs">
     <md-tab *ngFor="let category of categoryNames" [label]="categoryLabelName(category)">
-        <div class="vm-size-list">
-            <button *ngFor="let size of categories[category]" class="vm-size" (click)="pickSize(size)" [class.active]="size.name === pickedSize">
-                <div class="title" [title]="size.name">{{prettyTitle(size.name)}}</div>
-                <!--TODO link to billing data-->
-                <!--<div class="pricing">
-                    $50/mo
-                </div>-->
-                <div class="details">
-                    <div>
-                        <span class="value">{{size.numberOfCores}} </span>
-                        <span class="label">cores</span>
-                    </div>
-                    <div>
-                        <span class="value">{{prettyMb(size.memoryInMB)}}</span>
-                        <span class="label">Ram</span>
-                    </div>
-                    <div>
-                        <span class="value">{{prettyMb(size.osDiskSizeInMB)}}</span>
-                        <span class="label">OS disk</span>
-                    </div>
-                    <div>
-                        <span class="value">{{prettyMb(size.resourceDiskSizeInMB)}}</span>
-                        <span class="label">Temp disk</span>
-                    </div>
-                </div>
-            </button>
-        </div>
+        <bl-focus-section>
+            <bl-table [activeItem]="pickedSize" (activeItemChange)="pickSize($event)">
+                <bl-thead>
+                    <bl-column [sortable]="true">Name</bl-column>
+                    <!--<bl-column [sortable]="true">Price per node(Monthly)</bl-column>-->
+                    <bl-column [sortable]="true">Cores</bl-column>
+                    <bl-column [sortable]="true">RAM</bl-column>
+                    <bl-column [sortable]="true">OS Disk</bl-column>
+                    <bl-column [sortable]="true">Resource/Temp Disk</bl-column>
+                </bl-thead>
+                <bl-row *ngFor="let size of categories[category]" [key]="size.vmSize.name">
+                    <bl-cell [value]="size.vmSize.name">{{size.title}}</bl-cell>
+                    <!--<bl-cell [value]="size.price">{{size.prettyPrice}}</bl-cell>-->
+                    <bl-cell [value]="size.vmSize.numberOfCores"></bl-cell>
+                    <bl-cell [value]="size.vmSize.memoryInMB">{{size.prettyRAM}}</bl-cell>
+                    <bl-cell [value]="size.vmSize.osDiskSizeInMB">{{size.prettyOSDiskSize}}</bl-cell>
+                    <bl-cell [value]="size.vmSize.resourceDiskSizeInMB">{{size.prettyResourceDiskSize}}</bl-cell>
+                </bl-row>
+            </bl-table>
+        </bl-focus-section>
     </md-tab>
 </md-tab-group>

@@ -1,5 +1,6 @@
 import { Pool } from "app/models";
 import { DecoratorBase } from "app/utils/decorators";
+import * as moment from "moment";
 import { CloudServiceConfigurationDecorator } from "./cloud-service-configuration-decorator";
 import { TaskSchedulingPolicyDecorator } from "./task-scheduling-policy-decorator";
 import { VirtualMachineConfigurationDecorator } from "./virtual-machine-configuration-decorator";
@@ -13,7 +14,7 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     public creationTime: string;
     public currentDedicated: string;
     public displayName: string;
-    public enableAutoscale: string;
+    public enableAutoScale: string;
     public enableInterNodeCommunication: string;
     public id: string;
     public lastModified: string;
@@ -23,14 +24,18 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     public state: string;
     public stateTransitionTime: string;
     public targetDedicated: string;
+    public autoScaleFormula: string;
+    public autoScaleEvaluationInterval: string;
     public taskSchedulingPolicy: TaskSchedulingPolicyDecorator;
     public url: string;
     public virtualMachineConfiguration: VirtualMachineConfigurationDecorator;
     public vmSize: string;
+    public poolOs: string;
+    public poolOsIcon: string;
+    public lastResized: string;
 
     constructor(private pool?: Pool) {
         super(pool);
-
         this.allocationState = this.stateField(pool.allocationState);
         this.allocationStateTransitionTime = this.dateField(pool.allocationStateTransitionTime);
         this.cloudServiceConfiguration =
@@ -38,7 +43,7 @@ export class PoolDecorator extends DecoratorBase<Pool> {
         this.creationTime = this.dateField(pool.creationTime);
         this.currentDedicated = this.stringField(pool.currentDedicated);
         this.displayName = this.stringField(pool.displayName);
-        this.enableAutoscale = this.booleanField(pool.enableAutoscale);
+        this.enableAutoScale = this.booleanField(pool.enableAutoScale);
         this.enableInterNodeCommunication = this.booleanField(pool.enableInterNodeCommunication);
         this.id = this.stringField(pool.id);
         this.lastModified = this.dateField(pool.lastModified);
@@ -48,43 +53,51 @@ export class PoolDecorator extends DecoratorBase<Pool> {
         this.state = this.stateField(pool.state);
         this.stateTransitionTime = this.dateField(pool.stateTransitionTime);
         this.targetDedicated = this.stringField(pool.targetDedicated);
+        this.autoScaleFormula = this.stringField(pool.autoScaleFormula);
+        this.autoScaleEvaluationInterval = this.timespanField(pool.autoScaleEvaluationInterval);
         this.taskSchedulingPolicy =
             new TaskSchedulingPolicyDecorator(pool.taskSchedulingPolicy);
         this.url = this.stringField(pool.url);
         this.virtualMachineConfiguration =
             new VirtualMachineConfigurationDecorator(pool.virtualMachineConfiguration || <any>{});
         this.vmSize = this.stringField(pool.vmSize);
+
+        this.poolOs = this._computePoolOs();
+        this.poolOsIcon = this._computePoolOsIcon(this.poolOs);
+
+        this.lastResized = moment(this.pool.allocationStateTransitionTime).fromNow();
     }
 
-    public get poolOs(): string {
-        if (this.pool.cloudServiceConfiguration) {
-            let osName: string;
-            let osFamily = this.pool.cloudServiceConfiguration.osFamily;
+    private _computePoolOs(): string {
+        const { cloudServiceConfiguration, virtualMachineConfiguration } = this.pool;
+        if (cloudServiceConfiguration) {
+            let osFamily = cloudServiceConfiguration.osFamily;
 
             if (osFamily === 2) {
-                osName = "Windows Server 2008 R2 SP1";
+                return "Windows Server 2008 R2 SP1";
             } else if (osFamily === 3) {
-                osName = "Windows Server 2012";
+                return "Windows Server 2012";
             } else {
-                osName = "Windows Server 2012 R2";
+                return "Windows Server 2012 R2";
+            }
+        }
+
+        if (virtualMachineConfiguration) {
+            if (virtualMachineConfiguration.imageReference.publisher ===
+                "MicrosoftWindowsServer") {
+                return `Windows Server ${virtualMachineConfiguration.imageReference.sku}`;
             }
 
-            return osName;
+            const { offer, sku } = virtualMachineConfiguration.imageReference;
+
+            return `${offer} ${sku}`;
         }
 
-        if (this.pool.virtualMachineConfiguration.imageReference.publisher ===
-            "MicrosoftWindowsServer") {
-            let osName = "Windows Server";
-            osName += this.pool.virtualMachineConfiguration.imageReference.sku;
-
-            return osName;
-        }
-
-        return "Linux";
+        return "Unknown";
     }
 
-    public get poolOsIcon(): string {
-        if (this.poolOs.includes("Windows")) {
+    private _computePoolOsIcon(os): string {
+        if (os.includes("Windows")) {
             return "windows";
         }
 

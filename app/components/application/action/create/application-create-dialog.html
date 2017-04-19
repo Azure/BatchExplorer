@@ -1,8 +1,6 @@
-<div  class="slideout-form content-wrapper">
-    <h1>{{ title }}</h1>
-    <p>{{ description }}</p>
-    <bl-create-form [formGroup]="applicationForm" [submit]="submit" [sidebarRef]="sidebarRef">
-        <form novalidate [formGroup]="applicationForm">
+<bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef">
+    <bl-form-page main-form-page [title]="title" [subtitle]="description" [formGroup]="form">
+        <bl-form-section title="General info" subtitle="Basic information about the application">
             <div class="form-element">
                 <md-input-container>
                     <input mdInput formControlName="id" placeholder="Application identifier">
@@ -20,18 +18,18 @@
                 <bl-error controlName="version" code="maxlength">Package version has a maximum length of 64 characters</bl-error>
                 <bl-error controlName="version" code="pattern">Package version can only be in the format: 1, 1.2, 1.2a, 1.200.1, beta, etc</bl-error>
             </div>
-
+        </bl-form-section>
+        <bl-form-section title="Package" subtitle="Select a package for upload">
             <div class="form-element">
-                <h4>Select a package for upload</h4>
                 <input type="file" (change)="fileSelected($event)" />
                 <bl-error controlName="package" code="required">Please select a valid application package file</bl-error>
                 <bl-error controlName="package" code="pattern">Application packages need to be valid ZIP files only</bl-error>
                 <div *ngIf="hasValidFile()" class="input-summary">
                     <h4>Selected file details</h4>
                     <p><b>{{ file.name }}</b> ({{ prettyFileSize(file.size) }})</p>
-                    <p *ngIf="progress"><b>Progress:</b>  {{ progress }}</p>
+                    <p *ngIf="progress"><b>Progress:</b> {{ progress }}</p>
                 </div>
             </div>
-        </form>
-    </bl-create-form>
-</div>
+        </bl-form-section>
+    </bl-form-page>
+</bl-complex-form>

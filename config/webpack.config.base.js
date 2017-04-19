@@ -51,6 +51,7 @@ const baseConfig = {
     },
     plugins: [
         new CheckerPlugin(),
+
         new CopyWebpackPlugin([
             { from: "./client/splash-screen/**/*" },
         ]),

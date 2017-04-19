@@ -12,9 +12,7 @@ before_script:
   - sleep 3
 
 script:
-  - npm run build -s
-  - npm run test -s
-  - npm run lint -s
+    - ./scripts/travis/build-and-test.sh
 
 branches:
   only:

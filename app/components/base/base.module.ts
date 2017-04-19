@@ -5,6 +5,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 
 // components
+import { IconComponent } from "app/components/base/icon";
 import { AdvancedFilterModule } from "./advanced-filter";
 import { BackgroundTaskModule } from "./background-task";
 import { BannerComponent, BannerOtherFixDirective } from "./banner";
@@ -30,6 +31,7 @@ import { ScrollableModule } from "./scrollable";
 import { SidebarModule } from "./sidebar";
 import { TableModule } from "./table";
 import { TabsModule } from "./tabs";
+import { TagsModule } from "./tags";
 
 // Add submodules there
 const modules = [
@@ -49,6 +51,7 @@ const modules = [
     SidebarModule,
     TableModule,
     TabsModule,
+    TagsModule,
     FormModule,
     ScrollableModule,
 ];
@@ -59,6 +62,7 @@ const components = [
     BannerOtherFixDirective,
     ElapsedTimeComponent,
     EntityDetailsListComponent,
+    IconComponent,
     ListAndShowLayoutComponent,
     SimpleLoadingComponent,
     LoadingComponent,

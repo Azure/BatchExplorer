@@ -1,13 +1,11 @@
-import { BatchRequestOptions } from "./models";
-import { DeleteProxy, GetProxy, ListProxy } from "./shared";
+import { ServiceClient } from "azure-batch";
+
+import * as models from "./batch-models";
+import { ListProxy, mapGet, wrapOptions } from "./shared";
 
 export default class JobProxy {
-    private _getProxy: GetProxy;
-    private _deleteProxy: DeleteProxy;
 
-    constructor(private client: any) {
-        this._getProxy = new GetProxy(this.client.job);
-        this._deleteProxy = new DeleteProxy(this.client.job);
+    constructor(private client: ServiceClient) {
     }
 
     /**
@@ -15,8 +13,8 @@ export default class JobProxy {
      * http://azure.github.io/azure-sdk-for-node/azure-batch/latest/Job.html#list
      * @param options: Optional Parameters.
      */
-    public list(options?: BatchRequestOptions) {
-        return new ListProxy(this.client.job, null, { jobListOptions: options });
+    public list(options?: models.JobListOptions) {
+        return new ListProxy(this.client.job, null, wrapOptions({ jobListOptions: options }));
     }
 
     /**
@@ -25,8 +23,8 @@ export default class JobProxy {
      * @param jobId: The id of the job.
      * @param options: Optional Parameters.
      */
-    public get(jobId: string, options?: BatchRequestOptions) {
-        return this._getProxy.execute([jobId], { jobGetOptions: options });
+    public get(jobId: string, options?: models.JobGetOptions): Promise<any> {
+        return mapGet(this.client.job.get(jobId, wrapOptions({ jobGetOptions: options })));
     }
 
     /**
@@ -35,8 +33,8 @@ export default class JobProxy {
      * @param jobId: The id of the job to terminate.
      * @param options: Optional Parameters.
      */
-    public delete(jobId: string, options?: any) {
-        return this._deleteProxy.execute([jobId], { jobDeleteMethodOptions: options });
+    public delete(jobId: string, options?: any): Promise<any> {
+        return this.client.job.deleteMethod(jobId, wrapOptions(options));
     }
 
     /**
@@ -45,13 +43,8 @@ export default class JobProxy {
      * @param jobId: The id of the job to terminate.
      * @param options: Optional Parameters.
      */
-    public terminate(jobId: string, options?: any) {
-        return new Promise((resolve, reject) => {
-            this.client.job.terminate(jobId, { jobTerminateOptions: options }, (error, result) => {
-                if (error) { return reject(error); }
-                return resolve();
-            });
-        });
+    public terminate(jobId: string, options?: any): Promise<any> {
+        return this.client.job.terminate(jobId, wrapOptions(options));
     }
 
     /**
@@ -62,13 +55,8 @@ export default class JobProxy {
      *  Possible values include: 'requeue', 'terminate', 'wait'
      * @param options: Optional Parameters.
      */
-    public disable(jobId: string, disableTasks: string, options?: any) {
-        return new Promise((resolve, reject) => {
-            this.client.job.disable(jobId, disableTasks, { jobDisableOptions: options }, (error, result) => {
-                if (error) { return reject(error); }
-                return resolve();
-            });
-        });
+    public disable(jobId: string, disableTasks: string, options?: any): Promise<any> {
+        return this.client.job.disable(jobId, disableTasks, wrapOptions(options));
     }
 
     /**
@@ -77,13 +65,8 @@ export default class JobProxy {
      * @param jobId: The id of the job to enable.
      * @param options: Optional Parameters.
      */
-    public enable(jobId: string, options?: any) {
-        return new Promise((resolve, reject) => {
-            this.client.job.enable(jobId, { jobEnableOptions: options }, (error, result) => {
-                if (error) { return reject(error); }
-                return resolve();
-            });
-        });
+    public enable(jobId: string, options?: any): Promise<any> {
+        return this.client.job.enable(jobId, wrapOptions(options));
     }
 
     /**
@@ -92,12 +75,11 @@ export default class JobProxy {
      * @param job: The job object
      * @param options: Optional Parameters.
      */
-    public add(job: any, options?: any) {
-        return new Promise((resolve, reject) => {
-            this.client.job.add(job, { jobAddOptions: options }, (error, result) => {
-                if (error) { return reject(error); }
-                return resolve();
-            });
-        });
+    public add(job: any, options?: any): Promise<any> {
+        return this.client.job.add(job, wrapOptions(options));
+    }
+
+    public patch(jobId: string, attributes: any, options?: any): Promise<any> {
+        return this.client.job.patch(jobId, attributes, wrapOptions(options));
     }
 }

@@ -42,6 +42,7 @@ export const FileUrlStrings = {
 export const FileSourceTypes = {
     Job: "job",
     Pool: "pool",
+    Blob: "blob",
 };
 
 export const forms = {
@@ -66,6 +67,7 @@ export const forms = {
 
 export const SavedDataFilename = {
     sshPublicKeys: "ssh-pub-keys.json",
+    autosacleFormula: "autoscale-formula.json",
 };
 
 export const localStorageKey = {
@@ -99,6 +101,8 @@ export const sessionStorageKey = {
 
 export const ApiVersion = {
     arm: "2016-09-01",
+    armClassicStorage: "2016-11-01",
+    armStorage: "2016-12-01",
     armBatch: "2015-12-01",
     compute: "2017-03-30",
 };
@@ -121,4 +125,15 @@ export const Environment = {
 
 export const ServiceUrl = {
     arm: "https://management.azure.com",
+    githubRaw: "https://raw.githubusercontent.com",
+};
+
+export const APIErrorCodes = {
+    containerNotFound: "ContainerNotFound",
+    operationInvalidForCurrentState: "OperationInvalidForCurrentState",
+    authenticationFailed: "AuthenticationFailed",
+};
+
+export const MetadataInternalKey = {
+    tags: "_bl_tags",
 };

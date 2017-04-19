@@ -1,4 +1,5 @@
 import { app, protocol } from "electron";
+
 import * as path from "path";
 import { windows } from "./core";
 

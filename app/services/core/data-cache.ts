@@ -39,11 +39,17 @@ export class DataCache<T> {
     public items: Observable<Map<string, T>>;
     public deleted: Observable<string>;
 
+    /**
+     * Notification when the cache is being cleared
+     */
+    public cleared: Observable<void>;
+
     public queryCache = new QueryCache();
     public pollService = new PollService();
 
     private _items = new BehaviorSubject<Map<string, T>>(Map<string, T>({}));
     private _deleted = new Subject<string>();
+    private _cleared = new Subject<void>();
 
     /**
      * @param _uniqueField Each record should have a unqiue field. This is used to update the cache.
@@ -52,11 +58,13 @@ export class DataCache<T> {
         this.id = SecureUtils.uuid();
         this.items = this._items.asObservable();
         this.deleted = this._deleted.asObservable();
+        this.cleared = this._cleared.asObservable();
         DataCacheTracker.registerCache(this);
     }
 
     public clear() {
         this.queryCache.clearCache();
+        this._cleared.next();
         this._items.next(Map<string, T>({}));
     }
 
@@ -78,6 +86,7 @@ export class DataCache<T> {
         const key = this.getItemKey(item);
         const newItems = this._items.getValue().merge({ [key]: this._computeNewItem(item, key, select) });
         this._items.next(newItems);
+
         return key;
     }
 
@@ -88,13 +97,13 @@ export class DataCache<T> {
      */
     public addItems(items: T[], select?: string): string[] {
         const newItems: { [key: string]: T } = {};
-
         const keys = [];
         for (let item of items) {
             const key = this.getItemKey(item);
             keys.push(key);
             newItems[key] = this._computeNewItem(item, key, select);
         }
+
         this._items.next(this._items.getValue().merge(newItems));
         return keys;
     }

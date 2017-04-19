@@ -1,9 +1,6 @@
-<div class="slideout-form content-wrapper">
-    <h1>{{title}}</h1>
-    <p>{{subtitle}}</p>
-
-    <bl-create-form [formGroup]="form" [submit]="submit" [sidebarRef]="sidebarRef" [multiUse]="multiUse" [actionName]="actionName">
-        <form novalidate [formGroup]="form">
+<bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef" [multiUse]="multiUse" [actionName]="actionName">
+    <bl-form-page main-form-page [title]="title" [formGroup]="form">
+        <bl-form-section title="General info" subtitle="Basic information about the task">
             <div class="form-element">
                 <md-input-container>
                     <input mdInput formControlName="id" placeholder="Id">
@@ -35,9 +32,9 @@
                     <bl-error controlName="maxTaskRetryCount" code="validateRange">Retry count values can range from -1 to 100</bl-error>
                 </div>
             </div>
-
-            <h4>Resource files</h4>
+        </bl-form-section>
+        <bl-form-section title="Resource files" subtitle="List of files to be used by this task">
             <bl-resourcefile-picker formControlName="resourceFiles"></bl-resourcefile-picker>
-        </form>
-    </bl-create-form>
-</div>
+        </bl-form-section>
+    </bl-form-page>
+</bl-complex-form>

@@ -1,4 +1,5 @@
 import { Dto, DtoAttr } from "app/core";
+import * as moment from "moment";
 import { CloudServiceConfiguration } from "./cloud-service-configuration.dto";
 import { MetaDataDto } from "./metadata.dto";
 import { VirtualMachineConfiguration } from "./virtual-machine-configuration.dto";

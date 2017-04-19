@@ -2,11 +2,12 @@ import { Component, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
 import { MdDialog, MdDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
-import * as Moment from "moment";
+import { List } from "immutable";
 import { Subscription } from "rxjs";
 
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { Pool } from "app/models";
+import { PoolDecorator } from "app/models/decorators";
 import { PoolParams, PoolService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
 import { SidebarManager } from "../../base/sidebar";
@@ -18,7 +19,7 @@ import { PoolCreateBasicDialogComponent } from "../action";
     templateUrl: "pool-details.html",
 })
 export class PoolDetailsComponent implements OnInit, OnDestroy {
-    public static breadcrumb({id}, {tab}) {
+    public static breadcrumb({ id }, { tab }) {
         let label = tab ? `Pool - ${tab}` : "Pool";
         return {
             name: id,
@@ -27,10 +28,16 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
     }
 
     public poolId: string;
-    public pool: Pool;
+    public poolDecorator: PoolDecorator;
+    public set pool(pool: Pool) {
+        this._pool = pool;
+        this.poolDecorator = pool && new PoolDecorator(pool);
+    }
+    public get pool() { return this._pool; };
     public data: RxEntityProxy<PoolParams, Pool>;
 
     private _paramsSubscriber: Subscription;
+    private _pool: Pool;
 
     constructor(
         private router: Router,
@@ -99,44 +106,6 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         });
     }
 
-    // TODO: Move all of these to pool decorator
-    public get poolOs(): string {
-        if (this.pool.cloudServiceConfiguration) {
-            let osName: string;
-            let osFamily = this.pool.cloudServiceConfiguration.osFamily;
-
-            if (osFamily === 2) {
-                osName = "Windows Server 2008 R2 SP1";
-            } else if (osFamily === 3) {
-                osName = "Windows Server 2012";
-            } else if (osFamily === 4) {
-                osName = "Windows Server 2012 R2";
-            } else {
-                osName = "Windows Server 2016";
-            }
-
-            return osName;
-        }
-
-        if (this.pool.virtualMachineConfiguration.imageReference.publisher ===
-            "MicrosoftWindowsServer") {
-            let osName = "Windows Server";
-            osName += this.pool.virtualMachineConfiguration.imageReference.sku;
-
-            return osName;
-        }
-
-        return "Linux";
-    }
-
-    public get poolOsIcon(): string {
-        if (this.poolOs.includes("Windows")) {
-            return "windows";
-        }
-
-        return "linux";
-    }
-
     public get nodesTooltipMessage() {
         if (this.pool.resizeError) {
             return "There was a resize error";
@@ -147,7 +116,10 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         }
     }
 
-    public get lastResize(): string {
-        return Moment(this.pool.allocationStateTransitionTime).fromNow();
+    @autobind()
+    public updateTags(newTags: List<string>) {
+        return this.poolService.updateTags(this.pool, newTags).flatMap(() => {
+            return this.data.refresh();
+        });
     }
 }

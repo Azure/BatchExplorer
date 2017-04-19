@@ -1,0 +1,20 @@
+<button #button class="form-picker" (click)="openPicker()" [class.has-value]="hasValue">
+    <div *ngIf="!hasValue" class="no-value-content">
+        <i class="fa fa-plus"></i> <ng-content select="[no-value-title]"></ng-content>
+    </div>
+    <div *ngIf="hasValue" class="content">
+        <div class="details">
+            <div class="title"><ng-content select="[value-title]"></ng-content></div>
+            <div class="subtitle"><ng-content select="[value-subtitle]"></ng-content></div>
+        </div>
+        <div class="clear-btn" (click)="clearPicker($event)">
+            <button md-mini-fab><i class="fa fa-times"></i></button>
+        </div>
+    </div>
+
+    <bl-form-page #page [title]="name" [formGroup]="nestedValue" (submit)="nestedFormSubmit()" (cancel)="nestedFormCanceled()">
+        <bl-form-section>
+            <ng-content select="[nested-form]"></ng-content>
+        </bl-form-section>
+    </bl-form-page>
+</button>

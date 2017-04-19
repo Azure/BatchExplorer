@@ -1,0 +1,63 @@
+bl-server-error {
+    display: block;
+
+    &.error-in-list {
+        margin: 10px 0;
+    }
+}
+
+.error-banner {
+    background: $red;
+    color: $whiteSmoke;
+    > .content {
+        padding: 10px;
+    }
+
+    > .content > .main-content {
+        display: flex;
+        position: relative;
+
+        h4, p, table {
+            color: $whiteSmoke;
+            font-size: 12px;
+        }
+
+        h4 {
+            font-size: 24px;
+            font-weight: 300;
+        }
+
+        .main-info {
+            flex: 1;
+            margin-right: 10px;
+        }
+    }
+
+    .troubleshoot-btn {
+        font-size: 1.5em;
+        cursor: pointer;
+        z-index: 10;
+
+        i {
+            border: 1px solid $red-dark;
+            border-radius: 3px;
+            padding: 3px;
+            &:hover {
+                background-color: $red-dark;
+            }
+        }
+    }
+
+    .troubleshoot-info {
+        padding: 10px;
+        border-top: 1px solid $red-dark;
+
+        table {
+            font-size: 1em;
+            color: $whiteSmoke;
+        }
+        td {
+            padding-right: 10px;
+        }
+    }
+}

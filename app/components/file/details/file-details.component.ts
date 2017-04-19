@@ -3,10 +3,13 @@ import { ActivatedRoute } from "@angular/router";
 import { autobind } from "core-decorators";
 import { remote } from "electron";
 import { writeFile } from "fs";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
-import { FileService } from "app/services";
-import { Constants, FileUrlUtils } from "app/utils";
+import { NotificationService } from "app/components/base/notifications";
+import { File, ServerError } from "app/models";
+import { FileService, StorageService } from "app/services";
+import { RxEntityProxy } from "app/services/core";
+import { Constants, FileUrlUtils, log, prettyBytes } from "app/utils";
 
 @Component({
     selector: "bl-file-details",
@@ -23,14 +26,20 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     public poolId: string;
     public url: string;
     public filename: string;
-    public contentSize: number;
+    public contentSize: string;
     public downloadEnabled: boolean;
+    public outputKind: string;
 
     private _sourceType: string;
     private _paramsSubscribers: Subscription[] = [];
+    private _propertyProxy: RxEntityProxy<any, File>;
 
-    constructor(private route: ActivatedRoute, private fileService: FileService) {
-        this.downloadEnabled = false;
+    constructor(
+        private route: ActivatedRoute,
+        private fileService: FileService,
+        private notificationService: NotificationService,
+        private storageService: StorageService) {
+        this.downloadEnabled = true;
     }
 
     public ngOnInit() {
@@ -43,32 +52,11 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
             this.taskId = params["taskId"];
             this.poolId = params["poolId"];
             this.nodeId = params["nodeId"];
+            this.outputKind = params["outputKind"];
             this.filename = params["filename"];
-            if (this._sourceType === Constants.FileSourceTypes.Job) {
-                let propertiesProxy = this.fileService.getFilePropertiesFromTask(
-                    this.jobId, this.taskId, this.filename);
 
-                propertiesProxy.fetch().subscribe((details: any) => {
-                    this.url = decodeURIComponent(details.url);
-                    this.contentSize = details.properties.contentLength;
-                });
-            } else {
-                let propertiesProxy = this.fileService.getFilePropertiesFromComputeNode(
-                    this.poolId, this.nodeId, this.filename);
-
-                propertiesProxy.fetch().subscribe((details: any) => {
-                    this.url = decodeURIComponent(details.url);
-                    this.contentSize = details.properties.contentLength;
-                });
-
-                this.downloadEnabled = true;
-            }
+            this._loadFileProperties();
         }));
-
-    }
-
-    public update() {
-        return;
     }
 
     public ngOnDestroy() {
@@ -77,7 +65,7 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public refresh() {
-        return;
+        return Observable.of({});
     }
 
     public downloadFile() {
@@ -93,8 +81,39 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         }
     }
 
-    private _saveFile(fileName) {
-        if (fileName === undefined) {
+    private _loadFileProperties(): void {
+        if (this._sourceType === Constants.FileSourceTypes.Job) {
+            // it's a file from a job's task
+            this._propertyProxy = this.fileService.getFilePropertiesFromTask(
+                this.jobId, this.taskId, this.filename);
+
+        } else if (this._sourceType === Constants.FileSourceTypes.Pool) {
+            // it's a file from a node
+            this._propertyProxy = this.fileService.getFilePropertiesFromComputeNode(
+                this.poolId, this.nodeId, this.filename);
+
+        } else if (this._sourceType === Constants.FileSourceTypes.Blob) {
+            // it's a file from blob storage
+            this._propertyProxy = this.storageService.getBlobProperties(
+                this.jobId,
+                this.taskId,
+                this.outputKind,
+                this.filename,
+            );
+        } else {
+            throw "Unrecognised source type: " + this._sourceType;
+        }
+
+        this._propertyProxy.fetch().subscribe((details: any) => {
+            this.contentSize = prettyBytes(details.properties.contentLength);
+            this.url = decodeURIComponent(details.url);
+        });
+
+        this._propertyProxy = null;
+    }
+
+    private _saveFile(pathToFile) {
+        if (pathToFile === undefined) {
             return;
         }
 
@@ -102,14 +121,38 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         if (obj.type === Constants.FileSourceTypes.Job) {
             this.fileService.getFileContentFromTask(
                 this.jobId, this.taskId, this.filename).subscribe((data) => {
-                    writeFile(fileName, data.content);
+                    this._writeToFile(pathToFile, data.content);
                 });
-        } else {
+
+        } else if (this._sourceType === Constants.FileSourceTypes.Pool) {
             this.fileService.getFileContentFromComputeNode(
                 this.poolId, this.nodeId, this.filename).subscribe((data) => {
-                    writeFile(fileName, data.content);
+                    this._writeToFile(pathToFile, data.content);
                 });
-        }
 
+        } else if (this._sourceType === Constants.FileSourceTypes.Blob) {
+            const blobName = `${this.taskId}/${this.outputKind}/${this.filename}`;
+            this.storageService.saveBlobToFile(this.jobId, blobName, pathToFile).subscribe({
+                error: (error: ServerError) => {
+                    this.notificationService.error(
+                        "Download failed",
+                        `${this.filename} failed to download. ${error.body.message}`,
+                    );
+                },
+            });
+
+        } else {
+            throw "Unrecognised source type: " + this._sourceType;
+        }
+    }
+
+    private _writeToFile(filename: string, data: any): void {
+        writeFile(filename, data.content, (error) => {
+            // Callback to get rid of the following console error
+            // DeprecationWarning: Calling an asynchronous function without callback is deprecated.
+            if (error) {
+                log.error("[FileDetails.component] writeFile error:", error);
+            }
+        });
     }
 }
