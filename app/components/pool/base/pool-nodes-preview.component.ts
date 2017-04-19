@@ -1,12 +1,14 @@
-import { Component, Input } from "@angular/core";
+import { Component, HostBinding, Input, OnChanges } from "@angular/core";
 
 import { Pool } from "app/models";
+
+import "./pool-nodes-preview.scss";
 
 @Component({
     selector: "bl-pool-nodes-preview",
     templateUrl: "pool-nodes-preview.html",
 })
-export class PoolNodesPreviewComponent {
+export class PoolNodesPreviewComponent implements OnChanges {
     @Input()
     public pool: Pool;
 
@@ -14,15 +16,24 @@ export class PoolNodesPreviewComponent {
     public tooltipPosition: string = "below";
 
     @Input()
-    public largeIcon: boolean = false;
+    @HostBinding("class")
+    public size: ComponentSize = "normal";
+    public tooltipMessage: string;
 
-    public get tooltipMessage() {
-        if (this.pool.resizeError) {
+    public ngOnChanges(inputs) {
+        if (inputs.pool) {
+            this.tooltipMessage = this._getTooltipMessage();
+        }
+    }
+
+    private _getTooltipMessage() {
+        const pool = this.pool;
+        if (pool.resizeError) {
             return "There was a resize error";
-        } else if (this.pool.currentDedicated !== this.pool.targetDedicated) {
-            return `Pool is resizing from ${this.pool.currentDedicated} to ${this.pool.targetDedicated} nodes`;
+        } else if (pool.currentDedicated !== pool.targetDedicated) {
+            return `Pool is resizing from ${pool.currentDedicated} to ${pool.targetDedicated} nodes`;
         } else {
-            return `Pool has ${this.pool.currentDedicated} nodes`;
+            return `Pool has ${pool.currentDedicated} nodes`;
         }
     }
 }
