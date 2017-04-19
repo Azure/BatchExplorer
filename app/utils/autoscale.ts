@@ -35,7 +35,6 @@ const timeInterval = [
 ];
 
 // tslint:disable-next-line:max-line-length
-// const keywordRegex = /\$\b(\$CPUPercent|WallClockSeconds|MemoryBytes|DiskBytes|DiskReadBytes\$DiskWriteBytes|DiskReadOps|DiskWriteOps|NetworkInBytes|NetworkOutBytes|SampleNodeCount|ActiveTasks|RunningTasks|PendingTasks|SucceededTasks|FailedTasks|CurrentDedicated|TargetDedicated|NodeDeallocationOption)/;
 const keywordRegex = /\$\b(CPUPercent|WallClockSeconds|MemoryBytes|DiskBytes|DiskReadBytes\$DiskWriteBytes|DiskReadOps|DiskWriteOps|NetworkInBytes|NetworkOutBytes|SampleNodeCount|ActiveTasks|RunningTasks|PendingTasks|SucceededTasks|FailedTasks|CurrentDedicated|TargetDedicated|NodeDeallocationOption)\b/;
 const functionsRegex = /\b(avg|len|lg|ln|log|max|min|norm|percentile|rand|range|std|stop|sum|time|val)\b/;
 const obtainRegex = /\b(GetSamplePeriod|GetSample|Count|HistoryBeginTime|GetSamplePercent)\b/;

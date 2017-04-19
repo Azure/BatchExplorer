@@ -31,6 +31,7 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
         mode: "autoscale",
         autoRefresh: true,
     };
+    public customFormulaMode = true;
     private _subs: Subscription[];
     private _propagateChange: Function;
     private _propagateTouch: Function;
@@ -50,7 +51,8 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
         this._subs.push(this.autoscaleFormulaService.formulas.subscribe((formulas) => {
             this.savedAutoscaleFormulas = formulas;
         }));
-        this.predefinedFormula = this.predefinedFormulaService.getFormulas();
+        this.predefinedFormulaService.init();
+        this.predefinedFormulaService.predefinedFormulas.subscribe(formulas => this.predefinedFormula = formulas);
     }
 
     public ngOnDestroy() {
@@ -111,5 +113,13 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
 
     public deleteFormula(formula: AutoscaleFormula) {
         this.autoscaleFormulaService.deleteFormula(formula);
+    }
+
+    public showCustom() {
+        this.customFormulaMode = true;
+    }
+
+    public showSample() {
+        this.customFormulaMode = false;
     }
 }
