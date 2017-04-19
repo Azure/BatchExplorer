@@ -5,7 +5,7 @@ const variables = [
     "$DiskReadBytes", "$DiskReadOps", "$DiskWriteBytes", "$DiskWriteOps",
     "$FailedTasks", "$MemoryBytes", "$NetworkInBytes", "$NetworkOutBytes",
     "$PendingTasks", "$RunningTasks", "$SampleNodeCount", "$SucceededTasks",
-    "$TargetDedicated", "$WallClockSeconds",
+    "$TargetDedicated", "$WallClockSeconds", "$NodeDeallocationOption",
 ];
 
 const mathFunc = [
@@ -17,21 +17,51 @@ const systemFunc = [
     "GetSample", "GetSamplePeriod", "Count", "HistoryBeginTime", "GetSamplePercent",
 ];
 
+const keywords = [
+    "double", "doubleVec", "doubleVecList", "string", "timestamp",
+];
+
+const timeInterval = [
+    "TimeInterval_Zero",
+    "TimeInterval_100ns",
+    "TimeInterval_Microsecond",
+    "TimeInterval_Millisecond",
+    "TimeInterval_Second",
+    "TimeInterval_Minute",
+    "TimeInterval_Hour",
+    "TimeInterval_Day",
+    "TimeInterval_Week",
+    "TimeInterval_Year",
+];
+
 // tslint:disable-next-line:max-line-length
-const keywordRegex = /\$CPUPercent|\$WallClockSeconds|\$MemoryBytes|\$DiskBytes|\$DiskReadBytes\$DiskWriteBytes|\$DiskReadOps|\$DiskWriteOps|\$NetworkInBytes|\$NetworkOutBytes|\$SampleNodeCount|\$ActiveTasks|\$RunningTasks|\$PendingTasks|\$SucceededTasks|\$FailedTasks|\$CurrentDedicated|\$TargetDedicated/;
-const functionsRegex = /avg|len|lg|ln|log|max|min|norm|percentile|rand|range|std|stop|sum|time|val/;
-const obtainRegex = /GetSample|GetSamplePeriod|Count|HistoryBeginTime|GetSamplePercent/;
-const atomRegex = /true|false|null/;
+// const keywordRegex = /\$\b(\$CPUPercent|WallClockSeconds|MemoryBytes|DiskBytes|DiskReadBytes\$DiskWriteBytes|DiskReadOps|DiskWriteOps|NetworkInBytes|NetworkOutBytes|SampleNodeCount|ActiveTasks|RunningTasks|PendingTasks|SucceededTasks|FailedTasks|CurrentDedicated|TargetDedicated|NodeDeallocationOption)/;
+const keywordRegex = /\$\b(CPUPercent|WallClockSeconds|MemoryBytes|DiskBytes|DiskReadBytes\$DiskWriteBytes|DiskReadOps|DiskWriteOps|NetworkInBytes|NetworkOutBytes|SampleNodeCount|ActiveTasks|RunningTasks|PendingTasks|SucceededTasks|FailedTasks|CurrentDedicated|TargetDedicated|NodeDeallocationOption)\b/;
+const functionsRegex = /\b(avg|len|lg|ln|log|max|min|norm|percentile|rand|range|std|stop|sum|time|val)\b/;
+const obtainRegex = /\b(GetSamplePeriod|GetSample|Count|HistoryBeginTime|GetSamplePercent)\b/;
+const atomRegex = /\b(true|false|null)\b/;
+const typesRegex = /\b(double|doubleVec|doubleVecList|string|timestamp)\b/;
+// tslint:disable-next-line:max-line-length
+const intervalRegex = /\b(TimeInterval_Zero|TimeInterval_100ns|TimeInterval_Microsecond|TimeInterval_Millisecond|TimeInterval_Second|TimeInterval_Minute|TimeInterval_Hour|TimeInterval_Hour|TimeInterval_Day|TimeInterval_Week|TimeInterval_Year)\b/;
 const numberRegex = /0x[a-f\d]+|[-+]?(?:\.\d+|\d+\.?\d*)(?:e[-+]?\d+)?/i;
 const operatorRegex = /[-+\/*=<>!]+/;
-
+const commentRegex = /^\/\/(.*)/;
+const quoteRegex = /"(.*)"/;
 CodeMirror.defineMode("autoscale", () => {
     return {
         token: (stream, state) => {
-            if (stream.match(keywordRegex) ) {
-                return "keyword";
-            } else if (stream.match(functionsRegex) || stream.match(obtainRegex)) {
+            if (stream.match(commentRegex)) {
+                return "comment";
+            } else if (stream.match(quoteRegex)) {
                 return "string";
+            } else if (stream.match(keywordRegex) || stream.match(intervalRegex)) {
+                return "variables";
+            } else if (stream.match(functionsRegex)) {
+                return "functions";
+            } else if ( stream.match(obtainRegex)) {
+                return "math";
+            } else if (stream.match(typesRegex)) {
+                return "builtin";
             } else if (stream.match(atomRegex)) {
                 return "atom";
             } else if (stream.match(numberRegex)) {
@@ -60,6 +90,12 @@ CodeMirror.registerHelper("hint", "autoscale", (editor) => {
     }).concat(mathFunc.filter((item) => {
         return item.match(regex);
     })).concat(systemFunc.filter((item) => {
+        return item.match(regex);
+    })).concat(keywords.filter((item) => {
+        return item.match(regex);
+    })).concat(timeInterval.filter((item) => {
+        return item.match(regex);
+    })).concat(keywords.filter((item) => {
         return item.match(regex);
     }));
     return {

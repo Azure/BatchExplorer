@@ -17,18 +17,20 @@
         min-width: 100px;
     }
 
+    > .formula-mode {
+        border-bottom: 1px solid $altoGray;
+    }
+
     .mat-input-underline {
         position: relative;
         margin-top: 0;
     }
 
-    > .saved-formulas {
+    .saved-formulas {
         width: 210px;
         flex: 0 0 170px;
         padding: 1em 0;
-        border-bottom: 1px solid $altoGray;
-
-        > .saved-formulas-container {
+        .saved-formulas-container {
             height: 100%;
         }
 

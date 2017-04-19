@@ -174,10 +174,30 @@ bl-vm-size-picker {
 
 bl-autoscale-formula-picker {
     display: flex;
+    .CodeMirror {
+        font-size: 12px;
+    }
+
     .CodeMirror pre.CodeMirror-placeholder {
         font-family: Roboto, "Helvetica Neue", sans-serif;
         line-height: normal;
         text-align: left;
         color: rgba(0, 0, 0, 0.38);
+    }
+
+    .cm-variables {
+        color: green;
+    }
+
+    .cm-functions {
+        color: red;
+    }
+
+    .cm-math {
+        color: orange;
+    }
+
+    .cm-builtin {
+        color: blue;
     }
 }

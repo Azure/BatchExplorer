@@ -2,9 +2,9 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild, forwardRef } from 
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { AutoscaleFormula } from "app/models";
 import { AutoscaleFormulaService } from "app/services";
+import { PredefinedFormulaService } from "app/services/predefined-formula.service";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
-
 import "./autoscale-formula-picker.scss";
 
 @Component({
@@ -18,6 +18,7 @@ import "./autoscale-formula-picker.scss";
 })
 export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, ControlValueAccessor {
     public savedAutoscaleFormulas: List<AutoscaleFormula>;
+    public predefinedFormula: AutoscaleFormula[];
     public autoscaleFormulaValue: string;
     public autoscaleFormulaName: FormControl;
     public showSaveForm: Boolean;
@@ -34,7 +35,9 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
     private _propagateChange: Function;
     private _propagateTouch: Function;
 
-    constructor(private autoscaleFormulaService: AutoscaleFormulaService, elRef: ElementRef) { }
+    constructor(private autoscaleFormulaService: AutoscaleFormulaService,
+                private predefinedFormulaService: PredefinedFormulaService,
+                elRef: ElementRef) { }
 
     public ngOnInit() {
         this.autoscaleFormulaValue = "";
@@ -47,6 +50,7 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
         this._subs.push(this.autoscaleFormulaService.formulas.subscribe((formulas) => {
             this.savedAutoscaleFormulas = formulas;
         }));
+        this.predefinedFormula = this.predefinedFormulaService.getFormulas();
     }
 
     public ngOnDestroy() {
