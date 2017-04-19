@@ -1,1 +1,2 @@
-export * from "./task-output.component";
+export * from "./task-log.component";
+export * from "./task-outputs.component";

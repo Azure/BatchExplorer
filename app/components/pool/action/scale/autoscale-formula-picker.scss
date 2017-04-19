@@ -1,0 +1,94 @@
+@import "app/styles/variables";
+
+.CodeMirror {
+    display:block;
+    width:100%;
+    border-right: 1px solid $altoGray;
+}
+
+.autoscale-formula-picker {
+    display: flex;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+
+    > .editor {
+        flex: 1;
+        min-width: 100px;
+    }
+
+    .mat-input-underline {
+        position: relative;
+        margin-top: 0;
+    }
+
+    > .saved-formulas {
+        width: 210px;
+        flex: 0 0 170px;
+        padding: 1em 0;
+        border-bottom: 1px solid $altoGray;
+
+        > .saved-formulas-container {
+            height: 100%;
+        }
+
+        .saved-formulas-btns {
+            height: 28px;
+            padding: 2px 5px;
+        }
+
+        .saved-formulas-wrapper {
+            height: 100%;
+            overflow: auto;
+            border-top: 1px solid #d5d5d5;
+            border-bottom: 1px solid #d5d5d5;
+
+            > .formula {
+                display: flex;
+                height: 28px;
+                cursor: pointer;
+                padding: 5px;
+
+                > .label {
+                    flex: 1;
+                }
+
+                &:not(:last-child) {
+                    border-bottom: 1px solid #d5d5d5;
+                }
+
+                &:hover {
+                    background: #e5e5e5;
+                }
+            }
+
+            .no-formula {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 30px 10px;
+
+                .fa-file-code-o {
+                    font-size: 30px;
+                    margin-bottom: 10px;
+                    color: map-get($md-prussian-blue, 400);
+                }
+            }
+        }
+
+        .save-formula-form {
+            padding: 5px;
+            .btn-container {
+                display: flex;
+                justify-content: center;
+
+                button {
+                    margin: 0 10px;
+                }
+            }
+            .fa-times, .fa-check {
+                color: white;
+            }
+        }
+    }
+}

@@ -1,0 +1,15 @@
+<div class="main" (click)="onClickTile()">
+    <div class="icon">
+        <bl-icon [icon]="icon"></bl-icon>
+    </div>
+    <div class="title">
+        <ng-content></ng-content>
+    </div>
+</div>
+<button class="select-version" [mdMenuTriggerFor]="menu">
+        <span *ngIf="!active">Select Version<i class="fa fa-caret-down"></i></span>
+        <span *ngIf="active">{{selectedSku}}</span>
+    </button>
+<md-menu #menu="mdMenu">
+    <button md-menu-item *ngFor="let sku of skus" (click)="onClickSku(sku)">{{sku.name}}</button>
+</md-menu>

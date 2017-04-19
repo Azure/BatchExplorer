@@ -49,6 +49,13 @@ export class AccountService {
     public accounts: Observable<List<AccountResource>>;
 
     /**
+     * @returns the current account.
+     * If the current loaded account match the currentAccountId it will return immediately
+     * otherwise this will wait for the account with currentAccountId to be loaded
+     */
+    public currentAccount: Observable<AccountResource>;
+
+    /**
      * This represent the value of the current accountId.
      * This change value immediately after calling #selectAccount
      */
@@ -82,24 +89,17 @@ export class AccountService {
         });
 
         this.currentAccountId = this._currentAccountId.asObservable();
-    }
 
-    public get accountFavorites(): Observable<List<AccountResource>> {
-        return this._accountFavorites.asObservable();
-    }
-
-    /**
-     * @returns the current account.
-     * If the current loaded account match the currentAccountId it will return immediately
-     * otherwise this will wait for the account with currentAccountId to be loaded
-     */
-    public get currentAccount(): Observable<AccountResource> {
-        return this._currentAccountId.flatMap((id) => {
+        this.currentAccount = this._currentAccountId.flatMap((id) => {
             return this._currentAccount
                 .filter(x => x && id && x.account && x.account.id.toLowerCase() === id.toLowerCase())
                 .first()
                 .map(x => x && x.account);
-        }).share();
+        });
+    }
+
+    public get accountFavorites(): Observable<List<AccountResource>> {
+        return this._accountFavorites.asObservable();
     }
 
     public get currentAccountValid(): Observable<AccountStatus> {
@@ -112,23 +112,37 @@ export class AccountService {
             return;
         }
         this._currentAccountId.next(accountId);
+        this.refresh();
+    }
+
+    /**
+     * Refresh the current account
+     */
+    public refresh(): Observable<any> {
+        const accountId = this._currentAccountId.value;
         this._currentAccountValid.next(AccountStatus.Loading);
+
         const accountObs = this.getAccount(accountId);
         const keyObs = this.getAccountKeys(accountId);
         DataCacheTracker.clearAllCaches(this._accountCache);
-        Observable.forkJoin(accountObs, keyObs).subscribe({
+
+        const obs = Observable.forkJoin(accountObs, keyObs);
+        obs.subscribe({
             next: ([account, keys]) => {
                 this._currentAccount.next({ account, keys });
-                if (!this._accountLoaded.getValue()) {
+                if (!this._accountLoaded.value) {
                     this._accountLoaded.next(true);
                 }
+
                 this._currentAccountValid.next(AccountStatus.Valid);
             },
             error: (error) => {
-                log.error(`Error loading account ${accountId}`, error);
+                log.error(`Error Loading account ${accountId}`, error);
                 this._currentAccountValid.next(AccountStatus.Invalid);
             },
         });
+
+        return obs;
     }
 
     public load() {
@@ -136,6 +150,7 @@ export class AccountService {
             const accountObs = subscriptions.map((subscription) => {
                 return this.list(subscription.subscriptionId);
             }).toArray();
+
             return Observable.combineLatest(...accountObs);
         });
 
@@ -149,6 +164,7 @@ export class AccountService {
                 log.error("Error loading accounts", error);
             },
         });
+
         return obs;
     }
 

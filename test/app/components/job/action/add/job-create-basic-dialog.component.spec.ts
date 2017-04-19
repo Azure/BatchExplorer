@@ -12,7 +12,7 @@ import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";
 import { validateControl } from "test/utils/helpers";
 import { RxMockListProxy } from "test/utils/mocks";
-import { CreateFormMockComponent, ServerErrorMockComponent } from "test/utils/mocks/components";
+import { ServerErrorMockComponent, complexFormMockComponents } from "test/utils/mocks/components";
 
 describe("JobCreateBasicDialogComponent ", () => {
     let fixture: ComponentFixture<JobCreateBasicDialogComponent>;
@@ -25,7 +25,6 @@ describe("JobCreateBasicDialogComponent ", () => {
     let notificationServiceSpy: any;
     let baseForm: any;
     let constraintsForm: any;
-    let poolForm: any;
 
     const validators = TestConstants.validators;
 
@@ -70,7 +69,7 @@ describe("JobCreateBasicDialogComponent ", () => {
         };
 
         TestBed.configureTestingModule({
-            declarations: [CreateFormMockComponent, JobCreateBasicDialogComponent, ServerErrorMockComponent],
+            declarations: [...complexFormMockComponents, JobCreateBasicDialogComponent, ServerErrorMockComponent],
             providers: [
                 { provide: FormBuilder, useValue: new FormBuilder() },
                 { provide: SidebarRef, useValue: sidebarRefSpy },
@@ -89,12 +88,10 @@ describe("JobCreateBasicDialogComponent ", () => {
 
         baseForm = component.form;
         constraintsForm = component.constraintsGroup;
-        poolForm = component.poolInfoGroup;
     });
 
     it("Should show title and description", () => {
         expect(debugElement.nativeElement.textContent).toContain("Create job");
-        expect(debugElement.nativeElement.textContent).toContain("Adds a job to the selected account");
     });
 
     it("JobId is initialized", () => {
@@ -150,39 +147,39 @@ describe("JobCreateBasicDialogComponent ", () => {
         validateControl(constraintsForm, controlName).passes(validators.range).with(1);
     });
 
-    it("PoolId is initialized", () => {
-        const control = poolForm.controls.poolId;
+    it("Pool is initialized", () => {
+        const control = baseForm.controls.poolInfo;
         expect(control).not.toBeNull();
         expect(control.validator).not.toBeNull();
     });
 
-    it("PoolId has required validation only", () => {
-        poolForm.patchValue({ poolId: "my-pool" });
-        expect(poolForm.hasError(validators.required, ["poolId"])).toBe(false);
+    it("Pool has required validation only", () => {
+        baseForm.patchValue({ poolInfo: { poolId: "my-pool" } });
+        expect(baseForm.hasError(validators.required, ["poolInfo"])).toBe(false);
 
-        poolForm.patchValue({ poolId: "" });
-        expect(poolForm.hasError(validators.required, ["poolId"])).toBe(true);
+        baseForm.patchValue({ poolInfo: null });
+        expect(baseForm.hasError(validators.required, ["poolInfo"])).toBe(true);
     });
 
     it("Can patch poolId directly", () => {
         component.preSelectPool("pool-002");
-        expect(poolForm.controls["poolId"].value).toEqual("pool-002");
+        expect(baseForm.controls.poolInfo.value).toEqual({ poolId: "pool-002" });
     });
 
     it("Can clone job into form", () => {
         const job = Fixtures.job.create({ id: "job-001", poolInfo: { poolId: "pool-002" } });
-        component.setValue(job);
+        component.setValueFromEntity(job);
 
         expect(baseForm.controls.id.value).toEqual("job-001");
         expect(baseForm.controls.displayName.value).toEqual("display name");
         expect(baseForm.controls.priority.value).toEqual(1);
         expect(constraintsForm.controls.maxTaskRetryCount.value).toEqual(3);
-        expect(poolForm.controls.poolId.value).toEqual("pool-002");
+        expect(baseForm.controls.poolInfo.value).toEqual({ poolId: "pool-002" });
     });
 
     it("Clicking add creates job and doesnt close form", (done) => {
         const job = Fixtures.job.create({ id: "job-001", poolInfo: { poolId: "pool-002" } });
-        component.setValue(job);
+        component.setValueFromEntity(job);
         component.submit().subscribe(() => {
             expect(jobServiceSpy.add).toHaveBeenCalledTimes(1);
             expect(notificationServiceSpy.success).toHaveBeenCalledTimes(1);
@@ -205,7 +202,7 @@ describe("JobCreateBasicDialogComponent ", () => {
 
     it("If create job throws we handle the error", (done) => {
         const job = Fixtures.job.create({ id: "bad-job-id", poolInfo: { poolId: "pool-002" } });
-        component.setValue(job);
+        component.setValueFromEntity(job);
         component.submit().subscribe({
             next: () => {
                 fail("call should have failed");

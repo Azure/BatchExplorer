@@ -1,42 +1,22 @@
-<div [formGroup]="form">
-    <div class="element-spacer">
-        <h3>Select an operating system configuration</h3>
-        <div class="infrastructure">
-            <md-radio-group formControlName="source">
-                <md-radio-button [value]="PoolOsSources.IaaS">Virtual Machine</md-radio-button>
-                <md-radio-button [value]="PoolOsSources.PaaS">Cloud Service (Windows only)</md-radio-button>
-            </md-radio-group>
-        </div>
-    </div>
+<md-tab-group class="form-tabs">
+    <md-tab label="Distributions" title="selectedSource === PoolOsSources.IaaS" class="banana">
+        <bl-os-offer-tile *ngFor="let offer of vmOffers" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickOffer(offer)" (pickSku)="pickSku(offer, $event)"
+            [active]="offer.name === selectedOffer" [selectedSku]="selectedSku">
+            {{offer.name}}
+        </bl-os-offer-tile>
 
-    <div *ngIf="selectedSource === PoolOsSources.PaaS">
-        <div formGroupName="cloudServiceConfiguration" class="service-ref">
-            <md-select formControlName="osFamily" placeholder="Operating System">
-                <md-option *ngFor="let osFamily of cloudServiceOsFamilies" [value]="osFamily.id">{{osFamily.name}}</md-option>
-            </md-select>
-        </div>
-    </div>
 
-    <div formGroupName="virtualMachineConfiguration" *ngIf="selectedSource === PoolOsSources.IaaS">
-        <div formGroupName="imageReference" class="image-ref">
-            <div class="image-ref-element">
-                <md-select formControlName="publisher" placeholder="Publisher">
-                    <md-option *ngFor="let publisher of vmPublishers" [value]="publisher">{{publisher}}</md-option>
-                </md-select>
-            </div>
-
-            <div class="image-ref-element" *ngIf="selectedPublisher">
-                <md-select formControlName="offer" placeholder="Offer">
-                    <md-option *ngFor="let offer of vmOffers" [value]="offer">{{offer}}</md-option>
-                </md-select>
-            </div>
-
-            <div class="image-ref-element" *ngIf="selectedOffer">
-                <md-select formControlName="sku" placeholder="Sku">
-                    <md-option *ngFor="let sku of vmSkus" [value]="sku">{{sku}}</md-option>
-                </md-select>
-            </div>
-        </div>
-        <p *ngIf="selectedSku">Based on your selection node agent '{{vmNodeAgentId}}'' will be used</p>
-    </div>
-</div>
+        <bl-os-offer-tile name="WindowsServer" [skus]="cloudServiceOsFamilies" (pickOffer)="pickCloudService()" (pickSku)="pickCloudService($event.id)"
+            [active]="value?.source === PoolOsSources.PaaS" [selectedSku]="selectedFamilyName">
+            <div>Windows Server</div>
+            <div>(Cloud Service)</div>
+        </bl-os-offer-tile>
+        <p *ngIf="selectedSku">Based on your selection node agent '{{selectedNodeAgentId}}'' will be used</p>
+    </md-tab>
+    <md-tab label="Data science VM">
+        <bl-os-offer-tile *ngFor="let offer of dataScienceOffers" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickOffer(offer)" (pickSku)="pickSku(offer, $event)"
+            [active]="offer.name === selectedOffer" [selectedSku]="selectedSku">
+            {{offer.name}}
+        </bl-os-offer-tile>
+    </md-tab>
+</md-tab-group>

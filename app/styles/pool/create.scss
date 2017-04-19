@@ -1,0 +1,183 @@
+bl-pool-os-picker {
+    h5 {
+        margin: 0;
+    }
+
+    .service-ref {
+        display: flex;
+    }
+
+    .image-ref {
+        display: flex;
+        margin-top: 10px;
+
+        > .image-ref-element {
+            width: 30%;
+            margin-right: 10px;
+
+            md-select {
+                width: 100%;
+            }
+        }
+    }
+
+    bl-os-offer-tile {
+        padding: 0;
+        display: inline-block;
+        width: 120px;
+        border: 1px solid #d5d5d5;
+        border-radius: 3px;
+        background: $white;
+        outline: none;
+        text-align: center;
+        user-select: none;
+
+        margin: 5px;
+        cursor: pointer;
+
+        &:focus {
+            background-color: $whitesmoke-darker;
+        }
+
+        &.active {
+            border-color: map-get($md-prussian-blue, 300);
+
+            > .main > .icon {
+                background: map-get($md-prussian-blue, 300);
+                border-color: map-get($md-prussian-blue, 300);
+                color: map-get($md-prussian-blue, 50);
+            }
+
+            .select-version {
+                color: map-get($md-prussian-blue, 500);
+                font-weight: bold;
+            }
+
+        }
+
+        > .main {
+            &:hover {
+                background-color: $whitesmoke-darker;
+            }
+
+            > .icon {
+                padding: 10px 0;
+                height: 120px;
+                font-size: 60px;
+                color: map-get($md-prussian-blue, 300);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+
+                svg {
+                    width: 70px;
+                    height: 70px;
+                }
+            }
+
+            > .title {
+                margin-top: 5px;
+                border-bottom: 1px solid #d5d5d5;
+                font-size: 16px;
+                height: 36px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+
+        > .select-version {
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+            padding: 5px;
+            color: $silver-grey;
+            background: $white;
+            outline: none;
+            margin: 0;
+            width: 100%;
+            cursor: pointer;
+
+            &:hover, &:focus {
+                background-color: $whitesmoke-darker;
+            }
+
+            .fa {
+                margin-left: 5px;
+            }
+        }
+    }
+}
+
+
+bl-vm-size-picker {
+    .vm-size-list {
+        margin-top: 10px;
+        > .vm-size {
+            padding: 0;
+            display: inline-block;
+            width: 120px;
+            border: 1px solid #d5d5d5;
+            border-radius: 3px;
+            background: $white;
+            outline: none;
+
+            margin: 5px;
+            cursor: pointer;
+
+            &:hover, &:focus {
+                background-color: $whitesmoke-darker;
+            }
+
+            &.active {
+                border-color: map-get($md-prussian-blue, 300);
+
+                > .title {
+                    background: map-get($md-prussian-blue, 300);
+                    border-color: map-get($md-prussian-blue, 300);
+                    color: $whitesmoke;
+                }
+
+                > .pricing {
+                    border-color: map-get($md-prussian-blue, 300);
+                }
+            }
+
+            > .title {
+                overflow: hidden;
+                text-overflow: ellipsis;
+                padding: 5px;
+                border-bottom: 1px solid #d5d5d5;
+                text-align: center;
+                white-space: nowrap;
+            }
+
+            > .pricing {
+                text-align: center;
+                font-size: 20px;
+                border-bottom: 1px solid #d5d5d5;
+                padding: 10px;
+            }
+
+            > .details {
+                text-align: center;
+                padding: 5px;
+
+                .label {
+                    color: $silver-grey;
+                }
+            }
+        }
+    }
+}
+
+bl-autoscale-formula-picker {
+    display: flex;
+    .CodeMirror pre.CodeMirror-placeholder {
+        font-family: Roboto, "Helvetica Neue", sans-serif;
+        line-height: normal;
+        text-align: left;
+        color: rgba(0, 0, 0, 0.38);
+    }
+}

@@ -1,6 +1,7 @@
 const DefinePlugin = require("webpack/lib/DefinePlugin");
 const config = require("./webpack.config.base");
 const webpack = require("webpack");
+const helpers = require("./helpers");
 const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 
 const ENV = "test";
@@ -25,7 +26,7 @@ config.module.rules = config.module.rules.concat(
         {
             test: /node_modules.*\.css$/,
             loader: "style-loader!css-loader",
-        },
+        }
     ]
 );
 module.exports = config;

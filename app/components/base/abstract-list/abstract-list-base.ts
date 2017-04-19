@@ -1,5 +1,5 @@
 import {
-    AfterViewInit, ContentChildren, EventEmitter,  OnDestroy, Output, QueryList,
+    AfterViewInit, ChangeDetectorRef, ContentChildren, EventEmitter, Input, OnDestroy, Output, QueryList,
 } from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
 import { autobind } from "core-decorators";
@@ -25,6 +25,16 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     public items: QueryList<AbstractListItemBase>;
 
     /**
+     * List of items to display(Which might be different from the full items list because of sorting and other)
+     */
+    public displayItems: AbstractListItemBase[] = [];
+
+    @Input()
+    public set activeItem(key) {
+        this.setActiveItem(key);
+    }
+
+    /**
      * When the list of selected item change.
      */
     @Output()
@@ -35,6 +45,9 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      */
     @Output()
     public activatedItemChange = new EventEmitter<ActivatedItemChangeEvent>();
+
+    @Output()
+    public activeItemChange = new EventEmitter<string>();
 
     public set selectedItems(items: string[]) {
         let map = {};
@@ -58,10 +71,15 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     private _activeItemKey = new BehaviorSubject<ActivatedItemChangeEvent>(null);
     private _subs: Subscription[] = [];
 
-    constructor(private router: Router, private focusSection: FocusSectionComponent) {
+    constructor(
+        private router: Router,
+        private changeDetection: ChangeDetectorRef,
+        private focusSection: FocusSectionComponent) {
+
         this._subs.push(this._activeItemKey.subscribe(x => {
             this.selectedItems = x ? [x.key] : [];
             this.activatedItemChange.emit(x);
+            this.activeItemChange.emit(x && x.key);
             if (this.listFocused) {
                 this.focusedItem = x.key;
             }
@@ -92,6 +110,13 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
 
             });
         }
+
+        this._subs.push(this.items.changes.subscribe(() => {
+            this._updateDisplayItems();
+        }));
+        this._updateDisplayItems();
+        this.changeDetection.detectChanges();
+
     }
 
     public ngOnDestroy() {
@@ -180,7 +205,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     public selectTo(key: string) {
         let foundStart = false;
         const activeKey = this.activeKey;
-        this.items.some((item) => {
+        this.displayItems.some((item) => {
             if (!foundStart && (item.key === activeKey || item.key === key)) {
                 foundStart = true;
                 this._selectedItems[item.key] = true;
@@ -210,7 +235,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
 
     @autobind()
     public keyPressed(event: KeyboardEvent) {
-        const items: AbstractListItemBase[] = this.items.toArray();
+        const items: AbstractListItemBase[] = this.displayItems;
         let index = 0;
         let currentItem;
         for (let item of items) {
@@ -235,10 +260,15 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
                 return;
             default:
         }
-        index = (index + this.items.length) % this.items.length;
+        index = (index + items.length) % items.length;
         const item = items[index];
         this.focusedItem = item.key;
     }
+
+    /**
+     * Implement this to apply some sorting or other logic
+     */
+    protected computeDisplayedItems?(): AbstractListItemBase[];
 
     private _setInitialActivatedItem() {
         const item = this.getActiveItemFromRouter();
@@ -263,6 +293,14 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
             return this.router.isActive(item.urlTree, false);
         } else {
             return this.isActive(item.key);
+        }
+    }
+
+    private _updateDisplayItems() {
+        if (this.computeDisplayedItems) {
+            this.displayItems = this.computeDisplayedItems();
+        } else {
+            this.displayItems = this.items.toArray();
         }
     }
 }

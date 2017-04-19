@@ -1,5 +1,5 @@
 import {
-    Component, ContentChildren, Input, Optional, QueryList,
+    ChangeDetectorRef, Component, ContentChildren, Input, Optional, QueryList,
 } from "@angular/core";
 import { Router } from "@angular/router";
 
@@ -17,8 +17,8 @@ export class QuickListComponent extends AbstractListBase {
     @ContentChildren(QuickListItemComponent)
     public items: QueryList<QuickListItemComponent>;
 
-    constructor( @Optional() focusSection: FocusSectionComponent, router: Router) {
-        super(router, focusSection);
+    constructor( @Optional() focusSection: FocusSectionComponent, changeDetection: ChangeDetectorRef, router: Router) {
+        super(router, changeDetection, focusSection);
     }
 }
 

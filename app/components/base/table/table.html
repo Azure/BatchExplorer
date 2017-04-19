@@ -1,6 +1,6 @@
 <table>
     <ng-content select="bl-thead"></ng-content>
     <tbody>
-        <template [ngTemplateOutlet]="item.content" *ngFor="let item of items"></template>
+        <template [ngTemplateOutlet]="item.content" *ngFor="let item of displayItems, trackBy: item?.key"></template>
     </tbody>
 </table>

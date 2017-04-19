@@ -1,3 +1,20 @@
+# Version 0.3.0(Beta)
+[All items](https://github.com/Azure/BatchLabs/milestone/2?closed=1)
+
+### Features
+* Autoscale forumla support with option to save forumla [\#321](https://github.com/Azure/BatchLabs/issues/321)
+* Big work on the form UI(Also added pool start task picker)
+  - Section and picker [\#321](https://github.com/Azure/BatchLabs/issues/4)
+  - Form error sticky at the bottom not to miss it [\#317](https://github.com/Azure/BatchLabs/issues/317)
+* Read/Save files to azure storage UX  [\#110](https://github.com/Azure/BatchLabs/issues/110)
+* New VM size picker as a sortable table [\#292](https://github.com/Azure/BatchLabs/issues/292)
+* New pool picker for the job create experience [\#284](https://github.com/Azure/BatchLabs/issues/284)
+* New OS picker for the pool create experience [\#278](https://github.com/Azure/BatchLabs/issues/278)  
+* Added refresh account button [\#289](https://github.com/Azure/BatchLabs/issues/289)
+### Fixes
+* Bug with max results [\#295](https://github.com/Azure/BatchLabs/issues/295) [\#297](https://github.com/Azure/BatchLabs/issues/297) [\#299](https://github.com/Azure/BatchLabs/issues/299)
+
+
 # Version 0.2.0(Beta)
 [All items](https://github.com/Azure/BatchLabs/milestone/1?closed=1)
 

@@ -19,6 +19,7 @@ export class StartTaskEditFormComponent {
         this._pool = pool;
         this._startTask = pool.startTask;
         this.form.patchValue({
+            enableStartTask: Boolean(pool.startTask),
             startTask: pool.startTask && pool.startTask.toJS(),
         });
     }
@@ -35,8 +36,13 @@ export class StartTaskEditFormComponent {
         private poolService: PoolService,
         private notificationService: NotificationService) {
         this.form = formBuilder.group({
+            enableStartTask: [false],
             startTask: [null],
         });
+    }
+
+    public get enableStartTask() {
+        return this.form.controls["enableStartTask"].value;
     }
 
     @autobind()

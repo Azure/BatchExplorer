@@ -14,7 +14,7 @@ import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";
 import { validateControl } from "test/utils/helpers";
 import { MockedFile } from "test/utils/mocks";
-import { CreateFormMockComponent, ServerErrorMockComponent } from "test/utils/mocks/components";
+import { ServerErrorMockComponent, complexFormMockComponents } from "test/utils/mocks/components";
 
 describe("ApplicationCreateDialogComponent ", () => {
     let fixture: ComponentFixture<ApplicationCreateDialogComponent>;
@@ -76,7 +76,7 @@ describe("ApplicationCreateDialogComponent ", () => {
         };
 
         TestBed.configureTestingModule({
-            declarations: [ApplicationCreateDialogComponent, CreateFormMockComponent, ServerErrorMockComponent],
+            declarations: [...complexFormMockComponents, ApplicationCreateDialogComponent, ServerErrorMockComponent],
             providers: [
                 { provide: FormBuilder, useValue: new FormBuilder() },
                 { provide: SidebarRef, useValue: null },
@@ -92,7 +92,7 @@ describe("ApplicationCreateDialogComponent ", () => {
         debugElement = fixture.debugElement;
         fixture.detectChanges();
 
-        // applicationForm = component.applicationForm;
+        //  form = component. form;
     });
 
     it("Should show title and description", () => {
@@ -108,18 +108,18 @@ describe("ApplicationCreateDialogComponent ", () => {
         });
 
         it("control has required validation", () => {
-            validateControl(component.applicationForm, "id").fails(validators.required).with("");
-            validateControl(component.applicationForm, "id").passes(validators.required).with("bob");
+            validateControl(component.form, "id").fails(validators.required).with("");
+            validateControl(component.form, "id").passes(validators.required).with("bob");
         });
 
         it("control has maxLength validation", () => {
-            validateControl(component.applicationForm, "id").fails(validators.maxlength).with("a".repeat(65));
-            validateControl(component.applicationForm, "id").passes(validators.maxlength).with("a".repeat(64));
+            validateControl(component.form, "id").fails(validators.maxlength).with("a".repeat(65));
+            validateControl(component.form, "id").passes(validators.maxlength).with("a".repeat(64));
         });
 
         it("control has pattern validation", () => {
-            validateControl(component.applicationForm, "id").fails(validators.pattern).with("invalid app id");
-            validateControl(component.applicationForm, "id").passes(validators.pattern).with("valid-id");
+            validateControl(component.form, "id").fails(validators.pattern).with("invalid app id");
+            validateControl(component.form, "id").passes(validators.pattern).with("valid-id");
         });
     });
 
@@ -130,18 +130,18 @@ describe("ApplicationCreateDialogComponent ", () => {
         });
 
         it("control has required validation", () => {
-            validateControl(component.applicationForm, "version").fails(validators.required).with("");
-            validateControl(component.applicationForm, "version").passes(validators.required).with("1");
+            validateControl(component.form, "version").fails(validators.required).with("");
+            validateControl(component.form, "version").passes(validators.required).with("1");
         });
 
         it("control has maxLength validation", () => {
-            validateControl(component.applicationForm, "version").fails(validators.maxlength).with("a".repeat(65));
-            validateControl(component.applicationForm, "version").passes(validators.maxlength).with("a".repeat(64));
+            validateControl(component.form, "version").fails(validators.maxlength).with("a".repeat(65));
+            validateControl(component.form, "version").passes(validators.maxlength).with("a".repeat(64));
         });
 
         it("control has pattern validation", () => {
-            validateControl(component.applicationForm, "version").fails(validators.pattern).with("1 2 1");
-            validateControl(component.applicationForm, "version").passes(validators.pattern).with("1.2.1");
+            validateControl(component.form, "version").fails(validators.pattern).with("1 2 1");
+            validateControl(component.form, "version").passes(validators.pattern).with("1.2.1");
         });
     });
 
@@ -152,13 +152,13 @@ describe("ApplicationCreateDialogComponent ", () => {
         });
 
         it("control has required validation", () => {
-            validateControl(component.applicationForm, "package").fails(validators.required).with("");
-            validateControl(component.applicationForm, "package").passes(validators.required).with("bob.zip");
+            validateControl(component.form, "package").fails(validators.required).with("");
+            validateControl(component.form, "package").passes(validators.required).with("bob.zip");
         });
 
         it("control has pattern validation", () => {
-            validateControl(component.applicationForm, "package").fails(validators.pattern).with("file.text");
-            validateControl(component.applicationForm, "package").passes(validators.pattern).with("file.zip");
+            validateControl(component.form, "package").fails(validators.pattern).with("file.text");
+            validateControl(component.form, "package").passes(validators.pattern).with("file.zip");
         });
     });
 
@@ -169,7 +169,7 @@ describe("ApplicationCreateDialogComponent ", () => {
         });
 
         it("sets the application id", () => {
-            expect(component.applicationForm.controls["id"].value).toBe("monkeys");
+            expect(component.form.controls["id"].value).toBe("monkeys");
         });
 
         it("updates the description", () => {
@@ -185,11 +185,11 @@ describe("ApplicationCreateDialogComponent ", () => {
         });
 
         it("sets the application id", () => {
-            expect(component.applicationForm.controls["id"].value).toBe("more-monkeys");
+            expect(component.form.controls["id"].value).toBe("more-monkeys");
         });
 
         it("sets the version", () => {
-            expect(component.applicationForm.controls["version"].value).toBe("12.5");
+            expect(component.form.controls["version"].value).toBe("12.5");
         });
 
         it("updates the description", () => {
@@ -204,9 +204,9 @@ describe("ApplicationCreateDialogComponent ", () => {
 
     describe("Submitting action form", () => {
         beforeEach(() => {
-            component.applicationForm.controls["id"].setValue("app-5");
-            component.applicationForm.controls["version"].setValue("1.0");
-            component.applicationForm.controls["package"].setValue("bob.zip");
+            component.form.controls["id"].setValue("app-5");
+            component.form.controls["version"].setValue("1.0");
+            component.form.controls["package"].setValue("bob.zip");
             component.file = new MockedFile({
                 name: "GreenButtonIntegrationTest-1.0.zip",
                 path: "C:\Users\ascobie\Desktop\App Images\GreenButtonIntegrationTest-1.0.zip",
@@ -248,7 +248,7 @@ describe("ApplicationCreateDialogComponent ", () => {
         });
 
         it("If create application throws we handle the error", (done) => {
-            component.applicationForm.controls["id"].setValue("throw-me");
+            component.form.controls["id"].setValue("throw-me");
             fixture.detectChanges();
 
             component.submit().subscribe({
@@ -280,7 +280,7 @@ describe("ApplicationCreateDialogComponent ", () => {
         });
 
         it("If activate package throws we carry on and notify the user", (done) => {
-            component.applicationForm.controls["id"].setValue("activate-fail");
+            component.form.controls["id"].setValue("activate-fail");
             fixture.detectChanges();
 
             component.submit().subscribe({
@@ -295,7 +295,7 @@ describe("ApplicationCreateDialogComponent ", () => {
                     expect(notificationServiceSpy.error).toHaveBeenCalledWith(
                         "Activation failed",
                         "The application package was uploaded into storage successfully, "
-                            + "but the activation process failed.",
+                        + "but the activation process failed.",
                     );
 
                     done();

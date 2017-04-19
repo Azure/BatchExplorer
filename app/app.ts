@@ -10,10 +10,12 @@ import "chart.js";
 import "hammerjs";
 import "./utils/extensions";
 
+import "codemirror/addon/hint/show-hint.css";
+import "codemirror/lib/codemirror.css";
 import "font-awesome/css/font-awesome.min.css";
 import "roboto-fontface/css/roboto/roboto-fontface.css";
-import "./assets/styles/main.scss";
 import "./environment";
+import "./styles/main.scss";
 
 (remote.getCurrentWindow() as any).splashScreen.updateMessage("Initializing app");
 const platform = platformBrowserDynamic();

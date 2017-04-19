@@ -1,10 +1,12 @@
-import { Record } from "immutable";
+import { List, Record } from "immutable";
 import { Duration } from "moment";
 
+import { ModelUtils } from "app/utils";
 import { CloudServiceConfiguration } from "./cloud-service-configuration";
+import { Metadata, MetadataAttributes } from "./metadata";
 import { ResizeError } from "./resize-error";
 import { StartTask } from "./start-task";
-import { VirtualMachineConfiguration } from "./virtual-machine-configuration";
+import { VirtualMachineConfiguration, VirtualMachineConfigurationAttributes } from "./virtual-machine-configuration";
 
 const PoolRecord = Record({
     allocationState: null,
@@ -15,7 +17,7 @@ const PoolRecord = Record({
     creationTime: null,
     currentDedicated: 0,
     displayName: null,
-    enableAutoscale: false,
+    enableAutoScale: false,
     enableInterNodeCommunication: false,
     id: null,
     lastModified: null,
@@ -25,12 +27,14 @@ const PoolRecord = Record({
     state: null,
     stateTransitionTime: null,
     targetDedicated: 0,
+    autoScaleEvaluationInterval: null,
+    autoScaleFormula: null,
     taskSchedulingPolicy: null,
     url: null,
     virtualMachineConfiguration: null,
     vmSize: null,
     startTask: null,
-    metadata: [],
+    metadata: List([]),
 });
 
 export interface PoolAttributes {
@@ -54,16 +58,16 @@ export interface PoolAttributes {
     targetDedicated: number;
     taskSchedulingPolicy: any;
     url: string;
-    virtualMachineConfiguration: Partial<VirtualMachineConfiguration>;
+    virtualMachineConfiguration: Partial<VirtualMachineConfigurationAttributes>;
     vmSize: string;
     startTask: StartTask;
-    metadata: any[];
+    metadata: MetadataAttributes[];
 }
 
 /**
  * Class for displaying Batch pool information.
  */
-export class Pool extends PoolRecord implements PoolAttributes {
+export class Pool extends PoolRecord {
     public allocationState: string;
     public allocationStateTransitionTime: Date;
     public applicationPackageReferences: any[];
@@ -72,7 +76,7 @@ export class Pool extends PoolRecord implements PoolAttributes {
     public creationTime: Date;
     public currentDedicated: number;
     public displayName: string;
-    public enableAutoscale: boolean;
+    public enableAutoScale: boolean;
     public enableInterNodeCommunication: boolean;
     public id: string;
     public lastModified: Date;
@@ -82,18 +86,28 @@ export class Pool extends PoolRecord implements PoolAttributes {
     public state: string;
     public stateTransitionTime: Date;
     public targetDedicated: number;
+    public autoScaleFormula: string;
+    public autoScaleEvaluationInterval: Duration;
     public taskSchedulingPolicy: any;
     public url: string;
     public virtualMachineConfiguration: VirtualMachineConfiguration;
     public vmSize: string;
     public startTask: StartTask;
-    public metadata: any[];
+    public metadata: List<Metadata>;
+
+    /**
+     * Tags are computed from the metadata using an internal key
+     */
+    public tags: List<string> = List([]);
 
     constructor(data: Partial<PoolAttributes> = {}) {
         super(Object.assign({}, data, {
             resizeError: data.resizeError && new ResizeError(data.resizeError),
             startTask: data.startTask && new StartTask(data.startTask),
+            metadata: List(data.metadata && data.metadata.map(x => new Metadata(x))),
         }));
+
+        this.tags = ModelUtils.tagsFromMetadata(this.metadata);
     }
 }
 

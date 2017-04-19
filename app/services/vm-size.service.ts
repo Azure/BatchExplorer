@@ -4,15 +4,16 @@ import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
 import { AccountResource, VmSize } from "app/models";
-import { AccountService, ArmHttpService } from "app/services";
 import { StringUtils, log } from "app/utils";
+import { AccountService } from "./account.service";
+import { ArmHttpService } from "./arm-http.service";
+import { GithubDataService } from "./github-data.service";
 
 export function computeUrl(subscriptionId: string) {
     return `subscriptions/${subscriptionId}/providers/Microsoft.Compute`;
 }
 
-const githubRaw = "https://raw.githubusercontent.com";
-const excludedVmsSizesUrl = `${githubRaw}/Azure/BatchLabs-data/master/data/vm-sizes.json`;
+const excludedVmsSizesPath = "data/vm-sizes.json";
 
 interface VmSizeData {
     category: StringMap<string[]>;
@@ -27,7 +28,19 @@ interface ExcludedSizes {
 
 @Injectable()
 export class VmSizeService {
+    /**
+     * All sizes
+     */
+    public sizes: Observable<List<VmSize>>;
+
+    /**
+     * Only cloud services sizes supported
+     */
     public cloudServiceSizes: Observable<List<VmSize>>;
+
+    /**
+     * Only virtual machine sizes supported
+     */
     public virtualMachineSizes: Observable<List<VmSize>>;
     public vmSizeCategories: Observable<StringMap<string[]>>;
 
@@ -37,8 +50,12 @@ export class VmSizeService {
 
     private _currentAccount: AccountResource;
 
-    constructor(private arm: ArmHttpService, private http: Http, private accountService: AccountService) {
+    constructor(
+        private arm: ArmHttpService, private http: Http,
+        private githubData: GithubDataService, private accountService: AccountService) {
+
         const obs = Observable.combineLatest(this._sizes, this._excludedSizes);
+        this.sizes = this._sizes.asObservable();
 
         this.cloudServiceSizes = obs.map(([sizes, excluded]) => {
             if (!excluded) {
@@ -81,7 +98,7 @@ export class VmSizeService {
     }
 
     public loadVmSizeData() {
-        this.http.get(excludedVmsSizesUrl).subscribe({
+        this.githubData.get(excludedVmsSizesPath).subscribe({
             next: (response: Response) => {
                 const data: VmSizeData = response.json();
                 this._vmSizeCategories.next(data.category);
@@ -93,6 +110,11 @@ export class VmSizeService {
         });
     }
 
+    public get(vmSize: string): Observable<VmSize> {
+        return this._sizes.map(sizes => {
+            return sizes.filter(x => x.name.toLowerCase() === vmSize.toLowerCase()).first();
+        });
+    }
     /**
      * Filter the given list of vm sizes by excluding any patching the given patterns.
      * @param sizes Sizes to filter

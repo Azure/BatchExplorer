@@ -1,0 +1,298 @@
+.required-alert, bl-error {
+    color: $validation-error-color;
+}
+
+.button-bar {
+    margin-top: 25px;
+    display: block;
+
+    button {
+        margin-right: 15px;
+    }
+}
+
+fieldset {
+    padding: 0;
+    margin: 0;
+    margin-bottom: 15px;
+    border: 0;
+}
+
+.confirmation-dialog {
+    margin: 24px;
+    min-width: 450px;
+
+    p {
+        line-height: 1.2em;
+        padding-top: 10px;
+        color: $mineShaftGray;
+    }
+
+    .message {
+        line-height: 1.4em;
+        font-size: 1.5em;
+    }
+
+    .options {
+        h3 {
+            padding-top: 10px;
+        }
+
+        hr {
+            margin: 0;
+        }
+
+        p {
+            padding: 4px 0;;
+        }
+
+        md-radio-group {
+            md-radio-button {
+                font-size: 11pt;
+            }
+        }
+    }
+
+    .buttons {
+        margin: 30px 0 0;
+
+        [md-raised-button] {
+            margin-right: 15px;
+        }
+    }
+
+    .error {
+        padding-top: 15px;
+
+        p {
+            color: $errorText;
+            margin-bottom: 0.1em;
+        }
+    }
+}
+
+.infobox {
+    display: flex;
+    flex-flow: row nowrap;
+    padding: 0;
+    border: 1px solid #aaa;
+    background-color: $athensGrey;
+    margin-top: 16px;
+
+    .infobox-image {
+        width: 45px;
+        height: 45px;
+        padding: 10px;
+        background-color: $silver-grey;
+
+        i {
+            color: map-get($md-prussian-blue, 400);
+        }
+    }
+
+    .infobox-text {
+        margin-left: 4px;
+        padding: 4px;
+    }
+}
+
+.large-slideout-form {
+    width: 800px;
+}
+
+.slideout-form, .edit-form {
+    width: 640px;
+}
+
+.slideout-form, .large-slideout-form, .edit-form, bl-complex-form {
+
+    &.content-wrapper {
+        padding: 0;
+    }
+
+    .form-element {
+        width: 100%;
+        margin: 10px 0;
+
+        &.element-spacer {
+            margin-bottom: 15px;
+        }
+
+        &.pad-top {
+            margin-top: 20px;
+        }
+
+        // pretty sure most of what is in here can be set in the HTML with: dividerColor="<color>"
+
+        input[type=file] {
+            width: 100%;
+            margin-top: 5px;
+            margin-bottom: 5px;
+        }
+
+        md-input-container {
+            width: 100%;
+        }
+
+        md-input-container.ng-invalid.ng-touched {
+            label {
+                color: $validation-error-color;
+
+                .mat-placeholder-required {
+                    color: $validation-error-color;
+                }
+            }
+
+            .mat-input-underline {
+                border-color: $validation-error-color;
+                border-width: 2px;
+
+                .mat-input-ripple.mat-focused {
+                    opacity: 0;
+                }
+            }
+
+            md-hint {
+                color: $validation-error-color;
+            }
+        }
+
+        md-select {
+            margin-top: 5px;
+            width: 40%;
+        }
+
+        .input-summary {
+            margin-top: 15px;
+            padding-bottom: 5px;
+
+            p {
+                margin-bottom: 10px;
+            }
+        }
+    }
+}
+
+.dialog-form {
+    width: 500px;
+
+    hr {
+        margin: 0.4em 0 1.4em;
+    }
+}
+
+bl-complex-form {
+    display: block;
+    // height: $contentview-height;
+    $footer-height: 60px;
+    overflow: hidden;
+
+    &.small {
+        width: 500px;
+    }
+
+    &.medium {
+        width: 600px;
+    }
+
+    &.large {
+        width: 800px;
+    }
+
+    &.sticky-footer {
+        height: 100%;
+
+        > .content {
+            padding-bottom: 100px;
+        }
+
+        > .form-footer {
+            box-shadow: 0 0 40px -10px #a5a5a5;
+        }
+    }
+
+    .header {
+        h1 {
+            padding: 0 8px;
+        }
+
+        p {
+            padding: 0 10px;
+        }
+    }
+
+    > .content {
+        overflow: auto;
+        position: relative;
+        height: calc(100% - #{$footer-height});
+        padding: 10px 5px;
+
+        > .loading-overlay {
+            position: absolute;
+            background: white;
+            opacity: 0.5;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            right: 0;
+        }
+
+    }
+
+    > .form-server-error {
+        position: absolute;
+        bottom: $footer-height;
+        width: 100%;
+        z-index: 100;
+    }
+
+    > .form-footer {
+        height: $footer-height;
+
+        // background: map-get($md-prussian-blue, 500);
+        padding: 5px;
+        display: flex;
+        align-items: center;
+
+        > .toggle-error-btn {
+            button {
+                font-size: 26px;
+            }
+        }
+
+        > .summary {
+            margin: 0 5px;
+            flex: 1;
+            font-size: 16px;
+        }
+
+        > .form-buttons {
+            margin: 0 5px;
+        }
+    }
+}
+
+.form-element md-checkbox {
+    display: block;
+    margin: 10px 0;
+}
+
+md-tab-group.form-tabs {
+    .mat-tab-label {
+        min-width: auto;
+        line-height: 32px;
+        height: 32px;
+    }
+}
+
+
+input.search-input {
+    flex: 1 0 auto;
+    padding: 5px;
+    color: $emperor-grey;
+    font-size: 1.1em;
+
+    background-color: $athensGrey;
+    border: none;
+    outline: none;
+}
