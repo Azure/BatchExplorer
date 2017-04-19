@@ -30,7 +30,7 @@ export class MainWindow extends UniqueWindow {
             },
         });
         const url = process.env.HOT ? devServerUrl : buildFileUrl;
-
+        this._setupEvents(window);
         window.loadURL(url);
 
         const anyWindow = window as any;
@@ -58,5 +58,21 @@ export class MainWindow extends UniqueWindow {
         }
 
         return window;
+    }
+
+    private _setupEvents(window: Electron.BrowserWindow) {
+        window.webContents.on("crashed", (error) => {
+            logger.error("There was a crash", error);
+        });
+
+        window.webContents.on("did-fail-load", (error) => {
+            windows.splashScreen.updateMessage(
+                "Fail to load! Make sure you built the app or are running the dev-server.");
+            logger.error("Fail to load", error);
+        });
+
+        window.on("unresponsive", (error) => {
+            logger.error("There was a crash", error);
+        });
     }
 }

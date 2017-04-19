@@ -2,6 +2,7 @@ import { app, protocol } from "electron";
 
 import * as path from "path";
 import { windows } from "./core";
+import { logger } from "./logger";
 
 app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 
@@ -39,4 +40,8 @@ app.on("activate", () => {
     if (windows.main.exists()) {
         createWindow();
     }
+});
+
+process.on("uncaughtException", (error) => {
+    logger.error("There was a uncaught exception", error);
 });
