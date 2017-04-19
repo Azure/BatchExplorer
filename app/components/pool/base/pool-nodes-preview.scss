@@ -10,7 +10,7 @@ bl-pool-nodes-preview {
         font-size: 24px;
     }
 
-    .resize-error {
+    &.resize-error {
         color: $red;
         font-weight: bold;
     }

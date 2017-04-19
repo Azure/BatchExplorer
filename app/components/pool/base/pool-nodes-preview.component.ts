@@ -20,9 +20,12 @@ export class PoolNodesPreviewComponent implements OnChanges {
     public size: ComponentSize = "normal";
     public tooltipMessage: string;
 
+    @HostBinding("class.resize-error")
+    public hasResizeError: boolean = false;
     public ngOnChanges(inputs) {
         if (inputs.pool) {
             this.tooltipMessage = this._getTooltipMessage();
+            this.hasResizeError = Boolean(this.pool.resizeError);
         }
     }
 
