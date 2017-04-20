@@ -268,6 +268,10 @@ bl-complex-form {
 
         > .form-buttons {
             margin: 0 5px;
+
+            bl-submit-btn {
+                margin-right: 5px;
+            }
         }
     }
 }
@@ -295,8 +299,4 @@ input.search-input {
     background-color: $athensGrey;
     border: none;
     outline: none;
-}
-
-bl-submit-btn {
-    margin-right: 5px;
 }
