@@ -2,22 +2,17 @@
     Main module
 """
 
-import asyncio
-import websockets
+import signal
+import server.websocket_server
 
-async def hello(websocket, path):
+signal.signal(signal.SIGINT, signal.SIG_DFL)
+
+def run():
     """
-        Home stuff
+        Main function of the app that start the server
     """
-    while True:
-        name = await websocket.recv()
-        print("< {}".format(name))
+    ws_server = server.websocket_server.WebsocketServer(8765)
+    ws_server.run_forever()
 
-        greeting = "Hello {}!".format(name)
-        await websocket.send(greeting)
-        print("> {}".format(greeting))
-
-start_server = websockets.serve(hello, "localhost", 8765)
-
-asyncio.get_event_loop().run_until_complete(start_server)
-asyncio.get_event_loop().run_forever()
+if __name__ == "__main__":
+    run()
