@@ -107,3 +107,14 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.nodeService.listNodeAgentSkus().fetchAll();
     }
 }
+
+
+const socket = new WebSocket("ws://127.0.0.1:8765/ws");
+socket.onopen = (event) => {
+    socket.send("Here's some text that the server is urgently awaiting!");
+    socket.send("Second message");
+};
+
+socket.onmessage = (event) => {
+    console.log("Return data from server: ", event.data);
+};
