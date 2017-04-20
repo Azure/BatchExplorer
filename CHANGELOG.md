@@ -1,5 +1,6 @@
 # Version 0.3.1(Beta)
 [All items](https://github.com/Azure/BatchLabs/milestone/4?closed=1)
+
 ### Fixes
 * Fix error when cloning a pool not using autoscale forumla [\#342](https://github.com/Azure/BatchLabs/issues/342)
 * UI bug in the pool nodes preview(Font size is off) [\#332](https://github.com/Azure/BatchLabs/issues/332)
