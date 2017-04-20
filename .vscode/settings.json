@@ -12,5 +12,8 @@
     "dll/**": true
   },
   "tslint.jsEnable": true,
-  "vsicons.presets.angular": true
+  "vsicons.presets.angular": true,
+  "python.autoComplete.extraPaths": [
+    "${workspaceRoot}/python"
+  ]
 }

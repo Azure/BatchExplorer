@@ -111,8 +111,8 @@ export class AppComponent implements AfterViewInit, OnInit {
 
 const socket = new WebSocket("ws://127.0.0.1:8765/ws");
 socket.onopen = (event) => {
+    console.log("Open connection...");
     socket.send("Here's some text that the server is urgently awaiting!");
-    socket.send("Second message");
 };
 
 socket.onmessage = (event) => {

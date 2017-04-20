@@ -1,5 +1,6 @@
 import asyncio
 import websockets
+from jsonrpc import JsonRpcRequest, JsonRpcResponse, error
 
 
 class WebsocketServer:
@@ -9,7 +10,8 @@ class WebsocketServer:
 
     def __init__(self, port):
         self.port = port
-        self.start_server = websockets.serve(self.handler, "localhost", self.port)
+        self.start_server = websockets.serve(
+            self.handler, "localhost", self.port)
 
     def run_forever(self):
         """
@@ -23,10 +25,47 @@ class WebsocketServer:
         """
             Websocket handler
         """
-        while True:
-            message = await websocket.recv()
-            print("< {}".format(message))
+        connection = WebsocketConnection(websocket)
+        await connection.listen()
 
-            greeting = "Hello {}!".format(message)
-            await websocket.send(greeting)
-            print("> {}".format(greeting))
+
+class WebsocketConnection:
+    def __init__(self, websocket):
+        self.websocket = websocket
+
+    async def listen(self):
+        while True:
+            message = await self.websocket.recv()
+            try:
+                request = self.parse_request(message)
+            except error.JsonRpcParseError as parse_error:
+                response = JsonRpcResponse(
+                    request=None,
+                    error=parse_error,
+                )
+                await self.send_response(response)
+            else:
+                self.process_request(request)
+
+    async def process_request(self, request: JsonRpcRequest):
+        try:
+            print("< {0} {1}".format(request.request_id, request.method))
+            response = JsonRpcResponse(
+                request=request,
+                result={'banan': True},
+            )
+            await self.send_response(response)
+        except error.JsonRpcError as rpc_error:
+            response = JsonRpcResponse(
+                request=request,
+                error=rpc_error,
+            )
+            await self.send_response(response)
+
+    def parse_request(self, message: str) -> JsonRpcRequest:
+        return JsonRpcRequest.from_json(message)
+
+    async def send_response(self, response: JsonRpcResponse):
+        data = response.to_json()
+        await self.websocket.send(data)
+        print("> {}".format(data))
