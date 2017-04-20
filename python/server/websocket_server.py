@@ -45,7 +45,7 @@ class WebsocketConnection:
                 )
                 await self.send_response(response)
             else:
-                self.process_request(request)
+                await self.process_request(request)
 
     async def process_request(self, request: JsonRpcRequest):
         try:

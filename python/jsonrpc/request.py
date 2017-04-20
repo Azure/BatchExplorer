@@ -18,10 +18,10 @@ class JsonRpcRequest:
         try:
             data = json.loads(json_str)
             return JsonRpcRequest(
-                jsonrpc=data.jsonrpc,
-                method=data.method,
-                params=data.params,
-                request_id=data.id,
+                jsonrpc=data['jsonrpc'],
+                method=data['method'],
+                params=data['params'],
+                request_id=data['id'],
             )
         except json.JSONDecodeError as error:
             raise JsonRpcParseError(error, json_str)

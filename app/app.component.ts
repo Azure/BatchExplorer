@@ -108,13 +108,37 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
 }
 
+interface JsonRpcRequest {
+    jsonrpc: string;
+    id: string;
+    method: string;
+    params: any[];
+}
 
-const socket = new WebSocket("ws://127.0.0.1:8765/ws");
-socket.onopen = (event) => {
-    console.log("Open connection...");
-    socket.send("Here's some text that the server is urgently awaiting!");
-};
+class PythonRpcService {
+    private _socket: WebSocket;
+    constructor() {
+        const socket = this._socket = new WebSocket("ws://127.0.0.1:8765/ws");
 
-socket.onmessage = (event) => {
-    console.log("Return data from server: ", event.data);
-};
+        socket.onopen = (event) => {
+            console.log("Open connection...");
+            this.call("bananan", ["foo", "bar"]);
+        };
+
+        socket.onmessage = (event) => {
+            console.log("Return data from server: ", JSON.parse(event.data));
+        };
+    }
+
+    public call(method: string, params: any[]) {
+        const request: JsonRpcRequest = {
+            jsonrpc: "2.0",
+            id: "some-id",
+            method,
+            params,
+        };
+        this._socket.send(JSON.stringify(request));
+    }
+}
+
+const service = new PythonRpcService();
