@@ -186,18 +186,18 @@ bl-autoscale-formula-picker {
     }
 
     .cm-variables {
-        color: green;
+        color: $green-dark;
     }
 
     .cm-functions {
-        color: red;
+        color: $red-dark;
     }
 
     .cm-math {
-        color: orange;
+        color: $prussian-blue;
     }
 
     .cm-builtin {
-        color: blue;
+        color: $midnight;
     }
 }
