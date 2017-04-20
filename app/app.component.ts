@@ -122,7 +122,8 @@ class PythonRpcService {
 
         socket.onopen = (event) => {
             console.log("Open connection...");
-            this.call("bananan", ["foo", "bar"]);
+            this.call("foo", ["abc", "def"]);
+            this.call("other", ["abc", "def"]);
         };
 
         socket.onmessage = (event) => {

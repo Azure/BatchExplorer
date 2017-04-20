@@ -1,7 +1,8 @@
 import asyncio
 import websockets
 from jsonrpc import JsonRpcRequest, JsonRpcResponse, error
-
+from .app import app
+from controllers import *
 
 class WebsocketServer:
     """
@@ -50,9 +51,11 @@ class WebsocketConnection:
     async def process_request(self, request: JsonRpcRequest):
         try:
             print("< {0} {1}".format(request.request_id, request.method))
+
+            result = app.call_procedure(request.method, request.params)
             response = JsonRpcResponse(
                 request=request,
-                result={'banan': True},
+                result=result,
             )
             await self.send_response(response)
         except error.JsonRpcError as rpc_error:
