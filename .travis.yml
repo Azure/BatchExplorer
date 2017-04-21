@@ -5,6 +5,7 @@ node_js:
 install:
   - npm install -g yarn
   - yarn install
+  - pip install -r python/requirements.txt
 
 before_script:
   - export DISPLAY=:99.0
@@ -13,8 +14,16 @@ before_script:
 
 script:
     - ./scripts/travis/build-and-test.sh
+    - pylint python/main.py
 
 branches:
   only:
   - master
   - stable
+  - feature/python2
+
+addons:
+  apt:
+    packages:
+      - python3
+      - python3-pip
