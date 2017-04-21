@@ -3,6 +3,8 @@ dist: trusty
 sudo: false
 node_js:
     - '6.9.4'
+python:
+  - "3.6"
 
 before_install:
   - python3 --version
@@ -10,7 +12,7 @@ install:
   - npm install -g yarn
   - yarn install
   - python3 --version
-  - pip install -r python/requirements.txt
+  - pip3 install -r python/requirements.txt
 
 before_script:
   - export DISPLAY=:99.0
