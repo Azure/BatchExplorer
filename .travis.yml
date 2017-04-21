@@ -1,7 +1,11 @@
 language: node_js
+dist: trusty
+sudo: false
 node_js:
     - '6.9.4'
 
+before_install:
+  - python3 --version
 install:
   - npm install -g yarn
   - yarn install
@@ -23,7 +27,3 @@ branches:
   - stable
   - feature/python2
 
-addons:
-  apt:
-    packages:
-      - python3.6
