@@ -4,7 +4,7 @@
     "type": "git",
     "url": "https://github.com/Azure/BatchLabs"
   },
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "",
   "main": "index.js",
   "scripts": {
