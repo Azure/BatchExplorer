@@ -7,7 +7,9 @@ python:
   - "3.6"
 
 before_install:
+  - apt-get -y install python3-pip python-dev
   - python3 --version
+
 install:
   - npm install -g yarn
   - yarn install
@@ -20,7 +22,7 @@ before_script:
   - sleep 3
 
 script:
-    - ./scripts/travis/build-and-test.sh
+    # - ./scripts/travis/build-and-test.sh
     - pylint python/main.py
 
 branches:
