@@ -5,6 +5,8 @@ node_js:
 install:
   - npm install -g yarn
   - yarn install
+  - python3 --version
+  - pip install --upgrade pip
   - pip install -r python/requirements.txt
 
 before_script:
