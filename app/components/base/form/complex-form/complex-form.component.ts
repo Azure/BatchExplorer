@@ -25,6 +25,12 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
     public actionName = "Save";
 
     @Input()
+    public actionColor = "primary";
+
+    @Input()
+    public cancelText = "Close";
+
+    @Input()
     @HostBinding("class")
     public size: FormSize = "large";
 
