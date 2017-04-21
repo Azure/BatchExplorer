@@ -75,6 +75,7 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
  * Used to clone a pool
  */
 export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
+    const autoScaleInterval = pool.autoScaleEvaluationInterval;
     return {
         id: pool.id,
         displayName: pool.displayName,
@@ -83,7 +84,7 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
             targetDedicated: pool.targetDedicated,
             enableAutoScale: pool.enableAutoScale,
             autoScaleFormula: pool.autoScaleFormula,
-            autoScaleEvaluationInterval: pool.autoScaleEvaluationInterval.asMinutes(),
+            autoScaleEvaluationInterval: autoScaleInterval && autoScaleInterval.asMinutes(),
         },
         maxTasksPerNode: pool.maxTasksPerNode.toString(),
         enableInterNodeCommunication: pool.enableInterNodeCommunication,

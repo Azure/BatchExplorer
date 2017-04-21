@@ -24,9 +24,9 @@
     <div class="form-buttons">
         <div *ngIf="isMainWindow">
             <bl-submit-btn *ngIf="multiUse" [submit]="save" [multiSubmit]="true" [disabled]="!submitEnabled" class="add">{{actionName}}</bl-submit-btn>
-            <bl-submit-btn *ngIf="containerRef" [submit]="saveAndClose" [multiSubmit]="true" [disabled]="!submitEnabled" class="add-and-close">{{saveAndCloseText}}</bl-submit-btn>
+            <bl-submit-btn *ngIf="containerRef" [submit]="saveAndClose" [multiSubmit]="true" [disabled]="!submitEnabled" [color]="actionColor" class="add-and-close">{{saveAndCloseText}}</bl-submit-btn>
             <span style="display: inline-block">
-                <button type="button" [disabled]="isSaving" (click)="close()" class="close" md-raised-button>Close</button>
+                <button type="button" [disabled]="isSaving" (click)="close()" class="close" md-raised-button>{{cancelText}}</button>
             </span>
         </div>
         <div *ngIf="!isMainWindow">

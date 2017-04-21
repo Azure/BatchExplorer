@@ -17,9 +17,11 @@ import { Constants } from "app/utils";
     templateUrl: "application-edit-dialog.html",
 })
 export class ApplicationEditDialogComponent {
+    public form: FormGroup;
     public application: Application;
     public packages: List<ApplicationPackage>;
-    public applicationForm: FormGroup;
+    public title: string = "Edit application";
+    public description: string = "Update the display name, default version, or locked status of your application";
 
     constructor(
         private formBuilder: FormBuilder,
@@ -28,7 +30,7 @@ export class ApplicationEditDialogComponent {
         private notificationService: NotificationService) {
 
         const validation = Constants.forms.validation;
-        this.applicationForm = this.formBuilder.group({
+        this.form = this.formBuilder.group({
             id: ["", []],
             allowUpdates: ["", [
                 Validators.required,
@@ -43,12 +45,12 @@ export class ApplicationEditDialogComponent {
     public setValue(application: Application) {
         this.application = application;
         this.packages = application.packages || List([]);
-        this.applicationForm.patchValue(applicationToEditFormModel(application));
+        this.form.patchValue(applicationToEditFormModel(application));
     }
 
     @autobind()
     public submit(): Observable<any> {
-        const jsonData = editApplicationFormToJsonData(this.applicationForm.value);
+        const jsonData = editApplicationFormToJsonData(this.form.value);
         const patchObs = this.applicationService.patch(this.application.id, jsonData);
         patchObs.subscribe({
             next: (response: any) => {
