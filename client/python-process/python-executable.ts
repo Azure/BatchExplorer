@@ -57,7 +57,8 @@ export function tryMultiplePythons(paths: string[]): Promise<string> {
 }
 
 export function getPythonPath(): Promise<string> {
-    return tryMultiplePythons(["python3", "python"]);
+    const envPython = process.env.BL_PYTHON_PATH;
+    return tryMultiplePythons([envPython, "python3", "python"].filter(x => Boolean(x)));
 }
 
 const pythonVersionRegex = /Python\s*([\d.]+)/;
