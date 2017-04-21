@@ -8,6 +8,7 @@ import { registerIcons } from "app/config";
 import {
     AccountService, AdalService, AutoscaleFormulaService, CommandService, NodeService,
     PricingService, SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
+    PythonRpcService,
 } from "app/services";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
@@ -45,7 +46,9 @@ export class AppComponent implements AfterViewInit, OnInit {
         private nodeService: NodeService,
         private sshKeyService: SSHKeyService,
         private pricingService: PricingService,
-        private vmSizeService: VmSizeService) {
+        pythonRpcService: PythonRpcService,
+        private vmSizeService: VmSizeService,
+    ) {
         this.autoscaleFormulaService.init();
         this.settingsService.init();
         this.sshKeyService.init();
@@ -55,6 +58,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.vmSizeService.init();
         this.adalService.init(adalConfig);
         this.accountService.loadInitialData();
+        pythonRpcService.init();
 
         this.hasAccount = accountService.currentAccount.map((x) => Boolean(x));
 
@@ -107,39 +111,3 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.nodeService.listNodeAgentSkus().fetchAll();
     }
 }
-
-interface JsonRpcRequest {
-    jsonrpc: string;
-    id: string;
-    method: string;
-    params: any[];
-}
-
-class PythonRpcService {
-    private _socket: WebSocket;
-    constructor() {
-        const socket = this._socket = new WebSocket("ws://127.0.0.1:8765/ws");
-
-        socket.onopen = (event) => {
-            console.log("Open connection...");
-            this.call("foo", ["abc", "def"]);
-            this.call("other", ["abc", "def"]);
-        };
-
-        socket.onmessage = (event) => {
-            console.log("Return data from server: ", JSON.parse(event.data));
-        };
-    }
-
-    public call(method: string, params: any[]) {
-        const request: JsonRpcRequest = {
-            jsonrpc: "2.0",
-            id: "some-id",
-            method,
-            params,
-        };
-        this._socket.send(JSON.stringify(request));
-    }
-}
-
-const service = new PythonRpcService();
