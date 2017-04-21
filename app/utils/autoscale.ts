@@ -31,7 +31,7 @@ const mappedKeywords = variables.map((keyword) => `\\$\\b${keyword.substring(1)}
 const keywordRegex = new RegExp(mappedKeywords.join("|"));
 
 const mappedMath = mathFunc.map((math) => `\\b${math}\\b`);
-const mathRegex = new RegExp(mappedMath.join("|"), "g");
+const mathRegex = new RegExp(mappedMath.join("|"));
 
 const mappedSystemFunc = systemFunc.map((sf) => `\\b${sf}\\b`);
 const obtainRegex =  new RegExp(mappedSystemFunc.join("|"));
