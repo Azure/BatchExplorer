@@ -2,8 +2,12 @@ import { app, protocol } from "electron";
 
 import * as path from "path";
 import { windows } from "./core";
-
+import { getPythonPath } from "./python-process";
 app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
+
+getPythonPath().then((pythonPath) => {
+    console.log("Exec is", pythonPath);
+});
 
 // Create the browser window.
 function createWindow() {

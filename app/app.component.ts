@@ -7,8 +7,8 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { registerIcons } from "app/config";
 import {
     AccountService, AdalService, AutoscaleFormulaService, CommandService, NodeService,
-    PricingService, SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
-    PythonRpcService,
+    PricingService, PythonRpcService, SSHKeyService, SettingsService, SubscriptionService,
+    VmSizeService,
 } from "app/services";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 

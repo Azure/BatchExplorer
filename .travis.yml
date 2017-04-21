@@ -7,7 +7,6 @@ python:
   - "3.6"
 
 before_install:
-  - pyenv install 3.6-dev
   - python3 --version
 
 install:
