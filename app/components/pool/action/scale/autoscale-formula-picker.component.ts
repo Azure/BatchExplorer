@@ -51,7 +51,6 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
         this._subs.push(this.autoscaleFormulaService.formulas.subscribe((formulas) => {
             this.savedAutoscaleFormulas = formulas;
         }));
-        this.predefinedFormulaService.init();
         this.predefinedFormulaService.predefinedFormulas.subscribe(formulas => this.predefinedFormula = formulas);
     }
 

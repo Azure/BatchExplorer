@@ -14,38 +14,40 @@ const mathFunc = [
 ];
 
 const systemFunc = [
-    "GetSample", "GetSamplePeriod", "Count", "HistoryBeginTime", "GetSamplePercent",
+    "GetSamplePeriod", "GetSamplePercent", "GetSample", "Count", "HistoryBeginTime",
 ];
 
-const keywords = [
-    "double", "doubleVec", "doubleVecList", "string", "timestamp",
+const types = [
+    "doubleVecList", "doubleVec", "double", "string", "timestamp",
 ];
 
 const timeInterval = [
-    "TimeInterval_Zero",
-    "TimeInterval_100ns",
-    "TimeInterval_Microsecond",
-    "TimeInterval_Millisecond",
-    "TimeInterval_Second",
-    "TimeInterval_Minute",
-    "TimeInterval_Hour",
-    "TimeInterval_Day",
-    "TimeInterval_Week",
-    "TimeInterval_Year",
+    "TimeInterval_Zero", "TimeInterval_100ns", "TimeInterval_Microsecond",
+    "TimeInterval_Millisecond", "TimeInterval_Second", "TimeInterval_Minute",
+    "TimeInterval_Hour", "TimeInterval_Day", "TimeInterval_Week", "TimeInterval_Year",
 ];
 
-// tslint:disable-next-line:max-line-length
-const keywordRegex = /\$\b(CPUPercent|WallClockSeconds|MemoryBytes|DiskBytes|DiskReadBytes\$DiskWriteBytes|DiskReadOps|DiskWriteOps|NetworkInBytes|NetworkOutBytes|SampleNodeCount|ActiveTasks|RunningTasks|PendingTasks|SucceededTasks|FailedTasks|CurrentDedicated|TargetDedicated|NodeDeallocationOption)\b/;
-const functionsRegex = /\b(avg|len|lg|ln|log|max|min|norm|percentile|rand|range|std|stop|sum|time|val)\b/;
-const obtainRegex = /\b(GetSamplePeriod|GetSample|Count|HistoryBeginTime|GetSamplePercent)\b/;
+const mappedKeywords = variables.map((keyword) => `\\$\\b${keyword.substring(1)}\\b`);
+const keywordRegex = new RegExp(mappedKeywords.join("|"));
+
+const mappedMath = mathFunc.map((math) => `\\b${math}\\b`);
+const mathRegex = new RegExp(mappedMath.join("|"), "g");
+
+const mappedSystemFunc = systemFunc.map((sf) => `\\b${sf}\\b`);
+const obtainRegex =  new RegExp(mappedSystemFunc.join("|"));
+
+const mappedTypes = types.map((type) => `\\b${type}\\b`);
+const typesRegex = new RegExp(mappedTypes.join("|"));
+
+const mappedInterval = timeInterval.map((interval) => `\\b${interval}\\b`);
+const intervalRegex = new RegExp(mappedInterval.join("|"));
+
 const atomRegex = /\b(true|false|null)\b/;
-const typesRegex = /\b(double|doubleVec|doubleVecList|string|timestamp)\b/;
-// tslint:disable-next-line:max-line-length
-const intervalRegex = /\b(TimeInterval_Zero|TimeInterval_100ns|TimeInterval_Microsecond|TimeInterval_Millisecond|TimeInterval_Second|TimeInterval_Minute|TimeInterval_Hour|TimeInterval_Hour|TimeInterval_Day|TimeInterval_Week|TimeInterval_Year)\b/;
 const numberRegex = /0x[a-f\d]+|[-+]?(?:\.\d+|\d+\.?\d*)(?:e[-+]?\d+)?/i;
 const operatorRegex = /[-+\/*=<>!]+/;
 const commentRegex = /^\/\/(.*)/;
 const quoteRegex = /"(.*)"/;
+
 CodeMirror.defineMode("autoscale", () => {
     return {
         token: (stream, state) => {
@@ -55,7 +57,7 @@ CodeMirror.defineMode("autoscale", () => {
                 return "string";
             } else if (stream.match(keywordRegex) || stream.match(intervalRegex)) {
                 return "variables";
-            } else if (stream.match(functionsRegex)) {
+            } else if (stream.match(mathRegex)) {
                 return "functions";
             } else if ( stream.match(obtainRegex)) {
                 return "math";
@@ -90,7 +92,7 @@ CodeMirror.registerHelper("hint", "autoscale", (editor) => {
         return item.match(regex);
     })).concat(systemFunc.filter((item) => {
         return item.match(regex);
-    })).concat(keywords.filter((item) => {
+    })).concat(types.filter((item) => {
         return item.match(regex);
     })).concat(timeInterval.filter((item) => {
         return item.match(regex);

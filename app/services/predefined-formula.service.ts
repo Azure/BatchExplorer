@@ -30,10 +30,10 @@ export class PredefinedFormulaService {
                     this.githubData.get(`${predefinedFormulaPath}${file.value}`).subscribe({
                         next: (fileResponse: Response) => {
                             const text: string = fileResponse.text();
-                            const formula = <AutoscaleFormula>{
+                            const formula: AutoscaleFormula = new AutoscaleFormula({
                                 name: file.name,
                                 value: text,
-                            };
+                            });
                             result.push(formula);
                         },
                         error: (error) => {
