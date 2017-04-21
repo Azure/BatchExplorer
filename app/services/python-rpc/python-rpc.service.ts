@@ -51,19 +51,12 @@ export class PythonRpcService {
 
     public resetConnection() {
         this._ready = new AsyncSubject();
+        this._currentRequests = {};
         const socket = this._socket = new WebSocket("ws://127.0.0.1:8765/ws");
 
         socket.onopen = (event: Event) => {
             this._ready.next(true);
             this._ready.complete();
-            this.call("foo", ["abc", "def"]).subscribe({
-                next: (data) => console.log("Got foo", data),
-                error: (err) => console.log("Error foo", err),
-            });
-            this.call("other", ["abc", "def"]).subscribe({
-                next: (data) => console.log("Got foo", data),
-                error: (err) => console.log("Error foo", err),
-            });
         };
 
         socket.onmessage = (event: MessageEvent) => {
@@ -80,7 +73,10 @@ export class PythonRpcService {
     public call(method: string, params: any[]): Observable<any> {
         const request = this._buildRequest(method, params);
         const container = this._registerRequest(request);
-        this._socket.send(JSON.stringify(request));
+
+        this._ready.subscribe(() => {
+            this._socket.send(JSON.stringify(request));
+        });
 
         return container.subject.asObservable();
     }

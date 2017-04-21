@@ -60,6 +60,15 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.accountService.loadInitialData();
         pythonRpcService.init();
 
+        pythonRpcService.call("foo", ["abc", "def"]).subscribe({
+            next: (data) => console.log("Got foo", data),
+            error: (err) => console.log("Error foo", err),
+        });
+        pythonRpcService.call("other", ["abc", "def"]).subscribe({
+            next: (data) => console.log("Got foo", data),
+            error: (err) => console.log("Error foo", err),
+        });
+
         this.hasAccount = accountService.currentAccount.map((x) => Boolean(x));
 
         Observable
