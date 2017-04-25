@@ -12,6 +12,7 @@
     "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
+    "noImplicitThis": true,
     "noImplicitAny": false,
     "moduleResolution": "node",
     "listEmittedFiles": true, // debug option
