@@ -7,7 +7,7 @@ This is the readme for master branch is contains the latest changes. Stable migh
 
 ## Getting started
 #### 1. Prerequisites
-- **Install node.js version `6.9` or greater.**
+- **Install node.js version `6.9` or greater. [Download](https://nodejs.org/en/download/)**
 - Install yarn `npm install -g yarn`
 
 #### 2. Clone the repo
@@ -18,6 +18,7 @@ This is the readme for master branch is contains the latest changes. Stable migh
 ```bash
 yarn install
 ```
+Note: You can also use `npm install` at your own risk. However please do not submit an issue if you didn't use `yarn install`. Yarn will make sure you have the exact same set of dependencies as everybody which remove any unexpected third party bugs problems.
 
 #### 4. Build and run the application
 ```bash
