@@ -17,7 +17,6 @@ This is the readme for master branch is contains the latest changes. Stable migh
 #### 3. Install the dependencies
 ```bash
 yarn install
-npm install -g gulp (Optional)
 ```
 
 #### 4. Build and run the application
