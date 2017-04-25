@@ -18,7 +18,7 @@
     "test-browser-watch": "npm run test-app-watch",
     "test-client": "cross-env NODE_ENV=test node test/client/run-jasmine.js",
     "test-client-watch": "npm run test-client -- --watch",
-    "build-node-ts": "gulp build-node-ts",
+    "build-node-ts": "tsc -p tsconfig.node.json",
     "build-app": "webpack --progress --profile --colors --display-error-details --display-cached",
     "build": "npm run clean && npm run build-node-ts && npm run build-app",
     "build:prod": "cross-env NODE_ENV=production npm run build",

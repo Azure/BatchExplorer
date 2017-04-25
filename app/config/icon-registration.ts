@@ -10,9 +10,9 @@ export function registerIcons(registry: MdIconRegistry, sanitizer: DomSanitizer)
 
     // SVG logos
     registry
-        .addSvgIcon("centos", sanitizer.bypassSecurityTrustResourceUrl("./assets/images/logos/centos.svg"))
-        .addSvgIcon("debian", sanitizer.bypassSecurityTrustResourceUrl("./assets/images/logos/debian.svg"))
-        .addSvgIcon("oracle", sanitizer.bypassSecurityTrustResourceUrl("./assets/images/logos/oracle.svg"))
-        .addSvgIcon("suse", sanitizer.bypassSecurityTrustResourceUrl("./assets/images/logos/suse.svg"))
-        .addSvgIcon("ubuntu", sanitizer.bypassSecurityTrustResourceUrl("./assets/images/logos/ubuntu.svg"));
+        .addSvgIcon("centos", sanitizer.bypassSecurityTrustResourceUrl("/assets/images/logos/centos.svg"))
+        .addSvgIcon("debian", sanitizer.bypassSecurityTrustResourceUrl("/assets/images/logos/debian.svg"))
+        .addSvgIcon("oracle", sanitizer.bypassSecurityTrustResourceUrl("/assets/images/logos/oracle.svg"))
+        .addSvgIcon("suse", sanitizer.bypassSecurityTrustResourceUrl("/assets/images/logos/suse.svg"))
+        .addSvgIcon("ubuntu", sanitizer.bypassSecurityTrustResourceUrl("/assets/images/logos/ubuntu.svg"));
 }
