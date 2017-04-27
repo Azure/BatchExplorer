@@ -54,6 +54,7 @@ const baseConfig = {
 
         new CopyWebpackPlugin([
             { from: "./client/splash-screen/**/*" },
+            { context: "app/assets", from: "**/*", to: "assets" },
         ]),
         new CommonsChunkPlugin({
             name: "polyfills",

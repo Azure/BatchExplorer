@@ -17,7 +17,7 @@ declare module "rxjs/Observable" {
 }
 
 if (!Observable.prototype.cascade) {
-    Observable.prototype.cascade = function (callback: (data: any) => Observable<any> | any) {
+    Observable.prototype.cascade = function <T>(this: Observable<T>, callback: (data: any) => Observable<any> | any) {
         const subject = new AsyncSubject();
         this.take(1).subscribe({
             next: (data) => {
