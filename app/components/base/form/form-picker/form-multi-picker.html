@@ -1,0 +1,15 @@
+<div [formGroup]="values">
+    <div *ngFor="let control of values.controls; let i=index">
+        <bl-form-picker [formControlName]="i" (pick)="pickedValue(i)" (clear)="clearValue(i)" (open)="openPicker(i)">
+            <div no-value-title>
+                <ng-content select="[no-value-title]"></ng-content>
+            </div>
+            <div value-title>
+                {{title(control.value)}}
+            </div>
+            <div nested-form *ngIf="nestedForm">
+                <template [ngTemplateOutlet]="nestedForm"></template>
+            </div>
+        </bl-form-picker>
+    </div>
+</div>

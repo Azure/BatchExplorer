@@ -38,6 +38,15 @@
             </div>
         </bl-form-section>
 
+        <bl-form-section title="User accounts" subtitle="Set of user accounts to be created on each node in the pool.">
+            <bl-form-multi-picker formControlName="userAccounts" #userAccountsPicker [title]="accountTitle">
+                <div no-value-title>Add a user account</div>
+                <template nested-form>
+                    <bl-start-task-picker [formControl]="userAccountsPicker.currentEditValue"></bl-start-task-picker>
+                </template>
+            </bl-form-multi-picker>
+        </bl-form-section>
+
         <bl-form-section title="Start Task" subtitle="Additional startup configuration run on each node as it joins the pool">
             <bl-form-picker formControlName="startTask" #startTaskPicker>
                 <div no-value-title>Add a start task</div>

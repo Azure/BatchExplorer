@@ -8,7 +8,7 @@ import { ButtonsModule } from "../buttons";
 import { ComplexFormComponent } from "./complex-form";
 import { FormErrorComponent } from "./form-error";
 import { FormPageComponent } from "./form-page";
-import {  FormPickerComponent } from "./form-picker";
+import { FormMultiPickerComponent, FormPickerComponent, NestedFormDirective } from "./form-picker";
 import { FormSectionComponent } from "./form-section";
 import { ServerErrorComponent } from "./server-error";
 import { SimpleFormComponent } from "./simple-form";
@@ -26,6 +26,8 @@ const components = [
     ServerErrorComponent,
     FormPageComponent,
     FormSectionComponent,
+    FormMultiPickerComponent,
+    NestedFormDirective,
     FormPickerComponent,
 ];
 

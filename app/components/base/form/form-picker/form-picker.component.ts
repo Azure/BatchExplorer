@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, ViewChild, forwardRef } from "@angular/core";
+import { Component, ElementRef, Input, ViewChild, forwardRef, Output, EventEmitter } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from "@angular/forms";
 
 import { log } from "app/utils";
@@ -22,7 +22,17 @@ export class FormPickerComponent implements ControlValueAccessor, Validator {
     @Input()
     public page: FormPageComponent;
 
+    @Output()
+    public pick = new EventEmitter();
+
+    @Output()
+    public clear = new EventEmitter();
+
+    @Output()
+    public open = new EventEmitter();
+
     public nestedValue = new FormControl();
+
     public hasValue = false;
 
     @ViewChild("button")
@@ -39,6 +49,7 @@ export class FormPickerComponent implements ControlValueAccessor, Validator {
             log.error("FormPicker: Page is input is not defined", page);
         }
         page.activate(this);
+        this.open.emit();
     }
 
     public clearPicker(event: MouseEvent) {
@@ -49,6 +60,7 @@ export class FormPickerComponent implements ControlValueAccessor, Validator {
         if (page) {
             page.formGroup.reset();
         }
+        this.clear.emit();
     }
 
     public nestedFormSubmit() {
@@ -56,6 +68,7 @@ export class FormPickerComponent implements ControlValueAccessor, Validator {
         if (this._propagateChange) {
             this._propagateChange(this.nestedValue.value);
         }
+        this.pick.emit();
     }
 
     public nestedFormCanceled() {
@@ -67,6 +80,7 @@ export class FormPickerComponent implements ControlValueAccessor, Validator {
     }
 
     public writeValue(value: any) {
+        this.hasValue = Boolean(value);
         this.nestedValue.patchValue(value);
     }
 
