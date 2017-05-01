@@ -1,16 +1,11 @@
 import {
-    Component, ContentChild, Directive, Input, TemplateRef, forwardRef,
+    Component, ContentChild, Input, TemplateRef, forwardRef,
 } from "@angular/core";
 import {
-    ControlValueAccessor, FormArray, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
+    ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
 
-@Directive({
-    selector: "[nested-form]",
-})
-export class NestedFormDirective {
-
-}
+import "./form-multi-picker.scss";
 
 @Component({
     selector: "bl-form-multi-picker",
@@ -26,26 +21,22 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
     public name: string;
 
     @Input()
+    public addTitle: string;
+
+    @Input()
     public title: (value: any) => string;
 
     @ContentChild(TemplateRef)
     public nestedForm: TemplateRef<any>;
 
-    public values: FormArray;
+    public values: any[];
     public currentEditValue = new FormControl(null);
     public hasValue = false;
 
     private _propagateChange: (value: any) => void;
 
     constructor(formBuilder: FormBuilder) {
-        this.values = formBuilder.array([null]);
-        this.values.valueChanges.subscribe((newValues) => {
-            console.log("new values", newValues);
-        });
-    }
-
-    public ngAfterViewInit() {
-        console.log("nsform", this.nestedForm);
+        this.values = [null];
     }
 
     public writeValue(value: any) {
@@ -65,24 +56,25 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
     }
 
     public openPicker(index: number) {
-        const value = this.values.value[index];
+        const value = this.values[index];
         this.currentEditValue.setValue(value);
     }
 
     public pickedValue(index: number) {
-        const value = this.values.value;
-        value[index] = this.currentEditValue.value;
-        this.values.patchValue(value);
+        console.log("index", index, this.currentEditValue.value);
+        const values = this.values.concat([]);
+        values[index] = this.currentEditValue.value;
 
         if (index === this.values.length - 1) {
-            this.values.push(new FormControl(null));
+            values.push(null);
         }
+        this.values = values;
     }
 
     /**
      * Means the picker at the given index should be removed
      */
     public clearValue(index: number) {
-        this.values.removeAt(index);
+        this.values.splice(index, 1);
     }
 }
