@@ -41,7 +41,7 @@
         <bl-form-section title="User accounts" subtitle="Set of user accounts to be created on each node in the pool.">
             <bl-form-multi-picker formControlName="userAccounts" #userAccountsPicker addTitle="Add a user account" [title]="accountTitle">
                 <template nested-form>
-                    <bl-start-task-picker [formControl]="userAccountsPicker.currentEditValue"></bl-start-task-picker>
+                    <bl-user-accounts-picker [formControl]="userAccountsPicker.currentEditValue"></bl-user-accounts-picker>
                 </template>
             </bl-form-multi-picker>
         </bl-form-section>
