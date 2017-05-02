@@ -1,5 +1,5 @@
 <div *ngFor="let value of values; let i=index" class="picked-item">
-    <bl-form-picker [ngModel]="value" (pick)="pickedValue(i)" (clear)="clearValue(i)" (open)="openPicker(i)">
+    <bl-form-picker [ngModel]="value" [nestedValue]="currentEditValue" (pick)="pickedValue(i)" (clear)="clearValue(i)" (open)="openPicker(i)">
         <div no-value-title>
             {{addTitle}}
         </div>

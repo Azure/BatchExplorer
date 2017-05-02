@@ -64,4 +64,11 @@ export class FormPageComponent {
         this.openedWith = picker;
         this.form.openPage(this);
     }
+
+    /**
+     * Enabled if the formGroup is valid or there is no formGroup
+     */
+    public get submitEnabled() {
+        return !this.formGroup || this.formGroup.valid;
+    }
 }

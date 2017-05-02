@@ -31,6 +31,7 @@ export class FormPickerComponent implements ControlValueAccessor, Validator {
     @Output()
     public open = new EventEmitter();
 
+    @Input()
     public nestedValue = new FormControl();
 
     public hasValue = false;

@@ -22,7 +22,7 @@ export class UserAccountsPickerComponent implements ControlValueAccessor, Valida
         this.form = formBuilder.group({
             username: ["", Validators.required],
             password: ["", Validators.required],
-            runElevated: [false, Validators.required],
+            runElevated: [false],
         });
 
         this._sub = this.form.valueChanges.subscribe((val: any) => {
@@ -52,12 +52,12 @@ export class UserAccountsPickerComponent implements ControlValueAccessor, Valida
         // Do nothing
     }
 
-
     public validate(c: FormControl) {
         const valid = this.form.valid;
-
         if (!valid) {
-            return this.form.errors;
+            return {
+                userAccounts: false,
+            };
         }
 
         return null;
