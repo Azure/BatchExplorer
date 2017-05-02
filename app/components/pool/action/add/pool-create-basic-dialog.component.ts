@@ -46,7 +46,9 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             startTask: null,
             userAccounts: [[]],
         });
-
+        this.form.valueChanges.subscribe((val) => {
+            console.log("form val", val);
+        });
         this._sub = this._osControl.valueChanges.subscribe((value) => {
             this.osSource = value.source;
         });

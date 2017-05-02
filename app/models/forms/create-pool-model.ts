@@ -1,4 +1,4 @@
-import { PoolCreateDto } from "app/models/dtos";
+import { PoolCreateDto, UserAccountDto } from "app/models/dtos";
 import * as moment from "moment";
 
 export enum PoolOsSources {
@@ -28,6 +28,13 @@ export interface PoolScaleModel {
     targetDedicated: number;
 }
 
+export interface UserAccountFormModel {
+    username: string;
+    password: string;
+    runElevated: boolean;
+    sshPrivateKey: string;
+}
+
 export interface CreatePoolModel {
     id: string;
     displayName: string;
@@ -37,9 +44,11 @@ export interface CreatePoolModel {
     enableInterNodeCommunication: boolean;
     os: PoolOSPickerModel;
     startTask: any;
+    userAccounts: UserAccountFormModel[];
 }
 
 export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
+    console.log("out", output);
     const outputScale: PoolScaleModel = output.scale || {} as any;
     let data: any = {
         id: output.id,
@@ -49,6 +58,7 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
         maxTasksPerNode: Number(output.maxTasksPerNode),
         enableInterNodeCommunication: output.enableInterNodeCommunication,
         startTask: output.startTask,
+        userAccounts: output.userAccounts.map(x => userAccountToDto(x)),
     };
 
     if (outputScale.enableAutoScale) {
@@ -94,5 +104,25 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
             virtualMachineConfiguration: pool.virtualMachineConfiguration,
         },
         startTask: pool.startTask,
+        userAccounts: pool.userAccounts.map(x => userAccountToFormModel(x)),
     };
 };
+
+function userAccountToFormModel(userAccount: UserAccountDto) {
+    return {
+        username: userAccount.username,
+        password: userAccount.password,
+        runElevated: userAccount.elevationLevel === "admin",
+        sshPrivateKey: userAccount.sshPrivateKey,
+    };
+}
+
+function userAccountToDto(userAccount: UserAccountFormModel): UserAccountDto {
+    return {
+        username: userAccount.username,
+        password: userAccount.password,
+        elevationLevel: userAccount.runElevated ? "admin" : "nonAdmin",
+        sshPrivateKey: userAccount.sshPrivateKey,
+    };
+}
+

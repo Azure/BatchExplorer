@@ -40,7 +40,7 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
     }
 
     public writeValue(value: any) {
-        // TODO
+        this.values = [...value, null];
     }
 
     public registerOnChange(fn) {
@@ -61,7 +61,6 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
     }
 
     public pickedValue(index: number) {
-        console.log("index", index, this.currentEditValue.value);
         const values = this.values.concat([]);
         values[index] = this.currentEditValue.value;
 
@@ -69,6 +68,9 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
             values.push(null);
         }
         this.values = values;
+        this.currentEditValue.setValue(null);
+        this._emitNewValue();
+        console.log("Values", values);
     }
 
     /**
@@ -76,5 +78,14 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
      */
     public clearValue(index: number) {
         this.values.splice(index, 1);
+        this.currentEditValue.setValue(null);
+        this._emitNewValue();
+    }
+
+    private _emitNewValue() {
+        if (!this._propagateChange) {
+            return;
+        }
+        this._propagateChange(this.values.filter(x => x !== null));
     }
 }

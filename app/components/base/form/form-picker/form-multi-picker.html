@@ -1,4 +1,4 @@
-<div *ngFor="let value of values; let i=index" class="picked-item">
+<div *ngFor="let value of values; let i=index; trackBy: value" class="picked-item">
     <bl-form-picker [ngModel]="value" [nestedValue]="currentEditValue" (pick)="pickedValue(i)" (clear)="clearValue(i)" (open)="openPicker(i)">
         <div no-value-title>
             {{addTitle}}
