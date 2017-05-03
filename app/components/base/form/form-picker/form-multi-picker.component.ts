@@ -29,18 +29,18 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
     @ContentChild(TemplateRef)
     public nestedForm: TemplateRef<any>;
 
-    public values: any[];
+    public values: FormControl[];
     public currentEditValue = new FormControl(null);
     public hasValue = false;
 
     private _propagateChange: (value: any) => void;
 
     constructor(formBuilder: FormBuilder) {
-        this.values = [null];
+        this.values = [new FormControl(null)];
     }
 
     public writeValue(value: any) {
-        this.values = [...value, null];
+        this.values = [...value, new FormControl(null)];
     }
 
     public registerOnChange(fn) {
@@ -56,16 +56,16 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
     }
 
     public openPicker(index: number) {
-        const value = this.values[index];
-        this.currentEditValue.setValue(value);
+        const control = this.values[index];
+        this.currentEditValue.setValue(control.value);
     }
 
     public pickedValue(index: number) {
-        const values = this.values.concat([]);
-        values[index] = this.currentEditValue.value;
+        const values = this.values;
+        values[index].setValue(this.currentEditValue.value);
 
         if (index === this.values.length - 1) {
-            values.push(null);
+            values.push(new FormControl(null));
         }
         this.values = values;
         this.currentEditValue.setValue(null);
@@ -86,6 +86,6 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
         if (!this._propagateChange) {
             return;
         }
-        this._propagateChange(this.values.filter(x => x !== null));
+        this._propagateChange(this.values.map(x => x.value).filter(x => x !== null));
     }
 }

@@ -1,10 +1,10 @@
-<div *ngFor="let value of values; let i=index; trackBy: value" class="picked-item">
-    <bl-form-picker [ngModel]="value" [nestedValue]="currentEditValue" (pick)="pickedValue(i)" (clear)="clearValue(i)" (open)="openPicker(i)">
+<div *ngFor="let control of values; let i=index; trackBy: i" class="picked-item">
+    <bl-form-picker [formControl]="control" [nestedValue]="currentEditValue" (pick)="pickedValue(i)" (clear)="clearValue(i)" (open)="openPicker(i)">
         <div no-value-title>
             {{addTitle}}
         </div>
         <div value-title>
-            {{title(value)}}
+            {{title(control.value)}}
         </div>
         <div nested-form *ngIf="nestedForm">
             <template [ngTemplateOutlet]="nestedForm"></template>
