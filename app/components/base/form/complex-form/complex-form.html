@@ -30,6 +30,7 @@
             </span>
         </div>
         <div *ngIf="!isMainWindow">
+            U: {{currentPage.formGroup?.value.username}} {{currentPage.formGroup?.valid}}
             <button md-raised-button class="cancel" color="primary" (click)="cancelPage()">Cancel</button>
             <button md-raised-button class="select" color="primary" (click)="closePageOrSubmit()" [disabled]="!currentPage.submitEnabled">Select</button>
         </div>

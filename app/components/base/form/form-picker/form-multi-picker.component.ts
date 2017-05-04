@@ -1,9 +1,12 @@
 import {
-    Component, ContentChild, Input, TemplateRef, forwardRef,
+    Component, ContentChild, Input, TemplateRef, ViewChild, forwardRef,
 } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
+
+import { FormPageComponent } from "../form-page";
+
 
 import "./form-multi-picker.scss";
 
@@ -29,18 +32,27 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
     @ContentChild(TemplateRef)
     public nestedForm: TemplateRef<any>;
 
-    public values: FormControl[];
+
+    @ViewChild("page")
+    private _page: FormPageComponent;
+
+    public values: any[];
     public currentEditValue = new FormControl(null);
+
     public hasValue = false;
 
     private _propagateChange: (value: any) => void;
-
+    private _currentEditIndex = -1;
     constructor(formBuilder: FormBuilder) {
-        this.values = [new FormControl(null)];
+        this.values = [null];
+        this.currentEditValue.valueChanges.subscribe((value) => {
+            console.log("Current edit value...", this.currentEditValue.valid, this.currentEditValue.errors, value);
+
+        });
     }
 
     public writeValue(value: any) {
-        this.values = [...value, new FormControl(null)];
+        this.values = [...value, null];
     }
 
     public registerOnChange(fn) {
@@ -56,16 +68,21 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
     }
 
     public openPicker(index: number) {
-        const control = this.values[index];
-        this.currentEditValue.setValue(control.value);
+        this.currentEditValue.setValue(this.values[index]);
+        this._currentEditIndex = index;
+        this._page.activate();
+    }
+
+    public nestedFormSubmit() {
+        this.pickedValue(this._currentEditIndex);
     }
 
     public pickedValue(index: number) {
         const values = this.values;
-        values[index].setValue(this.currentEditValue.value);
+        values[index] = this.currentEditValue.value;
 
         if (index === this.values.length - 1) {
-            values.push(new FormControl(null));
+            values.push(null);
         }
         this.values = values;
         this.currentEditValue.setValue(null);
@@ -76,7 +93,9 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
     /**
      * Means the picker at the given index should be removed
      */
-    public clearValue(index: number) {
+    public clearValue(event: MouseEvent, index: number) {
+        event.stopPropagation();
+        this._page.formGroup.reset();
         this.values.splice(index, 1);
         this.currentEditValue.setValue(null);
         this._emitNewValue();
@@ -86,6 +105,6 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
         if (!this._propagateChange) {
             return;
         }
-        this._propagateChange(this.values.map(x => x.value).filter(x => x !== null));
+        this._propagateChange(this.values.filter(x => x !== null));
     }
 }

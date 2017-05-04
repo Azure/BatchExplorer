@@ -46,9 +46,6 @@ export class FormPickerComponent implements ControlValueAccessor, Validator {
 
     public openPicker() {
         const page = this._getPage();
-        if (!page) {
-            log.error("FormPicker: Page is input is not defined", page);
-        }
         page.activate(this);
         this.open.emit();
     }
