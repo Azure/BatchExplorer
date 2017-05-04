@@ -10,6 +10,10 @@ import { FormSectionComponent } from "../form-section";
 
 import "./form-page.scss";
 
+export interface FocusableElement {
+    focus();
+}
+
 @Component({
     selector: "bl-form-page",
     templateUrl: "form-page.html",
@@ -51,7 +55,7 @@ export class FormPageComponent {
     /**
      * Reference to the picker that opened the page if applicable
      */
-    public openedWith: FormPickerComponent;
+    public openedWith: FocusableElement;
 
     // tslint:disable-next-line:no-forward-ref
     constructor( @Inject(forwardRef(() => ComplexFormComponent)) private form: ComplexFormComponent) { }
@@ -60,7 +64,7 @@ export class FormPageComponent {
      * Open the given page. It will push on top of the page stack.
      * @param picker If opening from a picker
      */
-    public activate(picker?: FormPickerComponent) {
+    public activate(picker?: FocusableElement) {
         this.openedWith = picker;
         this.form.openPage(this);
     }
