@@ -20,7 +20,7 @@ export class UserAccountsPickerComponent implements ControlValueAccessor, Valida
 
     constructor(formBuilder: FormBuilder) {
         this.form = formBuilder.group({
-            username: ["", Validators.required],
+            name: ["", Validators.required],
             password: ["", Validators.required],
             runElevated: [false],
         });

@@ -32,7 +32,6 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
     @ContentChild(TemplateRef)
     public nestedForm: TemplateRef<any>;
 
-
     public values: any[];
     public currentEditValue = new FormControl(null);
 

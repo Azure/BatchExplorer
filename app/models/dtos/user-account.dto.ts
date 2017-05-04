@@ -1,5 +1,5 @@
 export interface UserAccountDto {
-    username: string;
+    name: string;
     password: string;
     elevationLevel?: "nonAdmin" | "admin";
     sshPrivateKey?: string;

@@ -29,7 +29,7 @@ export interface PoolScaleModel {
 }
 
 export interface UserAccountFormModel {
-    username: string;
+    name: string;
     password: string;
     runElevated: boolean;
     sshPrivateKey: string;
@@ -110,7 +110,7 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
 
 function userAccountToFormModel(userAccount: UserAccountDto) {
     return {
-        username: userAccount.username,
+        name: userAccount.name,
         password: userAccount.password,
         runElevated: userAccount.elevationLevel === "admin",
         sshPrivateKey: userAccount.sshPrivateKey,
@@ -119,7 +119,7 @@ function userAccountToFormModel(userAccount: UserAccountDto) {
 
 function userAccountToDto(userAccount: UserAccountFormModel): UserAccountDto {
     return {
-        username: userAccount.username,
+        name: userAccount.name,
         password: userAccount.password,
         elevationLevel: userAccount.runElevated ? "admin" : "nonAdmin",
         sshPrivateKey: userAccount.sshPrivateKey,
