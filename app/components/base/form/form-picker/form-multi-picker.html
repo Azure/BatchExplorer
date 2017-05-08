@@ -1,9 +1,9 @@
 <div *ngFor="let value of values; let i=index; trackBy: i" class="picked-item">
-    <button class="form-picker" (click)="openPicker($event, i)" [class.has-value]="hasValue">
-        <div *ngIf="!value" class="no-value-content">
+    <button class="form-picker" (click)="openPicker($event, i)" [class.has-value]="value">
+        <span *ngIf="!value" class="no-value-content">
             <i class="fa fa-plus"></i>{{addTitle}}
-        </div>
-        <div *ngIf="value" class="content">
+        </span>
+        <span *ngIf="value" class="content">
             <div class="details">
                 <div class="title">{{title(value)}}</div>
                 <div class="subtitle"></div>
@@ -11,7 +11,7 @@
             <div class="clear-btn" (click)="clearValue($event, i)">
                 <button md-mini-fab><i class="fa fa-times"></i></button>
             </div>
-        </div>
+        </span>
     </button>
 </div>
 <bl-form-page #page [title]="name" [formGroup]="currentEditValue" (submit)="nestedFormSubmit()">

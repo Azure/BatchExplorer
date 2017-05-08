@@ -48,7 +48,6 @@ export interface CreatePoolModel {
 }
 
 export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
-    console.log("out", output);
     const outputScale: PoolScaleModel = output.scale || {} as any;
     let data: any = {
         id: output.id,

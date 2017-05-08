@@ -7,7 +7,6 @@ import {
 
 import { FormPageComponent } from "../form-page";
 
-
 import "./form-multi-picker.scss";
 
 @Component({
@@ -45,10 +44,6 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
     private _currentEditIndex = -1;
     constructor(formBuilder: FormBuilder) {
         this.values = [null];
-        this.currentEditValue.valueChanges.subscribe((value) => {
-            console.log("Current edit value...", this.currentEditValue.valid, this.currentEditValue.errors, value);
-
-        });
     }
 
     public writeValue(value: any) {
@@ -69,13 +64,15 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
 
 
     public focus() {
+        console.log("Focus", this._lastOpenedButton);
         if (this._lastOpenedButton) {
             this._lastOpenedButton.focus();
         }
     }
 
     public openPicker(event: MouseEvent, index: number) {
-        this._lastOpenedButton = event.target as HTMLElement;
+        console.log("open picker", index, event.currentTarget);
+        this._lastOpenedButton = event.currentTarget as HTMLElement;
         this.currentEditValue.setValue(this.values[index]);
         this._currentEditIndex = index;
         this._page.activate(this);
@@ -95,7 +92,6 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
         this.values = values;
         this.currentEditValue.setValue(null);
         this._emitNewValue();
-        console.log("Values", values);
     }
 
     /**

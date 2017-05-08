@@ -78,7 +78,6 @@ export class FormPickerComponent implements ControlValueAccessor, Validator {
     }
 
     public writeValue(value: any) {
-        console.log("Write value", value);
         this.hasValue = Boolean(value);
         this.nestedValue.setValue(value);
     }

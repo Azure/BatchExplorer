@@ -53,7 +53,6 @@ export class UserAccountsPickerComponent implements ControlValueAccessor, Valida
     }
 
     public validate(c: FormControl) {
-        console.log("Validate user accounts", this.form.valid, this.form.value);
         const valid = this.form.valid;
         if (!valid) {
             return {
