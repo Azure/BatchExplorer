@@ -87,6 +87,6 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     }
 
     public accountTitle(account: any) {
-        return account && account.username;
+        return account && account.name;
     }
 }
