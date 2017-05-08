@@ -8,7 +8,7 @@ import { ButtonsModule } from "../buttons";
 import { ComplexFormComponent } from "./complex-form";
 import { FormErrorComponent } from "./form-error";
 import { FormPageComponent } from "./form-page";
-import { FormMultiPickerComponent, FormPickerComponent } from "./form-picker";
+import { FormMultiPickerComponent, FormPickerComponent, FormPickerItemTemplateDirective } from "./form-picker";
 import { FormSectionComponent } from "./form-section";
 import { ServerErrorComponent } from "./server-error";
 import { SimpleFormComponent } from "./simple-form";
@@ -28,6 +28,7 @@ const components = [
     FormSectionComponent,
     FormMultiPickerComponent,
     FormPickerComponent,
+    FormPickerItemTemplateDirective,
 ];
 
 @NgModule({

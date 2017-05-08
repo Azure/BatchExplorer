@@ -5,7 +5,6 @@ import {
 
 import { AbstractControl } from "@angular/forms";
 import { ComplexFormComponent } from "../complex-form";
-import { FormPickerComponent } from "../form-picker";
 import { FormSectionComponent } from "../form-section";
 
 import "./form-page.scss";

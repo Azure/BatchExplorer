@@ -5,8 +5,9 @@
         </span>
         <span *ngIf="value" class="content">
             <div class="details">
-                <div class="title">{{title(value)}}</div>
-                <div class="subtitle"></div>
+                <!--<div class="title">{{title(value)}}</div>
+                <div class="subtitle"></div>-->
+                <template [ngTemplateOutlet]="itemTemplate.template"  [ngOutletContext]="{value: value}"></template>
             </div>
             <div class="clear-btn" (click)="clearValue($event, i)">
                 <button md-mini-fab><i class="fa fa-times"></i></button>
@@ -16,6 +17,6 @@
 </div>
 <bl-form-page #page [title]="name" [formGroup]="currentEditValue" (submit)="nestedFormSubmit()">
     <bl-form-section>
-        <template [ngTemplateOutlet]="nestedForm"></template>
+        <ng-content select="[nested-form]"></ng-content>
     </bl-form-section>
 </bl-form-page>

@@ -1,5 +1,5 @@
 import {
-    Component, ContentChild, Input, TemplateRef, ViewChild, forwardRef,
+    Component, ContentChild, Directive, Input, TemplateRef, ViewChild, forwardRef,
 } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
@@ -8,6 +8,19 @@ import {
 import { FormPageComponent } from "../form-page";
 
 import "./form-multi-picker.scss";
+
+
+@Directive({
+    selector: "[blFormPickerItem]",
+})
+export class FormPickerItemTemplateDirective {
+    @ContentChild(TemplateRef)
+    public template: TemplateRef<any>;
+
+    ngAfterContentInit() {
+        console.log("In CCV", this.template)
+    }
+}
 
 @Component({
     selector: "bl-form-multi-picker",
@@ -28,8 +41,8 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
     @Input()
     public title: (value: any) => string;
 
-    @ContentChild(TemplateRef)
-    public nestedForm: TemplateRef<any>;
+    @ContentChild(FormPickerItemTemplateDirective)
+    public itemTemplate: FormPickerItemTemplateDirective;
 
     public values: any[];
     public currentEditValue = new FormControl(null);
