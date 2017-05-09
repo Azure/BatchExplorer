@@ -39,7 +39,7 @@
         </bl-form-section>
 
         <bl-form-section title="User accounts" subtitle="Set of user accounts to be created on each node in the pool. By default, pools come with one non-admin user and one admin user. You can add up to 5 specific users for running tasks.">
-            <bl-form-multi-picker formControlName="userAccounts" #userAccountsPicker addTitle="Add a user account">
+            <bl-form-multi-picker formControlName="userAccounts" #userAccountsPicker addTitle="Add a user account" [max]="5">
                 <template blFormPickerItem let-value>
                     <div title>
                         {{value?.name}}

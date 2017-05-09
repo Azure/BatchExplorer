@@ -1,5 +1,5 @@
 import {
-    Component, ContentChild, Directive, Input, TemplateRef, ViewChild, forwardRef,
+    Component, ContentChild, Directive, Input, TemplateRef, ViewChild, forwardRef, ViewChildren, ElementRef, QueryList,
 } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
@@ -36,6 +36,12 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
     @Input()
     public title: (value: any) => string;
 
+    /**
+     * If the picker should not have more than x values
+     */
+    @Input()
+    public max = -1;
+
     @ContentChild(FormPickerItemTemplateDirective)
     public itemTemplate: FormPickerItemTemplateDirective;
 
@@ -46,6 +52,9 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
 
     @ViewChild("page")
     private _page: FormPageComponent;
+
+    @ViewChildren("button")
+    private _buttons: QueryList<ElementRef>;
 
     private _lastOpenedButton: HTMLElement;
     private _propagateChange: (value: any) => void;
@@ -71,8 +80,9 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
     }
 
     public focus() {
-        if (this._lastOpenedButton) {
-            this._lastOpenedButton.focus();
+        const button = this._buttons.toArray()[this._currentEditIndex];
+        if (button) {
+            button.nativeElement.focus();
         }
     }
 
@@ -92,7 +102,9 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
         values[index] = this.currentEditValue.value;
 
         if (index === this.values.length - 1) {
-            values.push(null);
+            if (this.max === -1 || index < this.max - 1) {
+                values.push(null);
+            }
         }
         this.values = values;
         this.currentEditValue.setValue(null);
