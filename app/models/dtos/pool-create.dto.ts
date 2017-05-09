@@ -2,6 +2,7 @@ import { Dto, DtoAttr } from "app/core";
 import * as moment from "moment";
 import { CloudServiceConfiguration } from "./cloud-service-configuration.dto";
 import { MetaDataDto } from "./metadata.dto";
+import { UserAccountDto } from "./user-account.dto";
 import { VirtualMachineConfiguration } from "./virtual-machine-configuration.dto";
 
 export class PoolCreateDto extends Dto<PoolCreateDto> {
@@ -62,4 +63,7 @@ export class PoolCreateDto extends Dto<PoolCreateDto> {
 
     @DtoAttr()
     public metadata: MetaDataDto[];
+
+    @DtoAttr()
+    public userAccounts: UserAccountDto[];
 }
