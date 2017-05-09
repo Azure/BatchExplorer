@@ -1,5 +1,5 @@
 import {
-    Component, ContentChild, Directive, Input, TemplateRef, ViewChild, forwardRef, ViewChildren, ElementRef, QueryList,
+    Component, ContentChild, Directive, ElementRef, Input, QueryList, TemplateRef, ViewChild, ViewChildren, forwardRef,
 } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,

@@ -6,7 +6,6 @@ import { Subscription } from "rxjs";
 
 import { UserAccountDto } from "app/models/dtos";
 
-
 export interface UserAccountFormModel {
     name: string;
     password: string;

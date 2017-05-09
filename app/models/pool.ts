@@ -64,7 +64,7 @@ export interface PoolAttributes {
     vmSize: string;
     startTask: StartTask;
     metadata: MetadataAttributes[];
-    userAccounts: UserAccountAttributes[],
+    userAccounts: UserAccountAttributes[];
 }
 
 /**
