@@ -6,6 +6,7 @@ import { CloudServiceConfiguration } from "./cloud-service-configuration";
 import { Metadata, MetadataAttributes } from "./metadata";
 import { ResizeError } from "./resize-error";
 import { StartTask } from "./start-task";
+import { UserAccount, UserAccountAttributes } from "./user-account";
 import { VirtualMachineConfiguration, VirtualMachineConfigurationAttributes } from "./virtual-machine-configuration";
 
 const PoolRecord = Record({
@@ -35,6 +36,7 @@ const PoolRecord = Record({
     vmSize: null,
     startTask: null,
     metadata: List([]),
+    userAccounts: List([]),
 });
 
 export interface PoolAttributes {
@@ -62,6 +64,7 @@ export interface PoolAttributes {
     vmSize: string;
     startTask: StartTask;
     metadata: MetadataAttributes[];
+    userAccounts: UserAccountAttributes[];
 }
 
 /**
@@ -94,6 +97,7 @@ export class Pool extends PoolRecord {
     public vmSize: string;
     public startTask: StartTask;
     public metadata: List<Metadata>;
+    public userAccounts: List<UserAccount>;
 
     /**
      * Tags are computed from the metadata using an internal key
@@ -105,8 +109,8 @@ export class Pool extends PoolRecord {
             resizeError: data.resizeError && new ResizeError(data.resizeError),
             startTask: data.startTask && new StartTask(data.startTask),
             metadata: List(data.metadata && data.metadata.map(x => new Metadata(x))),
+            userAccounts: List(data.userAccounts && data.userAccounts.map(x => new UserAccount(x))),
         }));
-
         this.tags = ModelUtils.tagsFromMetadata(this.metadata);
     }
 }

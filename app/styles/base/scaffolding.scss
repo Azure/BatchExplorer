@@ -87,3 +87,11 @@ blockquote {
 blockquote:before, blockquote:after {
     content: "";
 }
+
+.danger {
+    color: $red;
+}
+
+.unaccent {
+    color: $silver-grey;
+}

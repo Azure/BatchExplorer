@@ -1,4 +1,4 @@
-import { Pool } from "app/models";
+import { Pool, UserAccount, UserAccountElevationLevel } from "app/models";
 import { DecoratorBase } from "app/utils/decorators";
 import * as moment from "moment";
 import { CloudServiceConfigurationDecorator } from "./cloud-service-configuration-decorator";
@@ -33,6 +33,7 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     public poolOs: string;
     public poolOsIcon: string;
     public lastResized: string;
+    public userAccounts: string;
 
     constructor(private pool?: Pool) {
         super(pool);
@@ -66,6 +67,8 @@ export class PoolDecorator extends DecoratorBase<Pool> {
         this.poolOsIcon = this._computePoolOsIcon(this.poolOs);
 
         this.lastResized = moment(this.pool.allocationStateTransitionTime).fromNow();
+
+        this.userAccounts = pool.userAccounts.map(x => this._decorateUserAccount(x)).join(", ");
     }
 
     private _computePoolOs(): string {
@@ -102,5 +105,12 @@ export class PoolDecorator extends DecoratorBase<Pool> {
         }
 
         return "linux";
+    }
+
+    private _decorateUserAccount(user: UserAccount) {
+        if (user.elevationLevel === UserAccountElevationLevel.admin) {
+            return `${user.name} (admin)`;
+        }
+        return user.name;
     }
 }
