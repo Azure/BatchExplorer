@@ -9,17 +9,12 @@ import { FormPageComponent } from "../form-page";
 
 import "./form-multi-picker.scss";
 
-
 @Directive({
     selector: "[blFormPickerItem]",
 })
 export class FormPickerItemTemplateDirective {
     @ContentChild(TemplateRef)
     public template: TemplateRef<any>;
-
-    ngAfterContentInit() {
-        console.log("In CCV", this.template)
-    }
 }
 
 @Component({
@@ -75,16 +70,13 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
         return null;
     }
 
-
     public focus() {
-        console.log("Focus", this._lastOpenedButton);
         if (this._lastOpenedButton) {
             this._lastOpenedButton.focus();
         }
     }
 
     public openPicker(event: MouseEvent, index: number) {
-        console.log("open picker", index, event.currentTarget);
         this._lastOpenedButton = event.currentTarget as HTMLElement;
         this.currentEditValue.setValue(this.values[index]);
         this._currentEditIndex = index;

@@ -40,7 +40,7 @@
 
         <bl-form-section title="User accounts" subtitle="Set of user accounts to be created on each node in the pool.">
             <bl-form-multi-picker formControlName="userAccounts" #userAccountsPicker addTitle="Add a user account">
-                <template blFormPickerItem let-value="value">
+                <template blFormPickerItem let-value>
                     <div title>
                         {{value?.name}}
                     </div>

@@ -124,4 +124,3 @@ function userAccountToDto(userAccount: UserAccountFormModel): UserAccountDto {
         sshPrivateKey: userAccount.sshPrivateKey,
     };
 }
-
