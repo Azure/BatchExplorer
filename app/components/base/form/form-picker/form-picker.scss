@@ -1,7 +1,7 @@
 @import "app/styles/variables";
 
 .form-picker {
-    border: 2px dashed $dusty-grey;
+    border: 1px dashed $dusty-grey;
     min-width: 210px;
     max-width: 100%;
     height: 60px;
@@ -15,14 +15,17 @@
     text-overflow: hidden;
     white-space: nowrap;
 
+    &.has-value {
+        border-style: solid;
+        color: $dove-grey;
+        border-color: $dove-grey;
+    }
+
     &:hover, &:focus {
         border-color: map-get($md-prussian-blue, 300);
         color: map-get($md-prussian-blue, 300);
     }
 
-    &.has-value {
-        border-style: solid;
-    }
 
     .fa-plus {
         font-size: 30px;

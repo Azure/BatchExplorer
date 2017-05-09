@@ -5,8 +5,6 @@
         </span>
         <span *ngIf="value" class="content">
             <div class="details">
-                <!--<div class="title">{{title(value)}}</div>
-                <div class="subtitle"></div>-->
                 <template [ngTemplateOutlet]="itemTemplate.template"  [ngOutletContext]="{value: value}"></template>
             </div>
             <div class="clear-btn" (click)="clearValue($event, i)">

@@ -39,13 +39,13 @@
         </bl-form-section>
 
         <bl-form-section title="User accounts" subtitle="Set of user accounts to be created on each node in the pool.">
-            <bl-form-multi-picker formControlName="userAccounts" #userAccountsPicker addTitle="Add a user account" [title]="accountTitle">
+            <bl-form-multi-picker formControlName="userAccounts" #userAccountsPicker addTitle="Add a user account">
                 <template blFormPickerItem let-value="value">
                     <div title>
                         {{value?.name}}
                     </div>
-                    <div subtitle>
-                        {{value?.runElevated}}
+                    <div subtitle class="unaccent">
+                        {{value?.runElevated ? "Administrator": ""}}
                     </div>
                 </template>
                 <div nested-form>

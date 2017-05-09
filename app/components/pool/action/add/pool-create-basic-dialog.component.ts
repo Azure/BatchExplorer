@@ -82,8 +82,4 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     public get startTask() {
         return this.form.controls.startTask.value;
     }
-
-    public accountTitle(account: any) {
-        return account && account.name;
-    }
 }
