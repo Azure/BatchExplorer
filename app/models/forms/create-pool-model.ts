@@ -28,13 +28,6 @@ export interface PoolScaleModel {
     targetDedicated: number;
 }
 
-export interface UserAccountFormModel {
-    name: string;
-    password: string;
-    runElevated: boolean;
-    sshPrivateKey: string;
-}
-
 export interface CreatePoolModel {
     id: string;
     displayName: string;
@@ -44,7 +37,7 @@ export interface CreatePoolModel {
     enableInterNodeCommunication: boolean;
     os: PoolOSPickerModel;
     startTask: any;
-    userAccounts: UserAccountFormModel[];
+    userAccounts: UserAccountDto[];
 }
 
 export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
@@ -57,7 +50,7 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
         maxTasksPerNode: Number(output.maxTasksPerNode),
         enableInterNodeCommunication: output.enableInterNodeCommunication,
         startTask: output.startTask,
-        userAccounts: output.userAccounts.map(x => userAccountToDto(x)),
+        userAccounts: output.userAccounts,
     };
 
     if (outputScale.enableAutoScale) {
@@ -103,24 +96,6 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
             virtualMachineConfiguration: pool.virtualMachineConfiguration,
         },
         startTask: pool.startTask,
-        userAccounts: pool.userAccounts.map(x => userAccountToFormModel(x)),
+        userAccounts: pool.userAccounts,
     };
 };
-
-function userAccountToFormModel(userAccount: UserAccountDto) {
-    return {
-        name: userAccount.name,
-        password: userAccount.password,
-        runElevated: userAccount.elevationLevel === "admin",
-        sshPrivateKey: userAccount.sshPrivateKey,
-    };
-}
-
-function userAccountToDto(userAccount: UserAccountFormModel): UserAccountDto {
-    return {
-        name: userAccount.name,
-        password: userAccount.password,
-        elevationLevel: userAccount.runElevated ? "admin" : "nonAdmin",
-        sshPrivateKey: userAccount.sshPrivateKey,
-    };
-}

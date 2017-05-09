@@ -38,7 +38,7 @@
             </div>
         </bl-form-section>
 
-        <bl-form-section title="User accounts" subtitle="Set of user accounts to be created on each node in the pool.">
+        <bl-form-section title="User accounts" subtitle="Set of user accounts to be created on each node in the pool. By default, pools come with one non-admin user and one admin user. You can add up to 5 specific users for running tasks.">
             <bl-form-multi-picker formControlName="userAccounts" #userAccountsPicker addTitle="Add a user account">
                 <template blFormPickerItem let-value>
                     <div title>
@@ -49,7 +49,7 @@
                     </div>
                 </template>
                 <div nested-form>
-                    <bl-user-accounts-picker [formControl]="userAccountsPicker.currentEditValue"></bl-user-accounts-picker>
+                    <bl-user-account-picker [formControl]="userAccountsPicker.currentEditValue"></bl-user-account-picker>
                 </div>
             </bl-form-multi-picker>
         </bl-form-section>

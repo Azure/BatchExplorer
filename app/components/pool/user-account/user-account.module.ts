@@ -1,10 +1,10 @@
 import { NgModule } from "@angular/core";
 
 import { commonModules } from "app/common";
-import { UserAccountsPickerComponent } from "./user-accounts-picker.component";
+import { UserAccountPickerComponent } from "./user-account-picker.component";
 
 const components = [
-    UserAccountsPickerComponent,
+    UserAccountPickerComponent,
 ];
 
 const modules = [
