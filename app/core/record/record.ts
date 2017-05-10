@@ -26,7 +26,7 @@ export class Record<TInput> {
     }
 
     public toJS(): any {
-        return this._map.toJS();
+        return Object.assign(this._defaultValues, this._map.toJS());
     }
 
     /**
