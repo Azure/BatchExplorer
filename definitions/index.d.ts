@@ -32,3 +32,5 @@ type StringMap<V> = { [key: string]: V };
 type AttrOf<T> = {
     [P in keyof T]: T[P];
 };
+
+type ComponentSize = "small" | "normal" | "large";

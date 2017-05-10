@@ -1,6 +1,6 @@
 # Write forms
 
-## Create form
+## Complex form
 
 ![](images/form.png)
 
@@ -50,4 +50,35 @@ Each page is composed of multiple section(If only have 1 section do not provide 
         </bl-form-section>
     </bl-form-page>
 </bl-complex-form>
+```
+
+## Multi Picker
+
+For complex forms that needs to add multiple complex items the form picker might suit the needs.
+
+![](images/form-multi-picker.png)
+
+Attributes:
+* `addTitle`: This is text that will be displayed on the button to add a new element
+* `max`: This is the maximum number of items to allow. By default it is unlimited(Value -1)
+
+```html
+<bl-form-multi-picker formControlName="userAccounts" #userAccountsPicker addTitle="Add a user account" [max]="5">
+    <!-- This is the template for selected item. Use the blFormPickerItem directive on it.-->
+    <!-- Use let-value to assign the item to the value variable -->
+    <template blFormPickerItem let-value>
+        <div title>
+            {{value?.name}}
+        </div>
+        <div subtitle class="unaccent">
+            {{value?.runElevated ? "Administrator": ""}}
+        </div>
+    </template>
+
+    <!-- This is the nested form template -->
+    <!-- User the currentEditValue to get the edit formControl -->
+    <div nested-form>
+        <bl-user-account-picker [formControl]="userAccountsPicker.currentEditValue"></bl-user-account-picker>
+    </div>
+</bl-form-multi-picker>
 ```

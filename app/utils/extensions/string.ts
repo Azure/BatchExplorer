@@ -27,7 +27,7 @@ interface String {
 
 // First, checks if it isn't implemented yet.
 if (!String.prototype.format) {
-    String.prototype.format = function (...args) {
+    String.prototype.format = function (this: string, ...args) {
         return this.replace(/{(\d+)}/g, (match, i) => {
             return typeof args[i] !== "undefined" ? args[i] : match;
         });
@@ -35,13 +35,13 @@ if (!String.prototype.format) {
 }
 
 if (!String.prototype.clearWhitespace) {
-    String.prototype.clearWhitespace = function () {
+    String.prototype.clearWhitespace = function (this: string) {
         return this.replace(/\s/g, "");
     };
 }
 
 if (!String.prototype.padStart) {
-    String.prototype.padStart = function (maxLength: number, padString?: string) {
+    String.prototype.padStart = function (this: string, maxLength: number, padString?: string) {
         padString = padString ? String(padString) : " ";
         if (padString.length === 0) {
             padString = " ";
@@ -63,7 +63,7 @@ if (!String.prototype.padStart) {
 }
 
 if (!String.prototype.trimEnd) {
-    String.prototype.trimEnd = function (...values: string[]) {
+    String.prototype.trimEnd = function (this: string, ...values: string[]) {
         let input = String(this) || "";
         while (input) {
             let match = values.find((value) => {

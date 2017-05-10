@@ -1,4 +1,4 @@
-import { PoolCreateDto } from "app/models/dtos";
+import { PoolCreateDto, UserAccountDto } from "app/models/dtos";
 import * as moment from "moment";
 
 export enum PoolOsSources {
@@ -37,6 +37,7 @@ export interface CreatePoolModel {
     enableInterNodeCommunication: boolean;
     os: PoolOSPickerModel;
     startTask: any;
+    userAccounts: UserAccountDto[];
 }
 
 export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
@@ -49,6 +50,7 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
         maxTasksPerNode: Number(output.maxTasksPerNode),
         enableInterNodeCommunication: output.enableInterNodeCommunication,
         startTask: output.startTask,
+        userAccounts: output.userAccounts,
     };
 
     if (outputScale.enableAutoScale) {
@@ -75,6 +77,7 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
  * Used to clone a pool
  */
 export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
+    const autoScaleInterval = pool.autoScaleEvaluationInterval;
     return {
         id: pool.id,
         displayName: pool.displayName,
@@ -83,7 +86,7 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
             targetDedicated: pool.targetDedicated,
             enableAutoScale: pool.enableAutoScale,
             autoScaleFormula: pool.autoScaleFormula,
-            autoScaleEvaluationInterval: pool.autoScaleEvaluationInterval.asMinutes(),
+            autoScaleEvaluationInterval: autoScaleInterval && autoScaleInterval.asMinutes(),
         },
         maxTasksPerNode: pool.maxTasksPerNode.toString(),
         enableInterNodeCommunication: pool.enableInterNodeCommunication,
@@ -93,5 +96,6 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
             virtualMachineConfiguration: pool.virtualMachineConfiguration,
         },
         startTask: pool.startTask,
+        userAccounts: pool.userAccounts,
     };
 };
