@@ -8,7 +8,6 @@ import { metadataForRecord, primitives } from "./helpers";
  */
 export class Record<TInput> {
     private _map: Map<string, any> = Map({});
-    // tslint:disable-next-line:no-unused-variable
     private _defaultValues = {};
     private _initialized = false;
     private _keys: Set<string>;
@@ -26,7 +25,7 @@ export class Record<TInput> {
     }
 
     public toJS(): any {
-        return Object.assign(this._defaultValues, this._map.toJS());
+        return Object.assign({}, this._defaultValues, this._map.toJS());
     }
 
     /**
@@ -38,6 +37,7 @@ export class Record<TInput> {
         const keys = Object.keys(attrs);
         this._keys = new Set(keys);
         for (let key of keys) {
+            this._defaultValues[key] = null;
             const typeMetadata = attrs[key];
             if (!(key in data)) {
                 continue;

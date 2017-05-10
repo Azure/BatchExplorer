@@ -3,6 +3,19 @@ import { setProp, updateTypeMetadata } from "./helpers";
 import { Record } from "./record";
 
 // tslint:disable:only-arrow-functions
+
+/**
+ * Model attribute decorator.
+ *
+ * @example
+ * ```ts
+ * @Prop
+ * public foo: string = "default";
+ *
+ * @Prop
+ * public bar:string; // Default will be null
+ * ```
+ */
 export function Prop<T>(...args) {
     return (target, attr, descriptor?: TypedPropertyDescriptor<T>) => {
         const ctr = target.constructor;
@@ -21,6 +34,16 @@ export function Prop<T>(...args) {
     };
 }
 
+
+/**
+ * Model list attribute decorator. Use this if the attribute is an array
+ *
+ * @example
+ * ```ts
+ * @ListProp(Bar)
+ * public foos: List<Bar> = List([]);
+ * ```
+ */
 export function ListProp<T>(type: any) {
     return (target, attr, descriptor?: TypedPropertyDescriptor<T>) => {
         const ctr = target.constructor;

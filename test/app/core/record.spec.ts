@@ -117,7 +117,7 @@ describe("Record", () => {
 
     it("toJS() returns correct values", () => {
         let a = new SimpleTestRec({ a: 29, b: 12, u: 2 });
-        expect(a.toJS()).toEqual({ id: undefined, a: 29, b: 12, c: undefined });
+        expect(a.toJS()).toEqual({ id: null, a: 29, b: 12, c: null });
 
         let b = new TestRec({ id: "id-1", nested: { name: "name-1", other: "invalid" }, nestedList: [{}] });
         expect(b.toJS()).toEqual({ id: "id-1", nested: { name: "name-1" }, nestedList: [{ name: "default-name" }] });
