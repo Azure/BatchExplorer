@@ -52,7 +52,7 @@ describe("Record", () => {
     it("should set the defaults", () => {
         const record = new TestRec();
         expect(record.id).toEqual("default-id");
-        expect(record.nested).toBe(undefined);
+        expect(record.nested).toBe(null);
         expect(record.nestedList).toEqual(List([]));
     });
 
