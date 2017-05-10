@@ -8,6 +8,7 @@ import { metadataForRecord, primitives } from "./helpers";
  */
 export class Record<TInput> {
     private _map: Map<string, any> = Map({});
+    // tslint:disable-next-line:no-unused-variable
     private _defaultValues = {};
     private _initialized = false;
     private _keys: Set<string>;
@@ -55,9 +56,8 @@ export class Record<TInput> {
         this._map = Map(obj);
     }
 
+    // tslint:disable-next-line:no-unused-variable
     private _completeInitialization() {
         this._initialized = true;
     }
 }
-
-

@@ -1,45 +1,45 @@
-import { Attr, ListAttr, Model, Record, RecordMissingExtendsError, RecordSetAttributeError } from "app/core";
+import { ListProp, Model, Prop, Record, RecordMissingExtendsError, RecordSetAttributeError } from "app/core";
 import { List } from "immutable";
 
 @Model()
-class NestedRec extends Record {
-    @Attr()
+class NestedRec extends Record<any> {
+    @Prop()
     public name: string = "default-name";
 }
 
 @Model()
-class TestRec extends Record {
-    @Attr()
+class TestRec extends Record<any> {
+    @Prop()
     public id: string = "default-id";
 
-    @Attr()
+    @Prop()
     public nested: NestedRec;
 
-    @ListAttr(NestedRec)
+    @ListProp(NestedRec)
     public nestedList: List<NestedRec> = List([]);
 }
 
 @Model()
-class SimpleTestRec extends Record {
-    @Attr()
+class SimpleTestRec extends Record<any> {
+    @Prop()
     public id: string;
 
-    @Attr()
+    @Prop()
     public a: number;
 
-    @Attr()
+    @Prop()
     public b: number;
 
-    @Attr()
+    @Prop()
     public c: number;
 }
 
-fdescribe("Record", () => {
+describe("Record", () => {
     it("should throw an expecption when record doesn't extends Record class", () => {
         try {
             @Model()
             class MissingExtendRecord {
-                @Attr()
+                @Prop()
                 public name: string;
             }
             expect(true).toBe(false, "Should have thrown an expecption");
@@ -123,13 +123,13 @@ fdescribe("Record", () => {
         expect(b.toJS()).toEqual({ id: "id-1", nested: { name: "name-1" }, nestedList: [{ name: "default-name" }] });
     });
 
-    fit("should have access to values in constructor", () => {
+    it("should have access to values in constructor", () => {
         @Model()
-        class ComputedValueRec extends Record {
-            @Attr()
+        class ComputedValueRec extends Record<any> {
+            @Prop()
             public a = 1;
 
-            @Attr()
+            @Prop()
             public b = 2;
 
             public computedA;

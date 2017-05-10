@@ -1,8 +1,6 @@
+import { ObjectUtils, SecureUtils } from "app/utils";
 import { Map } from "immutable";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
-
-import { Record } from "app/core";
-import { ObjectUtils, SecureUtils } from "app/utils";
 import { PollService } from "./poll-service";
 import { QueryCache } from "./query-cache";
 
@@ -142,7 +140,6 @@ export class DataCache<T> {
     }
 
     public getItemKey(item: T) {
-        console.log("item is", item);
         return item[this._uniqueField].toString();
     }
 
