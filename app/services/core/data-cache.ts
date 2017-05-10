@@ -31,7 +31,7 @@ export class DataCacheTracker {
  * Cache storage for entity and list of items.
  * Supports partial updates(OData select)
  */
-export class DataCache<T> {
+export class DataCache<T extends Record> {
     /**
      * Datacache id. Every datacache is assigned a unique guid
      */
@@ -141,6 +141,7 @@ export class DataCache<T> {
     }
 
     public getItemKey(item: T) {
+        console.log("item is", item);
         return item[this._uniqueField].toString();
     }
 

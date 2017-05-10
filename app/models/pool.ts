@@ -1,6 +1,7 @@
-import { List, Record } from "immutable";
+import { List } from "immutable";
 import { Duration } from "moment";
 
+import { Attr, Model, Record, ListAttr } from "app/core"
 import { ModelUtils } from "app/utils";
 import { CloudServiceConfiguration } from "./cloud-service-configuration";
 import { Metadata, MetadataAttributes } from "./metadata";
@@ -8,36 +9,6 @@ import { ResizeError } from "./resize-error";
 import { StartTask } from "./start-task";
 import { UserAccount, UserAccountAttributes } from "./user-account";
 import { VirtualMachineConfiguration, VirtualMachineConfigurationAttributes } from "./virtual-machine-configuration";
-
-const PoolRecord = Record({
-    allocationState: null,
-    allocationStateTransitionTime: null,
-    applicationPackageReferences: [],
-    certificateReferences: [],
-    cloudServiceConfiguration: null,
-    creationTime: null,
-    currentDedicated: 0,
-    displayName: null,
-    enableAutoScale: false,
-    enableInterNodeCommunication: false,
-    id: null,
-    lastModified: null,
-    maxTasksPerNode: 1,
-    resizeError: null,
-    resizeTimeout: null,
-    state: null,
-    stateTransitionTime: null,
-    targetDedicated: 0,
-    autoScaleEvaluationInterval: null,
-    autoScaleFormula: null,
-    taskSchedulingPolicy: null,
-    url: null,
-    virtualMachineConfiguration: null,
-    vmSize: null,
-    startTask: null,
-    metadata: List([]),
-    userAccounts: List([]),
-});
 
 export interface PoolAttributes {
     allocationState: string;
@@ -70,34 +41,63 @@ export interface PoolAttributes {
 /**
  * Class for displaying Batch pool information.
  */
-export class Pool extends PoolRecord {
+@Model()
+export class Pool extends Record {
+    @Attr()
     public allocationState: string;
+    @Attr()
     public allocationStateTransitionTime: Date;
+    @Attr()
     public applicationPackageReferences: any[];
+    @Attr()
     public certificateReferences: any[];
+    @Attr()
     public cloudServiceConfiguration: CloudServiceConfiguration;
+    @Attr()
     public creationTime: Date;
+    @Attr()
     public currentDedicated: number;
+    @Attr()
     public displayName: string;
+    @Attr()
     public enableAutoScale: boolean;
+    @Attr()
     public enableInterNodeCommunication: boolean;
+    @Attr()
     public id: string;
+    @Attr()
     public lastModified: Date;
-    public maxTasksPerNode: number;
+    @Attr()
+    public maxTasksPerNode: number = 1;
+    @Attr()
     public resizeError: ResizeError;
+    @Attr()
     public resizeTimeout: Duration;
+    @Attr()
     public state: string;
+    @Attr()
     public stateTransitionTime: Date;
-    public targetDedicated: number;
+    @Attr()
+    public targetDedicated: number = 0;
+    @Attr()
     public autoScaleFormula: string;
+    @Attr()
     public autoScaleEvaluationInterval: Duration;
+    @Attr()
     public taskSchedulingPolicy: any;
+    @Attr()
     public url: string;
+    @Attr()
     public virtualMachineConfiguration: VirtualMachineConfiguration;
+    @Attr()
     public vmSize: string;
+    @Attr()
     public startTask: StartTask;
-    public metadata: List<Metadata>;
-    public userAccounts: List<UserAccount>;
+    @ListAttr(Metadata)
+    public metadata: List<Metadata> = List([]);
+
+    @ListAttr(UserAccount)
+    public userAccounts: List<UserAccount> = List([]);
 
     /**
      * Tags are computed from the metadata using an internal key
@@ -105,12 +105,7 @@ export class Pool extends PoolRecord {
     public tags: List<string> = List([]);
 
     constructor(data: Partial<PoolAttributes> = {}) {
-        super(Object.assign({}, data, {
-            resizeError: data.resizeError && new ResizeError(data.resizeError),
-            startTask: data.startTask && new StartTask(data.startTask),
-            metadata: List(data.metadata && data.metadata.map(x => new Metadata(x))),
-            userAccounts: List(data.userAccounts && data.userAccounts.map(x => new UserAccount(x))),
-        }));
+        super(data);
         this.tags = ModelUtils.tagsFromMetadata(this.metadata);
     }
 }
