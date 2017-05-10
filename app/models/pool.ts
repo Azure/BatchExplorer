@@ -1,7 +1,7 @@
 import { List } from "immutable";
 import { Duration } from "moment";
 
-import { Attr, Model, Record, ListAttr } from "app/core"
+import { ListProp, Model, Prop, Record } from "app/core";
 import { ModelUtils } from "app/utils";
 import { CloudServiceConfiguration } from "./cloud-service-configuration";
 import { Metadata, MetadataAttributes } from "./metadata";
@@ -42,61 +42,60 @@ export interface PoolAttributes {
  * Class for displaying Batch pool information.
  */
 @Model()
-export class Pool extends Record {
-    @Attr()
+export class Pool extends Record<PoolAttributes> {
+    @Prop()
     public allocationState: string;
-    @Attr()
+    @Prop()
     public allocationStateTransitionTime: Date;
-    @Attr()
+    @Prop()
     public applicationPackageReferences: any[];
-    @Attr()
+    @Prop()
     public certificateReferences: any[];
-    @Attr()
+    @Prop()
     public cloudServiceConfiguration: CloudServiceConfiguration;
-    @Attr()
+    @Prop()
     public creationTime: Date;
-    @Attr()
+    @Prop()
     public currentDedicated: number;
-    @Attr()
+    @Prop()
     public displayName: string;
-    @Attr()
+    @Prop()
     public enableAutoScale: boolean;
-    @Attr()
+    @Prop()
     public enableInterNodeCommunication: boolean;
-    @Attr()
+    @Prop()
     public id: string;
-    @Attr()
+    @Prop()
     public lastModified: Date;
-    @Attr()
+    @Prop()
     public maxTasksPerNode: number = 1;
-    @Attr()
+    @Prop()
     public resizeError: ResizeError;
-    @Attr()
+    @Prop()
     public resizeTimeout: Duration;
-    @Attr()
+    @Prop()
     public state: string;
-    @Attr()
+    @Prop()
     public stateTransitionTime: Date;
-    @Attr()
+    @Prop()
     public targetDedicated: number = 0;
-    @Attr()
+    @Prop()
     public autoScaleFormula: string;
-    @Attr()
+    @Prop()
     public autoScaleEvaluationInterval: Duration;
-    @Attr()
+    @Prop()
     public taskSchedulingPolicy: any;
-    @Attr()
+    @Prop()
     public url: string;
-    @Attr()
+    @Prop()
     public virtualMachineConfiguration: VirtualMachineConfiguration;
-    @Attr()
+    @Prop()
     public vmSize: string;
-    @Attr()
+    @Prop()
     public startTask: StartTask;
-    @ListAttr(Metadata)
+    @ListProp(Metadata)
     public metadata: List<Metadata> = List([]);
-
-    @ListAttr(UserAccount)
+    @ListProp(UserAccount)
     public userAccounts: List<UserAccount> = List([]);
 
     /**

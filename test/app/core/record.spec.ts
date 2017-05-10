@@ -34,7 +34,7 @@ class SimpleTestRec extends Record {
     public c: number;
 }
 
-describe("Record", () => {
+fdescribe("Record", () => {
     it("should throw an expecption when record doesn't extends Record class", () => {
         try {
             @Model()
@@ -121,5 +121,31 @@ describe("Record", () => {
 
         let b = new TestRec({ id: "id-1", nested: { name: "name-1", other: "invalid" }, nestedList: [{}] });
         expect(b.toJS()).toEqual({ id: "id-1", nested: { name: "name-1" }, nestedList: [{ name: "default-name" }] });
+    });
+
+    fit("should have access to values in constructor", () => {
+        @Model()
+        class ComputedValueRec extends Record {
+            @Attr()
+            public a = 1;
+
+            @Attr()
+            public b = 2;
+
+            public computedA;
+            public computedB;
+            constructor(data: any) {
+                super(data);
+                this.computedA = `A${this.a}`;
+                this.computedB = `B${this.b}`;
+            }
+        }
+        const rec1 = new ComputedValueRec({});
+        expect(rec1.computedA).toEqual("A1");
+        expect(rec1.computedB).toEqual("B2");
+
+        const rec2 = new ComputedValueRec({ a: 3, b: 50 });
+        expect(rec2.computedA).toEqual("A3");
+        expect(rec2.computedB).toEqual("B50");
     });
 });

@@ -1,0 +1,41 @@
+import { Type } from "@angular/core";
+
+import { RecordSetAttributeError } from "./errors";
+import { Record } from "./record";
+
+const attrMetadataKey = "record:attrs";
+export const primitives = new Set(["Array", "Number", "String", "Object", "Boolean"]);
+
+export function metadataForRecord<T>(dto: Record) {
+    return Reflect.getMetadata(attrMetadataKey, dto.constructor) || {};
+}
+
+
+interface TypeMetadata {
+    list: boolean;
+    type: Type<any>;
+
+}
+
+export function updateTypeMetadata(ctr: Type<any>, attr: string, type: TypeMetadata) {
+    const metadata = Reflect.getMetadata(attrMetadataKey, ctr) || {};
+    metadata[attr] = type;
+    Reflect.defineMetadata(attrMetadataKey, metadata, ctr);
+}
+
+
+export function setProp(ctr: Type<any>, attr: string) {
+    Object.defineProperty(ctr.prototype, attr, {
+        get: function (this: Record) {
+            return (this as any)._map.get(attr) || (this as any)._defaultValues[attr];
+        },
+        set: function <T>(this: Record, value: T) {
+            if ((this as any)._initialized) {
+                throw new RecordSetAttributeError(this.constructor, attr);
+            } else {
+                const defaults = (this as any)._defaultValues;
+                defaults[attr] = value;
+            }
+        },
+    });
+}

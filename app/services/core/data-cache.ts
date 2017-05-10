@@ -1,6 +1,7 @@
 import { Map } from "immutable";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
 
+import { Record } from "app/core";
 import { ObjectUtils, SecureUtils } from "app/utils";
 import { PollService } from "./poll-service";
 import { QueryCache } from "./query-cache";
@@ -31,7 +32,7 @@ export class DataCacheTracker {
  * Cache storage for entity and list of items.
  * Supports partial updates(OData select)
  */
-export class DataCache<T extends Record> {
+export class DataCache<T> {
     /**
      * Datacache id. Every datacache is assigned a unique guid
      */

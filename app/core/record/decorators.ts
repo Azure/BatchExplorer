@@ -1,0 +1,61 @@
+import { RecordMissingExtendsError } from "./errors";
+import { setProp, updateTypeMetadata } from "./helpers";
+import { Record } from "./record";
+
+// tslint:disable:only-arrow-functions
+export function Prop<T>(...args) {
+    return (target, attr, descriptor?: TypedPropertyDescriptor<T>) => {
+        const ctr = target.constructor;
+        const type = Reflect.getMetadata("design:type", target, attr);
+        if (!type) {
+            throw `Cannot retrieve the type for RecordAttribute ${target.constructor.name}#${attr}`
+            + "Check your nested type is defined in another file or above this DtoAttr";
+        }
+
+        updateTypeMetadata(ctr, attr, { type, list: false });
+        if (descriptor) {
+            descriptor.writable = false;
+        } else {
+            setProp(ctr, attr);
+        }
+    };
+}
+
+export function ListProp<T>(type: any) {
+    return (target, attr, descriptor?: TypedPropertyDescriptor<T>) => {
+        const ctr = target.constructor;
+        updateTypeMetadata(ctr, attr, { type, list: true });
+
+        if (descriptor) {
+            descriptor.writable = false;
+        } else {
+            setProp(ctr, attr);
+        }
+    };
+}
+
+export function Model() {
+    return <T extends { new (...args: any[]): {} }>(ctr: T) => {
+        if (!(ctr.prototype instanceof Record)) {
+            throw new RecordMissingExtendsError(ctr);
+        }
+        // save a reference to the original constructor
+        const original = ctr;
+
+        // the new constructor behaviour
+        const f: any = function (this: T, data, ...args) {
+            if (data instanceof ctr) {
+                return data;
+            }
+            const obj = original.apply(this, [data, ...args]);
+            obj._completeInitialization();
+            return obj;
+        };
+
+        // copy prototype so intanceof operator still works
+        f.prototype = original.prototype;
+
+        // return new constructor (will override original)
+        return f;
+    };
+}
