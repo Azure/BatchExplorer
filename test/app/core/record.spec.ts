@@ -34,8 +34,7 @@ class SimpleTestRec extends Record {
     public c: number;
 }
 
-
-fdescribe("Record", () => {
+describe("Record", () => {
     it("should throw an expecption when record doesn't extends Record class", () => {
         try {
             @Model()

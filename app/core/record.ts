@@ -26,7 +26,6 @@ export class RecordSetAttributeError extends Error {
     }
 }
 
-
 export class Record {
     private _map: Map<string, any> = Map({});
     private _defaultValues = {};
@@ -65,7 +64,6 @@ export class Record {
             const value = (data as any)[key];
             if (typeMetadata && !primitives.has(typeMetadata.type.name)) {
                 if (typeMetadata.list) {
-                    console.log("is list", value);
                     obj[key] = List(value && value.map(x => new typeMetadata.type(x)));
                 } else {
                     obj[key] = new typeMetadata.type(value);
