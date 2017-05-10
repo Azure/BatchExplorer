@@ -1,5 +1,4 @@
 import { Type } from "@angular/core";
-import { nil } from "app/utils";
 import { List, Map } from "immutable";
 
 const attrMetadataKey = "record:attrs";
@@ -8,6 +7,25 @@ const primitives = new Set(["Array", "Number", "String", "Object", "Boolean"]);
 function metadataForRecord<T>(dto: Record) {
     return Reflect.getMetadata(attrMetadataKey, dto.constructor) || {};
 }
+
+/**
+ * Execption to be thrown if the user created a model with the @Model decorator but forgot to extend the Record class.
+ */
+export class RecordMissingExtendsError extends Error {
+    constructor(ctr: Function) {
+        super(`Class ${ctr.name} with the @Model Decorator should also extends the Record class`);
+    }
+}
+
+/**
+ * Execption to be thrown if the user tries to call setter of attribute.
+ */
+export class RecordSetAttributeError extends Error {
+    constructor(ctr: Function, attr: string) {
+        super(`Cannot set attribute ${attr} of immutable Record ${ctr.name}!`);
+    }
+}
+
 
 export class Record {
     private _map: Map<string, any> = Map({});
@@ -18,24 +36,16 @@ export class Record {
 
     }
 
-    public toJS?(): any {
-        let output: any = {};
-        const attrs = metadataForRecord(this);
-        for (let key of Object.keys(attrs)) {
-            if (!(key in this)) {
-                continue;
-            }
-            const value = this[key];
-            if (nil(value)) {
-                continue;
-            }
-            if (value.toJS) {
-                output[key] = value.toJS();
-            } else {
-                output[key] = value;
-            }
-        }
-        return output;
+    public equals(other: this) {
+        return this === other || this._map.equals(other._map);
+    }
+
+    public get(key: string) {
+        return this._map.get(key);
+    }
+
+    public toJS(): any {
+        return this._map.toJS();
     }
 
     /**
@@ -87,7 +97,7 @@ function setProp(ctr: Type<any>, attr: string) {
         },
         set: function <T>(this: Record, value: T) {
             if ((this as any)._initialized) {
-                throw `Cannot set attribute ${attr} of immutable Record ${this.constructor.name}!`;
+                throw new RecordSetAttributeError(this.constructor, attr);
             } else {
                 const defaults = (this as any)._defaultValues;
                 defaults[attr] = value;
@@ -128,15 +138,6 @@ export function ListAttr<T>(type: any) {
     };
 }
 
-/**
- * Execption to be thrown if the user created a model with the @Model decorator but forgot to extend the Record class.
- */
-export class RecordMissingExtendsError extends Error {
-    constructor(ctr: Function) {
-        super(`Class ${ctr.name} with the @Model Decorator should also extends the Record class`);
-    }
-}
-
 export function Model() {
     return <T extends { new (...args: any[]): {} }>(ctr: T) => {
         if (!(ctr.prototype instanceof Record)) {
@@ -146,8 +147,11 @@ export function Model() {
         const original = ctr;
 
         // the new constructor behaviour
-        const f: any = function (this: T, ...args) {
-            const obj = original.apply(this, args);
+        const f: any = function (this: T, data, ...args) {
+            if (data instanceof ctr) {
+                return data;
+            }
+            const obj = original.apply(this, [data, ...args]);
             obj._init();
             return obj;
         };
