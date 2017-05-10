@@ -34,7 +34,6 @@ export function Prop<T>(...args) {
     };
 }
 
-
 /**
  * Model list attribute decorator. Use this if the attribute is an array
  *

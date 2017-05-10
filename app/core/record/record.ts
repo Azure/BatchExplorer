@@ -43,7 +43,7 @@ export class Record<TInput> {
                 continue;
             }
             const value = (data as any)[key];
-            if (typeMetadata && !primitives.has(typeMetadata.type.name)) {
+            if (value && typeMetadata && !primitives.has(typeMetadata.type.name)) {
                 if (typeMetadata.list) {
                     obj[key] = List(value && value.map(x => new typeMetadata.type(x)));
                 } else {
