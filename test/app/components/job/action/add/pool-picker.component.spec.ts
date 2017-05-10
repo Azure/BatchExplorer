@@ -26,7 +26,7 @@ const pool1 = new Pool({ id: "pool-1", targetDedicated: 3, virtualMachineConfigu
 const pool2 = new Pool({ id: "pool-2", targetDedicated: 1, virtualMachineConfiguration: config });
 const pool3 = new Pool({ id: "pool-3", targetDedicated: 19, virtualMachineConfiguration: config });
 
-describe("PoolPickerComponenent", () => {
+describe("PoolPickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: PoolPickerComponent;

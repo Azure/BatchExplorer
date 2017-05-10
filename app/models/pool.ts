@@ -1,6 +1,7 @@
-import { List, Record } from "immutable";
+import { List } from "immutable";
 import { Duration } from "moment";
 
+import { ListProp, Model, Prop, Record } from "app/core";
 import { ModelUtils } from "app/utils";
 import { CloudServiceConfiguration } from "./cloud-service-configuration";
 import { Metadata, MetadataAttributes } from "./metadata";
@@ -8,36 +9,6 @@ import { ResizeError } from "./resize-error";
 import { StartTask } from "./start-task";
 import { UserAccount, UserAccountAttributes } from "./user-account";
 import { VirtualMachineConfiguration, VirtualMachineConfigurationAttributes } from "./virtual-machine-configuration";
-
-const PoolRecord = Record({
-    allocationState: null,
-    allocationStateTransitionTime: null,
-    applicationPackageReferences: [],
-    certificateReferences: [],
-    cloudServiceConfiguration: null,
-    creationTime: null,
-    currentDedicated: 0,
-    displayName: null,
-    enableAutoScale: false,
-    enableInterNodeCommunication: false,
-    id: null,
-    lastModified: null,
-    maxTasksPerNode: 1,
-    resizeError: null,
-    resizeTimeout: null,
-    state: null,
-    stateTransitionTime: null,
-    targetDedicated: 0,
-    autoScaleEvaluationInterval: null,
-    autoScaleFormula: null,
-    taskSchedulingPolicy: null,
-    url: null,
-    virtualMachineConfiguration: null,
-    vmSize: null,
-    startTask: null,
-    metadata: List([]),
-    userAccounts: List([]),
-});
 
 export interface PoolAttributes {
     allocationState: string;
@@ -70,34 +41,62 @@ export interface PoolAttributes {
 /**
  * Class for displaying Batch pool information.
  */
-export class Pool extends PoolRecord {
+@Model()
+export class Pool extends Record<PoolAttributes> {
+    @Prop()
     public allocationState: string;
+    @Prop()
     public allocationStateTransitionTime: Date;
+    @Prop()
     public applicationPackageReferences: any[];
+    @Prop()
     public certificateReferences: any[];
+    @Prop()
     public cloudServiceConfiguration: CloudServiceConfiguration;
+    @Prop()
     public creationTime: Date;
+    @Prop()
     public currentDedicated: number;
+    @Prop()
     public displayName: string;
+    @Prop()
     public enableAutoScale: boolean;
+    @Prop()
     public enableInterNodeCommunication: boolean;
+    @Prop()
     public id: string;
+    @Prop()
     public lastModified: Date;
-    public maxTasksPerNode: number;
+    @Prop()
+    public maxTasksPerNode: number = 1;
+    @Prop()
     public resizeError: ResizeError;
+    @Prop()
     public resizeTimeout: Duration;
+    @Prop()
     public state: string;
+    @Prop()
     public stateTransitionTime: Date;
-    public targetDedicated: number;
+    @Prop()
+    public targetDedicated: number = 0;
+    @Prop()
     public autoScaleFormula: string;
+    @Prop()
     public autoScaleEvaluationInterval: Duration;
+    @Prop()
     public taskSchedulingPolicy: any;
+    @Prop()
     public url: string;
+    @Prop()
     public virtualMachineConfiguration: VirtualMachineConfiguration;
+    @Prop()
     public vmSize: string;
+    @Prop()
     public startTask: StartTask;
-    public metadata: List<Metadata>;
-    public userAccounts: List<UserAccount>;
+    @ListProp(Metadata)
+    public metadata: List<Metadata> = List([]);
+    @ListProp(UserAccount)
+    public userAccounts: List<UserAccount> = List([]);
 
     /**
      * Tags are computed from the metadata using an internal key
@@ -105,12 +104,7 @@ export class Pool extends PoolRecord {
     public tags: List<string> = List([]);
 
     constructor(data: Partial<PoolAttributes> = {}) {
-        super(Object.assign({}, data, {
-            resizeError: data.resizeError && new ResizeError(data.resizeError),
-            startTask: data.startTask && new StartTask(data.startTask),
-            metadata: List(data.metadata && data.metadata.map(x => new Metadata(x))),
-            userAccounts: List(data.userAccounts && data.userAccounts.map(x => new UserAccount(x))),
-        }));
+        super(data);
         this.tags = ModelUtils.tagsFromMetadata(this.metadata);
     }
 }
