@@ -5,7 +5,7 @@
         </span>
         <span *ngIf="value" class="content">
             <div class="details">
-                <template [ngTemplateOutlet]="itemTemplate.template"  [ngOutletContext]="{$implicit: value}"></template>
+                <ng-template [ngTemplateOutlet]="itemTemplate.template"  [ngOutletContext]="{$implicit: value}"></ng-template>
             </div>
             <div class="clear-btn" (click)="clearValue($event, i)">
                 <button md-mini-fab><i class="fa fa-times"></i></button>
