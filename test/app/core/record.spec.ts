@@ -1,4 +1,4 @@
-import { ListProp, Model, Prop, Record, RecordMissingExtendsError, RecordSetAttributeError } from "app/core";
+import { ListProp, Model, Prop, Record } from "app/core";
 import { List } from "immutable";
 
 @Model()
