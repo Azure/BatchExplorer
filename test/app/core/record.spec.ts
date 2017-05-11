@@ -35,7 +35,7 @@ class SimpleTestRec extends Record<any> {
 }
 
 describe("Record", () => {
-    it("should throw an expecption when record doesn't extends Record class", () => {
+    it("should throw an exeption when record doesn't extends Record class", () => {
         try {
             @Model()
             class MissingExtendRecord {
@@ -45,7 +45,7 @@ describe("Record", () => {
             expect(true).toBe(false, "Should have thrown an expecption");
         } catch (e) {
             expect(true).toBe(true, "Throw an excpetion as expected");
-            expect(e instanceof RecordMissingExtendsError).toBe(true, "Throw an excpetion as expected");
+            expect(e.name).toEqual("RecordMissingExtendsError", "Exception should be a RecordMissingExtendsError");
         }
     });
 
@@ -89,7 +89,7 @@ describe("Record", () => {
             record.a = 3;
             expect(false).toBe(true, "Should have caught an error");
         } catch (e) {
-            expect(e instanceof RecordSetAttributeError).toBe(true, "Throw an excpetion as expected");
+            expect(e.name).toEqual("RecordSetAttributeError");
         }
     });
 

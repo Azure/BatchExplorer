@@ -1,6 +1,6 @@
 import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MdDialogRef, MdRadioButton, MdRadioGroup } from "@angular/material";
+import { MdDialogRef } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
@@ -37,8 +37,7 @@ describe("DisableJobDialogComponent ", () => {
 
         TestBed.configureTestingModule({
             declarations: [
-                SimpleFormMockComponent, DisableJobDialogComponent, InfoBoxMockComponent, MdRadioButton,
-                MdRadioGroup, ServerErrorMockComponent,
+                SimpleFormMockComponent, DisableJobDialogComponent, InfoBoxMockComponent, ServerErrorMockComponent,
             ],
             providers: [
                 { provide: MdDialogRef, useValue: dialogRefSpy },
