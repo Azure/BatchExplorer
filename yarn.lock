@@ -1336,9 +1336,9 @@ copy-webpack-plugin@^4.0.1:
     minimatch "^3.0.0"
     node-dir "^0.1.10"
 
-core-decorators@~0.17.0:
-  version "0.17.0"
-  resolved "https://registry.yarnpkg.com/core-decorators/-/core-decorators-0.17.0.tgz#3f43180a86d2ab0cc51069f46a1ec3e49e7cebd6"
+core-decorators@~0.18.0:
+  version "0.18.0"
+  resolved "https://registry.yarnpkg.com/core-decorators/-/core-decorators-0.18.0.tgz#5411f83cdb36c58320803c4492dbc4b023cfef71"
 
 core-js@^2.2.0:
   version "2.4.1"
@@ -1389,9 +1389,9 @@ create-hmac@^1.1.0, create-hmac@^1.1.2:
     create-hash "^1.1.0"
     inherits "^2.0.1"
 
-cross-env@~4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/cross-env/-/cross-env-4.0.0.tgz#16083862d08275a4628b0b243b121bedaa55dd80"
+cross-env@~5.0.0:
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/cross-env/-/cross-env-5.0.0.tgz#565ccae4d09676441a5087f406fe7661a29c931b"
   dependencies:
     cross-spawn "^5.1.0"
     is-windows "^1.0.0"
@@ -1578,9 +1578,9 @@ custom-event@~1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/custom-event/-/custom-event-1.0.1.tgz#5d02a46850adf1b4a317946a3928fccb5bfd0425"
 
-d3-array@1, d3-array@1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-1.1.1.tgz#a01abe63a25ffb91d3423c3c6d051b4d36bc8a09"
+d3-array@1, d3-array@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/d3-array/-/d3-array-1.2.0.tgz#147d269720e174c4057a7f42be8b0f3f2ba53108"
 
 d3-axis@1.0.6:
   version "1.0.6"
@@ -1643,9 +1643,9 @@ d3-force@1.0.6:
     d3-quadtree "1"
     d3-timer "1"
 
-d3-format@1, d3-format@1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/d3-format/-/d3-format-1.1.1.tgz#26e094e7b0fa925d3615aa6f43b265c5ca82b46e"
+d3-format@1, d3-format@1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/d3-format/-/d3-format-1.2.0.tgz#6b480baa886885d4651dc248a8f4ac9da16db07a"
 
 d3-geo@1.6.3:
   version "1.6.3"
@@ -1753,11 +1753,11 @@ d3-zoom@1.1.4:
     d3-selection "1"
     d3-transition "1"
 
-d3@~4.7.3:
-  version "4.7.4"
-  resolved "https://registry.yarnpkg.com/d3/-/d3-4.7.4.tgz#a2f40eb57decc51bc469010d48ae74a20e025772"
+d3@~4.8.0:
+  version "4.8.0"
+  resolved "https://registry.yarnpkg.com/d3/-/d3-4.8.0.tgz#1ad8d18997869c90b6ad6114e9b92425cee78460"
   dependencies:
-    d3-array "1.1.1"
+    d3-array "1.2.0"
     d3-axis "1.0.6"
     d3-brush "1.0.4"
     d3-chord "1.0.4"
@@ -1768,7 +1768,7 @@ d3@~4.7.3:
     d3-dsv "1.0.5"
     d3-ease "1.0.3"
     d3-force "1.0.6"
-    d3-format "1.1.1"
+    d3-format "1.2.0"
     d3-geo "1.6.3"
     d3-hierarchy "1.1.4"
     d3-interpolate "1.1.4"
@@ -2918,11 +2918,7 @@ humanize-plus@^1.8.1:
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/humanize-plus/-/humanize-plus-1.8.2.tgz#a65b34459ad6367adbb3707a82a3c9f916167030"
 
-iconv-lite@0.4:
-  version "0.4.17"
-  resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.17.tgz#4fdaa3b38acbc2c031b045d0edcdfe1ecab18c8d"
-
-iconv-lite@0.4.15:
+iconv-lite@0.4, iconv-lite@0.4.15:
   version "0.4.15"
   resolved "https://registry.yarnpkg.com/iconv-lite/-/iconv-lite-0.4.15.tgz#fe265a218ac6a57cfe854927e9d04c19825eddeb"
 
@@ -3410,9 +3406,9 @@ karma-webpack@~2.0.1:
     source-map "^0.1.41"
     webpack-dev-middleware "^1.0.11"
 
-karma@~1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/karma/-/karma-1.5.0.tgz#9c4c14f0400bef2c04c8e8e6bff59371025cc009"
+karma@~1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/karma/-/karma-1.7.0.tgz#6f7a1a406446fa2e187ec95398698f4cee476269"
   dependencies:
     bluebird "^3.3.0"
     body-parser "^1.16.1"
@@ -3431,7 +3427,7 @@ karma@~1.5.0:
     lodash "^3.8.0"
     log4js "^0.6.31"
     mime "^1.3.4"
-    minimatch "^3.0.0"
+    minimatch "^3.0.2"
     optimist "^0.6.1"
     qjobs "^1.1.4"
     range-parser "^1.2.0"
