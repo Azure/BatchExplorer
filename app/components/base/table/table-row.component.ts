@@ -14,7 +14,7 @@ import { TableComponent } from "./table.component";
     selector: "bl-row",
     templateUrl: `
         <ng-template>
-            <tr (click)="handleClick($event)" [class.selected]="active || selected" [class.focused]="isFocused">
+            <tr (click)="handleClick($event)" [class.selected]="active || selected" [class.focused]="isFocused | async">
                 <ng-content></ng-content>
             </tr>
         </ng-template>

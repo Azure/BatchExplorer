@@ -62,7 +62,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     public get selectedItems() { return Object.keys(this._selectedItems); };
 
     public listFocused: boolean = false;
-    public focusedItem: string = null;
+    public focusedItem  = new BehaviorSubject<string>(null);
 
     /**
      * Map of the selected items. Used for better performance to check if an item is selected.
@@ -80,8 +80,9 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
             this.selectedItems = x ? [x.key] : [];
             this.activatedItemChange.emit(x);
             this.activeItemChange.emit(x && x.key);
+
             if (this.listFocused) {
-                this.focusedItem = x.key;
+                this.focusedItem.next(x.key);
             }
         }));
 
@@ -224,13 +225,13 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     public onFocus(event: FocusEvent) {
         this.listFocused = true;
         const active = this._activeItemKey.getValue();
-        this.focusedItem = active && active.key;
+        this.focusedItem.next(active && active.key);
     }
 
     @autobind()
     public onBlur(event) {
         this.listFocused = false;
-        this.focusedItem = null;
+        this.focusedItem.next(null);
     }
 
     @autobind()
@@ -239,12 +240,13 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         let index = 0;
         let currentItem;
         for (let item of items) {
-            if (item.key === this.focusedItem) {
+            if (item.key === this.focusedItem.value) {
                 currentItem = item;
                 break;
             }
             index++;
         }
+
         switch (event.code) {
             case "ArrowDown":
                 index++;
@@ -262,7 +264,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         }
         index = (index + items.length) % items.length;
         const item = items[index];
-        this.focusedItem = item.key;
+        this.focusedItem.next(item.key);
     }
 
     /**
