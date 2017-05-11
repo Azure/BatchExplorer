@@ -1,5 +1,5 @@
 import { ErrorHandler } from "@angular/core";
-import { DebugContext } from "@angular/core/src/linker/debug_context";
+import { DebugContext } from "@angular/core/src/view";
 import { log } from "app/utils";
 import { remote } from "electron";
 

@@ -3,9 +3,11 @@
     "target": "ES6",
     "module": "commonjs",
     "lib": [
+      "dom",
       "es6",
+      "es2015",
       "es2016",
-      "dom"
+      "es2017"
     ],
     "removeComments": false,
     "emitDecoratorMetadata": true,

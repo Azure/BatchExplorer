@@ -52,7 +52,12 @@
     "invoke-injectable": true,
 
     // vrsource-tslint-rules https://github.com/vrsource/vrsource-tslint-rules
-    "no-jasmine-focus": true
+    "no-jasmine-focus": true,
+
+    // TODO enable
+    "prefer-const": false,
+    "no-angle-bracket-type-assertion": false,
+    "semicolon": [true, "always", "ignore-bound-class-methods", "ignore-interfaces"]
   },
   "jsRules": {
     "object-literal-sort-keys": false,
