@@ -40,9 +40,9 @@ export class TabGroupComponent implements AfterViewInit {
     }
 
     public ngAfterViewInit() {
-        setTimeout(() => {
+        // setTimeout(() => {
             this._updateSelectedTab();
-        });
+        // });
         this.tabs.changes.subscribe(() => {
             this._updateSelectedTab();
         });
