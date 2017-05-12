@@ -1,5 +1,5 @@
 import {
-    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, Input, QueryList,
+    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, Input, OnInit, QueryList,
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 
@@ -10,7 +10,7 @@ import { TabComponent } from "./tab.component";
     templateUrl: "tab-group.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TabGroupComponent implements AfterViewInit {
+export class TabGroupComponent implements AfterViewInit, OnInit {
     @Input()
     public dataKey = "tab";
 
@@ -23,26 +23,21 @@ export class TabGroupComponent implements AfterViewInit {
     constructor(
         private router: Router,
         private activeRoute: ActivatedRoute,
-        private changeDetector: ChangeDetectorRef) {
-
-
-    }
+        private changeDetector: ChangeDetectorRef) { }
 
     public ngOnInit() {
         this.activeRoute.queryParams.subscribe((data) => {
-            console.log("Activate tab", data, this.selectedIndex);
             if (this.dataKey in data) {
                 this.selectedTabKey = data[this.dataKey];
                 this._updateSelectedTab();
             }
         });
-        console.log("Done on init");
     }
 
     public ngAfterViewInit() {
-        // setTimeout(() => {
+        setTimeout(() => {
             this._updateSelectedTab();
-        // });
+        });
         this.tabs.changes.subscribe(() => {
             this._updateSelectedTab();
         });
@@ -68,7 +63,6 @@ export class TabGroupComponent implements AfterViewInit {
         }
         this.tabs.some((tab, index) => {
             if (tab.key === this.selectedTabKey) {
-                console.log("Change index", index, this.selectedIndex);
                 this.selectedIndex = index;
                 return true;
             }
