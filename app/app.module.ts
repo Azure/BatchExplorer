@@ -114,7 +114,7 @@ const modules = [
         SubscriptionService,
         TaskService,
         VmSizeService,
-        { provide: ErrorHandler, useClass: BatchLabsErrorHandler },
+        // { provide: ErrorHandler, useClass: BatchLabsErrorHandler },
         ...commands,
     ],
 })
