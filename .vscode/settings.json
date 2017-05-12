@@ -9,6 +9,7 @@
     "**/node_modules": true,
     "**/bower_components": true,
     "build/**": true,
+    "release/**": true,
     "dll/**": true
   },
   "tslint.jsEnable": true,
