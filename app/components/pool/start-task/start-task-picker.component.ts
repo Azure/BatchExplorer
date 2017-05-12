@@ -1,7 +1,10 @@
-import { Component, forwardRef } from "@angular/core";
+import { Component, Input, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators,
 } from "@angular/forms";
+import { List } from "immutable";
+
+import { UserAccount } from "app/models";
 
 @Component({
     selector: "bl-start-task-picker",
@@ -13,6 +16,9 @@ import {
     ],
 })
 export class StartTaskPickerComponent implements ControlValueAccessor {
+    @Input()
+    public userAccounts: List<UserAccount> | UserAccount[];
+
     public form: FormGroup;
     private _propagateChange: Function = null;
 
