@@ -36,7 +36,7 @@
     "stylelint": "stylelint --syntax scss \"app/**/*.scss\"",
     "lint": "npm run tslint && npm run stylelint",
     "package": "build --dir",
-    "package2": "electron-packager ./build"
+    "build-and-pack": "npm run build:prod && npm run package"
   },
   "license": "MIT",
   "engines": {
@@ -45,7 +45,6 @@
   "build": {
     "productName": "BatchLabs",
     "appId": "microsoft.azure.batchlabs",
-    "asar": false,
     "files": [
       "build/",
       "node_modules/",

@@ -20,7 +20,10 @@ const urls = {
     icon: __dirname + "/../assets/images/labs.ico",
 };
 
+const isAsar = process.mainModule.filename.indexOf("app.asar") !== -1;
+
 export const Constants = {
+    isAsar,
     root,
     urls,
     version: packageConfig.version,

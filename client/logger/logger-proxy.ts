@@ -4,7 +4,9 @@ import * as path from "path";
 
 import { Constants } from "../client-constants";
 
-mkdirp.sync(path.join(Constants.root, "logs"));
+const logsFolder = Constants.isAsar ? path.join(Constants.root, "../..", "logs") : path.join(Constants.root, "logs");
+
+mkdirp.sync(logsFolder);
 
 export const logger = bunyan.createLogger({
     name: "BatchLabs Main",
@@ -13,7 +15,7 @@ export const logger = bunyan.createLogger({
         { stream: process.stderr },
         {
             type: "rotating-file",
-            path: path.join(Constants.root, "logs/client.log"),
+            path: path.join(logsFolder, "logs/client.log"),
             period: "1d",       // daily rotation
             count: 3,           // keep 3 back copies
         },
@@ -27,7 +29,7 @@ export const renderLogger = bunyan.createLogger({
         { stream: process.stderr },
         {
             type: "rotating-file",
-            path: path.join(Constants.root, "logs/app.log"),
+            path: path.join(logsFolder, "logs/app.log"),
             period: "1d",       // daily rotation
             count: 3,           // keep 3 back copies
         },
