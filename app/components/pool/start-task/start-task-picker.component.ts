@@ -25,8 +25,8 @@ export class StartTaskPickerComponent implements ControlValueAccessor {
     constructor(formBuilder: FormBuilder) {
         this.form = formBuilder.group({
             commandLine: ["", Validators.required],
-            maxTaskRetryCount: ["0"],
-            runElevated: [false],
+            maxTaskRetryCount: [0],
+            userIdentity: [null],
             waitForSuccess: [false],
             resourceFiles: [[]],
             environmentSettings: [[]],
@@ -43,8 +43,15 @@ export class StartTaskPickerComponent implements ControlValueAccessor {
         if (value) {
             this.form.patchValue(value);
         } else {
-            this.form.reset();
+            this.reset();
         }
+    }
+
+    public reset() {
+        this.form.reset({
+            maxTaskRetryCount: 0,
+            waitForSuccess: false,
+        });
     }
 
     public registerOnChange(fn) {

@@ -8,7 +8,7 @@
                 </md-slide-toggle>
             </div>
             <div *ngIf="enableStartTask">
-                <bl-start-task-picker formControlName="startTask"></bl-start-task-picker>
+                <bl-start-task-picker formControlName="startTask" [userAccounts]="pool.userAccounts"></bl-start-task-picker>
             </div>
         </form>
     </bl-simple-form>

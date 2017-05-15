@@ -1,23 +1,43 @@
-import { Record } from "immutable";
+import { List } from "immutable";
+
+import { ListProp, Model, Prop, Record } from "app/core";
+import { ResourceFile } from "./resource-file";
+import { UserIdentity } from "./user-identity";
 
 // tslint:disable:variable-name object-literal-sort-keys
-const StartTaskRecord = Record({
-    commandLine: "",
-    waitForSuccess: true,
-    runElevated: false,
-    maxTaskRetryCount: 0,
-    resourceFiles: [],
-    environmentSettings: [],
-});
+export interface StartTaskAttributes {
+    commandLine: string;
+    userIdentity: any;
+    maxTaskRetryCount: number;
+    resourceFiles: any[];
+    environmentSettings: any[];
+}
 
 /**
  * Class for displaying Batch Start Task information.
  */
-export class StartTask extends StartTaskRecord {
+@Model()
+export class StartTask extends Record<StartTaskAttributes> {
+    @Prop()
     public commandLine: string;
-    public waitForSuccess: boolean;
-    public runElevated: boolean;
+
+    @Prop()
+    public waitForSuccess: boolean = true;
+
+    @Prop()
+    public userIdentity: UserIdentity;
+
+    @Prop()
     public maxTaskRetryCount: number;
-    public resourceFiles: any[];                // ResourceFile
-    public environmentSettings: any[];          // EnvironmentSetting
+
+    @ListProp(ResourceFile)
+    public resourceFiles: List<ResourceFile> = List([]);
+
+    @ListProp(Object)
+    public environmentSettings: List<any> = List([]);
+
+    constructor(a: any) {
+        super(a);
+        console.log(a.commandLine, a, this.userIdentity);
+    }
 }

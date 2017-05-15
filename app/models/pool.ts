@@ -6,7 +6,7 @@ import { ModelUtils } from "app/utils";
 import { CloudServiceConfiguration } from "./cloud-service-configuration";
 import { Metadata, MetadataAttributes } from "./metadata";
 import { ResizeError } from "./resize-error";
-import { StartTask } from "./start-task";
+import { StartTask, StartTaskAttributes } from "./start-task";
 import { UserAccount, UserAccountAttributes } from "./user-account";
 import { VirtualMachineConfiguration, VirtualMachineConfigurationAttributes } from "./virtual-machine-configuration";
 
@@ -33,7 +33,7 @@ export interface PoolAttributes {
     url: string;
     virtualMachineConfiguration: Partial<VirtualMachineConfigurationAttributes>;
     vmSize: string;
-    startTask: StartTask;
+    startTask: Partial<StartTaskAttributes>;
     metadata: MetadataAttributes[];
     userAccounts: UserAccountAttributes[];
 }
