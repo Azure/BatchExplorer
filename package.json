@@ -64,7 +64,11 @@
         }
       ]
     },
+    "mac": {
+      "icon": "app/assets/images/icon.icns"
+    },
     "win": {
+      "icon": "app/assets/images/icon.ico",
       "target": [
         "nsis"
       ]
