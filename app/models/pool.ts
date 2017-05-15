@@ -47,10 +47,10 @@ export class Pool extends Record<PoolAttributes> {
     public allocationState: string;
     @Prop()
     public allocationStateTransitionTime: Date;
-    @Prop()
-    public applicationPackageReferences: any[];
-    @Prop()
-    public certificateReferences: any[];
+    @ListProp(Object)
+    public applicationPackageReferences: List<any>;
+    @ListProp(Object)
+    public certificateReferences: List<any>;
     @Prop()
     public cloudServiceConfiguration: CloudServiceConfiguration;
     @Prop()

@@ -1,5 +1,6 @@
 import { List, Map } from "immutable";
 
+import { nil } from "app/utils";
 import { metadataForRecord, primitives } from "./helpers";
 
 /**
@@ -25,9 +26,27 @@ export class Record<TInput> {
     }
 
     public toJS(): any {
-        return Object.assign({}, this._defaultValues, this._map.toJS());
+        return Object.assign({}, this._defaultValues, this._toJS());
     }
 
+    private _toJS() {
+        let output: any = {};
+        const attrs = metadataForRecord(this);
+        for (let key of Object.keys(attrs)) {
+            if (!(key in this)) {
+                continue;
+            }
+            const value = this[key];
+            if (nil(value)) {
+                output[key] = value;
+            } else if (value.toJS) {
+                output[key] = value.toJS();
+            } else {
+                output[key] = value;
+            }
+        }
+        return output;
+    }
     /**
      * This method will be called by the decorator.
      */
