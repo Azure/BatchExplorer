@@ -123,6 +123,12 @@ describe("Record", () => {
         expect(b.toJS()).toEqual({ id: "id-1", nested: { name: "name-1" }, nestedList: [{ name: "default-name" }] });
     });
 
+    it("toJS() should return compelex type toJS recursively", () => {
+        let a = new TestRec({ id: "id-1", nested: { name: "name-1" }, nestedList: [{ name: "name-2" }]});
+
+        expect(a.toJS()).toEqual({ id: "id-1", nested: { name: "name-1" }, nestedList: [{ name: "name-2" }]});
+    });
+
     it("should have access to values in constructor", () => {
         @Model()
         class ComputedValueRec extends Record<any> {
