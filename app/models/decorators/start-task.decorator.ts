@@ -8,7 +8,6 @@ export class StartTaskDecorator extends DecoratorBase<StartTask> {
     constructor(startTask: StartTask) {
         super(startTask);
         this._initUserIdentity();
-        console.log("Ident", startTask.userIdentity, this.userIdentitySummary);
     }
 
     private _initUserIdentity() {

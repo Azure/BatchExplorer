@@ -15,7 +15,7 @@ const defaultUsers = [
     {
         label: "Task user",
         scope: AutoUserScope.task,
-        elevationLevel: UserAccountElevationLevel.nonAdmin,
+        elevationLevel: UserAccountElevationLevel.nonadmin,
     },
     {
         label: "Task user (Admin)",
@@ -25,7 +25,7 @@ const defaultUsers = [
     {
         label: "Pool user",
         scope: AutoUserScope.pool,
-        elevationLevel: UserAccountElevationLevel.nonAdmin,
+        elevationLevel: UserAccountElevationLevel.nonadmin,
     },
     {
         label: "Pool user (Admin)",
@@ -77,7 +77,22 @@ export class UserIdentityComponent implements OnChanges, OnDestroy {
 
     public writeValue(value: any) {
         if (value) {
-            this.selected.patchValue(value);
+            const options = this.options;
+            let picked;
+            if (value.userName) {
+                picked = options.filter(x => x.identity.userName === value.userName).first();
+            } else if (value.autoUser) {
+                picked = options.filter(x => {
+                    return value.autoUser
+                        && x.identity.autoUser.scope === value.autoUser.scope
+                        && x.identity.autoUser.elevationLevel === value.autoUser.elevationLevel;
+                }).first();
+            }
+            console.log("Picked", picked, value);
+            if (!picked) {
+                picked = defaultSelectedUser;
+            }
+            this.selected.setValue(picked.identity);
         } else {
             this.reset();
         }

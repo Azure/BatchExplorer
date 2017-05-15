@@ -1,26 +1,21 @@
-import { Record } from "immutable";
+import { Model, Prop, Record } from "app/core";
 
-const UserAccountRecord = Record({
-    name: null,
-    elevationLevel: "nonAdmin",
-});
+export type UserAccountElevationLevel = "nonadmin" | "admin";
+export const UserAccountElevationLevel = {
+    nonadmin: "nonadmin" as UserAccountElevationLevel,
+    admin: "nonadmin" as UserAccountElevationLevel,
+};
 
 export interface UserAccountAttributes {
     name: string;
     elevationLevel: UserAccountElevationLevel;
 }
 
-export class UserAccount extends UserAccountRecord {
+@Model()
+export class UserAccount extends Record<UserAccountAttributes> {
+    @Prop()
     public name: string;
-    public elevationLevel: UserAccountElevationLevel;
 
-    constructor(data: UserAccountAttributes) {
-        super(data);
-    }
+    @Prop()
+    public elevationLevel: UserAccountElevationLevel = UserAccountElevationLevel.nonadmin;
 }
-
-export type UserAccountElevationLevel = "nonAdmin" | "admin";
-export const UserAccountElevationLevel = {
-    nonAdmin: "nonAdmin" as UserAccountElevationLevel,
-    admin: "admin" as UserAccountElevationLevel,
-};
