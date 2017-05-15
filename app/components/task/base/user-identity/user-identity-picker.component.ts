@@ -74,7 +74,6 @@ export class UserIdentityComponent implements OnChanges, OnDestroy {
         });
     }
 
-
     public writeValue(value: any) {
         if (value) {
             const options = this.options;
@@ -88,7 +87,6 @@ export class UserIdentityComponent implements OnChanges, OnDestroy {
                         && x.identity.autoUser.elevationLevel === value.autoUser.elevationLevel;
                 }).first();
             }
-            console.log("Picked", picked, value);
             if (!picked) {
                 picked = defaultSelectedUser;
             }

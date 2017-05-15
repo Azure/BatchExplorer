@@ -1,7 +1,6 @@
 import { AutoUserScope, StartTask, UserAccountElevationLevel } from "app/models";
 import { DecoratorBase } from "app/utils/decorators";
 
-
 export class StartTaskDecorator extends DecoratorBase<StartTask> {
     public userIdentitySummary: string;
 

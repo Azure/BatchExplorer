@@ -4,6 +4,7 @@ import {
 } from "@angular/forms";
 import { Subscription } from "rxjs";
 
+import { UserAccountElevationLevel } from "app/models";
 import { UserAccountDto } from "app/models/dtos";
 
 export interface UserAccountFormModel {
@@ -26,7 +27,7 @@ function userAccountToDto(userAccount: UserAccountFormModel): UserAccountDto {
     return {
         name: userAccount.name,
         password: userAccount.password,
-        elevationLevel: userAccount.runElevated ? "admin" : "nonAdmin",
+        elevationLevel: userAccount.runElevated ? UserAccountElevationLevel.admin : UserAccountElevationLevel.nonadmin,
         sshPrivateKey: userAccount.sshPrivateKey,
     };
 }

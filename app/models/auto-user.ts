@@ -1,8 +1,6 @@
 import { Model, Prop, Record } from "app/core";
 import { UserAccountElevationLevel } from "./user-account";
 
-
-
 export interface AutoUserAttributes {
     scope: AutoUserScope;
     elevationLevel: UserAccountElevationLevel;

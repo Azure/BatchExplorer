@@ -35,9 +35,4 @@ export class StartTask extends Record<StartTaskAttributes> {
 
     @ListProp(Object)
     public environmentSettings: List<any> = List([]);
-
-    constructor(a: any) {
-        super(a);
-        console.log(a.commandLine, a, this.userIdentity);
-    }
 }
