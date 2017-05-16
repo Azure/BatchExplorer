@@ -4,7 +4,6 @@ import { ListProp, Model, Prop, Record } from "app/core";
 import { ResourceFile } from "./resource-file";
 import { UserIdentity } from "./user-identity";
 
-// tslint:disable:variable-name object-literal-sort-keys
 export interface StartTaskAttributes {
     commandLine: string;
     userIdentity: any;
