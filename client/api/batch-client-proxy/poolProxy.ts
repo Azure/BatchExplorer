@@ -2,7 +2,7 @@ import { ServiceClient } from "azure-batch";
 
 import * as models from "./batch-models";
 import { BatchResult } from "./models";
-import { ListProxy, mapGet, wrapOptions } from "./shared";
+import { ListProxy, ProxyUtil, mapGet, wrapOptions } from "./shared";
 
 export default class PoolProxy {
 
@@ -66,6 +66,20 @@ export default class PoolProxy {
      * @param options: Optional Parameters.
      */
     public add(pool: any, options?: any): Promise<any> {
+        pool = ProxyUtil.decoratePool(pool);
         return this.client.pool.add(pool, wrapOptions(options));
+    }
+
+    public enableAutoScale(
+        poolId: string,
+        attributes: models.PoolEnableAutoScaleParameter,
+        options?: any): Promise<any> {
+        attributes = ProxyUtil.decoratePool(attributes);
+
+        return this.client.pool.enableAutoScale(poolId, attributes, wrapOptions(options));
+    }
+
+    public disableAutoScale(poolId: string, options?: any): Promise<any> {
+        return this.client.pool.disableAutoScale(poolId, wrapOptions(options));
     }
 }

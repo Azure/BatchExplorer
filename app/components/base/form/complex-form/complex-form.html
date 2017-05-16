@@ -1,0 +1,37 @@
+<div class="content" *ngIf="currentPage">
+    <div class="header">
+        <div *ngIf="_pageStack.length > 0">
+            <button md-raised-button color="primary" (click)="closePage()">Back</button>
+        </div>
+        <h1>{{currentPage.title}}</h1>
+        <p>{{currentPage.subtitle}}</p>
+    </div>
+    <form novalidate (keyup.enter)="closePageOrSubmit()">
+        <ng-template [ngTemplateOutlet]="currentPage.content"></ng-template>
+    </form>
+    <div class="loading-overlay" *ngIf="loading"></div>
+</div>
+<div class="form-server-error" *ngIf="showError">
+    <bl-server-error [error]="error"></bl-server-error>
+</div>
+<div class="form-footer">
+    <div class="toggle-error-btn" *ngIf="error">
+        <button md-icon-button color="warn" (click)="toggleShowError()" mdTooltip="There was an error submitting this form" mdTooltipPosition="above">
+            <md-icon fontIcon="fa-exclamation-triangle"></md-icon>
+        </button>
+    </div>
+    <div class="summary"></div>
+    <div class="form-buttons">
+        <div *ngIf="isMainWindow">
+            <bl-submit-btn *ngIf="multiUse" [submit]="save" [multiSubmit]="true" [disabled]="!submitEnabled" class="add">{{actionName}}</bl-submit-btn>
+            <bl-submit-btn *ngIf="containerRef" [submit]="saveAndClose" [multiSubmit]="true" [disabled]="!submitEnabled" [color]="actionColor" class="add-and-close">{{saveAndCloseText}}</bl-submit-btn>
+            <span style="display: inline-block">
+                <button type="button" [disabled]="isSaving" (click)="close()" class="close" md-raised-button>{{cancelText}}</button>
+            </span>
+        </div>
+        <div *ngIf="!isMainWindow">
+            <button md-raised-button class="cancel" color="primary" (click)="cancelPage()">Cancel</button>
+            <button md-raised-button class="select" color="primary" (click)="closePageOrSubmit()" [disabled]="!currentPage.submitEnabled">Select</button>
+        </div>
+    </div>
+</div>

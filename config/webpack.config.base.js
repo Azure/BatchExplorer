@@ -19,7 +19,7 @@ const baseConfig = {
 
     resolve: {
         extensions: [".ts", ".js", ".json", ".scss", ".css", ".html"],
-        modules: [".", "node_modules"],
+        modules: [helpers.root(), helpers.root("node_modules")],
     },
 
     module: {
@@ -51,8 +51,10 @@ const baseConfig = {
     },
     plugins: [
         new CheckerPlugin(),
+
         new CopyWebpackPlugin([
             { from: "./client/splash-screen/**/*" },
+            { context: "app/assets", from: "**/*", to: "assets" },
         ]),
         new CommonsChunkPlugin({
             name: "polyfills",

@@ -13,7 +13,7 @@ import { ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";
 import { validateControl } from "test/utils/helpers";
-import { CreateFormMockComponent, ServerErrorMockComponent } from "test/utils/mocks/components";
+import { ServerErrorMockComponent, complexFormMockComponents } from "test/utils/mocks/components";
 
 describe("ApplicationEditDialogComponent ", () => {
     let fixture: ComponentFixture<ApplicationEditDialogComponent>;
@@ -46,7 +46,7 @@ describe("ApplicationEditDialogComponent ", () => {
         };
 
         TestBed.configureTestingModule({
-            declarations: [ApplicationEditDialogComponent, CreateFormMockComponent, ServerErrorMockComponent],
+            declarations: [...complexFormMockComponents, ApplicationEditDialogComponent, ServerErrorMockComponent],
             providers: [
                 { provide: FormBuilder, useValue: new FormBuilder() },
                 { provide: SidebarRef, useValue: null },
@@ -76,14 +76,14 @@ describe("ApplicationEditDialogComponent ", () => {
 
         it("control has no required validation", () => {
             const controlId = "displayName";
-            validateControl(component.applicationForm, controlId).passes(validators.required).with("");
-            validateControl(component.applicationForm, controlId).passes(validators.required).with(null);
+            validateControl(component.form, controlId).passes(validators.required).with("");
+            validateControl(component.form, controlId).passes(validators.required).with(null);
         });
 
         it("control has maxLength validation", () => {
             const controlId = "displayName";
-            validateControl(component.applicationForm, controlId).fails(validators.maxlength).with("a".repeat(1025));
-            validateControl(component.applicationForm, controlId).passes(validators.maxlength).with("a".repeat(1024));
+            validateControl(component.form, controlId).fails(validators.maxlength).with("a".repeat(1025));
+            validateControl(component.form, controlId).passes(validators.maxlength).with("a".repeat(1024));
         });
     });
 
@@ -95,8 +95,8 @@ describe("ApplicationEditDialogComponent ", () => {
 
         it("control has no validation", () => {
             const controlId = "defaultVersion";
-            validateControl(component.applicationForm, controlId).passes(validators.required).with("");
-            validateControl(component.applicationForm, controlId).passes(validators.required).with(null);
+            validateControl(component.form, controlId).passes(validators.required).with("");
+            validateControl(component.form, controlId).passes(validators.required).with(null);
         });
     });
 
@@ -107,10 +107,10 @@ describe("ApplicationEditDialogComponent ", () => {
         });
 
         it("control has required validation", () => {
-            validateControl(component.applicationForm, "allowUpdates").passes(validators.required).with(false);
-            validateControl(component.applicationForm, "allowUpdates").passes(validators.required).with(true);
-            validateControl(component.applicationForm, "allowUpdates").fails(validators.required).with(null);
-            validateControl(component.applicationForm, "allowUpdates").fails(validators.required).with("");
+            validateControl(component.form, "allowUpdates").passes(validators.required).with(false);
+            validateControl(component.form, "allowUpdates").passes(validators.required).with(true);
+            validateControl(component.form, "allowUpdates").fails(validators.required).with(null);
+            validateControl(component.form, "allowUpdates").fails(validators.required).with("");
         });
     });
 
@@ -139,15 +139,15 @@ describe("ApplicationEditDialogComponent ", () => {
         });
 
         it("sets the display name", () => {
-            expect(component.applicationForm.controls["displayName"].value).toBe("my monkey");
+            expect(component.form.controls["displayName"].value).toBe("my monkey");
         });
 
         it("sets the default version", () => {
-            expect(component.applicationForm.controls["defaultVersion"].value).toBe("1.0.1");
+            expect(component.form.controls["defaultVersion"].value).toBe("1.0.1");
         });
 
         it("sets allow updates", () => {
-            expect(component.applicationForm.controls["allowUpdates"].value).toBe(true);
+            expect(component.form.controls["allowUpdates"].value).toBe(true);
         });
     });
 

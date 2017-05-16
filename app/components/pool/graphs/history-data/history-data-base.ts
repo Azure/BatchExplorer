@@ -38,4 +38,8 @@ export class HistoryDataBase {
             }
         }
     }
+
+    public reset() {
+        this.history = [];
+    }
 }

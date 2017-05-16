@@ -1,19 +1,16 @@
-<div class="dialog-form">
-    <h2>Disable job</h2>
-    <bl-action-form [submit]="ok" [dialogRef]="dialogRef">
-        <div class="message">
-            <p>Do you want to disable the job '<b>{{jobId}}</b>'?</p>
-        </div>
-        <div class="options">
-            <h3>Task options</h3>
-            <hr />
-            <p>Specifies what to do with active tasks associated with the job:</p>
-            <md-radio-group [(ngModel)]="taskAction" [ngModelOptions]="{standalone: true}">
-                <md-radio-button value="requeue" checked="true">Requeue</md-radio-button>
-                <md-radio-button value="terminate">Terminate</md-radio-button>
-                <md-radio-button value="wait">Wait</md-radio-button>
-            </md-radio-group>
-            <bl-info-box [message]="actionDescription"></bl-info-box>
-        </div>
-    </bl-action-form>
-</div>
+<bl-simple-form [submit]="ok" [containerRef]="dialogRef" [multiUse]="false" actionName="Disable"  title="Disable job">
+    <div class="message">
+        <p>Do you want to disable the job '<b>{{jobId}}</b>'?</p>
+    </div>
+    <div class="options">
+        <h3>Task options</h3>
+        <hr />
+        <p>Specifies what to do with active tasks associated with the job:</p>
+        <md-radio-group [(ngModel)]="taskAction" [ngModelOptions]="{standalone: true}">
+            <md-radio-button value="requeue" checked="true">Requeue</md-radio-button>
+            <md-radio-button value="terminate">Terminate</md-radio-button>
+            <md-radio-button value="wait">Wait</md-radio-button>
+        </md-radio-group>
+        <bl-info-box [message]="actionDescription"></bl-info-box>
+    </div>
+</bl-simple-form>

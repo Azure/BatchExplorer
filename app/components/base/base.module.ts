@@ -11,6 +11,7 @@ import { BackgroundTaskModule } from "./background-task";
 import { BannerComponent, BannerOtherFixDirective } from "./banner";
 import { BreadcrumbModule } from "./breadcrumbs";
 import { ButtonsModule } from "./buttons";
+import { ChartsModule } from "./charts";
 import { ContextMenuModule } from "./context-menu";
 import { DropdownModule } from "./dropdown";
 import { EditorModule } from "./editor";
@@ -39,6 +40,7 @@ const modules = [
     BreadcrumbModule,
     ButtonsModule,
     BackgroundTaskModule,
+    ChartsModule,
     ContextMenuModule,
     DropdownModule,
     EditorModule,

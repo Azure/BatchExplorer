@@ -19,6 +19,7 @@ export class StartTaskEditFormComponent {
         this._pool = pool;
         this._startTask = pool.startTask;
         this.form.patchValue({
+            enableStartTask: Boolean(pool.startTask),
             startTask: pool.startTask && pool.startTask.toJS(),
         });
     }
@@ -35,8 +36,17 @@ export class StartTaskEditFormComponent {
         private poolService: PoolService,
         private notificationService: NotificationService) {
         this.form = formBuilder.group({
+            enableStartTask: [false],
             startTask: [null],
         });
+    }
+
+    public get enableStartTask() {
+        return this.form.controls["enableStartTask"].value;
+    }
+
+    public closeForm() {
+        this.close.emit();
     }
 
     @autobind()
@@ -50,10 +60,11 @@ export class StartTaskEditFormComponent {
             });
         } else {
             obs = this.poolService.getOnce(this.pool.id).cascade((pool) => {
+                const poolData = pool.toJS();
                 return this.poolService.replaceProperties(id, {
-                    applicationPackageReferences: pool.applicationPackageReferences,
-                    certificateReferences: pool.certificateReferences,
-                    metadata: pool.metadata,
+                    applicationPackageReferences: poolData.applicationPackageReferences || [],
+                    certificateReferences: poolData.certificateReferences || [],
+                    metadata: poolData.metadata || [],
                 });
             });
         }

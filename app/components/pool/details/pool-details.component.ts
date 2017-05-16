@@ -3,11 +3,11 @@ import { MdDialog, MdDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { List } from "immutable";
-import * as Moment from "moment";
 import { Subscription } from "rxjs";
 
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { Pool } from "app/models";
+import { PoolDecorator } from "app/models/decorators";
 import { PoolParams, PoolService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
 import { SidebarManager } from "../../base/sidebar";
@@ -28,10 +28,16 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
     }
 
     public poolId: string;
-    public pool: Pool;
+    public poolDecorator: PoolDecorator;
+    public set pool(pool: Pool) {
+        this._pool = pool;
+        this.poolDecorator = pool && new PoolDecorator(pool);
+    }
+    public get pool() { return this._pool; };
     public data: RxEntityProxy<PoolParams, Pool>;
 
     private _paramsSubscriber: Subscription;
+    private _pool: Pool;
 
     constructor(
         private router: Router,
@@ -108,10 +114,6 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         } else {
             return `Pool has ${this.pool.currentDedicated} nodes`;
         }
-    }
-
-    public get lastResize(): string {
-        return Moment(this.pool.allocationStateTransitionTime).fromNow();
     }
 
     @autobind()

@@ -1,9 +1,6 @@
-<div class="slideout-form content-wrapper">
-    <h1>Create job</h1>
-    <p>Adds a job to the selected account</p>
-
-    <bl-create-form [formGroup]="form" [submit]="submit" [sidebarRef]="sidebarRef">
-        <form novalidate [formGroup]="form">
+<bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef">
+    <bl-form-page main-form-page title="Create job" [formGroup]="form">
+        <bl-form-section title="General info" subtitle="Basic information about the job">
             <div class="form-element">
                 <md-input-container>
 
@@ -36,11 +33,12 @@
                     <bl-error controlName="maxTaskRetryCount" code="validateRange">Retry count values can range from -1 to 100</bl-error>
                 </div>
             </div>
-
+        </bl-form-section>
+        <bl-form-section title="Pool selection" subtitle="Choose where the job should be running">
             <div class="form-element">
                 <bl-pool-picker formControlName="poolInfo"></bl-pool-picker>
                 <bl-error controlName="poolInfo" code="required">You must select a pool for this job to run on</bl-error>
             </div>
-        </form>
-    </bl-create-form>
-</div>
+        </bl-form-section>
+    </bl-form-page>
+</bl-complex-form>

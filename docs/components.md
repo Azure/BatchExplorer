@@ -7,12 +7,12 @@ Official documentation from angular https://angular.io/docs/ts/latest/api/core/i
 1. Name the file in this format `do-something.component.ts`
 2. Name the class inside `class DoSomethingComponent`
 3. Name the compoennt selector `bl-do-something`
-
+4. Name the template and the css file the same as the component `do-something.html` and `do-something.scss`
 
 Note: TSLint will complain if you don't follow the format for #2 and 3
 
 ## Component template
-You can either have the template be inline with
+You can either have the template be inline(Only use this if the template is extremely simple - 3 lines max)
 ```typescript
 @Component({
   ...
@@ -31,6 +31,30 @@ Or in a sperated file. If so name the file with the same name as the component `
 
 ```html
 <div>Show something</div>
+```
+
+## Style your component
+Prefer use of the angular2 `styleUrls` attribute on the component decorator.
+Add a style file in the same folder as your component(If the folder is getting to crowded maybe move each component in its own sub folder)
+
+```ts
+import "./do-something.scss";
+
+@Component({
+    ...
+});
+```
+
+Then in `do-something.scss`
+```scss
+@import "app/styles/variables"; // Import variables
+
+bl-do-something {
+    .class1 {
+        color: red;
+    }
+}
+
 ```
 
 ## Do something on input

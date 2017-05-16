@@ -1,13 +1,13 @@
 import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MdDialogRef, MdRadioButton, MdRadioGroup, MdUniqueSelectionDispatcher } from "@angular/material";
+import { MdDialogRef } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
 import { DisableJobDialogComponent } from "app/components/job/action";
 import { ServerError } from "app/models";
 import { JobService } from "app/services";
-import { ActionFormMockComponent, InfoBoxMockComponent, ServerErrorMockComponent } from "test/utils/mocks/components";
+import { InfoBoxMockComponent, ServerErrorMockComponent, SimpleFormMockComponent } from "test/utils/mocks/components";
 
 describe("DisableJobDialogComponent ", () => {
     let fixture: ComponentFixture<DisableJobDialogComponent>;
@@ -15,7 +15,6 @@ describe("DisableJobDialogComponent ", () => {
     let debugElement: DebugElement;
     let dialogRefSpy: any;
     let jobServiceSpy: any;
-    let dispatcher: MdUniqueSelectionDispatcher;
 
     beforeEach(() => {
         dialogRefSpy = {
@@ -36,17 +35,13 @@ describe("DisableJobDialogComponent ", () => {
             }),
         };
 
-        dispatcher = new MdUniqueSelectionDispatcher();
         TestBed.configureTestingModule({
             declarations: [
-                ActionFormMockComponent, DisableJobDialogComponent, InfoBoxMockComponent, MdRadioButton,
-                MdRadioGroup, ServerErrorMockComponent,
+                SimpleFormMockComponent, DisableJobDialogComponent, InfoBoxMockComponent, ServerErrorMockComponent,
             ],
             providers: [
                 { provide: MdDialogRef, useValue: dialogRefSpy },
                 { provide: JobService, useValue: jobServiceSpy },
-                { provide: MdUniqueSelectionDispatcher, useValue: dispatcher },
-
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });

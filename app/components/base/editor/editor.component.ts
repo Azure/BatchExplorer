@@ -1,137 +1,117 @@
-import { Component, ElementRef, EventEmitter, Input, Output } from "@angular/core";
-import "brace";
-
-// Themes
-import "brace/theme/chrome";
-
-// Languages
-import "brace/mode/json";
-
-declare var ace: any;
+import {
+    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter,
+    HostListener, Input, Output, ViewChild, forwardRef,
+} from "@angular/core";
+import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import "app/utils/autoscale";
+import * as CodeMirror from "codemirror";
+import "codemirror/addon/display/autorefresh";
+import "codemirror/addon/display/placeholder";
+import "codemirror/addon/hint/show-hint";
 
 @Component({
     selector: "bl-editor",
-    template: "",
-    styles: [":host { display:block;width:100%;min-height: 200px;overflow: auto; }"],
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            // tslint:disable-next-line:no-forward-ref
+            useExisting: forwardRef(() => EditorComponent),
+            multi: true,
+        }],
+    template: `
+        <textarea #host placeholder="enter autoscale formula" placeholder="Please enter {{label}}">
+        </textarea>
+        <div class="mat-input-underline">
+            <span class="mat-input-ripple" [class.mat-focused]="isFocused"></span>
+        </div>
+    `,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class EditorComponent {
-    @Output()
-    public textChanged = new EventEmitter();
-    @Output()
-    public textChange = new EventEmitter();
+
+export class EditorComponent implements ControlValueAccessor, AfterViewInit {
     @Input()
-    public style: any = {};
+    public config;
+    @Input()
+    public label: string;
+    @Output()
+    public change = new EventEmitter();
+    @Output()
+    public focus = new EventEmitter();
+    @Output()
+    public blur = new EventEmitter();
 
-    private _options: any = {};
-    private _readOnly: boolean = false;
-    private _theme: string = "chrome";
-    private _mode: any = "json";
-    private _autoUpdateContent: boolean = true;
-    private _editor: any;
-    private _durationBeforeCallback: number = 0;
-    private _text: string = "";
-    private oldText: any;
-    private timeoutSaving: any;
+    @ViewChild("host")
+    public host;
 
-    constructor(elementRef: ElementRef) {
-        let el = elementRef.nativeElement;
-        this._editor = ace["edit"](el);
+    @Output()
+    public instance = null;
+    public isFocused = false;
+    private _value = "";
 
-        this.init();
-        this.initEvents();
+    get value() { return this._value; };
+
+    @Input() set value(v) {
+        if (v !== this._value) {
+            this._value = v;
+            this.onChange(v);
+        }
     }
 
-    public init() {
-        this.options = this._options || {};
-        this.theme = this._theme;
-        this.mode = this._mode;
-        this.readOnly = this._readOnly;
+    constructor(private changeDetector: ChangeDetectorRef) { }
+
+    public ngAfterViewInit() {
+        this.config = this.config || {};
+        this.codemirrorInit(this.config);
     }
 
-    public initEvents() {
-        this._editor.on("change", () => {
-            let newVal = this._editor.getValue();
-            if (newVal === this.oldText) {
-                return;
+    public codemirrorInit(config) {
+        this.instance = CodeMirror.fromTextArea(this.host.nativeElement, config);
+        this.instance.setValue(this._value);
+
+        this.instance.on("change", (editor, change) => {
+            this.updateValue(this.instance.getValue());
+
+            if (change.origin !== "complete" && change.origin !== "setValue") {
+                this.instance.showHint({ hint: CodeMirror.hint.autoscale, completeSingle: false });
             }
-            if (typeof this.oldText !== "undefined") {
-                this._updateText(newVal);
-            }
-            this.oldText = newVal;
+        });
+
+        this.instance.on("focus", () => {
+            this.isFocused = true;
+            this.focus.emit();
+            this.onTouched();
+            this.changeDetector.markForCheck();
+        });
+
+        this.instance.on("blur", () => {
+            this.isFocused = false;
+            this.blur.emit();
+            this.changeDetector.markForCheck();
         });
     }
 
-    private _updateText(newVal: string) {
-        if (this._durationBeforeCallback === 0) {
-            this._text = newVal;
-            this.textChange.emit(newVal);
-            this.textChanged.emit(newVal);
-        } else {
-            if (this.timeoutSaving != null) {
-                clearTimeout(this.timeoutSaving);
-            }
+    public updateValue(value) {
+        this.value = value;
+        this.change.emit(value);
+    }
 
-            this.timeoutSaving = setTimeout(() => {
-                this._text = newVal;
-                this.textChange.emit(newVal);
-                this.textChanged.emit(newVal);
-                this.timeoutSaving = null;
-            }, this._durationBeforeCallback);
+    public writeValue(value) {
+        this._value = value || "";
+        if (this.instance) {
+            this.instance.setValue(this._value);
         }
     }
 
-    @Input()
-    public set options(options: any) {
-        this._options = options;
-        this._editor.setOptions(options || {});
+    @HostListener("keyup.enter", ["$event"])
+    public onEnter(event: KeyboardEvent) {
+        // Prevent forms from being submitted when focussed in editor and pressing enter.
+        event.stopPropagation();
     }
 
-    @Input()
-    public set readOnly(readOnly: any) {
-        this._readOnly = readOnly;
-        this._editor.setReadOnly(readOnly);
-    }
+    public onChange: Function = () => null;
 
-    @Input()
-    public set theme(theme: any) {
-        this._theme = theme;
-        this._editor.setTheme(`ace/theme/${theme}`);
-    }
-
-    @Input()
-    public set mode(mode: any) {
-        this._mode = mode;
-        if (typeof this._mode === "object") {
-            this._editor.getSession().setMode(this._mode);
-        } else {
-            this._editor.getSession().setMode(`ace/mode/${this._mode}`);
-        }
-    }
-
-    @Input()
-    public get text() {
-        return this._text;
-    }
-
-    public set text(text: string) {
-        if (this._text !== text) {
-            if (text == null) {
-                text = "";
-            }
-            if (this._autoUpdateContent === true) {
-                this._text = text;
-                this._editor.setValue(text);
-            }
-        }
-    }
-
-    @Input()
-    public set autoUpdateContent(status: any) {
-        this._autoUpdateContent = status;
-    }
-
-    @Input()
-    public set durationBeforeCallback(num: number) {
-        this._durationBeforeCallback = num;
-    }
+    // tslint:disable-next-line:no-empty
+    public onTouched() { }
+    public registerOnChange(fn) { this.onChange = fn; }
+    public registerOnTouched(fn) { this.onTouched = fn; }
 }

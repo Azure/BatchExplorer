@@ -1,8 +1,8 @@
-<md-tab-group [selectedIndex]="selectedIndex | async" (selectChange)="changeTab($event)" #group>
+<md-tab-group [selectedIndex]="selectedIndex" (selectChange)="changeTab($event)" #group>
     <md-tab *ngFor="let tab of tabs" [disabled]="tab.disabled">
-        <template md-tab-label>
-            <template [ngTemplateOutlet]="tab.label.content"></template>
-        </template>
-        <template [ngTemplateOutlet]="tab.content"></template>
+        <ng-template md-tab-label>
+            <ng-template [ngTemplateOutlet]="tab.label.content"></ng-template>
+        </ng-template>
+        <ng-template [ngTemplateOutlet]="tab.content"></ng-template>
     </md-tab>
 </md-tab-group>

@@ -57,7 +57,6 @@ module.exports = merge(config, {
                     fallback: "style-loader",
                     use: "css-loader"
                 }),
-                include: [/node_modules/, helpers.root("app", "assets", "styles")]
             },
             /**
              * Extract and compile SCSS files from .node_modules and the assets directory to external CSS file
@@ -68,9 +67,7 @@ module.exports = merge(config, {
                     fallback: "style-loader",
                     use: "css-loader!sass-loader"
                 }),
-                include: [/node_modules/, helpers.root("app", "assets", "styles")]
             },
-
         ]
 
     },
@@ -108,42 +105,43 @@ module.exports = merge(config, {
          * See: https://webpack.github.io/docs/list-of-plugins.html#uglifyjsplugin
          */
         // NOTE: To debug prod builds uncomment //debug lines and comment //prod lines
-        new UglifyJsPlugin({
-            beautify: true, // debug
-            mangle: false, //debug
-            // compress: {
-            //   screw_ie8: true,
-            //   keep_fnames: true,
-            //   drop_debugger: false,
-            //   dead_code: false,
-            //   unused: false
-            // }, // debug
-            // output: {
-            //     comments: true
-            // }, // Debug
+        // Disable uglify unti it supports ES6 correctly
+        // new UglifyJsPlugin({
+        //     beautify: true, // debug
+        //     mangle: false, //debug
+        //     // compress: {
+        //     //   screw_ie8: true,
+        //     //   keep_fnames: true,
+        //     //   drop_debugger: false,
+        //     //   dead_code: false,
+        //     //   unused: false
+        //     // }, // debug
+        //     // output: {
+        //     //     comments: true
+        //     // }, // Debug
 
-            // beautify: false, //prod
-            output: {
-                comments: false
-            }, //prod
-            // mangle: {
-            //     screw_ie8: true,
-            //     keep_fnames: true,
-            // }, //prod
-            compress: {
-                screw_ie8: true,
-                warnings: false,
-                conditionals: true,
-                unused: true,
-                comparisons: true,
-                sequences: true,
-                dead_code: true,
-                evaluate: true,
-                if_return: true,
-                join_vars: true,
-                negate_iife: false // we need this for lazy v8
-            },
-        }),
+        //     // beautify: false, //prod
+        //     output: {
+        //         comments: false
+        //     }, //prod
+        //     // mangle: {
+        //     //     screw_ie8: true,
+        //     //     keep_fnames: true,
+        //     // }, //prod
+        //     compress: {
+        //         screw_ie8: true,
+        //         warnings: false,
+        //         conditionals: true,
+        //         unused: true,
+        //         comparisons: true,
+        //         sequences: true,
+        //         dead_code: true,
+        //         evaluate: true,
+        //         if_return: true,
+        //         join_vars: true,
+        //         negate_iife: false // we need this for lazy v8
+        //     },
+        // }),
 
         new LoaderOptionsPlugin({
             minimize: true,

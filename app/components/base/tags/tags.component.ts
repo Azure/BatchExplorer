@@ -4,6 +4,8 @@ import { Observable } from "rxjs";
 
 import { log } from "app/utils";
 
+import "./tags.scss";
+
 @Component({
     selector: "bl-tags",
     templateUrl: "tags.html",

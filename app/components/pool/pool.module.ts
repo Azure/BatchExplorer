@@ -7,24 +7,28 @@ import { PoolDetailsModule } from "app/components/pool/details";
 import { PoolGraphsModule } from "app/components/pool/graphs";
 import { PoolHomeComponent } from "app/components/pool/home/pool-home.component";
 import { StartTaskModule } from "app/components/pool/start-task";
+import { TaskBaseModule } from "app/components/task/base";
+import { UserAccountModule } from "./user-account";
 
 import {
+    AutoscaleFormulaPickerComponent,
     DeletePoolDialogComponent,
     OsOfferTileComponent,
     PoolCreateBasicDialogComponent,
     PoolOsPickerComponent,
     PoolResizeDialogComponent,
+    PoolScalePickerComponent,
     VmSizePickerComponent,
 } from "app/components/pool/action";
 
 const components = [
-    DeletePoolDialogComponent, PoolAdvancedFilterComponent, PoolCreateBasicDialogComponent,
-    PoolHomeComponent, PoolListComponent, PoolOsPickerComponent, VmSizePickerComponent,
-    PoolResizeDialogComponent, OsOfferTileComponent,
+    AutoscaleFormulaPickerComponent, DeletePoolDialogComponent, PoolAdvancedFilterComponent,
+    PoolCreateBasicDialogComponent, PoolHomeComponent, PoolListComponent, PoolOsPickerComponent,
+    PoolScalePickerComponent, VmSizePickerComponent, PoolResizeDialogComponent, OsOfferTileComponent,
 ];
 
 const modules = [
-    PoolDetailsModule, PoolGraphsModule, StartTaskModule, ...commonModules,
+    PoolDetailsModule, PoolGraphsModule, StartTaskModule, UserAccountModule, TaskBaseModule, ...commonModules,
 ];
 
 @NgModule({

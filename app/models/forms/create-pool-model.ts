@@ -1,4 +1,5 @@
-import { PoolCreateDto } from "app/models/dtos";
+import { PoolCreateDto, UserAccountDto } from "app/models/dtos";
+import * as moment from "moment";
 
 export enum PoolOsSources {
     PaaS,
@@ -20,25 +21,44 @@ export interface PoolOSPickerModel {
     };
 }
 
+export interface PoolScaleModel {
+    enableAutoScale: boolean;
+    autoScaleFormula: string;
+    autoScaleEvaluationInterval: number;
+    targetDedicated: number;
+}
+
 export interface CreatePoolModel {
     id: string;
     displayName: string;
-    targetDedicated: string;
+    scale: PoolScaleModel;
     vmSize: string;
     maxTasksPerNode: string;
     enableInterNodeCommunication: boolean;
     os: PoolOSPickerModel;
+    startTask: any;
+    userAccounts: UserAccountDto[];
 }
 
 export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
+    const outputScale: PoolScaleModel = output.scale || {} as any;
     let data: any = {
         id: output.id,
         displayName: output.displayName,
         vmSize: output.vmSize,
-        targetDedicated: Number(output.targetDedicated),
+        enableAutoScale: outputScale.enableAutoScale,
         maxTasksPerNode: Number(output.maxTasksPerNode),
         enableInterNodeCommunication: output.enableInterNodeCommunication,
+        startTask: output.startTask,
+        userAccounts: output.userAccounts,
     };
+
+    if (outputScale.enableAutoScale) {
+        data.autoScaleFormula = outputScale.autoScaleFormula;
+        data.autoScaleEvaluationInterval = moment.duration({ minutes: outputScale.autoScaleEvaluationInterval });
+    } else {
+        data.targetDedicated = outputScale.targetDedicated;
+    }
 
     if (output.os.source === PoolOsSources.PaaS) {
         data.cloudServiceConfiguration = output.os.cloudServiceConfiguration;
@@ -57,11 +77,17 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
  * Used to clone a pool
  */
 export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
+    const autoScaleInterval = pool.autoScaleEvaluationInterval;
     return {
         id: pool.id,
         displayName: pool.displayName,
         vmSize: pool.vmSize,
-        targetDedicated: pool.targetDedicated.toString(),
+        scale: {
+            targetDedicated: pool.targetDedicated,
+            enableAutoScale: pool.enableAutoScale,
+            autoScaleFormula: pool.autoScaleFormula,
+            autoScaleEvaluationInterval: autoScaleInterval && autoScaleInterval.asMinutes(),
+        },
         maxTasksPerNode: pool.maxTasksPerNode.toString(),
         enableInterNodeCommunication: pool.enableInterNodeCommunication,
         os: {
@@ -69,5 +95,7 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
             cloudServiceConfiguration: pool.cloudServiceConfiguration,
             virtualMachineConfiguration: pool.virtualMachineConfiguration,
         },
+        startTask: pool.startTask,
+        userAccounts: pool.userAccounts,
     };
 };

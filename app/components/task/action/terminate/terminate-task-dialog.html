@@ -1,8 +1,5 @@
-<div class="dialog-form">
-    <h2>Terminate task</h2>
-    <bl-action-form [submit]="ok" [dialogRef]="dialogRef">
-        <p>
-            Do you want to terminate task '<b>{{taskId}}</b>'? The task status will be set to complete.
-        </p>
-    </bl-action-form>
-</div>
+<bl-simple-form [submit]="ok" [containerRef]="dialogRef" [stickyFooter]="false" actionName="Terminate" [multiUse]="false" size="small" title="Terminate task">
+    <p>
+        Do you want to terminate task '<b>{{taskId}}</b>'? The task status will be set to complete.
+    </p>
+</bl-simple-form>

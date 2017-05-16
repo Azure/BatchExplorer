@@ -1,7 +1,10 @@
-import { Component, forwardRef } from "@angular/core";
+import { Component, Input, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators,
 } from "@angular/forms";
+import { List } from "immutable";
+
+import { UserAccount } from "app/models";
 
 @Component({
     selector: "bl-start-task-picker",
@@ -13,15 +16,17 @@ import {
     ],
 })
 export class StartTaskPickerComponent implements ControlValueAccessor {
+    @Input()
+    public userAccounts: List<UserAccount> | UserAccount[];
+
     public form: FormGroup;
     private _propagateChange: Function = null;
 
     constructor(formBuilder: FormBuilder) {
         this.form = formBuilder.group({
-            enableStartTask: [false],
             commandLine: ["", Validators.required],
-            maxTaskRetryCount: ["0"],
-            runElevated: [false],
+            maxTaskRetryCount: [0],
+            userIdentity: [null],
             waitForSuccess: [false],
             resourceFiles: [[]],
             environmentSettings: [[]],
@@ -29,26 +34,24 @@ export class StartTaskPickerComponent implements ControlValueAccessor {
 
         this.form.valueChanges.subscribe((val: any) => {
             if (this._propagateChange) {
-                this._propagateChange(val.enableStartTask ? val : null);
+                this._propagateChange(val);
             }
         });
     }
 
-    public get enableStartTask() {
-        return this.form.controls["enableStartTask"].value;
-    }
-
     public writeValue(value: any) {
         if (value) {
-            this.form.patchValue({
-                enableStartTask: true,
-                ...value,
-            });
+            this.form.patchValue(value);
         } else {
-            this.form.patchValue({
-                enableStartTask: false,
-            });
+            this.reset();
         }
+    }
+
+    public reset() {
+        this.form.reset({
+            maxTaskRetryCount: 0,
+            waitForSuccess: false,
+        });
     }
 
     public registerOnChange(fn) {

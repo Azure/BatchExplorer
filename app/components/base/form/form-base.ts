@@ -7,23 +7,23 @@ import { Observable } from "rxjs";
 import { ServerError } from "app/models";
 import { SidebarRef } from "../sidebar";
 
+export type ContainerRef = MdDialogRef<any> | SidebarRef<any> | GenericContainer;
+export interface GenericContainer {
+    /**
+     * Method to destroy the container
+     */
+    destroy();
+}
 export class FormBase {
     @Output()
     public done = new EventEmitter();
 
     /**
-     * Dialog ref if the form is used in the dialog.
+     * Dialog ref, sidebar ref or any other kind of container that has a destroy method on it.
      * If provided this will add a add and close button option that will close the sidebar when the form is submitted.
      */
     @Input()
-    public dialogRef: MdDialogRef<any>;
-
-    /**
-     * Sidebar ref if the form is used in the sidebar.
-     * If provided this will add a add and close button option that will close the sidebar when the form is submitted.
-     */
-    @Input()
-    public sidebarRef: SidebarRef<any>;
+    public containerRef: ContainerRef;
 
     /**
      * Submit method.
@@ -40,27 +40,30 @@ export class FormBase {
 
     public loading = false;
     public error: ServerError = null;
+    public showError = false;
 
     @autobind()
-    public performAction(): Observable<any> {
+    public save(): Observable<any> {
         this.loading = true;
         const obs = this.submit();
         obs.subscribe({
             next: () => {
                 this.loading = false;
                 this.error = null;
+                this.showError = false;
             },
             error: (e: ServerError) => {
                 this.loading = false;
                 this.error = e;
+                this.showError = true;
             },
         });
         return obs;
     }
 
     @autobind()
-    public performActionAndClose(): Observable<any> {
-        const obs = this.performAction();
+    public saveAndClose(): Observable<any> {
+        const obs = this.save();
         obs.subscribe({
             complete: () => {
                 setTimeout(() => {
@@ -78,10 +81,20 @@ export class FormBase {
 
     public close() {
         this.done.emit();
-        if (this.dialogRef) {
-            this.dialogRef.close();
-        } else if (this.sidebarRef) {
-            this.sidebarRef.destroy();
+        const container = this.containerRef;
+        if (!container) {
+            return;
         }
+        if (container instanceof MdDialogRef) {
+            container.close();
+        } else if (container instanceof SidebarRef) {
+            container.destroy();
+        } else {
+            container.destroy();
+        }
+    }
+
+    public toggleShowError() {
+        this.showError = !this.showError;
     }
 }

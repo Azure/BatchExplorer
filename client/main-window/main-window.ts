@@ -4,7 +4,7 @@ import { BatchClientProxyFactory, StorageClientProxyFactory } from "../api";
 import { Constants } from "../client-constants";
 import { UniqueWindow } from "../core";
 import { windows } from "../core";
-import { renderLogger } from "../logger";
+import { logger, renderLogger } from "../logger";
 
 // Webpack dev server url when using HOT=1
 const devServerUrl = Constants.urls.main.dev;
@@ -43,6 +43,18 @@ export class MainWindow extends UniqueWindow {
         // Open the DevTools.
         if (process.env.NODE_ENV !== "production") {
             window.webContents.openDevTools();
+            // activate devtron for the user if they have it installed and it's not already added
+            try {
+                const devtronAlreadyAdded = BrowserWindow.getDevToolsExtensions &&
+                    {}.hasOwnProperty.call(BrowserWindow.getDevToolsExtensions(), "devtron");
+
+                if (!devtronAlreadyAdded) {
+                    BrowserWindow.addDevToolsExtension(require("devtron").path);
+                }
+            } catch (error) {
+                logger.error("Error adding devtron", error);
+            }
+
         }
 
         return window;
