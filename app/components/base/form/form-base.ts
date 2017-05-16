@@ -82,6 +82,9 @@ export class FormBase {
     public close() {
         this.done.emit();
         const container = this.containerRef;
+        if (!container) {
+            return;
+        }
         if (container instanceof MdDialogRef) {
             container.close();
         } else if (container instanceof SidebarRef) {

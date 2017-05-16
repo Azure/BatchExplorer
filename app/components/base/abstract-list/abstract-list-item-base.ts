@@ -1,6 +1,6 @@
 import { Input, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
 import { BreadcrumbService } from "app/components/base/breadcrumbs";
 import { ContextMenuService } from "app/components/base/context-menu";
@@ -34,6 +34,8 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
     @Input()
     public forceBreadcrumb = false;
 
+    public isFocused: Observable<boolean>;
+
     /**
      * If the item is selected(!= active)
      */
@@ -59,6 +61,7 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
         private contextmenuService: ContextMenuService,
         private breadcrumbService: BreadcrumbService) {
 
+        this.isFocused = this.list.focusedItem.map(x => x === this.key);
         this._activeSub = list.activatedItemChange.subscribe((event) => {
             this._activeItemKey = event && event.key;
         });
@@ -83,13 +86,6 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
         if (this._selectedSub) {
             this._selectedSub.unsubscribe();
         }
-    }
-
-    /**
-     * If the current item is active(Router)
-     */
-    public get isFocused(): boolean {
-        return this.list.focusedItem === this.key;
     }
 
     public handleClick(event: MouseEvent) {

@@ -10,6 +10,7 @@ export * from "./job-preparation-task-decorator";
 export * from "./job-release-task-decorator";
 export * from "./pool-decorator";
 export * from "./scheduling-error-decorator";
+export * from "./start-task.decorator";
 export * from "./sub-task-decorator";
 export * from "./node-decorator";
 export * from "./task-constraints-decorator";

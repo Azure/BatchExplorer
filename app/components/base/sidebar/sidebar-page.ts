@@ -21,7 +21,7 @@ import { SidebarRef } from "./sidebar-ref";
     selector: "bl-sidebar-page",
     template: `
         <div [hidden]="!display" style="height: 100%">
-                <template portalHost></template>
+                <ng-template portalHost></ng-template>
         </div>
     `,
 })

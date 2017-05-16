@@ -40,14 +40,14 @@
 
         <bl-form-section title="User accounts" subtitle="Set of user accounts to be created on each node in the pool. By default, pools come with one non-admin user and one admin user. You can add up to 5 specific users for running tasks.">
             <bl-form-multi-picker formControlName="userAccounts" #userAccountsPicker addTitle="Add a user account" [max]="5">
-                <template blFormPickerItem let-value>
+                <ng-template blFormPickerItem let-value>
                     <div title>
                         {{value?.name}}
                     </div>
                     <div subtitle class="unaccent">
                         {{value?.runElevated ? "Administrator": ""}}
                     </div>
-                </template>
+                </ng-template>
                 <div nested-form>
                     <bl-user-account-picker [formControl]="userAccountsPicker.currentEditValue"></bl-user-account-picker>
                 </div>
@@ -59,7 +59,7 @@
                 <div no-value-title>Add a start task</div>
                 <div value-title>{{startTask?.commandLine}}</div>
                 <div nested-form>
-                    <bl-start-task-picker [formControl]="startTaskPicker.nestedValue"></bl-start-task-picker>
+                    <bl-start-task-picker [formControl]="startTaskPicker.nestedValue" [userAccounts]="form.value.userAccounts"></bl-start-task-picker>
                 </div>
             </bl-form-picker>
         </bl-form-section>

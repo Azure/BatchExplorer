@@ -1,2 +1,3 @@
-export * from "./dynamic-form"
-export * from "./dto"
+export * from "./dto";
+export * from "./dynamic-form";
+export * from "./record";

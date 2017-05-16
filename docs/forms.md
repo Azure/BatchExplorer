@@ -66,14 +66,14 @@ Attributes:
 <bl-form-multi-picker formControlName="userAccounts" #userAccountsPicker addTitle="Add a user account" [max]="5">
     <!-- This is the template for selected item. Use the blFormPickerItem directive on it.-->
     <!-- Use let-value to assign the item to the value variable -->
-    <template blFormPickerItem let-value>
+    <ng-template blFormPickerItem let-value>
         <div title>
             {{value?.name}}
         </div>
         <div subtitle class="unaccent">
             {{value?.runElevated ? "Administrator": ""}}
         </div>
-    </template>
+    </ng-template>
 
     <!-- This is the nested form template -->
     <!-- User the currentEditValue to get the edit formControl -->

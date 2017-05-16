@@ -1,10 +1,11 @@
 import { Component } from "@angular/core";
+import { ComponentFixture, TestBed, async } from "@angular/core/testing";
 import { MaterialModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { ActivatedRoute, Router } from "@angular/router";
 import { BehaviorSubject } from "rxjs";
 
-import { ComponentFixture, TestBed, async } from "@angular/core/testing";
 import { TabsModule } from "app/components/base/tabs";
 
 @Component({
@@ -40,7 +41,7 @@ describe("Tabs", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule.forRoot(), TabsModule],
+            imports: [MaterialModule.forRoot(), TabsModule, NoopAnimationsModule],
             declarations: [TabTestComponent],
             providers: [
                 { provide: Router, useValue: routerSpy },

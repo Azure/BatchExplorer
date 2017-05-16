@@ -2,20 +2,19 @@
 
 This is a documentation to help create models which are DataStructure that maps entities returned by apis.
 
-All models should be immmutable using `immutable.Record` otherwise the `RxProxy` that is using immutable `List` and `Map` will not handle those correctly.
+All models should be immmutable using the record api defined in `app/core`.
 
-Immutable.js will convert those to a Map automatically which then lose the ability to run `myModel.myAttr`
-
-If you are just making a model that is internal to a component:
-* doesn't it really need to be shared with others
-* if yes maybe just export from the component file/folder
+Note: Before writting a model double check this is the best option:
+* Models should be for containg data returned from remote APIs.
+* Models are immutable which means it should not be for a structure containing user edit.
+* Don't use models for internal data structure.(For a component or a small set of components)
 
 ### Step 1: Create file
 Create model file `my-new-model.ts` in `app/models`
 add this to `app/models/index.ts`
 
 ```typescript
-export * from "./my-new-model"
+export * from "./my-model"
 ```
 
 Then you should be able to have
@@ -25,28 +24,10 @@ Then you should be able to have
 import { MyNewModel } from "app/models"
 
 // Bad
-import {MyNewModel} from "app/models/myNewModel"
+import { MyNewModel } from "app/models/myNewModel"
 ```
 
-### Step 2: Write the Record
-Use this to specify default values for each input. This is quite useful for inputs which are array for example and prevent a null check later in the code
-**It is important to have every input defined here otherwise they will be ignored**
-
-
-```typescript
-import { List, Record } from "immutable";
-
-
-// Note the record is not being exported
-const FooRecord = Record({
-    id: null,
-    state: null,
-    files: List([]),
-    bar: null,
-});
-```
-
-### Step 3: Write the attribute interface
+### Step 2: Write the attribute interface
 
 In this interface define all the attributes of the model
 This may look like we are creating a lot of duplicate code here but it makes it worth it when using the model later as you'll have typing when creating a new model.
@@ -57,43 +38,36 @@ import { Partial } from "app/utils"
 export interface MyModelAttributes {
     id: string;
     state: string;
-    files: List<string>;
+    files: Partial<BarAttributes>[];
     bar: Partial<BarAttributes>
 }
 
 ```
 
-### Step 4: Write the model class
+### Step 3: Write the model class
 
-You'll need to redefine the inputs. This is for typing purposes.
+You need to do the following for the class:
+- Decorate the class with the `@Model` decorator
+- Extend the class with the `Record` class
+- Decorate all attributes of the model with `@Prop` and all list attributes with `@ListProp`. Note: `@Prop` will be able to get the type of a nested model automatically. However you need to pass the type of the model in the list decorator.
+- For default values just set the value in the class body `@Prop public a: string = "abc"`
 
 ```typescript
+import { ListProp, Model, Prop, Record } from "app/core";
 import { Bar, BarAttributes } from "./bar"
 
-export class Foo extends FooRecord implements MyModelAttributes {
-    public id: string;
+@Model()
+export class MyModel extends Record<MyModelAttributes> {
+    @Prop()
+    public id: string = "default-value";
+    @Prop()
     public state: string;
-    public files: List<string>;
+    @Prop()
     public bar: Bar;
 
-    constructor(data: Partial<MyModelAttributes> = {}) {
-        super(data);
-    }
+    @ListProp(Bar)
+    public files: List<Bar>;
 }
 ```
 
-### Step 4(If applicable): created nested Record
-In the case some of the attributes are other models(Record). Then you'll need to do the following to make sure they are initialized correctly
-
-**Important If the model has some attributes with complex object as type. Write another model(Extending record) for it.**
-
-```typescript
-// Add this constructor
-constructor(data: Partial<MyModelAttributes> = {}) {
-    super(Object.assign({}, data, {
-        files: List(data.files),
-        bar: data.bar && new Bar(data.bar),
-    }));
-}
-```
-
+The record api will make all attributes with `@Prop` immutable. If you have a nested object it will automatically create it. And when using `@ListProp` it will automatically create a immutable list of items.

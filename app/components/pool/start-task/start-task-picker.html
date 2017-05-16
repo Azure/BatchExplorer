@@ -12,14 +12,14 @@
         <bl-error controlName="maxTaskRetryCount" code="validateRange">Retry count values can range from -1 to 100</bl-error>
     </div>
     <div class="form-element">
-        <md-slide-toggle formControlName="runElevated" color="primary">
-            Run elevated
-        </md-slide-toggle>
-    </div>
-    <div class="form-element">
         <md-slide-toggle formControlName="waitForSuccess" color="primary">
             Wait for success
         </md-slide-toggle>
+    </div>
+
+    <div class="form-element">
+        <bl-user-identity-picker formControlName="userIdentity" [userAccounts]="userAccounts">
+        </bl-user-identity-picker>
     </div>
 
     <h4>Resource files</h4>
