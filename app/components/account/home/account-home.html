@@ -2,8 +2,8 @@
     <div bl-list-buttons>
     </div>
     <div pre-quicksearch>
-        <md-select placeholder="Subscriptions" [formControl]="subscriptionId">
-            <md-option [value]="null">All</md-option>
+        <md-select multiple placeholder="Subscriptions" [formControl]="subscriptionIds">
+            <!--<md-option [value]="null">All</md-option>-->
             <md-option *ngFor="let subscription of subscriptionService.subscriptions | async" [value]="subscription.subscriptionId">
                 {{subscription.displayName}}
             </md-option>

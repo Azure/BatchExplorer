@@ -4,7 +4,7 @@ import { Subscription } from "rxjs";
 
 import { ListAndShowLayoutComponent } from "app/components/base/list-and-show-layout";
 import { SubscriptionService } from "app/services";
-import { FilterBuilder } from "app/utils/filter-builder";
+import { FilterBuilder, Filter } from "app/utils/filter-builder";
 
 @Component({
     selector: "bl-account-home",
@@ -15,20 +15,26 @@ export class AccountHomeComponent implements OnDestroy {
     @ViewChild("layout")
     public layout: ListAndShowLayoutComponent;
 
-    public subscriptionId = new FormControl();
+    public subscriptionIds = new FormControl();
 
     private _sub: Subscription;
 
     constructor(public subscriptionService: SubscriptionService) {
-        this._sub = this.subscriptionId.valueChanges.subscribe((subscriptionId) => {
-            const filter = subscriptionId
-                ? FilterBuilder.prop("subscriptionId").eq(subscriptionId)
-                : FilterBuilder.none();
-            this.layout.advancedFilterChanged(filter);
+        this._sub = this.subscriptionIds.valueChanges.subscribe((subscriptionIds) => {
+            this.layout.advancedFilterChanged(this._buildSubscriptionFilter(subscriptionIds));
         });
     }
 
     public ngOnDestroy() {
         this._sub.unsubscribe();
+    }
+
+    private _buildSubscriptionFilter(subscriptionIds: string[]): Filter {
+        if (subscriptionIds.length === 0) {
+            return FilterBuilder.none();
+        }
+
+        const filters = subscriptionIds.map(id => FilterBuilder.prop("subscriptionId").eq(id));
+        return FilterBuilder.or(...filters);
     }
 }
