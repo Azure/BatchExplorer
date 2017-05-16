@@ -32,10 +32,9 @@ export class HistoryGraphComponent implements OnChanges {
     public ngOnChanges(inputs) {
         if (inputs.history || inputs.historySize) {
             this.updateData();
-            this.updateOptions();
         }
 
-        if (inputs.max) {
+        if (inputs.max || inputs.historySize) {
             this.updateOptions();
         }
     }
