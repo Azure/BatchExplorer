@@ -81,7 +81,6 @@ export const localStorageKey = {
      */
     currentAccessToken: "current_access_token",
 
-
     /**
      * List of subsciption id to the multi select in the account list
      */

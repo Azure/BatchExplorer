@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { List } from "immutable";
+import { Set } from "immutable";
 import { Subscription } from "rxjs";
 
 import { ListAndShowLayoutComponent } from "app/components/base/list-and-show-layout";
@@ -32,7 +32,7 @@ export class AccountHomeComponent implements OnInit, OnDestroy {
             }));
 
         this._subs.push(this.subscriptionIds.valueChanges.subscribe((subscriptionIds) => {
-            this.subscriptionService.setAccountSubscriptionFilter(List<string>(subscriptionIds));
+            this.subscriptionService.setAccountSubscriptionFilter(Set<string>(subscriptionIds));
         }));
     }
 
@@ -40,7 +40,7 @@ export class AccountHomeComponent implements OnInit, OnDestroy {
         this._subs.forEach(x => x.unsubscribe());
     }
 
-    private _buildSubscriptionFilter(subscriptionIds: List<string>): Filter {
+    private _buildSubscriptionFilter(subscriptionIds: Set<string>): Filter {
         if (subscriptionIds.size === 0) {
             return FilterBuilder.none();
         }
