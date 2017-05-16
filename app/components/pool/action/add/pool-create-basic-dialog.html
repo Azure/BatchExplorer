@@ -59,7 +59,7 @@
                 <div no-value-title>Add a start task</div>
                 <div value-title>{{startTask?.commandLine}}</div>
                 <div nested-form>
-                    <bl-start-task-picker [formControl]="startTaskPicker.nestedValue"></bl-start-task-picker>
+                    <bl-start-task-picker [formControl]="startTaskPicker.nestedValue" [userAccounts]="form.value.userAccounts"></bl-start-task-picker>
                 </div>
             </bl-form-picker>
         </bl-form-section>
