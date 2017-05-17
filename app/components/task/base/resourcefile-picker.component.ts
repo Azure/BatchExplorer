@@ -1,6 +1,6 @@
 import { Component, OnDestroy, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormArray, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
+    ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { Subscription } from "rxjs";
 
