@@ -2,7 +2,7 @@ import {
     AfterViewInit, Component, ContentChildren, OnDestroy, QueryList, forwardRef,
 } from "@angular/core";
 import {
-    ControlValueAccessor, FormArray, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator, FormGroup,
+    ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
 import { Subscription } from "rxjs";
 
@@ -65,7 +65,6 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
 
     public deleteItem(index: number) {
         this.items.removeAt(index);
-        console.log("items are", index, this.items.controls, this.items.get("1"));
     }
 
     public writeValue(value: any[]) {
