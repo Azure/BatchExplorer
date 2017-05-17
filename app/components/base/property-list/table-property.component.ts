@@ -6,7 +6,7 @@ import { clipboard } from "electron";
 @Component({
     selector: "bl-table-property-header",
     template: `
-        <template><ng-content></ng-content></template>
+        <ng-template><ng-content></ng-content></ng-template>
     `,
 })
 export class TablePropertyHeaderComponent {
@@ -17,7 +17,7 @@ export class TablePropertyHeaderComponent {
 @Component({
     selector: "bl-table-property-row",
     template: `
-        <template><ng-content></ng-content></template>
+        <ng-template><ng-content></ng-content></ng-template>
     `,
 })
 export class TablePropertyRowComponent {

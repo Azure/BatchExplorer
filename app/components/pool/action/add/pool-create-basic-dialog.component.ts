@@ -44,8 +44,8 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             maxTasksPerNode: 1,
             enableInterNodeCommunication: false,
             startTask: null,
+            userAccounts: [[]],
         });
-
         this._sub = this._osControl.valueChanges.subscribe((value) => {
             this.osSource = value.source;
         });
