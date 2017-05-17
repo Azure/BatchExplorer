@@ -1,5 +1,5 @@
 import { Component, DebugElement } from "@angular/core";
-import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 
@@ -102,7 +102,6 @@ describe("EditableTableComponent", () => {
         expectRowValues(rows[2], "foo3", "bar3");
         expectRowEmpty(rows[3]);
     });
-
 
     it("should delete row", () => {
         testComponent.items.setValue([
