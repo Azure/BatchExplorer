@@ -33,17 +33,6 @@ export class ResourcefilePickerComponent implements ControlValueAccessor {
         });
     }
 
-    public addResourceFile() {
-        this.files.push(this.formBuilder.group({
-            blobSource: "",
-            filePath: "",
-        }));
-    }
-
-    public deleteFile(index) {
-        this.files.removeAt(index);
-    }
-
     public writeValue(value: ResourceFile[]) {
         if (value) {
             this.files.controls = value.map((file) => {

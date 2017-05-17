@@ -1,6 +1,6 @@
-<div [formGroup]="form">
+<!--<div [formGroup]="form">
     <div formArrayName="files">
-        <table class="noselect">
+        <table class="noselect" cellspacing="0" cellpadding="0">
             <thead>
                 <tr>
                     <th>Blob source</th>
@@ -23,4 +23,8 @@
 
         <button class="add-file-btn" md-raised-button (click)="addResourceFile()">New resource file</button>
     </div>
-</div>
+</div>-->
+<bl-editable-table>
+    <bl-editable-table-column name="blobSource">Blob Source</bl-editable-table-column>
+    <bl-editable-table-column name="filePath">File path</bl-editable-table-column>
+</bl-editable-table>
