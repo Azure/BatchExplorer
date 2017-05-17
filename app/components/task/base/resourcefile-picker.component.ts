@@ -1,7 +1,8 @@
-import { Component, forwardRef } from "@angular/core";
+import { Component, OnDestroy, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR,
+    ControlValueAccessor, FormArray, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
+import { Subscription } from "rxjs";
 
 import { ResourceFile } from "app/models";
 
@@ -15,32 +16,28 @@ import { ResourceFile } from "app/models";
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => ResourcefilePickerComponent), multi: true },
     ],
 })
-export class ResourcefilePickerComponent implements ControlValueAccessor {
-    public form: FormGroup;
-    public files: FormArray;
+export class ResourcefilePickerComponent implements ControlValueAccessor, OnDestroy {
+    public files: FormControl;
 
     private _propagateChange: Function = null;
+    private _sub: Subscription;
 
     constructor(private formBuilder: FormBuilder) {
-        this.files = this.formBuilder.array([]);
-        this.form = this.formBuilder.group({
-            files: this.files,
-        });
-        this.files.valueChanges.subscribe((files) => {
+        this.files = this.formBuilder.control([[]]);
+        this._sub = this.files.valueChanges.subscribe((files) => {
             if (this._propagateChange) {
                 this._propagateChange(files);
             }
         });
     }
 
+    public ngOnDestroy() {
+        this._sub.unsubscribe();
+    }
+
     public writeValue(value: ResourceFile[]) {
         if (value) {
-            this.files.controls = value.map((file) => {
-                return this.formBuilder.group({
-                    blobSource: file.blobSource,
-                    filePath: file.filePath,
-                });
-            });
+            this.files.setValue(value);
         }
     }
 
@@ -53,7 +50,6 @@ export class ResourcefilePickerComponent implements ControlValueAccessor {
     }
 
     public validate(c: FormControl) {
-
         return null;
     }
 }

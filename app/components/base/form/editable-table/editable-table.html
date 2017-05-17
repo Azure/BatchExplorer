@@ -1,5 +1,5 @@
-<div [formGroup]="items">
-    <table class="noselect" cellspacing="0" cellpadding="0">
+<div [formGroup]="form">
+    <table class="noselect" cellspacing="0" cellpadding="0" formArrayName="items">
         <thead>
             <tr>
                 <th *ngFor="let column of columns">
@@ -8,17 +8,13 @@
                 <th></th>
             </tr>
         </thead>
-        <tr *ngFor="let item of items.controls; let i=index" [formGroupName]="i">
+        <tr *ngFor="let item of items.controls; let i=index; let isLast=last" [formGroupName]="i">
             <td *ngFor="let column of columns">
                 <input [formControlName]="column.name">
             </td>
             <td class="action-column">
-                <button class="delete-item-btn" (click)="deleteItem(i)"><i class="fa fa-times" ></i></button>
+                <button *ngIf="!isLast" class="delete-item-btn" (click)="deleteItem(i)"><i class="fa fa-times" ></i></button>
             </td>
         </tr>
     </table>
-
-    <button class="add-item-btn" md-mini-fab (click)="addNewItem()">
-        <i class="fa fa-plus"></i>
-    </button>
 </div>
