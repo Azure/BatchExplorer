@@ -3,7 +3,6 @@
     </div>
     <div pre-quicksearch>
         <md-select multiple placeholder="Subscriptions" [formControl]="subscriptionIds">
-            <!--<md-option [value]="null">All</md-option>-->
             <md-option *ngFor="let subscription of subscriptionService.subscriptions | async" [value]="subscription.subscriptionId">
                 {{subscription.displayName}}
             </md-option>
