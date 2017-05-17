@@ -24,6 +24,10 @@ bl-editable-table {
             line-height: 0;
         }
 
+        tr:last-child > td {
+            background: #f5f5f5;
+        }
+
         input {
             width: 100%;
             border: none;
@@ -32,8 +36,10 @@ bl-editable-table {
             font-size: 12px;
             color: $mineshaft-grey;
             border-bottom: 2px solid transparent;
+            background: transparent;
 
             &:focus {
+                background: white;
                 border-bottom: 2px solid map-get($md-prussian-blue, 500);
             }
         }
