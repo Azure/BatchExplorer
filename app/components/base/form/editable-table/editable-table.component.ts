@@ -39,7 +39,7 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
                 this.addNewItem();
             }
             if (this._propagateChange) {
-                this._propagateChange(files.slice(0, -1));
+                this._propagateChange(this.items.value.slice(0, -1));
             }
         });
     }
@@ -55,6 +55,9 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
     }
 
     public addNewItem() {
+        if (!this.columns) {
+            return;
+        }
         const columns = this.columns.toArray();
         const obj = {};
         for (let column of columns) {
@@ -74,8 +77,8 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
             });
         } else {
             this.items.controls = [];
-            this.addNewItem();
         }
+        this.addNewItem();
     }
 
     public registerOnChange(fn) {
