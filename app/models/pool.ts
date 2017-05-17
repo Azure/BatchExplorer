@@ -103,42 +103,53 @@ export class Pool extends Record<PoolAttributes> {
      */
     public tags: List<string> = List([]);
 
+    private _osName: string;
+    private _osIcon: string;
+
     constructor(data: Partial<PoolAttributes> = {}) {
         super(data);
         this.tags = ModelUtils.tagsFromMetadata(this.metadata);
+        this._osName = this._getOsName();
+        this._osIcon = this._getComputePoolOsIcon(this._osName);
     }
 
-    public get osName(): string {
+    public osIconName(): string {
+        return this._osIcon;
+    }
+
+    public osName(): string {
+        return this._osName;
+    }
+
+    private _getOsName(): string {
         if (this.cloudServiceConfiguration) {
-            let osName: string;
             let osFamily = this.cloudServiceConfiguration.osFamily;
 
             if (osFamily === 2) {
-                osName = "Windows Server 2008 R2 SP1";
+                return "Windows Server 2008 R2 SP1";
             } else if (osFamily === 3) {
-                osName = "Windows Server 2012";
-            } else if (osFamily === 4) {
-                osName = "Windows Server 2012 R2";
+                return "Windows Server 2012";
             } else {
-                osName = "Windows Server 2016";
+                return "Windows Server 2012 R2";
+            }
+        }
+
+        if (this.virtualMachineConfiguration) {
+            if (this.virtualMachineConfiguration.imageReference.publisher ===
+                "MicrosoftWindowsServer") {
+                return `Windows Server ${this.virtualMachineConfiguration.imageReference.sku}`;
             }
 
-            return osName;
+            const { offer, sku } = this.virtualMachineConfiguration.imageReference;
+
+            return `${offer} ${sku}`;
         }
 
-        if (this.virtualMachineConfiguration.imageReference.publisher ===
-            "MicrosoftWindowsServer") {
-            let osName = "Windows Server";
-            osName += this.virtualMachineConfiguration.imageReference.sku;
-
-            return osName;
-        }
-
-        return "Linux";
+        return "Unknown";
     }
 
-    public get osIconName(): string {
-        if (this.osName.includes("Windows")) {
+    private _getComputePoolOsIcon(osName): string {
+        if (osName.includes("Windows")) {
             return "windows";
         }
 

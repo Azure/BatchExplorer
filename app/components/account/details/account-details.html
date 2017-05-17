@@ -57,7 +57,7 @@
                             <bl-table>
                                 <bl-row *ngFor="let pool of (poolData.items | async)" [routerLink]="['/pools/', pool.id]" [key]="pool.id">
                                     <bl-cell>{{pool.id}}</bl-cell>
-                                    <bl-cell><i aria-hidden="true" class="fa fa-{{pool.osIconName}}"></i></bl-cell>
+                                    <bl-cell><i aria-hidden="true" class="fa fa-{{pool.osIconName()}}"></i></bl-cell>
                                     <bl-cell style="text-align: right">
                                         <bl-pool-nodes-preview [pool]="pool"></bl-pool-nodes-preview>
                                     </bl-cell>

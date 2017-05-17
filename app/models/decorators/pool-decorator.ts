@@ -72,39 +72,11 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     }
 
     private _computePoolOs(): string {
-        const { cloudServiceConfiguration, virtualMachineConfiguration } = this.pool;
-        if (cloudServiceConfiguration) {
-            let osFamily = cloudServiceConfiguration.osFamily;
-
-            if (osFamily === 2) {
-                return "Windows Server 2008 R2 SP1";
-            } else if (osFamily === 3) {
-                return "Windows Server 2012";
-            } else {
-                return "Windows Server 2012 R2";
-            }
-        }
-
-        if (virtualMachineConfiguration) {
-            if (virtualMachineConfiguration.imageReference.publisher ===
-                "MicrosoftWindowsServer") {
-                return `Windows Server ${virtualMachineConfiguration.imageReference.sku}`;
-            }
-
-            const { offer, sku } = virtualMachineConfiguration.imageReference;
-
-            return `${offer} ${sku}`;
-        }
-
-        return "Unknown";
+        return this.pool.osName();
     }
 
     private _computePoolOsIcon(os): string {
-        if (os.includes("Windows")) {
-            return "windows";
-        }
-
-        return "linux";
+        return this.pool.osIconName();
     }
 
     private _decorateUserAccount(user: UserAccount) {
