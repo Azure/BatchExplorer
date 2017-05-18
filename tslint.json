@@ -1,6 +1,6 @@
 {
   "extends": "tslint:recommended",
-  "defaultSeverity": "off",
+  "defaultSeverity": "warning",
   "rulesDirectory": [
     "node_modules/codelyzer",
     "node_modules/vrsource-tslint-rules/rules"
