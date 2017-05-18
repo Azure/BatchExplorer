@@ -12,7 +12,7 @@ export interface CreateTaskModel {
     commandLine: string;
     exitConditions: any;
     resourceFiles: any[];
-    environmentSettings: any;
+    environmentSettings: any[];
     affinityInfo: any;
     constraints: TaskConstraintsModel;
     runElevated: boolean;
@@ -29,7 +29,7 @@ export function createTaskFormToJsonData(formData: CreateTaskModel): any {
         commandLine: formData.commandLine,
         exitConditions: null,
         resourceFiles: formData.resourceFiles,
-        environmentSettings: null,
+        environmentSettings: formData.environmentSettings,
         affinityInfo: null,
         constraints: {
             maxWallClockTime: maxWallClockTime,
