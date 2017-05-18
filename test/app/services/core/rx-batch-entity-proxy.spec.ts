@@ -41,6 +41,20 @@ describe("RxEnity proxy", () => {
         expect(dataSpy).toHaveBeenCalledWith(batchClient, { id: "1" });
     }));
 
+    it("should use the cached value", fakeAsync(() => {
+        cache.addItem(new FakeModel({ id: "1", state: "creating" }));
+
+        let item: FakeModel;
+        proxy.item.subscribe((x) => item = x);
+        proxy.fetch();
+
+        expect(item).not.toBeFalsy();
+        expect(item).toEqualImmutable(new FakeModel({ id: "1", state: "creating" }));
+
+        tick(); // This should be the return from the fetched data
+        expect(item).toEqualImmutable(new FakeModel(data[0]));
+    }));
+
     it("Update the data when refreshing", fakeAsync(() => {
         let item: FakeModel;
         proxy.item.subscribe((x) => item = x);
