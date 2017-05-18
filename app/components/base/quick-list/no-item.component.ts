@@ -14,6 +14,7 @@ import { Filter } from "app/utils/filter-builder";
             <ng-content select="[icon]"></ng-content>
             <ng-content select="[no-filter]" *ngIf="!withFilter"></ng-content>
             <ng-content select="[with-filter]" *ngIf="withFilter"></ng-content>
+            <ng-content select="[description]"></ng-content>
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
