@@ -43,7 +43,7 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
 
     public get active(): boolean {
         return this.list && this._activeItemKey === this.key;
-    };
+    }
 
     public urlTree: any = null;
 

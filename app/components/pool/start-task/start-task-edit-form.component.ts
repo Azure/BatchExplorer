@@ -24,7 +24,7 @@ export class StartTaskEditFormComponent {
         });
     }
 
-    public get pool() { return this._pool; };
+    public get pool() { return this._pool; }
 
     public form: FormGroup;
 

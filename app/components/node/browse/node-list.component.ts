@@ -45,7 +45,7 @@ export class NodeListComponent extends SelectableList implements OnInit {
 
         this.data.fetchNext();
     }
-    public get filter(): Filter { return this._filter; };
+    public get filter(): Filter { return this._filter; }
 
     @ViewChild(NodeListDisplayComponent)
     public list: NodeListDisplayComponent;

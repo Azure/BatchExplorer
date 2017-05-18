@@ -19,7 +19,7 @@ export class ResourcefilePickerComponent implements ControlValueAccessor {
     public form: FormGroup;
     public files: FormArray;
 
-    private _propagateChange: Function = null;
+    private _propagateChange: (value: ResourceFile[]) => void = null;
 
     constructor(private formBuilder: FormBuilder) {
         this.files = this.formBuilder.array([]);

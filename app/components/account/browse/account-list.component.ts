@@ -25,7 +25,7 @@ export class AccountListComponent {
         this._filter = filter;
         this._updateDisplayedAccounts();
     }
-    public get filter(): Filter { return this._filter; };
+    public get filter(): Filter { return this._filter; }
 
     public displayedAccounts: Observable<List<AccountResource>>;
 

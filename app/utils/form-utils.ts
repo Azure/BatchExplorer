@@ -6,7 +6,7 @@ export class FormUtils {
         for (let segment of actualPath) {
             current = current.get(segment);
             if (!current) {
-                throw `Path ${actualPath} is invalid, there is no control with name '${segment}'`;
+                throw new Error(`Path ${actualPath} is invalid, there is no control with name '${segment}'`);
             }
         }
         return current;

@@ -25,7 +25,7 @@ export class SSHKeyPickerComponent implements OnDestroy, ControlValueAccessor {
     public nameInput: ElementRef;
 
     private _subs: Subscription[] = [];
-    private _propagateChange: Function = null;
+    private _propagateChange: (value: string) => void = null;
 
     constructor(private sshKeyService: SSHKeyService) {
         this._subs.push(sshKeyService.keys.subscribe((keys) => {

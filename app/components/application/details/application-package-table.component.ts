@@ -34,7 +34,7 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
         this._filter = filter;
         this._filterPackages();
     }
-    public get filter(): Filter { return this._filter; };
+    public get filter(): Filter { return this._filter; }
 
     public packages: List<ApplicationPackage>;
     public displayedPackages: List<ApplicationPackage>;

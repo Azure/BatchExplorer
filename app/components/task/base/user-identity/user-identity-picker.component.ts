@@ -61,7 +61,7 @@ export class UserIdentityComponent implements OnChanges, OnDestroy {
 
     public options: UserOption[];
     public selected = new FormControl();
-    private _propagateChange: Function = null;
+    private _propagateChange: (value: UserAccount) => void = null;
     private _sub: Subscription;
 
     constructor() {

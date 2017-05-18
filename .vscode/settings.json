@@ -12,5 +12,6 @@
     "dll/**": true
   },
   "tslint.jsEnable": true,
+  "tslint.autoFixOnSave": true,
   "vsicons.presets.angular": true
 }

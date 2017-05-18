@@ -57,7 +57,9 @@
     // TODO enable
     "prefer-const": false,
     "no-angle-bracket-type-assertion": false,
-    "semicolon": [true, "always", "ignore-bound-class-methods", "ignore-interfaces"]
+    "semicolon": [true, "always", "ignore-bound-class-methods", "ignore-interfaces"],
+    "no-empty-interface":  false,
+    "space-before-function-paren": [false]
   },
   "jsRules": {
     "object-literal-sort-keys": false,

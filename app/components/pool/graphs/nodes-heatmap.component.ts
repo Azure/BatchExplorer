@@ -84,7 +84,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         this._buildNodeMap();
         this._processNewNodes();
     }
-    public get nodes() { return this._nodes; };
+    public get nodes() { return this._nodes; }
 
     public colors: HeatmapColor;
     public selectedNodeId = new BehaviorSubject<string>(null);

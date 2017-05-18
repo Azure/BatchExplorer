@@ -4,7 +4,7 @@ export class PollService {
     private _pollTrackers: StringMap<StringMap<PollTracker>> = {};
     private _activePoolTrackers: StringMap<PollTracker> = {};
 
-    public startPoll(key: string, interval: number, callback: Function): PollObservable {
+    public startPoll(key: string, interval: number, callback: () => void): PollObservable {
         const tracker = new PollTracker(interval, callback);
         this._addTracker(key, tracker);
         return new PollObservable(this, key, tracker.id);
@@ -83,7 +83,7 @@ class PollTracker {
     public id: string;
     private _currentInterval: any;
 
-    constructor(public interval: number, public callback: Function) {
+    constructor(public interval: number, public callback: () => void) {
         this.id = SecureUtils.uuid();
     }
 

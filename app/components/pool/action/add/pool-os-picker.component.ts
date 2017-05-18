@@ -48,7 +48,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
     // Cloud service
     public selectedFamilyName: string;
 
-    private _propagateChange: Function = null;
+    private _propagateChange: (value: PoolOSPickerModel) => void = null;
     private _nodeAgentSkuMap: NodeAgentSkuMap = new NodeAgentSkuMap();
 
     constructor(private formBuilder: FormBuilder, private nodeService: NodeService) {

@@ -5,7 +5,7 @@ export function validateControl(formGroup: FormGroup, controlName: string) {
 }
 
 class Validate {
-    constructor (
+    constructor(
         private formGroup: FormGroup,
         private controlName: string) {
     }

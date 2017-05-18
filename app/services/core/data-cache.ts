@@ -152,9 +152,9 @@ export class DataCache<T> {
     }
 
     private _computeNewItem(item: T, key: string, select?: string): T {
-        if (!select) { return item; };
+        if (!select) { return item; }
         const oldItem = this._items.getValue().get(key);
-        if (!oldItem) { return item; };
+        if (!oldItem) { return item; }
         let attributes = ObjectUtils.slice((<any>item).toObject(), this._getAttributesList(select));
         return (<any>oldItem).merge(attributes);
     }

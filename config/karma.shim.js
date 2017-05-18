@@ -1,6 +1,7 @@
 import "../test/app/spec-bundle";
 import * as moment from "moment";
 // tslint:disable:no-var-requires
+// tslint:disable:no-console
 
 Error.stackTraceLimit = Infinity;
 import "app/utils/extensions";
@@ -41,6 +42,7 @@ if (process.env.DEBUG_MEM) {
         suiteDone: (result) => {
             const end = chromePerformance.memory.usedJSHeapSize;
             const out = Math.round(end / 1000);
+
             console.warn("Memory usage", `${out} kB`, result.fullName);
             stream.write(`${result.fullName},${out}\n`);
         },

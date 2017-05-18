@@ -31,7 +31,7 @@ export interface ListFilterControlConfig {
 export interface ListFilterParsedValue {
     items: any[];
     ranges: any[][];
-};
+}
 
 export class ListFilterControl extends AdvancedFilterControlBase {
     private _valueControl = new FormControl("");
