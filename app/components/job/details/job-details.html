@@ -33,10 +33,6 @@
         <bl-job-error-display [job]="job"></bl-job-error-display>
         <md-card class="details">
             <bl-tab-group>
-                <bl-tab key="configuration">
-                    <bl-tab-label>Configuration</bl-tab-label>
-                    <bl-job-configuration [job]="job"></bl-job-configuration>
-                </bl-tab>
                 <bl-tab key="tasks">
                     <bl-tab-label>Tasks</bl-tab-label>
                     <div class="tab-padding">
@@ -45,6 +41,10 @@
                             <bl-task-list [jobId]="job.id" [filter]="listWrapper.filter" [quickList]="false" #list [manualLoading]="true"></bl-task-list>
                         </bl-entity-details-list>
                     </div>
+                </bl-tab>
+                <bl-tab key="configuration">
+                    <bl-tab-label>Configuration</bl-tab-label>
+                    <bl-job-configuration [job]="job"></bl-job-configuration>
                 </bl-tab>
             </bl-tab-group>
         </md-card>
