@@ -1,6 +1,7 @@
 import { Type } from "@angular/core";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
+import { LoadingStatus } from "app/components/base/loading";
 import { ServerError } from "app/models";
 import { HttpCode } from "app/utils/constants";
 import { RxProxyBase, RxProxyBaseConfig } from "./rx-proxy-base";
@@ -37,6 +38,8 @@ export abstract class RxEntityProxy<TParams, TEntity> extends RxProxyBase<TParam
      * Fetch the current item.
      */
     public fetch(): Observable<any> {
+        this._tryToLoadFromCache();
+
         return this.fetchData({
             getData: () => {
                 return this.getData();
@@ -65,6 +68,17 @@ export abstract class RxEntityProxy<TParams, TEntity> extends RxProxyBase<TParam
     }
 
     protected abstract getData(): Observable<any>;
+
+    /**
+     * Try to see if the entity is already in the cache if so load it immediatelly.
+     */
+    private _tryToLoadFromCache() {
+        const key = this._params[this._cache.uniqueField];
+        if (this._cache.has(key)) {
+            this._itemKey.next(key);
+            this._status.next(LoadingStatus.Ready);
+        }
+    }
 }
 
 export function getOnceProxy<TEntity>(getProxy: RxEntityProxy<any, TEntity>): Observable<TEntity> {
