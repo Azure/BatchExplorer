@@ -28,7 +28,7 @@ export class AccountFavListComponent {
             }));
         });
     }
-    public get filter(): Property { return this._filter; };
+    public get filter(): Property { return this._filter; }
 
     private _filter: Property;
 

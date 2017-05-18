@@ -21,7 +21,7 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
     public predefinedFormula: AutoscaleFormula[];
     public autoscaleFormulaValue: string;
     public autoscaleFormulaName: FormControl;
-    public showSaveForm: Boolean;
+    public showSaveForm: boolean;
     @ViewChild("nameInput")
     public nameInput: ElementRef;
     public config = {
@@ -33,8 +33,8 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
     };
     public customFormulaMode = true;
     private _subs: Subscription[];
-    private _propagateChange: Function;
-    private _propagateTouch: Function;
+    private _propagateChange: (value: string) => void;
+    private _propagateTouch: () => void;
 
     constructor(private autoscaleFormulaService: AutoscaleFormulaService,
                 private predefinedFormulaService: PredefinedFormulaService,

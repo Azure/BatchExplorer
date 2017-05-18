@@ -34,7 +34,7 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
         this._filter = filter;
         this._filterPackages();
     }
-    public get filter(): Filter { return this._filter; };
+    public get filter(): Filter { return this._filter; }
 
     public packages: List<ApplicationPackage>;
     public displayedPackages: List<ApplicationPackage>;
@@ -157,7 +157,7 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
     private _filterPackages() {
         let text: string = null;
         if (this._filter) {
-            text = (<any>this._filter).value;
+            text = (this._filter as any).value;
             text = text && text.toLowerCase();
         }
 

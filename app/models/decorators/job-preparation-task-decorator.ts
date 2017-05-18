@@ -22,6 +22,6 @@ export class JobPreparationTaskDecorator extends DecoratorBase<JobPreparationTas
 
         this.resourceFiles = task.resourceFiles || {};
         this.environmentSettings = task.environmentSettings || {};
-        this.constraints = new TaskConstraintsDecorator(task.constraints || <any>{});
+        this.constraints = new TaskConstraintsDecorator(task.constraints || {} as any);
     }
 }

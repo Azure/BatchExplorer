@@ -24,7 +24,7 @@ export interface NotificationConfig {
     /**
      * Optional action
      */
-    action?: Function;
+    action?: () => void;
 }
 
 const defaultConfig: NotificationConfig = {

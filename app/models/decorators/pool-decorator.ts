@@ -40,7 +40,7 @@ export class PoolDecorator extends DecoratorBase<Pool> {
         this.allocationState = this.stateField(pool.allocationState);
         this.allocationStateTransitionTime = this.dateField(pool.allocationStateTransitionTime);
         this.cloudServiceConfiguration =
-            new CloudServiceConfigurationDecorator(pool.cloudServiceConfiguration || <any>{});
+            new CloudServiceConfigurationDecorator(pool.cloudServiceConfiguration || {} as any);
         this.creationTime = this.dateField(pool.creationTime);
         this.currentDedicated = this.stringField(pool.currentDedicated);
         this.displayName = this.stringField(pool.displayName);
@@ -60,7 +60,7 @@ export class PoolDecorator extends DecoratorBase<Pool> {
             new TaskSchedulingPolicyDecorator(pool.taskSchedulingPolicy);
         this.url = this.stringField(pool.url);
         this.virtualMachineConfiguration =
-            new VirtualMachineConfigurationDecorator(pool.virtualMachineConfiguration || <any>{});
+            new VirtualMachineConfigurationDecorator(pool.virtualMachineConfiguration || {} as any);
         this.vmSize = this.stringField(pool.vmSize);
 
         this.poolOs = this._computePoolOs();

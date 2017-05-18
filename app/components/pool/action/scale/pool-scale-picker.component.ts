@@ -18,7 +18,7 @@ export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor
 
     public selectedModeTab = 0;
 
-    private _propagateChange: Function;
+    private _propagateChange: (value: any) => void;
     private _sub: Subscription;
 
     constructor(formBuilder: FormBuilder) {

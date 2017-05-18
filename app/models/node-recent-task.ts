@@ -18,7 +18,7 @@ export interface NodeRecentTaskAttributes {
     subtaskId: number;
     taskState: TaskState;
     executionInfo: any;
-};
+}
 
 export class NodeRecentTask extends NodeRecentTaskRecord implements NodeRecentTaskAttributes {
     public taskUrl: string;
