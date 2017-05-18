@@ -3,8 +3,9 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs";
 
-import { AccountResource } from "app/models";
-import { AccountService } from "app/services";
+import { AccountResource, Application, Job, Pool } from "app/models";
+import { AccountService, ApplicationService, JobService, PoolService } from "app/services";
+import { RxListProxy } from "app/services/core";
 
 @Component({
     selector: "bl-account-details",
@@ -26,12 +27,20 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     public loading: boolean = true;
     public loadingError: any;
 
+    public applicationData: RxListProxy<{}, Application>;
+    public jobData: RxListProxy<{}, Job>;
+    public poolData: RxListProxy<{}, Pool>;
+
     private _paramsSubscriber: Subscription;
+    private initialOptions = { maxItems: 10 };
 
     constructor(
         private router: Router,
         private activatedRoute: ActivatedRoute,
         private accountService: AccountService,
+        private applicationService: ApplicationService,
+        private jobService: JobService,
+        private poolService: PoolService,
         private zone: NgZone,
         private viewContainerRef: ViewContainerRef) {
     }
@@ -45,6 +54,12 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
                 next: (x) => {
                     this.account = x;
                     this.loading = false;
+                    this.applicationData = this.applicationService.list(this.initialOptions);
+                    this.applicationData.fetchNext();
+                    this.jobData = this.jobService.list(this.initialOptions);
+                    this.jobData.fetchNext();
+                    this.poolData = this.poolService.list(this.initialOptions);
+                    this.poolData.fetchNext();
                 },
                 error: (error) => {
                     this.loadingError = error;

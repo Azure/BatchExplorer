@@ -2,7 +2,7 @@ import { List } from "immutable";
 import { Duration } from "moment";
 
 import { ListProp, Model, Prop, Record } from "app/core";
-import { ModelUtils } from "app/utils";
+import { ModelUtils, PoolUtils } from "app/utils";
 import { CloudServiceConfiguration } from "./cloud-service-configuration";
 import { Metadata, MetadataAttributes } from "./metadata";
 import { ResizeError } from "./resize-error";
@@ -103,9 +103,22 @@ export class Pool extends Record<PoolAttributes> {
      */
     public tags: List<string> = List([]);
 
+    private _osName: string;
+    private _osIcon: string;
+
     constructor(data: Partial<PoolAttributes> = {}) {
         super(data);
         this.tags = ModelUtils.tagsFromMetadata(this.metadata);
+        this._osName = PoolUtils.getOsName(this);
+        this._osIcon = PoolUtils.getComputePoolOsIcon(this._osName);
+    }
+
+    public osIconName(): string {
+        return this._osIcon;
+    }
+
+    public osName(): string {
+        return this._osName;
     }
 }
 
