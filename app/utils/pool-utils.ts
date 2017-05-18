@@ -80,42 +80,40 @@ export class PoolUtils {
         }
     }
 
-    public static osName(pool: Pool): string {
+    public static getOsName(pool: Pool): string {
         if (pool.cloudServiceConfiguration) {
-            let osName: string;
             let osFamily = pool.cloudServiceConfiguration.osFamily;
 
             if (osFamily === 2) {
-                osName = "Windows Server 2008 R2 SP1";
+                return "Windows Server 2008 R2 SP1";
             } else if (osFamily === 3) {
-                osName = "Windows Server 2012";
+                return "Windows Server 2012";
             } else if (osFamily === 4) {
-                osName = "Windows Server 2012 R2";
+                return "Windows Server 2012 R2";
             } else {
-                osName = "Windows Server 2016";
+                return "Windows Server 2016";
+            }
+        }
+
+        if (pool.virtualMachineConfiguration) {
+            if (pool.virtualMachineConfiguration.imageReference.publisher ===
+                "MicrosoftWindowsServer") {
+                return `Windows Server ${pool.virtualMachineConfiguration.imageReference.sku}`;
             }
 
-            return osName;
+            const { offer, sku } = pool.virtualMachineConfiguration.imageReference;
+
+            return `${offer} ${sku}`;
         }
 
-        if (pool.virtualMachineConfiguration.imageReference.publisher ===
-            "MicrosoftWindowsServer") {
-            let osName = "Windows Server".concat(pool.virtualMachineConfiguration.imageReference.sku);
-            return osName;
-        } else {
-            let osName = pool.virtualMachineConfiguration.imageReference.publisher;
-            osName = osName.concat(pool.virtualMachineConfiguration.imageReference.offer, " ",
-            pool.virtualMachineConfiguration.imageReference.sku, " ",
-            pool.virtualMachineConfiguration.imageReference.version);
-            return osName;
-        }
+        return "Unknown";
     }
 
-    // public get osIconName(): string {
-    //     if (this.osName.includes("Windows")) {
-    //         return "windows";
-    //     }
+    public static getComputePoolOsIcon(osName): string {
+        if (osName.includes("Windows")) {
+            return "windows";
+        }
 
-    //     return "linux";
-    // }
+        return "linux";
+    }
 }
