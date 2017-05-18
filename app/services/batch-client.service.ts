@@ -21,7 +21,7 @@ export class BatchClientService {
 
     public get(): Observable<any> {
         if (!this._currentAccountId) {
-            throw "No account currently selected....";
+            throw new Error("No account currently selected....");
         }
 
         return this.currentAccount.flatMap((account) => {

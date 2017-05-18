@@ -32,7 +32,7 @@ export class BatchClientProxyFactory {
      */
     public getForAADToken(accountUrl: string, token: string): BatchClientProxy {
         if (!token) {
-            throw "BatchClientProxy AAD token cannot be null or undefined";
+            throw new Error("BatchClientProxy AAD token cannot be null or undefined");
         }
         if (token !== this._currentToken || accountUrl !== this._currentUrl) {
             this._currentToken = token;

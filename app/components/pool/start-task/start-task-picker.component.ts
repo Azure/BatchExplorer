@@ -20,7 +20,7 @@ export class StartTaskPickerComponent implements ControlValueAccessor {
     public userAccounts: List<UserAccount> | UserAccount[];
 
     public form: FormGroup;
-    private _propagateChange: Function = null;
+    private _propagateChange: (value: any) => void = null;
 
     constructor(formBuilder: FormBuilder) {
         this.form = formBuilder.group({

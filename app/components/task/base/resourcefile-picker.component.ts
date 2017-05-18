@@ -19,7 +19,7 @@ import { ResourceFile } from "app/models";
 export class ResourcefilePickerComponent implements ControlValueAccessor, OnDestroy {
     public files: FormControl;
 
-    private _propagateChange: Function = null;
+    private _propagateChange: (value: ResourceFile[]) => void = null;
     private _sub: Subscription;
 
     constructor(private formBuilder: FormBuilder) {

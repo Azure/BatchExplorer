@@ -28,8 +28,8 @@ export class SubTaskDecorator extends DecoratorBase<SubtaskInformation> {
         this.previousState = this.stateField(task.previousState);
         this.previousStateTransitionTime = this.dateField(task.previousStateTransitionTime);
 
-        this.nodeInfo = new ComputeNodeInfoDecorator(task.nodeInfo || <any>{});
-        this.schedulingError = new SchedulingErrorDecorator(task.schedulingError || <any>{});
+        this.nodeInfo = new ComputeNodeInfoDecorator(task.nodeInfo || {} as any);
+        this.schedulingError = new SchedulingErrorDecorator(task.schedulingError || {} as any);
     }
 
     // todo: base class ...

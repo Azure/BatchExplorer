@@ -16,7 +16,7 @@ export class ApplicationPropertiesComponent {
     }
     public get application() { return this._application; }
 
-    public decorator: ApplicationDecorator = <any>{};
+    public decorator: ApplicationDecorator = {} as any;
 
     private _application: Application;
 

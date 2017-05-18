@@ -24,7 +24,7 @@ export class ContextMenu {
 
 interface ContextMenuItemConfig {
     label: string;
-    click: Function;
+    click: (...args) => void;
     enabled?: boolean;
 }
 
@@ -33,11 +33,11 @@ export class ContextMenuItem {
     public label: string;
     public callbackArgs: any[] = [];
     public enabled: boolean = true;
-    private _click: Function;
+    private _click: (...args) => void;
 
     constructor(config: ContextMenuItemConfig);
-    constructor(label: string, click: Function);
-    constructor(labelOrConfig: string | ContextMenuItemConfig, click?: Function) {
+    constructor(label: string, click: (...args) => void);
+    constructor(labelOrConfig: string | ContextMenuItemConfig, click?: (...args) => void) {
         this.id = SecureUtils.uuid();
         if (typeof (labelOrConfig) === "string") {
             this.label = labelOrConfig;

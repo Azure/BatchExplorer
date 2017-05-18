@@ -98,4 +98,4 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
         startTask: pool.startTask,
         userAccounts: pool.userAccounts,
     };
-};
+}

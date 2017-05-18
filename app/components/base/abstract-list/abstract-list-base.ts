@@ -59,7 +59,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     /**
      *  The active item is always in the selected list.
      */
-    public get selectedItems() { return Object.keys(this._selectedItems); };
+    public get selectedItems() { return Object.keys(this._selectedItems); }
 
     public listFocused: boolean = false;
     public focusedItem  = new BehaviorSubject<string>(null);

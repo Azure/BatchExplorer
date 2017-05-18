@@ -21,7 +21,7 @@ export enum HttpCode {
     BadGateway = 502,
     ServiceUnavailable = 503,
     GatewayTimeout = 504,
-};
+}
 
 export const RetryableHttpCode = new Set([
     HttpCode.RequestTimeout,

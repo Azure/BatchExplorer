@@ -12,10 +12,10 @@ export class VirtualMachineConfigurationDecorator extends DecoratorBase<VirtualM
         super(virtualMachieConfiguration);
 
         this.imageReference = new ImageReferenceDecorator(
-            virtualMachieConfiguration.imageReference || <any>{});
+            virtualMachieConfiguration.imageReference || {} as any);
         this.nodeAgentSKUId = this.stringField(
             virtualMachieConfiguration.nodeAgentSKUId);
         this.windowsConfiguration = new WindowsConfigurationDecorator(
-            virtualMachieConfiguration.windowsConfiguration || <any>{});
+            virtualMachieConfiguration.windowsConfiguration || {} as any);
     }
 }

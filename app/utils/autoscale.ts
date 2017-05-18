@@ -34,7 +34,7 @@ const mappedMath = mathFunc.map((math) => `\\b${math}\\b`);
 const mathRegex = new RegExp(mappedMath.join("|"));
 
 const mappedSystemFunc = systemFunc.map((sf) => `\\b${sf}\\b`);
-const obtainRegex =  new RegExp(mappedSystemFunc.join("|"));
+const obtainRegex = new RegExp(mappedSystemFunc.join("|"));
 
 const mappedTypes = types.map((type) => `\\b${type}\\b`);
 const typesRegex = new RegExp(mappedTypes.join("|"));
@@ -59,7 +59,7 @@ CodeMirror.defineMode("autoscale", () => {
                 return "variables";
             } else if (stream.match(mathRegex)) {
                 return "functions";
-            } else if ( stream.match(obtainRegex)) {
+            } else if (stream.match(obtainRegex)) {
                 return "math";
             } else if (stream.match(typesRegex)) {
                 return "builtin";
@@ -82,8 +82,8 @@ CodeMirror.registerHelper("hint", "autoscale", (editor) => {
     let curLine = editor.getLine(cur.line);
     let start = cur.ch;
     let end = start;
-    while (end < curLine.length && /[\w$]+/.test(curLine.charAt(end))) { ++end; };
-    while (start && /[\w$]+/.test(curLine.charAt(start - 1))) { --start; };
+    while (end < curLine.length && /[\w$]+/.test(curLine.charAt(end))) { ++end; }
+    while (start && /[\w$]+/.test(curLine.charAt(start - 1))) { --start; }
     let curWord = start !== end && curLine.slice(start, end).replace("$", "\\$");
     let regex = new RegExp("^" + curWord, "i");
     const results = variables.filter((item) => {

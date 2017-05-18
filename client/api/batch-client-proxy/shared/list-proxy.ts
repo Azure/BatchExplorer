@@ -1,12 +1,12 @@
 import { BatchResult } from "../models";
 
 export interface ListProxyEntity {
-    list: Function;
+    list: (...args) => void;
 
     /**
      * ListNext funtion of the batch-client if applicable(Some list return everything at once)
      */
-    listNext?: Function;
+    listNext?: (...args) => void;
 }
 
 /**

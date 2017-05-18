@@ -43,7 +43,7 @@ function userAccountToDto(userAccount: UserAccountFormModel): UserAccountDto {
 })
 export class UserAccountPickerComponent implements ControlValueAccessor, Validator, OnDestroy {
     public form: FormGroup;
-    private _propagateChange: Function = null;
+    private _propagateChange: (value: UserAccountDto) => void = null;
     private _sub: Subscription;
 
     constructor(formBuilder: FormBuilder) {

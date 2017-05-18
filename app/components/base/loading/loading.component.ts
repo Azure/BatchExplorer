@@ -68,7 +68,7 @@ export class LoadingComponent {
         if (parentDisplayStatus === DisplayStatus.Loading || parentDisplayStatus === DisplayStatus.ParentLoading) {
             this.displayStatus.next(DisplayStatus.ParentLoading);
         } else {
-            this.displayStatus.next(<any>this._status);
+            this.displayStatus.next(this._status as any);
         }
     }
 }

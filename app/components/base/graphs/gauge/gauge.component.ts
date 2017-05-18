@@ -43,7 +43,7 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
     public set options(options: GaugeConfig) {
         this._options = Object.assign({}, defaultOptions, options);
     }
-    public get options() { return this._options; };
+    public get options() { return this._options; }
 
     @Input()
     public set size(value: string | number) {

@@ -56,7 +56,7 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
 
         this.data.fetchNext();
     }
-    public get filter(): Filter { return this._filter; };
+    public get filter(): Filter { return this._filter; }
 
     private _filter: Filter;
 

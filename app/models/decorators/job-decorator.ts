@@ -43,11 +43,11 @@ export class JobDecorator extends DecoratorBase<Job> {
         this.onAllTasksComplete = this._translateAutoComplete(job.onAllTasksComplete);
         this.onTaskFailure = this._translateAutoComplete(job.onTaskFailure);
 
-        this.constraints = new JobConstraintsDecorator(job.constraints || <any>{});
-        this.executionInfo = new JobExecutionInfoDecorator(job.executionInfo || <any>{});
-        this.jobManagerTask = new JobManagerTaskDecorator(job.jobManagerTask || <any>{});
-        this.jobPreparationTask = new JobPreparationTaskDecorator(job.jobPreparationTask || <any>{});
-        this.jobReleaseTask = new JobReleaseTaskDecorator(job.jobReleaseTask || <any>{});
+        this.constraints = new JobConstraintsDecorator(job.constraints || {} as any);
+        this.executionInfo = new JobExecutionInfoDecorator(job.executionInfo || {} as any);
+        this.jobManagerTask = new JobManagerTaskDecorator(job.jobManagerTask || {} as any);
+        this.jobPreparationTask = new JobPreparationTaskDecorator(job.jobPreparationTask || {} as any);
+        this.jobReleaseTask = new JobReleaseTaskDecorator(job.jobReleaseTask || {} as any);
         this.poolInfo = job.poolInfo || {};
     }
 

@@ -21,12 +21,12 @@ export class PoolResizeDialogComponent {
         if (pool) {
             this._pool = pool;
             const interval = pool.autoScaleEvaluationInterval ? pool.autoScaleEvaluationInterval.asMinutes() : 15;
-            this.scale.patchValue(<PoolScaleModel>{
+            this.scale.patchValue({
                 targetDedicated: pool.targetDedicated,
                 enableAutoScale: pool.enableAutoScale,
                 autoScaleFormula: pool.autoScaleFormula,
                 autoScaleEvaluationInterval: interval,
-            });
+            } as PoolScaleModel);
         }
     }
     public get pool() { return this._pool; }
