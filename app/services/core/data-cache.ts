@@ -155,7 +155,7 @@ export class DataCache<T> {
         if (!select) { return item; }
         const oldItem = this._items.getValue().get(key);
         if (!oldItem) { return item; }
-        let attributes = ObjectUtils.slice((<any>item).toObject(), this._getAttributesList(select));
-        return (<any>oldItem).merge(attributes);
+        let attributes = ObjectUtils.slice((item as any).toObject(), this._getAttributesList(select));
+        return (oldItem as any).merge(attributes);
     }
 }

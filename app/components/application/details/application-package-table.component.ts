@@ -157,7 +157,7 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
     private _filterPackages() {
         let text: string = null;
         if (this._filter) {
-            text = (<any>this._filter).value;
+            text = (this._filter as any).value;
             text = text && text.toLowerCase();
         }
 

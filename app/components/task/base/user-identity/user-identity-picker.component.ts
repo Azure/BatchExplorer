@@ -7,7 +7,7 @@ import { AutoUserScope, UserAccount, UserAccountElevationLevel } from "app/model
 import { UserIdentityDto } from "app/models/dtos";
 
 interface UserOption {
-    label: string
+    label: string;
     identity: UserIdentityDto;
 }
 

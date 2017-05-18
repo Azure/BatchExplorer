@@ -4,8 +4,8 @@ import { BehaviorSubject } from "rxjs";
 import { Node, NodeState } from "app/models";
 import { ObjectUtils, log } from "app/utils";
 
-interface CountMap { [key: string]: number }
-interface CounObsMap { [key: string]: BehaviorSubject<number> }
+interface CountMap { [key: string]: number; }
+interface CounObsMap { [key: string]: BehaviorSubject<number>; }
 
 export class StateCounter {
     private _data: CounObsMap = {};

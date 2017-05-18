@@ -32,6 +32,8 @@
         true,
         ["main", "debugCrash"] // Show a warning if the main window is being shown on start for debug purposes
     ],
+    "no-empty-interface":  false,
+    "space-before-function-paren": [false],
 
     // Codelyzer rules(Angular2)
     "directive-selector": [true, "attribute", "bl", "camelCase"],
@@ -55,11 +57,7 @@
     "no-jasmine-focus": true,
 
     // TODO enable
-    "prefer-const": false,
-    "no-angle-bracket-type-assertion": false,
-    "semicolon": [true, "always", "ignore-bound-class-methods", "ignore-interfaces"],
-    "no-empty-interface":  false,
-    "space-before-function-paren": [false]
+    "prefer-const": false
   },
   "jsRules": {
     "object-literal-sort-keys": false,
