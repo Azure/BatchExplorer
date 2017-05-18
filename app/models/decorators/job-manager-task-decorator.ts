@@ -26,6 +26,6 @@ export class JobManagerTaskDecorator extends DecoratorBase<JobManagerTask> {
         this.resourceFiles = task.resourceFiles || {};
         this.applicationPackageReferences = task.applicationPackageReferences || {};
         this.environmentSettings = task.environmentSettings || {};
-        this.constraints = new TaskConstraintsDecorator(task.constraints || <any>{});
+        this.constraints = new TaskConstraintsDecorator(task.constraints || {} as any);
     }
 }

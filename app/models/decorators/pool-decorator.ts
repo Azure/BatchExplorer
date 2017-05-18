@@ -40,7 +40,7 @@ export class PoolDecorator extends DecoratorBase<Pool> {
         this.allocationState = this.stateField(pool.allocationState);
         this.allocationStateTransitionTime = this.dateField(pool.allocationStateTransitionTime);
         this.cloudServiceConfiguration =
-            new CloudServiceConfigurationDecorator(pool.cloudServiceConfiguration || <any>{});
+            new CloudServiceConfigurationDecorator(pool.cloudServiceConfiguration || {} as any);
         this.creationTime = this.dateField(pool.creationTime);
         this.currentDedicated = this.stringField(pool.currentDedicated);
         this.displayName = this.stringField(pool.displayName);
@@ -60,7 +60,7 @@ export class PoolDecorator extends DecoratorBase<Pool> {
             new TaskSchedulingPolicyDecorator(pool.taskSchedulingPolicy);
         this.url = this.stringField(pool.url);
         this.virtualMachineConfiguration =
-            new VirtualMachineConfigurationDecorator(pool.virtualMachineConfiguration || <any>{});
+            new VirtualMachineConfigurationDecorator(pool.virtualMachineConfiguration || {} as any);
         this.vmSize = this.stringField(pool.vmSize);
 
         this.poolOs = this._computePoolOs();
@@ -72,39 +72,11 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     }
 
     private _computePoolOs(): string {
-        const { cloudServiceConfiguration, virtualMachineConfiguration } = this.pool;
-        if (cloudServiceConfiguration) {
-            let osFamily = cloudServiceConfiguration.osFamily;
-
-            if (osFamily === 2) {
-                return "Windows Server 2008 R2 SP1";
-            } else if (osFamily === 3) {
-                return "Windows Server 2012";
-            } else {
-                return "Windows Server 2012 R2";
-            }
-        }
-
-        if (virtualMachineConfiguration) {
-            if (virtualMachineConfiguration.imageReference.publisher ===
-                "MicrosoftWindowsServer") {
-                return `Windows Server ${virtualMachineConfiguration.imageReference.sku}`;
-            }
-
-            const { offer, sku } = virtualMachineConfiguration.imageReference;
-
-            return `${offer} ${sku}`;
-        }
-
-        return "Unknown";
+        return this.pool.osName();
     }
 
     private _computePoolOsIcon(os): string {
-        if (os.includes("Windows")) {
-            return "windows";
-        }
-
-        return "linux";
+        return this.pool.osIconName();
     }
 
     private _decorateUserAccount(user: UserAccount) {

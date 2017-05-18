@@ -43,6 +43,12 @@ bl-table {
             &:hover:not(.selected) {
                 background-color: $altoGray;
             }
+
+            &:last-child {
+                bl-cell {
+                    border-bottom: 1px $athensGrey solid;
+                }
+            }
         }
     }
 
@@ -101,12 +107,6 @@ bl-table {
             width: 95%;
             overflow: hidden;
             text-overflow: ellipsis;
-        }
-    }
-
-    bl-row:last-child {
-        bl-cell {
-            border-bottom: 1px $athensGrey solid;
         }
     }
 }

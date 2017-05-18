@@ -10,7 +10,7 @@ export type TaskFunction = (task: BackgroundTask) => Observable<any>;
 export interface NamedTaskFunction {
     name: string;
     func: TaskFunction;
-};
+}
 
 export abstract class BackgroundTask {
     /**

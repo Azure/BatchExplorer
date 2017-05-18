@@ -14,7 +14,7 @@ import { FilterBuilder } from "app/utils/filter-builder";
 })
 export class EntityDetailsListComponent {
     @Input()
-    public refresh: Function;
+    public refresh: () => Observable<any>;
 
     @Input()
     public baseLink: any;

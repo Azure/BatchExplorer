@@ -104,7 +104,7 @@ export class TaskDependenciesComponent {
                 td.dependsOn = "no tasks";
             }
         }
-    };
+    }
 
     /**
      * Get the list of task id's to display on the current page.

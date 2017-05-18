@@ -16,7 +16,7 @@ export class DisableJobDialogComponent {
         this.onChange(action);
         this._taskAction = action;
     }
-    public get taskAction() { return this._taskAction; };
+    public get taskAction() { return this._taskAction; }
 
     private _taskAction: string = "requeue";
 

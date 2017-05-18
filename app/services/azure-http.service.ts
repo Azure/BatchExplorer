@@ -85,7 +85,7 @@ export class AzureHttpService {
             if (provider in providersApiVersion) {
                 return providersApiVersion[provider];
             } else {
-                throw `Unkown provider '${provider}'`;
+                throw new Error(`Unkown provider '${provider}'`);
             }
         }
         return apiVersion;
@@ -97,8 +97,8 @@ export class AzureHttpService {
         } else if (typeof subscriptionOrTenant === "string") {
             return subscriptionOrTenant;
         } else {
-            throw `Invalid param in azure http service for uri "${uri}". `
-            + `Expected Subscription or tenant id but got ${subscriptionOrTenant}`;
+            throw new Error(`Invalid param in azure http service for uri "${uri}". `
+            + `Expected Subscription or tenant id but got ${subscriptionOrTenant}`);
         }
     }
 

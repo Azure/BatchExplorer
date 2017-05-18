@@ -27,7 +27,7 @@ export class JobConfigurationComponent {
     }
     public get job() { return this._job; }
 
-    public decorator: JobDecorator = <any>{ usesTaskDependencies: false };
+    public decorator: JobDecorator = { usesTaskDependencies: false } as any;
     public constraints: any = {};
     public executionInfo: any = {};
     public managerTask: JobManagerTaskDecorator;

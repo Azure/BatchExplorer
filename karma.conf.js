@@ -2,7 +2,7 @@ const webpackConfig = require("./config/webpack.config.test");
 
 // Karma config for testing the code running the browser environemnt.
 // For the client testing use the mocha command line.
-module.exports = function (config) {
+module.exports = function(config) {
     config.set({
         basePath: ".",
         frameworks: ["jasmine"],
