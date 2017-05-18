@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
 
 import { AccountResource } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
-import { Filter, FilterBuilder, Property } from "app/utils/filter-builder";
+import { Filter, FilterBuilder, FilterMatcher, Operator } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
 
 interface SubscriptionAccount {
@@ -58,26 +58,17 @@ export class AccountListComponent {
 
     private _updateDisplayedAccounts() {
         this.displayedAccounts = this.accountService.accounts.map((accounts) => {
-            const properties = this._filter.properties.filter(x => x instanceof Property) as Property[];
-            const conditions = properties.map((property) => {
-                const { name, value } = property;
-                switch (name) {
-                    case "id":
-                        return (x) => value === "" || x.name.toLowerCase().startsWith(value.toLowerCase());
-                    case "subscriptionId":
-                        return (x) => value === "" || x.subscription.subscriptionId === value;
-                    default:
-                        return () => true;
-                }
+            const matcher = new FilterMatcher<AccountResource>({
+                id: (item: AccountResource, value: any, operator: Operator) => {
+                    return value === "" || item.name.toLowerCase().startsWith(value.toLowerCase());
+                },
+                subscriptionId: (item: AccountResource, value: any, operator: Operator) => {
+                    return value === "" || item.subscription.subscriptionId === value;
+                },
             });
 
             return List<AccountResource>(accounts.filter((x) => {
-                for (let condition of conditions) {
-                    if (!condition(x)) {
-                        return false;
-                    }
-                }
-                return true;
+                return matcher.test(this._filter, x);
             }).sort((a, b) => {
                 if (a.name < b.name) {
                     return -1;
