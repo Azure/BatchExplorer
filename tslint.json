@@ -35,6 +35,8 @@
     "no-empty-interface":  false,
     "space-before-function-paren": [false],
     "no-irregular-whitespace": true,
+    "no-invalid-template-strings": true,
+    "no-sparse-arrays": true,
 
     // Codelyzer rules(Angular2)
     "directive-selector": [true, "attribute", "bl", "camelCase"],
