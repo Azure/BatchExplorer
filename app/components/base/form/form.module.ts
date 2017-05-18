@@ -6,6 +6,7 @@ import { RouterModule } from "@angular/router";
 
 import { ButtonsModule } from "../buttons";
 import { ComplexFormComponent } from "./complex-form";
+import { EditableTableColumnComponent, EditableTableComponent } from "./editable-table";
 import { FormErrorComponent } from "./form-error";
 import { FormPageComponent } from "./form-page";
 import { FormMultiPickerComponent, FormPickerComponent, FormPickerItemTemplateDirective } from "./form-picker";
@@ -29,6 +30,8 @@ const components = [
     FormMultiPickerComponent,
     FormPickerComponent,
     FormPickerItemTemplateDirective,
+    EditableTableComponent,
+    EditableTableColumnComponent,
 ];
 
 @NgModule({
