@@ -120,41 +120,6 @@ export class Pool extends Record<PoolAttributes> {
     public osName(): string {
         return this._osName;
     }
-
-    private _getOsName(): string {
-        if (this.cloudServiceConfiguration) {
-            let osFamily = this.cloudServiceConfiguration.osFamily;
-
-            if (osFamily === 2) {
-                return "Windows Server 2008 R2 SP1";
-            } else if (osFamily === 3) {
-                return "Windows Server 2012";
-            } else {
-                return "Windows Server 2012 R2";
-            }
-        }
-
-        if (this.virtualMachineConfiguration) {
-            if (this.virtualMachineConfiguration.imageReference.publisher ===
-                "MicrosoftWindowsServer") {
-                return `Windows Server ${this.virtualMachineConfiguration.imageReference.sku}`;
-            }
-
-            const { offer, sku } = this.virtualMachineConfiguration.imageReference;
-
-            return `${offer} ${sku}`;
-        }
-
-        return "Unknown";
-    }
-
-    private _getComputePoolOsIcon(osName): string {
-        if (osName.includes("Windows")) {
-            return "windows";
-        }
-
-        return "linux";
-    }
 }
 
 export type PoolState = "active" | "upgrading" | "deleting";
