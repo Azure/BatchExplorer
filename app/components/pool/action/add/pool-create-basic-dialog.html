@@ -5,7 +5,7 @@
                 <div class="gcol">
                     <md-input-container class="form-element">
                         <input mdInput #idInput formControlName="id" placeholder="Id" maxlength="64">
-                        <md-hint align="end">{{idInput.characterCount}} / 64</md-hint>
+                        <md-hint align="end">{{idInput.value.length}} / 64</md-hint>
                     </md-input-container>
 
                     <bl-error controlName="id" code="required">Id is a required field</bl-error>
