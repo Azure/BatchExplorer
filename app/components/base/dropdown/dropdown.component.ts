@@ -1,4 +1,4 @@
-import { Component, ElementRef, HostListener } from "@angular/core";
+import { Component, HostListener } from "@angular/core";
 
 @Component({
     selector: "bl-dropdown",
@@ -9,9 +9,6 @@ export class DropdownComponent {
     public forcedOpen = false;
     public showDropdown = false;
 
-    constructor(elementRef: ElementRef) {
-
-    }
     public mouseEnter() {
         this.showDropdown = true;
     }

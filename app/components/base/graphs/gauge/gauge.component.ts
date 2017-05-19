@@ -99,9 +99,6 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
     private _options: GaugeConfig = defaultOptions;
     private _size: number = presetSizes.small;
 
-    constructor(elementRef: ElementRef) {
-    }
-
     public ngAfterViewInit() {
         this.init();
         this.redraw();
