@@ -63,5 +63,26 @@
                 </div>
             </bl-form-picker>
         </bl-form-section>
+
+
+        <bl-form-section title="Advanced" subtitle="Advanced optional options">
+            <div>
+                <md-input-container>
+                    <input mdInput type="number" formControlName="maxTasksPerNode" placeholder="Max task per node">
+                </md-input-container>
+                <md-slider formControlName="maxTasksPerNode" min="1" max="10" color="primary"></md-slider>
+            </div>
+            <div>
+                <md-slide-toggle formControlName="enableInterNodeCommunication" color="primary">
+                    Enable MPI
+                </md-slide-toggle>
+            </div>
+             <div>
+                <md-select formControlName="taskSchedulingPolicy" color="primary" placeholder="Task scheduling policy">
+                    <md-option [value]="NodeFillType.pack">Pack</md-option>
+                    <md-option [value]="NodeFillType.spread">Spread</md-option>
+                </md-select>
+            </div>
+        </bl-form-section>
     </bl-form-page>
 </bl-complex-form>
