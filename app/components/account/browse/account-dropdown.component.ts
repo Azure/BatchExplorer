@@ -24,7 +24,7 @@ export class AccountDropDownComponent implements AfterViewInit {
             if (accountId) {
                 this.selectedId = accountId;
                 this.selectedAccountAlias = accountService.getNameFromAccountId(accountId);
-                this.router.navigate(["/accounts", this.selectedId]);
+                // this.router.navigate(["/accounts", this.selectedId]);
 
             } else {
                 this.selectedAccountAlias = "No account selected!";

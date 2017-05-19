@@ -11,6 +11,7 @@ import { FormErrorComponent } from "./form-error";
 import { FormPageComponent } from "./form-page";
 import { FormMultiPickerComponent, FormPickerComponent, FormPickerItemTemplateDirective } from "./form-picker";
 import { FormSectionComponent } from "./form-section";
+import { KeyValuePickerComponent } from "./key-value-picker";
 import { ServerErrorComponent } from "./server-error";
 import { SimpleFormComponent } from "./simple-form";
 
@@ -32,6 +33,7 @@ const components = [
     FormPickerItemTemplateDirective,
     EditableTableComponent,
     EditableTableColumnComponent,
+    KeyValuePickerComponent,
 ];
 
 @NgModule({
