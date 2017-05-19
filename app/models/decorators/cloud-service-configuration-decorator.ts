@@ -6,7 +6,7 @@ export class CloudServiceConfigurationDecorator extends DecoratorBase<CloudServi
     public targetOSVersion: string;
     public currentOSVersion: string;
 
-    constructor(private cloudServiceConfiguration: CloudServiceConfiguration) {
+    constructor(cloudServiceConfiguration: CloudServiceConfiguration) {
         super(cloudServiceConfiguration);
 
         this.osFamily = this.stringField(cloudServiceConfiguration.osFamily);

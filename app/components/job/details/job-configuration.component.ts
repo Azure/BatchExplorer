@@ -41,9 +41,7 @@ export class JobConfigurationComponent {
 
     private _job: Job;
 
-    constructor(
-        private viewContainerRef: ViewContainerRef) {
-    }
+    constructor(viewContainerRef: ViewContainerRef) { }
 
     public refresh(job: Job) {
         if (this.job) {

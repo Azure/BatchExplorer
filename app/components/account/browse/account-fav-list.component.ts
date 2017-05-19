@@ -34,8 +34,8 @@ export class AccountFavListComponent {
 
     constructor(
         private accountService: AccountService,
-        private sidebarManager: SidebarManager,
-        private activatedRoute: ActivatedRoute) {
+        sidebarManager: SidebarManager,
+        activatedRoute: ActivatedRoute) {
         accountService.accountFavorites.subscribe(() => {
             this.status = LoadingStatus.Ready;
         });

@@ -9,12 +9,6 @@ import { AccountService, SubscriptionService } from "app/services";
 import { Filter, FilterBuilder, FilterMatcher, Operator } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
 
-interface SubscriptionAccount {
-    expanded: boolean;
-    loading: boolean;
-    accounts: Observable<List<AccountResource>>;
-}
-
 @Component({
     selector: "bl-account-list",
     templateUrl: "account-list.html",
@@ -33,9 +27,9 @@ export class AccountListComponent {
 
     constructor(
         private accountService: AccountService,
-        private activatedRoute: ActivatedRoute,
-        private sidebarManager: SidebarManager,
-        private subscriptionService: SubscriptionService) {
+        activatedRoute: ActivatedRoute,
+        sidebarManager: SidebarManager,
+        subscriptionService: SubscriptionService) {
         this._updateDisplayedAccounts();
     }
 

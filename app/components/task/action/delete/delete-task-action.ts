@@ -8,7 +8,7 @@ import { LongRunningDeleteAction } from "app/services/core";
 
 // todo: refactor me along with WaitForDeleteTaskPoller
 export class DeleteTaskAction extends LongRunningDeleteAction {
-    constructor(private taskService: TaskService, private jobId, private taskIds: string[]) {
+    constructor(private taskService: TaskService, private jobId, taskIds: string[]) {
         super("task", taskIds);
     }
 

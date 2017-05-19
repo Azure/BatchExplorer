@@ -8,7 +8,7 @@ import { PoolService } from "app/services";
 import { LongRunningUploadAction } from "app/services/core";
 
 export class UploadPackageTask extends LongRunningUploadAction {
-    constructor(private poolService: PoolService, private poolIds: string[]) {
+    constructor(poolService: PoolService, poolIds: string[]) {
         super("pool", poolIds);
     }
 

@@ -35,10 +35,10 @@ export class SidebarPageComponent implements OnDestroy {
     private onSideBarOpenEvent: any;
 
     constructor(
-        private componentFactoryResolver: ComponentFactoryResolver,
         private injector: Injector,
-        private ngZone: NgZone,
-        private sidebarManager: SidebarManager) {
+        componentFactoryResolver: ComponentFactoryResolver,
+        ngZone: NgZone,
+        sidebarManager: SidebarManager) {
     }
 
     public attachComponent<T>(componentType: Type<T>, sidebarRef: SidebarRef<T>) {

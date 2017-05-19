@@ -9,7 +9,7 @@ export class DropdownComponent {
     public forcedOpen = false;
     public showDropdown = false;
 
-    constructor(private elementRef: ElementRef) {
+    constructor(elementRef: ElementRef) {
 
     }
     public mouseEnter() {

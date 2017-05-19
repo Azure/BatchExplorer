@@ -12,7 +12,7 @@ export class JobPreparationTaskDecorator extends DecoratorBase<JobPreparationTas
     public environmentSettings: {};
     public constraints: {};
 
-    constructor(private task?: JobPreparationTask) {
+    constructor(task?: JobPreparationTask) {
         super(task);
 
         this.commandLine = this.stringField(task.commandLine);

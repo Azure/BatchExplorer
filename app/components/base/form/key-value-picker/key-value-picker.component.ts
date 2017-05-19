@@ -4,8 +4,6 @@ import {
 } from "@angular/forms";
 import { Subscription } from "rxjs";
 
-import { ResourceFile } from "app/models";
-
 // tslint:disable:no-forward-ref
 
 interface KeyValue {
@@ -26,8 +24,8 @@ export class KeyValuePickerComponent implements ControlValueAccessor, OnDestroy 
     private _propagateChange: (value: KeyValue[]) => void = null;
     private _sub: Subscription;
 
-    constructor(private formBuilder: FormBuilder) {
-        this.items = this.formBuilder.control([[]]);
+    constructor(formBuilder: FormBuilder) {
+        this.items = formBuilder.control([[]]);
         this._sub = this.items.valueChanges.subscribe((items) => {
             if (this._propagateChange) {
                 this._propagateChange(items);

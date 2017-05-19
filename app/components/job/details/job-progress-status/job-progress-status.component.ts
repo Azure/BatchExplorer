@@ -34,7 +34,7 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
     private _polls: PollObservable[] = [];
     private _subs: Subscription[] = [];
 
-    constructor(private poolService: PoolService, private nodeService: NodeService) {
+    constructor(poolService: PoolService, nodeService: NodeService) {
         this.poolData = poolService.get(null);
         this.data = nodeService.list(null, {
             pageSize: 1000,

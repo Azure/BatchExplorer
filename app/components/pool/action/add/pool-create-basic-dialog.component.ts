@@ -25,7 +25,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<PoolCreateBasicDialogComponent>,
         private poolService: PoolService,
-        private vmSizeService: VmSizeService,
+        vmSizeService: VmSizeService,
         private notificationService: NotificationService) {
         super(PoolCreateDto);
 
