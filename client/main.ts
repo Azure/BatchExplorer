@@ -5,7 +5,6 @@ app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 
 import { windows } from "./core";
 
-
 // Create the browser window.
 function createWindow() {
     windows.splashScreen.create();
