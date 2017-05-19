@@ -51,9 +51,9 @@ export class TaskDecorator extends DecoratorBase<Task> {
         this.resourceFiles = task.resourceFiles || {};
         this.environmentSettings = task.environmentSettings || {};
         this.affinityInfo = task.affinityInfo || {};
-        this.constraints = new TaskConstraintsDecorator(task.constraints || <any>{});
-        this.executionInfo = new TaskExecutionInfoDecorator(task.executionInfo || <any>{});
-        this.nodeInfo = new ComputeNodeInfoDecorator(task.nodeInfo || <any>{});
+        this.constraints = new TaskConstraintsDecorator(task.constraints || {} as any);
+        this.executionInfo = new TaskExecutionInfoDecorator(task.executionInfo || {} as any);
+        this.nodeInfo = new ComputeNodeInfoDecorator(task.nodeInfo || {} as any);
         this.multiInstanceSettings = task.multiInstanceSettings || {};
         this.stats = task.stats || {};
         this.dependsOn = task.dependsOn || {};

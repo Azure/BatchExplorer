@@ -48,7 +48,7 @@ export class TaskListComponent extends SelectableList implements OnInit {
 
         this.data.fetchNext();
     }
-    public get filter(): Filter { return this._filter; };
+    public get filter(): Filter { return this._filter; }
 
     @ViewChild(TaskListDisplayComponent)
     public list: TaskListDisplayComponent;

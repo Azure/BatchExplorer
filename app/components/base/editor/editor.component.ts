@@ -48,7 +48,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit {
     public isFocused = false;
     private _value = "";
 
-    get value() { return this._value; };
+    get value() { return this._value; }
 
     @Input() set value(v) {
         if (v !== this._value) {
@@ -108,7 +108,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit {
         event.stopPropagation();
     }
 
-    public onChange: Function = () => null;
+    public onChange: (value: any) => any = () => null;
 
     // tslint:disable-next-line:no-empty
     public onTouched() { }

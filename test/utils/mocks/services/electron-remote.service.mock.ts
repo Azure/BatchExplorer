@@ -38,7 +38,7 @@ export class MockBrowserWindow {
     public destroy: jasmine.Spy;
     public loadURL: jasmine.Spy;
     public on: jasmine.Spy;
-    public webContents: { on: jasmine.Spy, notify: Function };
+    public webContents: { on: jasmine.Spy, notify: (...args) => void };
 
     private _isVisible = false;
     private _events: { [key: string]: Subject<any> } = {};
@@ -46,7 +46,7 @@ export class MockBrowserWindow {
     constructor() {
         this.destroy = jasmine.createSpy("destroy");
         this.loadURL = jasmine.createSpy("loadURL");
-        this.on = jasmine.createSpy("on").and.callFake((event: string, callback: Function) => {
+        this.on = jasmine.createSpy("on").and.callFake((event: string, callback: (...args) => void) => {
             if (!(event in this._events)) {
                 this._events[event] = new Subject();
             }
@@ -55,7 +55,7 @@ export class MockBrowserWindow {
             });
         });
         this.webContents = {
-            on: jasmine.createSpy("webcontents.on").and.callFake((event: string, callback: Function) => {
+            on: jasmine.createSpy("webcontents.on").and.callFake((event: string, callback: (...args) => void) => {
                 this.on(`webcontents.${event}`, callback);
             }),
             notify: (event: string, data: any) => {

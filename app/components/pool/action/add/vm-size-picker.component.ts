@@ -71,7 +71,7 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     public categories: StringMap<VmSizeDecorator[]>;
     public prices: Map<string, SpecCost> = Map<string, SpecCost>({});
 
-    private _propagateChange: Function = null;
+    private _propagateChange: (value: string) => void = null;
     private _categories: StringMap<string[]> = {};
     private _vmSizes: List<VmSize> = List([]);
     private _sizeSub: Subscription;

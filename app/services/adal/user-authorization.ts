@@ -153,7 +153,7 @@ export class UserAuthorization {
         const auth = this._currentAuthorization;
         this._currentAuthorization = null;
 
-        if ((<any>params).error) {
+        if ((params as any).error) {
             auth.subject.error(params as AuthorizeError);
         } else {
             auth.subject.next(params as AuthorizeResult);
@@ -179,7 +179,7 @@ export class UserAuthorization {
             const [key, value] = str.split("=");
             params[key] = value;
         }
-        return <any>params;
+        return params as any;
     }
 
     private _isAuthorizingTenant(tenantId: string) {

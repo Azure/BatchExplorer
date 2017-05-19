@@ -3,7 +3,6 @@ import { ReactiveFormsModule } from "@angular/forms";
 import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
-import { ChartsModule } from "ng2-charts";
 
 import { BaseModule } from "app/components/base";
 import { HistoryGraphComponent } from "./history-graph";
@@ -18,7 +17,7 @@ const components = [NodePreviewCardComponent, NodesHeatmapComponent,
 @NgModule({
     declarations: components,
     exports: components,
-    imports: [BrowserModule, MaterialModule, RouterModule, BaseModule, ChartsModule, ReactiveFormsModule],
+    imports: [BrowserModule, MaterialModule, RouterModule, BaseModule, ReactiveFormsModule],
 })
 export class PoolGraphsModule {
 

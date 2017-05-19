@@ -25,7 +25,7 @@ export abstract class RxEntityProxy<TParams, TEntity> extends RxProxyBase<TParam
      */
     constructor(type: Type<TEntity>, config: RxEntityProxyConfig<TParams, TEntity>) {
         super(type, config);
-        this.params = config.initialParams || <TParams>{};
+        this.params = config.initialParams || {} as TParams;
         this.item = this._itemKey.map((key) => {
             return this.cache.items.map((items) => {
                 return items.get(key);

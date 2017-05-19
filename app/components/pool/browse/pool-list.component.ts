@@ -55,7 +55,7 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
 
         this.data.fetchNext();
     }
-    public get filter(): Filter { return this._filter; };
+    public get filter(): Filter { return this._filter; }
 
     private _filter: Filter;
     private _onPoolAddedSub: Subscription;

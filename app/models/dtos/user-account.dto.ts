@@ -1,6 +1,8 @@
+import { UserAccountElevationLevel } from "app/models";
+
 export interface UserAccountDto {
     name: string;
     password: string;
-    elevationLevel?: "nonAdmin" | "admin";
+    elevationLevel?: UserAccountElevationLevel;
     sshPrivateKey?: string;
 }

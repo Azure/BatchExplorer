@@ -4,6 +4,7 @@ import {
 } from "@angular/forms";
 import { Subscription } from "rxjs";
 
+import { UserAccountElevationLevel } from "app/models";
 import { UserAccountDto } from "app/models/dtos";
 
 export interface UserAccountFormModel {
@@ -26,7 +27,7 @@ function userAccountToDto(userAccount: UserAccountFormModel): UserAccountDto {
     return {
         name: userAccount.name,
         password: userAccount.password,
-        elevationLevel: userAccount.runElevated ? "admin" : "nonAdmin",
+        elevationLevel: userAccount.runElevated ? UserAccountElevationLevel.admin : UserAccountElevationLevel.nonadmin,
         sshPrivateKey: userAccount.sshPrivateKey,
     };
 }
@@ -42,7 +43,7 @@ function userAccountToDto(userAccount: UserAccountFormModel): UserAccountDto {
 })
 export class UserAccountPickerComponent implements ControlValueAccessor, Validator, OnDestroy {
     public form: FormGroup;
-    private _propagateChange: Function = null;
+    private _propagateChange: (value: UserAccountDto) => void = null;
     private _sub: Subscription;
 
     constructor(formBuilder: FormBuilder) {

@@ -53,6 +53,7 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
             constraints: this.constraintsGroup,
             runElevated: ["0"],
             resourceFiles: [[]],
+            environmentSettings: [[]],
         });
     }
 

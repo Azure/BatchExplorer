@@ -1,6 +1,8 @@
 import * as Moment from "moment";
 import { Duration } from "moment";
 
+import { exists } from "app/utils";
+
 export class DecoratorBase<TEntity> {
     public original: TEntity;
     public id: string;
@@ -9,7 +11,7 @@ export class DecoratorBase<TEntity> {
 
     constructor(entity: TEntity) {
         this.original = entity;
-        this.id = entity ? (<any>entity).id : "";
+        this.id = entity ? (entity as any).id : "";
     }
 
     protected dateField(value: Date, returnEmptyStringForNullOrUndefined = false): string {
@@ -19,11 +21,11 @@ export class DecoratorBase<TEntity> {
     }
 
     protected numberField(value: number | any, returnEmptyStringForNullOrUndefined = false): string {
-        return value !== null && value !== undefined ? <string>value : returnEmptyStringForNullOrUndefined ? "" : "n/a";
+        return exists(value) ? value as string : returnEmptyStringForNullOrUndefined ? "" : "n/a";
     }
 
     protected stringField(value: string | any, returnEmptyStringForNullOrUndefined = false): string {
-        return value !== null && value !== undefined ? <string>value : returnEmptyStringForNullOrUndefined ? "" : "n/a";
+        return exists(value) ? value as string : returnEmptyStringForNullOrUndefined ? "" : "n/a";
     }
 
     protected timespanField(value?: Duration, returnEmptyStringForNullOrUndefined = false): string {
@@ -34,7 +36,7 @@ export class DecoratorBase<TEntity> {
 
     protected booleanField(value: boolean | any, returnEmptyStringForNullOrUndefined = false): string {
         return value
-            ? <string>value
+            ? value as string
             : returnEmptyStringForNullOrUndefined ? "" : "n/a";
     }
 

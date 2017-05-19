@@ -24,7 +24,7 @@ export class StartTaskEditFormComponent {
         });
     }
 
-    public get pool() { return this._pool; };
+    public get pool() { return this._pool; }
 
     public form: FormGroup;
 
@@ -45,6 +45,10 @@ export class StartTaskEditFormComponent {
         return this.form.controls["enableStartTask"].value;
     }
 
+    public closeForm() {
+        this.close.emit();
+    }
+
     @autobind()
     public submit() {
         const startTask = this.form.value.startTask;
@@ -56,10 +60,11 @@ export class StartTaskEditFormComponent {
             });
         } else {
             obs = this.poolService.getOnce(this.pool.id).cascade((pool) => {
+                const poolData = pool.toJS();
                 return this.poolService.replaceProperties(id, {
-                    applicationPackageReferences: pool.applicationPackageReferences,
-                    certificateReferences: pool.certificateReferences,
-                    metadata: pool.metadata,
+                    applicationPackageReferences: poolData.applicationPackageReferences || [],
+                    certificateReferences: poolData.certificateReferences || [],
+                    metadata: poolData.metadata || [],
                 });
             });
         }
