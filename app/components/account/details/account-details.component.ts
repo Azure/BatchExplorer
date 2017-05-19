@@ -1,8 +1,9 @@
 import { Component, NgZone, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
+import { LoadingStatus } from "app/components/base/loading";
 import { AccountResource, Application, Job, Pool, ServerError } from "app/models";
 import { AccountService, ApplicationService, JobService, PoolService } from "app/services";
 import { RxListProxy } from "app/services/core";
@@ -27,12 +28,11 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     public accountId: string;
     public loading: boolean = true;
     public loadingError: any;
+    public noLinkedStorage: boolean = false;
 
     public applicationData: RxListProxy<{}, Application>;
     public jobData: RxListProxy<{}, Job>;
     public poolData: RxListProxy<{}, Pool>;
-
-    public noLinkedStorage: boolean;
 
     private _paramsSubscriber: Subscription;
     private initialOptions = { maxItems: 10 };
@@ -57,7 +57,6 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
                 next: (x) => {
                     this.account = x;
                     this.loading = false;
-
                     this.applicationData = this.applicationService.list(this.initialOptions, (error: ServerError) => {
                         let handled = false;
                         if (error && error.body.code === Constants.APIErrorCodes.accountNotEnabledForAutoStorage) {
@@ -92,6 +91,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     }
 
     public selectAccount(accountId: string): void {
+        this.noLinkedStorage = false;
         this.accountService.selectAccount(accountId);
     }
 }
