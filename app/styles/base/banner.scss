@@ -4,17 +4,23 @@ bl-banner {
 }
 
 bl-banner > md-card.mat-card {
-    color: $whiteSmoke-darker;
     padding: 0;
 
     > .summary-container {
         font-weight: 500;
         display: flex;
         align-items: center;
-        height: 36px;
 
         &.expandable {
             cursor: pointer;
+        }
+
+        &.standard {
+            height: 36px;
+        }
+
+        &.expand {
+            height: auto;
         }
 
         > [code] {
@@ -26,6 +32,11 @@ bl-banner > md-card.mat-card {
 
         > [message] {
             padding: 5px 24px;
+            flex: 1;
+        }
+
+        &.expand > [message] {
+            padding: 10px;
             flex: 1;
         }
 
@@ -122,10 +133,17 @@ bl-banner > md-card.mat-card {
 
 bl-banner > md-card.error {
     @include banner-scheme($red, $red-dark);
+    color: $whiteSmoke-darker;
 }
 
 bl-banner > md-card.warning {
     @include banner-scheme($yellow, $yellow-dark);
+    color: $whiteSmoke-darker;
+}
+
+bl-banner > md-card.notice {
+    @include banner-scheme($concreteGray, $dusty-grey );
+    color: $genericGray;
 }
 
 .other-fixes {

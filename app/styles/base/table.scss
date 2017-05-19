@@ -10,6 +10,7 @@ bl-table {
     table {
         width: 100%;
         border-spacing: 0;
+        border-collapse: collapse;
         overflow: hidden;
         display: table;
     }
@@ -24,8 +25,11 @@ bl-table {
     }
 
     tbody {
+        display: table-header-group;
+
         > tr {
             cursor:pointer;
+            border-top: 1px $athensGrey solid;
             height: $table-row-height;
 
             &.selected {
@@ -45,9 +49,7 @@ bl-table {
             }
 
             &:last-child {
-                bl-cell {
-                    border-bottom: 1px $athensGrey solid;
-                }
+                border-bottom: 1px $athensGrey solid;
             }
         }
     }
@@ -99,15 +101,56 @@ bl-table {
     bl-cell {
         display: table-cell;
         font-size: 13px;
-        border-top: 1px $athensGrey solid;
         position: relative;
         white-space: nowrap;
 
         .cell-value {
-            width: 95%;
+            width: 98%;
             overflow: hidden;
             text-overflow: ellipsis;
         }
+    }
+}
+
+/*
+ * Specifically for tables on the dashboard that need display: block & inline-block
+ * instead of display: table.
+ */
+bl-table.dashboard {
+    table {
+        display: block;
+    }
+
+    bl-thead {
+        display: block;
+    }
+
+    tbody {
+        display: block;
+
+        > tr {
+            display: block;
+            padding: 6px;
+        }
+    }
+
+    bl-cell,
+    bl-column {
+        &:first-child {
+            padding: 0;
+        }
+
+        &:last-child {
+            padding: 0;
+        }
+    }
+
+    bl-column {
+        display: inline-block;
+    }
+
+    bl-cell {
+        display: inline-block;
     }
 }
 

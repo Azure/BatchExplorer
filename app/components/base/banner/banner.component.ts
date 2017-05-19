@@ -7,10 +7,11 @@ export enum ErrorState {
     Fixed,
 }
 
-export type BannerType = "error" | "warning";
+export type BannerType = "error" | "warning" | "notice";
 export const BannerType = {
     error: "error" as BannerType,
     warning: "warning" as BannerType,
+    notice: "notice" as BannerType,
 };
 
 @Directive({
@@ -52,6 +53,9 @@ export class BannerComponent implements OnChanges {
 
     @Input()
     public type = BannerType.error;
+
+    @Input()
+    public height: string = "standard";
 
     @ContentChildren(BannerOtherFixDirective)
     public otherFixes: QueryList<BannerOtherFixDirective>;
