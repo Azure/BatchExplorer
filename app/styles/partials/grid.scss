@@ -1,0 +1,9 @@
+.grow {
+    display: flex;
+    margin: 0 -5px;
+
+    > .gcol {
+        flex: 1;
+        margin: 0 5px;
+    }
+}
