@@ -23,7 +23,7 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
     private _sub: Subscription;
 
     constructor(private formBuilder: FormBuilder) {
-        this.files = this.formBuilder.control([[]]);
+        this.files = this.formBuilder.control([]);
         this._sub = this.files.valueChanges.subscribe((files) => {
             if (this._propagateChange) {
                 this._propagateChange(files);

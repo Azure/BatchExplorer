@@ -25,7 +25,7 @@ export class KeyValuePickerComponent implements ControlValueAccessor, OnDestroy 
     private _sub: Subscription;
 
     constructor(formBuilder: FormBuilder) {
-        this.items = formBuilder.control([[]]);
+        this.items = formBuilder.control([]);
         this._sub = this.items.valueChanges.subscribe((items) => {
             if (this._propagateChange) {
                 this._propagateChange(items);
