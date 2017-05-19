@@ -59,8 +59,6 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
                     this.loading = false;
 
                     this.applicationData = this.applicationService.list(this.initialOptions, (error: ServerError) => {
-                        console.log("on error");
-                        console.log(error.body.code);
                         let handled = false;
                         if (error && error.body.code === Constants.APIErrorCodes.accountNotEnabledForAutoStorage) {
                             this.noLinkedStorage = true;
