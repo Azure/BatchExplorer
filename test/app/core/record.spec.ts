@@ -42,7 +42,9 @@ describe("Record", () => {
                 @Prop()
                 public name: string;
             }
+            const record = new MissingExtendRecord();
             expect(true).toBe(false, "Should have thrown an expecption");
+            expect(record).toBe(null);
         } catch (e) {
             expect(true).toBe(true, "Throw an excpetion as expected");
             expect(e.name).toEqual("RecordMissingExtendsError", "Exception should be a RecordMissingExtendsError");

@@ -34,7 +34,7 @@ export class ApplicationService extends ServiceBase {
 
     constructor(
         private arm: ArmHttpService,
-        private accountService: AccountService) {
+        accountService: AccountService) {
 
         super();
         accountService.currentAccountId.subscribe((accountId) => {

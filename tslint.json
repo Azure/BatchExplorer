@@ -14,7 +14,6 @@
     "no-inferrable-types": [false],
     "interface-name": [ true,  "never-prefix" ],
     "no-string-literal": false,
-    "no-unused-variable": [true],
     "variable-name": [false, "ban-keywords", "check-format", "allow-leading-underscore"], // https://github.com/palantir/tslint/issues/1489
     "whitespace": [true,
         "check-branch",

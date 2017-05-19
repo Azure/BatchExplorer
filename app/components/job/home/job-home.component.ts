@@ -16,7 +16,7 @@ export class JobHomeComponent {
     public quickFilter: Filter = FilterBuilder.none();
     public advancedFilter: Filter = FilterBuilder.none();
 
-    constructor(private formBuilder: FormBuilder, private sidebarManager: SidebarManager) {
+    constructor(formBuilder: FormBuilder, private sidebarManager: SidebarManager) {
         this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
             if (query === "") {
                 this.quickFilter = FilterBuilder.none();

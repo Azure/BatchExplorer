@@ -44,7 +44,7 @@ export class FileContentComponent implements OnChanges, OnDestroy, AfterViewInit
     constructor(
         private storageService: StorageService,
         private scrollableService: ScrollableService,
-        private taskService: TaskService,
+        taskService: TaskService,
         private fileService: FileService,
         private element: ElementRef) {
     }

@@ -24,7 +24,7 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<JobCreateBasicDialogComponent>,
         private jobService: JobService,
-        private poolService: PoolService,
+        poolService: PoolService,
         private notificationService: NotificationService) {
         super(JobCreateDto);
 

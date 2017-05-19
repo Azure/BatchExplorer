@@ -7,7 +7,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { registerIcons } from "app/config";
 import {
     AccountService, AdalService, AutoscaleFormulaService, CommandService, NodeService,
-    PredefinedFormulaService, PricingService, SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
+    PredefinedFormulaService, SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
 } from "app/services";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
@@ -44,7 +44,6 @@ export class AppComponent implements AfterViewInit, OnInit {
         private subscriptionService: SubscriptionService,
         private nodeService: NodeService,
         private sshKeyService: SSHKeyService,
-        private pricingService: PricingService,
         private vmSizeService: VmSizeService,
         private predefinedFormulaService: PredefinedFormulaService) {
         this.autoscaleFormulaService.init();
