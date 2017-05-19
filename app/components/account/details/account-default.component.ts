@@ -1,4 +1,6 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
+import { AccountService } from "app/services";
 
 @Component({
     selector: "bl-account-details-home",
@@ -10,8 +12,21 @@ import { Component } from "@angular/core";
     `,
 })
 
-export class AccountDefaultComponent {
+export class AccountDefaultComponent implements OnInit {
     public static breadcrumb() {
         return { name: "Accounts" };
+    }
+
+    constructor(
+        private accountService: AccountService,
+        private router: Router) {
+    }
+
+    public ngOnInit(): void {
+        this.accountService.currentAccountId.subscribe((accountId) => {
+            if (accountId) {
+                this.router.navigate(["/accounts", accountId]);
+            }
+        });
     }
 }
