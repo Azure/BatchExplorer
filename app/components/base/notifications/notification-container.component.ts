@@ -12,7 +12,7 @@ import { NotificationService } from "./notification-service";
 export class NotificationContainerComponent {
     public notifications: Observable<List<Notification>>;
 
-    constructor(private notificationService: NotificationService) {
+    constructor(notificationService: NotificationService) {
         this.notifications = notificationService.notifications;
     }
 }

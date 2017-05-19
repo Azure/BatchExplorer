@@ -13,10 +13,10 @@ export class AccountCreateDialogComponent {
     public isSaving: boolean = false;
 
     constructor(
-        private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<AccountCreateDialogComponent>,
-        private accountService: AccountService,
-        private router: Router) {
+        formBuilder: FormBuilder,
+        accountService: AccountService,
+        router: Router) {
     }
 
     public onSubmit() {

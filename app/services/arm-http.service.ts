@@ -23,7 +23,7 @@ function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?
  */
 @Injectable()
 export class ArmHttpService {
-    constructor(private http: AzureHttpService, private adal: AdalService, private accountService: AccountService) {
+    constructor(private http: AzureHttpService, adal: AdalService, private accountService: AccountService) {
     }
 
     public request(uri: string, options: RequestOptionsArgs): Observable<Response> {

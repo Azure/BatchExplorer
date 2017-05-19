@@ -18,7 +18,7 @@ export class AccountDropDownComponent implements AfterViewInit {
     constructor(
         private accountService: AccountService,
         private changeDetection: ChangeDetectorRef,
-        private router: Router) {
+        router: Router) {
 
         accountService.currentAccountId.subscribe((accountId) => {
             if (accountId) {

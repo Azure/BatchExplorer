@@ -1,4 +1,4 @@
-import { Component, Input, ViewContainerRef } from "@angular/core";
+import { Component, Input } from "@angular/core";
 
 import { ResourceFile, Task } from "app/models";
 
@@ -18,10 +18,6 @@ export class TaskResourceFilesComponent {
     public resourceFiles: ResourceFile[] = [];
 
     private _task: Task;
-
-    constructor(
-        private viewContainerRef: ViewContainerRef) {
-    }
 
     public refresh(task: Task) {
         if (this.task) {

@@ -9,7 +9,7 @@ import { LongRunningDeleteAction } from "app/services/core";
 export class DeleteApplicationAction extends LongRunningDeleteAction {
     constructor(
         private applicationService: ApplicationService,
-        private applicationIds: string[]) {
+        applicationIds: string[]) {
 
         super("Application", applicationIds);
     }

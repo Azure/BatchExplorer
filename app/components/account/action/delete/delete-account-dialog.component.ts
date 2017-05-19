@@ -13,7 +13,7 @@ export class DeleteAccountDialogComponent {
 
     constructor(
         public dialogRef: MdDialogRef<DeleteAccountDialogComponent>,
-        private accountService: AccountService) {
+        accountService: AccountService) {
     }
 
     public destroyAccount() {

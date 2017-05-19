@@ -39,7 +39,7 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
     private _filter: Filter;
 
     constructor(
-        private router: Router,
+        router: Router,
         private applicationService: ApplicationService,
         private taskManager: BackgroundTaskService) {
 

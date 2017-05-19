@@ -11,7 +11,7 @@ export class MainNavigationComponent {
     public selectedId: string;
     public selectedAccountAlias: string = "";
 
-    constructor(private accountService: AccountService) {
+    constructor(accountService: AccountService) {
         accountService.currentAccountId.subscribe((accountId) => {
             if (accountId) {
                 this.selectedId = accountId;
