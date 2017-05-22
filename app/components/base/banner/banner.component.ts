@@ -14,6 +14,8 @@ export const BannerType = {
     notice: "notice" as BannerType,
 };
 
+import "./banner.scss";
+
 @Directive({
     // tslint:disable-next-line:directive-selector
     selector: "[other-fix]",

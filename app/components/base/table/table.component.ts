@@ -9,6 +9,8 @@ import { AbstractListBase } from "../abstract-list";
 import { SortDirection, TableColumnComponent } from "./table-column.component";
 import { TableRowComponent } from "./table-row.component";
 
+import "./table.scss";
+
 @Component({
     selector: "bl-thead",
     template: `<tr><ng-content></ng-content></tr>`,
