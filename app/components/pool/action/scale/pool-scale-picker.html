@@ -2,7 +2,7 @@
     <md-tab-group class="form-tabs" [selectedIndex]="selectedModeTab" (selectChange)="changeScaleModeTab($event)">
         <md-tab label="Fixed">
             <md-input-container>
-                <input mdInput formControlName="targetDedicated" placeholder="Number of virtual machines in pool" type="number" />
+                <input mdInput formControlName="targetDedicated" placeholder="Number of virtual machines in pool" type="number" min="0"/>
             </md-input-container>
             <bl-error controlName="targetDedicated" code="required">Target size is a required field</bl-error>
         </md-tab>
