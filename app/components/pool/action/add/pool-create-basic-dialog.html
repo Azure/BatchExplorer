@@ -1,21 +1,41 @@
 <bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef">
     <bl-form-page main-form-page title="Add a pool to the account" [formGroup]="form">
         <bl-form-section title="General info" subtitle="Basic information about the pool">
-            <div class="form-element">
-                <md-input-container>
-                    <input mdInput #idInput formControlName="id" placeholder="Id" maxlength="64">
-                    <md-hint align="end">{{idInput.characterCount}} / 64</md-hint>
-                </md-input-container>
+            <div class="grow">
+                <div class="gcol">
+                    <md-input-container class="form-element">
+                        <input mdInput #idInput formControlName="id" placeholder="Id" maxlength="64">
+                        <md-hint align="end">{{idInput.value.length}} / 64</md-hint>
+                    </md-input-container>
 
-                <bl-error controlName="id" code="required">Id is a required field</bl-error>
-                <bl-error controlName="id" code="maxlength">Id has a maximum length of 64 characters</bl-error>
-                <bl-error controlName="id" code="pattern">Id can contain any combination of alphanumeric characters including hyphens and underscores.</bl-error>
+                    <bl-error controlName="id" code="required">Id is a required field</bl-error>
+                    <bl-error controlName="id" code="maxlength">Id has a maximum length of 64 characters</bl-error>
+                    <bl-error controlName="id" code="pattern">Id can contain any combination of alphanumeric characters including hyphens and underscores.</bl-error>
+                </div>
+
+                <div class="gcol">
+                    <md-input-container class="form-element">
+                        <input mdInput formControlName="displayName" placeholder="Display name">
+                    </md-input-container>
+                </div>
             </div>
-
+            <div class="grow">
+                <div class="gcol">
+                    <md-input-container>
+                        <input mdInput type="number" formControlName="maxTasksPerNode" placeholder="Max task per node">
+                    </md-input-container>
+                </div>
+                <div class="gcol">
+                    <md-slide-toggle formControlName="enableInterNodeCommunication" color="primary">
+                        Enable MPI
+                    </md-slide-toggle>
+                </div>
+            </div>
             <div class="form-element">
-                <md-input-container>
-                    <input mdInput formControlName="displayName" placeholder="Display name">
-                </md-input-container>
+                <md-select formControlName="taskSchedulingPolicy" color="primary" placeholder="Task scheduling policy">
+                    <md-option [value]="NodeFillType.pack">Pack</md-option>
+                    <md-option [value]="NodeFillType.spread">Spread</md-option>
+                </md-select>
             </div>
         </bl-form-section>
 
