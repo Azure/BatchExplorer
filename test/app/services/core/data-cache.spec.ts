@@ -22,7 +22,7 @@ describe("DataCache", () => {
     let sub;
     beforeEach(() => {
         cache = new DataCache<any>();
-        sub = cache.items.subscribe(x => items = <any>x);
+        sub = cache.items.subscribe(x => items = x as any);
         cache.addItems([item1, item2, item3]);
     });
 

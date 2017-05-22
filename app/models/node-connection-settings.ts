@@ -16,8 +16,8 @@ export class NodeConnectionSettings extends NodeConnectionSettingsRecord impleme
     public remoteLoginIPAddress: string;
     public remoteLoginPort: number;
 
-    public get ip() { return this.remoteLoginIPAddress; };
-    public get port() { return this.remoteLoginPort; };
+    public get ip() { return this.remoteLoginIPAddress; }
+    public get port() { return this.remoteLoginPort; }
 
     constructor(attrs: Partial<NodeConnectionSettingsAttributes> = {}) {
         super(attrs);

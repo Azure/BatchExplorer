@@ -1,4 +1,6 @@
-import { Component, Input } from "@angular/core";
+import { Component, HostBinding, Input } from "@angular/core";
+
+import "./property-list.scss";
 
 @Component({
     selector: "bl-property-list",
@@ -51,7 +53,7 @@ export class VoidLinkPropertyComponent {
         <section class="one-line">
             <label>{{label}}</label>
             <span class="value">
-                <i class="fa" [class.fa-check-circle]="value" [class.fa-times-circle]="!value"></i>
+                <i class="fa" [class.fa-toggle-on]="value" [class.fa-toggle-off]="!value"></i>
                 {{ ValueSting }}
             </span>
         </section>
@@ -62,6 +64,7 @@ export class BoolPropertyComponent {
     public label: string;
 
     @Input()
+    @HostBinding("class.enabled")
     public value: boolean;
 
     @Input()

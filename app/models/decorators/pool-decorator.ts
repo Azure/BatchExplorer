@@ -1,4 +1,4 @@
-import { Pool } from "app/models";
+import { Pool, UserAccount, UserAccountElevationLevel } from "app/models";
 import { DecoratorBase } from "app/utils/decorators";
 import * as moment from "moment";
 import { CloudServiceConfigurationDecorator } from "./cloud-service-configuration-decorator";
@@ -33,13 +33,14 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     public poolOs: string;
     public poolOsIcon: string;
     public lastResized: string;
+    public userAccounts: string;
 
     constructor(private pool?: Pool) {
         super(pool);
         this.allocationState = this.stateField(pool.allocationState);
         this.allocationStateTransitionTime = this.dateField(pool.allocationStateTransitionTime);
         this.cloudServiceConfiguration =
-            new CloudServiceConfigurationDecorator(pool.cloudServiceConfiguration || <any>{});
+            new CloudServiceConfigurationDecorator(pool.cloudServiceConfiguration || {} as any);
         this.creationTime = this.dateField(pool.creationTime);
         this.currentDedicated = this.stringField(pool.currentDedicated);
         this.displayName = this.stringField(pool.displayName);
@@ -59,48 +60,29 @@ export class PoolDecorator extends DecoratorBase<Pool> {
             new TaskSchedulingPolicyDecorator(pool.taskSchedulingPolicy);
         this.url = this.stringField(pool.url);
         this.virtualMachineConfiguration =
-            new VirtualMachineConfigurationDecorator(pool.virtualMachineConfiguration || <any>{});
+            new VirtualMachineConfigurationDecorator(pool.virtualMachineConfiguration || {} as any);
         this.vmSize = this.stringField(pool.vmSize);
 
         this.poolOs = this._computePoolOs();
         this.poolOsIcon = this._computePoolOsIcon(this.poolOs);
 
         this.lastResized = moment(this.pool.allocationStateTransitionTime).fromNow();
+
+        this.userAccounts = pool.userAccounts.map(x => this._decorateUserAccount(x)).join(", ");
     }
 
     private _computePoolOs(): string {
-        const { cloudServiceConfiguration, virtualMachineConfiguration } = this.pool;
-        if (cloudServiceConfiguration) {
-            let osFamily = cloudServiceConfiguration.osFamily;
-
-            if (osFamily === 2) {
-                return "Windows Server 2008 R2 SP1";
-            } else if (osFamily === 3) {
-                return "Windows Server 2012";
-            } else {
-                return "Windows Server 2012 R2";
-            }
-        }
-
-        if (virtualMachineConfiguration) {
-            if (virtualMachineConfiguration.imageReference.publisher ===
-                "MicrosoftWindowsServer") {
-                return `Windows Server ${virtualMachineConfiguration.imageReference.sku}`;
-            }
-
-            const { offer, sku } = virtualMachineConfiguration.imageReference;
-
-            return `${offer} ${sku}`;
-        }
-
-        return "Unknown";
+        return this.pool.osName();
     }
 
     private _computePoolOsIcon(os): string {
-        if (os.includes("Windows")) {
-            return "windows";
-        }
+        return this.pool.osIconName();
+    }
 
-        return "linux";
+    private _decorateUserAccount(user: UserAccount) {
+        if (user.elevationLevel === UserAccountElevationLevel.admin) {
+            return `${user.name} (admin)`;
+        }
+        return user.name;
     }
 }

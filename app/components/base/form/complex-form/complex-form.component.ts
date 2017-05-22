@@ -25,6 +25,12 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
     public actionName = "Save";
 
     @Input()
+    public actionColor = "primary";
+
+    @Input()
+    public cancelText = "Close";
+
+    @Input()
     @HostBinding("class")
     public size: FormSize = "large";
 
@@ -47,7 +53,7 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
     public ngAfterViewInit() {
         const page = this.pages.first;
         if (!page) {
-            throw "Expect form to have at least 1 page. Add bl-form-page in the bl-complex-form";
+            throw new Error("Expect form to have at least 1 page. Add bl-form-page in the bl-complex-form");
         }
         this.currentPage = page;
         this.mainPage = page;

@@ -1,26 +1,4 @@
-<div [formGroup]="form">
-    <div formArrayName="files">
-        <table class="noselect">
-            <thead>
-                <tr>
-                    <th>Blob source</th>
-                    <th>File path</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tr *ngFor="let file of files.controls; let i=index" [formGroupName]="i">
-                <td>
-                    <input formControlName="blobSource">
-                </td>
-                <td>
-                    <input formControlName="filePath">
-                </td>
-                <td>
-                    <button md-mini-fab color="warn" class="delete-file-btn" (click)="deleteFile(i)"><i class="fa fa-times" ></i></button>
-                </td>
-            </tr>
-        </table>
-
-        <button class="add-file-btn" md-raised-button (click)="addResourceFile()">New resource file</button>
-    </div>
-</div>
+<bl-editable-table [formControl]="files">
+    <bl-editable-table-column name="blobSource">Blob source</bl-editable-table-column>
+    <bl-editable-table-column name="filePath">File path</bl-editable-table-column>
+</bl-editable-table>

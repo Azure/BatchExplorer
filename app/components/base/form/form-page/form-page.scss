@@ -28,7 +28,6 @@
             }
         }
 
-
         margin-bottom: 5px;
     }
 
@@ -38,12 +37,12 @@
 
         > .section-bar {
             border-right: 1px solid rgba(0, 0, 0, 0.12);
-            margin: 10px 0 10px 15px;
+            margin: 10px 20px 10px 15px;
         }
 
         > .section-content {
             flex: 1;
-            padding: 0 25px;
+            padding: 0 5px;
             overflow: hidden;
         }
     }

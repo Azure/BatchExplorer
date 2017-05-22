@@ -1,3 +1,5 @@
+@import "app/styles/variables";
+
 $label-value-margin: 5px;
 $clipboard-width: 30px;
 $group-padding: 28px;
@@ -254,3 +256,10 @@ bl-property-group {
     }
 }
 
+bl-bool-property {
+    &.enabled {
+        .fa-toggle-on {
+            color: $green;
+        }
+    }
+}

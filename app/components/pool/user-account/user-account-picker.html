@@ -1,0 +1,19 @@
+<div [formGroup]="form">
+    <div class="form-element">
+        <md-input-container>
+            <input mdInput formControlName="name" placeholder="Username">
+        </md-input-container>
+        <bl-error controlName="name" code="required">Username a required field</bl-error>
+    </div>
+    <div class="form-element">
+        <md-input-container>
+            <input mdInput type="password" formControlName="password" placeholder="Password">
+        </md-input-container>
+        <bl-error controlName="password" code="required">Password a required field</bl-error>
+    </div>
+    <div class="form-element">
+        <md-slide-toggle formControlName="runElevated" color="primary">
+            Run as admin
+        </md-slide-toggle>
+    </div>
+</div>

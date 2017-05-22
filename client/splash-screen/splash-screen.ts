@@ -24,8 +24,8 @@ export class SplashScreen extends UniqueWindow {
 
     protected createWindow() {
         const window = new BrowserWindow({
-            height: 300,
-            width: 300,
+            height: 340,
+            width: 340,
             icon: Constants.urls.icon,
             resizable: false,
             titleBarStyle: "hidden",

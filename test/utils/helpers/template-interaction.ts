@@ -75,3 +75,12 @@ export function mouseleave(el: DebugElement | HTMLElement) {
         el.triggerEventHandler("mouseleave", {});
     }
 }
+
+export function updateInput(el: DebugElement | HTMLInputElement, value: any) {
+    if (el instanceof DebugElement) {
+        updateInput(el.nativeElement, value);
+    } else {
+        el.value = value;
+        el.dispatchEvent(new Event("input"));
+    }
+}

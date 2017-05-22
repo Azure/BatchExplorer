@@ -11,7 +11,7 @@ export class ServerErrorMockComponent {
     public set error(error: ServerError) {
         this._error =  error;
     }
-    public get error() { return this._error; };
+    public get error() { return this._error; }
 
     private _error: ServerError = null;
 }

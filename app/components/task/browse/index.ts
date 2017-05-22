@@ -1,1 +1,1 @@
-export * from "./task-browse.module"
+export * from "./task-browse.module";

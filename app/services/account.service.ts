@@ -76,6 +76,7 @@ export class AccountService {
         private subscriptionService: SubscriptionService) {
 
         this.accountLoaded = this._accountLoaded.asObservable();
+        this.accountsLoaded = this._accountsLoaded.asObservable();
         this._accountLoaded.next(true);
         this.accounts = this._accounts.asObservable();
         this._currentAccount.subscribe((selection) => {

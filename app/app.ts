@@ -20,7 +20,8 @@ import "./styles/main.scss";
 (remote.getCurrentWindow() as any).splashScreen.updateMessage("Initializing app");
 const platform = platformBrowserDynamic();
 
-platform.bootstrapModule(AppModule).catch(error => {
-    log.error("Bootstrapping failed :: ", error);
-    handleCoreError(error);
-});
+platform.bootstrapModule(AppModule)
+    .catch(error => {
+        log.error("Bootstrapping failed :: ", error);
+        handleCoreError(error);
+    });

@@ -4,16 +4,11 @@ import { autobind } from "core-decorators";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
+import { LoadingStatus } from "app/components/base/loading";
 import { AccountResource } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
-import { Filter, FilterBuilder, Property } from "app/utils/filter-builder";
+import { Filter, FilterBuilder, FilterMatcher, Operator } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
-
-interface SubscriptionAccount {
-    expanded: boolean;
-    loading: boolean;
-    accounts: Observable<List<AccountResource>>;
-}
 
 @Component({
     selector: "bl-account-list",
@@ -25,18 +20,23 @@ export class AccountListComponent {
         this._filter = filter;
         this._updateDisplayedAccounts();
     }
-    public get filter(): Filter { return this._filter; };
+    public get filter(): Filter { return this._filter; }
 
     public displayedAccounts: Observable<List<AccountResource>>;
+    public loadingStatus: LoadingStatus = LoadingStatus.Loading;
 
     private _filter: Filter = FilterBuilder.none();
 
     constructor(
         private accountService: AccountService,
-        private activatedRoute: ActivatedRoute,
-        private sidebarManager: SidebarManager,
-        private subscriptionService: SubscriptionService) {
+        activatedRoute: ActivatedRoute,
+        sidebarManager: SidebarManager,
+        subscriptionService: SubscriptionService) {
         this._updateDisplayedAccounts();
+
+        this.accountService.accountsLoaded.filter(x => x).first().subscribe(() => {
+            this.loadingStatus = LoadingStatus.Ready;
+        });
     }
 
     @autobind()
@@ -58,26 +58,17 @@ export class AccountListComponent {
 
     private _updateDisplayedAccounts() {
         this.displayedAccounts = this.accountService.accounts.map((accounts) => {
-            const properties = this._filter.properties.filter(x => x instanceof Property) as Property[];
-            const conditions = properties.map((property) => {
-                const { name, value } = property;
-                switch (name) {
-                    case "id":
-                        return (x) => value === "" || x.name.toLowerCase().startsWith(value.toLowerCase());
-                    case "subscriptionId":
-                        return (x) => value === "" || x.subscription.subscriptionId === value;
-                    default:
-                        return () => true;
-                }
+            const matcher = new FilterMatcher<AccountResource>({
+                id: (item: AccountResource, value: any, operator: Operator) => {
+                    return value === "" || item.name.toLowerCase().startsWith(value.toLowerCase());
+                },
+                subscriptionId: (item: AccountResource, value: any, operator: Operator) => {
+                    return value === "" || item.subscription.subscriptionId === value;
+                },
             });
 
             return List<AccountResource>(accounts.filter((x) => {
-                for (let condition of conditions) {
-                    if (!condition(x)) {
-                        return false;
-                    }
-                }
-                return true;
+                return matcher.test(this._filter, x);
             }).sort((a, b) => {
                 if (a.name < b.name) {
                     return -1;

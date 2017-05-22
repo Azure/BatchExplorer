@@ -7,7 +7,7 @@ import { PoolService } from "app/services";
 import { LongRunningDeleteAction } from "app/services/core";
 
 export class DeletePoolTask extends LongRunningDeleteAction {
-    constructor(private poolService: PoolService, private poolIds: string[]) {
+    constructor(private poolService: PoolService,  poolIds: string[]) {
         super("pool", poolIds);
     }
 

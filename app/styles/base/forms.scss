@@ -157,11 +157,6 @@ fieldset {
             }
         }
 
-        md-select {
-            margin-top: 5px;
-            width: 40%;
-        }
-
         .input-summary {
             margin-top: 15px;
             padding-bottom: 5px;
@@ -268,6 +263,10 @@ bl-complex-form {
 
         > .form-buttons {
             margin: 0 5px;
+
+            bl-submit-btn {
+                margin-right: 5px;
+            }
         }
     }
 }

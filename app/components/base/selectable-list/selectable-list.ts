@@ -25,7 +25,7 @@ export class SelectableList {
             });
         }
     }
-    public get list() { return this._list; };
+    public get list() { return this._list; }
 
     /**
      * Name of the thing we are deleting

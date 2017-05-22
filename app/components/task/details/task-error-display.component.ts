@@ -24,7 +24,7 @@ export class TaskErrorDisplayComponent {
         private sidebarManager: SidebarManager) {
     }
 
-    public get hasCompleted(): Boolean {
+    public get hasCompleted(): boolean {
         return Boolean(this.task && this.task.state === TaskState.completed);
     }
 

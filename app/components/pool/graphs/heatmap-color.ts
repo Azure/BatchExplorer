@@ -1,7 +1,7 @@
 import { ColorUtils, log } from "app/utils";
 import { StateTree } from "./state-tree";
 
-type ColorMap = { [key: string]: string };
+interface ColorMap { [key: string]: string; }
 
 /**
  * This handles highlighting or dimming colors based on a state selection.

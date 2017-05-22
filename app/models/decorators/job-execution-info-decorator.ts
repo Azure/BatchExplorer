@@ -9,13 +9,13 @@ export class JobExecutionInfoDecorator extends DecoratorBase<JobExecutionInforma
     public schedulingError: SchedulingErrorDecorator;
     public terminateReason: string;
 
-    constructor(private executionInfo: JobExecutionInformation) {
+    constructor(executionInfo: JobExecutionInformation) {
         super(executionInfo);
 
         this.startTime = this.dateField(executionInfo.startTime);
         this.endTime = this.dateField(executionInfo.endTime);
         this.poolId = this.stringField(executionInfo.poolId);
-        this.schedulingError = new SchedulingErrorDecorator(executionInfo.schedulingError || <any>{});
+        this.schedulingError = new SchedulingErrorDecorator(executionInfo.schedulingError || {} as any);
         this.terminateReason = this.stringField(executionInfo.terminateReason);
     }
 }

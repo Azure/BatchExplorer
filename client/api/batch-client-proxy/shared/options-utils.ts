@@ -17,4 +17,4 @@ export function mapGet(promise: Promise<any>): Promise<BatchResult> {
     return promise.then((data) => {
         return { data };
     });
-};
+}

@@ -21,18 +21,18 @@ interface Array<T> {
 
 // First, checks if it isn't implemented yet.
 if (!Array.prototype.first) {
-    Array.prototype.first = function () {
+    Array.prototype.first = function <T>(this: T[]) {
         return this[0];
     };
 }
 if (!Array.prototype.last) {
-    Array.prototype.last = function () {
+    Array.prototype.last = function <T>(this: T[]) {
         return this[this.length - 1];
     };
 }
 
 if (!Array.prototype.flatten) {
-    Array.prototype.flatten = function () {
+    Array.prototype.flatten = function <T>(this: T[]) {
         return [].concat(...this);
     };
 }

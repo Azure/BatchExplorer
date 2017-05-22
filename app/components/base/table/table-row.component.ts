@@ -13,11 +13,11 @@ import { TableComponent } from "./table.component";
 @Component({
     selector: "bl-row",
     templateUrl: `
-        <template>
-            <tr (click)="handleClick($event)" [class.selected]="active || selected" [class.focused]="isFocused">
+        <ng-template>
+            <tr (click)="handleClick($event)" [class.selected]="active || selected" [class.focused]="isFocused | async">
                 <ng-content></ng-content>
             </tr>
-        </template>
+        </ng-template>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })

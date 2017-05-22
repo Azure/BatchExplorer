@@ -1,6 +1,5 @@
 import {
     Component,
-    ComponentFactoryResolver,
     ComponentRef,
     Input,
     Type,
@@ -29,10 +28,6 @@ export class SidebarContentComponent {
     private currentComponentRef: ComponentRef<SidebarPageComponent>;
 
     private componentRefs: { [key: string]: ComponentRef<SidebarPageComponent> } = {};
-
-    constructor(
-        private componentFactoryResolver: ComponentFactoryResolver) {
-    }
 
     /**
      * This will create a new component and display it.

@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
 import { LoadingStatus } from "app/components/base/loading";
 import { AccountResource } from "app/models";
 import { AccountService } from "app/services";
-import {  Property } from "app/utils/filter-builder";
+import { Property } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
 
 @Component({
@@ -28,14 +28,14 @@ export class AccountFavListComponent {
             }));
         });
     }
-    public get filter(): Property { return this._filter; };
+    public get filter(): Property { return this._filter; }
 
     private _filter: Property;
 
     constructor(
         private accountService: AccountService,
-        private sidebarManager: SidebarManager,
-        private activatedRoute: ActivatedRoute) {
+        sidebarManager: SidebarManager,
+        activatedRoute: ActivatedRoute) {
         accountService.accountFavorites.subscribe(() => {
             this.status = LoadingStatus.Ready;
         });

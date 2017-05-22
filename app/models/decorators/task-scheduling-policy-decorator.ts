@@ -4,7 +4,7 @@ import { DecoratorBase } from "app/utils/decorators";
 export class TaskSchedulingPolicyDecorator extends DecoratorBase<TaskSchedulingPolicy> {
     public nodeFillType: string;
 
-    constructor(private taskSchedulingPolicy: TaskSchedulingPolicy) {
+    constructor(taskSchedulingPolicy: TaskSchedulingPolicy) {
         super(taskSchedulingPolicy);
 
         this.nodeFillType = this.stringField(taskSchedulingPolicy.nodeFillType);

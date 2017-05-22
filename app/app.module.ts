@@ -3,6 +3,7 @@ import { ErrorHandler, NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
+import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule } from "@angular/router";
 
 // application router
@@ -47,6 +48,7 @@ import {
     NodeService,
     NodeUserService,
     PoolService,
+    PredefinedFormulaService,
     PricingService,
     SSHKeyService,
     SettingsService,
@@ -75,6 +77,7 @@ const modules = [
         // imported in specific area modules
     ],
     imports: [
+        BrowserAnimationsModule,
         BrowserModule,
         FormsModule,
         MaterialModule,
@@ -112,6 +115,7 @@ const modules = [
         SubscriptionService,
         TaskService,
         VmSizeService,
+        PredefinedFormulaService,
         { provide: ErrorHandler, useClass: BatchLabsErrorHandler },
         ...commands,
     ],

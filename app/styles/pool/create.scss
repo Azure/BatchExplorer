@@ -7,20 +7,6 @@ bl-pool-os-picker {
         display: flex;
     }
 
-    .image-ref {
-        display: flex;
-        margin-top: 10px;
-
-        > .image-ref-element {
-            width: 30%;
-            margin-right: 10px;
-
-            md-select {
-                width: 100%;
-            }
-        }
-    }
-
     bl-os-offer-tile {
         padding: 0;
         display: inline-block;
@@ -174,10 +160,36 @@ bl-vm-size-picker {
 
 bl-autoscale-formula-picker {
     display: flex;
+    .CodeMirror {
+        font-size: 12px;
+    }
+
     .CodeMirror pre.CodeMirror-placeholder {
         font-family: Roboto, "Helvetica Neue", sans-serif;
         line-height: normal;
         text-align: left;
         color: rgba(0, 0, 0, 0.38);
+    }
+
+    .cm-variables {
+        color: $green-dark;
+    }
+
+    .cm-functions {
+        color: $red-dark;
+    }
+
+    .cm-math {
+        color: $prussian-blue;
+    }
+
+    .cm-builtin {
+        color: $midnight;
+    }
+}
+
+bl-pool-scale-picker {
+    md-input-container {
+        margin-top: 8px;
     }
 }

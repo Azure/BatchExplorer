@@ -20,7 +20,7 @@ export class AuthenticationWindow extends UniqueWindow {
 
     public loadURL(url: string) {
         if (!this._window) {
-            throw "AuthenticationWindow not created. Cannot call loadURL";
+            throw new Error("AuthenticationWindow not created. Cannot call loadURL");
         }
         this._window.loadURL(url);
     }

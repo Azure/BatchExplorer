@@ -1,4 +1,5 @@
-<bl-simple-form [submit]="submit" [containerRef]="sidebarRef" [formGroup]="scale" [multiUse]="false" title="Resize your pool" subtitle="You can manually resize the number of nodes in the pool">
+<bl-simple-form [submit]="submit" [containerRef]="sidebarRef" [formGroup]="scale" [multiUse]="false" title="Resize your pool"
+    cancelText="Close" subtitle="You can manually resize the number of nodes in the pool">
     <form *ngIf="pool">
         <bl-pool-scale-picker [formControl]="scale"> </bl-pool-scale-picker>
     </form>

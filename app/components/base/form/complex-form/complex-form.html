@@ -6,8 +6,8 @@
         <h1>{{currentPage.title}}</h1>
         <p>{{currentPage.subtitle}}</p>
     </div>
-    <form novalidate (keyup.enter)="closePageOrSubmit()">
-        <template [ngTemplateOutlet]="currentPage.content"></template>
+    <form novalidate>
+        <ng-template [ngTemplateOutlet]="currentPage.content"></ng-template>
     </form>
     <div class="loading-overlay" *ngIf="loading"></div>
 </div>
@@ -24,14 +24,14 @@
     <div class="form-buttons">
         <div *ngIf="isMainWindow">
             <bl-submit-btn *ngIf="multiUse" [submit]="save" [multiSubmit]="true" [disabled]="!submitEnabled" class="add">{{actionName}}</bl-submit-btn>
-            <bl-submit-btn *ngIf="containerRef" [submit]="saveAndClose" [multiSubmit]="true" [disabled]="!submitEnabled" class="add-and-close">{{saveAndCloseText}}</bl-submit-btn>
+            <bl-submit-btn *ngIf="containerRef" [submit]="saveAndClose" [multiSubmit]="true" [disabled]="!submitEnabled" [color]="actionColor" class="add-and-close">{{saveAndCloseText}}</bl-submit-btn>
             <span style="display: inline-block">
-                <button type="button" [disabled]="isSaving" (click)="close()" class="close" md-raised-button>Close</button>
+                <button type="button" [disabled]="isSaving" (click)="close()" class="close" md-raised-button>{{cancelText}}</button>
             </span>
         </div>
         <div *ngIf="!isMainWindow">
             <button md-raised-button class="cancel" color="primary" (click)="cancelPage()">Cancel</button>
-            <button md-raised-button class="select" color="primary" (click)="closePageOrSubmit()">Select</button>
+            <button md-raised-button class="select" color="primary" (click)="closePageOrSubmit()" [disabled]="!currentPage.submitEnabled">Select</button>
         </div>
     </div>
 </div>

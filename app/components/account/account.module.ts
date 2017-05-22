@@ -6,6 +6,7 @@ import { DeleteAccountDialogComponent } from "app/components/account/action/dele
 import { AccountBrowseModule } from "app/components/account/browse";
 import { AccountDefaultComponent, AccountDetailsComponent } from "app/components/account/details";
 import { AccountHomeComponent } from "app/components/account/home";
+import { PoolDetailsModule } from "app/components/pool/details";
 
 const components = [
     AccountCreateDialogComponent, AccountDefaultComponent, AccountDetailsComponent,
@@ -13,7 +14,7 @@ const components = [
 ];
 
 const modules = [
-    AccountBrowseModule, ...commonModules,
+    AccountBrowseModule, PoolDetailsModule, ...commonModules,
 ];
 
 @NgModule({

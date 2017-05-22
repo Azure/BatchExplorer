@@ -7,7 +7,7 @@ import { KeyBindings } from "app/models";
 import { ObjectUtils } from "app/utils";
 import { SettingsService } from "./settings-service";
 
-export const commands: any[] = ObjectUtils.values(<any>CommandMap).filter((x: any) => x.id !== undefined);
+export const commands: any[] = ObjectUtils.values(CommandMap as any).filter((x: any) => x.id !== undefined);
 
 @Injectable()
 export class CommandService {
