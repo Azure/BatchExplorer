@@ -7,6 +7,7 @@ import { CloudServiceConfiguration } from "./cloud-service-configuration";
 import { Metadata, MetadataAttributes } from "./metadata";
 import { ResizeError } from "./resize-error";
 import { StartTask, StartTaskAttributes } from "./start-task";
+import { TaskSchedulingPolicy } from "./task-scheduling-policy";
 import { UserAccount, UserAccountAttributes } from "./user-account";
 import { VirtualMachineConfiguration, VirtualMachineConfigurationAttributes } from "./virtual-machine-configuration";
 
@@ -29,7 +30,7 @@ export interface PoolAttributes {
     state: string;
     stateTransitionTime: Date;
     targetDedicated: number;
-    taskSchedulingPolicy: any;
+    taskSchedulingPolicy: TaskSchedulingPolicy;
     url: string;
     virtualMachineConfiguration: Partial<VirtualMachineConfigurationAttributes>;
     vmSize: string;
