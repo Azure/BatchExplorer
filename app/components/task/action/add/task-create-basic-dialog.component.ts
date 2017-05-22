@@ -29,7 +29,7 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
 
     constructor(
         private formBuilder: FormBuilder,
-        private sidebarRef: SidebarRef<TaskCreateBasicDialogComponent>,
+        sidebarRef: SidebarRef<TaskCreateBasicDialogComponent>,
         protected taskService: TaskService,
         private notificationService: NotificationService) {
         super(TaskCreateDto);
@@ -53,6 +53,7 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
             constraints: this.constraintsGroup,
             runElevated: ["0"],
             resourceFiles: [[]],
+            environmentSettings: [[]],
         });
     }
 

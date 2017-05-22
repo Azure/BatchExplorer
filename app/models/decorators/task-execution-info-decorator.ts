@@ -12,7 +12,7 @@ export class TaskExecutionInfoDecorator extends DecoratorBase<TaskExecutionInfor
     public requeueCount: string;
     public lastRequeueTime: string;
 
-    constructor(private executionInfo: TaskExecutionInformation) {
+    constructor(executionInfo: TaskExecutionInformation) {
         super(executionInfo);
 
         this.startTime = this.dateField(executionInfo.startTime);

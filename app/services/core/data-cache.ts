@@ -53,7 +53,7 @@ export class DataCache<T> {
     /**
      * @param _uniqueField Each record should have a unqiue field. This is used to update the cache.
      */
-    constructor(private _uniqueField = "id") {
+    constructor(public readonly uniqueField = "id") {
         this.id = SecureUtils.uuid();
         this.items = this._items.asObservable();
         this.deleted = this._deleted.asObservable();
@@ -140,11 +140,7 @@ export class DataCache<T> {
     }
 
     public getItemKey(item: T) {
-        return item[this._uniqueField].toString();
-    }
-
-    public get uniqueField(): string {
-        return this._uniqueField;
+        return item[this.uniqueField].toString();
     }
 
     private _getAttributesList(select: string): string[] {

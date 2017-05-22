@@ -9,7 +9,7 @@ export class JobExecutionInfoDecorator extends DecoratorBase<JobExecutionInforma
     public schedulingError: SchedulingErrorDecorator;
     public terminateReason: string;
 
-    constructor(private executionInfo: JobExecutionInformation) {
+    constructor(executionInfo: JobExecutionInformation) {
         super(executionInfo);
 
         this.startTime = this.dateField(executionInfo.startTime);

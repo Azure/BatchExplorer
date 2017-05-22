@@ -4,7 +4,7 @@ import { DecoratorBase } from "app/utils/decorators";
 export class WindowsConfigurationDecorator extends DecoratorBase<WindowsConfiguration> {
     public enableAutomaticUpdates: string;
 
-    constructor(private windowsConfiguration: WindowsConfiguration) {
+    constructor(windowsConfiguration: WindowsConfiguration) {
         super(windowsConfiguration);
 
         this.enableAutomaticUpdates = this.booleanField(

@@ -17,7 +17,7 @@ export class SchedulingErrorDecorator extends DecoratorBase<SchedulingError> {
      */
     public exists: boolean;
 
-    constructor(private error: SchedulingError) {
+    constructor(error: SchedulingError) {
         super(error);
 
         this.exists = Boolean(error && error.category);

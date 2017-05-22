@@ -38,14 +38,14 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     private initialOptions = { maxItems: 10 };
 
     constructor(
-        private router: Router,
+        router: Router,
         private activatedRoute: ActivatedRoute,
         private accountService: AccountService,
         private applicationService: ApplicationService,
         private jobService: JobService,
         private poolService: PoolService,
-        private zone: NgZone,
-        private viewContainerRef: ViewContainerRef) {
+        zone: NgZone,
+        viewContainerRef: ViewContainerRef) {
     }
 
     public ngOnInit() {

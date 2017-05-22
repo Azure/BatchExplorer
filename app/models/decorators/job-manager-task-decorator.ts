@@ -14,7 +14,7 @@ export class JobManagerTaskDecorator extends DecoratorBase<JobManagerTask> {
     public environmentSettings: {};
     public constraints: {};
 
-    constructor(private task?: JobManagerTask) {
+    constructor(task?: JobManagerTask) {
         super(task);
 
         this.displayName = this.stringField(task.displayName);

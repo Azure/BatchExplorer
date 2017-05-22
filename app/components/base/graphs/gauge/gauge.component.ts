@@ -99,9 +99,6 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
     private _options: GaugeConfig = defaultOptions;
     private _size: number = presetSizes.small;
 
-    constructor(private elementRef: ElementRef) {
-    }
-
     public ngAfterViewInit() {
         this.init();
         this.redraw();
@@ -242,7 +239,7 @@ export class GaugeComponent implements AfterViewInit, OnChanges {
      * Create and position labels
      */
     private _createLabels() {
-        const { width, height, radius, barWidth, outerHeight, outerWidth } = this._dimensions;
+        const { radius, barWidth, outerHeight, outerWidth } = this._dimensions;
         const centerX = outerWidth / 2;
         const centerY = outerHeight / 2;
         const offX = Math.sin(degToRad(50)) * (radius - barWidth / 2);

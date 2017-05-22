@@ -18,13 +18,13 @@ export class AccountDropDownComponent implements AfterViewInit {
     constructor(
         private accountService: AccountService,
         private changeDetection: ChangeDetectorRef,
-        private router: Router) {
+        router: Router) {
 
         accountService.currentAccountId.subscribe((accountId) => {
             if (accountId) {
                 this.selectedId = accountId;
                 this.selectedAccountAlias = accountService.getNameFromAccountId(accountId);
-                this.router.navigate(["/accounts", this.selectedId]);
+                // this.router.navigate(["/accounts", this.selectedId]);
 
             } else {
                 this.selectedAccountAlias = "No account selected!";

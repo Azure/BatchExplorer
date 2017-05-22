@@ -29,6 +29,13 @@ export class Record<TInput> {
         return Object.assign({}, this._defaultValues, this._toJS());
     }
 
+    /**
+     * DO NOT USE. For interal use only
+     */
+    protected _completeInitialization() {
+        this._initialized = true;
+    }
+
     private _toJS() {
         let output: any = {};
         const attrs = metadataForRecord(this);
@@ -75,8 +82,4 @@ export class Record<TInput> {
         this._map = Map(obj);
     }
 
-    // tslint:disable-next-line:no-unused-variable
-    private _completeInitialization() {
-        this._initialized = true;
-    }
 }
