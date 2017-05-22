@@ -7,20 +7,6 @@ bl-pool-os-picker {
         display: flex;
     }
 
-    .image-ref {
-        display: flex;
-        margin-top: 10px;
-
-        > .image-ref-element {
-            width: 30%;
-            margin-right: 10px;
-
-            md-select {
-                width: 100%;
-            }
-        }
-    }
-
     bl-os-offer-tile {
         padding: 0;
         display: inline-block;
