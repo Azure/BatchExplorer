@@ -19,6 +19,24 @@
                     </md-input-container>
                 </div>
             </div>
+            <div class="grow">
+                <div class="gcol">
+                    <md-input-container>
+                        <input mdInput type="number" formControlName="maxTasksPerNode" placeholder="Max task per node">
+                    </md-input-container>
+                </div>
+                <div class="gcol">
+                    <md-slide-toggle formControlName="enableInterNodeCommunication" color="primary">
+                        Enable MPI
+                    </md-slide-toggle>
+                </div>
+            </div>
+            <div class="form-element">
+                <md-select formControlName="taskSchedulingPolicy" color="primary" placeholder="Task scheduling policy">
+                    <md-option [value]="NodeFillType.pack">Pack</md-option>
+                    <md-option [value]="NodeFillType.spread">Spread</md-option>
+                </md-select>
+            </div>
         </bl-form-section>
 
         <bl-form-section title="Scale" subtitle="Number of nodes in your pool using a fix number or a auto scaling forumla">
@@ -64,29 +82,6 @@
                     <bl-start-task-picker [formControl]="startTaskPicker.nestedValue" [userAccounts]="form.value.userAccounts"></bl-start-task-picker>
                 </div>
             </bl-form-picker>
-        </bl-form-section>
-
-
-        <bl-form-section title="Advanced" subtitle="Advanced optional options">
-
-            <div class="grow">
-                <div class="gcol">
-                    <md-input-container>
-                        <input mdInput type="number" formControlName="maxTasksPerNode" placeholder="Max task per node">
-                    </md-input-container>
-                </div>
-                <div class="gcol">
-                    <md-slide-toggle formControlName="enableInterNodeCommunication" color="primary">
-                        Enable MPI
-                    </md-slide-toggle>
-                </div>
-            </div>
-            <div class="form-element">
-                <md-select formControlName="taskSchedulingPolicy" color="primary" placeholder="Task scheduling policy">
-                    <md-option [value]="NodeFillType.pack">Pack</md-option>
-                    <md-option [value]="NodeFillType.spread">Spread</md-option>
-                </md-select>
-            </div>
         </bl-form-section>
     </bl-form-page>
 </bl-complex-form>
