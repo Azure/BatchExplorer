@@ -3,7 +3,6 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs";
 
-import { LoadingStatus } from "app/components/base/loading";
 import { AccountResource, Application, Job, Pool, ServerError } from "app/models";
 import { AccountService, ApplicationService, JobService, PoolService } from "app/services";
 import { RxListProxy } from "app/services/core";
