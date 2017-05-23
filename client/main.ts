@@ -1,9 +1,9 @@
 import { app, protocol } from "electron";
-
 import * as path from "path";
-import { windows } from "./core";
 
 app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
+
+import { windows } from "./core";
 
 // Create the browser window.
 function createWindow() {
