@@ -28,6 +28,10 @@ Note: You can also use `npm install` at your own risk. However please do not sub
 
 #### 4. Build and run the application
 ```bash
+# Make an executable
+npm run build-and-pack
+
+# Manual
 npm run build:prod
 npm run electron:prod
 
