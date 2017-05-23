@@ -34,6 +34,7 @@ export class FocusSectionComponent {
 
     @HostListener("focus", ["$event"])
     public handleFocus(event: FocusEvent) {
+        console.log("Focus...");
         this.onFocus.emit(event);
     }
 

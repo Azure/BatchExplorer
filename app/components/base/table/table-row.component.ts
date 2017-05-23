@@ -30,7 +30,7 @@ export class TableRowComponent extends AbstractListItemBase implements AfterView
 
     public data: { [key: number]: any } = {};
     public get routerLinkActiveClass() {
-        return this.routerLink ? "selected" : null;
+        return this.link ? "selected" : null;
     }
 
     // tslint:disable:no-forward-ref

@@ -82,7 +82,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
             this.activeItemChange.emit(x && x.key);
 
             if (this.listFocused) {
-                this.focusedItem.next(x.key);
+                this.focusedItem.next(x && x.key);
             }
         }));
 
