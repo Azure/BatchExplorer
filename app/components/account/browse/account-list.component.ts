@@ -4,6 +4,7 @@ import { autobind } from "core-decorators";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
+import { LoadingStatus } from "app/components/base/loading";
 import { QuickListItemStatus } from "app/components/base/quick-list";
 import { AccountResource } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
@@ -23,6 +24,7 @@ export class AccountListComponent {
     public get filter(): Filter { return this._filter; }
 
     public displayedAccounts: Observable<List<AccountResource>>;
+    public loadingStatus: LoadingStatus = LoadingStatus.Loading;
 
     private _filter: Filter = FilterBuilder.none();
 
@@ -32,6 +34,10 @@ export class AccountListComponent {
         sidebarManager: SidebarManager,
         subscriptionService: SubscriptionService) {
         this._updateDisplayedAccounts();
+
+        this.accountService.accountsLoaded.filter(x => x).first().subscribe(() => {
+            this.loadingStatus = LoadingStatus.Ready;
+        });
     }
 
     @autobind()

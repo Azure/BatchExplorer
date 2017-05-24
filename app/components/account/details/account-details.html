@@ -30,7 +30,7 @@
                                 </p>
                             </bl-no-item>
                             <bl-table class="dashboard">
-                                <bl-row *ngFor="let job of (jobData.items | async)" [routerLink]="['/jobs/', job.id]" [key]="job.id">
+                                <bl-row *ngFor="let job of (jobData.items | async)" [link]="['/jobs/', job.id]" [key]="job.id">
                                     <bl-cell style="width:77%" [value]="job.id"></bl-cell>
                                     <bl-cell style="text-align:right; color:steelblue;width:21%" [value]="job.state"></bl-cell>
                                 </bl-row>
@@ -56,7 +56,7 @@
                                 </p>
                             </bl-no-item>
                             <bl-table class="dashboard">
-                                <bl-row *ngFor="let pool of (poolData.items | async)" [routerLink]="['/pools/', pool.id]" [key]="pool.id">
+                                <bl-row *ngFor="let pool of (poolData.items | async)" [link]="['/pools/', pool.id]" [key]="pool.id">
                                     <bl-cell style="width:68%;" [value]="pool.id"></bl-cell>
                                     <bl-cell style="width:10%;"><i aria-hidden="true" class="fa fa-{{pool.osIconName()}}"></i></bl-cell>
                                     <bl-cell style="text-align: right; width:19%;">
@@ -88,7 +88,7 @@
                                 </p>
                             </bl-no-item>
                             <bl-table class="dashboard">
-                                <bl-row *ngFor="let app of (applicationData.items | async).slice(0, 10)" [routerLink]="['/applications/', app.id]" [key]="app.id">
+                                <bl-row *ngFor="let app of (applicationData.items | async).slice(0, 10)" [link]="['/applications/', app.id]" [key]="app.id">
                                     <bl-cell>{{app.id}}</bl-cell>
                                 </bl-row>
                             </bl-table>

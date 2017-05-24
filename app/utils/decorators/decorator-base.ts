@@ -1,7 +1,6 @@
-import * as Moment from "moment";
 import { Duration } from "moment";
 
-import { exists } from "app/utils";
+import { DateUtils, exists } from "app/utils";
 
 export class DecoratorBase<TEntity> {
     public original: TEntity;
@@ -16,7 +15,7 @@ export class DecoratorBase<TEntity> {
 
     protected dateField(value: Date, returnEmptyStringForNullOrUndefined = false): string {
         return value
-            ? Moment(value).format("LLLL")
+            ? DateUtils.fullDateAndTime(value)
             : returnEmptyStringForNullOrUndefined ? "" : "n/a";
     }
 
@@ -104,6 +103,6 @@ export class DecoratorBase<TEntity> {
     }
 
     private _formatTimespan(value?: Duration) {
-        return value.toString() === this._maxTimespan ? "Unlimited" : value.humanize();
+        return value.toString() === this._maxTimespan ? "Unlimited" : DateUtils.prettyDuration(value);
     }
 }

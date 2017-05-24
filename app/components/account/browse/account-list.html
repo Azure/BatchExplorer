@@ -1,5 +1,5 @@
 <bl-quick-list>
-    <bl-quick-list-item *ngFor="let account of displayedAccounts | async" [routerLink]="['/accounts', account.id]" [key]="account.id">
+    <bl-quick-list-item *ngFor="let account of displayedAccounts | async" [link]="['/accounts', account.id]" [key]="account.id">
         <bl-quick-list-item-status [status]="accountStatus(account.id)">
         </bl-quick-list-item-status>
 
@@ -12,3 +12,4 @@
         </div>
     </bl-quick-list-item>
 </bl-quick-list>
+<bl-loading [status]="loadingStatus"></bl-loading>

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<style>
+    * {
+        box-sizing: border-box;
+    }
+
+    body {
+        background: #00416f;
+        width: 100vw;
+        height: 100vh;
+        font-family: "Segoe UI", "Helvetica Neue", Helvetica, Arial, sans-serif
+    }
+
+    body {
+        overflow: hidden;
+        margin: 0;
+        padding: 0;
+    }
+
+    .title {
+        color: #d5d5d5;
+        padding: 20px;
+        font-size: 20px;
+        text-align: center;
+    }
+
+    #message {
+        color: #d5d5d5;
+        font-size: 12px;
+        bottom: 5px;
+        padding: 10px;
+    }
+
+    .content {
+        height: calc(100vh - 60px);
+    }
+
+    .footer {
+        height: 60px;
+        width: 100vw;
+        background: #36719a;
+        padding: 15px;
+    }
+
+    .action-btns {
+        height: 30px;
+        width: 240px;
+        margin: auto;
+    }
+
+    .reload,
+    .exit {
+        background: #f5f5f5;
+        border: none;
+        padding: 5px;
+        color: #333;
+        width: 100px;
+        height: 30px;
+        cursor: pointer;
+        margin: 0 5px;
+    }
+
+    .reload:hover,
+    .exit:hover {
+        background-color: #94bdd9;
+    }
+</style>
+<html>
+
+<script>
+    const { ipcRenderer } = require("electron");
+    document.addEventListener("DOMContentLoaded", () => {
+        const message = document.getElementById("message");
+        ipcRenderer.on("update-message", (event, arg) => {
+            message.innerHTML = arg;
+        });
+    })
+
+    function exit() {
+        console.log("Exit...");
+        ipcRenderer.send("exit", true);
+    }
+
+    function reload() {
+        ipcRenderer.send("reload", true);
+    }
+
+</script>
+
+<body>
+    <div class="content">
+        <div class="title">
+            Oops! There was an error in batch labs
+        </div>
+
+        <div id="message">
+            Blabal lots off errors....
+        </div>
+    </div>
+    <div class="footer">
+        <div class="action-btns">
+            <button onclick="reload()" class="reload">Reload</button>
+            <button onclick="exit()" class="exit">Exit</button>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,5 +1,5 @@
 <bl-quick-list *ngIf="quickList">
-    <bl-quick-list-item *ngFor="let task of tasks" [routerLink]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id" [contextmenu]="contextmenu(task)">
+    <bl-quick-list-item *ngFor="let task of tasks" [link]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id" [contextmenu]="contextmenu(task)">
         <bl-quick-list-item-status [status]="taskStatus(task)" [tooltip]="taskStatusText(task)">
         </bl-quick-list-item-status>
 
@@ -21,7 +21,7 @@
         <bl-column>Exit code</bl-column>
     </bl-thead>
 
-    <bl-row *ngFor="let task of tasks" [routerLink]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id" [contextmenu]="contextmenu(task)">
+    <bl-row *ngFor="let task of tasks" [link]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id" [contextmenu]="contextmenu(task)">
         <bl-cell>{{task.id}}</bl-cell>
         <bl-cell>{{task.state}}</bl-cell>
         <bl-cell>{{formatDate(task.creationTime)}}</bl-cell>
