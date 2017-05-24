@@ -1,4 +1,4 @@
-import { app, protocol } from "electron";
+import { app, ipcMain, protocol } from "electron";
 
 import * as path from "path";
 import { windows } from "./core";
@@ -42,6 +42,24 @@ app.on("activate", () => {
     }
 });
 
-process.on("uncaughtException", (error) => {
+ipcMain.once("exit", () => {
+    process.exit(1);
+});
+
+ipcMain.on("reload", () => {
+    // Destroy window and error window if applicable
+    windows.main.destroy();
+    windows.recover.destroy();
+
+    // Show splash screen
+    windows.splashScreen.create();
+    windows.splashScreen.updateMessage("Loading app");
+
+    // Reopen a new window
+    windows.main.create();
+});
+
+process.on("uncaughtException", (error: Error) => {
     logger.error("There was a uncaught exception", error);
+    windows.recover.createWithError(error.message);
 });
