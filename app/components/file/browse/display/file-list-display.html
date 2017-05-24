@@ -1,6 +1,6 @@
 <bl-focus-section>
     <bl-quick-list *ngIf="quickList">
-        <bl-quick-list-item *ngFor="let file of files| fileDirectoryFilter" [routerLink]="urlToFile(file.name)" [key]="file.url">
+        <bl-quick-list-item *ngFor="let file of files| fileDirectoryFilter" [link]="urlToFile(file.name)" [key]="file.url">
             <bl-quick-list-item-status [status]="" [tooltip]="">
             </bl-quick-list-item-status>
 
@@ -14,7 +14,7 @@
             <bl-column style="width: 60%">Name</bl-column>
             <bl-column style="width: 40%">Content Length</bl-column>
         </bl-thead>
-        <bl-row *ngFor="let file of files | fileDirectoryFilter" [routerLink]="urlToFile(file.name)" [key]="file.url">
+        <bl-row *ngFor="let file of files | fileDirectoryFilter" [link]="urlToFile(file.name)" [key]="file.url">
             <bl-cell>{{file.name}}</bl-cell>
             <bl-cell>{{prettyFileSize(file.properties.contentLength)}}</bl-cell>
         </bl-row>
