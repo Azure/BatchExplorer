@@ -21,10 +21,13 @@ const urls = {
         dev: `file://${root}/client/recover-window/recover-window.html`,
         prod: `file://${root}/build/client/recover-window/recover-window.html`,
     },
-    icon: __dirname + "/../assets/images/labs.ico",
+    icon: __dirname + "/../assets/images/icon.ico",
 };
 
+const isAsar = process.mainModule.filename.indexOf("app.asar") !== -1;
+
 export const Constants = {
+    isAsar,
     root,
     urls,
     version: packageConfig.version,

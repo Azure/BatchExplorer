@@ -14,7 +14,7 @@ import { QuickListComponent } from "./quick-list.component";
 })
 export class QuickListItemComponent extends AbstractListItemBase implements OnInit {
     public get routerLinkActiveClass() {
-        return this.routerLink ? "selected" : null;
+        return this.link ? "selected" : null;
     }
 
     // tslint:disable:no-forward-ref

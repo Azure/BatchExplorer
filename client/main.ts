@@ -1,10 +1,10 @@
 import { app, ipcMain, protocol } from "electron";
-
 import * as path from "path";
-import { windows } from "./core";
-import { logger } from "./logger";
 
 app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
+
+import { windows } from "./core";
+import { logger } from "./logger";
 
 // Create the browser window.
 function createWindow() {
