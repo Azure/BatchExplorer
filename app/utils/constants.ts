@@ -137,6 +137,7 @@ export const APIErrorCodes = {
     containerNotFound: "ContainerNotFound",
     operationInvalidForCurrentState: "OperationInvalidForCurrentState",
     authenticationFailed: "AuthenticationFailed",
+    accountNotEnabledForAutoStorage: "AccountNotEnabledForAutoStorage",
 };
 
 export const MetadataInternalKey = {

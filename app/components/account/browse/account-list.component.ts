@@ -5,6 +5,7 @@ import { List } from "immutable";
 import { Observable } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
+import { QuickListItemStatus } from "app/components/base/quick-list";
 import { AccountResource } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
 import { Filter, FilterBuilder, FilterMatcher, Operator } from "app/utils/filter-builder";
@@ -54,6 +55,12 @@ export class AccountListComponent {
         } else {
             this.accountService.favoriteAccount(accountId);
         }
+    }
+
+    public accountStatus(accountId: string): QuickListItemStatus {
+        return this.isAccountFavorite(accountId)
+            ? QuickListItemStatus.accent
+            : QuickListItemStatus.normal;
     }
 
     private _updateDisplayedAccounts() {
