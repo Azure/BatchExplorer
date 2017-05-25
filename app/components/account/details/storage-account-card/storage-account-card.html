@@ -1,0 +1,15 @@
+<md-card class="storage-account-card" *ngIf="storageAccountId">
+    <div class="icon">
+        <span class="fa fa-hdd-o"></span>
+    </div>
+    <div class="details">
+        <div *ngIf="storageAccount">
+            {{storageAccount.name}}
+        </div>
+    </div>
+    <div class="actions">
+        <button class="edit" (click)="edit()">
+            Edit storage account
+        </button>
+    </div>
+</md-card>

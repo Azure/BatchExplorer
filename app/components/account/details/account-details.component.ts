@@ -8,6 +8,8 @@ import { AccountService, ApplicationService, JobService, PoolService } from "app
 import { RxListProxy } from "app/services/core";
 import { Constants } from "app/utils";
 
+import "./account-details.scss";
+
 @Component({
     selector: "bl-account-details",
     templateUrl: "account-details.html",
@@ -19,7 +21,6 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
             const split = id.split("/");
             name = split[split.length - 1];
         }
-
         return { name: name, label: "Account" };
     }
 

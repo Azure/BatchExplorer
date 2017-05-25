@@ -7,7 +7,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { registerIcons } from "app/config";
 import {
     AccountService, AdalService, AutoscaleFormulaService, CommandService, NodeService,
-    PredefinedFormulaService, SSHKeyService, SettingsService, StorageAccountService, SubscriptionService, VmSizeService,
+    PredefinedFormulaService, SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
 } from "app/services";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
@@ -44,7 +44,6 @@ export class AppComponent implements AfterViewInit, OnInit {
         private subscriptionService: SubscriptionService,
         private nodeService: NodeService,
         private sshKeyService: SSHKeyService,
-        storageAccountService: StorageAccountService,
         private vmSizeService: VmSizeService,
         private predefinedFormulaService: PredefinedFormulaService) {
         this.autoscaleFormulaService.init();
@@ -69,9 +68,6 @@ export class AppComponent implements AfterViewInit, OnInit {
         // Wait for the first account to be loaded.
         accountService.currentAccount.filter(x => Boolean(x)).first().subscribe((x) => {
             this._preloadData();
-            storageAccountService.list(x.subscription.subscriptionId).subscribe((acc) => {
-                console.log("Account is", acc.toJS());
-            });
         });
 
         registerIcons(mdIconRegistry, sanitizer);

@@ -1,14 +1,11 @@
 import { Injectable } from "@angular/core";
+import { RequestOptions, URLSearchParams } from "@angular/http";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
+import { StorageAccount } from "app/models";
 import { AzureHttpService } from "./azure-http.service";
 import { SubscriptionService } from "./subscription.service";
-
-export class StorageAccount {
-    constructor(public data: any) {
-    }
-}
 
 function getSubscriptionIdFromAccountId(accountId: string) {
     const regex = /subscriptions\/(.*)\/resourceGroups/;
@@ -37,7 +34,11 @@ export class StorageAccountService {
             .share();
     }
 
-    public list(subscriptionId: string, options: any = {}) {
+    public list(subscriptionId: string): Observable<List<StorageAccount>> {
+        const search = new URLSearchParams();
+        search.set("$filter", "resourceType eq 'Microsoft.Storage/storageAccounts'");
+        const options = new RequestOptions({ search });
+
         return this.subscriptionService.get(subscriptionId)
             .flatMap((subscription) => {
                 return this.azure.get(subscription, `/subscriptions/${subscriptionId}/resources`, options)
