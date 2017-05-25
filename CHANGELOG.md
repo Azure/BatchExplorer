@@ -1,3 +1,31 @@
+# Version 0.4.0(Beta)
+[All items](https://github.com/Azure/BatchLabs/milestone/3?closed=1)
+
+### Features
+* Added a new multi picker control [\#358](https://github.com/Azure/BatchLabs/issues/358)
+* Added user accounts support at pool creation using the multi picker [\#359](https://github.com/Azure/BatchLabs/issues/359)
+* Update enabled/disabled properties icon to be less confusing [\#354](https://github.com/Azure/BatchLabs/issues/354)
+* Pool start task can now use the useridentity selecition. [\#356](https://github.com/Azure/BatchLabs/issues/354)
+* Move tasks tab to be first in the tab list [\#375](https://github.com/Azure/BatchLabs/issues/375)
+* Made a new editable table control and update resource files to use it [\#376](https://github.com/Azure/BatchLabs/issues/376)
+* New environment settings picker for tasks and start task [\#355](https://github.com/Azure/BatchLabs/issues/355)
+* Improve account home page with a quick access to pools, jobs and applications  [\#310](https://github.com/Azure/BatchLabs/issues/310)
+* Account list now allow to filter by multiple subscription(Last selection is saved) [\#352](https://github.com/Azure/BatchLabs/issues/352)
+* Use chached value to display entity(Job, Pool, etc.) immediately when selected in the list  [\#382](https://github.com/Azure/BatchLabs/issues/382)
+* Added a few more missing fields to the pool creation  [\#357](https://github.com/Azure/BatchLabs/issues/357)
+* Added loading icon for account list on first load  [\#340](https://github.com/Azure/BatchLabs/issues/340)
+* Added a packaging flow to be able to make an exe  [\#364](https://github.com/Azure/BatchLabs/issues/364)
+* Improve dates and timespan field in configuration [\#396](https://github.com/Azure/BatchLabs/issues/396)
+* Listen to electron error events to show a recovery window [\#337](https://github.com/Azure/BatchLabs/issues/337)
+
+### Fixes
+* Edit start task cannot cancel [\#367](https://github.com/Azure/BatchLabs/issues/367)
+* Fix bug where graphs keeps history when switching between pools [\#353](https://github.com/Azure/BatchLabs/issues/353)
+* Fix unwanted form submit when pressing enter [\#393](https://github.com/Azure/BatchLabs/issues/393)
+* Fix configuration tabs having a nested scrollbar [\#397](https://github.com/Azure/BatchLabs/issues/397)
+* Fix list not having focus after click [\#400](https://github.com/Azure/BatchLabs/issues/400)
+
+
 # Version 0.3.1(Beta)
 [All items](https://github.com/Azure/BatchLabs/milestone/4?closed=1)
 

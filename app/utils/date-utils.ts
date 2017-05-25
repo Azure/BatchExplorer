@@ -54,7 +54,7 @@ export class DateUtils {
      */
     public static fullDateAndTime(date: Date | moment.Moment) {
         return date
-            ? moment(date).format("MMM Do, YYYY, HH:mm:ss.SSS")
+            ? moment(date).format("MMM Do, YYYY, HH:mm:ss.SSS Z")
             : "";
     }
 }
