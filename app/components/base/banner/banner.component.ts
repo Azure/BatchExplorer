@@ -7,11 +7,14 @@ export enum ErrorState {
     Fixed,
 }
 
-export type BannerType = "error" | "warning";
+export type BannerType = "error" | "warning" | "notice";
 export const BannerType = {
     error: "error" as BannerType,
     warning: "warning" as BannerType,
+    notice: "notice" as BannerType,
 };
+
+import "./banner.scss";
 
 @Directive({
     // tslint:disable-next-line:directive-selector
@@ -52,6 +55,9 @@ export class BannerComponent implements OnChanges {
 
     @Input()
     public type = BannerType.error;
+
+    @Input()
+    public height: string = "standard";
 
     @ContentChildren(BannerOtherFixDirective)
     public otherFixes: QueryList<BannerOtherFixDirective>;

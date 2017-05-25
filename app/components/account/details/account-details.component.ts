@@ -3,9 +3,10 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs";
 
-import { AccountResource, Application, Job, Pool } from "app/models";
+import { AccountResource, Application, Job, Pool, ServerError } from "app/models";
 import { AccountService, ApplicationService, JobService, PoolService } from "app/services";
 import { RxListProxy } from "app/services/core";
+import { Constants } from "app/utils";
 
 @Component({
     selector: "bl-account-details",
@@ -26,6 +27,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     public accountId: string;
     public loading: boolean = true;
     public loadingError: any;
+    public noLinkedStorage: boolean = false;
 
     public applicationData: RxListProxy<{}, Application>;
     public jobData: RxListProxy<{}, Job>;
@@ -54,10 +56,20 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
                 next: (x) => {
                     this.account = x;
                     this.loading = false;
-                    this.applicationData = this.applicationService.list(this.initialOptions);
+                    this.applicationData = this.applicationService.list(this.initialOptions, (error: ServerError) => {
+                        let handled = false;
+                        if (error && error.body.code === Constants.APIErrorCodes.accountNotEnabledForAutoStorage) {
+                            this.noLinkedStorage = true;
+                            handled = true;
+                        }
+
+                        return !handled;
+                    });
                     this.applicationData.fetchNext();
+
                     this.jobData = this.jobService.list(this.initialOptions);
                     this.jobData.fetchNext();
+
                     this.poolData = this.poolService.list(this.initialOptions);
                     this.poolData.fetchNext();
                 },
@@ -78,6 +90,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     }
 
     public selectAccount(accountId: string): void {
+        this.noLinkedStorage = false;
         this.accountService.selectAccount(accountId);
     }
 }
