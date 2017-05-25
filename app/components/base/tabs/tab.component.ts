@@ -2,7 +2,7 @@ import { Component, ContentChild, Input, TemplateRef, ViewChild } from "@angular
 
 @Component({
     selector: "bl-tab-label",
-    template: "<template><ng-content></ng-content></template>",
+    template: "<ng-template><ng-content></ng-content></ng-template>",
 })
 export class TabLabelComponent {
     @ViewChild(TemplateRef)
@@ -11,7 +11,7 @@ export class TabLabelComponent {
 
 @Component({
     selector: "bl-tab",
-    template: "<template><ng-content></ng-content></template>",
+    template: "<ng-template><ng-content></ng-content></ng-template>",
 })
 export class TabComponent {
     /**

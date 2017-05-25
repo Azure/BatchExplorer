@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { List } from "immutable";
+import { List, Set } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { Subscription } from "app/models";
@@ -10,12 +10,16 @@ import { AzureHttpService } from "./azure-http.service";
 @Injectable()
 export class SubscriptionService {
     public subscriptions: Observable<List<Subscription>>;
+    public accountSubscriptionFilter: Observable<Set<string>>;
     private _subscriptions = new BehaviorSubject<List<Subscription>>(List([]));
+    private _accountSubscriptionFilter = new BehaviorSubject<Set<string>>(Set([]));
     private _subscriptionsLoaded = new AsyncSubject();
 
     constructor(private azure: AzureHttpService, private adal: AdalService) {
         this.subscriptions = this._subscriptionsLoaded.flatMap(() => this._subscriptions.asObservable());
+        this.accountSubscriptionFilter = this._accountSubscriptionFilter.asObservable();
         this._loadCachedSubscriptions();
+        this._loadAccountSubscriptionFilter();
     }
 
     public load(): Observable<any> {
@@ -36,6 +40,13 @@ export class SubscriptionService {
         return obs;
     }
 
+    public setAccountSubscriptionFilter(subIds: Set<string>) {
+        if (subIds.equals(this._accountSubscriptionFilter.value)) {
+            return;
+        }
+        this._accountSubscriptionFilter.next(subIds);
+        localStorage.setItem(Constants.localStorageKey.accountSubscriptionFilter, JSON.stringify(subIds.toJS()));
+    }
     /**
      * Get the subscription with the given object.
      * @param subscriptionId Id of the subscription(UUID)
@@ -73,6 +84,21 @@ export class SubscriptionService {
             } else {
                 this._subscriptions.next(List<Subscription>(subscriptions));
                 this._markSubscriptionsAsLoaded();
+            }
+        } catch (e) {
+            this._clearCachedSubscriptions();
+        }
+    }
+
+    private _loadAccountSubscriptionFilter() {
+        const str = localStorage.getItem(Constants.localStorageKey.accountSubscriptionFilter);
+
+        try {
+            const data = JSON.parse(str);
+            if (Array.isArray(data)) {
+                this._accountSubscriptionFilter.next(Set(data));
+            } else {
+                localStorage.removeItem(Constants.localStorageKey.accountSubscriptionFilter);
             }
         } catch (e) {
             this._clearCachedSubscriptions();

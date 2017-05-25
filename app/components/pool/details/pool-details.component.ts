@@ -33,7 +33,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         this._pool = pool;
         this.poolDecorator = pool && new PoolDecorator(pool);
     }
-    public get pool() { return this._pool; };
+    public get pool() { return this._pool; }
     public data: RxEntityProxy<PoolParams, Pool>;
 
     private _paramsSubscriber: Subscription;

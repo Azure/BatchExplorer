@@ -5,23 +5,33 @@
 
 This is the readme for master branch is contains the latest changes. Stable might be slightly different [Stable readme](https://github.com/Azure/BatchLabs/tree/stable)
 
+## Description
+
+Batch Labs is a tool to manage your Azure Batch accounts. The goal is to implement some great user experience that will help you debug, monitor and manage your pools, jobs and tasks.
+It will also include expermiental features such as `No Code Job` in the aim to improve your Batch experience. We are open to any feedback, ideas and contribution you might have.
+
 ## Getting started
 #### 1. Prerequisites
-- **Install node.js version `6.9` or greater.**
+- **Install node.js version `6.9` or greater. [Download](https://nodejs.org/en/download/)**
 - Install yarn `npm install -g yarn`
 
 #### 2. Clone the repo
 - At stable branch `git clone -b stable https://github.com/Azure/BatchLabs`
 - Or for the latest changes `git clone https://github.com/Azure/BatchLabs`
 
+Move to the directory `cd BatchLabs`
 #### 3. Install the dependencies
 ```bash
 yarn install
-npm install -g gulp (Optional)
 ```
+Note: You can also use `npm install` at your own risk. However please do not submit an issue if you didn't use `yarn install`. Yarn will make sure you have the exact same set of dependencies as everybody which remove any unexpected third party bugs problems.
 
 #### 4. Build and run the application
 ```bash
+# Make an executable
+npm run build-and-pack
+
+# Manual
 npm run build:prod
 npm run electron:prod
 

@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { Observable } from "rxjs";
 
@@ -13,6 +13,9 @@ import { ContainerRef } from "../form-base";
     templateUrl: "simple-form.html",
 })
 export class SimpleFormComponent {
+    @Output()
+    public done = new EventEmitter();
+
     @Input()
     public title: string;
 

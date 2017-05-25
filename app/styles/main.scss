@@ -4,7 +4,6 @@
 @import "./common/type";
 
 // Base styles
-@import "./base/banner";
 @import "./base/background-task";
 @import "./base/breadcrumbs";
 @import "./base/buttons";
@@ -18,11 +17,9 @@
 @import "./base/list";
 @import "./base/loading";
 @import "./base/notifications";
-@import "./base/property-list";
 @import "./base/scrollable";
 @import "./base/advanced-filter";
 @import "./base/server-error";
-@import "./base/table";
 
 // Account styles
 @import "./account/details";
@@ -44,7 +41,6 @@
 
 //Task styles
 @import "./task/base";
-@import "./task/form";
 @import "./task/output";
 @import "./task/timeline";
 

@@ -7,3 +7,5 @@ export * from "./pool-enable-autoscale.dto";
 export * from "./job-create.dto";
 export * from "./task-create.dto";
 export * from "./metadata.dto";
+export * from "./user-account.dto";
+export * from "./user-identity.dto";

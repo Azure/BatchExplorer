@@ -19,11 +19,11 @@ describe("SidebarPageComponent", () => {
 
     beforeEach(inject([SidebarManager], (d: SidebarManager) => {
         sidebarManager = d;
-        sidebarManager.sidebar = <any>{
+        sidebarManager.sidebar = {
             onOpen: {
                 subscribe: onOpenSpy,
             },
-        };
+        } as any;
     }));
 
     beforeEach(() => {

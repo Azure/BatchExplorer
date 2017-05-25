@@ -101,7 +101,7 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
                 this.filename,
             );
         } else {
-            throw "Unrecognised source type: " + this._sourceType;
+            throw new Error("Unrecognised source type: " + this._sourceType);
         }
 
         this._propertyProxy.fetch().subscribe((details: any) => {
@@ -142,7 +142,7 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
             });
 
         } else {
-            throw "Unrecognised source type: " + this._sourceType;
+            throw new Error("Unrecognised source type: " + this._sourceType);
         }
     }
 

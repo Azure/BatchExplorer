@@ -6,7 +6,7 @@ import {
 import { FormControl } from "@angular/forms";
 import { MdDialog, MdDialogConfig } from "@angular/material";
 import { ActivatedRoute } from "@angular/router";
-import { BehaviorSubject, Subscription } from "rxjs";
+import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
 import { FocusSectionComponent } from "app/components/base/focus-section";
 import { SelectableList } from "app/components/base/selectable-list";
@@ -37,11 +37,11 @@ export class ListAndShowLayoutComponent implements AfterViewInit, OnChanges, OnD
             this.refresh = list.refresh;
         }
     }
-    public get list() { return this._list; };
+    public get list() { return this._list; }
 
     // Refresh function, if the list has a refresh function it will use that one
     @Input()
-    public refresh: Function;
+    public refresh: () => Observable<any>;
 
     /**
      * Field for the quicksearch.

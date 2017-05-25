@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, ViewContainerRef } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { List } from "immutable";
 
 import { Job, Metadata, NameValuePair } from "app/models";
@@ -27,7 +27,7 @@ export class JobConfigurationComponent {
     }
     public get job() { return this._job; }
 
-    public decorator: JobDecorator = <any>{ usesTaskDependencies: false };
+    public decorator: JobDecorator = { usesTaskDependencies: false } as any;
     public constraints: any = {};
     public executionInfo: any = {};
     public managerTask: JobManagerTaskDecorator;
@@ -40,10 +40,6 @@ export class JobConfigurationComponent {
     public hasEndTime: boolean;
 
     private _job: Job;
-
-    constructor(
-        private viewContainerRef: ViewContainerRef) {
-    }
 
     public refresh(job: Job) {
         if (this.job) {

@@ -1,5 +1,7 @@
-import { PoolCreateDto } from "app/models/dtos";
 import * as moment from "moment";
+
+import { NodeFillType } from "app/models";
+import { PoolCreateDto, UserAccountDto } from "app/models/dtos";
 
 export enum PoolOsSources {
     PaaS,
@@ -37,6 +39,8 @@ export interface CreatePoolModel {
     enableInterNodeCommunication: boolean;
     os: PoolOSPickerModel;
     startTask: any;
+    userAccounts: UserAccountDto[];
+    taskSchedulingPolicy: NodeFillType;
 }
 
 export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
@@ -48,7 +52,11 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
         enableAutoScale: outputScale.enableAutoScale,
         maxTasksPerNode: Number(output.maxTasksPerNode),
         enableInterNodeCommunication: output.enableInterNodeCommunication,
+        taskSchedulingPolicy:  {
+            nodeFillType: output.taskSchedulingPolicy,
+        },
         startTask: output.startTask,
+        userAccounts: output.userAccounts,
     };
 
     if (outputScale.enableAutoScale) {
@@ -88,11 +96,13 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
         },
         maxTasksPerNode: pool.maxTasksPerNode.toString(),
         enableInterNodeCommunication: pool.enableInterNodeCommunication,
+        taskSchedulingPolicy: pool.taskSchedulingPolicy.nodeFillType,
         os: {
             source: pool.cloudServiceConfiguration ? PoolOsSources.PaaS : PoolOsSources.IaaS,
             cloudServiceConfiguration: pool.cloudServiceConfiguration,
             virtualMachineConfiguration: pool.virtualMachineConfiguration,
         },
         startTask: pool.startTask,
+        userAccounts: pool.userAccounts,
     };
-};
+}

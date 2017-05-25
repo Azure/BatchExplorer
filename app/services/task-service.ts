@@ -48,7 +48,7 @@ export class TaskService extends ServiceBase {
     });
 
     private _subTaskCache = new TargetedDataCache<SubtaskListParams, SubtaskInformation>({
-        key: ({ jobId, taskId }) => `${jobId​​​}/${taskId}`,
+        key: ({ jobId, taskId }) => `${jobId}/${taskId}`,
     });
 
     public get basicProperties(): string {

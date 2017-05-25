@@ -23,7 +23,7 @@ export class ServerErrorComponent {
         this._error = error;
         this.errorData = this.parseErrorData();
     }
-    public get error() { return this._error; };
+    public get error() { return this._error; }
 
     public errorData: ErrorData;
 

@@ -26,7 +26,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
 
     public searchInput = new FormControl();
 
-    private _propagateChange: Function = null;
+    private _propagateChange: (value: any) => void = null;
     private _subs: Subscription[] = [];
 
     constructor(private poolService: PoolService, private vmSizeService: VmSizeService) {

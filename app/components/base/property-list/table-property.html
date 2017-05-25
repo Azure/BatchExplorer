@@ -2,12 +2,12 @@
     <table>
         <tr class="head">
             <td class="label">{{label}}</td>
-            <template [ngTemplateOutlet]="header.content"></template>
+            <ng-template [ngTemplateOutlet]="header.content"></ng-template>
         </tr>
 
         <tr *ngFor="let row of displayRows" class="row">
             <td class="label">{{row.label}}</td>
-            <template [ngTemplateOutlet]="row.content"></template>
+            <ng-template [ngTemplateOutlet]="row.content"></ng-template>
         </tr>
     </table>
     <div class="expand-container" *ngIf="canExpand || canCollapse">

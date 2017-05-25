@@ -7,7 +7,7 @@ export class ImageReferenceDecorator extends DecoratorBase<ImageReference> {
     public sku: string;
     public version: string;
 
-    constructor(private imageReference: ImageReference) {
+    constructor(imageReference: ImageReference) {
         super(imageReference);
 
         this.publisher = this.stringField(imageReference.publisher);

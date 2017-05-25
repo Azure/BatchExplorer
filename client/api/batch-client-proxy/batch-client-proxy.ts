@@ -59,7 +59,7 @@ export class BatchClientProxy {
 
     private checkProxy(proxy: any): any {
         if (!proxy) {
-            throw "BatchClientProxy has not been initialized, please call setOptions(options)";
+            throw new Error("BatchClientProxy has not been initialized, please call setOptions(options)");
         }
 
         return proxy;

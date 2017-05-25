@@ -9,7 +9,7 @@ import { FormControl, NG_VALIDATORS } from "@angular/forms";
     ],
 })
 export class RangeValidatorDirective {
-    public validator: Function;
+    public validator: (control: FormControl) => any;
 
     constructor(rangeStart: number, rangeEnd: number) {
         this.validator = ((control: FormControl) => {

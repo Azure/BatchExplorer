@@ -11,7 +11,7 @@ import { SubTaskDecorator } from "app/models/decorators";
 export class SubTaskPropertiesComponent {
     @Input()
     public set task(value: SubtaskInformation) {
-        this.decorator = new SubTaskDecorator(value || <any>{});
+        this.decorator = new SubTaskDecorator(value || {} as any);
         this.schedulingError = this.decorator.schedulingError || {};
         this.nodeInfo = this.decorator.nodeInfo || {};
     }

@@ -24,15 +24,15 @@
         <bl-application-error-display [application]="application"></bl-application-error-display>
         <md-card class="details">
             <bl-tab-group>
-                <bl-tab key="properties">
-                    <bl-tab-label>Properties</bl-tab-label>
-                    <bl-application-properties [application]="application"></bl-application-properties>
-                </bl-tab>
                 <bl-tab key="packages">
                     <bl-tab-label>Packages</bl-tab-label>
                     <div class="tab-padding">
                         <bl-application-packages [application]="application"></bl-application-packages>
                     </div>
+                </bl-tab>
+                <bl-tab key="properties">
+                    <bl-tab-label>Properties</bl-tab-label>
+                    <bl-application-properties [application]="application"></bl-application-properties>
                 </bl-tab>
             </bl-tab-group>
         </md-card>

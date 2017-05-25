@@ -1,7 +1,6 @@
+import { ObjectUtils, SecureUtils } from "app/utils";
 import { Map } from "immutable";
 import { BehaviorSubject, Observable, Subject } from "rxjs";
-
-import { ObjectUtils, SecureUtils } from "app/utils";
 import { PollService } from "./poll-service";
 import { QueryCache } from "./query-cache";
 
@@ -54,7 +53,7 @@ export class DataCache<T> {
     /**
      * @param _uniqueField Each record should have a unqiue field. This is used to update the cache.
      */
-    constructor(private _uniqueField = "id") {
+    constructor(public readonly uniqueField = "id") {
         this.id = SecureUtils.uuid();
         this.items = this._items.asObservable();
         this.deleted = this._deleted.asObservable();
@@ -141,11 +140,7 @@ export class DataCache<T> {
     }
 
     public getItemKey(item: T) {
-        return item[this._uniqueField].toString();
-    }
-
-    public get uniqueField(): string {
-        return this._uniqueField;
+        return item[this.uniqueField].toString();
     }
 
     private _getAttributesList(select: string): string[] {
@@ -153,10 +148,10 @@ export class DataCache<T> {
     }
 
     private _computeNewItem(item: T, key: string, select?: string): T {
-        if (!select) { return item; };
+        if (!select) { return item; }
         const oldItem = this._items.getValue().get(key);
-        if (!oldItem) { return item; };
-        let attributes = ObjectUtils.slice((<any>item).toObject(), this._getAttributesList(select));
-        return (<any>oldItem).merge(attributes);
+        if (!oldItem) { return item; }
+        let attributes = ObjectUtils.slice((item as any).toObject(), this._getAttributesList(select));
+        return (oldItem as any).merge(attributes);
     }
 }

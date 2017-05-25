@@ -12,13 +12,13 @@ export class TaskExecutionInfoDecorator extends DecoratorBase<TaskExecutionInfor
     public requeueCount: string;
     public lastRequeueTime: string;
 
-    constructor(private executionInfo: TaskExecutionInformation) {
+    constructor(executionInfo: TaskExecutionInformation) {
         super(executionInfo);
 
         this.startTime = this.dateField(executionInfo.startTime);
         this.endTime = this.dateField(executionInfo.endTime);
         this.exitCode = this.stringField(executionInfo.exitCode);
-        this.schedulingError = new SchedulingErrorDecorator(executionInfo.schedulingError || <any>{});
+        this.schedulingError = new SchedulingErrorDecorator(executionInfo.schedulingError || {} as any);
         this.retryCount = this.stringField(executionInfo.retryCount);
         this.lastRetryTime = this.dateField(executionInfo.lastRetryTime);
         this.requeueCount = this.stringField(executionInfo.requeueCount);

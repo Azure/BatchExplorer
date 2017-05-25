@@ -11,7 +11,7 @@
         </div>
     </div>
     <div class="preview" (click)="focusGraph(AvailableGraph.AvailableNodes)" [class.focused]="focusedGraph === AvailableGraph.AvailableNodes">
-        <div class="label">Node available</div>
+        <div class="label">Available nodes</div>
         <bl-history-graph [max]="pool.targetDedicated" class="small-preview" [history]="runningNodesHistory.history" [interactive]="false" [historySize]="selectedHistoryLength.value">
         </bl-history-graph>
     </div>
