@@ -50,6 +50,9 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         this.data = this.accountService.get(null);
         this.data.item.subscribe((account) => {
             this.account = account;
+            if (account) {
+                this._loadQuickAccessLists();
+            }
         });
     }
 
@@ -59,9 +62,6 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
             this.selectAccount(this.accountId);
             this.data.params = { id: this.accountId };
             this.data.fetch().subscribe({
-                next: (x) => {
-                    this._loadQuickAccessLists();
-                },
                 error: (error) => {
                     this.loadingError = error;
                 },
