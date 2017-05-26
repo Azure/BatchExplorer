@@ -62,7 +62,6 @@ export class AppComponent implements AfterViewInit, OnInit {
             .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)
             .subscribe((loadedArray) => {
                 this.isAppReady = loadedArray[0] && loadedArray[1];
-
             });
 
         // Wait for the first account to be loaded.
@@ -71,7 +70,6 @@ export class AppComponent implements AfterViewInit, OnInit {
         });
 
         registerIcons(mdIconRegistry, sanitizer);
-
     }
 
     public ngAfterViewInit() {
