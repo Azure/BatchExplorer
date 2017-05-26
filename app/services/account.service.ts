@@ -5,6 +5,7 @@ import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { AccountKeys, AccountResource, Subscription } from "app/models";
+import { AccountPatchDto } from "app/models/dtos";
 import { Constants, log } from "app/utils";
 import { AzureHttpService } from "./azure-http.service";
 import {
@@ -269,6 +270,13 @@ export class AccountService {
             this._accountFavorites.next(accounts);
             this._accountLoaded.next(true);
         });
+    }
+
+    public patch(accountId: string, properties: AccountPatchDto): Observable<any> {
+        return this.subscriptionService.get(getSubscriptionIdFromAccountId(accountId))
+            .flatMap((subscription) => {
+                return this.azure.patch(subscription, accountId, { properties: properties.toJS() });
+            });
     }
 
     private _loadFavoriteAccounts(): Observable<List<AccountResource>> {

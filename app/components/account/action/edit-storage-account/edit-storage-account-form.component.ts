@@ -1,6 +1,12 @@
 import { Component } from "@angular/core";
 import { FormControl } from "@angular/forms";
+import { autobind } from "core-decorators";
+import { Observable } from "rxjs";
+
+import { SidebarRef } from "app/components/base/sidebar";
 import { AccountResource } from "app/models";
+import { AccountPatchDto } from "app/models/dtos";
+import { AccountService } from "app/services";
 
 import "./edit-storage-account-form.scss";
 
@@ -21,4 +27,19 @@ export class EditStorageAccountFormComponent {
     public storageAccountId = new FormControl();
 
     private _account: AccountResource;
+
+    constructor(
+        private accountService: AccountService,
+        public sidebarRef: SidebarRef<EditStorageAccountFormComponent>,
+    ) { }
+
+    @autobind()
+    public submit(): Observable<any> {
+        const dto = new AccountPatchDto({ autoStorage: { storageAccountId: this.storageAccountId.value } });
+        const obs = this.accountService.patch(this.account.id, dto);
+        obs.subscribe(() => {
+            this.accountService.getAccount(this.account.id);
+        });
+        return obs;
+    }
 }

@@ -58,7 +58,7 @@ export class StorageAccountPickerComponent implements OnInit, ControlValueAccess
         const same = this.pickedStorageAccountId === storageAccountId;
         this.pickedStorageAccountId = storageAccountId;
         if (this._propagateChange && storageAccountId && !same) {
-            // this._propagateChange(storageAccountId);
+            this._propagateChange(storageAccountId);
         }
     }
 
