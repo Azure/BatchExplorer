@@ -99,21 +99,6 @@ md-card {
         }
     }
 
-    &.overview {
-        padding: 18px !important;
-
-        md-card-actions {
-            margin-left: -10px !important;
-            margin-right: -10px !important;
-            padding-top: 4px !important;
-        }
-
-        md-card-actions:last-child {
-            margin-bottom: -10px !important;
-            padding-bottom: 0 !important;
-        }
-    }
-
     &.details {
         margin-top:8px !important;
         padding:0 !important;

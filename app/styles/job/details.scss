@@ -1,12 +1,21 @@
-bl-job-details {
-    .overview > .main-content {
-        display: flex;
+md-card.overview {
+    padding: 0 !important;
+    display: flex;
 
-        > .info {
-            flex: 1;
+    > .actions {
+        text-align: center;
+        width: 40px;
+        border-right: 1px solid #d5d5d5;
+        padding: 10px 0;
+
+        > * {
+            display: block;
         }
     }
 
+    > .content {
+        padding: 18px;
+    }
 }
 
 bl-job-progress-status {
