@@ -7,6 +7,7 @@ import { HttpCode } from "app/utils/constants";
 import { RxProxyBase, RxProxyBaseConfig } from "./rx-proxy-base";
 
 export interface RxEntityProxyConfig<TParams, TEntity> extends RxProxyBaseConfig<TParams, TEntity> {
+
 }
 
 export abstract class RxEntityProxy<TParams, TEntity> extends RxProxyBase<TParams, any, TEntity> {

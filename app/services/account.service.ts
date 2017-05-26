@@ -9,7 +9,7 @@ import { AccountPatchDto } from "app/models/dtos";
 import { Constants, log } from "app/utils";
 import { AzureHttpService } from "./azure-http.service";
 import {
-    DataCache, DataCacheTracker,
+    DataCache, DataCacheTracker, RxBasicEntityProxy, RxEntityProxy, getOnceProxy,
 } from "./core";
 import { SubscriptionService } from "./subscription.service";
 
@@ -71,6 +71,7 @@ export class AccountService {
     private _currentAccountId = new BehaviorSubject<string>(null);
     private _accounts = new BehaviorSubject<List<AccountResource>>(List([]));
     private _accountsLoaded = new BehaviorSubject<boolean>(false);
+    private _cache = new DataCache<AccountResource>();
 
     constructor(
         private azure: AzureHttpService,
@@ -124,7 +125,7 @@ export class AccountService {
         const accountId = this._currentAccountId.value;
         this._currentAccountValid.next(AccountStatus.Loading);
 
-        const accountObs = this.getAccount(accountId);
+        const accountObs = this.getOnce(accountId);
         const keyObs = this.getAccountKeys(accountId);
         DataCacheTracker.clearAllCaches(this._accountCache);
 
@@ -187,16 +188,18 @@ export class AccountService {
             .share();
     }
 
-    public getAccount(accountId: string): Observable<AccountResource> {
-        return this.subscriptionService.get(getSubscriptionIdFromAccountId(accountId))
-            .flatMap((subscription) => {
-                return this.azure.get(subscription, accountId)
-                    .map(response => {
-                        const data = response.json();
-                        return this._createAccount(subscription, data);
-                    });
-            })
-            .share();
+    public get(accountId: string): RxEntityProxy<AccountParams, AccountResource> {
+        return new RxBasicEntityProxy<AccountParams, AccountResource>(AccountResource, {
+            cache: () => this._cache,
+            initialParams: {
+                id: accountId,
+            },
+            supplyData: ({ id }) => this._getAccount(id),
+        });
+    }
+
+    public getOnce(accountId: string): Observable<AccountResource> {
+        return getOnceProxy(this.get(accountId));
     }
 
     public getNameFromAccountId(accountId: string): string {
@@ -224,7 +227,7 @@ export class AccountService {
         }
 
         const subject = new AsyncSubject();
-        this.getAccount(accountId).subscribe({
+        this.getOnce(accountId).subscribe({
             next: (account) => {
                 this._accountFavorites.next(this._accountFavorites.getValue().push(account));
                 this._saveAccountFavorites();
@@ -314,6 +317,18 @@ export class AccountService {
         });
 
         return sub;
+    }
+
+    private _getAccount(accountId: string): Observable<AccountResource> {
+        return this.subscriptionService.get(getSubscriptionIdFromAccountId(accountId))
+            .flatMap((subscription) => {
+                return this.azure.get(subscription, accountId)
+                    .map(response => {
+                        const data = response.json();
+                        return this._createAccount(subscription, data);
+                    });
+            })
+            .share();
     }
 
     private _createAccount(subscription: Subscription, data: any): AccountResource {
