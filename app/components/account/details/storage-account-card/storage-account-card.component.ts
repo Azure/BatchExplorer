@@ -2,7 +2,7 @@ import { Component, Input, OnChanges } from "@angular/core";
 
 import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";
 import { SidebarManager } from "app/components/base/sidebar";
-import { AccountResource, StorageAccount } from "app/models";
+import { AccountResource, ServerError, StorageAccount } from "app/models";
 import { StorageAccountService } from "app/services";
 
 import "./storage-account-card.scss";
@@ -16,6 +16,7 @@ export class StorageAccountCardComponent implements OnChanges {
     public account: AccountResource;
     public storageAccountId: string;
 
+    public error: ServerError;
     public storageAccount: StorageAccount;
 
     constructor(
@@ -27,6 +28,7 @@ export class StorageAccountCardComponent implements OnChanges {
         if (changes.account) {
             const props = this.account.properties;
             this.storageAccountId = props.autoStorage && props.autoStorage.storageAccountId;
+            this.storageAccount = null;
             this._loadStorageAccount();
         }
     }
@@ -42,8 +44,16 @@ export class StorageAccountCardComponent implements OnChanges {
 
     private _loadStorageAccount() {
         const storageAccountId = this.storageAccountId;
-        this.storageAccountService.get(storageAccountId).subscribe((account) => {
-            this.storageAccount = account;
+        if (!storageAccountId) {
+            return;
+        }
+        this.storageAccountService.get(storageAccountId).subscribe({
+            next: (account) => {
+                this.storageAccount = account;
+            },
+            error: (error: ServerError) => {
+                this.error = error;
+            },
         });
     }
 }
