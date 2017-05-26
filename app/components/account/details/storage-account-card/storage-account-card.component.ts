@@ -36,10 +36,6 @@ export class StorageAccountCardComponent implements OnChanges {
     public edit() {
         const sidebarRef = this.sidebarManager.open("edit-storage-account", EditStorageAccountFormComponent);
         sidebarRef.component.account = this.account;
-        this.sidebarManager.onClosed.subscribe(() => {
-            // this._loadStorageAccount();
-            // TODO
-        });
     }
 
     private _loadStorageAccount() {

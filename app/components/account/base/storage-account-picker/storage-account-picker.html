@@ -1,7 +1,7 @@
 <bl-loading [status]="loadingStatus">
     <div *ngIf="loadingStatus">
         <h3>Storage accounts in the same region as your batch account({{account.location}})</h3>
-        <bl-table *ngIf="preferedAccounts.size > 0" [activeItem]="pickedStorageAccountId" (activeItemChange)="pickStorageAccount($event)">
+        <bl-table *ngIf="preferedAccounts.size > 0" [activeItem]="pickedStorageAccountId" (activeItemChange)="pickStorageAccount($event)" class="prefered">
             <bl-thead>
                 <bl-column [sortable]="true">Name</bl-column>
                 <bl-column [sortable]="true">Region</bl-column>
@@ -17,7 +17,7 @@
 
         <div *ngIf="otherAccounts.size > 0">
             <h3>Other regions</h3>
-            <bl-table [activeItem]="pickedStorageAccountId" (activeItemChange)="pickStorageAccount($event)">
+            <bl-table [activeItem]="pickedStorageAccountId" (activeItemChange)="pickStorageAccount($event)" class="others">
                 <bl-thead>
                     <bl-column [sortable]="true">Name</bl-column>
                     <bl-column [sortable]="true">Region</bl-column>
