@@ -1,21 +1,21 @@
 $black-87-opacity: rgba(black, 0.87);
 $white-87-opacity: rgba(white, 0.87);
 
-$md-prussian-blue: (
-    50: #cde0ed,
-    100: #94bdd9,
-    200: #6ba3cb,
-    300: #3e81b0,
-    400: #36719a,
-    500: #2e6083,
-    600: #264f6c,
-    700: #1e3f56,
-    800: #162e3f,
-    900: #0e1e28,
-    A100: #cde0ed,
-    A200: #94bdd9,
-    A400: #36719a,
-    A700: #1e3f56,
+$primary: (
+    50: var(--primary-50),
+    100: var(--primary-100),
+    200: var(--primary-200),
+    300: var(--primary-300),
+    400: var(--primary-400),
+    500: var(--primary-500),
+    600: var(--primary-600),
+    700: var(--primary-700),
+    800: var(--primary-800),
+    900: var(--primary-900),
+    A100: var(--primary-A100),
+    A200: var(--primary-A200),
+    A400: var(--primary-A400),
+    A700: var(--primary-A700),
     contrast: (
         50: $black-87-opacity,
         100: $black-87-opacity,
@@ -33,3 +33,5 @@ $md-prussian-blue: (
         A700: white,
     )
 );
+
+$md-prussian-blue: $primary;

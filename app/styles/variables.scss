@@ -1,6 +1,25 @@
 @import "./vars/material-colors";
 @import "./vars/zindex";
 
+body {
+    // Primary color
+    --primary-50: #cde0ed;
+    --primary-100: #94bdd9;
+    --primary-200: #6ba3cb;
+    --primary-300: #3e81b0;
+    --primary-400: #36719a;
+    --primary-500: #2e6083;
+    --primary-600: #264f6c;
+    --primary-700: #1e3f56;
+    --primary-800: #162e3f;
+    --primary-900: #0e1e28;
+    --primary-A100: #cde0ed;
+    --primary-A200: #94bdd9;
+    --primary-A400: #36719a;
+    --primary-A700: #1e3f56;
+}
+
+
 $orient: #00528c;
 $regal-blue: #00416f;
 $prussian-blue: #003153;
