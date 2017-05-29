@@ -16,12 +16,11 @@
                 </div>
                 <hr />
                 <div class="context-button-bar left">
-                    <button md-mini-fab color="warn" *ngIf="deleteSelectedIsEnabled && selectedItems.length > 0" (click)="deleteSelectedItems()">
-                        <i class="fa fa-trash"></i>
-                    </button>
+                    <bl-action-btn type="round" icon="fa fa-trash" color="danger" *ngIf="deleteSelectedIsEnabled && selectedItems.length > 0" (click)="deleteSelectedItems()">
+                    </bl-action-btn>
                 </div>
                 <div class="context-button-bar right">
-                    <bl-refresh-btn [refresh]="refresh" *ngIf="refresh"></bl-refresh-btn>
+                    <bl-refresh-btn [refresh]="refresh" *ngIf="refresh" type="round"></bl-refresh-btn>
                     <ng-content select="[bl-list-buttons]"></ng-content>
                 </div>
             </div>

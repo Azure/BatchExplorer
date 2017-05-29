@@ -26,6 +26,9 @@ export class RefreshButtonComponent {
     @Input()
     public refresh: () => Observable<any>;
 
+    @Input()
+    public type: string = "normal";
+
     public status = RefreshStatus.Idle;
 
     public onClick() {

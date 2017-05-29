@@ -5,6 +5,7 @@ import { RouterModule } from "@angular/router";
 
 import { SubmitButtonComponent } from "./submit-btn.component";
 
+import { ActionButtonComponent, ActionButtonGroupComponent } from "./action-buttons.component";
 import {
     AddButtonComponent,
     AddTaskButtonComponent,
@@ -21,6 +22,8 @@ import {
 } from "./buttons.component";
 
 const components = [
+    ActionButtonComponent,
+    ActionButtonGroupComponent,
     AddButtonComponent,
     AddTaskButtonComponent,
     ClearListSelectionButtonComponent,

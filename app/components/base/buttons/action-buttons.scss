@@ -1,0 +1,58 @@
+@import "app/styles/variables";
+
+bl-action-btn-group {
+    text-align: center;
+    border-right: 1px solid #d5d5d5;
+    display: block;
+
+    button.action-btn {
+        border-bottom: 1px solid #d5d5d5;
+    }
+}
+
+bl-action-btn > button.action-btn {
+    width: $action-btn-size;
+    height: $action-btn-size;
+    font-size: 20px;
+    cursor: pointer;
+
+    &[type="normal"] {
+        // Nothing
+    }
+
+    &[type="round"] {
+        border-radius: 99%;
+    }
+
+    &[color="primary"] {
+        background: white;
+        color: map-get($md-prussian-blue, 500);
+
+        &:hover {
+            background: $alto;
+            color: map-get($md-prussian-blue, 200);
+        }
+
+        &[type="round"] {
+            border: 1px solid #d5d5d5;
+        }
+    }
+
+    &[color="danger"] {
+        background: $red;
+        color: $whitesmoke;
+
+        &:hover {
+            background: $red-dark;
+        }
+    }
+
+    &[color="warn"] {
+        background: $yellow;
+        color: $whitesmoke;
+
+        &:hover {
+            background: $yellow-dark;
+        }
+    }
+}

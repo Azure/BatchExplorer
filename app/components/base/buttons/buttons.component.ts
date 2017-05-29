@@ -4,10 +4,12 @@ import { Job, JobState } from "app/models";
 
 @Component({
     selector: "bl-loading-button",
-    template: `<button md-raised-button color="primary">
-        <ng-content *ngIf="!loading"></ng-content>
-        <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
-    </button>`,
+    template: `
+        <bl-action-btn color="primary">
+            <ng-content *ngIf="!loading"></ng-content>
+            <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
+        </bl-action-btn>
+    `,
 })
 export class LoadingButtonComponent {
     @Input()
@@ -17,9 +19,9 @@ export class LoadingButtonComponent {
 @Component({
     selector: "bl-clear-list-selection",
     template: `
-        <button md-mini-fab color="accent" (click)="onClick()" md-tooltip="Clear selection">
+        <bl-action-btn color="accent" (click)="onClick()" md-tooltip="Clear selection">
             <i class="fa fa-check-square-o"></i>
-        </button>
+        </bl-action-btn>
     `,
 })
 export class ClearListSelectionButtonComponent {
@@ -37,7 +39,7 @@ export class ClearListSelectionButtonComponent {
  */
 @Component({
     selector: "bl-add-button",
-    template: `<button md-mini-fab [mdTooltip]="title"><i class="fa fa-plus"></i></button>`,
+    template: `<bl-action-btn icon="fa fa-plus" [title]="title"></bl-action-btn>`,
 })
 export class AddButtonComponent {
     @Input()
@@ -53,7 +55,7 @@ export class AddButtonComponent {
 
 @Component({
     selector: "bl-add-task-button",
-    template: `<button md-mini-fab [disabled]="!enabled"><i class="fa fa-plus"></i> {{title}}</button>`,
+    template: `<bl-action-btn [disabled]="!enabled"><i class="fa fa-plus"></i> {{title}}</bl-action-btn>`,
 })
 export class AddTaskButtonComponent {
     @Input()
@@ -81,7 +83,7 @@ export class AddTaskButtonComponent {
 
 @Component({
     selector: "bl-terminate-button",
-    template: `<button md-mini-fab [disabled]="!enabled"><i class="fa fa-times"></i> Terminate</button>`,
+    template: `<bl-action-btn [disabled]="!enabled"><i class="fa fa-times"></i> Terminate</bl-action-btn>`,
 })
 export class TerminateButtonComponent {
     @Input()
@@ -97,7 +99,7 @@ export class TerminateButtonComponent {
 
 @Component({
     selector: "bl-delete-button",
-    template: `<button md-mini-fab [disabled]="!enabled" mdTooltip="Delete"><i class="fa fa-trash-o"></i></button>`,
+    template: `<bl-action-btn [disabled]="!enabled" title="Delete" icon="fa fa-trash-o"></bl-action-btn>`,
 })
 export class DeleteButtonComponent {
     @Input()
@@ -117,9 +119,8 @@ export class DeleteButtonComponent {
 @Component({
     selector: "bl-disable-button",
     template: `
-        <button md-mini-fab *ngIf="visible" [disabled]="!enabled" mdTooltip="Disable">
-            <i class="fa fa-pause"></i>
-        </button>
+        <bl-action-btn *ngIf="visible" icon="fa fa-pause" [disabled]="!enabled" title="Disable">
+        </bl-action-btn>
     `,
 })
 export class DisableButtonComponent {
@@ -141,7 +142,7 @@ export class DisableButtonComponent {
 @Component({
     selector: "bl-enable-button",
     template: `
-        <button md-mini-fab *ngIf="visible" [disabled]="!enabled" mdTooltip="Enable"><i class="fa fa-play"></i></button>
+        <bl-action-btn *ngIf="visible" [disabled]="!enabled" title="Enable" icon="fa fa-play"></bl-action-btn>
     `,
 })
 export class EnableButtonComponent {
@@ -159,7 +160,7 @@ export class EnableButtonComponent {
 
 @Component({
     selector: "bl-clone-button",
-    template: `<button md-mini-fab [mdTooltip]="title"><i class="fa fa-clone"></i></button>`,
+    template: `<bl-action-btn [title]="title" icon="fa fa-clone"></bl-action-btn>`,
 })
 export class CloneButtonComponent {
     @Input()
@@ -175,7 +176,7 @@ export class CloneButtonComponent {
 
 @Component({
     selector: "bl-download-button",
-    template: `<button md-mini-fab [disabled]="!enabled" mdTooltip="Download"><i class="fa fa-download"></i> </button>`,
+    template: `<bl-action-btn [disabled]="!enabled" title="Download" icon="fa fa-download"></bl-action-btn>`,
 })
 export class DownloadButtonComponent {
     @Input()
@@ -191,14 +192,14 @@ export class DownloadButtonComponent {
 
 @Component({
     selector: "bl-resize-button",
-    template: `<button md-mini-fab mdTooltip="Resize"><i class="fa fa-arrows-v"></i></button>`,
+    template: `<bl-action-btn title="Resize" icon="fa fa-arrows-v"></bl-action-btn>`,
 })
 export class ResizeButtonComponent {
 }
 
 @Component({
     selector: "bl-edit-button",
-    template: `<button md-mini-fab mdTooltip="Edit"><i class="fa fa-pencil-square-o"></i></button>`,
+    template: `<bl-action-btn title="Edit" icon="fa fa-pencil-square-o"></bl-action-btn>`,
 })
 export class EditButtonComponent {
 }

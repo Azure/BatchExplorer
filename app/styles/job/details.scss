@@ -3,14 +3,7 @@ md-card.overview {
     display: flex;
 
     > .actions {
-        text-align: center;
-        width: 40px;
-        border-right: 1px solid #d5d5d5;
-        padding: 10px 0;
-
-        > * {
-            display: block;
-        }
+        width: $action-btn-size + 1;
     }
 
     > .content {
