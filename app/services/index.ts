@@ -22,6 +22,7 @@ export * from "./task-service";
 export * from "./vm-size.service";
 export * from "./adal";
 export * from "./batch-client.service";
+export * from "./storage-account.service";
 export * from "./storage-client.service";
 export * from "./predefined-formula.service";
 

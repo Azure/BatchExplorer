@@ -44,6 +44,7 @@ export * from "./spec-cost";
 export * from "./ssh-public-key";
 export * from "./server-error";
 export * from "./start-task";
+export * from "./storage-account";
 export * from "./storage-error";
 export * from "./storage-keys";
 export * from "./subscription";
