@@ -5,16 +5,21 @@ bl-action-btn-group {
     border-right: 1px solid #d5d5d5;
     display: block;
 
-    button.action-btn {
+    bl-action-btn {
         border-bottom: 1px solid #d5d5d5;
     }
 }
 
-bl-action-btn > button.action-btn {
+bl-action-btn {
+    display: inline-block;
     width: $action-btn-size;
     height: $action-btn-size;
-    font-size: 20px;
+    outline: none;
     cursor: pointer;
+    font-size: 20px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: $action-btn-size;
 
     &[type="normal"] {
         // Nothing
@@ -28,7 +33,7 @@ bl-action-btn > button.action-btn {
         background: white;
         color: map-get($md-prussian-blue, 500);
 
-        &:hover {
+        &:hover, &:focus {
             background: $alto;
             color: map-get($md-prussian-blue, 200);
         }
@@ -42,7 +47,7 @@ bl-action-btn > button.action-btn {
         background: $red;
         color: $whitesmoke;
 
-        &:hover {
+        &:hover, &:focus {
             background: $red-dark;
         }
     }
@@ -51,7 +56,7 @@ bl-action-btn > button.action-btn {
         background: $yellow;
         color: $whitesmoke;
 
-        &:hover {
+        &:hover, &:focus {
             background: $yellow-dark;
         }
     }

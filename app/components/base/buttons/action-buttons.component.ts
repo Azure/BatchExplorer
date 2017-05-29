@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, EventEmitter, HostBinding, HostListener, Input, Output } from "@angular/core";
 
 import "./action-buttons.scss";
 
@@ -8,14 +8,19 @@ type ButtonColor = "primary" | "danger" | "warn";
 @Component({
     selector: "bl-action-btn",
     template: `
-        <button class="action-btn" [attr.type]="type" [attr.color]="color" [mdTooltip]="title"
-            [disabled]="disabled" mdTooltipPosition="right">
+        <span class="action-btn" [mdTooltip]="title" mdTooltipPosition="right">
             <i [class]="icon"></i>
             <ng-content></ng-content>
-        </button>
+        </span>
     `,
 })
 export class ActionButtonComponent {
+    @Output()
+    public action = new EventEmitter();
+
+    @HostBinding("tabindex")
+    public tabindex = "0";
+
     @Input()
     public icon: string;
 
@@ -26,10 +31,32 @@ export class ActionButtonComponent {
     public disabled = false;
 
     @Input()
+    @HostBinding("attr.type")
     public type: ButtonType;
 
     @Input()
+    @HostBinding("attr.color")
     public color: ButtonColor = "primary";
+
+    @Input()
+    public routerLink: string;
+
+    @HostListener("click")
+    public handleAction() {
+        if (this.disabled) {
+            return;
+        }
+        this.action.emit();
+    }
+
+    @HostListener("keydown", ["$event"])
+    public onkeydown(event: KeyboardEvent) {
+        if (event.code === "Space" || event.code === "Enter") {
+            console.log("Event", event);
+            this.handleAction();
+            event.preventDefault();
+        }
+    }
 }
 
 @Component({

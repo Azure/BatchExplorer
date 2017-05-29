@@ -8,6 +8,11 @@ md-card.overview {
 
     > .content {
         padding: 18px;
+        flex: 1;
+    }
+
+    > .tile {
+        border-left: 1px solid #d5d5d5;
     }
 }
 

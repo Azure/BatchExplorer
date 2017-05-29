@@ -4,27 +4,21 @@
             <div class="actions">
                 <bl-action-btn-group>
                     <bl-refresh-btn [refresh]="refreshPool"></bl-refresh-btn>
-                    <bl-add-button title="Add job" (click)="addJob()"></bl-add-button>
-                    <bl-resize-button (click)="resizePool()"></bl-resize-button>
-                    <bl-clone-button (click)="clonePool()"></bl-clone-button>
-                    <bl-delete-button [entity]="pool" (click)="deletePool()"></bl-delete-button>
+                    <bl-add-button title="Add job" (action)="addJob()"></bl-add-button>
+                    <bl-resize-button (action)="resizePool()"></bl-resize-button>
+                    <bl-clone-button (action)="clonePool()"></bl-clone-button>
+                    <bl-delete-button [entity]="pool" (action)="deletePool()"></bl-delete-button>
                 </bl-action-btn-group>
             </div>
             <div class="content">
-                <md-card-title-group style="margin: 0px;">
-                    <div style="margin-left:12px; margin-right:auto;">
-                        <md-card-title>{{pool.id}}</md-card-title>
-                        <md-card-subtitle>{{pool.vmSize}}, {{pool.allocationState}}</md-card-subtitle>
-                    </div>
-                    <div>
-                        <bl-pool-nodes-preview [pool]="pool" size="large"></bl-pool-nodes-preview>
-                    </div>
-                </md-card-title-group>
-                <md-card-content>
-                    <p>Last resized {{poolDecorator.lastResized}}</p>
-                    <p><i class="fa fa-{{poolDecorator.poolOsIcon}}" aria-hidden="true"></i> {{poolDecorator.poolOs}}</p>
-                    <bl-tags [tags]="pool.tags" [editable]="true" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
-                </md-card-content>
+                <md-card-title>{{pool.id}}</md-card-title>
+                <md-card-subtitle>{{pool.vmSize}}, {{pool.allocationState}}</md-card-subtitle>
+                <p>Last resized {{poolDecorator.lastResized}}</p>
+                <p><i class="fa fa-{{poolDecorator.poolOsIcon}}" aria-hidden="true"></i> {{poolDecorator.poolOs}}</p>
+                <bl-tags [tags]="pool.tags" [editable]="true" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
+            </div>
+            <div style="padding: 10px">
+                <bl-pool-nodes-preview [pool]="pool" size="large"></bl-pool-nodes-preview>
             </div>
         </md-card>
         <bl-pool-error-display [pool]="pool"></bl-pool-error-display>

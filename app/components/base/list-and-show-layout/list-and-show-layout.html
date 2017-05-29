@@ -16,7 +16,7 @@
                 </div>
                 <hr />
                 <div class="context-button-bar left">
-                    <bl-action-btn type="round" icon="fa fa-trash" color="danger" *ngIf="deleteSelectedIsEnabled && selectedItems.length > 0" (click)="deleteSelectedItems()">
+                    <bl-action-btn type="round" icon="fa fa-trash" color="danger" *ngIf="deleteSelectedIsEnabled && selectedItems.length > 0" (action)="deleteSelectedItems()">
                     </bl-action-btn>
                 </div>
                 <div class="context-button-bar right">

@@ -1,6 +1,6 @@
 <bl-list-and-show-layout #layout (listScrolledToBottom)="poolList.onScrollToBottom()" [list]="poolList">
     <div bl-list-buttons>
-        <bl-action-btn color="primary" type="round" icon="fa fa-plus spin-hover" title="Add a pool" (click)="addPool()">
+        <bl-action-btn color="primary" type="round" icon="fa fa-plus spin-hover" title="Add a pool" (action)="addPool()">
         </bl-action-btn>
     </div>
     <div bl-list-content>
