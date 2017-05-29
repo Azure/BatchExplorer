@@ -92,7 +92,10 @@ export class AddTaskButtonComponent extends BaseButton {
 
 @Component({
     selector: "bl-terminate-button",
-    template: `<bl-action-btn (action)="action.emit()" [disabled]="!enabled" icon="fa fa-stop"></bl-action-btn>`,
+    template: `
+        <bl-action-btn (action)="action.emit()" [disabled]="!enabled" icon="fa fa-stop" title="Terminate">
+        </bl-action-btn>
+    `,
 })
 export class TerminateButtonComponent extends BaseButton {
     @Input()

@@ -5,7 +5,7 @@ import { RouterModule } from "@angular/router";
 
 import { SubmitButtonComponent } from "./submit-btn.component";
 
-import { ActionButtonComponent, ActionButtonGroupComponent } from "./action-buttons.component";
+import { ActionButtonComponent, ActionButtonGroupComponent } from "./action-button.component";
 import {
     AddButtonComponent,
     AddTaskButtonComponent,
