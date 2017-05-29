@@ -18,6 +18,8 @@ import "./storage-account-picker.scss";
     ],
 })
 export class StorageAccountPickerComponent implements OnInit, ControlValueAccessor {
+    public noSelectionKey = "-1";
+
     @Input()
     public account: AccountResource;
 
@@ -25,6 +27,7 @@ export class StorageAccountPickerComponent implements OnInit, ControlValueAccess
     public otherAccounts: List<StorageAccount> = List([]);
     public loadingStatus = LoadingStatus.Loading;
     public pickedStorageAccountId: string;
+    public pickedName: string;
 
     private _propagateChange: (value: string) => void;
     constructor(private storageAccountService: StorageAccountService) {
@@ -39,7 +42,8 @@ export class StorageAccountPickerComponent implements OnInit, ControlValueAccess
     }
 
     public writeValue(value: string) {
-        this.pickedStorageAccountId = value;
+        this.pickedStorageAccountId = value || this.noSelectionKey;
+
     }
 
     public registerOnChange(fn) {
@@ -58,7 +62,18 @@ export class StorageAccountPickerComponent implements OnInit, ControlValueAccess
         const same = this.pickedStorageAccountId === storageAccountId;
         this.pickedStorageAccountId = storageAccountId;
         if (this._propagateChange && storageAccountId && !same) {
-            this._propagateChange(storageAccountId);
+            if (storageAccountId === this.noSelectionKey) {
+                this._propagateChange(null);
+            } else {
+                this._propagateChange(storageAccountId);
+            }
+        }
+    }
+
+    public clearSelection() {
+        this.pickedStorageAccountId = null;
+        if (this._propagateChange) {
+            this._propagateChange(null);
         }
     }
 
