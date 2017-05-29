@@ -24,7 +24,7 @@ class TestComponent {
     public account = account;
 }
 
-describe("StorageAccountPickerComponent", () => {
+fdescribe("StorageAccountPickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: StorageAccountPickerComponent;
@@ -66,11 +66,12 @@ describe("StorageAccountPickerComponent", () => {
 
     it("should split accounts in best region and other regions", () => {
         const preferedRows = preferedTable.queryAll(By.css("bl-row"));
-        expect(preferedRows.length).toBe(2);
-        expect(preferedRows[0].nativeElement.textContent).toContain("storage-1");
-        expect(preferedRows[0].nativeElement.textContent).toContain("westus");
-        expect(preferedRows[1].nativeElement.textContent).toContain("storage-3");
+        expect(preferedRows.length).toBe(3); // 2 plus the no account row
+        expect(preferedRows[0].nativeElement.textContent).toContain("No storage account");
+        expect(preferedRows[1].nativeElement.textContent).toContain("storage-1");
         expect(preferedRows[1].nativeElement.textContent).toContain("westus");
+        expect(preferedRows[2].nativeElement.textContent).toContain("storage-3");
+        expect(preferedRows[2].nativeElement.textContent).toContain("westus");
 
         const otherRows = otherTable.queryAll(By.css("bl-row"));
         expect(otherRows.length).toBe(3);
@@ -86,5 +87,19 @@ describe("StorageAccountPickerComponent", () => {
         expect(testComponent.storageAccountId).toBe("sub-1/storage-3", "Change should propagate");
         expect(preferedTable.componentInstance.activeItem).toBe("sub-1/storage-3", "Prefered Table updated activeItem");
         expect(otherTable.componentInstance.activeItem).toBe("sub-1/storage-3", "Others Table updated activeItem");
+    });
+
+    it("should unselect account when clicking on the no storage account row", () => {
+        component.pickStorageAccount("sub-1/storage-3");
+        fixture.detectChanges();
+
+        component.pickStorageAccount(component.noSelectionKey);
+        fixture.detectChanges();
+
+        expect(testComponent.storageAccountId).toBe(null, "Change should propagate");
+        expect(preferedTable.componentInstance.activeItem).toBe(component.noSelectionKey,
+            "Prefered Table updated activeItem");
+        expect(otherTable.componentInstance.activeItem).toBe(component.noSelectionKey,
+            "Others Table updated activeItem");
     });
 });
