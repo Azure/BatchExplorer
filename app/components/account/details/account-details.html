@@ -1,16 +1,14 @@
 <bl-loading [status]="data.status">
     <div *ngIf="account">
         <md-card class="overview">
-            <div class="main">
-                <md-card-title-group style="margin: 0px;">
-                    <div style="align-items:center;">
-                        <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                    </div>
-                    <div style="margin-left:12px; margin-right:auto;">
-                        <md-card-title>{{account.name}}</md-card-title>
-                        <md-card-subtitle>{{account.properties.accountEndpoint}}</md-card-subtitle>
-                    </div>
-                </md-card-title-group>
+            <div class="actions">
+                <bl-action-btn-group>
+                    <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+                </bl-action-btn-group>
+            </div>
+            <div class="content">
+                <md-card-title>{{account.name}}</md-card-title>
+                <md-card-subtitle>{{account.properties.accountEndpoint}}</md-card-subtitle>
             </div>
             <div class="storage-account">
                 <bl-storage-account-card [account]="account">
