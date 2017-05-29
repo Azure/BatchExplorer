@@ -28,11 +28,12 @@ export class ActionButtonComponent {
     public title: string;
 
     @Input()
+    @HostBinding("class.disabled")
     public disabled = false;
 
     @Input()
     @HostBinding("attr.type")
-    public type: ButtonType;
+    public type: ButtonType = "normal";
 
     @Input()
     @HostBinding("attr.color")
@@ -55,6 +56,12 @@ export class ActionButtonComponent {
             console.log("Event", event);
             this.handleAction();
             event.preventDefault();
+        }
+    }
+
+    public ngOnChanges(changes) {
+        if ("disabled" in changes) {
+            this.tabindex = this.disabled ? "-1" : "0";
         }
     }
 }

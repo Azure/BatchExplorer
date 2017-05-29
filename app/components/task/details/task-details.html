@@ -4,29 +4,23 @@
     </md-card>
     <div *ngIf="task && job">
         <md-card class="overview">
-            <div class="summary">
-                <div class="main-info">
-                    <md-card-title-group style="margin: 0px;">
-                        <div style="align-items:center;">
-                            <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                        </div>
-                        <div style="margin-left:12px; margin-right:auto;">
-                            <md-card-title>{{task.id}} <span *ngIf="!!task.displayName"> - {{task.displayName}}</span> </md-card-title>
-                            <md-card-subtitle><i class="fa" [ngClass]="decorator.stateIcon"></i> {{task.state}}</md-card-subtitle>
-                        </div>
-                    </md-card-title-group>
-                    <md-card-content>
-                        <p>Job: {{jobId}}</p>
-                    </md-card-content>
-                </div>
+            <div class="actions">
+                <bl-action-btn-group>
+                    <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+                    <bl-add-button (action)="addTask()"></bl-add-button>
+                    <bl-terminate-button [entity]="task" (action)="terminateTask()"></bl-terminate-button>
+                    <bl-delete-button [entity]="task" (action)="deleteTask()"></bl-delete-button>
+                    <bl-clone-button (action)="cloneTask()"></bl-clone-button>
+                </bl-action-btn-group>
+            </div>
+            <div class="content">
+                <md-card-title>{{task.id}} <span *ngIf="!!task.displayName"> - {{task.displayName}}</span> </md-card-title>
+                <md-card-subtitle><i class="fa" [ngClass]="decorator.stateIcon"></i> {{task.state}}</md-card-subtitle>
+                <p>Job: {{jobId}}</p>
+            </div>
+            <div style="padding: 10px">
                 <bl-task-timeline [job]="job" [task]="task"></bl-task-timeline>
             </div>
-            <md-card-actions layout="row" layout-align="end center">
-                <bl-add-button (click)="addTask()"></bl-add-button>
-                <bl-terminate-button [entity]="task" (click)="terminateTask()"></bl-terminate-button>
-                <bl-delete-button [entity]="task" (click)="deleteTask()"></bl-delete-button>
-                <bl-clone-button (click)="cloneTask()"></bl-clone-button>
-            </md-card-actions>
         </md-card>
         <bl-task-error-display [jobId]="jobId" [task]="task"></bl-task-error-display>
         <md-card class="details">
