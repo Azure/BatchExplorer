@@ -2,8 +2,7 @@
   "extends": "tslint:recommended",
   "defaultSeverity": "warning",
   "rulesDirectory": [
-    "node_modules/codelyzer",
-    "node_modules/vrsource-tslint-rules/rules"
+    "node_modules/codelyzer"
   ],
   "rules": {
     // TSLint override
@@ -31,7 +30,7 @@
     "ban": [
         true,
         ["main", "debugCrash"], // Show a warning if the main window is being shown on start for debug purposes
-        ["fdescribe"] // Show a warning if the main window is being shown on start for debug purposes
+        ["fdescribe"]
     ],
     "no-empty-interface":  false,
     "space-before-function-paren": [false],
@@ -56,9 +55,6 @@
     "directive-class-suffix": true,
     "import-destructuring-spacing": true,
     "invoke-injectable": true,
-
-    // vrsource-tslint-rules https://github.com/vrsource/vrsource-tslint-rules
-    "no-jasmine-focus": true,
 
     // TODO enable
     "prefer-const": false

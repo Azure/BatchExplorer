@@ -1,5 +1,4 @@
 // tslint:disable:no-unused-variable
-// tslint:disable:no-jasmine-focus
 import { Component } from "@angular/core";
 import { TestBed, async } from "@angular/core/testing";
 
