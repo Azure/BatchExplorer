@@ -10,7 +10,7 @@
                     <bl-column [sortable]="true">OS Disk</bl-column>
                     <bl-column [sortable]="true">Resource/Temp Disk</bl-column>
                 </bl-thead>
-                <bl-row *ngFor="let size of categories[category]" [key]="size.vmSize.name">
+                <bl-row *ngFor="let size of categories[category]" [key]="size.vmSize.id">
                     <bl-cell [value]="size.vmSize.name">{{size.title}}</bl-cell>
                     <!--<bl-cell [value]="size.price">{{size.prettyPrice}}</bl-cell>-->
                     <bl-cell [value]="size.vmSize.numberOfCores"></bl-cell>
