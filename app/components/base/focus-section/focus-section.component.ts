@@ -22,6 +22,7 @@ export class FocusSectionComponent {
     }
 
     public focus() {
+        this.onFocus.emit();
         this.elementRef.nativeElement.focus();
     }
 

@@ -24,7 +24,7 @@ class TestComponent {
     public account = account;
 }
 
-fdescribe("StorageAccountPickerComponent", () => {
+describe("StorageAccountPickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: StorageAccountPickerComponent;
