@@ -7,7 +7,6 @@
             <div class="actions">
                 <bl-action-btn-group>
                     <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                    <bl-add-button (action)="addTask()"></bl-add-button>
                     <bl-terminate-button [entity]="task" (action)="terminateTask()"></bl-terminate-button>
                     <bl-delete-button [entity]="task" (action)="deleteTask()"></bl-delete-button>
                     <bl-clone-button (action)="cloneTask()"></bl-clone-button>

@@ -29,7 +29,7 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
 
     constructor(
         private formBuilder: FormBuilder,
-        sidebarRef: SidebarRef<TaskCreateBasicDialogComponent>,
+        public sidebarRef: SidebarRef<TaskCreateBasicDialogComponent>,
         protected taskService: TaskService,
         private notificationService: NotificationService) {
         super(TaskCreateDto);
