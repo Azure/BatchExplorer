@@ -4,11 +4,11 @@ import { By } from "@angular/platform-browser";
 import { BehaviorSubject } from "rxjs";
 
 import { ApplicationErrorDisplayComponent } from "app/components/application/errors";
+import { SidebarManager } from "app/components/base/sidebar";
 import { AccountResource, Application } from "app/models";
 import { AccountService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { BannerMockComponent } from "test/utils/mocks/components";
-import { SidebarManager } from "app/components/base/sidebar";
 
 @Component({
     template: `<bl-application-error-display [application]="application"></bl-application-error-display>`,

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, HostBinding, HostListener, Input, Output } from "@angular/core";
+import { Component, EventEmitter, HostBinding, HostListener, Input, OnChanges, Output } from "@angular/core";
 
 import "./action-buttons.scss";
 
@@ -14,7 +14,7 @@ type ButtonColor = "primary" | "danger" | "warn";
         </span>
     `,
 })
-export class ActionButtonComponent {
+export class ActionButtonComponent implements OnChanges {
     @Output()
     public action = new EventEmitter();
 
@@ -53,7 +53,6 @@ export class ActionButtonComponent {
     @HostListener("keydown", ["$event"])
     public onkeydown(event: KeyboardEvent) {
         if (event.code === "Space" || event.code === "Enter") {
-            console.log("Event", event);
             this.handleAction();
             event.preventDefault();
         }
