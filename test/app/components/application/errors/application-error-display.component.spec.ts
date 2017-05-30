@@ -5,9 +5,10 @@ import { BehaviorSubject } from "rxjs";
 
 import { ApplicationErrorDisplayComponent } from "app/components/application/errors";
 import { AccountResource, Application } from "app/models";
-import { AccountService, ElectronShell } from "app/services";
+import { AccountService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { BannerMockComponent } from "test/utils/mocks/components";
+import { SidebarManager } from "app/components/base/sidebar";
 
 @Component({
     template: `<bl-application-error-display [application]="application"></bl-application-error-display>`,
@@ -22,7 +23,7 @@ describe("ApplicationErrorDisplayComponent", () => {
     let component: ApplicationErrorDisplayComponent;
     let accountUnderTest: BehaviorSubject<AccountResource>;
     let accountServiceSpy: any;
-    let shellSpy;
+    let sidebarSpy;
 
     beforeEach(() => {
         accountUnderTest = new BehaviorSubject<AccountResource>(Fixtures.account.create({
@@ -38,15 +39,15 @@ describe("ApplicationErrorDisplayComponent", () => {
             currentAccount: accountUnderTest,
         };
 
-        shellSpy = {
-            openItem: jasmine.createSpy("openItem"),
+        sidebarSpy = {
+            open: jasmine.createSpy("open"),
         };
 
         TestBed.configureTestingModule({
             declarations: [ApplicationErrorDisplayComponent, BannerMockComponent, TestApplicationErrorDisplayComponent],
             providers: [
                 { provide: AccountService, useValue: accountServiceSpy },
-                { provide: ElectronShell, useValue: shellSpy },
+                { provide: SidebarManager, useValue: sidebarSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
