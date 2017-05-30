@@ -1,4 +1,4 @@
-import { Component, DebugElement } from "@angular/core";
+import { Component, DebugElement, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
@@ -15,7 +15,7 @@ interface TestItem {
 
 @Component({
     template: `
-        <bl-focus-section>
+        <bl-focus-section #focusSection>
             <bl-quick-list>
                 <bl-quick-list-item *ngFor="let item of items" [key]="item.id">
                     <h4 bl-quick-list-item-title>{{item.name}}</h4>
@@ -25,6 +25,9 @@ interface TestItem {
     `,
 })
 class TestComponent {
+    @ViewChild("focusSection")
+    public focusSection: FocusSectionComponent;
+
     public items: TestItem[] = [
         { id: "item-1", name: "Item 1" },
         { id: "item-2", name: "Item 2" },
@@ -83,7 +86,8 @@ describe("QuickListComponent", () => {
 
     it("click on an item should also focus it", () => {
         const item = items[1].query(By.css(".quick-list-item"));
-        fixture.debugElement.query(By.css("bl-focus-section")).nativeElement.focus();
+        testComponent.focusSection.focus();
+
         click(item.nativeElement);
         fixture.detectChanges();
         expect(quicklist.focusedItem.value).toEqual("item-2");

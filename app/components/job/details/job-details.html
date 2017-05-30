@@ -1,34 +1,28 @@
 <bl-loading [status]="data.newDataStatus | async">
     <div *ngIf="job">
         <md-card class="overview">
-            <div class="main-content">
-                <div class="info">
-                    <md-card-title-group style="margin: 0px;">
-                        <div style="align-items:center;">
-                            <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                        </div>
-                        <div style="margin-left:12px; margin-right:auto;">
-                            <md-card-title>{{decorator.id}}</md-card-title>
-                            <md-card-subtitle><i class="fa" [ngClass]="decorator.stateIcon"></i> {{decorator.state}}</md-card-subtitle>
-                        </div>
-                    </md-card-title-group>
-                    <div class="additional-info">
-                        Pool: <a [routerLink]="['/pools', job.poolId]">{{job.poolId}}</a>
-                        <bl-tags [tags]="job.tags" [editable]="true" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
-                    </div>
-                </div>
-                <md-card-content>
-                    <bl-job-progress-status [job]="job" [poolId]="job.poolId"></bl-job-progress-status>
-                </md-card-content>
+            <div class="actions">
+                <bl-action-btn-group>
+                    <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+                    <bl-add-task-button title="Add task" [job]="job" (action)="addTask()"></bl-add-task-button>
+                    <bl-terminate-button [entity]="job" (action)="terminateJob()"></bl-terminate-button>
+                    <bl-delete-button [entity]="job" (action)="deleteJob()"></bl-delete-button>
+                    <bl-disable-button [job]="job" (action)="disableJob()"></bl-disable-button>
+                    <bl-enable-button [job]="job" (action)="enableJob()"></bl-enable-button>
+                    <bl-clone-button (action)="cloneJob()"></bl-clone-button>
+                </bl-action-btn-group>
             </div>
-            <md-card-actions layout="row" layout-align="end center">
-                <bl-add-task-button title="Add task" [job]="job" (click)="addTask()"></bl-add-task-button>
-                <bl-terminate-button [entity]="job" (click)="terminateJob()"></bl-terminate-button>
-                <bl-delete-button [entity]="job" (click)="deleteJob()"></bl-delete-button>
-                <bl-disable-button [job]="job" (click)="disableJob()"></bl-disable-button>
-                <bl-enable-button [job]="job" (click)="enableJob()"></bl-enable-button>
-                <bl-clone-button (click)="cloneJob()"></bl-clone-button>
-            </md-card-actions>
+            <div class="content">
+                <div class="info">
+                    <md-card-title>{{decorator.id}}</md-card-title>
+                    <md-card-subtitle><i class="fa" [ngClass]="decorator.stateIcon"></i> {{decorator.state}}</md-card-subtitle>
+                    Pool: <a [routerLink]="['/pools', job.poolId]">{{job.poolId}}</a>
+                    <bl-tags [tags]="job.tags" [editable]="true" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
+                </div>
+            </div>
+            <div class="tile">
+                <bl-job-progress-status [job]="job" [poolId]="job.poolId"></bl-job-progress-status>
+            </div>
         </md-card>
         <bl-job-error-display [job]="job"></bl-job-error-display>
         <md-card class="details">

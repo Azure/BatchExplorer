@@ -1,11 +1,11 @@
 // tslint:disable:no-unused-variable
-// tslint:disable:no-jasmine-focus
 import { Component } from "@angular/core";
 import { TestBed, async } from "@angular/core/testing";
 
 import { TaskDetailsModule } from "app/components/task/details";
 
 export function main() {
+    // tslint:disable-next-line:ban
     fdescribe("Memory leak Testing", () => {
         for (let i = 0; i < 100000; i++) {
             describe(`${i}`, () => {

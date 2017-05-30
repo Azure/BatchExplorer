@@ -1,29 +1,25 @@
 <bl-loading [status]="data.newDataStatus | async">
     <div *ngIf="pool && poolDecorator">
         <md-card class="overview">
-            <md-card-title-group style="margin: 0px;">
-                <div style="align-items:center;">
+            <div class="actions">
+                <bl-action-btn-group>
                     <bl-refresh-btn [refresh]="refreshPool"></bl-refresh-btn>
-                </div>
-                <div style="margin-left:12px; margin-right:auto;">
-                    <md-card-title>{{pool.id}}</md-card-title>
-                    <md-card-subtitle>{{pool.vmSize}}, {{pool.allocationState}}</md-card-subtitle>
-                </div>
-                <div>
-                    <bl-pool-nodes-preview [pool]="pool" size="large"></bl-pool-nodes-preview>
-                </div>
-            </md-card-title-group>
-            <md-card-content>
+                    <bl-add-button title="Add job" (action)="addJob()"></bl-add-button>
+                    <bl-resize-button (action)="resizePool()"></bl-resize-button>
+                    <bl-clone-button (action)="clonePool()"></bl-clone-button>
+                    <bl-delete-button [entity]="pool" (action)="deletePool()"></bl-delete-button>
+                </bl-action-btn-group>
+            </div>
+            <div class="content">
+                <md-card-title>{{pool.id}}</md-card-title>
+                <md-card-subtitle>{{pool.vmSize}}, {{pool.allocationState}}</md-card-subtitle>
                 <p>Last resized {{poolDecorator.lastResized}}</p>
                 <p><i class="fa fa-{{poolDecorator.poolOsIcon}}" aria-hidden="true"></i> {{poolDecorator.poolOs}}</p>
                 <bl-tags [tags]="pool.tags" [editable]="true" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
-            </md-card-content>
-            <md-card-actions layout="row" layout-align="end center">
-                <bl-add-button title="Add job" (click)="addJob()"></bl-add-button>
-                <bl-resize-button (click)="resizePool()"></bl-resize-button>
-                <bl-clone-button (click)="clonePool()"></bl-clone-button>
-                <bl-delete-button [entity]="pool" (click)="deletePool()"></bl-delete-button>
-            </md-card-actions>
+            </div>
+            <div style="padding: 10px">
+                <bl-pool-nodes-preview [pool]="pool" size="large"></bl-pool-nodes-preview>
+            </div>
         </md-card>
         <bl-pool-error-display [pool]="pool"></bl-pool-error-display>
         <md-card class="details">
