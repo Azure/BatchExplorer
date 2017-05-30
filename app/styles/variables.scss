@@ -134,3 +134,7 @@ $listview-header-height              : 90px;
 $footer-height                       : 0;
 $content-top-position                : $header-height;
 $contentview-height                  : calc(100vh - #{$header-height});
+
+
+// Base component dimensions
+$action-btn-size: 32px;
