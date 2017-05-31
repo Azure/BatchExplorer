@@ -1,42 +1,13 @@
+@import "./themes/core";
+@import "./themes/classic";
 @import "./vars/material-colors";
 @import "./vars/zindex";
 
-$orient: #00528c;
-$regal-blue: #00416f;
-$prussian-blue: #003153;
-$midnight: #001e33;
-$charcoal-blue: #000306;
 
-$blue-lighter: $orient;
-$blue-light: $regal-blue;
-$blue-medium: $prussian-blue;
-$blue-dark: $midnight;
-$blue-darker: $charcoal-blue;
-
-// Red
-$red-light: #d46a6a;
-$red: #aa3939;
-$red-dark: #801515;
-
-$grenadier          :  #dd2c00;
-$fuzzyWuzzyBrown    :  #c74f54;
-$buttonBrown        :  #c45151;
-$crail              :  #c14848;
-$vanillaIce         :  #efd0d0;
-
-$yellow-light: #ffc267;
-$yellow: #f4ad42;
-$yellow-dark: #e39014;
-
-//Green
-$green-light: #77cc7d;
-$green: #4caf50;
-$green-dark: #388e3c;
-
-$header-background: $blue-light;
-$header-hover: $blue-medium;
-$navigation-background: $blue-medium;
-$navigation-hover: $blue-light;
+$header-background      : map-get($primary, 700);
+$header-hover           : map-get($primary, 800);
+$navigation-background  : map-get($primary, 600);
+$navigation-hover       : map-get($primary, 700);
 
 // Black & white
 //---------------------------------------------
@@ -68,34 +39,22 @@ $mineShaftGray      :  $mineshaft-grey;
 
 // Status Colours
 //---------------------------------------------
-$warningText        :  #c09853;
-$errorText          :  #b94a48;
-$infoText           :  #3a87ad;
-$successText        :  #468847;
-
+$warningText        :  map-get($warn, 500);
+$errorText          :  map-get($danger, 500);
+$infoText           :  map-get($primary, 500);
+$successText        :  map-get($success, 500);
 
 // Text
 //---------------------------------------------
-$headings-color      : $prussian-blue;
-$link-color          : map-get($md-prussian-blue, 700);
-$link-color-hover    : map-get($md-prussian-blue, 800);
-$validation-error-color   : $red;
-$label-text          : $dusty-grey;
+$headings-color             : map-get($primary, 700);
+$link-color                 : map-get($primary, 700);
+$link-color-hover           : map-get($primary, 800);
+$validation-error-color     : map-get($danger, 500);
+$label-text                 : $dusty-grey;
 
-// Typography
-//---------------------------------------------
-$segoeUiFontFamily         : wf_segoe-ui_normal, "Segoe UI", "Segoe WP", Tahoma, Arial, sans-serif;
-$segoiUiFontFamilySemibold : wf_segoe-ui_semibold, "Segoe UI Semibold", "Segoe WP Semibold", "Segoe UI", "Segoe WP", Tahoma, Arial, sans-serif;
-$segoiUiFontFamilySemilight: wf_segoe-ui_semilight, "Segoe UI Semilight", "Segoe WP Semilight","Segoe UI", "Segoe WP", Tahoma, Arial, sans-serif;
-$segoiUiFontFamilyBold     : wf_segoe-ui_bold, "Segoe UI Bold", "Segoe WP Bold","Segoe UI", "Segoe WP", Tahoma, Arial, sans-serif;
-
-$baseFontSize       : 10pt;
-$baseFontFamily     : $segoeUiFontFamily;
+$baseFontSize       : 13px;
 $baseLineHeight     : 1.4em;
-$lineHeightComputed : floor($baseFontSize * $baseLineHeight);
-$altFontFamily      : $segoeUiFontFamily;
 
-$headingsFontFamily : $segoeUiFontFamily;
 $headingsFontWeight : semilight;
 $headingWeightBold  : semibold;
 $headingsLineHeight : $baseLineHeight;

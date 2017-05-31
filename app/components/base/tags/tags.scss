@@ -7,7 +7,7 @@
     .tag {
         font-size: 11px;
         color: white;
-        background: map-get($md-prussian-blue, 300);
+        background: map-get($primary, 300);
         padding: 2px 5px;
         border-radius: 3px;
 
@@ -18,13 +18,13 @@
 
     .expand-tags {
         font-size: 16px;
-        color: map-get($md-prussian-blue, 300);
+        color: map-get($primary, 300);
         padding: 0 5px;
         border-radius: 3px;
 
         &:hover {
-            color: map-get($md-prussian-blue, 50);
-            background: map-get($md-prussian-blue, 300);
+            color: map-get($primary, 50);
+            background: map-get($primary, 300);
         }
     }
 }
@@ -53,10 +53,10 @@ bl-tags {
 
         .fa-pencil {
             cursor: pointer;
-            color: map-get($md-prussian-blue, 500);
+            color: map-get($primary, 500);
 
             &:hover {
-                color: map-get($md-prussian-blue, 300);
+                color: map-get($primary, 300);
             }
         }
 
@@ -66,11 +66,11 @@ bl-tags {
         }
 
         .fa-check:hover {
-            color: $green;
+            color: map-get($success, 500);;
         }
 
         .fa-times:hover {
-            color: $red-light;
+            color: map-get($danger, 400);
         }
     }
 

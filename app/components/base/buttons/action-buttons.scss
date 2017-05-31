@@ -2,11 +2,11 @@
 
 bl-action-btn-group {
     text-align: center;
-    border-right: 1px solid #d5d5d5;
+    border-right: 1px solid $border-color;
     display: block;
 
     bl-action-btn {
-        border-bottom: 1px solid #d5d5d5;
+        border-bottom: 1px solid $border-color;
     }
 }
 
@@ -42,33 +42,33 @@ bl-action-btn {
 
     &[color="primary"] {
         background: white;
-        color: map-get($md-prussian-blue, 500);
+        color: map-get($primary, 500);
 
         &:hover, &:focus {
             background: $alto;
-            color: map-get($md-prussian-blue, 200);
+            color: map-get($primary, 200);
         }
 
         &[type="round"] {
-            border: 1px solid #d5d5d5;
+            border: 1px solid $border-color;
         }
     }
 
     &[color="danger"] {
-        background: $red;
+        background: map-get($danger, 500);
         color: $whitesmoke;
 
         &:hover, &:focus {
-            background: $red-dark;
+            background: map-get($danger, 800);
         }
     }
 
     &[color="warn"] {
-        background: $yellow;
+        background: map-get($warn, 500);
         color: $whitesmoke;
 
         &:hover, &:focus {
-            background: $yellow-dark;
+            background: map-get($warn, 800);
         }
     }
 }
