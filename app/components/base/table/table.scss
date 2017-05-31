@@ -15,6 +15,7 @@ bl-table {
         border-collapse: collapse;
         overflow: hidden;
         display: table;
+        table-layout: fixed;
     }
 
     bl-thead {
