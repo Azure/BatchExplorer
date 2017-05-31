@@ -2,7 +2,7 @@ bl-task-timeline {
     $tile-size: 30px;
     $separator-width: 60px;
     $separator-height: 2px;
-    $state-reached-color: map-get($md-prussian-blue, 300);
+    $state-reached-color: map-get($primary, 300);
 
     .timeline {
         display: flex;
@@ -44,12 +44,12 @@ bl-task-timeline {
                     color: $dusty-grey;
 
                     .warn {
-                        color: $yellow;
+                        color: map-get($warn, 500);
                     }
 
                     .error {
                         font-weight: bold;
-                        color: $red;
+                        color: map-get($danger, 500);
                     }
                 }
             }
@@ -68,11 +68,11 @@ bl-task-timeline {
             }
 
             &.warn > .tile {
-                background: $yellow;
+                background: map-get($warn, 500);
             }
 
             &.error > .tile {
-                background: $red;
+                background: map-get($danger, 500);
             }
         }
 
