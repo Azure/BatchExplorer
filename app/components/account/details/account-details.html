@@ -62,9 +62,9 @@
                             </bl-no-item>
                             <bl-table class="dashboard">
                                 <bl-row *ngFor="let pool of (poolData.items | async)" [link]="['/pools/', pool.id]" [key]="pool.id">
-                                    <bl-cell style="width:68%;" [value]="pool.id"></bl-cell>
-                                    <bl-cell style="width:10%;"><i aria-hidden="true" class="fa fa-{{pool.osIconName()}}"></i></bl-cell>
-                                    <bl-cell style="text-align: right; width:19%;">
+                                    <bl-cell [value]="pool.id"></bl-cell>
+                                    <bl-cell style="width: 20px"><i aria-hidden="true" class="fa fa-{{pool.osIconName()}}"></i></bl-cell>
+                                    <bl-cell style="text-align: right; width: 60px">
                                         <bl-pool-nodes-preview [pool]="pool"></bl-pool-nodes-preview>
                                     </bl-cell>
                                 </bl-row>
