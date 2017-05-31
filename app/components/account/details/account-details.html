@@ -33,8 +33,8 @@
                             </bl-no-item>
                             <bl-table class="dashboard">
                                 <bl-row *ngFor="let job of (jobData.items | async)" [link]="['/jobs/', job.id]" [key]="job.id">
-                                    <bl-cell style="width:77%" [value]="job.id"></bl-cell>
-                                    <bl-cell style="text-align:right; color:steelblue;width:21%" [value]="job.state"></bl-cell>
+                                    <bl-cell style="" [value]="job.id"></bl-cell>
+                                    <bl-cell style="text-align:right; color:steelblue;width:75px" [value]="job.state"></bl-cell>
                                 </bl-row>
                             </bl-table>
                         </bl-loading>
