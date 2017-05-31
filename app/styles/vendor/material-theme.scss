@@ -8,19 +8,19 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue.
-$primary: mat-palette($md-prussian-blue);
-$accent:  mat-palette($mat-grey, A200, A100, A400);
+$md-primary: mat-palette($primary-theme1);
+$md-accent:  mat-palette($mat-grey, A200, A100, A400);
 
 // The warn palette is optional (defaults to red).
-$warn:    mat-palette($mat-red);
+$md-warn:    mat-palette($mat-red);
 
 // Create the theme object (a Sass map containing all of the palettes).
-$theme: mat-light-theme($primary, $accent, $warn);
+$md-theme: mat-light-theme($md-primary, $md-accent, $md-warn);
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include angular-material-theme($theme);
+@include angular-material-theme($md-theme);
 
 // TODO: can we pull in the material scss classes into the project?
 // really want to be able to override the styles more easily.

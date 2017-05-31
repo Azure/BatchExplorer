@@ -98,7 +98,7 @@ bl-notification {
     }
 
     &.info {
-        color: $orient;
+        color: map-get($primary, 400);
         background-color: white;
     }
 

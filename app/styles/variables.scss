@@ -3,34 +3,21 @@
 
 body {
     // Primary color
-    --primary-50: #cde0ed;
-    --primary-100: #94bdd9;
-    --primary-200: #6ba3cb;
-    --primary-300: #3e81b0;
-    --primary-400: #36719a;
-    --primary-500: #2e6083;
-    --primary-600: #264f6c;
-    --primary-700: #1e3f56;
-    --primary-800: #162e3f;
-    --primary-900: #0e1e28;
-    --primary-A100: #cde0ed;
-    --primary-A200: #94bdd9;
-    --primary-A400: #36719a;
-    --primary-A700: #1e3f56;
+    --primary-50: map-get($primary-theme1, 50);
+    --primary-100: map-get($primary-theme1, 100);
+    --primary-200: map-get($primary-theme1, 200);
+    --primary-300: map-get($primary-theme1, 300);
+    --primary-400: map-get($primary-theme1, 400);
+    --primary-500: map-get($primary-theme1, 500);
+    --primary-600: map-get($primary-theme1, 600);
+    --primary-700: map-get($primary-theme1, 700);
+    --primary-800: map-get($primary-theme1, 800);
+    --primary-900: map-get($primary-theme1, 900);
+    --primary-A100: map-get($primary-theme1, A100);
+    --primary-A200: map-get($primary-theme1, A200);
+    --primary-A400: map-get($primary-theme1, A400);
+    --primary-A700: map-get($primary-theme1, A700);
 }
-
-
-$orient: #00528c;
-$regal-blue: #00416f;
-$prussian-blue: #003153;
-$midnight: #001e33;
-$charcoal-blue: #000306;
-
-$blue-lighter: $orient;
-$blue-light: $regal-blue;
-$blue-medium: $prussian-blue;
-$blue-dark: $midnight;
-$blue-darker: $charcoal-blue;
 
 // Red
 $red-light: #d46a6a;
@@ -52,10 +39,10 @@ $green-light: #77cc7d;
 $green: #4caf50;
 $green-dark: #388e3c;
 
-$header-background: $blue-light;
-$header-hover: $blue-medium;
-$navigation-background: $blue-medium;
-$navigation-hover: $blue-light;
+$header-background: map-get($primary, 700);
+$header-hover: map-get($primary, 800);
+$navigation-background: map-get($primary, 600);
+$navigation-hover: map-get($primary, 700);
 
 // Black & white
 //---------------------------------------------
@@ -95,9 +82,9 @@ $successText        :  #468847;
 
 // Text
 //---------------------------------------------
-$headings-color      : $prussian-blue;
-$link-color          : map-get($md-prussian-blue, 700);
-$link-color-hover    : map-get($md-prussian-blue, 800);
+$headings-color      : map-get($primary, 700);
+$link-color          : map-get($primary, 700);
+$link-color-hover    : map-get($primary, 800);
 $validation-error-color   : $red;
 $label-text          : $dusty-grey;
 

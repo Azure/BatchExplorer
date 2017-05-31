@@ -1,6 +1,40 @@
 $black-87-opacity: rgba(black, 0.87);
 $white-87-opacity: rgba(white, 0.87);
 
+
+$primary-theme1: (
+    50: #cde0ed,
+    100: #94bdd9,
+    200: #6ba3cb,
+    300: #3e81b0,
+    400: #36719a,
+    500: #2e6083,
+    600: #264f6c,
+    700: #1e3f56,
+    800: #162e3f,
+    900: #0e1e28,
+    A100: #cde0ed,
+    A200: #94bdd9,
+    A400: #36719a,
+    A700: #1e3f56,
+    contrast: (
+        50: $black-87-opacity,
+        100: $black-87-opacity,
+        200: $black-87-opacity,
+        300: $black-87-opacity,
+        400: $black-87-opacity,
+        500: white,
+        600: white,
+        700: white,
+        800: $white-87-opacity,
+        900: $white-87-opacity,
+        A100: $black-87-opacity,
+        A200: white,
+        A400: white,
+        A700: white,
+    )
+);
+
 $primary: (
     50: var(--primary-50),
     100: var(--primary-100),
