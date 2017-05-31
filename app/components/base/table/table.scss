@@ -31,7 +31,7 @@ bl-table {
 
         > tr {
             cursor:pointer;
-            border-top: 1px $border-color solid;
+            border-top: 1px $athensGrey solid;
             height: $table-row-height;
 
             &.selected {
@@ -51,7 +51,7 @@ bl-table {
             }
 
             &:last-child {
-                border-bottom: 1px $border-color solid;
+                border-bottom: 1px $athensGrey solid;
             }
         }
     }
