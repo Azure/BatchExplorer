@@ -210,7 +210,7 @@ footer {
         position: absolute;
         left: 0;
         top: 0;
-        background-color: $fuzzyWuzzyBrown;
+        background-color: map-get($danger, 500);
         border-radius: 10px;
         width: 18px;
         height: 18px;

@@ -17,6 +17,21 @@ body {
     --primary-A200: map-get($primary-theme1, A200);
     --primary-A400: map-get($primary-theme1, A400);
     --primary-A700: map-get($primary-theme1, A700);
+
+    --danger-50: map-get($danger-theme1, 50);
+    --danger-100: map-get($danger-theme1, 100);
+    --danger-200: map-get($danger-theme1, 200);
+    --danger-300: map-get($danger-theme1, 300);
+    --danger-400: map-get($danger-theme1, 400);
+    --danger-500: map-get($danger-theme1, 500);
+    --danger-600: map-get($danger-theme1, 600);
+    --danger-700: map-get($danger-theme1, 700);
+    --danger-800: map-get($danger-theme1, 800);
+    --danger-900: map-get($danger-theme1, 900);
+    --danger-A100: map-get($danger-theme1, A100);
+    --danger-A200: map-get($danger-theme1, A200);
+    --danger-A400: map-get($danger-theme1, A400);
+    --danger-A700: map-get($danger-theme1, A700);
 }
 
 // Red
@@ -24,11 +39,11 @@ $red-light: #d46a6a;
 $red: #aa3939;
 $red-dark: #801515;
 
-$grenadier          :  #dd2c00;
-$fuzzyWuzzyBrown    :  #c74f54;
-$buttonBrown        :  #c45151;
-$crail              :  #c14848;
-$vanillaIce         :  #efd0d0;
+// $grenadier          :  #dd2c00;
+// $fuzzyWuzzyBrown    :  #c74f54;
+// $buttonBrown        :  #c45151;
+// $crail              :  #c14848;
+// $vanillaIce         :  #efd0d0;
 
 $yellow-light: #ffc267;
 $yellow: #f4ad42;

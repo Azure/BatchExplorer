@@ -168,7 +168,7 @@ bl-persistent-notifications-dropdown {
         position: absolute;
         left: 0;
         top: 0;
-        background-color: $fuzzyWuzzyBrown;
+        background-color: map-get($danger, 500);
         border-radius: 10px;
         width: 18px;
         height: 18px;
@@ -218,11 +218,11 @@ bl-persistent-notifications-dropdown {
 
             &:hover {
                 color: white;
-                background-color: $crail;
+                background-color: map-get($danger, 400);
             }
 
             &:active {
-                background-color: $buttonBrown;
+                background-color: map-get($danger, 600);
             }
         }
 
