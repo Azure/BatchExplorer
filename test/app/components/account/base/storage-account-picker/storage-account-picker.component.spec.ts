@@ -36,11 +36,11 @@ describe("StorageAccountPickerComponent", () => {
     beforeEach(() => {
         storageServiceSpy = {
             list: () => Observable.of(List([
-                new StorageAccount({ id: "sub-1/storage-1", name: "storage-1", location: "westus" }),
-                new StorageAccount({ id: "sub-1/storage-2", name: "storage-2", location: "brazilsouth" }),
-                new StorageAccount({ id: "sub-1/storage-3", name: "storage-3", location: "westus" }),
-                new StorageAccount({ id: "sub-1/storage-4", name: "storage-4", location: "easteurope" }),
-                new StorageAccount({ id: "sub-1/storage-5", name: "storage-5", location: "eastus" }),
+                new StorageAccount({ id: "sub-1/storage-1", name: "storage-1", location: "westus" } as any),
+                new StorageAccount({ id: "sub-1/storage-2", name: "storage-2", location: "brazilsouth" } as any),
+                new StorageAccount({ id: "sub-1/storage-3", name: "storage-3", location: "westus" } as any),
+                new StorageAccount({ id: "sub-1/storage-4", name: "storage-4", location: "easteurope" } as any),
+                new StorageAccount({ id: "sub-1/storage-5", name: "storage-5", location: "eastus" } as any),
             ])),
         };
         TestBed.configureTestingModule({
