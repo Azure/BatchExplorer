@@ -34,7 +34,7 @@
         border-right: 1px solid $navigation-background;
 
         &.invalid {
-            color: $fuzzyWuzzyBrown;
+            color: map-get($danger, 500);
         }
 
         i {

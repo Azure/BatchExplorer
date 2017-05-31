@@ -172,11 +172,11 @@ bl-autoscale-formula-picker {
     }
 
     .cm-variables {
-        color: $green-dark;
+        color: map-get($success, 800);
     }
 
     .cm-functions {
-        color: $red-dark;
+        color: map-get($danger, 800);
     }
 
     .cm-math {

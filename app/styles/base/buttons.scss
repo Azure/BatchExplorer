@@ -6,7 +6,7 @@ bl-submit-btn {
         }
 
         .fa-check {
-            color: $green-dark;
+            color: map-get($success, 800);
             overflow: hidden;
         }
 

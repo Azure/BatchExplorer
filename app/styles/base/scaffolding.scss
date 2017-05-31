@@ -89,7 +89,7 @@ blockquote:before, blockquote:after {
 }
 
 .danger {
-    color: $red;
+    color: map-get($danger, 500);
 }
 
 .unaccent {

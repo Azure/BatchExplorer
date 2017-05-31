@@ -1,63 +1,13 @@
+@import "./themes/core";
+@import "./themes/classic";
 @import "./vars/material-colors";
 @import "./vars/zindex";
 
-body {
-    // Primary color
-    --primary-50: map-get($primary-theme1, 50);
-    --primary-100: map-get($primary-theme1, 100);
-    --primary-200: map-get($primary-theme1, 200);
-    --primary-300: map-get($primary-theme1, 300);
-    --primary-400: map-get($primary-theme1, 400);
-    --primary-500: map-get($primary-theme1, 500);
-    --primary-600: map-get($primary-theme1, 600);
-    --primary-700: map-get($primary-theme1, 700);
-    --primary-800: map-get($primary-theme1, 800);
-    --primary-900: map-get($primary-theme1, 900);
-    --primary-A100: map-get($primary-theme1, A100);
-    --primary-A200: map-get($primary-theme1, A200);
-    --primary-A400: map-get($primary-theme1, A400);
-    --primary-A700: map-get($primary-theme1, A700);
 
-    --danger-50: map-get($danger-theme1, 50);
-    --danger-100: map-get($danger-theme1, 100);
-    --danger-200: map-get($danger-theme1, 200);
-    --danger-300: map-get($danger-theme1, 300);
-    --danger-400: map-get($danger-theme1, 400);
-    --danger-500: map-get($danger-theme1, 500);
-    --danger-600: map-get($danger-theme1, 600);
-    --danger-700: map-get($danger-theme1, 700);
-    --danger-800: map-get($danger-theme1, 800);
-    --danger-900: map-get($danger-theme1, 900);
-    --danger-A100: map-get($danger-theme1, A100);
-    --danger-A200: map-get($danger-theme1, A200);
-    --danger-A400: map-get($danger-theme1, A400);
-    --danger-A700: map-get($danger-theme1, A700);
-}
-
-// Red
-$red-light: #d46a6a;
-$red: #aa3939;
-$red-dark: #801515;
-
-// $grenadier          :  #dd2c00;
-// $fuzzyWuzzyBrown    :  #c74f54;
-// $buttonBrown        :  #c45151;
-// $crail              :  #c14848;
-// $vanillaIce         :  #efd0d0;
-
-$yellow-light: #ffc267;
-$yellow: #f4ad42;
-$yellow-dark: #e39014;
-
-//Green
-$green-light: #77cc7d;
-$green: #4caf50;
-$green-dark: #388e3c;
-
-$header-background: map-get($primary, 700);
-$header-hover: map-get($primary, 800);
-$navigation-background: map-get($primary, 600);
-$navigation-hover: map-get($primary, 700);
+$header-background      : map-get($primary, 700);
+$header-hover           : map-get($primary, 800);
+$navigation-background  : map-get($primary, 600);
+$navigation-hover       : map-get($primary, 700);
 
 // Black & white
 //---------------------------------------------
@@ -97,11 +47,11 @@ $successText        :  #468847;
 
 // Text
 //---------------------------------------------
-$headings-color      : map-get($primary, 700);
-$link-color          : map-get($primary, 700);
-$link-color-hover    : map-get($primary, 800);
-$validation-error-color   : $red;
-$label-text          : $dusty-grey;
+$headings-color             : map-get($primary, 700);
+$link-color                 : map-get($primary, 700);
+$link-color-hover           : map-get($primary, 800);
+$validation-error-color     : map-get($danger, 500);
+$label-text                 : $dusty-grey;
 
 // Typography
 //---------------------------------------------

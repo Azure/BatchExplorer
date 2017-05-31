@@ -84,16 +84,16 @@ bl-notification {
     }
 
     &.success {
-        background-color: $green;
+        background-color: map-get($success, 500);
         a {
-            color: $green-dark;
+            color: map-get($success, 800);
         }
     }
 
     &.error {
-        background-color: $red-light;
+        background-color: map-get($danger, 300);
         a {
-            color: $red;
+            color: map-get($danger, 500);
         }
     }
 
@@ -103,9 +103,9 @@ bl-notification {
     }
 
     &.warn {
-        background-color: $yellow-light;
+        background-color: map-get($warn, 400);
         a {
-            color: $yellow-dark;
+            color: map-get($warn, 800);
         }
     }
 
@@ -188,7 +188,7 @@ bl-persistent-notifications-dropdown {
             margin-right: 10px;
 
             .fa-exclamation-triangle {
-                color: $yellow;
+                color: map-get($warn, 500);
             }
         }
 

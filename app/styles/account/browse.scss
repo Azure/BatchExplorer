@@ -10,55 +10,16 @@ bl-account-home {
 }
 
 bl-account-list {
-    .subscription {
-        > .subscription-details {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-
-            &:hover {
-                background-color: $altoGray;
-            }
-
-            .icon {
-                color: map-get($md-prussian-blue, 300);
-                margin: 0 10px;
-                font-size: 2em;
-                width: 26px;
-            }
-        }
-
-        > .accounts {
-            position: relative;
-            background: #f1f1f1;
-            min-height: 40px;
-
-            .no-item-message {
-                height: 40px;
-                padding: 5px 0;
-                font-size: 14px;
-            }
-
-            .quick-list-item {
-                padding-left: 20px;
-            }
-            border-top: 1px solid #e5e5e5;
-            border-bottom: 1px solid #e5e5e5;
-        }
-    }
-}
-
-bl-account-list, bl-account-fav-list {
     .fa-star {
         font-size: 2em;
         color: #d5d5d5;
 
         &:hover {
-            color: map-get($md-prussian-blue, 100);
+            color: map-get($primary, 100);
         }
 
         &.favorite {
-            color: map-get($md-prussian-blue, 400);
+            color: map-get($primary, 400);
         }
     }
 }

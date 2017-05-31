@@ -101,7 +101,7 @@ bl-quick-list {
                 width: 100%;
 
                 &.warning {
-                    background-color: $red;
+                    background-color: map-get($danger, 500);
                 }
 
                 &.lightaccent {
