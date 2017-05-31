@@ -4,13 +4,13 @@ import { ListProp, Model, Prop, Record } from "app/core";
 import { ModelUtils } from "app/utils";
 import { AllTasksCompleteAction, TaskFailureAction } from "./job-action";
 import { JobConstraints } from "./job-constraints";
-import { JobExecutionInformation } from "./job-execution-information";
+import { JobExecutionInformation, JobExecutionInformationAttributes } from "./job-execution-information";
 import { JobManagerTask } from "./job-manager-task";
 import { JobPreparationTask } from "./job-preparation-task";
 import { JobReleaseTask } from "./job-release-task";
 import { JobStats } from "./job-stats";
 import { Metadata, MetadataAttributes } from "./metadata";
-import { NameValuePair } from "./name-value-pair";
+import { NameValuePair, NameValuePairAttributes } from "./name-value-pair";
 
 export interface JobAttributes {
     id: string;
@@ -28,14 +28,14 @@ export interface JobAttributes {
     onAllTasksComplete: AllTasksCompleteAction;
     onTaskFailure: TaskFailureAction;
 
-    constraints: JobConstraints;
-    jobManagerTask: JobManagerTask;
-    jobPreparationTask: JobPreparationTask;
-    jobReleaseTask: JobReleaseTask;
-    commonEnvironmentSettings: NameValuePair[];
+    constraints: Partial<JobConstraints>;
+    jobManagerTask: Partial<JobManagerTask>;
+    jobPreparationTask: Partial<JobPreparationTask>;
+    jobReleaseTask: Partial<JobReleaseTask>;
+    commonEnvironmentSettings: NameValuePairAttributes[];
     poolInfo: any;
     metadata: MetadataAttributes[];
-    executionInfo: JobExecutionInformation;
+    executionInfo: Partial<JobExecutionInformationAttributes>;
     stats: JobStats;
 }
 /**

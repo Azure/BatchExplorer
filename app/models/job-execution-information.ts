@@ -1,14 +1,5 @@
-import { Record } from "immutable";
-
-import { SchedulingError } from "./scheduling-error";
-
-const JobExecutionInformationRecord = Record({
-    startTime: null,
-    endTime: null,
-    poolId: null,
-    schedulingError: null,
-    terminateReason: null,
-});
+import { Model, Prop, Record } from "app/core";
+import { SchedulingError, SchedulingErrorAttributes } from "./scheduling-error";
 
 /**
  * Job terminate reason.
@@ -29,19 +20,22 @@ export const JobTerminateReason = {
     UserTerminate: "UserTerminate" as JobTerminateReason,
 };
 
+export interface JobExecutionInformationAttributes {
+    startTime: Date;
+    endTime: Date;
+    poolId: string;
+    schedulingError: Partial<SchedulingErrorAttributes>;
+    terminateReason: JobTerminateReason;
+}
+
 /**
  * Contains information about the execution of a job in the Azure
  */
-export class JobExecutionInformation extends JobExecutionInformationRecord {
-    public startTime: Date;
-    public endTime: Date;
-    public poolId: string;
-    public schedulingError: SchedulingError;
-    public terminateReason: JobTerminateReason;
-
-    constructor(data: any) {
-        super(Object.assign({}, data, {
-            schedulingError: data.schedulingError && new SchedulingError(data.schedulingError),
-        }));
-    }
+@Model()
+export class JobExecutionInformation extends Record<JobExecutionInformationAttributes> {
+    @Prop() public startTime: Date;
+    @Prop() public endTime: Date;
+    @Prop() public poolId: string;
+    @Prop() public schedulingError: SchedulingError;
+    @Prop() public terminateReason: JobTerminateReason;
 }
