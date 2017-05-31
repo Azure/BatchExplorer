@@ -1,4 +1,4 @@
-import { Model, Prop, Record } from "app/core";
+import { ArmRecord, Model, Prop, Record } from "app/core";
 
 interface StorageAccountPropertiesAttributes {
     creationTime: Date;
@@ -36,7 +36,7 @@ export interface StorageAccountAttributes {
 }
 
 @Model()
-export class StorageAccount extends Record<StorageAccountAttributes> {
+export class StorageAccount extends ArmRecord<StorageAccountAttributes> {
     @Prop() public id: string;
 
     @Prop() public location: string;

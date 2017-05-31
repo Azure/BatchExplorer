@@ -23,7 +23,7 @@ const accountWithInvalidStorage = new AccountResource({
         autoStorage: { storageAccountId: "sub-1/storage-wrong" },
     },
 });
-const storage1 = new StorageAccount({ id: "sub-1/storage-1", name: "storage-1", location: "westus" });
+const storage1 = new StorageAccount({ id: "sub-1/storage-1", name: "storage-1", location: "westus" } as any);
 
 @Component({
     template: `<bl-storage-account-card [account]="account"></bl-storage-account-card>`,
