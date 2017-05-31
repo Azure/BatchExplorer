@@ -1,7 +1,7 @@
 nav {
     ul {
         margin: 0;
- 
+
         li {
             padding: 0;
 
@@ -9,14 +9,14 @@ nav {
                 display: block;
                 margin: 0 auto;
             }
-            
+
             a {
                 display: block;
                 padding: 18px 0;
             }
 
             a.active {
-                background-color: lighten($navigation-hover, 4%);
+                background-color: map-get($primary, 500);
                 color: $white;
             }
         }

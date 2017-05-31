@@ -85,7 +85,7 @@ bl-banner > md-card.mat-card {
 
     > .details-container {
         padding: 10px 24px;
-        border-top: 1px solid $red-dark;
+        border-top: 1px solid map-get($danger, 800);
         font-weight: 500;
     }
 }
@@ -134,12 +134,12 @@ bl-banner > md-card.mat-card {
 }
 
 bl-banner > md-card.error {
-    @include banner-scheme($red, $red-dark);
+    @include banner-scheme(map-get($danger, 500), map-get($danger, 800));
     color: $whiteSmoke-darker;
 }
 
 bl-banner > md-card.warning {
-    @include banner-scheme($yellow, $yellow-dark);
+    @include banner-scheme(map-get($warn, 500), map-get($warn, 800));
     color: $whiteSmoke-darker;
 }
 

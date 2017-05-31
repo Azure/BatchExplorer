@@ -1,15 +1,15 @@
 bl-refresh-btn {
     .fa-refresh {
-        color: map-get($md-prussian-blue, 300);
+        color: map-get($primary, 300);
     }
 
     .fa-check {
-        color: $green-dark;
+        color: map-get($success, 800);
         // overflow: hidden;
     }
 
     .fa-warning {
-        color: $red;
+        color: map-get($danger, 500);
     }
 
     .success-container {

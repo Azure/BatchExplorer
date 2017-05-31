@@ -34,7 +34,7 @@
         border-right: 1px solid $navigation-background;
 
         &.invalid {
-            color: $fuzzyWuzzyBrown;
+            color: map-get($danger, 500);
         }
 
         i {
@@ -116,11 +116,11 @@
 
             &:hover {
                 color: white;
-                background-color: $crail;
+                background-color: map-get($danger, 400);
             }
 
             &:active {
-                background-color: $buttonBrown;
+                background-color: map-get($danger, 600);
             }
         }
     }

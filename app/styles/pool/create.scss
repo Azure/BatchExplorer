@@ -26,16 +26,16 @@ bl-pool-os-picker {
         }
 
         &.active {
-            border-color: map-get($md-prussian-blue, 300);
+            border-color: map-get($primary, 300);
 
             > .main > .icon {
-                background: map-get($md-prussian-blue, 300);
-                border-color: map-get($md-prussian-blue, 300);
-                color: map-get($md-prussian-blue, 50);
+                background: map-get($primary, 300);
+                border-color: map-get($primary, 300);
+                color: map-get($primary, 50);
             }
 
             .select-version {
-                color: map-get($md-prussian-blue, 500);
+                color: map-get($primary, 500);
                 font-weight: bold;
             }
 
@@ -50,7 +50,7 @@ bl-pool-os-picker {
                 padding: 10px 0;
                 height: 120px;
                 font-size: 60px;
-                color: map-get($md-prussian-blue, 300);
+                color: map-get($primary, 300);
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -117,16 +117,16 @@ bl-vm-size-picker {
             }
 
             &.active {
-                border-color: map-get($md-prussian-blue, 300);
+                border-color: map-get($primary, 300);
 
                 > .title {
-                    background: map-get($md-prussian-blue, 300);
-                    border-color: map-get($md-prussian-blue, 300);
+                    background: map-get($primary, 300);
+                    border-color: map-get($primary, 300);
                     color: $whitesmoke;
                 }
 
                 > .pricing {
-                    border-color: map-get($md-prussian-blue, 300);
+                    border-color: map-get($primary, 300);
                 }
             }
 
@@ -172,19 +172,19 @@ bl-autoscale-formula-picker {
     }
 
     .cm-variables {
-        color: $green-dark;
+        color: map-get($success, 800);
     }
 
     .cm-functions {
-        color: $red-dark;
+        color: map-get($danger, 800);
     }
 
     .cm-math {
-        color: $prussian-blue;
+        color: map-get($primary, 700);
     }
 
     .cm-builtin {
-        color: $midnight;
+        color: map-get($primary, 800);
     }
 }
 

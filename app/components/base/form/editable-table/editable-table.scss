@@ -40,7 +40,7 @@ bl-editable-table {
 
             &:focus {
                 background: white;
-                border-bottom: 2px solid map-get($md-prussian-blue, 500);
+                border-bottom: 2px solid map-get($primary, 500);
             }
         }
 
@@ -56,18 +56,18 @@ bl-editable-table {
             outline: none;
 
             > .fa {
-                color: $red;
+                color: map-get($danger, 500);
             }
 
             &:focus, &:hover {
-                background: $red;
+                background: map-get($danger, 500);
                 > .fa {
                     color: $whitesmoke;
                 }
             }
 
             &:active {
-                background: $red-dark;
+                background: map-get($danger, 800);
                 > .fa {
                     color: $whitesmoke;
                 }

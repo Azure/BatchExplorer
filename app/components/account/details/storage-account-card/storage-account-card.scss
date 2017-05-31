@@ -20,7 +20,7 @@ bl-storage-account-card > .storage-account-card {
                 font-size: 16px;
             }
             .error {
-                color: $red;
+                color: map-get($danger, 500);
             }
         }
     }
@@ -37,7 +37,7 @@ bl-storage-account-card > .storage-account-card {
 
             &:hover {
                 color: $whitesmoke;
-                background: map-get($md-prussian-blue, 300);
+                background: map-get($primary, 300);
             }
         }
     }

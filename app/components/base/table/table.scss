@@ -31,11 +31,11 @@ bl-table {
 
         > tr {
             cursor:pointer;
-            border-top: 1px $athensGrey solid;
+            border-top: 1px $border-color solid;
             height: $table-row-height;
 
             &.selected {
-                background-color: map-get($md-prussian-blue, 100);
+                background-color: map-get($primary, 100);
 
                 p {
                     color: $mineShaftGray;
@@ -43,7 +43,7 @@ bl-table {
             }
 
             &.focused {
-                background-color: map-get($md-prussian-blue, 200);
+                background-color: map-get($primary, 200);
             }
 
             &:hover:not(.selected) {
@@ -51,7 +51,7 @@ bl-table {
             }
 
             &:last-child {
-                border-bottom: 1px $athensGrey solid;
+                border-bottom: 1px $border-color solid;
             }
         }
     }
@@ -93,9 +93,9 @@ bl-table {
         }
 
         &.sorting {
-            color: map-get($md-prussian-blue, 500);
+            color: map-get($primary, 500);
             > .sort-icon {
-                color: map-get($md-prussian-blue, 500);
+                color: map-get($primary, 500);
             }
         }
     }
@@ -125,5 +125,5 @@ bl-table.dashboard {
 }
 
 .cell-spinner {
-    color: map-get($md-prussian-blue, 400);
+    color: map-get($primary, 400);
 }

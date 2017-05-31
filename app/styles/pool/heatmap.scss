@@ -20,7 +20,7 @@ $color-width: 14px;
     g.node-group {
         cursor: pointer;
         rect {
-            stroke: map-get($md-prussian-blue, 500);
+            stroke: map-get($primary, 500);
         }
 
         text {
@@ -33,7 +33,7 @@ $color-width: 14px;
     &.interactive {
         g.node-group:hover {
             rect {
-                stroke: map-get($md-prussian-blue, 500);
+                stroke: map-get($primary, 500);
                 fill-opacity: 0.7;
             }
         }
@@ -66,7 +66,7 @@ $color-width: 14px;
 
             &.highlighted {
                 color: $concreteGray;
-                background: map-get($md-prussian-blue, 400);
+                background: map-get($primary, 400);
             }
         }
 

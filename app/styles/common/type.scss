@@ -6,7 +6,7 @@
  */
 
 body {
-    font-family: $baseFontFamily;
+    font-family: "Roboto", Helvetica, Arial, sans-serif;
     font-size: $baseFontSize;
     line-height: $baseLineHeight;
     color: $textColor;
@@ -58,4 +58,11 @@ h5 { font-size: $h5FontSize; }
 h6 {
     font-size: $h6FontSize;
     line-height: 19px;
+}
+
+hr {
+    margin: $baseLineHeight 0;
+    border: 0;
+    border-top: 1px solid $border-color;
+    border-bottom: 1px solid $white;
 }
