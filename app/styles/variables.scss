@@ -39,11 +39,10 @@ $mineShaftGray      :  $mineshaft-grey;
 
 // Status Colours
 //---------------------------------------------
-$warningText        :  #c09853;
-$errorText          :  #b94a48;
-$infoText           :  #3a87ad;
-$successText        :  #468847;
-
+$warningText        :  map-get($warn, 500);
+$errorText          :  map-get($danger, 500);
+$infoText           :  map-get($primary, 500);
+$successText        :  map-get($success, 500);
 
 // Text
 //---------------------------------------------
@@ -53,20 +52,9 @@ $link-color-hover           : map-get($primary, 800);
 $validation-error-color     : map-get($danger, 500);
 $label-text                 : $dusty-grey;
 
-// Typography
-//---------------------------------------------
-$segoeUiFontFamily         : wf_segoe-ui_normal, "Segoe UI", "Segoe WP", Tahoma, Arial, sans-serif;
-$segoiUiFontFamilySemibold : wf_segoe-ui_semibold, "Segoe UI Semibold", "Segoe WP Semibold", "Segoe UI", "Segoe WP", Tahoma, Arial, sans-serif;
-$segoiUiFontFamilySemilight: wf_segoe-ui_semilight, "Segoe UI Semilight", "Segoe WP Semilight","Segoe UI", "Segoe WP", Tahoma, Arial, sans-serif;
-$segoiUiFontFamilyBold     : wf_segoe-ui_bold, "Segoe UI Bold", "Segoe WP Bold","Segoe UI", "Segoe WP", Tahoma, Arial, sans-serif;
-
-$baseFontSize       : 10pt;
-$baseFontFamily     : $segoeUiFontFamily;
+$baseFontSize       : 13px;
 $baseLineHeight     : 1.4em;
-$lineHeightComputed : floor($baseFontSize * $baseLineHeight);
-$altFontFamily      : $segoeUiFontFamily;
 
-$headingsFontFamily : $segoeUiFontFamily;
 $headingsFontWeight : semilight;
 $headingWeightBold  : semibold;
 $headingsLineHeight : $baseLineHeight;
