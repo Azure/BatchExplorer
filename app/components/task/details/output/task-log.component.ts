@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnDestroy, OnInit } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
-import { File, Task, TaskState } from "app/models";
+import { File, ServerError, Task, TaskState } from "app/models";
 import { FileService } from "app/services";
 import { prettyBytes } from "app/utils";
 
@@ -20,18 +20,20 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
     public task: Task;
 
     public outputFileNames = defaultOutputFileNames.slice();
-    public selectedOutputFile: "stdout.txt" | "stderr.txt" = "stdout.txt";
+    public selectedOutputFile: "stdout.txt" | "stderr.txt" = defaultOutputFileNames[0] as any;
     public fileSizes: { [filename: string]: string } = {};
     public filterControl = new FormControl();
     public filteredOptions: Observable<string[]>;
     public addingFile = false;
 
     private _dataSubs: Subscription[] = [];
+    private _taskFileSubscription: Subscription;
     private _options: BehaviorSubject<string[]>;
     private _currentTaskId: string = null;
 
     constructor(private fileService: FileService) {
         this._options = new BehaviorSubject<string[]>([]);
+
         // todo: read these from the node
         // todo: future enhancement, read from storage as well
         // https://material.angular.io/components/component/autocomplete
@@ -63,6 +65,9 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
                 this._currentTaskId = this.task.id;
                 this.fileSizes = {};
                 this.addingFile = false;
+
+                console.log("about to load files for task: ", this._currentTaskId);
+                this._loadTaskFilesData();
                 this._updateFileData();
             }
         }
@@ -75,6 +80,8 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
         this.addingFile = false;
         this.outputFileNames = defaultOutputFileNames.slice();
         this.selectedOutputFile = defaultOutputFileNames[0] as any;
+
+        this._taskFileSubscription.unsubscribe();
         this._clearSubscriptions();
     }
 
@@ -98,6 +105,25 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
             this.toggleFilter();
             this._updateFileData();
         }
+    }
+
+    /**
+     * Get the sizes for the output file name collection
+     */
+    private _loadTaskFilesData() {
+        const fileData = this.fileService.listFromTask(this.jobId, this.task.id, true, {}, (error: ServerError) => {
+            // todo: add something to the output list, or just ignore all errors?
+            return false;
+        });
+
+        this._taskFileSubscription = fileData.items.subscribe((items) => {
+            console.log("fileData.items: ", items);
+            items.map((file: File) => {
+                console.log(`${file.name}-${file.isDirectory}`);
+            });
+        });
+
+        fileData.fetchNext(true);
     }
 
     /**
