@@ -114,16 +114,6 @@ bl-table {
     }
 }
 
-/*
- * Specifically for tables on the dashboard that need display: block & inline-block
- * instead of display: table.
- */
-bl-table.dashboard {
-    bl-cell {
-        padding: 0 5px;
-    }
-}
-
 .cell-spinner {
     color: map-get($md-prussian-blue, 400);
 }
