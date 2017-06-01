@@ -1,6 +1,6 @@
 import { Component, HostBinding, Input, OnChanges } from "@angular/core";
 
-import { Pool } from "app/models";
+import { Pool, PoolAllocationState, PoolState } from "app/models";
 
 import "./pool-nodes-preview.scss";
 
@@ -33,10 +33,10 @@ export class PoolNodesPreviewComponent implements OnChanges {
         const pool = this.pool;
         if (pool.resizeError) {
             return "There was a resize error";
-        } else if (pool.currentDedicated !== pool.targetDedicated) {
-            return `Pool is resizing from ${pool.currentDedicated} to ${pool.targetDedicated} nodes`;
+        } else if (pool.allocationState === PoolAllocationState.resizing) {
+            return `Pool is resizing from ${pool.currentNodes} to ${pool.targetNodes} nodes`;
         } else {
-            return `Pool has ${pool.currentDedicated} nodes`;
+            return `Pool has ${pool.currentNodes} nodes`;
         }
     }
 }
