@@ -22,8 +22,8 @@
     }
 
     &:hover, &:focus {
-        border-color: map-get($md-prussian-blue, 300);
-        color: map-get($md-prussian-blue, 300);
+        border-color: map-get($primary, 300);
+        color: map-get($primary, 300);
     }
 
 

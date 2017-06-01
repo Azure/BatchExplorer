@@ -1,0 +1,89 @@
+@mixin prop($name, $var, $index) {
+    #{$name}-#{$index}: map-get($var, $index);
+}
+
+@mixin css-var-theme($name, $var) {
+    @include prop($name, $var, 50);
+    @include prop($name, $var, 100);
+    @include prop($name, $var, 200);
+    @include prop($name, $var, 300);
+    @include prop($name, $var, 400);
+    @include prop($name, $var, 500);
+    @include prop($name, $var, 600);
+    @include prop($name, $var, 700);
+    @include prop($name, $var, 800);
+    @include prop($name, $var, 900);
+    @include prop($name, $var, A100);
+    @include prop($name, $var, A200);
+    @include prop($name, $var, A400);
+    @include prop($name, $var, A700);
+};
+
+$primary: (
+    50: var(--primary-50),
+    100: var(--primary-100),
+    200: var(--primary-200),
+    300: var(--primary-300),
+    400: var(--primary-400),
+    500: var(--primary-500),
+    600: var(--primary-600),
+    700: var(--primary-700),
+    800: var(--primary-800),
+    900: var(--primary-900),
+    A100: var(--primary-A100),
+    A200: var(--primary-A200),
+    A400: var(--primary-A400),
+    A700: var(--primary-A700),
+);
+$primary: $primary;
+
+$danger: (
+    50: var(--danger-50),
+    100: var(--danger-100),
+    200: var(--danger-200),
+    300: var(--danger-300),
+    400: var(--danger-400),
+    500: var(--danger-500),
+    600: var(--danger-600),
+    700: var(--danger-700),
+    800: var(--danger-800),
+    900: var(--danger-900),
+    A100: var(--danger-A100),
+    A200: var(--danger-A200),
+    A400: var(--danger-A400),
+    A700: var(--danger-A700),
+);
+
+$warn: (
+    50: var(--warn-50),
+    100: var(--warn-100),
+    200: var(--warn-200),
+    300: var(--warn-300),
+    400: var(--warn-400),
+    500: var(--warn-500),
+    600: var(--warn-600),
+    700: var(--warn-700),
+    800: var(--warn-800),
+    900: var(--warn-900),
+    A100: var(--warn-A100),
+    A200: var(--warn-A200),
+    A400: var(--warn-A400),
+    A700: var(--warn-A700),
+);
+
+$success: (
+    50: var(--success-50),
+    100: var(--success-100),
+    200: var(--success-200),
+    300: var(--success-300),
+    400: var(--success-400),
+    500: var(--success-500),
+    600: var(--success-600),
+    700: var(--success-700),
+    800: var(--success-800),
+    900: var(--success-900),
+    A100: var(--success-A100),
+    A200: var(--success-A200),
+    A400: var(--success-A400),
+    A700: var(--success-A700),
+);

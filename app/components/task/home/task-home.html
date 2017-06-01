@@ -1,8 +1,7 @@
 <bl-list-and-show-layout #layout (listScrolledToBottom)="taskList.loadMore()" [list]="taskList">
     <div bl-list-buttons>
-        <button md-mini-fab color="primary" title="Add a task" (click)="addTask()">
-            <i class="fa fa-plus spin-hover"></i>
-        </button>
+        <bl-action-btn color="primary" type="round" icon="fa fa-plus spin-hover" title="Add a task" (action)="addTask()">
+        </bl-action-btn>
     </div>
     <div bl-list-content>
         <bl-focus-section>

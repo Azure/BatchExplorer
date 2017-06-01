@@ -1,8 +1,7 @@
 <bl-list-and-show-layout #layout (listScrolledToBottom)="jobList.onScrollToBottom()" [list]="jobList">
     <div bl-list-buttons>
-        <button md-mini-fab color="primary" title="Add a job" (click)="addJob()">
-            <i class="fa fa-plus spin-hover"></i>
-        </button>
+        <bl-action-btn color="primary" type="round" icon="fa fa-plus spin-hover" title="Add a job" (action)="addJob()">
+        </bl-action-btn>
     </div>
     <div bl-list-content>
         <bl-focus-section>

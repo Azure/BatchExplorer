@@ -68,7 +68,7 @@
         }
 
         &.following {
-            background: $green;
+            background: map-get($success, 500);
             color: $whiteSmoke-darker;
         }
     }

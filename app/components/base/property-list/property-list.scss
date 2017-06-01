@@ -57,15 +57,15 @@ bl-property-group {
     width: 100%;
 
     &:not(:last-child) {
-        border-bottom: 1px solid $alto;
+        border-bottom: 1px solid $border-color;
     }
 
     .warning-message {
-        color: $yellow;
+        color: map-get($warn, 500);
         margin-bottom: 10px;
 
         > .fa {
-            color: $yellow;
+            color: map-get($warn, 500);
         }
     }
 
@@ -82,7 +82,7 @@ bl-property-group {
             align-items: center;
             margin-right: 5px;
             font-size: 20px;
-            color: map-get($md-prussian-blue, 500);
+            color: map-get($primary, 500);
             width: 15px;
         }
 
@@ -139,7 +139,7 @@ bl-property-group {
             }
 
             &.link {
-                color: map-get($md-prussian-blue, 400);
+                color: map-get($primary, 400);
                 i {
                     padding-left: 4px;
                 }
@@ -166,7 +166,7 @@ bl-property-group {
             }
 
             &:active {
-                color: map-get($md-prussian-blue, 200);
+                color: map-get($primary, 200);
             }
         }
 
@@ -220,7 +220,7 @@ bl-property-group {
                 .copied-notification {
                     top: 0;
                     z-index: 1;
-                    background: $green;
+                    background: map-get($success, 500);
                     position: absolute;
                     color: $whitesmoke;
                     padding: 5px;
@@ -254,7 +254,7 @@ bl-property-group {
                 width: 26px !important;
                 height: 26px !important;
                 font-size: 16px;
-                color: map-get($md-prussian-blue, 500);
+                color: map-get($primary, 500);
             }
         }
     }
@@ -263,7 +263,7 @@ bl-property-group {
 bl-bool-property {
     &.enabled {
         .fa-toggle-on {
-            color: $green;
+            color: map-get($success, 500);
         }
     }
 }
