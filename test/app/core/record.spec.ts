@@ -34,6 +34,12 @@ class SimpleTestRec extends Record<any> {
     public c: number;
 }
 
+@Model()
+class InheritedTestRec extends SimpleTestRec {
+    @Prop()
+    public d: number;
+}
+
 describe("Record", () => {
     it("should throw an exeption when record doesn't extends Record class", () => {
         try {
@@ -126,9 +132,9 @@ describe("Record", () => {
     });
 
     it("toJS() should return compelex type toJS recursively", () => {
-        let a = new TestRec({ id: "id-1", nested: { name: "name-1" }, nestedList: [{ name: "name-2" }]});
+        let a = new TestRec({ id: "id-1", nested: { name: "name-1" }, nestedList: [{ name: "name-2" }] });
 
-        expect(a.toJS()).toEqual({ id: "id-1", nested: { name: "name-1" }, nestedList: [{ name: "name-2" }]});
+        expect(a.toJS()).toEqual({ id: "id-1", nested: { name: "name-1" }, nestedList: [{ name: "name-2" }] });
     });
 
     it("should have access to values in constructor", () => {
@@ -155,5 +161,10 @@ describe("Record", () => {
         const rec2 = new ComputedValueRec({ a: 3, b: 50 });
         expect(rec2.computedA).toEqual("A3");
         expect(rec2.computedB).toEqual("B50");
+    });
+
+    it("should work with inherited models", () => {
+        const rec = new InheritedTestRec({ a: 1, b: 2, c: 3, d: 4, invalid: 10 });
+        expect(rec.toJS()).toEqual({ id: null, a: 1, b: 2, c: 3, d: 4 });
     });
 });
