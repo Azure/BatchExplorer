@@ -7,8 +7,11 @@
             <input type="text" mdInput [formControl]="filterControl" [mdAutocomplete]="auto">
         </md-input-container>
     </div>
-    <div class="file-tab-more" (click)="toggleFilter()">
+    <div class="file-tab-more" (click)="toggleFilter()" title="Select additional file">
         <i class="fa" [ngClass]="!addingFile ? 'fa-plus' : 'fa-minus'"></i>
+    </div>
+    <div class="file-tab" *ngIf="outputFileNames.length > 2" (click)="resetTabs()" title="Reset to default">
+        <i class="fa fa-reply"></i>
     </div>
 </div>
 <div *ngFor="let filename of outputFileNames" [hidden]="filename !== selectedOutputFile">

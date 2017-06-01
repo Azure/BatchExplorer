@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
 import { File, ServerError, Task, TaskState } from "app/models";
 import { FileService } from "app/services";
+import { PollObservable } from "app/services/core";
 import { prettyBytes } from "app/utils";
 
 const defaultOutputFileNames = ["stdout.txt", "stderr.txt"];
@@ -26,23 +27,17 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
     public filteredOptions: Observable<string[]>;
     public addingFile = false;
 
-    private _dataSubs: Subscription[] = [];
+    private _fileSizeSubs: Subscription[] = [];
     private _taskFileSubscription: Subscription;
+    private _initialQueryOptions = { maxItems: 500 };
     private _options: BehaviorSubject<string[]>;
     private _currentTaskId: string = null;
+    private _poller: PollObservable;
+    private _refreshInterval: number = 5000;
+    private _fileMap = {};
 
     constructor(private fileService: FileService) {
         this._options = new BehaviorSubject<string[]>([]);
-
-        // todo: read these from the node
-        // todo: future enhancement, read from storage as well
-        // https://material.angular.io/components/component/autocomplete
-        this._options.next([
-            "stdout.txt",
-            "stderr.txt",
-            "ProcessEnv.cmd",
-            "bob.cmd",
-        ]);
         this.filteredOptions = this._options;
     }
 
@@ -59,14 +54,13 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
         if (inputs.jobId || inputs.task) {
             /**
              * ngOnChanges is fired multiple times for the same task selection
-             * so this should cut down on API chatter.
+             * so this should cut down on chatter.
              */
             if (this.task && this._currentTaskId !== this.task.id) {
                 this._currentTaskId = this.task.id;
                 this.fileSizes = {};
                 this.addingFile = false;
 
-                console.log("about to load files for task: ", this._currentTaskId);
                 this._loadTaskFilesData();
                 this._updateFileData();
             }
@@ -77,12 +71,12 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
      * Navigating away from the job and task so reset the tabs
      */
     public ngOnDestroy() {
-        this.addingFile = false;
-        this.outputFileNames = defaultOutputFileNames.slice();
-        this.selectedOutputFile = defaultOutputFileNames[0] as any;
-
-        this._taskFileSubscription.unsubscribe();
-        this._clearSubscriptions();
+        this.resetTabs();
+        this._clearTaskFilesSubscription();
+        this._clearFileSizeSubscriptions();
+        if (this._poller) {
+            this._poller.destroy();
+        }
     }
 
     /**
@@ -107,34 +101,56 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
         }
     }
 
+    public resetTabs() {
+        this.addingFile = false;
+        this.outputFileNames = defaultOutputFileNames.slice();
+        this.selectedOutputFile = defaultOutputFileNames[0] as any;
+    }
+
     /**
-     * Get the sizes for the output file name collection
+     * Get the task files from the node so we can use them to populate
+     * the autocomplete control.
      */
     private _loadTaskFilesData() {
-        const fileData = this.fileService.listFromTask(this.jobId, this.task.id, true, {}, (error: ServerError) => {
-            // todo: add something to the output list, or just ignore all errors?
-            return false;
-        });
+        this._clearTaskFilesSubscription();
+        const taskFileData = this.fileService.listFromTask(
+            this.jobId,
+            this.task.id,
+            true,
+            this._initialQueryOptions,
+            (error: ServerError) => {
+                // todo: should i ignore all errors for this call?
+                return false;
+            },
+        );
 
-        this._taskFileSubscription = fileData.items.subscribe((items) => {
-            console.log("fileData.items: ", items);
+        // poll for files if the job has not completed
+        if (this.task.state !== TaskState.completed) {
+            this._poller = taskFileData.startPoll(this._refreshInterval);
+        }
+
+        this._taskFileSubscription = taskFileData.items.subscribe((items) => {
             items.map((file: File) => {
-                console.log(`${file.name}-${file.isDirectory}`);
+                if (this._canAddFileToMap(file)) {
+                    this._fileMap[file.name] = {};
+                }
             });
+
+            this._options.next(Object.keys(this._fileMap));
         });
 
-        fileData.fetchNext(true);
+        taskFileData.fetchNext(true);
     }
 
     /**
      * Get the sizes for the output file name collection
      */
     private _updateFileData() {
-        this._clearSubscriptions();
+        this._clearFileSizeSubscriptions();
         this.outputFileNames.map((filename) => {
             if (this._shouldGetFileSize(filename)) {
                 const data = this.fileService.getFilePropertiesFromTask(this.jobId, this.task.id, filename);
-                this._dataSubs.push(data.item.subscribe((file: File) => {
+                this._fileSizeSubs.push(data.item.subscribe((file: File) => {
                     if (file) {
                         const props = file.properties;
                         this.fileSizes[filename] = prettyBytes(props && props.contentLength);
@@ -155,9 +171,24 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     /**
-     * Unsubscribe from any existing saved subscriptions
+     * Ignore directories and any file that is either already in the map, or
+     * is one of the defaults.
      */
-    private _clearSubscriptions() {
-        this._dataSubs.forEach(x => x.unsubscribe());
+    private _canAddFileToMap(file: File) {
+        return !file.isDirectory &&
+            !this._fileMap[file.name] &&
+            file.name !== defaultOutputFileNames[0] &&
+            file.name !== defaultOutputFileNames[1];
+    }
+
+    private _clearFileSizeSubscriptions() {
+        this._fileSizeSubs.forEach(x => x.unsubscribe());
+    }
+
+    private _clearTaskFilesSubscription() {
+        this._fileMap = {};
+        if (this._taskFileSubscription) {
+            this._taskFileSubscription.unsubscribe();
+        }
     }
 }
