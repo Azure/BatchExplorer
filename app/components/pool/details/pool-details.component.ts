@@ -106,16 +106,6 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         });
     }
 
-    public get nodesTooltipMessage() {
-        if (this.pool.resizeError) {
-            return "There was a resize error";
-        } else if (this.pool.currentDedicated !== this.pool.targetDedicated) {
-            return `Pool is resizing from ${this.pool.currentDedicated} to ${this.pool.targetDedicated} nodes`;
-        } else {
-            return `Pool has ${this.pool.currentDedicated} nodes`;
-        }
-    }
-
     @autobind()
     public updateTags(newTags: List<string>) {
         return this.poolService.updateTags(this.pool, newTags).flatMap(() => {

@@ -18,7 +18,7 @@ export class DeletePoolTask extends LongRunningDeleteAction {
     protected waitForDelete(id: string, taskManager?: BackgroundTaskService) {
         this.poolService.getOnce(id).subscribe({
             next: (pool: Pool) => {
-                const task = new WaitForDeletePoolPollTask(this.poolService, id, pool.currentDedicated);
+                const task = new WaitForDeletePoolPollTask(this.poolService, id, pool.currentNodes);
                 if (taskManager) {
                     taskManager.startTask(`Deleting pool '${id}'`, (bTask) => {
                         return task.start(bTask.progress);
@@ -72,7 +72,7 @@ export class WaitForDeletePoolPollTask {
         data.item.subscribe({
             next: (pool: Pool) => {
                 if (pool) {
-                    const currentNodes = pool.currentDedicated;
+                    const currentNodes = pool.currentNodes;
                     progress.next(this._getProgress(currentNodes));
                 }
             },

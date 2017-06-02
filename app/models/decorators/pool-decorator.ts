@@ -12,7 +12,8 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     public certificateReferences: any[];
     public cloudServiceConfiguration: CloudServiceConfigurationDecorator;
     public creationTime: string;
-    public currentDedicated: string;
+    public currentDedicatedNodes: string;
+    public currentLowPriorityNodes: string;
     public displayName: string;
     public enableAutoScale: string;
     public enableInterNodeCommunication: string;
@@ -23,7 +24,8 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     public resizeTimeout: string;
     public state: string;
     public stateTransitionTime: string;
-    public targetDedicated: string;
+    public targetDedicatedNodes: string;
+    public targetLowPriorityNodes: string;
     public autoScaleFormula: string;
     public autoScaleEvaluationInterval: string;
     public taskSchedulingPolicy: TaskSchedulingPolicyDecorator;
@@ -42,7 +44,7 @@ export class PoolDecorator extends DecoratorBase<Pool> {
         this.cloudServiceConfiguration =
             new CloudServiceConfigurationDecorator(pool.cloudServiceConfiguration || {} as any);
         this.creationTime = this.dateField(pool.creationTime);
-        this.currentDedicated = this.stringField(pool.currentDedicated);
+        this.currentDedicatedNodes = this.stringField(pool.currentDedicatedNodes);
         this.displayName = this.stringField(pool.displayName);
         this.enableAutoScale = this.booleanField(pool.enableAutoScale);
         this.enableInterNodeCommunication = this.booleanField(pool.enableInterNodeCommunication);
@@ -53,7 +55,7 @@ export class PoolDecorator extends DecoratorBase<Pool> {
         this.resizeTimeout = this.timespanField(pool.resizeTimeout);
         this.state = this.stateField(pool.state);
         this.stateTransitionTime = this.dateField(pool.stateTransitionTime);
-        this.targetDedicated = this.stringField(pool.targetDedicated);
+        this.targetDedicatedNodes = this.stringField(pool.targetDedicatedNodes);
         this.autoScaleFormula = this.stringField(pool.autoScaleFormula);
         this.autoScaleEvaluationInterval = this.timespanField(pool.autoScaleEvaluationInterval);
         this.taskSchedulingPolicy =
