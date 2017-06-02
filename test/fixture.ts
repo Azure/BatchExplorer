@@ -1,7 +1,7 @@
 import { Type } from "@angular/core";
 import * as moment from "moment";
 
-import { AccountResource, Application, ApplicationPackage, Job, Node, PackageState, Pool,
+import { AccountResource, Application, ApplicationPackage, File, Job, Node, PackageState, Pool,
     Subscription, SubtaskInformation, Task,
 } from "app/models";
 
@@ -235,4 +235,16 @@ export const applicationPackage = new FixtureFactory<ApplicationPackage>(Applica
     lastActivationTime: new Date(),
     storageUrl: "",
     storageUrlExpiry: null,
+});
+
+export const file = new FixtureFactory<File>(File, {
+    name: "file-1",
+    url: "url/to/file",
+    isDirectory: false,
+    properties: {
+        contentLength: 0,
+        contentType: "text/plain",
+        creationTime: new Date(),
+        lastModified: new Date(),
+    },
 });

@@ -51,7 +51,9 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
    }
 
     public ngOnChanges(inputs) {
+        console.log("*** ngOnChanges ***");
         if (inputs.jobId || inputs.task) {
+            console.log("inputs.jobId || inputs.task");
             /**
              * ngOnChanges is fired multiple times for the same task selection
              * so this should cut down on chatter.
