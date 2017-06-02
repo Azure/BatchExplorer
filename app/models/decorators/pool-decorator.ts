@@ -37,6 +37,9 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     public lastResized: string;
     public userAccounts: string;
 
+    public dedicatedNodes: string;
+    public lowPriorityNodes: string;
+
     constructor(private pool?: Pool) {
         super(pool);
         this.allocationState = this.stateField(pool.allocationState);
@@ -73,6 +76,9 @@ export class PoolDecorator extends DecoratorBase<Pool> {
         this.lastResized = moment(this.pool.allocationStateTransitionTime).fromNow();
 
         this.userAccounts = pool.userAccounts.map(x => this._decorateUserAccount(x)).join(", ");
+
+        this.dedicatedNodes = this._prettyNodes(pool.currentDedicatedNodes, pool.targetDedicatedNodes);
+        this.lowPriorityNodes = this._prettyNodes(pool.currentLowPriorityNodes, pool.targetLowPriorityNodes);
     }
 
     private _computePoolOs(): string {
@@ -81,6 +87,14 @@ export class PoolDecorator extends DecoratorBase<Pool> {
 
     private _computePoolOsIcon(os): string {
         return this.pool.osIconName();
+    }
+
+    private _prettyNodes(current: number, target: number) {
+        if (current === target) {
+            return target.toString();
+        } else {
+            return `${current} → ${target}`;
+        }
     }
 
     private _decorateUserAccount(user: UserAccount) {

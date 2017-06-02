@@ -31,6 +31,7 @@ export interface NodeAttributes {
     ipAddress: string;
     affinityId: string;
     recentTasks: Array<Partial<NodeRecentTask>>;
+    isPreemptible: boolean;
 }
 
 /**
