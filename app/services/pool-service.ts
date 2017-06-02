@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 
 import { Pool } from "app/models";
-import { PoolCreateDto, PoolEnableAutoScaleDto } from "app/models/dtos";
+import { PoolCreateDto, PoolEnableAutoScaleDto, PoolResizeDto } from "app/models/dtos";
 import { ModelUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";
@@ -11,14 +11,6 @@ import { ServiceBase } from "./service-base";
 
 export interface PoolParams {
     id?: string;
-}
-
-/**
- * TODO DTO
- */
-export interface PoolResizeAttributes {
-    targetDedicatedNodes: number;
-    targetLowPriorityNodes: number;
 }
 
 @Injectable()
@@ -87,8 +79,8 @@ export class PoolService extends ServiceBase {
         this._cache.deleteItemByKey(poolId);
     }
 
-    public resize(poolId: string, target: PoolResizeAttributes, options: any = {}) {
-        return this.callBatchClient((client) => client.pool.resize(poolId, target, options), (error) => {
+    public resize(poolId: string, target: PoolResizeDto, options: any = {}) {
+        return this.callBatchClient((client) => client.pool.resize(poolId, target.toJS(), options), (error) => {
             log.error("Error resizing pool: " + poolId, Object.assign({}, error));
         });
     }
