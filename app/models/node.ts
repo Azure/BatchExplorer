@@ -1,22 +1,8 @@
-import { Iterable, List, Record } from "immutable";
+import { Iterable, List } from "immutable";
 
+import { ListProp, Model, Prop, Record } from "app/core";
 import { NodeRecentTask } from "app/models/node-recent-task";
 import { TaskState } from "app/models/task";
-
-const NodeRecord = Record({
-    id: null,
-    state: null,
-    totalTasksRun: 0,
-    schedulingState: null,
-    vmSize: null,
-    url: null,
-    stateTransitionTime: null,
-    lastBootTime: null,
-    allocationTime: null,
-    ipAddress: null,
-    affinityId: null,
-    recentTasks: null,
-});
 
 export interface NodeAttributes {
     id: string;
@@ -37,25 +23,21 @@ export interface NodeAttributes {
 /**
  * Class for displaying Batch node information.
  */
-export class Node extends NodeRecord {
-    public id: string;
-    public state: NodeState;
-    public totalTasksRun: number;
-    public schedulingState: string;
-    public vmSize: string;
-    public url: string;
-    public stateTransitionTime: Date;
-    public lastBootTime: Date;
-    public allocationTime: Date;
-    public ipAddress: string;
-    public affinityId: string;
-    public recentTasks: List<NodeRecentTask>;
-
-    constructor(data: Partial<NodeAttributes>) {
-        super(Object.assign({}, data, {
-            recentTasks: List(data.recentTasks && data.recentTasks.map(x => new NodeRecentTask(x))),
-        }));
-    }
+@Model()
+export class Node extends Record<NodeAttributes> {
+    @Prop() public id: string;
+    @Prop() public state: NodeState;
+    @Prop() public totalTasksRun: number;
+    @Prop() public schedulingState: string;
+    @Prop() public vmSize: string;
+    @Prop() public url: string;
+    @Prop() public stateTransitionTime: Date;
+    @Prop() public lastBootTime: Date;
+    @Prop() public allocationTime: Date;
+    @Prop() public ipAddress: string;
+    @Prop() public affinityId: string;
+    @ListProp(NodeRecentTask) public recentTasks: List<NodeRecentTask> = List([]);
+    @Prop() public isPreemptible: boolean;
 
     public get runningTasks(): Iterable<number, NodeRecentTask> {
         return this.recentTasks.filter(x => x.taskState === TaskState.running);
