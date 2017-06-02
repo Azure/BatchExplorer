@@ -15,6 +15,7 @@ bl-table {
         border-collapse: collapse;
         overflow: hidden;
         display: table;
+        table-layout: fixed;
     }
 
     bl-thead {
@@ -111,48 +112,6 @@ bl-table {
             overflow: hidden;
             text-overflow: ellipsis;
         }
-    }
-}
-
-/*
- * Specifically for tables on the dashboard that need display: block & inline-block
- * instead of display: table.
- */
-bl-table.dashboard {
-    table {
-        display: block;
-    }
-
-    bl-thead {
-        display: block;
-    }
-
-    tbody {
-        display: block;
-
-        > tr {
-            display: block;
-            padding: 6px;
-        }
-    }
-
-    bl-cell,
-    bl-column {
-        &:first-child {
-            padding: 0;
-        }
-
-        &:last-child {
-            padding: 0;
-        }
-    }
-
-    bl-column {
-        display: inline-block;
-    }
-
-    bl-cell {
-        display: inline-block;
     }
 }
 
