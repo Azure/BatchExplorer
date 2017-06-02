@@ -44,9 +44,10 @@ export default class PoolProxy {
      * @param targetDedicated: The desired number of nodes in the pool
      * @param options: Optional Parameters.
      */
-    public resize(poolId: string, targetDedicated: number, options?: any): Promise<any> {
+    public resize(poolId: string, target: any, options?: any): Promise<any> {
         let resizeBody: any = {};
-        resizeBody.targetDedicated = Number(targetDedicated);
+        resizeBody.targetDedicated = Number(target.targetDedicatedNodes);
+        resizeBody.targetLowPriorityNodes = Number(target.targetLowPriorityNodes);
 
         return this.client.pool.resize(poolId, resizeBody, wrapOptions(options));
     }

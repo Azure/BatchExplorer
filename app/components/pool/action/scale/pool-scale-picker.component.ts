@@ -25,7 +25,8 @@ export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor
         this.form = formBuilder.group({
             enableAutoScale: false,
             autoScaleFormula: ["", this._invalidAutoscaleFormula()],
-            targetDedicated: [0, this._invalidTargetDedicated()],
+            targetDedicatedNodes: [0, this._invalidTargetNodes()],
+            targetLowPriorityNodes: [0, this._invalidTargetNodes()],
             autoScaleEvaluationInterval: [15],
         });
 
@@ -87,7 +88,7 @@ export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor
         };
     }
 
-    private _invalidTargetDedicated() {
+    private _invalidTargetNodes() {
         return (control: FormControl): { [key: string]: any } => {
             if (!this.form || this.form.controls.enableAutoScale.value) {
                 return null;

@@ -22,7 +22,8 @@ export class PoolResizeDialogComponent {
             this._pool = pool;
             const interval = pool.autoScaleEvaluationInterval ? pool.autoScaleEvaluationInterval.asMinutes() : 15;
             this.scale.patchValue({
-                targetDedicated: pool.targetDedicated,
+                targetDedicatedNodes: pool.targetDedicatedNodes,
+                targetLowPriorityNodes: pool.targetLowPriorityNodes,
                 enableAutoScale: pool.enableAutoScale,
                 autoScaleFormula: pool.autoScaleFormula,
                 autoScaleEvaluationInterval: interval,
@@ -52,15 +53,17 @@ export class PoolResizeDialogComponent {
         if (value.enableAutoScale) {
             obs = this._enableAutoScale(value);
         } else {
-            const targetDedicated = value.targetDedicated;
-            obs = this._disableAutoScale().flatMap(() => this.poolService.resize(id, targetDedicated));
+            const targetDedicatedNodes = value.targetDedicatedNodes;
+            const targetLowPriorityNodes = value.targetLowPriorityNodes;
+            obs = this._disableAutoScale().flatMap(() => this.poolService.resize(id,
+             { targetDedicatedNodes, targetLowPriorityNodes }));
         }
 
         const finalObs = obs.flatMap(() => this.poolService.getOnce(this.pool.id)).share();
         finalObs.subscribe({
             next: (pool) => {
                 this.notificationService.success("Pool resize started!",
-                    `Pool '${id}' will resize to ${pool.targetDedicated} nodes!`);
+                    `Pool '${id}' will resize to ${pool.targetNodes} nodes!`);
             },
             error: () => null,
         });

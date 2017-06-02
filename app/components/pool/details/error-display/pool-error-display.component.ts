@@ -32,7 +32,10 @@ export class PoolErrorDisplayComponent {
 
     @autobind()
     public fixStopResizeError() {
-        const obs = this.poolService.resize(this.pool.id, this.pool.targetDedicated);
+        const obs = this.poolService.resize(this.pool.id, {
+            targetDedicatedNodes: this.pool.targetDedicatedNodes,
+            targetLowPriorityNodes: this.pool.targetLowPriorityNodes,
+        });
         obs.subscribe(() => {
             this.refreshPool();
         });

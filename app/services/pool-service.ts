@@ -13,6 +13,14 @@ export interface PoolParams {
     id?: string;
 }
 
+/**
+ * TODO DTO
+ */
+export interface PoolResizeAttributes {
+    targetDedicatedNodes: number;
+    targetLowPriorityNodes: number;
+}
+
 @Injectable()
 export class PoolService extends ServiceBase {
     /**
@@ -79,8 +87,8 @@ export class PoolService extends ServiceBase {
         this._cache.deleteItemByKey(poolId);
     }
 
-    public resize(poolId: string, targetDedicated: number, options: any = {}) {
-        return this.callBatchClient((client) => client.pool.resize(poolId, targetDedicated, options), (error) => {
+    public resize(poolId: string, target: PoolResizeAttributes, options: any = {}) {
+        return this.callBatchClient((client) => client.pool.resize(poolId, target, options), (error) => {
             log.error("Error resizing pool: " + poolId, Object.assign({}, error));
         });
     }

@@ -1,16 +1,27 @@
 <div [formGroup]="form">
     <md-tab-group class="form-tabs" [selectedIndex]="selectedModeTab" (selectChange)="changeScaleModeTab($event)">
         <md-tab label="Fixed">
-            <md-input-container>
-                <input mdInput formControlName="targetDedicated" placeholder="Number of virtual machines in pool" type="number" min="0"/>
-            </md-input-container>
-            <bl-error controlName="targetDedicated" code="required">Target size is a required field</bl-error>
+            <div class="grow">
+                <div class="gcol">
+                    <md-input-container class="form-element">
+                        <input mdInput formControlName="targetDedicatedNodes" placeholder="Dedicated nodes" type="number" min="0" />
+                    </md-input-container>
+                </div>
+                <div class="gcol">
+                    <md-input-container class="form-element">
+                        <input mdInput formControlName="targetLowPriorityNodes" placeholder="Low priority nodes" type="number" min="0" />
+                    </md-input-container>
+                </div>
+            </div>
+            <bl-error controlName="targetDedicatedNodes" code="required">Target dedicated is a required field</bl-error>
+            <bl-error controlName="targetLowPriorityNodes" code="required">Target low priority is a required field</bl-error>
         </md-tab>
         <md-tab label="Auto Scale">
             <bl-autoscale-formula-picker formControlName="autoScaleFormula"></bl-autoscale-formula-picker>
             <bl-error controlName="autoScaleFormula" code="required">Auto scale formula is a required field</bl-error>
             <md-input-container>
-                <input mdInput formControlName="autoScaleEvaluationInterval" placeholder="Evaluation interval(In minutes)" type="number" />
+                <input mdInput formControlName="autoScaleEvaluationInterval" placeholder="Evaluation interval(In minutes)" type="number"
+                />
             </md-input-container>
         </md-tab>
     </md-tab-group>

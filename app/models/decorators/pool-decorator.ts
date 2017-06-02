@@ -45,6 +45,7 @@ export class PoolDecorator extends DecoratorBase<Pool> {
             new CloudServiceConfigurationDecorator(pool.cloudServiceConfiguration || {} as any);
         this.creationTime = this.dateField(pool.creationTime);
         this.currentDedicatedNodes = this.stringField(pool.currentDedicatedNodes);
+        this.currentLowPriorityNodes = this.stringField(pool.currentLowPriorityNodes);
         this.displayName = this.stringField(pool.displayName);
         this.enableAutoScale = this.booleanField(pool.enableAutoScale);
         this.enableInterNodeCommunication = this.booleanField(pool.enableInterNodeCommunication);
@@ -56,6 +57,7 @@ export class PoolDecorator extends DecoratorBase<Pool> {
         this.state = this.stateField(pool.state);
         this.stateTransitionTime = this.dateField(pool.stateTransitionTime);
         this.targetDedicatedNodes = this.stringField(pool.targetDedicatedNodes);
+        this.targetLowPriorityNodes = this.stringField(pool.targetLowPriorityNodes);
         this.autoScaleFormula = this.stringField(pool.autoScaleFormula);
         this.autoScaleEvaluationInterval = this.timespanField(pool.autoScaleEvaluationInterval);
         this.taskSchedulingPolicy =

@@ -59,9 +59,9 @@ export class Pool extends Record<PoolAttributes> {
 
     @Prop() public creationTime: Date;
 
-    @Prop() public currentDedicatedNodes: number;
+    @Prop() public currentDedicatedNodes: number = 0;
 
-    @Prop() public currentLowPriorityNodes: number;
+    @Prop() public currentLowPriorityNodes: number = 0;
 
     @Prop() public displayName: string;
 

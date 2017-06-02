@@ -1,6 +1,6 @@
 import { Component, HostBinding, Input, OnChanges } from "@angular/core";
 
-import { Pool, PoolAllocationState, PoolState } from "app/models";
+import { Pool, PoolAllocationState } from "app/models";
 
 import "./pool-nodes-preview.scss";
 
