@@ -11,6 +11,8 @@ export class HeatmapColor {
     private _colors: ColorMap = {};
     private _lastHighlightedState: string = null;
 
+    public keys: stringp[];
+    
     constructor(private _stateTree: StateTree) {
         this.updateColors();
     }
@@ -32,6 +34,7 @@ export class HeatmapColor {
         } else {
             this._colors = this._colorsForHighlight(highlightedState);
         }
+        this.keys = Object.keys(this._colors);
         this._lastHighlightedState = highlightedState;
     }
 

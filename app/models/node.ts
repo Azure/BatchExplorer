@@ -17,7 +17,7 @@ export interface NodeAttributes {
     ipAddress: string;
     affinityId: string;
     recentTasks: Array<Partial<NodeRecentTask>>;
-    isPreemptible: boolean;
+    isDedicated: boolean;
 }
 
 /**
@@ -37,7 +37,7 @@ export class Node extends Record<NodeAttributes> {
     @Prop() public ipAddress: string;
     @Prop() public affinityId: string;
     @ListProp(NodeRecentTask) public recentTasks: List<NodeRecentTask> = List([]);
-    @Prop() public isPreemptible: boolean;
+    @Prop() public isDedicated: boolean;
 
     public get runningTasks(): Iterable<number, NodeRecentTask> {
         return this.recentTasks.filter(x => x.taskState === TaskState.running);

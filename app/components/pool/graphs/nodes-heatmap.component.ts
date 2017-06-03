@@ -75,6 +75,9 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     @ViewChild("heatmap")
     public heatmapEl: ElementRef;
 
+    @ViewChild("svg")
+    public svgEl: ElementRef;
+
     @Input()
     public set nodes(nodes: List<Node>) {
         if (nodes.size > maxNodes) {
@@ -129,10 +132,11 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             this.containerSizeChanged();
         });
 
-        this._svg = d3.select(this.heatmapEl.nativeElement).append("svg")
+        this._svg = d3.select(this.svgEl.nativeElement)
             .attr("width", this._width)
             .attr("height", this._height);
 
+        this._setupLowPriColors();
         this._processNewNodes();
     }
 
@@ -216,6 +220,8 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
                 let color;
                 if (tile.node.state === NodeState.running) {
                     color = idleColor;
+                } else if (!tile.node.isDedicated) {
+                    return `url(#${tile.node.state})`;
                 } else {
                     color = this.colors.get(tile.node.state);
                 }
@@ -238,7 +244,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
                 if (node.state !== NodeState.running || !node.recentTasks) {
                     return [];
                 }
-                return node.runningTasks.map((task, index) => ({ task, index })).toJS();
+                return node.runningTasks.map((task, index) => ({ node, task, index })).toJS();
             });
 
         runningTaskRects.enter().append("rect")
@@ -249,9 +255,32 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             })
             .attr("width", z)
             .attr("height", taskWidth - 1)
-            .style("fill", runningColor);
+            .style("fill",  (tile: any) => {
+                if (tile.node.isDedicated) {
+                    return runningColor;
+                } else {
+                    return `url(#${tile.node.state})`;
+                }
+            });
 
         runningTaskRects.exit().remove();
+    }
+
+    private _setupLowPriColors() {
+        const defs = this._svg.append("defs");
+        for (let key of this.colors.keys) {
+            const pattern = defs.append("pattern")
+                .attr("id", key)
+                .attr("width", "8")
+                .attr("height", "10")
+                .attr("patternUnits", "userSpaceOnUse")
+                .attr("patternTransform", "rotate(45 50 50)");
+
+            pattern.append("line")
+                .attr("stroke", this.colors.get(key))
+                .attr("stroke-width", "12px")
+                .attr("y2", "10");
+        }
     }
 
     /**
