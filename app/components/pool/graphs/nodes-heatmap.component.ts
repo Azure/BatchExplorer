@@ -102,6 +102,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
 
     private _erd: any;
     private _svg: d3.Selection<any, any, any, any>;
+    private _defs: d3.Selection<any, any, any, any>;
     private _width: number = 0;
     private _height: number = 0;
     private _nodeMap: { [id: string]: Node } = {};
@@ -135,6 +136,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         this._svg = d3.select(this.svgEl.nativeElement)
             .attr("width", this._width)
             .attr("height", this._height);
+        this._defs = this._svg.append("defs");
 
         this._setupLowPriColors();
         this._processNewNodes();
@@ -153,11 +155,12 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
 
     public selectState(state: string) {
         this.highlightedState = state;
+        this.colors.updateColors(this.highlightedState);
+        this._setupLowPriColors();
         this.redraw();
     }
 
     public redraw() {
-        this.colors.updateColors(this.highlightedState);
         this._computeDimensions();
         const tiles = this._nodes.map((node, index) => ({ node, index }));
         const groups = this._svg.selectAll("g.node-group").data(tiles.toJS());
@@ -267,9 +270,9 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     }
 
     private _setupLowPriColors() {
-        const defs = this._svg.append("defs");
+        this._defs.selectAll("pattern").remove();
         for (let key of this.colors.keys) {
-            const pattern = defs.append("pattern")
+            const pattern = this._defs.append("pattern")
                 .attr("id", key)
                 .attr("width", "8")
                 .attr("height", "10")
