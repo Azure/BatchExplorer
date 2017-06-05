@@ -258,7 +258,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             })
             .attr("width", z)
             .attr("height", taskWidth - 1)
-            .style("fill",  (tile: any) => {
+            .style("fill", (tile: any) => {
                 if (tile.node.isDedicated) {
                     return runningColor;
                 } else {
@@ -278,14 +278,25 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
                 .attr("height", "10")
                 .attr("patternUnits", "userSpaceOnUse")
                 .attr("patternTransform", "rotate(45 50 50)");
-
             pattern.append("line")
                 .attr("stroke", this.colors.get(key))
                 .attr("stroke-width", "12px")
                 .attr("y2", "10");
+
+            this._triggerWebkitSvgRedraw();
         }
+
     }
 
+    /**
+     * Workaround for webkit not updating the svg if the defs only change(this will trigger the update).
+     */
+    private _triggerWebkitSvgRedraw() {
+        this._svg.style("display", "inline-block");
+        setTimeout(() => {
+            this._svg.style("display", "block");
+        });
+    }
     /**
      * Compute the dimension of the heatmap.
      *  - rows
