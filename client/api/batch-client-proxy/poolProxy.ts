@@ -46,7 +46,7 @@ export default class PoolProxy {
      */
     public resize(poolId: string, target: any, options?: any): Promise<any> {
         let resizeBody: any = {};
-        resizeBody.targetDedicated = Number(target.targetDedicatedNodes);
+        resizeBody.targetDedicatedNodes = Number(target.targetDedicatedNodes);
         resizeBody.targetLowPriorityNodes = Number(target.targetLowPriorityNodes);
 
         return this.client.pool.resize(poolId, resizeBody, wrapOptions(options));
