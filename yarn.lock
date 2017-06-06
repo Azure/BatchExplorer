@@ -639,9 +639,9 @@ aws4@^1.2.1:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.6.0.tgz#83ef5ca860b2b32e4a0deedee8c771b9db57471e"
 
-azure-batch@1.0.0-preview:
-  version "1.0.0-preview"
-  resolved "https://registry.yarnpkg.com/azure-batch/-/azure-batch-1.0.0-preview.tgz#2f281f1f8b7f381afa8eee5adbe6e8b48de40f0e"
+azure-batch@~2.0.0-preview:
+  version "2.0.0-preview"
+  resolved "https://registry.yarnpkg.com/azure-batch/-/azure-batch-2.0.0-preview.tgz#8f8cc0be13dcba361d28e2eb38887ca0e5876ea5"
   dependencies:
     "@types/underscore" "^1.8.0"
     moment "^2.18.1"

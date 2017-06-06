@@ -29,6 +29,11 @@ export class Record<TInput> {
         return Object.assign({}, this._defaultValues, this._toJS());
     }
 
+    public merge(other: Partial<TInput>): this {
+        const ctr: any = this.constructor;
+        return new ctr({ ...this.toJS(), ...other as any});
+    }
+
     /**
      * DO NOT USE. For interal use only
      */
