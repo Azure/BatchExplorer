@@ -1,5 +1,6 @@
 import {
-    AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild,
+    AfterViewInit, ChangeDetectionStrategy, Component, ElementRef,
+    HostBinding, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild,
 } from "@angular/core";
 import * as d3 from "d3";
 import * as elementResizeDetectorMaker from "element-resize-detector";
