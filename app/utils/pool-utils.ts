@@ -96,8 +96,14 @@ export class PoolUtils {
         }
 
         if (pool.virtualMachineConfiguration) {
-            if (pool.virtualMachineConfiguration.imageReference.publisher ===
-                "MicrosoftWindowsServer") {
+            const config = pool.virtualMachineConfiguration;
+            if (config.osDisk) {
+                return "Custom Image";
+            }
+            if (!config.imageReference) {
+                return "Unkown";
+            }
+            if (config.imageReference.publisher === "MicrosoftWindowsServer") {
                 return `Windows Server ${pool.virtualMachineConfiguration.imageReference.sku}`;
             }
 
@@ -110,7 +116,9 @@ export class PoolUtils {
     }
 
     public static getComputePoolOsIcon(osName): string {
-        if (osName.includes("Windows")) {
+        if (osName === "Custom Image") {
+            return "cloud";
+        } else if (osName.includes("Windows")) {
             return "windows";
         }
 
