@@ -9,7 +9,7 @@ import { ListOrTableBase } from "app/components/base/selectable-list";
 import { TableComponent } from "app/components/base/table";
 import { DeleteTaskDialogComponent, TerminateTaskDialogComponent } from "app/components/task/action";
 import { Task, TaskState } from "app/models";
-import { SchedulingErrorDecorator } from "app/models/decorators";
+import { FailureInfoDecorator } from "app/models/decorators";
 import { TaskService } from "app/services";
 import { DateUtils } from "app/utils";
 
@@ -46,8 +46,8 @@ export class TaskListDisplayComponent extends ListOrTableBase {
     }
 
     public taskStatusText(task: Task): string {
-        if (task.executionInfo && task.executionInfo.schedulingError) {
-            return new SchedulingErrorDecorator(task.executionInfo.schedulingError).summary;
+        if (task.executionInfo && task.executionInfo.failureInfo) {
+            return new FailureInfoDecorator(task.executionInfo.failureInfo).summary;
         } else if (task.executionInfo && task.executionInfo.exitCode !== 0) {
             return `Task failed with exitCode:  ${task.executionInfo.exitCode}`;
         }

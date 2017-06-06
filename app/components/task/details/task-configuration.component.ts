@@ -79,7 +79,7 @@ export class TaskConfigurationComponent {
         this.exitConditionData = {
             noAction,
             terminateJob,
-            schedulingError: this._jobActionString(this._task.exitConditions.schedulingError),
+            failureInfo: this._jobActionString(this._task.exitConditions.failureInfo),
             default: this._jobActionString(this._task.exitConditions.default),
         };
     }
