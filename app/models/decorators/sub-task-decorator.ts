@@ -1,7 +1,7 @@
 import { SubtaskInformation, TaskState } from "app/models";
 import { DecoratorBase } from "app/utils/decorators";
 import { ComputeNodeInfoDecorator } from "./compute-node-info-decorator";
-import { SchedulingErrorDecorator } from "./scheduling-error-decorator";
+import { FailureInfoDecorator } from "./failure-info-decorator";
 
 export class SubTaskDecorator extends DecoratorBase<SubtaskInformation> {
     public startTime: string;
@@ -14,7 +14,7 @@ export class SubTaskDecorator extends DecoratorBase<SubtaskInformation> {
     public previousStateTransitionTime: string;
 
     public nodeInfo: {};
-    public schedulingError: {};
+    public failureInfo: {};
 
     constructor(task?: SubtaskInformation) {
         super(task);
@@ -29,7 +29,7 @@ export class SubTaskDecorator extends DecoratorBase<SubtaskInformation> {
         this.previousStateTransitionTime = this.dateField(task.previousStateTransitionTime);
 
         this.nodeInfo = new ComputeNodeInfoDecorator(task.nodeInfo || {} as any);
-        this.schedulingError = new SchedulingErrorDecorator(task.schedulingError || {} as any);
+        this.failureInfo = new FailureInfoDecorator(task.failureInfo || {} as any);
     }
 
     // todo: base class ...

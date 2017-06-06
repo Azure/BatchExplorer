@@ -82,7 +82,7 @@ export class Task extends TaskRecord {
     public get didTimeout() {
         const info = this.executionInfo;
         const constraints = this.constraints;
-        if (!(info && info.exitCode && constraints && constraints.maxWallClockTime)) {
+        if (!(info && info.failureInfo && info.exitCode && constraints && constraints.maxWallClockTime)) {
             return false;
         }
         if (info.exitCode === 0) {

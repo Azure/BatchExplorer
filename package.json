@@ -152,7 +152,7 @@
     "@angular/platform-browser-dynamic": "4.1.2",
     "@angular/router": "4.1.2",
     "@angular/tsc-wrapped": "4.1.2",
-    "azure-batch": "1.0.0-preview",
+    "azure-batch": "~2.0.0-preview",
     "azure-storage": "^2.1.0",
     "brace": "^0.10.0",
     "bunyan": "^1.8.4",

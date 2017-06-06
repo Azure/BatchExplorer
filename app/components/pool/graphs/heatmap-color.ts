@@ -8,6 +8,8 @@ interface ColorMap { [key: string]: string; }
  * It also handles showing different colors for categories and substates
  */
 export class HeatmapColor {
+    public keys: string[];
+
     private _colors: ColorMap = {};
     private _lastHighlightedState: string = null;
 
@@ -32,6 +34,7 @@ export class HeatmapColor {
         } else {
             this._colors = this._colorsForHighlight(highlightedState);
         }
+        this.keys = Object.keys(this._colors);
         this._lastHighlightedState = highlightedState;
     }
 

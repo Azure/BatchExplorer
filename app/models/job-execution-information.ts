@@ -1,5 +1,5 @@
 import { Model, Prop, Record } from "app/core";
-import { SchedulingError, SchedulingErrorAttributes } from "./scheduling-error";
+import { FailureInfo, FailureInfoAttributes } from "./failure-info";
 
 /**
  * Job terminate reason.
@@ -24,7 +24,7 @@ export interface JobExecutionInformationAttributes {
     startTime: Date;
     endTime: Date;
     poolId: string;
-    schedulingError: Partial<SchedulingErrorAttributes>;
+    failureInfo: FailureInfoAttributes;
     terminateReason: JobTerminateReason;
 }
 
@@ -36,6 +36,6 @@ export class JobExecutionInformation extends Record<JobExecutionInformationAttri
     @Prop() public startTime: Date;
     @Prop() public endTime: Date;
     @Prop() public poolId: string;
-    @Prop() public schedulingError: SchedulingError;
+    @Prop() public failureInfo: FailureInfo;
     @Prop() public terminateReason: JobTerminateReason;
 }

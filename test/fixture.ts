@@ -59,7 +59,7 @@ export const job = new FixtureFactory<Job>(Job, {
         endTime: new Date(2015, 5, 1, 10, 4, 31),
         poolId: "pool-1",
         terminateReason: "because i said so",
-        schedulingError: {
+        failureInfo: {
             category: "cat1",
             code: "code1",
             message: "this is a message",
@@ -98,7 +98,7 @@ export const task = new FixtureFactory<Task>(Task, {
         lastRetryTime: new Date(2015, 5, 21, 0, 0, 0),
         requeueCount: 1,
         lastRequeueTime: new Date(2015, 5, 21, 0, 0, 0),
-        schedulingError: {
+        failureInfo: {
             category: "cat1",
             code: "code1",
             message: "this is a message",
@@ -197,6 +197,7 @@ export const node = new FixtureFactory<Node>(Node, {
     id: "node-1",
     displayName: "MyImaginaryNode",
     state: "running",
+    isDedicated: true,
 });
 
 export const subscription = new FixtureFactory<Subscription>(Subscription, {

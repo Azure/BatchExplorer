@@ -5,7 +5,7 @@ import { LoadingStatus } from "app/components/base/loading";
 import { QuickListComponent, QuickListItemStatus } from "app/components/base/quick-list";
 import { SelectableList } from "app/components/base/selectable-list";
 import { SubtaskInformation, TaskState } from "app/models";
-import { SchedulingErrorDecorator } from "app/models/decorators";
+import { FailureInfoDecorator } from "app/models/decorators";
 
 @Component({
     selector: "bl-sub-task-display-list",
@@ -43,8 +43,8 @@ export class SubTaskDisplayListComponent extends SelectableList {
     }
 
     public taskStatusText(task: SubtaskInformation): string {
-        if (task.schedulingError) {
-            return new SchedulingErrorDecorator(task.schedulingError).summary;
+        if (task.failureInfo) {
+            return new FailureInfoDecorator(task.failureInfo).summary;
         } else if (task.exitCode !== 0) {
             return `Subtask failed with exitCode:  ${task.exitCode}`;
         }

@@ -28,6 +28,10 @@ function createTask(state: string, timeout = "PT6M") {
             endTime: moment().subtract(20, "minutes").toDate(),
             retryCount: 3,
             exitCode: -3,
+            failureInfo: {
+                category: "UserError",
+                code: "TaskEnded",
+            },
         },
         constraints: {
             maxWallClockTime: moment.duration(timeout),

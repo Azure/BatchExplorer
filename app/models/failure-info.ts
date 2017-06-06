@@ -3,11 +3,11 @@ import { List } from "immutable";
 import { ListProp, Model, Prop, Record } from "app/core";
 import { NameValuePair, NameValuePairAttributes } from "./name-value-pair";
 
-export interface SchedulingErrorAttributes {
+export interface FailureInfoAttributes {
     code: string;
-    category: string;
-    message: string;
-    details: NameValuePairAttributes[];
+    category?: string;
+    message?: string;
+    details?: NameValuePairAttributes[];
 }
 
 /**
@@ -15,7 +15,7 @@ export interface SchedulingErrorAttributes {
  * Possible values are https://msdn.microsoft.com/en-us/library/azure/dn878162.aspx#BKMK_JobTaskError
  */
 @Model()
-export class SchedulingError extends Record<SchedulingErrorAttributes> {
+export class FailureInfo extends Record<FailureInfoAttributes> {
     @Prop() public code: string;
     @Prop() public category: string;
     @Prop() public message: string;
