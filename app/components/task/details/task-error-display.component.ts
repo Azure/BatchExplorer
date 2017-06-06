@@ -32,12 +32,20 @@ export class TaskErrorDisplayComponent implements OnChanges {
 
     public ngOnChanges(changes: SimpleChanges) {
         if (changes.task) {
-            const exec = this.task.executionInfo;
-            this.failureInfo = exec && exec.failureInfo;
-            this.hasCompleted = Boolean(this.task && this.task.state === TaskState.completed);
-            this.code = this.task && this.task.executionInfo && this.task.executionInfo.exitCode;
-            this.hasFailureExitCode = this.hasCompleted && this.code !== 0;
-            this._computeExitCodeMessage();
+            if (this.task) {
+
+                const exec = this.task.executionInfo;
+                this.failureInfo = exec && exec.failureInfo;
+                this.hasCompleted = Boolean(this.task && this.task.state === TaskState.completed);
+                this.code = exec && this.task.executionInfo.exitCode;
+                this.hasFailureExitCode = this.hasCompleted && this.code !== 0;
+                this._computeExitCodeMessage();
+            } else {
+                this.failureInfo = null;
+                this.code = null;
+                this.hasFailureExitCode = false;
+                this.errorMessage = "";
+            }
         }
     }
 
