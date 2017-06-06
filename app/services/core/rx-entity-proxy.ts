@@ -84,26 +84,20 @@ export abstract class RxEntityProxy<TParams, TEntity> extends RxProxyBase<TParam
 export function getOnceProxy<TEntity>(getProxy: RxEntityProxy<any, TEntity>): Observable<TEntity> {
     const obs = new AsyncSubject<TEntity>();
 
-    const errorCallback = (e) => {
-        sub.unsubscribe();
-        obs.error(e);
-        obs.complete();
-    };
-
-    const sub = getProxy.item.subscribe({
-        next: (item: TEntity) => {
-            if (item) {
-                sub.unsubscribe();
-                obs.next(item);
-                obs.complete();
-                getProxy.dispose();
-            }
-        },
-        error: errorCallback,
-    });
-
     getProxy.fetch().subscribe({
-        error: errorCallback,
+        next: () => {
+            getProxy.item.first().subscribe((item: TEntity) => {
+                if (item) {
+                    obs.next(item);
+                    obs.complete();
+                    getProxy.dispose();
+                }
+            });
+        },
+        error: (e) => {
+            obs.error(e);
+            obs.complete();
+        },
     });
 
     return obs.asObservable();
