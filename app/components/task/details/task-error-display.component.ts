@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from "@angular/core";
 import { autobind } from "core-decorators";
 
 import { SidebarManager } from "app/components/base/sidebar";
 import { RerunTaskFormComponent } from "app/components/task/action";
-import { Task, TaskState } from "app/models";
+import { FailureInfo, Task, TaskState } from "app/models";
 import { TaskService } from "app/services";
 import { DateUtils, ObservableUtils } from "app/utils";
 
@@ -12,36 +12,33 @@ import { DateUtils, ObservableUtils } from "app/utils";
     templateUrl: "task-error-display.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskErrorDisplayComponent {
+export class TaskErrorDisplayComponent implements OnChanges {
     @Input()
     public jobId: string;
 
     @Input()
     public task: Task;
 
+    public hasCompleted: boolean = false;
+    public failureInfo: FailureInfo;
+    public code: number;
+    public hasFailureExitCode: boolean = false;
+    public errorMessage: string;
+
     constructor(
         private taskService: TaskService,
         private sidebarManager: SidebarManager) {
     }
 
-    public get hasCompleted(): boolean {
-        return Boolean(this.task && this.task.state === TaskState.completed);
-    }
-
-    public get code() {
-        return this.task && this.task.executionInfo && this.task.executionInfo.exitCode;
-    }
-
-    public get hasFailureExitCode(): boolean {
-        return this.hasCompleted && this.code !== 0;
-    }
-
-    public get exitCodeMessage(): string {
-        if (this.task.didTimeout) {
-            const time: any = this.task.constraints && this.task.constraints.maxWallClockTime;
-            return `Task timed out after running for ${DateUtils.prettyDuration(time)}`;
-        } else {
-            return `Task completed with exit code '${this.code}'`;
+    public ngOnChanges(changes: SimpleChanges) {
+        if (changes.task) {
+            const exec = this.task.executionInfo;
+            this.failureInfo = exec && exec.failureInfo;
+            this.hasCompleted = Boolean(this.task && this.task.state === TaskState.completed);
+            this.code = this.task && this.task.executionInfo && this.task.executionInfo.exitCode;
+            this.hasFailureExitCode = this.hasCompleted && this.code !== 0;
+            this._computeExitCodeMessage();
+            console.log({ ...this.task.executionInfo.failureInfo });
         }
     }
 
@@ -58,5 +55,21 @@ export class TaskErrorDisplayComponent {
         const ref = this.sidebarManager.open("rerun-task", RerunTaskFormComponent);
         ref.component.jobId = this.jobId;
         ref.component.setValueFromEntity(this.task);
+    }
+
+    private _computeExitCodeMessage() {
+        if (!this.failureInfo) {
+            this.errorMessage = "";
+            return;
+        }
+
+        if (this.task.didTimeout) {
+            const time: any = this.task.constraints && this.task.constraints.maxWallClockTime;
+            this.errorMessage = `Task timed out after running for ${DateUtils.prettyDuration(time)}`;
+        } else if (this.failureInfo.code === "FailureExitCode") {
+            this.errorMessage = `Task completed with exit code '${this.code}'`;
+        } else {
+            this.errorMessage = this.failureInfo.message;
+        }
     }
 }
