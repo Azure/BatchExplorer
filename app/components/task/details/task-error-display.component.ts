@@ -38,7 +38,6 @@ export class TaskErrorDisplayComponent implements OnChanges {
             this.code = this.task && this.task.executionInfo && this.task.executionInfo.exitCode;
             this.hasFailureExitCode = this.hasCompleted && this.code !== 0;
             this._computeExitCodeMessage();
-            console.log({ ...this.task.executionInfo.failureInfo });
         }
     }
 
