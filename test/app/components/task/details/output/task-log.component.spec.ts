@@ -21,6 +21,7 @@ describe("TaskDependenciesComponent", () => {
     let fixture: ComponentFixture<TaskLogComponent>;
     let component: TaskLogComponent;
 
+    let anyComponent: any;
     let fileListProxy: RxMockListProxy<any, File>;
     let fileServiceSpy: any;
 
@@ -64,6 +65,7 @@ describe("TaskDependenciesComponent", () => {
         component = fixture.componentInstance;
         component.jobId = "bobs-job-1";
         component.task = Fixtures.task.create({ id: "bobs-task" });
+        anyComponent = component as any;
         fixture.detectChanges();
     });
 
@@ -76,7 +78,6 @@ describe("TaskDependenciesComponent", () => {
             expect(component.filterControl.value).toBeNull();
             expect(component.addingFile).toBeFalsy();
 
-            const anyComponent = component as any;
             expect(anyComponent._currentTaskId).toBeNull();
             expect(anyComponent._refreshInterval).toBe(5000);
         });
@@ -100,16 +101,12 @@ describe("TaskDependenciesComponent", () => {
     });
 
     describe("loads file sizes based on current job and task", () => {
-        let anyComponent: any;
-
         beforeEach(() => {
-            anyComponent = component as any;
             component.ngOnChanges({ jobId: component.jobId, task: component.task });
             fixture.detectChanges();
         });
 
         it("current task id set", () => {
-            anyComponent = component as any;
             expect(anyComponent._currentTaskId).toBe("bobs-task");
         });
 
@@ -132,10 +129,7 @@ describe("TaskDependenciesComponent", () => {
     });
 
     describe("loads additional task output files", () => {
-        let anyComponent: any;
-
         beforeEach(() => {
-            anyComponent = component as any;
             component.ngOnChanges({ jobId: component.jobId, task: component.task });
             fixture.detectChanges();
         });
@@ -161,10 +155,7 @@ describe("TaskDependenciesComponent", () => {
     });
 
     describe("can add a new file to a tab", () => {
-        let anyComponent: any;
-
         beforeEach(() => {
-            anyComponent = component as any;
             component.ngOnChanges({ jobId: component.jobId, task: component.task });
             fixture.detectChanges();
         });

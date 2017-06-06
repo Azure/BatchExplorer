@@ -176,7 +176,7 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
      */
     private _canAddFileToMap(file: File) {
         return !file.isDirectory &&
-            !this._fileMap[file.name] &&
+            !(file.name in this._fileMap) &&
             file.name !== defaultOutputFileNames[0] &&
             file.name !== defaultOutputFileNames[1];
     }
