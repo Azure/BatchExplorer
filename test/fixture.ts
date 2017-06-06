@@ -197,6 +197,7 @@ export const node = new FixtureFactory<Node>(Node, {
     id: "node-1",
     displayName: "MyImaginaryNode",
     state: "running",
+    isDedicated: true,
 });
 
 export const subscription = new FixtureFactory<Subscription>(Subscription, {

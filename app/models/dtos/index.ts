@@ -10,3 +10,4 @@ export * from "./task-create.dto";
 export * from "./metadata.dto";
 export * from "./user-account.dto";
 export * from "./user-identity.dto";
+export * from "./pool-resize.dto";

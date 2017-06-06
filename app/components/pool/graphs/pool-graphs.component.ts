@@ -78,7 +78,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
         if (changes.pool) {
             const prev = changes.pool.previousValue;
             const cur = changes.pool.currentValue;
-            this.maxRunningTasks = this.pool ? this.pool.targetDedicated * this.pool.maxTasksPerNode : 0;
+            this.maxRunningTasks = this.pool ? this.pool.targetNodes * this.pool.maxTasksPerNode : 0;
             if (prev && cur && prev.id === cur.id) {
                 return;
             }

@@ -27,7 +27,8 @@ export interface PoolScaleModel {
     enableAutoScale: boolean;
     autoScaleFormula: string;
     autoScaleEvaluationInterval: number;
-    targetDedicated: number;
+    targetDedicatedNodes: number;
+    targetLowPriorityNodes: number;
 }
 
 export interface CreatePoolModel {
@@ -63,7 +64,8 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
         data.autoScaleFormula = outputScale.autoScaleFormula;
         data.autoScaleEvaluationInterval = moment.duration({ minutes: outputScale.autoScaleEvaluationInterval });
     } else {
-        data.targetDedicated = outputScale.targetDedicated;
+        data.targetDedicatedNodes = outputScale.targetDedicatedNodes;
+        data.targetLowPriorityNodes = outputScale.targetLowPriorityNodes;
     }
 
     if (output.os.source === PoolOsSources.PaaS) {
@@ -89,7 +91,8 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
         displayName: pool.displayName,
         vmSize: pool.vmSize,
         scale: {
-            targetDedicated: pool.targetDedicated,
+            targetDedicatedNodes: pool.targetDedicatedNodes,
+            targetLowPriorityNodes: pool.targetLowPriorityNodes,
             enableAutoScale: pool.enableAutoScale,
             autoScaleFormula: pool.autoScaleFormula,
             autoScaleEvaluationInterval: autoScaleInterval && autoScaleInterval.asMinutes(),
