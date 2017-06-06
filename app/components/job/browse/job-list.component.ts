@@ -12,7 +12,7 @@ import { QuickListComponent, QuickListItemStatus } from "app/components/base/qui
 import { ListOrTableBase } from "app/components/base/selectable-list";
 import { TableComponent } from "app/components/base/table";
 import { Job, JobState } from "app/models";
-import { SchedulingErrorDecorator } from "app/models/decorators";
+import { FailureInfoDecorator } from "app/models/decorators";
 import { JobService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
@@ -91,7 +91,7 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
     }
 
     public jobStatus(job: Job): QuickListItemStatus {
-        if (job.executionInfo && job.executionInfo.schedulingError) {
+        if (job.executionInfo && job.executionInfo.failureInfo) {
             return QuickListItemStatus.warning;
         } else {
             switch (job.state) {
@@ -112,8 +112,8 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
     }
 
     public jobStatusText(job: Job): string {
-        if (job.executionInfo && job.executionInfo.schedulingError) {
-            return new SchedulingErrorDecorator(job.executionInfo.schedulingError).summary;
+        if (job.executionInfo && job.executionInfo.failureInfo) {
+            return new FailureInfoDecorator(job.executionInfo.failureInfo).summary;
         } else {
             switch (job.state) {
                 case JobState.completed:
