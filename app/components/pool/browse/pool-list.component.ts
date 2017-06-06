@@ -75,7 +75,7 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         this.data = this.poolService.list();
         this.status = this.data.status;
         this._subs.push(poolService.onPoolAdded.subscribe((poolId) => {
-            this.data.loadNewItem(poolService.get(poolId));
+            this.data.loadNewItem(poolService.getOnce(poolId));
         }));
         this._subs.push(this.data.items.subscribe((pools) => {
             this.pools = List<PoolDecorator>(pools.map(x => new PoolDecorator(x)));

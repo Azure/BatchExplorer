@@ -51,6 +51,7 @@ export class PoolService extends ServiceBase {
             cache: () => this._cache,
             getFn: (client, params: PoolParams) => client.pool.get(params.id, options),
             initialParams: { id: poolId },
+            poll: 10000,
         });
     }
 
