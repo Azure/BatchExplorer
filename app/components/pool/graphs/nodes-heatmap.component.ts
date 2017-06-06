@@ -1,5 +1,6 @@
 import {
-    AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input, OnChanges, OnDestroy, ViewChild,
+    AfterViewInit, ChangeDetectionStrategy, Component, ElementRef,
+    HostBinding, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild,
 } from "@angular/core";
 import * as d3 from "d3";
 import * as elementResizeDetectorMaker from "element-resize-detector";
@@ -115,8 +116,13 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         });
     }
 
-    public ngOnChanges(changes) {
+    public ngOnChanges(changes: SimpleChanges) {
         if (changes.pool) {
+            const prev = changes.pool.previousValue;
+            const cur = changes.pool.currentValue;
+            if (prev && cur && prev.id === cur.id) {
+                return;
+            }
             this.selectedNodeId.next(null);
             if (this._svg) {
                 this._svg.selectAll("g.node-group").remove();

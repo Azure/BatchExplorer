@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { Router } from "@angular/router";
 import { autobind } from "core-decorators";
@@ -74,11 +74,16 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
         this._poll = this.data.startPoll(refreshRate);
     }
 
-    public ngOnChanges(changes) {
+    public ngOnChanges(changes: SimpleChanges) {
         if (changes.pool) {
+            const prev = changes.pool.previousValue;
+            const cur = changes.pool.currentValue;
+            this.maxRunningTasks = this.pool ? this.pool.targetNodes * this.pool.maxTasksPerNode : 0;
+            if (prev && cur && prev.id === cur.id) {
+                return;
+            }
             this.data.updateParams({ poolId: this.pool.id });
             this.data.refresh(false);
-            this.maxRunningTasks = this.pool ? this.pool.targetNodes * this.pool.maxTasksPerNode : 0;
             this.runningNodesHistory.reset();
             this.runningTaskHistory.reset();
         }
