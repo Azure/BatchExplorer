@@ -124,7 +124,7 @@ describe("JobErrorDisplayComponent", () => {
                         category: "UserError",
                         message: "Auto pool has invalid settings",
                         details: [
-                            { key: "some", value: "More info" },
+                            { name: "some", value: "More info" },
                         ],
                     },
                 },

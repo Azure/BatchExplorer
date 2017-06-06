@@ -30,7 +30,8 @@
     "ban": [
         true,
         ["main", "debugCrash"], // Show a warning if the main window is being shown on start for debug purposes
-        ["fdescribe"]
+        ["fdescribe"],
+        ["fit"]
     ],
     "no-empty-interface":  false,
     "space-before-function-paren": [false],

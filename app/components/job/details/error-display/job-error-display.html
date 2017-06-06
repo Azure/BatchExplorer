@@ -10,7 +10,7 @@
     <div message>{{schedulingError.message}}</div>
     <div details *ngIf="schedulingError.details.size !== 0">
         <div *ngFor="let entry of schedulingError.details">
-            <div>{{entry.key}}: {{entry.value}}</div>
+            <div>{{entry.name}}: {{entry.value}}</div>
         </div>
     </div>
 </bl-banner>
