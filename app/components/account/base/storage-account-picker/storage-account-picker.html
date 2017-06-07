@@ -6,16 +6,17 @@
             <bl-thead>
                 <bl-column [sortable]="true">Name</bl-column>
                 <bl-column [sortable]="true">Region</bl-column>
+                <bl-column [sortable]="false"></bl-column>
             </bl-thead>
             <bl-row [key]="noSelectionKey">
                 <bl-cell>No storage account</bl-cell>
                 <bl-cell></bl-cell>
-
+                <bl-cell></bl-cell>
             </bl-row>
             <bl-row *ngFor="let account of preferedAccounts" [key]="account.id.toLowerCase()">
                 <bl-cell [value]="account.name"></bl-cell>
-
                 <bl-cell [value]="account.location"></bl-cell>
+                <bl-cell [value]="account.isClassic">{{account.isClassic ? "Classic" : ""}}</bl-cell>
             </bl-row>
         </bl-table>
         <div *ngIf="preferedAccounts.size === 0" class="no-prefered-account">
@@ -28,10 +29,13 @@
                 <bl-thead>
                     <bl-column [sortable]="true">Name</bl-column>
                     <bl-column [sortable]="true">Region</bl-column>
+                    <bl-column [sortable]="false"></bl-column>
+
                 </bl-thead>
                 <bl-row *ngFor="let account of otherAccounts" [key]="account.id.toLowerCase()">
                     <bl-cell [value]="account.name"></bl-cell>
                     <bl-cell [value]="account.location"></bl-cell>
+                    <bl-cell [value]="account.isClassic">{{account.isClassic ? "Classic" : ""}}</bl-cell>
                 </bl-row>
             </bl-table>
         </div>
