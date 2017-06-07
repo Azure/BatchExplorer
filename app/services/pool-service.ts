@@ -3,7 +3,7 @@ import { Observable, Subject } from "rxjs";
 
 import { Pool } from "app/models";
 import { PoolCreateDto, PoolEnableAutoScaleDto, PoolResizeDto } from "app/models/dtos";
-import { ModelUtils, log } from "app/utils";
+import { Constants, ModelUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
@@ -51,6 +51,7 @@ export class PoolService extends ServiceBase {
             cache: () => this._cache,
             getFn: (client, params: PoolParams) => client.pool.get(params.id, options),
             initialParams: { id: poolId },
+            poll: Constants.PollRate.entity,
         });
     }
 

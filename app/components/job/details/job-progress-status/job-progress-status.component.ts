@@ -73,6 +73,7 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
     public ngOnDestroy() {
         this._polls.forEach(x => x.destroy());
         this._subs.forEach(x => x.unsubscribe());
+        this.poolData.dispose();
     }
 
     public countRunningTasks() {

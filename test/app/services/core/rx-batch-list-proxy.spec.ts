@@ -6,7 +6,7 @@ import { List, OrderedSet } from "immutable";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { BatchError, ServerError } from "app/models";
-import { DataCache, RxBatchEntityProxy, RxBatchListProxy } from "app/services/core";
+import { DataCache, RxBatchEntityProxy, RxBatchListProxy, getOnceProxy } from "app/services/core";
 import { BatchClientServiceMock } from "test/utils/mocks";
 import { FakeModel } from "./fake-model";
 
@@ -209,7 +209,7 @@ describe("RxBatchListProxy", () => {
                 { id: "3", state: "running", name: "Fake3" },
             ];
 
-            proxy.loadNewItem(entityProxy as any).subscribe(() => {
+            proxy.loadNewItem(getOnceProxy(entityProxy)).subscribe(() => {
                 expect(items).toEqualImmutable(List(expected.map((x) => new FakeModel(x))));
                 done();
             });
@@ -225,7 +225,7 @@ describe("RxBatchListProxy", () => {
                 { id: "4", state: "running", name: "Fake4" },
             ].concat(data[0]);
 
-            proxy.loadNewItem(entityProxy as any).subscribe(() => {
+            proxy.loadNewItem(getOnceProxy(entityProxy)).subscribe(() => {
                 expect(items).toEqualImmutable(List(expected.map((x) => new FakeModel(x))));
                 done();
             });

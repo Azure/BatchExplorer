@@ -143,3 +143,7 @@ export const APIErrorCodes = {
 export const MetadataInternalKey = {
     tags: "_bl_tags",
 };
+
+export const PollRate = {
+    entity: 10000,
+};
