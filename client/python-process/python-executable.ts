@@ -1,5 +1,6 @@
 import { exec } from "child_process";
 
+let computedPythonPath: string = null;
 export function execPromise(command: string) {
     return new Promise((resolve, reject) => {
         exec(command, (error: string, stdout: string, stderr: string) => {
@@ -11,8 +12,6 @@ export function execPromise(command: string) {
         });
     });
 }
-
-
 
 export class PythonExecutableError extends Error {
     constructor(public message) {
@@ -57,8 +56,14 @@ export function tryMultiplePythons(paths: string[]): Promise<string> {
 }
 
 export function getPythonPath(): Promise<string> {
+    if (computedPythonPath) {
+        return Promise.resolve(computedPythonPath);
+    }
     const envPython = process.env.BL_PYTHON_PATH;
-    return tryMultiplePythons([envPython, "python3", "python"].filter(x => Boolean(x)));
+    return tryMultiplePythons([envPython, "python3", "python"].filter(x => Boolean(x))).then((path) => {
+        computedPythonPath = path;
+        return path;
+    });
 }
 
 const pythonVersionRegex = /Python\s*([\d.]+)/;

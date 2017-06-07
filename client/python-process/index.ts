@@ -1,2 +1,2 @@
-export * from "./python-process";
+export * from "./python-rpc-server-process";
 export * from "./python-executable";

@@ -4,7 +4,10 @@ app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 
 import { windows } from "./core";
 import { logger } from "./logger";
-import { getPythonPath } from "./python-process";
+import { PythonRpcServerProcess, getPythonPath } from "./python-process";
+
+const pythonServer = new PythonRpcServerProcess();
+pythonServer.start();
 
 getPythonPath().then((pythonPath) => {
     console.log("Exec is", pythonPath);
