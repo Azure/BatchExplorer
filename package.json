@@ -45,7 +45,11 @@
   "build": {
     "productName": "BatchLabs",
     "appId": "microsoft.azure.batchlabs",
+    "asarUnpack": [
+      "python/**/*"
+    ],
     "files": [
+      "python/",
       "build/",
       "node_modules/",
       "package.json"

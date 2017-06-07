@@ -5,7 +5,10 @@ import { Constants } from "../client-constants";
 import { logger } from "../logger";
 import { getPythonPath } from "./python-executable";
 
-const pythonFile = path.join(Constants.root, "python/main.py");
+const asarPath = path.join(Constants.root, "../app.asar.unpacked/python/main.py");
+const localPath = path.join(Constants.root, "python/main.py");
+const pythonFile = Constants.isAsar ? asarPath : localPath;
+logger.info("Python path is", pythonFile);
 
 export class PythonRpcServerProcess {
     private _spawedProcess: ChildProcess;

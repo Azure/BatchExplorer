@@ -1,5 +1,6 @@
 import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 import { remote } from "electron";
+import * as MouseTrap from "mousetrap";
 
 import { log } from "app/utils";
 import { AppModule } from "./app.module";
@@ -25,3 +26,11 @@ platform.bootstrapModule(AppModule)
         log.error("Bootstrapping failed :: ", error);
         handleCoreError(error);
     });
+
+MouseTrap.bind("ctrl+shift+i", () => {
+    if (remote.getCurrentWindow().webContents.isDevToolsOpened()) {
+        remote.getCurrentWindow().webContents.closeDevTools();
+    } else {
+        remote.getCurrentWindow().webContents.openDevTools();
+    }
+});
