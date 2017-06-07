@@ -49,7 +49,6 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
 
         this.data = this.poolService.get(null, {});
         this.data.item.subscribe((pool) => {
-            console.log("Got poool", this.poolId, pool && pool.id);
             this.pool = pool;
         });
 
