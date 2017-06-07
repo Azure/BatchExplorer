@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import { SecureUtils, log } from "app/utils";
 import { AsyncSubject, Observable } from "rxjs";
 
-
 export interface JsonRpcRequest {
     jsonrpc: string;
     id: string;
@@ -22,7 +21,6 @@ export interface JsonRpcResponse {
     result: any;
     error: JsonRpcError;
 }
-
 
 interface RequestContainer {
     request: JsonRpcRequest;

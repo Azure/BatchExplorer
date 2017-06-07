@@ -4,14 +4,10 @@ app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 
 import { windows } from "./core";
 import { logger } from "./logger";
-import { PythonRpcServerProcess, getPythonPath } from "./python-process";
+import { PythonRpcServerProcess } from "./python-process";
 
 const pythonServer = new PythonRpcServerProcess();
 pythonServer.start();
-
-getPythonPath().then((pythonPath) => {
-    console.log("Exec is", pythonPath);
-});
 
 // Create the browser window.
 function createWindow() {

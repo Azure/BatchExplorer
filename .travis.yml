@@ -21,7 +21,7 @@ before_script:
   - sleep 3
 
 script:
-    # - ./scripts/travis/build-and-test.sh
+    - ./scripts/travis/build-and-test.sh
     - pylint python/main.py
 
 branches:
