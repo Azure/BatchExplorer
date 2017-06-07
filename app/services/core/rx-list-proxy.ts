@@ -5,7 +5,6 @@ import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 import { LoadingStatus } from "app/components/base/loading";
 import { log } from "app/utils";
 import { ListOptions, ListOptionsAttributes } from "./list-options";
-import { RxEntityProxy } from "./rx-entity-proxy";
 import { RxProxyBase, RxProxyBaseConfig } from "./rx-proxy-base";
 
 export interface RxListProxyConfig<TParams, TEntity> extends RxProxyBaseConfig<TParams, TEntity> {
