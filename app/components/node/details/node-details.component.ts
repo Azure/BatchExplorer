@@ -77,6 +77,8 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._paramsSubscribers.forEach(x => x.unsubscribe());
+        this.poolData.dispose();
+        this.data.dispose();
     }
 
     @autobind()

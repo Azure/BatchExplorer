@@ -47,23 +47,17 @@ export class WaitForDeleteJobPoller {
     @autobind()
     public start(progress: BehaviorSubject<any>): Observable<any> {
         const obs = new AsyncSubject();
-        const data = this.jobService.get(this.jobId);
-        const errorCallback = (e) => {
-            progress.next(100);
-            clearInterval(interval);
-            obs.complete();
-        };
-
         let interval = setInterval(() => {
-            data.fetch().subscribe({
-                error: errorCallback,
+            this.jobService.getOnce(this.jobId).subscribe({
+                error: (e) => {
+                    progress.next(100);
+                    clearInterval(interval);
+                    obs.complete();
+                },
             });
         }, 5000);
 
         progress.next(-1);
-        data.item.subscribe({
-            error: errorCallback,
-        });
 
         return obs;
     }
