@@ -16,12 +16,13 @@ export class FocusSectionComponent {
     @Output()
     public onFocus = new EventEmitter<FocusEvent>();
 
-    @HostBinding("attr.tabindex") public get tabindex() { return 0; };
+    @HostBinding("attr.tabindex") public get tabindex() { return 0; }
 
     constructor(private elementRef: ElementRef) {
     }
 
     public focus() {
+        this.onFocus.emit();
         this.elementRef.nativeElement.focus();
     }
 

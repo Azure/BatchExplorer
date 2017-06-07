@@ -6,10 +6,12 @@ import { RouterModule } from "@angular/router";
 
 import { ButtonsModule } from "../buttons";
 import { ComplexFormComponent } from "./complex-form";
+import { EditableTableColumnComponent, EditableTableComponent } from "./editable-table";
 import { FormErrorComponent } from "./form-error";
 import { FormPageComponent } from "./form-page";
-import {  FormPickerComponent } from "./form-picker";
+import { FormMultiPickerComponent, FormPickerComponent, FormPickerItemTemplateDirective } from "./form-picker";
 import { FormSectionComponent } from "./form-section";
+import { KeyValuePickerComponent } from "./key-value-picker";
 import { ServerErrorComponent } from "./server-error";
 import { SimpleFormComponent } from "./simple-form";
 
@@ -26,7 +28,12 @@ const components = [
     ServerErrorComponent,
     FormPageComponent,
     FormSectionComponent,
+    FormMultiPickerComponent,
     FormPickerComponent,
+    FormPickerItemTemplateDirective,
+    EditableTableComponent,
+    EditableTableColumnComponent,
+    KeyValuePickerComponent,
 ];
 
 @NgModule({

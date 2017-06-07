@@ -23,7 +23,9 @@ export * from "./vm-size.service";
 export * from "./adal";
 export * from "./python-rpc";
 export * from "./batch-client.service";
+export * from "./storage-account.service";
 export * from "./storage-client.service";
+export * from "./predefined-formula.service";
 
 // This needs to be last(as it does dynamic inject which problably have dependencies on above services)
 export * from "./command-service";

@@ -3,5 +3,8 @@
         <bl-nodes-heatmap-legend [poolId]="pool.id" [nodes]="nodes" [colors]="colors" (selectedStateChange)="selectState($event)"></bl-nodes-heatmap-legend>
         <bl-node-preview-card [poolId]="pool.id" [node]="selectedNode | async" *ngIf="selectedNode | async" (close)="selectedNodeId.next(null)"></bl-node-preview-card>
     </div>
-    <div #heatmap class="heatmap-container"></div>
+    <div class="heatmap-container" #heatmap>
+        <svg #svg>
+        </svg>
+    </div>
 </div>

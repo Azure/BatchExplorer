@@ -31,6 +31,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
 
     @Input()
     public set activeItem(key) {
+        this._activeItemInput = key;
         this.setActiveItem(key);
     }
 
@@ -59,16 +60,21 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     /**
      *  The active item is always in the selected list.
      */
-    public get selectedItems() { return Object.keys(this._selectedItems); };
+    public get selectedItems() { return Object.keys(this._selectedItems); }
 
     public listFocused: boolean = false;
-    public focusedItem: string = null;
+    public focusedItem = new BehaviorSubject<string>(null);
 
     /**
      * Map of the selected items. Used for better performance to check if an item is selected.
      */
     private _selectedItems: { [key: string]: boolean } = {};
     private _activeItemKey = new BehaviorSubject<ActivatedItemChangeEvent>(null);
+
+    /**
+     * Save the value provided in the activeItem input
+     */
+    private _activeItemInput = null;
     private _subs: Subscription[] = [];
 
     constructor(
@@ -79,9 +85,12 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         this._subs.push(this._activeItemKey.subscribe(x => {
             this.selectedItems = x ? [x.key] : [];
             this.activatedItemChange.emit(x);
-            this.activeItemChange.emit(x && x.key);
+            if (!x || x.key !== this._activeItemInput) {
+                this.activeItemChange.emit(x && x.key);
+            }
+
             if (this.listFocused) {
-                this.focusedItem = x.key;
+                this.focusedItem.next(x && x.key);
             }
         }));
 
@@ -107,7 +116,6 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         } else {
             this.items.changes.first().subscribe((newItems: QueryList<AbstractListItemBase>) => {
                 this._processInitialItems(newItems);
-
             });
         }
 
@@ -224,13 +232,13 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     public onFocus(event: FocusEvent) {
         this.listFocused = true;
         const active = this._activeItemKey.getValue();
-        this.focusedItem = active && active.key;
+        this.focusedItem.next(active && active.key);
     }
 
     @autobind()
     public onBlur(event) {
         this.listFocused = false;
-        this.focusedItem = null;
+        this.focusedItem.next(null);
     }
 
     @autobind()
@@ -239,12 +247,13 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         let index = 0;
         let currentItem;
         for (let item of items) {
-            if (item.key === this.focusedItem) {
+            if (item.key === this.focusedItem.value) {
                 currentItem = item;
                 break;
             }
             index++;
         }
+
         switch (event.code) {
             case "ArrowDown":
                 index++;
@@ -262,7 +271,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         }
         index = (index + items.length) % items.length;
         const item = items[index];
-        this.focusedItem = item.key;
+        this.focusedItem.next(item.key);
     }
 
     /**

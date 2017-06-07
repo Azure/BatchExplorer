@@ -1,6 +1,6 @@
 import { Input, OnDestroy, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
 import { BreadcrumbService } from "app/components/base/breadcrumbs";
 import { ContextMenuService } from "app/components/base/context-menu";
@@ -23,16 +23,18 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
     public key: string;
 
     @Input()
-    public set routerLink(routerLink: any) {
+    public set link(routerLink: any) {
         this._routerLink = routerLink;
         if (routerLink) {
             this.urlTree = this.router.createUrlTree(routerLink);
         }
     }
-    public get routerLink() { return this._routerLink; }
+    public get link() { return this._routerLink; }
 
     @Input()
     public forceBreadcrumb = false;
+
+    public isFocused: Observable<boolean>;
 
     /**
      * If the item is selected(!= active)
@@ -41,7 +43,7 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
 
     public get active(): boolean {
         return this.list && this._activeItemKey === this.key;
-    };
+    }
 
     public urlTree: any = null;
 
@@ -59,6 +61,7 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
         private contextmenuService: ContextMenuService,
         private breadcrumbService: BreadcrumbService) {
 
+        this.isFocused = this.list.focusedItem.map(x => x === this.key);
         this._activeSub = list.activatedItemChange.subscribe((event) => {
             this._activeItemKey = event && event.key;
         });
@@ -85,13 +88,6 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
         }
     }
 
-    /**
-     * If the current item is active(Router)
-     */
-    public get isFocused(): boolean {
-        return this.list.focusedItem === this.key;
-    }
-
     public handleClick(event: MouseEvent) {
         const shiftKey = event.shiftKey;
         const ctrlKey = event.ctrlKey || event.metaKey;
@@ -114,14 +110,15 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
             return false;
         } else {
             // Means the user actually selected the item
-            this.activateItem();
+            this.activateItem(true);
         }
     }
     /**
      * Mark the item as active and trigger the router if applicable
      * Will desactivate the current activate item
+     * @parm andFocus If we should also focus the item
      */
-    public activateItem() {
+    public activateItem(andFocus = false) {
         this.list.setActiveItem(this.key);
         this._triggerRouter();
     }
@@ -136,11 +133,11 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
      * Just trigger the router the item will not be marked as active
      */
     private _triggerRouter() {
-        if (this.routerLink) {
+        if (this.link) {
             if (this.forceBreadcrumb) {
-                this.breadcrumbService.navigate(this.routerLink);
+                this.breadcrumbService.navigate(this.link);
             } else {
-                this.router.navigate(this.routerLink);
+                this.router.navigate(this.link);
             }
         }
     }

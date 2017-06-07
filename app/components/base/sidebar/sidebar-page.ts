@@ -21,7 +21,7 @@ import { SidebarRef } from "./sidebar-ref";
     selector: "bl-sidebar-page",
     template: `
         <div [hidden]="!display" style="height: 100%">
-                <template portalHost></template>
+                <ng-template portalHost></ng-template>
         </div>
     `,
 })
@@ -35,10 +35,10 @@ export class SidebarPageComponent implements OnDestroy {
     private onSideBarOpenEvent: any;
 
     constructor(
-        private componentFactoryResolver: ComponentFactoryResolver,
         private injector: Injector,
-        private ngZone: NgZone,
-        private sidebarManager: SidebarManager) {
+        componentFactoryResolver: ComponentFactoryResolver,
+        ngZone: NgZone,
+        sidebarManager: SidebarManager) {
     }
 
     public attachComponent<T>(componentType: Type<T>, sidebarRef: SidebarRef<T>) {

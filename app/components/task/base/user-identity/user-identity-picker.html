@@ -1,0 +1,5 @@
+<md-select placeholder="User identity" [formControl]="selected" name="food">
+    <md-option *ngFor="let option of options" [value]="option.identity">
+        {{option.label}}
+    </md-option>
+</md-select>

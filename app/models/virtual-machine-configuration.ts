@@ -1,30 +1,22 @@
-import { Record } from "immutable";
-
+import { Model, Prop, Record } from "app/core";
 import { ImageReference, ImageReferenceAttributes } from "./image-reference";
+import { PoolOSDisk, PoolOSDiskAttributes } from "./pool-os-disk";
 import { WindowsConfiguration } from "./windows-configuration";
-
-// tslint:disable:variable-name object-literal-sort-keys
-const VirtualMachineConfigurationRecord = Record({
-    imageReference: null,
-    nodeAgentSKUId: null,
-    windowsConfiguration: null,
-});
 
 export interface VirtualMachineConfigurationAttributes {
     imageReference: ImageReferenceAttributes;
     nodeAgentSKUId: string;
     windowsConfiguration: WindowsConfiguration;
+    osDisk?: PoolOSDiskAttributes;
 }
 
 /**
  * Class for displaying Batch VirtualMachineConfiguration information.
  */
-export class VirtualMachineConfiguration extends VirtualMachineConfigurationRecord {
-    public imageReference: ImageReference;
-    public nodeAgentSKUId: string;
-    public windowsConfiguration: WindowsConfiguration;
-
-    constructor(data: VirtualMachineConfigurationAttributes) {
-        super(data);
-    }
+@Model()
+export class VirtualMachineConfiguration extends Record<VirtualMachineConfigurationAttributes> {
+    @Prop() public imageReference: ImageReference;
+    @Prop() public nodeAgentSKUId: string;
+    @Prop() public windowsConfiguration: WindowsConfiguration;
+    @Prop() public osDisk: PoolOSDisk;
 }

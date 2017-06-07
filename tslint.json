@@ -1,8 +1,8 @@
 {
   "extends": "tslint:recommended",
+  "defaultSeverity": "warning",
   "rulesDirectory": [
-    "node_modules/codelyzer",
-    "node_modules/vrsource-tslint-rules/rules"
+    "node_modules/codelyzer"
   ],
   "rules": {
     // TSLint override
@@ -13,7 +13,6 @@
     "no-inferrable-types": [false],
     "interface-name": [ true,  "never-prefix" ],
     "no-string-literal": false,
-    "no-unused-variable": [true],
     "variable-name": [false, "ban-keywords", "check-format", "allow-leading-underscore"], // https://github.com/palantir/tslint/issues/1489
     "whitespace": [true,
         "check-branch",
@@ -30,8 +29,15 @@
     "arrow-return-shorthand": [true],
     "ban": [
         true,
-        ["main", "debugCrash"] // Show a warning if the main window is being shown on start for debug purposes
+        ["main", "debugCrash"], // Show a warning if the main window is being shown on start for debug purposes
+        ["fdescribe"],
+        ["fit"]
     ],
+    "no-empty-interface":  false,
+    "space-before-function-paren": [false],
+    "no-irregular-whitespace": true,
+    "no-invalid-template-strings": true,
+    "no-sparse-arrays": true,
 
     // Codelyzer rules(Angular2)
     "directive-selector": [true, "attribute", "bl", "camelCase"],
@@ -51,8 +57,8 @@
     "import-destructuring-spacing": true,
     "invoke-injectable": true,
 
-    // vrsource-tslint-rules https://github.com/vrsource/vrsource-tslint-rules
-    "no-jasmine-focus": true
+    // TODO enable
+    "prefer-const": false
   },
   "jsRules": {
     "object-literal-sort-keys": false,

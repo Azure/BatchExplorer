@@ -51,7 +51,7 @@ export class StorageService {
      * @param jobIdParam - The ID of the job that will be turned into a safe container name
      * @param taskIdParam - The ID of the task, this will be the initial prefix of the blob path
      * @param outputKindParam - Subfolder name for the type of file: '$TaskOutput' or '$TaskLog'
-     * @param callback - Callback for interrogating the server error to see if we want to handle it.
+     * @param onError - Callback for interrogating the server error to see if we want to handle it.
      */
     public listBlobsForTask(
         jobIdParam: string,

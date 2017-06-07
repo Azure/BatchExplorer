@@ -1,5 +1,6 @@
 import {
-    AfterViewInit, ChangeDetectionStrategy, Component, ElementRef, HostBinding, Input, OnChanges, OnDestroy, ViewChild,
+    AfterViewInit, ChangeDetectionStrategy, Component, ElementRef,
+    HostBinding, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild,
 } from "@angular/core";
 import * as d3 from "d3";
 import * as elementResizeDetectorMaker from "element-resize-detector";
@@ -75,6 +76,9 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     @ViewChild("heatmap")
     public heatmapEl: ElementRef;
 
+    @ViewChild("svg")
+    public svgEl: ElementRef;
+
     @Input()
     public set nodes(nodes: List<Node>) {
         if (nodes.size > maxNodes) {
@@ -84,7 +88,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         this._buildNodeMap();
         this._processNewNodes();
     }
-    public get nodes() { return this._nodes; };
+    public get nodes() { return this._nodes; }
 
     public colors: HeatmapColor;
     public selectedNodeId = new BehaviorSubject<string>(null);
@@ -99,6 +103,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
 
     private _erd: any;
     private _svg: d3.Selection<any, any, any, any>;
+    private _defs: d3.Selection<any, any, any, any>;
     private _width: number = 0;
     private _height: number = 0;
     private _nodeMap: { [id: string]: Node } = {};
@@ -111,8 +116,13 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         });
     }
 
-    public ngOnChanges(changes) {
+    public ngOnChanges(changes: SimpleChanges) {
         if (changes.pool) {
+            const prev = changes.pool.previousValue;
+            const cur = changes.pool.currentValue;
+            if (prev && cur && prev.id === cur.id) {
+                return;
+            }
             this.selectedNodeId.next(null);
             if (this._svg) {
                 this._svg.selectAll("g.node-group").remove();
@@ -129,10 +139,12 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             this.containerSizeChanged();
         });
 
-        this._svg = d3.select(this.heatmapEl.nativeElement).append("svg")
+        this._svg = d3.select(this.svgEl.nativeElement)
             .attr("width", this._width)
             .attr("height", this._height);
+        this._defs = this._svg.append("defs");
 
+        this._setupLowPriColors();
         this._processNewNodes();
     }
 
@@ -149,11 +161,12 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
 
     public selectState(state: string) {
         this.highlightedState = state;
+        this.colors.updateColors(this.highlightedState);
+        this._setupLowPriColors();
         this.redraw();
     }
 
     public redraw() {
-        this.colors.updateColors(this.highlightedState);
         this._computeDimensions();
         const tiles = this._nodes.map((node, index) => ({ node, index }));
         const groups = this._svg.selectAll("g.node-group").data(tiles.toJS());
@@ -216,6 +229,8 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
                 let color;
                 if (tile.node.state === NodeState.running) {
                     color = idleColor;
+                } else if (!tile.node.isDedicated) {
+                    return `url(#${tile.node.state})`;
                 } else {
                     color = this.colors.get(tile.node.state);
                 }
@@ -238,7 +253,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
                 if (node.state !== NodeState.running || !node.recentTasks) {
                     return [];
                 }
-                return node.runningTasks.map((task, index) => ({ task, index })).toJS();
+                return node.runningTasks.map((task, index) => ({ node, task, index })).toJS();
             });
 
         runningTaskRects.enter().append("rect")
@@ -249,11 +264,45 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             })
             .attr("width", z)
             .attr("height", taskWidth - 1)
-            .style("fill", runningColor);
+            .style("fill", (tile: any) => {
+                if (tile.node.isDedicated) {
+                    return runningColor;
+                } else {
+                    return `url(#${tile.node.state})`;
+                }
+            });
 
         runningTaskRects.exit().remove();
     }
 
+    private _setupLowPriColors() {
+        this._defs.selectAll("pattern").remove();
+        for (let key of this.colors.keys) {
+            const pattern = this._defs.append("pattern")
+                .attr("id", key)
+                .attr("width", "8")
+                .attr("height", "10")
+                .attr("patternUnits", "userSpaceOnUse")
+                .attr("patternTransform", "rotate(45 50 50)");
+            pattern.append("line")
+                .attr("stroke", this.colors.get(key))
+                .attr("stroke-width", "12px")
+                .attr("y2", "10");
+
+            this._triggerWebkitSvgRedraw();
+        }
+
+    }
+
+    /**
+     * Workaround for webkit not updating the svg if the defs only change(this will trigger the update).
+     */
+    private _triggerWebkitSvgRedraw() {
+        this._svg.style("display", "inline-block");
+        setTimeout(() => {
+            this._svg.style("display", "block");
+        });
+    }
     /**
      * Compute the dimension of the heatmap.
      *  - rows

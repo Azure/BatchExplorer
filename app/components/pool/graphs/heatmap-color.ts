@@ -1,13 +1,15 @@
 import { ColorUtils, log } from "app/utils";
 import { StateTree } from "./state-tree";
 
-type ColorMap = { [key: string]: string };
+interface ColorMap { [key: string]: string; }
 
 /**
  * This handles highlighting or dimming colors based on a state selection.
  * It also handles showing different colors for categories and substates
  */
 export class HeatmapColor {
+    public keys: string[];
+
     private _colors: ColorMap = {};
     private _lastHighlightedState: string = null;
 
@@ -32,6 +34,7 @@ export class HeatmapColor {
         } else {
             this._colors = this._colorsForHighlight(highlightedState);
         }
+        this.keys = Object.keys(this._colors);
         this._lastHighlightedState = highlightedState;
     }
 

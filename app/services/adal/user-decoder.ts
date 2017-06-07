@@ -16,7 +16,7 @@ export class UserDecoder {
 
         // if (!user || !user.ha    sOwnProperty('aud')) throw new Error('');
 
-        return <AADUser>user;
+        return user as AADUser;
     }
 
     private safeDecodeBase64(value: string) {

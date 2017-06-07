@@ -32,7 +32,7 @@ export class StorageClientService {
     constructor(
         private accountService: AccountService,
         private arm: ArmHttpService,
-        private remote: ElectronRemote) {
+        remote: ElectronRemote) {
 
         this._storageClientFactory = remote.getStorageClientFactory();
 
@@ -50,7 +50,7 @@ export class StorageClientService {
 
     public get(): Observable<any> {
         if (!this._currentAccountId) {
-            throw "No account currently selected ...";
+            throw new Error("No account currently selected ...");
         }
 
         return this.accountService.currentAccount.first().flatMap((account) => {
@@ -96,7 +96,7 @@ export class StorageClientService {
     private getStorageAccountName(storageAccountId: string): string {
         const accountName = ArmResourceUtils.getAccountNameFromResourceId(storageAccountId);
         if (!accountName) {
-            throw "Unable to get account name from storage account id: " + storageAccountId;
+            throw new Error(`Unable to get account name from storage account id: ${storageAccountId}`);
         }
 
         return accountName;

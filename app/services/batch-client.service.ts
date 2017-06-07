@@ -12,7 +12,7 @@ export class BatchClientService {
     private _currentAccountId: string;
     private _batchClientFactory: BatchClientProxyFactory;
 
-    constructor(private adal: AdalService, private accountService: AccountService, private remote: ElectronRemote) {
+    constructor(private adal: AdalService, private accountService: AccountService, remote: ElectronRemote) {
         this._batchClientFactory = remote.getBatchClientFactory();
         accountService.currentAccountId.subscribe((id) => {
             this._currentAccountId = id;
@@ -21,7 +21,7 @@ export class BatchClientService {
 
     public get(): Observable<any> {
         if (!this._currentAccountId) {
-            throw "No account currently selected....";
+            throw new Error("No account currently selected....");
         }
 
         return this.currentAccount.flatMap((account) => {

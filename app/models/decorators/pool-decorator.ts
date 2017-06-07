@@ -1,4 +1,4 @@
-import { Pool } from "app/models";
+import { Pool, UserAccount, UserAccountElevationLevel } from "app/models";
 import { DecoratorBase } from "app/utils/decorators";
 import * as moment from "moment";
 import { CloudServiceConfigurationDecorator } from "./cloud-service-configuration-decorator";
@@ -12,7 +12,8 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     public certificateReferences: any[];
     public cloudServiceConfiguration: CloudServiceConfigurationDecorator;
     public creationTime: string;
-    public currentDedicated: string;
+    public currentDedicatedNodes: string;
+    public currentLowPriorityNodes: string;
     public displayName: string;
     public enableAutoScale: string;
     public enableInterNodeCommunication: string;
@@ -23,7 +24,8 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     public resizeTimeout: string;
     public state: string;
     public stateTransitionTime: string;
-    public targetDedicated: string;
+    public targetDedicatedNodes: string;
+    public targetLowPriorityNodes: string;
     public autoScaleFormula: string;
     public autoScaleEvaluationInterval: string;
     public taskSchedulingPolicy: TaskSchedulingPolicyDecorator;
@@ -33,15 +35,20 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     public poolOs: string;
     public poolOsIcon: string;
     public lastResized: string;
+    public userAccounts: string;
+
+    public dedicatedNodes: string;
+    public lowPriorityNodes: string;
 
     constructor(private pool?: Pool) {
         super(pool);
         this.allocationState = this.stateField(pool.allocationState);
         this.allocationStateTransitionTime = this.dateField(pool.allocationStateTransitionTime);
         this.cloudServiceConfiguration =
-            new CloudServiceConfigurationDecorator(pool.cloudServiceConfiguration || <any>{});
+            new CloudServiceConfigurationDecorator(pool.cloudServiceConfiguration || {} as any);
         this.creationTime = this.dateField(pool.creationTime);
-        this.currentDedicated = this.stringField(pool.currentDedicated);
+        this.currentDedicatedNodes = this.stringField(pool.currentDedicatedNodes);
+        this.currentLowPriorityNodes = this.stringField(pool.currentLowPriorityNodes);
         this.displayName = this.stringField(pool.displayName);
         this.enableAutoScale = this.booleanField(pool.enableAutoScale);
         this.enableInterNodeCommunication = this.booleanField(pool.enableInterNodeCommunication);
@@ -52,55 +59,48 @@ export class PoolDecorator extends DecoratorBase<Pool> {
         this.resizeTimeout = this.timespanField(pool.resizeTimeout);
         this.state = this.stateField(pool.state);
         this.stateTransitionTime = this.dateField(pool.stateTransitionTime);
-        this.targetDedicated = this.stringField(pool.targetDedicated);
+        this.targetDedicatedNodes = this.stringField(pool.targetDedicatedNodes);
+        this.targetLowPriorityNodes = this.stringField(pool.targetLowPriorityNodes);
         this.autoScaleFormula = this.stringField(pool.autoScaleFormula);
         this.autoScaleEvaluationInterval = this.timespanField(pool.autoScaleEvaluationInterval);
         this.taskSchedulingPolicy =
             new TaskSchedulingPolicyDecorator(pool.taskSchedulingPolicy);
         this.url = this.stringField(pool.url);
         this.virtualMachineConfiguration =
-            new VirtualMachineConfigurationDecorator(pool.virtualMachineConfiguration || <any>{});
+            new VirtualMachineConfigurationDecorator(pool.virtualMachineConfiguration || {} as any);
         this.vmSize = this.stringField(pool.vmSize);
 
         this.poolOs = this._computePoolOs();
         this.poolOsIcon = this._computePoolOsIcon(this.poolOs);
 
         this.lastResized = moment(this.pool.allocationStateTransitionTime).fromNow();
+
+        this.userAccounts = pool.userAccounts.map(x => this._decorateUserAccount(x)).join(", ");
+
+        this.dedicatedNodes = this._prettyNodes(pool.currentDedicatedNodes, pool.targetDedicatedNodes);
+        this.lowPriorityNodes = this._prettyNodes(pool.currentLowPriorityNodes, pool.targetLowPriorityNodes);
     }
 
     private _computePoolOs(): string {
-        const { cloudServiceConfiguration, virtualMachineConfiguration } = this.pool;
-        if (cloudServiceConfiguration) {
-            let osFamily = cloudServiceConfiguration.osFamily;
-
-            if (osFamily === 2) {
-                return "Windows Server 2008 R2 SP1";
-            } else if (osFamily === 3) {
-                return "Windows Server 2012";
-            } else {
-                return "Windows Server 2012 R2";
-            }
-        }
-
-        if (virtualMachineConfiguration) {
-            if (virtualMachineConfiguration.imageReference.publisher ===
-                "MicrosoftWindowsServer") {
-                return `Windows Server ${virtualMachineConfiguration.imageReference.sku}`;
-            }
-
-            const { offer, sku } = virtualMachineConfiguration.imageReference;
-
-            return `${offer} ${sku}`;
-        }
-
-        return "Unknown";
+        return this.pool.osName();
     }
 
     private _computePoolOsIcon(os): string {
-        if (os.includes("Windows")) {
-            return "windows";
-        }
+        return this.pool.osIconName();
+    }
 
-        return "linux";
+    private _prettyNodes(current: number, target: number) {
+        if (current === target) {
+            return target.toString();
+        } else {
+            return `${current} → ${target}`;
+        }
+    }
+
+    private _decorateUserAccount(user: UserAccount) {
+        if (user.elevationLevel === UserAccountElevationLevel.admin) {
+            return `${user.name} (admin)`;
+        }
+        return user.name;
     }
 }

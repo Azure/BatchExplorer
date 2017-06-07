@@ -32,14 +32,14 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
         this._filter = filter;
         this._filterApplications();
     }
-    public get filter(): Filter { return this._filter; };
+    public get filter(): Filter { return this._filter; }
 
     private _baseOptions = { maxresults: 50 };
     private _subs: Subscription[] = [];
     private _filter: Filter;
 
     constructor(
-        private router: Router,
+        router: Router,
         private applicationService: ApplicationService,
         private taskManager: BackgroundTaskService) {
 

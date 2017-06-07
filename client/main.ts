@@ -1,9 +1,10 @@
-import { app, protocol } from "electron";
-
+import { app, ipcMain, protocol } from "electron";
 import * as path from "path";
-import { windows } from "./core";
-import { getPythonPath } from "./python-process";
 app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
+
+import { windows } from "./core";
+import { logger } from "./logger";
+import { getPythonPath } from "./python-process";
 
 getPythonPath().then((pythonPath) => {
     console.log("Exec is", pythonPath);
@@ -43,4 +44,26 @@ app.on("activate", () => {
     if (windows.main.exists()) {
         createWindow();
     }
+});
+
+ipcMain.once("exit", () => {
+    process.exit(1);
+});
+
+ipcMain.on("reload", () => {
+    // Destroy window and error window if applicable
+    windows.main.destroy();
+    windows.recover.destroy();
+
+    // Show splash screen
+    windows.splashScreen.create();
+    windows.splashScreen.updateMessage("Loading app");
+
+    // Reopen a new window
+    windows.main.create();
+});
+
+process.on("uncaughtException", (error: Error) => {
+    logger.error("There was a uncaught exception", error);
+    windows.recover.createWithError(error.message);
 });

@@ -21,7 +21,7 @@ export enum HttpCode {
     BadGateway = 502,
     ServiceUnavailable = 503,
     GatewayTimeout = 504,
-};
+}
 
 export const RetryableHttpCode = new Set([
     HttpCode.RequestTimeout,
@@ -82,6 +82,11 @@ export const localStorageKey = {
     currentAccessToken: "current_access_token",
 
     /**
+     * List of subsciption id to the multi select in the account list
+     */
+    accountSubscriptionFilter: "account_subscription_filter",
+
+    /**
      * Subscriptions cached
      */
     subscriptions: "subscriptions",
@@ -132,6 +137,7 @@ export const APIErrorCodes = {
     containerNotFound: "ContainerNotFound",
     operationInvalidForCurrentState: "OperationInvalidForCurrentState",
     authenticationFailed: "AuthenticationFailed",
+    accountNotEnabledForAutoStorage: "AccountNotEnabledForAutoStorage",
 };
 
 export const MetadataInternalKey = {

@@ -1,7 +1,8 @@
 import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 
-import { Application, ApplicationPackage } from "app/models";
+import { Application, ApplicationPackage, ServerError } from "app/models";
+import { Constants } from "app/utils";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
 import { DataCache, RxArmEntityProxy, RxArmListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
@@ -13,6 +14,11 @@ export interface ApplicationListParams {
 export interface ApplicationParams {
     id?: string;
 }
+
+// List of error we don't want to log for storage requests
+const applicationIgnoredErrors = [
+    Constants.HttpCode.Conflict,
+];
 
 @Injectable()
 export class ApplicationService extends ServiceBase {
@@ -34,7 +40,7 @@ export class ApplicationService extends ServiceBase {
 
     constructor(
         private arm: ArmHttpService,
-        private accountService: AccountService) {
+        accountService: AccountService) {
 
         super();
         accountService.currentAccountId.subscribe((accountId) => {
@@ -50,11 +56,15 @@ export class ApplicationService extends ServiceBase {
      * Lists all of the applications in the specified account.
      * @param initialOptions: options for the list query
      */
-    public list(initialOptions: any = {}): RxListProxy<ApplicationListParams, Application> {
+    public list(initialOptions: any = {}, onError?: (error: ServerError) => boolean):
+        RxListProxy<ApplicationListParams, Application> {
+
         return new RxArmListProxy<ApplicationListParams, Application>(Application, this.arm, {
             cache: (params) => this._cache,
             uri: () => `${this._currentAccountId}/applications`,
             initialOptions: initialOptions,
+            logIgnoreError: applicationIgnoredErrors,
+            onError: onError,
         });
     }
 

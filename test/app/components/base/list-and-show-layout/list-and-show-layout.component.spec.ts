@@ -3,6 +3,7 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testin
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MdDialog } from "@angular/material";
 import { By } from "@angular/platform-browser";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { ActivatedRoute } from "@angular/router";
 import { BehaviorSubject } from "rxjs";
 
@@ -43,7 +44,7 @@ describe("ListAndShowLayout", () => {
             crumbs: new BehaviorSubject([]),
         };
         TestBed.configureTestingModule({
-            imports: [FormsModule, ReactiveFormsModule],
+            imports: [FormsModule, ReactiveFormsModule, NoopAnimationsModule],
             declarations: [
                 TestLayoutComponent,
                 ListAndShowLayoutComponent,

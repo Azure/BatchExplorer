@@ -7,16 +7,16 @@ import {
 import { BehaviorSubject } from "rxjs";
 
 export enum LoadingStatus {
-    Loading = 1,
-    Ready = 2,
-    Error = 3,
+    Loading = 0,
+    Ready = 1,
+    Error = 2,
 }
 
 export enum DisplayStatus {
-    Loading = 1,
-    Ready = 2,
-    Error = 3,
-    ParentLoading = 4,
+    Loading = 0,
+    Ready = 1,
+    Error = 2,
+    ParentLoading = 3,
 }
 
 @Component({
@@ -68,7 +68,7 @@ export class LoadingComponent {
         if (parentDisplayStatus === DisplayStatus.Loading || parentDisplayStatus === DisplayStatus.ParentLoading) {
             this.displayStatus.next(DisplayStatus.ParentLoading);
         } else {
-            this.displayStatus.next(<any>this._status);
+            this.displayStatus.next(this._status as any);
         }
     }
 }

@@ -1,5 +1,4 @@
 import {
-    ComponentFactoryResolver,
     EventEmitter,
     Injectable,
     Type,
@@ -23,7 +22,7 @@ export class SidebarManager {
 
     private referencesSubject: BehaviorSubject<Array<SidebarRef<any>>> = new BehaviorSubject([]);
 
-    constructor(private componentFactoryResolver: ComponentFactoryResolver) {
+    constructor() {
         this.references = this.referencesSubject.asObservable();
     }
 

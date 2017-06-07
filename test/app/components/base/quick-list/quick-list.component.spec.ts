@@ -1,9 +1,10 @@
-import { Component, DebugElement } from "@angular/core";
+import { Component, DebugElement, ViewChild } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 
 import { BreadcrumbModule } from "app/components/base/breadcrumbs";
+import { FocusSectionComponent } from "app/components/base/focus-section";
 import { QuickListComponent, QuickListModule } from "app/components/base/quick-list";
 import { ButtonClickEvents, click } from "test/utils/helpers";
 
@@ -14,14 +15,19 @@ interface TestItem {
 
 @Component({
     template: `
-        <bl-quick-list>
-            <bl-quick-list-item *ngFor="let item of items" [key]="item.id">
-                <h4 bl-quick-list-item-title>{{item.name}}</h4>
-            </bl-quick-list-item>
-        </bl-quick-list>
+        <bl-focus-section #focusSection>
+            <bl-quick-list>
+                <bl-quick-list-item *ngFor="let item of items" [key]="item.id">
+                    <h4 bl-quick-list-item-title>{{item.name}}</h4>
+                </bl-quick-list-item>
+            </bl-quick-list>
+        </bl-focus-section>
     `,
 })
 class TestComponent {
+    @ViewChild("focusSection")
+    public focusSection: FocusSectionComponent;
+
     public items: TestItem[] = [
         { id: "item-1", name: "Item 1" },
         { id: "item-2", name: "Item 2" },
@@ -44,7 +50,7 @@ describe("QuickListComponent", () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [QuickListModule, RouterTestingModule.withRoutes([]), BreadcrumbModule],
-            declarations: [TestComponent],
+            declarations: [TestComponent, FocusSectionComponent],
         });
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
@@ -76,6 +82,15 @@ describe("QuickListComponent", () => {
 
         expect(selectedItems.length).toBe(1, "Should also select the item");
         expect(selectedItems[0]).toEqual("item-2", "Should also select the item");
+    });
+
+    it("click on an item should also focus it", () => {
+        const item = items[1].query(By.css(".quick-list-item"));
+        testComponent.focusSection.focus();
+
+        click(item.nativeElement);
+        fixture.detectChanges();
+        expect(quicklist.focusedItem.value).toEqual("item-2");
     });
 
     describe("When an item is active", () => {

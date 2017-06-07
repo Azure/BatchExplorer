@@ -16,7 +16,7 @@ export class DeletePoolDialogComponent {
         this._poolId = poolId;
         this.changeDetector.detectChanges();
     }
-    public get poolId() { return this._poolId; };
+    public get poolId() { return this._poolId; }
 
     private _poolId: string;
 

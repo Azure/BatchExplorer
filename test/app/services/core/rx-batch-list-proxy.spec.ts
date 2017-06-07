@@ -40,10 +40,10 @@ class MockListProxy {
         this.options = options;
         this.fetchNext = jasmine.createSpy("fetchNext").and.callFake(() => {
             if (!this.data) {
-                return Promise.reject(<BatchError>{
+                return Promise.reject({
                     statusCode: 409, code: "Bad",
                     message: { value: "Very bad stuff." },
-                });
+                } as BatchError);
             }
             const pageData = this.data[this.page];
             this.nextLink++;

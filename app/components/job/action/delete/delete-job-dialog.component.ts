@@ -16,7 +16,7 @@ export class DeleteJobDialogComponent {
         this._jobId = jobId;
         this.changeDetector.detectChanges();
     }
-    public get jobId() { return this._jobId; };
+    public get jobId() { return this._jobId; }
 
     private _jobId: string;
 

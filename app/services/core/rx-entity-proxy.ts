@@ -1,6 +1,7 @@
 import { Type } from "@angular/core";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
+import { LoadingStatus } from "app/components/base/loading";
 import { ServerError } from "app/models";
 import { HttpCode } from "app/utils/constants";
 import { RxProxyBase, RxProxyBaseConfig } from "./rx-proxy-base";
@@ -25,7 +26,7 @@ export abstract class RxEntityProxy<TParams, TEntity> extends RxProxyBase<TParam
      */
     constructor(type: Type<TEntity>, config: RxEntityProxyConfig<TParams, TEntity>) {
         super(type, config);
-        this.params = config.initialParams || <TParams>{};
+        this.params = config.initialParams || {} as TParams;
         this.item = this._itemKey.map((key) => {
             return this.cache.items.map((items) => {
                 return items.get(key);
@@ -37,6 +38,8 @@ export abstract class RxEntityProxy<TParams, TEntity> extends RxProxyBase<TParam
      * Fetch the current item.
      */
     public fetch(): Observable<any> {
+        this._tryToLoadFromCache();
+
         return this.fetchData({
             getData: () => {
                 return this.getData();
@@ -65,31 +68,36 @@ export abstract class RxEntityProxy<TParams, TEntity> extends RxProxyBase<TParam
     }
 
     protected abstract getData(): Observable<any>;
+
+    /**
+     * Try to see if the entity is already in the cache if so load it immediatelly.
+     */
+    private _tryToLoadFromCache() {
+        const key = this._params[this._cache.uniqueField];
+        if (this._cache.has(key)) {
+            this._itemKey.next(key);
+            this._status.next(LoadingStatus.Ready);
+        }
+    }
 }
 
 export function getOnceProxy<TEntity>(getProxy: RxEntityProxy<any, TEntity>): Observable<TEntity> {
     const obs = new AsyncSubject<TEntity>();
 
-    const errorCallback = (e) => {
-        sub.unsubscribe();
-        obs.error(e);
-        obs.complete();
-    };
-
-    const sub = getProxy.item.subscribe({
-        next: (item: TEntity) => {
-            if (item) {
-                sub.unsubscribe();
-                obs.next(item);
-                obs.complete();
-                getProxy.dispose();
-            }
-        },
-        error: errorCallback,
-    });
-
     getProxy.fetch().subscribe({
-        error: errorCallback,
+        next: () => {
+            getProxy.item.first().subscribe((item: TEntity) => {
+                if (item) {
+                    obs.next(item);
+                    obs.complete();
+                    getProxy.dispose();
+                }
+            });
+        },
+        error: (e) => {
+            obs.error(e);
+            obs.complete();
+        },
     });
 
     return obs.asObservable();

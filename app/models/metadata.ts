@@ -8,7 +8,7 @@ const MetadataRecord = Record({
 export interface MetadataAttributes {
     name: string;
     value: string;
-};
+}
 
 export class Metadata extends MetadataRecord {
     public name: string;

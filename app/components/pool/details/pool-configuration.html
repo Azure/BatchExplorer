@@ -3,8 +3,10 @@
 		<bl-property-group label="General" class="wide">
 			<bl-text-property label="Id" [value]="decorator.id"></bl-text-property>
 			<bl-text-property label="VM size" [value]="decorator.vmSize"></bl-text-property>
-			<bl-text-property label="Current dedicated" [value]="decorator.currentDedicated"></bl-text-property>
-			<bl-text-property label="Target dedicated" [value]="decorator.targetDedicated"></bl-text-property>
+			<bl-text-property label="Current dedicated" [value]="decorator.currentDedicatedNodes"></bl-text-property>
+			<bl-text-property label="Target dedicated" [value]="decorator.targetDedicatedNodes"></bl-text-property>
+			<bl-text-property label="Current low priority" [value]="decorator.currentLowPriorityNodes"></bl-text-property>
+			<bl-text-property label="Target low priority" [value]="decorator.targetLowPriorityNodes"></bl-text-property>
 			<bl-text-property label="State" [value]="decorator.state"></bl-text-property>
 			<bl-text-property label="State transistion Time" [value]="decorator.stateTransitionTime"></bl-text-property>
 			<bl-text-property label="Allocation state" [value]="decorator.allocationState"></bl-text-property>
@@ -14,13 +16,14 @@
             <bl-text-property label="Enable autoscale" [value]="decorator.enableAutoScale"></bl-text-property>
             <bl-text-property label="Autoscale evaluation interval" [value]="decorator.autoScaleEvaluationInterval"></bl-text-property>
             <bl-text-property label="Autoscale formula" [value]="decorator.autoScaleFormula"></bl-text-property>
-            <bl-text-property label="Enable inter-node communication" [value]="decorator.enableInterNodeCommunication"></bl-text-property>
+            <bl-bool-property label="Inter-node communication" [value]="pool.enableInterNodeCommunication"></bl-bool-property>
             <bl-text-property label="Last modified" [value]="decorator.lastModified"></bl-text-property>
             <bl-text-property label="Max tasks per node" [value]="decorator.maxTasksPerNode"></bl-text-property>
             <!--<bl-text-property label="Resize error" [value]="decorator"></bl-text-property>-->
             <bl-text-property label="Resize timeout" [value]="decorator.resizeTimeout"></bl-text-property>
             <bl-text-property label="Task scheduling policy" [value]="decorator.taskSchedulingPolicy.nodeFillType"></bl-text-property>
             <bl-text-property label="Url" [value]="decorator.url"></bl-text-property>
+            <bl-text-property label="User accounts" [value]="decorator.userAccounts"></bl-text-property>
 		</bl-property-group>
 
 		<bl-property-group label="Cloud service configuration" class="wide" [collapsed]="true" *ngIf="pool.cloudServiceConfiguration">

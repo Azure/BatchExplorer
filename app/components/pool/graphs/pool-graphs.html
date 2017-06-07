@@ -11,8 +11,8 @@
         </div>
     </div>
     <div class="preview" (click)="focusGraph(AvailableGraph.AvailableNodes)" [class.focused]="focusedGraph === AvailableGraph.AvailableNodes">
-        <div class="label">Node available</div>
-        <bl-history-graph [max]="pool.targetDedicated" class="small-preview" [history]="runningNodesHistory.history" [interactive]="false" [historySize]="selectedHistoryLength.value">
+        <div class="label">Available nodes</div>
+        <bl-history-graph [max]="pool.targetNodes" class="small-preview" [history]="runningNodesHistory.history" [interactive]="false" [historySize]="selectedHistoryLength.value">
         </bl-history-graph>
     </div>
     <div class="preview" (click)="focusGraph(AvailableGraph.RunningTasks)" [class.focused]="focusedGraph === AvailableGraph.RunningTasks">
@@ -34,7 +34,7 @@
         <bl-nodes-heatmap [pool]="pool" [nodes]="nodes"></bl-nodes-heatmap>
     </div>
     <div *ngSwitchCase="AvailableGraph.AvailableNodes" class="full-display">
-        <bl-history-graph [max]="pool.targetDedicated" class="full-display" [history]="runningNodesHistory.history" [historySize]="selectedHistoryLength.value">
+        <bl-history-graph [max]="pool.targetNodes" class="full-display" [history]="runningNodesHistory.history" [historySize]="selectedHistoryLength.value">
         </bl-history-graph>
     </div>
     <div *ngSwitchCase="AvailableGraph.RunningTasks" class="full-display">

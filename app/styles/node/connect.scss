@@ -18,12 +18,12 @@ bl-node-connect {
 
         &:hover {
             color: $whitesmoke;
-            background-color: map-get($md-prussian-blue, 400);
+            background-color: map-get($primary, 400);
         }
 
         &:active {
             color: $whitesmoke;
-            background-color: map-get($md-prussian-blue, 500);
+            background-color: map-get($primary, 500);
         }
     }
 }
@@ -67,8 +67,8 @@ bl-ssh-key-picker > .ssh-key-picker {
         .saved-keys-wrapper {
             height: 120px;
             overflow: auto;
-            border-top: 1px solid #d5d5d5;
-            border-bottom: 1px solid #d5d5d5;
+            border-top: 1px solid $border-color;
+            border-bottom: 1px solid $border-color;
 
             > .key {
                 display: flex;
@@ -81,7 +81,7 @@ bl-ssh-key-picker > .ssh-key-picker {
                 }
 
                 &:not(:last-child) {
-                    border-bottom: 1px solid #d5d5d5;
+                    border-bottom: 1px solid $border-color;
                 }
 
                 &:hover {
@@ -98,7 +98,7 @@ bl-ssh-key-picker > .ssh-key-picker {
                 .fa-key {
                     font-size: 30px;
                     margin-bottom: 10px;
-                    color: map-get($md-prussian-blue, 400);
+                    color: map-get($primary, 400);
                 }
             }
 

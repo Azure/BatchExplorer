@@ -17,18 +17,22 @@
         min-width: 100px;
     }
 
+    > .formula-mode {
+        border-bottom: 1px solid $altoGray;
+    }
+
     .mat-input-underline {
         position: relative;
         margin-top: 0;
     }
-
-    > .saved-formulas {
+    .formula-list {
+        margin: 0.5em 0.1em;
+    }
+    .saved-formulas {
         width: 210px;
         flex: 0 0 170px;
         padding: 1em 0;
-        border-bottom: 1px solid $altoGray;
-
-        > .saved-formulas-container {
+        .saved-formulas-container {
             height: 100%;
         }
 
@@ -71,7 +75,7 @@
                 .fa-file-code-o {
                     font-size: 30px;
                     margin-bottom: 10px;
-                    color: map-get($md-prussian-blue, 400);
+                    color: map-get($primary, 400);
                 }
             }
         }
@@ -89,6 +93,10 @@
             .fa-times, .fa-check {
                 color: white;
             }
+        }
+
+        .custom-formulas, .sample-formulas {
+            width: 49%;
         }
     }
 }

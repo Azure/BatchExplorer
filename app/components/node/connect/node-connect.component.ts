@@ -40,7 +40,7 @@ export class NodeConnectComponent implements OnInit {
             this.linux = PoolUtils.isLinux(this.pool);
         }
     }
-    public get pool() { return this._pool; };
+    public get pool() { return this._pool; }
 
     @Input()
     public node: Node;

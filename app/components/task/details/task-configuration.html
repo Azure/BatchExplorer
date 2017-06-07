@@ -76,7 +76,7 @@
     <bl-property-group label="Exit conditions" [warningMessage]="exitConditionWarningMessage" [collapsed]="true">
         <bl-text-property label="Exit codes that do nothing" [value]="exitConditionData.noAction.join(', ')"></bl-text-property>
         <bl-text-property label="Exit codes that terminate the job" [value]="exitConditionData.terminateJob.join(', ')"></bl-text-property>
-        <bl-text-property label="On scheduling error" [value]="exitConditionData.schedulingError"></bl-text-property>
+        <bl-text-property label="On scheduling error" [value]="exitConditionData.failureInfo"></bl-text-property>
         <bl-text-property *ngIf="exitConditionData.default" label="default" [value]="exitConditionData.default"></bl-text-property>
     </bl-property-group>
 </bl-property-list>

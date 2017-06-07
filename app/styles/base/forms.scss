@@ -86,7 +86,7 @@ fieldset {
         background-color: $silver-grey;
 
         i {
-            color: map-get($md-prussian-blue, 400);
+            color: map-get($primary, 400);
         }
     }
 
@@ -155,11 +155,6 @@ fieldset {
             md-hint {
                 color: $validation-error-color;
             }
-        }
-
-        md-select {
-            margin-top: 5px;
-            width: 40%;
         }
 
         .input-summary {
@@ -249,7 +244,7 @@ bl-complex-form {
     > .form-footer {
         height: $footer-height;
 
-        // background: map-get($md-prussian-blue, 500);
+        // background: map-get($primary, 500);
         padding: 5px;
         display: flex;
         align-items: center;

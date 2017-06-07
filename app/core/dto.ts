@@ -58,8 +58,8 @@ export function DtoAttr<T>() {
         const ctr = target.constructor;
         const type = Reflect.getMetadata("design:type", target, attr);
         if (!type) {
-            throw `Cannot retrieve the type for DtoAttr ${target.constructor.name}#${attr}`
-            + "Check your nested type is defined in another file or above this DtoAttr";
+            throw new Error(`Cannot retrieve the type for DtoAttr ${target.constructor.name}#${attr}`
+            + "Check your nested type is defined in another file or above this DtoAttr");
         }
         const metadata = Reflect.getMetadata(attrMetadataKey, ctr) || {};
         metadata[attr] = type;

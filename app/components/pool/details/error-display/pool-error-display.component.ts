@@ -3,6 +3,7 @@ import { autobind } from "core-decorators";
 import { shell } from "electron";
 
 import { Pool, ResizeErrorCode } from "app/models";
+import { PoolResizeDto } from "app/models/dtos";
 import { AccountService, PoolService } from "app/services";
 import { ExternalLinks } from "app/utils/constants";
 
@@ -32,7 +33,10 @@ export class PoolErrorDisplayComponent {
 
     @autobind()
     public fixStopResizeError() {
-        const obs = this.poolService.resize(this.pool.id, this.pool.targetDedicated);
+        const obs = this.poolService.resize(this.pool.id, new PoolResizeDto({
+            targetDedicatedNodes: this.pool.targetDedicatedNodes,
+            targetLowPriorityNodes: this.pool.targetLowPriorityNodes,
+        }));
         obs.subscribe(() => {
             this.refreshPool();
         });

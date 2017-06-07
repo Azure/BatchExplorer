@@ -34,15 +34,19 @@ bl-quick-list {
     display: block;
     width: 100%;
 
-    .quick-list-item {
+    bl-quick-list-item {
         cursor: pointer;
+        outline: none;
+    }
+
+    .quick-list-item {
         display: flex;
         width: 100%;
         height: 56px;
         white-space: nowrap;
 
         &.selected {
-            background-color: map-get($md-prussian-blue, 100);
+            background-color: map-get($primary, 100);
 
             p {
                 color: $mineShaftGray;
@@ -50,7 +54,7 @@ bl-quick-list {
         }
 
         &.focused {
-            background-color: map-get($md-prussian-blue, 200);
+            background-color: map-get($primary, 200);
         }
 
         &:hover:not(.selected) {
@@ -83,13 +87,13 @@ bl-quick-list {
             }
 
             .fa-hourglass-half {
-                color: map-get($md-prussian-blue, 400);
+                color: map-get($primary, 400);
             }
         }
 
         bl-quick-list-item-status {
             position: relative;
-            color: $blue-light;
+            color: map-get($primary, 500);
             flex: 0 0 8px;
             display: flex;
             align-items: stretch;
@@ -97,16 +101,16 @@ bl-quick-list {
                 width: 100%;
 
                 &.warning {
-                    background-color: $red;
+                    background-color: map-get($danger, 500);
                 }
 
                 &.lightaccent {
-                    background: map-get($md-prussian-blue, 100);
+                    background: map-get($primary, 100);
 
                 }
 
                 &.accent {
-                    background: map-get($md-prussian-blue, 300);
+                    background: map-get($primary, 300);
                 }
 
                 &.important {
@@ -116,7 +120,7 @@ bl-quick-list {
                         transparent 5px,
                         $concreteGray 5px,
                         $concreteGray 10px
-                    ), map-get($md-prussian-blue, 500);
+                    ), map-get($primary, 500);
                 }
             }
         }

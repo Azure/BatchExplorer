@@ -7,6 +7,8 @@ import { PoolDetailsModule } from "app/components/pool/details";
 import { PoolGraphsModule } from "app/components/pool/graphs";
 import { PoolHomeComponent } from "app/components/pool/home/pool-home.component";
 import { StartTaskModule } from "app/components/pool/start-task";
+import { TaskBaseModule } from "app/components/task/base";
+import { UserAccountModule } from "./user-account";
 
 import {
     AutoscaleFormulaPickerComponent,
@@ -26,7 +28,7 @@ const components = [
 ];
 
 const modules = [
-    PoolDetailsModule, PoolGraphsModule, StartTaskModule, ...commonModules,
+    PoolDetailsModule, PoolGraphsModule, StartTaskModule, UserAccountModule, TaskBaseModule, ...commonModules,
 ];
 
 @NgModule({

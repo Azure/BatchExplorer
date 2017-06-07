@@ -25,7 +25,7 @@ bl-pool-picker {
         margin: 5px;
         vertical-align: top;
 
-        border: 1px solid #d5d5d5;
+        border: 1px solid $border-color;
         border-radius: 3px;
         background: $white;
         outline: none;
@@ -38,21 +38,21 @@ bl-pool-picker {
 
         &.active {
             color: $whitesmoke;
-            border-color: map-get($md-prussian-blue, 300);
-            background:  map-get($md-prussian-blue, 300);
+            border-color: map-get($primary, 300);
+            background:  map-get($primary, 300);
 
             > .pool-wrapper {
                 > .icon {
-                    color: map-get($md-prussian-blue, 50);
+                    color: map-get($primary, 50);
                 }
                 > .info > .details {
-                    color: map-get($md-prussian-blue, 50);
+                    color: map-get($primary, 50);
                 }
             }
 
             > .pool-tags .tag {
-                color: map-get($md-prussian-blue, 700);
-                background-color: map-get($md-prussian-blue, 50);
+                color: map-get($primary, 700);
+                background-color: map-get($primary, 50);
             }
         }
 
@@ -62,7 +62,7 @@ bl-pool-picker {
             width: $tile-width;
 
             > .icon {
-                color: map-get($md-prussian-blue, 300);
+                color: map-get($primary, 300);
                 font-size: 30px;
                 height: 30px;
                 margin: 5px;

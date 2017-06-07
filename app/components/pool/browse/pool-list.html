@@ -1,6 +1,6 @@
 <bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
 <bl-quick-list #list *ngIf="quickList">
-    <bl-quick-list-item *ngFor="let pool of data.items | async" [routerLink]="['/pools/', pool.id]" [key]="pool.id" [contextmenu]="contextmenu(pool)">
+    <bl-quick-list-item *ngFor="let pool of data.items | async" [link]="['/pools/', pool.id]" [key]="pool.id" [contextmenu]="contextmenu(pool)">
         <bl-quick-list-item-status [status]="poolStatus(pool)" [tooltip]="poolStatusText(pool)">
         </bl-quick-list-item-status>
         <h4 bl-quick-list-item-title>{{pool.id}}</h4>
@@ -21,16 +21,16 @@
         <bl-column>State</bl-column>
         <bl-column>Allocation State</bl-column>
         <bl-column>VmSize</bl-column>
-        <bl-column numericField>Current <i class="fa fa-tv"></i></bl-column>
-        <bl-column numericField>Target <i class="fa fa-tv"></i></bl-column>
+        <bl-column>Dedicated <i class="fa fa-tv"></i></bl-column>
+        <bl-column>Low priority <i class="fa fa-tv"></i></bl-column>
     </bl-thead>
-    <bl-row *ngFor="let pool of data.items | async" [routerLink]="['/pools/', pool.id]" [key]="pool.id" [contextmenu]="contextmenu(pool)">
+    <bl-row *ngFor="let pool of pools, trackBy: pool?.id" [link]="['/pools/', pool.id]" [key]="pool.id" [contextmenu]="contextmenu(pool)">
         <bl-cell>{{pool.id}}</bl-cell>
         <bl-cell>{{pool.state}}</bl-cell>
         <bl-cell>{{pool.allocationState}}</bl-cell>
         <bl-cell>{{pool.vmSize}}</bl-cell>
-        <bl-cell numericField>{{pool.currentDedicated}}</bl-cell>
-        <bl-cell numericField>{{pool.targetDedicated}}</bl-cell>
+        <bl-cell [value]="pool.targetDedicatedNodes">{{pool.dedicatedNodes}}</bl-cell>
+        <bl-cell [value]="pool.targetLowPriorityNodes">{{pool.lowPriorityNodes}}</bl-cell>
     </bl-row>
 </bl-table>
 

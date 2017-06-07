@@ -1,8 +1,8 @@
 @import "app/styles/variables";
 
-bl-form-picker > .form-picker {
-    border: 2px dashed $dusty-grey;
-    min-width: 200px;
+.form-picker {
+    border: 1px dashed $dusty-grey;
+    min-width: 210px;
     max-width: 100%;
     height: 60px;
     background: transparent;
@@ -15,18 +15,21 @@ bl-form-picker > .form-picker {
     text-overflow: hidden;
     white-space: nowrap;
 
-    &:hover, &:focus {
-        border-color: map-get($md-prussian-blue, 300);
-        color: map-get($md-prussian-blue, 300);
-    }
-
     &.has-value {
         border-style: solid;
+        color: $dove-grey;
+        border-color: $dove-grey;
     }
+
+    &:hover, &:focus {
+        border-color: map-get($primary, 300);
+        color: map-get($primary, 300);
+    }
+
 
     .fa-plus {
         font-size: 30px;
-        margin: 0 20px;
+        margin: 0 15px;
     }
 
     > .no-value-content {
@@ -39,9 +42,10 @@ bl-form-picker > .form-picker {
         align-items: center;
         > .details {
             flex: 1;
-            margin: 0 5px;
+            margin: 0 10px;
             text-overflow: ellipsis;
             overflow: hidden;
+            text-align: left;
 
             > * {
                 text-overflow: ellipsis;
@@ -54,6 +58,10 @@ bl-form-picker > .form-picker {
 
         > .clear-btn {
             margin: 0 5px;
+
+            .mat-mini-fab {
+                box-shadow: 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
+            }
         }
     }
 }
