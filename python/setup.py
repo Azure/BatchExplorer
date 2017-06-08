@@ -1,14 +1,16 @@
 import os
 from cx_Freeze import setup, Executable
 
+dir_path = os.path.dirname(os.path.realpath(__file__))
+
 # Dependencies are automatically detected, but it might need fine tuning.
 build_exe_options = {
+    "build_exe": "python/build",
     "packages": ["os", "asyncio"],
-    "includes": ["controllers"],
+    "include_files": [(os.path.join(dir_path, "controllers/"), "controllers/")],
     "excludes": ["tkinter"],
 }
 
-dir_path = os.path.dirname(os.path.realpath(__file__))
 setup(
     name="blpythonrpc",
     version="0.1",

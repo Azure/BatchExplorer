@@ -36,12 +36,63 @@
     "tslint": "tslint -c tslint.json \"app/**/*.ts\" \"client/**/*.ts\" \"test/**/*.ts\" \"./*.js\" \"config/**/*.js\"",
     "stylelint": "stylelint --syntax scss \"app/**/*.scss\"",
     "lint": "npm run tslint && npm run stylelint",
-    "package": "node config/pack.js",
+    "package": "build --dir",
     "build-and-pack": "npm run build:prod && npm run package"
   },
   "license": "MIT",
   "engines": {
     "node": ">=6.0.0"
+  },
+  "build": {
+    "productName": "BatchLabs",
+    "appId": "microsoft.azure.batchlabs",
+    "files": [
+      "build/",
+      "node_modules/",
+      "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "python/build/",
+        "to": "python-rpc",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
+    "dmg": {
+      "contents": [
+        {
+          "x": 130,
+          "y": 220
+        },
+        {
+          "x": 410,
+          "y": 220,
+          "type": "link",
+          "path": "/Applications"
+        }
+      ]
+    },
+    "mac": {
+      "icon": "app/assets/images/icon.icns"
+    },
+    "win": {
+      "icon": "app/assets/images/icon.ico",
+      "target": [
+        "nsis"
+      ]
+    },
+    "linux": {
+      "target": [
+        "deb",
+        "AppImage"
+      ]
+    },
+    "directories": {
+      "buildResources": "resources",
+      "output": "release"
+    }
   },
   "devDependencies": {
     "@types/bunyan": "^0.0.32",
