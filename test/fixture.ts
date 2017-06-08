@@ -1,7 +1,7 @@
 import { Type } from "@angular/core";
 import * as moment from "moment";
 
-import { AccountResource, Application, ApplicationPackage, Job, Node, PackageState, Pool,
+import { AccountResource, Application, ApplicationPackage, File, Job, Node, PackageState, Pool,
     Subscription, SubtaskInformation, Task,
 } from "app/models";
 
@@ -59,7 +59,7 @@ export const job = new FixtureFactory<Job>(Job, {
         endTime: new Date(2015, 5, 1, 10, 4, 31),
         poolId: "pool-1",
         terminateReason: "because i said so",
-        schedulingError: {
+        failureInfo: {
             category: "cat1",
             code: "code1",
             message: "this is a message",
@@ -98,7 +98,7 @@ export const task = new FixtureFactory<Task>(Task, {
         lastRetryTime: new Date(2015, 5, 21, 0, 0, 0),
         requeueCount: 1,
         lastRequeueTime: new Date(2015, 5, 21, 0, 0, 0),
-        schedulingError: {
+        failureInfo: {
             category: "cat1",
             code: "code1",
             message: "this is a message",
@@ -197,6 +197,7 @@ export const node = new FixtureFactory<Node>(Node, {
     id: "node-1",
     displayName: "MyImaginaryNode",
     state: "running",
+    isDedicated: true,
 });
 
 export const subscription = new FixtureFactory<Subscription>(Subscription, {
@@ -235,4 +236,16 @@ export const applicationPackage = new FixtureFactory<ApplicationPackage>(Applica
     lastActivationTime: new Date(),
     storageUrl: "",
     storageUrlExpiry: null,
+});
+
+export const file = new FixtureFactory<File>(File, {
+    name: "file-1",
+    url: "url/to/file",
+    isDirectory: false,
+    properties: {
+        contentLength: 0,
+        contentType: "text/plain",
+        creationTime: new Date(),
+        lastModified: new Date(),
+    },
 });

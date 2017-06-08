@@ -33,14 +33,18 @@ describe("PoolNodesPreviewComponent", () => {
 
     describe("when pool is steady", () => {
         beforeEach(() => {
-            testComponent.pool = new Pool({ state: "steady", currentDedicated: 4, targetDedicated: 4 });
+            testComponent.pool = new Pool({
+                state: "steady",
+                currentDedicatedNodes: 4, targetDedicatedNodes: 4,
+                currentLowPriorityNodes: 1, targetLowPriorityNodes: 1,
+            });
             fixture.detectChanges();
         });
 
         it("should just show the current dedicated", () => {
             const text = de.nativeElement.textContent;
-            expect(text).toContain("4");
-            expect((text.match(/4/g) || []).length).toBe(1, "Should only have one 4 in the content");
+            expect(text).toContain("5");
+            expect((text.match(/5/g) || []).length).toBe(1, "Should only have one 5 in the content");
         });
 
         it("should not show the arrow", () => {
@@ -51,14 +55,18 @@ describe("PoolNodesPreviewComponent", () => {
 
     describe("when pool is resizing", () => {
         beforeEach(() => {
-            testComponent.pool = new Pool({ state: "resizing", currentDedicated: 2, targetDedicated: 8 });
+            testComponent.pool = new Pool({
+                state: "resizing",
+                currentDedicatedNodes: 2, targetDedicatedNodes: 8,
+                currentLowPriorityNodes: 1, targetLowPriorityNodes: 1,
+            });
             fixture.detectChanges();
         });
 
         it("should just show the current dedicated", () => {
             const text = de.nativeElement.textContent;
-            expect(text).toContain("2");
-            expect(text).toContain("8");
+            expect(text).toContain("3");
+            expect(text).toContain("9");
         });
 
         it("should show the arrow", () => {
@@ -70,7 +78,9 @@ describe("PoolNodesPreviewComponent", () => {
     describe("when there is a resize error", () => {
         beforeEach(() => {
             testComponent.pool = new Pool({
-                state: "steady", currentDedicated: 2, targetDedicated: 8,
+                state: "steady",
+                currentDedicatedNodes: 2, targetDedicatedNodes: 8,
+                currentLowPriorityNodes: 1, targetLowPriorityNodes: 1,
                 resizeError: { code: "StoppedResize" } as any,
             });
             fixture.detectChanges();
@@ -78,8 +88,8 @@ describe("PoolNodesPreviewComponent", () => {
 
         it("should just show the current dedicated", () => {
             const text = de.nativeElement.textContent;
-            expect(text).toContain("2");
-            expect(text).toContain("8");
+            expect(text).toContain("3");
+            expect(text).toContain("9");
         });
 
         it("should show the arrow", () => {

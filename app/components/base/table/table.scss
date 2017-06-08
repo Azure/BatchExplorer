@@ -15,6 +15,7 @@ bl-table {
         border-collapse: collapse;
         overflow: hidden;
         display: table;
+        table-layout: fixed;
     }
 
     bl-thead {
@@ -35,7 +36,7 @@ bl-table {
             height: $table-row-height;
 
             &.selected {
-                background-color: map-get($md-prussian-blue, 100);
+                background-color: map-get($primary, 100);
 
                 p {
                     color: $mineShaftGray;
@@ -43,7 +44,7 @@ bl-table {
             }
 
             &.focused {
-                background-color: map-get($md-prussian-blue, 200);
+                background-color: map-get($primary, 200);
             }
 
             &:hover:not(.selected) {
@@ -93,9 +94,9 @@ bl-table {
         }
 
         &.sorting {
-            color: map-get($md-prussian-blue, 500);
+            color: map-get($primary, 500);
             > .sort-icon {
-                color: map-get($md-prussian-blue, 500);
+                color: map-get($primary, 500);
             }
         }
     }
@@ -114,48 +115,6 @@ bl-table {
     }
 }
 
-/*
- * Specifically for tables on the dashboard that need display: block & inline-block
- * instead of display: table.
- */
-bl-table.dashboard {
-    table {
-        display: block;
-    }
-
-    bl-thead {
-        display: block;
-    }
-
-    tbody {
-        display: block;
-
-        > tr {
-            display: block;
-            padding: 6px;
-        }
-    }
-
-    bl-cell,
-    bl-column {
-        &:first-child {
-            padding: 0;
-        }
-
-        &:last-child {
-            padding: 0;
-        }
-    }
-
-    bl-column {
-        display: inline-block;
-    }
-
-    bl-cell {
-        display: inline-block;
-    }
-}
-
 .cell-spinner {
-    color: map-get($md-prussian-blue, 400);
+    color: map-get($primary, 400);
 }

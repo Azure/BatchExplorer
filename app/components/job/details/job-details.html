@@ -17,7 +17,7 @@
                     <md-card-title>{{decorator.id}}</md-card-title>
                     <md-card-subtitle><i class="fa" [ngClass]="decorator.stateIcon"></i> {{decorator.state}}</md-card-subtitle>
                     Pool: <a [routerLink]="['/pools', job.poolId]">{{job.poolId}}</a>
-                    <bl-tags [tags]="job.tags" [editable]="true" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
+                    <bl-tags [tags]="job.tags" [editable]="job.editable" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
                 </div>
             </div>
             <div class="tile">

@@ -1,4 +1,4 @@
-import { Model, Prop, Record } from "app/core";
+import { ArmRecord, ArmRecordAttributes, Model, Prop, Record } from "app/core";
 
 interface StorageAccountPropertiesAttributes {
     creationTime: Date;
@@ -27,16 +27,18 @@ class StorageAccountProperties extends Record<StorageAccountPropertiesAttributes
     @Prop() public supportsHttpsTrafficOnly: boolean;
 }
 
-export interface StorageAccountAttributes {
-    id: string;
+export interface StorageAccountAttributes extends ArmRecordAttributes {
     location: string;
     name: string;
     kind: string;
     properties: Partial<StorageAccountPropertiesAttributes>;
+    type: StorageAccountType;
 }
 
+export type StorageAccountType = "Microsoft.Storage/storageAccounts" | "Microsoft.ClassicStorage/storageAccounts";
+
 @Model()
-export class StorageAccount extends Record<StorageAccountAttributes> {
+export class StorageAccount extends ArmRecord<StorageAccountAttributes> {
     @Prop() public id: string;
 
     @Prop() public location: string;
@@ -46,4 +48,12 @@ export class StorageAccount extends Record<StorageAccountAttributes> {
     @Prop() public kind: string;
 
     @Prop() public properties: StorageAccountProperties;
+
+    public type: StorageAccountType;
+    public isClassic: boolean;
+
+    constructor(data: StorageAccountAttributes) {
+        super(data);
+        this.isClassic = this.type === "Microsoft.ClassicStorage/storageAccounts";
+    }
 }

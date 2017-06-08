@@ -32,7 +32,10 @@ export class PoolCreateDto extends Dto<PoolCreateDto> {
     public resizeTimeout?: moment.Duration;
 
     @DtoAttr()
-    public targetDedicated?: number;
+    public targetDedicatedNodes?: number;
+
+    @DtoAttr()
+    public targetLowPriorityNodes?: number;
 
     @DtoAttr()
     public maxTasksPerNode?: number;

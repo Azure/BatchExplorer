@@ -7,7 +7,18 @@ const attrMetadataKey = "record:attrs";
 export const primitives = new Set(["Array", "Number", "String", "Object", "Boolean"]);
 
 export function metadataForRecord(record: Record<any>) {
-    return Reflect.getMetadata(attrMetadataKey, record.constructor) || {};
+    return metadataForCtr(record.constructor);
+}
+
+function metadataForCtr(ctr: any) {
+    const data = Reflect.getMetadata(attrMetadataKey, ctr) || {};
+    const parent = Object.getPrototypeOf(ctr.prototype);
+    const parentCtr = parent.constructor;
+    if (parentCtr.name !== "Record") {
+        const parentData = metadataForCtr(parentCtr);
+        return { ...parentData, ...data };
+    }
+    return data;
 }
 
 interface TypeMetadata {

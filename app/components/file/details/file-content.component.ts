@@ -37,6 +37,7 @@ export class FileContentComponent implements OnChanges, OnDestroy, AfterViewInit
     public currentSubscription: Subscription;
 
     public nodeNotFound = false;
+    public fileCleanupOperation = false;
     public fileContentFailure = false;
 
     private _refreshInterval;
@@ -66,6 +67,7 @@ export class FileContentComponent implements OnChanges, OnDestroy, AfterViewInit
         this.loading = true;
         this.lastContentLength = 0;
         this.nodeNotFound = false;
+        this.fileCleanupOperation = false;
         this.fileContentFailure = false;
 
         this._updateFileContent();
@@ -216,7 +218,7 @@ export class FileContentComponent implements OnChanges, OnDestroy, AfterViewInit
             this.nodeNotFound = true;
             return;
         } else if (e.status === Constants.HttpCode.Conflict) {
-            this.nodeNotFound = true;
+            this.fileCleanupOperation = true;
             return;
         } else if (!e.status && e.body.message.startsWith("An incorrect number of bytes")) {
             // gets an undefined error code for binary files.

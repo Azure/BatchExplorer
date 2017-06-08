@@ -210,7 +210,7 @@ footer {
         position: absolute;
         left: 0;
         top: 0;
-        background-color: $fuzzyWuzzyBrown;
+        background-color: map-get($danger, 500);
         border-radius: 10px;
         width: 18px;
         height: 18px;
@@ -219,8 +219,12 @@ footer {
 
 .context-button-bar {
     position: relative !important;
-    margin: -34px 10px 0 !important;
+    margin: -35px 10px 0 !important;
     float: right;
+
+    bl-action-btn {
+        line-height: 31px;
+    }
 
     button {
         margin-left: 5px;
@@ -257,7 +261,7 @@ footer {
 }
 
 .warn-text {
-    color: $yellow-dark;
+    color: map-get($warn, 800);
 }
 
 .route-home {
@@ -313,7 +317,7 @@ ul.list-point {
         flex-direction: column;
         align-items: center;
         justify-content: center;
-        color: map-get($md-prussian-blue, 400);
+        color: map-get($primary, 400);
         cursor: pointer;
 
         &:hover {
@@ -341,7 +345,7 @@ ul.list-point {
 
         &:hover {
             background: $header-hover;
-            color: map-get($md-prussian-blue, 300);
+            color: map-get($primary, 300);
         }
 
         > .fa {

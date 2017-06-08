@@ -3,7 +3,7 @@ import { Observable, Subject } from "rxjs";
 
 import { Job } from "app/models";
 import { JobCreateDto } from "app/models/dtos";
-import { ModelUtils, log } from "app/utils";
+import { Constants, ModelUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
@@ -47,6 +47,7 @@ export class JobService extends ServiceBase {
                 return client.job.get(params.id, options);
             },
             initialParams: { id: jobId },
+            poll: Constants.PollRate.entity,
         });
     }
 

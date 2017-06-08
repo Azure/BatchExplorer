@@ -2,8 +2,8 @@ import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 
 import { Pool } from "app/models";
-import { PoolCreateDto, PoolEnableAutoScaleDto } from "app/models/dtos";
-import { ModelUtils, log } from "app/utils";
+import { PoolCreateDto, PoolEnableAutoScaleDto, PoolResizeDto } from "app/models/dtos";
+import { Constants, ModelUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
@@ -51,6 +51,7 @@ export class PoolService extends ServiceBase {
             cache: () => this._cache,
             getFn: (client, params: PoolParams) => client.pool.get(params.id, options),
             initialParams: { id: poolId },
+            poll: Constants.PollRate.entity,
         });
     }
 
@@ -79,8 +80,8 @@ export class PoolService extends ServiceBase {
         this._cache.deleteItemByKey(poolId);
     }
 
-    public resize(poolId: string, targetDedicated: number, options: any = {}) {
-        return this.callBatchClient((client) => client.pool.resize(poolId, targetDedicated, options), (error) => {
+    public resize(poolId: string, target: PoolResizeDto, options: any = {}) {
+        return this.callBatchClient((client) => client.pool.resize(poolId, target.toJS(), options), (error) => {
             log.error("Error resizing pool: " + poolId, Object.assign({}, error));
         });
     }

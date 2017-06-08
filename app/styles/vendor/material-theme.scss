@@ -8,19 +8,19 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue.
-$primary: mat-palette($md-prussian-blue);
-$accent:  mat-palette($mat-grey, A200, A100, A400);
+$md-primary: mat-palette($primary-theme-classic);
+$md-accent:  mat-palette($mat-grey, A200, A100, A400);
 
 // The warn palette is optional (defaults to red).
-$warn:    mat-palette($mat-red);
+$md-warn:    mat-palette($mat-red);
 
 // Create the theme object (a Sass map containing all of the palettes).
-$theme: mat-light-theme($primary, $accent, $warn);
+$md-theme: mat-light-theme($md-primary, $md-accent, $md-warn);
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include angular-material-theme($theme);
+@include angular-material-theme($md-theme);
 
 // TODO: can we pull in the material scss classes into the project?
 // really want to be able to override the styles more easily.
@@ -42,7 +42,7 @@ md-tab-group:not(.form-tabs) {
         border-right: 1px solid #ddd;
 
         &.mat-tab-label-active {
-            background-color: map-get($md-prussian-blue, 100);
+            background-color: map-get($primary, 100);
         }
 
         &.mat-tab-disabled {
@@ -115,17 +115,17 @@ md-radio-button {
 
     &.mat-radio-checked {
         .mat-radio-outer-circle {
-            border-color: map-get($md-prussian-blue, 400);
+            border-color: map-get($primary, 400);
         }
 
         .mat-radio-inner-circle {
-            background: map-get($md-prussian-blue, 400);
+            background: map-get($primary, 400);
         }
     }
 }
 
 [md-raised-button].mat-primary.mat-button-focus {
-    background: map-get($md-prussian-blue, 700);
+    background: map-get($primary, 700);
 }
 
 button[md-raised-button].small {
@@ -172,3 +172,6 @@ md-input-container.bl-textarea {
     margin-top: 6px;
 }
 
+.mat-autocomplete-panel {
+    width : 30vw;
+}

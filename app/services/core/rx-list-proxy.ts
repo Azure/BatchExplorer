@@ -5,7 +5,6 @@ import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 import { LoadingStatus } from "app/components/base/loading";
 import { log } from "app/utils";
 import { ListOptions, ListOptionsAttributes } from "./list-options";
-import { RxEntityProxy } from "./rx-entity-proxy";
 import { RxProxyBase, RxProxyBaseConfig } from "./rx-proxy-base";
 
 export interface RxListProxyConfig<TParams, TEntity> extends RxProxyBaseConfig<TParams, TEntity> {
@@ -129,9 +128,8 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
      * It should not add the new item if already present.
      * The cache system will handle updating it already.
      */
-    public loadNewItem(entityProxy: RxEntityProxy<any, TEntity>): Observable<any> {
-        const obs = entityProxy.fetch().flatMap(() => entityProxy.item.first());
-        obs.subscribe({
+    public loadNewItem(getOnceObs: Observable<TEntity>): Observable<any> {
+        getOnceObs.subscribe({
             next: (newItem) => {
                 this._addItemToList(newItem);
             }, error: (error) => {
@@ -139,8 +137,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
                     { error, params: this._params, options: this._options });
             },
         });
-
-        return obs;
+        return getOnceObs;
     }
 
     /**

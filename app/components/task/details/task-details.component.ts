@@ -82,6 +82,8 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._paramsSubscribers.forEach(x => x.unsubscribe());
+        this.jobData.dispose();
+        this.data.dispose();
     }
 
     @autobind()
