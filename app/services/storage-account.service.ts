@@ -36,7 +36,9 @@ export class StorageAccountService {
 
     public list(subscriptionId: string): Observable<List<StorageAccount>> {
         const search = new URLSearchParams();
-        search.set("$filter", "resourceType eq 'Microsoft.Storage/storageAccounts'");
+        search.set("$filter",
+            "resourceType eq 'Microsoft.Storage/storageAccounts'" +
+            "or resourceType eq 'Microsoft.ClassicStorage/storageAccounts'");
         const options = new RequestOptions({ search });
 
         return this.subscriptionService.get(subscriptionId)

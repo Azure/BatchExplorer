@@ -53,7 +53,7 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
 
         this.status = this.data.status;
         this._subs.push(applicationService.onApplicationAdded.subscribe((applicationId) => {
-            this.data.loadNewItem(applicationService.get(applicationId));
+            this.data.loadNewItem(applicationService.getOnce(applicationId));
         }));
     }
 

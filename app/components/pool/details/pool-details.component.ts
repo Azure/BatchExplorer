@@ -69,6 +69,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._paramsSubscriber.unsubscribe();
+        this.data.dispose();
     }
 
     public get filterPlaceholderText() {
