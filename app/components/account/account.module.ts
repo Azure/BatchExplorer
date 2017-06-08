@@ -8,13 +8,14 @@ import { AccountCreateDialogComponent } from "./action/add/account-create-dialog
 import { DeleteAccountDialogComponent } from "./action/delete/delete-account-dialog.component";
 import { AccountBrowseModule } from "./browse";
 import { AccountDefaultComponent, AccountDetailsComponent } from "./details";
+import { AccountQuotasCardComponent } from "./details/account-quotas-card";
 import { StorageAccountCardComponent } from "./details/storage-account-card";
 import { AccountHomeComponent } from "./home";
 
 const components = [
     AccountCreateDialogComponent, AccountDefaultComponent, AccountDetailsComponent,
     AccountHomeComponent, DeleteAccountDialogComponent, StorageAccountCardComponent,
-    EditStorageAccountFormComponent, StorageAccountPickerComponent,
+    EditStorageAccountFormComponent, StorageAccountPickerComponent, AccountQuotasCardComponent,
 ];
 
 const modules = [

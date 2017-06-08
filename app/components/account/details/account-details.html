@@ -10,27 +10,8 @@
                 <md-card-title>{{account.name}}</md-card-title>
                 <md-card-subtitle>{{account.properties.accountEndpoint}}</md-card-subtitle>
             </div>
-            <div class="tile quotas">
-                <div>
-                    <div class="quota">
-                        <div class="value">20</div>
-                        <div class="label">Pool quota</div>
-                    </div>
-                    <div class="quota">
-                        <div class="value">20</div>
-                        <div class="label">Job quota</div>
-                    </div>
-                </div>
-                <div>
-                    <div class="quota">
-                        <div class="value">20</div>
-                        <div class="label">Dedicated core quota</div>
-                    </div>
-                    <div class="quota">
-                        <div class="value">100</div>
-                        <div class="label">Low-pri core quota</div>
-                    </div>
-                </div>
+            <div class="tile">
+                <bl-account-quotas-card [account]="account"></bl-account-quotas-card>
             </div>
             <div class="tile">
                 <bl-storage-account-card [account]="account">
