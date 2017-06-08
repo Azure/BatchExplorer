@@ -47,6 +47,10 @@ export class PythonRpcService {
         this.resetConnection();
     }
 
+    /**
+     * Connect to the rpc server using websocket.
+     * Call this if the connection got cut to try again.
+     */
     public resetConnection() {
         this._ready = new AsyncSubject();
         this._currentRequests = {};
@@ -79,6 +83,11 @@ export class PythonRpcService {
         return container.subject.asObservable();
     }
 
+    /**
+     * Build the JsonRpcRequest from the procedure name and parameters.
+     * @param method Name of the procedure in the python controller
+     * @param params Params for the procedure
+     */
     private _buildRequest(method: string, params: any[]): JsonRpcRequest {
         return {
             jsonrpc: "2.0",
@@ -88,6 +97,10 @@ export class PythonRpcService {
         };
     }
 
+    /**
+     * Register the request as a pending request.
+     * @param request Request to be sent to the rpc server
+     */
     private _registerRequest(request: JsonRpcRequest): RequestContainer {
         const container = this._currentRequests[request.id] = {
             request,
@@ -100,6 +113,11 @@ export class PythonRpcService {
         return container;
     }
 
+    /**
+     * Process the response returned by the rpc server.
+     * It will find the corresponding request and notify the caller of the outcome.
+     * @param response Response returned by the rpc server
+     */
     private _processResponse(response: JsonRpcResponse) {
         const request = this._getRequestForResponse(response);
         if (!request) {
@@ -126,7 +144,7 @@ export class PythonRpcService {
         }
         const request = this._currentRequests[requestId];
         if (!request) {
-            log.error(`Request with id ${requestId} doesn't exists. Maybe it timedout!`, response);
+            log.error(`Request with id ${requestId} doesn't exists. Maybe it timed out!`, response);
             return null;
         }
         if (!response.result && !response.error) {
@@ -137,6 +155,11 @@ export class PythonRpcService {
 
         return request;
     }
+
+    /**
+     * Remove the request from the list of pending request and log a timeout.
+     * @param requestId Id of the request
+     */
     private _timeoutRequest(requestId: string) {
         const request = this._currentRequests[requestId];
         if (!request) {
