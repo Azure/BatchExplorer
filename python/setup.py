@@ -2,7 +2,11 @@ import os
 from cx_Freeze import setup, Executable
 
 # Dependencies are automatically detected, but it might need fine tuning.
-build_exe_options = {"packages": ["os", "asyncio"], "excludes": ["tkinter"]}
+build_exe_options = {
+    "packages": ["os", "asyncio"],
+    "includes": ["controllers"],
+    "excludes": ["tkinter"],
+}
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 setup(
