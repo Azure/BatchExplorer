@@ -1,4 +1,4 @@
-<div class="log-console" *ngIf="!nodeNotFound && !fileContentFailure">
+<div class="log-console" *ngIf="!nodeNotFound && !fileContentFailure && !fileCleanupOperation">
     <div class="follow-log-btn" [class.following]="followingLog" (click)="toggleFollowLog()">
         <i class="fa fa-circle"></i>
         <span>Follow log</span>
@@ -17,7 +17,11 @@
 </div>
 
 <div *ngIf="nodeNotFound" class="notfound-message">
-    The node this task ran on was not found.
+    The node this task ran on, or the file was not found.
+</div>
+
+<div *ngIf="fileCleanupOperation" class="notfound-message">
+    The files for the specified task have been cleaned from the node.
 </div>
 
 <div *ngIf="fileContentFailure" class="notfound-message">

@@ -219,8 +219,12 @@ footer {
 
 .context-button-bar {
     position: relative !important;
-    margin: -34px 10px 0 !important;
+    margin: -35px 10px 0 !important;
     float: right;
+
+    bl-action-btn {
+        line-height: 31px;
+    }
 
     button {
         margin-left: 5px;

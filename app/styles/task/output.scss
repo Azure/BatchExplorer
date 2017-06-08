@@ -24,10 +24,21 @@ bl-task-log, bl-task-outputs {
             &:hover {
                 background: $dove-grey;
             }
+
+            .mat-input-wrapper {
+                margin: 0;
+
+                .mat-input-underline {
+                    .mat-input-ripple {
+                        height: 0;
+                    }
+                }
+            }
         }
 
         > .file-tab-more {
-            font-size: 20px;
+            font-size: 16px;
+            padding-top: 6px;
         }
     }
 }

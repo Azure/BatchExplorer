@@ -37,6 +37,10 @@ bl-loading-button {
     }
 }
 
+.mat-mini-fab[disabled] {
+    background-color: rgba(225, 225, 225, 1) !important;
+}
+
 @keyframes spin-left-then-right {
     0% {
         transform: rotate(0);
