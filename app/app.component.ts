@@ -63,6 +63,16 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.predefinedFormulaService.init();
         this.hasAccount = accountService.currentAccount.map((x) => Boolean(x));
 
+        pythonRpcService.call("foo", ["abc", "def"]).subscribe({
+            next: (data) => console.log("Got foo", data),
+            error: (err) => console.log("Error foo", err),
+        });
+        pythonRpcService.call("other", ["abc", "def"]).subscribe({
+            next: (data) => console.log("Got other", data),
+            // Here it will return an
+            error: (err) => console.log("Error other", err),
+        });
+
         Observable
             .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)
             .subscribe((loadedArray) => {

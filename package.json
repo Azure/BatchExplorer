@@ -24,6 +24,7 @@
     "test-client-watch": "npm run test-client -- --watch",
     "build-node-ts": "tsc -p tsconfig.node.json",
     "build-app": "webpack --progress --profile --colors --display-error-details --display-cached",
+    "build-python": "python \"python/setup.py\" build",
     "build": "npm run clean && npm run build-node-ts && npm run build-app",
     "build:prod": "cross-env NODE_ENV=production npm run build",
     "watch": "webpack --watch --progress --profile --colors --display-error-details --display-cached",
@@ -35,58 +36,12 @@
     "tslint": "tslint -c tslint.json \"app/**/*.ts\" \"client/**/*.ts\" \"test/**/*.ts\" \"./*.js\" \"config/**/*.js\"",
     "stylelint": "stylelint --syntax scss \"app/**/*.scss\"",
     "lint": "npm run tslint && npm run stylelint",
-    "package": "build --dir",
+    "package": "node config/pack.js",
     "build-and-pack": "npm run build:prod && npm run package"
   },
   "license": "MIT",
   "engines": {
     "node": ">=6.0.0"
-  },
-  "build": {
-    "productName": "BatchLabs",
-    "appId": "microsoft.azure.batchlabs",
-    "asarUnpack": [
-      "python/**/*"
-    ],
-    "files": [
-      "python/",
-      "build/",
-      "node_modules/",
-      "package.json"
-    ],
-    "dmg": {
-      "contents": [
-        {
-          "x": 130,
-          "y": 220
-        },
-        {
-          "x": 410,
-          "y": 220,
-          "type": "link",
-          "path": "/Applications"
-        }
-      ]
-    },
-    "mac": {
-      "icon": "app/assets/images/icon.icns"
-    },
-    "win": {
-      "icon": "app/assets/images/icon.ico",
-      "target": [
-        "nsis"
-      ]
-    },
-    "linux": {
-      "target": [
-        "deb",
-        "AppImage"
-      ]
-    },
-    "directories": {
-      "buildResources": "resources",
-      "output": "release"
-    }
   },
   "devDependencies": {
     "@types/bunyan": "^0.0.32",
