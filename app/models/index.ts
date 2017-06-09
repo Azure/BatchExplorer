@@ -20,6 +20,8 @@ export * from "./job";
 export * from "./job-action";
 export * from "./job-constraints";
 export * from "./job-execution-information";
+export * from "./job-hook-task-execution-info";
+export * from "./job-hook-task";
 export * from "./job-manager-task";
 export * from "./job-preparation-task";
 export * from "./job-release-task";
