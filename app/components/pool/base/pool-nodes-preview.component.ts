@@ -25,13 +25,13 @@ export class PoolNodesPreviewComponent implements OnChanges {
     public ngOnChanges(inputs) {
         if (inputs.pool) {
             this.tooltipMessage = this._getTooltipMessage();
-            this.hasResizeError = Boolean(this.pool.resizeError);
+            this.hasResizeError = this.pool.resizeErrors.size > 0;
         }
     }
 
     private _getTooltipMessage() {
         const pool = this.pool;
-        if (pool.resizeError) {
+        if (this.hasResizeError) {
             return "There was a resize error";
         } else if (pool.allocationState === PoolAllocationState.resizing) {
             return `Pool is resizing from ${pool.currentNodes} to ${pool.targetNodes} nodes`;

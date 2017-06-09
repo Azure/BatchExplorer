@@ -96,11 +96,11 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
     }
 
     public poolStatus(pool: Pool): QuickListItemStatus {
-        return pool.resizeError ? QuickListItemStatus.warning : null;
+        return pool.resizeErrors.size > 0 ? QuickListItemStatus.warning : null;
     }
 
     public poolStatusText(pool: Pool): string {
-        if (pool.resizeError) {
+        if (pool.resizeErrors.size > 0) {
             return "Pool has a resize error";
         }
 
