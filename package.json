@@ -12,7 +12,6 @@
   "main": "build/client/main.prod.js",
   "scripts": {
     "ts": "ts-node --project tsconfig.node.json",
-    "ts2": "node config/run-ts.js",
     "start": "npm run electron:prod",
     "clean": "rimraf build/* dll/* python/build/*",
     "test": "npm run test-client && npm run test-app",
@@ -26,7 +25,7 @@
     "test-client-watch": "npm run test-client -- --watch",
     "build-client": "tsc -p tsconfig.node.json",
     "build-app": "webpack --progress --profile --colors --display-error-details --display-cached",
-    "build-python": "python \"python/setup.py\" build",
+    "build-python": "npm run ts config/build-python.ts",
     "build": "npm run clean && npm run build-client && npm run build-app",
     "build:prod": "cross-env NODE_ENV=production npm run build",
     "watch": "webpack --watch --progress --profile --colors --display-error-details --display-cached",
@@ -39,7 +38,7 @@
     "stylelint": "stylelint --syntax scss \"app/**/*.scss\"",
     "lint": "npm run tslint && npm run stylelint",
     "package": "build --dir",
-    "build-and-pack": "npm run build:prod && npm run package"
+    "build-and-pack": "npm run build:prod && npm run build-python && npm run package"
   },
   "license": "MIT",
   "engines": {
