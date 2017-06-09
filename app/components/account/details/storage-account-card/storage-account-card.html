@@ -9,7 +9,7 @@
                 <div *ngIf="storageAccount">
                     {{storageAccount.name}}
                 </div>
-                    <div *ngIf="!storageAccount && error" class="error" [title]="error.body.error?.message">
+                    <div *ngIf="!storageAccount && error" class="error" [title]="error.body?.error?.message">
                     {{error.statusText}}
                 </div>
                 <div *ngIf="!storageAccount && !error">
