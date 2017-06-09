@@ -1,5 +1,5 @@
 import { AfterViewInit, ChangeDetectorRef, Component } from "@angular/core";
-import { AccountResource} from "app/models";
+import { AccountResource } from "app/models";
 import { AccountService, AccountStatus } from "app/services";
 import { ArmResourceUtils } from "app/utils";
 
