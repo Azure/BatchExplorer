@@ -17,7 +17,7 @@ export class TaskHomeComponent implements OnInit, OnDestroy {
     private _paramsSubscriber: Subscription;
 
     constructor(
-        private formBuilder: FormBuilder,
+        formBuilder: FormBuilder,
         private sidebarManager: SidebarManager,
         private activatedRoute: ActivatedRoute) {
     }

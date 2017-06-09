@@ -14,7 +14,7 @@ import { NodeConnectComponent } from "../connect";
     templateUrl: "node-details.html",
 })
 export class NodeDetailsComponent implements OnInit, OnDestroy {
-    public static breadcrumb({id}, {tab}) {
+    public static breadcrumb({ id }, { tab }) {
         let label = tab ? `Node - ${tab}` : "Node";
         return {
             name: id,
@@ -33,9 +33,9 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
 
     constructor(
         private route: ActivatedRoute,
-        private nodeService: NodeService,
+        nodeService: NodeService,
         private poolService: PoolService,
-        private fileService: FileService,
+        fileService: FileService,
         private sidebarManager: SidebarManager) {
 
         this.data = nodeService.get(null, null, {});
@@ -77,6 +77,8 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._paramsSubscribers.forEach(x => x.unsubscribe());
+        this.poolData.dispose();
+        this.data.dispose();
     }
 
     @autobind()

@@ -1,4 +1,4 @@
-$spinner-color: $blue-medium;
+$spinner-color: map-get($primary, 600);
 
 bl-loading {
     display: block;

@@ -34,7 +34,7 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
     private _polls: PollObservable[] = [];
     private _subs: Subscription[] = [];
 
-    constructor(private poolService: PoolService, private nodeService: NodeService) {
+    constructor(poolService: PoolService, nodeService: NodeService) {
         this.poolData = poolService.get(null);
         this.data = nodeService.list(null, {
             pageSize: 1000,
@@ -45,7 +45,7 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
 
         this._subs.push(this.poolData.item.subscribe((pool) => {
             this.pool = pool;
-            this.maxRunningTasks = pool ? pool.targetDedicated * pool.maxTasksPerNode : 1;
+            this.maxRunningTasks = pool ? pool.targetNodes * pool.maxTasksPerNode : 1;
             this.updateGaugeOptions();
         }));
 
@@ -73,6 +73,7 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
     public ngOnDestroy() {
         this._polls.forEach(x => x.destroy());
         this._subs.forEach(x => x.unsubscribe());
+        this.poolData.dispose();
     }
 
     public countRunningTasks() {

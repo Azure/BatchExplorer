@@ -10,5 +10,6 @@
         <bl-text-property label="External Ip Adress" [value]="externalIpAdress" *ngIf="externalIpAdress"></bl-text-property>
         <bl-text-property label="State transition time" [value]="decorator.stateTransitionTime"></bl-text-property>
         <bl-text-property label="Last boot time" [value]="decorator.lastBootTime"></bl-text-property>
+        <bl-bool-property label="Is dedicated" [value]="node.isDedicated" [YesNo]="true"></bl-bool-property>
     </bl-property-group>
 </bl-property-list>

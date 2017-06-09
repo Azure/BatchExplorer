@@ -10,7 +10,7 @@ export class DeletePackageAction extends LongRunningDeleteAction {
     constructor(
         private applicationService: ApplicationService,
         private applicationId: string,
-        private versions: string[]) {
+        versions: string[]) {
 
         super("App package", versions);
     }

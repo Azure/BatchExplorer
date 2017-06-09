@@ -1,36 +1,37 @@
-import { Record } from "immutable";
+import { Model, Prop, Record } from "app/core";
 
 import { ComputeNodeInformation } from "./compute-node-information";
-import { SchedulingError } from "./scheduling-error";
+import { FailureInfo } from "./failure-info";
 import { TaskState } from "./task";
 
-// tslint:disable:variable-name
-const SubtaskRecord = Record({
-    id: null,
-    startTime: null,
-    endTime: null,
-    exitCode: null,
-    state: null,
-    stateTransitionTime: null,
-    previousState: null,
-    previousStateTransitionTime: null,
-    nodeInfo: null,
-    schedulingError: null,
-});
+export interface SubtaskInformationAttributes {
+    id?: number;
+    nodeInfo?: ComputeNodeInformation;
+    startTime?: Date;
+    endTime?: Date;
+    exitCode?: number;
+    failureInfo?: FailureInfo;
+    state?: string;
+    stateTransitionTime?: Date;
+    previousState?: string;
+    previousStateTransitionTime?: Date;
+    result?: string;
+}
 
 /**
  * Class for displaying MPI sub task information.
  */
-export class SubtaskInformation extends SubtaskRecord {
-    public id: string;
-    public startTime: Date;
-    public endTime: Date;
-    public exitCode: number;
-    public state: TaskState;
-    public stateTransitionTime: Date;
-    public previousState: TaskState;
-    public previousStateTransitionTime: Date;
+@Model()
+export class SubtaskInformation extends Record<SubtaskInformationAttributes> {
+    @Prop() public id: string;
+    @Prop() public startTime: Date;
+    @Prop() public endTime: Date;
+    @Prop() public exitCode: number;
+    @Prop() public state: TaskState;
+    @Prop() public stateTransitionTime: Date;
+    @Prop() public previousState: TaskState;
+    @Prop() public previousStateTransitionTime: Date;
 
-    public nodeInfo: ComputeNodeInformation;
-    public schedulingError: SchedulingError;
+    @Prop() public nodeInfo: ComputeNodeInformation;
+    @Prop() public failureInfo: FailureInfo;
 }

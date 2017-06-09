@@ -1,6 +1,7 @@
 import { AfterViewInit, ChangeDetectorRef, Component } from "@angular/core";
 import { AccountResource } from "app/models";
 import { AccountService, AccountStatus } from "app/services";
+import { ArmResourceUtils } from "app/utils";
 
 @Component({
     selector: "bl-account-dropdown",
@@ -21,7 +22,7 @@ export class AccountDropDownComponent implements AfterViewInit {
         accountService.currentAccountId.subscribe((accountId) => {
             if (accountId) {
                 this.selectedId = accountId;
-                this.selectedAccountAlias = accountService.getNameFromAccountId(accountId);
+                this.selectedAccountAlias = ArmResourceUtils.getAccountNameFromResourceId(accountId);
             } else {
                 this.selectedAccountAlias = "No account selected!";
             }

@@ -5,7 +5,8 @@ const variables = [
     "$DiskReadBytes", "$DiskReadOps", "$DiskWriteBytes", "$DiskWriteOps",
     "$FailedTasks", "$MemoryBytes", "$NetworkInBytes", "$NetworkOutBytes",
     "$PendingTasks", "$RunningTasks", "$SampleNodeCount", "$SucceededTasks",
-    "$TargetDedicated", "$WallClockSeconds", "$NodeDeallocationOption",
+    "$TargetDedicatedNodes", "$TargetLowPriorityNodes", "$WallClockSeconds",
+    "$NodeDeallocationOption",
 ];
 
 const mathFunc = [

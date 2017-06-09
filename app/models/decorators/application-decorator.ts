@@ -7,7 +7,7 @@ export class ApplicationDecorator extends DecoratorBase<Application> {
     public allowUpdates: string;
     public defaultVersion: string;
 
-    constructor(private application?: Application) {
+    constructor(application?: Application) {
         super(application);
 
         this.id = this.stringField(application.id);

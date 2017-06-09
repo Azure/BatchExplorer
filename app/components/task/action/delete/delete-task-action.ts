@@ -8,7 +8,7 @@ import { LongRunningDeleteAction } from "app/services/core";
 
 // todo: refactor me along with WaitForDeleteTaskPoller
 export class DeleteTaskAction extends LongRunningDeleteAction {
-    constructor(private taskService: TaskService, private jobId, private taskIds: string[]) {
+    constructor(private taskService: TaskService, private jobId, taskIds: string[]) {
         super("task", taskIds);
     }
 
@@ -48,24 +48,17 @@ export class WaitForDeleteTaskPoller {
     @autobind()
     public start(progress: BehaviorSubject<any>): Observable<any> {
         const obs = new AsyncSubject();
-        const data = this.taskService.get(this.jobId, this.taskId);
-        const errorCallback = (e) => {
-            progress.next(100);
-            clearInterval(interval);
-            obs.complete();
-        };
-
         let interval = setInterval(() => {
-            data.fetch().subscribe({
-                error: errorCallback,
+            this.taskService.getOnce(this.jobId, this.taskId).subscribe({
+                error: (e) => {
+                    progress.next(100);
+                    clearInterval(interval);
+                    obs.complete();
+                },
             });
         }, 5000);
 
         progress.next(-1);
-        data.item.subscribe({
-            error: errorCallback,
-        });
-
         return obs;
     }
 }

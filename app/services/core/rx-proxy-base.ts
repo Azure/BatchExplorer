@@ -1,5 +1,5 @@
 import { Type } from "@angular/core";
-import { BehaviorSubject, Observable, Subject, Subscription } from "rxjs";
+import { AsyncSubject, BehaviorSubject, Observable, Subject, Subscription } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { ServerError } from "app/models";
@@ -62,6 +62,11 @@ export abstract class RxProxyBase<TParams, TOptions extends ProxyOptions, TEntit
      */
     public newDataStatus: Observable<LoadingStatus>;
 
+    /**
+     * Sets to   after calling dispose()
+     */
+    public isDisposed: AsyncSubject<boolean>;
+
     protected _status = new BehaviorSubject<LoadingStatus>(LoadingStatus.Loading);
     protected _newDataStatus = new BehaviorSubject<LoadingStatus>(LoadingStatus.Loading);
     protected _error = new BehaviorSubject<ServerError>(null);
@@ -86,6 +91,7 @@ export abstract class RxProxyBase<TParams, TOptions extends ProxyOptions, TEntit
         this.status = this._status.asObservable();
         this.newDataStatus = this._newDataStatus.asObservable();
         this.error = this._error.asObservable();
+        this.isDisposed = new AsyncSubject();
 
         this.status.subscribe((status) => {
             if (status === LoadingStatus.Loading) {
@@ -163,7 +169,12 @@ export abstract class RxProxyBase<TParams, TOptions extends ProxyOptions, TEntit
      * otherwise internal subscribe will never get cleared and the list porxy will not get GC
      */
     public dispose() {
+        this.isDisposed.next(true);
+        this.isDisposed.complete();
         this._clearDeleteSub();
+        this._deleted.complete();
+        this._status.complete();
+        this._error.complete();
     }
 
     protected set cache(cache: DataCache<TEntity>) {
@@ -265,7 +276,7 @@ export abstract class RxProxyBase<TParams, TOptions extends ProxyOptions, TEntit
 
     private _key() {
         const paramsKey = ObjectUtils.serialize(this._params);
-        const optionsKey = ObjectUtils.serialize(this._options.original);
+        const optionsKey = this._options && ObjectUtils.serialize(this._options.original);
         return `${paramsKey}|${optionsKey}`;
     }
 }

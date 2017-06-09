@@ -7,7 +7,7 @@ import { Observable } from "rxjs";
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { Pool } from "app/models";
-import { PoolEnableAutoScaleDto } from "app/models/dtos";
+import { PoolEnableAutoScaleDto, PoolResizeDto } from "app/models/dtos";
 import { PoolScaleModel } from "app/models/forms";
 import { PoolService } from "app/services";
 
@@ -22,7 +22,8 @@ export class PoolResizeDialogComponent {
             this._pool = pool;
             const interval = pool.autoScaleEvaluationInterval ? pool.autoScaleEvaluationInterval.asMinutes() : 15;
             this.scale.patchValue({
-                targetDedicated: pool.targetDedicated,
+                targetDedicatedNodes: pool.targetDedicatedNodes,
+                targetLowPriorityNodes: pool.targetLowPriorityNodes,
                 enableAutoScale: pool.enableAutoScale,
                 autoScaleFormula: pool.autoScaleFormula,
                 autoScaleEvaluationInterval: interval,
@@ -52,15 +53,19 @@ export class PoolResizeDialogComponent {
         if (value.enableAutoScale) {
             obs = this._enableAutoScale(value);
         } else {
-            const targetDedicated = value.targetDedicated;
-            obs = this._disableAutoScale().flatMap(() => this.poolService.resize(id, targetDedicated));
+            const targetDedicatedNodes = value.targetDedicatedNodes;
+            const targetLowPriorityNodes = value.targetLowPriorityNodes;
+            obs = this._disableAutoScale()
+                .flatMap(() => this.poolService.resize(id, new PoolResizeDto({
+                    targetDedicatedNodes, targetLowPriorityNodes,
+                })));
         }
 
         const finalObs = obs.flatMap(() => this.poolService.getOnce(this.pool.id)).share();
         finalObs.subscribe({
             next: (pool) => {
                 this.notificationService.success("Pool resize started!",
-                    `Pool '${id}' will resize to ${pool.targetDedicated} nodes!`);
+                    `Pool '${id}' will resize to ${pool.targetNodes} nodes!`);
             },
             error: () => null,
         });

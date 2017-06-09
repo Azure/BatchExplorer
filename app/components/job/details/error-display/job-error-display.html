@@ -4,13 +4,13 @@
 <bl-banner *ngIf="jobTimeout" type="warning">
     <div message>Job timed out after running for {{jobRunningTime}}.</div>
 </bl-banner>
-<bl-banner *ngIf="schedulingError" type="warning">
-    <div message>{{schedulingError.message}}</div>
-    <div code>{{schedulingError.code}}</div>
-    <div message>{{schedulingError.message}}</div>
-    <div details *ngIf="schedulingError.details.size !== 0">
-        <div *ngFor="let entry of schedulingError.details">
-            <div>{{entry.key}}: {{entry.value}}</div>
+<bl-banner *ngIf="failureInfo" type="warning">
+    <div message>{{failureInfo.message}}</div>
+    <div code>{{failureInfo.code}}</div>
+    <div message>{{failureInfo.message}}</div>
+    <div details *ngIf="failureInfo.details.size !== 0">
+        <div *ngFor="let entry of failureInfo.details">
+            <div>{{entry.name}}: {{entry.value}}</div>
         </div>
     </div>
 </bl-banner>

@@ -1,5 +1,7 @@
 import { Dto, DtoAttr } from "app/core";
+import { NodeFillType } from "app/models";
 import * as moment from "moment";
+
 import { CloudServiceConfiguration } from "./cloud-service-configuration.dto";
 import { MetaDataDto } from "./metadata.dto";
 import { UserAccountDto } from "./user-account.dto";
@@ -30,14 +32,17 @@ export class PoolCreateDto extends Dto<PoolCreateDto> {
     public resizeTimeout?: moment.Duration;
 
     @DtoAttr()
-    public targetDedicated?: number;
+    public targetDedicatedNodes?: number;
+
+    @DtoAttr()
+    public targetLowPriorityNodes?: number;
 
     @DtoAttr()
     public maxTasksPerNode?: number;
 
     @DtoAttr()
     public taskSchedulingPolicy?: {
-        nodeFillType?: string;
+        nodeFillType?: NodeFillType;
     };
 
     @DtoAttr()

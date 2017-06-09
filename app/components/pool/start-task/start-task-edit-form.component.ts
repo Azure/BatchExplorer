@@ -32,9 +32,9 @@ export class StartTaskEditFormComponent {
     private _startTask: StartTask;
 
     constructor(
-        private formBuilder: FormBuilder,
+        formBuilder: FormBuilder,
         private poolService: PoolService,
-        private notificationService: NotificationService) {
+        notificationService: NotificationService) {
         this.form = formBuilder.group({
             enableStartTask: [false],
             startTask: [null],

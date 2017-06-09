@@ -31,6 +31,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
 
     @Input()
     public set activeItem(key) {
+        this._activeItemInput = key;
         this.setActiveItem(key);
     }
 
@@ -62,13 +63,18 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     public get selectedItems() { return Object.keys(this._selectedItems); }
 
     public listFocused: boolean = false;
-    public focusedItem  = new BehaviorSubject<string>(null);
+    public focusedItem = new BehaviorSubject<string>(null);
 
     /**
      * Map of the selected items. Used for better performance to check if an item is selected.
      */
     private _selectedItems: { [key: string]: boolean } = {};
     private _activeItemKey = new BehaviorSubject<ActivatedItemChangeEvent>(null);
+
+    /**
+     * Save the value provided in the activeItem input
+     */
+    private _activeItemInput = null;
     private _subs: Subscription[] = [];
 
     constructor(
@@ -79,10 +85,12 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         this._subs.push(this._activeItemKey.subscribe(x => {
             this.selectedItems = x ? [x.key] : [];
             this.activatedItemChange.emit(x);
-            this.activeItemChange.emit(x && x.key);
+            if (!x || x.key !== this._activeItemInput) {
+                this.activeItemChange.emit(x && x.key);
+            }
 
             if (this.listFocused) {
-                this.focusedItem.next(x.key);
+                this.focusedItem.next(x && x.key);
             }
         }));
 
@@ -108,7 +116,6 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         } else {
             this.items.changes.first().subscribe((newItems: QueryList<AbstractListItemBase>) => {
                 this._processInitialItems(newItems);
-
             });
         }
 

@@ -2,15 +2,24 @@ import * as moment from "moment";
 
 import { Task } from "app/models";
 
-function createTask(exitCode: number, startTime: Date, endTime: Date, maxWallClockTime = "PT4M") {
+function createTask(exitCode: number, startTime: Date, endTime: Date, hasFailureInfo = false) {
+    let failureInfo = null;
+
+    if (hasFailureInfo) {
+        failureInfo = {
+            category: "UserError",
+            code: "TaskEnded",
+        };
+    }
     return new Task({
         executionInfo: {
             startTime,
             endTime,
             exitCode,
+            failureInfo,
         },
         constraints: {
-            maxWallClockTime: moment.duration(maxWallClockTime),
+            maxWallClockTime: moment.duration("PT4M"),
         },
     });
 }
@@ -34,13 +43,13 @@ describe("Task Model", () => {
 
         it("should return false if runnnig time is less than clock time", () => {
             const current = moment();
-            const task = createTask(0, current.clone().subtract(3, "minute").toDate(), current.toDate());
+            const task = createTask(0, current.clone().subtract(3, "minute").toDate(), current.toDate(), true);
             expect(task.didTimeout).toBe(false);
         });
 
         it("should return true if runnnig time is more than clock time", () => {
             const current = moment();
-            const task = createTask(-10, current.clone().subtract(5, "minute").toDate(), current.toDate());
+            const task = createTask(-10, current.clone().subtract(5, "minute").toDate(), current.toDate(), true);
             expect(task.didTimeout).toBe(true);
         });
     });

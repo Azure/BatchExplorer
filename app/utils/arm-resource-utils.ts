@@ -7,6 +7,18 @@ import { log } from "app/utils";
  * From: MsPortalFx.ViewModels.Services.ResourceTypes.ts
  */
 export class ArmResourceUtils {
+
+    public static getSubscriptionIdFromResourceId(id: string) {
+        const regex = /subscriptions\/(.*)\/resourcegroups/;
+        const out = regex.exec(id.toLowerCase());
+
+        if (!out || out.length < 2) {
+            return null;
+        } else {
+            return out[1];
+        }
+    }
+
     /*
      * Returns the account name from a resource id
      */

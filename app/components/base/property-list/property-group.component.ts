@@ -18,6 +18,9 @@ export class PropertyGroupComponent {
     public warningMessage: string = null;
 
     @Input()
+    public collapsable: boolean = true;
+
+    @Input()
     public set collapsed(collapsed) {
         this._collapsed = collapsed;
         this.collapsedChange.emit(collapsed);
@@ -30,6 +33,8 @@ export class PropertyGroupComponent {
     private _collapsed = false;
 
     public toogleCollapsed() {
-        this.collapsed = !this.collapsed;
+        if (this.collapsable) {
+            this.collapsed = !this.collapsed;
+        }
     }
 }

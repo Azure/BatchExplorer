@@ -41,8 +41,9 @@ describe("DateUtils", () => {
         it("returns formatted full date", () => {
             // note: date month array starts at 0 for jan
             const date = new Date(2017, 11, 24, 10, 55, 2);
-            expect(DateUtils.fullDateAndTime(date)).toEqual(moment(date).format("MMM Do, YYYY, HH:mm:ss"));
-            expect(DateUtils.fullDateAndTime(date)).toEqual("Dec 24th, 2017, 10:55:02");
+            expect(DateUtils.fullDateAndTime(date)).toEqual(moment(date).format("MMM Do, YYYY, HH:mm:ss.SSS Z"));
+             // Timezone depends who runs the test so just check for the rest
+            expect(DateUtils.fullDateAndTime(date)).toContain("Dec 24th, 2017, 10:55:02.000");
         });
     });
 });

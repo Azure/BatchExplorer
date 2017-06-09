@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, ViewContainerRef } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { List } from "immutable";
 
 import { Job, Metadata, NameValuePair } from "app/models";
@@ -33,17 +33,13 @@ export class JobConfigurationComponent {
     public managerTask: JobManagerTaskDecorator;
     public prepTask: JobPreparationTaskDecorator;
     public releaseTask: JobReleaseTaskDecorator;
-    public environmentSettings: NameValuePair[] = [];
+    public environmentSettings: List<NameValuePair> = List([]);
     public jobMetadata: List<Metadata> = List([]);
     public poolInfo: any = {};
     public hasStartTime: boolean;
     public hasEndTime: boolean;
 
     private _job: Job;
-
-    constructor(
-        private viewContainerRef: ViewContainerRef) {
-    }
 
     public refresh(job: Job) {
         if (this.job) {
@@ -54,7 +50,7 @@ export class JobConfigurationComponent {
             this.prepTask = this.decorator.jobPreparationTask;
             this.releaseTask = this.decorator.jobReleaseTask;
             this.poolInfo = this.decorator.poolInfo || {};
-            this.environmentSettings = this.job.commonEnvironmentSettings || [];
+            this.environmentSettings = this.job.commonEnvironmentSettings;
             this.jobMetadata = this.job.metadata;
         }
     }

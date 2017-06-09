@@ -1,23 +1,17 @@
 <bl-loading [status]="data.newDataStatus | async">
     <div *ngIf="pool && node">
         <md-card class="overview">
-            <md-card-title-group style="margin: 0px;">
-                <div style="align-items:center;">
+            <div class="actions">
+                <bl-action-btn-group>
                     <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                </div>
-                <div style="margin-left:12px; margin-right:auto;">
-                    <md-card-title>{{node.id}}</md-card-title>
-                    <md-card-subtitle> {{node.state}}</md-card-subtitle>
-                </div>
-            </md-card-title-group>
-            <md-card-content>
+                    <bl-action-btn (action)="connect()" icon="fa fa-plug"></bl-action-btn>
+                </bl-action-btn-group>
+            </div>
+            <div class="content">
+                <md-card-title>{{node.id}}</md-card-title>
+                <md-card-subtitle> {{node.state}}</md-card-subtitle>
                 <p>Pool: {{poolId}}</p>
-            </md-card-content>
-            <md-card-actions layout="row" layout-align="end center">
-                <button md-button (click)="connect()">
-                    <i class="fa fa-plug"></i> Connect
-                </button>
-            </md-card-actions>
+            </div>
         </md-card>
         <md-card class="details">
             <bl-tab-group>

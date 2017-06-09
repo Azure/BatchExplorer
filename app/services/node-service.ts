@@ -5,9 +5,9 @@ import { AsyncSubject, Observable } from "rxjs";
 import { BackgroundTaskService } from "app/components/base/background-task";
 import { Node, NodeAgentSku, NodeConnectionSettings, NodeState } from "app/models";
 import { ArrayUtils, ObservableUtils, log } from "app/utils";
+import { Constants } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 import { BatchClientService } from "./batch-client.service";
-
 import {
     DataCache, ListOptionsAttributes, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy,
     TargetedDataCache, getOnceProxy,
@@ -79,6 +79,7 @@ export class NodeService extends ServiceBase {
                 return client.node.get(params.poolId, params.id, options);
             },
             initialParams: { poolId: initialPoolId, id: initialNodeId },
+            poll: Constants.PollRate.entity,
         });
     }
 

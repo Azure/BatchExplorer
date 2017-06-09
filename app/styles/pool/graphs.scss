@@ -18,7 +18,7 @@ bl-pool-graphs {
 
             &.focused {
                 .label {
-                    color: map-get($md-prussian-blue, 600);
+                    color: map-get($primary, 600);
                     text-decoration: underline;
                 }
             }

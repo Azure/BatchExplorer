@@ -23,13 +23,13 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
     public key: string;
 
     @Input()
-    public set routerLink(routerLink: any) {
+    public set link(routerLink: any) {
         this._routerLink = routerLink;
         if (routerLink) {
             this.urlTree = this.router.createUrlTree(routerLink);
         }
     }
-    public get routerLink() { return this._routerLink; }
+    public get link() { return this._routerLink; }
 
     @Input()
     public forceBreadcrumb = false;
@@ -110,14 +110,15 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
             return false;
         } else {
             // Means the user actually selected the item
-            this.activateItem();
+            this.activateItem(true);
         }
     }
     /**
      * Mark the item as active and trigger the router if applicable
      * Will desactivate the current activate item
+     * @parm andFocus If we should also focus the item
      */
-    public activateItem() {
+    public activateItem(andFocus = false) {
         this.list.setActiveItem(this.key);
         this._triggerRouter();
     }
@@ -132,11 +133,11 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
      * Just trigger the router the item will not be marked as active
      */
     private _triggerRouter() {
-        if (this.routerLink) {
+        if (this.link) {
             if (this.forceBreadcrumb) {
-                this.breadcrumbService.navigate(this.routerLink);
+                this.breadcrumbService.navigate(this.link);
             } else {
-                this.router.navigate(this.routerLink);
+                this.router.navigate(this.link);
             }
         }
     }

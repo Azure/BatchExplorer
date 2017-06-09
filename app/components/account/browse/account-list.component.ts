@@ -4,16 +4,12 @@ import { autobind } from "core-decorators";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
+import { LoadingStatus } from "app/components/base/loading";
+import { QuickListItemStatus } from "app/components/base/quick-list";
 import { AccountResource } from "app/models";
 import { AccountService, SubscriptionService } from "app/services";
 import { Filter, FilterBuilder, FilterMatcher, Operator } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
-
-interface SubscriptionAccount {
-    expanded: boolean;
-    loading: boolean;
-    accounts: Observable<List<AccountResource>>;
-}
 
 @Component({
     selector: "bl-account-list",
@@ -28,15 +24,20 @@ export class AccountListComponent {
     public get filter(): Filter { return this._filter; }
 
     public displayedAccounts: Observable<List<AccountResource>>;
+    public loadingStatus: LoadingStatus = LoadingStatus.Loading;
 
     private _filter: Filter = FilterBuilder.none();
 
     constructor(
         private accountService: AccountService,
-        private activatedRoute: ActivatedRoute,
-        private sidebarManager: SidebarManager,
-        private subscriptionService: SubscriptionService) {
+        activatedRoute: ActivatedRoute,
+        sidebarManager: SidebarManager,
+        subscriptionService: SubscriptionService) {
         this._updateDisplayedAccounts();
+
+        this.accountService.accountsLoaded.filter(x => x).first().subscribe(() => {
+            this.loadingStatus = LoadingStatus.Ready;
+        });
     }
 
     @autobind()
@@ -54,6 +55,12 @@ export class AccountListComponent {
         } else {
             this.accountService.favoriteAccount(accountId);
         }
+    }
+
+    public accountStatus(accountId: string): QuickListItemStatus {
+        return this.isAccountFavorite(accountId)
+            ? QuickListItemStatus.accent
+            : QuickListItemStatus.normal;
     }
 
     private _updateDisplayedAccounts() {

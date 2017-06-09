@@ -53,20 +53,12 @@ describe("PoolErrorDisplayComponent", () => {
     describe("when there is a quota error", () => {
         beforeEach(() => {
             testComponent.pool = new Pool({
-                resizeError: {
+                resizeErrors: [{
                     code: ResizeErrorCode.accountCoreQuotaReached,
                     message: "Reached account core quota",
-                },
+                }],
             });
             fixture.detectChanges();
-        });
-
-        it("should have a resize error", () => {
-            expect(component.hasResizeError).toBe(true);
-        });
-
-        it("should have a quota error", () => {
-            expect(component.hasQuotaReachedError).toBe(true);
         });
 
         it("should show 1 bl banner", () => {
@@ -88,20 +80,12 @@ describe("PoolErrorDisplayComponent", () => {
     describe("when there is a stop resizeError", () => {
         beforeEach(() => {
             testComponent.pool = new Pool({
-                resizeError: {
+                resizeErrors: [{
                     code: ResizeErrorCode.resizeStopped,
                     message: "The resize was stopped",
-                },
+                }],
             });
             fixture.detectChanges();
-        });
-
-        it("should have a resize error", () => {
-            expect(component.hasResizeError).toBe(true);
-        });
-
-        it("should NOT have a quota error", () => {
-            expect(component.hasQuotaReachedError).toBe(false);
         });
 
         it("should show 1 bl banner", () => {

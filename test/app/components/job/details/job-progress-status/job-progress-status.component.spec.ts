@@ -31,7 +31,7 @@ describe("JobProgressStatusComponent", () => {
     beforeEach(() => {
         poolServiceSpy = {
             get: () => new RxMockEntityProxy<any, Pool>(Pool, {
-                item: new Pool({ id: "pool-1", maxTasksPerNode: 8, targetDedicated: 3 }),
+                item: new Pool({ id: "pool-1", maxTasksPerNode: 8, targetDedicatedNodes: 3 }),
             }),
         };
 

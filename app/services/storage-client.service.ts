@@ -32,7 +32,7 @@ export class StorageClientService {
     constructor(
         private accountService: AccountService,
         private arm: ArmHttpService,
-        private remote: ElectronRemote) {
+        remote: ElectronRemote) {
 
         this._storageClientFactory = remote.getStorageClientFactory();
 

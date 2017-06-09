@@ -4,7 +4,7 @@ import { Observable, Subject } from "rxjs";
 
 import { SubtaskInformation, Task } from "app/models";
 import { TaskCreateDto } from "app/models/dtos";
-import { log } from "app/utils";
+import { Constants, log } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 import { BatchClientService } from "./batch-client.service";
 import {
@@ -96,6 +96,7 @@ export class TaskService extends ServiceBase {
                 return client.task.get(params.jobId, params.id, options);
             },
             initialParams: { id: taskId, jobId: initialJobId },
+            poll: Constants.PollRate.entity,
         });
     }
 

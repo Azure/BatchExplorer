@@ -1,7 +1,7 @@
-import { SchedulingError } from "app/models";
+import { FailureInfo } from "app/models";
 import { DecoratorBase } from "app/utils/decorators";
 
-export class SchedulingErrorDecorator extends DecoratorBase<SchedulingError> {
+export class FailureInfoDecorator extends DecoratorBase<FailureInfo> {
     public category: string;
     public code: string;
     public message: string;
@@ -17,7 +17,7 @@ export class SchedulingErrorDecorator extends DecoratorBase<SchedulingError> {
      */
     public exists: boolean;
 
-    constructor(private error: SchedulingError) {
+    constructor(error: FailureInfo) {
         super(error);
 
         this.exists = Boolean(error && error.category);

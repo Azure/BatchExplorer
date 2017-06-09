@@ -16,7 +16,7 @@ import { DeleteTaskDialogComponent, TaskCreateBasicDialogComponent, TerminateTas
     templateUrl: "task-details.html",
 })
 export class TaskDetailsComponent implements OnInit, OnDestroy {
-    public static breadcrumb({id}, {tab}) {
+    public static breadcrumb({ id }, { tab }) {
         let label = tab ? `Task - ${tab}` : "Task";
         return {
             name: id,
@@ -48,8 +48,8 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
         private route: ActivatedRoute,
         private viewContainerRef: ViewContainerRef,
         private sidebarManager: SidebarManager,
-        private taskService: TaskService,
-        private jobService: JobService,
+        taskService: TaskService,
+        jobService: JobService,
         private router: Router) {
 
         this.data = taskService.get(null, null, {});
@@ -82,6 +82,8 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._paramsSubscribers.forEach(x => x.unsubscribe());
+        this.jobData.dispose();
+        this.data.dispose();
     }
 
     @autobind()

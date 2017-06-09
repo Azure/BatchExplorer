@@ -7,7 +7,7 @@ import { PoolService } from "app/services";
 import { LongRunningDeleteAction } from "app/services/core";
 
 export class DeletePoolTask extends LongRunningDeleteAction {
-    constructor(private poolService: PoolService, private poolIds: string[]) {
+    constructor(private poolService: PoolService, poolIds: string[]) {
         super("pool", poolIds);
     }
 
@@ -18,7 +18,7 @@ export class DeletePoolTask extends LongRunningDeleteAction {
     protected waitForDelete(id: string, taskManager?: BackgroundTaskService) {
         this.poolService.getOnce(id).subscribe({
             next: (pool: Pool) => {
-                const task = new WaitForDeletePoolPollTask(this.poolService, id, pool.currentDedicated);
+                const task = new WaitForDeletePoolPollTask(this.poolService, id, pool.currentNodes);
                 if (taskManager) {
                     taskManager.startTask(`Deleting pool '${id}'`, (bTask) => {
                         return task.start(bTask.progress);
@@ -53,31 +53,25 @@ export class WaitForDeletePoolPollTask {
     @autobind()
     public start(progress: BehaviorSubject<any>): Observable<any> {
         const obs = new AsyncSubject();
-        const data = this.poolService.get(this.poolId);
         let interval;
 
-        const errorCallback = (e) => {
-            progress.next(100);
-            clearInterval(interval);
-            obs.complete();
-        };
-
         interval = setInterval(() => {
-            data.fetch().subscribe({
-                error: errorCallback,
+            this.poolService.getOnce(this.poolId).subscribe({
+                next: (pool: Pool) => {
+                    if (pool) {
+                        const currentNodes = pool.currentNodes;
+                        progress.next(this._getProgress(currentNodes));
+                    }
+                },
+                error: (e) => {
+                    progress.next(100);
+                    clearInterval(interval);
+                    obs.complete();
+                },
             });
         }, this.refreshRate);
 
         progress.next(10);
-        data.item.subscribe({
-            next: (pool: Pool) => {
-                if (pool) {
-                    const currentNodes = pool.currentDedicated;
-                    progress.next(this._getProgress(currentNodes));
-                }
-            },
-            error: errorCallback,
-        });
 
         return obs;
     }

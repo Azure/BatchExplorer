@@ -1,38 +1,35 @@
 <bl-loading [status]="data.newDataStatus | async">
     <div *ngIf="application">
         <md-card class="overview">
-            <md-card-title-group style="margin: 0px;">
-                <div style="align-items:center;">
+            <div class="actions">
+                <bl-action-btn-group>
                     <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                </div>
-                <div style="margin-left:12px; margin-right:auto;">
-                    <md-card-title>{{decorator.id}}</md-card-title>
-                    <md-card-subtitle>
-                        <i class="fa" [ngClass]="application.allowUpdates ? 'fa-unlock-alt' : 'fa-lock'"></i> {{decorator.displayName}}
-                        <div *ngIf="application.allowUpdates"> <b>(unlocked)</b></div>
-                        <div *ngIf="!application.allowUpdates"> <b>(locked)</b></div>
-                    </md-card-subtitle>
-                </div>
-            </md-card-title-group>
-            <md-card-content></md-card-content>
-            <md-card-actions layout="row" layout-align="end center">
-                <bl-add-button title="Add package" (click)="addPackage()"></bl-add-button>
-                <bl-edit-button (click)="editApplication()"></bl-edit-button>
-                <bl-delete-button [entity]="application" (click)="deleteApplication()"></bl-delete-button>
-            </md-card-actions>
+                    <bl-add-button title="Add package" (click)="addPackage()"></bl-add-button>
+                    <bl-edit-button (click)="editApplication()"></bl-edit-button>
+                    <bl-delete-button [entity]="application" (click)="deleteApplication()"></bl-delete-button>
+                </bl-action-btn-group>
+            </div>
+            <div class="content">
+                <md-card-title>{{decorator.id}}</md-card-title>
+                <md-card-subtitle>
+                    <i class="fa" [ngClass]="application.allowUpdates ? 'fa-unlock-alt' : 'fa-lock'"></i> {{decorator.displayName}}
+                    <div *ngIf="application.allowUpdates"> <b>(unlocked)</b></div>
+                    <div *ngIf="!application.allowUpdates"> <b>(locked)</b></div>
+                </md-card-subtitle>
+            </div>
         </md-card>
         <bl-application-error-display [application]="application"></bl-application-error-display>
         <md-card class="details">
             <bl-tab-group>
-                <bl-tab key="properties">
-                    <bl-tab-label>Properties</bl-tab-label>
-                    <bl-application-properties [application]="application"></bl-application-properties>
-                </bl-tab>
                 <bl-tab key="packages">
                     <bl-tab-label>Packages</bl-tab-label>
                     <div class="tab-padding">
                         <bl-application-packages [application]="application"></bl-application-packages>
                     </div>
+                </bl-tab>
+                <bl-tab key="properties">
+                    <bl-tab-label>Properties</bl-tab-label>
+                    <bl-application-properties [application]="application"></bl-application-properties>
                 </bl-tab>
             </bl-tab-group>
         </md-card>

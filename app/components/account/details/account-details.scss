@@ -1,3 +1,5 @@
+@import "app/styles/variables";
+
 bl-account-details {
     .account-cards {
         margin: 0 auto;
@@ -12,10 +14,17 @@ bl-account-details {
             text-align: justify;
             margin-top: 8px;
             margin-right: 4px;
+            padding: 12px;
 
             .account-card-content {
                 height: 300px;
             }
+        }
+    }
+
+    bl-table.dashboard {
+        bl-cell {
+            padding: 0 5px;
         }
     }
 }

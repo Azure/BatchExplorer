@@ -1,21 +1,33 @@
-<div *ngIf="hasResizeError">
-    <bl-banner *ngIf="!hasQuotaReachedError" fixMessage="Rescale" [fix]="fixStopResizeError">
-        <div code>{{pool.resizeError.code}}</div>
-        <div message>{{pool.resizeError.message}}</div>
-        <div details *ngIf="pool.resizeError.vals.size !== 0">
-            <div *ngFor="let entry of pool.resizeError.vals">
-                <div>{{entry.key}}: {{entry.value}}</div>
+<div *ngIf="pool">
+    <div *ngFor="let resizeError of pool.resizeErrors" [ngSwitch]="resizeError.code">
+        <bl-banner *ngSwitchCase="ResizeErrorCode.accountCoreQuotaReached" fixMessage="Increase quota" [fix]="increaseQuota">
+            <div [other-fix]="fixStopResizeError" fixMessage="Rescale"></div>
+            <div code>{{resizeError.code}}</div>
+            <div message>{{resizeError.message}} ({{dedicatedQuota | async}} cores)</div>
+            <div details *ngIf="resizeError.values.size !== 0">
+                <div *ngFor="let entry of resizeError.values.vals">
+                    <div>{{entry.key}}: {{entry.value}}</div>
+                </div>
             </div>
-        </div>
-    </bl-banner>
-    <bl-banner *ngIf="hasQuotaReachedError" fixMessage="Increase quota" [fix]="increaseQuota">
-        <div [other-fix]="fixStopResizeError" fixMessage="Rescale"></div>
-        <div code>{{pool.resizeError.code}}</div>
-        <div message>{{pool.resizeError.message}} ({{quota | async}} cores)</div>
-        <div details *ngIf="pool.resizeError.vals.size !== 0">
-            <div *ngFor="let entry of pool.resizeError.vals">
-                <div>{{entry.key}}: {{entry.value}}</div>
+        </bl-banner>
+        <bl-banner *ngSwitchCase="ResizeErrorCode.accountLowPriorityCoreQuotaReached" fixMessage="Increase quota" [fix]="increaseQuota">
+            <div [other-fix]="fixStopResizeError" fixMessage="Rescale"></div>
+            <div code>{{resizeError.code}}</div>
+            <div message>{{resizeError.message}} ({{lowPriorityQuota | async}} cores)</div>
+            <div details *ngIf="resizeError.values.size !== 0">
+                <div *ngFor="let entry of resizeError.values.vals">
+                    <div>{{entry.key}}: {{entry.value}}</div>
+                </div>
             </div>
-        </div>
-    </bl-banner>
+        </bl-banner>
+        <bl-banner *ngSwitchDefault fixMessage="Rescale" [fix]="fixStopResizeError">
+            <div code>{{resizeError.code}}</div>
+            <div message>{{resizeError.message}}</div>
+            <div details *ngIf="resizeError.values.size !== 0">
+                <div *ngFor="let entry of resizeError.values.vals">
+                    <div>{{entry.key}}: {{entry.value}}</div>
+                </div>
+            </div>
+        </bl-banner>
+    </div>
 </div>

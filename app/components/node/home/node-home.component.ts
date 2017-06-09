@@ -14,7 +14,7 @@ export class NodeHomeComponent implements OnInit, OnDestroy {
     private _paramsSubscriber: Subscription;
 
     constructor(
-        private sidebarManager: SidebarManager,
+        sidebarManager: SidebarManager,
         private activatedRoute: ActivatedRoute) {
     }
 
