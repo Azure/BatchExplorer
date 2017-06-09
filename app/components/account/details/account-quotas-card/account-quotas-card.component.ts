@@ -23,7 +23,6 @@ export class AccountQuotasCardComponent implements OnInit {
             this.dedicatedCoreQuota = this.account.properties.dedicatedCoreQuota.toString();
             this.lowPriorityCoreQuota = this.account.properties.lowPriorityCoreQuota.toString();
         } else {
-            console.log("NOT batch managed....");
             this.dedicatedCoreQuota = "Loading. ";
             this.lowPriorityCoreQuota = "N/A";
             this.computeService.getCoreQuota().subscribe((dedicatedCoreQuota) => {
