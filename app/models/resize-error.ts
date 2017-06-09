@@ -1,28 +1,26 @@
-import { List, Record } from "immutable";
+import { List } from "immutable";
 
-//  tslint:disable:variable-name
-const ResizeErrorRecord = Record({
-    code: null,
-    message: null,
-    vals: [],
-});
+import { ListProp, Model, Prop, Record } from "app/core";
+import { NameValuePair, NameValuePairAttributes } from "./name-value-pair";
 
-export class ResizeError extends ResizeErrorRecord {
-    public code: ResizeErrorCode;
-    public message: string;
-
-    // equivalent to the values in the API as values is already used in immutable
-    public vals: List<any>;
-
-    constructor(data: any = {}) {
-        super(Object.assign({}, data, {
-            vals: List(data.values),
-        }));
-    }
+export interface ResizeErrorAttributes {
+    code: ResizeErrorCode;
+    message: string;
+    values: NameValuePairAttributes[];
 }
 
-export type ResizeErrorCode = "AccountCoreQuotaReached" | "ResizeStopped";
+@Model()
+export class ResizeError extends Record<ResizeErrorAttributes> {
+    @Prop() public code: ResizeErrorCode;
+    @Prop() public message: string;
+    @ListProp(Object) public values: List<NameValuePair> = List([]);
+}
+
+export type ResizeErrorCode = "AccountCoreQuotaReached" | "ResizeStopped"
+    | "AllocationFailed" | "AccountLowPriorityCoreQuotaReached";
 export const ResizeErrorCode = {
     accountCoreQuotaReached: "AccountCoreQuotaReached" as ResizeErrorCode,
+    accountLowPriorityCoreQuotaReached: "AccountLowPriorityCoreQuotaReached" as ResizeErrorCode,
     resizeStopped: "ResizeStopped" as ResizeErrorCode,
+    allocationFailed: "AllocationFailed" as ResizeErrorCode,
 };

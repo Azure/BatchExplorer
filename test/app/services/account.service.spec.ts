@@ -9,7 +9,7 @@ describe("AccountService", () => {
     let accountService: AccountService;
     let currentAccount: AccountResource;
     let currentAccountId: string;
-    let account1 = new AccountResource({ id: "account-1" });
+    let account1 = new AccountResource({ id: "account-1" } as any);
     let subscriptionServiceSpy;
     let subs: Subscription[] = [];
 
@@ -60,7 +60,7 @@ describe("AccountService", () => {
         expect(currentAccountId).toEqual("account-2", "Account id should have been updated immediately");
         expect(currentAccount).toBeUndefined();
 
-        accountSubject.next(new AccountResource({ id: "account-2" }));
+        accountSubject.next(new AccountResource({ id: "account-2" } as any));
         accountSubject.complete();
         tick();
 

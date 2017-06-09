@@ -8,21 +8,21 @@ import { SidebarManager } from "app/components/base/sidebar";
 import { AccountResource, ServerError, StorageAccount } from "app/models";
 import { StorageAccountService } from "app/services";
 
-const accountNoStorage = new AccountResource({ id: "acc-1", location: "westus" });
+const accountNoStorage = new AccountResource({ id: "acc-1", location: "westus", properties: {} } as any);
 const accountWithStorage = new AccountResource({
     id: "acc-1",
     location: "westus",
     properties: {
         autoStorage: { storageAccountId: "sub-1/storage-1" },
     },
-});
+} as any);
 const accountWithInvalidStorage = new AccountResource({
     id: "acc-1",
     location: "westus",
     properties: {
         autoStorage: { storageAccountId: "sub-1/storage-wrong" },
     },
-});
+} as any);
 const storage1 = new StorageAccount({ id: "sub-1/storage-1", name: "storage-1", location: "westus" } as any);
 
 @Component({

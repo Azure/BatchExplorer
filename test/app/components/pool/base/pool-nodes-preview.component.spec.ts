@@ -81,7 +81,7 @@ describe("PoolNodesPreviewComponent", () => {
                 state: "steady",
                 currentDedicatedNodes: 2, targetDedicatedNodes: 8,
                 currentLowPriorityNodes: 1, targetLowPriorityNodes: 1,
-                resizeError: { code: "StoppedResize" } as any,
+                resizeErrors: [{ code: "StoppedResize" }] as any,
             });
             fixture.detectChanges();
         });

@@ -6,7 +6,7 @@ import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { AccountKeys, AccountResource, Subscription } from "app/models";
 import { AccountPatchDto } from "app/models/dtos";
-import { Constants, log } from "app/utils";
+import { ArmResourceUtils, Constants, log } from "app/utils";
 import { AzureHttpService } from "./azure-http.service";
 import {
     DataCache, DataCacheTracker, RxBasicEntityProxy, RxEntityProxy, getOnceProxy,
@@ -30,17 +30,6 @@ export interface AccountParams {
 export interface SelectedAccount {
     account: AccountResource;
     keys: AccountKeys;
-}
-
-function getSubscriptionIdFromAccountId(accountId: string) {
-    const regex = /subscriptions\/(.*)\/resourceGroups/;
-    const out = regex.exec(accountId);
-
-    if (!out || out.length < 2) {
-        return null;
-    } else {
-        return out[1];
-    }
 }
 
 @Injectable()
@@ -214,7 +203,7 @@ export class AccountService {
     }
 
     public getAccountKeys(accountId: string): Observable<AccountKeys> {
-        const subId = getSubscriptionIdFromAccountId(accountId);
+        const subId = ArmResourceUtils.getSubscriptionIdFromResourceId(accountId);
         return this.subscriptionService.get(subId)
             .flatMap((sub) => this.azure.post(sub, `${accountId}/listKeys`))
             .map(response => new AccountKeys(response.json()))
@@ -276,7 +265,7 @@ export class AccountService {
     }
 
     public patch(accountId: string, properties: AccountPatchDto): Observable<any> {
-        return this.subscriptionService.get(getSubscriptionIdFromAccountId(accountId))
+        return this.subscriptionService.get(ArmResourceUtils.getSubscriptionIdFromResourceId(accountId))
             .flatMap((subscription) => {
                 return this.azure.patch(subscription, accountId, { properties: properties.toJS() });
             });
@@ -320,7 +309,7 @@ export class AccountService {
     }
 
     private _getAccount(accountId: string): Observable<AccountResource> {
-        return this.subscriptionService.get(getSubscriptionIdFromAccountId(accountId))
+        return this.subscriptionService.get(ArmResourceUtils.getSubscriptionIdFromResourceId(accountId))
             .flatMap((subscription) => {
                 return this.azure.get(subscription, accountId)
                     .map(response => {

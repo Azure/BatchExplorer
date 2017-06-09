@@ -12,7 +12,10 @@ import { AccountResource, StorageAccount } from "app/models";
 import { StorageAccountService } from "app/services";
 import { LoadingMockComponent, TableMockComponent } from "test/utils/mocks/components";
 
-const account = new AccountResource({ id: "acc-1", location: "westus", subscription: { subscriptionId: "sub-1" } });
+const account = new AccountResource({
+    id: "acc-1", location: "westus",
+    subscription: { subscriptionId: "sub-1" },
+} as any);
 
 @Component({
     template: `

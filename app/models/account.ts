@@ -13,8 +13,8 @@ export interface AutoStorageAccountAttributes {
 
 @Model()
 export class AutoStorageAccount extends Record<AutoStorageAccountAttributes> {
-    public storageAccountId: string;
-    public lastKeySync: Date;
+    @Prop() public storageAccountId: string;
+    @Prop() public lastKeySync: Date;
 }
 
 export interface BatchAccountPropertiesAttributes {
