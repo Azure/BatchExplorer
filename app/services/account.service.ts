@@ -243,7 +243,7 @@ export class AccountService {
     public isAccountFavorite(accountId: string): boolean {
         accountId = accountId.toLowerCase();
         const favorites = this._accountFavorites.getValue();
-        const account = favorites.filter(x => x.id.toLowerCase() === accountId).first();
+        const account = favorites.filter(x => x.id === accountId).first();
 
         return Boolean(account);
     }
@@ -280,7 +280,7 @@ export class AccountService {
             }
 
             if (Array.isArray(data)) {
-                sub.next(List(data));
+                sub.next(List(data.map(x => new AccountResource(x))));
             } else {
                 sub.next(List([]));
             }
