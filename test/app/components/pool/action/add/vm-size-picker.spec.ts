@@ -52,7 +52,7 @@ describe("VmSizePickerComponent", () => {
         };
 
         accountServiceSpy = {
-            currentAccount: Observable.of(new AccountResource({ location: "westus" })),
+            currentAccount: Observable.of(new AccountResource({ location: "westus" } as any)),
         };
 
         pricingServiceSpy = {

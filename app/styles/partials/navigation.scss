@@ -1,36 +1,32 @@
-nav {
-    ul {
-        margin: 0;
+bl-app-nav > ul {
+    margin: 0;
+    user-select: none;
 
-        li {
-            padding: 0;
-
-            i.fa {
-                display: block;
-                margin: 0 auto;
-            }
-
-            a {
-                display: block;
-                padding: 18px 0;
-            }
-
-            a.active {
-                background-color: map-get($primary, 500);
-                color: $white;
-            }
-        }
-
-        li:hover {
-            background-color: $navigation-hover;
-        }
-    }
-
-    a {
+    > li > a {
+        height: $navigationbar-width;
+        display: block;
+        padding: 13px 0;
+        outline: none;
         color: $navigation-text;
-    }
+        -webkit-user-drag: none;
 
-    a:hover {
-        color: $white;
+        i.fa {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .label {
+            margin-top: 5px;
+        }
+
+        &:hover, &:focus {
+            background-color: $navigation-hover;
+            color: $white;
+        }
+
+        &.active {
+            background-color: map-get($primary, 500);
+            color: $white;
+        }
     }
 }

@@ -3,7 +3,7 @@
 </button>
 
 <bl-property-list *ngIf="startTask && !edit">
-    <bl-property-group class="wide">
+    <bl-property-group label="Start task settings" [collapsable]="false" class="wide">
         <bl-text-property label="Command line" [value]="startTask.commandLine"></bl-text-property>
         <bl-text-property label="Max retry count" [value]="startTask.maxTaskRetryCount"></bl-text-property>
         <bl-text-property label="User identity" [value]="decorator.userIdentitySummary"></bl-text-property>

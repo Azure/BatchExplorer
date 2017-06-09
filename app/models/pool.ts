@@ -26,7 +26,7 @@ export interface PoolAttributes {
     id: string;
     lastModified: Date;
     maxTasksPerNode: number;
-    resizeError: Partial<ResizeError>;
+    resizeErrors: Array<Partial<ResizeError>>;
     resizeTimeout: Duration;
     state: string;
     stateTransitionTime: Date;
@@ -75,7 +75,7 @@ export class Pool extends Record<PoolAttributes> {
 
     @Prop() public maxTasksPerNode: number = 1;
 
-    @Prop() public resizeError: ResizeError;
+    @ListProp(ResizeError) public resizeErrors: List<ResizeError> = List([]);
 
     @Prop() public resizeTimeout: Duration;
 

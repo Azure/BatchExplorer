@@ -1,0 +1,31 @@
+@import "app/styles/variables";
+
+bl-account-quotas-card {
+    > div {
+        height: 50%;
+        &:not(:last-child) {
+            border-bottom: 1px solid $border-color;
+        }
+    }
+    .quota {
+        display: inline-block;
+        width: 120px;
+        height: 100%;
+        padding: 3px 5px 0;
+
+        > .label {
+            font-size: 11px;
+            color: $dusty-grey;
+        }
+
+        > .value {
+            font-size: 20px;
+            text-align: center;
+            color: map-get($primary, 500);
+        }
+
+        &:not(:last-child) {
+            border-right: 1px solid $border-color;
+        }
+    }
+}
