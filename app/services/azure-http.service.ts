@@ -25,7 +25,7 @@ function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?
 
 const providersApiVersion = {
     "microsoft.batch": Constants.ApiVersion.armBatch,
-    "microsoft.classicStorage": Constants.ApiVersion.armClassicStorage,
+    "microsoft.classicstorage": Constants.ApiVersion.armClassicStorage,
     "microsoft.storage": Constants.ApiVersion.armStorage,
     "microsoft.compute": Constants.ApiVersion.compute,
 };

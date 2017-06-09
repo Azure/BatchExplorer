@@ -1,6 +1,12 @@
 import { ArmRecord, Model, Prop, Record } from "app/core";
 import { Subscription } from "./subscription";
 
+export type PoolAllocationMode = "UserSubscription";
+export const PoolAllocationMode = {
+    BatchService: "batchservice" as PoolAllocationMode,
+    UserSubscription: "usersubscription" as PoolAllocationMode,
+};
+
 export type AccountProvisingState = "Succeeded";
 export const AccountProvisingState = {
     Succeeded: "Succeeded" as AccountProvisingState,
@@ -25,6 +31,7 @@ export interface BatchAccountPropertiesAttributes {
     poolQuota: number;
     activeJobAndJobScheduleQuota: number;
     autoStorage: AutoStorageAccountAttributes;
+    poolAllocationMode: PoolAllocationMode;
 }
 
 @Model()
@@ -36,6 +43,7 @@ export class BatchAccountProperties extends Record<BatchAccountPropertiesAttribu
     @Prop() public poolQuota: number = 20;
     @Prop() public activeJobAndJobScheduleQuota: number = 20;
     @Prop() public autoStorage: AutoStorageAccount;
+    @Prop() public poolAllocationMode: PoolAllocationMode;
 }
 
 export interface BatchAccountAttributes {
@@ -56,4 +64,8 @@ export class AccountResource extends ArmRecord<BatchAccountAttributes> {
     @Prop() public location: string;
     @Prop() public properties: BatchAccountProperties;
     @Prop() public subscription: Subscription;
+
+    public get isBatchManaged() {
+        return this.properties && this.properties.poolAllocationMode === PoolAllocationMode.BatchService;
+    }
 }
