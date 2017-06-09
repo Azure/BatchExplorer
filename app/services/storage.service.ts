@@ -11,6 +11,7 @@ import {
     RxStorageListProxy,
     TargetedDataCache,
 } from "./core";
+import { FileLoader, FileloadOptions } from "./file";
 import { StorageClientService } from "./storage-client.service";
 
 export interface BlobListParams {
@@ -61,7 +62,7 @@ export class StorageService {
 
         const initialOptions: any = {};
         return new RxStorageListProxy<BlobListParams, File>(File, this.storageClient, {
-            cache: (params) =>  this.getBlobFileCache(params),
+            cache: (params) => this.getBlobFileCache(params),
             getData: (client, params, options) => {
                 // the prefix of the blob, eg: 10011/$TaskOutput/
                 const prefix = `${params.taskId}/${params.outputKind}/`;
@@ -72,7 +73,7 @@ export class StorageService {
                     return client.listBlobsWithPrefix(safeContainerName, prefix, filter, null, initialOptions);
                 });
             },
-            initialParams: { jobId: jobIdParam, taskId: taskIdParam, outputKind: outputKindParam},
+            initialParams: { jobId: jobIdParam, taskId: taskIdParam, outputKind: outputKindParam },
             initialOptions,
             logIgnoreError: storageIgnoredErrors,
             onError: onError,
@@ -118,10 +119,12 @@ export class StorageService {
      * @param blobName - Fully prefixed blob path: "1001/$TaskOutput/myblob.txt"
      * @param options - Optional parameters, rangeStart & rangeEnd for partial contents
      */
-    public getBlobContent(jobId: string, blobName: string, options: any = {}): Observable<BlobContentResult> {
-        return this._callStorageClient((client) => {
-            return StorageUtils.getSafeContainerName(jobId).then((safeContainerName) => {
-                return client.getBlobContent(safeContainerName, blobName, options);
+    public blobContent(jobId: string, blobName: string): FileLoader {
+        return new FileLoader((options: FileloadOptions) => {
+            return this._callStorageClient((client) => {
+                return StorageUtils.getSafeContainerName(jobId).then((safeContainerName) => {
+                    return client.getBlobContent(safeContainerName, blobName, options);
+                });
             });
         });
     }
