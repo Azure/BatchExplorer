@@ -1,5 +1,5 @@
 <div class="group-header" (click)="toogleCollapsed()" *ngIf="label">
-    <div class="collapse-icon">
+    <div class="collapse-icon" *ngIf="collapsable">
         <i class="fa fa-caret-right"*ngIf="collapsed"></i>
         <i class="fa fa-caret-down" *ngIf="!collapsed"></i>
     </div>
