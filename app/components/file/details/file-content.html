@@ -5,6 +5,8 @@
     <div *ngSwitchCase="FileType.Log">
         <bl-log-file-viewer [fileLoader]="fileLoader" [tail]="false"></bl-log-file-viewer>
     </div>
-    <div *ngSwitchCase="FileType.Image">Image viewer</div>
+    <div *ngSwitchCase="FileType.Image">
+        <bl-image-file-viewer [fileLoader]="fileLoader"></bl-image-file-viewer>
+    </div>
     <div *ngSwitchDefault>Unkown file format</div>
 </div>
