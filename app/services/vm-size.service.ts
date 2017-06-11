@@ -7,11 +7,8 @@ import { AccountResource, VmSize } from "app/models";
 import { StringUtils, log } from "app/utils";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
+import { computeUrl } from "./compute.service";
 import { GithubDataService } from "./github-data.service";
-
-export function computeUrl(subscriptionId: string) {
-    return `subscriptions/${subscriptionId}/providers/Microsoft.Compute`;
-}
 
 const excludedVmsSizesPath = "data/vm-sizes.json";
 

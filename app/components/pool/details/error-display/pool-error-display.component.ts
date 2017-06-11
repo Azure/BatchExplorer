@@ -13,22 +13,20 @@ import { ExternalLinks } from "app/utils/constants";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PoolErrorDisplayComponent {
+    public ResizeErrorCode = ResizeErrorCode;
+
     @Input()
     public pool: Pool;
 
     constructor(private poolService: PoolService, private accountService: AccountService) {
     }
 
-    public get hasResizeError(): boolean {
-        return Boolean(this.pool && this.pool.resizeError);
+    public get dedicatedQuota() {
+        return this.accountService.currentAccount.map(x => x.properties.dedicatedCoreQuota); // TODO low pri too
     }
 
-    public get hasQuotaReachedError(): boolean {
-        return this.hasResizeError && Boolean(this.pool.resizeError.code === ResizeErrorCode.accountCoreQuotaReached);
-    }
-
-    public get quota() {
-        return this.accountService.currentAccount.map(x => x.properties.coreQuota);
+    public get lowPriorityQuota() {
+        return this.accountService.currentAccount.map(x => x.properties.lowPriorityCoreQuota); // TODO low pri too
     }
 
     @autobind()

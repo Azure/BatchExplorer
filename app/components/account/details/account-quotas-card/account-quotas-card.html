@@ -1,0 +1,20 @@
+<div>
+    <div class="quota">
+        <div class="label">Pool quota</div>
+        <div class="value">{{account.properties.poolQuota}}</div>
+    </div>
+    <div class="quota">
+        <div class="label">Job quota</div>
+        <div class="value">{{account.properties.activeJobAndJobScheduleQuota}}</div>
+    </div>
+</div>
+<div>
+    <div class="quota">
+        <div class="label">Dedicated core quota</div>
+        <div class="value">{{dedicatedCoreQuota}}</div>
+    </div>
+    <div class="quota" title="Low priority VMs only works with pools allocated with the Batch Service">
+        <div class="label">Low-pri core quota</div>
+        <div class="value">{{lowPriorityCoreQuota}}</div>
+    </div>
+</div>

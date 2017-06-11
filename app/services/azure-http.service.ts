@@ -24,10 +24,10 @@ function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?
 }
 
 const providersApiVersion = {
-    "Microsoft.Batch": Constants.ApiVersion.armBatch,
-    "Microsoft.ClassicStorage": Constants.ApiVersion.armClassicStorage,
-    "Microsoft.Storage": Constants.ApiVersion.armStorage,
-    "Microsoft.Compute": Constants.ApiVersion.compute,
+    "microsoft.batch": Constants.ApiVersion.armBatch,
+    "microsoft.classicstorage": Constants.ApiVersion.armClassicStorage,
+    "microsoft.storage": Constants.ApiVersion.armStorage,
+    "microsoft.compute": Constants.ApiVersion.compute,
 };
 
 type SubscriptionOrTenant = Subscription | string;
@@ -81,7 +81,7 @@ export class AzureHttpService {
         const providerSpecific = /.*\/providers\/([a-zA-Z.]*)\/.+/i;
         const match = providerSpecific.exec(uri);
         if (match && match.length > 1) {
-            const provider = match[1];
+            const provider = match[1].toLowerCase();
             if (provider in providersApiVersion) {
                 return providersApiVersion[provider];
             } else {
