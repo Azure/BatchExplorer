@@ -22,10 +22,10 @@
 
     <bl-property-group label="Environment settings" class="wide" [collapsed]="true">
         <div collapsed-preview>
-            <span>{{environmentSettings?.count()}} environment settings</span>
+            <span>{{environmentSettings?.size}} environment settings</span>
         </div>
-        <bl-text-property *ngFor="let setting of environmentSettings.values()" label="{{setting.name}}" [value]="setting.value"></bl-text-property>
-        <bl-no-item [itemCount]="environmentSettings.count()" [slimline]="true">
+        <bl-text-property *ngFor="let setting of environmentSettings" label="{{setting.name}}" [value]="setting.value"></bl-text-property>
+        <bl-no-item [itemCount]="environmentSettings.size" [slimline]="true">
             <span no-filter>This job contains no environment settings</span>
         </bl-no-item>
     </bl-property-group>
@@ -148,10 +148,10 @@
 
     <bl-property-group label="Metadata" class="wide" [collapsed]="true">
         <div collapsed-preview>
-            <span>{{jobMetadata?.count()}} meta items</span>
+            <span>{{jobMetadata?.size}} meta items</span>
         </div>
-        <bl-text-property *ngFor="let metaItem of jobMetadata.values()" label="{{metaItem.name}}" [value]="metaItem.value"></bl-text-property>
-        <bl-no-item [itemCount]="jobMetadata.count()" [slimline]="true">
+        <bl-text-property *ngFor="let metaItem of jobMetadata" label="{{metaItem.name}}" [value]="metaItem.value"></bl-text-property>
+        <bl-no-item [itemCount]="jobMetadata.size" [slimline]="true">
             <span no-filter>This job contains no metadata</span>
         </bl-no-item>
     </bl-property-group>
