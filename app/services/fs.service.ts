@@ -42,13 +42,12 @@ export class FileSystemService {
     /**
      * Save the given content to the given location.
      *
-     * @param filename: Name of the file(without directory)
+     * @param filename: Full path to the file
      * @param content: Content of the file
-     * @param directory: Where should the file be saved
      */
-    public saveFile(filename: string, content: string, directory: string): Promise<string> {
-        return this.ensureDir(directory).then(() => {
-            return this._writeFile(path.join(directory, filename), content);
+    public saveFile(dest: string, content: string): Promise<string> {
+        return this.ensureDir(path.dirname(dest)).then(() => {
+            return this._writeFile(dest, content);
         });
     }
 

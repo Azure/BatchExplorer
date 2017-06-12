@@ -1,6 +1,17 @@
 import { Observable } from "rxjs";
 
 import { File } from "app/models";
+import { FileSystemService } from "../fs.service";
+
+export type PropertiesFunc = () => Observable<File>;
+export type ContentFunc = (options: FileLoadOptions) => Observable<FileLoadResult>;
+
+export interface FileLoaderConfig {
+    filename: string;
+    fs: FileSystemService;
+    properties: PropertiesFunc;
+    content: ContentFunc;
+}
 
 export interface FileLoadOptions {
     rangeStart?: number;
@@ -11,16 +22,17 @@ export interface FileLoadResult {
     content: string;
 }
 
-export type PropertiesFunc = () => Observable<File>;
-export type ContentFunc = (options: FileLoadOptions) => Observable<FileLoadResult>;
-
 export class FileLoader {
+    public filename: string;
+    private _fs: FileSystemService;
     private _properties: PropertiesFunc;
     private _content: ContentFunc;
 
-    constructor(config: { properties: PropertiesFunc, content: ContentFunc }) {
+    constructor(config: FileLoaderConfig) {
+        this.filename = config.filename;
         this._properties = config.properties;
         this._content = config.content;
+        this._fs = config.fs;
     }
 
     public properties(): Observable<File> {
@@ -29,5 +41,11 @@ export class FileLoader {
 
     public content(options: FileLoadOptions = {}): Observable<FileLoadResult> {
         return this._content(options);
+    }
+
+    public download(dest: string) {
+        return this.content().flatMap((result) => {
+            return this._fs.saveFile(dest, result.content);
+        });
     }
 }
