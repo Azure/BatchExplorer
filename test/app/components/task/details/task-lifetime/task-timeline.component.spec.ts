@@ -36,7 +36,7 @@ function createTask(state: string, timeout = "PT6M") {
         constraints: {
             maxWallClockTime: moment.duration(timeout),
         },
-    });
+    } as any);
 }
 
 describe("TaskTimelineComponent", () => {
