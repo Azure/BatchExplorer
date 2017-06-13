@@ -1,0 +1,23 @@
+<div>
+    <a href="#"></a>
+    <a href="#"></a>
+</div>
+<bl-table>
+    <bl-thead>
+        <bl-column>NodeId</bl-column>
+        <bl-column style="width: 100px">State</bl-column>
+        <bl-column style="width: 100px">Status</bl-column>
+        <bl-column style="width: 100px">Created</bl-column>
+        <bl-column style="width: 100px">Started</bl-column>
+        <bl-column style="width: 100px">Exit code</bl-column>
+    </bl-thead>
+
+    <bl-row *ngFor="let task of data.items | async" [key]="task.nodeId">
+        <bl-cell>{{task.nodeId}}</bl-cell>
+        <bl-cell style="width: 100px">{{task[type]?.state}}</bl-cell>
+        <bl-cell style="width: 100px">{{task[type]?.result}}</bl-cell>
+        <bl-cell style="width: 100px">{{formatDate(task[type]?.startTime)}}</bl-cell>
+        <bl-cell style="width: 100px">{{formatDate(task[type]?.endTime)}}</bl-cell>
+        <bl-cell style="width: 100px">{{task[type]?.exitCode}}</bl-cell>
+    </bl-row>
+</bl-table>

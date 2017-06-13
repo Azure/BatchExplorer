@@ -10,10 +10,10 @@ export interface JobHookTaskListParams {
 }
 
 @Injectable()
-export class JobService extends ServiceBase {
+export class JobHookTaskService extends ServiceBase {
     private _cache = new TargetedDataCache<JobHookTaskListParams, JobHookTask>({
         key: ({ jobId }) => jobId,
-    });
+    }, "nodeUrl");
 
     constructor(batchService: BatchClientService) {
         super(batchService);
@@ -22,8 +22,9 @@ export class JobService extends ServiceBase {
     public list(initialOptions: any = {}): RxListProxy<JobHookTaskListParams, JobHookTask> {
         return new RxBatchListProxy<JobHookTaskListParams, JobHookTask>(JobHookTask, this.batchService, {
             cache: ({ jobId }) => this._cache.getCache({ jobId }),
-            proxyConstructor: (client, params, options) => client.job.listHookTasks(options),
+            proxyConstructor: (client, params, options) => client.job.listHookTasks(params.jobId, options),
             initialOptions,
+            initialParams: {jobId: null},
         });
     }
 }

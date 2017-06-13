@@ -1,6 +1,6 @@
 import { List, Map } from "immutable";
 
-import { nil } from "app/utils";
+import { exists, nil } from "app/utils";
 import { metadataForRecord, primitives } from "./helpers";
 
 /**
@@ -31,7 +31,7 @@ export class Record<TInput> {
 
     public merge(other: Partial<TInput>): this {
         const ctr: any = this.constructor;
-        return new ctr({ ...this.toJS(), ...other as any});
+        return new ctr({ ...this.toJS(), ...other as any });
     }
 
     /**
@@ -74,13 +74,22 @@ export class Record<TInput> {
                 continue;
             }
             const value = (data as any)[key];
-            if (value && typeMetadata && !primitives.has(typeMetadata.type.name)) {
+            if (key === "exitCode") {
+                console.log("Value is", value, key);
+            }
+            if (exists(value) && typeMetadata && !primitives.has(typeMetadata.type.name)) {
+                if (key === "exitCode") {
+                    console.log("Value2 is", value, key);
+                }
                 if (typeMetadata.list) {
                     obj[key] = List(value && value.map(x => new typeMetadata.type(x)));
                 } else {
                     obj[key] = new typeMetadata.type(value);
                 }
             } else {
+                if (key === "exitCode") {
+                    console.log("Value falsy is", value, key);
+                }
                 obj[key] = value;
             }
         }

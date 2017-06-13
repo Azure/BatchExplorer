@@ -38,4 +38,9 @@ export class JobHookTaskExecutionInfo extends Record<JobHookTaskExecutionInfoAtt
     @Prop() public retryCount: number;
     @Prop() public lastRetryTime: Date;
     @Prop() public result: JobHookTaskResult;
+
+    constructor(data: any) {
+        super(data);
+        console.log("Exit code", data.exitCode, this.exitCode);
+    }
 }
