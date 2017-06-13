@@ -41,7 +41,7 @@ export abstract class RxEntityProxy<TParams, TEntity> extends RxProxyBase<TParam
         }).switch().distinctUntilChanged().takeUntil(this.isDisposed);
 
         if (config.poll) {
-            // this._pollTracker = this.startPoll(5000);
+            this._pollTracker = this.startPoll(5000);
         }
     }
 

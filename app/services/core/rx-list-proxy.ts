@@ -86,7 +86,6 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         const subject = new AsyncSubject();
 
         this._tryLoadFromQueryCache(forceNew);
-        console.log("Fetch next", forceNew);
         this._fetchNextKeys().subscribe({
             next: (keys: OrderedSet<string>) => {
                 const currentKeys = this._itemKeys.value;
@@ -111,7 +110,6 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         subject.next(true);
         this._fetchRemainingKeys().subscribe({
             next: (keys: OrderedSet<string>) => {
-                console.log("Got keys", keys.toJS());
                 this._updateNewKeys(keys);
                 subject.complete();
             },
