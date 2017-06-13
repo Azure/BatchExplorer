@@ -1,5 +1,5 @@
 import { ObjectUtils, SecureUtils } from "app/utils";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
 export class PollService {
     private _pollTrackers: StringMap<StringMap<PollTracker>> = {};
@@ -84,6 +84,7 @@ class PollTracker {
     public id: string;
     private _currentTimeout: any;
     private _running: boolean = false;
+    private _obsSubscription: Subscription;
 
     constructor(public interval: number, public callback: () => Observable<any> | void) {
         this.id = SecureUtils.uuid();
@@ -104,6 +105,10 @@ class PollTracker {
         if (this._currentTimeout) {
             clearTimeout(this._currentTimeout);
         }
+
+        if (this._obsSubscription) {
+            this._obsSubscription.unsubscribe();
+        }
     }
 
     private _waitForNextPoll() {
@@ -111,7 +116,7 @@ class PollTracker {
             this._currentTimeout = null;
             const output = this.callback();
             if (output && output instanceof Observable) {
-                output.subscribe(() => {
+                this._obsSubscription = output.subscribe(() => {
                     this._waitForNextPoll();
                 });
             } else {
