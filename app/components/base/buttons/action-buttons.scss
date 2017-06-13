@@ -12,7 +12,6 @@ bl-action-btn-group {
 
 bl-action-btn {
     display: inline-block;
-    width: $action-btn-size;
     height: $action-btn-size;
     outline: none;
     cursor: pointer;
@@ -32,12 +31,16 @@ bl-action-btn {
         }
     }
 
-    &[type="normal"] {
-        // Nothing
+    &[type="normal"], &[type="round"] {
+        width: $action-btn-size;
     }
 
     &[type="round"] {
         border-radius: 99%;
+    }
+
+    &[type="wide"] {
+        padding: 0 5px;
     }
 
     &[color="primary"] {
