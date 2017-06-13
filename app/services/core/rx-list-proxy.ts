@@ -196,14 +196,14 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
                 return this.fetchNextItems();
             },
             next: (response: any) => {
-                this._hasMore.next(this.hasMoreItems());
                 const keys = OrderedSet(this.newItems(this.processResponse(response)));
+                this._hasMore.next(this.hasMoreItems()); // This NEEDS to be called after processResponse
                 subject.next(keys);
                 subject.complete();
             },
             error: (error) => {
                 this._hasMore.next(false);
-                subject.next(false);
+                subject.error(error);
             },
         });
 
