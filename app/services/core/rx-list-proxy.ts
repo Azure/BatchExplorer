@@ -39,7 +39,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
                 }
                 return List<TEntity>(keys.map((x) => items.get(x)));
             });
-        }).switch().distinctUntilChanged();
+        }).switch().distinctUntilChanged().takeUntil(this.isDisposed);
 
         this.deleted.subscribe((deletedKey) => {
             this._itemKeys.next(OrderedSet<string>(this._itemKeys.value.filter((key) => key !== deletedKey)));
@@ -260,4 +260,25 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         this._itemKeys.next(OrderedSet(OrderedSet([key]).concat(this._itemKeys.value)));
         this._cache.queryCache.addKeyToQuery(null, key);
     }
+}
+
+export function getAllProxy<TEntity>(getProxy: RxListProxy<any, TEntity>): Observable<List<TEntity>> {
+    const obs = new AsyncSubject<List<TEntity>>();
+
+    getProxy.fetchAll().subscribe({
+        next: () => {
+            getProxy.items.subscribe((items: List<TEntity>) => {
+                obs.next(items);
+                obs.complete();
+                getProxy.dispose();
+            });
+        },
+        error: (e) => {
+            obs.error(e);
+            obs.complete();
+            getProxy.dispose();
+        },
+    });
+
+    return obs.asObservable();
 }

@@ -3,11 +3,13 @@ import { FormControl } from "@angular/forms";
 import { Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { List } from "immutable";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
-import { Node, NodeState, Pool } from "app/models";
-import { NodeListParams, NodeService } from "app/services";
+import { Job, JobState, Node, NodeState, Pool, Task, TaskState } from "app/models";
+import { JobService, NodeListParams, NodeService, TaskService } from "app/services";
 import { PollObservable, RxListProxy } from "app/services/core";
+import { Constants } from "app/utils";
+import { FilterBuilder } from "app/utils/filter-builder";
 import { NodesStateHistoryData, RunningTasksHistoryData } from "./history-data";
 import { StateCounter } from "./state-counter";
 
@@ -39,6 +41,12 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     public data: RxListProxy<NodeListParams, Node>;
 
     public nodes: List<Node> = List([]);
+    /**
+     * List of jobs running on this pool
+     */
+    public jobs: List<Job> = List([]);
+    public tasks: List<Task> = List([]);
+
     public startTaskFailedError: any;
 
     public runningTaskHistory = new RunningTasksHistoryData();
@@ -48,12 +56,19 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     public focusedGraph = AvailableGraph.Heatmap;
     public selectedHistoryLength = new FormControl(HistoryLength.TenMinute);
 
+    private _jobData: RxListProxy<{}, Job>;
     private _stateCounter = new StateCounter();
 
     private _poll: PollObservable;
+    private _tasksPoll: PollObservable;
     private _nodesSub: Subscription;
 
-    constructor(private nodeService: NodeService, private router: Router) {
+    constructor(
+        private nodeService: NodeService,
+        private jobService: JobService,
+        private taskService: TaskService,
+        private router: Router,
+    ) {
         this.data = nodeService.list(null, {
             pageSize: 1000,
             select: "recentTasks,id,state,isDedicated",
@@ -66,6 +81,13 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
                 this.runningTaskHistory.update(this.nodes);
             }
             this._scanForProblems();
+        });
+        this._jobData = jobService.list({
+            select: "id",
+        });
+
+        this._jobData.items.subscribe((jobs) => {
+            this.jobs = jobs;
         });
 
         this.selectedHistoryLength.valueChanges.subscribe((value) => {
@@ -85,14 +107,29 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
             }
             this.data.updateParams({ poolId: this.pool.id });
             this.data.refreshAll(false);
+
+            this._jobData.patchOptions({
+                filter: this._buildJobFilter(),
+            });
+            this._jobData.refreshAll().subscribe(() => {
+                this._loadAllTasks(this.jobs.map(x => x.id).toArray());
+            });
             this.runningNodesHistory.reset();
             this.runningTaskHistory.reset();
+            this._killTaskPoll();
+            if (this.pool.maxTasksPerNode > Constants.nodeRecentTaskLimit) {
+                this._tasksPoll = this.jobService.cache.pollService.startPoll("pool-tasks", 10000,
+                    () => this._loadAllTasks(this.jobs.map(x => x.id).toArray()));
+            }
         }
     }
 
     public ngOnDestroy() {
         this._poll.destroy();
+        this._killTaskPoll();
         this._nodesSub.unsubscribe();
+        this.data.dispose();
+        this._jobData.dispose();
     }
 
     @autobind()
@@ -128,4 +165,38 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
         }
     }
 
+    private _buildJobFilter(): string {
+        return FilterBuilder.and(
+            FilterBuilder.prop("state").eq(JobState.active),
+            FilterBuilder.prop("executionInfo/poolId").eq(this.pool.id),
+        ).toOData();
+    }
+
+    private _buildTaskFilter(): string {
+        return FilterBuilder.and(
+            FilterBuilder.prop("state").eq(TaskState.running),
+        ).toOData();
+    }
+
+    private _loadAllTasks(jobIds: string[]) {
+        const waiting = [];
+
+        for (let jobId of jobIds) {
+            waiting.push(this.taskService.listAll(jobId, {
+                select: "id,state,nodeInfo",
+                filter: this._buildTaskFilter(),
+            }));
+        }
+        const obs = Observable.forkJoin(...waiting);
+        obs.subscribe((tasks: Array<List<Task>>) => {
+            this.tasks = List(tasks.map(x => x.toArray()).flatten());
+        });
+        return obs;
+    }
+
+    private _killTaskPoll() {
+        if (this._tasksPoll) {
+            this._tasksPoll.destroy();
+        }
+    }
 }

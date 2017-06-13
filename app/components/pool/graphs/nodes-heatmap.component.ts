@@ -7,8 +7,8 @@ import * as elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";
 import { BehaviorSubject } from "rxjs";
 
-import { Node, NodeState, Pool } from "app/models";
-import { log } from "app/utils";
+import { Job, Node, NodeState, Pool, Task } from "app/models";
+import { Constants, log } from "app/utils";
 import { HeatmapColor } from "./heatmap-color";
 import { StateTree } from "./state-tree";
 
@@ -67,6 +67,9 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     public showLegend: boolean = true;
 
     @Input()
+    public showRunningTasks: boolean = true;
+
+    @Input()
     @HostBinding("class.interactive")
     public interactive: boolean = true;
 
@@ -90,6 +93,12 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     }
     public get nodes() { return this._nodes; }
 
+    @Input()
+    public jobs: List<Job> = List([]);
+
+    @Input()
+    public tasks: List<Task> = List([]);
+
     public colors: HeatmapColor;
     public selectedNodeId = new BehaviorSubject<string>(null);
     public selectedNode = new BehaviorSubject<Node>(null);
@@ -108,6 +117,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     private _height: number = 0;
     private _nodeMap: { [id: string]: Node } = {};
     private _nodes: List<Node>;
+    private _taskPerNodes: StringMap<number> = {};
 
     constructor(private elementRef: ElementRef) {
         this.colors = new HeatmapColor(stateTree);
@@ -127,6 +137,10 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             if (this._svg) {
                 this._svg.selectAll("g.node-group").remove();
             }
+        }
+
+        if (changes.tasks) {
+            this._processNewTasks(this.tasks);
         }
     }
 
@@ -226,21 +240,36 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             .attr("width", z)
             .attr("height", z)
             .style("fill", (tile: any) => {
-                let color;
-                if (tile.node.state === NodeState.running) {
-                    color = idleColor;
-                } else if (!tile.node.isDedicated) {
-                    return `url(#${tile.node.state})`;
-                } else {
-                    color = this.colors.get(tile.node.state);
-                }
-                return d3.color(color) as any;
+                return this._tileBgColor(tile.node);
             })
             .style("stroke-width", (tile: any) => {
                 return tile.node.id === this.selectedNodeId.value ? "2px" : "0";
             });
 
         nodeBackground.exit().remove();
+    }
+
+    /**
+     * Get the color of the tile given the node it is assigned
+     * @param node Node for the given tile
+     *
+     * It will use the color of the state of the node unless the node is running.
+     * In the case the node is running it will use the idle background color as the tasks will be displayed above
+     * unless tasks are not loaded yet and so it will use the running color.
+     *
+     * If the node is low priority it will use a dashed pattern.
+     * If the node is dedicated it will fill the bg with the color.
+     */
+    private _tileBgColor(node: Node) {
+        let color;
+        const hasTasksData = this.pool.maxTasksPerNode <= Constants.nodeRecentTaskLimit || this.tasks.size > 0;
+        const showTaskOverlay = node.state === NodeState.running && hasTasksData;
+        if (!node.isDedicated) {
+            return `url(#${showTaskOverlay ? NodeState.idle : node.state})`;
+        } else {
+            color = showTaskOverlay ? idleColor : this.colors.get(node.state);
+        }
+        return d3.color(color) as any;
     }
 
     private _displayRunningTasks(taskGroup, z) {
@@ -253,7 +282,13 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
                 if (node.state !== NodeState.running || !node.recentTasks) {
                     return [];
                 }
-                return node.runningTasks.map((task, index) => ({ node, task, index })).toJS();
+                if (maxTaskPerNode <= Constants.nodeRecentTaskLimit) {
+                    return node.runningTasks.map((task, index) => ({ node, index })).toJS();
+                } else {
+                    const count = this._taskPerNodes[node.id] || 0;
+                    const array = new Array(count).fill(0).map((task, index) => ({ node, index }));
+                    return array;
+                }
             });
 
         runningTaskRects.enter().append("rect")
@@ -386,5 +421,20 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
 
     private _updateSelectedNode() {
         this.selectedNode.next(this._nodeMap[this.selectedNodeId.getValue()]);
+    }
+
+    private _processNewTasks(tasks: List<Task>) {
+        let taskPerNode = this._taskPerNodes = {};
+        if (!tasks) {
+            return;
+        }
+        tasks.forEach((task) => {
+            const nodeId = task.nodeInfo.nodeId;
+            if (!(nodeId in taskPerNode)) {
+                taskPerNode[nodeId] = 1;
+            } else {
+                taskPerNode[nodeId]++;
+            }
+        });
     }
 }

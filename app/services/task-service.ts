@@ -15,6 +15,7 @@ import {
     RxEntityProxy,
     RxListProxy,
     TargetedDataCache,
+    getAllProxy,
     getOnceProxy,
 } from "./core";
 import { ServiceBase } from "./service-base";
@@ -72,6 +73,10 @@ export class TaskService extends ServiceBase {
             initialParams: { jobId: initialJobId },
             initialOptions,
         });
+    }
+
+    public listAll(jobId: string, options: TaskListOptions): Observable<List<Task>> {
+        return getAllProxy(this.list(jobId, options));
     }
 
     public listSubTasks(
