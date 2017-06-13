@@ -36,14 +36,14 @@
                     <bl-tab-label>Start Task</bl-tab-label>
                     <bl-start-task-properties [pool]="pool"></bl-start-task-properties>
                 </bl-tab>
-                <bl-tab key="nodes">
+                <!--<bl-tab key="nodes">
                     <bl-tab-label>Nodes</bl-tab-label>
                     <div class="tab-padding">
                         <bl-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/pools', poolId, 'nodes']" [filterPlaceholder]="filterPlaceholderText">
                             <bl-node-list #list [poolId]="poolId" [filter]="listWrapper.filter" [quickList]="false" [manualLoading]="true"></bl-node-list>
                         </bl-entity-details-list>
                     </div>
-                </bl-tab>
+                </bl-tab>-->
             </bl-tab-group>
         </md-card>
     </div>

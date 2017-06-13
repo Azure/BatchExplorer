@@ -19,6 +19,11 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
     private _hasMore: BehaviorSubject<boolean> = new BehaviorSubject(true);
     private _lastRequest: { params: TParams, options: any };
 
+    /**
+     * If polling this list proxy this is a flag if it should fetch all or just the first set
+     */
+    private _pollFetchAll: boolean = false;
+
     constructor(type: Type<TEntity>, config: RxListProxyConfig<TParams, TEntity>) {
         super(type, config);
         this._options = new ListOptions(config.initialOptions || {});
@@ -26,7 +31,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         this._hasMore.next(true);
         this.hasMore = this._hasMore.asObservable();
 
-        this.items = this._itemKeys.map((itemKeys) => {
+        this.items = this._itemKeys.distinctUntilChanged().map((itemKeys) => {
             return this.cache.items.map((items) => {
                 let keys: any = itemKeys;
                 if (this._options.maxItems) {
@@ -34,7 +39,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
                 }
                 return List<TEntity>(keys.map((x) => items.get(x)));
             });
-        }).switch();
+        }).switch().distinctUntilChanged();
 
         this.deleted.subscribe((deletedKey) => {
             this._itemKeys.next(OrderedSet<string>(this._itemKeys.value.filter((key) => key !== deletedKey)));
@@ -43,6 +48,11 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         this._cacheCleared.subscribe((deletedKey) => {
             this._itemKeys.next(OrderedSet<string>([]));
         });
+    }
+
+    public startPoll(interval: number, fetchAll: boolean = false) {
+        this._pollFetchAll = fetchAll;
+        return super.startPoll(interval);
     }
 
     public updateParams(params: TParams) {
@@ -73,49 +83,37 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         if (!this._hasMore.value) {
             return Observable.of({ data: [] });
         }
+        const subject = new AsyncSubject();
 
         this._tryLoadFromQueryCache(forceNew);
-
-        return this.fetchData({
-            getData: () => {
-                return this.fetchNextItems();
-            },
-            next: (response: any) => {
-                const keys = OrderedSet(this.newItems(this.processResponse(response)));
-                this._hasMore.next(this.hasMoreItems());
+        console.log("Fetch next", forceNew);
+        this._fetchNextKeys().subscribe({
+            next: (keys: OrderedSet<string>) => {
                 const currentKeys = this._itemKeys.value;
                 if (currentKeys.size === 0) {
                     this.cache.queryCache.cacheQuery(this._options.filter, keys, null);
                 }
-
-                const last = this._lastRequest;
-                if (last && (last.params !== this._params || last.options !== this._options)) {
-                    this._itemKeys.next(keys);
-                } else {
-                    this._itemKeys.next(OrderedSet<string>(currentKeys.concat(keys)));
-                }
-
-                this._lastRequest = { params: this._params, options: this._options };
+                subject.next(true);
+                subject.complete();
+                this._updateNewKeys(keys);
             },
             error: (error) => {
                 this._hasMore.next(false);
+                subject.error(error);
             },
         });
+
+        return subject.asObservable();
     }
 
     public fetchAll(): Observable<any> {
-        if (!this.hasMoreItems()) {
-            return Observable.of(true);
-        }
-
         const subject = new AsyncSubject();
         subject.next(true);
-        this.fetchNext().subscribe({
-            complete: () => {
-                this.fetchAll().subscribe({
-                    complete: () => subject.complete(),
-                    error: (e) => subject.error(e),
-                });
+        this._fetchRemainingKeys().subscribe({
+            next: (keys: OrderedSet<string>) => {
+                console.log("Got keys", keys.toJS());
+                this._updateNewKeys(keys);
+                subject.complete();
             },
             error: (e) => subject.error(e),
         });
@@ -148,11 +146,26 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
     public refresh(clearExistingData = true): Observable<any> {
         this.cache.queryCache.clearCache();
         this.setOptions(this._options, clearExistingData);
-        return this.fetchNext(true);
+        return this.fetchNext();
+    }
+
+    /**
+     * Refresh the list but loads all the data from the server.
+     * @param clearExistingData If set to false it will only clear the data when the new date comes in.
+     *  This means that during the loading time the items are still the old ones.
+     */
+    public refreshAll(clearExistingData = true): Observable<any> {
+        this.cache.queryCache.clearCache();
+        this.setOptions(this._options, clearExistingData);
+        return this.fetchAll();
     }
 
     protected pollRefresh() {
-        return this.refresh(false);
+        if (this._pollFetchAll) {
+            return this.refreshAll(false);
+        } else {
+            return this.refresh(false);
+        }
     }
 
     // Method to implement in the child class
@@ -162,6 +175,55 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
     protected abstract hasMoreItems(): boolean;
     protected abstract queryCacheKey(): string;
 
+    /**
+     * Load all the remaining items from the server and return their keys
+     */
+    private _fetchRemainingKeys() {
+        if (!this.hasMoreItems()) {
+            return Observable.of(OrderedSet());
+        }
+
+        return this._fetchNextKeys().flatMap((keys: OrderedSet<string>) => {
+            return this._fetchRemainingKeys().map(remainingKeys => OrderedSet(keys.concat(remainingKeys)));
+        }).share();
+    }
+
+    /**
+     * Load the next set of items from the server and returns the keys of those items.
+     */
+    private _fetchNextKeys(): Observable<OrderedSet<string>> {
+        const subject = new AsyncSubject();
+        this.fetchData({
+            getData: () => {
+                return this.fetchNextItems();
+            },
+            next: (response: any) => {
+                this._hasMore.next(this.hasMoreItems());
+                const keys = OrderedSet(this.newItems(this.processResponse(response)));
+                subject.next(keys);
+                subject.complete();
+            },
+            error: (error) => {
+                this._hasMore.next(false);
+                subject.next(false);
+            },
+        });
+
+        return subject.asObservable();
+    }
+
+    private _updateNewKeys(newKeys: OrderedSet<string>) {
+        const currentKeys = this._itemKeys.value;
+
+        const last = this._lastRequest;
+        if (last && (last.params !== this._params || last.options !== this._options)) {
+            this._itemKeys.next(newKeys);
+        } else {
+            this._itemKeys.next(OrderedSet<string>(currentKeys.concat(newKeys)));
+        }
+
+        this._lastRequest = { params: this._params, options: this._options };
+    }
     /**
      * This will try to load keys from the query cache
      * This succeed only if there is no item currently loaded, we don't want new data and there is cached data.

@@ -1,10 +1,11 @@
 import { ObjectUtils, SecureUtils } from "app/utils";
+import { Observable } from "rxjs";
 
 export class PollService {
     private _pollTrackers: StringMap<StringMap<PollTracker>> = {};
     private _activePoolTrackers: StringMap<PollTracker> = {};
 
-    public startPoll(key: string, interval: number, callback: () => void): PollObservable {
+    public startPoll(key: string, interval: number, callback: () => Observable<any> | void): PollObservable {
         const tracker = new PollTracker(interval, callback);
         this._addTracker(key, tracker);
         return new PollObservable(this, key, tracker.id);
@@ -81,27 +82,42 @@ export class PollService {
 
 class PollTracker {
     public id: string;
-    private _currentInterval: any;
+    private _currentTimeout: any;
+    private _running: boolean = false;
 
-    constructor(public interval: number, public callback: () => void) {
+    constructor(public interval: number, public callback: () => Observable<any> | void) {
         this.id = SecureUtils.uuid();
     }
 
     public get running(): boolean {
-        return Boolean(this._currentInterval);
+        return this._running;
     }
 
     public start() {
         this.stop();
-        this._currentInterval = setInterval(() => {
-            this.callback();
-        }, this.interval);
+        this._running = true;
+        this._waitForNextPoll();
     }
 
     public stop() {
-        if (this._currentInterval) {
-            clearInterval(this._currentInterval);
+        this._running = false;
+        if (this._currentTimeout) {
+            clearTimeout(this._currentTimeout);
         }
+    }
+
+    private _waitForNextPoll() {
+        this._currentTimeout = setTimeout(() => {
+            this._currentTimeout = null;
+            const output = this.callback();
+            if (output && output instanceof Observable) {
+                output.subscribe(() => {
+                    this._waitForNextPoll();
+                });
+            } else {
+                this._waitForNextPoll();
+            }
+        }, this.interval);
     }
 }
 

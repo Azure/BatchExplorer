@@ -38,6 +38,7 @@ export class RxBatchListProxy<TParams, TEntity> extends RxListProxy<TParams, TEn
     }
 
     protected fetchNextItems(): Observable<any> {
+        console.log("Fetch next set of items");
         return this._clientProxy().flatMap((client) => {
             return Observable.fromPromise(client.fetchNext()).do((data) => {
                 this._nextLink = client.nextLink;
@@ -63,6 +64,7 @@ export class RxBatchListProxy<TParams, TEntity> extends RxListProxy<TParams, TEn
     private _computeOptions(options: ListOptions) {
         const newOptions = options.mergeDefault(defaultOptions);
         const attributes = newOptions.attributes;
+        console.log("Compute options", newOptions.maxResults);
         if (newOptions.maxResults) {
             attributes.maxResults = newOptions.maxResults;
         }

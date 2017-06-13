@@ -213,12 +213,11 @@ export abstract class RxProxyBase<TParams, TOptions extends ProxyOptions, TEntit
             return this._currentObservable;
         }
         this._status.next(LoadingStatus.Loading);
-
         const obs = this._currentObservable = options.getData();
         this._currentQuerySub = obs.subscribe((response) => {
-            options.next(response);
-            this._status.next(LoadingStatus.Ready);
             this.abortFetch();
+            this._status.next(LoadingStatus.Ready);
+            options.next(response);
         }, (error: ServerError) => {
             // We need to clone the error otherwise it only logs the stacktrace
             // and not the actual error returned by the server which is not helpful

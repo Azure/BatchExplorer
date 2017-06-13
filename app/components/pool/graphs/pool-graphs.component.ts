@@ -24,6 +24,7 @@ const HistoryLength = {
 };
 
 const refreshRate = 5000;
+
 @Component({
     selector: "bl-pool-graphs",
     templateUrl: "pool-graphs.html",
@@ -55,7 +56,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     constructor(private nodeService: NodeService, private router: Router) {
         this.data = nodeService.list(null, {
             pageSize: 1000,
-            select: "recentTasks,id,state",
+            select: "recentTasks,id,state,isDedicated",
         });
         this._nodesSub = this.data.items.subscribe((nodes) => {
             if (nodes.size !== 0) {
@@ -71,7 +72,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
             this.runningNodesHistory.setHistorySize(value);
             this.runningTaskHistory.setHistorySize(value);
         });
-        this._poll = this.data.startPoll(refreshRate);
+        this._poll = this.data.startPoll(refreshRate, true);
     }
 
     public ngOnChanges(changes: SimpleChanges) {
@@ -83,7 +84,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
                 return;
             }
             this.data.updateParams({ poolId: this.pool.id });
-            this.data.refresh(false);
+            this.data.refreshAll(false);
             this.runningNodesHistory.reset();
             this.runningTaskHistory.reset();
         }
