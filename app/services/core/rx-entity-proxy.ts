@@ -134,19 +134,3 @@ export function getOnceProxy<TEntity>(getProxy: RxEntityProxy<any, TEntity>): Ob
 
     return obs.asObservable();
 }
-
-// const sub = new BehaviorSubject(0);
-// const until = new AsyncSubject();
-// let i = 0;
-// setInterval(() => {
-//     sub.next(i++);
-//     if (i === 4) {
-//         until.next(true);
-//         until.complete();
-//     }
-// }, 2000);
-
-// const obs = sub.takeUntil(until);
-// obs.subscribe((x) => {
-//     console.log("New value", x);
-// });
