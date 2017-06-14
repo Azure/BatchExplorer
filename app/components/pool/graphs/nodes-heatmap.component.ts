@@ -8,7 +8,7 @@ import { List } from "immutable";
 import { BehaviorSubject } from "rxjs";
 
 import { Job, Node, NodeState, Pool, Task } from "app/models";
-import { Constants, log } from "app/utils";
+import { log } from "app/utils";
 import { HeatmapColor } from "./heatmap-color";
 import { StateTree } from "./state-tree";
 
@@ -83,15 +83,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     public svgEl: ElementRef;
 
     @Input()
-    public set nodes(nodes: List<Node>) {
-        if (nodes.size > maxNodes) {
-            log.warn(`Only supporting up to ${maxNodes} nodes for now!`);
-        }
-        this._nodes = List<Node>(nodes.slice(0, this.limitNode || maxNodes));
-        this._buildNodeMap();
-        this._processNewNodes();
-    }
-    public get nodes() { return this._nodes; }
+    public nodes: List<Node>;
 
     @Input()
     public jobs: List<Job> = List([]);
@@ -114,8 +106,8 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     private _svg: d3.Selection<any, any, any, any>;
     private _width: number = 0;
     private _height: number = 0;
-    private _nodeMap: { [id: string]: Node } = {};
     private _nodes: List<Node>;
+    private _nodeMap: { [id: string]: Node } = {};
     private _taskPerNodes: StringMap<number> = {};
 
     constructor(private elementRef: ElementRef) {
@@ -138,8 +130,18 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             }
         }
 
+        if (changes.nodes) {
+            if (this.nodes.size > maxNodes) {
+                log.warn(`Only supporting up to ${maxNodes} nodes for now!`);
+            }
+            this._nodes = List<Node>(this.nodes.slice(0, this.limitNode || maxNodes));
+            this._buildNodeMap();
+            this._processNewData();
+        }
+
         if (changes.tasks) {
             this._processNewTasks(this.tasks);
+            this._processNewData();
         }
     }
 
@@ -156,7 +158,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             .attr("width", this._width)
             .attr("height", this._height);
 
-        this._processNewNodes();
+        this._processNewData();
     }
 
     public ngOnDestroy() {
@@ -184,7 +186,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         this._updateSvg(groups);
     }
 
-    private _processNewNodes() {
+    private _processNewData() {
         if (!this._svg) {
             return;
         }
@@ -240,7 +242,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             .attr("height", z)
             .style("fill", (tile: any) => {
                 if (tile.node.isDedicated) {
-                    return "";
+                    return "transparent";
                 } else {
                     return "url(#low-pri-stripes)";
                 }
@@ -264,8 +266,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
      * If the node is dedicated it will fill the bg with the color.
      */
     private _tileBgColor(node: Node) {
-        const hasTasksData = this.pool.maxTasksPerNode <= Constants.nodeRecentTaskLimit || this.tasks.size > 0;
-        const showTaskOverlay = node.state === NodeState.running && hasTasksData;
+        const showTaskOverlay = node.state === NodeState.running;
         const color = showTaskOverlay ? idleColor : this.colors.get(node.state);
         return d3.color(color) as any;
     }
@@ -273,20 +274,18 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     private _displayRunningTasks(taskGroup, z) {
         const maxTaskPerNode = this.pool.maxTasksPerNode;
         const taskWidth = Math.floor(z / maxTaskPerNode);
-
+        if (z === 0) { // When switching between the graphs there is a moment where the width/height is 0
+            return;
+        }
         const runningTaskRects = taskGroup.selectAll("rect")
             .data((d) => {
                 const node: Node = d.node;
                 if (node.state !== NodeState.running || !node.recentTasks) {
                     return [];
                 }
-                if (maxTaskPerNode <= Constants.nodeRecentTaskLimit) {
-                    return node.runningTasks.map((task, index) => ({ node, index })).toJS();
-                } else {
-                    const count = this._taskPerNodes[node.id] || 0;
-                    const array = new Array(count).fill(0).map((task, index) => ({ node, index }));
-                    return array;
-                }
+                const count = node.runningTasksCount;
+                const array = new Array(count).fill(0).map((task, index) => ({ node, index }));
+                return array;
             });
 
         runningTaskRects.enter().append("rect")

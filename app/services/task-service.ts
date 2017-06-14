@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { List } from "immutable";
 import { Observable, Subject } from "rxjs";
 
-import { SubtaskInformation, Task } from "app/models";
+import { SubtaskInformation, Task, TaskState } from "app/models";
 import { TaskCreateDto } from "app/models/dtos";
 import { Constants, log } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
@@ -77,6 +77,11 @@ export class TaskService extends ServiceBase {
 
     public listAll(jobId: string, options: TaskListOptions): Observable<List<Task>> {
         return getAllProxy(this.list(jobId, options));
+    }
+
+    public countTask(jobId: string, state: TaskState): Observable<number> {
+        const filter = FilterBuilder.prop("state").eq(state).toOData();
+        return this.listAll(jobId, { filter, select: "id,state" }).map(tasks => tasks.size).share();
     }
 
     public listSubTasks(

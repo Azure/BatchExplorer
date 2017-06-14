@@ -1,6 +1,9 @@
-import { ObjectUtils, SecureUtils } from "app/utils";
+import { Injectable } from "@angular/core";
 import { Observable, Subscription } from "rxjs";
 
+import { ObjectUtils, SecureUtils } from "app/utils";
+
+@Injectable()
 export class PollService {
     private _pollTrackers: StringMap<StringMap<PollTracker>> = {};
     private _activePoolTrackers: StringMap<PollTracker> = {};
