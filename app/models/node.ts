@@ -36,9 +36,9 @@ export class Node extends Record<NodeAttributes> {
     @Prop() public allocationTime: Date;
     @Prop() public ipAddress: string;
     @Prop() public affinityId: string;
-    @Prop() public totalTasksRun: number;
-    @Prop() public totalTasksSucceeded: number;
-    @Prop() public runningTasksCount: number;
+    @Prop() public totalTasksRun: number = 0;
+    @Prop() public totalTasksSucceeded: number = 0;
+    @Prop() public runningTasksCount: number = 0;
     @ListProp(NodeRecentTask) public recentTasks: List<NodeRecentTask> = List([]);
     @Prop() public isDedicated: boolean;
 }

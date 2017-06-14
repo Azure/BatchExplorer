@@ -7,7 +7,7 @@ import * as elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";
 import { BehaviorSubject } from "rxjs";
 
-import { Job, Node, NodeState, Pool, Task } from "app/models";
+import { Job, Node, NodeState, Pool } from "app/models";
 import { log } from "app/utils";
 import { HeatmapColor } from "./heatmap-color";
 import { StateTree } from "./state-tree";
@@ -88,9 +88,6 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     @Input()
     public jobs: List<Job> = List([]);
 
-    @Input()
-    public tasks: List<Task> = List([]);
-
     public colors: HeatmapColor;
     public selectedNodeId = new BehaviorSubject<string>(null);
     public selectedNode = new BehaviorSubject<Node>(null);
@@ -108,7 +105,6 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     private _height: number = 0;
     private _nodes: List<Node>;
     private _nodeMap: { [id: string]: Node } = {};
-    private _taskPerNodes: StringMap<number> = {};
 
     constructor(private elementRef: ElementRef) {
         this.colors = new HeatmapColor(stateTree);
@@ -136,11 +132,6 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             }
             this._nodes = List<Node>(this.nodes.slice(0, this.limitNode || maxNodes));
             this._buildNodeMap();
-            this._processNewData();
-        }
-
-        if (changes.tasks) {
-            this._processNewTasks(this.tasks);
             this._processNewData();
         }
     }
@@ -303,12 +294,8 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
 
     private _displayTileTooltip(titleNode) {
         titleNode.text((tile) => {
-            if (this.tasks.size === 0) {
-                return "Loading running tasks.";
-            } else {
-                const count = this._taskPerNodes[tile.node.id] || 0;
-                return `${count} tasks running on this node`;
-            }
+            const count = tile.node.runningTasksCount;
+            return `${count} tasks running on this node`;
         });
     }
 
@@ -395,20 +382,5 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
 
     private _updateSelectedNode() {
         this.selectedNode.next(this._nodeMap[this.selectedNodeId.getValue()]);
-    }
-
-    private _processNewTasks(tasks: List<Task>) {
-        let taskPerNode = this._taskPerNodes = {};
-        if (!tasks) {
-            return;
-        }
-        tasks.forEach((task) => {
-            const nodeId = task.nodeInfo.nodeId;
-            if (!(nodeId in taskPerNode)) {
-                taskPerNode[nodeId] = 1;
-            } else {
-                taskPerNode[nodeId]++;
-            }
-        });
     }
 }
