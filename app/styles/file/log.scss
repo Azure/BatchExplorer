@@ -17,6 +17,7 @@
         background-color: $file-content-bg;
         counter-reset: line-numbering;
         margin-top: 0;
+        margin-bottom: 4px;
 
         > bl-simple-loading {
             padding-left: 10px;
