@@ -95,7 +95,6 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
         } else {
             this.runningTasksCount = this._runningTaskCountForJob;
         }
-
     }
 
     public updateGaugeOptions() {
@@ -118,8 +117,12 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
     }
 
     private _updateJobRunningTasks() {
-        const obs = this.taskService.countTask(this.job.id, TaskState.running);
-        obs.subscribe(x => this._runningTaskCountForJob = x);
+        const obs = this.taskService.countTasks(this.job.id, TaskState.running);
+
+        obs.subscribe((x) => {
+            this._runningTaskCountForJob = x;
+            this.countRunningTasks();
+        });
         return obs;
     }
 }

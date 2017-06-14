@@ -79,7 +79,7 @@ export class TaskService extends ServiceBase {
         return getAllProxy(this.list(jobId, options));
     }
 
-    public countTask(jobId: string, state: TaskState): Observable<number> {
+    public countTasks(jobId: string, state: TaskState): Observable<number> {
         const filter = FilterBuilder.prop("state").eq(state).toOData();
         return this.listAll(jobId, { filter, select: "id,state" }).map(tasks => tasks.size).share();
     }
