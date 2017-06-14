@@ -87,7 +87,6 @@ export class BannerComponent implements OnChanges {
         const fixObs = fixMethod();
         if (fixObs) {
             this._fixingSub = fixObs.subscribe(() => {
-                console.log("Mark as fixed...");
                 this._markFixed();
             });
         } else {
