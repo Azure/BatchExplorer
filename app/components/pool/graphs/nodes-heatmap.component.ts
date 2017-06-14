@@ -112,7 +112,6 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
 
     private _erd: any;
     private _svg: d3.Selection<any, any, any, any>;
-    private _defs: d3.Selection<any, any, any, any>;
     private _width: number = 0;
     private _height: number = 0;
     private _nodeMap: { [id: string]: Node } = {};
@@ -156,9 +155,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         this._svg = d3.select(this.svgEl.nativeElement)
             .attr("width", this._width)
             .attr("height", this._height);
-        this._defs = this._svg.append("defs");
 
-        this._setupLowPriColors();
         this._processNewNodes();
     }
 
@@ -176,7 +173,6 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     public selectState(state: string) {
         this.highlightedState = state;
         this.colors.updateColors(this.highlightedState);
-        this._setupLowPriColors();
         this.redraw();
     }
 
@@ -229,9 +225,11 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
 
         const backgroundGroup = nodeEnter.append("g").classed("bg", true).merge(groups.select("g.bg"));
         const runningTaskGroup = nodeEnter.append("g").classed("tasks", true).merge(groups.select("g.tasks"));
+        const lowPriOverlayGroup = nodeEnter.append("g").classed("lowpri", true).merge(groups.select("g.lowpri"));
 
         this._displayNodeBackground(backgroundGroup, z);
         this._displayRunningTasks(runningTaskGroup, z);
+        this._displayLowPriOverlay(lowPriOverlayGroup, z);
     }
 
     private _displayNodeBackground(backgroundGroup, z) {
@@ -241,6 +239,25 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             .attr("height", z)
             .style("fill", (tile: any) => {
                 return this._tileBgColor(tile.node);
+            })
+            .style("stroke-width", (tile: any) => {
+                return tile.node.id === this.selectedNodeId.value ? "2px" : "0";
+            });
+
+        nodeBackground.exit().remove();
+    }
+
+    private _displayLowPriOverlay(lowPriGroup, z) {
+        const nodeBackground = lowPriGroup.selectAll("rect").data((d) => [d]);
+        nodeBackground.enter().append("rect").merge(nodeBackground)
+            .attr("width", z)
+            .attr("height", z)
+            .style("fill", (tile: any) => {
+                if (tile.node.isDedicated) {
+                    return "";
+                } else {
+                    return "url(#low-pri-stripes)";
+                }
             })
             .style("stroke-width", (tile: any) => {
                 return tile.node.id === this.selectedNodeId.value ? "2px" : "0";
@@ -261,14 +278,9 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
      * If the node is dedicated it will fill the bg with the color.
      */
     private _tileBgColor(node: Node) {
-        let color;
         const hasTasksData = this.pool.maxTasksPerNode <= Constants.nodeRecentTaskLimit || this.tasks.size > 0;
         const showTaskOverlay = node.state === NodeState.running && hasTasksData;
-        if (!node.isDedicated) {
-            return `url(#${showTaskOverlay ? NodeState.idle : node.state})`;
-        } else {
-            color = showTaskOverlay ? idleColor : this.colors.get(node.state);
-        }
+        const color = showTaskOverlay ? idleColor : this.colors.get(node.state);
         return d3.color(color) as any;
     }
 
@@ -294,50 +306,16 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         runningTaskRects.enter().append("rect")
             .attr("transform", (data) => {
                 const index = data.index;
-                const x = (maxTaskPerNode - index - 1) * taskWidth + 1;
+                const x = z - (index + 1) * taskWidth;
                 return `translate(0,${x})`;
             })
             .attr("width", z)
             .attr("height", taskWidth - 1)
-            .style("fill", (tile: any) => {
-                if (tile.node.isDedicated) {
-                    return runningColor;
-                } else {
-                    return `url(#${tile.node.state})`;
-                }
-            });
+            .style("fill", runningColor);
 
         runningTaskRects.exit().remove();
     }
 
-    private _setupLowPriColors() {
-        this._defs.selectAll("pattern").remove();
-        for (let key of this.colors.keys) {
-            const pattern = this._defs.append("pattern")
-                .attr("id", key)
-                .attr("width", "8")
-                .attr("height", "10")
-                .attr("patternUnits", "userSpaceOnUse")
-                .attr("patternTransform", "rotate(45 50 50)");
-            pattern.append("line")
-                .attr("stroke", this.colors.get(key))
-                .attr("stroke-width", "12px")
-                .attr("y2", "10");
-
-            this._triggerWebkitSvgRedraw();
-        }
-
-    }
-
-    /**
-     * Workaround for webkit not updating the svg if the defs only change(this will trigger the update).
-     */
-    private _triggerWebkitSvgRedraw() {
-        this._svg.style("display", "inline-block");
-        setTimeout(() => {
-            this._svg.style("display", "block");
-        });
-    }
     /**
      * Compute the dimension of the heatmap.
      *  - rows
