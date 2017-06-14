@@ -211,17 +211,11 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         const runningTaskGroup = nodeEnter.append("g").classed("tasks", true).merge(groups.select("g.tasks"));
         const lowPriOverlayGroup = nodeEnter.append("g").classed("lowpri", true).merge(groups.select("g.lowpri"));
         const title = nodeEnter.append("title").merge(groups.select("title"));
-        title.text((tile) => {
-            if (this.tasks.size === 0) {
-                return "Loading running tasks.";
-            } else {
-                const count = this._taskPerNodes[tile.node.id] || 0;
-                return `${count} tasks running on this node`;
-            }
-        });
+
         this._displayNodeBackground(backgroundGroup, z);
         this._displayRunningTasks(runningTaskGroup, z);
         this._displayLowPriOverlay(lowPriOverlayGroup, z);
+        this._displayTileTooltip(title);
     }
 
     private _displayNodeBackground(backgroundGroup, z) {
@@ -306,6 +300,17 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             .style("fill", runningColor);
 
         runningTaskRects.exit().remove();
+    }
+
+    private _displayTileTooltip(titleNode) {
+        titleNode.text((tile) => {
+            if (this.tasks.size === 0) {
+                return "Loading running tasks.";
+            } else {
+                const count = this._taskPerNodes[tile.node.id] || 0;
+                return `${count} tasks running on this node`;
+            }
+        });
     }
 
     /**
