@@ -129,6 +129,20 @@ describe("NodesHeatmapLegendComponent", () => {
         });
     });
 
+    it("should have title with number of tasks running on node", () => {
+        testComponent.nodes = createNodes(2);
+        fixture.detectChanges();
+        const tiles = svg.selectAll("g.node-group");
+        tiles.each((d, i, groups) => {
+            const group = d3.select(groups[i]);
+            expect(group.selectAll("title").size()).toBe(1, "Should only 1 title element");
+            const title = group.select("title");
+
+            expect(title).not.toBeFalsy("Should have a rect in bg");
+            expect(title.text()).toContain("2 tasks running on this node");
+        });
+    });
+
     describe("Lowpri stipes overlay", () => {
         it("should use fill transpart for dedicated nodes", () => {
             testComponent.nodes = createNodes(2);
@@ -225,7 +239,11 @@ describe("NodesHeatmapLegendComponent", () => {
 function createNodes(count: number, dedicated = true) {
     const nodes: Node[] = [];
     for (let i = 0; i < count; i++) {
-        nodes.push(Fixture.node.create({ id: `node-${i + 1}`, state: NodeState.idle, isDedicated: dedicated }));
+        nodes.push(Fixture.node.create({
+            id: `node-${i + 1}`, state: NodeState.idle,
+            isDedicated: dedicated,
+            runningTasksCount: 2,
+        }));
     }
     return List(nodes);
 }
