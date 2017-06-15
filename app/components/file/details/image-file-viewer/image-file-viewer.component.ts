@@ -22,16 +22,13 @@ export class ImageFileViewerComponent implements OnChanges {
     }
 
     public ngOnChanges(changes) {
-        console.log("Changes..", changes);
         this._loadImage();
     }
 
     private _loadImage() {
         const destination = path.join(this.fs.commonFolders.temp, "task-output", this.fileLoader.filename);
-        console.log("Going to save to file", destination);
         this.loadingStatus = LoadingStatus.Loading;
         this.fileLoader.download(destination).subscribe((result) => {
-            console.log("Result", result);
             this.src = `file://${destination}`;
             this.loadingStatus = LoadingStatus.Ready;
         });
