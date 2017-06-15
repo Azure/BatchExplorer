@@ -63,9 +63,11 @@ export class FileLoader {
     }
 
     public download(dest: string): Observable<string> {
-        return this.content().flatMap((result) => {
+        const obs = this.content().concatMap((result) => {
             return this._fs.saveFile(dest, result.content);
         }).share();
+        obs.subscribe();
+        return obs;
     }
 
     /**

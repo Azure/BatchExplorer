@@ -3,7 +3,7 @@
         <div class="actions">
             <bl-action-btn-group>
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                <bl-download-button [enabled]="downloadEnabled" (click)="downloadFile()"></bl-download-button>
+                <bl-download-button [enabled]="downloadEnabled" (action)="downloadFile()"></bl-download-button>
             </bl-action-btn-group>
         </div>
         <div class="content">

@@ -1,8 +1,6 @@
 import { Component, Input, OnChanges } from "@angular/core";
-import * as path from "path";
 
 import { LoadingStatus } from "app/components/base/loading";
-import { FileSystemService } from "app/services";
 import { FileLoader } from "app/services/file";
 import "./image-file-viewer.scss";
 
@@ -17,10 +15,6 @@ export class ImageFileViewerComponent implements OnChanges {
     public src: string;
     public loadingStatus = LoadingStatus.Loading;
 
-    constructor(private fs: FileSystemService) {
-
-    }
-
     public ngOnChanges(changes) {
         this._loadImage();
     }
@@ -28,7 +22,6 @@ export class ImageFileViewerComponent implements OnChanges {
     private _loadImage() {
         this.loadingStatus = LoadingStatus.Loading;
         this.fileLoader.cache().subscribe((destination) => {
-            console.log("destination", destination);
             this.src = `file://${destination}`;
             this.loadingStatus = LoadingStatus.Ready;
         });

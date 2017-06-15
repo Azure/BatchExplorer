@@ -6,7 +6,7 @@ import { Observable, Subscription } from "rxjs";
 
 import { NotificationService } from "app/components/base/notifications";
 import { File, ServerError } from "app/models";
-import { FileService, StorageService } from "app/services";
+import { ElectronShell, FileService, StorageService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
 import { Constants, FileUrlUtils, prettyBytes } from "app/utils";
 
@@ -36,6 +36,7 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     constructor(
         private route: ActivatedRoute,
         private fileService: FileService,
+        private shell: ElectronShell,
         private notificationService: NotificationService,
         private storageService: StorageService) {
         this.downloadEnabled = true;
@@ -67,6 +68,7 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         return Observable.of({});
     }
 
+    @autobind()
     public downloadFile() {
         const dialog = remote.dialog;
         const localPath = dialog.showSaveDialog({
@@ -76,7 +78,7 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         });
 
         if (localPath) {
-            this._saveFile(localPath);
+            return this._saveFile(localPath);
         }
     }
 
@@ -117,14 +119,14 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         }
 
         const obj = FileUrlUtils.parseRelativePath(this.url);
+        let obs;
         if (obj.type === Constants.FileSourceTypes.Job) {
-            this.fileService.fileFromTask(this.jobId, this.taskId, this.filename).download(pathToFile);
-
+            obs = this.fileService.fileFromTask(this.jobId, this.taskId, this.filename).download(pathToFile);
         } else if (this._sourceType === Constants.FileSourceTypes.Pool) {
-            this.fileService.fileFromNode(this.poolId, this.nodeId, this.filename).download(pathToFile);
+            obs = this.fileService.fileFromNode(this.poolId, this.nodeId, this.filename).download(pathToFile);
         } else if (this._sourceType === Constants.FileSourceTypes.Blob) {
             const blobName = `${this.taskId}/${this.outputKind}/${this.filename}`;
-            this.storageService.saveBlobToFile(this.jobId, blobName, pathToFile).subscribe({
+            obs = this.storageService.saveBlobToFile(this.jobId, blobName, pathToFile).subscribe({
                 error: (error: ServerError) => {
                     this.notificationService.error(
                         "Download failed",
@@ -136,5 +138,11 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         } else {
             throw new Error("Unrecognised source type: " + this._sourceType);
         }
+
+        obs.subscribe(() => {
+            this.shell.showItemInFolder(pathToFile);
+            this.notificationService.success("Download complete!", `File was saved locally at ${pathToFile}`);
+        });
+        return obs;
     }
 }
