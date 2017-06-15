@@ -1,7 +1,9 @@
 import { List } from "immutable";
 
 import { ListProp, Model, Prop, Record } from "app/core";
-import { CertificateReference, NodeRecentTask, StartTaskInfo } from "app/models";
+import { CertificateReference } from "app/models/certificate-reference";
+import { NodeRecentTask } from "app/models/node-recent-task";
+import { StartTaskInfo } from "app/models/start-task-info";
 
 export interface NodeAttributes {
     id: string;
@@ -20,7 +22,7 @@ export interface NodeAttributes {
     isDedicated: boolean;
     recentTasks: Array<Partial<NodeRecentTask>>;
     certificateReferences: Array<Partial<CertificateReference>>;
-    startTaskInfo: StartTaskInfo;
+    startTaskInfo: Partial<StartTaskInfo>;
 }
 
 /**
