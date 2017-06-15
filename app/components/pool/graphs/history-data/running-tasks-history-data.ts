@@ -9,7 +9,7 @@ export class RunningTasksHistoryData extends HistoryDataBase {
         if (!this.hasTimePassed(time)) {
             return;
         }
-        const runningTask = nodes.map(x => x.runningTasks.size).reduce((a, b) => a + b, 0);
+        const runningTask = nodes.map(x => x.runningTasksCount).reduce((a, b) => a + b, 0);
         this.history = this.history.concat([{
             time: time,
             y: runningTask,

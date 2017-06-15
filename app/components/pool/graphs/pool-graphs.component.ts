@@ -5,9 +5,10 @@ import { autobind } from "core-decorators";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
-import { Node, NodeState, Pool } from "app/models";
-import { NodeListParams, NodeService } from "app/services";
+import { Job, JobState, Node, NodeState, Pool, Task } from "app/models";
+import { JobService, NodeListParams, NodeService } from "app/services";
 import { PollObservable, RxListProxy } from "app/services/core";
+import { FilterBuilder } from "app/utils/filter-builder";
 import { NodesStateHistoryData, RunningTasksHistoryData } from "./history-data";
 import { StateCounter } from "./state-counter";
 
@@ -39,6 +40,12 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     public data: RxListProxy<NodeListParams, Node>;
 
     public nodes: List<Node> = List([]);
+    /**
+     * List of jobs running on this pool
+     */
+    public jobs: List<Job> = List([]);
+    public tasks: List<Task> = List([]);
+
     public startTaskFailedError: any;
 
     public runningTaskHistory = new RunningTasksHistoryData();
@@ -48,15 +55,20 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     public focusedGraph = AvailableGraph.Heatmap;
     public selectedHistoryLength = new FormControl(HistoryLength.TenMinute);
 
+    private _jobData: RxListProxy<{}, Job>;
     private _stateCounter = new StateCounter();
 
     private _poll: PollObservable;
     private _nodesSub: Subscription;
 
-    constructor(private nodeService: NodeService, private router: Router) {
+    constructor(
+        private nodeService: NodeService,
+        jobService: JobService,
+        private router: Router,
+    ) {
         this.data = nodeService.list(null, {
             pageSize: 1000,
-            select: "recentTasks,id,state,isDedicated",
+            select: "id,state,runningTasksCount,isDedicated",
         });
         this._nodesSub = this.data.items.subscribe((nodes) => {
             if (nodes.size !== 0) {
@@ -66,6 +78,13 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
                 this.runningTaskHistory.update(this.nodes);
             }
             this._scanForProblems();
+        });
+        this._jobData = jobService.list({
+            select: "id",
+        });
+
+        this._jobData.items.subscribe((jobs) => {
+            this.jobs = jobs;
         });
 
         this.selectedHistoryLength.valueChanges.subscribe((value) => {
@@ -85,6 +104,11 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
             }
             this.data.updateParams({ poolId: this.pool.id });
             this.data.refreshAll(false);
+
+            this._jobData.patchOptions({
+                filter: this._buildJobFilter(),
+            });
+            this._jobData.refreshAll();
             this.runningNodesHistory.reset();
             this.runningTaskHistory.reset();
         }
@@ -93,6 +117,8 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     public ngOnDestroy() {
         this._poll.destroy();
         this._nodesSub.unsubscribe();
+        this.data.dispose();
+        this._jobData.dispose();
     }
 
     @autobind()
@@ -128,4 +154,10 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
         }
     }
 
+    private _buildJobFilter(): string {
+        return FilterBuilder.and(
+            FilterBuilder.prop("state").eq(JobState.active),
+            FilterBuilder.prop("executionInfo/poolId").eq(this.pool.id),
+        ).toOData();
+    }
 }
