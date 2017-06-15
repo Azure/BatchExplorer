@@ -2,13 +2,13 @@ import { Component, EventEmitter, HostBinding, HostListener, Input, OnChanges, O
 
 import "./action-buttons.scss";
 
-type ButtonType = "normal" | "round";
+type ButtonType = "normal" | "round" | "wide";
 type ButtonColor = "primary" | "danger" | "warn";
 
 @Component({
     selector: "bl-action-btn",
     template: `
-        <span class="action-btn" [mdTooltip]="title" mdTooltipPosition="right">
+        <span class="action-btn" [ngClass]="type" [mdTooltip]="title" mdTooltipPosition="right">
             <i [class]="icon"></i>
             <ng-content></ng-content>
         </span>

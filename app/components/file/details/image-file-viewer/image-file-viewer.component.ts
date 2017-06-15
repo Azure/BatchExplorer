@@ -1,9 +1,8 @@
-import { Component, Input } from "@angular/core";
-import { remote } from "electron";
-const { app } = remote;
+import { Component, Input, OnChanges, OnInit } from "@angular/core";
 import * as path from "path";
 
 import { FileSystemService } from "app/services";
+import { FileLoader } from "app/services/file";
 import "./image-file-viewer.scss";
 
 @Component({
@@ -34,5 +33,5 @@ export class ImageFileViewerComponent implements OnInit, OnChanges {
             console.log("Result", result);
             this.src = `file://${destination}`;
         });
-
     }
+}

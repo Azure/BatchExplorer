@@ -4,13 +4,12 @@
             <bl-action-btn-group>
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
                 <bl-download-button [enabled]="downloadEnabled" (click)="downloadFile()"></bl-download-button>
-
             </bl-action-btn-group>
         </div>
         <div class="content">
             <md-card-title>{{filename}}</md-card-title>
+            <md-card-subtitle>{{url}}</md-card-subtitle>
             <md-card-subtitle>{{contentSize}}</md-card-subtitle>
-            <p>Url: {{url}}</p>
         </div>
     </md-card>
     <md-card class="details">

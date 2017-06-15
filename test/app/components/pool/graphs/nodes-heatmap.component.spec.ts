@@ -129,19 +129,51 @@ describe("NodesHeatmapLegendComponent", () => {
         });
     });
 
-    it("should use fill url(gradient) for low pri nodes", () => {
-        testComponent.nodes = createNodes(2, false);
+    it("should have title with number of tasks running on node", () => {
+        testComponent.nodes = createNodes(2);
         fixture.detectChanges();
         const tiles = svg.selectAll("g.node-group");
-        expect(tiles.size()).toBe(2);
         tiles.each((d, i, groups) => {
             const group = d3.select(groups[i]);
-            const bg = group.select("g.bg");
+            expect(group.selectAll("title").size()).toBe(1, "Should only 1 title element");
+            const title = group.select("title");
 
-            expect(bg.selectAll("rect").size()).toBe(1, "Should only have 1 rect");
-            const rect = bg.select("rect");
-            expect(rect).not.toBeFalsy("Should have a rect in bg");
-            expect(rect.attr("style")).toContain("fill: url(\"#idle\")");
+            expect(title).not.toBeFalsy("Should have a rect in bg");
+            expect(title.text()).toContain("2 tasks running on this node");
+        });
+    });
+
+    describe("Lowpri stipes overlay", () => {
+        it("should use fill transpart for dedicated nodes", () => {
+            testComponent.nodes = createNodes(2);
+            fixture.detectChanges();
+            const tiles = svg.selectAll("g.node-group");
+            expect(tiles.size()).toBe(2);
+            tiles.each((d, i, groups) => {
+                const group = d3.select(groups[i]);
+                const bg = group.select("g.lowpri");
+
+                expect(bg.selectAll("rect").size()).toBe(1, "Should only have 1 rect");
+                const rect = bg.select("rect");
+                expect(rect).not.toBeFalsy("Should have a rect in lowpri group");
+                expect(rect.attr("style")).toContain("fill: transparent");
+            });
+        });
+
+        it("should use fill url(low-pri-stripes) for low pri nodes", () => {
+            testComponent.nodes = createNodes(2, false);
+            fixture.detectChanges();
+            const tiles = svg.selectAll("g.node-group");
+            expect(tiles.size()).toBe(2);
+            tiles.each((d, i, groups) => {
+                const group = d3.select(groups[i]);
+                const bg = group.select("g.lowpri");
+
+                expect(bg.selectAll("rect").size()).toBe(1, "Should only have 1 rect");
+                const rect = bg.select("rect");
+                expect(rect).not.toBeFalsy("Should have a rect in lowpri group");
+                expect(rect.attr("style")).toContain("fill: url(\"#low-pri-stripes\")");
+            });
         });
     });
 
@@ -207,7 +239,11 @@ describe("NodesHeatmapLegendComponent", () => {
 function createNodes(count: number, dedicated = true) {
     const nodes: Node[] = [];
     for (let i = 0; i < count; i++) {
-        nodes.push(Fixture.node.create({ id: `node-${i + 1}`, state: NodeState.idle, isDedicated: dedicated }));
+        nodes.push(Fixture.node.create({
+            id: `node-${i + 1}`, state: NodeState.idle,
+            isDedicated: dedicated,
+            runningTasksCount: 2,
+        }));
     }
     return List(nodes);
 }

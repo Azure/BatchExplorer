@@ -193,6 +193,14 @@ describe("RxBatchListProxy", () => {
         });
     });
 
+    it("#refreshAll() should get all the items", (done) => {
+        items = List([]); // Reset the items to make sure it loads all of them again
+        proxy.refreshAll().subscribe(() => {
+            expect(items).toEqualImmutable(List(data[0].concat(data[1]).map((x) => new FakeModel(x))));
+            done();
+        });
+    });
+
     describe("#loadNewItem()", () => {
         beforeEach((done) => {
             proxy.fetchNext().subscribe(() => done());

@@ -61,7 +61,7 @@ describe("TaskErrorDisplayComponent", () => {
                     },
                     exitCode: 1,
                 },
-            });
+            } as any);
             fixture.detectChanges();
         });
 
