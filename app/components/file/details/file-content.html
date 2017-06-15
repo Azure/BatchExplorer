@@ -8,5 +8,8 @@
     <div *ngSwitchCase="FileType.Image">
         <bl-image-file-viewer [fileLoader]="fileLoader"></bl-image-file-viewer>
     </div>
+    <div *ngSwitchCase="FileType.Code">
+        <bl-code-file-viewer [fileLoader]="fileLoader"></bl-code-file-viewer>
+    </div>
     <div *ngSwitchDefault>Unkown file format</div>
 </div>

@@ -6,11 +6,13 @@ import { FileLoader } from "app/services/file";
 enum FileType {
     Log,
     Image,
+    Code,
 }
 
 const fileTypes = {
     [FileType.Log]: ["txt", "log"],
-    [FileType.Image]: ["png", "jpg"],
+    [FileType.Image]: ["png", "jpg", "gif"],
+    [FileType.Code]: ["json", "ts", "js", "java", "cs", "cpp", "h", "hpp", "py", "xml"],
 };
 
 @Component({
