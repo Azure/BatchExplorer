@@ -2,14 +2,21 @@
     Error this file is neither a node, task or blob file.
 </div>
 <div *ngIf="fileLoader" [ngSwitch]="fileType">
-    <div *ngSwitchCase="FileType.Log">
+    <div *ngSwitchCase="FileType.log">
         <bl-log-file-viewer [fileLoader]="fileLoader" [tail]="false"></bl-log-file-viewer>
     </div>
-    <div *ngSwitchCase="FileType.Image">
+    <div *ngSwitchCase="FileType.image">
         <bl-image-file-viewer [fileLoader]="fileLoader"></bl-image-file-viewer>
     </div>
-    <div *ngSwitchCase="FileType.Code">
+    <div *ngSwitchCase="FileType.code">
         <bl-code-file-viewer [fileLoader]="fileLoader"></bl-code-file-viewer>
     </div>
-    <div *ngSwitchDefault>Unkown file format</div>
+    <md-card *ngSwitchDefault class="unknown-file-type">
+        <h2 class="title">This file is not a known extension. Do you still want to open it?</h2>
+        <div class="options">
+            <button (click)="openAs(FileType.log)">Log</button>
+            <button (click)="openAs(FileType.code)">Code</button>
+            <button (click)="openAs(FileType.image)">Image</button>
+        </div>
+    </md-card>
 </div>

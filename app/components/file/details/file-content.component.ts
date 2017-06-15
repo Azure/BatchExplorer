@@ -2,17 +2,18 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from "@angular/cor
 
 import { FileService, StorageService, TaskService } from "app/services";
 import { FileLoader } from "app/services/file";
+import "./file-content.scss";
 
 enum FileType {
-    Log,
-    Image,
-    Code,
+    log,
+    image,
+    code,
 }
 
 const fileTypes = {
-    [FileType.Log]: ["txt", "log"],
-    [FileType.Image]: ["png", "jpg", "gif"],
-    [FileType.Code]: ["json", "ts", "js", "java", "cs", "cpp", "h", "hpp", "py", "xml"],
+    [FileType.log]: ["txt", "log"],
+    [FileType.image]: ["png", "jpg", "gif"],
+    [FileType.code]: ["json", "ts2", "js", "java", "cs", "cpp", "h", "hpp", "py", "xml"],
 };
 
 @Component({
@@ -82,6 +83,10 @@ export class FileContentComponent implements OnChanges, OnInit {
 
     public get isBlob() {
         return this.jobId && this.taskId && this.outputKind;
+    }
+
+    public openAs(type: FileType) {
+        this.fileType = type;
     }
 
     private setupFileLoad() {
