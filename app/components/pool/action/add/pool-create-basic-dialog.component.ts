@@ -18,6 +18,7 @@ import { PoolService, VmSizeService } from "app/services";
 })
 export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreateDto> implements OnDestroy {
     public osSource: PoolOsSources = PoolOsSources.IaaS;
+    public osType: "linux" | "windows" = "linux";
     public NodeFillType = NodeFillType;
 
     private _osControl: FormControl;
@@ -52,6 +53,17 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
 
         this._sub = this._osControl.valueChanges.subscribe((value) => {
             this.osSource = value.source;
+            if (value.source === PoolOsSources.PaaS) {
+                this.osType = "windows";
+            } else {
+                const config = value.virtualMachineConfiguration;
+                const agentId: string = config && config.nodeAgentSKUId;
+                if (agentId && agentId.toLowerCase().indexOf("windows") !== -1) {
+                    this.osType = "windows";
+                } else {
+                    this.osType = "linux";
+                }
+            }
         });
     }
 
