@@ -27,12 +27,20 @@
 		</bl-property-group>
 
 		<bl-property-group label="Cloud service configuration" class="wide" [collapsed]="true" *ngIf="pool.cloudServiceConfiguration">
+            <div collapsed-preview>
+                <span>{{decorator.poolOs}}</span>
+            </div>
+
 			<bl-text-property label="OS family" [value]="decorator.cloudServiceConfiguration.osFamily"></bl-text-property>
 			<bl-text-property label="Curent OS version" [value]="decorator.cloudServiceConfiguration.currentOSVersion"></bl-text-property>
 			<bl-text-property label="Target OS version" [value]="decorator.cloudServiceConfiguration.targetOSVersion"></bl-text-property>
 		</bl-property-group>
 
 		<bl-property-group label="Virtual machine configuration" class="wide" [collapsed]="true" *ngIf="pool.virtualMachineConfiguration">
+            <div collapsed-preview>
+                <span>{{decorator.poolOs}}</span>
+            </div>
+
 			<bl-text-property label="Publisher" [value]="decorator.virtualMachineConfiguration.imageReference.publisher"></bl-text-property>
 			<bl-text-property label="Offer" [value]="decorator.virtualMachineConfiguration.imageReference.offer"></bl-text-property>
             <bl-text-property label="Sku" [value]="decorator.virtualMachineConfiguration.imageReference.sku"></bl-text-property>
@@ -41,5 +49,57 @@
             <bl-text-property *ngIf="decorator.virtualMachineConfiguration.windowsConfiguration"
                 label="Enable automatic updates" [value]="decorator.virtualMachineConfiguration.windowsConfiguration.enableAutomaticUpdates"></bl-text-property>
 		</bl-property-group>
+
+        <bl-property-group label="Application packages" class="wide" [collapsed]="true">
+            <div collapsed-preview>
+                <span>{{appPackages?.size}} application package references</span>
+            </div>
+            <bl-table-property *ngIf="appPackages.size > 0" label="Package references">
+                <bl-table-property-header>
+                    <div tp-column>Application</div>
+                    <div tp-column>Version</div>
+                </bl-table-property-header>
+                <bl-table-property-row *ngFor="let package of appPackages">
+                    <bl-tp-cell [value]="package.applicationId"></bl-tp-cell>
+                    <bl-tp-cell [value]="package.version"></bl-tp-cell>
+                </bl-table-property-row>
+            </bl-table-property>
+            <bl-no-item [itemCount]="appPackages.size" [slimline]="true">
+                <span no-filter>This pool contains no application package references</span>
+            </bl-no-item>
+        </bl-property-group>
+
+        <bl-property-group label="Certificates" class="wide" [collapsed]="true">
+            <div collapsed-preview>
+                <span>{{certificates?.size}} certificate references</span>
+            </div>
+            <bl-table-property *ngIf="certificates.size > 0" label="Certificate references">
+                <bl-table-property-header>
+                    <div tp-column>Thumbprint</div>
+                    <div tp-column>Store</div>
+                    <div tp-column>Store name</div>
+                    <div tp-column>Visibility</div>
+                </bl-table-property-header>
+                <bl-table-property-row *ngFor="let certificate of certificates">
+                    <bl-tp-cell [value]="certificate.thumbprint"></bl-tp-cell>
+                    <bl-tp-cell [value]="certificate.storeLocation"></bl-tp-cell>
+                    <bl-tp-cell [value]="certificate.storeName"></bl-tp-cell>
+                    <bl-tp-cell [value]="certificate.visibility"></bl-tp-cell>
+                </bl-table-property-row>
+            </bl-table-property>
+            <bl-no-item [itemCount]="certificates.size" [slimline]="true">
+                <span no-filter>This pool contains no certificate references</span>
+            </bl-no-item>
+        </bl-property-group>
+
+        <bl-property-group label="Metadata" class="wide" [collapsed]="true">
+            <div collapsed-preview>
+                <span>{{metadata?.size}} meta items</span>
+            </div>
+            <bl-text-property *ngFor="let metaItem of metadata" label="{{metaItem.name}}" [value]="metaItem.value"></bl-text-property>
+            <bl-no-item [itemCount]="metadata.size" [slimline]="true">
+                <span no-filter>This pool contains no metadata</span>
+            </bl-no-item>
+        </bl-property-group>
 	</bl-property-list>
 </div>

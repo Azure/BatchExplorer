@@ -8,6 +8,7 @@ export * from "./application-package-reference";
 export * from "./auto-user";
 export * from "./autoscale-formula";
 export * from "./batch-error";
+export * from "./certificate-reference";
 export * from "./cloud-service-configuration";
 export * from "./compute-node-information";
 export * from "./constraints";
