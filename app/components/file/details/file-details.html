@@ -12,9 +12,9 @@
             <md-card-subtitle>{{contentSize}}</md-card-subtitle>
         </div>
     </md-card>
-    <md-card class="details">
+    <div class="details" style="margin-top: 5px">
         <bl-file-content *ngIf="jobId && taskId && !outputKind" [jobId]="jobId" [taskId]="taskId" [filename]="filename"></bl-file-content>
         <bl-file-content *ngIf="jobId && taskId && outputKind" [jobId]="jobId" [taskId]="taskId" [outputKind]="outputKind" [filename]="filename"></bl-file-content>
         <bl-file-content *ngIf="poolId && nodeId" [poolId]="poolId" [nodeId]="nodeId" [filename]="filename"></bl-file-content>
-    </md-card>
+    </div>
 </div>
