@@ -1,7 +1,7 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA, ViewChild } from "@angular/core";
-import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
+import { ComponentFixture, TestBed, fakeAsync } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { Observable } from "rxjs";
+import { AsyncSubject } from "rxjs";
 
 import { BannerComponent, BannerOtherFixDirective } from "app/components/base/banner";
 import { mouseenter } from "test/utils/helpers";
@@ -140,26 +140,24 @@ describe("BannerComponent", () => {
     });
 
     describe("when switching id after clicking fix it", () => {
+        let subject;
         beforeEach(() => {
-            testComponent.fix1 = (() => Observable.timer(1000)) as any;
+            subject = new AsyncSubject();
+            testComponent.fix1 = (() => subject) as any;
             fixture.detectChanges();
             component.triggerFix();
             fixture.detectChanges();
             expect(de.query(By.css(".quick-fix-btn-container .btn")).nativeElement.textContent).toContain("Fixing");
         });
 
-        it("should reset the message", () => {
-            testComponent.bannerId = "id-2";
-            fixture.detectChanges();
-            expect(de.query(By.css(".quick-fix-btn-container .btn")).nativeElement.textContent).toContain("Main fix");
-        });
-
         it("should not show the fixed message", fakeAsync(() => {
             testComponent.bannerId = "id-2";
             fixture.detectChanges();
             expect(de.query(By.css(".quick-fix-btn-container .btn")).nativeElement.textContent).toContain("Main fix");
-            tick(1100);
-            expect(de.query(By.css(".quick-fix-btn-container .btn")).nativeElement.textContent).toContain("Main fix");
+            subject.next(true);
+            subject.complete();
+            expect(de.query(By.css(".quick-fix-btn-container .btn")).nativeElement.textContent)
+                .toContain("Main fix", "Should still be Main fix after fix observable resolve");
         }));
     });
 });
