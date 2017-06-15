@@ -1,0 +1,11 @@
+<div *ngIf="task">
+    <bl-property-group>
+        <bl-link-property label="Pool" [value]="task.poolId" [link]="['/pools', task.poolId]"></bl-link-property>
+        <bl-link-property label="Node" [value]="task.nodeId" [link]="['/pools', task.poolId, 'nodes', task.nodeId]"></bl-link-property>
+
+        <bl-node-file-list #list [poolId]="task.poolId" [nodeId]="task.nodeId" [quickList]="false" [folder]="currentFolder" [manualLoading]="true">
+        </bl-node-file-list>
+    </bl-property-group>
+</div>
+
+Task: {{task}} {{task?.id}}

@@ -17,10 +17,14 @@ export class JobHookTask extends Record<JobHookTaskAttributes> {
     @Prop() public preparationTask: JobHookTaskExecutionInfo;
     @Prop() public releaseTask: JobHookTaskExecutionInfo;
 
+    /**
+     * Id is a computed attribute using the pool and the node id. It is not returned by the server
+     */
+    @Prop() public id: string;
     constructor(data: JobHookTaskAttributes) {
         super({
             ...data,
-            id: `${data.poolId}|${data.nodeId}`,
+            id: `${data.poolId}/${data.nodeId}`,
             preparationTask: data.jobPreparationTaskExecutionInfo,
             releaseTask: data.jobReleaseTaskExecutionInfo,
         });

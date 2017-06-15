@@ -1,0 +1,24 @@
+bl-job-hook-task-browser {
+    .filters {
+        display: flex;
+    }
+    
+    .type-toggle {
+        margin: 10px;
+        text-align: right;
+        cursor: pointer;
+        > .option {
+            display: inline-block;
+        }
+
+        > .option.active {
+            text-decoration: underline;
+            cursor: default;
+        }
+        
+        > .option.disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+    }
+}

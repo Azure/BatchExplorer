@@ -1,23 +1,37 @@
-<div>
-    <a href="#"></a>
-    <a href="#"></a>
+<div class="filters">
+    <div style="padding: 10px; flex: 1">
+        <md-checkbox [formControl]="onlyFailedControl">Only failed</md-checkbox>
+    </div>
+    <div class="type-toggle">
+        <div class="option" (click)="updateType(HookTaskType.preparationTask)" [class.active]="type === HookTaskType.preparationTask">
+            Preparation Tasks
+        </div>
+        <div class="option" (click)="updateType(HookTaskType.releaseTask)" [class.active]="type === HookTaskType.releaseTask" [class.disabled]="!hasReleaseTask">
+            Release tasks
+        </div>
+    </div>
 </div>
-<bl-table>
-    <bl-thead>
-        <bl-column>NodeId</bl-column>
-        <bl-column style="width: 100px">State</bl-column>
-        <bl-column style="width: 100px">Status</bl-column>
-        <bl-column style="width: 100px">Created</bl-column>
-        <bl-column style="width: 100px">Started</bl-column>
-        <bl-column style="width: 100px">Exit code</bl-column>
-    </bl-thead>
+<div class="content">
+    <bl-table class="list" [activeItem]="pickedTaskId" (activeItemChange)="pickTask($event)">
+        <bl-thead>
+            <bl-column>NodeId</bl-column>
+            <bl-column style="width: 100px">State</bl-column>
+            <bl-column style="width: 100px">Status</bl-column>
+            <bl-column style="width: 100px">Created</bl-column>
+            <bl-column style="width: 100px">Started</bl-column>
+            <bl-column style="width: 100px">Exit code</bl-column>
+        </bl-thead>
 
-    <bl-row *ngFor="let task of data.items | async" [key]="task.nodeId">
-        <bl-cell>{{task.nodeId}}</bl-cell>
-        <bl-cell style="width: 100px">{{task[type]?.state}}</bl-cell>
-        <bl-cell style="width: 100px">{{task[type]?.result}}</bl-cell>
-        <bl-cell style="width: 100px">{{formatDate(task[type]?.startTime)}}</bl-cell>
-        <bl-cell style="width: 100px">{{formatDate(task[type]?.endTime)}}</bl-cell>
-        <bl-cell style="width: 100px">{{task[type]?.exitCode}}</bl-cell>
-    </bl-row>
-</bl-table>
+        <bl-row *ngFor="let task of data.items | async" [key]="task.nodeId">
+            <bl-cell>{{task.nodeId}}</bl-cell>
+            <bl-cell style="width: 100px">{{task[type]?.state}}</bl-cell>
+            <bl-cell style="width: 100px">{{task[type]?.result}}</bl-cell>
+            <bl-cell style="width: 100px">{{formatDate(task[type]?.startTime)}}</bl-cell>
+            <bl-cell style="width: 100px">{{formatDate(task[type]?.endTime)}}</bl-cell>
+            <bl-cell style="width: 100px">{{task[type]?.exitCode}}</bl-cell>
+        </bl-row>
+    </bl-table>
+    <div>
+        <bl-job-hook-task-details [task]="null"></bl-job-hook-task-details>
+    </div>
+</div>
