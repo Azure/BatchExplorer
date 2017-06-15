@@ -17,6 +17,7 @@ export class NodeConfigurationComponent implements OnChanges {
     public set node(value: Node) {
         this._node = value;
         this.decorator = new NodeDecorator(this._node);
+        console.log(this._node);
     }
     public get node() { return this._node; }
 

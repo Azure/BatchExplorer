@@ -43,6 +43,7 @@ export class PoolDecorator extends DecoratorBase<Pool> {
 
     public dedicatedNodes: string;
     public lowPriorityNodes: string;
+    public networkSubnetId: string;
 
     constructor(private pool?: Pool) {
         super(pool);
@@ -86,6 +87,7 @@ export class PoolDecorator extends DecoratorBase<Pool> {
 
         this.applicationPackageReferences = List(pool.applicationPackageReferences);
         this.certificateReferences = List(pool.certificateReferences);
+        this.networkSubnetId = pool.networkConfiguration && pool.networkConfiguration.subnetId;
     }
 
     private _computePoolOs(): string {
