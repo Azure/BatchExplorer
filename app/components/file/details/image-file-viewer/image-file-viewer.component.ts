@@ -9,8 +9,7 @@ import "./image-file-viewer.scss";
     templateUrl: "image-file-viewer.html",
 })
 export class ImageFileViewerComponent implements OnChanges {
-    @Input()
-    public fileLoader: FileLoader;
+    @Input() public fileLoader: FileLoader;
 
     public src: string;
     public loadingStatus = LoadingStatus.Loading;

@@ -23,31 +23,17 @@ const fileTypes = {
 export class FileContentComponent implements OnChanges, OnInit {
     public FileType = FileType;
 
-    @Input()
-    public jobId: string;
+    @Input() public jobId: string;
 
-    @Input()
-    public taskId: string;
+    @Input() public taskId: string;
 
-    @Input()
-    public poolId: string;
+    @Input() public poolId: string;
 
-    @Input()
-    public nodeId: string;
+    @Input() public nodeId: string;
 
-    @Input()
-    public filename: string;
+    @Input() public filename: string;
 
-    @Input()
-    public outputKind: string;
-
-    public lastContentLength = 0;
-    public lines = [];
-    public loading = true;
-
-    public nodeNotFound = false;
-    public fileCleanupOperation = false;
-    public fileContentFailure = false;
+    @Input() public outputKind: string;
 
     public fileLoader: FileLoader = null;
     public fileType: FileType;
@@ -68,9 +54,6 @@ export class FileContentComponent implements OnChanges, OnInit {
         }
 
         this.setupFileLoad();
-        this.nodeNotFound = false;
-        this.fileCleanupOperation = false;
-        this.fileContentFailure = false;
     }
 
     public get isJob() {
@@ -105,6 +88,9 @@ export class FileContentComponent implements OnChanges, OnInit {
     }
 
     private _findFileType() {
+        if (!this.filename) {
+            throw new Error(`Expect filename to be a valid string but was "${this.filename}"`)
+        }
         const filename = this.filename.toLowerCase();
         for (let type of Object.keys(fileTypes)) {
             const extensions = fileTypes[type];

@@ -14,11 +14,9 @@ import "./log-file-viewer.scss";
     templateUrl: "log-file-viewer.html",
 })
 export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewInit {
-    @Input()
-    public fileLoader: FileLoader;
+    @Input() public fileLoader: FileLoader;
 
-    @Input()
-    public tail: boolean = false;
+    @Input() public tail: boolean = false;
 
     public followingLog = false;
     public lastContentLength = 0;

@@ -9,12 +9,11 @@ import "./code-file-viewer.scss";
     templateUrl: "code-file-viewer.html",
 })
 export class CodeFileViewerComponent implements OnChanges {
-    @Input()
-    public fileLoader: FileLoader;
+    @Input() public fileLoader: FileLoader;
 
     public value: string = "";
 
-    public loadingStatus: LoadingStatus= LoadingStatus.Loading;
+    public loadingStatus: LoadingStatus = LoadingStatus.Loading;
 
     public config: CodeMirror.EditorConfiguration = {
         readOnly: true,
