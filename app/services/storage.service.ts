@@ -1,7 +1,9 @@
 import { Injectable } from "@angular/core";
+import * as path from "path";
 import { Observable } from "rxjs";
 
 import { File, ServerError } from "app/models";
+import { FileSystemService } from "app/services";
 import { Constants, StorageUtils } from "app/utils";
 import {
     DataCache,
@@ -10,8 +12,9 @@ import {
     RxStorageEntityProxy,
     RxStorageListProxy,
     TargetedDataCache,
+    getOnceProxy,
 } from "./core";
-import { FileLoader, FileloadOptions } from "./file";
+import { FileLoadOptions, FileLoader, FileSource } from "./file";
 import { StorageClientService } from "./storage-client.service";
 
 export interface BlobListParams {
@@ -40,7 +43,7 @@ export class StorageService {
         key: ({ jobId, taskId, outputKind }) => jobId + "/" + taskId + "/" + outputKind,
     }, "url");
 
-    constructor(private storageClient: StorageClientService) {
+    constructor(private storageClient: StorageClientService, private fs: FileSystemService) {
     }
 
     public getBlobFileCache(params: BlobListParams): DataCache<File> {
@@ -119,13 +122,23 @@ export class StorageService {
      * @param blobName - Fully prefixed blob path: "1001/$TaskOutput/myblob.txt"
      * @param options - Optional parameters, rangeStart & rangeEnd for partial contents
      */
-    public blobContent(jobId: string, blobName: string): FileLoader {
-        return new FileLoader((options: FileloadOptions) => {
-            return this._callStorageClient((client) => {
-                return StorageUtils.getSafeContainerName(jobId).then((safeContainerName) => {
-                    return client.getBlobContent(safeContainerName, blobName, options);
+    public blobContent(jobId: string, taskId: string, outputKind: string, filename: string): FileLoader {
+        return new FileLoader({
+            filename: filename,
+            source: FileSource.blob,
+            groupId: path.join(jobId, taskId, outputKind),
+            fs: this.fs,
+            properties: () => {
+                return getOnceProxy(this.getBlobProperties(jobId, taskId, outputKind, filename));
+            },
+            content: (options: FileLoadOptions) => {
+                return this._callStorageClient((client) => {
+                    return StorageUtils.getSafeContainerName(jobId).then((safeContainerName) => {
+                        const blobName = `${taskId}/${outputKind}/${filename}`;
+                        return client.getBlobContent(safeContainerName, blobName, options);
+                    });
                 });
-            });
+            },
         });
     }
 

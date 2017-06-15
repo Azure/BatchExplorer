@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, OnChanges } from "@angular/core";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { FileLoader } from "app/services/file";
@@ -22,7 +22,6 @@ export class CodeFileViewerComponent implements OnChanges {
     };
 
     public ngOnChanges(changes) {
-        console.log("Changes..", changes);
         this._loadImage();
     }
 

@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import * as path from "path";
 
 import { File, ServerError } from "app/models";
 import { Constants, exists } from "app/utils";
@@ -6,7 +7,7 @@ import { BatchClientService } from "./batch-client.service";
 import {
     DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache, getOnceProxy,
 } from "./core";
-import { FileLoader } from "./file";
+import { FileLoader, FileSource } from "./file";
 import { FileSystemService } from "./fs.service";
 import { ServiceBase } from "./service-base";
 
@@ -86,6 +87,7 @@ export class FileService extends ServiceBase {
     public fileFromNode(poolId: string, nodeId: string, filename: string): FileLoader {
         return new FileLoader({
             filename: filename,
+            source: FileSource.node,
             fs: this.fs,
             properties: () => {
                 return getOnceProxy(this.getFilePropertiesFromComputeNode(poolId, nodeId, filename));
@@ -139,6 +141,8 @@ export class FileService extends ServiceBase {
     public fileFromTask(jobId: string, taskId: string, filename: string): FileLoader {
         return new FileLoader({
             filename: filename,
+            source: FileSource.task,
+            groupId: path.join(jobId, taskId),
             fs: this.fs,
             properties: () => {
                 return getOnceProxy(this.getFilePropertiesFromTask(jobId, taskId, filename));

@@ -92,8 +92,7 @@ export class FileContentComponent implements OnChanges, OnInit {
         } else if (this.isPool) {
             obs = this.fileService.fileFromNode(this.poolId, this.nodeId, this.filename);
         } else if (this.isBlob) {
-            const blobName = `${this.taskId}/${this.outputKind}/${this.filename}`;
-            obs = this.storageService.blobContent(this.jobId, blobName);
+            obs = this.storageService.blobContent(this.jobId, this.taskId, this.outputKind, this.filename);
         } else {
             return;
         }

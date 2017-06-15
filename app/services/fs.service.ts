@@ -4,7 +4,7 @@ import * as fs from "fs";
 import * as mkdirp from "mkdirp";
 import * as path from "path";
 
-const {app} = remote;
+const { app } = remote;
 import { log } from "app/utils";
 
 export interface CommonFolders {
@@ -24,6 +24,18 @@ export class FileSystemService {
             temp: path.join(app.getPath("temp"), "batch-labs"),
             downloads: app.getPath("downloads"),
         };
+    }
+
+    /**
+     * Check if a file exists async
+     * @param path Full path to the file
+     */
+    public exists(path: string): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            fs.exists(path, (exists) => {
+                resolve(exists);
+            });
+        });
     }
 
     /**

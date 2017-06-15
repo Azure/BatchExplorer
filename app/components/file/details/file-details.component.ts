@@ -2,21 +2,20 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { autobind } from "core-decorators";
 import { remote } from "electron";
-import { writeFile } from "fs";
 import { Observable, Subscription } from "rxjs";
 
 import { NotificationService } from "app/components/base/notifications";
 import { File, ServerError } from "app/models";
 import { FileService, StorageService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
-import { Constants, FileUrlUtils, log, prettyBytes } from "app/utils";
+import { Constants, FileUrlUtils, prettyBytes } from "app/utils";
 
 @Component({
     selector: "bl-file-details",
     templateUrl: "file-details.html",
 })
 export class FileDetailsComponent implements OnInit, OnDestroy {
-    public static breadcrumb({filename}) {
+    public static breadcrumb({ filename }) {
         return { name: filename, label: "File", invertName: true };
     }
 
@@ -119,17 +118,10 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
 
         const obj = FileUrlUtils.parseRelativePath(this.url);
         if (obj.type === Constants.FileSourceTypes.Job) {
-            this.fileService.getFileContentFromTask(
-                this.jobId, this.taskId, this.filename).subscribe((data) => {
-                    this._writeToFile(pathToFile, data.content);
-                });
+            this.fileService.fileFromTask(this.jobId, this.taskId, this.filename).download(pathToFile);
 
         } else if (this._sourceType === Constants.FileSourceTypes.Pool) {
-            this.fileService.getFileContentFromComputeNode(
-                this.poolId, this.nodeId, this.filename).subscribe((data) => {
-                    this._writeToFile(pathToFile, data.content);
-                });
-
+            this.fileService.fileFromNode(this.poolId, this.nodeId, this.filename).download(pathToFile);
         } else if (this._sourceType === Constants.FileSourceTypes.Blob) {
             const blobName = `${this.taskId}/${this.outputKind}/${this.filename}`;
             this.storageService.saveBlobToFile(this.jobId, blobName, pathToFile).subscribe({
@@ -144,15 +136,5 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         } else {
             throw new Error("Unrecognised source type: " + this._sourceType);
         }
-    }
-
-    private _writeToFile(filename: string, data: any): void {
-        writeFile(filename, data.content, (error) => {
-            // Callback to get rid of the following console error
-            // DeprecationWarning: Calling an asynchronous function without callback is deprecated.
-            if (error) {
-                log.error("[FileDetails.component] writeFile error:", error);
-            }
-        });
     }
 }

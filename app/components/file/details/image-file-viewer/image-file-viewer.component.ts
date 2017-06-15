@@ -26,9 +26,9 @@ export class ImageFileViewerComponent implements OnChanges {
     }
 
     private _loadImage() {
-        const destination = path.join(this.fs.commonFolders.temp, "task-output", this.fileLoader.filename);
         this.loadingStatus = LoadingStatus.Loading;
-        this.fileLoader.download(destination).subscribe((result) => {
+        this.fileLoader.cache().subscribe((destination) => {
+            console.log("destination", destination);
             this.src = `file://${destination}`;
             this.loadingStatus = LoadingStatus.Ready;
         });
