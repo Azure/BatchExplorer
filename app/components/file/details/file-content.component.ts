@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
 
-import { FileService, StorageService, TaskService } from "app/services";
+import { FileService, StorageService } from "app/services";
 import { FileLoader } from "app/services/file";
 import "./file-content.scss";
 
@@ -40,7 +40,6 @@ export class FileContentComponent implements OnChanges, OnInit {
 
     constructor(
         private storageService: StorageService,
-        taskService: TaskService,
         private fileService: FileService) {
     }
 
