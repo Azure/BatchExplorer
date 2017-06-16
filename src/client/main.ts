@@ -1,10 +1,13 @@
 import { app, ipcMain, protocol } from "electron";
 import * as path from "path";
-
 app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 
 import { windows } from "./core";
 import { logger } from "./logger";
+import { PythonRpcServerProcess } from "./python-process";
+
+const pythonServer = new PythonRpcServerProcess();
+pythonServer.start();
 
 // Create the browser window.
 function createWindow() {

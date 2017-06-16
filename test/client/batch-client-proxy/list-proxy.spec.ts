@@ -1,4 +1,4 @@
-import { ListProxy } from "../../../client/api/batch-client-proxy/shared/list-proxy";
+import { ListProxy } from "../../../src/client/api/batch-client-proxy/shared/list-proxy";
 
 describe("ListProxy", () => {
     let listProxy;
