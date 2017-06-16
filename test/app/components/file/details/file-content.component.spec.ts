@@ -1,10 +1,12 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { Observable } from "rxjs";
 
 import { FileContentComponent } from "app/components/file/details";
 import { File } from "app/models";
 import { FileService, StorageService } from "app/services";
+import { click } from "test/utils/helpers";
 
 @Component({
     template: `<bl-file-content [poolId]="poolId" [nodeId]="nodeId" [filename]="filename"></bl-file-content>`,
@@ -15,7 +17,7 @@ class TestComponent {
     public filename = "some.txt";
 }
 
-fdescribe("FileContentComponent", () => {
+describe("FileContentComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: FileContentComponent;
@@ -27,9 +29,10 @@ fdescribe("FileContentComponent", () => {
     beforeEach(() => {
         storageServiceSpy = {};
         fileServiceSpy = {
-            fileFromNode: () => Observable.of([
-                new File({})
-            ]),
+            fileFromNode: (pool, node, filename) => ({
+                properties: () => Observable.of(new File()),
+                content: () => Observable.of({ content: "something" }),
+            }),
         };
         TestBed.configureTestingModule({
             imports: [],
@@ -47,6 +50,50 @@ fdescribe("FileContentComponent", () => {
         fixture.detectChanges();
     });
 
-    it("", () => {
+    it("when file is of type log it should show the log file viewer", () => {
+        testComponent.filename = "some.log";
+        fixture.detectChanges();
+        expect(de.query(By.css("bl-log-file-viewer"))).not.toBeFalsy();
+        expect(de.query(By.css("bl-image-file-viewer"))).toBeFalsy();
+        expect(de.query(By.css("bl-code-file-viewer"))).toBeFalsy();
+        expect(de.query(By.css(".unknown-file-type"))).toBeFalsy();
+    });
+
+    it("when file is of type png it should show the image file viewer", () => {
+        testComponent.filename = "some.png";
+        fixture.detectChanges();
+        expect(de.query(By.css("bl-log-file-viewer"))).toBeFalsy();
+        expect(de.query(By.css("bl-image-file-viewer"))).not.toBeFalsy();
+        expect(de.query(By.css("bl-code-file-viewer"))).toBeFalsy();
+        expect(de.query(By.css(".unknown-file-type"))).toBeFalsy();
+    });
+
+    it("when file is of type py it should show the code file viewer", () => {
+        testComponent.filename = "some.py";
+        fixture.detectChanges();
+        expect(de.query(By.css("bl-log-file-viewer"))).toBeFalsy();
+        expect(de.query(By.css("bl-image-file-viewer"))).toBeFalsy();
+        expect(de.query(By.css("bl-code-file-viewer"))).not.toBeFalsy();
+        expect(de.query(By.css(".unknown-file-type"))).toBeFalsy();
+    });
+
+    it("when file is of unkown type", () => {
+        testComponent.filename = "some.custom";
+        fixture.detectChanges();
+        expect(de.query(By.css("bl-log-file-viewer"))).toBeFalsy();
+        expect(de.query(By.css("bl-image-file-viewer"))).toBeFalsy();
+        expect(de.query(By.css("bl-code-file-viewer"))).toBeFalsy();
+        expect(de.query(By.css(".unknown-file-type"))).not.toBeFalsy();
+
+        const codeBtn = de.query(By.css(".unknown-file-type .code"));
+
+        expect(codeBtn).not.toBeFalsy("Should have the open as code button");
+
+        click(codeBtn);
+        fixture.detectChanges();
+
+        expect(de.query(By.css("bl-code-file-viewer"))).not.toBeFalsy("Should now show the code viewer");
+
+        expect(de.query(By.css(".unknown-file-type"))).toBeFalsy("Should not show the unkown file type anymore");
     });
 });
