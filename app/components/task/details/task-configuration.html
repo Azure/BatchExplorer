@@ -59,13 +59,14 @@
 
     <bl-property-group label="Execution information" class="wide" [collapsed]="true">
         <div collapsed-preview>
-            <span *ngIf="!hasStartTime">Task not started</span>
-            <span *ngIf="hasStartTime">Task started {{executionInfo.startTime}}</span>
-            <span *ngIf="hasEndTime"> and ended {{executionInfo.endTime}}</span>
+            <span *ngIf="!executionInfo.runtime">Task not started</span>
+            <span *ngIf="!executionInfo.endTime">Currently running: {{ executionInfo.runtime }}</span>
+            <span *ngIf="executionInfo.endTime">Completed in: {{ executionInfo.runtime }}</span>
         </div>
 
         <bl-text-property label="Start time" [value]="executionInfo.startTime"></bl-text-property>
         <bl-text-property label="End time" [value]="executionInfo.endTime"></bl-text-property>
+        <bl-text-property label="Execution time" [value]="executionInfo.runtime"></bl-text-property>
         <bl-text-property label="Exit code" [value]="executionInfo.exitCode"></bl-text-property>
         <bl-text-property label="Retry count" [value]="executionInfo.retryCount"></bl-text-property>
         <bl-text-property label="Last retry time" [value]="executionInfo.lastRetryTime" *ngIf="executionInfo.retryCount > 0"></bl-text-property>

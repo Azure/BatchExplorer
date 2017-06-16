@@ -17,11 +17,6 @@ export class TaskConfigurationComponent {
     @Input()
     public set task(task: Task) {
         this._task = task;
-        if (task && task.executionInfo) {
-            this.hasStartTime = Boolean(this.task.executionInfo.startTime);
-            this.hasEndTime = Boolean(this.task.executionInfo.endTime);
-        }
-
         this.processExitConditionData();
         this._refresh(task);
     }
@@ -34,8 +29,6 @@ export class TaskConfigurationComponent {
     public exitConditionData: any;
     public environmentSettings: List<NameValuePair> = List([]);
     public nodeInfo: any;
-    public hasStartTime: boolean;
-    public hasEndTime: boolean;
 
     private _task: Task;
 
