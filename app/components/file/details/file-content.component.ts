@@ -13,7 +13,7 @@ enum FileType {
 const fileTypes = {
     [FileType.log]: ["txt", "log"],
     [FileType.image]: ["png", "jpg", "gif"],
-    [FileType.code]: ["json", "ts2", "js", "java", "cs", "cpp", "h", "hpp", "py", "xml"],
+    [FileType.code]: ["json", "ts2", "js", "java", "cs", "cpp", "h", "hpp", "py", "xml", "sh", "cmd", "bat"],
 };
 
 @Component({
@@ -88,7 +88,7 @@ export class FileContentComponent implements OnChanges, OnInit {
 
     private _findFileType() {
         if (!this.filename) {
-            throw new Error(`Expect filename to be a valid string but was "${this.filename}"`)
+            throw new Error(`Expect filename to be a valid string but was "${this.filename}"`);
         }
         const filename = this.filename.toLowerCase();
         for (let type of Object.keys(fileTypes)) {
