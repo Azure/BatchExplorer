@@ -22,10 +22,10 @@ export class StartTaskInfoDecorator extends DecoratorBase<StartTaskInfo> {
         this.retryCount = this.numberField(startTaskInfo.retryCount);
 
         if (!startTaskInfo.startTime) {
-            this.executionTime("not started");
+            this.executionTime = "not started";
         } else {
             const endTime = startTaskInfo.endTime === null ? moment.utc() : moment.utc(startTaskInfo.endTime);
-            const runtime = moment(endTime).diff(moment(startTaskInfo.startTime));
+            const runtime = moment.duration(endTime.diff(moment(startTaskInfo.startTime)));
             this.executionTime = DateUtils.prettyDuration(runtime);
         }
     }
