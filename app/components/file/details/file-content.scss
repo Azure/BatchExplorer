@@ -1,0 +1,23 @@
+@import "app/styles/variables";
+
+bl-file-content {
+    .unknown-file-type {
+        display: flex;
+        align-items: center;
+
+        .title {
+            flex: 1;
+        }
+
+        .options > button {
+            padding: 10px;
+            cursor: pointer;
+            background: map-get($primary, 300);
+            color: $whitesmoke;
+
+            &:hover {
+                background: map-get($primary, 500);
+            }
+        }
+    }
+}

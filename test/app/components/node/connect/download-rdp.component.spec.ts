@@ -99,9 +99,9 @@ describe("DownloadRdpComponent", () => {
             btn.submit().subscribe(() => {
                 expect(fsServiceSpy.saveFile).toHaveBeenCalledOnce();
                 const expectedContent = "full address:s:0.0.0.0\nusername:s:.\\bar\nprompt for credentials:i:1";
-                expect(fsServiceSpy.saveFile).toHaveBeenCalledWith("node-1.rdp",
-                    expectedContent,
-                    path.join("temp-folder", "rdp"));
+                expect(fsServiceSpy.saveFile).toHaveBeenCalledWith(
+                    path.join("temp-folder", "rdp", "node-1.rdp"),
+                    expectedContent);
 
                 expect(shellSpy.openItem).toHaveBeenCalledOnce();
                 expect(shellSpy.showItemInFolder).not.toHaveBeenCalled();
@@ -133,9 +133,9 @@ describe("DownloadRdpComponent", () => {
             btn.submit().subscribe(() => {
                 expect(fsServiceSpy.saveFile).toHaveBeenCalledOnce();
                 const expectedContent = "full address:s:0.0.0.0\nusername:s:.\\bar\nprompt for credentials:i:1";
-                expect(fsServiceSpy.saveFile).toHaveBeenCalledWith("node-1.rdp",
-                    expectedContent,
-                    "download-folder");
+                expect(fsServiceSpy.saveFile).toHaveBeenCalledWith(
+                    path.join("download-folder", "node-1.rdp"),
+                    expectedContent);
 
                 expect(shellSpy.showItemInFolder).toHaveBeenCalledOnce();
                 expect(shellSpy.openItem).not.toHaveBeenCalled();

@@ -1,5 +1,4 @@
-import { Record } from "immutable";
-
+import { Model, Prop, Record } from "app/core";
 import { Partial } from "app/utils";
 import { FileProperties, FilePropertiesAttributes } from "./file-properties";
 
@@ -10,26 +9,13 @@ export interface FileAttributes {
     properties: Partial<FilePropertiesAttributes>;
 }
 
-// tslint:disable:variable-name object-literal-sort-keys
-const FileRecord = Record({
-    name: null,
-    url: null,
-    isDirectory: false,
-    properties: null,
-});
-
 /**
  * Class for displaying Batch File information.
  */
-export class File extends FileRecord implements FileAttributes {
-    public name: string;
-    public url: string;
-    public isDirectory: boolean;
-    public properties: FileProperties;
-
-    constructor(data: Partial<FileAttributes> = {}) {
-        super(Object.assign({}, data, {
-            properties: data.properties && new FileProperties(data.properties),
-        }));
-    }
+@Model()
+export class File extends Record<FileAttributes> {
+    @Prop() public name: string;
+    @Prop() public url: string;
+    @Prop() public isDirectory: boolean = false;
+    @Prop() public properties: FileProperties;
 }
