@@ -163,6 +163,7 @@
     "@angular/platform-browser-dynamic": "4.1.2",
     "@angular/router": "4.1.2",
     "@angular/tsc-wrapped": "4.1.2",
+    "@types/codemirror": "~0.0.40",
     "azure-batch": "~2.0.0-preview",
     "azure-storage": "^2.1.0",
     "brace": "^0.10.0",

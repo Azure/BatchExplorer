@@ -1,0 +1,16 @@
+bl-image-file-viewer {
+    display: block;
+    min-height: 100px;
+    position: relative;
+
+    .img-container {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        justify-content: center;
+    }
+
+    img {
+        max-width: calc(100% - 5px);
+    }
+}

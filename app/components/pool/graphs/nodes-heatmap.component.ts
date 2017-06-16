@@ -7,7 +7,7 @@ import * as elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";
 import { BehaviorSubject } from "rxjs";
 
-import { Node, NodeState, Pool } from "app/models";
+import { Job, Node, NodeState, Pool } from "app/models";
 import { log } from "app/utils";
 import { HeatmapColor } from "./heatmap-color";
 import { StateTree } from "./state-tree";
@@ -67,6 +67,9 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     public showLegend: boolean = true;
 
     @Input()
+    public showRunningTasks: boolean = true;
+
+    @Input()
     @HostBinding("class.interactive")
     public interactive: boolean = true;
 
@@ -80,15 +83,10 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     public svgEl: ElementRef;
 
     @Input()
-    public set nodes(nodes: List<Node>) {
-        if (nodes.size > maxNodes) {
-            log.warn(`Only supporting up to ${maxNodes} nodes for now!`);
-        }
-        this._nodes = List<Node>(nodes.slice(0, this.limitNode || maxNodes));
-        this._buildNodeMap();
-        this._processNewNodes();
-    }
-    public get nodes() { return this._nodes; }
+    public nodes: List<Node>;
+
+    @Input()
+    public jobs: List<Job> = List([]);
 
     public colors: HeatmapColor;
     public selectedNodeId = new BehaviorSubject<string>(null);
@@ -103,11 +101,10 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
 
     private _erd: any;
     private _svg: d3.Selection<any, any, any, any>;
-    private _defs: d3.Selection<any, any, any, any>;
     private _width: number = 0;
     private _height: number = 0;
-    private _nodeMap: { [id: string]: Node } = {};
     private _nodes: List<Node>;
+    private _nodeMap: { [id: string]: Node } = {};
 
     constructor(private elementRef: ElementRef) {
         this.colors = new HeatmapColor(stateTree);
@@ -128,6 +125,15 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
                 this._svg.selectAll("g.node-group").remove();
             }
         }
+
+        if (changes.nodes) {
+            if (this.nodes.size > maxNodes) {
+                log.warn(`Only supporting up to ${maxNodes} nodes for now!`);
+            }
+            this._nodes = List<Node>(this.nodes.slice(0, this.limitNode || maxNodes));
+            this._buildNodeMap();
+            this._processNewData();
+        }
     }
 
     public ngAfterViewInit() {
@@ -142,10 +148,8 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         this._svg = d3.select(this.svgEl.nativeElement)
             .attr("width", this._width)
             .attr("height", this._height);
-        this._defs = this._svg.append("defs");
 
-        this._setupLowPriColors();
-        this._processNewNodes();
+        this._processNewData();
     }
 
     public ngOnDestroy() {
@@ -162,7 +166,6 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     public selectState(state: string) {
         this.highlightedState = state;
         this.colors.updateColors(this.highlightedState);
-        this._setupLowPriColors();
         this.redraw();
     }
 
@@ -174,7 +177,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         this._updateSvg(groups);
     }
 
-    private _processNewNodes() {
+    private _processNewData() {
         if (!this._svg) {
             return;
         }
@@ -185,22 +188,6 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         const z = Math.max(this.dimensions.tileSize - 6, 0);
         const nodeEnter = groups.enter().append("g")
             .attr("class", "node-group")
-            .on("mouseenter", (tile, index, nodes) => {
-                if (!this.interactive) {
-                    return;
-                }
-                const group = d3.select(nodes[index]);
-                groups.selectAll("text").remove();
-                group.append("text")
-                    .attr("dx", 5)
-                    .attr("dy", "1.5em")
-                    .attr("text-anchor", "start")
-                    .text(`${tile.node.runningTasks.size} task running`);
-            })
-            .on("mouseleave", (tile, index, nodes) => {
-                const group = d3.select(nodes[index]);
-                group.selectAll("text").remove();
-            })
             .on("click", (tile) => {
                 if (!this.interactive) {
                     return;
@@ -215,9 +202,13 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
 
         const backgroundGroup = nodeEnter.append("g").classed("bg", true).merge(groups.select("g.bg"));
         const runningTaskGroup = nodeEnter.append("g").classed("tasks", true).merge(groups.select("g.tasks"));
+        const lowPriOverlayGroup = nodeEnter.append("g").classed("lowpri", true).merge(groups.select("g.lowpri"));
+        const title = nodeEnter.append("title").merge(groups.select("title"));
 
         this._displayNodeBackground(backgroundGroup, z);
         this._displayRunningTasks(runningTaskGroup, z);
+        this._displayLowPriOverlay(lowPriOverlayGroup, z);
+        this._displayTileTooltip(title);
     }
 
     private _displayNodeBackground(backgroundGroup, z) {
@@ -226,15 +217,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             .attr("width", z)
             .attr("height", z)
             .style("fill", (tile: any) => {
-                let color;
-                if (tile.node.state === NodeState.running) {
-                    color = idleColor;
-                } else if (!tile.node.isDedicated) {
-                    return `url(#${tile.node.state})`;
-                } else {
-                    color = this.colors.get(tile.node.state);
-                }
-                return d3.color(color) as any;
+                return this._tileBgColor(tile.node);
             })
             .style("stroke-width", (tile: any) => {
                 return tile.node.id === this.selectedNodeId.value ? "2px" : "0";
@@ -243,66 +226,79 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         nodeBackground.exit().remove();
     }
 
+    private _displayLowPriOverlay(lowPriGroup, z) {
+        const nodeBackground = lowPriGroup.selectAll("rect").data((d) => [d]);
+        nodeBackground.enter().append("rect").merge(nodeBackground)
+            .attr("width", z)
+            .attr("height", z)
+            .style("fill", (tile: any) => {
+                if (tile.node.isDedicated) {
+                    return "transparent";
+                } else {
+                    return "url(#low-pri-stripes)";
+                }
+            })
+            .style("stroke-width", (tile: any) => {
+                return tile.node.id === this.selectedNodeId.value ? "2px" : "0";
+            });
+
+        nodeBackground.exit().remove();
+    }
+
+    /**
+     * Get the color of the tile given the node it is assigned
+     * @param node Node for the given tile
+     *
+     * It will use the color of the state of the node unless the node is running.
+     * In the case the node is running it will use the idle background color as the tasks will be displayed above
+     * unless tasks are not loaded yet and so it will use the running color.
+     *
+     * If the node is low priority it will use a dashed pattern.
+     * If the node is dedicated it will fill the bg with the color.
+     */
+    private _tileBgColor(node: Node) {
+        const showTaskOverlay = node.state === NodeState.running;
+        const color = showTaskOverlay ? idleColor : this.colors.get(node.state);
+        return d3.color(color) as any;
+    }
+
     private _displayRunningTasks(taskGroup, z) {
         const maxTaskPerNode = this.pool.maxTasksPerNode;
         const taskWidth = Math.floor(z / maxTaskPerNode);
-
+        if (z === 0) { // When switching between the graphs there is a moment where the width/height is 0
+            return;
+        }
         const runningTaskRects = taskGroup.selectAll("rect")
             .data((d) => {
                 const node: Node = d.node;
                 if (node.state !== NodeState.running || !node.recentTasks) {
                     return [];
                 }
-                return node.runningTasks.map((task, index) => ({ node, task, index })).toJS();
+                const count = node.runningTasksCount;
+                const array = new Array(count).fill(0).map((task, index) => ({ node, index }));
+                return array;
             });
 
         runningTaskRects.enter().append("rect")
             .attr("transform", (data) => {
                 const index = data.index;
-                const x = (maxTaskPerNode - index - 1) * taskWidth + 1;
+                const x = z - (index + 1) * taskWidth;
                 return `translate(0,${x})`;
             })
             .attr("width", z)
             .attr("height", taskWidth - 1)
-            .style("fill", (tile: any) => {
-                if (tile.node.isDedicated) {
-                    return runningColor;
-                } else {
-                    return `url(#${tile.node.state})`;
-                }
-            });
+            .style("fill", runningColor);
 
         runningTaskRects.exit().remove();
     }
 
-    private _setupLowPriColors() {
-        this._defs.selectAll("pattern").remove();
-        for (let key of this.colors.keys) {
-            const pattern = this._defs.append("pattern")
-                .attr("id", key)
-                .attr("width", "8")
-                .attr("height", "10")
-                .attr("patternUnits", "userSpaceOnUse")
-                .attr("patternTransform", "rotate(45 50 50)");
-            pattern.append("line")
-                .attr("stroke", this.colors.get(key))
-                .attr("stroke-width", "12px")
-                .attr("y2", "10");
-
-            this._triggerWebkitSvgRedraw();
-        }
-
-    }
-
-    /**
-     * Workaround for webkit not updating the svg if the defs only change(this will trigger the update).
-     */
-    private _triggerWebkitSvgRedraw() {
-        this._svg.style("display", "inline-block");
-        setTimeout(() => {
-            this._svg.style("display", "block");
+    private _displayTileTooltip(titleNode) {
+        titleNode.text((tile) => {
+            const count = tile.node.runningTasksCount;
+            return `${count} tasks running on this node`;
         });
     }
+
     /**
      * Compute the dimension of the heatmap.
      *  - rows

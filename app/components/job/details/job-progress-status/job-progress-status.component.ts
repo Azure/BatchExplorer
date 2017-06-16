@@ -3,9 +3,9 @@ import { List } from "immutable";
 import { Subscription } from "rxjs";
 
 import { GaugeConfig } from "app/components/base/graphs/gauge";
-import { Job, Node, Pool } from "app/models";
-import { NodeListParams, NodeService, PoolParams, PoolService } from "app/services";
-import { PollObservable, RxEntityProxy, RxListProxy } from "app/services/core";
+import { Job, Node, Pool, TaskState } from "app/models";
+import { NodeListParams, NodeService, PoolParams, PoolService, TaskService } from "app/services";
+import { PollObservable, PollService, RxEntityProxy, RxListProxy } from "app/services/core";
 
 const refreshRate = 5000;
 
@@ -33,12 +33,18 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
 
     private _polls: PollObservable[] = [];
     private _subs: Subscription[] = [];
+    private _runningTaskCountForJob: number = 0;
 
-    constructor(poolService: PoolService, nodeService: NodeService) {
+    constructor(
+        poolService: PoolService,
+        nodeService: NodeService,
+        private taskService: TaskService,
+        pollService: PollService,
+    ) {
         this.poolData = poolService.get(null);
         this.data = nodeService.list(null, {
             pageSize: 1000,
-            select: "recentTasks,id,state",
+            select: "id,state,runningTasksCount",
         });
 
         this.updateGaugeOptions();
@@ -59,6 +65,8 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
         }));
 
         this._polls.push(this.data.startPoll(refreshRate));
+
+        this._polls.push(pollService.startPoll("count-tasks", 10000, () => this._updateJobRunningTasks()));
     }
 
     public ngOnChanges(changes) {
@@ -66,7 +74,11 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
             this.poolData.params = ({ id: this.poolId });
             this.poolData.refresh();
             this.data.updateParams({ poolId: this.poolId });
-            this.data.refresh(false);
+            this.data.refreshAll(false);
+        }
+
+        if (changes.job) {
+            this._updateJobRunningTasks();
         }
     }
 
@@ -77,14 +89,12 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
     }
 
     public countRunningTasks() {
-        let taskCountPerNode;
         if (this.showAllPoolTasks) {
-            taskCountPerNode = this.nodes.map(x => x.runningTasks.size);
+            const taskCountPerNode = this.nodes.map(x => x.runningTasksCount);
+            this.runningTasksCount = taskCountPerNode.reduce((a, b) => a + b, 0);
         } else {
-            taskCountPerNode = this.nodes.map(x => x.runningTasks.filter(task => task.jobId === this.job.id).size);
+            this.runningTasksCount = this._runningTaskCountForJob;
         }
-
-        this.runningTasksCount = taskCountPerNode.reduce((a, b) => a + b, 0);
     }
 
     public updateGaugeOptions() {
@@ -104,5 +114,15 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
         this.showAllPoolTasks = value;
         this.countRunningTasks();
         this.updateGaugeOptions();
+    }
+
+    private _updateJobRunningTasks() {
+        const obs = this.taskService.countTasks(this.job.id, TaskState.running);
+
+        obs.subscribe((x) => {
+            this._runningTaskCountForJob = x;
+            this.countRunningTasks();
+        });
+        return obs;
     }
 }

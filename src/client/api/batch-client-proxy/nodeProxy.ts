@@ -10,7 +10,8 @@ export default class NodeProxy {
     }
 
     public list(poolId: string, options?: models.ComputeNodeListOptions) {
-        return new ListProxy(this.client.computeNodeOperations, [poolId], wrapOptions(options));
+        return new ListProxy(this.client.computeNodeOperations, [poolId],
+            wrapOptions({ computeNodeListOptions: options }));
     }
 
     public get(poolId: string, nodeId: string, options?: any): Promise<BatchResult> {

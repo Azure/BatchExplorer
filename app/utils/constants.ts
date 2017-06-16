@@ -147,3 +147,8 @@ export const MetadataInternalKey = {
 export const PollRate = {
     entity: 10000,
 };
+
+/**
+ * Maximum number of tasks the recent tasks attribute can have.
+ */
+export const nodeRecentTaskLimit = 10;

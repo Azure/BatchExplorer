@@ -28,6 +28,7 @@ import { TaskModule } from "app/components/task/task.module";
 import { BatchLabsErrorHandler } from "app/error-handler";
 
 // services
+import { PollService } from "app/services/core";
 import {
     AccountService,
     AdalService,
@@ -110,6 +111,7 @@ const modules = [
         LocalFileStorage,
         NodeService,
         NodeUserService,
+        PollService,
         PoolService,
         PricingService,
         PythonRpcService,

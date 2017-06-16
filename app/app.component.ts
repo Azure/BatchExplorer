@@ -7,7 +7,7 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { registerIcons } from "app/config";
 import {
     AccountService, AdalService, AutoscaleFormulaService, CommandService, NodeService,
-    PredefinedFormulaService, PythonRpcService, SSHKeyService, SettingsService, SubscriptionService,
+    PredefinedFormulaService, PricingService, PythonRpcService, SSHKeyService, SettingsService, SubscriptionService,
     VmSizeService,
 } from "app/services";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
@@ -47,14 +47,14 @@ export class AppComponent implements AfterViewInit, OnInit {
         private sshKeyService: SSHKeyService,
         pythonRpcService: PythonRpcService,
         private vmSizeService: VmSizeService,
+        private pricingService: PricingService,
         private predefinedFormulaService: PredefinedFormulaService,
-    ) {
+        ) {
         this.autoscaleFormulaService.init();
         this.settingsService.init();
         this.sshKeyService.init();
         this.commandService.init();
-        // Init the pricing when good to go.
-        // this.pricingService.init();
+        this.pricingService.init();
         this.vmSizeService.init();
         this.adalService.init(adalConfig);
         this.accountService.loadInitialData();
