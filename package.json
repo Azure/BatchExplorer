@@ -11,8 +11,9 @@
   "version": "0.4.0",
   "main": "build/client/main.prod.js",
   "scripts": {
+    "ts": "ts-node --project tsconfig.node.json",
     "start": "npm run electron:prod",
-    "clean": "rimraf build/* dll/*",
+    "clean": "rimraf build/* dll/* python/build/*",
     "test": "npm run test-client && npm run test-app",
     "test-app": "karma start",
     "test-app:mem": "cross-env DEBUG_MEM=1 npm run test-app",
@@ -22,9 +23,10 @@
     "test-browser-watch": "npm run test-app-watch",
     "test-client": "cross-env NODE_ENV=test node test/client/run-jasmine.js",
     "test-client-watch": "npm run test-client -- --watch",
-    "build-node-ts": "tsc -p tsconfig.node.json",
+    "build-client": "tsc -p tsconfig.node.json",
     "build-app": "webpack --progress --profile --colors --display-error-details --display-cached",
-    "build": "npm run clean && npm run build-node-ts && npm run build-app",
+    "build-python": "npm run ts config/build-python.ts",
+    "build": "npm run clean && npm run build-client && npm run build-app",
     "build:prod": "cross-env NODE_ENV=production npm run build",
     "watch": "webpack --watch --progress --profile --colors --display-error-details --display-cached",
     "electron": "electron build/client/main.js",
@@ -32,11 +34,11 @@
     "dev": "concurrently --kill-others \"npm run dev-server\" \"npm run dev-electron\"",
     "dev-electron": "cross-env HOT=1 electron build/client/main.js",
     "dev-server": "webpack-dev-server --hot --inline --colors --content-base app/",
-    "tslint": "tslint -c tslint.json \"app/**/*.ts\" \"client/**/*.ts\" \"test/**/*.ts\" \"./*.js\" \"config/**/*.js\"",
+    "tslint": "tslint -c tslint.json \"app/**/*.ts\" \"src/**/*.ts\" \"test/**/*.ts\" \"./*.js\" \"config/**/*.js\"",
     "stylelint": "stylelint --syntax scss \"app/**/*.scss\"",
     "lint": "npm run tslint && npm run stylelint",
     "package": "build --dir",
-    "build-and-pack": "npm run build:prod && npm run package"
+    "build-and-pack": "npm run build:prod && npm run build-python && npm run package"
   },
   "license": "MIT",
   "engines": {
@@ -49,6 +51,15 @@
       "build/",
       "node_modules/",
       "package.json"
+    ],
+    "extraResources": [
+      {
+        "from": "python/build/",
+        "to": "python-rpc",
+        "filter": [
+          "**/*"
+        ]
+      }
     ],
     "dmg": {
       "contents": [
@@ -152,6 +163,7 @@
     "@angular/platform-browser-dynamic": "4.1.2",
     "@angular/router": "4.1.2",
     "@angular/tsc-wrapped": "4.1.2",
+    "@types/codemirror": "~0.0.40",
     "azure-batch": "~2.0.0-preview",
     "azure-storage": "^2.1.0",
     "brace": "^0.10.0",

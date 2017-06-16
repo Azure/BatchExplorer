@@ -18,10 +18,12 @@ export class StartTaskEditFormComponent {
     public set pool(pool: Pool) {
         this._pool = pool;
         this._startTask = pool.startTask;
-        this.form.patchValue({
-            enableStartTask: Boolean(pool.startTask),
-            startTask: pool.startTask && pool.startTask.toJS(),
-        });
+        if (!this.form.dirty) {
+            this.form.patchValue({
+                enableStartTask: Boolean(pool.startTask),
+                startTask: pool.startTask && pool.startTask.toJS(),
+            });
+        }
     }
 
     public get pool() { return this._pool; }

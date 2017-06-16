@@ -4,7 +4,7 @@ import * as fs from "fs";
 import * as mkdirp from "mkdirp";
 import * as path from "path";
 
-const {app} = remote;
+const { app } = remote;
 import { log } from "app/utils";
 
 export interface CommonFolders {
@@ -27,6 +27,18 @@ export class FileSystemService {
     }
 
     /**
+     * Check if a file exists async
+     * @param path Full path to the file
+     */
+    public exists(path: string): Promise<boolean> {
+        return new Promise<boolean>((resolve, reject) => {
+            fs.exists(path, (exists) => {
+                resolve(exists);
+            });
+        });
+    }
+
+    /**
      * This make sure the given dir exists. Will recusrivelly create any missing directory.
      * @param directory: Path that we expect to exists
      */
@@ -42,13 +54,12 @@ export class FileSystemService {
     /**
      * Save the given content to the given location.
      *
-     * @param filename: Name of the file(without directory)
+     * @param filename: Full path to the file
      * @param content: Content of the file
-     * @param directory: Where should the file be saved
      */
-    public saveFile(filename: string, content: string, directory: string): Promise<string> {
-        return this.ensureDir(directory).then(() => {
-            return this._writeFile(path.join(directory, filename), content);
+    public saveFile(dest: string, content: string): Promise<string> {
+        return this.ensureDir(path.dirname(dest)).then(() => {
+            return this._writeFile(dest, content);
         });
     }
 

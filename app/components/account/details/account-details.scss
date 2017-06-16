@@ -1,19 +1,6 @@
 @import "app/styles/variables";
 
 bl-account-details {
-    md-card.overview {
-        display: flex;
-        padding: 0 !important;
-
-        > .main {
-            flex: 1;
-            padding: 18px;
-        }
-
-        > .storage-account {
-            border-left: 1px solid $border-color;
-        }
-    }
     .account-cards {
         margin: 0 auto;
         text-align: justify;

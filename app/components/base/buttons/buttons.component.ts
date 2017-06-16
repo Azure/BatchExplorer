@@ -10,7 +10,7 @@ export class BaseButton {
 @Component({
     selector: "bl-loading-button",
     template: `
-        <bl-action-btn color="primary" (action)="action.emit()">
+        <bl-action-btn color="primary" type="wide" (action)="action.emit()">
             <ng-content *ngIf="!loading"></ng-content>
             <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
         </bl-action-btn>

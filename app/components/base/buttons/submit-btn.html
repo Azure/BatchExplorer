@@ -1,4 +1,4 @@
-<button md-raised-button color="{{color}}" type="button" (click)="onClick()" [disabled]="disabled || status !== statuses.Idle" [ngSwitch]="status">
+<button md-raised-button [color]="color" type="button" (click)="onClick()" [disabled]="disabled || status !== statuses.Idle" [ngSwitch]="status">
     <ng-content                      *ngSwitchCase="statuses.Idle"></ng-content>
     <i class="fa fa-spinner fa-spin" *ngSwitchCase="statuses.Submitting"></i>
     <i class="fa fa-warning" *ngSwitchCase="statuses.Failed"></i>

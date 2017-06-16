@@ -73,7 +73,7 @@ export class DownloadRdpComponent {
         const content = this._computeFullRdpFile();
         const directory = this.downloadFolder;
         const filename = `${this.nodeId}.rdp`;
-        return Observable.fromPromise(this.fsService.saveFile(filename, content, directory));
+        return Observable.fromPromise(this.fsService.saveFile(path.join(directory, filename), content));
     }
 
     private _computeFullRdpFile() {

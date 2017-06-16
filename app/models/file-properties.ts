@@ -1,6 +1,4 @@
-import { Record } from "immutable";
-
-import { Partial } from "app/utils";
+import { Model, Prop, Record } from "app/core";
 
 export interface FilePropertiesAttributes {
     contentLength: number;
@@ -9,24 +7,13 @@ export interface FilePropertiesAttributes {
     lastModified: Date;
 }
 
-// tslint:disable:variable-name object-literal-sort-keys
-const FilePropertiesRecord = Record({
-    contentLength: null,
-    contentType: null,
-    creationTime: null,
-    lastModified: null,
-});
-
 /**
  * Class for displaying Batch File information.
  */
-export class FileProperties extends FilePropertiesRecord implements FilePropertiesAttributes {
-    public contentLength: number;
-    public contentType: string;
-    public creationTime: Date;
-    public lastModified: Date;
-
-    constructor(data: Partial<FilePropertiesAttributes> = {}) {
-        super(data);
-    }
+@Model()
+export class FileProperties extends Record<FilePropertiesAttributes> {
+    @Prop() public contentLength: number;
+    @Prop() public contentType: string;
+    @Prop() public creationTime: Date;
+    @Prop() public lastModified: Date;
 }

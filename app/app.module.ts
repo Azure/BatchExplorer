@@ -28,6 +28,7 @@ import { TaskModule } from "app/components/task/task.module";
 import { BatchLabsErrorHandler } from "app/error-handler";
 
 // services
+import { PollService } from "app/services/core";
 import {
     AccountService,
     AdalService,
@@ -37,6 +38,7 @@ import {
     AzureHttpService,
     BatchClientService,
     CommandService,
+    ComputeService,
     ElectronRemote,
     ElectronShell,
     FileService,
@@ -51,6 +53,7 @@ import {
     PoolService,
     PredefinedFormulaService,
     PricingService,
+    PythonRpcService,
     SSHKeyService,
     SettingsService,
     StorageAccountService,
@@ -98,6 +101,7 @@ const modules = [
         ArmHttpService,
         BatchClientService,
         CommandService,
+        ComputeService,
         ElectronRemote,
         ElectronShell,
         FileService,
@@ -109,8 +113,10 @@ const modules = [
         LocalFileStorage,
         NodeService,
         NodeUserService,
+        PollService,
         PoolService,
         PricingService,
+        PythonRpcService,
         SettingsService,
         StorageAccountService,
         StorageClientService,

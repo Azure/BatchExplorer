@@ -63,6 +63,7 @@ export class RxBatchListProxy<TParams, TEntity> extends RxListProxy<TParams, TEn
     private _computeOptions(options: ListOptions) {
         const newOptions = options.mergeDefault(defaultOptions);
         const attributes = newOptions.attributes;
+
         if (newOptions.maxResults) {
             attributes.maxResults = newOptions.maxResults;
         }
