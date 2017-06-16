@@ -32,6 +32,6 @@ export class NodeDecorator extends DecoratorBase<Node> {
         this.runningTasksCount = this.stringField(node.runningTasksCount);
         this.totalTasksRun = this.stringField(node.totalTasksRun);
         this.totalTasksSucceeded = this.stringField(node.totalTasksSucceeded);
-        this.startTaskInfo = new StartTaskInfoDecorator(node.startTaskInfo);
+        this.startTaskInfo = new StartTaskInfoDecorator(node.startTaskInfo || {} as any);
     }
 }
