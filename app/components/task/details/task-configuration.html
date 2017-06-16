@@ -60,8 +60,8 @@
     <bl-property-group label="Execution information" class="wide" [collapsed]="true">
         <div collapsed-preview>
             <span *ngIf="!executionInfo.runtime">Task not started</span>
-            <span *ngIf="!executionInfo.endTime">Currently running: {{ executionInfo.runtime }}</span>
-            <span *ngIf="executionInfo.endTime">Completed in: {{ executionInfo.runtime }}</span>
+            <span *ngIf="executionInfo.runtime && !task?.executionInfo?.endTime">Currently running for: {{ executionInfo.runtime }}</span>
+            <span *ngIf="task?.executionInfo?.endTime">Completed in: {{ executionInfo.runtime }}</span>
         </div>
 
         <bl-text-property label="Start time" [value]="executionInfo.startTime"></bl-text-property>

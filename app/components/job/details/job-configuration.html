@@ -33,8 +33,8 @@
     <bl-property-group label="Execution information" class="wide" [collapsed]="true">
         <div collapsed-preview>
             <span *ngIf="!executionInfo.runtime">Job not started</span>
-            <span *ngIf="!executionInfo.endTime">Current active time: {{ executionInfo.runtime }}</span>
-            <span *ngIf="executionInfo.endTime">Completed in: {{ executionInfo.runtime }}</span>
+            <span *ngIf="executionInfo.runtime && !job?.executionInfo?.endTime">Currently active for: {{ executionInfo.runtime }}</span>
+            <span *ngIf="job?.executionInfo?.endTime">Completed in: {{ executionInfo.runtime }}</span>
         </div>
 
         <bl-text-property label="Start time" [value]="executionInfo.startTime"></bl-text-property>
