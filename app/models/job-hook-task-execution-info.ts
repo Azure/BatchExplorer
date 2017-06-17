@@ -9,8 +9,8 @@ export const JobHookTaskState = {
 
 export type JobHookTaskResult = "success" | "failure";
 export const JobHookTaskResult = {
-    success: "success" as JobHookTaskResult,
-    failure: "failure" as JobHookTaskResult,
+    success: "Success" as JobHookTaskResult,
+    failure: "Failure" as JobHookTaskResult,
 };
 
 export interface JobHookTaskExecutionInfoAttributes {

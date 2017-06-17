@@ -3,7 +3,7 @@ import { FormControl } from "@angular/forms";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
-import { Job, JobHookTask } from "app/models";
+import { Job, JobHookTask, JobHookTaskResult, JobHookTaskState } from "app/models";
 import { JobHookTaskListParams, JobHookTaskService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { DateUtils } from "app/utils";
@@ -73,9 +73,22 @@ export class JobHookTaskBrowserComponent implements OnInit, OnDestroy {
         this.type = type;
     }
 
+    public status(task: JobHookTask) {
+        const { state, result } = task[this.type];
+
+        if (state === JobHookTaskState.running) {
+            return "runnning";
+        } else if (result === JobHookTaskResult.success) {
+            return "success";
+        } else {
+            return "failure";
+        }
+    }
+
     public pickTask(id: string) {
         this.pickedTaskId = id;
         this.pickedTask = this.tasks.filter(x => x.id === id).first();
+        console.log("pick a task", id, this.pickedTask, this.tasks.map(x => x.id).toArray());
     }
     public get hasReleasedTask() {
         return Boolean(this.job.jobReleaseTask);

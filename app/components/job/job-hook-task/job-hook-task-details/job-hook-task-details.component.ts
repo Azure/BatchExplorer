@@ -10,4 +10,11 @@ import "./job-hook-task-details.scss";
 export class JobHookTaskDetailsComponent {
     @Input()
     public task: JobHookTask;
+
+    @Input()
+    public type: string = "preparationTask";
+
+    public get currentFolder() {
+        return this.task[this.type].taskRootDirectory;
+    }
 }
