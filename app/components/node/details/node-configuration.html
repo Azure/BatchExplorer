@@ -18,12 +18,9 @@
 
     <bl-property-group label="Start task execution" class="wide" [collapsed]="true" *ngIf="node.startTaskInfo">
         <div collapsed-preview>
-            <span>Runtime: {{ decorator.startTaskInfo.runtime }}</span>
-        </div>
-        <div collapsed-preview>
-            <span *ngIf="!executionInfo.runtime">Start task not started</span>
-            <span *ngIf="!executionInfo.endTime">Currently running: {{ executionInfo.runtime }}</span>
-            <span *ngIf="executionInfo.endTime">Completed in: {{ executionInfo.runtime }}</span>
+            <span *ngIf="!decorator.startTaskInfo.runtime">Start task not started</span>
+            <span *ngIf="decorator.startTaskInfo.runtime && !node?.startTaskInfo?.endTime">Currently running for: {{ decorator.startTaskInfo.runtime }}</span>
+            <span *ngIf="node?.startTaskInfo?.endTime">Completed in: {{ decorator.startTaskInfo.runtime }}</span>
         </div>
 
         <bl-text-property label="State" [value]="decorator.startTaskInfo.state"></bl-text-property>

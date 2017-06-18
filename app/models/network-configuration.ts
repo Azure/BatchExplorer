@@ -1,12 +1,13 @@
-import { Record } from "immutable";
+import { Model, Prop, Record } from "app/core";
 
-const NetworkConfigurationRecord = Record({
-    subnetId: null,
-});
+export interface NetworkConfigurationAttributes {
+    subnetId: string;
+}
 
 /**
  * Class for displaying The network configuration for the pool.
  */
-export class NetworkConfiguration extends NetworkConfigurationRecord {
-    public subnetId: string;
+@Model()
+export class NetworkConfiguration extends Record<NetworkConfigurationAttributes> {
+    @Prop() public subnetId: string;
 }

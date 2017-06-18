@@ -1,4 +1,4 @@
-import { Model, Prop, Record } from "app/core";
+import { ListProp, Model, Prop, Record } from "app/core";
 
 export interface CertificateReferenceAttributes {
     thumbprint: string;
@@ -17,5 +17,5 @@ export class CertificateReference extends Record<CertificateReferenceAttributes>
     @Prop() public thumbprintAlgorithm: string;
     @Prop() public storeLocation: string;
     @Prop() public storeName: string;
-    @Prop() public visibility: string[];
+    @ListProp() public visibility: string[];
 }

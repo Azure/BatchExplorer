@@ -14,11 +14,11 @@ const urls = {
         prod: `file://${__dirname}/../../build/index.html`,
     },
     splash: {
-        dev: `file://${root}/client/splash-screen/splash-screen.html`,
+        dev: `file://${root}/src/client/splash-screen/splash-screen.html`,
         prod: `file://${root}/build/client/splash-screen/splash-screen.html`,
     },
     recover: {
-        dev: `file://${root}/client/recover-window/recover-window.html`,
+        dev: `file://${root}/src/client/recover-window/recover-window.html`,
         prod: `file://${root}/build/client/recover-window/recover-window.html`,
     },
     icon: __dirname + "/../assets/images/icon.ico",

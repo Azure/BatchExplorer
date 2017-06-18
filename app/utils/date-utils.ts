@@ -68,10 +68,10 @@ export class DateUtils {
     public static computeRuntime(startTime?: Date, endTime?: Date): string {
         if (!startTime) {
             return null;
-        } else {
-            const currentEndTime = endTime === null ? moment.utc() : moment.utc(endTime);
-            const runtime = moment.duration(currentEndTime.diff(moment(startTime)));
-            return DateUtils.prettyDuration(runtime);
         }
+
+        const currentEndTime = endTime === null ? moment.utc() : moment.utc(endTime);
+        const runtime = moment.duration(currentEndTime.diff(moment(startTime)));
+        return DateUtils.prettyDuration(runtime);
     }
 }

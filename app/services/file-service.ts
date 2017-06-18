@@ -1,10 +1,14 @@
 import { Injectable } from "@angular/core";
-import { Observable } from "rxjs";
+import * as path from "path";
 
 import { File, ServerError } from "app/models";
-import { Constants } from "app/utils";
+import { Constants, exists } from "app/utils";
 import { BatchClientService } from "./batch-client.service";
-import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache } from "./core";
+import {
+    DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache, getOnceProxy,
+} from "./core";
+import { FileLoader, FileSource } from "./file";
+import { FileSystemService } from "./fs.service";
 import { ServiceBase } from "./service-base";
 
 export interface NodeFileListParams {
@@ -46,7 +50,7 @@ export class FileService extends ServiceBase {
         key: ({ jobId, taskId }) => jobId + "/" + taskId,
     }, "url");
 
-    constructor(batchService: BatchClientService) {
+    constructor(batchService: BatchClientService, private fs: FileSystemService) {
         super(batchService);
     }
 
@@ -80,13 +84,25 @@ export class FileService extends ServiceBase {
         });
     }
 
-    public getFileContentFromComputeNode(
-        poolId: string,
-        nodeId: string,
-        filename: string,
-        options: any = {}): Observable<FileContentResult> {
-
-        return this.callBatchClient((client) => client.file.getComputeNodeFile(poolId, nodeId, filename, options));
+    public fileFromNode(poolId: string, nodeId: string, filename: string): FileLoader {
+        return new FileLoader({
+            filename: filename,
+            source: FileSource.node,
+            fs: this.fs,
+            properties: () => {
+                return getOnceProxy(this.getFilePropertiesFromComputeNode(poolId, nodeId, filename));
+            },
+            content: (options) => {
+                let ocpRange = "";
+                if (exists(options.rangeStart) && exists(options.rangeEnd)) {
+                    ocpRange = `bytes=${options.rangeStart}-${options.rangeEnd}`;
+                }
+                const batchOptions = { fileGetFromTaskOptions: { ocpRange } };
+                return this.callBatchClient((client) => {
+                    return client.file.getComputeNodeFile(poolId, nodeId, filename, batchOptions);
+                });
+            },
+        });
     }
 
     public getFilePropertiesFromComputeNode(
@@ -122,13 +138,26 @@ export class FileService extends ServiceBase {
         });
     }
 
-    public getFileContentFromTask(
-        jobId: string,
-        taskId: string,
-        filename: string,
-        options: any = {}): Observable<FileContentResult> {
-
-        return this.callBatchClient((client) => client.file.getTaskFile(jobId, taskId, filename, options));
+    public fileFromTask(jobId: string, taskId: string, filename: string): FileLoader {
+        return new FileLoader({
+            filename: filename,
+            source: FileSource.task,
+            groupId: path.join(jobId, taskId),
+            fs: this.fs,
+            properties: () => {
+                return getOnceProxy(this.getFilePropertiesFromTask(jobId, taskId, filename));
+            },
+            content: (options) => {
+                let ocpRange = "";
+                if (exists(options.rangeStart) && exists(options.rangeEnd)) {
+                    ocpRange = `bytes=${options.rangeStart}-${options.rangeEnd}`;
+                }
+                const batchOptions = { fileGetFromComputeNodeOptions: { ocpRange } };
+                return this.callBatchClient((client) => {
+                    return client.file.getTaskFile(jobId, taskId, filename, batchOptions);
+                });
+            },
+        });
     }
 
     public getFilePropertiesFromTask(
