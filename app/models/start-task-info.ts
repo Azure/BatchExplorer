@@ -15,8 +15,8 @@ export interface StartTaskInfoAttributes {
 @Model()
 export class StartTaskInfo extends Record<StartTaskInfoAttributes> {
     @Prop() public state: TaskState;
-    @Prop() public startTime?: Date;
-    @Prop() public endTime?: Date;
+    @Prop() public startTime: Date;
+    @Prop() public endTime: Date;
     @Prop() public exitCode: number;
     @Prop() public retryCount: number;
 }
