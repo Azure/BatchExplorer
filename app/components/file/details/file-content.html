@@ -1,29 +1,22 @@
-<div class="log-console" *ngIf="!nodeNotFound && !fileContentFailure && !fileCleanupOperation">
-    <div class="follow-log-btn" [class.following]="followingLog" (click)="toggleFollowLog()">
-        <i class="fa fa-circle"></i>
-        <span>Follow log</span>
+<div *ngIf="!fileLoader">
+    Error this file is neither a node, task or blob file.
+</div>
+<div *ngIf="fileLoader" [ngSwitch]="fileType">
+    <div *ngSwitchCase="FileType.log">
+        <bl-log-file-viewer [fileLoader]="fileLoader" [tail]="false"></bl-log-file-viewer>
     </div>
-    <div class="log-container">
-        <bl-simple-loading *ngIf="loading"></bl-simple-loading>
-        <div class="line" *ngFor="let line of lines">
-            <span class="line-nb"></span>
-            <span class="line-content">{{line}}</span>
+    <div *ngSwitchCase="FileType.image">
+        <bl-image-file-viewer [fileLoader]="fileLoader"></bl-image-file-viewer>
+    </div>
+    <div *ngSwitchCase="FileType.code">
+        <bl-code-file-viewer [fileLoader]="fileLoader"></bl-code-file-viewer>
+    </div>
+    <md-card *ngSwitchDefault class="unknown-file-type">
+        <h2 class="title">This file is not a known extension. Do you still want to open it?</h2>
+        <div class="options">
+            <button class="log" (click)="openAs(FileType.log)">Log</button>
+            <button class="code" (click)="openAs(FileType.code)">Code</button>
+            <button class="image" (click)="openAs(FileType.image)">Image</button>
         </div>
-    </div>
-    <div class="follow-log-btn bottom" [class.following]="followingLog" (click)="followingLog = !followingLog">
-        <i class="fa fa-circle"></i>
-        <span>Follow log</span>
-    </div>
-</div>
-
-<div *ngIf="nodeNotFound" class="notfound-message">
-    The node this task ran on, or the file was not found.
-</div>
-
-<div *ngIf="fileCleanupOperation" class="notfound-message">
-    The files for the specified task have been cleaned from the node.
-</div>
-
-<div *ngIf="fileContentFailure" class="notfound-message">
-    The contents of the file was unable to be read. Try downloading the file.
+    </md-card>
 </div>

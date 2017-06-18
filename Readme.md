@@ -61,7 +61,7 @@ npm run dev-electron
 
 The dev-server and dev-electron support hot reload for a better development experience. Simply saving a file will cause the UI to refresh to your updated changes.
 
-*Note:* Changes to any files in the node client directory ('\client\') require restarting the application.
+*Note:* Changes to any files in the node client directory ('src/client') require restarting the application.
 
 If you're using VSCode (recommended) we suggest you use the following extensions:
 * Debugger for Chrome
