@@ -8,7 +8,6 @@ const StorageKeysRecord = Record({
 });
 
 export interface StorageKeysAttributes {
-
     primaryKey: string;
     secondaryKey: string;
 }
