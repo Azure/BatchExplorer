@@ -1,0 +1,9 @@
+<bl-banner *ngIf="failureInfo" type="error">
+    <div code>{{errorCode}}</div>
+    <div message>{{errorMessage}}</div>
+    <div details *ngIf="failureInfo.details.size > 0">
+        <div *ngFor="let entry of failureInfo.details">
+            <div>{{entry.name}}: {{entry.value}}</div>
+        </div>
+    </div>
+</bl-banner>

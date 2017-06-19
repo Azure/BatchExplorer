@@ -1,4 +1,5 @@
 import { Model, Prop, Record } from "app/core";
+import { FailureInfo, FailureInfoAttributes } from "./failure-info";
 import { TaskState } from "./task";
 
 export interface StartTaskInfoAttributes {
@@ -6,6 +7,7 @@ export interface StartTaskInfoAttributes {
     startTime?: Date;
     endTime?: Date;
     exitCode: number;
+    failureInfo?: FailureInfoAttributes;
     retryCount: number;
 }
 
@@ -18,5 +20,6 @@ export class StartTaskInfo extends Record<StartTaskInfoAttributes> {
     @Prop() public startTime: Date;
     @Prop() public endTime: Date;
     @Prop() public exitCode: number;
+    @Prop() public failureInfo: FailureInfo;
     @Prop() public retryCount: number;
 }

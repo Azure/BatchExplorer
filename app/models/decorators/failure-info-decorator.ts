@@ -26,10 +26,7 @@ export class FailureInfoDecorator extends DecoratorBase<FailureInfo> {
         this.message = this.stringField(error.message);
         this.details = this._getDetails(error.details);
         this.summary = this.exists
-            ? String.prototype.format("category: {0}, code: {1}, message: {2}",
-                error.category,
-                error.code,
-                error.message)
+            ? `category: ${error.category}, code: ${error.code}, message: ${error.message}`
             : "";
     }
 

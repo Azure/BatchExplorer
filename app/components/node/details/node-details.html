@@ -13,6 +13,7 @@
                 <p>Pool: {{poolId}}</p>
             </div>
         </md-card>
+        <bl-start-task-error-display [startTaskInfo]="node?.startTaskInfo"></bl-start-task-error-display>
         <md-card class="details">
             <bl-tab-group>
                 <bl-tab key="configuration">

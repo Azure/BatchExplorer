@@ -19,5 +19,5 @@ export class FailureInfo extends Record<FailureInfoAttributes> {
     @Prop() public code: string;
     @Prop() public category: string;
     @Prop() public message: string;
-    @ListProp(NameValuePair) public details: List<NameValuePairAttributes>;
+    @ListProp(NameValuePair) public details: List<NameValuePairAttributes> = List([]);
 }
