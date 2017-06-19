@@ -32,6 +32,7 @@ export class PersistedFileListComponent implements OnChanges, OnDestroy {
     public data: RxListProxy<BlobListParams, File>;
     public status = new BehaviorSubject(LoadingStatus.Loading);
     public LoadingStatus = LoadingStatus;
+    public hasAutoStorage: boolean;
     public containerNotFound: boolean;
     public authFailed: boolean;
 
@@ -58,7 +59,9 @@ export class PersistedFileListComponent implements OnChanges, OnDestroy {
             this.status.next(status);
         });
 
+        this.hasAutoStorage = false;
         this._autoStorageSub = storageService.hasAutoStorage.subscribe((hasAutoStorage) => {
+            this.hasAutoStorage = hasAutoStorage;
             if (!hasAutoStorage) {
                 this.status.next(LoadingStatus.Ready);
             }
@@ -101,10 +104,6 @@ export class PersistedFileListComponent implements OnChanges, OnDestroy {
 
     public get filterPlaceholder() {
         return "Filter by blob name (case sensitive)";
-    }
-
-    public get hasAutoStorage(): Observable<boolean> {
-        return this.storageService.hasAutoStorage;
     }
 
     private _loadFiles() {

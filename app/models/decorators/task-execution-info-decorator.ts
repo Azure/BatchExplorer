@@ -1,4 +1,5 @@
 import { TaskExecutionInformation } from "app/models";
+import { DateUtils } from "app/utils";
 import { DecoratorBase } from "app/utils/decorators";
 import { FailureInfoDecorator } from "./failure-info-decorator";
 
@@ -11,6 +12,7 @@ export class TaskExecutionInfoDecorator extends DecoratorBase<TaskExecutionInfor
     public lastRetryTime: string;
     public requeueCount: string;
     public lastRequeueTime: string;
+    public runtime: string;
 
     constructor(executionInfo: TaskExecutionInformation) {
         super(executionInfo);
@@ -23,5 +25,6 @@ export class TaskExecutionInfoDecorator extends DecoratorBase<TaskExecutionInfor
         this.lastRetryTime = this.dateField(executionInfo.lastRetryTime);
         this.requeueCount = this.stringField(executionInfo.requeueCount);
         this.lastRequeueTime = this.dateField(executionInfo.lastRequeueTime);
+        this.runtime = DateUtils.computeRuntime(executionInfo.startTime, executionInfo.endTime);
     }
 }
