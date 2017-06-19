@@ -18,13 +18,11 @@ export class StartTaskErrorDisplayComponent implements OnChanges {
 
     public ngOnChanges(changes: SimpleChanges) {
         if (changes.startTaskInfo) {
-            if (this.startTaskInfo) {
-                this.failureInfo = this.startTaskInfo && this.startTaskInfo.failureInfo;
-                this._computeErrorMessage();
-            } else {
-                this.errorMessage = this.errorCode = "";
-                this.failureInfo = null;
-            }
+            this.failureInfo = this.startTaskInfo && this.startTaskInfo.failureInfo;
+            this._computeErrorMessage();
+        } else {
+            this.errorMessage = this.errorCode = "";
+            this.failureInfo = null;
         }
     }
 
