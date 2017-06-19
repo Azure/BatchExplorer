@@ -1,0 +1,19 @@
+@import "app/styles/variables";
+
+bl-file-too-large {
+    button {
+        padding: 10px;
+        cursor: pointer;
+        background: map-get($primary, 300);
+        color: $whitesmoke;
+
+        &:hover {
+            background: map-get($primary, 500);
+        }
+
+        &[disabled] {
+            cursor: not-allowed;
+            background: $alto;
+        }
+    }
+}
