@@ -109,6 +109,6 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     private _isAutoStorageError(error: any): boolean {
         return error &&
             (error.body.code === Constants.APIErrorCodes.accountNotEnabledForAutoStorage ||
-            error.body.error.code === Constants.APIErrorCodes.accountNotEnabledForAutoStorage);
+            (error.body.error && error.body.error.code === Constants.APIErrorCodes.accountNotEnabledForAutoStorage));
     }
 }
