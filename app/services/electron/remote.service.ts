@@ -11,6 +11,11 @@ import { remote } from "electron";
  */
 @Injectable()
 export class ElectronRemote {
+
+    public get dialog(): Electron.Dialog {
+        return remote.dialog;
+    }
+
     /**
      * @returns The BrowserWindow object which this web page belongs to.
      */
