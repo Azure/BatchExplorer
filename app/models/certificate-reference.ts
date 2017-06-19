@@ -1,3 +1,5 @@
+import { List } from "immutable";
+
 import { ListProp, Model, Prop, Record } from "app/core";
 
 export interface CertificateReferenceAttributes {
@@ -17,5 +19,5 @@ export class CertificateReference extends Record<CertificateReferenceAttributes>
     @Prop() public thumbprintAlgorithm: string;
     @Prop() public storeLocation: string;
     @Prop() public storeName: string;
-    @ListProp() public visibility: string[];
+    @ListProp(String) public visibility: List<string> = List([]);
 }

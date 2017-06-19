@@ -86,7 +86,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     private _loadQuickAccessLists() {
         this.applicationData = this.applicationService.list(this.initialOptions, (error: ServerError) => {
             let handled = false;
-            if (error && error.body.code === Constants.APIErrorCodes.accountNotEnabledForAutoStorage) {
+            if (this._isAutoStorageError(error)) {
                 this.noLinkedStorage = true;
                 handled = true;
             }
@@ -100,5 +100,15 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
         this.poolData = this.poolService.list(this.initialOptions);
         this.poolData.fetchNext();
+    }
+
+    /**
+     * There is a difference in the error response body between classic and standard storage API's
+     * @param error - error JSON object
+     */
+    private _isAutoStorageError(error: any): boolean {
+        return error &&
+            (error.body.code === Constants.APIErrorCodes.accountNotEnabledForAutoStorage ||
+            error.body.error.code === Constants.APIErrorCodes.accountNotEnabledForAutoStorage);
     }
 }
