@@ -12,10 +12,11 @@ bl-node-connect {
     display: flex;
     justify-content: center;
 
-    > bl-submit-btn > button {
+    > bl-button {
         user-select: none;
         width: 150px;
         height: 75px;
+        line-height: 75px;
         font-size: 20px;
         margin: 10px 20px;
         text-align: center;
