@@ -40,9 +40,9 @@
                     <bl-tab-label>Configuration</bl-tab-label>
                     <bl-job-configuration [job]="job"></bl-job-configuration>
                 </bl-tab>
-                <bl-tab key="hooktasks">
+                <bl-tab key="hooktasks" [disabled]="!hasHookTask">
                     <bl-tab-label>Prep/Release tasks</bl-tab-label>
-                    <bl-job-hook-task-browser [job]="job"></bl-job-hook-task-browser>
+                    <bl-job-hook-task-browser [job]="job" *ngIf="hasHookTask"></bl-job-hook-task-browser>
                 </bl-tab>
             </bl-tab-group>
         </md-card>

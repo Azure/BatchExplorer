@@ -47,7 +47,7 @@ export class AppTestComponent implements AfterViewInit {
 export function setupSidebarTest() {
     TestBed.configureTestingModule({
         declarations: [FakeComponent, AppTestComponent],
-        imports: [SidebarModule.forRoot(), MaterialModule.forRoot()],
+        imports: [SidebarModule.forRoot(), MaterialModule],
     });
 
     TestBed.overrideModule(BrowserDynamicTestingModule, {
