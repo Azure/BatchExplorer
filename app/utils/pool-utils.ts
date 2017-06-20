@@ -59,7 +59,7 @@ export class PoolUtils {
     }
 
     public static isOfferWindows(offer: string) {
-        return offer.match(/windows/i);
+        return Boolean(offer.match(/windows/i));
     }
 
     public static iconForOffer(offerName: string) {
