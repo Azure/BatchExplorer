@@ -119,12 +119,38 @@ describe("PoolUtils", () => {
                 },
             });
 
+            const vm3Pool = new Pool({
+                virtualMachineConfiguration: {
+                    imageReference: {
+                        publisher: "batch",
+                        offer: "rendering-windows2016",
+                        sku: "rendering",
+                        version: "latest",
+                    },
+                    nodeAgentSKUId: "batch.node.windows amd64",
+                },
+            });
+
+            const vm4Pool = new Pool({
+                virtualMachineConfiguration: {
+                    imageReference: {
+                        publisher: "batch",
+                        offer: "autodesk-maya-arnold-centos73",
+                        sku: "maya-arnold-2017",
+                        version: "latest",
+                    },
+                    nodeAgentSKUId: "batch.node.centos 7",
+                },
+            });
+
             expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsName(cs2Pool))).toBe("windows");
             expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsName(cs3Pool))).toBe("windows");
             expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsName(cs4Pool))).toBe("windows");
             expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsName(cs5Pool))).toBe("windows");
             expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsName(vm1Pool))).toBe("linux");
             expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsName(vm2Pool))).toBe("windows");
+            expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsName(vm3Pool))).toBe("windows");
+            expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsName(vm4Pool))).toBe("linux");
         });
     });
 });
