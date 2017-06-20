@@ -5,7 +5,7 @@
     <div class="saved-keys">
         <div *ngIf="!showSaveForm">
             <div class="saved-keys-btns">
-                <button md-raised-button color="primary" class="small add-key-btn" (click)="addKey()"><i class="fa fa-save"></i> Save this key</button>
+                <bl-button color="primary" type="wide" class="add-key-btn" (click)="addKey()"><i class="fa fa-save"></i> Save this key</bl-button>
             </div>
             <div class="saved-keys-wrapper">
                 <div class="key" *ngFor="let key of savedSSHKeys" (click)="selectKey(key)">
@@ -27,8 +27,8 @@
             </md-input-container>
 
             <div class="btn-container">
-                <button md-mini-fab color="primary" class="small save-key-btn" (click)="saveKey()"><i class="fa fa-check"></i> </button>
-                <button md-mini-fab color="warn" class="small" (click)="cancelAddKey()"><i class="fa fa-times"></i> </button>
+                <bl-button type="round" color="primary" class="save-key-btn" [action]="saveKey"><i class="fa fa-check"></i> </bl-button>
+                <bl-button type="round" color="danger" [action]="cancelAddKey"><i class="fa fa-times"></i> </bl-button>
             </div>
         </div>
     </div>

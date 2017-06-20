@@ -38,7 +38,7 @@ bl-button {
         color: #d5d5d5;
         background: #f5f5f5;
 
-        &:hover {
+        &:hover, &:focus, &:active {
             color: #d5d5d5;
             background: #f5f5f5;
         }

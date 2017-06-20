@@ -60,8 +60,7 @@ export class ButtonComponent implements OnChanges {
 
     @HostListener("click")
     public handleAction() {
-        console.log("CLICKED>...");
-        if (this.disabled) {
+        if (this.disabled || !this.action) {
             return;
         }
         this._execute();
@@ -78,12 +77,6 @@ export class ButtonComponent implements OnChanges {
     public ngOnChanges(changes: SimpleChanges) {
         if ("disabled" in changes) {
             this.tabindex = this.disabled ? "-1" : "0";
-        }
-
-        if (changes.action) {
-            if (!changes.action.currentValue) {
-                throw new Error(`Action for bl-button with title '${this.title}' cannot be null or undefined`);
-            }
         }
     }
 

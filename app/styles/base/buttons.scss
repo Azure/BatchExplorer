@@ -7,20 +7,6 @@ bl-loading-button {
     }
 }
 
-[md-mini-fab]:hover {
-    .spin-hover {
-        animation: fa-spin 0.2s ease-in-out;
-    }
-
-    .shake-hover {
-        animation: spin-left-then-right 0.2s linear;
-    }
-}
-
-.mat-mini-fab[disabled] {
-    background-color: rgba(225, 225, 225, 1) !important;
-}
-
 @keyframes spin-left-then-right {
     0% {
         transform: rotate(0);
