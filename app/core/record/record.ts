@@ -44,6 +44,7 @@ export class Record<TInput> {
     private _toJS() {
         let output: any = {};
         const attrs = metadataForRecord(this);
+
         for (let key of Object.keys(attrs)) {
             if (!(key in this)) {
                 continue;
@@ -57,8 +58,10 @@ export class Record<TInput> {
                 output[key] = value;
             }
         }
+
         return output;
     }
+
     /**
      * This method will be called by the decorator.
      */
@@ -67,12 +70,14 @@ export class Record<TInput> {
         const obj = {};
         const keys = Object.keys(attrs);
         this._keys = new Set(keys);
+
         for (let key of keys) {
             this._defaultValues[key] = null;
             const typeMetadata = attrs[key];
             if (!(key in data)) {
                 continue;
             }
+
             const value = (data as any)[key];
             if (value && typeMetadata && !primitives.has(typeMetadata.type.name)) {
                 if (typeMetadata.list) {
@@ -84,7 +89,7 @@ export class Record<TInput> {
                 obj[key] = value;
             }
         }
+
         this._map = Map(obj);
     }
-
 }

@@ -9,6 +9,8 @@ import { Constants, log } from "app/utils";
 
 import "./log-file-viewer.scss";
 
+const maxSize = 300000; // 300KB
+
 @Component({
     selector: "bl-log-file-viewer",
     templateUrl: "log-file-viewer.html",
@@ -18,6 +20,8 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
 
     @Input() public tail: boolean = false;
 
+    public file: File;
+    public fileTooLarge = false;
     public followingLog = false;
     public lastContentLength = 0;
     public lines = [];
@@ -87,9 +91,11 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
     }
 
     private _updateFileContent() {
+        this.fileTooLarge = false;
         this.currentSubscription = this.fileLoader.properties().subscribe({
-            next: (result: any) => {
-                this._processProperties(result);
+            next: (file: File) => {
+                this.file = file;
+                this._processProperties(file);
             },
             error: (e) => {
                 this._processError(e);
@@ -122,13 +128,20 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
      * Process the properties of the file and check if we need to load more content.
      */
     private _processProperties(file: File) {
-        if (file && file.properties) {
-            const newContentLength = file.properties.contentLength;
-            if (newContentLength === 0) {
-                this.loading = false;
-            } else if (newContentLength !== this.lastContentLength) {
-                this._loadUpTo(newContentLength);
-            }
+        if (!(file && file.properties)) {
+            return;
+        }
+        const contentLength = file.properties.contentLength;
+        if (contentLength > maxSize) {
+            this.loading = false;
+            this.fileTooLarge = true;
+            return;
+        }
+
+        if (contentLength === 0) {
+            this.loading = false;
+        } else if (contentLength !== this.lastContentLength) {
+            this._loadUpTo(contentLength);
         }
     }
 

@@ -21,7 +21,6 @@ export class NodeConfigurationComponent implements OnChanges {
     public get node() { return this._node; }
 
     public decorator: NodeDecorator;
-
     public externalIpAdress;
 
     private _node: Node;

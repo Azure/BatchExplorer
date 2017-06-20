@@ -1,4 +1,5 @@
 import { JobExecutionInformation } from "app/models";
+import { DateUtils } from "app/utils";
 import { DecoratorBase } from "app/utils/decorators";
 import { FailureInfoDecorator } from "./failure-info-decorator";
 
@@ -8,6 +9,7 @@ export class JobExecutionInfoDecorator extends DecoratorBase<JobExecutionInforma
     public poolId: string;
     public failureInfo: FailureInfoDecorator;
     public terminateReason: string;
+    public runtime: string;
 
     constructor(executionInfo: JobExecutionInformation) {
         super(executionInfo);
@@ -17,5 +19,6 @@ export class JobExecutionInfoDecorator extends DecoratorBase<JobExecutionInforma
         this.poolId = this.stringField(executionInfo.poolId);
         this.failureInfo = new FailureInfoDecorator(executionInfo.failureInfo || {} as any);
         this.terminateReason = this.stringField(executionInfo.terminateReason);
+        this.runtime = DateUtils.computeRuntime(executionInfo.startTime, executionInfo.endTime);
     }
 }

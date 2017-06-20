@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { StorageAccountSharedKeyOptions, StorageClientProxyFactory } from "client/api";
 import { Observable } from "rxjs";
 
-import { AutoStorageAccount, StorageKeys } from "app/models";
+import { AutoStorageAccount, StorageKeys, StorageKeysAttributes } from "app/models";
 import { ArmResourceUtils } from "app/utils";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
@@ -66,8 +66,13 @@ export class StorageClientService {
             } else {
                 const url = `${settings.storageAccountId}/listkeys`;
                 return this.arm.post(url, JSON.stringify({}))
-                    .map(response => new StorageKeys(response.json()))
-                    .cascade((keys) => {
+                    .map(response => this._parseKeysReponse(response.json()))
+                    .cascade((keys: StorageKeys) => {
+                        // bail out if we didn't get any keys
+                        if (!keys.primaryKey && !keys.secondaryKey) {
+                            throw new Error(`Failed to return access keys for: ${settings.storageAccountId}`);
+                        }
+
                         cachedItem.keys = keys;
                         return Observable.of(this.getForSharedKey({
                             account: cachedItem.storageAccountName,
@@ -86,6 +91,26 @@ export class StorageClientService {
         let cachedItem = this._getCachedItem(this._currentStorageAccountId);
         if (cachedItem) {
             cachedItem.keys = null;
+        }
+    }
+
+    /**
+     * Classic and Standard storage API's return different payloads for the /listkeys operation
+     * @param responseJson - response JSON from the /listkeys operation
+     */
+    private _parseKeysReponse(responseJson) {
+        if (responseJson.primaryKey) {
+            // classic storage
+            return new StorageKeys(responseJson);
+        } else {
+            // Probably new storage account type, StorageKeys is immutable so construct correct JSON format.
+            const keyJson: StorageKeysAttributes = {} as any;
+            if (Array.isArray(responseJson.keys)) {
+                keyJson.primaryKey = responseJson.keys[0] ? responseJson.keys[0].value : null;
+                keyJson.secondaryKey = responseJson.keys[1] ? responseJson.keys[1].value : null;
+            }
+
+            return new StorageKeys(keyJson);
         }
     }
 

@@ -1,4 +1,4 @@
-<div class="log-console" *ngIf="!nodeNotFound && !fileContentFailure && !fileCleanupOperation">
+<div class="log-console" *ngIf="!nodeNotFound && !fileContentFailure && !fileCleanupOperation && !fileTooLarge">
     <div class="follow-log-btn" [class.following]="followingLog" (click)="toggleFollowLog()">
         <i class="fa fa-circle"></i>
         <span>Follow log</span>
@@ -27,3 +27,4 @@
 <div *ngIf="fileContentFailure" class="notfound-message">
     The contents of the file was unable to be read. Try downloading the file.
 </div>
+<bl-file-too-large [file]="file" [fileLoader]="fileLoader" *ngIf="fileTooLarge"></bl-file-too-large>

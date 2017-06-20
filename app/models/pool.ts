@@ -5,6 +5,7 @@ import { ListProp, Model, Prop, Record } from "app/core";
 import { ModelUtils, PoolUtils } from "app/utils";
 import { CloudServiceConfiguration } from "./cloud-service-configuration";
 import { Metadata, MetadataAttributes } from "./metadata";
+import { NetworkConfiguration } from "./network-configuration";
 import { ResizeError } from "./resize-error";
 import { StartTask, StartTaskAttributes } from "./start-task";
 import { TaskSchedulingPolicy } from "./task-scheduling-policy";
@@ -100,6 +101,8 @@ export class Pool extends Record<PoolAttributes> {
     @Prop() public vmSize: string;
 
     @Prop() public startTask: StartTask;
+
+    @Prop() public networkConfiguration: NetworkConfiguration;
 
     @ListProp(Metadata) public metadata: List<Metadata> = List([]);
 
