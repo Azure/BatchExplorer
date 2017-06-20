@@ -32,6 +32,7 @@ export class JobHookTaskBrowserComponent implements OnInit, OnDestroy {
     public data: RxListProxy<JobHookTaskListParams, JobHookTask>;
 
     public tasks: List<JobHookTask>;
+    public displayItems: any[];
     public pickedTaskId: string;
     public pickedTask: JobHookTask;
 
@@ -43,6 +44,7 @@ export class JobHookTaskBrowserComponent implements OnInit, OnDestroy {
         this.data.items.subscribe((items) => {
             this.tasks = items;
             console.log("Items", items.toJS());
+            this._computeDisplayItems();
         });
 
         this._sub = this.onlyFailedControl.valueChanges.subscribe((onlyFailed) => {
@@ -70,11 +72,20 @@ export class JobHookTaskBrowserComponent implements OnInit, OnDestroy {
     }
 
     public updateType(type) {
+        if (type === HookTaskType.releaseTask && !this.hasReleaseTask) {
+            return;
+        }
         this.type = type;
+        this._computeDisplayItems();
     }
 
     public status(task: JobHookTask) {
-        const { state, result } = task[this.type];
+        const info = task[this.type];
+
+        if (!info) {
+            return "waiting";
+        }
+        const { state, result } = info;
 
         if (state === JobHookTaskState.running) {
             return "runnning";
@@ -90,7 +101,22 @@ export class JobHookTaskBrowserComponent implements OnInit, OnDestroy {
         this.pickedTask = this.tasks.filter(x => x.id === id).first();
         console.log("pick a task", id, this.pickedTask, this.tasks.map(x => x.id).toArray());
     }
-    public get hasReleasedTask() {
+
+    public get hasReleaseTask() {
         return Boolean(this.job.jobReleaseTask);
+    }
+
+    private _computeDisplayItems() {
+        this.displayItems = this.tasks.map((task) => {
+            const info = task[this.type];
+            return {
+                id: task.id,
+                nodeId: task.nodeId,
+                status: this.status(task),
+                startTime: this.formatDate(info && info.startTime),
+                endTime: this.formatDate(info && info.endTime),
+                exitCode: info && info.exitCode,
+            };
+        }).toArray();
     }
 }

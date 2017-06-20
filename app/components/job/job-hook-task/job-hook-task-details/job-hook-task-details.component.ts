@@ -15,6 +15,7 @@ export class JobHookTaskDetailsComponent {
     public type: string = "preparationTask";
 
     public get currentFolder() {
-        return this.task[this.type].taskRootDirectory;
+        const info = this.task[this.type];
+        return info && info.taskRootDirectory;
     }
 }

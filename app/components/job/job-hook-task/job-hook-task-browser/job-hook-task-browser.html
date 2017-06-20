@@ -21,19 +21,19 @@
             <bl-column style="width: 100px">Exit code</bl-column>
         </bl-thead>
 
-        <bl-row *ngFor="let task of (data.items | async)"  [key]="task.id">
+        <bl-row *ngFor="let task of displayItems; trackBy: task?.id" [key]="task.id">
             <bl-cell>{{task.nodeId}}</bl-cell>
-            <bl-cell style="width: 45px" [title]="status(task)">
-                <span *ngIf="status(task) === 'running'" class="fa fa-spinner"></span>
-                <span *ngIf="status(task) === 'success'" class="fa fa-check-circle"></span>
-                <span *ngIf="status(task) === 'failure'" class="fa fa-times-circle"></span>
+            <bl-cell style="width: 45px" [title]="task.status">
+                <span *ngIf="task.status === 'running'" class="fa fa-spinner"></span>
+                <span *ngIf="task.status === 'success'" class="fa fa-check-circle"></span>
+                <span *ngIf="task.status === 'failure'" class="fa fa-times-circle"></span>
             </bl-cell>
-            <bl-cell style="width: 100px" *ngIf="!pickedTask">{{formatDate(task[type]?.startTime)}}</bl-cell>
-            <bl-cell style="width: 100px" *ngIf="!pickedTask">{{formatDate(task[type]?.endTime)}}</bl-cell>
-            <bl-cell style="width: 100px">{{task[type]?.exitCode}}</bl-cell>
+            <bl-cell style="width: 100px" *ngIf="!pickedTask">{{task.startTime}}</bl-cell>
+            <bl-cell style="width: 100px" *ngIf="!pickedTask">{{task.endTime}}</bl-cell>
+            <bl-cell style="width: 100px">{{task.exitCode}}</bl-cell>
         </bl-row>
     </bl-table>
     <div *ngIf="pickedTask" class="details">
-        <bl-job-hook-task-details [task]="pickedTask"></bl-job-hook-task-details>
+        <bl-job-hook-task-details [task]="pickedTask" [type]="type"></bl-job-hook-task-details>
     </div>
 </div>
