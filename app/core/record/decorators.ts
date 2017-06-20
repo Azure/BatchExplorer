@@ -22,7 +22,7 @@ export function Prop<T>(...args) {
         const type = Reflect.getMetadata("design:type", target, attr);
         if (!type) {
             throw new Error(`Cannot retrieve the type for RecordAttribute ${target.constructor.name}#${attr}`
-                + "Check your nested type is defined in another file or above this DtoAttr");
+                + ". Check your nested type is defined in another file or above this DtoAttr");
         }
 
         updateTypeMetadata(ctr, attr, { type, list: false });

@@ -8,7 +8,7 @@ export class VirtualMachineConfigurationDecorator extends DecoratorBase<VirtualM
     public nodeAgentSKUId: string;
     public windowsConfiguration: WindowsConfigurationDecorator;
 
-    constructor(virtualMachieConfiguration: VirtualMachineConfiguration) {
+    constructor(virtualMachieConfiguration: VirtualMachineConfiguration, osName: string) {
         super(virtualMachieConfiguration);
 
         this.imageReference = new ImageReferenceDecorator(

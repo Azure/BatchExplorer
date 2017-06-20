@@ -9,7 +9,7 @@
         <bl-text-property label="User identity" [value]="decorator.userIdentitySummary"></bl-text-property>
         <bl-bool-property label="Wait for success" [value]="startTask.waitForSuccess" YesNo="true"></bl-bool-property>
 
-        <bl-table-property label="Resource files">
+        <bl-table-property label="Resource files" *ngIf="startTask.resourceFiles.size > 0">
             <bl-table-property-header>
                 <div tp-column>Blob source</div>
                 <div tp-column>File path</div>
@@ -19,7 +19,8 @@
                 <bl-tp-cell [value]="file.filePath"></bl-tp-cell>
             </bl-table-property-row>
         </bl-table-property>
-        <bl-table-property label="Environment settings">
+
+        <bl-table-property label="Environment settings" *ngIf="startTask.environmentSettings.size > 0">
             <bl-table-property-header>
                 <div tp-column>Key</div>
                 <div tp-column>Value</div>
