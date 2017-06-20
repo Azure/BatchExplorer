@@ -1,4 +1,6 @@
-import { FailureInfo } from "app/models";
+import { List } from "immutable";
+
+import { FailureInfo, NameValuePair } from "app/models";
 import { DecoratorBase } from "app/utils/decorators";
 
 export class FailureInfoDecorator extends DecoratorBase<FailureInfo> {
@@ -30,9 +32,9 @@ export class FailureInfoDecorator extends DecoratorBase<FailureInfo> {
             : "";
     }
 
-    private _getDetails(details: any): string {
-        if (Boolean(details) && details.length > 0) {
-            const detailMessage = details.filter((x) => x.name === "Message")[0];
+    private _getDetails(details: List<NameValuePair>): string {
+        if (details && details.size > 0) {
+            const detailMessage = details.filter(x => x.name === "Message").first();
 
             if (detailMessage) {
                 return detailMessage.value;
