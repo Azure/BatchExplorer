@@ -1,6 +1,6 @@
-import {List} from "immutable";
+import { List } from "immutable";
 
-import { FailureInfo } from "app/models";
+import { FailureInfo, NameValuePair } from "app/models";
 import { DecoratorBase } from "app/utils/decorators";
 
 export class FailureInfoDecorator extends DecoratorBase<FailureInfo> {
