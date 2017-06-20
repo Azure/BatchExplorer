@@ -65,7 +65,7 @@ describe("NodeConnectComponent", () => {
     });
 
     it("should propose to generate or specify credentials", () => {
-        const buttons = de.queryAll(By.css("bl-button"));
+        const buttons = de.queryAll(By.css(".credentials-source bl-button"));
         expect(buttons.length).toBe(2);
         expect(buttons[0].nativeElement.textContent).toContain("Generate");
         expect(buttons[1].nativeElement.textContent).toContain("Specify");
@@ -78,7 +78,7 @@ describe("NodeConnectComponent", () => {
 
     it("clicking on generate should generate credentials", (done) => {
         const button = de.queryAll(By.css("bl-button"))[0].componentInstance;
-        button.submit().subscribe(() => {
+        button.action().subscribe(() => {
             fixture.detectChanges();
             expect(component.credentials).not.toBeFalsy("Credentials should be defined");
             expect(component.credentials.name).not.toBeFalsy();
@@ -98,7 +98,7 @@ describe("NodeConnectComponent", () => {
     describe("clicking on specify", () => {
         beforeEach(() => {
             const button = de.queryAll(By.css("bl-button"))[1].componentInstance;
-            button.submit();
+            button.action();
             fixture.detectChanges();
         });
 

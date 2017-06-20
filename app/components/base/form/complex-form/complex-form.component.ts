@@ -94,6 +94,7 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
         this.closePage();
     }
 
+    @autobind()
     public cancelPage() {
         this.currentPage.cancel.emit();
         this.currentPage.formGroup.reset();

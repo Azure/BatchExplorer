@@ -60,6 +60,7 @@ export class ButtonComponent implements OnChanges {
 
     @HostListener("click")
     public handleAction() {
+        console.log("CLICKED>...");
         if (this.disabled) {
             return;
         }

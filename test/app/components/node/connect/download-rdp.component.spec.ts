@@ -96,7 +96,7 @@ describe("DownloadRdpComponent", () => {
 
         it("should save the rdp file when submitting", (done) => {
             const btn = de.query(By.css("bl-button")).componentInstance;
-            btn.submit().subscribe(() => {
+            btn.action().subscribe(() => {
                 expect(fsServiceSpy.saveFile).toHaveBeenCalledOnce();
                 const expectedContent = "full address:s:0.0.0.0\nusername:s:.\\bar\nprompt for credentials:i:1";
                 expect(fsServiceSpy.saveFile).toHaveBeenCalledWith(
@@ -130,7 +130,7 @@ describe("DownloadRdpComponent", () => {
 
         it("should save the rdp file when submitting", (done) => {
             const btn = de.query(By.css("bl-button")).componentInstance;
-            btn.submit().subscribe(() => {
+            btn.action().subscribe(() => {
                 expect(fsServiceSpy.saveFile).toHaveBeenCalledOnce();
                 const expectedContent = "full address:s:0.0.0.0\nusername:s:.\\bar\nprompt for credentials:i:1";
                 expect(fsServiceSpy.saveFile).toHaveBeenCalledWith(

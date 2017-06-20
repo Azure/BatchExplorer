@@ -1,9 +1,10 @@
-import { Component, DebugElement } from "@angular/core";
+import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
 import { StorageAccountCardComponent } from "app/components/account/details";
+import { ButtonComponent } from "app/components/base/buttons";
 import { SidebarManager } from "app/components/base/sidebar";
 import { AccountResource, ServerError, StorageAccount } from "app/models";
 import { StorageAccountService } from "app/services";
@@ -55,11 +56,12 @@ describe("StorageAccountCardComponent", () => {
         };
         TestBed.configureTestingModule({
             imports: [],
-            declarations: [StorageAccountCardComponent, TestComponent],
+            declarations: [StorageAccountCardComponent, TestComponent, ButtonComponent],
             providers: [
                 { provide: SidebarManager, useValue: null },
                 { provide: StorageAccountService, useValue: storageAccountServiceSpy },
             ],
+            schemas: [NO_ERRORS_SCHEMA],
         });
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
@@ -75,7 +77,7 @@ describe("StorageAccountCardComponent", () => {
         });
 
         it("should show the button with setup text", () => {
-            const btn = de.query(By.css("button.edit"));
+            const btn = de.query(By.css("bl-button.edit"));
             expect(btn).not.toBeFalsy();
             expect(btn.nativeElement.textContent).toContain("Setup");
             expect(btn.nativeElement.textContent).not.toContain("Edit");
@@ -89,7 +91,7 @@ describe("StorageAccountCardComponent", () => {
         });
 
         it("should show the button with edit text", () => {
-            const btn = de.query(By.css("button.edit"));
+            const btn = de.query(By.css("bl-button.edit"));
             expect(btn).not.toBeFalsy();
             expect(btn.nativeElement.textContent).toContain("Edit");
             expect(btn.nativeElement.textContent).not.toContain("Setup");
@@ -107,7 +109,7 @@ describe("StorageAccountCardComponent", () => {
         });
 
         it("should show the button with edit text", () => {
-            const btn = de.query(By.css("button.edit"));
+            const btn = de.query(By.css("bl-button.edit"));
             expect(btn).not.toBeFalsy();
             expect(btn.nativeElement.textContent).toContain("Edit");
             expect(btn.nativeElement.textContent).not.toContain("Setup");
