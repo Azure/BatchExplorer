@@ -1,4 +1,9 @@
+@import "app/styles/variables";
+
 bl-node-connect {
+    display: block;
+    padding: 15px;
+
     .connect-content {
         min-height: calc(100% - 85px);
     }
@@ -8,7 +13,7 @@ bl-node-connect {
     justify-content: center;
 
     > bl-submit-btn > button {
-        @extend .noselect;
+        user-select: none;
         width: 150px;
         height: 75px;
         font-size: 20px;
