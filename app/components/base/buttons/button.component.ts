@@ -37,6 +37,10 @@ export class ButtonComponent implements OnChanges {
     @Input() public action: ButtonAction;
     @Input() public icon: string;
     @Input() public title: string;
+    /**
+     * If set to true the check mark animation will not be shown
+     */
+    @Input() public skipSuccess: boolean = false;
     @Input() @HostBinding("class.disabled") public disabled = false;
     @Input() @HostBinding("attr.type") public type: ButtonType = "square";
     @Input() @HostBinding("attr.color") public color: ButtonColor = "primary";
@@ -85,7 +89,7 @@ export class ButtonComponent implements OnChanges {
     public done() {
         setTimeout(() => {
             this.status = SubmitStatus.Idle;
-        }, 500);
+        }, 700);
     }
 
     private _execute() {
@@ -93,8 +97,12 @@ export class ButtonComponent implements OnChanges {
 
         const obs = this.action();
         if (!obs) {
-            this.status = SubmitStatus.Succeeded;
-            this.done();
+            if (this.skipSuccess) {
+                this.status = SubmitStatus.Idle;
+            } else {
+                this.status = SubmitStatus.Succeeded;
+                this.done();
+            }
             return;
         }
         obs.subscribe({

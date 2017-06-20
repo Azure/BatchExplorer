@@ -22,6 +22,17 @@ bl-button {
     line-height: $action-btn-size;
     min-width: $action-btn-size;
 
+    .fa-check {
+        color: map-get($success, 800);
+        overflow: hidden;
+    }
+
+    .success-container {
+        width: 13px;
+        text-align: left;
+        display: inline-block;
+    }
+
     &.disabled[color] {
         cursor: not-allowed;
         color: #d5d5d5;
