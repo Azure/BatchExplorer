@@ -23,15 +23,15 @@
     <div class="summary"></div>
     <div class="form-buttons">
         <div *ngIf="isMainWindow">
-            <bl-submit-btn *ngIf="multiUse" [submit]="save" [multiSubmit]="true" [disabled]="!submitEnabled" class="add">{{actionName}}</bl-submit-btn>
-            <bl-submit-btn *ngIf="containerRef" [submit]="saveAndClose" [multiSubmit]="true" [disabled]="!submitEnabled" [color]="actionColor" class="add-and-close">{{saveAndCloseText}}</bl-submit-btn>
+            <bl-button type="wide" *ngIf="multiUse" [action]="save" [disabled]="!submitEnabled" class="add">{{actionName}}</bl-button>
+            <bl-button type="wide" *ngIf="containerRef" [action]="saveAndClose" [disabled]="!submitEnabled" [color]="actionColor" class="add-and-close">{{saveAndCloseText}}</bl-button>
             <span style="display: inline-block">
-                <button type="button" [disabled]="isSaving" (click)="close()" class="close" md-raised-button>{{cancelText}}</button>
+                <bl-button type="wide" color="light" [disabled]="isSaving" [action]="close" class="close">{{cancelText}}</bl-button>
             </span>
         </div>
         <div *ngIf="!isMainWindow">
-            <button md-raised-button class="cancel" color="primary" (click)="cancelPage()">Cancel</button>
-            <button md-raised-button class="select" color="primary" (click)="closePageOrSubmit()" [disabled]="!currentPage.submitEnabled">Select</button>
+            <bl-button type="wide" class="cancel" color="primary" [action]="cancelPage">Cancel</bl-button>
+            <bl-button type="wide" class="select" color="primary" [action]="closePageOrSubmit" [disabled]="!currentPage.submitEnabled">Select</bl-button>
         </div>
     </div>
 </div>

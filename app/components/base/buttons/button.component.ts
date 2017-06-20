@@ -1,55 +1,65 @@
-import { Component, HostBinding, HostListener, Input, OnChanges, SimpleChanges } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, HostListener,
+    Input, OnChanges, SimpleChanges, animate, style, transition, trigger,
+} from "@angular/core";
 import { Observable } from "rxjs";
 
 import "./button.scss";
 
-export type ButtonType = "normal" | "round" | "wide";
-export type ButtonColor = "primary" | "danger" | "warn";
+export type ButtonType = "square" | "round" | "wide";
+export type ButtonColor = "primary" | "light" | "danger" | "warn";
 export type ButtonAction = () => Observable<any> | void;
+
+export enum SubmitStatus {
+    Idle,
+    Submitting,
+    Succeeded,
+    Failed,
+}
 
 @Component({
     selector: "bl-button",
-    template: `
-        <span class="action-btn" [ngClass]="type" [mdTooltip]="title" mdTooltipPosition="right">
-            <i [class]="icon"></i>
-            <ng-content></ng-content>
-        </span>
-    `,
+    templateUrl: "button.html",
+    animations: [
+        trigger("animateSucessIcon", [
+            transition(":enter", [
+                style({ width: 0 }),
+                animate("200ms", style({ width: "1em" })),
+            ]),
+        ]),
+    ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+
 })
 export class ButtonComponent implements OnChanges {
-    @Input()
-    public action: ButtonAction;
+    public SubmitStatus = SubmitStatus;
 
-    @HostBinding("tabindex")
-    public tabindex = "0";
+    @Input() public action: ButtonAction;
+    @Input() public icon: string;
+    @Input() public title: string;
+    @Input() @HostBinding("class.disabled") public disabled = false;
+    @Input() @HostBinding("attr.type") public type: ButtonType = "square";
+    @Input() @HostBinding("attr.color") public color: ButtonColor = "primary";
+    @Input() public routerLink: string;
 
-    @Input()
-    public icon: string;
+    @HostBinding("tabindex") public tabindex = "0";
 
-    @Input()
-    public title: string;
+    public set status(value: SubmitStatus) {
+        this._status = value;
+        this.changeDetectionRef.markForCheck();
+    }
 
-    @Input()
-    @HostBinding("class.disabled")
-    public disabled = false;
+    public get status() { return this._status; }
+    private _status = SubmitStatus.Idle;
 
-    @Input()
-    @HostBinding("attr.type")
-    public type: ButtonType = "normal";
-
-    @Input()
-    @HostBinding("attr.color")
-    public color: ButtonColor = "primary";
-
-    @Input()
-    public routerLink: string;
+    constructor(private changeDetectionRef: ChangeDetectorRef) { }
 
     @HostListener("click")
     public handleAction() {
         if (this.disabled) {
             return;
         }
-        this.action();
+        this._execute();
     }
 
     @HostListener("keydown", ["$event"])
@@ -70,6 +80,33 @@ export class ButtonComponent implements OnChanges {
                 throw new Error(`Action for bl-button with title '${this.title}' cannot be null or undefined`);
             }
         }
+    }
+
+    public done() {
+        setTimeout(() => {
+            this.status = SubmitStatus.Idle;
+        }, 500);
+    }
+
+    private _execute() {
+        this.status = SubmitStatus.Submitting;
+
+        const obs = this.action();
+        if (!obs) {
+            this.status = SubmitStatus.Succeeded;
+            this.done();
+            return;
+        }
+        obs.subscribe({
+            complete: () => {
+                this.status = SubmitStatus.Succeeded;
+                this.done();
+            },
+            error: () => {
+                this.status = SubmitStatus.Failed;
+                this.done();
+            },
+        });
     }
 }
 

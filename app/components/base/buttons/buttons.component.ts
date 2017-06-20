@@ -12,7 +12,7 @@ export class BaseButton {
 @Component({
     selector: "bl-loading-button",
     template: `
-        <bl-button color="primary" type="wide" [action]="action">
+        <bl-button color="light" type="wide" [action]="action">
             <ng-content *ngIf="!loading"></ng-content>
             <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
         </bl-button>
@@ -48,7 +48,7 @@ export class ClearListSelectionButtonComponent extends BaseButton {
  */
 @Component({
     selector: "bl-add-button",
-    template: `<bl-button icon="fa fa-plus" [title]="title" [action]="action"></bl-button>`,
+    template: `<bl-button color="light" icon="fa fa-plus" [title]="title" [action]="action"></bl-button>`,
 })
 export class AddButtonComponent extends BaseButton {
     @Input()
@@ -65,7 +65,7 @@ export class AddButtonComponent extends BaseButton {
 @Component({
     selector: "bl-add-task-button",
     template: `
-        <bl-button [action]="action" [disabled]="!enabled" [title]="title" icon="fa fa-plus">
+        <bl-button color="light" [action]="action" [disabled]="!enabled" [title]="title" icon="fa fa-plus">
         </bl-button>
     `,
 })
@@ -96,7 +96,7 @@ export class AddTaskButtonComponent extends BaseButton {
 @Component({
     selector: "bl-terminate-button",
     template: `
-        <bl-button [action]="action" [disabled]="!enabled" icon="fa fa-stop" title="Terminate">
+        <bl-button color="light" [action]="action" [disabled]="!enabled" icon="fa fa-stop" title="Terminate">
         </bl-button>
     `,
 })
@@ -115,7 +115,7 @@ export class TerminateButtonComponent extends BaseButton {
 @Component({
     selector: "bl-delete-button",
     template: `
-        <bl-button [action]="action" [disabled]="!enabled" title="Delete" icon="fa fa-trash-o">
+        <bl-button color="light" [action]="action" [disabled]="!enabled" title="Delete" icon="fa fa-trash-o">
         </bl-button>
     `,
 })
@@ -137,7 +137,7 @@ export class DeleteButtonComponent extends BaseButton {
 @Component({
     selector: "bl-disable-button",
     template: `
-        <bl-button [action]="action" *ngIf="visible" icon="fa fa-pause"
+        <bl-button color="light" [action]="action" *ngIf="visible" icon="fa fa-pause"
             [disabled]="!enabled" title="Disable">
         </bl-button>
     `,
@@ -161,7 +161,8 @@ export class DisableButtonComponent extends BaseButton {
 @Component({
     selector: "bl-enable-button",
     template: `
-        <bl-button *ngIf="visible" [action]="action" [disabled]="!enabled" title="Enable" icon="fa fa-play">
+        <bl-button color="light" *ngIf="visible" [action]="action" [disabled]="!enabled" title="Enable"
+            icon="fa fa-play">
         </bl-button>
     `,
 })
@@ -180,7 +181,7 @@ export class EnableButtonComponent extends BaseButton {
 
 @Component({
     selector: "bl-clone-button",
-    template: `<bl-button [action]="action" [title]="title" icon="fa fa-clone"></bl-button>`,
+    template: `<bl-button color="light" [action]="action" [title]="title" icon="fa fa-clone"></bl-button>`,
 })
 export class CloneButtonComponent extends BaseButton {
     @Input()
@@ -197,7 +198,7 @@ export class CloneButtonComponent extends BaseButton {
 @Component({
     selector: "bl-download-button",
     template: `
-        <bl-button [action]="action" [disabled]="!enabled" title="Download" icon="fa fa-download">
+        <bl-button color="light" [action]="action" [disabled]="!enabled" title="Download" icon="fa fa-download">
         </bl-button>
     `,
 })
@@ -215,14 +216,14 @@ export class DownloadButtonComponent extends BaseButton {
 
 @Component({
     selector: "bl-resize-button",
-    template: `<bl-button [action]="action" title="Resize" icon="fa fa-arrows-v"></bl-button>`,
+    template: `<bl-button color="light" [action]="action" title="Resize" icon="fa fa-arrows-v"></bl-button>`,
 })
 export class ResizeButtonComponent extends BaseButton {
 }
 
 @Component({
     selector: "bl-edit-button",
-    template: `<bl-button [action]="action" title="Edit" icon="fa fa-pencil-square-o"></bl-button>`,
+    template: `<bl-button color="light" [action]="action" title="Edit" icon="fa fa-pencil-square-o"></bl-button>`,
 })
 export class EditButtonComponent extends BaseButton {
 }

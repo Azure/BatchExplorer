@@ -2,11 +2,13 @@
 
 bl-button-group {
     text-align: center;
-    border-right: 1px solid $border-color;
+    // border-right: 1px solid $border-color;
     display: block;
-
+    padding-top: 3px;
+    padding-left: 3px;
     bl-button {
-        border-bottom: 1px solid $border-color;
+        // border-bottom: 1px solid $border-color;
+        margin-bottom: 3px;
     }
 }
 
@@ -15,10 +17,10 @@ bl-button {
     height: $action-btn-size;
     outline: none;
     cursor: pointer;
-    font-size: 20px;
     text-align: center;
     vertical-align: middle;
     line-height: $action-btn-size;
+    min-width: $action-btn-size;
 
     &.disabled[color] {
         cursor: not-allowed;
@@ -31,7 +33,7 @@ bl-button {
         }
     }
 
-    &[type="normal"], &[type="round"] {
+    &[type="square"], &[type="round"] {
         width: $action-btn-size;
     }
 
@@ -40,11 +42,24 @@ bl-button {
     }
 
     &[type="wide"] {
-        padding: 0 5px;
+        padding: 0 10px;
     }
 
     &[color="primary"] {
-        background: white;
+        background: map-get($primary, 300);
+        color: $whitesmoke;
+
+        &:hover, &:focus {
+            background: map-get($primary, 500);
+        }
+
+        &:active {
+            background: map-get($primary, 600);
+        }
+    }
+
+    &[color="light"] {
+        background: $mercury-grey;
         color: map-get($primary, 500);
 
         &:hover, &:focus {
@@ -52,8 +67,8 @@ bl-button {
             color: map-get($primary, 200);
         }
 
-        &[type="round"] {
-            border: 1px solid $border-color;
+        &:active {
+            background: $silver-grey;
         }
     }
 

@@ -1,6 +1,7 @@
 import {
     AfterViewInit, ChangeDetectorRef, Component, ContentChildren, HostBinding, Input, QueryList,
 } from "@angular/core";
+import { autobind } from "core-decorators";
 
 import { log } from "app/utils";
 import { FormBase } from "../form-base";
@@ -73,6 +74,7 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
         this.currentPage = page;
     }
 
+    @autobind()
     public closePage() {
         const picker = this.currentPage.openedWith;
         this.currentPage = this._pageStack.pop();
@@ -83,6 +85,7 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
         }
     }
 
+    @autobind()
     public closePageOrSubmit() {
         if (this._pageStack.length === 0) {
             return this.save();
