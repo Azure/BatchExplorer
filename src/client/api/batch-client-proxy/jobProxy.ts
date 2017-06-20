@@ -93,6 +93,6 @@ export default class JobProxy {
 
         // returns all of the tasklets, there is no nextLink data
         return new ListProxy(entity, [jobId],
-            wrapOptions({ jobListPreparationAndReleaseTaskStatusNextOptions: options }));
+            wrapOptions({ jobListPreparationAndReleaseTaskStatusOptions: options }));
     }
 }

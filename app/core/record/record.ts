@@ -79,22 +79,13 @@ export class Record<TInput> {
             }
 
             const value = (data as any)[key];
-            if (key === "exitCode") {
-                console.log("Value is", value, key);
-            }
             if (exists(value) && typeMetadata && !primitives.has(typeMetadata.type.name)) {
-                if (key === "exitCode") {
-                    console.log("Value2 is", value, key);
-                }
                 if (typeMetadata.list) {
                     obj[key] = List(value && value.map(x => new typeMetadata.type(x)));
                 } else {
                     obj[key] = new typeMetadata.type(value);
                 }
             } else {
-                if (key === "exitCode") {
-                    console.log("Value falsy is", value, key);
-                }
                 obj[key] = value;
             }
         }

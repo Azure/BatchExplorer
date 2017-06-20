@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
@@ -21,7 +21,7 @@ const HookTaskType = {
     selector: "bl-job-hook-task-browser",
     templateUrl: "job-hook-task-browser.html",
 })
-export class JobHookTaskBrowserComponent implements OnInit, OnDestroy {
+export class JobHookTaskBrowserComponent implements OnDestroy, OnChanges {
     public HookTaskType = HookTaskType;
 
     public onlyFailedControl = new FormControl(false);
@@ -43,12 +43,10 @@ export class JobHookTaskBrowserComponent implements OnInit, OnDestroy {
         this.data = jobHookTaskService.list();
         this.data.items.subscribe((items) => {
             this.tasks = items;
-            console.log("Items", items.toJS());
             this._computeDisplayItems();
         });
 
         this._sub = this.onlyFailedControl.valueChanges.subscribe((onlyFailed) => {
-            console.log("ONly failed", onlyFailed);
             const filter = FilterBuilder.prop("jobPreparationTaskExecutionInfo/exitCode").ne(0).toOData();
             this.data.patchOptions({
                 filter: filter,
@@ -57,9 +55,15 @@ export class JobHookTaskBrowserComponent implements OnInit, OnDestroy {
         });
     }
 
-    public ngOnInit() {
-        this.data.params = { jobId: this.job.id };
-        this.data.fetchNext().subscribe(() => console.log("Banana"), (e) => console.error("Ee", e));
+    public ngOnChanges(changes: SimpleChanges) {
+        if (changes.job) {
+            const { previousValue, currentValue } = changes.job;
+            if (previousValue && currentValue && previousValue.id === currentValue.id) {
+                return;
+            }
+            this.data.params = { jobId: this.job.id };
+            this.data.refresh();
+        }
     }
 
     public ngOnDestroy() {
@@ -99,7 +103,6 @@ export class JobHookTaskBrowserComponent implements OnInit, OnDestroy {
     public pickTask(id: string) {
         this.pickedTaskId = id;
         this.pickedTask = this.tasks.filter(x => x.id === id).first();
-        console.log("pick a task", id, this.pickedTask, this.tasks.map(x => x.id).toArray());
     }
 
     public get hasReleaseTask() {
