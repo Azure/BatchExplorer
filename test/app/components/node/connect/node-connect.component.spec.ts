@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
-import { SubmitButtonComponent } from "app/components/base/buttons";
+import { ButtonComponent } from "app/components/base/buttons";
 import { PropertyGroupComponent, TextPropertyComponent } from "app/components/base/property-list";
 import { SidebarRef } from "app/components/base/sidebar";
 import { NodeConnectComponent } from "app/components/node/connect";
@@ -42,7 +42,7 @@ describe("NodeConnectComponent", () => {
 
         TestBed.configureTestingModule({
             declarations: [
-                NodeConnectComponent, SubmitButtonComponent,
+                NodeConnectComponent, ButtonComponent,
                 TextPropertyComponent, PropertyGroupComponent, TestComponent,
             ],
             providers: [
@@ -65,7 +65,7 @@ describe("NodeConnectComponent", () => {
     });
 
     it("should propose to generate or specify credentials", () => {
-        const buttons = de.queryAll(By.css("bl-submit-btn"));
+        const buttons = de.queryAll(By.css("bl-button"));
         expect(buttons.length).toBe(2);
         expect(buttons[0].nativeElement.textContent).toContain("Generate");
         expect(buttons[1].nativeElement.textContent).toContain("Specify");
@@ -77,7 +77,7 @@ describe("NodeConnectComponent", () => {
     });
 
     it("clicking on generate should generate credentials", (done) => {
-        const button = de.queryAll(By.css("bl-submit-btn"))[0].componentInstance;
+        const button = de.queryAll(By.css("bl-button"))[0].componentInstance;
         button.submit().subscribe(() => {
             fixture.detectChanges();
             expect(component.credentials).not.toBeFalsy("Credentials should be defined");
@@ -97,7 +97,7 @@ describe("NodeConnectComponent", () => {
 
     describe("clicking on specify", () => {
         beforeEach(() => {
-            const button = de.queryAll(By.css("bl-submit-btn"))[1].componentInstance;
+            const button = de.queryAll(By.css("bl-button"))[1].componentInstance;
             button.submit();
             fixture.detectChanges();
         });
