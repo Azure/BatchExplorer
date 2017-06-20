@@ -58,8 +58,8 @@ export class PoolUtils {
         return !this.isOfferWindows(offer);
     }
 
-    public static isOfferWindows(offer: string) {
-        return Boolean(offer.match(/windows/i));
+    public static isOfferWindows(offer: string): boolean {
+        return /windows/i.test(offer);
     }
 
     public static iconForOffer(offerName: string) {
@@ -118,7 +118,7 @@ export class PoolUtils {
     public static getComputePoolOsIcon(osName): string {
         if (osName === "Custom Image") {
             return "cloud";
-        } else if (osName.match(/windows/i)) {
+        } else if (/windows/i.test(osName)) {
             return "windows";
         }
 
