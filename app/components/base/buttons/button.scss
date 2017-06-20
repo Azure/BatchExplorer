@@ -1,16 +1,16 @@
 @import "app/styles/variables";
 
-bl-action-btn-group {
+bl-button-group {
     text-align: center;
     border-right: 1px solid $border-color;
     display: block;
 
-    bl-action-btn {
+    bl-button {
         border-bottom: 1px solid $border-color;
     }
 }
 
-bl-action-btn {
+bl-button {
     display: inline-block;
     height: $action-btn-size;
     outline: none;

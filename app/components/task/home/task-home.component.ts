@@ -1,7 +1,9 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { FormBuilder, FormControl } from "@angular/forms";
 import { ActivatedRoute } from "@angular/router";
+import { autobind } from "core-decorators";
 import { Subscription } from "rxjs";
+
 import { SidebarManager } from "../../base/sidebar";
 import { TaskCreateBasicDialogComponent } from "../action";
 
@@ -32,6 +34,7 @@ export class TaskHomeComponent implements OnInit, OnDestroy {
         this._paramsSubscriber.unsubscribe();
     }
 
+    @autobind()
     public addTask() {
         const createRef = this.sidebarManager.open("add-basic-task", TaskCreateBasicDialogComponent);
         createRef.component.jobId = this.jobId;

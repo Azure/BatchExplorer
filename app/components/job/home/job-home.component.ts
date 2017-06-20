@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormControl } from "@angular/forms";
+import { autobind } from "core-decorators";
 
 import { Filter, FilterBuilder } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
@@ -28,6 +29,7 @@ export class JobHomeComponent {
         });
     }
 
+    @autobind()
     public addJob() {
         this.sidebarManager.open("add-basic-job", JobCreateBasicDialogComponent);
     }

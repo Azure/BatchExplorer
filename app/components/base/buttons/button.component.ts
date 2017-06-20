@@ -1,12 +1,14 @@
-import { Component, EventEmitter, HostBinding, HostListener, Input, OnChanges, Output } from "@angular/core";
+import { Component, HostBinding, HostListener, Input, OnChanges, SimpleChanges } from "@angular/core";
+import { Observable } from "rxjs";
 
-import "./action-buttons.scss";
+import "./button.scss";
 
-type ButtonType = "normal" | "round" | "wide";
-type ButtonColor = "primary" | "danger" | "warn";
+export type ButtonType = "normal" | "round" | "wide";
+export type ButtonColor = "primary" | "danger" | "warn";
+export type ButtonAction = () => Observable<any> | void;
 
 @Component({
-    selector: "bl-action-btn",
+    selector: "bl-button",
     template: `
         <span class="action-btn" [ngClass]="type" [mdTooltip]="title" mdTooltipPosition="right">
             <i [class]="icon"></i>
@@ -14,9 +16,9 @@ type ButtonColor = "primary" | "danger" | "warn";
         </span>
     `,
 })
-export class ActionButtonComponent implements OnChanges {
-    @Output()
-    public action = new EventEmitter();
+export class ButtonComponent implements OnChanges {
+    @Input()
+    public action: ButtonAction;
 
     @HostBinding("tabindex")
     public tabindex = "0";
@@ -47,7 +49,7 @@ export class ActionButtonComponent implements OnChanges {
         if (this.disabled) {
             return;
         }
-        this.action.emit();
+        this.action();
     }
 
     @HostListener("keydown", ["$event"])
@@ -58,18 +60,24 @@ export class ActionButtonComponent implements OnChanges {
         }
     }
 
-    public ngOnChanges(changes) {
+    public ngOnChanges(changes: SimpleChanges) {
         if ("disabled" in changes) {
             this.tabindex = this.disabled ? "-1" : "0";
+        }
+
+        if (changes.action) {
+            if (!changes.action.currentValue) {
+                throw new Error(`Action for bl-button with title '${this.title}' cannot be null or undefined`);
+            }
         }
     }
 }
 
 @Component({
-    selector: "bl-action-btn-group",
+    selector: "bl-button-group",
     template: `
         <ng-content></ng-content>
     `,
 })
-export class ActionButtonGroupComponent {
+export class ButtonGroupComponent {
 }

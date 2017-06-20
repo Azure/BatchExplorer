@@ -85,11 +85,13 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
         return this.data.refresh();
     }
 
+    @autobind()
     public addTask() {
         const createRef = this.sidebarManager.open("add-basic-task", TaskCreateBasicDialogComponent);
         createRef.component.jobId = this.job.id;
     }
 
+    @autobind()
     public terminateJob() {
         let config = new MdDialogConfig();
         config.viewContainerRef = this.viewContainerRef;
@@ -101,6 +103,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
         });
     }
 
+    @autobind()
     public deleteJob() {
         let config = new MdDialogConfig();
         config.viewContainerRef = this.viewContainerRef;
@@ -108,6 +111,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
         dialogRef.componentInstance.jobId = this.job.id;
     }
 
+    @autobind()
     public disableJob() {
         let config = new MdDialogConfig();
         config.viewContainerRef = this.viewContainerRef;
@@ -119,11 +123,13 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
         });
     }
 
+    @autobind()
     public cloneJob() {
         const ref = this.sidebarManager.open("add-basic-pool", JobCreateBasicDialogComponent);
         ref.component.setValueFromEntity(this.job);
     }
 
+    @autobind()
     public enableJob() {
         let config = new MdDialogConfig();
         config.viewContainerRef = this.viewContainerRef;

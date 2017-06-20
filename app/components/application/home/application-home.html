@@ -1,7 +1,7 @@
 <bl-list-and-show-layout #layout (listScrolledToBottom)="applicationList.onScrollToBottom()" [list]="applicationList">
     <div bl-list-buttons>
-        <bl-action-btn type="round" icon="fa fa-plus spin-hover" color="primary" title="Add an application" (action)="addApplication()">
-        </bl-action-btn>
+        <bl-button type="round" icon="fa fa-plus spin-hover" color="primary" title="Add an application" [action]="addApplication">
+        </bl-button>
     </div>
     <div bl-list-content>
         <bl-focus-section>

@@ -2,10 +2,10 @@
     <div *ngIf="pool && node">
         <md-card class="overview">
             <div class="actions">
-                <bl-action-btn-group>
+                <bl-button-group>
                     <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                    <bl-action-btn (action)="connect()" icon="fa fa-plug"></bl-action-btn>
-                </bl-action-btn-group>
+                    <bl-button [action]="connect" icon="fa fa-plug"></bl-button>
+                </bl-button-group>
             </div>
             <div class="content">
                 <md-card-title>{{node.id}}</md-card-title>

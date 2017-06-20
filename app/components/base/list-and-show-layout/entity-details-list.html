@@ -7,9 +7,9 @@
 </div>
 <hr />
 <div class="context-button-bar">
-    <bl-action-btn type="round" icon="fa fa-expand spin-hover" *ngIf="showExpandButton" color="primary" [routerLink]="baseLink"
+    <bl-button type="round" icon="fa fa-expand spin-hover" *ngIf="showExpandButton" color="primary" [routerLink]="baseLink"
         title="{{expandButtonHoverText}}">
-    </bl-action-btn>
+    </bl-button>
     <bl-refresh-btn *ngIf="showRefreshButton" type="round" [refresh]="refresh" title="{{refreshButtonHoverText}}"></bl-refresh-btn>
     <ng-content select="[bl-list-buttons]"></ng-content>
 </div>
