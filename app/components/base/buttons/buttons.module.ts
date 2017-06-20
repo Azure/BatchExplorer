@@ -3,8 +3,6 @@ import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 
-import { SubmitButtonComponent } from "./submit-btn.component";
-
 import { ButtonComponent, ButtonGroupComponent } from "./button.component";
 import {
     AddButtonComponent,
@@ -35,7 +33,6 @@ const components = [
     EnableButtonComponent,
     LoadingButtonComponent,
     ResizeButtonComponent,
-    SubmitButtonComponent,
     TerminateButtonComponent,
 ];
 
