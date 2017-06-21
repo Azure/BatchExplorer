@@ -1,0 +1,42 @@
+.node-content-wrapper, .tree-children {
+    position: relative;
+    margin: 0;
+    text-rendering: optimizelegibility;
+    color: #003153;
+    font-weight: 300;
+    line-height: 1.4em;
+    font-size: 12pt;
+}
+
+.node-content-wrapper::before, .tree-children::after {
+  content: "";
+  position: absolute;
+}
+
+.node-content-wrapper::before {
+  border-bottom: 1px solid lightgrey;
+  border-left: 1px solid lightgrey;
+  height: 28px;
+  top: -17px;
+  width: 20px;
+  left: -28px;
+}
+
+.tree-node-leaf > .node-wrapper > .node-content-wrapper::before {
+  width: 25px;
+}
+
+.tree-children::after {
+  border-left: 1px solid lightgrey;
+  height: 100%;
+  top: -15px;
+  left: -15px;
+}
+
+treenode:last-child > .tree-node > .tree-children::after {
+  border-left: none;
+}
+
+.toggle-children {
+  z-index: 1;
+}

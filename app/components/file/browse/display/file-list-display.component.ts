@@ -1,15 +1,17 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, OnChanges, SimpleChanges } from "@angular/core";
+import { Router } from "@angular/router";
 import { List } from "immutable";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
-import { prettyBytes } from "app/utils";
+import { TreeComponentItem } from "app/models/tree-component-item";
+import { TreeComponentUtils, prettyBytes } from "app/utils";
 
 @Component({
     selector: "bl-file-list-display",
     templateUrl: "file-list-display.html",
 })
-export class FileListDisplayComponent {
+export class FileListDisplayComponent implements OnChanges {
     /**
      * If set to true it will display the quick list view, if false will use the table view
      */
@@ -34,6 +36,18 @@ export class FileListDisplayComponent {
     @Input()
     public isBlob: boolean = false;
 
+    public treeNodes: TreeComponentItem[] = [];
+
+    constructor(private router: Router) { }
+
+    public ngOnChanges(changes: SimpleChanges): void {
+        // fires data model decoration if files inputs changed
+        if (changes["files"] && this.files.size > 0) {
+            const fileList = this.files.filter(file => file.isDirectory === false).toArray();
+            this.treeNodes = TreeComponentUtils.unflattenFileDirectory(fileList);
+        }
+    }
+
     public prettyFileSize(size: string) {
         return prettyBytes(parseInt(size, 10));
     }
@@ -53,5 +67,12 @@ export class FileListDisplayComponent {
         // }
 
         return false;
+    }
+
+    public treeOnActivate($event) {
+        if ($event.node && $event.node.isLeaf) {
+            const routerLink = this.urlToFile($event.node.data.fileName);
+            this.router.navigate(routerLink);
+        }
     }
 }

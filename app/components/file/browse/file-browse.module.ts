@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 
+import { TreeModule } from "angular-tree-component";
 import { commonModules } from "app/common";
 import { FileDirectoryFilter, FileListDisplayComponent } from "./display";
 import { NodeFileBrowseComponent } from "./node-file-browse.component";
@@ -15,7 +16,7 @@ const components = [
 @NgModule({
     declarations: components,
     exports: components,
-    imports: [...commonModules],
+    imports: [...commonModules, TreeModule],
 })
 export class FileBrowseModule {
 

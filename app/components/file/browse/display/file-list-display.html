@@ -1,14 +1,7 @@
 <bl-focus-section>
     <bl-quick-list *ngIf="quickList">
-        <bl-quick-list-item *ngFor="let file of files| fileDirectoryFilter" [routerLink]="urlToFile(file.name)" [key]="file.url">
-            <bl-quick-list-item-status [status]="" [tooltip]="">
-            </bl-quick-list-item-status>
-
-            <h4 bl-quick-list-item-title>{{file.name}}</h4>
-            <p bl-quick-list-item-field>{{prettyFileSize(file.properties.contentLength)}}</p>
-        </bl-quick-list-item>
+        <tree-root [nodes]="treeNodes" (activate)="treeOnActivate($event)"></tree-root>
     </bl-quick-list>
-
     <bl-table *ngIf="!quickList">
         <bl-thead>
             <bl-column style="width: 60%">Name</bl-column>
@@ -19,7 +12,7 @@
             <bl-cell>{{prettyFileSize(file.properties.contentLength)}}</bl-cell>
         </bl-row>
     </bl-table>
-    <bl-no-item [itemCount]="(files  | fileDirectoryFilter).size" [filter]="filter" [status]="status">
+    <bl-no-item [itemCount]="(files | fileDirectoryFilter).size" [filter]="filter" [status]="status">
         <i icon class="fa fa-tv"></i>
         <span no-filter>No files</span>
         <span with-filter>No files match this filter</span>

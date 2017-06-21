@@ -15,6 +15,7 @@ export * from "./secure";
 export * from "./shared-key-utils";
 export * from "./storage-utils";
 export * from "./string-utils";
+export * from "./tree-component-utils";
 
 import * as icons from "./icons";
 export const Icons = icons;
