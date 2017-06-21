@@ -43,7 +43,7 @@ const components = [
         BrowserModule,
         ButtonsModule,
         FormsModule,
-        MaterialModule.forRoot(),
+        MaterialModule,
         ReactiveFormsModule,
         RouterModule,
         ...modules,

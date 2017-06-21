@@ -41,7 +41,7 @@ describe("Tabs", () => {
         };
 
         TestBed.configureTestingModule({
-            imports: [MaterialModule.forRoot(), TabsModule, NoopAnimationsModule],
+            imports: [MaterialModule, TabsModule, NoopAnimationsModule],
             declarations: [TabTestComponent],
             providers: [
                 { provide: Router, useValue: routerSpy },

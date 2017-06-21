@@ -5,6 +5,7 @@ import { BaseModule } from "app/components/base";
 import { FileBrowseModule } from "app/components/file/browse";
 import { FileDetailsModule } from "app/components/file/details";
 import { TaskBrowseModule } from "app/components/task/browse";
+import { JobHookTaskModule } from "../job-hook-task";
 import { JobErrorDisplayComponent } from "./error-display";
 import { JobConfigurationComponent } from "./job-configuration.component";
 import { JobDefaultComponent } from "./job-default.component";
@@ -20,7 +21,7 @@ const components = [
 ];
 
 const modules = [
-    BaseModule, FileBrowseModule, FileDetailsModule, TaskBrowseModule,
+    BaseModule, FileBrowseModule, FileDetailsModule, TaskBrowseModule, JobHookTaskModule,
 ];
 
 @NgModule({

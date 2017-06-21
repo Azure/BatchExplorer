@@ -82,4 +82,17 @@ export default class JobProxy {
     public patch(jobId: string, attributes: any, options?: any): Promise<any> {
         return this.client.job.patch(jobId, attributes, wrapOptions(options));
     }
+
+    /**
+     */
+    public listHookTasks(jobId: string, options?: models.JobListPreparationAndReleaseTaskStatusNextOptions) {
+        const entity = {
+            list: this.client.job.listPreparationAndReleaseTaskStatus.bind(this.client.job),
+            listNext: this.client.job.listPreparationAndReleaseTaskStatusNext.bind(this.client.job),
+        };
+
+        // returns all of the tasklets, there is no nextLink data
+        return new ListProxy(entity, [jobId],
+            wrapOptions({ jobListPreparationAndReleaseTaskStatusOptions: options }));
+    }
 }
