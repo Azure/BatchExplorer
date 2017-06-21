@@ -38,6 +38,8 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     public decorator: JobDecorator;
     public data: RxEntityProxy<JobParams, Job>;
 
+    public hasHookTask = false;
+
     private _paramsSubscriber: Subscription;
 
     constructor(
@@ -51,6 +53,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
         this.data = this.jobService.get(null, {});
         this.data.item.subscribe((job) => {
             this.job = job;
+            this.hasHookTask = Boolean(job && job.jobPreparationTask);
             if (job) {
                 this.decorator = new JobDecorator(job);
             }

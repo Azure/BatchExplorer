@@ -1,0 +1,37 @@
+@import "app/styles/variables";
+
+bl-job-hook-task-browser {
+    .filters {
+        display: flex;
+    }
+
+    .content {
+        display: flex;
+        border-top: 1px solid #d5d5d5;
+
+        > .details {
+            padding-top: 10px;
+            border-left: 1px solid $border-color;
+            width: 600px;
+        }
+    }
+
+    .type-toggle {
+        margin: 10px;
+        text-align: right;
+        cursor: pointer;
+        > .option {
+            display: inline-block;
+        }
+
+        > .option.active {
+            text-decoration: underline;
+            cursor: default;
+        }
+
+        > .option.disabled {
+            opacity: 0.5;
+            cursor: default;
+        }
+    }
+}
