@@ -4,6 +4,7 @@ import {
 import { MdDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
+import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
@@ -14,6 +15,7 @@ import { ListOrTableBase } from "app/components/base/selectable-list";
 import { SidebarManager } from "app/components/base/sidebar";
 import { TableComponent } from "app/components/base/table";
 import { Pool } from "app/models";
+import { PoolDecorator } from "app/models/decorators";
 import { PoolService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
@@ -57,8 +59,9 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
     }
     public get filter(): Filter { return this._filter; }
 
+    public pools: List<PoolDecorator> = List([]);
     private _filter: Filter;
-    private _onPoolAddedSub: Subscription;
+    private _subs: Subscription[] = [];
 
     constructor(
         private poolService: PoolService,
@@ -71,9 +74,12 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         super(dialog);
         this.data = this.poolService.list();
         this.status = this.data.status;
-        this._onPoolAddedSub = poolService.onPoolAdded.subscribe((poolId) => {
-            this.data.loadNewItem(poolService.get(poolId));
-        });
+        this._subs.push(poolService.onPoolAdded.subscribe((poolId) => {
+            this.data.loadNewItem(poolService.getOnce(poolId));
+        }));
+        this._subs.push(this.data.items.subscribe((pools) => {
+            this.pools = List<PoolDecorator>(pools.map(x => new PoolDecorator(x)));
+        }));
     }
 
     public ngOnInit() {
@@ -81,7 +87,7 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
     }
 
     public ngOnDestroy() {
-        this._onPoolAddedSub.unsubscribe();
+        this._subs.forEach(x => x.unsubscribe());
     }
 
     @autobind()
@@ -90,11 +96,11 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
     }
 
     public poolStatus(pool: Pool): QuickListItemStatus {
-        return pool.resizeError ? QuickListItemStatus.warning : null;
+        return pool.resizeErrors.size > 0 ? QuickListItemStatus.warning : null;
     }
 
     public poolStatusText(pool: Pool): string {
-        if (pool.resizeError) {
+        if (pool.resizeErrors.size > 0) {
             return "Pool has a resize error";
         }
 

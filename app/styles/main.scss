@@ -22,7 +22,6 @@
 @import "./base/server-error";
 
 // Account styles
-@import "./account/details";
 @import "./account/browse";
 
 // Pool styles
@@ -36,9 +35,6 @@
 @import "./job/details";
 @import "./job/form";
 
-// Node styles
-@import "./node/connect";
-
 //Task styles
 @import "./task/base";
 @import "./task/output";
@@ -46,7 +42,6 @@
 
 // File styles
 @import "./file/browse";
-@import "./file/log";
 
 // Partial styles
 @import "./partials/grid";

@@ -1,4 +1,9 @@
-<bl-banner [id]="task.id" *ngIf="hasFailureExitCode" fixMessage="Rerun task" [fix]="rerun" type="warning">
+<!--<bl-banner [id]="task.id" *ngIf="hasFailureExitCode" fixMessage="Rerun task" [fix]="rerun" type="warning">
     <div [other-fix]="rerunDifferent" fixMessage="Rerun with different attributes"></div>
     <div message>{{exitCodeMessage}}</div>
+</bl-banner>z-->
+<bl-banner [id]="task.id" *ngIf="failureInfo" fixMessage="Rerun task" [fix]="rerun" type="warning">
+    <div code>{{failureInfo.code}}</div>
+    <div [other-fix]="rerunDifferent" fixMessage="Rerun with different attributes"></div>
+    <div message>{{errorMessage}}</div>
 </bl-banner>

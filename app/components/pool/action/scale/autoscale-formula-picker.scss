@@ -75,7 +75,7 @@
                 .fa-file-code-o {
                     font-size: 30px;
                     margin-bottom: 10px;
-                    color: map-get($md-prussian-blue, 400);
+                    color: map-get($primary, 400);
                 }
             }
         }
@@ -98,5 +98,37 @@
         .custom-formulas, .sample-formulas {
             width: 49%;
         }
+    }
+}
+
+
+bl-autoscale-formula-picker {
+    display: flex;
+    .CodeMirror {
+        font-size: 12px;
+        height: 300px !important;
+    }
+
+    .CodeMirror pre.CodeMirror-placeholder {
+        font-family: Roboto, "Helvetica Neue", sans-serif;
+        line-height: normal;
+        text-align: left;
+        color: rgba(0, 0, 0, 0.38);
+    }
+
+    .cm-variables {
+        color: map-get($success, 800);
+    }
+
+    .cm-functions {
+        color: map-get($danger, 800);
+    }
+
+    .cm-math {
+        color: map-get($primary, 700);
+    }
+
+    .cm-builtin {
+        color: map-get($primary, 800);
     }
 }

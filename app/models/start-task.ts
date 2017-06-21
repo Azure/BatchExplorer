@@ -10,6 +10,7 @@ export interface StartTaskAttributes {
     maxTaskRetryCount: number;
     resourceFiles: any[];
     environmentSettings: any[];
+    waitForSuccess: boolean;
 }
 
 /**

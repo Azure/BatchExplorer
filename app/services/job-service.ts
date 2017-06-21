@@ -3,7 +3,7 @@ import { Observable, Subject } from "rxjs";
 
 import { Job } from "app/models";
 import { JobCreateDto } from "app/models/dtos";
-import { ModelUtils, log } from "app/utils";
+import { Constants, ModelUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
@@ -20,9 +20,9 @@ export class JobService extends ServiceBase {
      * Used to notify the list of a new item
      */
     public onJobAdded = new Subject<string>();
+    public cache = new DataCache<Job>();
 
     private _basicProperties: string = "id,displayName,state,creationTime,poolInfo";
-    private _cache = new DataCache<Job>();
 
     constructor(batchService: BatchClientService) {
         super(batchService);
@@ -34,7 +34,7 @@ export class JobService extends ServiceBase {
 
     public list(initialOptions: any = {}): RxListProxy<{}, Job> {
         return new RxBatchListProxy<{}, Job>(Job, this.batchService, {
-            cache: () => this._cache,
+            cache: () => this.cache,
             proxyConstructor: (client, params, options) => client.job.list(options),
             initialOptions,
         });
@@ -42,11 +42,12 @@ export class JobService extends ServiceBase {
 
     public get(jobId: string, options: any = {}): RxEntityProxy<JobParams, Job> {
         return new RxBatchEntityProxy(Job, this.batchService, {
-            cache: () => this._cache,
+            cache: () => this.cache,
             getFn: (client, params: JobParams) => {
                 return client.job.get(params.id, options);
             },
             initialParams: { id: jobId },
+            poll: Constants.PollRate.entity,
         });
     }
 

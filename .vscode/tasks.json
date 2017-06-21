@@ -9,7 +9,7 @@
   ],
   "tasks": [
     {
-      "taskName": "build-node-ts",
+      "taskName": "build-client",
       "args": [],
       "isBuildCommand": true
     },

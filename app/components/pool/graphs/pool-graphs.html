@@ -7,12 +7,12 @@
     <div class="preview" (click)="focusGraph(AvailableGraph.Heatmap)" [class.focused]="focusedGraph === AvailableGraph.Heatmap">
         <div class="label">Heatmap</div>
         <div class="small-preview">
-            <bl-nodes-heatmap [pool]="pool" [nodes]="nodes" [showLegend]="false" [interactive]="false" [limitNode]="10"></bl-nodes-heatmap>
+            <bl-nodes-heatmap [pool]="pool" [nodes]="nodes" [showRunningTasks]="false"[showLegend]="false" [interactive]="false" [limitNode]="10"></bl-nodes-heatmap>
         </div>
     </div>
     <div class="preview" (click)="focusGraph(AvailableGraph.AvailableNodes)" [class.focused]="focusedGraph === AvailableGraph.AvailableNodes">
         <div class="label">Available nodes</div>
-        <bl-history-graph [max]="pool.targetDedicated" class="small-preview" [history]="runningNodesHistory.history" [interactive]="false" [historySize]="selectedHistoryLength.value">
+        <bl-history-graph [max]="pool.targetNodes" class="small-preview" [history]="runningNodesHistory.history" [interactive]="false" [historySize]="selectedHistoryLength.value">
         </bl-history-graph>
     </div>
     <div class="preview" (click)="focusGraph(AvailableGraph.RunningTasks)" [class.focused]="focusedGraph === AvailableGraph.RunningTasks">
@@ -31,10 +31,10 @@
 
 <div class="focused-graph" [ngSwitch]="focusedGraph">
     <div *ngSwitchCase="AvailableGraph.Heatmap" class="full-display-heatmap">
-        <bl-nodes-heatmap [pool]="pool" [nodes]="nodes"></bl-nodes-heatmap>
+        <bl-nodes-heatmap [pool]="pool" [nodes]="nodes" [jobs]="jobs"></bl-nodes-heatmap>
     </div>
     <div *ngSwitchCase="AvailableGraph.AvailableNodes" class="full-display">
-        <bl-history-graph [max]="pool.targetDedicated" class="full-display" [history]="runningNodesHistory.history" [historySize]="selectedHistoryLength.value">
+        <bl-history-graph [max]="pool.targetNodes" class="full-display" [history]="runningNodesHistory.history" [historySize]="selectedHistoryLength.value">
         </bl-history-graph>
     </div>
     <div *ngSwitchCase="AvailableGraph.RunningTasks" class="full-display">

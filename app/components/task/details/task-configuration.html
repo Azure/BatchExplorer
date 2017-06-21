@@ -59,13 +59,14 @@
 
     <bl-property-group label="Execution information" class="wide" [collapsed]="true">
         <div collapsed-preview>
-            <span *ngIf="!hasStartTime">Task not started</span>
-            <span *ngIf="hasStartTime">Task started {{executionInfo.startTime}}</span>
-            <span *ngIf="hasEndTime"> and ended {{executionInfo.endTime}}</span>
+            <span *ngIf="!executionInfo.runtime">Task not started</span>
+            <span *ngIf="executionInfo.runtime && !task?.executionInfo?.endTime">Currently running for: {{ executionInfo.runtime }}</span>
+            <span *ngIf="task?.executionInfo?.endTime">Completed in: {{ executionInfo.runtime }}</span>
         </div>
 
         <bl-text-property label="Start time" [value]="executionInfo.startTime"></bl-text-property>
         <bl-text-property label="End time" [value]="executionInfo.endTime"></bl-text-property>
+        <bl-text-property label="Execution time" [value]="executionInfo.runtime"></bl-text-property>
         <bl-text-property label="Exit code" [value]="executionInfo.exitCode"></bl-text-property>
         <bl-text-property label="Retry count" [value]="executionInfo.retryCount"></bl-text-property>
         <bl-text-property label="Last retry time" [value]="executionInfo.lastRetryTime" *ngIf="executionInfo.retryCount > 0"></bl-text-property>
@@ -76,7 +77,7 @@
     <bl-property-group label="Exit conditions" [warningMessage]="exitConditionWarningMessage" [collapsed]="true">
         <bl-text-property label="Exit codes that do nothing" [value]="exitConditionData.noAction.join(', ')"></bl-text-property>
         <bl-text-property label="Exit codes that terminate the job" [value]="exitConditionData.terminateJob.join(', ')"></bl-text-property>
-        <bl-text-property label="On scheduling error" [value]="exitConditionData.schedulingError"></bl-text-property>
+        <bl-text-property label="On scheduling error" [value]="exitConditionData.failureInfo"></bl-text-property>
         <bl-text-property *ngIf="exitConditionData.default" label="default" [value]="exitConditionData.default"></bl-text-property>
     </bl-property-group>
 </bl-property-list>

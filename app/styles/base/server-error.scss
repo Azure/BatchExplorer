@@ -7,7 +7,7 @@ bl-server-error {
 }
 
 .error-banner {
-    background: $red;
+    background: map-get($danger, 500);
     color: $whiteSmoke;
     > .content {
         padding: 10px;
@@ -39,18 +39,18 @@ bl-server-error {
         z-index: 10;
 
         i {
-            border: 1px solid $red-dark;
+            border: 1px solid map-get($danger, 800);
             border-radius: 3px;
             padding: 3px;
             &:hover {
-                background-color: $red-dark;
+                background-color: map-get($danger, 800);
             }
         }
     }
 
     .troubleshoot-info {
         padding: 10px;
-        border-top: 1px solid $red-dark;
+        border-top: 1px solid map-get($danger, 800);
 
         table {
             font-size: 1em;

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { List } from "immutable";
 
 import { ExitOptions, Job, NameValuePair, Task } from "app/models";
 import { TaskDecorator } from "app/models/decorators";
@@ -16,11 +17,6 @@ export class TaskConfigurationComponent {
     @Input()
     public set task(task: Task) {
         this._task = task;
-        if (task && task.executionInfo) {
-            this.hasStartTime = Boolean(this.task.executionInfo.startTime);
-            this.hasEndTime = Boolean(this.task.executionInfo.endTime);
-        }
-
         this.processExitConditionData();
         this._refresh(task);
     }
@@ -31,10 +27,8 @@ export class TaskConfigurationComponent {
     public constraints: any;
     public executionInfo: any;
     public exitConditionData: any;
-    public environmentSettings: NameValuePair[] = [];
+    public environmentSettings: List<NameValuePair> = List([]);
     public nodeInfo: any;
-    public hasStartTime: boolean;
-    public hasEndTime: boolean;
 
     private _task: Task;
 
@@ -79,14 +73,14 @@ export class TaskConfigurationComponent {
         this.exitConditionData = {
             noAction,
             terminateJob,
-            schedulingError: this._jobActionString(this._task.exitConditions.schedulingError),
+            failureInfo: this._jobActionString(this._task.exitConditions.failureInfo),
             default: this._jobActionString(this._task.exitConditions.default),
         };
     }
 
     private _refresh(task: Task) {
         if (task) {
-            this.environmentSettings = task.environmentSettings || [];
+            this.environmentSettings = task.environmentSettings;
 
             this.decorator = new TaskDecorator(task);
             this.appPackages = this.decorator.applicationPackageReferences || [];

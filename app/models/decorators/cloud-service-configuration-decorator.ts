@@ -6,11 +6,15 @@ export class CloudServiceConfigurationDecorator extends DecoratorBase<CloudServi
     public targetOSVersion: string;
     public currentOSVersion: string;
 
-    constructor(cloudServiceConfiguration: CloudServiceConfiguration) {
+    constructor(cloudServiceConfiguration: CloudServiceConfiguration, osName: string) {
         super(cloudServiceConfiguration);
 
-        this.osFamily = this.stringField(cloudServiceConfiguration.osFamily);
+        this.osFamily = this._translateOSFamily(osName, cloudServiceConfiguration.osFamily);
         this.targetOSVersion = this.stringField(cloudServiceConfiguration.targetOSVersion);
         this.currentOSVersion = this.stringField(cloudServiceConfiguration.currentOSVersion);
+    }
+
+    private _translateOSFamily(osName: string, osFamilyId: number): string {
+        return `${osName}, (ID: ${osFamilyId})`;
     }
 }

@@ -2,9 +2,9 @@ import { Injectable } from "@angular/core";
 import { List } from "immutable";
 import { Observable, Subject } from "rxjs";
 
-import { SubtaskInformation, Task } from "app/models";
+import { SubtaskInformation, Task, TaskState } from "app/models";
 import { TaskCreateDto } from "app/models/dtos";
-import { log } from "app/utils";
+import { Constants, log } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 import { BatchClientService } from "./batch-client.service";
 import {
@@ -15,6 +15,7 @@ import {
     RxEntityProxy,
     RxListProxy,
     TargetedDataCache,
+    getAllProxy,
     getOnceProxy,
 } from "./core";
 import { ServiceBase } from "./service-base";
@@ -74,6 +75,15 @@ export class TaskService extends ServiceBase {
         });
     }
 
+    public listAll(jobId: string, options: TaskListOptions): Observable<List<Task>> {
+        return getAllProxy(this.list(jobId, options));
+    }
+
+    public countTasks(jobId: string, state: TaskState): Observable<number> {
+        const filter = FilterBuilder.prop("state").eq(state).toOData();
+        return this.listAll(jobId, { filter, select: "id,state" }).map(tasks => tasks.size).share();
+    }
+
     public listSubTasks(
         initialJobId: string,
         initialTaskId: string,
@@ -96,6 +106,7 @@ export class TaskService extends ServiceBase {
                 return client.task.get(params.jobId, params.id, options);
             },
             initialParams: { id: taskId, jobId: initialJobId },
+            poll: Constants.PollRate.entity,
         });
     }
 

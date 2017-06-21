@@ -3,8 +3,8 @@ bl-breadcrumb-group {
     $separation: 3px;
     $height: 28px;
     $half-height: $height / 2;
-    $color: lighten($blue-lighter, 5%);
-    $hover-color: $blue-light;
+    $color: map-get($primary, 500);
+    $hover-color: map-get($primary, 600);
     display: block;
     height: $height;
 

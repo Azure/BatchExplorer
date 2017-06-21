@@ -1,16 +1,16 @@
 <bl-table>
     <bl-thead>
         <bl-column>Blob source</bl-column>
-        <bl-column>Local file path</bl-column>
-        <bl-column>File mode</bl-column>
+        <bl-column style="width: 400px">Local file path</bl-column>
+        <bl-column style="width: 100px">File mode</bl-column>
     </bl-thead>
     <bl-row *ngFor="let file of resourceFiles" [key]="file.blobSource">
-        <bl-cell style="width: 60%" [value]="file.blobSource"></bl-cell>
-        <bl-cell style="width: 25%" [value]="file.filePath"></bl-cell>
-        <bl-cell style="width: 15%" [value]="file.fileMode"></bl-cell>
+        <bl-cell [value]="file.blobSource"></bl-cell>
+        <bl-cell [value]="file.filePath"></bl-cell>
+        <bl-cell [value]="file.fileMode"></bl-cell>
     </bl-row>
 </bl-table>
-<bl-no-item [itemCount]="resourceFiles.length">
+<bl-no-item [itemCount]="resourceFiles.size">
     <i icon class="fa fa-file-text-o"></i>
     <span no-filter>This task contains no resource files</span>
 </bl-no-item>

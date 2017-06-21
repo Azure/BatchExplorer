@@ -1,10 +1,12 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { Observable } from "rxjs";
 
 import { JobProgressStatusComponent } from "app/components/job/details/job-progress-status";
-import { Job, Node, Pool, TaskState } from "app/models";
-import { NodeService, PoolService } from "app/services";
+import { Job, Node, Pool } from "app/models";
+import { NodeService, PoolService, TaskService } from "app/services";
+import { PollService } from "app/services/core";
 import { click } from "test/utils/helpers";
 import { RxMockEntityProxy, RxMockListProxy } from "test/utils/mocks";
 import { GaugeMockComponent } from "test/utils/mocks/components";
@@ -27,40 +29,32 @@ describe("JobProgressStatusComponent", () => {
     let de: DebugElement;
     let poolServiceSpy;
     let nodeServiceSpy;
+    let taskServiceSpy;
+    let pollServiceSpy;
 
     beforeEach(() => {
         poolServiceSpy = {
             get: () => new RxMockEntityProxy<any, Pool>(Pool, {
-                item: new Pool({ id: "pool-1", maxTasksPerNode: 8, targetDedicated: 3 }),
+                item: new Pool({ id: "pool-1", maxTasksPerNode: 8, targetDedicatedNodes: 3 }),
             }),
         };
 
         nodeServiceSpy = {
             list: () => new RxMockListProxy<any, Node>(Node, {
                 items: [
-                    new Node({
-                        id: "node-1",
-                        recentTasks: [
-                            { taskId: "running-1", taskState: TaskState.running, jobId: "job-1" },
-                            { taskId: "running-2", taskState: TaskState.running, jobId: "job-1" },
-                            { taskId: "completed-1", taskState: TaskState.completed, jobId: "job-1" },
-                        ],
-                    }),
-                    new Node({
-                        id: "node-2",
-                        recentTasks: [
-                            { taskId: "running-3", taskState: TaskState.running, jobId: "job-1" },
-                            { taskId: "running-wrong-job", taskState: TaskState.running, jobId: "job-2" },
-                            { taskId: "active-1", taskState: TaskState.active, jobId: "job-1" },
-                        ],
-                    }),
-                    new Node({
-                        id: "node-3", recentTasks: [
-                            { taskId: "running-4", taskState: TaskState.running, jobId: "job-1" },
-                        ],
-                    }),
+                    new Node({ id: "node-1", runningTasksCount: 2 }),
+                    new Node({ id: "node-2", runningTasksCount: 2 }),
+                    new Node({ id: "node-3", runningTasksCount: 1 }),
                 ],
             }),
+        };
+
+        taskServiceSpy = {
+            countTasks: jasmine.createSpy("countTasks").and.returnValue(Observable.of(4)),
+        };
+
+        pollServiceSpy = {
+            startPoll: () => ({}),
         };
 
         TestBed.configureTestingModule({
@@ -69,6 +63,8 @@ describe("JobProgressStatusComponent", () => {
             providers: [
                 { provide: PoolService, useValue: poolServiceSpy },
                 { provide: NodeService, useValue: nodeServiceSpy },
+                { provide: TaskService, useValue: taskServiceSpy },
+                { provide: PollService, useValue: pollServiceSpy },
             ],
         });
         fixture = TestBed.createComponent(TestComponent);
@@ -103,7 +99,7 @@ describe("JobProgressStatusComponent", () => {
         const options = de.queryAll(By.css(".toggle-job-pool-tasks > .option"));
         click(options[1]);
         fixture.detectChanges();
-        expect(gaugeComponent.value).toBe(5, "Should all task on pool");
+        expect(gaugeComponent.value).toBe(5, "Should count task on pool");
 
         click(options[0]);
         fixture.detectChanges();

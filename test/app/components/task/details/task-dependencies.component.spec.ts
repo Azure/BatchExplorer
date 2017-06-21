@@ -15,8 +15,8 @@ import * as Fixtures from "test/fixture";
 import { NoItemMockComponent } from "test/utils/mocks/components";
 
 const taskMap: Map<string, Task> = new Map()
-    .set("1", new Task({ id: "1", dependsOn: { taskIds: ["1", "2"]} }))
-    .set("2", new Task({ id: "2", dependsOn: { taskIds: ["3", "4", "5"]} }));
+    .set("1", new Task({ id: "1", dependsOn: { taskIds: ["1", "2"] } } as any))
+    .set("2", new Task({ id: "2", dependsOn: { taskIds: ["3", "4", "5"] } } as any));
 
 describe("TaskDependenciesComponent", () => {
     let fixture: ComponentFixture<TaskDependenciesComponent>;
@@ -29,12 +29,12 @@ describe("TaskDependenciesComponent", () => {
                 .createSpy("getMultipleTasks").and
                 .callFake((jobid: string, taskIds: string[], properties?: string) => {
 
-                const result = List<Task>(taskIds.map(id => {
-                    return taskMap.get(id) || Fixtures.task.create({ id: id });
-                }));
+                    const result = List<Task>(taskIds.map(id => {
+                        return taskMap.get(id) || Fixtures.task.create({ id: id });
+                    }));
 
-                return Observable.of(result);
-            }),
+                    return Observable.of(result);
+                }),
         };
 
         TestBed.configureTestingModule({
@@ -78,7 +78,7 @@ describe("TaskDependenciesComponent", () => {
                 dependsOn: {
                     taskIds: ["1", "2", "3"],
                 },
-            });
+            } as any);
 
             fixture.detectChanges();
         });
@@ -105,7 +105,7 @@ describe("TaskDependenciesComponent", () => {
                 dependsOn: {
                     taskIdRanges: [{ start: 1, end: 5 }, { start: 10, end: 12 }],
                 },
-            });
+            } as any);
 
             fixture.detectChanges();
         });
@@ -129,7 +129,7 @@ describe("TaskDependenciesComponent", () => {
                     taskIds: ["1"],
                     taskIdRanges: [{ start: 1, end: 5 }],
                 },
-            });
+            } as any);
 
             fixture.detectChanges();
         });
@@ -152,7 +152,7 @@ describe("TaskDependenciesComponent", () => {
                 dependsOn: {
                     taskIdRanges: [{ start: 1, end: 25 }],
                 },
-            });
+            } as any);
 
             fixture.detectChanges();
         });
@@ -170,7 +170,7 @@ describe("TaskDependenciesComponent", () => {
                 dependsOn: {
                     taskIds: ["1", "2", "3"],
                 },
-            });
+            } as any);
 
             fixture.detectChanges();
         });

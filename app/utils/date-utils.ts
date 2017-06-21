@@ -57,4 +57,21 @@ export class DateUtils {
             ? moment(date).format("MMM Do, YYYY, HH:mm:ss.SSS Z")
             : "";
     }
+
+    /**
+     * Using the supplied start and end times, compute the duration.
+     * @example 9m 2s, or null if no start time supplied.
+     *
+     * @param startTime - optional start time
+     * @param endTime - optional end time
+     */
+    public static computeRuntime(startTime?: Date, endTime?: Date): string {
+        if (!startTime) {
+            return null;
+        }
+
+        const currentEndTime = endTime === null ? moment.utc() : moment.utc(endTime);
+        const runtime = moment.duration(currentEndTime.diff(moment(startTime)));
+        return DateUtils.prettyDuration(runtime);
+    }
 }

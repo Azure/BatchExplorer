@@ -30,7 +30,7 @@ describe("ServerErrorComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [MaterialModule.forRoot()],
+            imports: [MaterialModule],
             declarations: [
                 ServerErrorComponent,
                 ServerErrorTestComponent,

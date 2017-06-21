@@ -1,9 +1,10 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
 import { autobind } from "core-decorators";
 
+import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";
+import { SidebarManager } from "app/components/base/sidebar";
 import { AccountResource, Application } from "app/models";
-import { AccountService, ElectronShell } from "app/services";
-import { ExternalLinks } from "app/utils/constants";
+import { AccountService } from "app/services";
 
 @Component({
     selector: "bl-application-error-display",
@@ -23,7 +24,7 @@ export class ApplicationErrorDisplayComponent implements OnInit {
     constructor(
         private accountService: AccountService,
         private changeDetector: ChangeDetectorRef,
-        private shell: ElectronShell) {
+        private sidebarManager: SidebarManager) {
     }
 
     public get hasLinkedStorageAccountIssue(): boolean {
@@ -45,6 +46,7 @@ export class ApplicationErrorDisplayComponent implements OnInit {
 
     @autobind()
     public setupLinkedStorage() {
-        this.shell.openExternal(ExternalLinks.setupStorageAccount.format(this._batchAccount.id));
+        const sidebarRef = this.sidebarManager.open("edit-storage-account", EditStorageAccountFormComponent);
+        sidebarRef.component.account = this._batchAccount;
     }
 }

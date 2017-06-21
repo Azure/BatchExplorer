@@ -1,11 +1,23 @@
 /**
  * Information about the compute node on which a task ran.
  */
-export class ComputeNodeInformation {
-    public affinityId: string;
-    public nodeUrl: string;
-    public poolId: string;
-    public nodeId: string;
-    public taskRootDirectory: string;
-    public taskRootDirectoryUrl: string;
+import { Model, Prop, Record } from "app/core";
+
+export interface ComputeNodeInformationAttributes {
+    affinityId: string;
+    nodeUrl: string;
+    poolId: string;
+    nodeId: string;
+    taskRootDirectory: string;
+    taskRootDirectoryUrl: string;
+}
+
+@Model()
+export class ComputeNodeInformation extends Record<ComputeNodeInformationAttributes> {
+    @Prop() public affinityId: string;
+    @Prop() public nodeUrl: string;
+    @Prop() public poolId: string;
+    @Prop() public nodeId: string;
+    @Prop() public taskRootDirectory: string;
+    @Prop() public taskRootDirectoryUrl: string;
 }

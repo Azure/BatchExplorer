@@ -1,0 +1,128 @@
+@import "app/styles/variables";
+
+bl-node-connect {
+    display: block;
+    padding: 15px;
+
+    .connect-content {
+        min-height: calc(100% - 85px);
+    }
+}
+.credentials-source {
+    display: flex;
+    justify-content: center;
+
+    > bl-submit-btn > button {
+        user-select: none;
+        width: 150px;
+        height: 75px;
+        font-size: 20px;
+        margin: 10px 20px;
+        text-align: center;
+        cursor: pointer;
+
+        &:hover {
+            color: $whitesmoke;
+            background-color: map-get($primary, 400);
+        }
+
+        &:active {
+            color: $whitesmoke;
+            background-color: map-get($primary, 500);
+        }
+    }
+}
+
+bl-node-user-credentials-form {
+    display: block;
+    margin-bottom: 20px;
+
+    .username-mode-input {
+        display: flex;
+        align-items: center;
+
+        md-input-container {
+            flex: 1;
+            margin-right: 20px;
+        }
+    }
+}
+
+bl-ssh-key-picker > .ssh-key-picker {
+    display: flex;
+
+    > md-input-container {
+        flex: 1;
+
+        textarea {
+            height: 140px;
+        }
+    }
+
+    > .saved-keys {
+        width: 150px;
+        flex: 0 0 150px;
+        padding: 1em 0;
+
+        .saved-keys-btns {
+            height: 28px;
+            padding: 2px 5px;
+        }
+
+        .saved-keys-wrapper {
+            height: 120px;
+            overflow: auto;
+            border-top: 1px solid $border-color;
+            border-bottom: 1px solid $border-color;
+
+            > .key {
+                display: flex;
+                height: 28px;
+                cursor: pointer;
+                padding: 5px;
+
+                > .label {
+                    flex: 1;
+                }
+
+                &:not(:last-child) {
+                    border-bottom: 1px solid $border-color;
+                }
+
+                &:hover {
+                    background: #e5e5e5;
+                }
+            }
+
+            .no-key {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 20px 10px;
+
+                .fa-key {
+                    font-size: 30px;
+                    margin-bottom: 10px;
+                    color: map-get($primary, 400);
+                }
+            }
+
+        }
+
+        .save-key-form {
+            padding: 5px;
+            .btn-container {
+                display: flex;
+                justify-content: center;
+
+                button {
+                    margin: 0 10px;
+                }
+            }
+            .fa-times, .fa-check {
+
+                color: white;
+            }
+        }
+    }
+}
