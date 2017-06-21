@@ -8,14 +8,14 @@ export class VirtualMachineConfigurationDecorator extends DecoratorBase<VirtualM
     public nodeAgentSKUId: string;
     public windowsConfiguration: WindowsConfigurationDecorator;
 
-    constructor(private virtualMachieConfiguration: VirtualMachineConfiguration) {
+    constructor(virtualMachieConfiguration: VirtualMachineConfiguration, osName: string) {
         super(virtualMachieConfiguration);
 
         this.imageReference = new ImageReferenceDecorator(
-            virtualMachieConfiguration.imageReference || <any>{});
+            virtualMachieConfiguration.imageReference || {} as any);
         this.nodeAgentSKUId = this.stringField(
             virtualMachieConfiguration.nodeAgentSKUId);
         this.windowsConfiguration = new WindowsConfigurationDecorator(
-            virtualMachieConfiguration.windowsConfiguration || <any>{});
+            virtualMachieConfiguration.windowsConfiguration || {} as any);
     }
 }

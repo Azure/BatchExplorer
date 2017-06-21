@@ -6,6 +6,7 @@ import { SidebarRef } from "app/components/base/sidebar";
 import { Node, NodeAgentSku, NodeConnectionSettings, Pool } from "app/models";
 import { AddNodeUserAttributes, NodeService, NodeUserService } from "app/services";
 import { PoolUtils, SecureUtils } from "app/utils";
+import "./node-connect.scss";
 
 enum CredentialSource {
     Generated,
@@ -40,7 +41,7 @@ export class NodeConnectComponent implements OnInit {
             this.linux = PoolUtils.isLinux(this.pool);
         }
     }
-    public get pool() { return this._pool; };
+    public get pool() { return this._pool; }
 
     @Input()
     public node: Node;

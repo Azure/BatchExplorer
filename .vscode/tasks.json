@@ -9,7 +9,7 @@
   ],
   "tasks": [
     {
-      "taskName": "build-node-ts",
+      "taskName": "build-client",
       "args": [],
       "isBuildCommand": true
     },
@@ -23,19 +23,8 @@
       "args": ["-s"],
       "isBuildCommand": false,
       "problemMatcher": {
-        "owner": "tslint",
-        "fileLocation": [
-          "relative",
-          "${workspaceRoot}"
-        ],
-        "severity": "warning",
-        "pattern": {
-          "regexp": "(.*)\\[(\\d+)\\, (\\d+)\\]:(.*)$",
-          "file": 1,
-          "line": 2,
-          "column": 3,
-          "message": 4
-        }
+        "base": "$tslint5",
+	      "fileLocation": "relative"
       }
     }
   ]

@@ -1,6 +1,6 @@
 import {
     AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter,
-    HostListener, Input, Output, ViewChild, forwardRef,
+    HostListener, Input, OnChanges, Output, ViewChild, forwardRef,
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import "app/utils/autoscale";
@@ -8,6 +8,7 @@ import * as CodeMirror from "codemirror";
 import "codemirror/addon/display/autorefresh";
 import "codemirror/addon/display/placeholder";
 import "codemirror/addon/hint/show-hint";
+import "./editor.scss";
 
 @Component({
     selector: "bl-editor",
@@ -18,47 +19,42 @@ import "codemirror/addon/hint/show-hint";
             useExisting: forwardRef(() => EditorComponent),
             multi: true,
         }],
-    template: `
-        <textarea #host placeholder="enter autoscale formula" placeholder="Please enter {{label}}">
-        </textarea>
-        <div class="mat-input-underline">
-            <span class="mat-input-ripple" [class.mat-focused]="isFocused"></span>
-        </div>
-    `,
+    templateUrl: "editor.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class EditorComponent implements ControlValueAccessor, AfterViewInit {
-    @Input()
-    public config;
-    @Input()
-    public label: string;
-    @Output()
-    public change = new EventEmitter();
-    @Output()
-    public focus = new EventEmitter();
-    @Output()
-    public blur = new EventEmitter();
+export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnChanges {
+    @Input() public config: CodeMirror.EditorConfiguration;
+    @Input() public label: string;
+
+    @Output() public change = new EventEmitter();
+    @Output() public focus = new EventEmitter();
+    @Output() public blur = new EventEmitter();
 
     @ViewChild("host")
     public host;
 
-    @Output()
-    public instance = null;
+    public instance: CodeMirror.EditorFromTextArea = null;
     public isFocused = false;
+    public placeholder: string;
     private _value = "";
 
-    get value() { return this._value; };
+    get value() { return this._value; }
 
     @Input() set value(v) {
         if (v !== this._value) {
-            this._value = v;
+            this.writeValue(v);
             this.onChange(v);
         }
     }
 
     constructor(private changeDetector: ChangeDetectorRef) { }
 
+    public ngOnChanges(changes) {
+        if (changes.config) {
+            this._updatePlaceHolder();
+        }
+    }
     public ngAfterViewInit() {
         this.config = this.config || {};
         this.codemirrorInit(this.config);
@@ -72,7 +68,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit {
             this.updateValue(this.instance.getValue());
 
             if (change.origin !== "complete" && change.origin !== "setValue") {
-                this.instance.showHint({ hint: CodeMirror.hint.autoscale, completeSingle: false });
+                (this.instance as any).showHint({ hint: (CodeMirror as any).hint.autoscale, completeSingle: false });
             }
         });
 
@@ -108,10 +104,18 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit {
         event.stopPropagation();
     }
 
-    public onChange: Function = () => null;
+    public onChange: (value: any) => any = () => null;
 
     // tslint:disable-next-line:no-empty
     public onTouched() { }
     public registerOnChange(fn) { this.onChange = fn; }
     public registerOnTouched(fn) { this.onTouched = fn; }
+
+    private _updatePlaceHolder() {
+        if (!this.label || (this.config && this.config.readOnly)) {
+            this.placeholder = "";
+        } else {
+            this.placeholder = `Please enter ${this.label}`;
+        }
+    }
 }

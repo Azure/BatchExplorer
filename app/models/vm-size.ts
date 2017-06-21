@@ -1,13 +1,4 @@
-import { Record } from "immutable";
-
-const VmSizeRecord = Record({
-    name: null,
-    numberOfCores: null,
-    osDiskSizeInMB: null,
-    resourceDiskSizeInMB: null,
-    memoryInMB: null,
-    maxDataDiskCount: null,
-});
+import { Model, Prop, Record } from "app/core";
 
 export interface VmSizeAttributes {
     name: string;
@@ -18,34 +9,44 @@ export interface VmSizeAttributes {
     maxDataDiskCount: number;
 }
 
-export class VmSize extends VmSizeRecord implements VmSizeAttributes {
+@Model()
+export class VmSize extends Record<VmSizeAttributes> {
+    /**
+     * Id for the vmSize(This is computed form the name attribute)
+     */
+    @Prop() public id: string;
+
     /**
      * Specifies the name of the virtual machine size
      */
-    public name: string;
+    @Prop() public name: string;
 
     /**
      * Specifies the number of available CPU cores.
      */
-    public numberOfCores: number;
+    @Prop() public numberOfCores: number;
 
     /**
      * Specifies the size in MB of the operating system disk.
      */
-    public osDiskSizeInMB: number;
+    @Prop() public osDiskSizeInMB: number;
 
     /**
      * Specifies the size in MB of the temporary or resource disk.
      */
-    public resourceDiskSizeInMB: number;
+    @Prop() public resourceDiskSizeInMB: number;
 
     /**
      * Specifies the available RAM in MB.
      */
-    public memoryInMB: number;
+    @Prop() public memoryInMB: number;
 
     /**
      * Specifies the maximum number of data disks that can be attached to the VM size.
      */
-    public maxDataDiskCount: number;
+    @Prop() public maxDataDiskCount: number;
+
+    constructor(data: VmSizeAttributes) {
+        super({ ...data, id: data.name && data.name.toLowerCase() });
+    }
 }

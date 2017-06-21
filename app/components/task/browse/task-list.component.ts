@@ -48,7 +48,7 @@ export class TaskListComponent extends SelectableList implements OnInit {
 
         this.data.fetchNext();
     }
-    public get filter(): Filter { return this._filter; };
+    public get filter(): Filter { return this._filter; }
 
     @ViewChild(TaskListDisplayComponent)
     public list: TaskListDisplayComponent;
@@ -68,7 +68,7 @@ export class TaskListComponent extends SelectableList implements OnInit {
         super();
 
         this._onTaskAddedSub = taskService.onTaskAdded.subscribe((item: TaskParams) => {
-            this.data.loadNewItem(taskService.get(item.jobId, item.id));
+            this.data.loadNewItem(taskService.getOnce(item.jobId, item.id));
         });
     }
 

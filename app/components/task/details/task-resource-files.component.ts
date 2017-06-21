@@ -1,4 +1,5 @@
-import { Component, Input, ViewContainerRef } from "@angular/core";
+import { Component, Input } from "@angular/core";
+import { List } from "immutable";
 
 import { ResourceFile, Task } from "app/models";
 
@@ -15,17 +16,13 @@ export class TaskResourceFilesComponent {
     }
     public get task() { return this._task; }
 
-    public resourceFiles: ResourceFile[] = [];
+    public resourceFiles: List<ResourceFile> = List([]);
 
     private _task: Task;
 
-    constructor(
-        private viewContainerRef: ViewContainerRef) {
-    }
-
     public refresh(task: Task) {
         if (this.task) {
-            this.resourceFiles = this.task.resourceFiles || [];
+            this.resourceFiles = this.task.resourceFiles;
         }
     }
 }

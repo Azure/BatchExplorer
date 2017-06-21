@@ -9,15 +9,15 @@ export const presetSizes = {
 
 export function percToDeg(perc) {
     return perc * 360;
-};
+}
 
 export function percToRad(perc) {
     return degToRad(percToDeg(perc));
-};
+}
 
 export function degToRad(deg) {
     return deg * Math.PI / 180;
-};
+}
 
 export function invalidSizeMessage(value) {
     const sizes = Object.keys(presetSizes).join(",");

@@ -1,6 +1,7 @@
-import { Record } from "immutable";
+import { List } from "immutable";
 import * as moment from "moment";
 
+import { ListProp, Model, Prop, Record } from "app/core";
 import { AffinityInformation } from "./affinity-information";
 import { ApplicationPackageReference } from "./application-package-reference";
 import { ComputeNodeInformation } from "./compute-node-information";
@@ -12,68 +13,59 @@ import { TaskDependencies } from "./task-dependencies";
 import { TaskExecutionInformation } from "./task-execution-information";
 import { TaskExitConditions } from "./task-exit-conditions";
 
-// tslint:disable:variable-name
-const TaskRecord = Record({
-    id: null,
-    displayName: null,
-    url: null,
-    eTag: null,
-    lastModified: null,
-    creationTime: null,
-    state: null,
-    stateTransitionTime: null,
-    previousState: null,
-    previousStateTransitionTime: null,
-    commandLine: null,
-    runElevated: null,
-    exitConditions: new TaskExitConditions(),
-    resourceFiles: [],
-    environmentSettings: null,
-    affinityInfo: null,
-    constraints: null,
-    executionInfo: null,
-    nodeInfo: null,
-    multiInstanceSettings: null,
-    stats: null,
-    dependsOn: null,
-    applicationPackageReferences: null,
-});
-
+export interface TaskAttributes {
+    id: string;
+    displayName: string;
+    url: string;
+    eTag: string;
+    lastModified: Date;
+    creationTime: Date;
+    state: TaskState;
+    stateTransitionTime: Date;
+    previousState: TaskState;
+    previousStateTransitionTime: Date;
+    commandLine: string;
+    runElevated: boolean;
+    exitConditions: TaskExitConditions;
+    resourceFiles: ResourceFile[];
+    environmentSettings: NameValuePair[];
+    affinityInfo: AffinityInformation;
+    constraints: TaskConstraints;
+    executionInfo: TaskExecutionInformation;
+    nodeInfo: ComputeNodeInformation;
+    multiInstanceSettings: MultiInstanceSettings;
+    stats: any; // TaskStatistics
+    dependsOn: TaskDependencies;
+    applicationPackageReferences: ApplicationPackageReference[];
+}
 /**
  * Class for displaying Batch task information.
  */
-export class Task extends TaskRecord {
-    public id: string;
-    public displayName: string;
-    public url: string;
-    public eTag: string;
-    public lastModified: Date;
-    public creationTime: Date;
-    public state: TaskState;
-    public stateTransitionTime: Date;
-    public previousState: TaskState;
-    public previousStateTransitionTime: Date;
-    public commandLine: string;
-    public runElevated: boolean;
-
-    public exitConditions: TaskExitConditions;
-    public resourceFiles: ResourceFile[];
-    public environmentSettings: NameValuePair[];
-    public affinityInfo: AffinityInformation;
-    public constraints: TaskConstraints;
-    public executionInfo: TaskExecutionInformation;
-    public nodeInfo: ComputeNodeInformation;
-    public multiInstanceSettings: MultiInstanceSettings;
-    public stats: any; // TaskStatistics
-    public dependsOn: TaskDependencies;
-    public applicationPackageReferences: ApplicationPackageReference[];
-
-    constructor(data: any = {}) {
-        super(Object.assign({}, data, {
-            exitConditions: new TaskExitConditions(data.exitConditions),
-            dependsOn: data.dependsOn && new TaskDependencies(data.dependsOn),
-        }));
-    }
+@Model()
+export class Task extends Record<TaskAttributes> {
+    @Prop() public id: string;
+    @Prop() public displayName: string;
+    @Prop() public url: string;
+    @Prop() public eTag: string;
+    @Prop() public lastModified: Date;
+    @Prop() public creationTime: Date;
+    @Prop() public state: TaskState;
+    @Prop() public stateTransitionTime: Date;
+    @Prop() public previousState: TaskState;
+    @Prop() public previousStateTransitionTime: Date;
+    @Prop() public commandLine: string;
+    @Prop() public runElevated: boolean;
+    @Prop() public exitConditions: TaskExitConditions = new TaskExitConditions();
+    @ListProp(ResourceFile) public resourceFiles: List<ResourceFile> = List([]);
+    @ListProp(NameValuePair) public environmentSettings: List<NameValuePair> = List([]);
+    @Prop() public affinityInfo: AffinityInformation;
+    @Prop() public constraints: TaskConstraints;
+    @Prop() public executionInfo: TaskExecutionInformation;
+    @Prop() public nodeInfo: ComputeNodeInformation;
+    @Prop() public multiInstanceSettings: MultiInstanceSettings;
+    @Prop() public stats: any; // TaskStatistics
+    @Prop() public dependsOn: TaskDependencies;
+    @Prop() public applicationPackageReferences: ApplicationPackageReference[];
 
     /**
      * @returns true if the task timeout.
@@ -82,7 +74,7 @@ export class Task extends TaskRecord {
     public get didTimeout() {
         const info = this.executionInfo;
         const constraints = this.constraints;
-        if (!(info && info.exitCode && constraints && constraints.maxWallClockTime)) {
+        if (!(info && info.failureInfo && info.exitCode && constraints && constraints.maxWallClockTime)) {
             return false;
         }
         if (info.exitCode === 0) {

@@ -1,5 +1,5 @@
 import {
-    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, Input, OnInit, QueryList,
+    AfterViewInit, ChangeDetectorRef, Component, ContentChildren, Input, OnInit, QueryList,
 } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 
@@ -8,7 +8,6 @@ import { TabComponent } from "./tab.component";
 @Component({
     selector: "bl-tab-group",
     templateUrl: "tab-group.html",
-    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TabGroupComponent implements AfterViewInit, OnInit {
     @Input()
@@ -55,6 +54,10 @@ export class TabGroupComponent implements AfterViewInit, OnInit {
                 [this.dataKey]: tabKey,
             },
         });
+    }
+
+    public detectChanges() {
+        this.changeDetector.markForCheck();
     }
 
     private _updateSelectedTab() {

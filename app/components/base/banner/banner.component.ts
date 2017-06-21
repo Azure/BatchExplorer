@@ -1,5 +1,5 @@
 import { Component, ContentChildren, Directive, Input, OnChanges, QueryList } from "@angular/core";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
 export enum ErrorState {
     Error,
@@ -7,11 +7,14 @@ export enum ErrorState {
     Fixed,
 }
 
-export type BannerType = "error" | "warning";
+export type BannerType = "error" | "warning" | "notice";
 export const BannerType = {
     error: "error" as BannerType,
     warning: "warning" as BannerType,
+    notice: "notice" as BannerType,
 };
+
+import "./banner.scss";
 
 @Directive({
     // tslint:disable-next-line:directive-selector
@@ -53,6 +56,9 @@ export class BannerComponent implements OnChanges {
     @Input()
     public type = BannerType.error;
 
+    @Input()
+    public height: string = "standard";
+
     @ContentChildren(BannerOtherFixDirective)
     public otherFixes: QueryList<BannerOtherFixDirective>;
 
@@ -62,8 +68,16 @@ export class BannerComponent implements OnChanges {
 
     public showOtherFixes = false;
 
+    /**
+     * Subscription when listening to the fixing method observable
+     */
+    private _fixingSub: Subscription;
+
     public ngOnChanges(inputs) {
         this.state = ErrorState.Error;
+        if (this._fixingSub) {
+            this._fixingSub.unsubscribe();
+        }
     }
 
     public triggerFix(otherFix?: BannerOtherFixDirective) {
@@ -72,7 +86,7 @@ export class BannerComponent implements OnChanges {
         const fixMethod = otherFix ? otherFix.fix : this.fix;
         const fixObs = fixMethod();
         if (fixObs) {
-            fixObs.subscribe(() => {
+            this._fixingSub = fixObs.subscribe(() => {
                 this._markFixed();
             });
         } else {

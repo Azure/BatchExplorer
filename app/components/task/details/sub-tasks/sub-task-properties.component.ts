@@ -11,12 +11,12 @@ import { SubTaskDecorator } from "app/models/decorators";
 export class SubTaskPropertiesComponent {
     @Input()
     public set task(value: SubtaskInformation) {
-        this.decorator = new SubTaskDecorator(value || <any>{});
-        this.schedulingError = this.decorator.schedulingError || {};
+        this.decorator = new SubTaskDecorator(value || {} as any);
+        this.failureInfo = this.decorator.failureInfo || {};
         this.nodeInfo = this.decorator.nodeInfo || {};
     }
 
     public decorator: SubTaskDecorator;
-    public schedulingError: any;
+    public failureInfo: any;
     public nodeInfo: any;
 }

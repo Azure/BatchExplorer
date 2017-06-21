@@ -1,8 +1,0 @@
-{
-  "name": "batch-explorer",
-  "version": "1.0.0",
-  "main": "../../build/client/main.js",
-  "scripts": {
-    "start": "electron ../../build/client/main.js"
-  }
-}

@@ -1,11 +1,18 @@
 <ul>
     <li>
-        <a href="#" routerLink="jobs" routerLinkActive="active"><i class="fa fa-tasks fa-lg"></i><span>Jobs</span></a>
+        <a href="#" [routerLink]="['/accounts', selectedId]" routerLinkActive="active" title="Dashboard">
+            <i class="fa fa-th fa-lg"></i><div class="label">Dash</div>
+        </a>
     </li>
     <li>
-        <a href="#" routerLink="pools" routerLinkActive="active"><i class="fa fa-database fa-lg"></i><span>Pools</span></a>
+        <a href="#" routerLink="jobs" routerLinkActive="active"><i class="fa fa-tasks fa-lg"></i><div class="label">Jobs</div></a>
     </li>
     <li>
-        <a href="#" routerLink="applications" routerLinkActive="active"><i class="fa fa-file-archive-o fa-lg"></i><span>App Packages</span></a>
+        <a href="#" routerLink="pools" routerLinkActive="active"><i class="fa fa-database fa-lg"></i><div class="label">Pools</div></a>
+    </li>
+    <li>
+        <a href="#" routerLink="applications" routerLinkActive="active" title="Application packages">
+            <i class="fa fa-file-archive-o fa-lg"></i><div class="label">Packages</div>
+        </a>
     </li>
 </ul>

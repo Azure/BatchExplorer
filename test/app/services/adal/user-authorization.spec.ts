@@ -134,7 +134,7 @@ describe("UserAuthorization", () => {
         let result: AuthorizeResult;
         let error: AuthorizeError;
         let currentAuthObs: Observable<any>;
-        let callAuth: Function;
+        let callAuth: () => void;
         let authorizeOutput: jasmine.Spy;
 
         beforeEach(() => {

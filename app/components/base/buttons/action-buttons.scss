@@ -1,0 +1,77 @@
+@import "app/styles/variables";
+
+bl-action-btn-group {
+    text-align: center;
+    border-right: 1px solid $border-color;
+    display: block;
+
+    bl-action-btn {
+        border-bottom: 1px solid $border-color;
+    }
+}
+
+bl-action-btn {
+    display: inline-block;
+    height: $action-btn-size;
+    outline: none;
+    cursor: pointer;
+    font-size: 20px;
+    text-align: center;
+    vertical-align: middle;
+    line-height: $action-btn-size;
+
+    &.disabled[color] {
+        cursor: not-allowed;
+        color: #d5d5d5;
+        background: #f5f5f5;
+
+        &:hover {
+            color: #d5d5d5;
+            background: #f5f5f5;
+        }
+    }
+
+    &[type="normal"], &[type="round"] {
+        width: $action-btn-size;
+    }
+
+    &[type="round"] {
+        border-radius: 99%;
+    }
+
+    &[type="wide"] {
+        padding: 0 5px;
+    }
+
+    &[color="primary"] {
+        background: white;
+        color: map-get($primary, 500);
+
+        &:hover, &:focus {
+            background: $alto;
+            color: map-get($primary, 200);
+        }
+
+        &[type="round"] {
+            border: 1px solid $border-color;
+        }
+    }
+
+    &[color="danger"] {
+        background: map-get($danger, 500);
+        color: $whitesmoke;
+
+        &:hover, &:focus {
+            background: map-get($danger, 800);
+        }
+    }
+
+    &[color="warn"] {
+        background: map-get($warn, 500);
+        color: $whitesmoke;
+
+        &:hover, &:focus {
+            background: map-get($warn, 800);
+        }
+    }
+}

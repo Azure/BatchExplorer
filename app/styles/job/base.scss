@@ -1,13 +1,13 @@
 bl-job-stats-preview {
     .task-success {
         display: inline-block;
-        color: $green-dark;
+        color: map-get($success, 800);
         margin-right: 5px;
     }
 
     .task-failed {
         display: inline-block;
-        color: $red;
+        color: map-get($danger, 500);
     }
 }
 
@@ -17,10 +17,10 @@ bl-application-preview, bl-task-preview {
     }
 
     .success {
-        color: $green;
+        color: map-get($success, 500);
     }
 
     .failure {
-        color: $red;
+        color: map-get($danger, 500);
     }
 }

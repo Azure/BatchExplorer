@@ -54,9 +54,14 @@ describe("TaskErrorDisplayComponent", () => {
             testComponent.task = new Task({
                 state: TaskState.completed,
                 executionInfo: {
+                    failureInfo: {
+                        category: "UserError",
+                        code: "FailureExitCode",
+                        message: "Task has wrong exit code",
+                    },
                     exitCode: 1,
                 },
-            });
+            } as any);
             fixture.detectChanges();
         });
 
@@ -69,9 +74,19 @@ describe("TaskErrorDisplayComponent", () => {
             expect(fixture.debugElement.queryAll(By.css("bl-banner")).length).toBe(1);
         });
 
-        it("Should show the code and message", () => {
+        it("Should contain the error code", () => {
+            const banner = fixture.debugElement.query(By.css("bl-banner"));
+            expect(banner.nativeElement.textContent).toContain("FailureExitCode");
+        });
+
+        it("Should custom message", () => {
             const banner = fixture.debugElement.query(By.css("bl-banner"));
             expect(banner.nativeElement.textContent).toContain("Task completed with exit code '1'");
+        });
+
+        it("Should not show the failure info message", () => {
+            const banner = fixture.debugElement.query(By.css("bl-banner"));
+            expect(banner.nativeElement.textContent).not.toContain("Task has wrong exit code");
         });
 
         it("should propose increase quota as a first fix", () => {

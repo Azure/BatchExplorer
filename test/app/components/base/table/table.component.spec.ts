@@ -11,10 +11,10 @@ import {
 import { VmSize } from "app/models";
 import { click } from "test/utils/helpers";
 
-const sizeA = new VmSize({ name: "Size A", numberOfCores: 1, resourceDiskSizeInMB: 1000 });
-const sizeB = new VmSize({ name: "Size B", numberOfCores: 8, resourceDiskSizeInMB: 2000 });
-const sizeC = new VmSize({ name: "Size C", numberOfCores: 4, resourceDiskSizeInMB: 80000 });
-const sizeD = new VmSize({ name: "Size D", numberOfCores: 2, resourceDiskSizeInMB: 4000 });
+const sizeA = new VmSize({ name: "Size A", numberOfCores: 1, resourceDiskSizeInMB: 1000 } as any);
+const sizeB = new VmSize({ name: "Size B", numberOfCores: 8, resourceDiskSizeInMB: 2000 } as any);
+const sizeC = new VmSize({ name: "Size C", numberOfCores: 4, resourceDiskSizeInMB: 80000 } as any);
+const sizeD = new VmSize({ name: "Size D", numberOfCores: 2, resourceDiskSizeInMB: 4000 } as any);
 
 @Component({
     template: `

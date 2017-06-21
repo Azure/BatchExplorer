@@ -1,0 +1,82 @@
+@import "app/styles/variables";
+
+bl-editable-table {
+    table {
+        border-collapse: collapse;
+        width: 100%;
+        thead {
+            text-align: left;
+            color: $genericGray;
+            font-size: 12px;
+            font-weight: 200;
+        }
+
+        th {
+            padding: 0 5px;
+        }
+
+        td {
+            border: 1px solid $border-color;
+            padding: 0;
+            margin: 0;
+            height: 20px;
+            font-size: 12px;
+            line-height: 0;
+        }
+
+        tr:last-child > td {
+            background: #f5f5f5;
+        }
+
+        input {
+            width: 100%;
+            border: none;
+            padding: 5px;
+            outline: none;
+            font-size: 12px;
+            color: $mineshaft-grey;
+            border-bottom: 2px solid transparent;
+            background: transparent;
+
+            &:focus {
+                background: white;
+                border-bottom: 2px solid map-get($primary, 500);
+            }
+        }
+
+        td.action-column {
+            width: 26px;
+        }
+
+        .delete-item-btn {
+            width: 26px;
+            height: 26px;
+            background: none;
+            cursor: pointer;
+            outline: none;
+
+            > .fa {
+                color: map-get($danger, 500);
+            }
+
+            &:focus, &:hover {
+                background: map-get($danger, 500);
+                > .fa {
+                    color: $whitesmoke;
+                }
+            }
+
+            &:active {
+                background: map-get($danger, 800);
+                > .fa {
+                    color: $whitesmoke;
+                }
+            }
+        }
+    }
+
+    .add-item-btn {
+        display: block;
+        margin: 10px auto;
+    }
+}

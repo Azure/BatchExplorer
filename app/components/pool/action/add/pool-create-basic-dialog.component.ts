@@ -7,6 +7,7 @@ import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { DynamicForm } from "app/core";
 import { Pool } from "app/models";
+import { NodeFillType } from "app/models";
 import { PoolCreateDto } from "app/models/dtos";
 import { PoolOsSources, createPoolToData, poolToFormModel } from "app/models/forms";
 import { PoolService, VmSizeService } from "app/services";
@@ -17,6 +18,8 @@ import { PoolService, VmSizeService } from "app/services";
 })
 export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreateDto> implements OnDestroy {
     public osSource: PoolOsSources = PoolOsSources.IaaS;
+    public osType: "linux" | "windows" = "linux";
+    public NodeFillType = NodeFillType;
 
     private _osControl: FormControl;
     private _sub: Subscription;
@@ -25,7 +28,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<PoolCreateBasicDialogComponent>,
         private poolService: PoolService,
-        private vmSizeService: VmSizeService,
+        vmSizeService: VmSizeService,
         private notificationService: NotificationService) {
         super(PoolCreateDto);
 
@@ -43,11 +46,24 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             vmSize: ["Standard_D1", Validators.required],
             maxTasksPerNode: 1,
             enableInterNodeCommunication: false,
+            taskSchedulingPolicy: [NodeFillType.pack],
             startTask: null,
             userAccounts: [[]],
         });
+
         this._sub = this._osControl.valueChanges.subscribe((value) => {
             this.osSource = value.source;
+            if (value.source === PoolOsSources.PaaS) {
+                this.osType = "windows";
+            } else {
+                const config = value.virtualMachineConfiguration;
+                const agentId: string = config && config.nodeAgentSKUId;
+                if (agentId && agentId.toLowerCase().indexOf("windows") !== -1) {
+                    this.osType = "windows";
+                } else {
+                    this.osType = "linux";
+                }
+            }
         });
     }
 

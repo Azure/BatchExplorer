@@ -18,7 +18,7 @@ export class BreadcrumbGroupComponent implements OnDestroy {
 
     private _subscription: Subscription;
 
-    constructor(private breadcrumbService: BreadcrumbService, private elementRef: ElementRef) {
+    constructor(breadcrumbService: BreadcrumbService, private elementRef: ElementRef) {
         this._subscription = breadcrumbService.crumbs.subscribe((crumbs) => {
             this.crumbs = crumbs;
             this.expandable = crumbs.length > expandableCount;

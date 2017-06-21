@@ -4,3 +4,4 @@ dll/
 typings/
 *.log*
 *.mem.csv
+release/

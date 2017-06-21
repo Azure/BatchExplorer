@@ -5,7 +5,6 @@ import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 import { LoadingStatus } from "app/components/base/loading";
 import { log } from "app/utils";
 import { ListOptions, ListOptionsAttributes } from "./list-options";
-import { RxEntityProxy } from "./rx-entity-proxy";
 import { RxProxyBase, RxProxyBaseConfig } from "./rx-proxy-base";
 
 export interface RxListProxyConfig<TParams, TEntity> extends RxProxyBaseConfig<TParams, TEntity> {
@@ -20,6 +19,11 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
     private _hasMore: BehaviorSubject<boolean> = new BehaviorSubject(true);
     private _lastRequest: { params: TParams, options: any };
 
+    /**
+     * If polling this list proxy this is a flag if it should fetch all or just the first set
+     */
+    private _pollFetchAll: boolean = false;
+
     constructor(type: Type<TEntity>, config: RxListProxyConfig<TParams, TEntity>) {
         super(type, config);
         this._options = new ListOptions(config.initialOptions || {});
@@ -27,7 +31,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         this._hasMore.next(true);
         this.hasMore = this._hasMore.asObservable();
 
-        this.items = this._itemKeys.map((itemKeys) => {
+        this.items = this._itemKeys.distinctUntilChanged().map((itemKeys) => {
             return this.cache.items.map((items) => {
                 let keys: any = itemKeys;
                 if (this._options.maxItems) {
@@ -35,7 +39,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
                 }
                 return List<TEntity>(keys.map((x) => items.get(x)));
             });
-        }).switch();
+        }).switch().distinctUntilChanged().takeUntil(this.isDisposed);
 
         this.deleted.subscribe((deletedKey) => {
             this._itemKeys.next(OrderedSet<string>(this._itemKeys.value.filter((key) => key !== deletedKey)));
@@ -44,6 +48,11 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         this._cacheCleared.subscribe((deletedKey) => {
             this._itemKeys.next(OrderedSet<string>([]));
         });
+    }
+
+    public startPoll(interval: number, fetchAll: boolean = false) {
+        this._pollFetchAll = fetchAll;
+        return super.startPoll(interval);
     }
 
     public updateParams(params: TParams) {
@@ -74,49 +83,35 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         if (!this._hasMore.value) {
             return Observable.of({ data: [] });
         }
+        const subject = new AsyncSubject();
 
         this._tryLoadFromQueryCache(forceNew);
-
-        return this.fetchData({
-            getData: () => {
-                return this.fetchNextItems();
-            },
-            next: (response: any) => {
-                const keys = OrderedSet(this.newItems(this.processResponse(response)));
-                this._hasMore.next(this.hasMoreItems());
+        this._fetchNextKeys().subscribe({
+            next: (keys: OrderedSet<string>) => {
                 const currentKeys = this._itemKeys.value;
                 if (currentKeys.size === 0) {
                     this.cache.queryCache.cacheQuery(this._options.filter, keys, null);
                 }
-
-                const last = this._lastRequest;
-                if (last && (last.params !== this._params || last.options !== this._options)) {
-                    this._itemKeys.next(keys);
-                } else {
-                    this._itemKeys.next(OrderedSet<string>(currentKeys.concat(keys)));
-                }
-
-                this._lastRequest = { params: this._params, options: this._options };
+                subject.next(true);
+                subject.complete();
+                this._updateNewKeys(keys);
             },
             error: (error) => {
                 this._hasMore.next(false);
+                subject.error(error);
             },
         });
+
+        return subject.asObservable();
     }
 
     public fetchAll(): Observable<any> {
-        if (!this.hasMoreItems()) {
-            return Observable.of(true);
-        }
-
         const subject = new AsyncSubject();
         subject.next(true);
-        this.fetchNext().subscribe({
-            complete: () => {
-                this.fetchAll().subscribe({
-                    complete: () => subject.complete(),
-                    error: (e) => subject.error(e),
-                });
+        this._fetchRemainingKeys().subscribe({
+            next: (keys: OrderedSet<string>) => {
+                this._updateNewKeys(keys);
+                subject.complete();
             },
             error: (e) => subject.error(e),
         });
@@ -129,9 +124,8 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
      * It should not add the new item if already present.
      * The cache system will handle updating it already.
      */
-    public loadNewItem(entityProxy: RxEntityProxy<any, TEntity>): Observable<any> {
-        const obs = entityProxy.fetch().flatMap(() => entityProxy.item.first());
-        obs.subscribe({
+    public loadNewItem(getOnceObs: Observable<TEntity>): Observable<any> {
+        getOnceObs.subscribe({
             next: (newItem) => {
                 this._addItemToList(newItem);
             }, error: (error) => {
@@ -139,8 +133,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
                     { error, params: this._params, options: this._options });
             },
         });
-
-        return obs;
+        return getOnceObs;
     }
 
     /**
@@ -151,11 +144,26 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
     public refresh(clearExistingData = true): Observable<any> {
         this.cache.queryCache.clearCache();
         this.setOptions(this._options, clearExistingData);
-        return this.fetchNext(true);
+        return this.fetchNext();
+    }
+
+    /**
+     * Refresh the list but loads all the data from the server.
+     * @param clearExistingData If set to false it will only clear the data when the new date comes in.
+     *  This means that during the loading time the items are still the old ones.
+     */
+    public refreshAll(clearExistingData = true): Observable<any> {
+        this.cache.queryCache.clearCache();
+        this.setOptions(this._options, clearExistingData);
+        return this.fetchAll();
     }
 
     protected pollRefresh() {
-        return this.refresh(false);
+        if (this._pollFetchAll) {
+            return this.refreshAll(false);
+        } else {
+            return this.refresh(false);
+        }
     }
 
     // Method to implement in the child class
@@ -165,6 +173,55 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
     protected abstract hasMoreItems(): boolean;
     protected abstract queryCacheKey(): string;
 
+    /**
+     * Load all the remaining items from the server and return their keys
+     */
+    private _fetchRemainingKeys() {
+        if (!this.hasMoreItems()) {
+            return Observable.of(OrderedSet());
+        }
+
+        return this._fetchNextKeys().flatMap((keys: OrderedSet<string>) => {
+            return this._fetchRemainingKeys().map(remainingKeys => OrderedSet(keys.concat(remainingKeys)));
+        }).share();
+    }
+
+    /**
+     * Load the next set of items from the server and returns the keys of those items.
+     */
+    private _fetchNextKeys(): Observable<OrderedSet<string>> {
+        const subject = new AsyncSubject();
+        this.fetchData({
+            getData: () => {
+                return this.fetchNextItems();
+            },
+            next: (response: any) => {
+                const keys = OrderedSet(this.newItems(this.processResponse(response)));
+                this._hasMore.next(this.hasMoreItems()); // This NEEDS to be called after processResponse
+                subject.next(keys);
+                subject.complete();
+            },
+            error: (error) => {
+                this._hasMore.next(false);
+                subject.error(error);
+            },
+        });
+
+        return subject.asObservable();
+    }
+
+    private _updateNewKeys(newKeys: OrderedSet<string>) {
+        const currentKeys = this._itemKeys.value;
+
+        const last = this._lastRequest;
+        if (last && (last.params !== this._params || last.options !== this._options)) {
+            this._itemKeys.next(newKeys);
+        } else {
+            this._itemKeys.next(OrderedSet<string>(currentKeys.concat(newKeys)));
+        }
+
+        this._lastRequest = { params: this._params, options: this._options };
+    }
     /**
      * This will try to load keys from the query cache
      * This succeed only if there is no item currently loaded, we don't want new data and there is cached data.
@@ -203,4 +260,25 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
         this._itemKeys.next(OrderedSet(OrderedSet([key]).concat(this._itemKeys.value)));
         this._cache.queryCache.addKeyToQuery(null, key);
     }
+}
+
+export function getAllProxy<TEntity>(getProxy: RxListProxy<any, TEntity>): Observable<List<TEntity>> {
+    const obs = new AsyncSubject<List<TEntity>>();
+
+    getProxy.fetchAll().subscribe({
+        next: () => {
+            getProxy.items.subscribe((items: List<TEntity>) => {
+                obs.next(items);
+                obs.complete();
+                getProxy.dispose();
+            });
+        },
+        error: (e) => {
+            obs.error(e);
+            obs.complete();
+            getProxy.dispose();
+        },
+    });
+
+    return obs.asObservable();
 }

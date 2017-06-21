@@ -49,7 +49,8 @@ export class FileListDisplayComponent implements OnChanges {
     }
 
     public prettyFileSize(size: string) {
-        return prettyBytes(parseInt(size, 10));
+        // having falsy issues with contentLength = 0
+        return prettyBytes(parseInt(size || "0", 10));
     }
 
     /**
@@ -62,10 +63,6 @@ export class FileListDisplayComponent implements OnChanges {
     }
 
     public isErrorState(file: any) {
-        // if (node.state === "startTaskFailed") {
-        //     return true;
-        // }
-
         return false;
     }
 

@@ -21,7 +21,7 @@ export enum HttpCode {
     BadGateway = 502,
     ServiceUnavailable = 503,
     GatewayTimeout = 504,
-};
+}
 
 export const RetryableHttpCode = new Set([
     HttpCode.RequestTimeout,
@@ -82,6 +82,11 @@ export const localStorageKey = {
     currentAccessToken: "current_access_token",
 
     /**
+     * List of subsciption id to the multi select in the account list
+     */
+    accountSubscriptionFilter: "account_subscription_filter",
+
+    /**
      * Subscriptions cached
      */
     subscriptions: "subscriptions",
@@ -103,7 +108,7 @@ export const ApiVersion = {
     arm: "2016-09-01",
     armClassicStorage: "2016-11-01",
     armStorage: "2016-12-01",
-    armBatch: "2015-12-01",
+    armBatch: "2017-05-01",
     compute: "2017-03-30",
 };
 
@@ -132,8 +137,18 @@ export const APIErrorCodes = {
     containerNotFound: "ContainerNotFound",
     operationInvalidForCurrentState: "OperationInvalidForCurrentState",
     authenticationFailed: "AuthenticationFailed",
+    accountNotEnabledForAutoStorage: "AccountNotEnabledForAutoStorage",
 };
 
 export const MetadataInternalKey = {
     tags: "_bl_tags",
 };
+
+export const PollRate = {
+    entity: 10000,
+};
+
+/**
+ * Maximum number of tasks the recent tasks attribute can have.
+ */
+export const nodeRecentTaskLimit = 10;

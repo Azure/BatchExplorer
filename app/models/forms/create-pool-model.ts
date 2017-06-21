@@ -1,5 +1,7 @@
-import { PoolCreateDto, UserAccountDto } from "app/models/dtos";
 import * as moment from "moment";
+
+import { NodeFillType } from "app/models";
+import { PoolCreateDto, UserAccountDto } from "app/models/dtos";
 
 export enum PoolOsSources {
     PaaS,
@@ -25,7 +27,8 @@ export interface PoolScaleModel {
     enableAutoScale: boolean;
     autoScaleFormula: string;
     autoScaleEvaluationInterval: number;
-    targetDedicated: number;
+    targetDedicatedNodes: number;
+    targetLowPriorityNodes: number;
 }
 
 export interface CreatePoolModel {
@@ -38,6 +41,7 @@ export interface CreatePoolModel {
     os: PoolOSPickerModel;
     startTask: any;
     userAccounts: UserAccountDto[];
+    taskSchedulingPolicy: NodeFillType;
 }
 
 export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
@@ -49,6 +53,9 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
         enableAutoScale: outputScale.enableAutoScale,
         maxTasksPerNode: Number(output.maxTasksPerNode),
         enableInterNodeCommunication: output.enableInterNodeCommunication,
+        taskSchedulingPolicy:  {
+            nodeFillType: output.taskSchedulingPolicy,
+        },
         startTask: output.startTask,
         userAccounts: output.userAccounts,
     };
@@ -57,7 +64,8 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
         data.autoScaleFormula = outputScale.autoScaleFormula;
         data.autoScaleEvaluationInterval = moment.duration({ minutes: outputScale.autoScaleEvaluationInterval });
     } else {
-        data.targetDedicated = outputScale.targetDedicated;
+        data.targetDedicatedNodes = outputScale.targetDedicatedNodes;
+        data.targetLowPriorityNodes = outputScale.targetLowPriorityNodes;
     }
 
     if (output.os.source === PoolOsSources.PaaS) {
@@ -83,13 +91,15 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
         displayName: pool.displayName,
         vmSize: pool.vmSize,
         scale: {
-            targetDedicated: pool.targetDedicated,
+            targetDedicatedNodes: pool.targetDedicatedNodes,
+            targetLowPriorityNodes: pool.targetLowPriorityNodes,
             enableAutoScale: pool.enableAutoScale,
             autoScaleFormula: pool.autoScaleFormula,
             autoScaleEvaluationInterval: autoScaleInterval && autoScaleInterval.asMinutes(),
         },
         maxTasksPerNode: pool.maxTasksPerNode.toString(),
         enableInterNodeCommunication: pool.enableInterNodeCommunication,
+        taskSchedulingPolicy: pool.taskSchedulingPolicy.nodeFillType,
         os: {
             source: pool.cloudServiceConfiguration ? PoolOsSources.PaaS : PoolOsSources.IaaS,
             cloudServiceConfiguration: pool.cloudServiceConfiguration,
@@ -98,4 +108,4 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
         startTask: pool.startTask,
         userAccounts: pool.userAccounts,
     };
-};
+}

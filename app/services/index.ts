@@ -3,12 +3,14 @@ export * from "./application-service";
 export * from "./autoscale-formula.service";
 export * from "./azure-http.service";
 export * from "./arm-http.service";
+export * from "./compute.service";
 export * from "./electron";
 export * from "./file-service";
 export * from "./fs.service";
 export * from "./github-data.service";
 export * from "./http-upload-service";
 export * from "./job-service";
+export * from "./job-hook-task.service";
 export * from "./local-file-storage.service";
 export * from "./pool-service";
 export * from "./node-service";
@@ -21,8 +23,11 @@ export * from "./subscription.service";
 export * from "./task-service";
 export * from "./vm-size.service";
 export * from "./adal";
+export * from "./python-rpc";
 export * from "./batch-client.service";
+export * from "./storage-account.service";
 export * from "./storage-client.service";
+export * from "./predefined-formula.service";
 
 // This needs to be last(as it does dynamic inject which problably have dependencies on above services)
 export * from "./command-service";

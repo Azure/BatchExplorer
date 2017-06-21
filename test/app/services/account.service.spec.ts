@@ -9,7 +9,7 @@ describe("AccountService", () => {
     let accountService: AccountService;
     let currentAccount: AccountResource;
     let currentAccountId: string;
-    let account1 = new AccountResource({ id: "account-1" });
+    let account1 = new AccountResource({ id: "account-1" } as any);
     let subscriptionServiceSpy;
     let subs: Subscription[] = [];
 
@@ -19,7 +19,7 @@ describe("AccountService", () => {
         };
 
         accountService = new AccountService({} as any, subscriptionServiceSpy);
-        accountService.getAccount = jasmine.createSpy("getAccount").and.returnValue(Observable.of(account1));
+        accountService.getOnce = jasmine.createSpy("getOnce").and.returnValue(Observable.of(account1));
         accountService.getAccountKeys = jasmine.createSpy("getAccountKeys").and.returnValue(Observable.of({}));
         subs.push(accountService.currentAccountId.subscribe(x => currentAccountId = x));
         subs.push(accountService.currentAccount.subscribe(x => currentAccount = x));
@@ -52,7 +52,7 @@ describe("AccountService", () => {
         expect(currentAccount.id).toBe("account-1");
 
         let accountSubject = new AsyncSubject();
-        accountService.getAccount = jasmine.createSpy("getOnce").and.returnValue(accountSubject);
+        accountService.getOnce = jasmine.createSpy("getOnce").and.returnValue(accountSubject);
 
         accountService.selectAccount("account-2");
         currentAccount = undefined;
@@ -60,7 +60,7 @@ describe("AccountService", () => {
         expect(currentAccountId).toEqual("account-2", "Account id should have been updated immediately");
         expect(currentAccount).toBeUndefined();
 
-        accountSubject.next(new AccountResource({ id: "account-2" }));
+        accountSubject.next(new AccountResource({ id: "account-2" } as any));
         accountSubject.complete();
         tick();
 

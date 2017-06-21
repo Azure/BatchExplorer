@@ -1,0 +1,31 @@
+<div class="storage-account-card">
+    <div class="content">
+        <div class="icon">
+            <span class="fa fa-hdd-o"></span>
+        </div>
+        <div class="details">
+            <h2 class="title">Storage account</h2>
+            <div *ngIf="storageAccountId">
+                <div *ngIf="storageAccount">
+                    {{storageAccount.name}}
+                </div>
+                    <div *ngIf="!storageAccount && error" class="error" [title]="error.body?.error?.message">
+                    {{error.statusText}}
+                </div>
+                <div *ngIf="!storageAccount && !error">
+                    Loading...
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="actions">
+        <button class="edit" (click)="edit()">
+            <span *ngIf="storageAccountId">
+                Edit
+            </span>
+            <span *ngIf="!storageAccountId">
+                Setup
+            </span>
+        </button>
+    </div>
+</div>

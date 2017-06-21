@@ -3,7 +3,12 @@
 
 **Note: BatchLabs is in beta. We don't provide any installer/packaged binaries as of now. You will need to build this app yourself.**
 
-This is the readme for master branch is contains the latest changes. Stable might be slightly different [Stable readme](https://github.com/Azure/BatchLabs/tree/stable)
+This is the readme for the 'master' branch which contains the latest changes, 'stable' may differ from this [Stable readme](https://github.com/Azure/BatchLabs/tree/stable)
+
+## Description
+
+Batch Labs is a tool to manage your Azure Batch accounts. The goal is to implement a great user experience that will help you debug, monitor and manage your pools, jobs and tasks.
+It will also include expermiental features such as `Batch Templates` in the aim to improve your Batch experience. We are open to any feedback, ideas and contributions you might have.
 
 ## Getting started
 #### 1. Prerequisites
@@ -14,14 +19,19 @@ This is the readme for master branch is contains the latest changes. Stable migh
 - At stable branch `git clone -b stable https://github.com/Azure/BatchLabs`
 - Or for the latest changes `git clone https://github.com/Azure/BatchLabs`
 
+Move to the directory `cd BatchLabs`
 #### 3. Install the dependencies
 ```bash
 yarn install
 ```
-Note: You can also use `npm install` at your own risk. However please do not submit an issue if you didn't use `yarn install`. Yarn will make sure you have the exact same set of dependencies as everybody which remove any unexpected third party bugs problems.
+Note: You can also use `npm install` at your own risk. However please do not submit an issue if you didn't use `yarn install`. Yarn will make sure you have the right set of dependencies, which reduces the likelihood of any unexpected build issues relating to third party packages.
 
 #### 4. Build and run the application
 ```bash
+# Make an executable
+npm run build-and-pack
+
+# Manual
 npm run build:prod
 npm run electron:prod
 
@@ -34,7 +44,7 @@ npm run electron
 [Dev docs](docs/readme.md)
 
 For developers, you can set up a development environment as follows:
-**Use `yarn install` instead of `npm install` this will makes sure everybody has the same exact set of depenencies [Migrating from npm to yarn](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)**
+**Use `yarn install` instead of `npm install`. This ensures a consistent build environment with the right set of dependencies [Migrating from npm to yarn](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)**
 
 Start the dev server
 ```bash
@@ -51,7 +61,7 @@ npm run dev-electron
 
 The dev-server and dev-electron support hot reload for a better development experience. Simply saving a file will cause the UI to refresh to your updated changes.
 
-*Note:* Changes to any files in the node client directory ('\client\') require restarting the application.
+*Note:* Changes to any files in the node client directory ('src/client') require restarting the application.
 
 If you're using VSCode (recommended) we suggest you use the following extensions:
 * Debugger for Chrome
@@ -69,7 +79,7 @@ Please also take a look at the [coding guidelines](coding-guidelines.md) for thi
 In vscode install the editorconfig extension
 
 ## Detailed commands:
-**Magic command(Starts the server and electron in dev mode)**
+**Magic command (starts the server and electron in dev mode)**
 ```
 npm run dev
 ```
@@ -84,17 +94,17 @@ Run app
 npm run electron
 ```
 
-Run watch(This will build files on save)
+Run watch (this will build files on save)
 ```
 npm run watch
 ```
 
-Run dev server(This will handle the refresh of files and later should have live reloead)
+Run dev server (this will handle the refresh of files and later should have live reload)
 ```
 npm run dev-server
 ```
 
-Run dev electron(To use the dev server you need to run this)
+Run dev electron (to use the dev server you need to run this)
 ```
 npm run dev-electron
 ```

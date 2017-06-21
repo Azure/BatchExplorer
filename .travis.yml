@@ -1,10 +1,19 @@
 language: node_js
+dist: trusty
+sudo: false
 node_js:
     - '6.9.4'
+python:
+  - "3.6"
+
+before_install:
+  - python3 --version
 
 install:
   - npm install -g yarn
   - yarn install
+  - python3 --version
+  - pip3 install -r python/requirements.txt
 
 before_script:
   - export DISPLAY=:99.0
@@ -13,6 +22,7 @@ before_script:
 
 script:
     - ./scripts/travis/build-and-test.sh
+    - pylint python/main.py
 
 branches:
   only:

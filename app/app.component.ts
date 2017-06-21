@@ -7,7 +7,8 @@ import { DomSanitizer } from "@angular/platform-browser";
 import { registerIcons } from "app/config";
 import {
     AccountService, AdalService, AutoscaleFormulaService, CommandService, NodeService,
-    PricingService, SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
+    PredefinedFormulaService, PricingService, PythonRpcService, SSHKeyService, SettingsService, SubscriptionService,
+    VmSizeService,
 } from "app/services";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
@@ -44,18 +45,22 @@ export class AppComponent implements AfterViewInit, OnInit {
         private subscriptionService: SubscriptionService,
         private nodeService: NodeService,
         private sshKeyService: SSHKeyService,
+        pythonRpcService: PythonRpcService,
+        private vmSizeService: VmSizeService,
         private pricingService: PricingService,
-        private vmSizeService: VmSizeService) {
+        private predefinedFormulaService: PredefinedFormulaService,
+        ) {
         this.autoscaleFormulaService.init();
         this.settingsService.init();
         this.sshKeyService.init();
         this.commandService.init();
-        // Init the pricing when good to go.
-        // this.pricingService.init();
+        this.pricingService.init();
         this.vmSizeService.init();
         this.adalService.init(adalConfig);
         this.accountService.loadInitialData();
+        pythonRpcService.init();
 
+        this.predefinedFormulaService.init();
         this.hasAccount = accountService.currentAccount.map((x) => Boolean(x));
 
         Observable

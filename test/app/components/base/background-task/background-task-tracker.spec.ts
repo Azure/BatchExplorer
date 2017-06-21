@@ -13,7 +13,7 @@ describe("BackgroundTaskTrackerComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [MaterialModule.forRoot(), BackgroundTaskModule],
+            imports: [MaterialModule, BackgroundTaskModule],
             declarations: [
             ],
         });

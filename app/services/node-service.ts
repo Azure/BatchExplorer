@@ -5,9 +5,9 @@ import { AsyncSubject, Observable } from "rxjs";
 import { BackgroundTaskService } from "app/components/base/background-task";
 import { Node, NodeAgentSku, NodeConnectionSettings, NodeState } from "app/models";
 import { ArrayUtils, ObservableUtils, log } from "app/utils";
+import { Constants } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 import { BatchClientService } from "./batch-client.service";
-
 import {
     DataCache, ListOptionsAttributes, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy,
     TargetedDataCache, getOnceProxy,
@@ -49,7 +49,7 @@ export class NodeService extends ServiceBase {
     }
 
     public list(initialPoolId: string, initialOptions: PoolListOptions = {}): RxListProxy<NodeListParams, Node> {
-        return new RxBatchListProxy<NodeListParams, Node>(​​​Node, this.batchService, {
+        return new RxBatchListProxy<NodeListParams, Node>(Node, this.batchService, {
             cache: ({ poolId }) => this.getCache(poolId),
             proxyConstructor: (client, { poolId }, options) => {
                 return client.node.list(poolId, options);
@@ -73,12 +73,13 @@ export class NodeService extends ServiceBase {
     }
 
     public get(initialPoolId: string, initialNodeId: string, options: any): RxEntityProxy<NodeParams, Node> {
-        return new RxBatchEntityProxy<NodeParams, Node>(​​​Node, this.batchService, {
+        return new RxBatchEntityProxy<NodeParams, Node>(Node, this.batchService, {
             cache: ({ poolId }) => this.getCache(poolId),
             getFn: (client, params: NodeParams) => {
                 return client.node.get(params.poolId, params.id, options);
             },
             initialParams: { poolId: initialPoolId, id: initialNodeId },
+            poll: Constants.PollRate.entity,
         });
     }
 

@@ -68,7 +68,7 @@ export class ApplicationCreateDialogComponent {
     }
 
     public fileSelected(changeEvent: Event) {
-        const element = <any>changeEvent.srcElement;
+        const element = changeEvent.srcElement as any;
         this.form.controls["package"].markAsTouched();
 
         if (element.files.length > 0) {

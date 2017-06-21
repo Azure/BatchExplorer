@@ -9,7 +9,7 @@ export class ComputeNodeInfoDecorator extends DecoratorBase<ComputeNodeInformati
     public taskRootDirectory: string;
     public taskRootDirectoryUrl: string;
 
-    constructor(private nodeInfo: ComputeNodeInformation) {
+    constructor(nodeInfo: ComputeNodeInformation) {
         super(nodeInfo);
 
         this.affinityId = this.stringField(nodeInfo.affinityId);

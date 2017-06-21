@@ -5,7 +5,7 @@ export class JobConstraintsDecorator extends DecoratorBase<JobConstraints> {
     public maxWallClockTime: string;
     public maxTaskRetryCount: string;
 
-    constructor(private constraints: JobConstraints) {
+    constructor(constraints: JobConstraints) {
         super(constraints);
 
         this.maxWallClockTime = this.timespanField(constraints.maxWallClockTime);

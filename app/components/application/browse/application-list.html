@@ -1,5 +1,5 @@
 <bl-quick-list *ngIf="quickList">
-    <bl-quick-list-item *ngFor="let application of displayedApplications" [routerLink]="['/applications/', application.id]" [key]="application.id">
+    <bl-quick-list-item *ngFor="let application of displayedApplications" [link]="['/applications/', application.id]" [key]="application.id">
         <bl-quick-list-item-status [status]="appStatus(application)">
         </bl-quick-list-item-status>
 
@@ -18,9 +18,9 @@
         <bl-column>Default Version</bl-column>
         <bl-column>Allow Updates</bl-column>
     </bl-thead>
-    <bl-row *ngFor="let application of displayedApplications" [routerLink]="['/applications/', application.id]" [key]="application.id">
+    <bl-row *ngFor="let application of displayedApplications" [link]="['/applications/', application.id]" [key]="application.id">
         <bl-cell>{{application.id}}</bl-cell>
-        <bl-cell>{{application.packages?.length}}</bl-cell>
+        <bl-cell>{{application.packages?.size}}</bl-cell>
         <bl-cell>{{application.defaultVersion}}</bl-cell>
         <bl-cell>{{application.allowUpdates}}</bl-cell>
     </bl-row>

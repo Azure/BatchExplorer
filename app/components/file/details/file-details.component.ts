@@ -2,21 +2,20 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { autobind } from "core-decorators";
 import { remote } from "electron";
-import { writeFile } from "fs";
 import { Observable, Subscription } from "rxjs";
 
 import { NotificationService } from "app/components/base/notifications";
 import { File, ServerError } from "app/models";
-import { FileService, StorageService } from "app/services";
+import { ElectronShell, FileService, StorageService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
-import { Constants, FileUrlUtils, log, prettyBytes } from "app/utils";
+import { Constants, FileUrlUtils, prettyBytes } from "app/utils";
 
 @Component({
     selector: "bl-file-details",
     templateUrl: "file-details.html",
 })
 export class FileDetailsComponent implements OnInit, OnDestroy {
-    public static breadcrumb({filename}) {
+    public static breadcrumb({ filename }) {
         return { name: filename, label: "File", invertName: true };
     }
 
@@ -37,6 +36,7 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     constructor(
         private route: ActivatedRoute,
         private fileService: FileService,
+        private shell: ElectronShell,
         private notificationService: NotificationService,
         private storageService: StorageService) {
         this.downloadEnabled = true;
@@ -68,6 +68,7 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         return Observable.of({});
     }
 
+    @autobind()
     public downloadFile() {
         const dialog = remote.dialog;
         const localPath = dialog.showSaveDialog({
@@ -77,7 +78,7 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         });
 
         if (localPath) {
-            this._saveFile(localPath);
+            return this._saveFile(localPath);
         }
     }
 
@@ -101,7 +102,7 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
                 this.filename,
             );
         } else {
-            throw "Unrecognised source type: " + this._sourceType;
+            throw new Error("Unrecognised source type: " + this._sourceType);
         }
 
         this._propertyProxy.fetch().subscribe((details: any) => {
@@ -118,21 +119,14 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         }
 
         const obj = FileUrlUtils.parseRelativePath(this.url);
+        let obs;
         if (obj.type === Constants.FileSourceTypes.Job) {
-            this.fileService.getFileContentFromTask(
-                this.jobId, this.taskId, this.filename).subscribe((data) => {
-                    this._writeToFile(pathToFile, data.content);
-                });
-
+            obs = this.fileService.fileFromTask(this.jobId, this.taskId, this.filename).download(pathToFile);
         } else if (this._sourceType === Constants.FileSourceTypes.Pool) {
-            this.fileService.getFileContentFromComputeNode(
-                this.poolId, this.nodeId, this.filename).subscribe((data) => {
-                    this._writeToFile(pathToFile, data.content);
-                });
-
+            obs = this.fileService.fileFromNode(this.poolId, this.nodeId, this.filename).download(pathToFile);
         } else if (this._sourceType === Constants.FileSourceTypes.Blob) {
             const blobName = `${this.taskId}/${this.outputKind}/${this.filename}`;
-            this.storageService.saveBlobToFile(this.jobId, blobName, pathToFile).subscribe({
+            obs = this.storageService.saveBlobToFile(this.jobId, blobName, pathToFile).subscribe({
                 error: (error: ServerError) => {
                     this.notificationService.error(
                         "Download failed",
@@ -142,17 +136,13 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
             });
 
         } else {
-            throw "Unrecognised source type: " + this._sourceType;
+            throw new Error("Unrecognised source type: " + this._sourceType);
         }
-    }
 
-    private _writeToFile(filename: string, data: any): void {
-        writeFile(filename, data.content, (error) => {
-            // Callback to get rid of the following console error
-            // DeprecationWarning: Calling an asynchronous function without callback is deprecated.
-            if (error) {
-                log.error("[FileDetails.component] writeFile error:", error);
-            }
+        obs.subscribe(() => {
+            this.shell.showItemInFolder(pathToFile);
+            this.notificationService.success("Download complete!", `File was saved locally at ${pathToFile}`);
         });
+        return obs;
     }
 }

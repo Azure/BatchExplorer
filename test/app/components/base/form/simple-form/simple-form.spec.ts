@@ -50,7 +50,7 @@ describe("SimpleFormComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [ReactiveFormsModule, MaterialModule.forRoot()],
+            imports: [ReactiveFormsModule, MaterialModule],
             declarations: [
                 SubmitButtonComponent,
                 FormTestComponent,

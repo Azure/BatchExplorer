@@ -38,7 +38,8 @@ export class FormErrorComponent implements OnChanges {
         for (let segment of this.path) {
             current = current.get(segment);
             if (!current) {
-                throw `Path ${this.path} for bl-error is invalid, there is no control with name '${segment}'`;
+                throw new Error(`Path ${this.path} for bl-error is invalid,`
+                    + ` there is no control with name '${segment}'`);
             }
         }
         return current;

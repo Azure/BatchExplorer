@@ -58,8 +58,8 @@ export class PoolUtils {
         return !this.isOfferWindows(offer);
     }
 
-    public static isOfferWindows(offer: string) {
-        return /^.*Windows.*$/.test(offer);
+    public static isOfferWindows(offer: string): boolean {
+        return /windows/i.test(offer);
     }
 
     public static iconForOffer(offerName: string) {
@@ -78,5 +78,50 @@ export class PoolUtils {
         } else {
             return this.iconForOffer("WindowsServer");
         }
+    }
+
+    public static getOsName(pool: Pool): string {
+        if (pool.cloudServiceConfiguration) {
+            let osFamily = pool.cloudServiceConfiguration.osFamily;
+
+            if (osFamily === 2) {
+                return "Windows Server 2008 R2 SP1";
+            } else if (osFamily === 3) {
+                return "Windows Server 2012";
+            } else if (osFamily === 4) {
+                return "Windows Server 2012 R2";
+            } else {
+                return "Windows Server 2016";
+            }
+        }
+
+        if (pool.virtualMachineConfiguration) {
+            const config = pool.virtualMachineConfiguration;
+            if (config.osDisk) {
+                return "Custom Image";
+            }
+            if (!config.imageReference) {
+                return "Unkown";
+            }
+            if (config.imageReference.publisher === "MicrosoftWindowsServer") {
+                return `Windows Server ${pool.virtualMachineConfiguration.imageReference.sku}`;
+            }
+
+            const { offer, sku } = pool.virtualMachineConfiguration.imageReference;
+
+            return `${offer} ${sku}`;
+        }
+
+        return "Unknown";
+    }
+
+    public static getComputePoolOsIcon(osName): string {
+        if (osName === "Custom Image") {
+            return "cloud";
+        } else if (/windows/i.test(osName)) {
+            return "windows";
+        }
+
+        return "linux";
     }
 }

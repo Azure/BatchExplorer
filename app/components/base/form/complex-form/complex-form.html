@@ -6,7 +6,7 @@
         <h1>{{currentPage.title}}</h1>
         <p>{{currentPage.subtitle}}</p>
     </div>
-    <form novalidate (keyup.enter)="closePageOrSubmit()">
+    <form novalidate>
         <ng-template [ngTemplateOutlet]="currentPage.content"></ng-template>
     </form>
     <div class="loading-overlay" *ngIf="loading"></div>

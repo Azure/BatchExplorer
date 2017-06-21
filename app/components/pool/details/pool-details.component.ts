@@ -33,7 +33,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         this._pool = pool;
         this.poolDecorator = pool && new PoolDecorator(pool);
     }
-    public get pool() { return this._pool; };
+    public get pool() { return this._pool; }
     public data: RxEntityProxy<PoolParams, Pool>;
 
     private _paramsSubscriber: Subscription;
@@ -69,6 +69,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._paramsSubscriber.unsubscribe();
+        this.data.dispose();
     }
 
     public get filterPlaceholderText() {
@@ -104,16 +105,6 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         this.sidebarManager.onClosed.subscribe(() => {
             this.refreshPool();
         });
-    }
-
-    public get nodesTooltipMessage() {
-        if (this.pool.resizeError) {
-            return "There was a resize error";
-        } else if (this.pool.currentDedicated !== this.pool.targetDedicated) {
-            return `Pool is resizing from ${this.pool.currentDedicated} to ${this.pool.targetDedicated} nodes`;
-        } else {
-            return `Pool has ${this.pool.currentDedicated} nodes`;
-        }
     }
 
     @autobind()

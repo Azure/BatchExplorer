@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { StorageAccountSharedKeyOptions, StorageClientProxyFactory } from "client/api";
 import { Observable } from "rxjs";
 
-import { AutoStorageAccount, StorageKeys } from "app/models";
+import { AutoStorageAccount, StorageKeys, StorageKeysAttributes } from "app/models";
 import { ArmResourceUtils } from "app/utils";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
@@ -32,7 +32,7 @@ export class StorageClientService {
     constructor(
         private accountService: AccountService,
         private arm: ArmHttpService,
-        private remote: ElectronRemote) {
+        remote: ElectronRemote) {
 
         this._storageClientFactory = remote.getStorageClientFactory();
 
@@ -50,7 +50,7 @@ export class StorageClientService {
 
     public get(): Observable<any> {
         if (!this._currentAccountId) {
-            throw "No account currently selected ...";
+            throw new Error("No account currently selected ...");
         }
 
         return this.accountService.currentAccount.first().flatMap((account) => {
@@ -66,8 +66,13 @@ export class StorageClientService {
             } else {
                 const url = `${settings.storageAccountId}/listkeys`;
                 return this.arm.post(url, JSON.stringify({}))
-                    .map(response => new StorageKeys(response.json()))
-                    .cascade((keys) => {
+                    .map(response => this._parseKeysReponse(response.json()))
+                    .cascade((keys: StorageKeys) => {
+                        // bail out if we didn't get any keys
+                        if (!keys.primaryKey && !keys.secondaryKey) {
+                            throw new Error(`Failed to return access keys for: ${settings.storageAccountId}`);
+                        }
+
                         cachedItem.keys = keys;
                         return Observable.of(this.getForSharedKey({
                             account: cachedItem.storageAccountName,
@@ -90,13 +95,33 @@ export class StorageClientService {
     }
 
     /**
+     * Classic and Standard storage API's return different payloads for the /listkeys operation
+     * @param responseJson - response JSON from the /listkeys operation
+     */
+    private _parseKeysReponse(responseJson) {
+        if (responseJson.primaryKey) {
+            // classic storage
+            return new StorageKeys(responseJson);
+        } else {
+            // Probably new storage account type, StorageKeys is immutable so construct correct JSON format.
+            const keyJson: StorageKeysAttributes = {} as any;
+            if (Array.isArray(responseJson.keys)) {
+                keyJson.primaryKey = responseJson.keys[0] ? responseJson.keys[0].value : null;
+                keyJson.secondaryKey = responseJson.keys[1] ? responseJson.keys[1].value : null;
+            }
+
+            return new StorageKeys(keyJson);
+        }
+    }
+
+    /**
      * Get the name of the storage account from the account id
      * @param [storageAccountId] the full resource id for the storage account.
      */
     private getStorageAccountName(storageAccountId: string): string {
         const accountName = ArmResourceUtils.getAccountNameFromResourceId(storageAccountId);
         if (!accountName) {
-            throw "Unable to get account name from storage account id: " + storageAccountId;
+            throw new Error(`Unable to get account name from storage account id: ${storageAccountId}`);
         }
 
         return accountName;

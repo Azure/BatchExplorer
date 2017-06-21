@@ -26,7 +26,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
 
     public searchInput = new FormControl();
 
-    private _propagateChange: Function = null;
+    private _propagateChange: (value: any) => void = null;
     private _subs: Subscription[] = [];
 
     constructor(private poolService: PoolService, private vmSizeService: VmSizeService) {
@@ -91,7 +91,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
 
     public poolCoreCount(pool: Pool) {
         const cores = this.poolCores[pool.id] || 1;
-        return cores * pool.targetDedicated;
+        return cores * pool.targetNodes;
     }
 
     private _computeOptions(query: string = null) {

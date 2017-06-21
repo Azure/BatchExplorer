@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Http, Response } from "@angular/http";
+import { Response } from "@angular/http";
 import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
@@ -7,11 +7,8 @@ import { AccountResource, VmSize } from "app/models";
 import { StringUtils, log } from "app/utils";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
+import { computeUrl } from "./compute.service";
 import { GithubDataService } from "./github-data.service";
-
-export function computeUrl(subscriptionId: string) {
-    return `subscriptions/${subscriptionId}/providers/Microsoft.Compute`;
-}
 
 const excludedVmsSizesPath = "data/vm-sizes.json";
 
@@ -51,7 +48,7 @@ export class VmSizeService {
     private _currentAccount: AccountResource;
 
     constructor(
-        private arm: ArmHttpService, private http: Http,
+        private arm: ArmHttpService,
         private githubData: GithubDataService, private accountService: AccountService) {
 
         const obs = Observable.combineLatest(this._sizes, this._excludedSizes);

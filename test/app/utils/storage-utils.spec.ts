@@ -5,8 +5,8 @@ describe("StorageUtils", () => {
     let startAndEndRegex: RegExp;
 
     beforeEach(() => {
-        multipleCharRegex = (<any>StorageUtils)._regexUnderscoresAndMultipleDashes;
-        startAndEndRegex = (<any>StorageUtils)._regexTrimStartAndEnd;
+        multipleCharRegex = (StorageUtils as any)._regexUnderscoresAndMultipleDashes;
+        startAndEndRegex = (StorageUtils as any)._regexTrimStartAndEnd;
     });
 
     it("Throws error if no jobId supplied", (done) => {

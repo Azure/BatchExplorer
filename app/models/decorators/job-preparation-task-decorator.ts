@@ -12,7 +12,7 @@ export class JobPreparationTaskDecorator extends DecoratorBase<JobPreparationTas
     public environmentSettings: {};
     public constraints: {};
 
-    constructor(private task?: JobPreparationTask) {
+    constructor(task?: JobPreparationTask) {
         super(task);
 
         this.commandLine = this.stringField(task.commandLine);
@@ -22,6 +22,6 @@ export class JobPreparationTaskDecorator extends DecoratorBase<JobPreparationTas
 
         this.resourceFiles = task.resourceFiles || {};
         this.environmentSettings = task.environmentSettings || {};
-        this.constraints = new TaskConstraintsDecorator(task.constraints || <any>{});
+        this.constraints = new TaskConstraintsDecorator(task.constraints || {} as any);
     }
 }

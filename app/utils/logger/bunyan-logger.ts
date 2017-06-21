@@ -1,5 +1,5 @@
 import { remote } from "electron";
-let logger = (<any>remote.getCurrentWindow()).logger;
+let logger = (remote.getCurrentWindow() as any).logger;
 if (!logger) {
     logger = {
         trace: () => null,

@@ -65,13 +65,17 @@ export class VmSizeDecorator {
 export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnChanges, OnDestroy {
     @Input()
     public osSource: PoolOsSources;
+
+    @Input()
+    public osType: "linux" | "windows";
+
     public pickedSize: string;
 
     public categoryNames: string[];
     public categories: StringMap<VmSizeDecorator[]>;
     public prices: Map<string, SpecCost> = Map<string, SpecCost>({});
 
-    private _propagateChange: Function = null;
+    private _propagateChange: (value: string) => void = null;
     private _categories: StringMap<string[]> = {};
     private _vmSizes: List<VmSize> = List([]);
     private _sizeSub: Subscription;
@@ -106,6 +110,10 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
                 this._vmSizes = x;
                 this._categorizeSizes();
             });
+        }
+
+        if (inputs.osType) {
+            this._loadPrices();
         }
     }
 
@@ -194,7 +202,7 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
 
     private _loadPrices() {
         this.accountService.currentAccount.flatMap((account) => {
-            const os = "linux"; // TODO update this.
+            const os = this.osType || "linux";
             return this.pricingService.getPrices(account.location, os);
         }).subscribe((prices: List<SpecCost>) => {
             const map: StringMap<SpecCost> = {};

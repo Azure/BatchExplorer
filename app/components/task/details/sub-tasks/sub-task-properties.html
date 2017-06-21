@@ -19,10 +19,10 @@
         <bl-text-property label="Task root directory URL" [value]="nodeInfo.taskRootDirectoryUrl"></bl-text-property>
     </bl-property-group>
 
-    <bl-property-group label="Scheduling Error" class="wide" *ngIf="schedulingError.exists">
-        <bl-text-property label="Category" [value]="schedulingError.category"></bl-text-property>
-        <bl-text-property label="Code" [value]="schedulingError.code"></bl-text-property>
-        <bl-text-property label="Message" [value]="schedulingError.message"></bl-text-property>
-        <bl-text-property label="Detals" [value]="schedulingError.details"></bl-text-property>
+    <bl-property-group label="Scheduling Error" class="wide" *ngIf="failureInfo.exists">
+        <bl-text-property label="Category" [value]="failureInfo.category"></bl-text-property>
+        <bl-text-property label="Code" [value]="failureInfo.code"></bl-text-property>
+        <bl-text-property label="Message" [value]="failureInfo.message"></bl-text-property>
+        <bl-text-property label="Detals" [value]="failureInfo.details"></bl-text-property>
     </bl-property-group>
 </bl-property-list>

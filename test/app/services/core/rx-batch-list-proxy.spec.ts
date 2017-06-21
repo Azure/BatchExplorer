@@ -6,7 +6,7 @@ import { List, OrderedSet } from "immutable";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { BatchError, ServerError } from "app/models";
-import { DataCache, RxBatchEntityProxy, RxBatchListProxy } from "app/services/core";
+import { DataCache, RxBatchEntityProxy, RxBatchListProxy, getOnceProxy } from "app/services/core";
 import { BatchClientServiceMock } from "test/utils/mocks";
 import { FakeModel } from "./fake-model";
 
@@ -40,10 +40,10 @@ class MockListProxy {
         this.options = options;
         this.fetchNext = jasmine.createSpy("fetchNext").and.callFake(() => {
             if (!this.data) {
-                return Promise.reject(<BatchError>{
+                return Promise.reject({
                     statusCode: 409, code: "Bad",
                     message: { value: "Very bad stuff." },
-                });
+                } as BatchError);
             }
             const pageData = this.data[this.page];
             this.nextLink++;
@@ -193,6 +193,14 @@ describe("RxBatchListProxy", () => {
         });
     });
 
+    it("#refreshAll() should get all the items", (done) => {
+        items = List([]); // Reset the items to make sure it loads all of them again
+        proxy.refreshAll().subscribe(() => {
+            expect(items).toEqualImmutable(List(data[0].concat(data[1]).map((x) => new FakeModel(x))));
+            done();
+        });
+    });
+
     describe("#loadNewItem()", () => {
         beforeEach((done) => {
             proxy.fetchNext().subscribe(() => done());
@@ -209,7 +217,7 @@ describe("RxBatchListProxy", () => {
                 { id: "3", state: "running", name: "Fake3" },
             ];
 
-            proxy.loadNewItem(entityProxy as any).subscribe(() => {
+            proxy.loadNewItem(getOnceProxy(entityProxy)).subscribe(() => {
                 expect(items).toEqualImmutable(List(expected.map((x) => new FakeModel(x))));
                 done();
             });
@@ -225,7 +233,7 @@ describe("RxBatchListProxy", () => {
                 { id: "4", state: "running", name: "Fake4" },
             ].concat(data[0]);
 
-            proxy.loadNewItem(entityProxy as any).subscribe(() => {
+            proxy.loadNewItem(getOnceProxy(entityProxy)).subscribe(() => {
                 expect(items).toEqualImmutable(List(expected.map((x) => new FakeModel(x))));
                 done();
             });

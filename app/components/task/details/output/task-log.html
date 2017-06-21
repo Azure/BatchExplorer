@@ -1,13 +1,25 @@
 <div class="file-tabs">
-    <div class="file-tab" *ngFor="let filename of outputFileNames" [class.active]="filename === outputFilename" (click)="outputFilename = filename">
+    <div class="file-tab" *ngFor="let filename of outputFileNames" [class.active]="filename === selectedOutputFile" (click)="selectedOutputFile = filename">
         {{filename}} ({{fileSizes[filename] || " - B"}})
     </div>
-
-    <!-- TODO when material2 autocomplete is here add a quick add another file -->
-    <!--<div class="file-tab-more">
-        <i class="fa fa-plus"></i>
-    </div>-->
+    <div class="file-tab" *ngIf="addingFile" [class.active]="addingFile">
+        <md-input-container>
+            <input type="text" mdInput [formControl]="filterControl" [mdAutocomplete]="auto">
+        </md-input-container>
+    </div>
+    <div class="file-tab-more" (click)="toggleFilter()" title="Select additional file">
+        <i class="fa" [ngClass]="!addingFile ? 'fa-plus' : 'fa-minus'"></i>
+    </div>
+    <div class="file-tab" *ngIf="outputFileNames.length > 2" (click)="resetTabs()" title="Reset to default">
+        <i class="fa fa-reply"></i>
+    </div>
 </div>
-<div *ngFor="let filename of outputFileNames" [hidden]="filename !== outputFilename">
+<div *ngFor="let filename of outputFileNames" [hidden]="filename !== selectedOutputFile">
     <bl-file-content [jobId]="jobId" [taskId]="task.id" [filename]="filename"></bl-file-content>
 </div>
+
+<md-autocomplete #auto="mdAutocomplete">
+   <md-option *ngFor="let option of filteredOptions | async" [value]="option" (onSelectionChange)="optionSelected($event, option)">
+      {{ option }}
+   </md-option>
+</md-autocomplete>
