@@ -16,6 +16,7 @@ import { Filter } from "app/utils/filter-builder";
 const validStates = [
     NodeState.idle,
     NodeState.running,
+    NodeState.startTaskFailed,
 ];
 
 @Component({
@@ -43,6 +44,8 @@ export class TaskFileListComponent implements OnChanges, OnDestroy {
     public LoadingStatus = LoadingStatus;
     public fileCleanupOperation: boolean;
     public nodeNotFound: boolean;
+    public nodeInInvalidState: boolean;
+    public nodeState: string;
 
     private _statuSub: Subscription;
 
@@ -104,22 +107,21 @@ export class TaskFileListComponent implements OnChanges, OnDestroy {
     }
 
     private _loadIfNodeExists() {
-        this.fileCleanupOperation = false;
-        this.nodeNotFound = false;
-
+        this._resetStates();
         this.status.next(LoadingStatus.Loading);
         this.taskService.getOnce(this.jobId, this.taskId).cascade((task: Task) => {
             if (!task.nodeInfo) {
-                this.nodeNotFound = false;
                 return null;
             }
 
             this.nodeService.getOnce(task.nodeInfo.poolId, task.nodeInfo.nodeId, {}).subscribe({
                 next: (node: Node) => {
-                    this.nodeNotFound = false;
-
                     if (validStates.includes(node.state)) {
                         this._loadFiles();
+                    } else {
+                        this.nodeState = node.state;
+                        this.status.next(LoadingStatus.Ready);
+                        this.nodeInInvalidState = true;
                     }
                 },
                 error: (error) => {
@@ -144,5 +146,12 @@ export class TaskFileListComponent implements OnChanges, OnDestroy {
         } else {
             return {};
         }
+    }
+
+    private _resetStates() {
+        this.nodeState = null;
+        this.nodeInInvalidState = false;
+        this.fileCleanupOperation = false;
+        this.nodeNotFound = false;
     }
 }
