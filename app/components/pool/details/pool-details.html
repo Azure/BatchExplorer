@@ -2,13 +2,13 @@
     <div *ngIf="pool && poolDecorator">
         <md-card class="overview">
             <div class="actions">
-                <bl-action-btn-group>
+                <bl-button-group>
                     <bl-refresh-btn [refresh]="refreshPool"></bl-refresh-btn>
-                    <bl-add-button title="Add job" (action)="addJob()"></bl-add-button>
-                    <bl-resize-button (action)="resizePool()"></bl-resize-button>
-                    <bl-clone-button (action)="clonePool()"></bl-clone-button>
-                    <bl-delete-button [entity]="pool" (action)="deletePool()"></bl-delete-button>
-                </bl-action-btn-group>
+                    <bl-add-button title="Add job" [action]="addJob"></bl-add-button>
+                    <bl-resize-button [action]="resizePool"></bl-resize-button>
+                    <bl-clone-button [action]="clonePool"></bl-clone-button>
+                    <bl-delete-button [entity]="pool" [action]="deletePool"></bl-delete-button>
+                </bl-button-group>
             </div>
             <div class="content">
                 <md-card-title>{{pool.id}}</md-card-title>

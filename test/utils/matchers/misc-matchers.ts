@@ -29,7 +29,7 @@ function toBeHidden() {
             } else if (actual instanceof HTMLElement) {
                 element = actual;
             }
-            return { pass: element.offsetParent === null, message: "Expected to be visible" };
+            return { pass: element.offsetParent === null, message: "Expected to be hidden" };
         },
     };
 }

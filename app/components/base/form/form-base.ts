@@ -75,10 +75,12 @@ export class FormBase {
         return obs;
     }
 
+    @autobind()
     public cancel() {
         this.close();
     }
 
+    @autobind()
     public close() {
         this.done.emit();
         const container = this.containerRef;

@@ -1,0 +1,12 @@
+<div>
+    <div class="title">
+        <a class="id" [routerLink]="['/pools', poolId, 'nodes', node.id]">{{node.id}}</a>
+        <i class="fa fa-times" (click)="close.emit()"></i>
+    </div>
+    <div class="state">{{node.state}}</div>
+    <div class="actions">
+        <bl-button type="wide" color="primary" [action]="reboot">Reboot</bl-button>
+        <bl-button type="wide" color="primary" [action]="reimage">Reimage</bl-button>
+        <!--<button md-raised-button color="warn">Delete</button>-->
+    </div>
+</div>

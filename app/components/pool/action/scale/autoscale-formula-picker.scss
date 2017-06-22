@@ -26,19 +26,22 @@
         margin-top: 0;
     }
     .formula-list {
-        margin: 0.5em 0.1em;
+        margin: 0;
     }
     .saved-formulas {
         width: 210px;
         flex: 0 0 170px;
-        padding: 1em 0;
         .saved-formulas-container {
             height: 100%;
         }
 
         .saved-formulas-btns {
-            height: 28px;
-            padding: 2px 5px;
+            padding: 5px;
+            > bl-button {
+                height: 24px;
+                line-height: 24px;
+                width: 100%;
+            }
         }
 
         .saved-formulas-wrapper {
