@@ -42,9 +42,10 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     get value() { return this._value; }
 
     @Input() set value(v) {
+        console.log("Setting value...");
         if (v !== this._value) {
+            console.log("Writing value...");
             this.writeValue(v);
-            this.onChange(v);
         }
     }
 
@@ -52,6 +53,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
 
     public ngOnChanges(changes) {
         if (changes.config) {
+            console.log("Update config...");
             this._updatePlaceHolder();
         }
     }
@@ -87,8 +89,9 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     }
 
     public updateValue(value) {
-        this.value = value;
+        this._value = value;
         this.change.emit(value);
+        this.onChange(value);
     }
 
     public writeValue(value) {
