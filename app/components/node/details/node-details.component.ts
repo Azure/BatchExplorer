@@ -86,6 +86,7 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
         return this.data.refresh();
     }
 
+    @autobind()
     public connect() {
         const ref = this.sidebarManager.open(`connect-node-${this.nodeId}`, NodeConnectComponent);
         ref.component.node = this.node;

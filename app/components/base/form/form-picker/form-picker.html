@@ -7,9 +7,7 @@
             <div class="title"><ng-content select="[value-title]"></ng-content></div>
             <div class="subtitle"><ng-content select="[value-subtitle]"></ng-content></div>
         </div>
-        <div class="clear-btn" (click)="clearPicker($event)">
-            <button md-mini-fab><i class="fa fa-times"></i></button>
-        </div>
+        <bl-button class="clear-btn"  type="round" color="light" (click)="clearPicker($event)"><i class="fa fa-times"></i></bl-button>
     </div>
 </button>
 <bl-form-page #page [title]="name" [formGroup]="nestedValue" (submit)="nestedFormSubmit()" (cancel)="nestedFormCanceled()">

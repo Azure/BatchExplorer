@@ -3,7 +3,7 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import * as path from "path";
 
-import { SubmitButtonComponent } from "app/components/base/buttons";
+import { ButtonComponent } from "app/components/base/buttons";
 import { DownloadRdpComponent } from "app/components/node/connect";
 import { NodeConnectionSettings } from "app/models";
 import { ElectronShell, FileSystemService } from "app/services";
@@ -46,7 +46,7 @@ describe("DownloadRdpComponent", () => {
         };
 
         TestBed.configureTestingModule({
-            declarations: [DownloadRdpComponent, DownloadRdpMockComponent, SubmitButtonComponent],
+            declarations: [DownloadRdpComponent, DownloadRdpMockComponent, ButtonComponent],
             providers: [
                 { provide: FileSystemService, useValue: fsServiceSpy },
                 { provide: ElectronShell, useValue: shellSpy },
@@ -89,14 +89,14 @@ describe("DownloadRdpComponent", () => {
         });
 
         it("should have 1 button proposing to connect", () => {
-            const btn = de.query(By.css("bl-submit-btn"));
+            const btn = de.query(By.css("bl-button"));
             expect(btn).not.toBeFalsy();
             expect(btn.nativeElement.textContent).toContain("Connect");
         });
 
         it("should save the rdp file when submitting", (done) => {
-            const btn = de.query(By.css("bl-submit-btn")).componentInstance;
-            btn.submit().subscribe(() => {
+            const btn = de.query(By.css("bl-button")).componentInstance;
+            btn.action().subscribe(() => {
                 expect(fsServiceSpy.saveFile).toHaveBeenCalledOnce();
                 const expectedContent = "full address:s:0.0.0.0\nusername:s:.\\bar\nprompt for credentials:i:1";
                 expect(fsServiceSpy.saveFile).toHaveBeenCalledWith(
@@ -122,15 +122,15 @@ describe("DownloadRdpComponent", () => {
         });
 
         it("should have 1 button proposing to download", () => {
-            const btn = de.query(By.css("bl-submit-btn"));
+            const btn = de.query(By.css("bl-button"));
             expect(btn).not.toBeFalsy();
             fixture.detectChanges();
             expect(btn.nativeElement.textContent).toContain("Download rdp file");
         });
 
         it("should save the rdp file when submitting", (done) => {
-            const btn = de.query(By.css("bl-submit-btn")).componentInstance;
-            btn.submit().subscribe(() => {
+            const btn = de.query(By.css("bl-button")).componentInstance;
+            btn.action().subscribe(() => {
                 expect(fsServiceSpy.saveFile).toHaveBeenCalledOnce();
                 const expectedContent = "full address:s:0.0.0.0\nusername:s:.\\bar\nprompt for credentials:i:1";
                 expect(fsServiceSpy.saveFile).toHaveBeenCalledWith(

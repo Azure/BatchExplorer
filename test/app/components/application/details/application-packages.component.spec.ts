@@ -37,23 +37,18 @@ describe("ApplicationPackagesComponent", () => {
     });
 
     describe("table context commands are displayed", () => {
-        it("add button displayed", () => {
-            const container = fixture.debugElement.query(By.css("button[title=\"Add package version\"]"));
-            expect(container.nativeElement).toBeDefined();
-        });
-
         it("delete button displayed", () => {
-            const container = fixture.debugElement.query(By.css("button[title=\"Delete selected\"]"));
+            const container = fixture.debugElement.query(By.css("bl-button[title=\"Delete selected\"]"));
             expect(container.nativeElement).toBeDefined();
         });
 
         it("edit button displayed", () => {
-            const container = fixture.debugElement.query(By.css("button[title=\"Update package\"]"));
+            const container = fixture.debugElement.query(By.css("bl-button[title=\"Update package\"]"));
             expect(container.nativeElement).toBeDefined();
         });
 
         it("activate button displayed", () => {
-            const container = fixture.debugElement.query(By.css("button[title=\"Activate pending package\"]"));
+            const container = fixture.debugElement.query(By.css("bl-button[title=\"Activate pending package\"]"));
             expect(container.nativeElement).toBeDefined();
         });
     });

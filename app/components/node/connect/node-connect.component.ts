@@ -89,13 +89,18 @@ export class NodeConnectComponent implements OnInit {
         if (!this.connectionSettings || !this.credentials) {
             return "N/A";
         }
-        const {ip, port} = this.connectionSettings;
+        const { ip, port } = this.connectionSettings;
         return `ssh ${this.credentials.name}@${ip} -p ${port}`;
     }
 
     @autobind()
     public specifyCredentials() {
         this.credentialSource = CredentialSource.Specified;
+    }
+
+    @autobind()
+    public close() {
+        this.sidebarRef.destroy();
     }
 
     /**

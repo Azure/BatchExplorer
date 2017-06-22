@@ -91,11 +91,7 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
         return this.data.refresh();
     }
 
-    public addTask() {
-        const createRef = this.sidebarManager.open("add-basic-task", TaskCreateBasicDialogComponent);
-        createRef.component.jobId = this.jobId;
-    }
-
+    @autobind()
     public terminateTask() {
         let config = new MdDialogConfig();
         config.viewContainerRef = this.viewContainerRef;
@@ -108,6 +104,7 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
         });
     }
 
+    @autobind()
     public deleteTask() {
         let config = new MdDialogConfig();
         config.viewContainerRef = this.viewContainerRef;
@@ -117,6 +114,7 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
         dialogRef.componentInstance.taskId = this.taskId;
     }
 
+    @autobind()
     public cloneTask() {
         const ref = this.sidebarManager.open("add-basic-pool", TaskCreateBasicDialogComponent);
         ref.component.jobId = this.jobId;
