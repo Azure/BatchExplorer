@@ -68,8 +68,15 @@ export class PoolUtils {
         const icon = iconMapping[offerName];
         if (icon) {
             return icon;
+        }
+
+        // double check if we can parse out the kind of icon we need.
+        // these will be the majority of any new rendering offers.
+        if (this.isOfferWindows(offerName)) {
+            return Icons.windows;
+        } else if (/centos/i.test(offerName)) {
+            return Icons.centos;
         } else {
-            // Need a final check here looking for clues in the offer name. "windows|centos|etc"
             return new Icon(IconSources.fa, "fa-microchip");
         }
     }
