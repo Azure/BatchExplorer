@@ -114,16 +114,6 @@ md-radio-button {
     }
 }
 
-[md-raised-button].mat-primary.mat-button-focus {
-    background: map-get($primary, 700);
-}
-
-button[md-raised-button].small {
-    height: 20px;
-    line-height: 20px;
-    min-width: 50px;
-}
-
 md-checkbox[small] {
     .mat-checkbox-inner-container {
         width: 14px;
