@@ -3,7 +3,7 @@ import { Model, Prop, Record } from "app/core";
 export type UserAccountElevationLevel = "nonadmin" | "admin";
 export const UserAccountElevationLevel = {
     nonadmin: "nonadmin" as UserAccountElevationLevel,
-    admin: "nonadmin" as UserAccountElevationLevel,
+    admin: "admin" as UserAccountElevationLevel,
 };
 
 export interface UserAccountAttributes {
