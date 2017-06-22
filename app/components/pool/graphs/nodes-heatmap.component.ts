@@ -2,12 +2,17 @@ import {
     AfterViewInit, ChangeDetectionStrategy, Component, ElementRef,
     HostBinding, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild,
 } from "@angular/core";
+import { Router } from "@angular/router";
 import * as d3 from "d3";
 import * as elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";
 import { BehaviorSubject } from "rxjs";
 
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
+import { SidebarManager } from "app/components/base/sidebar";
+import { NodeConnectComponent } from "app/components/node/connect";
 import { Job, Node, NodeState, Pool } from "app/models";
+import { NodeService } from "app/services";
 import { log } from "app/utils";
 import { HeatmapColor } from "./heatmap-color";
 import { StateTree } from "./state-tree";
@@ -106,7 +111,13 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     private _nodes: List<Node>;
     private _nodeMap: { [id: string]: Node } = {};
 
-    constructor(private elementRef: ElementRef) {
+    constructor(
+        private elementRef: ElementRef,
+        private contextMenuService: ContextMenuService,
+        private nodeService: NodeService,
+        private sidebarManager: SidebarManager,
+        private router: Router,
+    ) {
         this.colors = new HeatmapColor(stateTree);
         this.selectedNodeId.subscribe(() => {
             this._updateSelectedNode();
@@ -198,7 +209,11 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         nodeEnter.merge(groups)
             .attr("transform", (x) => this._translate(x as any))
             .attr("width", z)
-            .attr("height", z);
+            .attr("height", z)
+            .on("contextmenu", (data) => {
+                console.log("Context menu....", data);
+                this._showContextMenu(data.node);
+            });
 
         const backgroundGroup = nodeEnter.append("g").classed("bg", true).merge(groups.select("g.bg"));
         const runningTaskGroup = nodeEnter.append("g").classed("tasks", true).merge(groups.select("g.tasks"));
@@ -382,5 +397,36 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
 
     private _updateSelectedNode() {
         this.selectedNode.next(this._nodeMap[this.selectedNodeId.getValue()]);
+    }
+
+    private _showContextMenu(node: Node) {
+        this.contextMenuService.openMenu(this._buildContextMenu(node));
+    }
+
+    private _buildContextMenu(node: Node) {
+        return new ContextMenu([
+            new ContextMenuItem({ label: "Go to", click: () => this._gotoNode(node) }),
+            new ContextMenuItem({ label: "Reboot", click: () => this._reboot(node) }),
+            new ContextMenuItem({ label: "Reimage", click: () => this._reimage(node) }),
+            new ContextMenuItem({ label: "Connect", click: () => this._connectTo(node) }),
+        ]);
+    }
+
+    private _reboot(node: Node) {
+        this.nodeService.reboot(this.pool.id, node.id).cascade(() => this.nodeService.getOnce(this.pool.id, node.id));
+    }
+
+    private _reimage(node: Node) {
+        this.nodeService.reimage(this.pool.id, node.id).cascade(() => this.nodeService.getOnce(this.pool.id, node.id));
+    }
+
+    private _gotoNode(node: Node) {
+        this.router.navigate(["/pools", this.pool.id, "nodes", node.id]);
+    }
+
+    private _connectTo(node: Node) {
+        const ref = this.sidebarManager.open(`connect-node`, NodeConnectComponent, true);
+        ref.component.node = node;
+        ref.component.pool = this.pool;
     }
 }
