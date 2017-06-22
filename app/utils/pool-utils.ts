@@ -14,10 +14,12 @@ const iconMapping = {
     "SLES": Icons.openSUSE,
     "SLES-HPC": Icons.openSUSE,
     "standard-data-science-vm": Icons.windows,
+    "rendering-windows2016": Icons.windows,
+    "autodesk-maya-arnold-centos73": Icons.centos,
+    "rendering-centos73": Icons.centos,
 };
 
 export class PoolUtils {
-
     public static isIaas(pool: Pool) {
         return Boolean(pool && pool.virtualMachineConfiguration);
     }
@@ -67,6 +69,7 @@ export class PoolUtils {
         if (icon) {
             return icon;
         } else {
+            // Need a final check here looking for clues in the offer name. "windows|centos|etc"
             return new Icon(IconSources.fa, "fa-microchip");
         }
     }

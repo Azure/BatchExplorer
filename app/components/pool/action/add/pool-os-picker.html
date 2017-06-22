@@ -5,7 +5,6 @@
             {{offer.name}}
         </bl-os-offer-tile>
 
-
         <bl-os-offer-tile name="WindowsServer" [skus]="cloudServiceOsFamilies" (pickOffer)="pickCloudService()" (pickSku)="pickCloudService($event.id)"
             [active]="value?.source === PoolOsSources.PaaS" [selectedSku]="selectedFamilyName">
             <div>Windows Server</div>
