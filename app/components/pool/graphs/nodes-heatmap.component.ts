@@ -206,8 +206,14 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
                 this.selectedNodeId.next(tile.node.id);
                 this._updateSvg(this._svg.selectAll("g.node-group"));
             }).on("dblclick", (tile) => {
+                if (!this.interactive) {
+                    return;
+                }
                 this._gotoNode(tile.node);
             }).on("contextmenu", (tile) => {
+                if (!this.interactive) {
+                    return;
+                }
                 this._showContextMenu(tile.node);
             });
 
