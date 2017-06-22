@@ -29,11 +29,15 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
 
     private _propagateChange: (items: any[]) => void;
     private _sub: Subscription;
+    private _writingValue = false;
 
     constructor(private formBuilder: FormBuilder) {
         this.items = formBuilder.array([]);
         this.form = formBuilder.group({ items: this.items });
         this._sub = this.items.valueChanges.subscribe((files) => {
+            if (this._writingValue) {
+                return;
+            }
             const lastFile = files[files.length - 1];
             if (lastFile && !this._isEmpty(lastFile)) {
                 this.addNewItem();
@@ -70,14 +74,18 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
         this.items.removeAt(index);
     }
 
-    public writeValue(values: any[]) {
+    public writeValue(value: any[]) {
+        this._writingValue = true;
         this.items.controls = [];
 
-        if (values) {
-            for (let file of values) {
-                this.items.push(this.formBuilder.group(file));
+        if (value) {
+            for (let val of value) {
+                this.items.push(this.formBuilder.group(val));
             }
+        } else {
+            this.items.setValue([]);
         }
+        this._writingValue = false;
         this.addNewItem();
     }
 

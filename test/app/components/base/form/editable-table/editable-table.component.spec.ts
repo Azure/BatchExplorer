@@ -119,4 +119,25 @@ describe("EditableTableComponent", () => {
         const newRows = de.queryAll(By.css("tbody tr"));
         expect(newRows.length).toBe(3);
     });
+
+    it("it should edit a exisiting row", () => {
+        testComponent.items.setValue([
+            { key: "foo1", value: "bar1" },
+            { key: "foo2", value: "bar2" },
+            { key: "foo3", value: "bar3" },
+        ]);
+        fixture.detectChanges();
+        const rows = de.queryAll(By.css("tbody tr"));
+        expect(rows.length).toBe(4);
+        const row = rows[1];
+        const inputs = row.queryAll(By.css("input"));
+        expect(inputs.length).toBe(2, "Should have 2 inputs in each row");
+        const input = inputs[0];
+        updateInput(input, "newVal");
+        expect(testComponent.items.value).toEqual([
+            { key: "foo1", value: "bar1" },
+            { key: "newVal", value: "bar2" },
+            { key: "foo3", value: "bar3" },
+        ]);
+    });
 });
