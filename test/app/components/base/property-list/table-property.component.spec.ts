@@ -1,7 +1,9 @@
-import { Component, DebugElement } from "@angular/core";
+import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
+import { ButtonComponent } from "app/components/base/buttons";
 import {
     TablePropertyCellComponent, TablePropertyComponent, TablePropertyHeaderComponent, TablePropertyRowComponent,
 } from "app/components/base/property-list";
@@ -28,7 +30,7 @@ class TestTableComponent {
     ];
 }
 
-describe("TextPropertyComponent", () => {
+describe("TablePropertyComponent", () => {
     let fixture: ComponentFixture<TestTableComponent>;
     let de: DebugElement;
     let component: TestTableComponent;
@@ -37,12 +39,15 @@ describe("TextPropertyComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
+            imports: [NoopAnimationsModule],
             declarations: [TestTableComponent,
                 TablePropertyComponent,
                 TablePropertyCellComponent,
                 TablePropertyHeaderComponent,
                 TablePropertyRowComponent,
+                ButtonComponent,
             ],
+            schemas: [NO_ERRORS_SCHEMA],
         });
         fixture = TestBed.createComponent(TestTableComponent);
         de = fixture.debugElement;
