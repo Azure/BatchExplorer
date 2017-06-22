@@ -1,2 +1,2 @@
-<bl-submit-btn *ngIf="isOSWindows" [submit]="connectWithRdp">Connect</bl-submit-btn>
-<bl-submit-btn *ngIf="!isOSWindows" [submit]="downloadRdp">Download rdp file</bl-submit-btn>
+<bl-button type="wide" *ngIf="isOSWindows" [action]="connectWithRdp">Connect</bl-button>
+<bl-button type="wide" *ngIf="!isOSWindows" [action]="downloadRdp">Download rdp file</bl-button>

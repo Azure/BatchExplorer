@@ -3,9 +3,7 @@ import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 
-import { SubmitButtonComponent } from "./submit-btn.component";
-
-import { ActionButtonComponent, ActionButtonGroupComponent } from "./action-button.component";
+import { ButtonComponent, ButtonGroupComponent } from "./button.component";
 import {
     AddButtonComponent,
     AddTaskButtonComponent,
@@ -22,8 +20,8 @@ import {
 } from "./buttons.component";
 
 const components = [
-    ActionButtonComponent,
-    ActionButtonGroupComponent,
+    ButtonComponent,
+    ButtonGroupComponent,
     AddButtonComponent,
     AddTaskButtonComponent,
     ClearListSelectionButtonComponent,
@@ -35,7 +33,6 @@ const components = [
     EnableButtonComponent,
     LoadingButtonComponent,
     ResizeButtonComponent,
-    SubmitButtonComponent,
     TerminateButtonComponent,
 ];
 

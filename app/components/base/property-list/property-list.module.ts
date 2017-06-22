@@ -14,6 +14,7 @@ import {
     PropertyGroupComponent,
 } from "./property-group.component";
 
+import { ButtonsModule } from "../buttons";
 import {
     TablePropertyCellComponent, TablePropertyComponent, TablePropertyHeaderComponent, TablePropertyRowComponent,
 } from "./table-property.component";
@@ -36,7 +37,7 @@ const components = [
     declarations: components,
     entryComponents: [],
     exports: [...components],
-    imports: [BrowserModule, MaterialModule, RouterModule],
+    imports: [ButtonsModule, BrowserModule, MaterialModule, RouterModule],
     providers: [],
 })
 

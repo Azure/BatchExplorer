@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges, ViewContainerRef } from "@angular/core";
 import { MdDialog, MdDialogConfig } from "@angular/material";
+import { autobind } from "core-decorators";
 import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
@@ -97,6 +98,7 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
         });
     }
 
+    @autobind()
     public deleteSelected() {
         this.taskManager.startTask("", (backgroundTask) => {
             const task = new DeletePackageAction(this.applicationService, this.application.id, this.selectedItems);
@@ -113,6 +115,7 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
         return this.applicationService.getOnce(this.application.id);
     }
 
+    @autobind()
     public activateActiveItem() {
         let config = new MdDialogConfig();
         config.viewContainerRef = this.viewContainerRef;
@@ -125,6 +128,7 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
         });
     }
 
+    @autobind()
     public updatePackageVersion() {
         const sidebarRef = this.sidebarManager.open("update-package", ApplicationCreateDialogComponent);
         sidebarRef.component.setValue(this.application, this.activatedItem);

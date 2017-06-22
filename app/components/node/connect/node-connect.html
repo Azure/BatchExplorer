@@ -4,8 +4,8 @@
         <div *ngIf="credentialSource === null">
             <h3>Node credentials</h3>
             <div class="credentials-source">
-                <bl-submit-btn [submit]="generateCredentials">Generate</bl-submit-btn>
-                <bl-submit-btn [submit]="specifyCredentials">Specify</bl-submit-btn>
+                <bl-button type="wide" [action]="generateCredentials">Generate</bl-button>
+                <bl-button type="wide" [action]="specifyCredentials">Specify</bl-button>
             </div>
         </div>
         <div *ngIf="credentialSource === CredentialSource.Specified && !credentials">
@@ -20,7 +20,7 @@
         </div>
         <div *ngIf="hasIp && connectionSettings && credentials">
             <h3>Connection settings</h3>
-            <bl-property-group  class="normal">
+            <bl-property-group class="normal">
                 <bl-text-property label="Ip" [value]="connectionSettings.ip"></bl-text-property>
                 <bl-text-property label="Port" [value]="connectionSettings.port"></bl-text-property>
                 <bl-text-property *ngIf="!windows" label="SSH command" [value]="sshCommand"></bl-text-property>
@@ -31,6 +31,6 @@
         <span *ngIf="credentials && windows && agentSkus">
             <bl-download-rdp [nodeId]="node.id" [credentials]="credentials" [rdpContent]="rdpContent" [connectionSettings]="connectionSettings"></bl-download-rdp>
         </span>
-        <button md-raised-button (click)="sidebarRef.destroy()">Close</button>
+        <bl-button color="light" type="wide" [action]="close">Close</bl-button>
     </div>
 </div>

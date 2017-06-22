@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnDestroy, ViewChild, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { autobind } from "core-decorators";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
@@ -69,6 +70,7 @@ export class SSHKeyPickerComponent implements OnDestroy, ControlValueAccessor {
         return null;
     }
 
+    @autobind()
     public addKey() {
         this.showSaveForm = true;
         setTimeout(() => {
@@ -76,11 +78,13 @@ export class SSHKeyPickerComponent implements OnDestroy, ControlValueAccessor {
         });
     }
 
+    @autobind()
     public cancelAddKey() {
         this.showSaveForm = false;
         this.sshKeyName.patchValue("");
     }
 
+    @autobind()
     public saveKey() {
         const value = this.sshKeyValue.value;
         const name = this.sshKeyName.value;
