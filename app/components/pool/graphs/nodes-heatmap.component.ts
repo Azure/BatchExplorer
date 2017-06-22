@@ -205,15 +205,16 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
                 }
                 this.selectedNodeId.next(tile.node.id);
                 this._updateSvg(this._svg.selectAll("g.node-group"));
+            }).on("dblclick", (tile) => {
+                this._gotoNode(tile.node);
+            }).on("contextmenu", (tile) => {
+                this._showContextMenu(tile.node);
             });
+
         nodeEnter.merge(groups)
             .attr("transform", (x) => this._translate(x as any))
             .attr("width", z)
-            .attr("height", z)
-            .on("contextmenu", (data) => {
-                console.log("Context menu....", data);
-                this._showContextMenu(data.node);
-            });
+            .attr("height", z);
 
         const backgroundGroup = nodeEnter.append("g").classed("bg", true).merge(groups.select("g.bg"));
         const runningTaskGroup = nodeEnter.append("g").classed("tasks", true).merge(groups.select("g.tasks"));
