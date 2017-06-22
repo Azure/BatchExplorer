@@ -28,6 +28,7 @@ import { TaskModule } from "app/components/task/task.module";
 import { BatchLabsErrorHandler } from "app/error-handler";
 
 // services
+import { HttpModule } from "@angular/http";
 import { PollService } from "app/services/core";
 import {
     AccountService,
@@ -45,6 +46,7 @@ import {
     FileSystemService,
     GithubDataService,
     HttpUploadService,
+    JobHookTaskService,
     JobService,
     LocalFileStorage,
     NodeService,
@@ -86,6 +88,7 @@ const modules = [
         FormsModule,
         MaterialModule,
         ReactiveFormsModule,
+        HttpModule,
         RouterModule.forRoot(routes, { useHash: true }),
         BaseModule,
         ...modules,
@@ -107,6 +110,7 @@ const modules = [
         FileSystemService,
         GithubDataService,
         HttpUploadService,
+        JobHookTaskService,
         JobService,
         LocalFileStorage,
         NodeService,

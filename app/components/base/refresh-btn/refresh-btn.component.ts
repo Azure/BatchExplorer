@@ -1,4 +1,5 @@
 import { Component, Input, animate, style, transition, trigger } from "@angular/core";
+import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
 export enum RefreshStatus {
@@ -27,10 +28,11 @@ export class RefreshButtonComponent {
     public refresh: () => Observable<any>;
 
     @Input()
-    public type: string = "normal";
+    public type: string = "square";
 
     public status = RefreshStatus.Idle;
 
+    @autobind()
     public onClick() {
         this.status = RefreshStatus.Refreshing;
         this.refresh().subscribe(

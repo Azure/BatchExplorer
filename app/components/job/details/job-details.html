@@ -2,15 +2,15 @@
     <div *ngIf="job">
         <md-card class="overview">
             <div class="actions">
-                <bl-action-btn-group>
+                <bl-button-group>
                     <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                    <bl-add-task-button title="Add task" [job]="job" (action)="addTask()"></bl-add-task-button>
-                    <bl-terminate-button [entity]="job" (action)="terminateJob()"></bl-terminate-button>
-                    <bl-delete-button [entity]="job" (action)="deleteJob()"></bl-delete-button>
-                    <bl-disable-button [job]="job" (action)="disableJob()"></bl-disable-button>
-                    <bl-enable-button [job]="job" (action)="enableJob()"></bl-enable-button>
-                    <bl-clone-button (action)="cloneJob()"></bl-clone-button>
-                </bl-action-btn-group>
+                    <bl-add-task-button title="Add task" [job]="job" [action]="addTask"></bl-add-task-button>
+                    <bl-terminate-button [entity]="job" [action]="terminateJob"></bl-terminate-button>
+                    <bl-delete-button [entity]="job" [action]="deleteJob"></bl-delete-button>
+                    <bl-disable-button [job]="job" [action]="disableJob"></bl-disable-button>
+                    <bl-enable-button [job]="job" [action]="enableJob"></bl-enable-button>
+                    <bl-clone-button [action]="cloneJob"></bl-clone-button>
+                </bl-button-group>
             </div>
             <div class="content">
                 <div class="info">
@@ -39,6 +39,10 @@
                 <bl-tab key="configuration">
                     <bl-tab-label>Configuration</bl-tab-label>
                     <bl-job-configuration [job]="job"></bl-job-configuration>
+                </bl-tab>
+                <bl-tab key="hooktasks" [disabled]="!hasHookTask">
+                    <bl-tab-label>Prep/Release tasks</bl-tab-label>
+                    <bl-job-hook-task-browser [job]="job" *ngIf="hasHookTask"></bl-job-hook-task-browser>
                 </bl-tab>
             </bl-tab-group>
         </md-card>

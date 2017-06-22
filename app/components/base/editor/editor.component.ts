@@ -44,7 +44,6 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     @Input() set value(v) {
         if (v !== this._value) {
             this.writeValue(v);
-            this.onChange(v);
         }
     }
 
@@ -87,8 +86,9 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     }
 
     public updateValue(value) {
-        this.value = value;
+        this._value = value;
         this.change.emit(value);
+        this.onChange(value);
     }
 
     public writeValue(value) {

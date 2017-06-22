@@ -16,7 +16,7 @@ import { FocusSectionComponent } from "./focus-section.component";
         BrowserModule,
         FormsModule,
         RouterModule,
-        MaterialModule.forRoot(),
+        MaterialModule,
     ],
 })
 export class FocusSectionModule {

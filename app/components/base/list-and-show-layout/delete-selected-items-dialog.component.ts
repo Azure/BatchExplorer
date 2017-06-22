@@ -16,10 +16,10 @@ import { MdDialogRef } from "@angular/material";
                 </ul>
             </div>
             <div class="buttons">
-                <button md-raised-button (click)="dialogRef.close(true)" color="warn">
+                <bl-button type="wide" (click)="dialogRef.close(true)" color="danger">
                     Yes
-                </button>
-                <button md-raised-button type="primary" (click)="dialogRef.close(false)">No</button>
+                </bl-button>
+                <bl-button type="wide" type="primary" (click)="dialogRef.close(false)" color="light">No</bl-button>
             </div>
         </div>
     `,

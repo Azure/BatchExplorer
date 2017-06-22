@@ -10,17 +10,17 @@
         <div class="saved-formulas">
             <div *ngIf="!showSaveForm" class="saved-formulas-container">
                 <div class="saved-formulas-btns">
-                    <button md-raised-button color="primary" class="small add-formula-btn" (click)="addFormula()">
+                    <bl-button type="wide" color="primary" class="small add-formula-btn" (click)="addFormula()">
                         <i class="fa fa-save"></i> Save Autoscale Formula
-                    </button>
+                    </bl-button>
                 </div>
                 <div class="formula-list">
-                    <button md-raised-button class="small custom-formulas" mdTooltip="Custom auto scale formula" (click)="showCustom()">
+                    <bl-button type="wide" color="light" class="custom-formulas" mdTooltip="Custom auto scale formula" (click)="showCustom()">
                         <i class="fa fa-file-code-o" aria-hidden="true"></i> Custom
-                    </button>
-                    <button md-raised-button class="small sample-formulas" mdTooltip="Sample auto scale formula" (click)="showSample()">
+                    </bl-button>
+                    <bl-button type="wide" color="light" class="sample-formulas" mdTooltip="Sample auto scale formula" (click)="showSample()">
                        <i class="fa fa-star" aria-hidden="true"></i> Sample
-                    </button>
+                    </bl-button>
                 </div>
                 <div class="saved-formulas-wrapper" *ngIf="customFormulaMode">
                     <div class="formula" *ngFor="let formula of savedAutoscaleFormulas" (click)="selectFormula(formula)">
@@ -52,8 +52,8 @@
                 </md-input-container>
 
                 <div class="btn-container">
-                    <button md-mini-fab color="primary" class="small save-formula-btn" (click)="saveFormula()"><i class="fa fa-check"></i></button>
-                    <button md-mini-fab color="warn" class="small" (click)="cancelAddFormula()"><i class="fa fa-times"></i> </button>
+                    <bl-button type="round" color="primary" class="save-formula-btn" (click)="saveFormula()"><i class="fa fa-check"></i></bl-button>
+                    <bl-button type="round" color="danger" (click)="cancelAddFormula()"><i class="fa fa-times"></i> </bl-button>
                 </div>
             </div>
         </div>

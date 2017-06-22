@@ -18,7 +18,7 @@ class TestGroupComponent {
     public warningMessage = null;
 }
 
-describe("TextPropertyComponent", () => {
+describe("PropertyGroupComponent", () => {
     let fixture: ComponentFixture<TestGroupComponent>;
     let de: DebugElement;
     let component: TestGroupComponent;

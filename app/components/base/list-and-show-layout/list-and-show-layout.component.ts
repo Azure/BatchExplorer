@@ -6,6 +6,7 @@ import {
 import { FormControl } from "@angular/forms";
 import { MdDialog, MdDialogConfig } from "@angular/material";
 import { ActivatedRoute } from "@angular/router";
+import { autobind } from "core-decorators";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
 import { FocusSectionComponent } from "app/components/base/focus-section";
@@ -142,6 +143,7 @@ export class ListAndShowLayoutComponent implements AfterViewInit, OnChanges, OnD
         this._updateFilter();
     }
 
+    @autobind()
     public deleteSelectedItems() {
         let config = new MdDialogConfig();
 

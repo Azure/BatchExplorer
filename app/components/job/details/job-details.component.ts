@@ -38,6 +38,8 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     public decorator: JobDecorator;
     public data: RxEntityProxy<JobParams, Job>;
 
+    public hasHookTask = false;
+
     private _paramsSubscriber: Subscription;
 
     constructor(
@@ -51,6 +53,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
         this.data = this.jobService.get(null, {});
         this.data.item.subscribe((job) => {
             this.job = job;
+            this.hasHookTask = Boolean(job && job.jobPreparationTask);
             if (job) {
                 this.decorator = new JobDecorator(job);
             }
@@ -85,11 +88,13 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
         return this.data.refresh();
     }
 
+    @autobind()
     public addTask() {
         const createRef = this.sidebarManager.open("add-basic-task", TaskCreateBasicDialogComponent);
         createRef.component.jobId = this.job.id;
     }
 
+    @autobind()
     public terminateJob() {
         let config = new MdDialogConfig();
         config.viewContainerRef = this.viewContainerRef;
@@ -101,6 +106,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
         });
     }
 
+    @autobind()
     public deleteJob() {
         let config = new MdDialogConfig();
         config.viewContainerRef = this.viewContainerRef;
@@ -108,6 +114,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
         dialogRef.componentInstance.jobId = this.job.id;
     }
 
+    @autobind()
     public disableJob() {
         let config = new MdDialogConfig();
         config.viewContainerRef = this.viewContainerRef;
@@ -119,11 +126,13 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
         });
     }
 
+    @autobind()
     public cloneJob() {
         const ref = this.sidebarManager.open("add-basic-pool", JobCreateBasicDialogComponent);
         ref.component.setValueFromEntity(this.job);
     }
 
+    @autobind()
     public enableJob() {
         let config = new MdDialogConfig();
         config.viewContainerRef = this.viewContainerRef;

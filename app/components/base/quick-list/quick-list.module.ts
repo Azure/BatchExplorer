@@ -26,7 +26,7 @@ import { QuickListComponent, QuickListItemStatusComponent } from "./quick-list.c
         BrowserModule,
         FormsModule,
         RouterModule,
-        MaterialModule.forRoot(),
+        MaterialModule,
         ContextMenuModule,
     ],
 })

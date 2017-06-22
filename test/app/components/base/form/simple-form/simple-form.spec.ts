@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angula
 import { MaterialModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
 
-import { SubmitButtonComponent } from "app/components/base/buttons";
+import { ButtonComponent } from "app/components/base/buttons";
 import { ServerErrorComponent } from "app/components/base/form/server-error";
 import { SimpleFormComponent } from "app/components/base/form/simple-form";
 import { complexFormMockComponents } from "test/utils/mocks/components";
@@ -50,9 +50,9 @@ describe("SimpleFormComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [ReactiveFormsModule, MaterialModule.forRoot()],
+            imports: [ReactiveFormsModule, MaterialModule],
             declarations: [
-                SubmitButtonComponent,
+                ButtonComponent,
                 FormTestComponent,
                 ServerErrorComponent,
                 SimpleFormComponent,

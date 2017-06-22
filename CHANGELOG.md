@@ -1,3 +1,19 @@
+# Version 0.5.0(Beta)
+[All items](https://github.com/Azure/BatchLabs/milestone/5?closed=1)
+
+### Features
+* Link Storage account in batch labs [\#385](https://github.com/Azure/BatchLabs/issues/385)
+* New actions buttons [\#408](https://github.com/Azure/BatchLabs/issues/408)
+* Low priority VMs [\#414](https://github.com/Azure/BatchLabs/issues/414)
+* Details now refresh automatically every 10 seconds [\#428](https://github.com/Azure/BatchLabs/issues/428)
+* Show batch account quotas [\#413](https://github.com/Azure/BatchLabs/issues/413)
+* Job show manager task details [\#447](https://github.com/Azure/BatchLabs/issues/447)
+* Preview images(and gif) and code files in labs  [\#417](https://github.com/Azure/BatchLabs/issues/417)
+* Setup python support for ncj [\#439](https://github.com/Azure/BatchLabs/issues/439)
+* Task output quick add otherfiles for debug [\#184](https://github.com/Azure/BatchLabs/issues/184)
+* Job prep/release task status read experience [\#429](https://github.com/Azure/BatchLabs/issues/429)
+* Start task failed show error banner on node details [\#476](https://github.com/Azure/BatchLabs/issues/476)
+
 # Version 0.4.0(Beta)
 [All items](https://github.com/Azure/BatchLabs/milestone/3?closed=1)
 

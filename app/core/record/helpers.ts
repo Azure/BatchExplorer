@@ -1,5 +1,6 @@
 import { Type } from "@angular/core";
 
+import { exists } from "app/utils";
 import { RecordSetAttributeError } from "./errors";
 import { Record } from "./record";
 
@@ -36,7 +37,8 @@ export function updateTypeMetadata(ctr: Type<any>, attr: string, type: TypeMetad
 export function setProp(ctr: Type<any>, attr: string) {
     Object.defineProperty(ctr.prototype, attr, {
         get: function (this: Record<any>) {
-            return (this as any)._map.get(attr) || (this as any)._defaultValues[attr];
+            const value = (this as any)._map.get(attr);
+            return exists(value) ? value : (this as any)._defaultValues[attr];
         },
         set: function <T>(this: Record<any>, value: T) {
             if ((this as any)._initialized) {

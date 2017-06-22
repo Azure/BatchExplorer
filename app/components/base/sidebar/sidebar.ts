@@ -24,7 +24,7 @@ import { SidebarPageComponent } from "./sidebar-page";
     imports: [
         BrowserModule,
         FormsModule,
-        MaterialModule.forRoot(),
+        MaterialModule,
     ],
     providers: [
         SidebarManager,

@@ -1,10 +1,10 @@
 <div *ngIf="filename">
     <md-card class="overview">
         <div class="actions">
-            <bl-action-btn-group>
+            <bl-button-group>
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                <bl-download-button [enabled]="downloadEnabled" (action)="downloadFile()"></bl-download-button>
-            </bl-action-btn-group>
+                <bl-download-button [enabled]="downloadEnabled" [action]="downloadFile"></bl-download-button>
+            </bl-button-group>
         </div>
         <div class="content">
             <md-card-title>{{filename}}</md-card-title>

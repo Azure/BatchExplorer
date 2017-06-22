@@ -1,5 +1,6 @@
 import { EventEmitter, ViewChild } from "@angular/core";
 import { MdDialog, MdDialogConfig } from "@angular/material";
+import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
 import { DeleteSelectedItemsDialogComponent } from "app/components/base/list-and-show-layout";
@@ -63,6 +64,7 @@ export class SelectableList {
         }
     }
 
+    @autobind()
     public deleteSelectedItems() {
         if (!this.dialog) {
             log.error("this.dialog not defined, call 'super(dialog)' in your constructor to set it.");
