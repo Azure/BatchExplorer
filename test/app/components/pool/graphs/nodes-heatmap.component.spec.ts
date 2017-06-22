@@ -1,15 +1,16 @@
 import { Component, DebugElement, Input } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { RouterTestingModule } from "@angular/router/testing";
+import { Router } from "@angular/router";
 import * as d3 from "d3";
 import { List } from "immutable";
 
+import { SidebarManager } from "app/components/base/sidebar";
 import { NodesHeatmapComponent, NodesHeatmapLegendComponent } from "app/components/pool/graphs";
 import { Node, NodeState, Pool } from "app/models";
 import { NodeService } from "app/services";
 import * as Fixture from "test/fixture";
-import { click } from "test/utils/helpers";
+import { click, dblclick, rightClick } from "test/utils/helpers";
 import { ContextMenuServiceMock } from "test/utils/mocks";
 
 @Component({
@@ -39,23 +40,28 @@ export class NodePreviewCardMockComponent {
     public poolId: string;
 }
 
-describe("NodesHeatmapLegendComponent", () => {
+describe("NodesHeatmapComponent", () => {
     let fixture: ComponentFixture<HeatmapMockComponent>;
     let testComponent: HeatmapMockComponent;
     let heatmap: NodesHeatmapComponent;
     let heatmapContainer: DebugElement;
     let svg: d3.Selection<any, any, any, any>;
     let contextMenuService: ContextMenuServiceMock;
+    let routerSpy;
 
     beforeEach(() => {
         contextMenuService = new ContextMenuServiceMock();
+        routerSpy = {
+            navigate: jasmine.createSpy("router.navigate"),
+        };
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule],
             declarations: [
                 HeatmapMockComponent, NodesHeatmapComponent, NodesHeatmapLegendComponent, NodePreviewCardMockComponent,
             ],
             providers: [
                 { provide: NodeService, useValue: {} },
+                { provide: SidebarManager, useValue: {} },
+                { provide: Router, useValue: routerSpy },
                 contextMenuService.asProvider(),
             ],
         });
@@ -216,6 +222,30 @@ describe("NodesHeatmapLegendComponent", () => {
         expect(heatmap.selectedNodeId.value).toBeNull();
     });
 
+    it("should show context menu on right click", () => {
+        testComponent.nodes = createNodes(4);
+        fixture.detectChanges();
+
+        const groups = svg.selectAll("g.node-group");
+        const el: any = groups.nodes()[1];
+        rightClick(el);
+        fixture.detectChanges();
+
+        expect(contextMenuService.openMenu).toHaveBeenCalledOnce();
+    });
+
+    it("should go to the node on double click", () => {
+        testComponent.nodes = createNodes(4);
+        fixture.detectChanges();
+
+        const groups = svg.selectAll("g.node-group");
+        const el: any = groups.nodes()[1];
+        dblclick(el);
+        fixture.detectChanges();
+
+        expect(routerSpy.navigate).toHaveBeenCalledOnce();
+    });
+
     describe("when interactive is off", () => {
         beforeEach(() => {
             testComponent.interactive = false;
@@ -232,6 +262,30 @@ describe("NodesHeatmapLegendComponent", () => {
             click(el);
             fixture.detectChanges();
             expect(heatmap.selectedNodeId.value).toEqual(null);
+        });
+
+        it("should not double click", () => {
+            testComponent.nodes = createNodes(4);
+            fixture.detectChanges();
+
+            const groups = svg.selectAll("g.node-group");
+            const el: any = groups.nodes()[1];
+            dblclick(el);
+            fixture.detectChanges();
+
+            expect(routerSpy.navigate).not.toHaveBeenCalled();
+        });
+
+        it("should not allow right click", () => {
+            testComponent.nodes = createNodes(4);
+            fixture.detectChanges();
+
+            const groups = svg.selectAll("g.node-group");
+            const el: any = groups.nodes()[1];
+            rightClick(el);
+            fixture.detectChanges();
+
+            expect(contextMenuService.openMenu).not.toHaveBeenCalled();
         });
     });
 });
