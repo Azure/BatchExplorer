@@ -57,14 +57,11 @@ export class StartTaskEditFormComponent {
         const { enableStartTask, startTask } = this.form.value;
         const id = this._pool.id;
         let obs;
-        console.log("Patch");
         if (startTask && enableStartTask) {
-            console.log("updating...");
             obs = this.poolService.patch(id, {
                 startTask: startTask,
             });
         } else {
-            console.log("REmaing");
             obs = this.poolService.getOnce(this.pool.id).cascade((pool) => {
                 const poolData = pool.toJS();
                 return this.poolService.replaceProperties(id, {
