@@ -1,9 +1,11 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { List } from "immutable";
 import { BehaviorSubject } from "rxjs";
 
+import { ButtonComponent } from "app/components/base/buttons";
 import { SSHKeyPickerComponent } from "app/components/node/connect";
 import { SSHPublicKey } from "app/models";
 import { SSHKeyService } from "app/services";
@@ -31,8 +33,8 @@ describe("SSHKeyPickerComponent", () => {
             deleteKey: jasmine.createSpy("deleteKey"),
         };
         TestBed.configureTestingModule({
-            imports: [],
-            declarations: [SSHKeyPickerComponent, TestComponent],
+            imports: [NoopAnimationsModule],
+            declarations: [SSHKeyPickerComponent, TestComponent, ButtonComponent],
             providers: [
                 { provide: SSHKeyService, useValue: sshKeyServiceSpy },
             ],
@@ -57,11 +59,10 @@ describe("SSHKeyPickerComponent", () => {
     it("click on save should open form for name", () => {
         const btn = de.query(By.css(".add-key-btn"));
         expect(btn).not.toBeFalsy();
-
         click(btn);
         fixture.detectChanges();
+        saveKeyForm = de.query(By.css(".save-key-form"));
         expect(saveKeyForm).toBeVisible();
-
         const saveBtn = de.query(By.css(".save-key-btn"));
         click(saveBtn);
         fixture.detectChanges();
