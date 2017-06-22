@@ -70,13 +70,13 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
         this.items.removeAt(index);
     }
 
-    public writeValue(value: any[]) {
-        if (value) {
-            this.items.controls = value.map((file) => {
-                return this.formBuilder.group(file);
-            });
-        } else {
-            this.items.controls = [];
+    public writeValue(values: any[]) {
+        this.items.controls = [];
+
+        if (values) {
+            for (let file of values) {
+                this.items.push(this.formBuilder.group(file));
+            }
         }
         this.addNewItem();
     }
