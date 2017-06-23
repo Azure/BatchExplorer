@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
 import { File, ServerError, Task, TaskState } from "app/models";
 import { FileService } from "app/services";
-import { PollObservable } from "app/services/core";
+import { PollObservable, RxEntityProxy } from "app/services/core";
 import { prettyBytes } from "app/utils";
 
 const defaultOutputFileNames = ["stdout.txt", "stderr.txt"];
@@ -27,8 +27,8 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
     public filteredOptions: Observable<string[]>;
     public addingFile = false;
 
-    private _fileSizeSubs: Subscription[] = [];
     private _taskFileSubscription: Subscription;
+    private _fileProxyMap: Array<RxEntityProxy<any, File>> = [];
     private _initialQueryOptions = { maxItems: 500 };
     private _options: BehaviorSubject<string[]>;
     private _currentTaskId: string = null;
@@ -73,7 +73,7 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
     public ngOnDestroy() {
         this.resetTabs();
         this._clearTaskFilesSubscription();
-        this._clearFileSizeSubscriptions();
+        this._clearFileSizeProxyMap();
         if (this._poller) {
             this._poller.destroy();
         }
@@ -146,20 +146,21 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
      * Get the sizes for the output file name collection
      */
     private _updateFileData() {
-        this._clearFileSizeSubscriptions();
-        this.outputFileNames.map((filename) => {
+        this._clearFileSizeProxyMap();
+        for (const filename of this.outputFileNames) {
             if (this._shouldGetFileSize(filename)) {
                 const data = this.fileService.getFilePropertiesFromTask(this.jobId, this.task.id, filename);
-                this._fileSizeSubs.push(data.item.subscribe((file: File) => {
+                data.item.subscribe((file: File) => {
                     if (file) {
                         const props = file.properties;
                         this.fileSizes[filename] = prettyBytes(props && props.contentLength);
                     }
-                }));
+                });
 
+                this._fileProxyMap.push(data);
                 data.fetch();
             }
-        });
+        }
     }
 
     /**
@@ -181,8 +182,8 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
             file.name !== defaultOutputFileNames[1];
     }
 
-    private _clearFileSizeSubscriptions() {
-        this._fileSizeSubs.forEach(x => x.unsubscribe());
+    private _clearFileSizeProxyMap() {
+        this._fileProxyMap.forEach(x => x.dispose());
     }
 
     private _clearTaskFilesSubscription() {
