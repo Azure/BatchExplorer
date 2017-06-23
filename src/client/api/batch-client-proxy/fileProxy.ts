@@ -43,7 +43,7 @@ export default class FileProxy {
                         isDirectory: headers["ocp-batch-file-isdirectory"],
                         url: headers["ocp-batch-file-url"],
                         properties: {
-                            contentLength: parseInt(headers["content-length"], 10),
+                            contentLength: parseInt(headers["content-length"] as string, 10),
                             contentType: headers["content-type"],
                             creationTime: headers["ocp-creation-time"],
                             lastModified: headers["lastModified"],
@@ -92,7 +92,7 @@ export default class FileProxy {
                         isDirectory: headers["ocp-batch-file-isdirectory"],
                         url: headers["ocp-batch-file-url"],
                         properties: {
-                            contentLength: parseInt(headers["content-length"], 10),
+                            contentLength: parseInt(headers["content-length"] as string, 10),
                             contentType: headers["content-type"],
                             creationTime: headers["ocp-creation-time"],
                             lastModified: headers["lastModified"],
