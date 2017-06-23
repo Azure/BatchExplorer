@@ -62,7 +62,7 @@ ipcMain.on("reload", () => {
     windows.main.create();
 });
 
-process.on("uncaughtException", (error: Error) => {
+process.on("uncaughtException" as any, (error: Error) => {
     logger.error("There was a uncaught exception", error);
     windows.recover.createWithError(error.message);
 });

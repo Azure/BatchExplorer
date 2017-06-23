@@ -117,8 +117,8 @@
     "copy-webpack-plugin": "^4.0.1",
     "cross-env": "~5.0.1",
     "css-loader": "~0.28.0",
-    "electron": "1.6.7",
-    "electron-builder": "~17.5.0",
+    "electron": "~1.6.11",
+    "electron-builder": "~19.8.0",
     "electron-rebuild": "^1.4.0",
     "file-loader": "~0.11.0",
     "html-webpack-plugin": "^2.28.0",
@@ -186,7 +186,7 @@
     "mousetrap": "^1.6.0",
     "reflect-metadata": "^0.1.9",
     "roboto-fontface": "^0.7.0",
-    "rxjs": "~5.3.3",
+    "rxjs": "~5.4.1",
     "zone.js": "0.8.10"
   }
 }
