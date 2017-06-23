@@ -187,6 +187,6 @@
     "reflect-metadata": "^0.1.9",
     "roboto-fontface": "^0.7.0",
     "rxjs": "~5.3.3",
-    "zone.js": "~0.8.5"
+    "zone.js": "0.8.10"
   }
 }
