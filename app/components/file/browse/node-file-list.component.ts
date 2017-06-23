@@ -7,6 +7,7 @@ import { File, Node } from "app/models";
 import { FileService, NodeFileListParams } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter, FilterBuilder, Property } from "app/utils/filter-builder";
+import { List } from "immutable";
 
 @Component({
     selector: "bl-node-file-list",
@@ -48,6 +49,8 @@ export class NodeFileListComponent implements OnInit, OnChanges {
     public node: Node;
     public notFound: boolean;
 
+    private _fileProxyMap: StringMap<RxListProxy<NodeFileListParams, File>> = {};
+
     constructor(private fileService: FileService) {
         this.notFound = false;
         this.data = this.fileService.listFromComputeNode(null, null, true, {});
@@ -56,7 +59,7 @@ export class NodeFileListComponent implements OnInit, OnChanges {
 
     public ngOnInit() {
         return;
-   }
+    }
 
     public ngOnChanges(inputs) {
         if (inputs.poolId || inputs.nodeId || inputs.folder || inputs.filter) {
@@ -89,6 +92,19 @@ export class NodeFileListComponent implements OnInit, OnChanges {
 
     public get baseUrl() {
         return ["/pools", this.poolId, "nodes", this.nodeId];
+    }
+
+    public loadPath(path: string, refresh: boolean = false): Observable<List<File>> {
+        if (!(path in this._fileProxyMap)) {
+            const filterPath = path ? { filter: FilterBuilder.prop("name").startswith(path).toOData() } : {};
+            const poolId = this.poolId;
+            const nodeId = this.nodeId;
+            this._fileProxyMap[path] = this.fileService.listFromComputeNode(poolId, nodeId, false, filterPath);
+        }
+        let observable = refresh ?  this._fileProxyMap[path].refresh() : this._fileProxyMap[path].fetchNext();
+        return observable.flatMap(() => {
+            return this._fileProxyMap[path].items.first();
+        });
     }
 
     private _buildFilter() {

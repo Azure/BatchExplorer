@@ -1,13 +1,20 @@
 <bl-focus-section>
     <bl-quick-list *ngIf="quickList">
-        <tree-root [nodes]="treeNodes" (activate)="treeOnActivate($event)"></tree-root>
-        <bl-quick-list-item *ngFor="let file of files| fileDirectoryFilter" [link]="urlToFile(file.name)" [key]="file.url">
-            <bl-quick-list-item-status [status]="" [tooltip]="">
-            </bl-quick-list-item-status>
-
-            <h4 bl-quick-list-item-title>{{file.name}}</h4>
-            <p bl-quick-list-item-field>{{prettyFileSize(file.properties.contentLength)}}</p>
-        </bl-quick-list-item>
+        <tree-root #tree [nodes]="treeNodes" [options]="treeOptions">
+            <ng-template #treeNodeWrapperTemplate let-node let-index="index">
+                <div class="node-wrapper"
+                    [class.tree-node-expanded]="node.data.state===NodeState.EXPANDED_DIRECTORY"
+                    [class.tree-node-collapsed]="node.data.state===NodeState.COLLAPSED_DIRECTORY"
+                    [class.tree-node-spin]="node.data.state===NodeState.LOADING_DIRECTORY"
+                    [class.tree-node-file]="node.data.state===NodeState.FILE">
+                <tree-node-expander [node]="node"></tree-node-expander>
+                    <div class="node-content-wrapper"
+                        (click)="onClick(node, $event)">
+                        <tree-node-content [node]="node" [index]="index"></tree-node-content>
+                    </div>
+                </div>
+            </ng-template>
+        </tree-root>
     </bl-quick-list>
     <bl-table *ngIf="!quickList">
         <bl-thead>
