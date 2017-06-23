@@ -1,7 +1,10 @@
 import { Component, Input } from "@angular/core";
+import { autobind } from "core-decorators";
 
+import { SidebarManager } from "app/components/base/sidebar";
 import { Pool, StartTask } from "app/models";
 import { StartTaskDecorator } from "app/models/decorators";
+import { StartTaskEditFormComponent } from "./start-task-edit-form.component";
 
 @Component({
     selector: "bl-start-task-properties",
@@ -20,8 +23,14 @@ export class StartTaskPropertiesComponent {
 
     public startTask: StartTask;
     public decorator: StartTaskDecorator;
-    public edit = false;
-
     private _pool: Pool;
+
+    constructor(private sidebarManager: SidebarManager) { }
+
+    @autobind()
+    public edit() {
+        const ref = this.sidebarManager.open(`edit-start-task-${this._pool.id}`, StartTaskEditFormComponent);
+        ref.component.pool = this.pool;
+    }
 
 }
