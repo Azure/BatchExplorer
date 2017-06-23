@@ -83,7 +83,7 @@ describe("SimpleFormComponent", () => {
     });
 
     it("should pass the dialogRef", () => {
-        expect(component.containerRef).toEqual(testComponent.dialogRef);
+        expect(component.containerRef).toEqual(testComponent.dialogRef as any);
     });
 
     it("should pass the submit method", () => {
