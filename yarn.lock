@@ -96,9 +96,9 @@
   dependencies:
     tsickle "^0.21.0"
 
-"@types/bunyan@^0.0.32":
-  version "0.0.32"
-  resolved "https://registry.yarnpkg.com/@types/bunyan/-/bunyan-0.0.32.tgz#f3be2ed20f5c6ebfcfc35f99d4f658943660cdeb"
+"@types/bunyan@~1.8.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@types/bunyan/-/bunyan-1.8.0.tgz#913bf718a2f4dd1efa063e808cab76609289c986"
   dependencies:
     "@types/node" "*"
 
@@ -320,9 +320,9 @@
   version "1.5.28"
   resolved "https://registry.yarnpkg.com/@types/inflection/-/inflection-1.5.28.tgz#43d55e0d72cf333a2dffd9c4ec0407455a1b0931"
 
-"@types/jasmine@2.5.45":
-  version "2.5.45"
-  resolved "https://registry.yarnpkg.com/@types/jasmine/-/jasmine-2.5.45.tgz#58928a621d014ce6ab59c5a9c41071f7328b0ca9"
+"@types/jasmine@~2.5.53":
+  version "2.5.53"
+  resolved "https://registry.yarnpkg.com/@types/jasmine/-/jasmine-2.5.53.tgz#4e0cefad09df5ec48c8dd40433512f84b1568d61"
 
 "@types/jquery@*":
   version "3.2.4"
@@ -348,10 +348,6 @@
   dependencies:
     "@types/form-data" "*"
     "@types/node" "*"
-
-"@types/sinon@^1.16.31":
-  version "1.16.36"
-  resolved "https://registry.yarnpkg.com/@types/sinon/-/sinon-1.16.36.tgz#74bb6ed7928597c1b3fb1b009005e94dc6eae357"
 
 "@types/underscore@^1.8.0":
   version "1.8.1"
