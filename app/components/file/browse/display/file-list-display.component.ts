@@ -1,14 +1,12 @@
 import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
-import { List } from "immutable";
-
+import { IActionMapping, TREE_ACTIONS, TreeComponent, TreeModel, TreeNode } from "angular-tree-component";
 import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
 import { NodeState, TreeNodeData, TreeNodeOption } from "app/models/tree-component";
 import { prettyBytes } from "app/utils";
+import { List } from "immutable";
 import { Observable } from "rxjs/Observable";
-
-import { IActionMapping, TREE_ACTIONS, TreeComponent, TreeModel, TreeNode } from "angular-tree-component";
 
 @Component({
     selector: "bl-file-list-display",
@@ -43,36 +41,20 @@ export class FileListDisplayComponent implements OnInit {
     public loadPath: (path: string, refresh?: boolean) => Observable<List<File>>;
 
     public NodeState = NodeState;
+
+    /** TreeModel instance variables */
     public treeNodes: TreeNodeData[];
     public node: TreeNode;
     public treeOptions: TreeNodeOption;
+
     @ViewChild(TreeComponent)
     public tree: TreeComponent;
-
-    public _currPath: string = "";
+    private _currPath: string = "";
 
     constructor(private router: Router) { }
 
     public ngOnInit() {
         this.initNodes();
-    }
-
-    public prettyFileSize(size: string) {
-        // having falsy issues with contentLength = 0
-        return prettyBytes(parseInt(size || "0", 10));
-    }
-
-    /**
-     * Handle linking to files from blob storage as well as the task and node API
-     * @param fileName - name if the file
-     */
-    public urlToFile(fileName: string) {
-        const filePathPart = this.isBlob ? "blobs" : "files";
-        return this.baseUrl.concat([filePathPart, fileName]);
-    }
-
-    public isErrorState(file: any) {
-        return false;
     }
 
     /**
@@ -162,5 +144,23 @@ export class FileListDisplayComponent implements OnInit {
         let displayName = tokens[tokens.length - 1];
         return (file.isDirectory) ?
             displayName : `${displayName} (${this.prettyFileSize(file.properties.contentLength.toString())})`;
+    }
+
+    public prettyFileSize(size: string) {
+        // having falsy issues with contentLength = 0
+        return prettyBytes(parseInt(size || "0", 10));
+    }
+
+    /**
+     * Handle linking to files from blob storage as well as the task and node API
+     * @param fileName - name if the file
+     */
+    public urlToFile(fileName: string) {
+        const filePathPart = this.isBlob ? "blobs" : "files";
+        return this.baseUrl.concat([filePathPart, fileName]);
+    }
+
+    public isErrorState(file: any) {
+        return false;
     }
 }

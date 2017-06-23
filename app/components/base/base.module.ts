@@ -5,6 +5,7 @@ import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 
 // components
+import { TreeModule } from "angular-tree-component";
 import { IconComponent } from "app/components/base/icon";
 import { AdvancedFilterModule } from "./advanced-filter";
 import { BackgroundTaskModule } from "./background-task";
@@ -56,6 +57,7 @@ const modules = [
     TagsModule,
     FormModule,
     ScrollableModule,
+    TreeModule,
 ];
 
 // Add subcomponnent not in a module here
