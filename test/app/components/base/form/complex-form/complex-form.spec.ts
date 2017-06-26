@@ -142,7 +142,7 @@ describe("ComplexFormComponent", () => {
         });
         fixture.detectChanges();
 
-        addAndCloseButtonComponent.handleAction();
+        addAndCloseButtonComponent.handleAction({} as any);
         expect(fixture.componentInstance.submitSpy).toHaveBeenCalledTimes(1);
         tick(); // For asyncsjubject
         tick(1000); // For the timeout to close
@@ -155,7 +155,7 @@ describe("ComplexFormComponent", () => {
         });
         fixture.detectChanges();
 
-        addButtonComponent.handleAction();
+        addButtonComponent.handleAction({} as any);
         expect(fixture.componentInstance.submitSpy).toHaveBeenCalledTimes(1);
         tick();
         tick(1000);
@@ -168,7 +168,7 @@ describe("ComplexFormComponent", () => {
                 id: "error",
             });
             fixture.detectChanges();
-            addButtonComponent.handleAction();
+            addButtonComponent.handleAction({} as any);
             fixture.detectChanges();
         });
 

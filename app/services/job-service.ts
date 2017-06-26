@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 
 import { Job } from "app/models";
-import { JobCreateDto } from "app/models/dtos";
+import { JobCreateDto, JobPatchDto } from "app/models/dtos";
 import { Constants, ModelUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";
@@ -80,16 +80,16 @@ export class JobService extends ServiceBase {
         return this.callBatchClient((client) => client.job.add(job.toJS(), options));
     }
 
-    public patch(jobId: string, attributes: any, options: any = {}) {
-        return this.callBatchClient((client) => client.job.patch(jobId, attributes, options), (error) => {
+    public patch(jobId: string, attributes: JobPatchDto, options: any = {}) {
+        return this.callBatchClient((client) => client.job.patch(jobId, attributes.toJS(), options), (error) => {
             log.error(`Error patching job: ${jobId}`, error);
         });
     }
 
     public updateTags(job: Job, tags: List<string>) {
-        const attributes = {
+        const attributes = new JobPatchDto({
             metadata: ModelUtils.updateMetadataWithTags(job.metadata, tags),
-        };
+        });
         return this.patch(job.id, attributes);
     }
 }

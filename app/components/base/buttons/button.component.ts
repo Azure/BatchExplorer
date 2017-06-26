@@ -8,7 +8,7 @@ import "./button.scss";
 
 export type ButtonType = "square" | "round" | "wide";
 export type ButtonColor = "primary" | "light" | "danger" | "warn";
-export type ButtonAction = () => Observable<any> | void;
+export type ButtonAction = (event?: Event) => Observable<any> | void;
 
 export enum SubmitStatus {
     Idle,
@@ -58,18 +58,18 @@ export class ButtonComponent implements OnChanges {
 
     constructor(private changeDetectionRef: ChangeDetectorRef) { }
 
-    @HostListener("click")
-    public handleAction() {
+    @HostListener("click", ["$event"])
+    public handleAction(event: Event) {
         if (this.disabled || !this.action) {
             return;
         }
-        this._execute();
+        this._execute(event);
     }
 
     @HostListener("keydown", ["$event"])
     public onkeydown(event: KeyboardEvent) {
         if (event.code === "Space" || event.code === "Enter") {
-            this.handleAction();
+            this.handleAction(event);
             event.preventDefault();
         }
     }
@@ -86,10 +86,10 @@ export class ButtonComponent implements OnChanges {
         }, 700);
     }
 
-    private _execute() {
+    private _execute(event: Event) {
         this.status = SubmitStatus.Submitting;
 
-        const obs = this.action();
+        const obs = this.action(event);
         if (!obs) {
             if (this.skipSuccess) {
                 this.status = SubmitStatus.Idle;

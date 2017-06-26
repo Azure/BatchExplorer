@@ -5,6 +5,7 @@ import { autobind } from "core-decorators";
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { Pool, StartTask } from "app/models";
+import { PoolPatchDto } from "app/models/dtos";
 import { PoolService } from "app/services";
 
 @Component({
@@ -58,17 +59,17 @@ export class StartTaskEditFormComponent {
         const id = this._pool.id;
         let obs;
         if (startTask && enableStartTask) {
-            obs = this.poolService.patch(id, {
+            obs = this.poolService.patch(id, new PoolPatchDto({
                 startTask: startTask,
-            });
+            }));
         } else {
             obs = this.poolService.getOnce(this.pool.id).cascade((pool) => {
                 const poolData = pool.toJS();
-                return this.poolService.replaceProperties(id, {
+                return this.poolService.replaceProperties(id, new PoolPatchDto({
                     applicationPackageReferences: poolData.applicationPackageReferences || [],
                     certificateReferences: poolData.certificateReferences || [],
                     metadata: poolData.metadata || [],
-                });
+                }));
             });
         }
         return obs.cascade(() => {
