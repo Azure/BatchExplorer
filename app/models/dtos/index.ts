@@ -11,3 +11,4 @@ export * from "./metadata.dto";
 export * from "./user-account.dto";
 export * from "./user-identity.dto";
 export * from "./pool-resize.dto";
+export * from "./pool-patch.dto";

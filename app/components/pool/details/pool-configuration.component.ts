@@ -6,6 +6,7 @@ import { EditMetadataFormComponent } from "app/components/base/form/edit-metadat
 import { SidebarManager } from "app/components/base/sidebar";
 import { ApplicationPackageReference, CertificateReference, Metadata, Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
+import { PoolPatchDto } from "app/models/dtos";
 import { PoolService } from "app/services";
 
 @Component({
@@ -37,7 +38,8 @@ export class PoolConfigurationComponent {
         const ref = this.sidebarManager.open(`edit-pool-metadata-${id}`, EditMetadataFormComponent);
         ref.component.metadata = this.pool.metadata;
         ref.component.save = (metadata) => {
-            return this.poolService.patch(id, { metadata }).cascade(() => this.poolService.getOnce(id));
+            const data = new PoolPatchDto({ metadata });
+            return this.poolService.patch(id, data).cascade(() => this.poolService.getOnce(id));
         };
     }
 
