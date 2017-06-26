@@ -12,6 +12,8 @@ const dataScienceVms = {
     },
 };
 
+const renderingPublisher = "batch";
+
 export interface Sku {
     name: string;
     nodeAgentId: string;
@@ -28,6 +30,7 @@ export class NodeAgentSkuMap {
     public allOffers: Offer[];
     public vmOffers: Offer[];
     public dataScienceOffers: Offer[];
+    public renderingOffers: Offer[];
 
     constructor(skus: List<NodeAgentSku> = List([])) {
         let offers: StringMap<Offer> = {};
@@ -48,8 +51,11 @@ export class NodeAgentSkuMap {
                 });
             }
         });
+
         this.allOffers = ObjectUtils.values(offers);
-        this.vmOffers = this.allOffers.filter(x => !(x.name in dataScienceVms));
-        this.dataScienceOffers = this.allOffers.filter(x => (x.name in dataScienceVms));
+        this.renderingOffers = this.allOffers.filter(x => x.publisher === renderingPublisher);
+        this.vmOffers = this.allOffers.filter(x => !(x.name in dataScienceVms) && x.publisher !== renderingPublisher);
+        this.dataScienceOffers = this.allOffers
+            .filter(x => (x.name in dataScienceVms) && x.publisher !== renderingPublisher);
     }
 }
