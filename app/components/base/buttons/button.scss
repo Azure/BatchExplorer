@@ -18,7 +18,6 @@ bl-button {
     text-align: center;
     vertical-align: middle;
     line-height: $action-btn-size;
-    min-width: $action-btn-size;
     position: relative;
 
     .hide {
@@ -65,6 +64,7 @@ bl-button {
 
     &[type="wide"] {
         padding: 0 10px;
+        min-width: $action-btn-size;
     }
 
     &[color="primary"] {

@@ -1,8 +1,12 @@
 import { Component, Input } from "@angular/core";
+import { autobind } from "core-decorators";
 import { List } from "immutable";
 
+import { EditMetadataFormComponent } from "app/components/base/form/edit-metadata-form";
+import { SidebarManager } from "app/components/base/sidebar";
 import { ApplicationPackageReference, CertificateReference, Metadata, Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
+import { PoolService } from "app/services";
 
 @Component({
     selector: "bl-pool-configuration",
@@ -23,6 +27,20 @@ export class PoolConfigurationComponent {
 
     private _pool: Pool;
 
+    constructor(private sidebarManager: SidebarManager, private poolService: PoolService) {
+
+    }
+
+    @autobind()
+    public editMetadata() {
+        const id = this.pool.id;
+        const ref = this.sidebarManager.open(`edit-pool-metadata-${id}`, EditMetadataFormComponent);
+        ref.component.metadata = this.pool.metadata;
+        ref.component.save = (metadata) => {
+            return this.poolService.patch(id, { metadata }).cascade(() => this.poolService.getOnce(id));
+        };
+    }
+
     private _refresh(pool: Pool) {
         if (pool) {
             this.decorator = new PoolDecorator(this._pool);
@@ -31,4 +49,5 @@ export class PoolConfigurationComponent {
             this.metadata = pool.metadata;
         }
     }
+
 }
