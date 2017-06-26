@@ -11,6 +11,7 @@ import {
     JobPreparationTaskDecorator,
     JobReleaseTaskDecorator,
 } from "app/models/decorators";
+import { JobPatchDto } from "app/models/dtos";
 import { JobService } from "app/services";
 
 @Component({
@@ -48,7 +49,7 @@ export class JobConfigurationComponent {
         const ref = this.sidebarManager.open(`edit-job-metadata-${id}`, EditMetadataFormComponent);
         ref.component.metadata = this.job.metadata;
         ref.component.save = (metadata) => {
-            return this.jobService.patch(id, { metadata }).cascade(() => this.jobService.getOnce(id));
+            return this.jobService.patch(id, new JobPatchDto({ metadata })).cascade(() => this.jobService.getOnce(id));
         };
     }
 

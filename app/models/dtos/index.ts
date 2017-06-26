@@ -6,6 +6,7 @@ export * from "./account-patch.dto";
 export * from "./pool-create.dto";
 export * from "./pool-enable-autoscale.dto";
 export * from "./job-create.dto";
+export * from "./job-patch.dto";
 export * from "./task-create.dto";
 export * from "./metadata.dto";
 export * from "./user-account.dto";
