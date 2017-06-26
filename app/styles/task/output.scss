@@ -25,10 +25,13 @@ bl-task-log, bl-task-outputs {
                 background: $dove-grey;
             }
 
-            .mat-input-wrapper {
-                margin: 0;
+            .mat-input-infix, .mat-input-wrapper {
+                padding: 0 !important;
+                border-top: 0;
 
                 .mat-input-underline {
+                    background-color: transparent;
+
                     .mat-input-ripple {
                         height: 0;
                     }

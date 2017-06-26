@@ -128,8 +128,8 @@ describe("UserAuthorization", () => {
     });
 
     describe("Try Authorize silently first", () => {
-        const goodResult = { id_token: "sometoken", code: "somecode" };
-        const badResult = { error: "someerror", error_description: "There was an error" };
+        const goodResult: AuthorizeResult = { id_token: "sometoken", code: "somecode" } as any;
+        const badResult: AuthorizeError = { error: "someerror", error_description: "There was an error" };
 
         let result: AuthorizeResult;
         let error: AuthorizeError;

@@ -61,9 +61,9 @@ export class MainWindow extends UniqueWindow {
     }
 
     private _setupEvents(window: Electron.BrowserWindow) {
-        window.webContents.on("crashed", (error: Error) => {
-            logger.error("There was a crash", error);
-            windows.recover.createWithError(error.message);
+        window.webContents.on("crashed", (event: Electron.Event, killed: boolean) => {
+            logger.error("There was a crash", event, killed);
+            windows.recover.createWithError(event.returnValue);
         });
 
         window.webContents.on("did-fail-load", (error) => {
