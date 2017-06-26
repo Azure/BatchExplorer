@@ -69,12 +69,11 @@ describe("StorageAccountPickerComponent", () => {
 
     it("should split accounts in best region and other regions", () => {
         const preferedRows = preferedTable.queryAll(By.css("bl-row"));
-        expect(preferedRows.length).toBe(3); // 2 plus the no account row
-        expect(preferedRows[0].nativeElement.textContent).toContain("No storage account");
-        expect(preferedRows[1].nativeElement.textContent).toContain("storage-1");
+        expect(preferedRows.length).toBe(2);
+        expect(preferedRows[0].nativeElement.textContent).toContain("storage-1");
+        expect(preferedRows[0].nativeElement.textContent).toContain("westus");
+        expect(preferedRows[1].nativeElement.textContent).toContain("storage-3");
         expect(preferedRows[1].nativeElement.textContent).toContain("westus");
-        expect(preferedRows[2].nativeElement.textContent).toContain("storage-3");
-        expect(preferedRows[2].nativeElement.textContent).toContain("westus");
 
         const otherRows = otherTable.queryAll(By.css("bl-row"));
         expect(otherRows.length).toBe(3);
