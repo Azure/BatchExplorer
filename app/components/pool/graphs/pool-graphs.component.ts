@@ -10,6 +10,7 @@ import { JobService, NodeListParams, NodeService } from "app/services";
 import { PollObservable, RxListProxy } from "app/services/core";
 import { FilterBuilder } from "app/utils/filter-builder";
 import { NodesStateHistoryData, RunningTasksHistoryData } from "./history-data";
+import "./pool-graphs.scss";
 import { StateCounter } from "./state-counter";
 
 enum AvailableGraph {
