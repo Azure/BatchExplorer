@@ -1,6 +1,9 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { autobind } from "core-decorators";
 import { List } from "immutable";
 
+import { EditMetadataFormComponent } from "app/components/base/form/edit-metadata-form";
+import { SidebarManager } from "app/components/base/sidebar";
 import { Job, Metadata, NameValuePair } from "app/models";
 import {
     JobDecorator,
@@ -8,6 +11,7 @@ import {
     JobPreparationTaskDecorator,
     JobReleaseTaskDecorator,
 } from "app/models/decorators";
+import { JobService } from "app/services";
 
 @Component({
     selector: "bl-job-configuration",
@@ -33,6 +37,20 @@ export class JobConfigurationComponent {
     public poolInfo: any = {};
 
     private _job: Job;
+
+    constructor(private sidebarManager: SidebarManager, private jobService: JobService) {
+
+    }
+
+    @autobind()
+    public editMetadata() {
+        const id = this.job.id;
+        const ref = this.sidebarManager.open(`edit-job-metadata-${id}`, EditMetadataFormComponent);
+        ref.component.metadata = this.job.metadata;
+        ref.component.save = (metadata) => {
+            return this.jobService.patch(id, { metadata }).cascade(() => this.jobService.getOnce(id));
+        };
+    }
 
     public refresh(job: Job) {
         if (this.job) {
