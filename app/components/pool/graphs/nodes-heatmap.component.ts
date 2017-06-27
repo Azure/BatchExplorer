@@ -15,6 +15,7 @@ import { Job, Node, NodeState, Pool } from "app/models";
 import { NodeService } from "app/services";
 import { log } from "app/utils";
 import { HeatmapColor } from "./heatmap-color";
+import "./nodes-heatmap.scss";
 import { StateTree } from "./state-tree";
 
 interface HeatmapTile {
