@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit } from "@angular/core";
+import { Component, ElementRef, Input, OnChanges, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
@@ -19,6 +19,9 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
 
     @Input()
     public task: Task;
+
+    @ViewChild("addfileInput")
+    public addfileInput: ElementRef;
 
     public outputFileNames = defaultOutputFileNames.slice();
     public selectedOutputFile: "stdout.txt" | "stderr.txt" = defaultOutputFileNames[0] as any;
@@ -41,14 +44,14 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
         this.filteredOptions = this._options;
     }
 
-   public ngOnInit() {
-      this.filteredOptions = this.filterControl.valueChanges
-         .map((nameFilter) => {
-             return nameFilter
-                ? this._options.value.filter(option => new RegExp(`${nameFilter}`, "gi").test(option))
-                : this._options.value;
-        });
-   }
+    public ngOnInit() {
+        this.filteredOptions = this.filterControl.valueChanges
+            .map((nameFilter) => {
+                return nameFilter
+                    ? this._options.value.filter(option => new RegExp(`${nameFilter}`, "gi").test(option))
+                    : this._options.value;
+            });
+    }
 
     public ngOnChanges(inputs) {
         if (inputs.jobId || inputs.task) {
@@ -85,6 +88,11 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
     public toggleFilter() {
         this.addingFile = !this.addingFile;
         this.filterControl.setValue(null);
+        if (this.addingFile) {
+            setTimeout(() => {
+                this.addfileInput.nativeElement.focus();
+            });
+        }
     }
 
     /**
