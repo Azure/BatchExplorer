@@ -5,6 +5,7 @@ import { File, ServerError } from "app/models";
 import { FileService, NodeFileListParams } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter, FilterBuilder, Property } from "app/utils/filter-builder";
+import { autobind } from "core-decorators";
 import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
@@ -67,8 +68,7 @@ export class NodeFileListComponent implements OnChanges {
         const quickSearch = filterProp && filterProp.value;
         const loadPath = [this.folder, quickSearch].filter(x => Boolean(x)).join("/");
         if (this.listDisplay) {
-            console.log(`Init Nodes with ${this.poolId}(poolId) and ${this.nodeId}(nodeId)`);
-            this.listDisplay.initNodes(loadPath);
+            this.listDisplay.initNodes(loadPath, true);
         }
     }
 
@@ -76,6 +76,7 @@ export class NodeFileListComponent implements OnChanges {
         return ["/pools", this.poolId, "nodes", this.nodeId];
     }
 
+    @autobind()
     public loadPath(path: string, refresh: boolean = false): Observable<List<File>> {
         if (!(path in this._fileProxyMap)) {
             const filterPath = path ? { filter: FilterBuilder.prop("name").startswith(path).toOData() } : {};

@@ -1,6 +1,6 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
-import { TREE_ACTIONS, TreeModel, TreeNode } from "angular-tree-component";
+import { TREE_ACTIONS, TreeComponent, TreeModel, TreeNode } from "angular-tree-component";
 import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
 import { NodeState, TreeNodeData } from "app/models/tree-component";
@@ -36,21 +36,31 @@ export class FileListDisplayComponent implements OnInit {
 
     public node: TreeNode;
 
-    private _currPath: string = "";
+    @ViewChild(TreeComponent)
+    public tree: TreeComponent;
 
     constructor(public treeComponentService: TreeComponentService, private router: Router) { }
 
     public ngOnInit() {
         this.initNodes("");
     }
+
     /**
-     * Initialize tree nodes function once loadPath callback function is ready
+     * Initialize treenode by given path, path default to ""
+     * @param currPath
      */
-    public initNodes(currPath: string) {
-        this._currPath = currPath || "";
-        let filesObs = this.loadPath(this._currPath, false);
+    public initNodes(currentPath: string, force: boolean = false) {
+        let filesObs = this.loadPath(currentPath || "", false);
         filesObs.subscribe((files) => {
-            this.treeComponentService.treeNodes = (files.size > 0) ? files.map(mapFileToTree).toArray() : [];
+            if (this.treeComponentService.treeNodes.length === 0 || force) {
+                this.treeComponentService.treeNodes = (files.size > 0) ? files.map(mapFileToTree).toArray() : [];
+            }
+            this.tree.treeModel.doForAll((node: TreeNode) => {
+                if (node.data.state === NodeState.EXPANDED_DIRECTORY) {
+                    node.expand();
+                }
+            });
+            this.tree.treeModel.update();
         });
     }
 
@@ -61,32 +71,25 @@ export class FileListDisplayComponent implements OnInit {
      */
     public loadNodes(treeModel: TreeModel, treeNode: TreeNode) {
         let currTreeNode: TreeNodeData = treeNode.data;
-        if (currTreeNode.children.length > 0) { return; }
-        this._currPath = `${currTreeNode.fileName}\\`;
-        let filesObs = this.loadPath(this._currPath, false);
+        let filesObs = this.loadPath(`${currTreeNode.fileName}\\`, false);
         currTreeNode.state = NodeState.LOADING_DIRECTORY;
         filesObs.subscribe((files) => {
+            currTreeNode.hasChildren = (files.size > 0);
+            currTreeNode.children = (files.size > 0) ? files.map(mapFileToTree).toArray() : [];
             currTreeNode.state = NodeState.EXPANDED_DIRECTORY;
-            if (files.size > 0) {
-                currTreeNode.hasChildren = true;
-                currTreeNode.children = files.map(mapFileToTree).toArray();
-                treeNode.expand();
-            } else {
-                currTreeNode.hasChildren = false;
-                currTreeNode.children = [] as TreeNodeData[];
-            }
+            treeNode.expand();
             treeModel.update();
         });
     }
 
     /**
-     * onClick callback function when tree node is selected
+     * onNodeClick event handler when tree node is selected
      * 1, If current selected path is a directory, call loadNodes function retrieving children nodes
      * 2, If current selected path is a file, then open file in content page
      * @param node tree node clicked
      * @param $event click event instance
      */
-    public onClick(node: TreeNode, $event: any) {
+    public onNodeClick(node: TreeNode, $event: any) {
         if (node.data.state !== NodeState.FILE) {
             if (node.data.state === NodeState.COLLAPSED_DIRECTORY) {
                 this.loadNodes(node.treeModel, node);

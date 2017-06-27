@@ -1,7 +1,4 @@
 import { Component, Input, OnChanges, ViewChild } from "@angular/core";
-import { autobind } from "core-decorators";
-import { BehaviorSubject, Observable } from "rxjs";
-
 import { LoadingStatus } from "app/components/base/loading";
 import { FileListDisplayComponent } from "app/components/file/browse/display";
 import { File, Node, NodeState, ServerError, Task } from "app/models";
@@ -9,7 +6,9 @@ import { FileService, NodeService, TaskFileListParams, TaskService } from "app/s
 import { RxListProxy } from "app/services/core";
 import { Constants } from "app/utils";
 import { Filter, FilterBuilder, Property } from "app/utils/filter-builder";
+import { autobind } from "core-decorators";
 import { List } from "immutable";
+import { BehaviorSubject, Observable } from "rxjs";
 
 /**
  * Valid state of a node to retrieve files
@@ -63,7 +62,6 @@ export class TaskFileListComponent implements OnChanges {
         }
     }
 
-    @autobind()
     public refresh() {
         if (this.jobId && this.taskId) {
             this._loadIfNodeExists();
@@ -78,6 +76,7 @@ export class TaskFileListComponent implements OnChanges {
         return "Filter by file name";
     }
 
+    @autobind()
     public loadPath(path: string, refresh: boolean = false): Observable<List<File>> {
         if (!(path in this._fileProxyMap)) {
             const filterPath = path ? { filter: FilterBuilder.prop("name").startswith(path).toOData() } : {};
@@ -116,7 +115,7 @@ export class TaskFileListComponent implements OnChanges {
                     if (validStates.includes(node.state)) {
                         const filterProp = this.filter as Property;
                         const loadPath = filterProp && filterProp.value;
-                        this.listDisplay.initNodes(loadPath);
+                        this.listDisplay.initNodes(loadPath, true);
                     }
                 },
                 error: (error) => {

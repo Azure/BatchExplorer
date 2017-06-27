@@ -48,7 +48,6 @@ export class NodeFileBrowseComponent implements OnChanges {
 
     public ngOnChanges(inputs) {
         if (inputs.poolId && inputs.node) {
-            console.log("ngOnchanges in node file browse");
             this.currentFolder = null;
             this.data.updateParams({ poolId: this.poolId, nodeId: this.node.id });
             this.data.fetchNext(true);

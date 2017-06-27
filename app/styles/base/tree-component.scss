@@ -3,24 +3,22 @@
     font-size: 14px;
 }
 
-.tree-node-loading {
-    padding-left: 13px!important;
-}
-
 .toggle-children-wrapper {
-    padding-left: 15px!important;
+    padding: 0!important;
 }
 
-.toggle-children-placeholder {
-    padding-left: 15px!important;
-    padding-right: 12px!important;
+.node-wrapper.tree-node-spin .toggle-children-placeholde, .node-wrapper.tree-node-spin .toggle-children{
+    position: relative;
+    -webkit-animation: fa-spin 2s infinite linear;
+    animation: fa-spin 2s infinite linear;
+    height: 15px;
+    width: 15px;
 }
 
 .node-wrapper.tree-node-spin .toggle-children-placeholder:before, .node-wrapper.tree-node-spin .toggle-children:before {
     content: "\f110";
     position: absolute;
     font-family: FontAwesome;
-    bottom: -5px;
     cursor: default;
 }
 
@@ -28,7 +26,6 @@
     content: "\f1c9";
     position: absolute;
     font-family: FontAwesome;
-    bottom: -5px;
     cursor: default;
 }
 
@@ -36,15 +33,18 @@
     z-index: 1;
     color: #003153;
     font-size: 14px;
-    background-image: none!important;
+    background: none!important;
     transform: none!important;
+    height: 15px!important;
+    width: 15px!important;
+    margin-top: 1px;
+    margin-left: 20px;
 }
 
 .toggle-children-wrapper-collapsed .toggle-children:before, .node-wrapper.tree-node-collapsed .toggle-children-placeholder:before {
     content: "\f114";
     position: absolute;
     font-family: FontAwesome;
-    bottom: -5px;
     cursor: default;
 }
 
@@ -52,6 +52,5 @@
     content: "\f115";
     position: absolute;
     font-family: FontAwesome;
-    bottom: -5px;
     cursor: default;
 }
