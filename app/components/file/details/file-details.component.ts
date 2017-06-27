@@ -82,6 +82,13 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         }
     }
 
+    @autobind()
+    public openExternal() {
+        return this._fileLoader().cache().cascade((pathToFile) => {
+            this.shell.openExternal(pathToFile);
+        });
+    }
+
     private _loadFileProperties(): void {
         if (this._sourceType === Constants.FileSourceTypes.Job) {
             // it's a file from a job's task
@@ -113,35 +120,37 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         this._propertyProxy = null;
     }
 
+    private _fileLoader() {
+        const obj = FileUrlUtils.parseRelativePath(this.url);
+
+        if (obj.type === Constants.FileSourceTypes.Job) {
+            return this.fileService.fileFromTask(this.jobId, this.taskId, this.filename);
+        } else if (this._sourceType === Constants.FileSourceTypes.Pool) {
+            return this.fileService.fileFromNode(this.poolId, this.nodeId, this.filename);
+        } else if (this._sourceType === Constants.FileSourceTypes.Blob) {
+            return this.storageService.blobContent(this.jobId, this.taskId, this.outputKind, this.filename);
+        } else {
+            throw new Error("Unrecognised source type: " + this._sourceType);
+        }
+    }
+
     private _saveFile(pathToFile) {
         if (pathToFile === undefined) {
             return;
         }
+        const obs = this._fileLoader().download(pathToFile);
 
-        const obj = FileUrlUtils.parseRelativePath(this.url);
-        let obs;
-        if (obj.type === Constants.FileSourceTypes.Job) {
-            obs = this.fileService.fileFromTask(this.jobId, this.taskId, this.filename).download(pathToFile);
-        } else if (this._sourceType === Constants.FileSourceTypes.Pool) {
-            obs = this.fileService.fileFromNode(this.poolId, this.nodeId, this.filename).download(pathToFile);
-        } else if (this._sourceType === Constants.FileSourceTypes.Blob) {
-            const blobName = `${this.taskId}/${this.outputKind}/${this.filename}`;
-            obs = this.storageService.saveBlobToFile(this.jobId, blobName, pathToFile).subscribe({
-                error: (error: ServerError) => {
-                    this.notificationService.error(
-                        "Download failed",
-                        `${this.filename} failed to download. ${error.body.message}`,
-                    );
-                },
-            });
-
-        } else {
-            throw new Error("Unrecognised source type: " + this._sourceType);
-        }
-
-        obs.subscribe(() => {
-            this.shell.showItemInFolder(pathToFile);
-            this.notificationService.success("Download complete!", `File was saved locally at ${pathToFile}`);
+        obs.subscribe({
+            next: () => {
+                this.shell.showItemInFolder(pathToFile);
+                this.notificationService.success("Download complete!", `File was saved locally at ${pathToFile}`);
+            },
+            error: (error: ServerError) => {
+                this.notificationService.error(
+                    "Download failed",
+                    `${this.filename} failed to download. ${error.body.message}`,
+                );
+            },
         });
         return obs;
     }

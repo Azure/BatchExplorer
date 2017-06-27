@@ -42,7 +42,9 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
     }
 
     public ngAfterViewInit() {
-        this.scrollable = this.scrollableService.getParentSrollable(this.element.nativeElement);
+        setTimeout(() => {
+            this.scrollable = this.scrollableService.getParentSrollable(this.element.nativeElement);
+        });
     }
 
     public ngOnChanges(changes) {

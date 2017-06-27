@@ -4,6 +4,7 @@
             <bl-button-group>
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
                 <bl-download-button [enabled]="downloadEnabled" [action]="downloadFile"></bl-download-button>
+                <bl-button color="light" [disabled]="!downloadEnabled" [action]="openExternal" title="Open in default application"><i class="fa fa-external-link"></i></bl-button>
             </bl-button-group>
         </div>
         <div class="content">
