@@ -2,6 +2,7 @@ import * as path from "path";
 import { Observable } from "rxjs";
 
 import { File } from "app/models";
+import { log } from "app/utils";
 import { FileSystemService } from "../fs.service";
 
 export type PropertiesFunc = () => Observable<File>;
@@ -44,6 +45,7 @@ export class FileLoader {
     private _fs: FileSystemService;
     private _properties: PropertiesFunc;
     private _content: ContentFunc;
+    private _cachedProperties: File;
 
     constructor(config: FileLoaderConfig) {
         this.filename = config.filename;
@@ -54,8 +56,20 @@ export class FileLoader {
         this._fs = config.fs;
     }
 
-    public properties(): Observable<File> {
-        return this._properties();
+    public properties(forceNew = false): Observable<File> {
+        if (!forceNew && this._cachedProperties) {
+            return Observable.of(this._cachedProperties);
+        }
+        const obs = this._properties();
+        obs.subscribe({
+            next: (file) => {
+                this._cachedProperties = file;
+            },
+            error: (error) => {
+                log.error("Error getting the file properties!", error);
+            },
+        });
+        return obs;
     }
 
     public content(options: FileLoadOptions = {}): Observable<FileLoadResult> {
@@ -75,13 +89,25 @@ export class FileLoader {
      * @returns observable that resolve the path of the cached file when done caching
      */
     public cache(): Observable<string> {
-        const destination = path.join(this._fs.commonFolders.temp, this.source, this.groupId, this.filename);
-        return Observable.fromPromise(this._fs.exists(destination)).flatMap((exists) => {
-            if (exists) {
-                return Observable.of(destination);
-            } else {
-                return this.download(destination);
-            }
-        }).share();
+        return this.properties().cascade((file: File) => {
+            const filename = this._hashFilename(file);
+            const destination = path.join(this._fs.commonFolders.temp, this.source, this.groupId, filename);
+            console.log("Destination will be", destination);
+            return Observable.fromPromise(this._fs.exists(destination)).flatMap((exists) => {
+                if (exists) {
+                    return Observable.of(destination);
+                } else {
+                    return this.download(destination);
+                }
+            }).share();
+        });
+    }
+
+    private _hashFilename(file: File) {
+        const hash = file.properties.lastModified.getTime().toString(36);
+        const segements = file.name.split(/[\\\/]/);
+        const filename = segements.pop();
+        segements.push(`${hash}.${filename}`);
+        return path.join(...segements);
     }
 }
