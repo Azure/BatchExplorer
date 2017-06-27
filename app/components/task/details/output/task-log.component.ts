@@ -153,7 +153,7 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
             this.fileLoaderMap[filename] = fileLoader;
 
             if (this._shouldGetFileSize(filename)) {
-                fileLoader.properties().subscribe((file: File) => {
+                fileLoader.getProperties().subscribe((file: File) => {
                     if (file) {
                         const props = file.properties;
                         this.fileSizes[filename] = prettyBytes(props && props.contentLength);

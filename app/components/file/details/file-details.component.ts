@@ -2,11 +2,12 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { autobind } from "core-decorators";
 import { remote } from "electron";
-import { Observable, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 
 import { NotificationService } from "app/components/base/notifications";
 import { File, ServerError } from "app/models";
 import { ElectronShell, FileService, StorageService } from "app/services";
+import { RxEntityProxy } from "app/services/core";
 import { FileLoader } from "app/services/file";
 import { FileUrlUtils, prettyBytes } from "app/utils";
 
@@ -30,6 +31,7 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     public outputKind: string;
 
     public fileLoader: FileLoader = null;
+    public fileData: RxEntityProxy<any, File>;
 
     private _sourceType: string;
     private _paramsSubscribers: Subscription[] = [];
@@ -55,19 +57,19 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
             this.nodeId = params["nodeId"];
             this.outputKind = params["outputKind"];
             this.filename = params["filename"];
-
+            this._clearFileLoader();
             this._setupFileLoader();
-            this._loadFileProperties();
         }));
     }
 
     public ngOnDestroy() {
         this._paramsSubscribers.forEach(x => x.unsubscribe());
+        this._clearFileLoader();
     }
 
     @autobind()
     public refresh() {
-        return Observable.of({});
+        return this.fileData.refresh();
     }
 
     @autobind()
@@ -103,13 +105,6 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         return this.jobId && this.taskId && this.outputKind;
     }
 
-    private _loadFileProperties(): void {
-        this.fileLoader.properties().subscribe((file: File) => {
-            this.contentSize = prettyBytes(file.properties.contentLength);
-            this.url = decodeURIComponent(file.url);
-        });
-    }
-
     private _setupFileLoader() {
         let obs: FileLoader;
 
@@ -123,6 +118,12 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
             throw new Error("Unrecognised source type: " + this._sourceType);
         }
         this.fileLoader = obs;
+        this.fileData = this.fileLoader.listen();
+        this.fileData.item.subscribe((file) => {
+            if (!file) { return; }
+            this.contentSize = prettyBytes(file.properties.contentLength);
+            this.url = decodeURIComponent(file.url);
+        });
     }
 
     private _saveFile(pathToFile) {
@@ -144,5 +145,12 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
             },
         });
         return obs;
+    }
+
+    private _clearFileLoader() {
+        if (this.fileLoader) {
+            this.fileLoader.dispose();
+            this.fileLoader = null;
+        }
     }
 }

@@ -1,6 +1,5 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
+import { Component, Input, OnChanges, SimpleChanges } from "@angular/core";
 
-import { FileService, StorageService } from "app/services";
 import { FileLoader } from "app/services/file";
 import "./file-content.scss";
 

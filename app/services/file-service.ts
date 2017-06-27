@@ -5,7 +5,7 @@ import { File, ServerError } from "app/models";
 import { Constants, exists } from "app/utils";
 import { BatchClientService } from "./batch-client.service";
 import {
-    DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache, getOnceProxy,
+    DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache,
 } from "./core";
 import { FileLoader, FileSource } from "./file";
 import { FileSystemService } from "./fs.service";
@@ -90,7 +90,7 @@ export class FileService extends ServiceBase {
             source: FileSource.node,
             fs: this.fs,
             properties: () => {
-                return getOnceProxy(this.getFilePropertiesFromComputeNode(poolId, nodeId, filename));
+                return this.getFilePropertiesFromComputeNode(poolId, nodeId, filename);
             },
             content: (options) => {
                 let ocpRange = "";
@@ -145,7 +145,7 @@ export class FileService extends ServiceBase {
             groupId: path.join(jobId, taskId),
             fs: this.fs,
             properties: () => {
-                return getOnceProxy(this.getFilePropertiesFromTask(jobId, taskId, filename));
+                return this.getFilePropertiesFromTask(jobId, taskId, filename);
             },
             content: (options) => {
                 let ocpRange = "";

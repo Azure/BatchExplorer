@@ -1,4 +1,5 @@
-import { Component, Input, OnChanges } from "@angular/core";
+import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import { Subscription } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { FileLoader } from "app/services/file";
@@ -8,14 +9,25 @@ import "./image-file-viewer.scss";
     selector: "bl-image-file-viewer",
     templateUrl: "image-file-viewer.html",
 })
-export class ImageFileViewerComponent implements OnChanges {
+export class ImageFileViewerComponent implements OnChanges, OnDestroy {
     @Input() public fileLoader: FileLoader;
 
     public src: string;
     public loadingStatus = LoadingStatus.Loading;
 
+    private _sub: Subscription;
+
     public ngOnChanges(changes) {
         this._loadImage();
+        if (changes.fileLoader) {
+            this._sub  = this.fileLoader.fileChanged.subscribe(() => {
+                this._loadImage();
+                console.log("File changed...");
+            });
+        }
+    }
+    public ngOnDestroy() {
+        this._cleanup();
     }
 
     private _loadImage() {
@@ -24,5 +36,11 @@ export class ImageFileViewerComponent implements OnChanges {
             this.src = `file://${destination}`;
             this.loadingStatus = LoadingStatus.Ready;
         });
+    }
+
+    private _cleanup() {
+        if (this._sub) {
+            this._sub.unsubscribe();
+        }
     }
 }
