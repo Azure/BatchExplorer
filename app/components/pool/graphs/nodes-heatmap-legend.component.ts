@@ -7,6 +7,8 @@ import { NodeService } from "app/services";
 import { StateCounter } from "./state-counter";
 import { CategoryNode, StateNode, StateTree } from "./state-tree";
 
+import "./nodes-heatmap-legend.scss";
+
 @Component({
     selector: "bl-nodes-heatmap-legend",
     templateUrl: "nodes-heatmap-legend.html",

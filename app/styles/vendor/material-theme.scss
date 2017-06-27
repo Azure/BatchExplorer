@@ -35,6 +35,8 @@ md-tab-group:not(.form-tabs) {
     .mat-tab-label {
         opacity: 0.8 !important;
         border-right: 1px solid #ddd;
+        height: 32px;
+        line-height: 32px;
 
         &.mat-tab-label-active {
             background-color: map-get($primary, 100);

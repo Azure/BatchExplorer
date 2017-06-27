@@ -1,14 +1,18 @@
+@import "app/styles/variables";
+
 bl-pool-graphs {
     .charts-previews {
         margin-bottom: 15px;
-        padding-bottom: 10px;
-        border-bottom: 1px solid $whitesmoke-darker;
+        // padding-bottom: 10px;
+        border-bottom: 1px solid $border-color;
         display: flex;
         user-select: none;
 
         > .preview {
             cursor: pointer;
             margin-right: 5px;
+            padding: 10px;
+            border-right: 1px solid $border-color;
             flex: 1;
             .label {
                 font-size: 11px;
@@ -19,13 +23,20 @@ bl-pool-graphs {
             &.focused {
                 .label {
                     color: map-get($primary, 600);
-                    text-decoration: underline;
                 }
+
+                .small-preview {
+                    display: none;
+                }
+            }
+
+            &:hover {
+                background: $whitesmoke;
             }
         }
 
         > .config {
-            margin: 10px;
+            margin: 20px 10px;
         }
     }
 
