@@ -1,5 +1,12 @@
 import { IActionMapping } from "angular-tree-component/dist/angular-tree-component";
 
+export enum NodeState {
+    COLLAPSED_DIRECTORY,
+    EXPANDED_DIRECTORY,
+    LOADING_DIRECTORY,
+    FILE,
+}
+
 export class TreeNodeData {
     public id: number;
     public name: string;
@@ -11,11 +18,4 @@ export class TreeNodeData {
 
 export class TreeNodeOption {
     public actionMapping: IActionMapping;
-}
-
-export enum NodeState {
-    COLLAPSED_DIRECTORY,
-    EXPANDED_DIRECTORY,
-    LOADING_DIRECTORY,
-    FILE,
 }

@@ -81,6 +81,11 @@ export class PersistedFileListComponent implements OnChanges, OnDestroy {
     }
 
     @autobind()
+    public loadPath() {
+        // do nothing
+    }
+
+    @autobind()
     public refresh(): Observable<any> {
         if (this.jobId && this.taskId && this.outputKind) {
             this._loadFiles();

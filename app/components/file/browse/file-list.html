@@ -1,12 +1,13 @@
 <div *ngIf="!nodeNotFound && !fileCleanupOperation">
     <bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
     <bl-file-list-display
-        [files]="data.items | async"
-        [status]="status | async"
-        [quickList]="quickList"
-        [baseUrl]="baseUrl"
-        [filter]="filter"
-        [loadPath]="loadPath.bind(this)"></bl-file-list-display>
+            #listDisplay
+            [status]="status | async"
+            [quickList]="quickList"
+            [baseUrl]="baseUrl"
+            [filter]="filter"
+            [loadPath]="loadPath.bind(this)"></bl-file-list-display>
+
     <bl-list-loading [manualLoading]="manualLoading" [data]="data" [status]="status | async"></bl-list-loading>
 </div>
 

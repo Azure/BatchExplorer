@@ -45,6 +45,7 @@ export class TaskFileListComponent implements OnChanges, OnDestroy {
     public nodeNotFound: boolean;
 
     private _statuSub: Subscription;
+    private _fileProxyMap: StringMap<RxListProxy<TaskFileListParams, File>> = {};
 
     constructor(
         private fileService: FileService,
@@ -101,6 +102,19 @@ export class TaskFileListComponent implements OnChanges, OnDestroy {
 
     public get filterPlaceholder() {
         return "Filter by file name";
+    }
+
+    public loadPath(path: string, refresh: boolean = false): Observable<List<File>> {
+        if (!(path in this._fileProxyMap)) {
+            const filterPath = path ? { filter: FilterBuilder.prop("name").startswith(path).toOData() } : {};
+            const poolId = this.poolId;
+            const nodeId = this.nodeId;
+            this._fileProxyMap[path] = this.fileService.listFromComputeNode(poolId, nodeId, false, filterPath);
+        }
+        let observable = refresh ?  this._fileProxyMap[path].refresh() : this._fileProxyMap[path].fetchNext();
+        return observable.flatMap(() => {
+            return this._fileProxyMap[path].items.first();
+        });
     }
 
     private _loadIfNodeExists() {
