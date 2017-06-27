@@ -4,7 +4,8 @@ import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
 import { File, ServerError, Task, TaskState } from "app/models";
 import { FileService } from "app/services";
-import { PollObservable, RxEntityProxy } from "app/services/core";
+import { PollObservable } from "app/services/core";
+import { FileLoader } from "app/services/file";
 import { prettyBytes } from "app/utils";
 
 const defaultOutputFileNames = ["stdout.txt", "stderr.txt"];
@@ -26,9 +27,9 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
     public filterControl = new FormControl();
     public filteredOptions: Observable<string[]>;
     public addingFile = false;
+    public fileLoaderMap: StringMap<FileLoader> = {};
 
     private _taskFileSubscription: Subscription;
-    private _fileProxyMap: Array<RxEntityProxy<any, File>> = [];
     private _initialQueryOptions = { maxItems: 500 };
     private _options: BehaviorSubject<string[]>;
     private _currentTaskId: string = null;
@@ -41,14 +42,14 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
         this.filteredOptions = this._options;
     }
 
-   public ngOnInit() {
-      this.filteredOptions = this.filterControl.valueChanges
-         .map((nameFilter) => {
-             return nameFilter
-                ? this._options.value.filter(option => new RegExp(`${nameFilter}`, "gi").test(option))
-                : this._options.value;
-        });
-   }
+    public ngOnInit() {
+        this.filteredOptions = this.filterControl.valueChanges
+            .map((nameFilter) => {
+                return nameFilter
+                    ? this._options.value.filter(option => new RegExp(`${nameFilter}`, "gi").test(option))
+                    : this._options.value;
+            });
+    }
 
     public ngOnChanges(inputs) {
         if (inputs.jobId || inputs.task) {
@@ -148,17 +149,16 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
     private _updateFileData() {
         this._clearFileSizeProxyMap();
         for (const filename of this.outputFileNames) {
+            const fileLoader = this.fileService.fileFromTask(this.jobId, this.task.id, filename);
+            this.fileLoaderMap[filename] = fileLoader;
+
             if (this._shouldGetFileSize(filename)) {
-                const data = this.fileService.getFilePropertiesFromTask(this.jobId, this.task.id, filename);
-                data.item.subscribe((file: File) => {
+                fileLoader.properties().subscribe((file: File) => {
                     if (file) {
                         const props = file.properties;
                         this.fileSizes[filename] = prettyBytes(props && props.contentLength);
                     }
                 });
-
-                this._fileProxyMap.push(data);
-                data.fetch();
             }
         }
     }
@@ -183,8 +183,7 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private _clearFileSizeProxyMap() {
-        this._fileProxyMap.forEach(x => x.dispose());
-        this._fileProxyMap = [];
+        this.fileLoaderMap = {};
     }
 
     private _clearTaskFilesSubscription() {
