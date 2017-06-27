@@ -21,6 +21,7 @@
     position: absolute;
     font-family: FontAwesome;
     bottom: -5px;
+    cursor: default;
 }
 
 .node-wrapper.tree-node-file .toggle-children-placeholder:before {
@@ -28,6 +29,7 @@
     position: absolute;
     font-family: FontAwesome;
     bottom: -5px;
+    cursor: default;
 }
 
 .toggle-children, .toggle-children-placeholder {
@@ -43,6 +45,7 @@
     position: absolute;
     font-family: FontAwesome;
     bottom: -5px;
+    cursor: default;
 }
 
 .toggle-children-wrapper-expanded .toggle-children:before, .node-wrapper.tree-node-expanded .toggle-children-placeholder:before {
@@ -50,4 +53,5 @@
     position: absolute;
     font-family: FontAwesome;
     bottom: -5px;
+    cursor: default;
 }

@@ -1,6 +1,6 @@
-import { Component, Input, OnInit, ViewChild } from "@angular/core";
+import { Component, Input, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { TREE_ACTIONS, TreeComponent, TreeModel, TreeNode } from "angular-tree-component";
+import { TREE_ACTIONS, TreeModel, TreeNode } from "angular-tree-component";
 import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
 import { NodeState, TreeNodeData } from "app/models/tree-component";
@@ -14,86 +14,44 @@ import { Observable } from "rxjs/Observable";
     templateUrl: "file-list-display.html",
 })
 export class FileListDisplayComponent implements OnInit {
-    /**
-     * If set to true it will display the quick list view, if false will use the table view
-     */
     @Input()
-    public quickList: boolean; // remove later
+    public status: LoadingStatus;
 
     @Input()
-    public files: List<File>; // remove later
+    public filter: any;
 
     @Input()
-    public status: LoadingStatus; // ??
-
-    @Input()
-    public filter: any; // ??
-
-    @Input()
-    public baseUrl: any[]; // routing?
+    public baseUrl: any[];
 
     /**
      * If true then create link to /blobs/filename rather than /files/filename
      */
     @Input()
-    public isBlob: boolean = false; // ??
+    public isBlob: boolean = false;
 
     @Input()
     public loadPath: (path: string, refresh?: boolean) => Observable<List<File>>;
 
     public NodeState = NodeState;
 
-    /** TreeModel instance variables */
     public node: TreeNode;
-    // public treeNodes: TreeNodeData[];
-    // public treeOptions: TreeNodeOption;
-
-    @ViewChild(TreeComponent)
-    public tree: TreeComponent;
 
     private _currPath: string = "";
 
-    constructor(public treeComponentService: TreeComponentService,
-                // private route: ActivatedRoute,
-                private router: Router) { }
+    constructor(public treeComponentService: TreeComponentService, private router: Router) { }
 
     public ngOnInit() {
-        console.log("what is this value?", this.treeComponentService.treeNodes);
-        this.tree.treeModel.expandAll();
-        this.initNodes();
-        // this.route.queryParams.subscribe(params => {
-        //     if (params["expandedNodes"]) {
-        //         const expandedNodes = JSON.parse(params["expandedNodes"]);
-        //         this.tree.treeModel.expandAll();
-        //         console.log(this.tree.treeModel.nodes, "da sb");
-        //         expandedNodes.map((nodeId) => {
-        //             // let treeNode: TreeNode = this.tree.treeModel.getNodeById(nodeId);
-        //             // if (treeNode.data.state === NodeState.EXPANDED_DIRECTORY) {
-        //             //     treeNode.expand();
-        //             // }
-        //         });
-        //         this.tree.treeModel.update();
-        //     } else {
-        //         this.initNodes();
-        //     }
-        // });
+        this.initNodes("");
     }
-
     /**
      * Initialize tree nodes function once loadPath callback function is ready
      */
-    public initNodes(currPath?: string) {
-        if (this.loadPath) {
-            if (currPath || !this.treeComponentService.treeNodes) {
-                let filesObs = this.loadPath(currPath || this._currPath, false);
-                filesObs.subscribe((files) => {
-                    if (files.size > 0) {
-                        this.treeComponentService.treeNodes = files.map(mapFileToTree).toArray();
-                        this.tree.treeModel.update();
-                    }
-                });
-            }
-        }
+    public initNodes(currPath: string) {
+        this._currPath = currPath || "";
+        let filesObs = this.loadPath(this._currPath, false);
+        filesObs.subscribe((files) => {
+            this.treeComponentService.treeNodes = (files.size > 0) ? files.map(mapFileToTree).toArray() : [];
+        });
     }
 
     /**
@@ -131,22 +89,14 @@ export class FileListDisplayComponent implements OnInit {
     public onClick(node: TreeNode, $event: any) {
         if (node.data.state !== NodeState.FILE) {
             if (node.data.state === NodeState.COLLAPSED_DIRECTORY) {
-                this.loadNodes(this.tree.treeModel, node);
+                this.loadNodes(node.treeModel, node);
             } else if (node.data.state === NodeState.EXPANDED_DIRECTORY) {
                 node.data.state = NodeState.COLLAPSED_DIRECTORY;
             }
-            return TREE_ACTIONS.TOGGLE_EXPANDED(this.tree.treeModel, node, $event);
+            return TREE_ACTIONS.TOGGLE_EXPANDED(node.treeModel, node, $event);
         }
-        // node.focus();
-        // console.log(this.tree.treeModel.expandedNodes, this.tree.treeModel.expandedNodeIds);
-        const queryParams = {
-            queryParams: {
-                expandedNodes: JSON.stringify(
-                    this.tree.treeModel.expandedNodes.map((nodeElement: TreeNode) => node.data.id)),
-            },
-        };
-        this.router.navigate(this.urlToFile(node.data.fileName), queryParams);
-        return TREE_ACTIONS.TOGGLE_SELECTED(this.tree.treeModel, node, $event);
+        this.router.navigate(this.urlToFile(node.data.fileName));
+        return TREE_ACTIONS.TOGGLE_SELECTED(node.treeModel, node, $event);
     }
 
     /**
@@ -157,11 +107,6 @@ export class FileListDisplayComponent implements OnInit {
         const filePathPart = this.isBlob ? "blobs" : "files";
         return this.baseUrl.concat([filePathPart, fileName]);
     }
-
-    public isErrorState(file: any) {
-        return false;
-    }
-
 }
 
 function prettyFileSize(size: string) {

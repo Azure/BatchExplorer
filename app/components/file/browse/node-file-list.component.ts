@@ -1,20 +1,18 @@
-import { Component, Input, OnChanges, OnInit, ViewChild } from "@angular/core";
-import { autobind } from "core-decorators";
-import { Observable } from "rxjs";
-
+import { Component, Input, OnChanges, ViewChild } from "@angular/core";
 import { LoadingStatus } from "app/components/base/loading";
 import { FileListDisplayComponent } from "app/components/file/browse/display";
-import { File } from "app/models";
+import { File, ServerError } from "app/models";
 import { FileService, NodeFileListParams } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter, FilterBuilder, Property } from "app/utils/filter-builder";
 import { List } from "immutable";
+import { BehaviorSubject, Observable } from "rxjs";
 
 @Component({
     selector: "bl-node-file-list",
     templateUrl: "file-list.html",
 })
-export class NodeFileListComponent implements OnInit, OnChanges {
+export class NodeFileListComponent implements OnChanges {
     public LoadingStatus = LoadingStatus;
 
     /**
@@ -48,23 +46,12 @@ export class NodeFileListComponent implements OnInit, OnChanges {
     @ViewChild(FileListDisplayComponent)
     public listDisplay: FileListDisplayComponent;
 
-    // public status: Observable<LoadingStatus>;
-    // public data: RxListProxy<NodeFileListParams, File>;
-    // public node: Node;
-    public notFound: boolean;
+    public status: BehaviorSubject<LoadingStatus> = new BehaviorSubject(LoadingStatus.Loading);
+    public error: BehaviorSubject<ServerError> = new BehaviorSubject(null);
 
     private _fileProxyMap: StringMap<RxListProxy<NodeFileListParams, File>> = {};
 
-    constructor(private fileService: FileService) {
-        this.notFound = false;
-
-        // this.data = this.fileService.listFromComputeNode(null, null, true, {});
-        // this.status = this.data.status;
-    }
-
-    public ngOnInit() {
-        return;
-    }
+    constructor(private fileService: FileService) { }
 
     public ngOnChanges(inputs) {
         if (inputs.poolId || inputs.nodeId || inputs.folder || inputs.filter) {
@@ -72,7 +59,6 @@ export class NodeFileListComponent implements OnInit, OnChanges {
         }
     }
 
-    @autobind()
     public refresh() {
         if (!(this.poolId && this.nodeId)) {
             return;
@@ -81,37 +67,9 @@ export class NodeFileListComponent implements OnInit, OnChanges {
         const quickSearch = filterProp && filterProp.value;
         const loadPath = [this.folder, quickSearch].filter(x => Boolean(x)).join("/");
         if (this.listDisplay) {
+            console.log(`Init Nodes with ${this.poolId}(poolId) and ${this.nodeId}(nodeId)`);
             this.listDisplay.initNodes(loadPath);
         }
-        // console.log("info", this.folder, this.filter, this.tree);
-        // let filesObs = this.treeComponentUtils.initNodes(this.fileService,
-        //                         this.poolId, this.nodeId, this.folder, this.filter);
-        // filesObs.subscribe((files) => {
-        //     if (files.size > 0) {
-        //         this.treeNodes = files.map(this.treeComponentUtils.mappingFilesToTree).toArray();
-        //         this.treeOptions = this.treeComponentUtils.getFileTreeOption();
-        //         console.log("result treeNodes after update", this.treeNodes);
-        //     } else {
-        //         this.notFound = true;
-        //     }
-        // });
-        // const filter: Property = this.filter as Property;
-        // const quickSearch = filter && filter.value;
-        // const filterOption = this._buildFilter();
-        // let options = !filterOption.isEmpty() ? { filter: filterOption.toOData() } : {};
-        // if (!(quickSearch in this._fileProxyMap)) {
-        //     const poolId = this.poolId;
-        //     const nodeId = this.nodeId;
-        //     this._fileProxyMap[quickSearch] = this.fileService.listFromComputeNode(poolId, nodeId, false, options);
-        //     return this._fileProxyMap[quickSearch].fetchNext(true);
-        // }
-        // return this._fileProxyMap[quickSearch].refresh();
-    }
-
-    @autobind()
-    public loadMore(): Observable<any> {
-        return null;
-        // return this.data.fetchNext();
     }
 
     public get baseUrl() {
@@ -125,6 +83,12 @@ export class NodeFileListComponent implements OnInit, OnChanges {
             const nodeId = this.nodeId;
             this._fileProxyMap[path] = this.fileService.listFromComputeNode(poolId, nodeId, false, filterPath);
         }
+        this._fileProxyMap[path].status.subscribe((status) => {
+            this.status.next(status);
+        });
+        this._fileProxyMap[path].error.subscribe((error) => {
+            this.error.next(error);
+        });
         let observable = refresh ?  this._fileProxyMap[path].refresh() : this._fileProxyMap[path].fetchNext();
         return observable.flatMap(() => {
             return this._fileProxyMap[path].items.first();

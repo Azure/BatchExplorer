@@ -13,6 +13,7 @@ export class TreeComponentService {
 
     constructor() {
         const actionMapping: IActionMapping = { mouse: { expanderClick: null } };
+        this.treeNodes = [] as TreeNodeData[];
         this.treeOptions = { actionMapping: actionMapping } as TreeNodeOption;
     }
 }

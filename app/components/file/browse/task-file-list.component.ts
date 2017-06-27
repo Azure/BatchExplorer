@@ -1,13 +1,15 @@
-import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import { Component, Input, OnChanges, ViewChild } from "@angular/core";
 import { autobind } from "core-decorators";
-import { BehaviorSubject, Observable, Subscription } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
+import { FileListDisplayComponent } from "app/components/file/browse/display";
 import { File, Node, NodeState, ServerError, Task } from "app/models";
 import { FileService, NodeService, TaskFileListParams, TaskService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Constants } from "app/utils";
-import { Filter } from "app/utils/filter-builder";
+import { Filter, FilterBuilder, Property } from "app/utils/filter-builder";
+import { List } from "immutable";
 
 /**
  * Valid state of a node to retrieve files
@@ -22,7 +24,7 @@ const validStates = [
     selector: "bl-task-file-list",
     templateUrl: "file-list.html",
 })
-export class TaskFileListComponent implements OnChanges, OnDestroy {
+export class TaskFileListComponent implements OnChanges {
     /**
      * If set to true it will display the quick list view, if false will use the table view
      */
@@ -38,34 +40,22 @@ export class TaskFileListComponent implements OnChanges, OnDestroy {
     @Input()
     public filter: Filter;
 
-    public data: RxListProxy<TaskFileListParams, File>;
-    public status = new BehaviorSubject(LoadingStatus.Loading);
+    @ViewChild(FileListDisplayComponent)
+    public listDisplay: FileListDisplayComponent;
+
     public LoadingStatus = LoadingStatus;
     public fileCleanupOperation: boolean;
     public nodeNotFound: boolean;
 
-    private _statuSub: Subscription;
+    public status = new BehaviorSubject(LoadingStatus.Loading);
+    public error: BehaviorSubject<ServerError> = new BehaviorSubject(null);
+
     private _fileProxyMap: StringMap<RxListProxy<TaskFileListParams, File>> = {};
 
     constructor(
         private fileService: FileService,
         private nodeService: NodeService,
-        private taskService: TaskService) {
-
-        this.data = this.fileService.listFromTask(null, null, true, {}, (error: ServerError) => {
-            if (error && error.body.code === Constants.APIErrorCodes.operationInvalidForCurrentState) {
-                this.fileCleanupOperation = true;
-                return false;
-            }
-
-            // carry on throwing error
-            return true;
-        });
-
-        this._statuSub = this.data.status.subscribe((status) => {
-            this.status.next(status);
-        });
-    }
+        private taskService: TaskService) { }
 
     public ngOnChanges(inputs) {
         if (inputs.jobId || inputs.taskId || inputs.filter) {
@@ -73,27 +63,11 @@ export class TaskFileListComponent implements OnChanges, OnDestroy {
         }
     }
 
-    public ngOnDestroy() {
-        this.status.unsubscribe();
-        this._statuSub.unsubscribe();
-    }
-
     @autobind()
-    public refresh(): Observable<any> {
+    public refresh() {
         if (this.jobId && this.taskId) {
             this._loadIfNodeExists();
         }
-
-        return Observable.of(true);
-    }
-
-    @autobind()
-    public loadMore(): Observable<any> {
-        if (this.data) {
-            return this.data.fetchNext();
-        }
-
-        return new Observable(null);
     }
 
     public get baseUrl() {
@@ -107,10 +81,20 @@ export class TaskFileListComponent implements OnChanges, OnDestroy {
     public loadPath(path: string, refresh: boolean = false): Observable<List<File>> {
         if (!(path in this._fileProxyMap)) {
             const filterPath = path ? { filter: FilterBuilder.prop("name").startswith(path).toOData() } : {};
-            const poolId = this.poolId;
-            const nodeId = this.nodeId;
-            this._fileProxyMap[path] = this.fileService.listFromComputeNode(poolId, nodeId, false, filterPath);
+            const jobId = this.jobId;
+            const taskId = this.taskId;
+            this._fileProxyMap[path] = this.fileService.listFromTask(jobId, taskId, false, filterPath);
         }
+        this._fileProxyMap[path].status.subscribe((status) => {
+            this.status.next(status);
+        });
+        this._fileProxyMap[path].error.subscribe((error) => {
+            if (error && error.body.code === Constants.APIErrorCodes.operationInvalidForCurrentState) {
+                this.fileCleanupOperation = true;
+                return;
+            }
+            this.error.next(error);
+        });
         let observable = refresh ?  this._fileProxyMap[path].refresh() : this._fileProxyMap[path].fetchNext();
         return observable.flatMap(() => {
             return this._fileProxyMap[path].items.first();
@@ -120,20 +104,19 @@ export class TaskFileListComponent implements OnChanges, OnDestroy {
     private _loadIfNodeExists() {
         this.fileCleanupOperation = false;
         this.nodeNotFound = false;
-
         this.status.next(LoadingStatus.Loading);
         this.taskService.getOnce(this.jobId, this.taskId).cascade((task: Task) => {
             if (!task.nodeInfo) {
                 this.nodeNotFound = false;
                 return null;
             }
-
             this.nodeService.getOnce(task.nodeInfo.poolId, task.nodeInfo.nodeId, {}).subscribe({
                 next: (node: Node) => {
                     this.nodeNotFound = false;
-
                     if (validStates.includes(node.state)) {
-                        this._loadFiles();
+                        const filterProp = this.filter as Property;
+                        const loadPath = filterProp && filterProp.value;
+                        this.listDisplay.initNodes(loadPath);
                     }
                 },
                 error: (error) => {
@@ -142,21 +125,5 @@ export class TaskFileListComponent implements OnChanges, OnDestroy {
                 },
             });
         });
-    }
-
-    private _loadFiles() {
-        this.data.updateParams({ jobId: this.jobId, taskId: this.taskId });
-        this.data.setOptions(this._buildOptions());
-        this.data.fetchNext(true);
-    }
-
-    private _buildOptions() {
-        if (this.filter && !this.filter.isEmpty()) {
-            return {
-                filter: this.filter.toOData(),
-            };
-        } else {
-            return {};
-        }
     }
 }
