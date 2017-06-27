@@ -14,10 +14,12 @@ const iconMapping = {
     "SLES": Icons.openSUSE,
     "SLES-HPC": Icons.openSUSE,
     "standard-data-science-vm": Icons.windows,
+    "rendering-windows2016": Icons.windows,
+    "autodesk-maya-arnold-centos73": Icons.centos,
+    "rendering-centos73": Icons.centos,
 };
 
 export class PoolUtils {
-
     public static isIaas(pool: Pool) {
         return Boolean(pool && pool.virtualMachineConfiguration);
     }
@@ -66,6 +68,14 @@ export class PoolUtils {
         const icon = iconMapping[offerName];
         if (icon) {
             return icon;
+        }
+
+        // double check if we can parse out the kind of icon we need.
+        // these will be the majority of any new rendering offers.
+        if (this.isOfferWindows(offerName)) {
+            return Icons.windows;
+        } else if (/centos/i.test(offerName)) {
+            return Icons.centos;
         } else {
             return new Icon(IconSources.fa, "fa-microchip");
         }

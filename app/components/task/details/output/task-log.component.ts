@@ -184,6 +184,7 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
 
     private _clearFileSizeProxyMap() {
         this._fileProxyMap.forEach(x => x.dispose());
+        this._fileProxyMap = [];
     }
 
     private _clearTaskFilesSubscription() {
