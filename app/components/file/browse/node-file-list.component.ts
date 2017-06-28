@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, ViewChild } from "@angular/core";
+import { Component, Input, OnChanges, SimpleChange, ViewChild } from "@angular/core";
 import { LoadingStatus } from "app/components/base/loading";
 import { FileListDisplayComponent } from "app/components/file/browse/display";
 import { File, ServerError } from "app/models";
@@ -20,10 +20,10 @@ export class NodeFileListComponent implements OnChanges {
      * If set to true it will display the quick list view, if false will use the table view
      */
     @Input()
-    public quickList: boolean;
+    public quickList: boolean; // remove later
 
     @Input()
-    public manualLoading: boolean;
+    public manualLoading: boolean; // remove later
 
     @Input()
     public poolId: string;
@@ -56,19 +56,19 @@ export class NodeFileListComponent implements OnChanges {
 
     public ngOnChanges(inputs) {
         if (inputs.poolId || inputs.nodeId || inputs.folder || inputs.filter) {
+            this._initProxyMap(inputs);
             this.refresh();
         }
     }
 
     public refresh() {
-        if (!(this.poolId && this.nodeId)) {
-            return;
-        }
-        const filterProp = this.filter as Property;
-        const quickSearch = filterProp && filterProp.value;
-        const loadPath = [this.folder, quickSearch].filter(x => Boolean(x)).join("/");
-        if (this.listDisplay) {
-            this.listDisplay.initNodes(loadPath, true);
+        if ((this.poolId && this.nodeId)) {
+            const filterProp = this.filter as Property;
+            const quickSearch = filterProp && filterProp.value;
+            const loadPath = [this.folder, quickSearch].filter(x => Boolean(x)).join("/");
+            if (this.listDisplay) {
+                this.listDisplay.initNodes(loadPath, true);
+            }
         }
     }
 
@@ -94,5 +94,14 @@ export class NodeFileListComponent implements OnChanges {
         return observable.flatMap(() => {
             return this._fileProxyMap[path].items.first();
         });
+    }
+
+    private _initProxyMap(inputs) {
+        let poolIdInput: SimpleChange = inputs.poolId;
+        let nodeIdInput: SimpleChange = inputs.nodeId;
+        if (poolIdInput && poolIdInput.previousValue && poolIdInput.currentValue !== poolIdInput.previousValue ||
+            nodeIdInput && nodeIdInput.previousValue && nodeIdInput.currentValue !== nodeIdInput.previousValue) {
+            this._fileProxyMap = {} as StringMap<RxListProxy<NodeFileListParams, File>>;
+        }
     }
 }

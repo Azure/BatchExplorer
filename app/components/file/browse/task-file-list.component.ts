@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, ViewChild } from "@angular/core";
+import { Component, Input, OnChanges, SimpleChange, ViewChild } from "@angular/core";
 import { LoadingStatus } from "app/components/base/loading";
 import { FileListDisplayComponent } from "app/components/file/browse/display";
 import { File, Node, NodeState, ServerError, Task } from "app/models";
@@ -28,10 +28,10 @@ export class TaskFileListComponent implements OnChanges {
      * If set to true it will display the quick list view, if false will use the table view
      */
     @Input()
-    public quickList: boolean;
+    public quickList: boolean; // remove later
 
     @Input()
-    public jobId: string;
+    public jobId: string; // remove later
 
     @Input()
     public taskId: string;
@@ -58,6 +58,7 @@ export class TaskFileListComponent implements OnChanges {
 
     public ngOnChanges(inputs) {
         if (inputs.jobId || inputs.taskId || inputs.filter) {
+            this._initProxyMap(inputs);
             this.refresh();
         }
     }
@@ -124,5 +125,14 @@ export class TaskFileListComponent implements OnChanges {
                 },
             });
         });
+    }
+
+    private _initProxyMap(inputs) {
+        let jobIdInput: SimpleChange = inputs.jobId;
+        let taskIdInput: SimpleChange = inputs.taskId;
+        if (jobIdInput && jobIdInput.previousValue && jobIdInput.currentValue !== jobIdInput.previousValue ||
+            taskIdInput && taskIdInput.previousValue && taskIdInput.currentValue !== taskIdInput.previousValue) {
+            this._fileProxyMap = {} as StringMap<RxListProxy<TaskFileListParams, File>>;
+        }
     }
 }
