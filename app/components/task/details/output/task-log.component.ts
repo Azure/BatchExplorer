@@ -63,6 +63,9 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
 
                 this._loadTaskFilesData();
                 this._updateFileData();
+            } else if (this._shouldClearFileSizePollers()) {
+                // clear pollers when task has completed and all file sizes have been loaded.
+                this._clearFileSizeProxyMap();
             }
         }
     }
@@ -158,6 +161,7 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
                 });
 
                 this._fileProxyMap.push(data);
+                data.startPoll(10000);
                 data.fetch();
             }
         }
@@ -169,6 +173,17 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
      */
     private _shouldGetFileSize(filename: string) {
         return this.task.state !== TaskState.completed || !this.fileSizes[filename];
+    }
+
+    /**
+     * If the task has complted and we have loaded the file sizes, then stop
+     * the file size pollers.
+     */
+    private _shouldClearFileSizePollers(): boolean {
+        return this.task
+            && this.task.state === TaskState.completed
+            && this._fileProxyMap.length > 0
+            && Object.keys(this.fileSizes).length === this.outputFileNames.length;
     }
 
     /**

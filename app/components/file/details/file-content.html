@@ -1,5 +1,5 @@
 <div *ngIf="!fileLoader">
-    Error this file is neither a node, task or blob file.
+    Error: this file is neither a node, task or blob file.
 </div>
 <div *ngIf="fileLoader" [ngSwitch]="fileType">
     <div *ngSwitchCase="FileType.log">
