@@ -11,6 +11,7 @@ import { NodeFillType } from "app/models";
 import { PoolCreateDto } from "app/models/dtos";
 import { PoolOsSources, createPoolToData, poolToFormModel } from "app/models/forms";
 import { PoolService, VmSizeService } from "app/services";
+import { Constants } from "app/utils";
 
 @Component({
     selector: "bl-pool-create-basic-dialog",
@@ -23,6 +24,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
 
     private _osControl: FormControl;
     private _sub: Subscription;
+    private _renderingSkuSelected: boolean = false;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -38,7 +40,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             id: ["", [
                 Validators.required,
                 Validators.maxLength(64),
-                Validators.pattern("^[\\w\\_-]+$"),
+                Validators.pattern(Constants.forms.validation.regex.id),
             ]],
             displayName: "",
             scale: [null],
@@ -52,12 +54,17 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         });
 
         this._sub = this._osControl.valueChanges.subscribe((value) => {
+            console.log("this._osControl.valueChanges: ", value);
             this.osSource = value.source;
             if (value.source === PoolOsSources.PaaS) {
+                this._renderingSkuSelected = false;
                 this.osType = "windows";
             } else {
                 const config = value.virtualMachineConfiguration;
                 const agentId: string = config && config.nodeAgentSKUId;
+                this._renderingSkuSelected = config && config.imageReference
+                    && config.imageReference.publisher === "batch";
+
                 if (agentId && agentId.toLowerCase().indexOf("windows") !== -1) {
                     this.osType = "windows";
                 } else {
@@ -97,5 +104,9 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
 
     public get startTask() {
         return this.form.controls.startTask.value;
+    }
+
+    public get renderingSkuSelected(): boolean {
+        return this._renderingSkuSelected;
     }
 }

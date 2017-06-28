@@ -57,7 +57,7 @@ export class FormPageComponent {
     public openedWith: FocusableElement;
 
     // tslint:disable-next-line:no-forward-ref
-    constructor( @Inject(forwardRef(() => ComplexFormComponent)) private form: ComplexFormComponent) { }
+    constructor(@Inject(forwardRef(() => ComplexFormComponent)) private form: ComplexFormComponent) { }
 
     /**
      * Open the given page. It will push on top of the page stack.
