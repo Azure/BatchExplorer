@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, OnDestroy, OnInit, ViewChild, forwardRef }
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
+import { MdCheckboxChange } from "@angular/material";
 import { List, Map } from "immutable";
 import { Subscription } from "rxjs";
 
@@ -85,7 +86,7 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
         ]);
 
         this._table.selectedItemsChange.subscribe((items) => {
-            console.log("this._table.selectedItemsChange :: ", items);
+            // console.log("this._table.selectedItemsChange :: ", items);
         });
 
         // this._loadPrices();
@@ -110,6 +111,10 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
 
     public registerOnTouched() {
         /** no-op */
+    }
+
+    public setCheckState(id: string, event: MdCheckboxChange) {
+        console.log(`${id} - ${event.checked}`);
     }
 
     // public pickSize(size: string) {

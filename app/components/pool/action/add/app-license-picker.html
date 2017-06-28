@@ -8,7 +8,7 @@
         </bl-thead>
         <bl-row *ngFor="let license of licenses" [key]="license.id">
             <bl-cell style="width: 40px">
-                <md-checkbox color="primary" name="isDefault"></md-checkbox>
+                <md-checkbox color="primary" (change)="setCheckState(license.id, $event)"></md-checkbox>
             </bl-cell>
             <bl-cell [value]="license.description"></bl-cell>
             <bl-cell style="width: 85px">EULA</bl-cell>
