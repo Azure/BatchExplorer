@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, SimpleChange, ViewChild } from "@angular/core";
 import { LoadingStatus } from "app/components/base/loading";
-import { FileListDisplayComponent } from "app/components/file/browse/display";
+import { TreeViewDisplayComponent } from "app/components/file/browse/display";
 import { File, Node, NodeState, ServerError, Task } from "app/models";
 import { FileService, NodeService, TaskFileListParams, TaskService } from "app/services";
 import { RxListProxy } from "app/services/core";
@@ -28,9 +28,6 @@ export class TaskFileListComponent implements OnChanges {
      * If set to true it will display the quick list view, if false will use the table view
      */
     @Input()
-    public quickList: boolean; // remove later
-
-    @Input()
     public jobId: string; // remove later
 
     @Input()
@@ -39,8 +36,8 @@ export class TaskFileListComponent implements OnChanges {
     @Input()
     public filter: Filter;
 
-    @ViewChild(FileListDisplayComponent)
-    public listDisplay: FileListDisplayComponent;
+    @ViewChild(TreeViewDisplayComponent)
+    public treeDisplay: TreeViewDisplayComponent;
 
     public LoadingStatus = LoadingStatus;
     public fileCleanupOperation: boolean;
@@ -116,7 +113,7 @@ export class TaskFileListComponent implements OnChanges {
                     if (validStates.includes(node.state)) {
                         const filterProp = this.filter as Property;
                         const loadPath = filterProp && filterProp.value;
-                        this.listDisplay.initNodes(loadPath, true);
+                        this.treeDisplay.initNodes(loadPath, true);
                     }
                 },
                 error: (error) => {

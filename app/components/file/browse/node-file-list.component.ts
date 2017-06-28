@@ -1,6 +1,6 @@
 import { Component, Input, OnChanges, SimpleChange, ViewChild } from "@angular/core";
 import { LoadingStatus } from "app/components/base/loading";
-import { FileListDisplayComponent } from "app/components/file/browse/display";
+import { TreeViewDisplayComponent } from "app/components/file/browse/display";
 import { File, ServerError } from "app/models";
 import { FileService, NodeFileListParams } from "app/services";
 import { RxListProxy } from "app/services/core";
@@ -20,12 +20,6 @@ export class NodeFileListComponent implements OnChanges {
      * If set to true it will display the quick list view, if false will use the table view
      */
     @Input()
-    public quickList: boolean; // remove later
-
-    @Input()
-    public manualLoading: boolean; // remove later
-
-    @Input()
     public poolId: string;
 
     @Input()
@@ -44,8 +38,8 @@ export class NodeFileListComponent implements OnChanges {
     @ViewChild(NodeFileListComponent)
     public list: NodeFileListComponent;
 
-    @ViewChild(FileListDisplayComponent)
-    public listDisplay: FileListDisplayComponent;
+    @ViewChild(TreeViewDisplayComponent)
+    public treeDisplay: TreeViewDisplayComponent;
 
     public status: BehaviorSubject<LoadingStatus> = new BehaviorSubject(LoadingStatus.Loading);
     public error: BehaviorSubject<ServerError> = new BehaviorSubject(null);
@@ -66,8 +60,8 @@ export class NodeFileListComponent implements OnChanges {
             const filterProp = this.filter as Property;
             const quickSearch = filterProp && filterProp.value;
             const loadPath = [this.folder, quickSearch].filter(x => Boolean(x)).join("/");
-            if (this.listDisplay) {
-                this.listDisplay.initNodes(loadPath, true);
+            if (this.treeDisplay) {
+                this.treeDisplay.initNodes(loadPath, true);
             }
         }
     }

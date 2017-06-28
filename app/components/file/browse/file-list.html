@@ -1,11 +1,11 @@
 <div *ngIf="!nodeNotFound && !fileCleanupOperation">
     <bl-server-error class="error-in-list" [error]="error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
-    <bl-file-list-display
-            #listDisplay
+    <bl-tree-view-display
+            #treeDisplay
             [status]="status | async"
             [baseUrl]="baseUrl"
             [filter]="filter"
-            [loadPath]="loadPath"></bl-file-list-display>
+            [loadPath]="loadPath"></bl-tree-view-display>
 </div>
 
 <div *ngIf="nodeNotFound" class="notfound-message top-margin">

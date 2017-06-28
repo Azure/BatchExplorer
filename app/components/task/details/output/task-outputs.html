@@ -7,7 +7,7 @@
 <!-- list any task outputs on the node -->
 <bl-entity-details-list *ngIf="selectedTab === 'node'" #nodeWrapper [refresh]="nodeList.refresh" [filterPlaceholder]="nodeList.filterPlaceholder"
     [showAddButton]="false" quickSearchField="name">
-    <bl-task-file-list #nodeList [jobId]="jobId" [taskId]="taskId" [filter]="nodeWrapper.filter" [quickList]="false">
+    <bl-task-file-list #nodeList [jobId]="jobId" [taskId]="taskId" [filter]="nodeWrapper.filter">
     </bl-task-file-list>
 </bl-entity-details-list>
 

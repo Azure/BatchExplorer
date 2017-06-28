@@ -1,20 +1,25 @@
 <bl-focus-section>
-    <tree-root #tree [nodes]="treeComponentService.treeNodes" [options]="treeComponentService.treeOptions">
-        <ng-template #treeNodeWrapperTemplate let-node let-index="index">
-            <div class="node-wrapper"
-                [class.tree-node-expanded]="node.data.state===NodeState.EXPANDED_DIRECTORY"
-                [class.tree-node-collapsed]="node.data.state===NodeState.COLLAPSED_DIRECTORY"
-                [class.tree-node-spin]="node.data.state===NodeState.LOADING_DIRECTORY"
-                [class.tree-node-file]="node.data.state===NodeState.FILE">
-                <tree-node-expander [node]="node"></tree-node-expander>
-                <div class="node-content-wrapper"
-                    (click)="onNodeClick(node, $event)">
-                    <tree-node-content [node]="node" [index]="index"></tree-node-content>
-                </div>
-            </div>
-        </ng-template>
-    </tree-root>
-    <bl-no-item [itemCount]="treeComponentService.treeNodes.length" [filter]="filter" [status]="status">
+    <bl-quick-list *ngIf="quickList">
+        <bl-quick-list-item *ngFor="let file of files| fileDirectoryFilter" [link]="urlToFile(file.name)" [key]="file.url">
+            <bl-quick-list-item-status [status]="" [tooltip]="">
+            </bl-quick-list-item-status>
+
+            <h4 bl-quick-list-item-title>{{file.name}}</h4>
+            <p bl-quick-list-item-field>{{prettyFileSize(file.properties.contentLength)}}</p>
+        </bl-quick-list-item>
+    </bl-quick-list>
+
+    <bl-table *ngIf="!quickList">
+        <bl-thead>
+            <bl-column>Name</bl-column>
+            <bl-column style="width: 200px">Content Length</bl-column>
+        </bl-thead>
+        <bl-row *ngFor="let file of files | fileDirectoryFilter" [link]="urlToFile(file.name)" [key]="file.url">
+            <bl-cell [value]="file.name"></bl-cell>
+            <bl-cell [value]="prettyFileSize(file.properties.contentLength)"></bl-cell>
+        </bl-row>
+    </bl-table>
+    <bl-no-item [itemCount]="(files  | fileDirectoryFilter).size" [filter]="filter" [status]="status">
         <i icon class="fa fa-tv"></i>
         <span no-filter>No files</span>
         <span with-filter>No files match this filter</span>
