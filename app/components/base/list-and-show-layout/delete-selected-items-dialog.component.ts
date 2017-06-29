@@ -16,7 +16,7 @@ export class DeleteSelectedItemsDialogComponent {
     }
 
     @autobind()
-    public destroyEntity() {
+    public destroyEntities() {
         return Observable.of(this.dialogRef.close(true));
     }
 }
