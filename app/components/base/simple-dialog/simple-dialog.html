@@ -1,9 +1,11 @@
-<div class="content">
+<div class="dialog">
     <div class="header">
         <h1>{{title}}</h1>
         <p *ngIf="subtitle">{{subtitle}}</p>
     </div>
-    <ng-template><ng-content></ng-content></ng-template>
+    <div class="content">
+        <ng-content></ng-content>
+    </div>
 </div>
 <div class="footer">
     <div class="buttons">

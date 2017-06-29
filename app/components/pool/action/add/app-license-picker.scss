@@ -23,3 +23,34 @@ bl-app-license-picker {
         }
     }
 }
+
+// Current EULA styles, will need to be tweaked when dynamic.
+.eula {
+    color: $mineshaft-grey;
+
+    .title {
+        font-weight: bold;
+        margin-right: 5px;
+        border-bottom: 1px solid $mineshaft-grey;
+    }
+
+    a {
+        // link color from portal makes links stand out better
+        color: #00bcf2;
+        cursor: pointer;
+    }
+
+    ol {
+
+    }
+
+    ol li {
+        margin-bottom: 15px;
+    }
+
+    ol li span {
+        font-weight:bold;
+        margin-right:5px;
+        border-bottom: 1px solid #2d3239;
+    }
+}
