@@ -1,0 +1,67 @@
+
+bl-simple-dialog {
+    display: block;
+    $footer-height: 60px;
+    overflow: hidden;
+    width: 600px;
+
+    .header {
+        h1 {
+            padding: 0 8px;
+        }
+
+        p {
+            padding: 0 10px;
+        }
+    }
+
+    > .content {
+        overflow: auto;
+        position: relative;
+        height: calc(100% - #{$footer-height});
+        padding: 10px 5px;
+    }
+
+    > .footer {
+        padding: 5px;
+        height: $footer-height;
+        align-items: center;
+        display: flex;
+
+        > .buttons {
+            margin: 0 5px;
+
+            bl-button {
+                margin-right: 5px;
+            }
+        }
+    }
+}
+
+.ext-eula-link {
+    color: #00bcf2;
+}
+
+.ext-eula .ext-eula-title {
+    font-weight: bold;
+    margin-right: 5px;
+    border-bottom: 1px solid #2d3239;
+}
+
+.ext-eula a {
+    cursor: pointer;
+}
+
+.ext-eula ol {
+    margin-left: -15px;
+}
+
+.ext-eula ol li {
+    margin-bottom: 15px;
+}
+
+.ext-eula ol li span {
+    font-weight:bold;
+    margin-right:5px;
+    border-bottom: 1px solid #2d3239;
+}

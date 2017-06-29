@@ -1,50 +1,16 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, ViewChild, forwardRef } from "@angular/core";
+import { Component, OnChanges, OnDestroy, OnInit, ViewChild, ViewContainerRef, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
+    ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
-import { MdCheckboxChange } from "@angular/material";
+import { MdCheckboxChange, MdDialog, MdDialogConfig } from "@angular/material";
 import { List, Map } from "immutable";
 import { Subscription } from "rxjs";
 
 import { TableComponent } from "app/components/base/table";
 import { ApplicationLicense } from "app/models";
-import { PoolOsSources } from "app/models/forms";
-import { AccountService, PricingService, VmSizeService } from "app/services";
-// import { StringUtils, prettyBytes } from "app/utils";
+import { LicenseEulaDialogComponent } from "./";
 
-// export class VmSizeDecorator {
-//     public title: string;
-//     public prettyCores: string;
-//     public prettyRAM: string;
-//     public prettyOSDiskSize: string;
-//     public prettyResourceDiskSize: string;
-//     public price: number;
-//     public prettyPrice: string;
-
-//     constructor(public vmSize: VmSize, prices: Map<string, SpecCost>) {
-//         this.title = this.prettyTitle(vmSize.name);
-//         this.prettyCores = this.prettyMb(vmSize.numberOfCores);
-//         this.prettyRAM = this.prettyMb(vmSize.memoryInMB);
-//         this.prettyOSDiskSize = this.prettyMb(vmSize.osDiskSizeInMB);
-//         this.prettyResourceDiskSize = this.prettyMb(vmSize.resourceDiskSizeInMB);
-
-//         const price = prices.get(vmSize.name.toLowerCase());
-//         if (price) {
-//             this.price = price.amount;
-//             this.prettyPrice = `${price.currencyCode} ${price.amount.toFixed(2)}`;
-//         } else {
-//             this.price = -1;
-//         }
-//     }
-
-//     public prettyMb(megaBytes: number) {
-//         return prettyBytes(megaBytes * 1000 * 1000, 0);
-//     }
-
-//     public prettyTitle(vmSize: string) {
-//         return vmSize.replace(/_/g, " ");
-//     }
-// }
+import "./app-license-picker.scss";
 
 // tslint:disable:no-forward-ref
 @Component({
@@ -55,17 +21,33 @@ import { AccountService, PricingService, VmSizeService } from "app/services";
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => AppLicensePickerComponent), multi: true },
     ],
 })
-export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, OnChanges, OnDestroy {
+export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, OnChanges, OnDestroy, Validator {
     @ViewChild("licenseTable")
-    public _table: TableComponent;
+    public table: TableComponent;
 
+    public form: FormGroup;
     public licenses: List<ApplicationLicense> = List([]);
 
-    private _propagateChange: (value: string) => void = null;
+    private _propagateChange: (value: string[]) => void = null;
+    private _pickedLicenses: Map<string, boolean> = Map<string, any>({});
+    private _formChangeSub: Subscription;
 
-    constructor() {
-        // private accountService: AccountService,
-        // private pricingService: PricingService
+    constructor(
+        private formBuilder: FormBuilder,
+        private viewContainerRef: ViewContainerRef,
+        private dialog: MdDialog) {
+
+        this.form = this.formBuilder.group({
+            acceptEula: [false],
+        });
+
+        this._formChangeSub = this.form.controls.acceptEula.valueChanges.subscribe((value) => {
+            if (this._propagateChange) {
+                setTimeout(() => {
+                    this._propagateChange(this._getPicked());
+                });
+            }
+        });
     }
 
     public ngOnInit() {
@@ -84,12 +66,6 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
                 cost: "2c USD",
             }),
         ]);
-
-        this._table.selectedItemsChange.subscribe((items) => {
-            // console.log("this._table.selectedItemsChange :: ", items);
-        });
-
-        // this._loadPrices();
     }
 
     public ngOnChanges(inputs) {
@@ -97,12 +73,11 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
     }
 
     public ngOnDestroy() {
-        /** no-op currently */
+        this._formChangeSub.unsubscribe();
     }
 
     public writeValue(value: any) {
-        console.log("writeValue: ", value);
-        /** no-op currently */
+        this._pickedLicenses = value;
     }
 
     public registerOnChange(fn) {
@@ -114,36 +89,32 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
     }
 
     public setCheckState(id: string, event: MdCheckboxChange) {
-        console.log(`${id} - ${event.checked}`);
+        this._pickedLicenses[id] = event.checked;
+        if (this._propagateChange) {
+            setTimeout(() => {
+                this._propagateChange(this._getPicked());
+            });
+        }
     }
 
-    // public pickSize(size: string) {
-    //     console.log("pick size: ", size);
-    //     this.pickedSize = size;
-    //     if (this._propagateChange) {
-    //         setTimeout(() => {
-    //             this._propagateChange(size);
-    //         });
-    //     }
-    // }
+    public validate(control: FormControl) {
+        if (this._getPicked().length > 0 && !this.form.controls.acceptEula.value) {
+            return {
+                appLicenses: false,
+            };
+        }
 
-    // private _sizeMatchPattern(size: VmSize, patterns: string[]) {
-    //     for (let pattern of patterns) {
-    //         if (StringUtils.matchWildcard(size.name, pattern)) {
-    //             return true;
-    //         }
-    //     }
-    //     return false;
-    // }
+        return null;
+    }
 
-    // private _loadPrices() {
-    //     this.accountService.currentAccount.flatMap((account) => {
-    //         const os = this.osType || "linux";
-    //         return this.pricingService.getPrices(account.location, os);
-    //     }).subscribe((prices: List<SpecCost>) => {
-    //         const map: StringMap<SpecCost> = {};
-    //         prices.forEach(x => map[x.id] = x);
-    //         this.prices = Map(map);
-    //     });
-    // }
+    public viewEula(id: string) {
+        let config = new MdDialogConfig();
+        config.viewContainerRef = this.viewContainerRef;
+        const dialogRef = this.dialog.open(LicenseEulaDialogComponent, config);
+        dialogRef.componentInstance.licenseName = id;
+    }
+
+    private _getPicked(): string[] {
+        return Object.keys(this._pickedLicenses).filter(x => this._pickedLicenses[x] === true);
+    }
 }

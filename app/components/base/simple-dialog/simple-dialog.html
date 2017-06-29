@@ -1,0 +1,15 @@
+<div class="content">
+    <div class="header">
+        <h1>{{title}}</h1>
+        <p *ngIf="subtitle">{{subtitle}}</p>
+    </div>
+    <ng-template><ng-content></ng-content></ng-template>
+</div>
+<div class="footer">
+    <div class="buttons">
+        <span style="display: inline-block">
+            <bl-button type="wide" color="light" [action]="close" class="close">{{closeText}}</bl-button>
+        </span>
+    </div>
+</div>
+

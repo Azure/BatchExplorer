@@ -1,0 +1,25 @@
+@import "app/styles/variables";
+
+bl-app-license-picker {
+    .link {
+        color: $link-color;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
+    .form-element {
+        md-checkbox {
+            margin-left: 15px;
+
+            .mat-checkbox-inner-container {
+                margin-top: 3px;
+            }
+
+            .mat-checkbox-label {
+                line-height: 18px;
+            }
+        }
+    }
+}

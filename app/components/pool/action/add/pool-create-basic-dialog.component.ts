@@ -23,8 +23,9 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     public NodeFillType = NodeFillType;
 
     private _osControl: FormControl;
-    private _sub: Subscription;
+    private _licenseControl: FormControl;
     private _renderingSkuSelected: boolean = false;
+    private _sub: Subscription;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -35,6 +36,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         super(PoolCreateDto);
 
         this._osControl = this.formBuilder.control({}, Validators.required);
+        this._licenseControl = this.formBuilder.control([]);
 
         this.form = formBuilder.group({
             id: ["", [
@@ -45,16 +47,17 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             displayName: "",
             scale: [null],
             os: this._osControl,
-            vmSize: ["Standard_D1", Validators.required],
+            // note: probably not advisable to default vmSize value
+            vmSize: ["", Validators.required],
             maxTasksPerNode: 1,
             enableInterNodeCommunication: false,
             taskSchedulingPolicy: [NodeFillType.pack],
             startTask: null,
             userAccounts: [[]],
+            appLicenses: [[]],
         });
 
         this._sub = this._osControl.valueChanges.subscribe((value) => {
-            console.log("this._osControl.valueChanges: ", value);
             this.osSource = value.source;
             if (value.source === PoolOsSources.PaaS) {
                 this._renderingSkuSelected = false;
