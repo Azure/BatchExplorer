@@ -1,11 +1,11 @@
 import { Component, Input, OnChanges, SimpleChange, ViewChild } from "@angular/core";
 import { LoadingStatus } from "app/components/base/loading";
-import { TreeViewDisplayComponent } from "app/components/file/browse/display";
+import { TreeViewDisplayComponent, buildTreeRootFilter } from "app/components/file/browse/display";
 import { File, Node, NodeState, ServerError, Task } from "app/models";
 import { FileService, NodeService, TaskFileListParams, TaskService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Constants } from "app/utils";
-import { Filter, FilterBuilder, Property } from "app/utils/filter-builder";
+import { Filter, Property } from "app/utils/filter-builder";
 import { autobind } from "core-decorators";
 import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -60,10 +60,12 @@ export class TaskFileListComponent implements OnChanges {
         }
     }
 
-    public refresh() {
+    @autobind()
+    public refresh(): Observable<any> {
         if (this.jobId && this.taskId) {
             this._loadIfNodeExists();
         }
+        return Observable.of(true);
     }
 
     public get baseUrl() {
@@ -77,21 +79,21 @@ export class TaskFileListComponent implements OnChanges {
     @autobind()
     public loadPath(path: string, refresh: boolean = false): Observable<List<File>> {
         if (!(path in this._fileProxyMap)) {
-            const filterPath = path ? { filter: FilterBuilder.prop("name").startswith(path).toOData() } : {};
+            const options = buildTreeRootFilter(path);
             const jobId = this.jobId;
             const taskId = this.taskId;
-            this._fileProxyMap[path] = this.fileService.listFromTask(jobId, taskId, false, filterPath);
+            this._fileProxyMap[path] = this.fileService.listFromTask(jobId, taskId, false, options);
+            this._fileProxyMap[path].status.subscribe((status) => {
+                this.status.next(status);
+            });
+            this._fileProxyMap[path].error.subscribe((error) => {
+                if (error && error.body.code === Constants.APIErrorCodes.operationInvalidForCurrentState) {
+                    this.fileCleanupOperation = true;
+                    return;
+                }
+                this.error.next(error);
+            });
         }
-        this._fileProxyMap[path].status.subscribe((status) => {
-            this.status.next(status);
-        });
-        this._fileProxyMap[path].error.subscribe((error) => {
-            if (error && error.body.code === Constants.APIErrorCodes.operationInvalidForCurrentState) {
-                this.fileCleanupOperation = true;
-                return;
-            }
-            this.error.next(error);
-        });
         let observable = refresh ?  this._fileProxyMap[path].refresh() : this._fileProxyMap[path].fetchNext();
         return observable.flatMap(() => {
             return this._fileProxyMap[path].items.first();

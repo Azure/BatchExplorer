@@ -1,10 +1,10 @@
 import { Component, Input, OnChanges, SimpleChange, ViewChild } from "@angular/core";
 import { LoadingStatus } from "app/components/base/loading";
-import { TreeViewDisplayComponent } from "app/components/file/browse/display";
+import { TreeViewDisplayComponent, buildTreeRootFilter } from "app/components/file/browse/display";
 import { File, ServerError } from "app/models";
 import { FileService, NodeFileListParams } from "app/services";
 import { RxListProxy } from "app/services/core";
-import { Filter, FilterBuilder, Property } from "app/utils/filter-builder";
+import { Filter, Property } from "app/utils/filter-builder";
 import { autobind } from "core-decorators";
 import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -40,7 +40,7 @@ export class NodeFileListComponent implements OnChanges {
 
     @ViewChild(TreeViewDisplayComponent)
     public treeDisplay: TreeViewDisplayComponent;
-
+    public moreFileMap: StringMap<boolean> = {};
     public status: BehaviorSubject<LoadingStatus> = new BehaviorSubject(LoadingStatus.Loading);
     public error: BehaviorSubject<ServerError> = new BehaviorSubject(null);
 
@@ -55,15 +55,17 @@ export class NodeFileListComponent implements OnChanges {
         }
     }
 
-    public refresh() {
+    @autobind()
+    public refresh(): Observable<any> {
         if ((this.poolId && this.nodeId)) {
             const filterProp = this.filter as Property;
             const quickSearch = filterProp && filterProp.value;
             const loadPath = [this.folder, quickSearch].filter(x => Boolean(x)).join("/");
             if (this.treeDisplay) {
-                this.treeDisplay.initNodes(loadPath, true);
+                return this.treeDisplay.initNodes(loadPath, true);
             }
         }
+        return Observable.of(true);
     }
 
     public get baseUrl() {
@@ -73,18 +75,21 @@ export class NodeFileListComponent implements OnChanges {
     @autobind()
     public loadPath(path: string, refresh: boolean = false): Observable<List<File>> {
         if (!(path in this._fileProxyMap)) {
-            const filterPath = path ? { filter: FilterBuilder.prop("name").startswith(path).toOData() } : {};
+            const options = buildTreeRootFilter(path);
             const poolId = this.poolId;
             const nodeId = this.nodeId;
-            this._fileProxyMap[path] = this.fileService.listFromComputeNode(poolId, nodeId, false, filterPath);
+            this._fileProxyMap[path] = this.fileService.listFromComputeNode(poolId, nodeId, false, options);
+            this._fileProxyMap[path].hasMore.subscribe((hasMore) => {
+                this.moreFileMap[path] = hasMore;
+            });
+            this._fileProxyMap[path].status.subscribe((status) => {
+                this.status.next(status);
+            });
+            this._fileProxyMap[path].error.subscribe((error) => {
+                this.error.next(error);
+            });
         }
-        this._fileProxyMap[path].status.subscribe((status) => {
-            this.status.next(status);
-        });
-        this._fileProxyMap[path].error.subscribe((error) => {
-            this.error.next(error);
-        });
-        let observable = refresh ?  this._fileProxyMap[path].refresh() : this._fileProxyMap[path].fetchNext();
+        let observable = refresh ? this._fileProxyMap[path].refresh() : this._fileProxyMap[path].fetchNext();
         return observable.flatMap(() => {
             return this._fileProxyMap[path].items.first();
         });

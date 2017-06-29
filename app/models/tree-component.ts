@@ -5,6 +5,7 @@ export enum NodeState {
     EXPANDED_DIRECTORY,
     LOADING_DIRECTORY,
     FILE,
+    MORE_BUTTON,
 }
 
 export class TreeNodeData {
