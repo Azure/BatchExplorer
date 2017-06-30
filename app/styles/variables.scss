@@ -15,9 +15,9 @@ $black              :  #000;
 $white              :  #fff;
 $offWhite           :  #fdfdfd;
 $whitesmoke         :  #fafafa;
-$whiteSmoke         :    $whitesmoke;
+$whiteSmoke         :  $whitesmoke;
 $whitesmoke-darker  :  #f5f5f5;
-$whiteSmoke-darker  :    $whitesmoke-darker;
+$whiteSmoke-darker  :  $whitesmoke-darker;
 $snowDriftWhite     :  #fafcfa;
 
 // Grays
@@ -51,6 +51,7 @@ $link-color                 : map-get($primary, 700);
 $link-color-hover           : map-get($primary, 800);
 $validation-error-color     : map-get($danger, 500);
 $label-text                 : $dusty-grey;
+$portal-link-color          : #00bcf2;
 
 $baseFontSize       : 13px;
 $baseLineHeight     : 1.4em;

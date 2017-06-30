@@ -3,6 +3,7 @@
 bl-app-license-picker {
     .link {
         color: $link-color;
+        cursor: pointer;
 
         &:hover {
             text-decoration: underline;
@@ -26,17 +27,19 @@ bl-app-license-picker {
 
 // Current EULA styles, will need to be tweaked when dynamic.
 .eula {
-    color: $mineshaft-grey;
-
     .title {
         font-weight: bold;
         margin-right: 5px;
         border-bottom: 1px solid $mineshaft-grey;
     }
 
+    p {
+        color: $mineshaft-grey;
+    }
+
     a {
         // link color from portal makes links stand out better
-        color: #00bcf2;
+        color: $portal-link-color;
         cursor: pointer;
     }
 
