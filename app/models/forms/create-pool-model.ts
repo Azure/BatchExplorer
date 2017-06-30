@@ -42,6 +42,7 @@ export interface CreatePoolModel {
     startTask: any;
     userAccounts: UserAccountDto[];
     taskSchedulingPolicy: NodeFillType;
+    appLicenses: string[];
 }
 
 export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
@@ -77,6 +78,10 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
         // }
     }
 
+    if (output.appLicenses && output.appLicenses.length > 0) {
+        data.applicationLicenses = output.appLicenses;
+    }
+
     return data;
 }
 
@@ -85,6 +90,7 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
  * Used to clone a pool
  */
 export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
+    console.log("poolToFormModel: ", pool);
     const autoScaleInterval = pool.autoScaleEvaluationInterval;
     return {
         id: pool.id,
@@ -107,5 +113,6 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
         },
         startTask: pool.startTask,
         userAccounts: pool.userAccounts,
+        appLicenses: pool.applicationLicenses,
     };
 }

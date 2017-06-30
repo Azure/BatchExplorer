@@ -43,10 +43,6 @@ bl-app-license-picker {
         cursor: pointer;
     }
 
-    ol {
-
-    }
-
     ol li {
         margin-bottom: 15px;
     }
@@ -54,6 +50,6 @@ bl-app-license-picker {
     ol li span {
         font-weight:bold;
         margin-right:5px;
-        border-bottom: 1px solid #2d3239;
+        border-bottom: 1px solid $mineshaft-grey;
     }
 }

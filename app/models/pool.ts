@@ -40,6 +40,7 @@ export interface PoolAttributes {
     startTask: Partial<StartTaskAttributes>;
     metadata: MetadataAttributes[];
     userAccounts: UserAccountAttributes[];
+    applicationLicenses: string[];
 }
 
 /**
@@ -107,6 +108,8 @@ export class Pool extends Record<PoolAttributes> {
     @ListProp(Metadata) public metadata: List<Metadata> = List([]);
 
     @ListProp(UserAccount) public userAccounts: List<UserAccount> = List([]);
+
+    @ListProp(String) public applicationLicenses: List<string> = List([]);
 
     /**
      * Tags are computed from the metadata using an internal key

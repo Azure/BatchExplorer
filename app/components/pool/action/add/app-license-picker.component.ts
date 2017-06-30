@@ -29,6 +29,7 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
     public licenses: List<ApplicationLicense> = List([]);
 
     private _propagateChange: (value: string[]) => void = null;
+    private _propagateTouched: (value: boolean) => void = null;
     private _pickedLicenses: Map<string, boolean> = Map<string, any>({});
     private _formChangeSub: Subscription;
 
@@ -84,23 +85,20 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
         this._propagateChange = fn;
     }
 
-    public registerOnTouched() {
-        /** no-op */
+    // need this in order for the bl-error validation control to work
+    public registerOnTouched(fn) {
+        this._propagateTouched = fn;
     }
 
     public setCheckState(id: string, event: MdCheckboxChange) {
         this._pickedLicenses[id] = event.checked;
-        if (this._propagateChange) {
-            setTimeout(() => {
-                this._propagateChange(this._getPicked());
-            });
-        }
+        this._emitChangeAndTouchedEvents();
     }
 
     public validate(control: FormControl) {
         if (this._getPicked().length > 0 && !this.form.controls.acceptEula.value) {
             return {
-                appLicenses: false,
+                required: true,
             };
         }
 
@@ -116,5 +114,19 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
 
     private _getPicked(): string[] {
         return Object.keys(this._pickedLicenses).filter(x => this._pickedLicenses[x] === true);
+    }
+
+    private _emitChangeAndTouchedEvents() {
+        if (this._propagateChange) {
+            setTimeout(() => {
+                this._propagateChange(this._getPicked());
+            });
+        }
+
+        if (this._propagateTouched) {
+            setTimeout(() => {
+                this._propagateTouched(true);
+            });
+        }
     }
 }
