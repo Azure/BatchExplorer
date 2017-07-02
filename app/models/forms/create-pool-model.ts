@@ -90,7 +90,6 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
  * Used to clone a pool
  */
 export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
-    console.log("poolToFormModel: ", pool);
     const autoScaleInterval = pool.autoScaleEvaluationInterval;
     return {
         id: pool.id,
