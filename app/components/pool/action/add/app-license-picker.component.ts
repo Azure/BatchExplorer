@@ -1,10 +1,9 @@
 import { Component, OnChanges, OnDestroy, OnInit, ViewChild, ViewContainerRef, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
+    ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
 import { MdCheckboxChange, MdDialog, MdDialogConfig } from "@angular/material";
 import { List, Map } from "immutable";
-import { Subscription } from "rxjs";
 
 import { TableComponent } from "app/components/base/table";
 import { ApplicationLicense } from "app/models";
@@ -25,30 +24,16 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
     @ViewChild("licenseTable")
     public table: TableComponent;
 
-    public form: FormGroup;
     public licenses: List<ApplicationLicense> = List([]);
 
     private _propagateChange: (value: string[]) => void = null;
     private _propagateTouched: (value: boolean) => void = null;
     private _pickedLicenses: Map<string, boolean> = Map<string, any>({});
-    private _formChangeSub: Subscription;
+    private _eulaRead: boolean = false;
 
     constructor(
-        private formBuilder: FormBuilder,
         private viewContainerRef: ViewContainerRef,
         private dialog: MdDialog) {
-
-        this.form = this.formBuilder.group({
-            acceptEula: [false],
-        });
-
-        this._formChangeSub = this.form.controls.acceptEula.valueChanges.subscribe((value) => {
-            if (this._propagateChange) {
-                setTimeout(() => {
-                    this._propagateChange(this._getPicked());
-                });
-            }
-        });
     }
 
     public ngOnInit() {
@@ -74,11 +59,13 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
     }
 
     public ngOnDestroy() {
-        this._formChangeSub.unsubscribe();
+        /** no-op currently */
     }
 
     public writeValue(value: any) {
-        this._pickedLicenses = value;
+        if (value) {
+            this._pickedLicenses = value;
+        }
     }
 
     public registerOnChange(fn) {
@@ -90,13 +77,13 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
         this._propagateTouched = fn;
     }
 
-    public setCheckState(id: string, event: MdCheckboxChange) {
+    public pickLicense(id: string, event: MdCheckboxChange) {
         this._pickedLicenses[id] = event.checked;
         this._emitChangeAndTouchedEvents();
     }
 
     public validate(control: FormControl) {
-        if (this._getPicked().length > 0 && !this.form.controls.acceptEula.value) {
+        if (this._getPicked().length > 0 && !this._eulaRead) {
             return {
                 required: true,
             };
@@ -105,11 +92,20 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
         return null;
     }
 
-    public viewEula(id: string) {
+    public viewEula(name: string) {
         let config = new MdDialogConfig();
         config.viewContainerRef = this.viewContainerRef;
         const dialogRef = this.dialog.open(LicenseEulaDialogComponent, config);
-        dialogRef.componentInstance.licenseName = id;
+        dialogRef.componentInstance.licenseName = name;
+    }
+
+    public eulaCheck(event: MdCheckboxChange) {
+        this._eulaRead = event.checked;
+        if (this._propagateChange) {
+            setTimeout(() => {
+                this._propagateChange(this._getPicked());
+            });
+        }
     }
 
     private _getPicked(): string[] {
