@@ -32,7 +32,7 @@
 <bl-no-item [itemCount]="(data.items | async).size" [filter]="filter" [status]="status | async">
     <i icon class="fa fa-tasks"></i>
     <span no-filter>No jobs</span>
-    <span with-filter>No job match this filter</span>
+    <span with-filter>No jobs match this filter</span>
 </bl-no-item>
 
 <bl-loading [status]="status | async"></bl-loading>

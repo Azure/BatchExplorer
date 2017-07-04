@@ -143,4 +143,71 @@ export class BlobStorageClientProxy {
             });
         });
     }
+
+    /**
+     * Lists a segment containing a collection of container items whose names begin with the specified
+     * prefix under the specified account. By default the prefix will generally be "grp-" as this is the
+     * NCJ prefix for file group containers, but can aso be anything we like in order to get any
+     * arbritrary container.
+     * http://azure.github.io/azure-storage-node/BlobService.html#listContainersSegmentedWithPrefix__anchor
+     *
+     * @param {string} prefix - Container name prefix including filter, or null.
+     * @param {string} filter - Filter in addition to name prefix.
+     * @param {string} continuationToken - Token that was returned from the last call, if any
+     * @param {StorageRequestOptions} options - Optional request parameters
+     */
+    public listContainersWithPrefix(
+        prefix: string,
+        filter: string,
+        continuationToken?: any,
+        options?: StorageRequestOptions): Promise<BlobStorageResult> {
+
+        const prefixAndFilter = filter ? prefix + filter : prefix;
+        return new Promise((resolve, reject) => {
+            this._blobService.listContainersSegmentedWithPrefix(prefixAndFilter, continuationToken, options,
+                (error, result, response) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve({
+                        data: result.entries.map((container) =>  {
+                            return Object.assign(container, {
+                                id: container.name,
+                                name: container.name.replace(prefix, ""),
+                            });
+                        }),
+                        continuationToken: result.continuationToken,
+                    });
+                }
+            });
+        });
+    }
+
+    /**
+     * Returns all user-defined metadata and system properties for the specified container.
+     * The data returned does not include the container's list of blobs.
+     * http://azure.github.io/azure-storage-node/BlobService.html#getContainerProperties__anchor
+     *
+     * @param {string} container - Name of the storage container
+     * @param {string} prefix - Container name prefix to be remove from the display name.
+     * @param {StorageRequestOptions} options - Optional request parameters
+     */
+    public getContainerProperties(container: string, prefix: string, options?: StorageRequestOptions)
+        : Promise<BlobStorageResult> {
+
+        return new Promise((resolve, reject) => {
+            this._blobService.getContainerProperties(container, options, (error, result, response) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve({
+                        data: Object.assign(result, {
+                            id: result.name,
+                            name: result.name.replace(prefix, ""),
+                        }),
+                    });
+                }
+            });
+        });
+    }
 }

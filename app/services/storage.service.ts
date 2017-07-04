@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 import * as path from "path";
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
 
-import { File, ServerError } from "app/models";
+import { BlobContainer, File, ServerError } from "app/models";
 import { FileSystemService } from "app/services";
 import { Constants, StorageUtils } from "app/utils";
 import {
@@ -23,6 +23,14 @@ export interface BlobListParams {
     outputKind?: string;
 }
 
+export interface GetContainerParams {
+    name: string;
+}
+
+export interface ContainerListParams {
+    prefix?: string;
+}
+
 export interface BlobFileParams extends BlobListParams {
     filename?: string;
 }
@@ -39,6 +47,13 @@ const storageIgnoredErrors = [
 
 @Injectable()
 export class StorageService {
+    /**
+     * Triggered only when a file group is added through this app.
+     * Used to notify the list of a new item
+     */
+    public onFileGroupAdded = new Subject<string>();
+
+    private _containerCache = new DataCache<BlobContainer>();
     private _blobListCache = new TargetedDataCache<BlobListParams, File>({
         key: ({ jobId, taskId, outputKind }) => jobId + "/" + taskId + "/" + outputKind,
     }, "url");
@@ -160,6 +175,44 @@ export class StorageService {
                 return client.getBlobToLocalFile(safeContainerName, blobName, fileName, options);
             });
         });
+    }
+
+    /**
+     * List containers in the linked storage account that match the optional container name prefix
+     * @param prefixParam - Container name prefix for filtering containers
+     * @param filterParam - Optional filter to append to container prefix
+     * @param onError - Callback for interrogating the server error to see if we want to handle it.
+     */
+    public listContainers(prefixParam: string, onError?: (error: ServerError) => boolean)
+        : RxListProxy<ContainerListParams, BlobContainer> {
+
+        const initialOptions: any = { maxResults: 50 };
+        return new RxStorageListProxy<ContainerListParams, BlobContainer>(BlobContainer, this.storageClient, {
+            cache: () => this._containerCache,
+            getData: (client, params, options) => {
+                // NOTE: not sure what to do with the continuationToken and how to pass it back
+                return client.listContainersWithPrefix(params.prefix, options.filter, null, initialOptions);
+            },
+            initialParams: { prefix: prefixParam },
+            initialOptions,
+            logIgnoreError: storageIgnoredErrors,
+            onError: onError,
+        });
+    }
+
+    public getContainer(containerName: string, options: any = {}): RxEntityProxy<GetContainerParams, BlobContainer> {
+        return new RxStorageEntityProxy<GetContainerParams, BlobContainer>(BlobContainer, this.storageClient, {
+            cache: () => this._containerCache,
+            getFn: (client, params) => {
+                return client.getContainerProperties(params.name, options);
+            },
+            initialParams: { name: containerName },
+            logIgnoreError: storageIgnoredErrors,
+        });
+    }
+
+    public getContainerOnce(containerName: string, options: any = {}): Observable<BlobContainer> {
+        return getOnceProxy(this.getContainer(containerName, options));
     }
 
     /**
