@@ -1,9 +1,11 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, Output } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { autobind } from "core-decorators";
 
 import { NotificationService } from "app/components/base/notifications";
+import { SidebarRef } from "app/components/base/sidebar";
 import { Pool, StartTask } from "app/models";
+import { PoolPatchDto } from "app/models/dtos";
 import { PoolService } from "app/services";
 
 @Component({
@@ -14,7 +16,6 @@ export class StartTaskEditFormComponent {
     @Output()
     public close = new EventEmitter();
 
-    @Input()
     public set pool(pool: Pool) {
         this._pool = pool;
         this._startTask = pool.startTask;
@@ -36,6 +37,7 @@ export class StartTaskEditFormComponent {
     constructor(
         formBuilder: FormBuilder,
         private poolService: PoolService,
+        public sidebarRef: SidebarRef<any>,
         notificationService: NotificationService) {
         this.form = formBuilder.group({
             enableStartTask: [false],
@@ -53,26 +55,25 @@ export class StartTaskEditFormComponent {
 
     @autobind()
     public submit() {
-        const startTask = this.form.value.startTask;
+        const { enableStartTask, startTask } = this.form.value;
         const id = this._pool.id;
         let obs;
-        if (startTask) {
-            obs = this.poolService.patch(id, {
+        if (startTask && enableStartTask) {
+            obs = this.poolService.patch(id, new PoolPatchDto({
                 startTask: startTask,
-            });
+            }));
         } else {
             obs = this.poolService.getOnce(this.pool.id).cascade((pool) => {
                 const poolData = pool.toJS();
-                return this.poolService.replaceProperties(id, {
+                return this.poolService.replaceProperties(id, new PoolPatchDto({
                     applicationPackageReferences: poolData.applicationPackageReferences || [],
                     certificateReferences: poolData.certificateReferences || [],
                     metadata: poolData.metadata || [],
-                });
+                }));
             });
         }
-        obs.subscribe(() => {
-            this.poolService.getOnce(id); // Refresh the pool
+        return obs.cascade(() => {
+            return this.poolService.getOnce(id); // Refresh the pool
         });
-        return obs;
     }
 }

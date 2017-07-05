@@ -33,7 +33,6 @@ const cloudServiceOsFamilies = [{
 })
 export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
     public value: PoolOSPickerModel;
-
     public accountData: RxListProxy<{}, NodeAgentSku>;
 
     // Shared to the view
@@ -77,7 +76,6 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
 
     public validate(c: FormControl) {
         const valid = this.value;
-
         if (!valid || !valid.source) {
             return {
                 validateOsPicker: {
@@ -107,6 +105,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
             },
             cloudServiceConfiguration: null,
         };
+
         this._updateSelection();
         if (this._propagateChange) {
             this._propagateChange(this.value);
@@ -122,6 +121,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
             },
             virtualMachineConfiguration: null,
         };
+
         this._updateSelection();
         if (this._propagateChange) {
             this._propagateChange(this.value);
@@ -134,6 +134,10 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
 
     public get dataScienceOffers() {
         return this._nodeAgentSkuMap.dataScienceOffers;
+    }
+
+    public get renderingOffers() {
+        return this._nodeAgentSkuMap.renderingOffers;
     }
 
     private _updateSelection() {

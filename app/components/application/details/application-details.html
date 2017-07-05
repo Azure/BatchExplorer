@@ -2,12 +2,12 @@
     <div *ngIf="application">
         <md-card class="overview">
             <div class="actions">
-                <bl-action-btn-group>
+                <bl-button-group>
                     <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                    <bl-add-button title="Add package" (click)="addPackage()"></bl-add-button>
-                    <bl-edit-button (click)="editApplication()"></bl-edit-button>
-                    <bl-delete-button [entity]="application" (click)="deleteApplication()"></bl-delete-button>
-                </bl-action-btn-group>
+                    <bl-add-button title="Add package" [action]="addPackage"></bl-add-button>
+                    <bl-edit-button [action]="editApplication"></bl-edit-button>
+                    <bl-delete-button [entity]="application" [action]="deleteApplication"></bl-delete-button>
+                </bl-button-group>
             </div>
             <div class="content">
                 <md-card-title>{{decorator.id}}</md-card-title>

@@ -103,7 +103,7 @@ describe("ApplicationErrorDisplayComponent", () => {
 
         it("should link to portal storage config as quickfix", () => {
             const banner = fixture.debugElement.query(By.css("bl-banner")).componentInstance;
-            expect(banner.fixMessage).toContain("Setup linked storage account in the portal");
+            expect(banner.fixMessage).toContain("Setup linked storage account");
         });
     });
 

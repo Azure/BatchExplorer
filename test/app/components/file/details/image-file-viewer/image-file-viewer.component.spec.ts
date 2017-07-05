@@ -1,7 +1,7 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { Observable } from "rxjs";
+import { Observable, Subject } from "rxjs";
 
 import { ImageFileViewerComponent } from "app/components/file/details/image-file-viewer";
 
@@ -28,6 +28,7 @@ describe("ImageFileViewerComponent", () => {
         testComponent = fixture.componentInstance;
         testComponent.fileLoader = {
             cache: jasmine.createSpy("file-loader-cache").and.returnValue(Observable.of("cached/file.png")),
+            fileChanged: new Subject(),
         };
         de = fixture.debugElement.query(By.css("bl-image-file-viewer"));
         component = de.componentInstance;

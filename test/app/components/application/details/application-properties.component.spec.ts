@@ -1,3 +1,4 @@
+import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
@@ -20,6 +21,7 @@ describe("ApplicationPropertiesComponent", () => {
                 ApplicationPropertiesComponent, BoolPropertyComponent, PropertyGroupComponent,
                 PropertyListComponent, TextPropertyComponent,
             ],
+            schemas: [NO_ERRORS_SCHEMA],
         });
 
         fixture = TestBed.createComponent(ApplicationPropertiesComponent);

@@ -17,6 +17,7 @@ const components = [StartTaskEditFormComponent, StartTaskPickerComponent, StartT
     exports: components,
     imports: [BrowserModule, MaterialModule, RouterModule, FormsModule, ReactiveFormsModule,
         BaseModule, TaskBaseModule],
+    entryComponents: [StartTaskEditFormComponent],
 })
 export class StartTaskModule {
 

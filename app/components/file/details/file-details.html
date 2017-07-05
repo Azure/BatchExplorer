@@ -1,10 +1,11 @@
 <div *ngIf="filename">
     <md-card class="overview">
         <div class="actions">
-            <bl-action-btn-group>
+            <bl-button-group>
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                <bl-download-button [enabled]="downloadEnabled" (action)="downloadFile()"></bl-download-button>
-            </bl-action-btn-group>
+                <bl-download-button [enabled]="downloadEnabled" [action]="downloadFile"></bl-download-button>
+                <bl-button color="light" [disabled]="!downloadEnabled" [action]="openExternal" title="Open in default application"><i class="fa fa-external-link"></i></bl-button>
+            </bl-button-group>
         </div>
         <div class="content">
             <md-card-title>{{filename}}</md-card-title>
@@ -13,8 +14,6 @@
         </div>
     </md-card>
     <div class="details" style="margin-top: 5px">
-        <bl-file-content *ngIf="jobId && taskId && !outputKind" [jobId]="jobId" [taskId]="taskId" [filename]="filename"></bl-file-content>
-        <bl-file-content *ngIf="jobId && taskId && outputKind" [jobId]="jobId" [taskId]="taskId" [outputKind]="outputKind" [filename]="filename"></bl-file-content>
-        <bl-file-content *ngIf="poolId && nodeId" [poolId]="poolId" [nodeId]="nodeId" [filename]="filename"></bl-file-content>
+        <bl-file-content [fileLoader]="fileLoader" *ngIf="fileLoader"></bl-file-content>
     </div>
 </div>

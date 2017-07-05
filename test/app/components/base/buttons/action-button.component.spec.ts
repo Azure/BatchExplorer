@@ -1,15 +1,16 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
 import { MaterialModule, MdTooltip } from "@angular/material";
-import { ActionButtonComponent } from "app/components/base/buttons/action-button.component";
+import { ButtonComponent } from "app/components/base/buttons/button.component";
 import { click } from "test/utils/helpers";
 
 @Component({
     template: `
-        <bl-action-btn [disabled]="disabled" icon="fa fa-stop" (action)="onAction()" title="Stop" [color]="color">
-        </bl-action-btn>
+        <bl-button [disabled]="disabled" icon="fa fa-stop" [action]="onAction" title="Stop" [color]="color">
+        </bl-button>
     `,
 })
 class TestComponent {
@@ -26,18 +27,18 @@ class TestComponent {
 describe("ActionButton", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
-    let component: ActionButtonComponent;
+    let component: ButtonComponent;
     let de: DebugElement;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [MaterialModule],
-            declarations: [ActionButtonComponent, TestComponent],
+            imports: [MaterialModule, NoopAnimationsModule],
+            declarations: [ButtonComponent, TestComponent],
             schemas: [NO_ERRORS_SCHEMA],
         });
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
-        de = fixture.debugElement.query(By.css("bl-action-btn"));
+        de = fixture.debugElement.query(By.css("bl-button"));
         component = de.componentInstance;
         fixture.detectChanges();
     });

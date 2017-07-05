@@ -4,7 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from "@angula
 import { MaterialModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
 
-import { SubmitButtonComponent } from "app/components/base/buttons";
+import { ButtonComponent } from "app/components/base/buttons";
 import { ServerErrorComponent } from "app/components/base/form/server-error";
 import { SimpleFormComponent } from "app/components/base/form/simple-form";
 import { complexFormMockComponents } from "test/utils/mocks/components";
@@ -52,7 +52,7 @@ describe("SimpleFormComponent", () => {
         TestBed.configureTestingModule({
             imports: [ReactiveFormsModule, MaterialModule],
             declarations: [
-                SubmitButtonComponent,
+                ButtonComponent,
                 FormTestComponent,
                 ServerErrorComponent,
                 SimpleFormComponent,
@@ -83,7 +83,7 @@ describe("SimpleFormComponent", () => {
     });
 
     it("should pass the dialogRef", () => {
-        expect(component.containerRef).toEqual(testComponent.dialogRef);
+        expect(component.containerRef).toEqual(testComponent.dialogRef as any);
     });
 
     it("should pass the submit method", () => {

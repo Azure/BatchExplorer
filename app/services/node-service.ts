@@ -87,7 +87,7 @@ export class NodeService extends ServiceBase {
      * Get a node once and forget.
      * You don't need to cleanup the subscription.
      */
-    public getOnce(poolId: string, nodeId: string, options: any): Observable<Node> {
+    public getOnce(poolId: string, nodeId: string, options: any = {}): Observable<Node> {
         return getOnceProxy(this.get(poolId, nodeId, options));
     }
 

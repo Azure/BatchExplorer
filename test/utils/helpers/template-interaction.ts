@@ -40,6 +40,20 @@ export function click(el: DebugElement | HTMLElement | Node, eventObj: any = But
 }
 
 /**
+ * Simulate element dobule click.
+ */
+export function dblclick(el: DebugElement | HTMLElement | Node) {
+    if (el instanceof DebugElement) {
+        el.triggerEventHandler("dblclick", new FakeMouseEvent({}));
+    } else if ((el as any).click) {
+        (el as any).click();
+    } else if (el.dispatchEvent) {
+        const evt = document.createEvent("MouseEvents");
+        evt.initMouseEvent("dblclick", true, true, window, 0, 0, 0, 0, 0, false, false, false, false, 0, null);
+        el.dispatchEvent(evt);
+    }
+}
+/**
  * Simulate element click. Defaults to mouse left-button click event.
  */
 export function rightClick(el: DebugElement | HTMLElement | Node) {

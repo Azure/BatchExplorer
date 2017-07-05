@@ -22,11 +22,11 @@ export class PoolErrorDisplayComponent {
     }
 
     public get dedicatedQuota() {
-        return this.accountService.currentAccount.map(x => x.properties.dedicatedCoreQuota); // TODO low pri too
+        return this.accountService.currentAccount.map(x => x.properties.dedicatedCoreQuota);
     }
 
     public get lowPriorityQuota() {
-        return this.accountService.currentAccount.map(x => x.properties.lowPriorityCoreQuota); // TODO low pri too
+        return this.accountService.currentAccount.map(x => x.properties.lowPriorityCoreQuota);
     }
 
     @autobind()

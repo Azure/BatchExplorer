@@ -81,11 +81,13 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         return this.data.refresh();
     }
 
+    @autobind()
     public addJob() {
         const createRef = this.sidebarManager.open("add-basic-job", JobCreateBasicDialogComponent);
         createRef.component.preSelectPool(this.pool.id);
     }
 
+    @autobind()
     public deletePool() {
         let config = new MdDialogConfig();
         config.viewContainerRef = this.viewContainerRef;
@@ -94,11 +96,13 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         dialogRef.componentInstance.poolId = this.poolId;
     }
 
+    @autobind()
     public clonePool() {
         const ref = this.sidebarManager.open("add-basic-pool", PoolCreateBasicDialogComponent);
         ref.component.setValueFromEntity(this.pool);
     }
 
+    @autobind()
     public resizePool() {
         const sidebarRef = this.sidebarManager.open("resize-pool", PoolResizeDialogComponent);
         sidebarRef.component.pool = this.pool;

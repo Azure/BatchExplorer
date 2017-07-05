@@ -3,6 +3,7 @@ import { Observable, Subject } from "rxjs";
 
 import { Pool } from "app/models";
 import { PoolCreateDto, PoolEnableAutoScaleDto, PoolResizeDto } from "app/models/dtos";
+import { PoolPatchDto } from "app/models/dtos";
 import { Constants, ModelUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";
@@ -86,22 +87,23 @@ export class PoolService extends ServiceBase {
         });
     }
 
-    public patch(poolId: string, attributes: any, options: any = {}) {
-        return this.callBatchClient((client) => client.pool.patch(poolId, attributes, options), (error) => {
+    public patch(poolId: string, attributes: PoolPatchDto, options: any = {}) {
+        return this.callBatchClient(client => client.pool.patch(poolId, attributes.toJS(), options), (error) => {
             log.error("Error patching pool: " + poolId, error);
         });
     }
 
-    public replaceProperties(poolId: string, attributes: any, options: any = {}) {
-        return this.callBatchClient((client) => client.pool.replaceProperties(poolId, attributes, options), (error) => {
-            log.error("Error updating pool: " + poolId, error);
-        });
+    public replaceProperties(poolId: string, attributes: PoolPatchDto, options: any = {}) {
+        return this.callBatchClient(client => client.pool.replaceProperties(poolId, attributes.toJS(), options),
+            (error) => {
+                log.error("Error updating pool: " + poolId, error);
+            });
     }
 
     public updateTags(pool: Pool, tags: List<string>) {
-        const attributes = {
+        const attributes = new PoolPatchDto({
             metadata: ModelUtils.updateMetadataWithTags(pool.metadata, tags),
-        };
+        });
         return this.patch(pool.id, attributes);
     }
 

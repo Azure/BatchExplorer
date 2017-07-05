@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { autobind } from "core-decorators";
 
 @Component({
     selector: "bl-property-group",
@@ -21,6 +22,9 @@ export class PropertyGroupComponent {
     public collapsable: boolean = true;
 
     @Input()
+    public edit: () => void;
+
+    @Input()
     public set collapsed(collapsed) {
         this._collapsed = collapsed;
         this.collapsedChange.emit(collapsed);
@@ -36,5 +40,11 @@ export class PropertyGroupComponent {
         if (this.collapsable) {
             this.collapsed = !this.collapsed;
         }
+    }
+
+    @autobind()
+    public triggerEdit(event: Event) {
+        event.stopPropagation();
+        this.edit();
     }
 }

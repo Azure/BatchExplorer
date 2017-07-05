@@ -17,6 +17,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 const validStates = [
     NodeState.idle,
     NodeState.running,
+    NodeState.startTaskFailed,
 ];
 
 @Component({
@@ -42,6 +43,8 @@ export class TaskFileListComponent implements OnChanges {
     public LoadingStatus = LoadingStatus;
     public fileCleanupOperation: boolean;
     public nodeNotFound: boolean;
+    public nodeInInvalidState: boolean;
+    public nodeState: string;
 
     public status = new BehaviorSubject(LoadingStatus.Loading);
     public error: BehaviorSubject<ServerError> = new BehaviorSubject(null);
@@ -101,21 +104,22 @@ export class TaskFileListComponent implements OnChanges {
     }
 
     private _loadIfNodeExists() {
-        this.fileCleanupOperation = false;
-        this.nodeNotFound = false;
+        this._resetStates();
         this.status.next(LoadingStatus.Loading);
         this.taskService.getOnce(this.jobId, this.taskId).cascade((task: Task) => {
             if (!task.nodeInfo) {
-                this.nodeNotFound = false;
                 return null;
             }
             this.nodeService.getOnce(task.nodeInfo.poolId, task.nodeInfo.nodeId, {}).subscribe({
                 next: (node: Node) => {
-                    this.nodeNotFound = false;
                     if (validStates.includes(node.state)) {
                         const filterProp = this.filter as Property;
                         const loadPath = filterProp && filterProp.value;
                         this.treeDisplay.initNodes(loadPath, true);
+                    } else {
+                        this.nodeState = node.state;
+                        this.status.next(LoadingStatus.Ready);
+                        this.nodeInInvalidState = true;
                     }
                 },
                 error: (error) => {
@@ -133,5 +137,12 @@ export class TaskFileListComponent implements OnChanges {
             taskIdInput && taskIdInput.previousValue && taskIdInput.currentValue !== taskIdInput.previousValue) {
             this._fileProxyMap = {} as StringMap<RxListProxy<TaskFileListParams, File>>;
         }
+    }
+
+    private _resetStates() {
+        this.nodeState = null;
+        this.nodeInInvalidState = false;
+        this.fileCleanupOperation = false;
+        this.nodeNotFound = false;
     }
 }

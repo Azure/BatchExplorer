@@ -9,12 +9,12 @@ import { FileService, StorageService } from "app/services";
 import { click } from "test/utils/helpers";
 
 @Component({
-    template: `<bl-file-content [poolId]="poolId" [nodeId]="nodeId" [filename]="filename"></bl-file-content>`,
+    template: `<bl-file-content [fileLoader]="fileLoader"></bl-file-content>`,
 })
 class TestComponent {
-    public poolId = "pool-1";
-    public nodeId = "pool-1";
-    public filename = "some.txt";
+    public fileLoader = {
+        filename: "some.txt",
+    };
 }
 
 describe("FileContentComponent", () => {
@@ -51,7 +51,9 @@ describe("FileContentComponent", () => {
     });
 
     it("when file is of type log it should show the log file viewer", () => {
-        testComponent.filename = "some.log";
+        testComponent.fileLoader = {
+            filename: "some.log",
+        };
         fixture.detectChanges();
         expect(de.query(By.css("bl-log-file-viewer"))).not.toBeFalsy();
         expect(de.query(By.css("bl-image-file-viewer"))).toBeFalsy();
@@ -60,7 +62,9 @@ describe("FileContentComponent", () => {
     });
 
     it("when file is of type png it should show the image file viewer", () => {
-        testComponent.filename = "some.png";
+        testComponent.fileLoader = {
+            filename: "some.png",
+        };
         fixture.detectChanges();
         expect(de.query(By.css("bl-log-file-viewer"))).toBeFalsy();
         expect(de.query(By.css("bl-image-file-viewer"))).not.toBeFalsy();
@@ -69,7 +73,9 @@ describe("FileContentComponent", () => {
     });
 
     it("when file is of type py it should show the code file viewer", () => {
-        testComponent.filename = "some.py";
+        testComponent.fileLoader = {
+            filename: "some.py",
+        };
         fixture.detectChanges();
         expect(de.query(By.css("bl-log-file-viewer"))).toBeFalsy();
         expect(de.query(By.css("bl-image-file-viewer"))).toBeFalsy();
@@ -78,7 +84,9 @@ describe("FileContentComponent", () => {
     });
 
     it("when file is of unkown type", () => {
-        testComponent.filename = "some.custom";
+        testComponent.fileLoader = {
+            filename: "some.custom",
+        };
         fixture.detectChanges();
         expect(de.query(By.css("bl-log-file-viewer"))).toBeFalsy();
         expect(de.query(By.css("bl-image-file-viewer"))).toBeFalsy();

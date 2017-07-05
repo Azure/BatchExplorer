@@ -25,11 +25,6 @@ $md-theme: mat-light-theme($md-primary, $md-accent, $md-warn);
 // TODO: can we pull in the material scss classes into the project?
 // really want to be able to override the styles more easily.
 
-[md-mini-fab] {
-    width: 30px !important;
-    height: 30px !important;
-}
-
 [md-list-avatar] {
     width: auto !important;
     height: auto !important;
@@ -40,6 +35,8 @@ md-tab-group:not(.form-tabs) {
     .mat-tab-label {
         opacity: 0.8 !important;
         border-right: 1px solid #ddd;
+        height: 32px;
+        line-height: 32px;
 
         &.mat-tab-label-active {
             background-color: map-get($primary, 100);
@@ -84,11 +81,6 @@ md-tab-group:not(.form-tabs) {
     }
 }
 
-[md-mini-fab] i, [md-mini-fab] md-icon {
-    overflow: hidden;
-    padding: 3px 0 !important;
-}
-
 md-card {
     transition: none !important;
     box-shadow: 1px 1px 5px 0 #d5d5d5 !important;
@@ -122,16 +114,6 @@ md-radio-button {
             background: map-get($primary, 400);
         }
     }
-}
-
-[md-raised-button].mat-primary.mat-button-focus {
-    background: map-get($primary, 700);
-}
-
-button[md-raised-button].small {
-    height: 20px;
-    line-height: 20px;
-    min-width: 50px;
 }
 
 md-checkbox[small] {

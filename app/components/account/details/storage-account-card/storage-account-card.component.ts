@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges } from "@angular/core";
+import { autobind } from "core-decorators";
 
 import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";
 import { SidebarManager } from "app/components/base/sidebar";
@@ -33,6 +34,7 @@ export class StorageAccountCardComponent implements OnChanges {
         }
     }
 
+    @autobind()
     public edit() {
         const sidebarRef = this.sidebarManager.open("edit-storage-account", EditStorageAccountFormComponent);
         sidebarRef.component.account = this.account;
