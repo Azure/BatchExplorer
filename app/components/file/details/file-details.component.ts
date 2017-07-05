@@ -2,13 +2,14 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { autobind } from "core-decorators";
 import { remote } from "electron";
-import { Observable, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 
 import { NotificationService } from "app/components/base/notifications";
 import { File, ServerError } from "app/models";
 import { ElectronShell, FileService, StorageService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
-import { Constants, FileUrlUtils, prettyBytes } from "app/utils";
+import { FileLoader } from "app/services/file";
+import { FileUrlUtils, prettyBytes } from "app/utils";
 
 @Component({
     selector: "bl-file-details",
@@ -29,9 +30,11 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     public downloadEnabled: boolean;
     public outputKind: string;
 
+    public fileLoader: FileLoader = null;
+    public fileData: RxEntityProxy<any, File>;
+
     private _sourceType: string;
     private _paramsSubscribers: Subscription[] = [];
-    private _propertyProxy: RxEntityProxy<any, File>;
 
     constructor(
         private route: ActivatedRoute,
@@ -54,18 +57,19 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
             this.nodeId = params["nodeId"];
             this.outputKind = params["outputKind"];
             this.filename = params["filename"];
-
-            this._loadFileProperties();
+            this._clearFileLoader();
+            this._setupFileLoader();
         }));
     }
 
     public ngOnDestroy() {
         this._paramsSubscribers.forEach(x => x.unsubscribe());
+        this._clearFileLoader();
     }
 
     @autobind()
     public refresh() {
-        return Observable.of({});
+        return this.fileData.refresh();
     }
 
     @autobind()
@@ -84,61 +88,49 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public openExternal() {
-        return this._fileLoader().cache().cascade((pathToFile) => {
+        return this.fileLoader.cache().cascade((pathToFile) => {
             this.shell.openExternal(pathToFile);
         });
     }
 
-    private _loadFileProperties(): void {
-        if (this._sourceType === Constants.FileSourceTypes.Job) {
-            // it's a file from a job's task
-            this._propertyProxy = this.fileService.getFilePropertiesFromTask(
-                this.jobId, this.taskId, this.filename);
-
-        } else if (this._sourceType === Constants.FileSourceTypes.Pool) {
-            // it's a file from a node
-            this._propertyProxy = this.fileService.getFilePropertiesFromComputeNode(
-                this.poolId, this.nodeId, this.filename);
-
-        } else if (this._sourceType === Constants.FileSourceTypes.Blob) {
-            // it's a file from blob storage
-            this._propertyProxy = this.storageService.getBlobProperties(
-                this.jobId,
-                this.taskId,
-                this.outputKind,
-                this.filename,
-            );
-        } else {
-            throw new Error("Unrecognised source type: " + this._sourceType);
-        }
-
-        this._propertyProxy.fetch().subscribe((details: any) => {
-            this.contentSize = prettyBytes(details.properties.contentLength);
-            this.url = decodeURIComponent(details.url);
-        });
-
-        this._propertyProxy = null;
+    public get isJobFile() {
+        return this.jobId && this.taskId && !this.outputKind;
     }
 
-    private _fileLoader() {
-        const obj = FileUrlUtils.parseRelativePath(this.url);
+    public get isPoolFile() {
+        return this.poolId && this.nodeId;
+    }
 
-        if (obj.type === Constants.FileSourceTypes.Job) {
-            return this.fileService.fileFromTask(this.jobId, this.taskId, this.filename);
-        } else if (this._sourceType === Constants.FileSourceTypes.Pool) {
-            return this.fileService.fileFromNode(this.poolId, this.nodeId, this.filename);
-        } else if (this._sourceType === Constants.FileSourceTypes.Blob) {
-            return this.storageService.blobContent(this.jobId, this.taskId, this.outputKind, this.filename);
+    public get isBlobFile() {
+        return this.jobId && this.taskId && this.outputKind;
+    }
+
+    private _setupFileLoader() {
+        let obs: FileLoader;
+
+        if (this.isJobFile) {
+            obs = this.fileService.fileFromTask(this.jobId, this.taskId, this.filename);
+        } else if (this.isPoolFile) {
+            obs = this.fileService.fileFromNode(this.poolId, this.nodeId, this.filename);
+        } else if (this.isBlobFile) {
+            obs = this.storageService.blobContent(this.jobId, this.taskId, this.outputKind, this.filename);
         } else {
             throw new Error("Unrecognised source type: " + this._sourceType);
         }
+        this.fileLoader = obs;
+        this.fileData = this.fileLoader.listen();
+        this.fileData.item.subscribe((file) => {
+            if (!file) { return; }
+            this.contentSize = prettyBytes(file.properties.contentLength);
+            this.url = decodeURIComponent(file.url);
+        });
     }
 
     private _saveFile(pathToFile) {
         if (pathToFile === undefined) {
             return;
         }
-        const obs = this._fileLoader().download(pathToFile);
+        const obs = this.fileLoader.download(pathToFile);
 
         obs.subscribe({
             next: () => {
@@ -153,5 +145,12 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
             },
         });
         return obs;
+    }
+
+    private _clearFileLoader() {
+        if (this.fileLoader) {
+            this.fileLoader.dispose();
+            this.fileLoader = null;
+        }
     }
 }
