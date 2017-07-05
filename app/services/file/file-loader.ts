@@ -120,9 +120,7 @@ export class FileLoader {
      */
     public cache(): Observable<string> {
         return this.getProperties().cascade((file: File) => {
-            const filename = this._hashFilename(file);
-            const destination = path.join(this._fs.commonFolders.temp, this.source, this.groupId, filename);
-            console.log("Destination will be", destination);
+            const destination = this._getCacheDestination(file);
             return Observable.fromPromise(this._fs.exists(destination)).flatMap((exists) => {
                 if (exists) {
                     return Observable.of(destination);
@@ -133,6 +131,10 @@ export class FileLoader {
         });
     }
 
+    /**
+     * Dipose of the file loader entities if applicable
+     * You MUST call this if you used .listen on a file loader otherwise there will be memory leaks.
+     */
     public dispose() {
         if (this._proxy) {
             this._proxy.dispose();
@@ -154,5 +156,14 @@ export class FileLoader {
         if (last && !last.equals(file)) {
             this._fileChanged.next(file);
         }
+    }
+
+    /**
+     * Return a local path unique for this file at this version to allow caching.
+     * @param file File properties returned by the server
+     */
+    private _getCacheDestination(file: File) {
+        const filename = this._hashFilename(file);
+        return path.join(this._fs.commonFolders.temp, this.source, this.groupId, filename);
     }
 }
