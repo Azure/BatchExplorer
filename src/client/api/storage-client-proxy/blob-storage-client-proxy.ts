@@ -77,8 +77,6 @@ export class BlobStorageClientProxy {
         options?: StorageRequestOptions): Promise<BlobStorageResult> {
 
         const blobPath = `${blobPrefix || ""}${blobName}`;
-        console.log("getBlobProperties: ", container, blobName, blobPath);
-
         return new Promise((resolve, reject) => {
             this._blobService.getBlobProperties(container, blobPath, options, (error, result, response) => {
                 if (error) {
@@ -110,15 +108,12 @@ export class BlobStorageClientProxy {
      * @param {StorageRequestOptions} options - Optional request parameters
      */
     public getBlobContent(container: string, blob: string, options?: StorageRequestOptions) {
-        console.log("getBlobContent: ", container, blob);
         return new Promise((resolve, reject) => {
             this._blobService.getBlobToText(container, blob, options, (error, text, blockBlob, response) => {
                 if (error) {
-                    console.log("error: ", error);
                     reject(error);
                 } else {
-                    console.log("resolve: ", text);
-                    resolve({
+                   resolve({
                         content: text,
                     });
                 }

@@ -2,9 +2,9 @@
     <div class="file-tab" *ngFor="let filename of outputFileNames" [class.active]="filename === selectedOutputFile" (click)="selectedOutputFile = filename">
         {{filename}} ({{fileSizes[filename] || " - B"}})
     </div>
-    <div class="file-tab" *ngIf="addingFile" [class.active]="addingFile">
+    <div class="file-tab" [hidden]="!addingFile" [class.active]="addingFile">
         <md-input-container>
-            <input type="text" mdInput [formControl]="filterControl" [mdAutocomplete]="auto">
+            <input type="text" mdInput [formControl]="filterControl" [mdAutocomplete]="auto" #addfileInput (blur)="toggleFilter()">
         </md-input-container>
     </div>
     <div class="file-tab-more" (click)="toggleFilter()" title="Select additional file">
@@ -15,7 +15,7 @@
     </div>
 </div>
 <div *ngFor="let filename of outputFileNames" [hidden]="filename !== selectedOutputFile">
-    <bl-file-content [jobId]="jobId" [taskId]="task.id" [filename]="filename"></bl-file-content>
+    <bl-file-content [fileLoader]="fileLoaderMap[filename]"></bl-file-content>
 </div>
 
 <md-autocomplete #auto="mdAutocomplete">

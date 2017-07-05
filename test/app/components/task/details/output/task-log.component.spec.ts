@@ -3,12 +3,13 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MdAutocomplete } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
+import { Observable } from "rxjs";
 
 import { TaskLogComponent } from "app/components/task/details/output";
 import { File } from "app/models";
 import { FileService } from "app/services";
 import * as Fixtures from "test/fixture";
-import { RxMockEntityProxy, RxMockListProxy } from "test/utils/mocks";
+import { RxMockListProxy } from "test/utils/mocks";
 
 const fileSizeMap: Map<string, number> = new Map()
     .set("stdout.txt", 10)
@@ -17,7 +18,7 @@ const fileSizeMap: Map<string, number> = new Map()
     .set("apple.txt", 40)
     .set("pear.txt", 50);
 
-describe("TaskDependenciesComponent", () => {
+describe("TaskLogComponent", () => {
     let fixture: ComponentFixture<TaskLogComponent>;
     let component: TaskLogComponent;
 
@@ -40,14 +41,14 @@ describe("TaskDependenciesComponent", () => {
         fileServiceSpy = {
             listFromTask: (jobid: string, taskId: string, recursive?: boolean, options?: any) => fileListProxy,
 
-            getFilePropertiesFromTask: (jobid: string, taskId: string, filename: string) =>
-                new RxMockEntityProxy<any, File>(File, {
-                    cacheKey: "name",
-                    item: Fixtures.file.create({
+            fileFromTask: (jobid: string, taskId: string, filename: string) => {
+                return {
+                    getProperties: () => Observable.of(Fixtures.file.create({
                         name: filename,
                         properties: { contentLength: fileSizeMap.get(filename) || 100 },
-                    }),
-                }),
+                    })),
+                };
+            },
         };
 
         TestBed.configureTestingModule({

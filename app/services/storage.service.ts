@@ -50,7 +50,7 @@ export class StorageService {
      * Used to notify the list of a new item
      */
     public onFileGroupAdded = new Subject<string>();
-    public ncjFileGroupPrefix: string = "job-";
+    public ncjFileGroupPrefix: string = "job-"; // todo: change to fgrp-
 
     private _containerCache = new DataCache<BlobContainer>();
     private _blobListCache = new TargetedDataCache<ListBlobParams, File>({
@@ -136,7 +136,7 @@ export class StorageService {
             fs: this.fs,
             properties: () => {
                 console.log("getBlobContent .. calling properties");
-                return getOnceProxy(this.getBlobProperties(container, blobName, blobPrefix));
+                return this.getBlobProperties(container, blobName, blobPrefix);
             },
             content: (options: FileLoadOptions) => {
                 return this._callStorageClient((client) => {
