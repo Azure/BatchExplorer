@@ -138,6 +138,14 @@ export class StorageService {
                     });
                 });
             },
+            download: (dest: string) => {
+                return this._callStorageClient((client) => {
+                    return StorageUtils.getSafeContainerName(jobId).then((safeContainerName) => {
+                        const blobName = `${taskId}/${outputKind}/${filename}`;
+                        return client.getBlobToLocalFile(safeContainerName, blobName, dest);
+                    });
+                });
+            },
         });
     }
 
