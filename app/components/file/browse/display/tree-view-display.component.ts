@@ -62,13 +62,7 @@ export class TreeViewDisplayComponent implements OnInit {
                 nodes = this._decorateNodesWithMoreOption(nodes, pathToLoad);
                 this.treeComponentService.treeNodes = (files.size > 0) ? nodes : [];
             }
-            // Keep tree nodes expanded if routing to a different route
-            this.tree.treeModel.doForAll((node: TreeNode) => {
-                if (node.data.state === NodeState.EXPANDED_DIRECTORY) {
-                    node.expand();
-                }
-            });
-            this.tree.treeModel.update();
+            this.expandTreeNodes();
         });
         return filesObservable;
     }
@@ -80,17 +74,23 @@ export class TreeViewDisplayComponent implements OnInit {
      */
     public loadNodes(treeModel: TreeModel, treeNode: TreeNode) {
         let currTreeNode: TreeNodeData = treeNode.data;
-        const pathToLoad = `${currTreeNode.fileName}\\`;
+        const pathToLoad = currTreeNode.fileName ? `${currTreeNode.fileName}\\` : "";
         let filesObs = this.loadPath(pathToLoad, false);
         currTreeNode.state = NodeState.LOADING_DIRECTORY;
         filesObs.subscribe((files) => {
             currTreeNode.hasChildren = (files.size > 0);
             let nodes = files.map(mapFileToTree).toArray();
             nodes = this._decorateNodesWithMoreOption(nodes, pathToLoad);
-            currTreeNode.children = (files.size > 0) ? nodes : [];
-            currTreeNode.state = NodeState.EXPANDED_DIRECTORY;
-            treeNode.expand();
-            treeModel.update();
+            // Special root level nodes
+            if (pathToLoad === "") {
+                this.treeComponentService.treeNodes = (files.size > 0) ? nodes : [];
+                this.tree.treeModel.update();
+            } else {
+                currTreeNode.children = (files.size > 0) ? nodes : [];
+                currTreeNode.state = NodeState.EXPANDED_DIRECTORY;
+                treeNode.expand();
+                treeModel.update();
+            }
         });
     }
 
@@ -106,32 +106,31 @@ export class TreeViewDisplayComponent implements OnInit {
     public onNodeClick(node: TreeNode, $event: any) {
         let nodeState: NodeState = node.data.state;
         if (nodeState === NodeState.MORE_BUTTON) {
-            console.log("more button is clicked", node.data.fileName);
-            let filesObs = this.loadPath(node.data.fileName, false);
-            filesObs.subscribe((files) => {
-                console.log("[path]", node.data.fileName);
-                console.log("[hasMore]", this.hasMoreMap[node.data.fileName]);
-                console.log("[files]", files.toJS());
-                // node.parent.data.children = node.parent.data.children.slice(0, -1); // remove ...
-                // let nodes: TreeNodeData[] = files.map(mapFileToTree).toArray();
-                // nodes = this._decorateNodesWithMoreOption(nodes, node.data.fileName);
-                // node.parent.data.children = node.parent.data.children.concat(nodes);
-                // console.log("after click more button?", node.parent.data.children);
-                // node.treeModel.update();
-            });
+            this.loadNodes(node.parent.treeModel, node.parent);
         } else if (nodeState === NodeState.FILE) {
             this.router.navigate(this.urlToFile(node.data.fileName));
             return TREE_ACTIONS.TOGGLE_SELECTED(node.treeModel, node, $event);
-        } else {
-            if (nodeState === NodeState.COLLAPSED_DIRECTORY) {
-                this.loadNodes(node.treeModel, node);
-            } else if (node.data.state === NodeState.EXPANDED_DIRECTORY) {
-                nodeState = NodeState.COLLAPSED_DIRECTORY;
-            }
+        } else if (nodeState === NodeState.COLLAPSED_DIRECTORY) {
+            this.loadNodes(node.treeModel, node);
+            return TREE_ACTIONS.TOGGLE_EXPANDED(node.treeModel, node, $event);
+        } else if (nodeState === NodeState.EXPANDED_DIRECTORY) {
+            node.data.state = NodeState.COLLAPSED_DIRECTORY;
             return TREE_ACTIONS.TOGGLE_EXPANDED(node.treeModel, node, $event);
         }
+        return null;
     }
 
+    /**
+     * Recursively expand tree nodes if current node has expanded status
+     */
+    public expandTreeNodes(): void {
+        // Keep tree nodes expanded if routing to a different route
+        this.tree.treeModel.doForAll((node: TreeNode) => {
+            if (node.data.state === NodeState.EXPANDED_DIRECTORY) {
+                node.expand();
+            }
+        });
+    }
     /**
      * Handle linking to files from blob storage as well as the task and node API
      * @param fileName - name if the file
@@ -146,7 +145,7 @@ export class TreeViewDisplayComponent implements OnInit {
      * @param nodes tree nodes array
      * @param pathToLoad path to check with more items
      */
-    private _decorateNodesWithMoreOption(nodes: TreeNodeData[], pathToLoad: string) {
+    private _decorateNodesWithMoreOption(nodes: TreeNodeData[], pathToLoad: string): TreeNodeData[] {
         if (this.hasMoreMap && this.hasMoreMap[pathToLoad]) {
             nodes.push(this._getFetchMoreNode(pathToLoad));
         }
@@ -179,7 +178,7 @@ export const MAX_TREENODES_ITEMS: number = 100;
  */
 export function buildTreeRootFilter(path: string) {
     let options = {
-        // maxItems: MAX_TREENODES_ITEMS,
+        pageSize: MAX_TREENODES_ITEMS,
     };
     if (path) {
         options["filter"] = FilterBuilder.prop("name").startswith(path).toOData();
