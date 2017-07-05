@@ -1,14 +1,14 @@
-import { Component, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
-import { MdDialog, MdDialogConfig } from "@angular/material";
+import { Component, OnDestroy, OnInit/*, ViewContainerRef*/ } from "@angular/core";
+// import { MdDialog, MdDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs/Subscription";
 
-import { Application } from "app/models";
+import { BlobContainer } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";
-import { ApplicationParams, ApplicationService } from "app/services";
+import { GetContainerParams/*, StorageService*/  } from "app/services";
 import { RxEntityProxy } from "app/services/core";
-import { SidebarManager } from "../../base/sidebar";
+// import { SidebarManager } from "../../base/sidebar";
 // import { ApplicationCreateDialogComponent, ApplicationEditDialogComponent,
 //     DeleteApplicationDialogComponent,
 // } from "../action";
@@ -26,31 +26,31 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
         };
     }
 
-    public application: Application;
-    public applicationId: string;
+    public container: BlobContainer;
+    public containerId: string;
     public decorator: ApplicationDecorator;
-    public data: RxEntityProxy<ApplicationParams, Application>;
+    public data: RxEntityProxy<GetContainerParams, BlobContainer>;
 
     private _paramsSubscriber: Subscription;
 
     constructor(
         private activatedRoute: ActivatedRoute,
-        private applicationService: ApplicationService,
-        private dialog: MdDialog,
+        // private storageService: StorageService,
+        // private dialog: MdDialog,
         private router: Router,
-        private sidebarManager: SidebarManager,
-        private viewContainerRef: ViewContainerRef) {
+        // private sidebarManager: SidebarManager,
+        /*private viewContainerRef: ViewContainerRef*/) {
 
-        this.data = this.applicationService.get(null);
-        this.data.item.subscribe((application) => {
-            this.application = application;
-            if (application) {
-                this.decorator = new ApplicationDecorator(application);
-            }
-        });
+        // this.data = this.storageService.get(null);
+        // this.data.item.subscribe((application) => {
+        //     this.application = application;
+        //     if (application) {
+        //         this.decorator = new ApplicationDecorator(application);
+        //     }
+        // });
 
         this.data.deleted.subscribe((key) => {
-            if (this.applicationId === key) {
+            if (this.containerId === key) {
                 this.router.navigate(["/data"]);
             }
         });
@@ -58,8 +58,8 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
 
     public ngOnInit() {
         this._paramsSubscriber = this.activatedRoute.params.subscribe((params) => {
-            this.applicationId = params["id"];
-            this.data.params = { id: this.applicationId };
+            this.containerId = params["id"];
+            this.data.params = { container: this.containerId };
             this.data.fetch();
         });
     }

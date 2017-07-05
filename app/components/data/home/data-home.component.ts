@@ -3,7 +3,7 @@ import { FormControl } from "@angular/forms";
 import { autobind } from "core-decorators";
 
 import { Filter, FilterBuilder } from "app/utils/filter-builder";
-import { SidebarManager } from "../../base/sidebar";
+// import { SidebarManager } from "../../base/sidebar";
 // import { ApplicationCreateDialogComponent } from "../action";
 
 @Component({
@@ -15,7 +15,7 @@ export class DataHomeComponent {
     public filter: Filter = FilterBuilder.none();
     public quickFilter: Filter = FilterBuilder.none();
 
-    constructor(private sidebarManager: SidebarManager) {
+    constructor(/*private sidebarManager: SidebarManager*/) {
         this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
             if (query === "") {
                 this.quickFilter = FilterBuilder.none();

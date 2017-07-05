@@ -85,7 +85,7 @@ export class BlobStorageClientProxy {
                     resolve({
                         data: {
                             name: blobName,
-                            url: `${container}/${blobName}`,
+                            url: `${container}/${blobPath}`,
                             isDirectory: false,
                             properties: {
                                 contentLength: parseInt(result.contentLength, 10),

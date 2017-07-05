@@ -4,9 +4,9 @@ import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { File, ServerError } from "app/models";
-import { BlobListParams, StorageService } from "app/services";
+import { ListBlobParams, StorageService } from "app/services";
 import { RxListProxy } from "app/services/core";
-import { Constants } from "app/utils";
+import { Constants, StorageUtils } from "app/utils";
 import { Property } from "app/utils/filter-builder";
 
 @Component({
@@ -29,7 +29,7 @@ export class PersistedFileListComponent implements OnChanges, OnDestroy {
     @Input()
     public filter: Property;
 
-    public data: RxListProxy<BlobListParams, File>;
+    public data: RxListProxy<ListBlobParams, File>;
     public status = new BehaviorSubject(LoadingStatus.Loading);
     public LoadingStatus = LoadingStatus;
     public hasAutoStorage: boolean;
@@ -40,12 +40,12 @@ export class PersistedFileListComponent implements OnChanges, OnDestroy {
     private _statuSub: Subscription;
 
     constructor(private storageService: StorageService) {
-        this.data = this.storageService.listBlobsForTask(null, null, null, (error: ServerError) => {
+        this.data = this.storageService.listBlobs(null, null, (error: ServerError) => {
             let handled = false;
-            if (error && error.body.code === Constants.APIErrorCodes.containerNotFound) {
+            if (error && error.body && error.body.code === Constants.APIErrorCodes.containerNotFound) {
                 this.containerNotFound = true;
                 handled = true;
-            } else if (error && error.body.code === Constants.APIErrorCodes.authenticationFailed) {
+            } else if (error && error.body && error.body.code === Constants.APIErrorCodes.authenticationFailed) {
                 this.authFailed = true;
                 // try refreshing the keys cache so we get them from the API again.
                 this.storageService.clearCurrentStorageKeys();
@@ -110,7 +110,8 @@ export class PersistedFileListComponent implements OnChanges, OnDestroy {
         this.authFailed = false;
         this.containerNotFound = false;
         if (this.hasAutoStorage) {
-            this.data.updateParams({ jobId: this.jobId, taskId: this.taskId, outputKind: this.outputKind });
+            const prefix = `${this.taskId}/${this.outputKind}/`;
+            this.data.updateParams({ container: StorageUtils.getSafeContainerName(this.jobId), blobPrefix: prefix });
             this.data.setOptions(this._buildOptions());
             this.data.fetchNext(true);
         }

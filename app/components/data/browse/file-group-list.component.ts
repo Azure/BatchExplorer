@@ -7,8 +7,8 @@ import { Observable, Subscription } from "rxjs";
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListItemStatus } from "app/components/base/quick-list";
 import { ListOrTableBase } from "app/components/base/selectable-list";
-import { BlobContainer, LeaseStatus, ServerError } from "app/models";
-import { ContainerListParams, StorageService } from "app/services";
+import { BlobContainer, LeaseStatus } from "app/models";
+import { ListContainerParams, StorageService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
 // import { DeleteApplicationAction } from "../action";
@@ -19,7 +19,8 @@ import { Filter } from "app/utils/filter-builder";
 })
 export class FileGroupListComponent extends ListOrTableBase implements OnInit, OnDestroy {
     public status: Observable<LoadingStatus>;
-    public data: RxListProxy<ContainerListParams, BlobContainer>;
+    public data: RxListProxy<ListContainerParams, BlobContainer>;
+    public hasAutoStorage: boolean;
 
     @Input()
     public quickList: boolean;
@@ -32,6 +33,7 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
     public get filter(): Filter { return this._filter; }
 
     private _onJobAddedSub: Subscription;
+    private _autoStorageSub: Subscription;
     private _containerPrefix: string = "job-";
     private _filter: Filter;
 
@@ -42,15 +44,14 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
         private storageService: StorageService) {
 
         super();
-        this.data = this.storageService.listContainers(this._containerPrefix, (error: ServerError) => {
-            console.log("listContainers :: Error :: ", error);
-            // let handled = false;
-            // if (this._isAutoStorageError(error)) {
-            //     this.noLinkedStorage = true;
-            //     handled = true;
-            // }
+        this.data = this.storageService.listContainers(this._containerPrefix);
 
-            return false;
+        this.hasAutoStorage = false;
+        this._autoStorageSub = storageService.hasAutoStorage.subscribe((hasAutoStorage) => {
+            this.hasAutoStorage = hasAutoStorage;
+            if (!hasAutoStorage) {
+                this.status = Observable.of(LoadingStatus.Ready);
+            }
         });
 
         this.status = this.data.status;
@@ -64,29 +65,37 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
     }
 
     public ngOnDestroy() {
-        this._onJobAddedSub.unsubscribe();
         this.data.dispose();
+        this._autoStorageSub.unsubscribe();
+        this._onJobAddedSub.unsubscribe();
     }
 
     @autobind()
     public refresh(): Observable<any> {
-        return this.data.refresh();
+        if (this.hasAutoStorage) {
+            return this.data.refresh();
+        }
+
+        return Observable.of(null);
     }
 
     public containerStatus(container: BlobContainer): QuickListItemStatus {
         switch (container.lease && container.lease.status) {
             case LeaseStatus.locked:
-                return QuickListItemStatus.important;
+                return QuickListItemStatus.warning;
             default:
                 return QuickListItemStatus.normal;
         }
     }
 
     public onScrollToBottom(x) {
-        this.data.fetchNext();
+        if (this.hasAutoStorage) {
+            this.data.fetchNext();
+        }
     }
 
     public deleteSelected() {
+        // TODO
         // this.taskManager.startTask("", (backgroundTask) => {
         //     const task = new DeleteApplicationAction(this.applicationService, this.selectedItems);
         //     task.start(backgroundTask);
@@ -103,6 +112,8 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
             this.data.setOptions({ filter: filterText && filterText.toLowerCase() });
         }
 
-        this.data.fetchNext();
+        if (this.hasAutoStorage) {
+            this.data.fetchNext();
+        }
     }
 }

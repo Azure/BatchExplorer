@@ -2,6 +2,8 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from "@angular/cor
 
 import { FileService, StorageService } from "app/services";
 import { FileLoader } from "app/services/file";
+import { StorageUtils } from "app/utils";
+
 import "./file-content.scss";
 
 enum FileType {
@@ -79,10 +81,14 @@ export class FileContentComponent implements OnChanges, OnInit {
         } else if (this.isPool) {
             obs = this.fileService.fileFromNode(this.poolId, this.nodeId, this.filename);
         } else if (this.isBlob) {
-            obs = this.storageService.blobContent(this.jobId, this.taskId, this.outputKind, this.filename);
+            obs = this.storageService.getBlobContent(
+                StorageUtils.getSafeContainerName(this.jobId),
+                this.filename,
+                `${this.taskId}/${this.outputKind}/`);
         } else {
             return;
         }
+
         this.fileLoader = obs;
     }
 
@@ -90,6 +96,7 @@ export class FileContentComponent implements OnChanges, OnInit {
         if (!this.filename) {
             throw new Error(`Expect filename to be a valid string but was "${this.filename}"`);
         }
+
         const filename = this.filename.toLowerCase();
         for (let type of Object.keys(fileTypes)) {
             const extensions = fileTypes[type];
@@ -100,6 +107,7 @@ export class FileContentComponent implements OnChanges, OnInit {
                 }
             }
         }
+
         this.fileType = null;
     }
 }

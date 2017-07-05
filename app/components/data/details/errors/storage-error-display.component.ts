@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit } from "@angular/core";
 import { autobind } from "core-decorators";
-import { Observable, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 
 import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";
 import { SidebarManager } from "app/components/base/sidebar";
@@ -14,11 +14,11 @@ import { AccountService, StorageService } from "app/services";
 })
 export class StorageErrorDisplayComponent implements OnInit, OnDestroy {
     public hasAutoStorage: boolean;
-    public hasAutoStorage1: Observable<boolean>;
 
     private _autoStorageSub: Subscription;
     private _batchAccount: AccountResource;
 
+    // TODO: make this the default auto storage error display.
     constructor(
         private accountService: AccountService,
         private storageService: StorageService,
@@ -27,6 +27,7 @@ export class StorageErrorDisplayComponent implements OnInit, OnDestroy {
 
         this.hasAutoStorage = false;
         this._autoStorageSub = this.storageService.hasAutoStorage.subscribe((hasAutoStorage) => {
+            // todo: remove when done
             console.log("hasAutoStorage :: ", hasAutoStorage);
             this.hasAutoStorage = hasAutoStorage;
             this.changeDetector.markForCheck();

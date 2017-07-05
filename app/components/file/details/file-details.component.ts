@@ -8,7 +8,8 @@ import { NotificationService } from "app/components/base/notifications";
 import { File, ServerError } from "app/models";
 import { ElectronShell, FileService, StorageService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
-import { Constants, FileUrlUtils, prettyBytes } from "app/utils";
+import { FileLoader } from "app/services/file";
+import { Constants, FileUrlUtils, StorageUtils, prettyBytes } from "app/utils";
 
 @Component({
     selector: "bl-file-details",
@@ -93,21 +94,24 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         if (this._sourceType === Constants.FileSourceTypes.Job) {
             // it's a file from a job's task
             this._propertyProxy = this.fileService.getFilePropertiesFromTask(
-                this.jobId, this.taskId, this.filename);
+                this.jobId,
+                this.taskId,
+                this.filename);
 
         } else if (this._sourceType === Constants.FileSourceTypes.Pool) {
             // it's a file from a node
             this._propertyProxy = this.fileService.getFilePropertiesFromComputeNode(
-                this.poolId, this.nodeId, this.filename);
+                this.poolId,
+                this.nodeId,
+                this.filename);
 
         } else if (this._sourceType === Constants.FileSourceTypes.Blob) {
             // it's a file from blob storage
+            const prefix = `${this.taskId}/${this.outputKind}/`;
             this._propertyProxy = this.storageService.getBlobProperties(
-                this.jobId,
-                this.taskId,
-                this.outputKind,
+                StorageUtils.getSafeContainerName(this.jobId),
                 this.filename,
-            );
+                prefix);
         } else {
             throw new Error("Unrecognised source type: " + this._sourceType);
         }
@@ -120,15 +124,17 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         this._propertyProxy = null;
     }
 
-    private _fileLoader() {
+    private _fileLoader(): FileLoader {
         const obj = FileUrlUtils.parseRelativePath(this.url);
-
         if (obj.type === Constants.FileSourceTypes.Job) {
             return this.fileService.fileFromTask(this.jobId, this.taskId, this.filename);
         } else if (this._sourceType === Constants.FileSourceTypes.Pool) {
             return this.fileService.fileFromNode(this.poolId, this.nodeId, this.filename);
         } else if (this._sourceType === Constants.FileSourceTypes.Blob) {
-            return this.storageService.blobContent(this.jobId, this.taskId, this.outputKind, this.filename);
+            return this.storageService.getBlobContent(
+                StorageUtils.getSafeContainerName(this.jobId),
+                this.filename,
+                `${this.taskId}/${this.outputKind}/`);
         } else {
             throw new Error("Unrecognised source type: " + this._sourceType);
         }
@@ -139,7 +145,6 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
             return;
         }
         const obs = this._fileLoader().download(pathToFile);
-
         obs.subscribe({
             next: () => {
                 this.shell.showItemInFolder(pathToFile);
@@ -152,6 +157,7 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
                 );
             },
         });
+
         return obs;
     }
 }
