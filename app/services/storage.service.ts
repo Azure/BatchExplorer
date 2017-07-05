@@ -12,7 +12,6 @@ import {
     RxStorageEntityProxy,
     RxStorageListProxy,
     TargetedDataCache,
-    getOnceProxy,
 } from "./core";
 import { FileLoadOptions, FileLoader, FileSource } from "./file";
 import { StorageClientService } from "./storage-client.service";
@@ -129,7 +128,7 @@ export class StorageService {
             groupId: path.join(jobId, taskId, outputKind),
             fs: this.fs,
             properties: () => {
-                return getOnceProxy(this.getBlobProperties(jobId, taskId, outputKind, filename));
+                return this.getBlobProperties(jobId, taskId, outputKind, filename);
             },
             content: (options: FileLoadOptions) => {
                 return this._callStorageClient((client) => {

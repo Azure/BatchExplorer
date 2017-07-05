@@ -94,7 +94,7 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
 
     private _updateFileContent() {
         this.fileTooLarge = false;
-        this.currentSubscription = this.fileLoader.properties().subscribe({
+        this.currentSubscription = this.fileLoader.getProperties(true).subscribe({
             next: (file: File) => {
                 this.file = file;
                 this._processProperties(file);
