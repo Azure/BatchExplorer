@@ -20,9 +20,8 @@ export class ImageFileViewerComponent implements OnChanges, OnDestroy {
     public ngOnChanges(changes) {
         this._loadImage();
         if (changes.fileLoader) {
-            this._sub  = this.fileLoader.fileChanged.subscribe(() => {
+            this._sub = this.fileLoader.fileChanged.subscribe(() => {
                 this._loadImage();
-                console.log("File changed...");
             });
         }
     }
