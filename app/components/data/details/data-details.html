@@ -1,30 +1,32 @@
 <bl-loading [status]="data.newDataStatus | async">
-    <div *ngIf="application">
+    <div *ngIf="container">
         <md-card class="overview">
             <div class="actions">
                 <bl-button-group>
                     <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                    <bl-add-button title="Add package" [action]="addPackage"></bl-add-button>
-                    <bl-edit-button [action]="editApplication"></bl-edit-button>
-                    <bl-delete-button [entity]="application" [action]="deleteApplication"></bl-delete-button>
+                    <bl-add-button title="Add file group" [action]="addFileGroup"></bl-add-button>
+                    <bl-delete-button [entity]="container" [action]="deleteFileGroup"></bl-delete-button>
                 </bl-button-group>
             </div>
             <div class="content">
-                <md-card-title>{{decorator.id}}</md-card-title>
+                <md-card-title>{{container?.name}}</md-card-title>
                 <md-card-subtitle>
-                    <i class="fa" [ngClass]="application.allowUpdates ? 'fa-unlock-alt' : 'fa-lock'"></i> {{decorator.displayName}}
-                    <div *ngIf="application.allowUpdates"> <b>(unlocked)</b></div>
-                    <div *ngIf="!application.allowUpdates"> <b>(locked)</b></div>
+                    {{container.lease?.state}} ({{container.lease?.status}})
                 </md-card-subtitle>
             </div>
         </md-card>
-        <!--<bl-application-error-display [application]="application"></bl-application-error-display>-->
+        <bl-storage-error-display></bl-storage-error-display>
         <md-card class="details">
             <bl-tab-group>
-                <bl-tab key="packages">
-                    <bl-tab-label>Packages</bl-tab-label>
+                <bl-tab key="files">
+                    <bl-tab-label>Files</bl-tab-label>
                     <div class="tab-padding">
                         <!--<bl-application-packages [application]="application"></bl-application-packages>-->
+                        <bl-entity-details-list #blobWrapper [refresh]="blobList.refresh" filterPlaceholder="Filter by file name (case sensitive)"
+                            [showAddButton]="false">
+                            <bl-persisted-file-list #blobList [container]="container.id" [filter]="blobWrapper.filter" [quickList]="false">
+                            </bl-persisted-file-list>
+                        </bl-entity-details-list>
                     </div>
                 </bl-tab>
                 <bl-tab key="properties">

@@ -103,6 +103,14 @@ export const routes: Routes = [
             { path: "", component: FileDetailsComponent },
         ],
     },
+    {
+        path: "data/:container/blobs/:filename",
+        component: FileHomeComponent,
+        data: { type: Constants.FileSourceTypes.Blob },
+        children: [
+            { path: "", component: FileDetailsComponent },
+        ],
+    },
 ];
 
 // todo: copied here for reference only, delete when done.

@@ -37,6 +37,8 @@ export class FileContentComponent implements OnChanges, OnInit {
 
     @Input() public outputKind: string;
 
+    @Input() public container: string;
+
     public fileLoader: FileLoader = null;
     public fileType: FileType;
 
@@ -66,7 +68,7 @@ export class FileContentComponent implements OnChanges, OnInit {
     }
 
     public get isBlob() {
-        return this.jobId && this.taskId && this.outputKind;
+        return this.container || (this.jobId && this.taskId && this.outputKind);
     }
 
     public openAs(type: FileType) {
@@ -81,10 +83,12 @@ export class FileContentComponent implements OnChanges, OnInit {
         } else if (this.isPool) {
             obs = this.fileService.fileFromNode(this.poolId, this.nodeId, this.filename);
         } else if (this.isBlob) {
-            obs = this.storageService.getBlobContent(
-                StorageUtils.getSafeContainerName(this.jobId),
-                this.filename,
-                `${this.taskId}/${this.outputKind}/`);
+            const prefix = !this.container ? `${this.taskId}/${this.outputKind}/` : null;
+            const containerPromise = !this.container
+                ? StorageUtils.getSafeContainerName(this.jobId)
+                : Promise.resolve(this.container);
+
+            obs = this.storageService.getBlobContent(containerPromise, this.filename, prefix);
         } else {
             return;
         }

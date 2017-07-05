@@ -50,6 +50,7 @@ export class StorageService {
      * Used to notify the list of a new item
      */
     public onFileGroupAdded = new Subject<string>();
+    public ncjFileGroupPrefix: string = "job-";
 
     private _containerCache = new DataCache<BlobContainer>();
     private _blobListCache = new TargetedDataCache<ListBlobParams, File>({
@@ -108,6 +109,7 @@ export class StorageService {
             cache: (params) => this.getBlobFileCache(params),
             getFn: (client, params) => {
                 return params.container.then((containerName) => {
+                    console.log("getBlobProperties: ", containerName, params.blobName, params.blobPrefix);
                     return client.getBlobProperties(containerName, params.blobName, params.blobPrefix, initialOptions);
                 });
             },
@@ -126,19 +128,21 @@ export class StorageService {
      * @param blobName - Name of the blob, not including prefix
      * @param blobPrefix - Optional prefix of the blob, i.e. {container}/{blobPrefix}+{blobName}
      */
-    public getBlobContent(container: Promise<string>, blobName: string, blobPrefix: string = ""): FileLoader {
+    public getBlobContent(container: Promise<string>, blobName: string, blobPrefix?: string): FileLoader {
         return new FileLoader({
             filename: blobName,
             source: FileSource.blob,
             groupId: blobPrefix,
             fs: this.fs,
             properties: () => {
+                console.log("getBlobContent .. calling properties");
                 return getOnceProxy(this.getBlobProperties(container, blobName, blobPrefix));
             },
             content: (options: FileLoadOptions) => {
                 return this._callStorageClient((client) => {
-                    const pathToBlob = `${blobPrefix}${blobName}`;
+                    const pathToBlob = `${blobPrefix || ""}${blobName}`;
                     return container.then((containerName) => {
+                        console.log("getBlobContent: ", containerName, pathToBlob);
                         return client.getBlobContent(containerName, pathToBlob, options);
                     });
                 });
@@ -188,11 +192,13 @@ export class StorageService {
      * @param container - Name of the blob container
      * @param options - Optional parameters for the request
      */
-    public getContainer(container: string, options: any = {}): RxEntityProxy<GetContainerParams, BlobContainer> {
+    public getContainerProperties(container: string, options: any = {})
+        : RxEntityProxy<GetContainerParams, BlobContainer> {
+
         return new RxStorageEntityProxy<GetContainerParams, BlobContainer>(BlobContainer, this.storageClient, {
             cache: () => this._containerCache,
             getFn: (client, params) => {
-                return client.getContainerProperties(params.container, options);
+                return client.getContainerProperties(params.container, this.ncjFileGroupPrefix, options);
             },
             initialParams: { container: container },
             logIgnoreError: storageIgnoredErrors,
@@ -200,7 +206,7 @@ export class StorageService {
     }
 
     public getContainerOnce(containerName: string, options: any = {}): Observable<BlobContainer> {
-        return getOnceProxy(this.getContainer(containerName, options));
+        return getOnceProxy(this.getContainerProperties(containerName, options));
     }
 
     /**

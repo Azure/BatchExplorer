@@ -27,6 +27,9 @@ export class PersistedFileListComponent implements OnChanges, OnDestroy {
     public outputKind: string;
 
     @Input()
+    public container: string;
+
+    @Input()
     public filter: Property;
 
     public data: RxListProxy<ListBlobParams, File>;
@@ -41,6 +44,7 @@ export class PersistedFileListComponent implements OnChanges, OnDestroy {
 
     constructor(private storageService: StorageService) {
         this.data = this.storageService.listBlobs(null, null, (error: ServerError) => {
+            console.log("presisted list error: ", error);
             let handled = false;
             if (error && error.body && error.body.code === Constants.APIErrorCodes.containerNotFound) {
                 this.containerNotFound = true;
@@ -69,7 +73,7 @@ export class PersistedFileListComponent implements OnChanges, OnDestroy {
     }
 
     public ngOnChanges(inputs) {
-        if (inputs.jobId || inputs.taskId || inputs.filter) {
+        if (inputs.container || inputs.jobId || inputs.taskId || inputs.filter) {
             this.refresh();
         }
     }
@@ -82,7 +86,7 @@ export class PersistedFileListComponent implements OnChanges, OnDestroy {
 
     @autobind()
     public refresh(): Observable<any> {
-        if (this.jobId && this.taskId && this.outputKind) {
+        if (this.container || (this.jobId && this.taskId && this.outputKind)) {
             this._loadFiles();
         }
 
@@ -99,7 +103,9 @@ export class PersistedFileListComponent implements OnChanges, OnDestroy {
     }
 
     public get baseUrl() {
-        return ["/jobs", this.jobId, "tasks", this.taskId, this.outputKind];
+        return this.container
+            ? ["/data", this.container]
+            : ["/jobs", this.jobId, "tasks", this.taskId, this.outputKind];
     }
 
     public get filterPlaceholder() {
@@ -107,11 +113,16 @@ export class PersistedFileListComponent implements OnChanges, OnDestroy {
     }
 
     private _loadFiles() {
+        console.log("presisted list load files");
         this.authFailed = false;
         this.containerNotFound = false;
         if (this.hasAutoStorage) {
-            const prefix = `${this.taskId}/${this.outputKind}/`;
-            this.data.updateParams({ container: StorageUtils.getSafeContainerName(this.jobId), blobPrefix: prefix });
+            const prefix = !this.container ? `${this.taskId}/${this.outputKind}/` : null;
+            const containerPromise = !this.container
+                ? StorageUtils.getSafeContainerName(this.jobId)
+                : Promise.resolve(this.container);
+
+            this.data.updateParams({ container: containerPromise, blobPrefix: prefix });
             this.data.setOptions(this._buildOptions());
             this.data.fetchNext(true);
         }

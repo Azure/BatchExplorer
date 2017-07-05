@@ -6,7 +6,7 @@ import { Subscription } from "rxjs/Subscription";
 
 import { BlobContainer } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";
-import { GetContainerParams/*, StorageService*/  } from "app/services";
+import { GetContainerParams, StorageService  } from "app/services";
 import { RxEntityProxy } from "app/services/core";
 // import { SidebarManager } from "../../base/sidebar";
 // import { ApplicationCreateDialogComponent, ApplicationEditDialogComponent,
@@ -35,19 +35,16 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
 
     constructor(
         private activatedRoute: ActivatedRoute,
-        // private storageService: StorageService,
+        private storageService: StorageService,
         // private dialog: MdDialog,
         private router: Router,
         // private sidebarManager: SidebarManager,
         /*private viewContainerRef: ViewContainerRef*/) {
 
-        // this.data = this.storageService.get(null);
-        // this.data.item.subscribe((application) => {
-        //     this.application = application;
-        //     if (application) {
-        //         this.decorator = new ApplicationDecorator(application);
-        //     }
-        // });
+        this.data = this.storageService.getContainerProperties(null);
+        this.data.item.subscribe((container) => {
+            this.container = container;
+        });
 
         this.data.deleted.subscribe((key) => {
             if (this.containerId === key) {
@@ -68,7 +65,7 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
         this._paramsSubscriber.unsubscribe();
     }
 
-    public addPackage() {
+    public addFileGroup() {
         // const sidebarRef = this.sidebarManager.open("add-package", ApplicationCreateDialogComponent);
         // sidebarRef.component.setValue(this.application);
         // sidebarRef.afterCompletition.subscribe(() => {
@@ -76,15 +73,7 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
         // });
     }
 
-    public editApplication() {
-        // const sidebarRef = this.sidebarManager.open("edit-application", ApplicationEditDialogComponent);
-        // sidebarRef.component.setValue(this.application);
-        // sidebarRef.afterCompletition.subscribe(() => {
-        //     this.refresh();
-        // });
-    }
-
-    public deleteApplication() {
+    public deleteFileGroup() {
         // let config = new MdDialogConfig();
         // config.viewContainerRef = this.viewContainerRef;
         // const dialogRef = this.dialog.open(DeleteApplicationDialogComponent, config);

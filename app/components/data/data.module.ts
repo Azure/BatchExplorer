@@ -1,6 +1,8 @@
 import { NgModule } from "@angular/core";
 
 import { commonModules } from "app/common";
+import { FileBrowseModule } from "app/components/file/browse";
+import { FileDetailsModule } from "app/components/file/details";
 import { FileGroupListComponent, FileGroupPreviewComponent } from "./browse";
 import { DataDefaultComponent, DataDetailsComponent } from "./details";
 import { StorageErrorDisplayComponent } from "./details/errors";
@@ -12,7 +14,7 @@ const components = [DataHomeComponent, DataDefaultComponent, DataDetailsComponen
 @NgModule({
     declarations: components,
     exports: components,
-    imports: [...commonModules ],
+    imports: [ FileBrowseModule, FileDetailsModule, ...commonModules ],
     entryComponents: [
         // ApplicationCreateDialogComponent,
         // ApplicationEditDialogComponent,

@@ -8,7 +8,7 @@ export interface BlobContainerAttributes {
     id: string;
     name: string;
     publicAccessLevel: string;
-    metadata?: MetadataAttributes[];
+    metadata?: any;
     lastModified: Date;
     lease?: Partial<ContainerLeaseAttributes>;
 }
@@ -25,9 +25,9 @@ export class BlobContainer extends Record<BlobContainerAttributes> {
     @Prop() public name: string;
 
     @Prop() public publicAccessLevel: string;
+    @Prop() public metadata: any;
     @Prop() public lastModified: Date;
     @Prop() public lease: ContainerLease;
-    @ListProp(Metadata) public metadata: List<Metadata> = List([]);
 
     constructor(data: Partial<BlobContainerAttributes> = {}) {
         super(data);

@@ -34,7 +34,6 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
 
     private _onJobAddedSub: Subscription;
     private _autoStorageSub: Subscription;
-    private _containerPrefix: string = "job-";
     private _filter: Filter;
 
     // private taskManager: BackgroundTaskService
@@ -44,7 +43,7 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
         private storageService: StorageService) {
 
         super();
-        this.data = this.storageService.listContainers(this._containerPrefix);
+        this.data = this.storageService.listContainers(storageService.ncjFileGroupPrefix);
 
         this.hasAutoStorage = false;
         this._autoStorageSub = storageService.hasAutoStorage.subscribe((hasAutoStorage) => {

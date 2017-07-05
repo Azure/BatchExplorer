@@ -17,5 +17,6 @@
         <bl-file-content *ngIf="jobId && taskId && !outputKind" [jobId]="jobId" [taskId]="taskId" [filename]="filename"></bl-file-content>
         <bl-file-content *ngIf="jobId && taskId && outputKind" [jobId]="jobId" [taskId]="taskId" [outputKind]="outputKind" [filename]="filename"></bl-file-content>
         <bl-file-content *ngIf="poolId && nodeId" [poolId]="poolId" [nodeId]="nodeId" [filename]="filename"></bl-file-content>
+        <bl-file-content *ngIf="container" [container]="container" [filename]="filename"></bl-file-content>
     </div>
 </div>

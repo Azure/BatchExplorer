@@ -24,6 +24,7 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     public taskId: string;
     public nodeId: string;
     public poolId: string;
+    public container: string;
     public url: string;
     public filename: string;
     public contentSize: string;
@@ -55,6 +56,7 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
             this.nodeId = params["nodeId"];
             this.outputKind = params["outputKind"];
             this.filename = params["filename"];
+            this.container = params["container"];
 
             this._loadFileProperties();
         }));
@@ -106,17 +108,20 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
                 this.filename);
 
         } else if (this._sourceType === Constants.FileSourceTypes.Blob) {
+            console.log("MEH: ", this.filename);
             // it's a file from blob storage
-            const prefix = `${this.taskId}/${this.outputKind}/`;
-            this._propertyProxy = this.storageService.getBlobProperties(
-                StorageUtils.getSafeContainerName(this.jobId),
-                this.filename,
-                prefix);
+            const prefix = !this.container ? `${this.taskId}/${this.outputKind}/` : null;
+            const containerPromise = !this.container
+                ? StorageUtils.getSafeContainerName(this.jobId)
+                : Promise.resolve(this.container);
+
+            this._propertyProxy = this.storageService.getBlobProperties(containerPromise, this.filename, prefix);
         } else {
             throw new Error("Unrecognised source type: " + this._sourceType);
         }
 
         this._propertyProxy.fetch().subscribe((details: any) => {
+            console.log("GOT, ", details);
             this.contentSize = prettyBytes(details.properties.contentLength);
             this.url = decodeURIComponent(details.url);
         });
@@ -131,10 +136,12 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         } else if (this._sourceType === Constants.FileSourceTypes.Pool) {
             return this.fileService.fileFromNode(this.poolId, this.nodeId, this.filename);
         } else if (this._sourceType === Constants.FileSourceTypes.Blob) {
-            return this.storageService.getBlobContent(
-                StorageUtils.getSafeContainerName(this.jobId),
-                this.filename,
-                `${this.taskId}/${this.outputKind}/`);
+            const prefix = !this.container ? `${this.taskId}/${this.outputKind}/` : null;
+            const containerPromise = !this.container
+                ? StorageUtils.getSafeContainerName(this.jobId)
+                : Promise.resolve(this.container);
+
+            return this.storageService.getBlobContent(containerPromise, this.filename, prefix);
         } else {
             throw new Error("Unrecognised source type: " + this._sourceType);
         }
