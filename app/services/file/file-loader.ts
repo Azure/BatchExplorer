@@ -8,6 +8,7 @@ import { FileSystemService } from "../fs.service";
 
 export type PropertiesFunc = () => RxEntityProxy<any, File>;
 export type ContentFunc = (options: FileLoadOptions) => Observable<FileLoadResult>;
+export type DownloadFunc = (destination: string) => Observable<boolean>;
 
 export interface FileLoaderConfig {
     filename: string;
@@ -16,6 +17,11 @@ export interface FileLoaderConfig {
     fs: FileSystemService;
     properties: PropertiesFunc;
     content: ContentFunc;
+    /**
+     * Optional specify another function for downloading the file.
+     * If not provided it will read the content and write it to file.
+     */
+    download?: DownloadFunc;
 }
 
 export interface FileLoadOptions {
@@ -51,6 +57,7 @@ export class FileLoader {
     private _fs: FileSystemService;
     private _properties: PropertiesFunc;
     private _content: ContentFunc;
+    private _download: DownloadFunc;
     private _cachedProperties: File;
     private _proxy: RxEntityProxy<any, File>;
     private _fileChanged = new Subject<File>();
@@ -62,6 +69,7 @@ export class FileLoader {
         this.groupId = config.groupId || "";
         this.source = config.source;
         this._fs = config.fs;
+        this._download = config.download;
 
         this.fileChanged = this._fileChanged.asObservable();
     }
@@ -107,6 +115,9 @@ export class FileLoader {
     }
 
     public download(dest: string): Observable<string> {
+        if (this._download) {
+            return this._download(dest).map(x => dest).share();
+        }
         const obs = this.content().concatMap((result) => {
             return this._fs.saveFile(dest, result.content);
         }).share();
