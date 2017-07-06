@@ -1,6 +1,6 @@
 {
   "extends": "tslint:recommended",
-  "defaultSeverity": "warning",
+  "defaultSeverity": "error",
   "rulesDirectory": [
     "node_modules/codelyzer"
   ],
@@ -30,8 +30,8 @@
     "ban": [
         true,
         ["main", "debugCrash"], // Show a warning if the main window is being shown on start for debug purposes
-        ["fdescribe"],
-        ["fit"]
+        {"name": "fdescribe", "message": "Don't keep jasmine fit methods in the code."},
+        {"name": "fit", "message": "Don't keep jasmine fit methods in the code."}
     ],
     "no-empty-interface":  false,
     "space-before-function-paren": [false],
@@ -56,7 +56,7 @@
     "directive-class-suffix": true,
     "import-destructuring-spacing": true,
     "invoke-injectable": true,
-
+    "no-shadowed-variable": false,
     // TODO enable
     "prefer-const": false
   },
