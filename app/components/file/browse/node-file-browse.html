@@ -1,7 +1,7 @@
 <bl-loading [status]="data.status | async">
     <div>
         <bl-entity-details-list #listWrapper [refresh]="list.refresh" [filterPlaceholder]="quicksearchPlaceholder" [showAddButton]="false"
-            [enableAdvancedFilter]="false" quickSearchField="name" [loadMore]="list.loadMore">
+            [enableAdvancedFilter]="false" [showExpandButton]="false" quickSearchField="name" [loadMore]="list.loadMore">
             <div pre-quicksearch class="folders">
                 <md-select placeholder="Filter by folder" [(ngModel)]="currentFolder">
                     <md-option [value]="null">All</md-option>

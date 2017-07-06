@@ -58,7 +58,9 @@ export class NodeFileListComponent implements OnChanges {
     @autobind()
     public refresh(): Observable<any> {
         if (this.poolId && this.nodeId) {
-            const filterProp = this.filter as Property;
+            // filter is changed in two different situation (search field of node file list and file nav list)
+            const filterProp = ((this.filter.properties && this.filter.properties.length > 0) ?
+                                        this.filter.properties[0] : this.filter) as Property;
             const quickSearch = filterProp && filterProp.value;
             const loadPath = [this.folder, quickSearch].filter(x => Boolean(x)).join("/");
             if (this.treeDisplay) {
