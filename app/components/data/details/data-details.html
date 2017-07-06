@@ -21,12 +21,7 @@
                 <bl-tab key="files">
                     <bl-tab-label>Files</bl-tab-label>
                     <div class="tab-padding">
-                        <!--<bl-application-packages [application]="application"></bl-application-packages>-->
-                        <bl-entity-details-list #blobWrapper [refresh]="blobList.refresh" filterPlaceholder="Filter by file name (case sensitive)"
-                            [showAddButton]="false">
-                            <bl-persisted-file-list #blobList [container]="container.id" [filter]="blobWrapper.filter" [quickList]="false">
-                            </bl-persisted-file-list>
-                        </bl-entity-details-list>
+                        <bl-data-container-files [container]="container"></bl-data-container-files>
                     </div>
                 </bl-tab>
                 <bl-tab key="properties">

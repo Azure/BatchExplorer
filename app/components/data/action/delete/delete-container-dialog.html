@@ -1,0 +1,11 @@
+<bl-simple-form [submit]="destroy" [containerRef]="dialogRef" actionColor="warn" actionName="Delete" [stickyFooter]="false" [multiUse]="false"
+    size="small" title="Delete file group">
+    <div class="message">
+        <p>Do you want to permantly delete the file group: '<b>{{name}}</b>'?</p>
+        <p>The underlying container in linked storage is: '<b>{{id}}</b>'</p>
+        <p>
+            Warning! Deleting the file group '<b>{{name}}</b>' is irreversible.
+            The action you're about to take can't be undone.
+        </p>
+    </div>
+</bl-simple-form>

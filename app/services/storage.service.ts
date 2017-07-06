@@ -51,6 +51,8 @@ export class StorageService {
      */
     public onFileGroupAdded = new Subject<string>();
     public ncjFileGroupPrefix: string = "job-"; // todo: change to fgrp-
+    public maxBlobPageSize: number = 500;
+    public maxContainerPageSize: number = 50;
 
     private _containerCache = new DataCache<BlobContainer>();
     private _blobListCache = new TargetedDataCache<ListBlobParams, File>({
@@ -73,7 +75,7 @@ export class StorageService {
     public listBlobs(container: Promise<string>, blobPrefix?: string, onError?: (error: ServerError) => boolean)
         : RxListProxy<ListBlobParams, File> {
 
-        const initialOptions: any = {};
+        const initialOptions: any = { maxResults: this.maxBlobPageSize };
         return new RxStorageListProxy<ListBlobParams, File>(File, this.storageClient, {
             cache: (params) => this.getBlobFileCache(params),
             getData: (client, params, options) => {
@@ -109,7 +111,6 @@ export class StorageService {
             cache: (params) => this.getBlobFileCache(params),
             getFn: (client, params) => {
                 return params.container.then((containerName) => {
-                    console.log("getBlobProperties: ", containerName, params.blobName, params.blobPrefix);
                     return client.getBlobProperties(containerName, params.blobName, params.blobPrefix, initialOptions);
                 });
             },
@@ -135,14 +136,12 @@ export class StorageService {
             groupId: blobPrefix,
             fs: this.fs,
             properties: () => {
-                console.log("getBlobContent .. calling properties");
                 return this.getBlobProperties(container, blobName, blobPrefix);
             },
             content: (options: FileLoadOptions) => {
                 return this._callStorageClient((client) => {
                     const pathToBlob = `${blobPrefix || ""}${blobName}`;
                     return container.then((containerName) => {
-                        console.log("getBlobContent: ", containerName, pathToBlob);
                         return client.getBlobContent(containerName, pathToBlob, options);
                     });
                 });
@@ -173,7 +172,7 @@ export class StorageService {
     public listContainers(prefix: string, onError?: (error: ServerError) => boolean)
         : RxListProxy<ListContainerParams, BlobContainer> {
 
-        const initialOptions: any = { maxResults: 50 };
+        const initialOptions: any = { maxResults: this.maxContainerPageSize };
         return new RxStorageListProxy<ListContainerParams, BlobContainer>(BlobContainer, this.storageClient, {
             cache: () => this._containerCache,
             getData: (client, params, options) => {

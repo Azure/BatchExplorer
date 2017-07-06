@@ -1,7 +1,7 @@
 import { autobind } from "core-decorators";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-// todo: move this somewhere common and hook it up to DeleteJobAction
+// todo: Hook up to DeleteJobAction, DeleteTaskAction
 export class WaitForDeletePoller {
     constructor(private getFunction: any) {
     }

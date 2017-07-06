@@ -2,28 +2,28 @@ import { BehaviorSubject } from "rxjs";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
 import { WaitForDeletePoller } from "app/components/core/pollers";
-import { Application } from "app/models";
-import { ApplicationService } from "app/services";
+import { BlobContainer } from "app/models";
+import { StorageService } from "app/services";
 import { LongRunningDeleteAction } from "app/services/core";
 
-export class DeleteApplicationAction extends LongRunningDeleteAction {
+export class DeleteContainerAction extends LongRunningDeleteAction {
     constructor(
-        private applicationService: ApplicationService,
-        applicationIds: string[]) {
+        private storageService: StorageService,
+        containerIds: string[]) {
 
-        super("Application", applicationIds);
+        super("Container", containerIds);
     }
 
     public deleteAction(id: string) {
-        return this.applicationService.delete(id);
+        return this.storageService.deleteContainer(id);
     }
 
     protected waitForDelete(id: string, taskManager?: BackgroundTaskService) {
-        this.applicationService.getOnce(id).subscribe({
-            next: (application: Application) => {
-                const task = new WaitForDeletePoller(this.applicationService.get(id));
+        this.storageService.getContainerOnce(id).subscribe({
+            next: (container: BlobContainer) => {
+                const task = new WaitForDeletePoller(this.storageService.getContainerProperties(id));
                 if (taskManager) {
-                    const message = `Deleting application: ${id}`;
+                    const message = `Deleting container: ${id}`;
                     taskManager.startTask(message, (bTask) => {
                         return task.start(bTask.progress);
                     });
@@ -36,7 +36,6 @@ export class DeleteApplicationAction extends LongRunningDeleteAction {
                 }
             },
             error: (error) => {
-                // No need to watch for App it is already deleted
                 this.markItemAsDeleted();
             },
         });

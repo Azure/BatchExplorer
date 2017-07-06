@@ -44,7 +44,6 @@ export class PersistedFileListComponent implements OnChanges, OnDestroy {
 
     constructor(private storageService: StorageService) {
         this.data = this.storageService.listBlobs(null, null, (error: ServerError) => {
-            console.log("presisted list error: ", error);
             let handled = false;
             if (error && error.body && error.body.code === Constants.APIErrorCodes.containerNotFound) {
                 this.containerNotFound = true;
@@ -113,7 +112,6 @@ export class PersistedFileListComponent implements OnChanges, OnDestroy {
     }
 
     private _loadFiles() {
-        console.log("presisted list load files");
         this.authFailed = false;
         this.containerNotFound = false;
         if (this.hasAutoStorage) {

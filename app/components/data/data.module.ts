@@ -4,12 +4,14 @@ import { commonModules } from "app/common";
 import { FileBrowseModule } from "app/components/file/browse";
 import { FileDetailsModule } from "app/components/file/details";
 import { FileGroupListComponent, FileGroupPreviewComponent } from "./browse";
-import { DataDefaultComponent, DataDetailsComponent } from "./details";
+import { DataContainerFilesComponent, DataDefaultComponent, DataDetailsComponent } from "./details";
 import { StorageErrorDisplayComponent } from "./details/errors";
 import { DataHomeComponent } from "./home";
 
-const components = [DataHomeComponent, DataDefaultComponent, DataDetailsComponent,
-    FileGroupListComponent, FileGroupPreviewComponent, StorageErrorDisplayComponent];
+const components = [
+    DataContainerFilesComponent, DataHomeComponent, DataDefaultComponent, DataDetailsComponent,
+    FileGroupListComponent, FileGroupPreviewComponent, StorageErrorDisplayComponent,
+];
 
 @NgModule({
     declarations: components,

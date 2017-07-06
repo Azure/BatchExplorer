@@ -1,8 +1,5 @@
-import { List } from "immutable";
-
-import { ListProp, Model, Prop, Record } from "app/core";
+import { Model, Prop, Record } from "app/core";
 import { ContainerLease, ContainerLeaseAttributes } from "./container-lease";
-import { Metadata, MetadataAttributes } from "./metadata";
 
 export interface BlobContainerAttributes {
     id: string;

@@ -3,7 +3,7 @@ import { Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Observable, Subscription } from "rxjs";
 
-// import { BackgroundTaskService } from "app/components/base/background-task";
+import { BackgroundTaskService } from "app/components/base/background-task";
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListItemStatus } from "app/components/base/quick-list";
 import { ListOrTableBase } from "app/components/base/selectable-list";
@@ -11,7 +11,7 @@ import { BlobContainer, LeaseStatus } from "app/models";
 import { ListContainerParams, StorageService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
-// import { DeleteApplicationAction } from "../action";
+import { DeleteContainerAction } from "../action";
 
 @Component({
     selector: "bl-file-group-list",
@@ -36,10 +36,9 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
     private _autoStorageSub: Subscription;
     private _filter: Filter;
 
-    // private taskManager: BackgroundTaskService
-
     constructor(
         router: Router,
+        private taskManager: BackgroundTaskService,
         private storageService: StorageService) {
 
         super();
@@ -94,13 +93,12 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
     }
 
     public deleteSelected() {
-        // TODO
-        // this.taskManager.startTask("", (backgroundTask) => {
-        //     const task = new DeleteApplicationAction(this.applicationService, this.selectedItems);
-        //     task.start(backgroundTask);
+        this.taskManager.startTask("", (backgroundTask) => {
+            const task = new DeleteContainerAction(this.storageService, this.selectedItems);
+            task.start(backgroundTask);
 
-        //     return task.waitingDone;
-        // });
+            return task.waitingDone;
+        });
     }
 
     private _setContainerFilter(filter: Filter) {
