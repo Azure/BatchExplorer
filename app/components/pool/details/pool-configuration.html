@@ -23,7 +23,8 @@
             <bl-text-property label="Resize timeout" [value]="decorator.resizeTimeout"></bl-text-property>
             <bl-text-property label="Task scheduling policy" [value]="decorator.taskSchedulingPolicy.nodeFillType"></bl-text-property>
             <bl-text-property label="Url" [value]="decorator.url"></bl-text-property>
-            <bl-text-property label="User accounts" [value]="decorator.userAccounts"></bl-text-property>
+            <bl-text-property label="User accounts" [value]="decorator.userAccounts" *ngIf="decorator.userAccounts"></bl-text-property>
+            <bl-text-property label="Application licenses" [value]="decorator.applicationLicenses" *ngIf="decorator.applicationLicenses"></bl-text-property>
             <bl-text-property label="Network subnet" [value]="decorator.networkSubnetId" *ngIf="decorator.networkSubnetId"></bl-text-property>
 		</bl-property-group>
 

@@ -11,8 +11,10 @@ import { TaskBaseModule } from "app/components/task/base";
 import { UserAccountModule } from "./user-account";
 
 import {
+    AppLicensePickerComponent,
     AutoscaleFormulaPickerComponent,
     DeletePoolDialogComponent,
+    LicenseEulaDialogComponent,
     OsOfferTileComponent,
     PoolCreateBasicDialogComponent,
     PoolOsPickerComponent,
@@ -22,9 +24,10 @@ import {
 } from "app/components/pool/action";
 
 const components = [
-    AutoscaleFormulaPickerComponent, DeletePoolDialogComponent, PoolAdvancedFilterComponent,
-    PoolCreateBasicDialogComponent, PoolHomeComponent, PoolListComponent, PoolOsPickerComponent,
-    PoolScalePickerComponent, VmSizePickerComponent, PoolResizeDialogComponent, OsOfferTileComponent,
+    AppLicensePickerComponent, AutoscaleFormulaPickerComponent, DeletePoolDialogComponent,
+    LicenseEulaDialogComponent, OsOfferTileComponent, PoolAdvancedFilterComponent, PoolCreateBasicDialogComponent,
+    PoolHomeComponent, PoolListComponent, PoolOsPickerComponent, PoolScalePickerComponent, VmSizePickerComponent,
+    PoolResizeDialogComponent,
 ];
 
 const modules = [
@@ -37,6 +40,7 @@ const modules = [
     imports: [...modules],
     entryComponents: [
         DeletePoolDialogComponent,
+        LicenseEulaDialogComponent,
         PoolCreateBasicDialogComponent,
         PoolResizeDialogComponent,
     ],

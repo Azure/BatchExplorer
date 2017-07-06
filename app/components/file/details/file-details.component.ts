@@ -91,7 +91,7 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     @autobind()
     public openExternal() {
         return this.fileLoader.cache().cascade((pathToFile) => {
-            this.shell.openExternal(pathToFile);
+            this.shell.openItem(pathToFile);
         });
     }
 

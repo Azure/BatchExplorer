@@ -4,6 +4,7 @@ import {
 } from "@angular/core";
 import { Observable } from "rxjs";
 
+import { log } from "app/utils";
 import "./button.scss";
 
 export type ButtonType = "square" | "round" | "wide";
@@ -106,7 +107,8 @@ export class ButtonComponent implements OnChanges {
                 this.status = SubmitStatus.Succeeded;
                 this.done();
             },
-            error: () => {
+            error: (e) => {
+                log.error("Error while executing button action", e);
                 this.status = SubmitStatus.Failed;
                 this.done();
             },

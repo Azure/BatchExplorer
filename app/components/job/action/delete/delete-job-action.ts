@@ -8,18 +8,18 @@ import { LongRunningDeleteAction } from "app/services/core";
 
 // todo: refactor me along with WaitForDeleteJobPollTask
 export class DeleteJobAction extends LongRunningDeleteAction {
-    constructor(private JobService: JobService, jobIds: string[]) {
+    constructor(private jobService: JobService, jobIds: string[]) {
         super("job", jobIds);
     }
 
     public deleteAction(id: string) {
-        return this.JobService.delete(id);
+        return this.jobService.delete(id);
     }
 
     protected waitForDelete(id: string, taskManager?: BackgroundTaskService) {
-        this.JobService.getOnce(id).subscribe({
+        this.jobService.getOnce(id).subscribe({
             next: (job: Job) => {
-                const task = new WaitForDeleteJobPoller(this.JobService, id);
+                const task = new WaitForDeleteJobPoller(this.jobService, id);
                 if (taskManager) {
                     taskManager.startTask(`Deleting Job '${id}'`, (bTask) => {
                         return task.start(bTask.progress);

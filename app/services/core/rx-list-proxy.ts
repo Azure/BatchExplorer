@@ -39,7 +39,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
                 }
                 return List<TEntity>(keys.map((x) => items.get(x)));
             });
-        }).switch().distinctUntilChanged().takeUntil(this.isDisposed);
+        }).switch().distinctUntilChanged((a, b) => a.equals(b)).takeUntil(this.isDisposed);
 
         this.deleted.subscribe((deletedKey) => {
             this._itemKeys.next(OrderedSet<string>(this._itemKeys.value.filter((key) => key !== deletedKey)));
