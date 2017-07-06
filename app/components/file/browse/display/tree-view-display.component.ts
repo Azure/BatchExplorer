@@ -74,7 +74,7 @@ export class TreeViewDisplayComponent implements OnInit {
      */
     public loadNodes(treeModel: TreeModel, treeNode: TreeNode) {
         let currTreeNode: TreeNodeData = treeNode.data;
-        const pathToLoad = currTreeNode.fileName ? `${currTreeNode.fileName}\\` : "";
+        const pathToLoad = currTreeNode.fileName ? `${currTreeNode.fileName}\/` : "";
         let filesObs = this.loadPath(pathToLoad, false);
         currTreeNode.state = NodeState.LOADING_DIRECTORY;
         filesObs.subscribe((files) => {
@@ -200,10 +200,18 @@ function prettyFileSize(size: string): string {
  * @param file
  */
 function getNameFromPath(file: File): string {
-    let tokens = file.name.split("\\");
+    let tokens = standardizeFilePath(file.name).split("\/");
     let displayName = tokens[tokens.length - 1];
     return (file.isDirectory) ?
         displayName : `${displayName} (${prettyFileSize(file.properties.contentLength.toString())})`;
+}
+
+/**
+ * Replace all '\' with '/' in given path
+ * @param filePath
+ */
+function standardizeFilePath(filePath: string): string {
+    return filePath.replace(/\\/g, "/");
 }
 
 /**
@@ -212,7 +220,7 @@ function getNameFromPath(file: File): string {
 function mapFileToTree(file: File): TreeNodeData {
     return {
         name: getNameFromPath(file),
-        fileName: file.name,
+        fileName: standardizeFilePath(file.name),
         hasChildren: file.isDirectory,
         children: [] as TreeNodeData[],
         state: file.isDirectory ? NodeState.COLLAPSED_DIRECTORY : NodeState.FILE,

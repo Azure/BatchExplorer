@@ -2,7 +2,7 @@ import { Component, Input, OnChanges } from "@angular/core";
 import { List } from "immutable";
 
 import { File, Node } from "app/models";
-import { FileService, NodeFileListParams } from "app/services";
+import { FileService, NodeFileListParams, TreeComponentService } from "app/services";
 import { RxListProxy } from "app/services/core";
 
 const folderFriendlyName = {
@@ -34,7 +34,7 @@ export class NodeFileBrowseComponent implements OnChanges {
     public folders: List<Folder>;
     public currentFolder: string = null;
 
-    constructor(private fileService: FileService) {
+    constructor(private treeComponentService: TreeComponentService, private fileService: FileService) {
         this.data = this.fileService.listFromComputeNode(null, null, false);
         this.data.items.subscribe((files) => {
             this.folders = List<Folder>(files.map(x => {
@@ -49,6 +49,7 @@ export class NodeFileBrowseComponent implements OnChanges {
     public ngOnChanges(inputs) {
         if (inputs.poolId && inputs.node) {
             this.currentFolder = null;
+            this.treeComponentService.treeNodes = [];
             this.data.updateParams({ poolId: this.poolId, nodeId: this.node.id });
             this.data.fetchNext(true);
         }

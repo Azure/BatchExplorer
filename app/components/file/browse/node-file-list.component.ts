@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, SimpleChange, ViewChild } from "@angular/c
 import { LoadingStatus } from "app/components/base/loading";
 import { TreeViewDisplayComponent, buildTreeRootFilter } from "app/components/file/browse/display";
 import { File, ServerError } from "app/models";
-import { FileService, NodeFileListParams } from "app/services";
+import { FileService, NodeFileListParams, TreeComponentService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter, Property } from "app/utils/filter-builder";
 import { autobind } from "core-decorators";
@@ -46,7 +46,7 @@ export class NodeFileListComponent implements OnChanges {
 
     private _fileProxyMap: StringMap<RxListProxy<NodeFileListParams, File>> = {};
 
-    constructor(private fileService: FileService) { }
+    constructor(private treeComponentService: TreeComponentService, private fileService: FileService) { }
 
     public ngOnChanges(inputs) {
         if (inputs.poolId || inputs.nodeId || inputs.folder || inputs.filter) {
@@ -57,7 +57,7 @@ export class NodeFileListComponent implements OnChanges {
 
     @autobind()
     public refresh(): Observable<any> {
-        if ((this.poolId && this.nodeId)) {
+        if (this.poolId && this.nodeId) {
             const filterProp = this.filter as Property;
             const quickSearch = filterProp && filterProp.value;
             const loadPath = [this.folder, quickSearch].filter(x => Boolean(x)).join("/");
@@ -98,9 +98,11 @@ export class NodeFileListComponent implements OnChanges {
     private _initProxyMap(inputs) {
         let poolIdInput: SimpleChange = inputs.poolId;
         let nodeIdInput: SimpleChange = inputs.nodeId;
-        if (poolIdInput && poolIdInput.previousValue && poolIdInput.currentValue !== poolIdInput.previousValue ||
-            nodeIdInput && nodeIdInput.previousValue && nodeIdInput.currentValue !== nodeIdInput.previousValue) {
+        if ((poolIdInput && poolIdInput.previousValue && poolIdInput.currentValue !== poolIdInput.previousValue) ||
+            (nodeIdInput && nodeIdInput.previousValue && nodeIdInput.currentValue !== nodeIdInput.previousValue)) {
+            this.treeComponentService.treeNodes = [];
             this._fileProxyMap = {} as StringMap<RxListProxy<NodeFileListParams, File>>;
+            this.moreFileMap = {} as StringMap<boolean>;
         }
     }
 }

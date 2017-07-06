@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, SimpleChange, ViewChild } from "@angular/c
 import { LoadingStatus } from "app/components/base/loading";
 import { TreeViewDisplayComponent, buildTreeRootFilter } from "app/components/file/browse/display";
 import { File, Node, NodeState, ServerError, Task } from "app/models";
-import { FileService, NodeService, TaskFileListParams, TaskService } from "app/services";
+import { FileService, NodeService, TaskFileListParams, TaskService, TreeComponentService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Constants } from "app/utils";
 import { Filter, Property } from "app/utils/filter-builder";
@@ -39,7 +39,7 @@ export class TaskFileListComponent implements OnChanges {
 
     @ViewChild(TreeViewDisplayComponent)
     public treeDisplay: TreeViewDisplayComponent;
-
+    public moreFileMap: StringMap<boolean> = {};
     public LoadingStatus = LoadingStatus;
     public fileCleanupOperation: boolean;
     public nodeNotFound: boolean;
@@ -52,6 +52,7 @@ export class TaskFileListComponent implements OnChanges {
     private _fileProxyMap: StringMap<RxListProxy<TaskFileListParams, File>> = {};
 
     constructor(
+        private treeComponentService: TreeComponentService,
         private fileService: FileService,
         private nodeService: NodeService,
         private taskService: TaskService) { }
@@ -86,6 +87,9 @@ export class TaskFileListComponent implements OnChanges {
             const jobId = this.jobId;
             const taskId = this.taskId;
             this._fileProxyMap[path] = this.fileService.listFromTask(jobId, taskId, false, options);
+            this._fileProxyMap[path].hasMore.subscribe((hasMore) => {
+                this.moreFileMap[path] = hasMore;
+            });
             this._fileProxyMap[path].status.subscribe((status) => {
                 this.status.next(status);
             });
@@ -133,9 +137,11 @@ export class TaskFileListComponent implements OnChanges {
     private _initProxyMap(inputs) {
         let jobIdInput: SimpleChange = inputs.jobId;
         let taskIdInput: SimpleChange = inputs.taskId;
-        if (jobIdInput && jobIdInput.previousValue && jobIdInput.currentValue !== jobIdInput.previousValue ||
-            taskIdInput && taskIdInput.previousValue && taskIdInput.currentValue !== taskIdInput.previousValue) {
+        if ((jobIdInput && jobIdInput.previousValue && jobIdInput.currentValue !== jobIdInput.previousValue) ||
+            (taskIdInput && taskIdInput.previousValue && taskIdInput.currentValue !== taskIdInput.previousValue)) {
+            this.treeComponentService.treeNodes = [];
             this._fileProxyMap = {} as StringMap<RxListProxy<TaskFileListParams, File>>;
+            this.moreFileMap = {} as StringMap<boolean>;
         }
     }
 
