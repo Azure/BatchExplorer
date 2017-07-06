@@ -174,11 +174,15 @@ describe("RxBatchListProxy", () => {
         expect(hasMore).toBe(false);
     }));
 
-    it("Should remove item from the list when the cache call onItemDeleted", fakeAsync(() => {
+    fit("Should remove item from the list when the cache call onItemDeleted", fakeAsync(() => {
         proxy.fetchNext();
         tick();
-
+        const subSpy = jasmine.createSpy("items sub");
+        proxy.items.subscribe(subSpy);
+        expect(subSpy).toHaveBeenCalledTimes(1); // Should initialy get called
         cache.deleteItemByKey("2");
+        expect(subSpy).toHaveBeenCalledTimes(2); // Should not have been called more than once
+
         const newList = [
             { id: "1", state: "active", name: "Fake1" },
             { id: "3", state: "running", name: "Fake3" },
