@@ -4,24 +4,24 @@ import { isPresent } from "../object";
 /**
  * Validator that requires controls to have a value of a min value.
  */
-export function min(min: number): ValidatorFn {
+export function min(val: number): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } => {
         if (isPresent(Validators.required(control))) { return null; }
 
         let v: number = control.value;
-        return v >= min ? null : { min: true };
+        return v >= val ? null : { min: true };
     };
 }
 
 /**
  * Validator that requires controls to have a value of a max value.
  */
-export function max(max: number): ValidatorFn {
+export function max(val: number): ValidatorFn {
     return (control: AbstractControl): { [key: string]: any } => {
         if (isPresent(Validators.required(control))) { return null; }
 
         let v: number = control.value;
-        return v <= max ? null : { max: true };
+        return v <= val ? null : { max: true };
     };
 }
 

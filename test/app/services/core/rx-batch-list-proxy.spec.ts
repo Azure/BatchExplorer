@@ -174,7 +174,7 @@ describe("RxBatchListProxy", () => {
         expect(hasMore).toBe(false);
     }));
 
-    fit("Should remove item from the list when the cache call onItemDeleted", fakeAsync(() => {
+    it("Should remove item from the list when the cache call onItemDeleted", fakeAsync(() => {
         proxy.fetchNext();
         tick();
         const subSpy = jasmine.createSpy("items sub");
