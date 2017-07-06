@@ -270,8 +270,8 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
             default:
         }
         index = (index + items.length) % items.length;
-        const item = items[index];
-        this.focusedItem.next(item.key);
+        const newItem = items[index];
+        this.focusedItem.next(newItem.key);
     }
 
     /**

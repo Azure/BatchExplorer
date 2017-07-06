@@ -116,8 +116,8 @@ export class FileLoader {
 
     public download(dest: string): Observable<string> {
         if (this._download) {
-            const obs = Observable.fromPromise(this._fs.ensureDir(path.dirname(dest)));
-            return obs.flatMap(() => this._download(dest)).map(x => dest).share();
+            const checkDirObs = Observable.fromPromise(this._fs.ensureDir(path.dirname(dest)));
+            return checkDirObs.flatMap(() => this._download(dest)).map(x => dest).share();
         }
         const obs = this.content().concatMap((result) => {
             return this._fs.saveFile(dest, result.content);
