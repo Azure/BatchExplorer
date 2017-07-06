@@ -1,4 +1,4 @@
-import { Component, OnChanges, OnDestroy, OnInit, ViewChild, ViewContainerRef, forwardRef } from "@angular/core";
+import { Component, OnInit, ViewChild, ViewContainerRef, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
@@ -20,7 +20,7 @@ import "./app-license-picker.scss";
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => AppLicensePickerComponent), multi: true },
     ],
 })
-export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, OnChanges, OnDestroy, Validator {
+export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, Validator {
     @ViewChild("licenseTable")
     public table: TableComponent;
 
@@ -28,7 +28,7 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
 
     private _propagateChange: (value: string[]) => void = null;
     private _propagateTouched: (value: boolean) => void = null;
-    private _pickedLicenses: Map<string, boolean> = Map<string, any>({});
+    private _pickedLicenses: Map<string, boolean> = Map<string, boolean>({});
     private _eulaRead: boolean = false;
 
     constructor(
@@ -52,14 +52,6 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
                 cost: "2c USD",
             }),
         ]);
-    }
-
-    public ngOnChanges(inputs) {
-        /** no-op currently */
-    }
-
-    public ngOnDestroy() {
-        /** no-op currently */
     }
 
     public writeValue(value: any) {
@@ -101,11 +93,7 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
 
     public eulaCheck(event: MdCheckboxChange) {
         this._eulaRead = event.checked;
-        if (this._propagateChange) {
-            setTimeout(() => {
-                this._propagateChange(this._getPicked());
-            });
-        }
+        this._fireChangeEvent();
     }
 
     private _getPicked(): string[] {
@@ -113,15 +101,18 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
     }
 
     private _emitChangeAndTouchedEvents() {
-        if (this._propagateChange) {
-            setTimeout(() => {
-                this._propagateChange(this._getPicked());
-            });
-        }
-
+        this._fireChangeEvent();
         if (this._propagateTouched) {
             setTimeout(() => {
                 this._propagateTouched(true);
+            });
+        }
+    }
+
+    private _fireChangeEvent() {
+        if (this._propagateChange) {
+            setTimeout(() => {
+                this._propagateChange(this._getPicked());
             });
         }
     }
