@@ -30,6 +30,7 @@ import { QuickListModule } from "./quick-list";
 import { RefreshButtonComponent } from "./refresh-btn";
 import { ScrollableModule } from "./scrollable";
 import { SidebarModule } from "./sidebar";
+import { SimpleDialogComponent } from "./simple-dialog";
 import { TableModule } from "./table";
 import { TabsModule } from "./tabs";
 import { TagsModule } from "./tags";
@@ -67,6 +68,7 @@ const components = [
     IconComponent,
     ListAndShowLayoutComponent,
     SimpleLoadingComponent,
+    SimpleDialogComponent,
     LoadingComponent,
     RefreshButtonComponent,
     ListLoadingComponent,

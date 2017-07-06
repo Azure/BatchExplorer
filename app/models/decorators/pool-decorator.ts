@@ -21,7 +21,6 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     public displayName: string;
     public enableAutoScale: string;
     public enableInterNodeCommunication: string;
-    public id: string;
     public lastModified: string;
     public maxTasksPerNode: string;
     public resizeError: any;
@@ -40,14 +39,14 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     public poolOsIcon: string;
     public lastResized: string;
     public userAccounts: string;
-
     public dedicatedNodes: string;
     public lowPriorityNodes: string;
     public networkSubnetId: string;
+    public applicationLicenses: string;
 
-    constructor(private pool?: Pool) {
+    constructor(private pool: Pool) {
         super(pool);
-        this.id = this.stringField(pool.id);
+
         this.displayName = this.stringField(pool.displayName);
         this.allocationState = this.stateField(pool.allocationState);
         this.allocationStateTransitionTime = this.dateField(pool.allocationStateTransitionTime);
@@ -88,6 +87,7 @@ export class PoolDecorator extends DecoratorBase<Pool> {
         this.applicationPackageReferences = List(pool.applicationPackageReferences);
         this.certificateReferences = List(pool.certificateReferences);
         this.networkSubnetId = pool.networkConfiguration && pool.networkConfiguration.subnetId;
+        this.applicationLicenses = pool.applicationLicenses.join(", ");
     }
 
     private _computePoolOs(): string {
