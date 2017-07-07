@@ -3,8 +3,8 @@ import { FormControl } from "@angular/forms";
 import { autobind } from "core-decorators";
 
 import { Filter, FilterBuilder } from "app/utils/filter-builder";
-// import { SidebarManager } from "../../base/sidebar";
-// import { ApplicationCreateDialogComponent } from "../action";
+import { SidebarManager } from "../../base/sidebar";
+import { FileGroupCreateFormComponent } from "../action";
 
 @Component({
     selector: "bl-data-home",
@@ -15,7 +15,7 @@ export class DataHomeComponent {
     public filter: Filter = FilterBuilder.none();
     public quickFilter: Filter = FilterBuilder.none();
 
-    constructor(/*private sidebarManager: SidebarManager*/) {
+    constructor(private sidebarManager: SidebarManager) {
         this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
             if (query === "") {
                 this.quickFilter = FilterBuilder.none();
@@ -28,8 +28,8 @@ export class DataHomeComponent {
     }
 
     @autobind()
-    public addApplication() {
-        // this.sidebarManager.open("add-file-group", ApplicationCreateDialogComponent);
+    public addFileGroup() {
+        this.sidebarManager.open("add-file-group", FileGroupCreateFormComponent);
     }
 
     public advancedFilterChanged(filter: Filter) {

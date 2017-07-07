@@ -32,8 +32,8 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
     }
     public get filter(): Filter { return this._filter; }
 
-    private _onJobAddedSub: Subscription;
     private _autoStorageSub: Subscription;
+    private _onGroupAddedSub: Subscription;
     private _filter: Filter;
 
     constructor(
@@ -53,7 +53,7 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
         });
 
         this.status = this.data.status;
-        this._onJobAddedSub = this.storageService.onFileGroupAdded.subscribe((fileGroupId: string) => {
+        this._onGroupAddedSub = this.storageService.onFileGroupAdded.subscribe((fileGroupId: string) => {
             this.data.loadNewItem(storageService.getContainerOnce(fileGroupId));
         });
     }
@@ -64,8 +64,8 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
 
     public ngOnDestroy() {
         this.data.dispose();
+        this._onGroupAddedSub.unsubscribe();
         this._autoStorageSub.unsubscribe();
-        this._onJobAddedSub.unsubscribe();
     }
 
     @autobind()

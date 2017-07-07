@@ -3,7 +3,7 @@ import { Observable, Subject } from "rxjs";
 
 import { BlobContainer, File, ServerError } from "app/models";
 import { FileSystemService } from "app/services";
-import { Constants } from "app/utils";
+import { Constants, log } from "app/utils";
 import {
     DataCache,
     RxEntityProxy,
@@ -148,9 +148,9 @@ export class StorageService {
             },
             download: (dest: string) => {
                 return this._callStorageClient((client) => {
-                    return StorageUtils.getSafeContainerName(jobId).then((safeContainerName) => {
-                        const blobName = `${taskId}/${outputKind}/${filename}`;
-                        return client.getBlobToLocalFile(safeContainerName, blobName, dest);
+                    return container.then((containerName) => {
+                        const pathToBlob = `${blobPrefix || ""}${blobName}`;
+                        return client.getBlobToLocalFile(containerName, pathToBlob, dest);
                     });
                 });
             },
@@ -212,8 +212,23 @@ export class StorageService {
         });
     }
 
-    public getContainerOnce(containerName: string, options: any = {}): Observable<BlobContainer> {
-        return getOnceProxy(this.getContainerProperties(containerName, options));
+    public getContainerOnce(container: string, options: any = {}): Observable<BlobContainer> {
+        return getOnceProxy(this.getContainerProperties(container, options));
+    }
+
+    /**
+     * Marks the specified container for deletion if it exists. The container and any blobs contained
+     * within it are later deleted during garbage collection.
+     */
+    public deleteContainer(container: string, options: any = {}): Observable<any> {
+        let observable = this._callStorageClient((client) => client.deleteContainer(container, options));
+        observable.subscribe({
+            error: (error) => {
+                log.error("Error deleting container: " + container, Object.assign({}, error));
+            },
+        });
+
+        return observable;
     }
 
     /**

@@ -1,6 +1,10 @@
 import { NgModule } from "@angular/core";
 
 import { commonModules } from "app/common";
+import {
+    DeleteContainerDialogComponent,
+    FileGroupCreateFormComponent,
+} from "app/components/data/action";
 import { FileBrowseModule } from "app/components/file/browse";
 import { FileDetailsModule } from "app/components/file/details";
 import { FileGroupListComponent, FileGroupPreviewComponent } from "./browse";
@@ -10,7 +14,8 @@ import { DataHomeComponent } from "./home";
 
 const components = [
     DataContainerFilesComponent, DataHomeComponent, DataDefaultComponent, DataDetailsComponent,
-    FileGroupListComponent, FileGroupPreviewComponent, StorageErrorDisplayComponent,
+    FileGroupCreateFormComponent, DeleteContainerDialogComponent, FileGroupListComponent, FileGroupPreviewComponent,
+    StorageErrorDisplayComponent,
 ];
 
 @NgModule({
@@ -18,9 +23,8 @@ const components = [
     exports: components,
     imports: [ FileBrowseModule, FileDetailsModule, ...commonModules ],
     entryComponents: [
-        // ApplicationCreateDialogComponent,
-        // ApplicationEditDialogComponent,
-        // DeleteApplicationDialogComponent,
+        DeleteContainerDialogComponent,
+        FileGroupCreateFormComponent,
     ],
 })
 export class DataModule {

@@ -47,7 +47,9 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
         });
 
         this.data.deleted.subscribe((key) => {
+            console.log("DataDetailsComponent :: DELETED: ", key, this.containerId);
             if (this.containerId === key) {
+                console.log("DataDetailsComponent :: Navigating to /data");
                 this.router.navigate(["/data"]);
             }
         });

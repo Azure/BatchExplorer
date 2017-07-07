@@ -9,22 +9,17 @@ export class WaitForDeletePoller {
     @autobind()
     public start(progress: BehaviorSubject<any>): Observable<any> {
         const obs = new AsyncSubject();
-        const errorCallback = (e) => {
-            progress.next(100);
-            clearInterval(interval);
-            obs.complete();
-        };
-
         let interval = setInterval(() => {
             this.getFunction.fetch().subscribe({
-                error: errorCallback,
+                error: (e) => {
+                    progress.next(100);
+                    clearInterval(interval);
+                    obs.complete();
+                },
             });
         }, 5000);
 
         progress.next(-1);
-        this.getFunction.item.subscribe({
-            error: errorCallback,
-        });
 
         return obs;
     }

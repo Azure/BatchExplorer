@@ -115,13 +115,23 @@ export class TerminateButtonComponent extends BaseButton {
 @Component({
     selector: "bl-delete-button",
     template: `
-        <bl-button color="light" [action]="action" [disabled]="!enabled" title="Delete" icon="fa fa-trash-o">
+        <bl-button color="light" [action]="action" [disabled]="!enabled" [title]="title" icon="fa fa-trash-o">
         </bl-button>
     `,
 })
 export class DeleteButtonComponent extends BaseButton {
     @Input()
     public entity: any;
+
+    @Input()
+    public set title(value: string) {
+        this._title = value;
+    }
+    public get title() {
+        return this._title ? this._title : "Delete";
+    }
+
+    private _title: string;
 
     public get enabled() {
         if (this.entity instanceof Job) {

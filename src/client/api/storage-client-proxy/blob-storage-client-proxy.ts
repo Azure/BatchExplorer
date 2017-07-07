@@ -210,4 +210,28 @@ export class BlobStorageClientProxy {
             });
         });
     }
+
+    /**
+     * Marks the specified container for deletion. The container and any blobs contained within
+     * it are later deleted during garbage collection.
+     * http://azure.github.io/azure-storage-node/BlobService.html#deleteContainer__anchor
+     *
+     * @param {string} container - Name of the storage container
+     * @param {StorageRequestOptions} options - Optional request parameters
+     */
+    public deleteContainer(container: string, options?: StorageRequestOptions)
+        : Promise<BlobStorageResult> {
+
+        return new Promise((resolve, reject) => {
+            this._blobService.deleteContainer(container, options, (error, response) => {
+                if (error) {
+                    console.log("delete container error: ", error);
+                    reject(error);
+                } else {
+                    console.log("delete container ok: ", response);
+                    resolve();
+                }
+            });
+        });
+    }
 }
