@@ -3,13 +3,13 @@ import { FormBuilder, Validators } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
-import { NotificationService } from "app/components/base/notifications";
+// import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { DynamicForm } from "app/core";
 import { Job } from "app/models";
 import { JobCreateDto } from "app/models/dtos";
 import { createJobFormToJsonData, jobToFormModel } from "app/models/forms";
-import { StorageService } from "app/services";
+// import { StorageService } from "app/services";
 import { Constants } from "app/utils";
 
 @Component({
@@ -20,8 +20,8 @@ export class FileGroupCreateFormComponent extends DynamicForm<Job, JobCreateDto>
     constructor(
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<FileGroupCreateFormComponent>,
-        private storageService: StorageService,
-        private notificationService: NotificationService) {
+        /*private storageService: StorageService,
+        private notificationService: NotificationService*/) {
         super(JobCreateDto);
 
         const validation = Constants.forms.validation;

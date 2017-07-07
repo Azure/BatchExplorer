@@ -22,7 +22,7 @@ export interface ListBlobParams {
 }
 
 export interface GetContainerParams {
-    container: string;
+    id: string;
 }
 
 export interface ListContainerParams {
@@ -205,9 +205,9 @@ export class StorageService {
         return new RxStorageEntityProxy<GetContainerParams, BlobContainer>(BlobContainer, this.storageClient, {
             cache: () => this._containerCache,
             getFn: (client, params) => {
-                return client.getContainerProperties(params.container, this.ncjFileGroupPrefix, options);
+                return client.getContainerProperties(params.id, this.ncjFileGroupPrefix, options);
             },
-            initialParams: { container: container },
+            initialParams: { id: container },
             logIgnoreError: storageIgnoredErrors,
         });
     }

@@ -4,6 +4,7 @@ import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 import { LoadingStatus } from "app/components/base/loading";
 import { ServerError } from "app/models";
 import { PollObservable } from "app/services/core";
+import { log } from "app/utils";
 import { HttpCode } from "app/utils/constants";
 import { RxProxyBase, RxProxyBaseConfig } from "./rx-proxy-base";
 
@@ -64,7 +65,13 @@ export abstract class RxEntityProxy<TParams, TEntity> extends RxProxyBase<TParam
                 if (error.status === HttpCode.NotFound) {
                     this._itemKey.next(null);
                     const queryKey = this.params[this.cache.uniqueField];
-                    this.cache.deleteItemByKey(queryKey);
+                    if (queryKey) {
+                        this.cache.deleteItemByKey(queryKey);
+                    } else {
+                        // tslint:disable:max-line-length
+                        const paramsString = Object.keys(this.params).join(",");
+                        log.warn(`Unable to find unique key for cached item. Property: ${this.cache.uniqueField}, with params: ${paramsString}. The property must exist in the params collection.`);
+                    }
                 }
             },
         });

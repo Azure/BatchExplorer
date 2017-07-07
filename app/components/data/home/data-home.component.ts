@@ -29,7 +29,7 @@ export class DataHomeComponent {
 
     @autobind()
     public addFileGroup() {
-        this.sidebarManager.open("add-file-group", FileGroupCreateFormComponent);
+        this.sidebarManager.open("Add a new file group", FileGroupCreateFormComponent);
     }
 
     public advancedFilterChanged(filter: Filter) {
