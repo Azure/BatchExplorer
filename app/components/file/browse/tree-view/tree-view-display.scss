@@ -1,5 +1,7 @@
+@import "app/styles/variables";
+
 .node-content-wrapper, .tree-children {
-    color: #003153;
+    color: $black;
     font-size: 14px;
 }
 
@@ -16,22 +18,23 @@
 }
 
 .node-wrapper.tree-node-spin .toggle-children-placeholder:before, .node-wrapper.tree-node-spin .toggle-children:before {
-    content: "\f110";
+    content: "\f110"; // fa-spinner icon
     position: absolute;
     font-family: FontAwesome;
     cursor: default;
+    color: $black;
 }
 
 .node-wrapper.tree-node-file .toggle-children-placeholder:before {
-    content: "\f1c9";
+    content: "\f15b"; // fa-file icon
     position: absolute;
     font-family: FontAwesome;
     cursor: default;
+    color: $dove-grey;
 }
 
 .toggle-children, .toggle-children-placeholder {
     z-index: 1;
-    color: #003153;
     font-size: 14px;
     background: none!important;
     transform: none!important;
@@ -42,15 +45,17 @@
 }
 
 .toggle-children-wrapper-collapsed .toggle-children:before, .node-wrapper.tree-node-collapsed .toggle-children-placeholder:before {
-    content: "\f114";
+    content: "\f07b"; // fa-folder icon
     position: absolute;
     font-family: FontAwesome;
     cursor: default;
+    color: #F8D979;
 }
 
 .toggle-children-wrapper-expanded .toggle-children:before, .node-wrapper.tree-node-expanded .toggle-children-placeholder:before {
-    content: "\f115";
+    content: "\f07c"; // fa-folder-open icon
     position: absolute;
     font-family: FontAwesome;
     cursor: default;
+    color: #F8D979;
 }

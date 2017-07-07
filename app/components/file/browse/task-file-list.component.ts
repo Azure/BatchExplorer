@@ -1,6 +1,6 @@
-import { Component, Input, OnChanges, SimpleChange, ViewChild } from "@angular/core";
+import { Component, Input, OnChanges, OnDestroy, SimpleChange, ViewChild } from "@angular/core";
 import { LoadingStatus } from "app/components/base/loading";
-import { TreeViewDisplayComponent, buildTreeRootFilter } from "app/components/file/browse/display";
+import { TreeViewDisplayComponent, buildTreeRootFilter } from "app/components/file/browse/tree-view";
 import { File, Node, NodeState, ServerError, Task } from "app/models";
 import { FileService, NodeService, TaskFileListParams, TaskService, TreeComponentService } from "app/services";
 import { RxListProxy } from "app/services/core";
@@ -24,7 +24,7 @@ const validStates = [
     selector: "bl-task-file-list",
     templateUrl: "file-list.html",
 })
-export class TaskFileListComponent implements OnChanges {
+export class TaskFileListComponent implements OnChanges, OnDestroy {
     /**
      * If set to true it will display the quick list view, if false will use the table view
      */
@@ -62,6 +62,11 @@ export class TaskFileListComponent implements OnChanges {
             this._initProxyMap(inputs);
             this.refresh();
         }
+    }
+
+    public ngOnDestroy(): void {
+        this.status.unsubscribe();
+        this.error.unsubscribe();
     }
 
     @autobind()
@@ -137,9 +142,9 @@ export class TaskFileListComponent implements OnChanges {
     private _initProxyMap(inputs) {
         let jobIdInput: SimpleChange = inputs.jobId;
         let taskIdInput: SimpleChange = inputs.taskId;
-        if ((jobIdInput && jobIdInput.previousValue && jobIdInput.currentValue !== jobIdInput.previousValue) ||
-            (taskIdInput && taskIdInput.previousValue && taskIdInput.currentValue !== taskIdInput.previousValue)) {
+        if (this._hasInputChanged(jobIdInput) || this._hasInputChanged(taskIdInput)) {
             this.treeComponentService.treeNodes = [];
+            this._disposeListProxy();
             this._fileProxyMap = {} as StringMap<RxListProxy<TaskFileListParams, File>>;
             this.moreFileMap = {} as StringMap<boolean>;
         }
@@ -150,5 +155,17 @@ export class TaskFileListComponent implements OnChanges {
         this.nodeInInvalidState = false;
         this.fileCleanupOperation = false;
         this.nodeNotFound = false;
+    }
+
+    private _disposeListProxy() {
+        for (let path in this._fileProxyMap){
+            if (path !== null) {
+                this._fileProxyMap[path].dispose();
+            }
+        }
+    }
+
+    private _hasInputChanged(input: SimpleChange): boolean {
+        return input && input.previousValue && input.currentValue !== input.previousValue;
     }
 }

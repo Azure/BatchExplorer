@@ -1,6 +1,6 @@
 import { IActionMapping } from "angular-tree-component/dist/angular-tree-component";
 
-export enum NodeState {
+export enum FileState {
     COLLAPSED_DIRECTORY,
     EXPANDED_DIRECTORY,
     LOADING_DIRECTORY,
@@ -14,7 +14,7 @@ export class TreeNodeData {
     public fileName: string;
     public hasChildren: boolean;
     public children: TreeNodeData[];
-    public state: NodeState;
+    public state: FileState;
 }
 
 export class TreeNodeOption {

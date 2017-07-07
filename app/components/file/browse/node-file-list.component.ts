@@ -1,19 +1,20 @@
-import { Component, Input, OnChanges, SimpleChange, ViewChild } from "@angular/core";
+import { Component, Input, OnChanges, OnDestroy, SimpleChange, ViewChild } from "@angular/core";
+import { autobind } from "core-decorators";
+import { List } from "immutable";
+import { BehaviorSubject, Observable } from "rxjs";
+
 import { LoadingStatus } from "app/components/base/loading";
-import { TreeViewDisplayComponent, buildTreeRootFilter } from "app/components/file/browse/display";
+import { TreeViewDisplayComponent, buildTreeRootFilter } from "app/components/file/browse/tree-view";
 import { File, ServerError } from "app/models";
 import { FileService, NodeFileListParams, TreeComponentService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter, Property } from "app/utils/filter-builder";
-import { autobind } from "core-decorators";
-import { List } from "immutable";
-import { BehaviorSubject, Observable } from "rxjs";
 
 @Component({
     selector: "bl-node-file-list",
     templateUrl: "file-list.html",
 })
-export class NodeFileListComponent implements OnChanges {
+export class NodeFileListComponent implements OnChanges, OnDestroy {
     public LoadingStatus = LoadingStatus;
 
     /**
@@ -53,6 +54,11 @@ export class NodeFileListComponent implements OnChanges {
             this._initProxyMap(inputs);
             this.refresh();
         }
+    }
+
+    public ngOnDestroy(): void {
+        this.status.unsubscribe();
+        this.error.unsubscribe();
     }
 
     @autobind()
@@ -100,11 +106,23 @@ export class NodeFileListComponent implements OnChanges {
     private _initProxyMap(inputs) {
         let poolIdInput: SimpleChange = inputs.poolId;
         let nodeIdInput: SimpleChange = inputs.nodeId;
-        if ((poolIdInput && poolIdInput.previousValue && poolIdInput.currentValue !== poolIdInput.previousValue) ||
-            (nodeIdInput && nodeIdInput.previousValue && nodeIdInput.currentValue !== nodeIdInput.previousValue)) {
+        if (this._hasInputChanged(poolIdInput) || this._hasInputChanged(nodeIdInput)) {
             this.treeComponentService.treeNodes = [];
+            this._disposeListProxy();
             this._fileProxyMap = {} as StringMap<RxListProxy<NodeFileListParams, File>>;
             this.moreFileMap = {} as StringMap<boolean>;
         }
+    }
+
+    private _disposeListProxy() {
+        for (let path in this._fileProxyMap){
+            if (path !== null) {
+                this._fileProxyMap[path].dispose();
+            }
+        }
+    }
+
+    private _hasInputChanged(input: SimpleChange): boolean {
+        return input && input.previousValue && input.currentValue !== input.previousValue;
     }
 }

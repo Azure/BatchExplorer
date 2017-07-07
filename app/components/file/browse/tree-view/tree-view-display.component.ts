@@ -1,14 +1,15 @@
 import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import { Router } from "@angular/router";
+
 import { TREE_ACTIONS, TreeComponent, TreeModel, TreeNode } from "angular-tree-component";
 import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
-import { NodeState, TreeNodeData } from "app/models/tree-component";
+import { FileState, TreeNodeData } from "app/models/tree-component";
 import { TreeComponentService } from "app/services";
-import { prettyBytes } from "app/utils";
-import { FilterBuilder } from "app/utils/filter-builder";
 import { List } from "immutable";
 import { Observable } from "rxjs/Observable";
+import "./tree-view-display.scss";
+import { mapFileToTree } from "./tree-view-helper";
 
 @Component({
     selector: "bl-tree-view-display",
@@ -36,7 +37,7 @@ export class TreeViewDisplayComponent implements OnInit {
     @Input()
     public hasMoreMap: StringMap<boolean>;
 
-    public NodeState = NodeState;
+    public FileState = FileState;
     public node: TreeNode;
 
     @ViewChild(TreeComponent)
@@ -76,7 +77,7 @@ export class TreeViewDisplayComponent implements OnInit {
         let currTreeNode: TreeNodeData = treeNode.data;
         const pathToLoad = currTreeNode.fileName ? `${currTreeNode.fileName}\/` : "";
         let filesObs = this.loadPath(pathToLoad, false);
-        currTreeNode.state = NodeState.LOADING_DIRECTORY;
+        currTreeNode.state = FileState.LOADING_DIRECTORY;
         filesObs.subscribe((files) => {
             currTreeNode.hasChildren = (files.size > 0);
             let nodes = files.map(mapFileToTree).toArray();
@@ -87,7 +88,7 @@ export class TreeViewDisplayComponent implements OnInit {
                 this.tree.treeModel.update();
             } else {
                 currTreeNode.children = (files.size > 0) ? nodes : [];
-                currTreeNode.state = NodeState.EXPANDED_DIRECTORY;
+                currTreeNode.state = FileState.EXPANDED_DIRECTORY;
                 treeNode.expand();
                 treeModel.update();
             }
@@ -104,18 +105,20 @@ export class TreeViewDisplayComponent implements OnInit {
      * @param $event click event instance
      */
     public onNodeClick(node: TreeNode, $event: any) {
-        let nodeState: NodeState = node.data.state;
-        if (nodeState === NodeState.MORE_BUTTON) {
-            this.loadNodes(node.parent.treeModel, node.parent);
-        } else if (nodeState === NodeState.FILE) {
-            this.router.navigate(this.urlToFile(node.data.fileName));
-            return TREE_ACTIONS.TOGGLE_SELECTED(node.treeModel, node, $event);
-        } else if (nodeState === NodeState.COLLAPSED_DIRECTORY) {
-            this.loadNodes(node.treeModel, node);
-            return TREE_ACTIONS.TOGGLE_EXPANDED(node.treeModel, node, $event);
-        } else if (nodeState === NodeState.EXPANDED_DIRECTORY) {
-            node.data.state = NodeState.COLLAPSED_DIRECTORY;
-            return TREE_ACTIONS.TOGGLE_EXPANDED(node.treeModel, node, $event);
+        let nodeState: FileState = node.data.state;
+        switch (nodeState) {
+            case FileState.MORE_BUTTON:
+                this.loadNodes(node.parent.treeModel, node.parent);
+                break;
+            case FileState.FILE:
+                this.router.navigate(this.urlToFile(node.data.fileName));
+                return TREE_ACTIONS.TOGGLE_SELECTED(node.treeModel, node, $event);
+            case FileState.COLLAPSED_DIRECTORY:
+                this.loadNodes(node.treeModel, node);
+                return TREE_ACTIONS.TOGGLE_EXPANDED(node.treeModel, node, $event);
+            case FileState.EXPANDED_DIRECTORY:
+                node.data.state = FileState.COLLAPSED_DIRECTORY;
+                return TREE_ACTIONS.TOGGLE_EXPANDED(node.treeModel, node, $event);
         }
         return null;
     }
@@ -126,7 +129,7 @@ export class TreeViewDisplayComponent implements OnInit {
     public expandTreeNodes(): void {
         // Keep tree nodes expanded if routing to a different route
         this.tree.treeModel.doForAll((node: TreeNode) => {
-            if (node.data.state === NodeState.EXPANDED_DIRECTORY) {
+            if (node.data.state === FileState.EXPANDED_DIRECTORY) {
                 node.expand();
             }
         });
@@ -162,67 +165,7 @@ export class TreeViewDisplayComponent implements OnInit {
             fileName: pathToReload,
             hasChildren: false,
             children: [] as TreeNodeData[],
-            state: NodeState.MORE_BUTTON,
+            state: FileState.MORE_BUTTON,
         } as TreeNodeData;
     }
-}
-
-/**
- * Max treenodes number
- */
-export const MAX_TREENODES_ITEMS: number = 100;
-
-/**
- * Helper function that builds tree options with maxItems and filter
- * @param path
- */
-export function buildTreeRootFilter(path: string) {
-    let options = {
-        pageSize: MAX_TREENODES_ITEMS,
-    };
-    if (path) {
-        options["filter"] = FilterBuilder.prop("name").startswith(path).toOData();
-    }
-    return options;
-}
-
-/**
- * Helper function that prettify file size
- * @param size raw file size
- */
-function prettyFileSize(size: string): string {
-    // having falsy issues with contentLength = 0
-    return prettyBytes(parseInt(size || "0", 10));
-}
-
-/**
- * Helper function that helps to append pretty file size after file name
- * @param file
- */
-function getNameFromPath(file: File): string {
-    let tokens = standardizeFilePath(file.name).split("\/");
-    let displayName = tokens[tokens.length - 1];
-    return (file.isDirectory) ?
-        displayName : `${displayName} (${prettyFileSize(file.properties.contentLength.toString())})`;
-}
-
-/**
- * Replace all '\' with '/' in given path
- * @param filePath
- */
-function standardizeFilePath(filePath: string): string {
-    return filePath.replace(/\\/g, "/");
-}
-
-/**
- * Helper function that map File to tree node
- */
-function mapFileToTree(file: File): TreeNodeData {
-    return {
-        name: getNameFromPath(file),
-        fileName: standardizeFilePath(file.name),
-        hasChildren: file.isDirectory,
-        children: [] as TreeNodeData[],
-        state: file.isDirectory ? NodeState.COLLAPSED_DIRECTORY : NodeState.FILE,
-    } as TreeNodeData;
 }
