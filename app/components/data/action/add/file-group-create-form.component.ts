@@ -8,7 +8,7 @@ import { SidebarRef } from "app/components/base/sidebar";
 import { DynamicForm } from "app/core";
 import { BlobContainer } from "app/models";
 import { FileGroupCreateDto } from "app/models/dtos";
-import { CreateFormGroupModel, createFormGroupFormToJsonData } from "app/models/forms";
+import { CreateFileGroupModel, createFileGroupFormToJsonData } from "app/models/forms";
 import { StorageService } from "app/services";
 import { Constants } from "app/utils";
 
@@ -59,13 +59,13 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
         return Observable.of(null);
     }
 
-    public dtoToForm(fileGroup: FileGroupCreateDto): CreateFormGroupModel {
+    public dtoToForm(fileGroup: FileGroupCreateDto): CreateFileGroupModel {
         // dont think we need to clone to nothing to do here
         return null;
     }
 
-    public formToDto(data: CreateFormGroupModel): FileGroupCreateDto {
-        return createFormGroupFormToJsonData(data);
+    public formToDto(data: CreateFileGroupModel): FileGroupCreateDto {
+        return createFileGroupFormToJsonData(data);
     }
 
     public selectFolder(changeEvent: Event) {

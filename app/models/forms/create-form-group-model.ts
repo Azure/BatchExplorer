@@ -1,18 +1,18 @@
 
-export interface FormGroupOptionsModel {
+export interface FileGroupOptionsModel {
     prefix?: string;
     flatten: string;
     fullPath: string;
 }
 
-export interface CreateFormGroupModel {
+export interface CreateFileGroupModel {
     name: string;
     folder: string;
     accessPolicy: string;
-    options: FormGroupOptionsModel;
+    options: FileGroupOptionsModel;
 }
 
-export function createFormGroupFormToJsonData(formData: CreateFormGroupModel): any {
+export function createFileGroupFormToJsonData(formData: CreateFileGroupModel): any {
     let data: any = {
         name: formData.name,
         folder: formData.folder,
