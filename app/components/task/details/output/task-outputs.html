@@ -7,8 +7,18 @@
 <!-- list any task outputs on the node -->
 <bl-entity-details-list *ngIf="selectedTab === 'node'" #nodeWrapper [refresh]="nodeList.refresh" [filterPlaceholder]="nodeList.filterPlaceholder"
     [showAddButton]="false" quickSearchField="name">
-    <bl-task-file-list #nodeList [jobId]="jobId" [taskId]="taskId" [filter]="nodeWrapper.filter">
-    </bl-task-file-list>
+    <bl-list-and-show-layout #layout [hiddenFields]="hiddenFields">>
+        <div bl-list-buttons></div>
+        <div bl-list-content>
+            <bl-focus-section>
+                <bl-task-file-list #nodeList [jobId]="jobId" [taskId]="taskId" [filter]="nodeWrapper.filter" (fileNameUpdate)="updateOptions($event)">
+                </bl-task-file-list>
+            </bl-focus-section>
+        </div>
+        <div bl-show-content>
+            <bl-file-details-quickview #quickview [options]="options"></bl-file-details-quickview>
+        </div>
+    </bl-list-and-show-layout>
 </bl-entity-details-list>
 
 <!-- list any persisted task outputs -->

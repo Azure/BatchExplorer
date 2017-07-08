@@ -6,7 +6,8 @@
             [baseUrl]="baseUrl"
             [filter]="filter"
             [hasMoreMap]="moreFileMap"
-            [loadPath]="loadPath"></bl-tree-view-display>
+            [loadPath]="loadPath"
+            (treeNodeClicked)="treeNodeClicked($event)"></bl-tree-view-display>
     <bl-loading [status]="status | async"></bl-loading>
 </div>
 

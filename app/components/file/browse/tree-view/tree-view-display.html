@@ -1,5 +1,5 @@
 <bl-focus-section>
-    <tree-root #tree [nodes]="treeComponentService.treeNodes" [options]="treeComponentService.treeOptions">
+    <tree-root #tree [nodes]="treeNodes" [options]="treeOptions">
         <ng-template #treeNodeWrapperTemplate let-node let-index="index">
             <div class="node-wrapper"
                 [class.tree-node-expanded]="node.data.state===FileState.EXPANDED_DIRECTORY"
@@ -14,7 +14,7 @@
             </div>
         </ng-template>
     </tree-root>
-    <bl-no-item [itemCount]="treeComponentService.treeNodes.length" [filter]="filter" [status]="status">
+    <bl-no-item [itemCount]="treeNodes.length" [filter]="filter" [status]="status">
         <i icon class="fa fa-tv"></i>
         <span no-filter>No files</span>
         <span with-filter>No files match this filter</span>

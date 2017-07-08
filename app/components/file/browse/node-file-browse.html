@@ -11,8 +11,18 @@
                 </md-select>
             </div>
 
-            <bl-node-file-list #list [poolId]="poolId" [nodeId]="node.id" [filter]="listWrapper.filter" [folder]="currentFolder">
-            </bl-node-file-list>
+            <bl-list-and-show-layout #layout [hiddenFields]="hiddenFields">
+                <div bl-list-content>
+                    <bl-focus-section>
+                        <bl-node-file-list #list [poolId]="poolId" [nodeId]="node.id" [filter]="listWrapper.filter" [folder]="currentFolder"
+                                        (fileNameUpdate)="updateOptions($event)">
+                        </bl-node-file-list>
+                    </bl-focus-section>
+                </div>
+                <div bl-show-content>
+                    <bl-file-details-quickview #quickview [options]="options"></bl-file-details-quickview>
+                </div>
+            </bl-list-and-show-layout>
         </bl-entity-details-list>
     </div>
 </bl-loading>

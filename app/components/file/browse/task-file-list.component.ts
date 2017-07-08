@@ -1,8 +1,8 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChange, ViewChild } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChange, ViewChild } from "@angular/core";
 import { LoadingStatus } from "app/components/base/loading";
 import { TreeViewDisplayComponent, buildTreeRootFilter } from "app/components/file/browse/tree-view";
 import { File, Node, NodeState, ServerError, Task } from "app/models";
-import { FileService, NodeService, TaskFileListParams, TaskService, TreeComponentService } from "app/services";
+import { FileService, NodeService, TaskFileListParams, TaskService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Constants } from "app/utils";
 import { Filter, Property } from "app/utils/filter-builder";
@@ -37,6 +37,9 @@ export class TaskFileListComponent implements OnChanges, OnDestroy {
     @Input()
     public filter: Filter;
 
+    @Output()
+    public fileNameUpdate: EventEmitter<string> = new EventEmitter<string>();
+
     @ViewChild(TreeViewDisplayComponent)
     public treeDisplay: TreeViewDisplayComponent;
     public moreFileMap: StringMap<boolean> = {};
@@ -52,7 +55,6 @@ export class TaskFileListComponent implements OnChanges, OnDestroy {
     private _fileProxyMap: StringMap<RxListProxy<TaskFileListParams, File>> = {};
 
     constructor(
-        private treeComponentService: TreeComponentService,
         private fileService: FileService,
         private nodeService: NodeService,
         private taskService: TaskService) { }
@@ -112,6 +114,10 @@ export class TaskFileListComponent implements OnChanges, OnDestroy {
         });
     }
 
+    public treeNodeClicked(event) {
+        this.fileNameUpdate.emit(event);
+    }
+
     private _loadIfNodeExists() {
         this._resetStates();
         this.status.next(LoadingStatus.Loading);
@@ -143,7 +149,7 @@ export class TaskFileListComponent implements OnChanges, OnDestroy {
         let jobIdInput: SimpleChange = inputs.jobId;
         let taskIdInput: SimpleChange = inputs.taskId;
         if (this._hasInputChanged(jobIdInput) || this._hasInputChanged(taskIdInput)) {
-            this.treeComponentService.treeNodes = [];
+            this.treeDisplay.treeNodes = [];
             this._disposeListProxy();
             this._fileProxyMap = {} as StringMap<RxListProxy<TaskFileListParams, File>>;
             this.moreFileMap = {} as StringMap<boolean>;

@@ -1,8 +1,11 @@
-import { Component, Input, OnChanges } from "@angular/core";
+import { Component, Input, OnChanges, ViewChild, forwardRef } from "@angular/core";
 import { List } from "immutable";
 
+import { NodeFileListComponent } from "app/components/file/browse";
+import { FileDetailsQuickviewComponent } from "app/components/file/details";
+import { IfileDetails } from "app/components/file/details/file-details-quickview.component";
 import { File, Node } from "app/models";
-import { FileService, NodeFileListParams, TreeComponentService } from "app/services";
+import { FileService, NodeFileListParams } from "app/services";
 import { RxListProxy } from "app/services/core";
 
 const folderFriendlyName = {
@@ -33,8 +36,17 @@ export class NodeFileBrowseComponent implements OnChanges {
     public data: RxListProxy<NodeFileListParams, File>;
     public folders: List<Folder>;
     public currentFolder: string = null;
+    public options: IfileDetails;
+    public hiddenFields: string[] = ["breadcrumb", "quicksearch"];
 
-    constructor(private treeComponentService: TreeComponentService, private fileService: FileService) {
+    @ViewChild(FileDetailsQuickviewComponent)
+    public quickview: FileDetailsQuickviewComponent;
+
+    // tslint:disable-next-line:no-forward-ref
+    @ViewChild(forwardRef(() => NodeFileListComponent))
+    public list: NodeFileListComponent;
+
+    constructor(private fileService: FileService) {
         this.data = this.fileService.listFromComputeNode(null, null, false);
         this.data.items.subscribe((files) => {
             this.folders = List<Folder>(files.map(x => {
@@ -49,10 +61,21 @@ export class NodeFileBrowseComponent implements OnChanges {
     public ngOnChanges(inputs) {
         if (inputs.poolId && inputs.node) {
             this.currentFolder = null;
-            this.treeComponentService.treeNodes = [];
+            this.options = {
+                sourceType: "pool",
+                poolId: this.poolId,
+                nodeId: this.node.id,
+            } as IfileDetails;
+
+            this.list.treeDisplay.treeNodes = [];
             this.data.updateParams({ poolId: this.poolId, nodeId: this.node.id });
             this.data.fetchNext(true);
         }
+    }
+
+    public updateOptions(event) {
+        this.quickview.filename = event;
+        this.quickview.initFileLoader();
     }
 
     public selectFolder(folderName: string) {

@@ -1,11 +1,9 @@
-import { Component, Input, OnInit, ViewChild } from "@angular/core";
-import { Router } from "@angular/router";
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
 
 import { TREE_ACTIONS, TreeComponent, TreeModel, TreeNode } from "angular-tree-component";
 import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
-import { FileState, TreeNodeData } from "app/models/tree-component";
-import { TreeComponentService } from "app/services";
+import { FileState, TreeNodeData, TreeNodeOption } from "app/models/tree-component";
 import { List } from "immutable";
 import { Observable } from "rxjs/Observable";
 import "./tree-view-display.scss";
@@ -43,7 +41,11 @@ export class TreeViewDisplayComponent implements OnInit {
     @ViewChild(TreeComponent)
     public tree: TreeComponent;
 
-    constructor(public treeComponentService: TreeComponentService, private router: Router) { }
+    public treeNodes: TreeNodeData[] = [];
+    public treeOptions: TreeNodeOption = { actionMapping: { mouse: { expanderClick: null } } };
+
+    @Output()
+    public treeNodeClicked: EventEmitter<string> = new EventEmitter<string>();
 
     public ngOnInit() {
         this.initNodes("");
@@ -58,10 +60,10 @@ export class TreeViewDisplayComponent implements OnInit {
         let filesObservable = this.loadPath(pathToLoad, force);
         filesObservable.subscribe((files) => {
             // Only map tree children when this function is first time loaded or 'force' is true
-            if (this.treeComponentService.treeNodes.length === 0 || force) {
+            if (this.treeNodes.length === 0 || force) {
                 let nodes = files.map(mapFileToTree).toArray();
                 nodes = this._decorateNodesWithMoreOption(nodes, pathToLoad);
-                this.treeComponentService.treeNodes = (files.size > 0) ? nodes : [];
+                this.treeNodes = (files.size > 0) ? nodes : [];
             }
             this.expandTreeNodes();
         });
@@ -84,7 +86,7 @@ export class TreeViewDisplayComponent implements OnInit {
             nodes = this._decorateNodesWithMoreOption(nodes, pathToLoad);
             // Special root level nodes
             if (pathToLoad === "") {
-                this.treeComponentService.treeNodes = (files.size > 0) ? nodes : [];
+                this.treeNodes = (files.size > 0) ? nodes : [];
                 this.tree.treeModel.update();
             } else {
                 currTreeNode.children = (files.size > 0) ? nodes : [];
@@ -111,7 +113,7 @@ export class TreeViewDisplayComponent implements OnInit {
                 this.loadNodes(node.parent.treeModel, node.parent);
                 break;
             case FileState.FILE:
-                this.router.navigate(this.urlToFile(node.data.fileName));
+                this.treeNodeClicked.emit(node.data.fileName);
                 return TREE_ACTIONS.TOGGLE_SELECTED(node.treeModel, node, $event);
             case FileState.COLLAPSED_DIRECTORY:
                 this.loadNodes(node.treeModel, node);

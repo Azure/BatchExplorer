@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, SimpleChange, ViewChild } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChange, ViewChild } from "@angular/core";
 import { autobind } from "core-decorators";
 import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -6,7 +6,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { LoadingStatus } from "app/components/base/loading";
 import { TreeViewDisplayComponent, buildTreeRootFilter } from "app/components/file/browse/tree-view";
 import { File, ServerError } from "app/models";
-import { FileService, NodeFileListParams, TreeComponentService } from "app/services";
+import { FileService, NodeFileListParams } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter, Property } from "app/utils/filter-builder";
 
@@ -17,9 +17,6 @@ import { Filter, Property } from "app/utils/filter-builder";
 export class NodeFileListComponent implements OnChanges, OnDestroy {
     public LoadingStatus = LoadingStatus;
 
-    /**
-     * If set to true it will display the quick list view, if false will use the table view
-     */
     @Input()
     public poolId: string;
 
@@ -36,8 +33,8 @@ export class NodeFileListComponent implements OnChanges, OnDestroy {
     @Input()
     public folder: string = "";
 
-    @ViewChild(NodeFileListComponent)
-    public list: NodeFileListComponent;
+    @Output()
+    public fileNameUpdate: EventEmitter<string> = new EventEmitter<string>();
 
     @ViewChild(TreeViewDisplayComponent)
     public treeDisplay: TreeViewDisplayComponent;
@@ -47,7 +44,7 @@ export class NodeFileListComponent implements OnChanges, OnDestroy {
 
     private _fileProxyMap: StringMap<RxListProxy<NodeFileListParams, File>> = {};
 
-    constructor(private treeComponentService: TreeComponentService, private fileService: FileService) { }
+    constructor(private fileService: FileService) { }
 
     public ngOnChanges(inputs) {
         if (inputs.poolId || inputs.nodeId || inputs.folder || inputs.filter) {
@@ -103,11 +100,15 @@ export class NodeFileListComponent implements OnChanges, OnDestroy {
         });
     }
 
+    public treeNodeClicked(event) {
+        this.fileNameUpdate.emit(event);
+    }
+
     private _initProxyMap(inputs) {
         let poolIdInput: SimpleChange = inputs.poolId;
         let nodeIdInput: SimpleChange = inputs.nodeId;
         if (this._hasInputChanged(poolIdInput) || this._hasInputChanged(nodeIdInput)) {
-            this.treeComponentService.treeNodes = [];
+            this.treeDisplay.treeNodes = [];
             this._disposeListProxy();
             this._fileProxyMap = {} as StringMap<RxListProxy<NodeFileListParams, File>>;
             this.moreFileMap = {} as StringMap<boolean>;
