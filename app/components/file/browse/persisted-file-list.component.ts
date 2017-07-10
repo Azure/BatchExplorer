@@ -85,11 +85,22 @@ export class PersistedFileListComponent implements OnChanges, OnDestroy {
 
     @autobind()
     public refresh(): Observable<any> {
-        if (this.container || (this.jobId && this.taskId && this.outputKind)) {
-            this._loadFiles();
+        if (!this.hasAutoStorage || (!this.container && !(this.jobId && this.taskId && this.outputKind))) {
+            this.status.next(LoadingStatus.Ready);
+            return;
         }
 
-        return Observable.of(true);
+        this.authFailed = false;
+        this.containerNotFound = false;
+        const prefix = !this.container ? `${this.taskId}/${this.outputKind}/` : null;
+        const containerPromise = !this.container
+            ? StorageUtils.getSafeContainerName(this.jobId)
+            : Promise.resolve(this.container);
+
+        this.data.updateParams({ container: containerPromise, blobPrefix: prefix });
+        this.data.setOptions(this._buildOptions());
+
+        return this.data.fetchNext(true);
     }
 
     @autobind()
@@ -111,28 +122,15 @@ export class PersistedFileListComponent implements OnChanges, OnDestroy {
         return "Filter by blob name (case sensitive)";
     }
 
-    private _loadFiles() {
-        this.authFailed = false;
-        this.containerNotFound = false;
-        if (this.hasAutoStorage) {
-            const prefix = !this.container ? `${this.taskId}/${this.outputKind}/` : null;
-            const containerPromise = !this.container
-                ? StorageUtils.getSafeContainerName(this.jobId)
-                : Promise.resolve(this.container);
-
-            this.data.updateParams({ container: containerPromise, blobPrefix: prefix });
-            this.data.setOptions(this._buildOptions());
-            this.data.fetchNext(true);
-        }
-    }
-
     private _buildOptions() {
-        if (this.filter && this.filter.value) {
-            return {
-                filter: this.filter.value,
-            };
-        } else {
-            return {};
+        let options = {};
+        if (!this.filter.isEmpty()) {
+            const filterText = this.filter.properties.length > 0
+                ? (this.filter.properties[0] as any).value
+                : this.filter.value;
+            options = { filter: filterText };
         }
+
+        return options;
     }
 }

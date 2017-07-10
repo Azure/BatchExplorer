@@ -51,7 +51,7 @@ export class StorageService {
      */
     public onFileGroupAdded = new Subject<string>();
     public ncjFileGroupPrefix: string = "job-"; // todo: change to fgrp-
-    public maxBlobPageSize: number = 500;
+    public maxBlobPageSize: number = 250; // 500 slows down the UI too much.
     public maxContainerPageSize: number = 50;
 
     private _containerCache = new DataCache<BlobContainer>();

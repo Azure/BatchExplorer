@@ -30,7 +30,7 @@ export class BlobStorageClientProxy {
 
         // we want to keep the filter and prefix separate for mapping files in the response.
         const prefix = filter
-            ? blobPrefix || "" + filter
+            ? `${blobPrefix || ""}${filter}`
             : blobPrefix;
 
         return new Promise((resolve, reject) => {
@@ -225,10 +225,8 @@ export class BlobStorageClientProxy {
         return new Promise((resolve, reject) => {
             this._blobService.deleteContainer(container, options, (error, response) => {
                 if (error) {
-                    console.log("delete container error: ", error);
                     reject(error);
                 } else {
-                    console.log("delete container ok: ", response);
                     resolve();
                 }
             });

@@ -104,7 +104,7 @@ export class FileLoader {
                 this._updateProperties(file);
             },
             error: (error) => {
-                log.error("Error getting the file properties!", {...error});
+                log.error("Error getting the file properties!", Object.assign({}, error));
             },
         });
         return obs;

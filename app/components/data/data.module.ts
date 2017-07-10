@@ -8,13 +8,18 @@ import {
 import { FileBrowseModule } from "app/components/file/browse";
 import { FileDetailsModule } from "app/components/file/details";
 import { FileGroupListComponent, FileGroupPreviewComponent } from "./browse";
-import { DataContainerFilesComponent, DataDefaultComponent, DataDetailsComponent } from "./details";
+import {
+    DataContainerConfigurationComponent,
+    DataContainerFilesComponent,
+    DataDefaultComponent,
+    DataDetailsComponent,
+} from "./details";
 import { StorageErrorDisplayComponent } from "./details/errors";
 import { DataHomeComponent } from "./home";
 
-const components = [DataContainerFilesComponent, DataHomeComponent, DataDefaultComponent, DataDetailsComponent,
-    FileGroupCreateFormComponent, DeleteContainerDialogComponent, FileGroupListComponent, FileGroupPreviewComponent,
-    StorageErrorDisplayComponent];
+const components = [DataContainerConfigurationComponent, DataContainerFilesComponent, DataHomeComponent,
+    DataDefaultComponent, DataDetailsComponent, FileGroupCreateFormComponent, DeleteContainerDialogComponent,
+    FileGroupListComponent, FileGroupPreviewComponent, StorageErrorDisplayComponent];
 
 @NgModule({
     declarations: components,
