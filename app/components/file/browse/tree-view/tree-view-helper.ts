@@ -1,7 +1,7 @@
 import { File } from "app/models";
-import { FileState, TreeNodeData } from "app/models/tree-component";
 import { prettyBytes } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
+import { FileState, TreeNodeData } from "./tree-component";
 
 /**
  * Max treenodes number, default to 100 children

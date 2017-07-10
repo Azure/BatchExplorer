@@ -5,7 +5,7 @@ import { Observable } from "rxjs/Observable";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
-import { FileState, TreeNodeData, TreeNodeOption } from "app/models/tree-component";
+import { FileState, TreeNodeData, TreeNodeOption } from "./tree-component";
 import "./tree-view-display.scss";
 import { mapFileToTree } from "./tree-view-helper";
 
