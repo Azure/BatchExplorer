@@ -164,7 +164,7 @@ export class TaskFileListComponent implements OnChanges, OnDestroy {
     }
 
     private _disposeListProxy() {
-        for (let path in this._fileProxyMap){
+        for (let path in this._fileProxyMap) {
             if (path !== null) {
                 this._fileProxyMap[path].dispose();
             }

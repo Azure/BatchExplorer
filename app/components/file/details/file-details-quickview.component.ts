@@ -50,16 +50,17 @@ export class FileDetailsQuickviewComponent implements OnChanges, OnDestroy {
 
     public ngOnChanges(inputs) {
         if (inputs.options) {
-            this.sourceType = this.options["type"];
+            this.sourceType = this.options["sourceType"];
             this.jobId = this.options["jobId"];
             this.taskId = this.options["taskId"];
             this.poolId = this.options["poolId"];
             this.nodeId = this.options["nodeId"];
+            this.filename = this.options["filename"];
             this.initFileLoader();
         }
     }
 
-    public initFileLoader(){
+    public initFileLoader() {
         this._clearFileLoader();
         this._setupFileLoader();
     }

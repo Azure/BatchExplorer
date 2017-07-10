@@ -3,8 +3,6 @@
     </div>
     <div bl-list-content>
         <bl-focus-section>
-            <bl-task-file-list #fileList *ngIf="isJob" [jobId]="jobId" [taskId]="taskId" [filter]="layout.filter"></bl-task-file-list>
-            <bl-node-file-list #fileList *ngIf="isPool" [poolId]="poolId" [nodeId]="nodeId" [filter]="layout.filter"></bl-node-file-list>
             <bl-persisted-file-list #fileList *ngIf="isBlob" [jobId]="jobId" [taskId]="taskId" [outputKind]="outputKind" [filter]="layout.filter"
                 [quickList]="true">
             </bl-persisted-file-list>

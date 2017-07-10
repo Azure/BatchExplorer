@@ -31,6 +31,9 @@ export class NodeFileBrowseComponent implements OnChanges {
     public poolId: string;
 
     @Input()
+    public nodeId: string;
+
+    @Input()
     public node: Node;
 
     public data: RxListProxy<NodeFileListParams, File>;
@@ -59,16 +62,14 @@ export class NodeFileBrowseComponent implements OnChanges {
     }
 
     public ngOnChanges(inputs) {
-        if (inputs.poolId && inputs.node) {
+        if (inputs.poolId || inputs.nodeId) {
             this.currentFolder = null;
             this.options = {
                 sourceType: "pool",
                 poolId: this.poolId,
-                nodeId: this.node.id,
+                nodeId: this.nodeId,
             } as IfileDetails;
-
-            this.list.treeDisplay.treeNodes = [];
-            this.data.updateParams({ poolId: this.poolId, nodeId: this.node.id });
+            this.data.updateParams({ poolId: this.poolId, nodeId: this.nodeId });
             this.data.fetchNext(true);
         }
     }

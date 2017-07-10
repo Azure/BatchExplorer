@@ -33,13 +33,12 @@ export class TaskOutputsComponent implements OnChanges {
     public nodeList: TaskFileListComponent;
 
     public ngOnChanges(inputs) {
-        if (inputs.jobId && inputs.taskId) {
+        if (inputs.jobId || inputs.taskId) {
             this.options = {
                 sourceType: "job",
                 taskId: this.taskId,
                 jobId: this.jobId,
             } as IfileDetails;
-            this.nodeList.treeDisplay.treeNodes = [];
         }
     }
 

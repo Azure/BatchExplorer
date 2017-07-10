@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
-
 import { TREE_ACTIONS, TreeComponent, TreeModel, TreeNode } from "angular-tree-component";
+import { List } from "immutable";
+import { Observable } from "rxjs/Observable";
+
 import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
 import { FileState, TreeNodeData, TreeNodeOption } from "app/models/tree-component";
-import { List } from "immutable";
-import { Observable } from "rxjs/Observable";
 import "./tree-view-display.scss";
 import { mapFileToTree } from "./tree-view-helper";
 

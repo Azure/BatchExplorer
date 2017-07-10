@@ -4,7 +4,7 @@ import { prettyBytes } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 
 /**
- * Max treenodes number
+ * Max treenodes number, default to 100 children
  */
 export const MAX_TREENODES_ITEMS: number = 100;
 
