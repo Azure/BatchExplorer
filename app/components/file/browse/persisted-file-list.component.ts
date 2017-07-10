@@ -32,6 +32,9 @@ export class PersistedFileListComponent implements OnChanges, OnDestroy {
     @Input()
     public filter: Property;
 
+    @Input()
+    public manualLoading: boolean;
+
     public data: RxListProxy<ListBlobParams, File>;
     public status = new BehaviorSubject(LoadingStatus.Loading);
     public LoadingStatus = LoadingStatus;

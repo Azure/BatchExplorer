@@ -51,7 +51,7 @@ export class StorageService {
      */
     public onFileGroupAdded = new Subject<string>();
     public ncjFileGroupPrefix: string = "job-"; // todo: change to fgrp-
-    public maxBlobPageSize: number = 250; // 500 slows down the UI too much.
+    public maxBlobPageSize: number = 100; // 500 slows down the UI too much.
     public maxContainerPageSize: number = 50;
 
     private _containerCache = new DataCache<BlobContainer>();
@@ -78,14 +78,13 @@ export class StorageService {
         const initialOptions: any = { maxResults: this.maxBlobPageSize };
         return new RxStorageListProxy<ListBlobParams, File>(File, this.storageClient, {
             cache: (params) => this.getBlobFileCache(params),
-            getData: (client, params, options) => {
-                // NOTE: not sure what to do with the continuationToken and how to pass it back
+            getData: (client, params, options, continuationToken) => {
                 return params.container.then((containerName) => {
                     return client.listBlobsWithPrefix(
                         containerName,
                         params.blobPrefix,
                         options.filter,
-                        null,
+                        continuationToken,
                         initialOptions);
                 });
             },
@@ -183,9 +182,12 @@ export class StorageService {
         const initialOptions: any = { maxResults: this.maxContainerPageSize };
         return new RxStorageListProxy<ListContainerParams, BlobContainer>(BlobContainer, this.storageClient, {
             cache: () => this._containerCache,
-            getData: (client, params, options) => {
-                // NOTE: not sure what to do with the continuationToken and how to pass it back
-                return client.listContainersWithPrefix(params.prefix, options.filter, null, initialOptions);
+            getData: (client, params, options, continuationToken) => {
+                return client.listContainersWithPrefix(
+                    params.prefix,
+                    options.filter,
+                    continuationToken,
+                    initialOptions);
             },
             initialParams: { prefix: prefix },
             initialOptions,
