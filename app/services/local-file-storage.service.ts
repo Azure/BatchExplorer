@@ -13,11 +13,11 @@ export class LocalFileStorage {
      * @returns Observable which will resolve the data contained in the file if successfull or reject if any error
      */
     public get<T>(filename: string): Observable<T> {
-        const sub = new AsyncSubject();
+        const sub = new AsyncSubject<T>();
         storage.get(filename, (error, data) => {
             this._errorToSub(sub, error, data);
         });
-        return sub;
+        return sub.asObservable();
     }
 
     /**

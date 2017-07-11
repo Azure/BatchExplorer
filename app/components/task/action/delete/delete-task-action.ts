@@ -59,6 +59,6 @@ export class WaitForDeleteTaskPoller {
         }, 5000);
 
         progress.next(-1);
-        return obs;
+        return obs.asObservable();
     }
 }
