@@ -59,6 +59,6 @@ export class WaitForDeleteJobPoller {
 
         progress.next(-1);
 
-        return obs;
+        return obs.asObservable();
     }
 }

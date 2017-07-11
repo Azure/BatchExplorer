@@ -42,7 +42,7 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
 
     constructor(private fileService: FileService) {
         this._options = new BehaviorSubject<string[]>([]);
-        this.filteredOptions = this._options;
+        this.filteredOptions = this._options.asObservable();
     }
 
     public ngOnInit() {

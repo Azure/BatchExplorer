@@ -52,7 +52,7 @@ export class UserAuthorization {
         if (this._isAuthorizingTenant(tenantId)) {
             return this._getTenantSubject(tenantId).asObservable();
         }
-        const subject = new AsyncSubject();
+        const subject = new AsyncSubject<AuthorizeResult>();
         this._authorizeQueue.push({ tenantId, silent, subject });
         this._authorizeNext();
         return subject.asObservable();

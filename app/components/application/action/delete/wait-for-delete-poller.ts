@@ -26,6 +26,6 @@ export class WaitForDeletePoller {
             error: errorCallback,
         });
 
-        return obs;
+        return obs.asObservable();
     }
 }
