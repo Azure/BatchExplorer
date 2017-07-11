@@ -9,8 +9,9 @@ import { DynamicForm } from "app/core";
 import { BlobContainer } from "app/models";
 import { FileGroupCreateDto } from "app/models/dtos";
 import { CreateFileGroupModel, createFileGroupFormToJsonData } from "app/models/forms";
-import { StorageService } from "app/services";
 import { Constants } from "app/utils";
+
+import "./file-group-create-form.scss";
 
 @Component({
     selector: "bl-file-group-create-form",
@@ -22,7 +23,6 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     constructor(
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<FileGroupCreateFormComponent>,
-        private storageService: StorageService,
         private notificationService: NotificationService) {
         super(FileGroupCreateDto);
 
@@ -34,6 +34,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                 Validators.pattern(validation.regex.id),
             ]],
             folder: ["", [Validators.required]],
+            options: [null, []],
             accessPolicy: ["private"],
         });
     }
@@ -43,24 +44,14 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
         this.notificationService.warn("Create file group", "Not wired up to persist anything yet ...");
         const formGroup = this.getCurrentValue();
 
-        console.log("form group json: ", formGroup.toJS());
+        // todo: remove when done
+        console.warn("form group json: ", formGroup.toJS());
 
-        // const observable = this.jobService.add(job, {});
-        // observable.subscribe({
-        //     next: () => {
-        //         const id = job.id;
-        //         this.jobService.onJobAdded.next(id);
-        //         this.notificationService.success("Job added!", `Job '${id}' was created successfully!`);
-        //     },
-        //     error: () => null,
-        // });
-
-        // return observable;
         return Observable.of(null);
     }
 
     public dtoToForm(fileGroup: FileGroupCreateDto): CreateFileGroupModel {
-        // dont think we need to clone to nothing to do here
+        // dont think we need to clone so nothing to do here
         return null;
     }
 
@@ -68,6 +59,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
         return createFileGroupFormToJsonData(data);
     }
 
+    @autobind()
     public selectFolder(changeEvent: Event) {
         const element = changeEvent.srcElement as any;
         this.form.controls["folder"].markAsTouched();
