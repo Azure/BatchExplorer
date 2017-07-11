@@ -142,7 +142,7 @@ export class PricingService {
             if (lastSync.isBefore(weekOld)) {
                 return null;
             }
-            return data.map;
+            return data.map as any;
         }).catch((error) => {
             log.error("Error retrieving hardwaremap locally", error);
             return null;
