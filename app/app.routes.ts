@@ -15,6 +15,7 @@ import { NodeHomeComponent } from "./components/node/home";
 import { PoolDetailsComponent } from "./components/pool/details";
 import { PoolDefaultComponent } from "./components/pool/details";
 import { PoolHomeComponent } from "./components/pool/home/pool-home.component";
+import { MarketHomeComponent } from "./components/market/home/market-home.component";
 import { TaskDefaultComponent, TaskDetailsComponent } from "./components/task/details";
 import { TaskHomeComponent } from "./components/task/home";
 
@@ -43,6 +44,13 @@ export const routes: Routes = [
         children: [
             { path: "", component: PoolDefaultComponent }, // pools/
             { path: ":id", component: PoolDetailsComponent }, // pools/{pool.id}
+        ],
+    },
+    {
+        path: "market",
+        component: MarketHomeComponent,
+        children: [
+            { path: "", component: MarketHomeComponent }, // pools/
         ],
     },
     {
