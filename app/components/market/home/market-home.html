@@ -1,2 +1,48 @@
 
-<div> Hello World </div>
+<div *ngIf="state=='Page1'"> Page 1 
+
+    <ul>
+
+        
+        <li *ngFor="let name of names" (click)="selected=name" > 
+          
+            {{ name}} 
+        
+        </li>
+    </ul>
+
+    <ul>
+        <li> Selected: {{ selected }} </li>
+    </ul>
+
+    <button *ngIf="selected!=''" (click) = "state='Page2'">
+        Next
+    </button>
+</div>
+<div *ngIf="state=='Page2'"> Page 2 
+
+    <ul>
+        <li> Selected: {{ selected }} </li>
+    </ul>
+
+    <button (click) = "state='Page3'">
+        Next
+    </button>
+    <button (click) = "state='Page1';selected=''">
+        Prev
+    </button>
+</div>
+
+<div *ngIf="state=='Page3'"> Page 3 
+
+    <ul>
+        <li> Selected: {{ selected }} </li>
+    </ul>
+
+    <button (click) = "state='Page2'">
+        Prev
+    </button>
+
+
+
+</div>
