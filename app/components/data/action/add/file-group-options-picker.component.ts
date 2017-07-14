@@ -1,6 +1,7 @@
 import { Component, OnDestroy, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators,
+    AbstractControl, ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS,
+    NG_VALUE_ACCESSOR, Validators,
 } from "@angular/forms";
 import { Subscription } from "rxjs";
 
@@ -25,8 +26,8 @@ export class FileGroupOptionsPickerComponent implements OnDestroy, ControlValueA
     constructor(formBuilder: FormBuilder) {
         this.form = formBuilder.group({
             prefix: ["", Validators.pattern(Constants.forms.validation.regex.id)],
-            flatten: false,
-            fullPath: false,
+            flatten: [false, this._validateFlatten()],
+            fullPath: [false, this._validateFullPath()],
         });
 
         this._valueChangeSub = this.form.valueChanges.distinctUntilChanged().subscribe((value) => {
@@ -52,7 +53,11 @@ export class FileGroupOptionsPickerComponent implements OnDestroy, ControlValueA
         this._propagateTouched = fn;
     }
 
-    public validate(c: FormControl) {
+    /**
+     * Return validation result to the parent form
+     * @param control
+     */
+    public validate(control: FormControl) {
         const valid = this.form.valid;
         if (valid) {
             return null;
@@ -61,6 +66,37 @@ export class FileGroupOptionsPickerComponent implements OnDestroy, ControlValueA
         return {
             options: this.form.errors,
         };
+    }
+
+    /**
+     * Cannot have both Flatten and FullPath selected at the same time
+     */
+    private _validateFullPath(): { [key: string]: any } {
+        return (control: FormControl): { [key: string]: any } => {
+            return this._validateOtherControl(control, this.form && this.form.controls.flatten);
+        };
+    }
+
+    /**
+     * Cannot have both Flatten and FullPath selected at the same time
+     */
+    private _validateFlatten(): { [key: string]: any } {
+        return (control: FormControl): { [key: string]: any } => {
+            return this._validateOtherControl(control, this.form && this.form.controls.fullPath);
+        };
+    }
+
+    private _validateOtherControl(control: FormControl, otherControl: AbstractControl) {
+        if (!this.form || !otherControl || !otherControl.value) {
+            return null;
+        }
+
+        const result = control.value ? { invalid: true } : null;
+        if (!result) {
+            otherControl.updateValueAndValidity();
+        }
+
+        return result;
     }
 
     private _emitChangeAndTouchedEvents(value) {
