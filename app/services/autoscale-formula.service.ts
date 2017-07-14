@@ -37,12 +37,10 @@ export class AutoscaleFormulaService {
     }
 
     public loadInitialData(): Observable<List<AutoscaleFormula>> {
-        const sub = new AsyncSubject();
         return this.localFileStorage.get(filename).map(data => {
             return Array.isArray(data) ? List(data) : List([]);
-        }).catch((error) => {
+        }).catch<any, any>((error) => {
             log.error("Error retrieving autoscale formulas");
-            sub.error(error);
             return null;
         });
     }

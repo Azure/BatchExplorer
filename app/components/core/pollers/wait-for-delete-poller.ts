@@ -1,7 +1,6 @@
 import { autobind } from "core-decorators";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-// todo: Hook up to DeleteJobAction, DeleteTaskAction
 export class WaitForDeletePoller {
     constructor(private getFunction: any) {
     }
@@ -21,6 +20,6 @@ export class WaitForDeletePoller {
 
         progress.next(-1);
 
-        return obs;
+        return obs.asObservable();
     }
 }

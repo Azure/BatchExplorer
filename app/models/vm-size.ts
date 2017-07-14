@@ -47,6 +47,6 @@ export class VmSize extends Record<VmSizeAttributes> {
     @Prop() public maxDataDiskCount: number;
 
     constructor(data: VmSizeAttributes) {
-        super({ ...data, id: data.name && data.name.toLowerCase() });
+        super({ ...data, id: data.name && data.name.toLowerCase() } as any);
     }
 }

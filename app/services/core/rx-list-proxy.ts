@@ -190,7 +190,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
      * Load the next set of items from the server and returns the keys of those items.
      */
     private _fetchNextKeys(): Observable<OrderedSet<string>> {
-        const subject = new AsyncSubject();
+        const subject = new AsyncSubject<OrderedSet<string>>();
         this.fetchData({
             getData: () => {
                 return this.fetchNextItems();

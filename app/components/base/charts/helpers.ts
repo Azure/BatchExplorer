@@ -144,5 +144,5 @@ export function getColors(chartType: string, index: number, count: number): Colo
     if (chartType === "bar" || chartType === "horizontalBar") {
         return formatBarColor(generateColor(index));
     }
-    return generateColor(index);
+    return generateColor(index) as any;
 }

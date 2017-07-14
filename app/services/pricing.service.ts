@@ -86,7 +86,7 @@ export class PricingService {
                         log.error("Unexpected format returned from GetSpecsCosts", response.json());
                         return [];
                     }
-                    return List(costs.map(x => new SpecCost(x)));
+                    return List<SpecCost>(costs.map(x => new SpecCost(x))) as any;
                 });
             });
         });
@@ -142,7 +142,7 @@ export class PricingService {
             if (lastSync.isBefore(weekOld)) {
                 return null;
             }
-            return data.map;
+            return data.map as any;
         }).catch((error) => {
             log.error("Error retrieving hardwaremap locally", error);
             return null;
