@@ -4,8 +4,9 @@ import { List } from "immutable";
 
 import { EditMetadataFormComponent } from "app/components/base/form/edit-metadata-form";
 import { SidebarManager } from "app/components/base/sidebar";
-import { ApplicationPackageReference, CertificateReference, Metadata, Pool } from "app/models";
-import { PoolDecorator } from "app/models/decorators";
+import { StartTaskEditFormComponent } from "app/components/pool/start-task";
+import { ApplicationPackageReference, CertificateReference, Metadata, Pool, StartTask } from "app/models";
+import { PoolDecorator, StartTaskDecorator } from "app/models/decorators";
 import { PoolPatchDto } from "app/models/dtos";
 import { PoolService } from "app/services";
 
@@ -22,6 +23,7 @@ export class PoolConfigurationComponent {
     public get pool() { return this._pool; }
 
     public decorator: PoolDecorator;
+    public startTask: StartTask;
     public certificates: List<CertificateReference>;
     public appPackages: List<ApplicationPackageReference>;
     public metadata: List<Metadata> = List([]);
@@ -43,12 +45,19 @@ export class PoolConfigurationComponent {
         };
     }
 
+    @autobind()
+    public editStartTask() {
+        const ref = this.sidebarManager.open(`edit-start-task-${this._pool.id}`, StartTaskEditFormComponent);
+        ref.component.pool = this.pool;
+    }
+
     private _refresh(pool: Pool) {
         if (pool) {
             this.decorator = new PoolDecorator(this._pool);
             this.appPackages = this.decorator.applicationPackageReferences;
             this.certificates = this.decorator.certificateReferences;
             this.metadata = pool.metadata;
+            this.startTask = pool.startTask;
         }
     }
 
