@@ -1,0 +1,174 @@
+{
+  "templateMetadata": {
+    "description": "Application template for working with Maya on CentOS."
+  },
+  "parameters": {
+    "sceneFile": {
+      "type": "string",
+      "metadata": {
+        "description": "The Maya scene file to be rendered"
+      }
+    },
+    "renderer": {
+      "type": "string",
+      "defaultValue": "sw",
+      "metadata": {
+        "description": "The Maya renderer to be used for the render"
+      },
+      "allowedValues": [
+        "sw"
+      ]
+    },
+    "projectData": {
+      "type": "string",
+      "metadata": {
+        "description": "The file group where the input data is stored"
+      }
+    },
+    "assetScript": {
+      "type": "string",
+      "metadata": {
+        "description": "The SAS URL to a pre-render asset path redirection script"
+      }
+    },
+    "thumbScript": {
+      "type": "string",
+      "metadata": {
+        "description": "The SAS URL to the thumbnail generation script"
+      }
+    },
+    "frameStart": {
+      "type": "int",
+      "metadata": {
+        "description": "Index of the first frame to render"
+      }
+    },
+    "workspace": {
+      "type": "string",
+      "metadata": {
+        "description": "The SAS URL to the project workspace"
+      }
+    },
+    "frameStep": {
+      "type": "int",
+      "metadata": {
+        "description": "Incremental step in frame sequeunce"
+      }
+    },
+    "frameEnd": {
+      "type": "int",
+      "metadata": {
+        "description": "Index of the last frame to render"
+      }
+    },
+    "outputs": {
+      "type": "string",
+      "metadata": {
+        "description": "The file group where outputs will be stored"
+      }
+    }
+  },
+  "jobPreparationTask": {
+    "resourceFiles": [
+      {
+        "source": {
+          "fileGroup": "[parameters('projectData')]"
+        },
+        "filePath": "assets/"
+      },
+      {
+        "blobSource": "[parameters('assetScript')]",
+        "filePath": "scripts/renderPrep.mel"
+      },
+      {
+        "blobSource": "[parameters('thumbScript')]",
+        "filePath": "thumbnail.py"
+      },
+      {
+        "blobSource": "[parameters('workspace')]",
+        "filePath": "workspace.mel"
+      }
+    ],
+    "commandLine": "dir"
+  },
+  "taskFactory": {
+    "type": "parametricSweep",
+    "parameterSets": [
+      {
+        "start": "[parameters('frameStart')]",
+        "end": "[parameters('frameEnd')]",
+        "step": "[parameters('frameStep')]"
+      }
+    ],
+    "repeatTask": {
+      "displayName": "Frame {0}",
+      "userIdentity": {
+        "autoUser": {
+          "scope": "task",
+          "elevationLevel": "admin"
+        }
+      },
+      "commandLine": "sudo mkdir -m a=rwx -p \"/X\";sudo mount --rbind $AZ_BATCH_JOB_PREP_WORKING_DIR/assets /X;Render -renderer [parameters('renderer')] -proj \"$AZ_BATCH_JOB_PREP_WORKING_DIR\" -verb -preRender renderPrep -rd \"$AZ_BATCH_TASK_WORKING_DIR/images\" -s {0} -e {0} \"[parameters('sceneFile')]\";err=$?;python /mnt/resource/batch/tasks/workitems/[parameters('outputs')]/job-1/jobpreparation/wd/thumbnail.py $err;sudo umount \"/X\";exit $err",
+      "environmentSettings": [
+        {
+          "name": "MAYA_SCRIPT_PATH",
+          "value": "/mnt/resource/batch/tasks/workitems/[parameters('outputs')]/job-1/jobpreparation/wd/scripts"
+        },
+        {
+          "name": "FLEXLM_TIMEOUT",
+          "value": "5000000"
+        }
+      ],
+      "outputFiles": [
+        {
+          "filePattern": "images/**/*",
+          "destination": {
+            "autoStorage": {
+              "fileGroup": "[parameters('outputs')]"
+            }
+          },
+          "uploadOptions": {
+            "uploadCondition": "taskSuccess"
+          }
+        },
+        {
+          "filePattern": "thumbs/*.png",
+          "destination": {
+            "autoStorage": {
+              "fileGroup": "[parameters('outputs')]",
+              "path": "thumbs"
+            }
+          },
+          "uploadOptions": {
+            "uploadCondition": "taskSuccess"
+          }
+        },
+        {
+          "filePattern": "../stdout.txt",
+          "destination": {
+            "autoStorage": {
+              "fileGroup": "[parameters('outputs')]",
+              "path": "logs/frame_{0}.log"
+            }
+          },
+          "uploadOptions": {
+            "uploadCondition": "taskCompletion"
+          }
+        },
+        {
+          "filePattern": "../stderr.txt",
+          "destination": {
+            "autoStorage": {
+              "fileGroup": "[parameters('outputs')]",
+              "path": "logs/frame_{0}_error.log"
+            }
+          },
+          "uploadOptions": {
+            "uploadCondition": "taskCompletion"
+          }
+        }
+      ]
+    }
+  },
+  "onAllTasksComplete": "terminateJob"
+}

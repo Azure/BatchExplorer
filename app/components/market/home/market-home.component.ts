@@ -1,7 +1,4 @@
 import { Component} from "@angular/core";
-import { ActivatedRoute } from "@angular/router";
-import { SidebarManager } from "../../base/sidebar";
-
 
 @Component({
     selector: "bl-market-home",
@@ -10,18 +7,43 @@ import { SidebarManager } from "../../base/sidebar";
 export class MarketHomeComponent {
     state='Page1';
     selected="";
-    names = ["Maya Windows","Maya Linux","3DS Max Windows"];
+    templates = [ 
+        {"name": "Maya Windows", "filecontent":  require("../templates/mayaSoftware-basic-windows.json")},
+        {"name": "Maya Linux", "filecontent": require("../templates/mayaSoftware-basic-linux.json")},
+        {"name": "Arnold Windows", "filecontent": require("../templates/arnold-basic-windows.json")},
+        {"name": "Arnold Linux", "filecontent": require("../templates/arnold-basic-linux.json")}
+    ];
 
     public static breadcrumb() {
         return { name: "Market" };
     }
 
-    onClick(){
-        
+    getTemplate(name){
+        for (var i=0;i<this.templates.length;i++){
+            if (this.templates[i].name==name){
+                return this.templates[i];
+            }
+        }
     }
-    constructor(
-        sidebarManager: SidebarManager,
-        private activatedRoute: ActivatedRoute) {
+    getParameters(name){
+        var parameters =[]
+        for (var i=0;i<this.templates.length;i++){
+            if (this.templates[i].name==name){
+                console.log(this.templates[i]);
+                var parameterKeys = Object.keys(this.templates[i]["parameters"]);
+                for (var j=0;j<parameterKeys.length;j++){
+                    parameters.push(parameterKeys[j]);
+                }
+            }
+        }
+        return parameters;
+    }
+    constructor() {
             console.log("Entered Market");
+            for (var i=0;i<this.templates.length;i++){
+                var file = JSON.parse(this.templates[i].filecontent);
+                this.templates[i]["description"] = file.templateMetadata.description;
+                this.templates[i]["parameters"] = file.parameters;
+            }
     }
 }

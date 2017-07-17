@@ -8,11 +8,9 @@
     </div>
 
     <ul>
-
-        
-        <li *ngFor="let name of names" (click)="selected=name;state='Page2'" > 
+        <li *ngFor="let template of templates" (click)="selected=template['name'];state='Page2'" > 
           
-            {{ name}} 
+            {{ template["name"]}} : {{ template["description"]}}
         
         </li>
     </ul>
@@ -31,7 +29,13 @@
         Complete the form:
     </div>
 
-    
+    <ul>
+        <li *ngFor="let parameter of getParameters(selected)" > 
+          
+            {{ parameter }}
+        
+        </li>
+    </ul>
 
 
     <button (click) = "state='Page1';selected=''">
