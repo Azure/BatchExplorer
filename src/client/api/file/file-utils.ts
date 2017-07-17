@@ -7,7 +7,7 @@ export class FileUtils {
             const file = fs.createWriteStream(destination);
             const request = get(source, (response) => {
                 response.pipe(file);
-                file.on("finish", function () {
+                file.on("finish", () => {
                     file.close();  // close() is async, call cb after close completes.
                     resolve(destination);
                 });
