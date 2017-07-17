@@ -1,19 +1,26 @@
-import * as fs from "fs";
-import { get } from "http";
+import * as download from "download";
+import * as extract from "extract-zip";
+import * as path from "path";
 
+/**
+ * Helper method for file releated actions.
+ * This should contains action where you use stream or large file
+ * that wouldn't handle well to talk between the node and browser env
+ */
 export class FileUtils {
-    public static download(source: string, destination: string): Promise<string> {
+    public download(source: string, dest: string): Promise<string> {
+        return download(source, path.dirname(dest), {
+            filename: path.basename(dest),
+        }).then(() => dest);
+    }
+
+    public unzip(source: string, dest: string): Promise<void> {
         return new Promise((resolve, reject) => {
-            const file = fs.createWriteStream(destination);
-            const request = get(source, (response) => {
-                response.pipe(file);
-                file.on("finish", () => {
-                    file.close();  // close() is async, call cb after close completes.
-                    resolve(destination);
-                });
-            }).on("error", (err) => { // Handle errors
-                fs.unlink(destination); // Delete the file async. (But we don't check the result)
-                reject(err);
+            extract(source, { dir: dest }, (err) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve();
             });
         });
     }

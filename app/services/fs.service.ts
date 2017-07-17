@@ -4,8 +4,10 @@ import * as fs from "fs";
 import * as mkdirp from "mkdirp";
 import * as path from "path";
 
+import { ElectronRemote } from "./electron/remote.service";
 const { app } = remote;
 import { log } from "app/utils";
+import { FileUtils } from "client/api";
 
 export interface CommonFolders {
     temp: string;
@@ -19,11 +21,14 @@ export interface CommonFolders {
 export class FileSystemService {
     public commonFolders: CommonFolders;
 
-    constructor() {
+    private _fileUtils: FileUtils;
+
+    constructor(remote: ElectronRemote) {
         this.commonFolders = {
             temp: path.join(app.getPath("temp"), "batch-labs"),
             downloads: app.getPath("downloads"),
         };
+        this._fileUtils = remote.getFileUtils();
     }
 
     /**
@@ -61,6 +66,21 @@ export class FileSystemService {
         return this.ensureDir(path.dirname(dest)).then(() => {
             return this._writeFile(dest, content);
         });
+    }
+
+    public download(source: string, dest: string): Promise<string> {
+        return this.ensureDir(path.dirname(dest)).then(() => {
+            return this._fileUtils.download(source, dest);
+        });
+    }
+
+    /**
+     * Unzip the given zip file content to the given folder as you would expect from a os unzip
+     * @param source Path to the zip file
+     * @param dest Folder where the zip file should be extracted
+     */
+    public unzip(source: string, dest: string): Promise<void> {
+        return this._fileUtils.unzip(source, dest);
     }
 
     private _writeFile(path: string, content: string): Promise<string> {
