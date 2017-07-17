@@ -25,7 +25,7 @@ export class FileGroupOptionsPickerComponent implements OnDestroy, ControlValueA
 
     constructor(formBuilder: FormBuilder) {
         this.form = formBuilder.group({
-            prefix: ["", Validators.pattern(Constants.forms.validation.regex.id)],
+            prefix: [null, Validators.pattern(Constants.forms.validation.regex.id)],
             flatten: [false, this._validateFlatten()],
             fullPath: [false, this._validateFullPath()],
         });

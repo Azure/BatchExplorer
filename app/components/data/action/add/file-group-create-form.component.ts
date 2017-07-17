@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { FormBuilder, Validators } from "@angular/forms";
+import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
@@ -9,7 +9,8 @@ import { DynamicForm } from "app/core";
 import { BlobContainer } from "app/models";
 import { FileGroupCreateDto } from "app/models/dtos";
 import { CreateFileGroupModel, createFileGroupFormToJsonData } from "app/models/forms";
-import { Constants } from "app/utils";
+import { StorageService } from "app/services";
+import { Constants, log } from "app/utils";
 
 import "./file-group-create-form.scss";
 
@@ -23,6 +24,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     constructor(
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<FileGroupCreateFormComponent>,
+        private storageService: StorageService,
         private notificationService: NotificationService) {
         super(FileGroupCreateDto);
 
@@ -32,6 +34,8 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                 Validators.required,
                 Validators.maxLength(validation.maxLength.id),
                 Validators.pattern(validation.regex.id),
+            ], [
+                this._validateFileGroupName.bind(this),
             ]],
             folder: ["", [Validators.required]],
             options: [null, []],
@@ -45,7 +49,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
         const formGroup = this.getCurrentValue();
 
         // todo: remove when done
-        console.warn("form group json: ", formGroup.toJS());
+        log.warn("form group json: ", formGroup.toJS() as any);
 
         return Observable.of(null);
     }
@@ -75,5 +79,24 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
 
     public hasValidFolder(): boolean {
         return this.folder && this.form.controls["folder"].valid;
+    }
+
+    /**
+     * Async validator to check a given filegroup does not already exist
+     */
+    private _validateFileGroupName(control: FormControl): Promise<any> {
+        return new Promise ((resolve) => {
+            setTimeout(() => {
+                const containerName = `${this.storageService.ncjFileGroupPrefix}${control.value}`;
+                this.storageService.getContainerOnce(containerName).subscribe({
+                next: (container: BlobContainer) => {
+                    resolve({ duplicate: true });
+                },
+                error: (error) => {
+                    resolve(null);
+                },
+            });
+            }, 500);
+        });
     }
 }

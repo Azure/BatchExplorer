@@ -27,8 +27,6 @@ export class StorageErrorDisplayComponent implements OnInit, OnDestroy {
 
         this.hasAutoStorage = false;
         this._autoStorageSub = this.storageService.hasAutoStorage.subscribe((hasAutoStorage) => {
-            // todo: remove when done
-            console.warn("hasAutoStorage :: ", hasAutoStorage);
             this.hasAutoStorage = hasAutoStorage;
             this.changeDetector.markForCheck();
         });
