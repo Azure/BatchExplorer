@@ -10,7 +10,6 @@ import { Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
 import { PoolParams, PoolService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
-import { HttpCode } from "app/utils/constants";
 import { SidebarManager } from "../../base/sidebar";
 import { DeletePoolDialogComponent, PoolResizeDialogComponent } from "../action";
 import { PoolCreateBasicDialogComponent } from "../action";
