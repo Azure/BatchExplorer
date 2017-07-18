@@ -6,10 +6,10 @@ import { Observable } from "rxjs";
 import { DomSanitizer } from "@angular/platform-browser";
 import { registerIcons } from "app/config";
 import {
-    AccountService, AdalService, AutoscaleFormulaService, CommandService, NodeService,
-    PredefinedFormulaService, PricingService, PythonRpcService, SSHKeyService, SettingsService, SubscriptionService,
+    AccountService, AdalService, AutoscaleFormulaService, CommandService, NcjTemplateService,
+    NodeService, PredefinedFormulaService, PricingService, PythonRpcService, SSHKeyService, SettingsService,
+    SubscriptionService,
     VmSizeService,
-    NcjTemplateService,
 } from "app/services";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
@@ -62,7 +62,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.accountService.loadInitialData();
         this.ncjTemplateService.init();
         pythonRpcService.init();
-
+        this.ncjTemplateService.listApplications().subscribe(x => console.log(x.toJS()));
         this.predefinedFormulaService.init();
         this.hasAccount = accountService.currentAccount.map((x) => Boolean(x));
 

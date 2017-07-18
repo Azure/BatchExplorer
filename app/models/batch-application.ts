@@ -3,7 +3,7 @@ import { List } from "immutable";
 import { ListProp, Model, Prop, Record } from "app/core";
 import { ApplicationPackage } from "./application-package";
 
-export interface ApplicationAttributes {
+export interface BatchApplicationAttributes {
     id: string;
     displayName: string;
     allowUpdates: boolean;
@@ -15,7 +15,7 @@ export interface ApplicationAttributes {
  * Class for displaying Batch application information.
  */
 @Model()
-export class BatchApplication extends Record<ApplicationAttributes> {
+export class BatchApplication extends Record<BatchApplicationAttributes> {
     @Prop() public id: string;
     @Prop() public displayName: string;
     @Prop() public allowUpdates: boolean = false;

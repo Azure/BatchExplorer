@@ -1,8 +1,10 @@
 import { Injectable } from "@angular/core";
 import { FileSystemService } from "app/services";
+import { List } from "immutable";
 import * as path from "path";
 import { Observable } from "rxjs";
 
+import { Application } from "app/models";
 import { DateUtils, log } from "app/utils";
 
 const branch = "ncj";
@@ -38,17 +40,19 @@ export class NcjTemplateService {
      * Get a file from the batch data repo relative to the ncj folder.
      * @param path: path to the file
      */
-    public get(uri: string): Observable<string> {
-        return Observable.fromPromise(this.fs.readFile(this.getFullPath(uri)));
+    public get(uri: string): Observable<any> {
+        return Observable.fromPromise(this.fs.readFile(this.getFullPath(uri)).then(data => JSON.parse(data)));
     }
 
     public getFullPath(uri: string) {
         return path.join(this._dataRoot, uri);
     }
 
-    // public listApplications(): Observable<Application> {
-
-    // }
+    public listApplications(): Observable<List<Application>> {
+        return this.get("index.json").map((apps) => {
+            return List<Application>(apps.map(x => new Application(x)));
+        }).share();
+    }
 
     private _checkIfDataNeedReload(): Promise<boolean> {
         const syncFile = this._syncFile;
