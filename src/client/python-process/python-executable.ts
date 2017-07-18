@@ -1,4 +1,5 @@
 import { execCommand } from "../core";
+import { logger } from "../logger";
 
 let computedPythonPath: string = null;
 
@@ -42,16 +43,18 @@ export function tryPython(pythonPath: string): Promise<string> {
 export function tryMultiplePythons(paths: string[]): Promise<string> {
     let promise: Promise<string> = Promise.reject(null);
     const errors = {};
-
-    for (let path of paths) {
-        promise = promise.catch((error) => {
-            errors[path] = error;
-            return tryPython(path);
-        }).then(() => {
-            return path;
-        });
+    if (paths.length === 0) {
+        return Promise.reject("No python path found");
     }
-    return promise;
+    const firstPath = paths[0];
+    console.log("Trying path:", firstPath);
+
+    return tryPython(firstPath).then(() => {
+        return firstPath;
+    }).catch((error) => {
+        logger.info(`Python path is not a valid python 3.6 installation`, error);
+        return tryMultiplePythons(paths.slice(1));
+    });
 }
 
 /**

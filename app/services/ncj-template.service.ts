@@ -4,7 +4,7 @@ import { List } from "immutable";
 import * as path from "path";
 import { AsyncSubject, Observable } from "rxjs";
 
-import { Application } from "app/models";
+import { Application, ApplicationAction } from "app/models";
 import { DateUtils, log } from "app/utils";
 
 const branch = "ncj";
@@ -33,10 +33,11 @@ export class NcjTemplateService {
             return this.fs.download(dataUrl, tmpZip).then(() => {
                 return this.fs.unzip(tmpZip, dest);
             }).then(() => {
-                this._ready.next(true);
-                this._ready.complete();
                 return this._saveSyncData();
             });
+        }).then(() => {
+            this._ready.next(true);
+            this._ready.complete();
         });
     }
 
@@ -58,6 +59,24 @@ export class NcjTemplateService {
     public listApplications(): Observable<List<Application>> {
         return this.get("index.json").map((apps) => {
             return List<Application>(apps.map(x => new Application(x)));
+        }).share();
+    }
+
+    public listActions(applicationId: string): Observable<List<ApplicationAction>> {
+        return this.get(`${applicationId}/index.json`).map((apps) => {
+            return List<ApplicationAction>(apps.map(x => new ApplicationAction(x)));
+        }).share();
+    }
+
+    public getTemplates(applicationId: string, actionId: string): Observable<any> {
+        const job = this.get(`${applicationId}/${actionId}/job.template.json`);
+        const pool = this.get(`${applicationId}/${actionId}/pool.template.json`);
+
+        return Observable.combineLatest(job, pool).map((data) => {
+            return {
+                job: data[0],
+                pool: data[1],
+            };
         }).share();
     }
 

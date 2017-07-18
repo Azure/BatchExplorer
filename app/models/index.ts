@@ -4,6 +4,7 @@ export * from "./aad-user";
 export * from "./affinity-information";
 export * from "./batch-application";
 export * from "./application";
+export * from "./application-action";
 export * from "./application-license";
 export * from "./application-package";
 export * from "./application-package-reference";
