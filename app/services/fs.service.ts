@@ -38,7 +38,6 @@ export class FileSystemService {
     public exists(path: string): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             fs.exists(path, (exists) => {
-                console.log("FIle xawa", exists, path);
                 resolve(exists);
             });
         });

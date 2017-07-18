@@ -47,7 +47,6 @@ export function tryMultiplePythons(paths: string[]): Promise<string> {
         return Promise.reject("No python path found");
     }
     const firstPath = paths[0];
-    console.log("Trying path:", firstPath);
 
     return tryPython(firstPath).then(() => {
         return firstPath;

@@ -67,7 +67,7 @@ export class ApplicationService extends ServiceBase {
             onError: onError,
         });
     }
-    e
+
     /**
      * Gets information about the specified application, including
      * a list of it's packages.

@@ -77,11 +77,6 @@ export class AppComponent implements AfterViewInit, OnInit {
         });
 
         registerIcons(mdIconRegistry, sanitizer);
-
-        console.log("Doing somehting..");
-        this.ncjTemplateService.listApplications().subscribe(x => console.log(x.toJS()));
-        this.ncjTemplateService.listActions("blender").subscribe(x => console.log(x.toJS()));
-        this.ncjTemplateService.getTemplates("blender", "render-movie").subscribe(x => console.log(x));
     }
 
     public ngAfterViewInit() {
