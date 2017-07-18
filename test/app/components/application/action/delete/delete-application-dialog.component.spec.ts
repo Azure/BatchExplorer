@@ -16,7 +16,7 @@ import { ServerErrorMockComponent, SimpleFormMockComponent } from "test/utils/mo
 describe("DeleteApplicationDialogComponent ", () => {
     let fixture: ComponentFixture<DeleteApplicationDialogComponent>;
     let component: DeleteApplicationDialogComponent;
-    let entityProxy: RxMockEntityProxy<any, Application>;
+    let entityProxy: RxMockEntityProxy<any, BatchApplication>;
     let debugElement: DebugElement;
     let appServiceSpy: any;
 
