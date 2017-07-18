@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
 
 import { DeleteApplicationDialogComponent } from "app/components/application/action";
 import { BackgroundTaskService } from "app/components/base/background-task";
-import { Application, ServerError } from "app/models";
+import { BatchApplication, ServerError } from "app/models";
 import { ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { RxMockEntityProxy } from "test/utils/mocks";
@@ -21,7 +21,7 @@ describe("DeleteApplicationDialogComponent ", () => {
     let appServiceSpy: any;
 
     beforeEach(() => {
-        entityProxy = new RxMockEntityProxy(Application, {
+        entityProxy = new RxMockEntityProxy(BatchApplication, {
             item: Fixtures.application.create({ id: "app-1" }),
         });
 

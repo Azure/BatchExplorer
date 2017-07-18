@@ -2,7 +2,7 @@ export * from "./account";
 export * from "./account-keys";
 export * from "./aad-user";
 export * from "./affinity-information";
-export * from "./application";
+export * from "./batch-application";
 export * from "./application-license";
 export * from "./application-package";
 export * from "./application-package-reference";

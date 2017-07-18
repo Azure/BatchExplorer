@@ -46,6 +46,10 @@ export class NcjTemplateService {
         return path.join(this._dataRoot, uri);
     }
 
+    // public listApplications(): Observable<Application> {
+
+    // }
+
     private _checkIfDataNeedReload(): Promise<boolean> {
         const syncFile = this._syncFile;
         return this.fs.exists(syncFile).then((exists) => {

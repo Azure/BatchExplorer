@@ -6,7 +6,7 @@ import { AsyncSubject, Observable } from "rxjs";
 
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
-import { Application } from "app/models";
+import { BatchApplication } from "app/models";
 import { applicationToCreateFormModel } from "app/models/forms";
 import { ApplicationService, CommitBlockListOptions, HttpUploadService, UploadBlockOptions } from "app/services";
 import { Constants, log, prettyBytes } from "app/utils";
@@ -56,7 +56,7 @@ export class ApplicationCreateDialogComponent {
         });
     }
 
-    public setValue(application: Application, version?: string) {
+    public setValue(application: BatchApplication, version?: string) {
         // TODO: need to disable appId and version fields if they are supplied
         this.form.patchValue(applicationToCreateFormModel(application, version));
         if (version) {
