@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { FileSystemService } from "app/services";
 import { List } from "immutable";
 import * as path from "path";
-import { Observable } from "rxjs";
+import { AsyncSubject, Observable } from "rxjs";
 
 import { Application } from "app/models";
 import { DateUtils, log } from "app/utils";
@@ -18,6 +18,8 @@ interface SyncFile {
 
 @Injectable()
 export class NcjTemplateService {
+    private _ready = new AsyncSubject();
+
     constructor(private fs: FileSystemService) { }
 
     public init() {
@@ -31,6 +33,8 @@ export class NcjTemplateService {
             return this.fs.download(dataUrl, tmpZip).then(() => {
                 return this.fs.unzip(tmpZip, dest);
             }).then(() => {
+                this._ready.next(true);
+                this._ready.complete();
                 return this._saveSyncData();
             });
         });
@@ -41,7 +45,10 @@ export class NcjTemplateService {
      * @param path: path to the file
      */
     public get(uri: string): Observable<any> {
-        return Observable.fromPromise(this.fs.readFile(this.getFullPath(uri)).then(data => JSON.parse(data)));
+        return this._ready.flatMap(() => {
+            const promise = this.fs.readFile(this.getFullPath(uri)).then(data => JSON.parse(data));
+            return Observable.fromPromise(promise);
+        }).share();
     }
 
     public getFullPath(uri: string) {
