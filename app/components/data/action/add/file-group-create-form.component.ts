@@ -9,7 +9,7 @@ import { DynamicForm } from "app/core";
 import { BlobContainer } from "app/models";
 import { FileGroupCreateDto } from "app/models/dtos";
 import { CreateFileGroupModel, createFileGroupFormToJsonData } from "app/models/forms";
-import { StorageService } from "app/services";
+import { PythonRpcService, StorageService } from "app/services";
 import { Constants, log } from "app/utils";
 
 import "./file-group-create-form.scss";
@@ -25,7 +25,8 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<FileGroupCreateFormComponent>,
         private storageService: StorageService,
-        private notificationService: NotificationService) {
+        private notificationService: NotificationService,
+        private pythonRpcService: PythonRpcService) {
         super(FileGroupCreateDto);
 
         const validation = Constants.forms.validation;
@@ -50,6 +51,15 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
 
         // todo: remove when done
         log.warn("form group json: ", formGroup.toJS() as any);
+        this.pythonRpcService.call("create_file_group", [
+            formGroup.name,
+            formGroup.folder,
+            formGroup.accessPolicy,
+            formGroup.options,
+        ]).subscribe({
+            next: (data) => log.warn("Got create", data),
+            error: (err) => log.warn("Error create", err),
+        });
 
         return Observable.of(null);
     }
