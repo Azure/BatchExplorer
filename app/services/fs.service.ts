@@ -38,6 +38,7 @@ export class FileSystemService {
     public exists(path: string): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
             fs.exists(path, (exists) => {
+                console.log("FIle xawa", exists, path);
                 resolve(exists);
             });
         });
@@ -65,6 +66,17 @@ export class FileSystemService {
     public saveFile(dest: string, content: string): Promise<string> {
         return this.ensureDir(path.dirname(dest)).then(() => {
             return this._writeFile(dest, content);
+        });
+    }
+
+    public readFile(path: string): Promise<string> {
+        return new Promise<string>((resolve, reject) => {
+            fs.readFile(path, (err, data) => {
+                if (err) {
+                    return reject(err);
+                }
+                resolve(data.toString());
+            });
         });
     }
 
