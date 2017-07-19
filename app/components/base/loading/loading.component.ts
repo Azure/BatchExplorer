@@ -6,6 +6,9 @@ import {
 } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
 
+import { ServerError } from "app/models";
+import "./loading.scss";
+
 export enum LoadingStatus {
     Loading = 0,
     Ready = 1,
@@ -44,6 +47,9 @@ export class LoadingComponent {
         this._status = value;
         this._updateDisplayStatus();
     }
+
+    @Input()
+    public error: ServerError;
 
     public get status() {
         return this._status;

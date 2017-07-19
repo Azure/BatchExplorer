@@ -1,4 +1,4 @@
-<bl-loading [status]="data.newDataStatus | async">
+<bl-loading [status]="data.newDataStatus | async" [error]="data.error | async">
     <div *ngIf="pool && poolDecorator">
         <md-card class="overview">
             <div class="actions">
