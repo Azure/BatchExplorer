@@ -49,7 +49,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         private vmSizeService: VmSizeService,
         private pricingService: PricingService,
         private predefinedFormulaService: PredefinedFormulaService,
-        ) {
+    ) {
         this.autoscaleFormulaService.init();
         this.settingsService.init();
         this.sshKeyService.init();
@@ -59,7 +59,6 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.adalService.init(adalConfig);
         this.accountService.loadInitialData();
         pythonRpcService.init();
-
         this.predefinedFormulaService.init();
         this.hasAccount = accountService.currentAccount.map((x) => Boolean(x));
 
