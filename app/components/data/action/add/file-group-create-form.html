@@ -8,8 +8,8 @@
                 <bl-error controlName="name" code="required">The file group name is a required field</bl-error>
                 <bl-error controlName="name" code="maxlength">The file group name has a maximum length of 64 characters</bl-error>
                 <bl-error controlName="name" code="pattern">The file group name can contain any combination of alphanumeric characters including hyphens and underscores</bl-error>
-                <bl-error controlName="name" code="duplicate">The given file group name already exists</bl-error>
             </div>
+            <p *ngIf="groupExists"><b>This file group already exists, any selected files will be added to this existing group</b></p>
         </bl-form-section>
 
         <bl-form-section title="Files" subtitle="Choose a directory containing the files you want to include in the file group">
@@ -22,6 +22,9 @@
                     <!-- todo: include warning if too many files in folder. if we can even know how many -->
                 </div>
             </div>
+            <div class="form-element">
+                <md-checkbox formControlName="includeSubDirectories" color="primary">Include sub directories</md-checkbox>
+            </div>
         </bl-form-section>
 
         <bl-form-section title="File options" subtitle="How data should be laid out in storage">
@@ -30,7 +33,8 @@
             </div>
         </bl-form-section>
 
-        <bl-form-section title="Select container access policy" subtitle="Select a container access policy for your file group.">
+        <!-- No access policy exists currently in the file group CLI -->
+        <!-- <bl-form-section title="Select container access policy" subtitle="Select a container access policy for your file group.">
             <div class="form-element">
                 <md-select formControlName="accessPolicy" color="primary" placeholder="Access policy">
                     <md-option value="private">Private</md-option>
@@ -42,6 +46,6 @@
                 generated file or container SAS token. Public means blobs within the container can be read by anonymous
                 requests.
             </p>
-        </bl-form-section>
+        </bl-form-section> -->
     </bl-form-page>
 </bl-complex-form>

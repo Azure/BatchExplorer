@@ -9,6 +9,9 @@ export class FileGroupCreateDto extends Dto<FileGroupCreateDto> {
     public folder: string;
 
     @DtoAttr()
+    public includeSubDirectories: boolean;
+
+    @DtoAttr()
     public accessPolicy: string;
 
     @DtoAttr()

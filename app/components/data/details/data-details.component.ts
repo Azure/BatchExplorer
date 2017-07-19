@@ -4,12 +4,11 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs/Subscription";
 
-import { SidebarManager } from "app/components/base/sidebar";
 import { BlobContainer } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";
 import { GetContainerParams, StorageService  } from "app/services";
 import { RxEntityProxy } from "app/services/core";
-import { DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "../action";
+import { DeleteContainerDialogComponent } from "../action";
 
 @Component({
     selector: "bl-data-details",
@@ -36,7 +35,6 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
         private storageService: StorageService,
         private dialog: MdDialog,
         private router: Router,
-        private sidebarManager: SidebarManager,
         private viewContainerRef: ViewContainerRef) {
 
         this.data = this.storageService.getContainerProperties(null);
@@ -63,14 +61,14 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
         this._paramsSubscriber.unsubscribe();
     }
 
-    @autobind()
-    public addFileGroup() {
-        const sidebarRef = this.sidebarManager.open("Add a new file group", FileGroupCreateFormComponent);
-        // sidebarRef.component.setValue(this.container);
-        sidebarRef.afterCompletition.subscribe(() => {
-            this.refresh();
-        });
-    }
+    // @autobind()
+    // public addFileGroup() {
+    //     const sidebarRef = this.sidebarManager.open("Add a new file group", FileGroupCreateFormComponent);
+    //     // sidebarRef.component.setValue(this.container);
+    //     sidebarRef.afterCompletition.subscribe(() => {
+    //         this.refresh();
+    //     });
+    // }
 
     @autobind()
     public deleteFileGroup() {

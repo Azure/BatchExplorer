@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
@@ -6,11 +6,12 @@ import { Observable } from "rxjs";
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { DynamicForm } from "app/core";
-import { BlobContainer } from "app/models";
+import { AccountResource, BlobContainer } from "app/models";
 import { FileGroupCreateDto } from "app/models/dtos";
 import { CreateFileGroupModel, createFileGroupFormToJsonData } from "app/models/forms";
-import { PythonRpcService, StorageService } from "app/services";
+import { AccountService, PythonRpcService, StorageService } from "app/services";
 import { Constants, log } from "app/utils";
+import * as path from "path";
 
 import "./file-group-create-form.scss";
 
@@ -18,15 +19,19 @@ import "./file-group-create-form.scss";
     selector: "bl-file-group-create-form",
     templateUrl: "file-group-create-form.html",
 })
-export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, FileGroupCreateDto> {
+export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, FileGroupCreateDto> implements OnInit {
     public folder: string;
+    public groupExists: boolean;
+
+    private _account: AccountResource;
 
     constructor(
-        private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<FileGroupCreateFormComponent>,
-        private storageService: StorageService,
+        private accountService: AccountService,
+        private formBuilder: FormBuilder,
         private notificationService: NotificationService,
-        private pythonRpcService: PythonRpcService) {
+        private pythonRpcService: PythonRpcService,
+        private storageService: StorageService) {
         super(FileGroupCreateDto);
 
         const validation = Constants.forms.validation;
@@ -39,29 +44,42 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                 this._validateFileGroupName.bind(this),
             ]],
             folder: ["", [Validators.required]],
+            includeSubDirectories: [true],
             options: [null, []],
             accessPolicy: ["private"],
         });
     }
 
+    public ngOnInit() {
+        this.accountService.currentAccount.subscribe((account: AccountResource) => {
+            this._account = account;
+        });
+    }
+
+    // TODO: file group name needs to comply with container name
+
     @autobind()
     public submit(): Observable<any> {
-        this.notificationService.warn("Create file group", "Not wired up to persist anything yet ...");
         const formGroup = this.getCurrentValue();
-
-        // todo: remove when done
-        log.warn("form group json: ", formGroup.toJS() as any);
-        this.pythonRpcService.call("create_file_group", [
+        const observable = this.pythonRpcService.call("create_file_group", [
             formGroup.name,
-            formGroup.folder,
-            formGroup.accessPolicy,
+            formGroup.includeSubDirectories ? path.join(formGroup.folder, "**\\*") : formGroup.folder,
             formGroup.options,
-        ]).subscribe({
-            next: (data) => log.warn("Got create", data),
-            error: (err) => log.warn("Error create", err),
+            this._account.toJS(),
+        ]);
+        observable.subscribe({
+            next: (data) => {
+                const message = `${data.uploadCount} files were successfully uploaded to the file group`;
+                this.storageService.onFileGroupAdded.next(`${this.storageService.ncjFileGroupPrefix}${formGroup.name}`);
+                this.notificationService.success("Create file group", message, { persist: true });
+            },
+            error: (error) => {
+                this.notificationService.error("Create file group", "Failed to create form group");
+                log.error("Failed to create form group", error);
+            },
         });
 
-        return Observable.of(null);
+        return observable;
     }
 
     public dtoToForm(fileGroup: FileGroupCreateDto): CreateFileGroupModel {
@@ -100,9 +118,11 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                 const containerName = `${this.storageService.ncjFileGroupPrefix}${control.value}`;
                 this.storageService.getContainerOnce(containerName).subscribe({
                 next: (container: BlobContainer) => {
-                    resolve({ duplicate: true });
+                    this.groupExists = true;
+                    resolve(null);
                 },
                 error: (error) => {
+                    this.groupExists = false;
                     resolve(null);
                 },
             });

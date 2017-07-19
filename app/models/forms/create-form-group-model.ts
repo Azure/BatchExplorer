@@ -8,6 +8,7 @@ export interface FileGroupOptionsModel {
 export interface CreateFileGroupModel {
     name: string;
     folder: string;
+    includeSubDirectories: boolean;
     accessPolicy: string;
     options: FileGroupOptionsModel;
 }
@@ -16,6 +17,7 @@ export function createFileGroupFormToJsonData(formData: CreateFileGroupModel): a
     let data: any = {
         name: formData.name,
         folder: formData.folder,
+        includeSubDirectories: formData.includeSubDirectories,
         accessPolicy: formData.accessPolicy,
         options: formData.options,
     };

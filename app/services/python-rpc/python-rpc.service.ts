@@ -105,9 +105,9 @@ export class PythonRpcService {
         const container = this._currentRequests[request.id] = {
             request,
             subject: new AsyncSubject(),
-            timeout: setTimeout(() => {
+            timeout: null /*setTimeout(() => {
                 this._timeoutRequest(request.id);
-            }, requestTimeout),
+            }, requestTimeout)*/,
         };
 
         return container;
