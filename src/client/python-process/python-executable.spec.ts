@@ -1,0 +1,3 @@
+fdescribe("python-executable", () => {
+    fit("")
+});
