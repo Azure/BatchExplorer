@@ -18,6 +18,7 @@ export * from "./container-lease";
 export * from "./image-reference";
 export * from "./failure-info";
 export * from "./file";
+export * from "./file-group";
 export * from "./file-type";
 export * from "./file-properties";
 export * from "./job";
