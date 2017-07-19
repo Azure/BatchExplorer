@@ -62,6 +62,14 @@ export class NcjTemplateService {
         }).share();
     }
 
+    /**
+     * Return the application icon path
+     * @param applicationId Id of the application
+     */
+    public getApplicationIcon(applicationId: string): string {
+        return this.getFullPath(`${applicationId}/icon.svg`);
+    }
+
     public listActions(applicationId: string): Observable<List<ApplicationAction>> {
         return this.get(`${applicationId}/index.json`).map((apps) => {
             return List<ApplicationAction>(apps.map(x => new ApplicationAction(x)));
