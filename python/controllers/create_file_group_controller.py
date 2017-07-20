@@ -1,6 +1,7 @@
 from os import listdir
 import azure.batch_extensions as batch
 from server.app import app
+from jsonrpc import JsonRpcErrorCodes, error
 
 SUBDIR_FILTER = "**\\*"
 
@@ -15,6 +16,8 @@ PARAM_INDEX_NAME = 0
 PARAM_INDEX_DIRECTORY = 1
 PARAM_INDEX_OPTIONS = 2
 PARAM_INDEX_ACCOUNT = 3
+
+ERROR_REQUIRED_PARAM = "{} is a required parameter"
 
 @app.procedure("create_file_group")
 def create_file_group(params):
@@ -46,8 +49,11 @@ def create_file_group(params):
 
     try:
         client.file.upload(directory, name, prefix, flatten, __uploadCallback)
-    except Exception as error:
-        raise Exception("Failed to upload files to file group: " + str(error))
+    except ValueError as valueError:
+        raise error.JsonRpcError(
+            code=JsonRpcErrorCodes.BATCH_CLIENT_ERROR,
+            message="Failed to upload files to file group",
+            data={"originalError": str(valueError)})
 
     # just return this count to the user, can do something better later
     # TODO: keep track of uploading files in the callback below.
@@ -65,10 +71,10 @@ def __validateRequiredGroupParams(params):
     name = params[PARAM_INDEX_NAME]
     directory = params[PARAM_INDEX_DIRECTORY]
 
-    if name is None:
-        raise Exception("File group name is a required parameter")
-    elif directory is None:
-        raise Exception("File group source directory is a required parameter")
+    if not name:
+        raise __getRequiredParameterError("File group name")
+    elif not directory:
+        raise __getRequiredParameterError("File group source directory")
     else:
         return [name, directory]
 
@@ -77,15 +83,21 @@ def __validateAccountParams(params):
     account = params[PARAM_INDEX_ACCOUNT]
 
     if account is None:
-        raise Exception("Batch account is a required parameter")
+        raise __getRequiredParameterError("Batch account")
     elif account.get(PARAM_ACCOUNT_NAME) is None:
-        raise Exception("Batch account name is a required parameter")
+        raise __getRequiredParameterError("Batch account name")
     elif account.get(PARAM_ACCOUNT_PROPERTIES) is None:
-        raise Exception("Batch account properties is a required parameter")
+        raise __getRequiredParameterError("Batch account properties")
     elif account.get(PARAM_ACCOUNT_PROPERTIES).get(PARAM_ACCOUNT_URL) is None:
-        raise Exception("Batch account URL is a required parameter")
+        raise __getRequiredParameterError("Batch account URL")
     else:
         return [
             account.get(PARAM_ACCOUNT_NAME),
             "https://" + account.get(PARAM_ACCOUNT_PROPERTIES).get(PARAM_ACCOUNT_URL)
         ]
+
+def __getRequiredParameterError(parameter):
+    return error.JsonRpcError(
+        code=JsonRpcErrorCodes.INVALID_PARAMS,
+        message=ERROR_REQUIRED_PARAM.format(parameter),
+        data=None)

@@ -32,7 +32,8 @@ interface RequestContainer {
     timeout: any;
 }
 
-const requestTimeout = 10000;
+// TODO: comment out unused for now.
+// const requestTimeout = 10000;
 
 @Injectable()
 export class PythonRpcService {
@@ -156,20 +157,21 @@ export class PythonRpcService {
         return request;
     }
 
+    // TODO: As per Tim's suggestion, commented out for now so no timeouts.
     /**
      * Remove the request from the list of pending request and log a timeout.
      * @param requestId Id of the request
      */
-    private _timeoutRequest(requestId: string) {
-        const request = this._currentRequests[requestId];
-        if (!request) {
-            return;
-        }
-        delete this._currentRequests[requestId];
+    // private _timeoutRequest(requestId: string) {
+    //     const request = this._currentRequests[requestId];
+    //     if (!request) {
+    //         return;
+    //     }
+    //     delete this._currentRequests[requestId];
 
-        request.subject.error({
-            code: 408,
-            message: `Rpc request timeout after ${requestTimeout}ms`,
-        });
-    }
+    //     request.subject.error({
+    //         code: 408,
+    //         message: `Rpc request timeout after ${requestTimeout}ms`,
+    //     });
+    // }
 }

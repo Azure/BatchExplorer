@@ -1,6 +1,7 @@
 import { Response } from "@angular/http";
 
 import { BatchError } from "./batch-error";
+import { PythonPRpcError } from "./python-rpc-error";
 import { StorageError } from "./storage-error";
 
 interface ServerErrorAttributes {
@@ -15,6 +16,7 @@ interface ServerErrorBodyAttributes {
     message?: string;
     requestId?: string;
     values?: any[];
+    data?: any;
 }
 
 /**
@@ -58,6 +60,20 @@ export class ServerError {
             statusText: response.statusText,
             body: body,
             original: response,
+        });
+    }
+
+    public static fromPython(error: PythonPRpcError) {
+        const body = {
+            code: error.code.toString(),
+            message: error.message,
+            data: error.data,
+        };
+
+        return new ServerError({
+            status: error.code,
+            body: body,
+            original: error,
         });
     }
 

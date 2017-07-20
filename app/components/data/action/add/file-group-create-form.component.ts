@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { DynamicForm } from "app/core";
-import { AccountResource, BlobContainer } from "app/models";
+import { AccountResource, BlobContainer, ServerError } from "app/models";
 import { FileGroupCreateDto } from "app/models/dtos";
 import { CreateFileGroupModel, createFileGroupFormToJsonData } from "app/models/forms";
 import { AccountService, PythonRpcService, StorageService } from "app/services";
@@ -38,8 +38,8 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
         this.form = this.formBuilder.group({
             name: ["", [
                 Validators.required,
-                Validators.maxLength(validation.maxLength.id),
-                Validators.pattern(validation.regex.id),
+                Validators.maxLength(validation.maxLength.fileGroup),
+                Validators.pattern(validation.regex.fileGroup),
             ], [
                 this._validateFileGroupName.bind(this),
             ]],
@@ -74,8 +74,13 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                 this.notificationService.success("Create file group", message, { persist: true });
             },
             error: (error) => {
-                this.notificationService.error("Create file group", "Failed to create form group");
+                this.notificationService.error(
+                    "Create file group",
+                    "Failed to create form group with error: " + error.message);
                 log.error("Failed to create form group", error);
+
+                // TODO: Make this work ....
+                // return Observable.throw(ServerError.fromPython(error));
             },
         });
 
