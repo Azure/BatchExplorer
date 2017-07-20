@@ -272,7 +272,7 @@ export class AccountService {
     }
 
     private _loadFavoriteAccounts(): Observable<List<AccountResource>> {
-        let sub = new AsyncSubject();
+        let sub = new AsyncSubject<List<AccountResource>>();
         storage.get(this._accountJsonFileName, (error, data) => {
             if (error) {
                 log.error("Error retrieving accounts");
@@ -288,7 +288,7 @@ export class AccountService {
             sub.complete();
         });
 
-        return sub;
+        return sub.asObservable();
     }
 
     private _saveAccountFavorites(accounts: List<AccountResource> = null): Observable<any> {

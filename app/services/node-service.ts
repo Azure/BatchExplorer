@@ -60,16 +60,17 @@ export class NodeService extends ServiceBase {
     }
 
     public listAll(poolId: string, options: PoolListOptions = {}): Observable<List<Node>> {
-        const subject = new AsyncSubject();
+        const subject = new AsyncSubject<List<Node>>();
         options.pageSize = 1000;
         const data = this.list(poolId, options);
         const sub = data.items.subscribe((x) => subject.next(x));
         data.fetchAll().subscribe(() => {
+
             subject.complete();
             sub.unsubscribe();
         });
 
-        return subject;
+        return subject.asObservable();
     }
 
     public get(initialPoolId: string, initialNodeId: string, options: any): RxEntityProxy<NodeParams, Node> {
