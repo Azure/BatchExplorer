@@ -69,21 +69,17 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
     @autobind()
     public submit(): Observable<any> {
         const task = this.getCurrentValue();
-        // const id = task.id;
+        const id = task.id;
+        const onAddedParams = { jobId: this.jobId, id };
+        const observable = this.taskService.add(this.jobId, task, {});
+        observable.subscribe({
+            next: () => {
+                this.notificationService.success("Task added!", `Task '${id}' was created successfully!`);
+                this.taskService.onTaskAdded.next(onAddedParams);
+            },
+            error: (error) => null,
+        });
 
-        console.log("TASK DATA: ", task);
-
-        // const onAddedParams = { jobId: this.jobId, id };
-        // const observable = this.taskService.add(this.jobId, task, {});
-        // observable.subscribe({
-        //     next: () => {
-        //         this.notificationService.success("Task added!", `Task '${id}' was created successfully!`);
-        //         this.taskService.onTaskAdded.next(onAddedParams);
-        //     },
-        //     error: (error) => null,
-        // });
-
-        // return observable;
-        return Observable.of(null);
+        return observable;
     }
 }
