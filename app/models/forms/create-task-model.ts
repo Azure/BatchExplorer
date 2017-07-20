@@ -12,7 +12,6 @@ export interface CreateTaskModel {
     commandLine: string;
     exitConditions: any;
     resourceFiles: any[];
-    fileGroups: any[];
     environmentSettings: any[];
     affinityInfo: any;
     constraints: TaskConstraintsModel;
@@ -29,7 +28,7 @@ export function createTaskFormToJsonData(formData: CreateTaskModel): any {
         displayName: formData.displayName,
         commandLine: formData.commandLine,
         exitConditions: null,
-        resourceFiles: buildResourceFiles(formData.resourceFiles, formData.fileGroups),
+        resourceFiles: formData.resourceFiles,
         environmentSettings: formData.environmentSettings,
         affinityInfo: null,
         constraints: {
@@ -52,7 +51,6 @@ export function taskToFormModel(task: TaskCreateDto): CreateTaskModel {
         commandLine: task.commandLine,
         exitConditions: task.exitConditions,
         resourceFiles: task.resourceFiles,
-        fileGroups: task.fileGroups,
         environmentSettings: task.environmentSettings,
         affinityInfo: task.affinityInfo,
 
@@ -77,8 +75,4 @@ function durationToString(duration: moment.Duration) {
     } else {
         return null;
     }
-}
-
-function buildResourceFiles(resourceFiles: any[], fileGroups: any[]) {
-    return resourceFiles.concat(fileGroups);
 }
