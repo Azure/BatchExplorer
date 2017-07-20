@@ -4,11 +4,13 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs/Subscription";
 
+import { SidebarManager } from "app/components/base/sidebar";
 import { BlobContainer } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";
+import { FileGroupCreateDto } from "app/models/dtos";
 import { GetContainerParams, StorageService  } from "app/services";
 import { RxEntityProxy } from "app/services/core";
-import { DeleteContainerDialogComponent } from "../action";
+import { DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "../action";
 
 @Component({
     selector: "bl-data-details",
@@ -32,9 +34,10 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
 
     constructor(
         private activatedRoute: ActivatedRoute,
-        private storageService: StorageService,
         private dialog: MdDialog,
         private router: Router,
+        private sidebarManager: SidebarManager,
+        private storageService: StorageService,
         private viewContainerRef: ViewContainerRef) {
 
         this.data = this.storageService.getContainerProperties(null);
@@ -61,14 +64,19 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
         this._paramsSubscriber.unsubscribe();
     }
 
-    // @autobind()
-    // public addFileGroup() {
-    //     const sidebarRef = this.sidebarManager.open("Add a new file group", FileGroupCreateFormComponent);
-    //     // sidebarRef.component.setValue(this.container);
-    //     sidebarRef.afterCompletition.subscribe(() => {
-    //         this.refresh();
-    //     });
-    // }
+    @autobind()
+    public manageFileGroup() {
+        const sidebarRef = this.sidebarManager.open("Maintain a file group", FileGroupCreateFormComponent);
+        sidebarRef.component.setValue(new FileGroupCreateDto({
+            name: this.container.name,
+            includeSubDirectories: true,
+            folder: null,
+        }));
+
+        sidebarRef.afterCompletition.subscribe(() => {
+            this.storageService.onFileGroupUpdated.next();
+        });
+    }
 
     @autobind()
     public deleteFileGroup() {

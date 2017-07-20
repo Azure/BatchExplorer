@@ -1,8 +1,9 @@
+import { FileGroupCreateDto } from "app/models/dtos";
 
 export interface FileGroupOptionsModel {
     prefix?: string;
-    flatten: string;
-    fullPath: string;
+    flatten: boolean;
+    fullPath: boolean;
 }
 
 export interface CreateFileGroupModel {
@@ -23,4 +24,14 @@ export function createFileGroupFormToJsonData(formData: CreateFileGroupModel): a
     };
 
     return data;
+}
+
+export function fileGroupToFormModel(fileGroup: FileGroupCreateDto): CreateFileGroupModel {
+    return {
+        name: fileGroup.name,
+        folder: fileGroup.folder,
+        includeSubDirectories: fileGroup.includeSubDirectories,
+        accessPolicy: fileGroup.accessPolicy,
+        options: fileGroup.options,
+    };
 }

@@ -1,5 +1,5 @@
 <bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef">
-    <bl-form-page main-form-page title="Create file group" [formGroup]="form">
+    <bl-form-page main-form-page [title]="title" [subtitle]="description" [formGroup]="form">
         <bl-form-section title="General info" subtitle="Basic information about the file group">
             <div class="form-element">
                 <md-input-container>
@@ -32,20 +32,5 @@
                 <bl-file-group-options-picker formControlName="options"></bl-file-group-options-picker>
             </div>
         </bl-form-section>
-
-        <!-- No access policy exists currently in the file group CLI -->
-        <!-- <bl-form-section title="Select container access policy" subtitle="Select a container access policy for your file group.">
-            <div class="form-element">
-                <md-select formControlName="accessPolicy" color="primary" placeholder="Access policy">
-                    <md-option value="private">Private</md-option>
-                    <md-option value="public">Public</md-option>
-                </md-select>
-            </div>
-            <p>
-                Private means the container and it's blobs can be accessed only by the storage account owner and via a
-                generated file or container SAS token. Public means blobs within the container can be read by anonymous
-                requests.
-            </p>
-        </bl-form-section> -->
     </bl-form-page>
 </bl-complex-form>

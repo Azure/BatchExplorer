@@ -6,9 +6,9 @@ import { Observable } from "rxjs";
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { DynamicForm } from "app/core";
-import { AccountResource, BlobContainer, ServerError } from "app/models";
+import { AccountResource, BlobContainer } from "app/models";
 import { FileGroupCreateDto } from "app/models/dtos";
-import { CreateFileGroupModel, createFileGroupFormToJsonData } from "app/models/forms";
+import { CreateFileGroupModel, createFileGroupFormToJsonData, fileGroupToFormModel } from "app/models/forms";
 import { AccountService, PythonRpcService, StorageService } from "app/services";
 import { Constants, log } from "app/utils";
 import * as path from "path";
@@ -22,6 +22,10 @@ import "./file-group-create-form.scss";
 export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, FileGroupCreateDto> implements OnInit {
     public folder: string;
     public groupExists: boolean;
+    public editing: boolean;
+    public title: string = "Create file group";
+    public description: string = "Upload files into a managed storage container that you can use " +
+        "for resource files in your jobs and tasks";
 
     private _account: AccountResource;
 
@@ -51,12 +55,11 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     }
 
     public ngOnInit() {
+        this.editing = false;
         this.accountService.currentAccount.subscribe((account: AccountResource) => {
             this._account = account;
         });
     }
-
-    // TODO: file group name needs to comply with container name
 
     @autobind()
     public submit(): Observable<any> {
@@ -67,6 +70,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
             formGroup.options,
             this._account.toJS(),
         ]);
+
         observable.subscribe({
             next: (data) => {
                 const message = `${data.uploadCount} files were successfully uploaded to the file group`;
@@ -88,8 +92,12 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     }
 
     public dtoToForm(fileGroup: FileGroupCreateDto): CreateFileGroupModel {
-        // dont think we need to clone so nothing to do here
-        return null;
+        this.editing = true;
+        this.title = "Add folder to file group";
+        this.description = "Add another folder to an already existing file group";
+        this.form.controls.name.disable();
+
+        return fileGroupToFormModel(fileGroup);
     }
 
     public formToDto(data: CreateFileGroupModel): FileGroupCreateDto {
@@ -115,7 +123,9 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     }
 
     /**
-     * Async validator to check a given filegroup does not already exist
+     * Async validator to check if a given file-group exists.
+     * If it does exist then we inform the user that they will be modifying
+     * the existing group and not creating a new one.
      */
     private _validateFileGroupName(control: FormControl): Promise<any> {
         return new Promise ((resolve) => {

@@ -12,7 +12,7 @@ export class FileGroupCreateDto extends Dto<FileGroupCreateDto> {
     public includeSubDirectories: boolean;
 
     @DtoAttr()
-    public accessPolicy: string;
+    public accessPolicy?: string;
 
     @DtoAttr()
     public options?: FileGroupOptionsDto;

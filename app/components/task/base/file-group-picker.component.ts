@@ -5,7 +5,7 @@ import {
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
-import { BlobContainer, FileGroup } from "app/models";
+import { BlobContainer } from "app/models";
 import { ListContainerParams, StorageService } from "app/services";
 import { RxListProxy } from "app/services/core";
 
@@ -23,7 +23,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
     public data: RxListProxy<ListContainerParams, BlobContainer>;
     public groups: List<string>;
 
-    private _propagateChange: (value: FileGroup[]) => void = null;
+    private _propagateChange: (value: any[]) => void = null;
     private _subscriptions: Subscription[] = [];
 
     // TODO: handle no autostorage, hide file group control if account has no autostorage settings.
@@ -55,7 +55,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
         this._subscriptions.forEach(x => x.unsubscribe());
     }
 
-    public writeValue(value: FileGroup[]) {
+    public writeValue(value: any[]) {
         if (value) {
             const unmapped = this._mapFileGroupsFromApi(value);
             this.fileGroups.setValue(unmapped);
@@ -75,7 +75,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
     }
 
     // data in the table is flattened so turn it into correct objects
-    private _mapFileGroupsFromForm(files: any): FileGroup[] {
+    private _mapFileGroupsFromForm(files: any): any[] {
         return files.map((file: any) => {
             return {
                 source: {
@@ -88,8 +88,8 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
     }
 
     // data from the api needs to be flattened to display in the table
-    private _mapFileGroupsFromApi(files: FileGroup[]): any[] {
-        return files.map((file: FileGroup) => {
+    private _mapFileGroupsFromApi(files: any[]): any[] {
+        return files.map((file: any) => {
             return {
                 fileGroup: file.source.fileGroup,
                 prefix: file.source.prefix,

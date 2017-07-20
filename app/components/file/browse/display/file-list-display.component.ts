@@ -2,6 +2,7 @@ import { Component, Input } from "@angular/core";
 import { List } from "immutable";
 
 import { LoadingStatus } from "app/components/base/loading";
+import { ListOrTableBase } from "app/components/base/selectable-list";
 import { File } from "app/models";
 import { DateUtils, prettyBytes } from "app/utils";
 
@@ -9,7 +10,7 @@ import { DateUtils, prettyBytes } from "app/utils";
     selector: "bl-file-list-display",
     templateUrl: "file-list-display.html",
 })
-export class FileListDisplayComponent {
+export class FileListDisplayComponent extends ListOrTableBase {
     /**
      * If set to true it will display the quick list view, if false will use the table view
      */
@@ -33,6 +34,10 @@ export class FileListDisplayComponent {
      */
     @Input()
     public isBlob: boolean = false;
+
+    public constructor() {
+        super();
+    }
 
     public prettyFileSize(size: string) {
         // having falsy issues with contentLength = 0

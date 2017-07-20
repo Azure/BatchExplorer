@@ -68,6 +68,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
         this._paramsSubscriber.unsubscribe();
     }
 
+    @autobind()
     public addPackage() {
         const sidebarRef = this.sidebarManager.open("add-package", ApplicationCreateDialogComponent);
         sidebarRef.component.setValue(this.application);
@@ -76,6 +77,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
         });
     }
 
+    @autobind()
     public editApplication() {
         const sidebarRef = this.sidebarManager.open("edit-application", ApplicationEditDialogComponent);
         sidebarRef.component.setValue(this.application);
@@ -84,6 +86,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
         });
     }
 
+    @autobind()
     public deleteApplication() {
         let config = new MdDialogConfig();
         config.viewContainerRef = this.viewContainerRef;

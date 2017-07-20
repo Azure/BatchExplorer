@@ -1,17 +1,21 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { MdDialog } from "@angular/material";
 import { Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Observable, Subscription } from "rxjs";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
+import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListItemStatus } from "app/components/base/quick-list";
 import { ListOrTableBase } from "app/components/base/selectable-list";
+import { SidebarManager } from "app/components/base/sidebar";
 import { BlobContainer, LeaseStatus } from "app/models";
+import { FileGroupCreateDto } from "app/models/dtos";
 import { ListContainerParams, StorageService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
-import { DeleteContainerAction } from "../action";
+import { DeleteContainerAction, DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "../action";
 
 @Component({
     selector: "bl-file-group-list",
@@ -38,10 +42,12 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
 
     constructor(
         router: Router,
+        dialog: MdDialog,
+        private sidebarManager: SidebarManager,
         private taskManager: BackgroundTaskService,
         private storageService: StorageService) {
 
-        super();
+        super(dialog);
         this.data = this.storageService.listContainers(storageService.ncjFileGroupPrefix);
 
         this.hasAutoStorage = false;
@@ -101,6 +107,13 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
         });
     }
 
+    public contextmenu(container: BlobContainer) {
+        return new ContextMenu([
+            new ContextMenuItem({ label: "Delete", click: () => this._deleteFileGroup(container) }),
+            new ContextMenuItem({ label: "Add more files", click: () => this._manageFileGroup(container) }),
+        ]);
+    }
+
     private _setContainerFilter(filter: Filter) {
         if (filter.isEmpty() || filter.properties.length === 0) {
             this.data.setOptions({});
@@ -112,5 +125,27 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
         if (this.hasAutoStorage) {
             this.data.fetchNext();
         }
+    }
+
+    private _deleteFileGroup(container: BlobContainer) {
+        const dialogRef = this.dialog.open(DeleteContainerDialogComponent);
+        dialogRef.componentInstance.id = container.id;
+        dialogRef.componentInstance.name = container.name;
+        dialogRef.afterClosed().subscribe((obj) => {
+            this.storageService.getContainerOnce(container.id);
+        });
+    }
+
+    private _manageFileGroup(container: BlobContainer) {
+        const sidebarRef = this.sidebarManager.open("Maintain a file group", FileGroupCreateFormComponent);
+        sidebarRef.component.setValue(new FileGroupCreateDto({
+            name: container.name,
+            includeSubDirectories: true,
+            folder: null,
+        }));
+
+        sidebarRef.afterCompletition.subscribe(() => {
+            this.storageService.onFileGroupUpdated.next();
+        });
     }
 }

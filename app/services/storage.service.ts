@@ -50,6 +50,7 @@ export class StorageService {
      * Used to notify the list of a new item
      */
     public onFileGroupAdded = new Subject<string>();
+    public onFileGroupUpdated = new Subject();
     public ncjFileGroupPrefix: string = "fgrp-";
     public maxBlobPageSize: number = 100; // 500 slows down the UI too much.
     public maxContainerPageSize: number = 50;

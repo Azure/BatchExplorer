@@ -4,6 +4,7 @@
             <div class="actions">
                 <bl-button-group>
                     <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+                    <bl-edit-button title="Add more files to the file group" [action]="manageFileGroup"></bl-edit-button>
                     <bl-delete-button title="Delete this file group" [entity]="container" [action]="deleteFileGroup"></bl-delete-button>
                 </bl-button-group>
             </div>
