@@ -28,3 +28,4 @@ branches:
   only:
   - master
   - stable
+  - ncj

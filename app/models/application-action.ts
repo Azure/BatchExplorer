@@ -1,6 +1,6 @@
 import { Model, Prop, Record } from "app/core";
 
-export interface ApplicationAttributes {
+export interface ApplicationActionAttributes {
     id: string;
     name: string;
     description: string;
@@ -10,7 +10,7 @@ export interface ApplicationAttributes {
  * Class for displaying Batch application information.
  */
 @Model()
-export class Application extends Record<ApplicationAttributes> {
+export class ApplicationAction extends Record<ApplicationActionAttributes> {
     @Prop() public id: string;
     @Prop() public name: string;
     @Prop() public description: string;
