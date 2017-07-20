@@ -8,7 +8,7 @@
     </div>
 
     <ul>
-        <li *ngFor="let template of templates" (click)="selected=template['name'];state='Page2'" > 
+        <li *ngFor="let template of templates" (click)="selected=template['name'];state='Page2';createForms();form=getTemplate(selected).form;" > 
           
             {{ template["name"]}} : {{ template["description"]}}
         
@@ -29,20 +29,35 @@
         Complete the form:
     </div>
 
-    <ul>
-        <li *ngFor="let parameter of getParameters(selected)" > 
-          
-            {{ parameter }}
-        
-        </li>
-    </ul>
+    <form 
+        [formGroup]="form"
+        (ngSubmit)="onSubmit(form.value)">
+        <ul>
+            <div *ngFor="let parameter of getParameters(selected)" >
+                <li>
+                    <label for="name"> 
+                        {{ parameter }}
+                    </label>
+                </li>
+                
+                <li>
+                    <input type="text" name="name" id="name" formControlName="{{parameter}}"> 
+                </li>
+            </div>
+        </ul>
 
+        <button type="submit">
+            Submit
+        </button>
+    </form>
 
     <button (click) = "state='Page1';selected=''">
-        Prev
+            Prev
     </button>
-    <button (click) = "state='Page1';selected=''">
-        Submit
-    </button>
+
+    
+
+
+    
     
 </div>

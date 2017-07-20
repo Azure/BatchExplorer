@@ -1,10 +1,14 @@
-import { Component} from "@angular/core";
+import {Component} from "@angular/core";
+import { FormGroup, FormControl } from "@angular/forms";
+import { FormBuilder } from "@angular/forms";
+
 
 @Component({
     selector: "bl-market-home",
     templateUrl: "market-home.html",
 })
 export class MarketHomeComponent {
+    form;
     state='Page1';
     selected="";
     templates = [ 
@@ -18,6 +22,10 @@ export class MarketHomeComponent {
         return { name: "Market" };
     }
 
+    onSubmit(formItem){
+        console.log(formItem);
+    }
+
     getTemplate(name){
         for (var i=0;i<this.templates.length;i++){
             if (this.templates[i].name==name){
@@ -29,7 +37,6 @@ export class MarketHomeComponent {
         var parameters =[]
         for (var i=0;i<this.templates.length;i++){
             if (this.templates[i].name==name){
-                console.log(this.templates[i]);
                 var parameterKeys = Object.keys(this.templates[i]["parameters"]);
                 for (var j=0;j<parameterKeys.length;j++){
                     parameters.push(parameterKeys[j]);
@@ -38,7 +45,26 @@ export class MarketHomeComponent {
         }
         return parameters;
     }
-    constructor() {
+
+    createForms(){
+        for (var i=0;i<this.templates.length;i++){
+            var parameterKeys = Object.keys(this.templates[i]["parameters"]);
+            var fg = {};
+            for (var j=0;j<parameterKeys.length;j++){
+                if ("defaultValue" in this.templates[i]["parameters"][parameterKeys[j]]){
+                    fg[parameterKeys[j]] = new FormControl(String(this.templates[i]["parameters"][parameterKeys[j]]["defaultValue"]));
+                }
+                else{
+                    fg[parameterKeys[j]] = new FormControl();
+                }
+            }
+            this.templates[i]["form"] = new FormGroup(fg);
+        }
+    }
+    ngOnInit(){
+        this.createForms();
+    }
+    constructor(public formBuilder: FormBuilder) {
             console.log("Entered Market");
             for (var i=0;i<this.templates.length;i++){
                 var file = JSON.parse(this.templates[i].filecontent);
