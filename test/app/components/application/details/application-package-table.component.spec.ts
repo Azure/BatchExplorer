@@ -8,7 +8,7 @@ import { Observable } from "rxjs";
 import { ApplicationPackageTableComponent } from "app/components/application/details";
 import { BackgroundTaskService } from "app/components/base/background-task";
 import { SidebarManager } from "app/components/base/sidebar";
-import { Application, PackageState } from "app/models";
+import { BatchApplication, PackageState } from "app/models";
 import { ApplicationService } from "app/services";
 import { Property } from "app/utils/filter-builder";
 import * as Fixtures from "test/fixture";
@@ -21,19 +21,23 @@ import {
 const appWithPackagesId: string = "app-2";
 const appWithoutPackagesId: string = "app-1";
 const disabledApp: string = "app-3";
-const applicationMap: Map<string, Application> = new Map()
+const applicationMap: Map<string, BatchApplication> = new Map()
     .set(appWithoutPackagesId, Fixtures.application.create({ id: appWithoutPackagesId }))
-    .set(appWithPackagesId, Fixtures.application.create({ id: appWithPackagesId, packages: [
-        Fixtures.applicationPackage.create({ version: "1.0" }),
-        Fixtures.applicationPackage.create({ version: "2.0" }),
-        Fixtures.applicationPackage.create({ version: "3.0" }),
-        Fixtures.applicationPackage.create({ version: "4.0" }),
-        Fixtures.applicationPackage.create({ version: "5.0" }),
-    ]}))
-    .set(disabledApp, Fixtures.application.create({ id: disabledApp, allowUpdates: false, packages: [
-        Fixtures.applicationPackage.create({ version: "1.0" }),
-        Fixtures.applicationPackage.create({ version: "2.0" }),
-    ]}));
+    .set(appWithPackagesId, Fixtures.application.create({
+        id: appWithPackagesId, packages: [
+            Fixtures.applicationPackage.create({ version: "1.0" }),
+            Fixtures.applicationPackage.create({ version: "2.0" }),
+            Fixtures.applicationPackage.create({ version: "3.0" }),
+            Fixtures.applicationPackage.create({ version: "4.0" }),
+            Fixtures.applicationPackage.create({ version: "5.0" }),
+        ],
+    }))
+    .set(disabledApp, Fixtures.application.create({
+        id: disabledApp, allowUpdates: false, packages: [
+            Fixtures.applicationPackage.create({ version: "1.0" }),
+            Fixtures.applicationPackage.create({ version: "2.0" }),
+        ],
+    }));
 
 describe("ApplicationPackageTableComponent", () => {
     let fixture: ComponentFixture<ApplicationPackageTableComponent>;
@@ -46,10 +50,10 @@ describe("ApplicationPackageTableComponent", () => {
                 .createSpy("getOnce").and
                 .callFake((applicationId: string) => {
 
-                return Observable.of(
-                    applicationMap.get(applicationId) || Fixtures.application.create({ id: applicationId }),
-                );
-            }),
+                    return Observable.of(
+                        applicationMap.get(applicationId) || Fixtures.application.create({ id: applicationId }),
+                    );
+                }),
         };
 
         TestBed.configureTestingModule({
@@ -138,12 +142,12 @@ describe("ApplicationPackageTableComponent", () => {
             });
 
             it("enabled if one item selected", () => {
-                component.table.selectedItems = [ "1.0" ];
+                component.table.selectedItems = ["1.0"];
                 expect(component.deleteItemEnabled.value).toBe(true);
             });
 
             it("enabled if many items selected", () => {
-                component.table.selectedItems = [ "1.0", "2.0", "3.0" ];
+                component.table.selectedItems = ["1.0", "2.0", "3.0"];
                 expect(component.deleteItemEnabled.value).toBe(true);
             });
 
@@ -162,12 +166,12 @@ describe("ApplicationPackageTableComponent", () => {
             });
 
             it("enabled if one item selected", () => {
-                component.table.selectedItems = [ "1.0" ];
+                component.table.selectedItems = ["1.0"];
                 expect(component.editItemEnabled.value).toBe(true);
             });
 
             it("disabled if many items selected", () => {
-                component.table.selectedItems = [ "1.0", "2.0", "3.0" ];
+                component.table.selectedItems = ["1.0", "2.0", "3.0"];
                 expect(component.editItemEnabled.value).toBe(false);
             });
 
@@ -182,11 +186,13 @@ describe("ApplicationPackageTableComponent", () => {
 
         describe("activateItemEnabled", () => {
             beforeEach(() => {
-                component.application = Fixtures.application.create({ id: "app-4", packages: [
-                    Fixtures.applicationPackage.create({ version: "active", state: PackageState.active }),
-                    Fixtures.applicationPackage.create({ version: "pending1", state: PackageState.pending }),
-                    Fixtures.applicationPackage.create({ version: "pending2", state: PackageState.pending }),
-                ]});
+                component.application = Fixtures.application.create({
+                    id: "app-4", packages: [
+                        Fixtures.applicationPackage.create({ version: "active", state: PackageState.active }),
+                        Fixtures.applicationPackage.create({ version: "pending1", state: PackageState.pending }),
+                        Fixtures.applicationPackage.create({ version: "pending2", state: PackageState.pending }),
+                    ],
+                });
 
                 component.ngOnChanges({ application: component.application });
                 fixture.detectChanges();
@@ -204,7 +210,7 @@ describe("ApplicationPackageTableComponent", () => {
 
             it("disabled if many items selected", () => {
                 component.table.setActiveItem("pending1");
-                component.table.selectedItems = [ "pending1", "pending2" ];
+                component.table.selectedItems = ["pending1", "pending2"];
                 expect(component.activateItemEnabled.value).toBe(false);
             });
         });
