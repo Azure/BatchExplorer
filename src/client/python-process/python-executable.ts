@@ -31,6 +31,7 @@ export function tryPython(pythonPath: string): Promise<string> {
         }
         return pythonPath;
     }).catch((error) => {
+        console.log("GOt here wtf...", error);
         return Promise.reject(new PythonExecutableNotFoundError(pythonPath));
     });
 }
