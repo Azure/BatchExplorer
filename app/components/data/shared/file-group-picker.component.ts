@@ -3,7 +3,7 @@ import {
     ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { List } from "immutable";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
 import { BlobContainer } from "app/models";
 import { ListContainerParams, StorageService } from "app/services";
@@ -22,6 +22,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
     public fileGroups: FormControl;
     public data: RxListProxy<ListContainerParams, BlobContainer>;
     public groups: List<string>;
+    public filteredOptions: Observable<string[]>;
 
     private _propagateChange: (value: any[]) => void = null;
     private _subscriptions: Subscription[] = [];
@@ -35,7 +36,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
         this.data = this.storageService.listContainers(storageService.ncjFileGroupPrefix);
         this._subscriptions.push(this.data.items.subscribe((fileGroupContainers) => {
             this.groups = List(fileGroupContainers.map((container) => container.name));
-            console.log("GOT: ", this.groups);
+            // console.log("GOT: ", this.groups);
         }));
 
         this.fileGroups = this.formBuilder.control([]);

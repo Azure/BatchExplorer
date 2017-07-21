@@ -1,13 +1,9 @@
 import os
 import azure.batch_extensions as batch
+
 from server.app import app
 from jsonrpc import JsonRpcErrorCodes, error
-#from azure.common.credentials import AADTokenCredentials
-
-from msrestazure.azure_active_directory import AADTokenCredentials
-
-
-# AADTokenCredentials
+from msrestazure.azure_active_directory import AdalAuthentication
 
 SUBDIR_FILTER = "**\\*"
 
@@ -20,20 +16,23 @@ PARAM_ACCOUNT_URL = "accountEndpoint"
 PARAM_ACCOUNT_SUBSCRIPTION = "subscription"
 PARAM_ACCOUNT_SUBSCRIPTION_ID = "subscriptionId"
 
-PARAM_INDEX_AUTH_TOKEN = 0
-PARAM_INDEX_NAME = 1
-PARAM_INDEX_DIRECTORY = 2
-PARAM_INDEX_OPTIONS = 3
-PARAM_INDEX_ACCOUNT = 4
+PARAM_INDEX_BATCH_TOKEN = 0
+PARAM_INDEX_ARM_TOKEN = 1
+PARAM_INDEX_NAME = 2
+PARAM_INDEX_DIRECTORY = 3
+PARAM_INDEX_OPTIONS = 4
+PARAM_INDEX_ACCOUNT = 5
 
 ERROR_REQUIRED_PARAM = "{} is a required parameter"
 
 @app.procedure("create_file_group")
 def create_file_group(params):
-    authToken = __validateAuthTokenParam(params)
+    batchToken, armToken = __validateAuthTokenParam(params)
     name, directory = __validateRequiredGroupParams(params)
     accountName, accountUrl, subscriptionId = __validateAccountParams(params)
     options = params[PARAM_INDEX_OPTIONS]
+
+    # default these parameters as they are optional
     prefix, flatten, fullPath = [None, False, False]
 
     if options:
@@ -51,15 +50,17 @@ def create_file_group(params):
     if fullPath:
         prefix = directory.replace(SUBDIR_FILTER, "")
 
-    tokenCreds = AADTokenCredentials(
-        token={"token":authToken})
+    # Need credentials for both Batch and ARM
+    batchCreds = AdalAuthentication(lambda: {"accessToken":batchToken})
+    armCreds = AdalAuthentication(lambda: {"accessToken":armToken, "tokenType": "Bearer"})
 
     # Create extension client
     client = batch.BatchExtensionsClient(
-        credentials=tokenCreds,
+        credentials=batchCreds,
         batch_account=accountName,
         base_url=accountUrl,
-        subscription_id=subscriptionId)
+        subscription_id=subscriptionId,
+        mgmt_credentials=armCreds)
 
     try:
         client.file.upload(directory, name, prefix, flatten, __uploadCallback)
@@ -79,6 +80,8 @@ def create_file_group(params):
         "uploaded": uploadCount,
     }
 
+# Callback from file upload. Anna is going to change to return filename as well.
+# TODO: Create a dictionary and pass back upload progress to the caller.
 def __uploadCallback(param1, param2):
     print("uploading {} of {} bytes".format(param1, param2))
 
@@ -96,10 +99,15 @@ def __validateRequiredGroupParams(params):
 
 # Check that the auth token was provided
 def __validateAuthTokenParam(params):
-    if not params[PARAM_INDEX_AUTH_TOKEN]:
-        raise __getRequiredParameterError("Authentication token")
+    if not params[PARAM_INDEX_BATCH_TOKEN]:
+        raise __getRequiredParameterError("Batch token")
+    elif not params[PARAM_INDEX_ARM_TOKEN]:
+        raise __getRequiredParameterError("ARM token")
     else:
-        return params[PARAM_INDEX_AUTH_TOKEN]
+        return [
+            params[PARAM_INDEX_BATCH_TOKEN],
+            params[PARAM_INDEX_ARM_TOKEN]
+        ]
 
 # Check account parameters that we need
 # TODO: No doubt there is an easier way to do this ...
@@ -129,4 +137,4 @@ def __getRequiredParameterError(parameter):
     return error.JsonRpcError(
         code=JsonRpcErrorCodes.INVALID_PARAMS,
         message=ERROR_REQUIRED_PARAM.format(parameter),
-        data={"status":404})
+        data={"status":400})

@@ -61,18 +61,23 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     @autobind()
     public submit(): Observable<any> {
         const formData = this.getCurrentValue();
-        const resource = Constants.ResourceUrl.batch;
+        const batch = Constants.ResourceUrl.batch;
+        const arm = Constants.ResourceUrl.arm;
 
+        // We now need to pass in both the Batch and ARM tokens as we are dealing with storage.
         const observable = this.accountService.currentAccount.cascade((account) => {
-            return this.adalService.accessTokenFor(account.subscription.tenantId, resource).cascade((token) => {
-                return this.pythonRpcService.call("create_file_group", [
-                    token,
-                    formData.name,
-                    formData.includeSubDirectories ? path.join(formData.folder, "**\\*") : formData.folder,
-                    formData.options,
-                    account.toJS(),
-                ]).catch((error) => {
-                    return Observable.throw(ServerError.fromPython(error));
+            return this.adalService.accessTokenFor(account.subscription.tenantId, batch).cascade((batchToken) => {
+                return this.adalService.accessTokenFor(account.subscription.tenantId, arm).cascade((armToken) => {
+                    return this.pythonRpcService.call("create_file_group", [
+                        batchToken,
+                        armToken,
+                        formData.name,
+                        formData.includeSubDirectories ? path.join(formData.folder, "**\\*") : formData.folder,
+                        formData.options,
+                        account.toJS(),
+                    ]).catch((error) => {
+                        return Observable.throw(ServerError.fromPython(error));
+                    });
                 });
             });
         }).share();
