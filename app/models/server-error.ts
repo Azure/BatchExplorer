@@ -65,16 +65,27 @@ export class ServerError {
 
     public static fromPython(error: PythonPRpcError) {
         const body = {
-            code: error.code.toString(),
+            code: ServerError._mapPythonErrorCode(error.code),
             message: error.message,
             data: error.data,
         };
 
         return new ServerError({
-            status: error.code,
+            status: error.data && error.data.status,
             body: body,
             original: error,
         });
+    }
+
+    private static _mapPythonErrorCode(code: number) {
+        switch (code) {
+            case -32602:
+                return "InvalidParameterValue";
+            case -32604:
+                return "BatchClientError";
+            default:
+                return null;
+        }
     }
 
     public status: number;

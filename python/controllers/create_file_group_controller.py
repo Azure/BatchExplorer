@@ -1,7 +1,13 @@
-from os import listdir
+import os
 import azure.batch_extensions as batch
 from server.app import app
 from jsonrpc import JsonRpcErrorCodes, error
+#from azure.common.credentials import AADTokenCredentials
+
+from msrestazure.azure_active_directory import AADTokenCredentials
+
+
+# AADTokenCredentials
 
 SUBDIR_FILTER = "**\\*"
 
@@ -11,18 +17,22 @@ PARAM_FLATTEN = "flatten"
 PARAM_ACCOUNT_NAME = "name"
 PARAM_ACCOUNT_PROPERTIES = "properties"
 PARAM_ACCOUNT_URL = "accountEndpoint"
+PARAM_ACCOUNT_SUBSCRIPTION = "subscription"
+PARAM_ACCOUNT_SUBSCRIPTION_ID = "subscriptionId"
 
-PARAM_INDEX_NAME = 0
-PARAM_INDEX_DIRECTORY = 1
-PARAM_INDEX_OPTIONS = 2
-PARAM_INDEX_ACCOUNT = 3
+PARAM_INDEX_AUTH_TOKEN = 0
+PARAM_INDEX_NAME = 1
+PARAM_INDEX_DIRECTORY = 2
+PARAM_INDEX_OPTIONS = 3
+PARAM_INDEX_ACCOUNT = 4
 
 ERROR_REQUIRED_PARAM = "{} is a required parameter"
 
 @app.procedure("create_file_group")
 def create_file_group(params):
+    authToken = __validateAuthTokenParam(params)
     name, directory = __validateRequiredGroupParams(params)
-    accountName, accountUrl = __validateAccountParams(params)
+    accountName, accountUrl, subscriptionId = __validateAccountParams(params)
     options = params[PARAM_INDEX_OPTIONS]
     prefix, flatten, fullPath = [None, False, False]
 
@@ -41,11 +51,15 @@ def create_file_group(params):
     if fullPath:
         prefix = directory.replace(SUBDIR_FILTER, "")
 
+    tokenCreds = AADTokenCredentials(
+        token={"token":authToken})
+
     # Create extension client
-    # TODO: Pass in AAD Auth Token
     client = batch.BatchExtensionsClient(
+        credentials=tokenCreds,
         batch_account=accountName,
-        base_url=accountUrl)
+        base_url=accountUrl,
+        subscription_id=subscriptionId)
 
     try:
         client.file.upload(directory, name, prefix, flatten, __uploadCallback)
@@ -53,14 +67,16 @@ def create_file_group(params):
         raise error.JsonRpcError(
             code=JsonRpcErrorCodes.BATCH_CLIENT_ERROR,
             message="Failed to upload files to file group",
-            data={"originalError": str(valueError)})
+            data={"original": str(valueError)})
 
     # just return this count to the user, can do something better later
-    # TODO: keep track of uploading files in the callback below.
-    uploadCount = len(listdir(directory.replace(SUBDIR_FILTER, "")))
+    # TODO: keep track of uploading files in the callback below and remove this code.
+    uploadCount = 0
+    for root, dirs, files in os.walk(directory.replace(SUBDIR_FILTER, "")):
+        uploadCount += len(files)
 
     return {
-        "uploadCount": uploadCount,
+        "uploaded": uploadCount,
     }
 
 def __uploadCallback(param1, param2):
@@ -78,7 +94,15 @@ def __validateRequiredGroupParams(params):
     else:
         return [name, directory]
 
+# Check that the auth token was provided
+def __validateAuthTokenParam(params):
+    if not params[PARAM_INDEX_AUTH_TOKEN]:
+        raise __getRequiredParameterError("Authentication token")
+    else:
+        return params[PARAM_INDEX_AUTH_TOKEN]
+
 # Check account parameters that we need
+# TODO: No doubt there is an easier way to do this ...
 def __validateAccountParams(params):
     account = params[PARAM_INDEX_ACCOUNT]
 
@@ -90,14 +114,19 @@ def __validateAccountParams(params):
         raise __getRequiredParameterError("Batch account properties")
     elif account.get(PARAM_ACCOUNT_PROPERTIES).get(PARAM_ACCOUNT_URL) is None:
         raise __getRequiredParameterError("Batch account URL")
+    elif account.get(PARAM_ACCOUNT_SUBSCRIPTION) is None:
+        raise __getRequiredParameterError("Batch account subscription")
+    elif account.get(PARAM_ACCOUNT_SUBSCRIPTION).get(PARAM_ACCOUNT_SUBSCRIPTION_ID) is None:
+        raise __getRequiredParameterError("Batch account subscription ID")
     else:
         return [
             account.get(PARAM_ACCOUNT_NAME),
-            "https://" + account.get(PARAM_ACCOUNT_PROPERTIES).get(PARAM_ACCOUNT_URL)
+            "https://" + account.get(PARAM_ACCOUNT_PROPERTIES).get(PARAM_ACCOUNT_URL),
+            account.get(PARAM_ACCOUNT_SUBSCRIPTION).get(PARAM_ACCOUNT_SUBSCRIPTION_ID),
         ]
 
 def __getRequiredParameterError(parameter):
     return error.JsonRpcError(
         code=JsonRpcErrorCodes.INVALID_PARAMS,
         message=ERROR_REQUIRED_PARAM.format(parameter),
-        data=None)
+        data={"status":404})

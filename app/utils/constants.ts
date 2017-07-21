@@ -135,6 +135,11 @@ export const ServiceUrl = {
     githubRaw: "https://raw.githubusercontent.com",
 };
 
+export const ResourceUrl = {
+    batch: "https://batch.core.windows.net/",
+    arm: "https://management.core.windows.net/",
+};
+
 export const APIErrorCodes = {
     containerNotFound: "ContainerNotFound",
     operationInvalidForCurrentState: "OperationInvalidForCurrentState",
