@@ -14,6 +14,7 @@ export class MarketHomeComponent {
     state='Page1';
     selected="";
     templates = [
+        {"name": "Blender", "filecontent":  require("../templates/blender.json")},
         {"name": "Maya Windows", "filecontent":  require("../templates/mayaSoftware-basic-windows.json")},
         {"name": "Maya Linux", "filecontent": require("../templates/mayaSoftware-basic-linux.json")},
         {"name": "Arnold Windows", "filecontent": require("../templates/arnold-basic-windows.json")},
@@ -26,7 +27,7 @@ export class MarketHomeComponent {
 
     onSubmit(formItem){
         console.log(formItem);
-        this.PythonService.call("submitNCJ", ["abc", "def",formItem]).subscribe({
+        this.PythonService.call("submitNCJ", [JSON.parse(this.getTemplate(this.selected)["filecontent"]),formItem]).subscribe({
             next: (data) => console.log("Got NCJ", data),
             error: (err) => console.log("Error NCJ", err),
         });
