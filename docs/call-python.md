@@ -41,3 +41,9 @@ pythonRpcService.call("other", ["abc", "def"]).subscribe({
     error: (err) => console.log("Error other", err),
 });
 ```
+
+
+## Throw an error from the python server
+
+You need to raise an errot that is a child of `JsonRpcError` or `JsonRpcError` itself to get the best result.
+Any other exception will act as a Server internal error and also get logged in the python
