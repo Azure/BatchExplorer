@@ -1,4 +1,4 @@
-import { Application } from "app/models";
+import { BatchApplication } from "app/models";
 
 export interface EditApplicationModel {
     displayName: string;
@@ -16,7 +16,7 @@ export function editApplicationFormToJsonData(formData: EditApplicationModel): a
     return data;
 }
 
-export function applicationToEditFormModel(application: Application): EditApplicationModel {
+export function applicationToEditFormModel(application: BatchApplication): EditApplicationModel {
     return {
         displayName: application.displayName,
         defaultVersion: application.defaultVersion,

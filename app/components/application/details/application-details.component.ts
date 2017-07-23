@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs/Subscription";
 
-import { Application } from "app/models";
+import { BatchApplication } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";
 import { ApplicationParams, ApplicationService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
@@ -26,10 +26,10 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
         };
     }
 
-    public application: Application;
+    public application: BatchApplication;
     public applicationId: string;
     public decorator: ApplicationDecorator;
-    public data: RxEntityProxy<ApplicationParams, Application>;
+    public data: RxEntityProxy<ApplicationParams, BatchApplication>;
 
     private _paramsSubscriber: Subscription;
 
