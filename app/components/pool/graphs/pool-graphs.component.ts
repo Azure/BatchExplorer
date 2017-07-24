@@ -72,12 +72,12 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
             select: "id,state,runningTasksCount,isDedicated",
         });
         this._nodesSub = this.data.items.subscribe((nodes) => {
-            // let n = [];
+            let n = [];
 
-            // for (let i = 0; i < 1000; i++) {
-            //     n.push(new Node({ id: i.toString(), state: "running", runningTasksCount: 12 }));
-            // }
-            // this.nodes = List(n);
+            for (let i = 0; i < 10; i++) {
+                n.push(new Node({ id: i.toString(), state: "running", runningTasksCount: 12 }));
+            }
+            nodes = List(n);
             this.nodes  = nodes;
 
             if (nodes.size !== 0) {
