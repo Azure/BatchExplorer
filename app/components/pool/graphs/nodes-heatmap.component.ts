@@ -294,7 +294,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         const runningTaskRects = taskGroup.selectAll("rect")
             .data((d) => {
                 const node: Node = d.node;
-                if (node.state !== NodeState.running || !node.recentTasks) {
+                if (node.state !== NodeState.running) {
                     return [];
                 }
                 const count = node.runningTasksCount;
