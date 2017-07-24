@@ -72,13 +72,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
             select: "id,state,runningTasksCount,isDedicated",
         });
         this._nodesSub = this.data.items.subscribe((nodes) => {
-            let n = [];
-
-            for (let i = 0; i < 10; i++) {
-                n.push(new Node({ id: i.toString(), state: "running", runningTasksCount: 12 }));
-            }
-            nodes = List(n);
-            this.nodes  = nodes;
+            this.nodes = nodes;
 
             if (nodes.size !== 0) {
 
@@ -87,7 +81,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
                 this.runningTaskHistory.update(this.nodes);
             }
             this._scanForProblems();
-        });
+        };
         this._jobData = jobService.list({
             select: "id",
         });

@@ -335,7 +335,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         } else {
             height = taskHeight - 1;
         }
-        return { taskHeight: Math.max(1, height - 1), combine };
+        return { taskHeight: Math.max(1, height), combine };
     }
     /**
      * Compute the dimension of the heatmap.
