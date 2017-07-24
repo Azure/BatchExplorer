@@ -81,7 +81,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
                 this.runningTaskHistory.update(this.nodes);
             }
             this._scanForProblems();
-        };
+        });
         this._jobData = jobService.list({
             select: "id",
         });
