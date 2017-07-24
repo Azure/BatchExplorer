@@ -1,63 +1,58 @@
 
-<div *ngIf="state=='Page1'"> 
-    <div> 
+<div *ngIf="state=='Page1'">
+    <div>
         Market Apps
     </div>
-    <div> 
+    <div>
         Select one of the following apps:
     </div>
 
     <ul>
-        <li *ngFor="let template of templates" (click)="selected=template['name'];state='Page2';createForms();form=getTemplate(selected).form;" > 
-          
+        <li *ngFor="let template of templates" (click)="selected=template['name'];state='Page2';createForms();form=getTemplate(selected).form;" >
+
             {{ template["name"]}} : {{ template["description"]}}
-        
+
         </li>
     </ul>
 </div>
-<div *ngIf="state=='Page2'"> 
-    <div> 
+<div *ngIf="state=='Page2'">
+    <div>
         App configuration
     </div>
 
     <ul>
         <li> Selected: {{ selected }} </li>
     </ul>
-   
 
-    <div> 
+
+    <div>
         Complete the form:
     </div>
 
-    <form 
-        [formGroup]="form"
-        (ngSubmit)="onSubmit(form.value)">
+    <form
+        [formGroup]="form">
         <ul>
             <div *ngFor="let parameter of getParameters(selected)" >
                 <li>
-                    <label for="name"> 
-                        {{ parameter }}
-                    </label>
-                </li>
-                
-                <li>
-                    <input type="text" name="name" id="name" formControlName="{{parameter}}"> 
+                    <md-input-container class="form-element">
+                        <input mdInput type="text" name="name" id="name" formControlName="{{parameter}}" [placeholder]="parameter">
+                    </md-input-container>
                 </li>
             </div>
         </ul>
 
-        <button type="submit">
+        <bl-button [action]="onSubmit" type="wide">
             Submit
-        </button>
+        </bl-button>
     </form>
 
-    <button (click) = "state='Page1';selected=''">
+    <bl-button (click) = "state='Page1';selected=''">
             Prev
-    </button>
-
-    
+    </bl-button>
 
 
-    
-    
+
+
+
+
 </div>

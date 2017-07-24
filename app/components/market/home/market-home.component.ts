@@ -2,7 +2,10 @@ import { Component } from "@angular/core";
 import { FormGroup, FormControl } from "@angular/forms";
 import { FormBuilder } from "@angular/forms";
 import { PythonRpcService } from "app/services";
+import {autobind} from "core-decorators";
 //python python/main.py
+
+import "./market-home.scss";
 
 @Component({
     selector: "bl-market-home",
@@ -10,7 +13,6 @@ import { PythonRpcService } from "app/services";
 })
 export class MarketHomeComponent {
     form;
-    PythonService;
     state='Page1';
     selected="";
     templates = [
@@ -25,12 +27,17 @@ export class MarketHomeComponent {
         return { name: "Market" };
     }
 
-    onSubmit(formItem){
+    @autobind()
+    onSubmit() {
+        const formItem = this.form.value;
         console.log(formItem);
-        this.PythonService.call("submitNCJ", [JSON.parse(this.getTemplate(this.selected)["filecontent"]),formItem]).subscribe({
+        const obs=  this.pythonRpcService.call("submitNCJ", [JSON.parse(this.getTemplate(this.selected)["filecontent"]),formItem]);
+        obs.subscribe({
             next: (data) => console.log("Got NCJ", data),
             error: (err) => console.log("Error NCJ", err),
         });
+
+        return obs;
     }
 
     getTemplate(name){
@@ -71,9 +78,8 @@ export class MarketHomeComponent {
     ngOnInit(){
         this.createForms();
     }
-    constructor(public formBuilder: FormBuilder, pythonRpcService: PythonRpcService) {
+    constructor(public formBuilder: FormBuilder, private pythonRpcService: PythonRpcService) {
             console.log("Entered Market");
-            this.PythonService = pythonRpcService;
             for (let i=0;i<this.templates.length;i++){
                 let file = JSON.parse(this.templates[i].filecontent);
                 this.templates[i]["description"] = file.templateMetadata.description;
