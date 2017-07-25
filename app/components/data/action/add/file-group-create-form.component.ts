@@ -9,7 +9,7 @@ import { DynamicForm } from "app/core";
 import { BlobContainer } from "app/models";
 import { FileGroupCreateDto } from "app/models/dtos";
 import { CreateFileGroupModel, createFileGroupFormToJsonData, fileGroupToFormModel } from "app/models/forms";
-import { CliFileGroupService, StorageService } from "app/services";
+import { NcjFileGroupService, StorageService } from "app/services";
 import { Constants, log } from "app/utils";
 
 import "./file-group-create-form.scss";
@@ -29,8 +29,8 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
 
     constructor(
         public sidebarRef: SidebarRef<FileGroupCreateFormComponent>,
-        private fileGroupService: CliFileGroupService,
         private formBuilder: FormBuilder,
+        private fileGroupService: NcjFileGroupService,
         private notificationService: NotificationService,
         private storageService: StorageService) {
         super(FileGroupCreateDto);

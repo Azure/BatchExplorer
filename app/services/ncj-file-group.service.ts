@@ -13,7 +13,7 @@ import { PythonRpcService } from "./python-rpc/python-rpc.service";
  * Service to handle file-group calls to the Python RPC service.
  */
 @Injectable()
-export class CliFileGroupService {
+export class NcjFileGroupService {
     constructor(
         private adalService: AdalService,
         private accountService: AccountService,
