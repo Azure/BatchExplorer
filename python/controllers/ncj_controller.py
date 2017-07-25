@@ -3,8 +3,6 @@ from server.app import app
 import azure.batch_extensions as batch
 from jsonrpc import JsonRpcErrorCodes, error
 from msrestazure.azure_active_directory import AdalAuthentication
-
-
 from azure.common.credentials import ServicePrincipalCredentials
 import azure.batch_extensions as batch
 from azure.batch_extensions import models
@@ -21,4 +19,4 @@ def submitNCJ(params):
     job_json = client.job.expand_template(params[0], params[1])
     job = client.job.jobparameter_from_json(job_json)
     client.job.add(job)
-    return {"what": "it works2!"}
+    return {"It": "Works!"}
