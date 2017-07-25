@@ -1,18 +1,19 @@
 @import "app/styles/variables";
 
 bl-pool-graphs {
+    display: block;
+    overflow: hidden;
+
     .charts-previews {
         margin-bottom: 15px;
-        // padding-bottom: 10px;
-        border-bottom: 1px solid $border-color;
         display: flex;
         user-select: none;
 
         > .preview {
             cursor: pointer;
-            margin-right: 5px;
             padding: 10px;
             border-right: 1px solid $border-color;
+            border-bottom: 1px solid $border-color;
             flex: 1;
             .label {
                 font-size: 11px;
@@ -21,7 +22,13 @@ bl-pool-graphs {
             }
 
             &.focused {
+                display:  flex;
+                align-items: center;
+                justify-content: center;
+                border-bottom: none;
+
                 .label {
+                    font-size: 16px;
                     color: map-get($primary, 600);
                 }
 
@@ -36,7 +43,8 @@ bl-pool-graphs {
         }
 
         > .config {
-            margin: 20px 10px;
+            padding: 20px 10px;
+            border-bottom: 1px solid $border-color;
         }
     }
 
