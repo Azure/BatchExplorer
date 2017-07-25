@@ -1,6 +1,7 @@
 import asyncio
 import websockets
 from jsonrpc import JsonRpcRequest, JsonRpcResponse, error
+from .response_stream import ResponseStream
 from .app import app
 from controllers import *
 
@@ -54,11 +55,15 @@ class WebsocketConnection:
             print("< {0} {1}".format(request.request_id, request.method))
 
             result = app.call_procedure(request)
-            response = JsonRpcResponse(
-                request=request,
-                result=result,
-            )
-            await self.send_response(response)
+
+            if isinstance(result, ResponseStream):
+                await self.__handle_response_stream(request, result)
+            else:
+                response = JsonRpcResponse(
+                    request=request,
+                    result=result,
+                )
+                await self.send_response(response)
         except error.JsonRpcError as rpc_error:
             response = JsonRpcResponse(
                 request=request,
@@ -80,3 +85,14 @@ class WebsocketConnection:
         data = response.to_json()
         await self.websocket.send(data)
         print("> {}".format(data))
+
+    def __handle_response_stream(self, request: JsonRpcRequest, stream: ResponseStream):
+        stream.onData(lambda data, last: self.__send_stream_response(request, data, last))
+
+    async def __send_stream_response(self, request: JsonRpcRequest, data, last: bool):
+        response = JsonRpcResponse(
+            request=request,
+            result=data,
+            stream=not last,
+        )
+        await self.send_response(response)
