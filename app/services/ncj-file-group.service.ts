@@ -41,7 +41,7 @@ export class NcjFileGroupService {
                         batchToken,
                         armToken,
                         fileGroup.name,
-                        fileGroup.includeSubDirectories ? path.join(fileGroup.folder, "**//*") : fileGroup.folder,
+                        fileGroup.includeSubDirectories ? path.join(fileGroup.folder, "**/*") : fileGroup.folder,
                         fileGroup.options,
                         account.toJS(),
                     ]).catch((error) => {

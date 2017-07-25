@@ -68,8 +68,8 @@ export abstract class RxEntityProxy<TParams, TEntity> extends RxProxyBase<TParam
                     if (queryKey) {
                         this.cache.deleteItemByKey(queryKey);
                     } else {
-                        // tslint:disable:max-line-length
                         const paramsString = Object.keys(this.params).join(",");
+                        // tslint:disable-next-line:max-line-length
                         log.warn(`Unable to find unique key for cached item. Property: ${this.cache.uniqueField}, with params: ${paramsString}. The property must exist in the params collection.`);
                     }
                 }
