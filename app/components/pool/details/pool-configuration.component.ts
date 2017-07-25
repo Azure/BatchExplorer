@@ -6,7 +6,7 @@ import { EditMetadataFormComponent } from "app/components/base/form/edit-metadat
 import { SidebarManager } from "app/components/base/sidebar";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { ApplicationPackageReference, CertificateReference, Metadata, Pool, StartTask } from "app/models";
-import { PoolDecorator, StartTaskDecorator } from "app/models/decorators";
+import { PoolDecorator } from "app/models/decorators";
 import { PoolPatchDto } from "app/models/dtos";
 import { PoolService } from "app/services";
 
