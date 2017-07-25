@@ -1,12 +1,10 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { MdDialog, MdDialogConfig } from "@angular/material";
 import { ActivatedRoute } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs";
 
 import { DialogService } from "app/components/base/dialogs";
 import { SidebarManager } from "app/components/base/sidebar";
-import { SimpleDialogComponent } from "app/components/base/simple-dialog";
 import { Node, Pool } from "app/models";
 import { FileService, NodeParams, NodeService, PoolService } from "app/services";
 import { RxEntityProxy } from "app/services/core";

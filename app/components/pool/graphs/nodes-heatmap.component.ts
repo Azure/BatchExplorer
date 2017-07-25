@@ -6,12 +6,13 @@ import { Router } from "@angular/router";
 import * as d3 from "d3";
 import * as elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
+import { NotificationService } from "app/components/base/notifications";
 import { SidebarManager } from "app/components/base/sidebar";
 import { NodeConnectComponent } from "app/components/node/connect";
-import { Job, Node, NodeState, Pool } from "app/models";
+import { Job, Node, NodeState, Pool, ServerError } from "app/models";
 import { NodeService } from "app/services";
 import { log } from "app/utils";
 import { HeatmapColor } from "./heatmap-color";
@@ -117,6 +118,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         private contextMenuService: ContextMenuService,
         private nodeService: NodeService,
         private sidebarManager: SidebarManager,
+        private notificationService: NotificationService,
         private router: Router,
     ) {
         this.colors = new HeatmapColor(stateTree);
@@ -437,15 +439,33 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     }
 
     private _reboot(node: Node) {
-        this.nodeService.reboot(this.pool.id, node.id).cascade(() => this.nodeService.getOnce(this.pool.id, node.id));
+        this._nodeAction(node, this.nodeService.reboot(this.pool.id, node.id)).cascade(() => {
+            this.notificationService.success("Node reimaging!", `Node ${node.id} started reimaging`);
+        });
     }
 
     private _reimage(node: Node) {
-        this.nodeService.reimage(this.pool.id, node.id).cascade(() => this.nodeService.getOnce(this.pool.id, node.id));
+        this._nodeAction(node, this.nodeService.reimage(this.pool.id, node.id)).cascade(() => {
+            this.notificationService.success("Node rebooting!", `Node ${node.id} started rebooting`);
+        });
     }
 
     private _delete(node: Node) {
-        this.nodeService.delete(this.pool.id, node.id).cascade(() => this.nodeService.getOnce(this.pool.id, node.id));
+        this._nodeAction(node, this.nodeService.delete(this.pool.id, node.id)).cascade(() => {
+            this.notificationService.success("Node deleting!", `Node ${node.id} is being removed from the pool.`);
+        });
+    }
+
+    private _nodeAction(node: Node, action: Observable<any>): Observable<any> {
+        action.subscribe({
+            next: () => {
+                this.nodeService.getOnce(this.pool.id, node.id);
+            },
+            error: (error: ServerError) => {
+                this.notificationService.error(error.body.code, error.body.message);
+            },
+        });
+        return action;
     }
 
     private _gotoNode(node: Node) {
