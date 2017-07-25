@@ -3,7 +3,6 @@ import os
 from server.app import app
 from jsonrpc import JsonRpcErrorCodes, error, JsonRpcRequest
 
-# used for string replacement so i think it needs to stay like this.
 SUBDIR_FILTER = os.path.join('**', '*')
 
 PARAM_PREFIX = "prefix"
