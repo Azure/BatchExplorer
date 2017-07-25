@@ -1,12 +1,11 @@
-import { autobind } from "core-decorators";
-import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject } from "rxjs";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
+import { WaitForDeletePoller } from "app/components/core/pollers";
 import { Job } from "app/models";
 import { JobService } from "app/services";
 import { LongRunningDeleteAction } from "app/services/core";
 
-// todo: refactor me along with WaitForDeleteJobPollTask
 export class DeleteJobAction extends LongRunningDeleteAction {
     constructor(private jobService: JobService, jobIds: string[]) {
         super("job", jobIds);
@@ -19,7 +18,7 @@ export class DeleteJobAction extends LongRunningDeleteAction {
     protected waitForDelete(id: string, taskManager?: BackgroundTaskService) {
         this.jobService.getOnce(id).subscribe({
             next: (job: Job) => {
-                const task = new WaitForDeleteJobPoller(this.jobService, id);
+                const task = new WaitForDeletePoller(this.jobService.get(id));
                 if (taskManager) {
                     taskManager.startTask(`Deleting Job '${id}'`, (bTask) => {
                         return task.start(bTask.progress);
@@ -37,28 +36,5 @@ export class DeleteJobAction extends LongRunningDeleteAction {
                 this.markItemAsDeleted();
             },
         });
-    }
-}
-
-export class WaitForDeleteJobPoller {
-    constructor(private jobService: JobService, private jobId) {
-    }
-
-    @autobind()
-    public start(progress: BehaviorSubject<any>): Observable<any> {
-        const obs = new AsyncSubject();
-        let interval = setInterval(() => {
-            this.jobService.getOnce(this.jobId).subscribe({
-                error: (e) => {
-                    progress.next(100);
-                    clearInterval(interval);
-                    obs.complete();
-                },
-            });
-        }, 5000);
-
-        progress.next(-1);
-
-        return obs.asObservable();
     }
 }

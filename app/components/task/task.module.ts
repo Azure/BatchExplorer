@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 
 import { commonModules } from "app/common";
+import { DataSharedModule } from "app/components/data/shared";
 import { TaskBaseModule } from "app/components/task/base";
 import { TaskBrowseModule } from "app/components/task/browse";
 import { TaskDetailsModule } from "app/components/task/details";
@@ -19,7 +20,7 @@ const components = [
 ];
 
 const modules = [
-    TaskBaseModule, TaskBrowseModule, TaskDetailsModule, ...commonModules,
+    DataSharedModule, TaskBaseModule, TaskBrowseModule, TaskDetailsModule, ...commonModules,
 ];
 
 @NgModule({

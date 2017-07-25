@@ -12,7 +12,7 @@ const defaultOptions = {
 };
 
 export interface RxStorageListProxyConfig<TParams, TEntity> extends RxListProxyConfig<TParams, TEntity> {
-    getData: (client: any, params: TParams, options: any) => any;
+    getData: (client: any, params: TParams, options: any, token: any) => any;
     initialOptions?: any;
 }
 
@@ -22,7 +22,7 @@ export interface RxStorageListProxyConfig<TParams, TEntity> extends RxListProxyC
 export class RxStorageListProxy<TParams, TEntity> extends RxListProxy<TParams, TEntity> {
     private _continuationToken = null;
     private _loadedFirst = false;
-    private _getData: (client: any, params: TParams, options: any) => any;
+    private _getData: (client: any, params: TParams, options: any, token: any) => any;
 
     constructor(
         type: Type<TEntity>,
@@ -75,7 +75,7 @@ export class RxStorageListProxy<TParams, TEntity> extends RxListProxy<TParams, T
 
     private _clientProxy() {
         return this.storageClient.get().map((client) => {
-           return this._getData(client, this._params, this._computeOptions(this._options));
+           return this._getData(client, this._params, this._computeOptions(this._options), this._continuationToken);
         }).share();
     }
 }

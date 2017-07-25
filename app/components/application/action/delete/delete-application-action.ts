@@ -1,7 +1,7 @@
 import { BehaviorSubject } from "rxjs";
 
-import { WaitForDeletePoller } from "app/components/application/action";
 import { BackgroundTaskService } from "app/components/base/background-task";
+import { WaitForDeletePoller } from "app/components/core/pollers";
 import { BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
 import { LongRunningDeleteAction } from "app/services/core";

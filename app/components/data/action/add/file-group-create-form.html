@@ -1,0 +1,36 @@
+<bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef">
+    <bl-form-page main-form-page [title]="title" [subtitle]="description" [formGroup]="form">
+        <bl-form-section title="General info" subtitle="Basic information about the file group">
+            <div class="form-element">
+                <md-input-container>
+                    <input mdInput formControlName="name" placeholder="File group name">
+                </md-input-container>
+                <bl-error controlName="name" code="required">The file group name is a required field</bl-error>
+                <bl-error controlName="name" code="maxlength">The file group name has a maximum length of 64 characters</bl-error>
+                <bl-error controlName="name" code="pattern">The file group name can contain any combination of lowercase alphanumeric characters including single hyphens</bl-error>
+            </div>
+            <p *ngIf="groupExists"><b>This file group already exists, any selected files will be added to this existing group</b></p>
+        </bl-form-section>
+
+        <bl-form-section title="Files" subtitle="Choose a directory containing the files you want to include in the file group">
+            <div class="form-element">
+                <bl-directory-picker [onChange]="selectFolder">Select directory</bl-directory-picker>
+                <bl-error controlName="folder" code="required">Please select a valid directory that contains your files</bl-error>
+                <div *ngIf="hasValidFolder()" class="input-summary">
+                    <h4>Selected folder details</h4>
+                    <p><b>{{ folder }}</b></p>
+                    <!-- todo: include warning if too many files in folder. if we can even know how many -->
+                </div>
+            </div>
+            <div class="form-element">
+                <md-checkbox formControlName="includeSubDirectories" color="primary">Include sub directories</md-checkbox>
+            </div>
+        </bl-form-section>
+
+        <bl-form-section title="File options" subtitle="How data should be laid out in storage">
+            <div class="form-element">
+                <bl-file-group-options-picker formControlName="options"></bl-file-group-options-picker>
+            </div>
+        </bl-form-section>
+    </bl-form-page>
+</bl-complex-form>

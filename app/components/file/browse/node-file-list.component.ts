@@ -69,6 +69,7 @@ export class NodeFileListComponent implements OnInit, OnChanges {
         if (!(this.poolId && this.nodeId)) {
             return;
         }
+
         let options = {};
         const filter = this._buildFilter();
         if (!filter.isEmpty()) {
@@ -76,9 +77,11 @@ export class NodeFileListComponent implements OnInit, OnChanges {
                 filter: filter.toOData(),
             };
         }
+
         this.data.updateParams({ poolId: this.poolId, nodeId: this.nodeId });
         this.data.setOptions(options); // This clears the previous list objects
         this.notFound = false;
+
         return this.data.fetchNext(true);
     }
 
