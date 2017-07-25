@@ -3,6 +3,7 @@ export * from "./application-service";
 export * from "./autoscale-formula.service";
 export * from "./azure-http.service";
 export * from "./arm-http.service";
+export * from "./cli-file-group.service";
 export * from "./compute.service";
 export * from "./electron";
 export * from "./file-service";

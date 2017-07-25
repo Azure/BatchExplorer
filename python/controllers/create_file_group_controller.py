@@ -5,7 +5,8 @@ from server.app import app
 from jsonrpc import JsonRpcErrorCodes, error
 from msrestazure.azure_active_directory import AdalAuthentication
 
-SUBDIR_FILTER = "**\\*"
+# used for string replacement so i think it needs to stay like this.
+SUBDIR_FILTER = "**\*"
 
 PARAM_PREFIX = "prefix"
 PARAM_FULL_PATH = "fullPath"

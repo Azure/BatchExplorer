@@ -36,7 +36,6 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
         this.data = this.storageService.listContainers(storageService.ncjFileGroupPrefix);
         this._subscriptions.push(this.data.items.subscribe((fileGroupContainers) => {
             this.groups = List(fileGroupContainers.map((container) => container.name));
-            // console.log("GOT: ", this.groups);
         }));
 
         this.fileGroups = this.formBuilder.control([]);

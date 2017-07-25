@@ -6,13 +6,11 @@ import { Observable } from "rxjs";
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { DynamicForm } from "app/core";
-import { BlobContainer, ServerError } from "app/models";
+import { BlobContainer } from "app/models";
 import { FileGroupCreateDto } from "app/models/dtos";
 import { CreateFileGroupModel, createFileGroupFormToJsonData, fileGroupToFormModel } from "app/models/forms";
-import { AccountService, PythonRpcService, StorageService } from "app/services";
-import { AdalService } from "app/services/adal";
+import { CliFileGroupService, StorageService } from "app/services";
 import { Constants, log } from "app/utils";
-import * as path from "path";
 
 import "./file-group-create-form.scss";
 
@@ -22,6 +20,7 @@ import "./file-group-create-form.scss";
 })
 export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, FileGroupCreateDto> implements OnInit {
     public folder: string;
+    public folderControl: FormControl;
     public groupExists: boolean;
     public editing: boolean;
     public title: string = "Create file group";
@@ -30,15 +29,15 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
 
     constructor(
         public sidebarRef: SidebarRef<FileGroupCreateFormComponent>,
-        private adalService: AdalService,
-        private accountService: AccountService,
+        private fileGroupService: CliFileGroupService,
         private formBuilder: FormBuilder,
         private notificationService: NotificationService,
-        private pythonRpcService: PythonRpcService,
         private storageService: StorageService) {
         super(FileGroupCreateDto);
 
         const validation = Constants.forms.validation;
+
+        this.folderControl = formBuilder.control("", Validators.required);
         this.form = this.formBuilder.group({
             name: ["", [
                 Validators.required,
@@ -47,7 +46,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
             ], [
                 this._validateFileGroupName.bind(this),
             ]],
-            folder: ["", [Validators.required]],
+            folder: this.folderControl,
             includeSubDirectories: [true],
             options: [null, []],
             accessPolicy: ["private"],
@@ -61,27 +60,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     @autobind()
     public submit(): Observable<any> {
         const formData = this.getCurrentValue();
-        const batch = Constants.ResourceUrl.batch;
-        const arm = Constants.ResourceUrl.arm;
-
-        // We now need to pass in both the Batch and ARM tokens as we are dealing with storage.
-        const observable = this.accountService.currentAccount.cascade((account) => {
-            return this.adalService.accessTokenFor(account.subscription.tenantId, batch).cascade((batchToken) => {
-                return this.adalService.accessTokenFor(account.subscription.tenantId, arm).cascade((armToken) => {
-                    return this.pythonRpcService.call("create_file_group", [
-                        batchToken,
-                        armToken,
-                        formData.name,
-                        formData.includeSubDirectories ? path.join(formData.folder, "**\\*") : formData.folder,
-                        formData.options,
-                        account.toJS(),
-                    ]).catch((error) => {
-                        return Observable.throw(ServerError.fromPython(error));
-                    });
-                });
-            });
-        }).share();
-
+        const observable = this.fileGroupService.createFileGroup(formData);
         observable.subscribe({
             next: (data) => {
                 const message = `${data.uploaded} files were successfully uploaded to the file group`;
@@ -112,19 +91,19 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     @autobind()
     public selectFolder(changeEvent: Event) {
         const element = changeEvent.srcElement as any;
-        this.form.controls["folder"].markAsTouched();
+        this.folderControl.markAsTouched();
 
         if (element.files.length > 0) {
             this.folder = element.files[0].path;
-            this.form.controls["folder"].setValue(this.folder);
+            this.folderControl.setValue(this.folder);
         } else {
             this.folder = null;
-            this.form.controls["folder"].setValue(null);
+            this.folderControl.setValue(null);
         }
     }
 
     public hasValidFolder(): boolean {
-        return this.folder && this.form.controls["folder"].valid;
+        return this.folder && this.folderControl.valid;
     }
 
     /**
@@ -137,15 +116,17 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
             setTimeout(() => {
                 const containerName = `${this.storageService.ncjFileGroupPrefix}${control.value}`;
                 this.storageService.getContainerOnce(containerName).subscribe({
-                next: (container: BlobContainer) => {
-                    this.groupExists = true;
-                    resolve(null);
-                },
-                error: (error) => {
-                    this.groupExists = false;
-                    resolve(null);
-                },
-            });
+                    next: (container: BlobContainer) => {
+                        this.groupExists = true;
+                        resolve(null);
+                    },
+                    error: (error) => {
+                        this.groupExists = false;
+                        resolve(null);
+                    },
+                });
+            // timeout for allowing the user to type more than one character.
+            // async validation fires after every kepress.
             }, 500);
         });
     }
