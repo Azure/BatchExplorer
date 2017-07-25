@@ -3,7 +3,7 @@ import { List } from "immutable";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
-import { prettyBytes } from "app/utils";
+import { DateUtils, prettyBytes } from "app/utils";
 
 @Component({
     selector: "bl-file-list-display",
@@ -37,6 +37,10 @@ export class FileListDisplayComponent {
     public prettyFileSize(size: string) {
         // having falsy issues with contentLength = 0
         return prettyBytes(parseInt(size || "0", 10));
+    }
+
+    public prettyDate(date: Date) {
+        return DateUtils.customFormat(date, "MMM Do, YYYY, HH:mm:ss");
     }
 
     /**

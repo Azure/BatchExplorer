@@ -15,6 +15,9 @@ export class TaskCreateDto extends Dto<TaskCreateDto> {
     public resourceFiles?: ResourceFileDto[];
 
     @DtoAttr()
+    public fileGroups?: FileGroupDto[];
+
+    @DtoAttr()
     public applicationPackageReferences?: ApplicationPackageReferenceDto[];
 
     @DtoAttr()
@@ -43,6 +46,16 @@ export interface ResourceFileDto {
     blobSource: string;
     filePath: string;
     fileMode?: string;
+}
+
+export interface FileGroupDto {
+    source: GroupSourceDto;
+    filePath: string;
+}
+
+export interface GroupSourceDto {
+    fileGroup: string;
+    prefix: string;
 }
 
 export interface ApplicationPackageReferenceDto {

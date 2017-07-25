@@ -1,6 +1,7 @@
 import { Response } from "@angular/http";
 
 import { BatchError } from "./batch-error";
+import { PythonPRpcError } from "./python-rpc-error";
 import { StorageError } from "./storage-error";
 
 interface ServerErrorAttributes {
@@ -15,6 +16,7 @@ interface ServerErrorBodyAttributes {
     message?: string;
     requestId?: string;
     values?: any[];
+    data?: any;
 }
 
 /**
@@ -59,6 +61,31 @@ export class ServerError {
             body: body,
             original: response,
         });
+    }
+
+    public static fromPython(error: PythonPRpcError) {
+        const body = {
+            code: ServerError._mapPythonErrorCode(error.code),
+            message: error.message,
+            data: error.data,
+        };
+
+        return new ServerError({
+            status: error.data && error.data.status,
+            body: body,
+            original: error,
+        });
+    }
+
+    private static _mapPythonErrorCode(code: number) {
+        switch (code) {
+            case -32602:
+                return "InvalidParameterValue";
+            case -32604:
+                return "BatchClientError";
+            default:
+                return null;
+        }
     }
 
     public status: number;

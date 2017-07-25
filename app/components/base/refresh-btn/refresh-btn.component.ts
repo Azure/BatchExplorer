@@ -30,6 +30,9 @@ export class RefreshButtonComponent {
     @Input()
     public type: string = "square";
 
+    @Input()
+    public tooltipPosition: string = "right";
+
     public status = RefreshStatus.Idle;
 
     @autobind()

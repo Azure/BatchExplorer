@@ -2,8 +2,10 @@
 
 bl-editable-table {
     table {
+        margin-bottom: 15px;
         border-collapse: collapse;
         width: 100%;
+
         thead {
             text-align: left;
             color: $genericGray;

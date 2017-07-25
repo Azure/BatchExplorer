@@ -6,6 +6,8 @@ import { AccountDefaultComponent, AccountDetailsComponent } from "./components/a
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
 import { ApplicationDefaultComponent, ApplicationDetailsComponent } from "./components/application/details";
 import { ApplicationHomeComponent } from "./components/application/home/application-home.component";
+import { DataDefaultComponent, DataDetailsComponent } from "./components/data/details";
+import { DataHomeComponent } from "./components/data/home/data-home.component";
 import { FileDetailsComponent } from "./components/file/details/file-details.component";
 import { FileHomeComponent } from "./components/file/home";
 import { JobDefaultComponent, JobDetailsComponent } from "./components/job/details";
@@ -54,6 +56,14 @@ export const routes: Routes = [
         ],
     },
     {
+        path: "data",
+        component: DataHomeComponent,
+        children: [
+            { path: "", component: DataDefaultComponent }, // data/
+            { path: ":id", component: DataDetailsComponent }, // data/{file-group.id}
+        ],
+    },
+    {
         path: "pools/:poolId/nodes",
         component: NodeHomeComponent,
         children: [
@@ -87,6 +97,14 @@ export const routes: Routes = [
     },
     {
         path: "jobs/:jobId/tasks/:taskId/:outputKind/blobs/:filename",
+        component: FileHomeComponent,
+        data: { type: Constants.FileSourceTypes.Blob },
+        children: [
+            { path: "", component: FileDetailsComponent },
+        ],
+    },
+    {
+        path: "data/:container/blobs/:filename",
         component: FileHomeComponent,
         data: { type: Constants.FileSourceTypes.Blob },
         children: [
