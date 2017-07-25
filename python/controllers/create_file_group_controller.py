@@ -4,7 +4,7 @@ from server.app import app
 from jsonrpc import JsonRpcErrorCodes, error, JsonRpcRequest
 
 # used for string replacement so i think it needs to stay like this.
-SUBDIR_FILTER = "**/*"
+SUBDIR_FILTER = os.path.join('**', '*')
 
 PARAM_PREFIX = "prefix"
 PARAM_FULL_PATH = "fullPath"
@@ -26,7 +26,6 @@ ERROR_REQUIRED_PARAM = "{} is a required parameter"
 def create_file_group(request: JsonRpcRequest, name, directory, options):
     # default these parameters as they are optional
     prefix, flatten, fullPath = [None, False, False]
-
     if options:
         if options.get(PARAM_PREFIX):
             prefix = options.get(PARAM_PREFIX)
