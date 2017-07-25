@@ -14,7 +14,6 @@ async def send_stream(stream: ResponseStream):
 
 def start_listen(stream):
     stream_loop.run_until_complete(send_stream(stream))
-    stream_loop.close()
 
 @app.procedure("foo")
 def foo(request, param1):
