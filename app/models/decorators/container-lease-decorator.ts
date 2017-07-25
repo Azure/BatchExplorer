@@ -1,4 +1,4 @@
-import { ContainerLease } from "app/models";
+import { ContainerLease, LeaseState, LeaseStatus } from "app/models";
 import { DecoratorBase } from "app/utils/decorators";
 
 export class ContainerLeaseDecorator extends DecoratorBase<ContainerLease> {
@@ -14,13 +14,13 @@ export class ContainerLeaseDecorator extends DecoratorBase<ContainerLease> {
         this.duration = this.stringField(lease.duration);
     }
 
-    private _leaseStatusField(status: any): string {
+    private _leaseStatusField(status: LeaseStatus): string {
         switch (status) {
-            case "locked":
+            case LeaseStatus.locked:
                 return "Locked";
-            case "unlocked":
+            case LeaseStatus.unlocked:
                 return "Unlocked";
-            case "unspecified":
+            case LeaseStatus.unspecified:
                 return "Unspecified";
 
             default:
@@ -28,19 +28,19 @@ export class ContainerLeaseDecorator extends DecoratorBase<ContainerLease> {
         }
     }
 
-    private _leaseStateField(state: any): string {
+    private _leaseStateField(state: LeaseState): string {
         switch (state) {
-            case "available":
+            case LeaseState.available:
                 return "Available";
-            case "breaking":
+            case LeaseState.breaking:
                 return "Breaking";
-            case "broken":
+            case LeaseState.broken:
                 return "Broken";
-            case "expired":
+            case LeaseState.expired:
                 return "Expired";
-            case "leased":
+            case LeaseState.leased:
                 return "Leased";
-            case "unspecified":
+            case LeaseState.unspecified:
                 return "Unspecified";
 
             default:
