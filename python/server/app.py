@@ -34,12 +34,14 @@ class BatchLabsApp:
         """
         self.procedures[name] = callback
 
-    def call_procedure(self, name: str, params):
+    def call_procedure(self, request):
         """
             Call the register procedure with the given name. If none found it raise a JsonRpcMethodNotFoundError
         """
+        name = request.method
+        params = request.params
         if name in self.procedures:
-            return self.procedures[name](params)
+            return self.procedures[name](request, *params)
         else:
             raise JsonRpcMethodNotFoundError(name)
 
