@@ -13,8 +13,10 @@ const components = [ResourcefilePickerComponent, UserIdentityComponent];
 @NgModule({
     declarations: components,
     exports: components,
-    imports: [BrowserModule, MaterialModule, RouterModule, BaseModule, FormsModule, ReactiveFormsModule],
+    imports: [
+        BrowserModule, MaterialModule, RouterModule, BaseModule, FormsModule,
+        ReactiveFormsModule,
+    ],
 })
 export class TaskBaseModule {
-
 }

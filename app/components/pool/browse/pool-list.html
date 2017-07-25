@@ -19,7 +19,7 @@
     <bl-thead>
         <bl-column>Id</bl-column>
         <bl-column>State</bl-column>
-        <bl-column>Allocation State</bl-column>
+        <bl-column>Allocation state</bl-column>
         <bl-column>VmSize</bl-column>
         <bl-column>Dedicated <i class="fa fa-tv"></i></bl-column>
         <bl-column>Low priority <i class="fa fa-tv"></i></bl-column>
@@ -35,7 +35,7 @@
 </bl-table>
 
 <bl-no-item [itemCount]="(data.items | async).size" [filter]="filter" [status]="status | async">
-    <i icon class="fa fa-database"></i>
+    <i icon class="fa fa-database small"></i>
     <span no-filter>No pools</span>
     <span with-filter>No pool match this filter</span>
 </bl-no-item>
