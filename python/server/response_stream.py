@@ -5,9 +5,9 @@ class ResponseStream:
     def onData(self, callback):
         self.callbacks.append(callback)
 
-    def send(self, data, last = False):
+    async def send(self, data, last = False):
         for callback in self.callbacks:
-            callback(data, last)
+            await callback(data, last)
 
         if last:
             self.callbacks = []

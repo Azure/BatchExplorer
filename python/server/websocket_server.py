@@ -22,6 +22,7 @@ class WebsocketServer:
         """
         print("Starting websocket server...")
         asyncio.get_event_loop().run_until_complete(self.start_server)
+        print("Started server")
         asyncio.get_event_loop().run_forever()
 
     async def handler(self, websocket, _):
@@ -57,7 +58,7 @@ class WebsocketConnection:
             result = app.call_procedure(request)
 
             if isinstance(result, ResponseStream):
-                await self.__handle_response_stream(request, result)
+                 self.__handle_response_stream(request, result)
             else:
                 response = JsonRpcResponse(
                     request=request,
