@@ -163,6 +163,19 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             .attr("width", this._width)
             .attr("height", this._height);
 
+        const defs = this._svg.append("defs");
+        const pattern = defs.append("pattern")
+            .attr("id", "low-pri-stripes")
+            .attr("width", "10")
+            .attr("height", "10")
+            .attr("patternUnits", "userSpaceOnUse")
+            .attr("patternTransform", "rotate(45 50 50)");
+
+        pattern.append("line")
+            .attr("stroke", "#fff")
+            .attr("stroke-width", "2px")
+            .attr("y2", "10");
+
         this._processNewData();
     }
 
