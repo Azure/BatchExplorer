@@ -442,13 +442,18 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     }
 
     private _buildContextMenu(node: Node) {
-        return new ContextMenu([
+        const actions = [
             new ContextMenuItem({ label: "Go to", click: () => this._gotoNode(node) }),
             new ContextMenuItem({ label: "Connect", click: () => this._connectTo(node) }),
             new ContextMenuItem({ label: "Reboot", click: () => this._reboot(node) }),
             new ContextMenuItem({ label: "Reimage", click: () => this._reimage(node) }),
             new ContextMenuItem({ label: "Delete", click: () => this._delete(node) }),
-        ]);
+        ];
+
+        if (node.state === NodeState.startTaskFailed) {
+            actions.push(new ContextMenuItem({ label: "View start task output", click: () => this._gotoNode(node) }));
+        }
+        return new ContextMenu(actions);
     }
 
     private _reboot(node: Node) {
@@ -482,7 +487,11 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     }
 
     private _gotoNode(node: Node) {
-        this.router.navigate(["/pools", this.pool.id, "nodes", node.id]);
+        this.router.navigate(["/pools", this.pool.id, "nodes", node.id], {
+            queryParams: {
+                tab: "files",
+            },
+        });
     }
 
     private _connectTo(node: Node) {
