@@ -1,12 +1,16 @@
 import { Injectable } from "@angular/core";
-import { SecureUtils, log } from "app/utils";
+import { AccountResource } from "app/models";
+import { Constants, SecureUtils, log } from "app/utils";
 import { AsyncSubject, Observable } from "rxjs";
+import { AccountService } from "../account.service";
+import { AdalService } from "../adal";
 
 export interface JsonRpcRequest {
     jsonrpc: string;
     id: string;
     method: string;
     params: any[];
+    options: RequestOptions;
 }
 
 export interface JsonRpcError {
@@ -32,8 +36,13 @@ interface RequestContainer {
     timeout: any;
 }
 
+interface RequestOptions {
+    authentication?: any;
+}
 // TODO: comment out unused for now.
 // const requestTimeout = 10000;
+
+const ResourceUrl = Constants.ResourceUrl;
 
 @Injectable()
 export class PythonRpcService {
@@ -41,6 +50,7 @@ export class PythonRpcService {
     private _ready = new AsyncSubject();
     private _currentRequests: StringMap<RequestContainer> = {};
 
+    constructor(private accountService: AccountService, private adalService: AdalService) { }
     /**
      * Initialize the connection to the rpc server
      */
@@ -73,8 +83,8 @@ export class PythonRpcService {
      * @param method Name of the method registered in the python
      * @param params Params for the method
      */
-    public call(method: string, params: any[]): Observable<any> {
-        const request = this._buildRequest(method, params);
+    public call(method: string, params: any[], options: RequestOptions = {}): Observable<any> {
+        const request = this._buildRequest(method, params, options);
         const container = this._registerRequest(request);
 
         this._ready.subscribe(() => {
@@ -84,17 +94,31 @@ export class PythonRpcService {
         return container.subject.asObservable();
     }
 
+    public callWithAuth(method: string, params: any[]): Observable<any> {
+        return this.accountService.currentAccount.cascade((account: AccountResource) => {
+            const batchToken = this.adalService.accessTokenFor(account.subscription.tenantId, ResourceUrl.batch);
+            const armToken = this.adalService.accessTokenFor(account.subscription.tenantId, ResourceUrl.arm);
+            return Observable.combineLatest(batchToken, armToken).cascade(([batchToken, armToken]) => {
+                const authParam = { batchToken, armToken, account: account.toJS() };
+                return this.call(method, params, {
+                    authentication: authParam,
+                });
+            });
+        });
+    }
+
     /**
      * Build the JsonRpcRequest from the procedure name and parameters.
      * @param method Name of the procedure in the python controller
      * @param params Params for the procedure
      */
-    private _buildRequest(method: string, params: any[]): JsonRpcRequest {
+    private _buildRequest(method: string, params: any[], options: RequestOptions): JsonRpcRequest {
         return {
             jsonrpc: "2.0",
             id: SecureUtils.uuid(),
             method,
             params,
+            options,
         };
     }
 
