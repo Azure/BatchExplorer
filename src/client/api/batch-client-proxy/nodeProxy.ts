@@ -31,6 +31,16 @@ export default class NodeProxy {
 
     /**
      * Reinstalls the operating system on the specified compute node.
+     * @param poolId: The id of the pool.
+     * @param nodeId: The id of the node to delete
+     * @param options: Optional Parameters.
+     */
+    public delete(poolId: string, nodeId: string, options?: any): Promise<any> {
+        return this.client.pool.removeNodes(poolId, { nodeList: [nodeId] }, wrapOptions(options));
+    }
+
+    /**
+     * Reinstalls the operating system on the specified compute node.
      * http://azure.github.io/azure-sdk-for-node/azure-batch/latest/ComputeNodeOperations.html#reimage
      * @param poolId: The id of the pool.
      * @param nodeId: The id of the node to reimage

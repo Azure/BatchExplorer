@@ -13,6 +13,7 @@ import { BreadcrumbModule } from "./breadcrumbs";
 import { ButtonsModule } from "./buttons";
 import { ChartsModule } from "./charts";
 import { ContextMenuModule } from "./context-menu";
+import { DialogsModule } from "./dialogs";
 import { DropdownModule } from "./dropdown";
 import { EditorModule } from "./editor";
 import { ElapsedTimeComponent } from "./elapsed-time";
@@ -43,6 +44,7 @@ const modules = [
     BackgroundTaskModule,
     ChartsModule,
     ContextMenuModule,
+    DialogsModule,
     DropdownModule,
     EditorModule,
     FocusSectionModule,
@@ -79,6 +81,7 @@ const components = [
     declarations: components,
     entryComponents: [
         DeleteSelectedItemsDialogComponent,
+        SimpleDialogComponent,
     ],
     exports: [...modules, ...components],
     imports: [
