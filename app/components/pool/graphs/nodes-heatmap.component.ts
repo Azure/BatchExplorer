@@ -429,9 +429,10 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     private _buildContextMenu(node: Node) {
         return new ContextMenu([
             new ContextMenuItem({ label: "Go to", click: () => this._gotoNode(node) }),
+            new ContextMenuItem({ label: "Connect", click: () => this._connectTo(node) }),
             new ContextMenuItem({ label: "Reboot", click: () => this._reboot(node) }),
             new ContextMenuItem({ label: "Reimage", click: () => this._reimage(node) }),
-            new ContextMenuItem({ label: "Connect", click: () => this._connectTo(node) }),
+            new ContextMenuItem({ label: "Delete", click: () => this._delete(node) }),
         ]);
     }
 
@@ -441,6 +442,10 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
 
     private _reimage(node: Node) {
         this.nodeService.reimage(this.pool.id, node.id).cascade(() => this.nodeService.getOnce(this.pool.id, node.id));
+    }
+
+    private _delete(node: Node) {
+        this.nodeService.delete(this.pool.id, node.id).cascade(() => this.nodeService.getOnce(this.pool.id, node.id));
     }
 
     private _gotoNode(node: Node) {

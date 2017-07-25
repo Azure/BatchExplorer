@@ -177,6 +177,12 @@ export class NodeService extends ServiceBase {
         return observable;
     }
 
+    public delete(poolId: string, nodeId: string): Observable<any> {
+        return this.callBatchClient((client) => client.node.delete(poolId, nodeId, {}), (error) => {
+            log.error("Error deleting node: " + nodeId, Object.assign({}, error));
+        });
+    }
+
     public listNodeAgentSkus(initialOptions: any = { pageSize: 1000 }): RxListProxy<{}, NodeAgentSku> {
         return new RxBatchListProxy<{}, NodeAgentSku>(NodeAgentSku, this.batchService, {
             cache: (params) => this._nodeAgentSkusCache,
