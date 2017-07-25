@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 
-import { Application } from "app/models";
+import { BatchApplication } from "app/models";
 
 @Component({
     selector: "bl-application-packages",
@@ -9,5 +9,5 @@ import { Application } from "app/models";
 
 export class ApplicationPackagesComponent {
     @Input()
-    public application: Application;
+    public application: BatchApplication;
 }

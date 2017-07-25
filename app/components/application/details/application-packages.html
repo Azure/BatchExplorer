@@ -1,4 +1,4 @@
-<bl-entity-details-list #listWrapper [showRefreshButton]="false" [showExpandButton]="false" [showFilterIcon]="false" addButtonHoverText="Add package version"
+<bl-entity-details-list #listWrapper [showRefreshButton]="false" [showExpandButton]="false" [enableAdvancedFilter]="false" addButtonHoverText="Add package version"
     (onAddEntity)="list?.addPackage($event)" filterPlaceholder="Filter by package version">
     <div bl-list-buttons>
         <!--
@@ -8,13 +8,16 @@
                 - update: enabled if allow updates is true and package is active
                 - activate: enabled if package is pending
         -->
-        <bl-button color="danger" type="round" title="Delete selected" [action]="list?.deleteSelectedItems" [disabled]="!(list?.deleteItemEnabled | async)">
+        <bl-button color="danger" type="round" title="Delete selected" [action]="list?.deleteSelectedItems" [disabled]="!(list?.deleteItemEnabled | async)"
+            tooltipPosition="left">
             <i class="fa fa-trash spin-hover"></i>
         </bl-button>
-        <bl-button color="primary" type="round" title="Update package" [action]="list?.updatePackageVersion" [disabled]="!(list?.editItemEnabled | async)">
+        <bl-button color="primary" type="round" title="Update package" [action]="list?.updatePackageVersion" [disabled]="!(list?.editItemEnabled | async)"
+            tooltipPosition="left">
             <i class="fa fa-pencil-square-o spin-hover"></i>
         </bl-button>
-        <bl-button color="primary" type="round" title="Activate pending package" [action]="list?.activateActiveItem" [disabled]="!(list?.activateItemEnabled | async)">
+        <bl-button color="primary" type="round" title="Activate pending package" [action]="list?.activateActiveItem" 
+            [disabled]="!(list?.activateItemEnabled | async)" tooltipPosition="left">
             <i class="fa fa-toggle-on spin-hover"></i>
         </bl-button>
     </div>

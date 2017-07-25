@@ -1,4 +1,4 @@
-from jsonrpc.error import JsonRpcMethodNotFoundError
+from jsonrpc.error import JsonRpcMethodNotFoundError, JsonRpcInvalidParamsError
 
 
 class BatchLabsApp:
@@ -34,12 +34,17 @@ class BatchLabsApp:
         """
         self.procedures[name] = callback
 
-    def call_procedure(self, name: str, params):
+    def call_procedure(self, request):
         """
             Call the register procedure with the given name. If none found it raise a JsonRpcMethodNotFoundError
         """
+        name = request.method
+        params = request.params
         if name in self.procedures:
-            return self.procedures[name](params)
+            try:
+                return self.procedures[name](request, *params)
+            except TypeError as e:
+                raise JsonRpcInvalidParamsError(e.args)
         else:
             raise JsonRpcMethodNotFoundError(name)
 

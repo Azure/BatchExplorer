@@ -118,7 +118,7 @@ export class StorageClientService {
      * Get the name of the storage account from the account id
      * @param [storageAccountId] the full resource id for the storage account.
      */
-    private getStorageAccountName(storageAccountId: string): string {
+    private _getStorageAccountName(storageAccountId: string): string {
         const accountName = ArmResourceUtils.getAccountNameFromResourceId(storageAccountId);
         if (!accountName) {
             throw new Error(`Unable to get account name from storage account id: ${storageAccountId}`);
@@ -133,7 +133,7 @@ export class StorageClientService {
      */
     private _checkAndSetCachedItem(settings: AutoStorageAccount) {
         if (settings && !this._isCached(settings.storageAccountId)) {
-            const storageAccountName = this.getStorageAccountName(settings.storageAccountId);
+            const storageAccountName = this._getStorageAccountName(settings.storageAccountId);
             this._storageKeyMap[settings.storageAccountId] = {
                 batchAccountId: this._currentAccountId,
                 storageAccountName: storageAccountName,

@@ -38,9 +38,6 @@ export class EntityDetailsListComponent {
     public showRefreshButton: boolean = true;
 
     @Input()
-    public showFilterIcon: boolean = true;
-
-    @Input()
     public refreshButtonHoverText: string = "Refresh";
 
     @Input()

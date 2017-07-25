@@ -6,7 +6,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
 import { ListOrTableBase } from "app/components/base/selectable-list";
-import { Application, ApplicationPackage, PackageState } from "app/models";
+import { ApplicationPackage, BatchApplication, PackageState } from "app/models";
 import { ApplicationService } from "app/services";
 import { DateUtils } from "app/utils";
 import { Filter } from "app/utils/filter-builder";
@@ -20,7 +20,7 @@ import { ActivatePackageDialogComponent, ApplicationCreateDialogComponent, Delet
 
 export class ApplicationPackageTableComponent extends ListOrTableBase implements OnChanges {
     @Input()
-    public set application(application: Application) {
+    public set application(application: BatchApplication) {
         this._application = application;
         if (this.application) {
             this.entityParentId = this.application.id;
@@ -46,7 +46,7 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
     public editItemEnabled = new BehaviorSubject<boolean>(false);
 
     private _filter: Filter;
-    private _application: Application;
+    private _application: BatchApplication;
     private _stateMap: Map<string, PackageState>;
 
     constructor(

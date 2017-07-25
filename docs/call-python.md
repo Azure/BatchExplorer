@@ -45,5 +45,5 @@ pythonRpcService.call("other", ["abc", "def"]).subscribe({
 
 ## Throw an error from the python server
 
-You need to raise an errot that is a child of `JsonRpcError` or `JsonRpcError` itself to get the best result.
+You need to raise an error that is a child of `JsonRpcError` or `JsonRpcError` itself to get the best result.
 Any other exception will act as a Server internal error and also get logged in the python

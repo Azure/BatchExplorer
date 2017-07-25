@@ -8,7 +8,7 @@ import { BackgroundTaskService } from "app/components/base/background-task";
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListItemStatus } from "app/components/base/quick-list";
 import { ListOrTableBase } from "app/components/base/selectable-list";
-import { Application } from "app/models";
+import { BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
@@ -20,9 +20,9 @@ import { DeleteApplicationAction } from "../action";
 })
 export class ApplicationListComponent extends ListOrTableBase implements OnInit, OnDestroy {
     public status: Observable<LoadingStatus>;
-    public data: RxListProxy<{}, Application>;
-    public applications: List<Application>;
-    public displayedApplications: List<Application>;
+    public data: RxListProxy<{}, BatchApplication>;
+    public applications: List<BatchApplication>;
+    public displayedApplications: List<BatchApplication>;
 
     @Input()
     public quickList: boolean;
@@ -70,13 +70,13 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
         return this.data.refresh();
     }
 
-    public appStatus(application: Application): QuickListItemStatus {
+    public appStatus(application: BatchApplication): QuickListItemStatus {
         return application.allowUpdates
             ? QuickListItemStatus.lightaccent
             : QuickListItemStatus.accent;
     }
 
-    public appStatusText(application: Application): string {
+    public appStatusText(application: BatchApplication): string {
         return application.allowUpdates
             ? "Application allows updates"
             : "Application is locked";
@@ -102,7 +102,7 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
             text = text && text.toLowerCase();
         }
 
-        this.displayedApplications = List<Application>(this.applications.filter((app) => {
+        this.displayedApplications = List<BatchApplication>(this.applications.filter((app) => {
             return !text || app.id.toLowerCase().indexOf(text) !== -1;
         }));
     }

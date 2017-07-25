@@ -1,5 +1,5 @@
 import {
-    AfterViewInit, ChangeDetectionStrategy, Component, ContentChildren, Inject,
+    AfterViewInit, ChangeDetectionStrategy, Component, ContentChildren, Inject, OnInit,
     QueryList, TemplateRef, ViewChild, forwardRef,
 } from "@angular/core";
 import { Router } from "@angular/router";
@@ -12,16 +12,17 @@ import { TableComponent } from "./table.component";
 
 @Component({
     selector: "bl-row",
-    templateUrl: `
+    template: `
         <ng-template>
-            <tr (click)="handleClick($event)" [class.selected]="active || selected" [class.focused]="isFocused | async">
+            <tr (click)="handleClick($event)" (contextmenu)="openContextMenu($event)"
+                [class.selected]="active || selected" [class.focused]="isFocused | async">
                 <ng-content></ng-content>
             </tr>
         </ng-template>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TableRowComponent extends AbstractListItemBase implements AfterViewInit {
+export class TableRowComponent extends AbstractListItemBase implements AfterViewInit, OnInit {
     @ViewChild(TemplateRef)
     public content: TemplateRef<any>;
 

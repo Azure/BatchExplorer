@@ -3,7 +3,7 @@ import { autobind } from "core-decorators";
 
 import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";
 import { SidebarManager } from "app/components/base/sidebar";
-import { AccountResource, Application } from "app/models";
+import { AccountResource, BatchApplication } from "app/models";
 import { AccountService } from "app/services";
 
 @Component({
@@ -13,7 +13,7 @@ import { AccountService } from "app/services";
 })
 export class ApplicationErrorDisplayComponent implements OnInit {
     @Input()
-    public application: Application;
+    public application: BatchApplication;
 
     public get batchAccount() {
         return this._batchAccount;

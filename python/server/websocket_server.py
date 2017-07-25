@@ -53,7 +53,7 @@ class WebsocketConnection:
         try:
             print("< {0} {1}".format(request.request_id, request.method))
 
-            result = app.call_procedure(request.method, request.params)
+            result = app.call_procedure(request)
             response = JsonRpcResponse(
                 request=request,
                 result=result,

@@ -7,7 +7,7 @@ import { Observable } from "rxjs";
 
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
-import { Application, ApplicationPackage } from "app/models";
+import { ApplicationPackage, BatchApplication } from "app/models";
 import { applicationToEditFormModel, editApplicationFormToJsonData } from "app/models/forms";
 import { ApplicationService  } from "app/services";
 import { Constants } from "app/utils";
@@ -18,7 +18,7 @@ import { Constants } from "app/utils";
 })
 export class ApplicationEditDialogComponent {
     public form: FormGroup;
-    public application: Application;
+    public application: BatchApplication;
     public packages: List<ApplicationPackage>;
     public title: string = "Edit application";
     public description: string = "Update the display name, default version, or locked status of your application";
@@ -42,7 +42,7 @@ export class ApplicationEditDialogComponent {
         });
     }
 
-    public setValue(application: Application) {
+    public setValue(application: BatchApplication) {
         this.application = application;
         this.packages = application.packages || List([]);
         this.form.patchValue(applicationToEditFormModel(application));

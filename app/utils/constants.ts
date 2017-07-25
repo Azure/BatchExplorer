@@ -52,11 +52,13 @@ export const forms = {
             displayName: 1024,
             applicationName: 64,
             version: 64,
+            fileGroup: 63,
         },
         regex: {
             id: /^[\w\_-]+$/i,
             appVersion: /^[a-zA-Z0-9_-][a-zA-Z0-9_.-]*$/i,
             appFilename: /\.zip$/i,
+            fileGroup: /^[a-z0-9]([a-z0-9]|-(?!-|\z))*$/,
         },
         range: {
             retry: { min: -1, max: 100 },
@@ -131,6 +133,11 @@ export const Environment = {
 export const ServiceUrl = {
     arm: "https://management.azure.com",
     githubRaw: "https://raw.githubusercontent.com",
+};
+
+export const ResourceUrl = {
+    batch: "https://batch.core.windows.net/",
+    arm: "https://management.core.windows.net/",
 };
 
 export const APIErrorCodes = {
