@@ -11,7 +11,7 @@ import { Node, NodeState, Pool } from "app/models";
 import { NodeService } from "app/services";
 import * as Fixture from "test/fixture";
 import { click, dblclick, rightClick } from "test/utils/helpers";
-import { ContextMenuServiceMock } from "test/utils/mocks";
+import { ContextMenuServiceMock, NotificationServiceMock } from "test/utils/mocks";
 
 @Component({
     template: `
@@ -48,9 +48,10 @@ describe("NodesHeatmapComponent", () => {
     let svg: d3.Selection<any, any, any, any>;
     let contextMenuService: ContextMenuServiceMock;
     let routerSpy;
-
+    let notificationService;
     beforeEach(() => {
         contextMenuService = new ContextMenuServiceMock();
+        notificationService = new NotificationServiceMock();
         routerSpy = {
             navigate: jasmine.createSpy("router.navigate"),
         };
@@ -63,6 +64,7 @@ describe("NodesHeatmapComponent", () => {
                 { provide: SidebarManager, useValue: {} },
                 { provide: Router, useValue: routerSpy },
                 contextMenuService.asProvider(),
+                notificationService.asProvider(),
             ],
         });
 
@@ -146,6 +148,46 @@ describe("NodesHeatmapComponent", () => {
 
             expect(title).not.toBeFalsy("Should have a rect in bg");
             expect(title.text()).toContain("2 tasks running on this node");
+        });
+    });
+
+    describe("Running task overlay", () => {
+        it("when there is space should show 2 green sripes", () => {
+            testComponent.nodes = createNodes(2);
+            testComponent.pool = new Pool({ id: "pool-4", maxTasksPerNode: 4 });
+            fixture.detectChanges();
+            const tiles = svg.selectAll("g.node-group");
+            expect(tiles.size()).toBe(2);
+            tiles.each((d, i, groups) => {
+                const group = d3.select(groups[i]);
+                const bg = group.select("g.tasks");
+                const taskRects = bg.selectAll("rect");
+                expect(taskRects.size()).toBe(2, "Should have 2 rect");
+                taskRects.each((d, i, rects) => {
+                    const rect = d3.select(rects[i]);
+                    expect(rect.attr("height")).not.toBe("0");
+                    expect(rect.attr("style")).toContain("fill: rgb(56, 142, 60);");
+                });
+            });
+        });
+
+        it("when there is no space should combine green sripes", () => {
+            testComponent.nodes = createNodes(2);
+            testComponent.pool = new Pool({ id: "pool-100", maxTasksPerNode: 300 });
+            fixture.detectChanges();
+            const tiles = svg.selectAll("g.node-group");
+            expect(tiles.size()).toBe(2);
+            tiles.each((d, i, groups) => {
+                const group = d3.select(groups[i]);
+                const bg = group.select("g.tasks");
+                const taskRects = bg.selectAll("rect");
+                expect(taskRects.size()).toBe(1, "Should have only 1 rect");
+                taskRects.each((d, i, rects) => {
+                    const rect = d3.select(rects[i]);
+                    expect(rect.attr("height")).not.toBe("0");
+                    expect(rect.attr("style")).toContain("fill: rgb(56, 142, 60);");
+                });
+            });
         });
     });
 
@@ -294,7 +336,8 @@ function createNodes(count: number, dedicated = true) {
     const nodes: Node[] = [];
     for (let i = 0; i < count; i++) {
         nodes.push(Fixture.node.create({
-            id: `node-${i + 1}`, state: NodeState.idle,
+            id: `node-${i + 1}`,
+            state: NodeState.running,
             isDedicated: dedicated,
             runningTasksCount: 2,
         }));

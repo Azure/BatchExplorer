@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
-import { BatchClientProxyFactory, SharedKeyOptions } from "client/api";
 import { Observable } from "rxjs";
+
+import { Constants } from "app/utils";
+import { BatchClientProxyFactory, SharedKeyOptions } from "client/api";
 import { AccountService } from "./account.service";
 import { AdalService } from "./adal";
 import { ElectronRemote } from "./electron";
-
-const resource = "https://batch.core.windows.net/";
 
 @Injectable()
 export class BatchClientService {
@@ -24,6 +24,7 @@ export class BatchClientService {
             throw new Error("No account currently selected....");
         }
 
+        const resource = Constants.ResourceUrl.batch;
         return this.currentAccount.flatMap((account) => {
             return this.adal.accessTokenFor(account.subscription.tenantId, resource).map((token) => {
                 const url = `https://${account.properties.accountEndpoint}`;

@@ -1,13 +1,13 @@
-import { Application } from "app/models";
+import { BatchApplication } from "app/models";
 import { DecoratorBase } from "app/utils/decorators";
 
-export class ApplicationDecorator extends DecoratorBase<Application> {
+export class ApplicationDecorator extends DecoratorBase<BatchApplication> {
     public id: string;
     public displayName: string;
     public allowUpdates: string;
     public defaultVersion: string;
 
-    constructor(application?: Application) {
+    constructor(application: BatchApplication) {
         super(application);
 
         this.id = this.stringField(application.id);

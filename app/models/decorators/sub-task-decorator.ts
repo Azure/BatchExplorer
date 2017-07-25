@@ -16,7 +16,7 @@ export class SubTaskDecorator extends DecoratorBase<SubtaskInformation> {
     public nodeInfo: {};
     public failureInfo: {};
 
-    constructor(task?: SubtaskInformation) {
+    constructor(task: SubtaskInformation) {
         super(task);
 
         this.startTime = this.dateField(task.startTime);

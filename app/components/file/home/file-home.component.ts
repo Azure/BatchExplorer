@@ -22,6 +22,7 @@ export class FileHomeComponent implements OnInit, OnDestroy {
     public taskId: string;
     public outputKind: string;
     public filename: string;
+    public container: string;
 
     private _dataSub: Subscription;
     private _paramsSubscriber: Subscription;
@@ -46,6 +47,7 @@ export class FileHomeComponent implements OnInit, OnDestroy {
             this.nodeId = params["nodeId"];
             this.outputKind = params["outputKind"];
             this.filename = params["filename"];
+            this.container = params["container"];
         });
     }
 

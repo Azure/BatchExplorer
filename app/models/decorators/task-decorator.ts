@@ -31,7 +31,7 @@ export class TaskDecorator extends DecoratorBase<Task> {
     public dependsOn: {};
     public applicationPackageReferences: any[];
 
-    constructor(task?: Task) {
+    constructor(task: Task) {
         super(task);
 
         this.displayName = this.stringField(task.displayName);

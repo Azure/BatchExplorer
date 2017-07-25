@@ -4,6 +4,7 @@ from jsonrpc import JsonRpcRequest, JsonRpcResponse, error
 from .app import app
 from controllers import *
 
+
 class WebsocketServer:
     """
         Websocket server core class. It will handle receiving and sending messages
@@ -52,7 +53,7 @@ class WebsocketConnection:
         try:
             print("< {0} {1}".format(request.request_id, request.method))
 
-            result = app.call_procedure(request.method, request.params)
+            result = app.call_procedure(request)
             response = JsonRpcResponse(
                 request=request,
                 result=result,
@@ -64,6 +65,13 @@ class WebsocketConnection:
                 error=rpc_error,
             )
             await self.send_response(response)
+        except Exception as e:
+            response = JsonRpcResponse(
+                request=request,
+                error=error.JsonRpcError(500, "Server internal error", str(e)),
+            )
+            await self.send_response(response)
+            raise e
 
     def parse_request(self, message: str) -> JsonRpcRequest:
         return JsonRpcRequest.from_json(message)

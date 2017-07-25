@@ -1,17 +1,15 @@
 import { Model, Prop, Record } from "app/core";
 import { FailureInfoAttributes } from "./failure-info";
 
-export type JobHookTaskState = "running" | "completed";
-export const JobHookTaskState = {
-    running: "running" as JobHookTaskState,
-    completed: "completed" as JobHookTaskState,
-};
+export enum JobHookTaskState {
+    running = "running",
+    completed = "completed",
+}
 
-export type JobHookTaskResult = "success" | "failure";
-export const JobHookTaskResult = {
-    success: "Success" as JobHookTaskResult,
-    failure: "Failure" as JobHookTaskResult,
-};
+export enum JobHookTaskResult {
+    success = "Success",
+    failure = "Failure",
+}
 
 export interface JobHookTaskExecutionInfoAttributes {
     state: JobHookTaskState;

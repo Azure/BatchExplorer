@@ -27,6 +27,6 @@ export class JobHookTask extends Record<JobHookTaskAttributes> {
             id: `${data.poolId}/${data.nodeId}`,
             preparationTask: data.jobPreparationTaskExecutionInfo,
             releaseTask: data.jobReleaseTaskExecutionInfo,
-        });
+        } as any);
     }
 }

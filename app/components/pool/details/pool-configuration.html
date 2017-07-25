@@ -1,16 +1,16 @@
 <div *ngIf="decorator">
-	<bl-property-list>
-		<bl-property-group label="General" class="wide">
-			<bl-text-property label="Id" [value]="decorator.id"></bl-text-property>
-			<bl-text-property label="VM size" [value]="decorator.vmSize"></bl-text-property>
-			<bl-text-property label="Current dedicated" [value]="decorator.currentDedicatedNodes"></bl-text-property>
-			<bl-text-property label="Target dedicated" [value]="decorator.targetDedicatedNodes"></bl-text-property>
-			<bl-text-property label="Current low priority" [value]="decorator.currentLowPriorityNodes"></bl-text-property>
-			<bl-text-property label="Target low priority" [value]="decorator.targetLowPriorityNodes"></bl-text-property>
-			<bl-text-property label="State" [value]="decorator.state"></bl-text-property>
-			<bl-text-property label="State transistion Time" [value]="decorator.stateTransitionTime"></bl-text-property>
-			<bl-text-property label="Allocation state" [value]="decorator.allocationState"></bl-text-property>
-			<bl-text-property label="Allocation state transition time" [value]="decorator.allocationStateTransitionTime"></bl-text-property>
+    <bl-property-list>
+        <bl-property-group label="General" class="wide">
+            <bl-text-property label="Id" [value]="decorator.id"></bl-text-property>
+            <bl-text-property label="VM size" [value]="decorator.vmSize"></bl-text-property>
+            <bl-text-property label="Current dedicated" [value]="decorator.currentDedicatedNodes"></bl-text-property>
+            <bl-text-property label="Target dedicated" [value]="decorator.targetDedicatedNodes"></bl-text-property>
+            <bl-text-property label="Current low priority" [value]="decorator.currentLowPriorityNodes"></bl-text-property>
+            <bl-text-property label="Target low priority" [value]="decorator.targetLowPriorityNodes"></bl-text-property>
+            <bl-text-property label="State" [value]="decorator.state"></bl-text-property>
+            <bl-text-property label="State transistion Time" [value]="decorator.stateTransitionTime"></bl-text-property>
+            <bl-text-property label="Allocation state" [value]="decorator.allocationState"></bl-text-property>
+            <bl-text-property label="Allocation state transition time" [value]="decorator.allocationStateTransitionTime"></bl-text-property>
             <bl-text-property label="Creation time" [value]="decorator.creationTime"></bl-text-property>
             <bl-text-property label="Dispaly name" [value]="decorator.displayName"></bl-text-property>
             <bl-text-property label="Enable autoscale" [value]="decorator.enableAutoScale"></bl-text-property>
@@ -23,33 +23,62 @@
             <bl-text-property label="Resize timeout" [value]="decorator.resizeTimeout"></bl-text-property>
             <bl-text-property label="Task scheduling policy" [value]="decorator.taskSchedulingPolicy.nodeFillType"></bl-text-property>
             <bl-text-property label="Url" [value]="decorator.url"></bl-text-property>
-            <bl-text-property label="User accounts" [value]="decorator.userAccounts"></bl-text-property>
+            <bl-text-property label="User accounts" [value]="decorator.userAccounts" *ngIf="decorator.userAccounts"></bl-text-property>
+            <bl-text-property label="Application licenses" [value]="decorator.applicationLicenses" *ngIf="decorator.applicationLicenses"></bl-text-property>
             <bl-text-property label="Network subnet" [value]="decorator.networkSubnetId" *ngIf="decorator.networkSubnetId"></bl-text-property>
-		</bl-property-group>
+        </bl-property-group>
 
-		<bl-property-group label="Cloud service configuration" class="wide" [collapsed]="true" *ngIf="pool.cloudServiceConfiguration">
+        <bl-property-group label="Cloud service configuration" class="wide" [collapsed]="true" *ngIf="pool.cloudServiceConfiguration">
             <div collapsed-preview>
                 <span>{{decorator.poolOs}}</span>
             </div>
 
-			<bl-text-property label="OS family" [value]="decorator.cloudServiceConfiguration.osFamily"></bl-text-property>
-			<bl-text-property label="Curent OS version" [value]="decorator.cloudServiceConfiguration.currentOSVersion"></bl-text-property>
-			<bl-text-property label="Target OS version" [value]="decorator.cloudServiceConfiguration.targetOSVersion"></bl-text-property>
-		</bl-property-group>
+            <bl-text-property label="OS family" [value]="decorator.cloudServiceConfiguration.osFamily"></bl-text-property>
+            <bl-text-property label="Curent OS version" [value]="decorator.cloudServiceConfiguration.currentOSVersion"></bl-text-property>
+            <bl-text-property label="Target OS version" [value]="decorator.cloudServiceConfiguration.targetOSVersion"></bl-text-property>
+        </bl-property-group>
 
-		<bl-property-group label="Virtual machine configuration" class="wide" [collapsed]="true" *ngIf="pool.virtualMachineConfiguration">
+        <bl-property-group label="Virtual machine configuration" class="wide" [collapsed]="true" *ngIf="pool.virtualMachineConfiguration">
             <div collapsed-preview>
                 <span>{{decorator.poolOs}}</span>
             </div>
 
-			<bl-text-property label="Publisher" [value]="decorator.virtualMachineConfiguration.imageReference.publisher"></bl-text-property>
-			<bl-text-property label="Offer" [value]="decorator.virtualMachineConfiguration.imageReference.offer"></bl-text-property>
+            <bl-text-property label="Publisher" [value]="decorator.virtualMachineConfiguration.imageReference.publisher"></bl-text-property>
+            <bl-text-property label="Offer" [value]="decorator.virtualMachineConfiguration.imageReference.offer"></bl-text-property>
             <bl-text-property label="Sku" [value]="decorator.virtualMachineConfiguration.imageReference.sku"></bl-text-property>
             <bl-text-property label="Version" [value]="decorator.virtualMachineConfiguration.imageReference.version"></bl-text-property>
             <bl-text-property label="Node agent sku id" [value]="decorator.virtualMachineConfiguration.nodeAgentSKUId"></bl-text-property>
-            <bl-text-property *ngIf="decorator.virtualMachineConfiguration.windowsConfiguration"
-                label="Enable automatic updates" [value]="decorator.virtualMachineConfiguration.windowsConfiguration.enableAutomaticUpdates"></bl-text-property>
-		</bl-property-group>
+            <bl-text-property *ngIf="decorator.virtualMachineConfiguration.windowsConfiguration" label="Enable automatic updates" [value]="decorator.virtualMachineConfiguration.windowsConfiguration.enableAutomaticUpdates"></bl-text-property>
+        </bl-property-group>
+
+        <bl-property-group label="Start task settings" [collapsed]="true" class="wide" [edit]="editStartTask">
+            <bl-text-property label="Command line" [value]="startTask.commandLine"></bl-text-property>
+            <bl-text-property label="Max retry count" [value]="startTask.maxTaskRetryCount"></bl-text-property>
+            <bl-text-property label="User identity" [value]="decorator.userIdentitySummary"></bl-text-property>
+            <bl-bool-property label="Wait for success" [value]="startTask.waitForSuccess" YesNo="true"></bl-bool-property>
+
+            <bl-table-property label="Resource files" *ngIf="startTask.resourceFiles.size > 0">
+                <bl-table-property-header>
+                    <div tp-column>Blob source</div>
+                    <div tp-column>File path</div>
+                </bl-table-property-header>
+                <bl-table-property-row *ngFor="let file of startTask.resourceFiles">
+                    <bl-tp-cell [value]="file.blobSource"></bl-tp-cell>
+                    <bl-tp-cell [value]="file.filePath"></bl-tp-cell>
+                </bl-table-property-row>
+            </bl-table-property>
+
+            <bl-table-property label="Environment settings" *ngIf="startTask.environmentSettings.size > 0">
+                <bl-table-property-header>
+                    <div tp-column>Key</div>
+                    <div tp-column>Value</div>
+                </bl-table-property-header>
+                <bl-table-property-row *ngFor="let setting of startTask.environmentSettings">
+                    <bl-tp-cell [value]="setting.name"></bl-tp-cell>
+                    <bl-tp-cell [value]="setting.value"></bl-tp-cell>
+                </bl-table-property-row>
+            </bl-table-property>
+        </bl-property-group>
 
         <bl-property-group label="Application packages" class="wide" [collapsed]="true">
             <div collapsed-preview>
@@ -102,5 +131,5 @@
                 <span no-filter>This pool contains no metadata</span>
             </bl-no-item>
         </bl-property-group>
-	</bl-property-list>
+    </bl-property-list>
 </div>

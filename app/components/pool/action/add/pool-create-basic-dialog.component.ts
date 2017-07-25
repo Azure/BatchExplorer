@@ -11,6 +11,7 @@ import { NodeFillType } from "app/models";
 import { PoolCreateDto } from "app/models/dtos";
 import { PoolOsSources, createPoolToData, poolToFormModel } from "app/models/forms";
 import { PoolService, VmSizeService } from "app/services";
+import { Constants } from "app/utils";
 
 @Component({
     selector: "bl-pool-create-basic-dialog",
@@ -22,6 +23,8 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     public NodeFillType = NodeFillType;
 
     private _osControl: FormControl;
+    private _licenseControl: FormControl;
+    private _renderingSkuSelected: boolean = false;
     private _sub: Subscription;
 
     constructor(
@@ -33,31 +36,38 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         super(PoolCreateDto);
 
         this._osControl = this.formBuilder.control({}, Validators.required);
+        this._licenseControl = this.formBuilder.control([]);
 
         this.form = formBuilder.group({
             id: ["", [
                 Validators.required,
                 Validators.maxLength(64),
-                Validators.pattern("^[\\w\\_-]+$"),
+                Validators.pattern(Constants.forms.validation.regex.id),
             ]],
             displayName: "",
             scale: [null],
             os: this._osControl,
-            vmSize: ["Standard_D1", Validators.required],
+            // note: probably not advisable to default vmSize value
+            vmSize: ["", Validators.required],
             maxTasksPerNode: 1,
             enableInterNodeCommunication: false,
             taskSchedulingPolicy: [NodeFillType.pack],
             startTask: null,
             userAccounts: [[]],
+            appLicenses: [[]],
         });
 
         this._sub = this._osControl.valueChanges.subscribe((value) => {
             this.osSource = value.source;
             if (value.source === PoolOsSources.PaaS) {
+                this._renderingSkuSelected = false;
                 this.osType = "windows";
             } else {
                 const config = value.virtualMachineConfiguration;
                 const agentId: string = config && config.nodeAgentSKUId;
+                this._renderingSkuSelected = config && config.imageReference
+                    && config.imageReference.publisher === "batch";
+
                 if (agentId && agentId.toLowerCase().indexOf("windows") !== -1) {
                     this.osType = "windows";
                 } else {
@@ -97,5 +107,9 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
 
     public get startTask() {
         return this.form.controls.startTask.value;
+    }
+
+    public get renderingSkuSelected(): boolean {
+        return this._renderingSkuSelected;
     }
 }

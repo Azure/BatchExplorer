@@ -1,6 +1,6 @@
 import { BrowserWindow } from "electron";
 
-import { BatchClientProxyFactory, StorageClientProxyFactory } from "../api";
+import { BatchClientProxyFactory, FileUtils, StorageClientProxyFactory } from "../api";
 import { Constants } from "../client-constants";
 import { UniqueWindow } from "../core";
 import { windows } from "../core";
@@ -39,6 +39,7 @@ export class MainWindow extends UniqueWindow {
         anyWindow.logger = renderLogger;
         anyWindow.splashScreen = windows.splashScreen;
         anyWindow.authenticationWindow = windows.authentication;
+        anyWindow.fileUtils = new FileUtils();
 
         // Open the DevTools.
         if (process.env.NODE_ENV !== "production") {

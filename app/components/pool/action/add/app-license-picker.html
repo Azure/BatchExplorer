@@ -1,0 +1,24 @@
+<bl-focus-section>
+    <bl-table #licenseTable>
+        <bl-thead>
+            <bl-column style="width: 40px"></bl-column>
+            <bl-column>Software license name</bl-column>
+            <bl-column style="width: 85px">EULA</bl-column>
+            <bl-column>Cost (in addition to VM)</bl-column>
+        </bl-thead>
+        <bl-row *ngFor="let license of licenses" [key]="license.id">
+            <bl-cell style="width: 40px">
+                <md-checkbox color="primary" (change)="pickLicense(license.id, $event)"></md-checkbox>
+            </bl-cell>
+            <bl-cell>{{license.description}}</bl-cell>
+            <bl-cell style="width: 85px"><span class="link" (click)="viewEula(license.description)">EULA</span></bl-cell>
+            <bl-cell>
+                <div><span>{{license.cost}}/core/hour*</span></div>
+                <div><span>Charged while VM is running</span></div>
+            </bl-cell>
+        </bl-row>
+    </bl-table>
+</bl-focus-section>
+
+<!-- Read EULA checkbox -->
+<md-checkbox (change)="eulaCheck($event)" color="primary">I have read each of the end user license agreements (EULA) for the software licenses selected, and I agree to be bound by the terms and conditions of each end user license agreement.</md-checkbox>
