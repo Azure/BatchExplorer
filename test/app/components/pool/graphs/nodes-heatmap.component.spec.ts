@@ -11,7 +11,7 @@ import { Node, NodeState, Pool } from "app/models";
 import { NodeService } from "app/services";
 import * as Fixture from "test/fixture";
 import { click, dblclick, rightClick } from "test/utils/helpers";
-import { ContextMenuServiceMock } from "test/utils/mocks";
+import { ContextMenuServiceMock, NotificationServiceMock } from "test/utils/mocks";
 
 @Component({
     template: `
@@ -48,9 +48,10 @@ describe("NodesHeatmapComponent", () => {
     let svg: d3.Selection<any, any, any, any>;
     let contextMenuService: ContextMenuServiceMock;
     let routerSpy;
-
+    let notificationService;
     beforeEach(() => {
         contextMenuService = new ContextMenuServiceMock();
+        notificationService = new NotificationServiceMock();
         routerSpy = {
             navigate: jasmine.createSpy("router.navigate"),
         };
@@ -63,6 +64,7 @@ describe("NodesHeatmapComponent", () => {
                 { provide: SidebarManager, useValue: {} },
                 { provide: Router, useValue: routerSpy },
                 contextMenuService.asProvider(),
+                notificationService.asProvider(),
             ],
         });
 
