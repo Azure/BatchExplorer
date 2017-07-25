@@ -31,7 +31,7 @@ export class MarketHomeComponent {
         const formItem = this.form.value;
         console.log(formItem);
         //RPC takes in Template JSON object and Parameter JSON object
-        const obs=  this.pythonRpcService.callWithAuth("submitNCJ", [JSON.parse(this.getTemplate(this.selected)["filecontent"]),formItem]);
+        const obs =  this.pythonRpcService.callWithAuth("submitNCJ", [JSON.parse(this.getTemplate(this.selected)["filecontent"]),formItem]);
         obs.subscribe({
             next: (data) => console.log("Submitted NCJ package", data),
             error: (err) => console.log("Error NCJ package", err),
