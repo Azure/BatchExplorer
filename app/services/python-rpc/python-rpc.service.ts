@@ -90,7 +90,6 @@ export class PythonRpcService {
         const container = this._registerRequest(request);
 
         this._ready.subscribe(() => {
-            console.log("Send", JSON.stringify(request));
             this._socket.send(JSON.stringify(request));
         });
 

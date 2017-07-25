@@ -1,10 +1,7 @@
 import os
-import azure.batch_extensions as batch
 
 from server.app import app
-from server.aad_auth import AADAuth
 from jsonrpc import JsonRpcErrorCodes, error, JsonRpcRequest
-from msrestazure.azure_active_directory import AdalAuthentication
 
 # used for string replacement so i think it needs to stay like this.
 SUBDIR_FILTER = "**/*"
@@ -57,7 +54,7 @@ def create_file_group(request: JsonRpcRequest, name, directory, options):
     # TODO: keep track of uploading files in the callback below and remove
     # this code.
     uploadCount = 0
-    for root, dirs, files in os.walk(directory.replace(SUBDIR_FILTER, "")):
+    for _, _, files in os.walk(directory.replace(SUBDIR_FILTER, "")):
         uploadCount += len(files)
 
     return {

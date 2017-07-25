@@ -11,7 +11,6 @@ class BatchAccount:
 
     @staticmethod
     def from_dict(data: dict):
-        print('Acc', data)
         return BatchAccount(
             account_id=data['id'],
             name=data['name'],
