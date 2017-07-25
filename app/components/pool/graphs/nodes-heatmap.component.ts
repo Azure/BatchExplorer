@@ -286,30 +286,33 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     }
 
     private _displayRunningTasks(taskGroup, z) {
-        const maxTaskPerNode = this.pool.maxTasksPerNode;
-        const taskWidth = Math.floor(z / maxTaskPerNode);
         if (z === 0) { // When switching between the graphs there is a moment where the width/height is 0
             return;
         }
+
         const runningTaskRects = taskGroup.selectAll("rect")
             .data((d) => {
                 const node: Node = d.node;
-                if (node.state !== NodeState.running || !node.recentTasks) {
+                if (node.state !== NodeState.running) {
                     return [];
                 }
+                const { taskHeight, combine } = this._getTaskHeight(z, node);
+                if (combine) {
+                    return [{ node, index: 0, taskHeight }];
+                }
                 const count = node.runningTasksCount;
-                const array = new Array(count).fill(0).map((task, index) => ({ node, index }));
+                const array = new Array(count).fill(0).map((task, index) => ({ node, index, taskHeight }));
                 return array;
             });
 
         runningTaskRects.enter().append("rect")
             .attr("transform", (data) => {
                 const index = data.index;
-                const x = z - (index + 1) * taskWidth;
+                const x = z - (index + 1) * (data.taskHeight + 1);
                 return `translate(0,${x})`;
             })
             .attr("width", z)
-            .attr("height", taskWidth - 1)
+            .attr("height", (data) => data.taskHeight)
             .style("fill", runningColor);
 
         runningTaskRects.exit().remove();
@@ -322,6 +325,18 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         });
     }
 
+    private _getTaskHeight(tileSize: number, node: Node) {
+        const maxTaskPerNode = this.pool.maxTasksPerNode;
+        const taskHeight = Math.floor(tileSize / maxTaskPerNode);
+        let height;
+        const combine = taskHeight < 2;
+        if (combine) {
+            height = Math.floor(tileSize / maxTaskPerNode * node.runningTasksCount);
+        } else {
+            height = taskHeight - 1;
+        }
+        return { taskHeight: Math.max(1, height), combine };
+    }
     /**
      * Compute the dimension of the heatmap.
      *  - rows

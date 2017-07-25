@@ -49,6 +49,23 @@ bl-nodes-heatmap {
         cursor: pointer;
         height: 20px;
     }
+
+    .no-nodes-container {
+        top: 0;
+        position: absolute;
+        height: 100%;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        font-size: 16px;
+        color: $whitesmoke;
+
+        > div {
+            padding: 10px 20px;
+            background: $dusty-grey;
+            height: 36px;
+        }
+    }
 }
 
 bl-node-preview-card {
