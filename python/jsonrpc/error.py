@@ -15,7 +15,6 @@ JSONRPC_ERROR_MESSAGE = dict([
     (JsonRpcErrorCodes.PARSE_ERROR, "Parse error"),
     (JsonRpcErrorCodes.INVALID_REQUEST, "nvalid request"),
     (JsonRpcErrorCodes.METHOD_NOT_FOUND, "Method not found"),
-    (JsonRpcErrorCodes.INVALID_PARAMS, "Invalid params"),
     (JsonRpcErrorCodes.INTERNAL_ERROR, "Internal error"),
 ])
 

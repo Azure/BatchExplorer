@@ -1,4 +1,4 @@
-from jsonrpc.error import JsonRpcMethodNotFoundError
+from jsonrpc.error import JsonRpcMethodNotFoundError, JsonRpcInvalidParamsError
 
 
 class BatchLabsApp:
@@ -41,7 +41,10 @@ class BatchLabsApp:
         name = request.method
         params = request.params
         if name in self.procedures:
-            return self.procedures[name](request, *params)
+            try:
+                return self.procedures[name](request, *params)
+            except TypeError as e:
+                raise JsonRpcInvalidParamsError(e.args)
         else:
             raise JsonRpcMethodNotFoundError(name)
 
