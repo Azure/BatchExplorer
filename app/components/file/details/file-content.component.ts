@@ -41,6 +41,7 @@ export class FileContentComponent implements OnChanges {
         if (!filename) {
             throw new Error(`Expect filename to be a valid string but was "${filename}"`);
         }
+
         const name = filename.toLowerCase();
         for (let type of Object.keys(fileTypes)) {
             const extensions = fileTypes[type];
@@ -51,6 +52,7 @@ export class FileContentComponent implements OnChanges {
                 }
             }
         }
+
         this.fileType = null;
     }
 }

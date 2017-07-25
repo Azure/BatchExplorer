@@ -16,7 +16,7 @@ export class SimpleDialogComponent {
     public done = new EventEmitter();
 
     @Input()
-    public title: string;
+    public title: string = "Are you sure?";
 
     @Input()
     public subtitle: string;

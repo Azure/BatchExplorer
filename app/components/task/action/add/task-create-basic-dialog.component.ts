@@ -52,6 +52,7 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
             commandLine: ["", Validators.required],
             constraints: this.constraintsGroup,
             runElevated: ["0"],
+            fileGroups: [[]],
             resourceFiles: [[]],
             environmentSettings: [[]],
         });
@@ -69,7 +70,6 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
     public submit(): Observable<any> {
         const task = this.getCurrentValue();
         const id = task.id;
-
         const onAddedParams = { jobId: this.jobId, id };
         const observable = this.taskService.add(this.jobId, task, {});
         observable.subscribe({

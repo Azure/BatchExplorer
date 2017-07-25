@@ -8,7 +8,7 @@ import { Observable } from "rxjs";
 
 import { ApplicationDetailsComponent } from "app/components/application/details";
 import { SidebarManager } from "app/components/base/sidebar";
-import { Application } from "app/models";
+import { BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { ActivatedRouteMock, RxMockEntityProxy } from "test/utils/mocks";
@@ -21,12 +21,12 @@ import { LoadingMockComponent } from "test/utils/mocks/components";
 })
 class ApplicationPropertiesMockComponent {
     @Input()
-    public set application(application: Application) {
+    public set application(application: BatchApplication) {
         this._application = application;
     }
     public get application() { return this._application; }
 
-    private _application: Application;
+    private _application: BatchApplication;
 }
 
 // mock application packages component
@@ -36,7 +36,7 @@ class ApplicationPropertiesMockComponent {
 })
 class ApplicationPackagesMockComponent {
     @Input()
-    public application: Application;
+    public application: BatchApplication;
 }
 
 // mock application error component
@@ -46,7 +46,7 @@ class ApplicationPackagesMockComponent {
 })
 class ApplicationErrorDisplayMockComponent {
     @Input()
-    public application: Application;
+    public application: BatchApplication;
 }
 
 describe("ApplicationDetailsComponent.breadcrumb()", () => {
@@ -60,14 +60,14 @@ describe("ApplicationDetailsComponent.breadcrumb()", () => {
 describe("ApplicationDetailsComponent", () => {
     let fixture: ComponentFixture<ApplicationDetailsComponent>;
     let component: ApplicationDetailsComponent;
-    let entityProxy: RxMockEntityProxy<any, Application>;
+    let entityProxy: RxMockEntityProxy<any, BatchApplication>;
     let applicationServiceSpy: any;
     let activatedRouteSpy: any;
     let accountServiceSpy: any;
     let mdDialogSpy: any;
 
     beforeEach(() => {
-        entityProxy = new RxMockEntityProxy(Application, {
+        entityProxy = new RxMockEntityProxy(BatchApplication, {
             item: Fixtures.application.create({
                 id: "app-1",
                 displayName: "bobs display name",

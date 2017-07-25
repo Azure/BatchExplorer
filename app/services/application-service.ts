@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 
-import { Application, ApplicationPackage, ServerError } from "app/models";
+import { ApplicationPackage, BatchApplication, ServerError } from "app/models";
 import { Constants } from "app/utils";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
@@ -36,7 +36,7 @@ export class ApplicationService extends ServiceBase {
 
     private _currentAccountId: string;
     private _basicProperties: string = "id,displayName,allowUpdates,defaultVersion";
-    private _cache = new DataCache<Application>();
+    private _cache = new DataCache<BatchApplication>();
 
     constructor(
         private arm: ArmHttpService,
@@ -57,9 +57,9 @@ export class ApplicationService extends ServiceBase {
      * @param initialOptions: options for the list query
      */
     public list(initialOptions: any = {}, onError?: (error: ServerError) => boolean):
-        RxListProxy<ApplicationListParams, Application> {
+        RxListProxy<ApplicationListParams, BatchApplication> {
 
-        return new RxArmListProxy<ApplicationListParams, Application>(Application, this.arm, {
+        return new RxArmListProxy<ApplicationListParams, BatchApplication>(BatchApplication, this.arm, {
             cache: (params) => this._cache,
             uri: () => `${this._currentAccountId}/applications`,
             initialOptions: initialOptions,
@@ -73,8 +73,8 @@ export class ApplicationService extends ServiceBase {
      * a list of it's packages.
      * @param applicationId: id of the application
      */
-    public get(applicationId: string): RxEntityProxy<ApplicationParams, Application> {
-        return new RxArmEntityProxy<ApplicationParams, Application>(Application, this.arm, {
+    public get(applicationId: string): RxEntityProxy<ApplicationParams, BatchApplication> {
+        return new RxArmEntityProxy<ApplicationParams, BatchApplication>(BatchApplication, this.arm, {
             cache: () => this._cache,
             uri: ({ id }) => `${this._currentAccountId}/applications/${id}`,
             initialParams: {
@@ -83,7 +83,7 @@ export class ApplicationService extends ServiceBase {
         });
     }
 
-    public getOnce(applicationId: string, options: any = {}): Observable<Application> {
+    public getOnce(applicationId: string, options: any = {}): Observable<BatchApplication> {
         return getOnceProxy(this.get(applicationId));
     }
 

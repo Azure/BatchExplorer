@@ -20,12 +20,12 @@ export interface AuthorizationResult {
     state: string;
 }
 
-const defaultResource = "https://management.core.windows.net/";
-
 const resources = [
-    "https://management.core.windows.net/",
-    "https://batch.core.windows.net/",
+    Constants.ResourceUrl.arm,
+    Constants.ResourceUrl.batch,
 ];
+
+const defaultResource = resources[0];
 
 @Injectable()
 export class AdalService {

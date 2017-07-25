@@ -3,7 +3,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs";
 
-import { AccountResource, Application, Job, Pool, ServerError } from "app/models";
+import { AccountResource, BatchApplication, Job, Pool, ServerError } from "app/models";
 import { AccountParams, AccountService, ApplicationService, JobService, PoolService } from "app/services";
 import { RxEntityProxy, RxListProxy } from "app/services/core";
 import { Constants } from "app/utils";
@@ -31,7 +31,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
     public data: RxEntityProxy<AccountParams, AccountResource>;
 
-    public applicationData: RxListProxy<{}, Application>;
+    public applicationData: RxListProxy<{}, BatchApplication>;
     public jobData: RxListProxy<{}, Job>;
     public poolData: RxListProxy<{}, Pool>;
 
@@ -107,8 +107,9 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
      * @param error - error JSON object
      */
     private _isAutoStorageError(error: any): boolean {
+        const badCode = Constants.APIErrorCodes.accountNotEnabledForAutoStorage;
         return error &&
-            (error.body.code === Constants.APIErrorCodes.accountNotEnabledForAutoStorage ||
-            (error.body.error && error.body.error.code === Constants.APIErrorCodes.accountNotEnabledForAutoStorage));
+            (error.body.code === badCode ||
+                (error.body.error && error.body.error.code === badCode));
     }
 }

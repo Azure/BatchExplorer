@@ -1,0 +1,15 @@
+<bl-list-and-show-layout #layout (listScrolledToBottom)="fileGroupList.onScrollToBottom()" [list]="fileGroupList">
+    <div bl-list-buttons>
+        <bl-button type="round" icon="fa fa-plus spin-hover" color="light" title="Add a file group" [action]="addFileGroup"
+            [disabled]="!hasAutoStorage">
+        </bl-button>
+    </div>
+    <div bl-list-content>
+        <bl-focus-section>
+            <bl-file-group-list #fileGroupList [filter]="layout.filter" [quickList]="!(layout.showAdvancedFilter | async)"></bl-file-group-list>
+        </bl-focus-section>
+    </div>
+    <div bl-show-content>
+        <router-outlet></router-outlet>
+    </div>
+</bl-list-and-show-layout>
