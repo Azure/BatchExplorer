@@ -25,6 +25,9 @@ export class ChooseActionComponent implements OnInit, OnDestroy {
             this._updateActions();
         });
     }
+    public static breadcrumb() {
+        return { name: "Choose Action" };
+    }
 
     public ngOnDestroy() {
         this._paramsSubscriber.unsubscribe();

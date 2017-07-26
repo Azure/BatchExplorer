@@ -1,9 +1,11 @@
 <h1 class="title">
-    Application configuration: {{ applicationId }} - {{actionId}}
+    Application configuration: {{ applicationId }} - {{ actionId }}
 </h1>
+
+
 <form [formGroup]="form">
     <ul>
-        <div *ngFor="let parameter of getParameters(selected)">
+        <div *ngFor="let parameter of getParameters()">
             <li>
                 <md-input-container class="form-element">
                     <input mdInput type="text" name="name" id="name" formControlName="{{parameter}}" [placeholder]="parameter">
@@ -11,10 +13,9 @@
             </li>
         </div>
     </ul>
-    <bl-button (click)="prevPage();" type="wide">
-        Prev
-    </bl-button>
-    <bl-button [action]="onSubmit" type="wide">
+
+    <bl-button (click)="onSubmit" type="wide">
         Submit
     </bl-button>
 </form>
+

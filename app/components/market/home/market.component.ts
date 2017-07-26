@@ -13,7 +13,9 @@ export class MarketComponent implements OnInit {
     public applications: List<Application>;
 
     constructor(private templateService: NcjTemplateService) { }
-
+    public static breadcrumb() {
+        return { name: "Market" };
+    }
     public ngOnInit() {
         this.templateService.listApplications().subscribe((applications) => {
             this.applications = applications;
