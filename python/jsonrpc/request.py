@@ -9,7 +9,7 @@ class JsonRpcRequestOptions:
     @staticmethod
     def from_dict(data: dict):
         return JsonRpcRequestOptions(
-            authentication=data["authentication"],
+            authentication=data.get("authentication", None),
         )
 
 
