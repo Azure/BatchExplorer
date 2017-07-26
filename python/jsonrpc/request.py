@@ -2,6 +2,7 @@ import json
 from server.aad_auth import AADAuth
 from .error import JsonRpcParseError
 
+
 class JsonRpcRequestOptions:
     def __init__(self, authentication):
         self.authentication = authentication
