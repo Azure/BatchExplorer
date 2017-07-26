@@ -14,7 +14,7 @@ import { FileHomeComponent } from "./components/file/home";
 import { JobDefaultComponent, JobDetailsComponent } from "./components/job/details";
 import { JobHomeComponent } from "./components/job/home/job-home.component";
 import { MarketComponent } from "./components/market/home";
-import { MarketHomeComponent } from "./components/market/home/market-home.component";
+import { SubmitMarketApplicationComponent } from "./components/market/submit";
 import { NodeDefaultComponent, NodeDetailsComponent } from "./components/node/details";
 import { NodeHomeComponent } from "./components/node/home";
 import { PoolDetailsComponent } from "./components/pool/details";
@@ -57,6 +57,10 @@ export const routes: Routes = [
     {
         path: "market/:applicationId/actions",
         component: ChooseActionComponent,
+    },
+    {
+        path: "market/:applicationId/actions/:actionId/submit",
+        component: SubmitMarketApplicationComponent,
     },
     {
         path: "applications",

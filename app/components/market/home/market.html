@@ -1,4 +1,11 @@
-<div *ngFor="let application of applications">
-    <img [src]="application.icon">
-    <a [routerLink]="['/market', application.id, 'actions']">{{application.name}} - {{application.description}}</a>
-</div>
+<bl-scrollable>
+    <div>
+        <h1>Market applications</h1>
+    </div>
+    <div class="applicaitons">
+        <md-card *ngFor="let application of applications" class="application" [title]="application.description" [routerLink]="['/market', application.id, 'actions']">
+            <img class="logo" [src]="application.icon">
+            <div class="name">{{application.name}}</div>
+        </md-card>
+    </div>
+</bl-scrollable>

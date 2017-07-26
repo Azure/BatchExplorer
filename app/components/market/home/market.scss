@@ -1,6 +1,29 @@
+@import "app/styles/variables";
+
 bl-market {
-    img {
-        width: 80px;
-        height: 80px;
+    display: flex;
+    width: 100%;
+    height: $contentview-height;
+
+    h1 {
+        margin: 10px;
+    }
+
+    .application {
+        cursor: pointer;
+        display: inline-block;
+        width: 100px;
+        margin: 5px;
+        padding: 5px;
+
+        img.logo {
+            width: 90px;
+            height: 90px;
+        }
+        .name {
+            padding: 10px 0;
+            text-align: center;
+            font-size: 16px;
+        }
     }
 }
