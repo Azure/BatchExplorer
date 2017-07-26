@@ -5,7 +5,6 @@ from .response_stream import ResponseStream
 from .app import app
 from controllers import *
 
-
 class WebsocketServer:
     """
         Websocket server core class. It will handle receiving and sending messages
@@ -55,7 +54,7 @@ class WebsocketConnection:
         try:
             print("< {0} {1}".format(request.request_id, request.method))
 
-            result = app.call_procedure(request)
+            result = await app.call_procedure(request)
 
             if isinstance(result, ResponseStream):
                  self.__handle_response_stream(request, result)
@@ -80,7 +79,7 @@ class WebsocketConnection:
             raise e
 
     def parse_request(self, message: str) -> JsonRpcRequest:
-        return JsonRpcRequest.from_json(message)
+        return JsonRpcRequest.from_json(self, message)
 
     async def send_response(self, response: JsonRpcResponse):
         data = response.to_json()

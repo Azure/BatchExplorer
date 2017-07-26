@@ -1,3 +1,9 @@
+import asyncio
+
+class ResponseStreamManager:
+    def __init__(self):
+        self.loop = asyncio.new_event_loop()
+
 class ResponseStream:
     def __init__(self):
         self.callbacks = []

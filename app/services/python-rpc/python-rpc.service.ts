@@ -96,16 +96,16 @@ export class PythonRpcService {
     }
 
     public callWithAuth(method: string, params: any[]): Observable<any> {
-        return this.accountService.currentAccount.cascade((account: AccountResource) => {
+        return this.accountService.currentAccount.flatMap((account: AccountResource) => {
             const batchToken = this.adalService.accessTokenFor(account.subscription.tenantId, ResourceUrl.batch);
             const armToken = this.adalService.accessTokenFor(account.subscription.tenantId, ResourceUrl.arm);
-            return Observable.combineLatest(batchToken, armToken).cascade(([batchToken, armToken]) => {
+            return Observable.combineLatest(batchToken, armToken).flatMap(([batchToken, armToken]) => {
                 const authParam = { batchToken, armToken, account: account.toJS() };
                 return this.call(method, params, {
                     authentication: authParam,
                 });
             });
-        });
+        }).share();
     }
 
     /**
@@ -151,7 +151,6 @@ export class PythonRpcService {
             request.subject.error(response.error);
         } else {
             request.subject.next(response.result);
-            console.log("Got result3", response);
         }
         if (!response.stream) {
             request.subject.complete();
