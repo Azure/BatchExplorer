@@ -33,6 +33,10 @@ bl-market {
         margin: 5px;
         padding: 5px;
 
+        &:hover {
+            background: $whitesmoke-darker;
+        }
+
         img.logo {
             width: 90px;
             height: 90px;

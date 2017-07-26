@@ -1,3 +1,9 @@
-<div *ngFor="let action of actions">
-    <a [routerLink]="['/market', applicationId, 'actions', action.id, 'submit']">{{action.name}} - {{action.description}}</a>
-</div>
+<bl-scrollable>
+    <h1> What would you like to do with {{application?.name}} </h1>
+    <div class="actions">
+        <md-card *ngFor="let action of actions" class="action" [routerLink]="['/market', applicationId, 'actions', action.id, 'submit']">
+            <div class="name">{{action.name}}</div>
+            <div class="description">{{action.description}}</div>
+        </md-card>
+    </div>
+</bl-scrollable>
