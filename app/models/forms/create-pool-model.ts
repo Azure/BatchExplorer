@@ -4,7 +4,6 @@ import { NodeFillType } from "app/models";
 import { PoolCreateDto, UserAccountDto } from "app/models/dtos";
 
 export enum PoolOsSources {
-    Unknown, // fix for !value.source returning true for PoolOsSources.PaaS
     PaaS,
     IaaS,
 }
