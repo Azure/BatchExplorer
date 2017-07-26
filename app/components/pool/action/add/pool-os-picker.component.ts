@@ -76,7 +76,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
 
     public validate(c: FormControl) {
         const valid = this.value;
-        if (!valid || !valid.source) {
+        if (!valid || Boolean(valid.source !== PoolOsSources.PaaS && valid.source !== PoolOsSources.IaaS)) {
             return {
                 validateOsPicker: {
                     valid: false,
