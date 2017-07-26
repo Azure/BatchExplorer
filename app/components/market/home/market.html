@@ -1,0 +1,4 @@
+<div *ngFor="let application of applications">
+    <img [src]="application.icon">
+    <a [routerLink]="['/market', application.id, 'actions']">{{application.name}} - {{application.description}}</a>
+</div>

@@ -1,0 +1,3 @@
+<div *ngFor="let action of actions">
+    <a [routerLink]="['/market', applicationId, 'actions', action.id, 'submit']">{{action.name}} - {{action.description}}</a>
+</div>

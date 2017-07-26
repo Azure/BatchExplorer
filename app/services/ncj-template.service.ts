@@ -58,7 +58,9 @@ export class NcjTemplateService {
 
     public listApplications(): Observable<List<Application>> {
         return this.get("index.json").map((apps) => {
-            return List<Application>(apps.map(x => new Application(x)));
+            return List<Application>(apps.map(data => {
+                return new Application({ ...data, icon: this.getApplicationIcon(data.id) });
+            }));
         }).share();
     }
 
@@ -67,7 +69,7 @@ export class NcjTemplateService {
      * @param applicationId Id of the application
      */
     public getApplicationIcon(applicationId: string): string {
-        return this.getFullPath(`${applicationId}/icon.svg`);
+        return "file:" + this.getFullPath(`${applicationId}/icon.svg`);
     }
 
     public listActions(applicationId: string): Observable<List<ApplicationAction>> {

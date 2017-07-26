@@ -1,6 +1,7 @@
 // tslint:disable: object-literal-sort-keys
 import { Routes } from "@angular/router";
 
+import { ChooseActionComponent } from "app/components/market/application-action";
 import { Constants } from "app/utils";
 import { AccountDefaultComponent, AccountDetailsComponent } from "./components/account/details";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
@@ -12,12 +13,13 @@ import { FileDetailsComponent } from "./components/file/details/file-details.com
 import { FileHomeComponent } from "./components/file/home";
 import { JobDefaultComponent, JobDetailsComponent } from "./components/job/details";
 import { JobHomeComponent } from "./components/job/home/job-home.component";
+import { MarketComponent } from "./components/market/home";
+import { MarketHomeComponent } from "./components/market/home/market-home.component";
 import { NodeDefaultComponent, NodeDetailsComponent } from "./components/node/details";
 import { NodeHomeComponent } from "./components/node/home";
 import { PoolDetailsComponent } from "./components/pool/details";
 import { PoolDefaultComponent } from "./components/pool/details";
 import { PoolHomeComponent } from "./components/pool/home/pool-home.component";
-import { MarketHomeComponent } from "./components/market/home/market-home.component";
 import { TaskDefaultComponent, TaskDetailsComponent } from "./components/task/details";
 import { TaskHomeComponent } from "./components/task/home";
 
@@ -50,10 +52,11 @@ export const routes: Routes = [
     },
     {
         path: "market",
-        component: MarketHomeComponent,
-        children: [
-            { path: "", component: MarketHomeComponent }, // pools/
-        ],
+        component: MarketComponent,
+    },
+    {
+        path: "market/:applicationId/actions",
+        component: ChooseActionComponent,
     },
     {
         path: "applications",
