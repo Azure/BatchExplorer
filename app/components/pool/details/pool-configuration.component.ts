@@ -57,7 +57,8 @@ export class PoolConfigurationComponent {
             this.appPackages = this.decorator.applicationPackageReferences;
             this.certificates = this.decorator.certificateReferences;
             this.metadata = pool.metadata;
-            this.startTask = pool.startTask;
+            // Quick fix to make sure it stops crashing the UI
+            this.startTask = pool.startTask || {} as any;
         }
     }
 
