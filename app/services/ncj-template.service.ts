@@ -47,7 +47,13 @@ export class NcjTemplateService {
      */
     public get(uri: string): Observable<any> {
         return this._ready.flatMap(() => {
-            const promise = this.fs.readFile(this.getFullPath(uri)).then(data => JSON.parse(data));
+            const promise = this.fs.readFile(this.getFullPath(uri)).then(data => {
+                try {
+                    return JSON.parse(data);
+                } catch (e) {
+                    log.error(`Error parsing template file ${uri}`);
+                }
+            });
             return Observable.fromPromise(promise);
         }).share();
     }

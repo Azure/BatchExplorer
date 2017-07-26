@@ -1,0 +1,20 @@
+<h1 class="title">
+    Application configuration: {{ applicationId }} - {{actionId}}
+</h1>
+<form [formGroup]="form">
+    <ul>
+        <div *ngFor="let parameter of getParameters(selected)">
+            <li>
+                <md-input-container class="form-element">
+                    <input mdInput type="text" name="name" id="name" formControlName="{{parameter}}" [placeholder]="parameter">
+                </md-input-container>
+            </li>
+        </div>
+    </ul>
+    <bl-button (click)="prevPage();" type="wide">
+        Prev
+    </bl-button>
+    <bl-button [action]="onSubmit" type="wide">
+        Submit
+    </bl-button>
+</form>
