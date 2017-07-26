@@ -80,12 +80,22 @@ export class SubmitMarketApplicationComponent implements OnInit {
         const formItem = this.form.value;
         console.log(formItem);
         // RPC takes in Template JSON object and Parameter JSON object
-        const obs = this.pythonRpcService.callWithAuth("submitNCJ", [this.jobTemplate, formItem]);
+        const obs = this.pythonRpcService.callWithAuth("submitNCJ", [this._buildJobTemplate(), formItem]);
         obs.subscribe({
             next: (data) => console.log("Submitted NCJ package", data),
             error: (err) => console.log("Error NCJ package", err),
         });
     }
+
+    private _buildJobTemplate(): any {
+        const template = {...this.jobTemplate};
+        template.job.properties.poolInfo = {
+            poolId: "some-pool",
+        }
+        console.log("Template", template);
+        return template;
+    }
+
     /*
     // Triggers when submit button is pressed
     @autobind()

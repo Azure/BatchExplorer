@@ -3,7 +3,7 @@ import { ActivatedRoute } from "@angular/router";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
-import { ApplicationAction } from "app/models";
+import { Application, ApplicationAction } from "app/models";
 import { NcjTemplateService } from "app/services";
 import "./choose-action.scss";
 
@@ -13,6 +13,7 @@ import "./choose-action.scss";
 })
 export class ChooseActionComponent implements OnInit, OnDestroy {
     public applicationId: string;
+    public application: Application;
     public actions: List<ApplicationAction>;
 
     private _paramsSubscriber: Subscription;
@@ -34,6 +35,10 @@ export class ChooseActionComponent implements OnInit, OnDestroy {
     }
 
     private _updateActions() {
+        this.templateService.getApplication(this.applicationId).subscribe((application) => {
+            console.log("Got applicaiton", application && application.toJS());
+            this.application = application;
+        });
         this.templateService.listActions(this.applicationId).subscribe((actions) => {
             this.actions = actions;
         });

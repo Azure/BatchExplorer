@@ -19,10 +19,16 @@ interface String {
      */
     padStart(maxLength: number, padString?: string);
 
-   /**
-    * Trims all occurrences of the given set of strings off the end of the input.
-    */
+    /**
+     * Trims all occurrences of the given set of strings off the end of the input.
+     */
     trimEnd(...values: string[]);
+
+
+    /**
+     * Check if a string contains a substring
+     */
+    contains(substring: string): boolean;
 }
 
 // First, checks if it isn't implemented yet.
@@ -78,5 +84,11 @@ if (!String.prototype.trimEnd) {
         }
 
         return input;
+    };
+}
+
+if (!String.prototype.contains) {
+    String.prototype.contains = function (this: string, substr: string) {
+        return this.indexOf(substr) !== -1;
     };
 }

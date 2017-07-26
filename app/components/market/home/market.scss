@@ -9,12 +9,33 @@ bl-market {
         margin: 10px;
     }
 
+    .header {
+        display: flex;
+
+        h1 {
+            flex: 1;
+        }
+
+        .filter .quicksearch {
+            width: 400px;
+        }
+    }
+
+
+    .applications {
+        padding: 0 10px;
+    }
+
     .application {
         cursor: pointer;
         display: inline-block;
         width: 100px;
         margin: 5px;
         padding: 5px;
+
+        &:hover {
+            background: $whitesmoke-darker;
+        }
 
         img.logo {
             width: 90px;

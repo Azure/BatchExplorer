@@ -70,6 +70,13 @@ export class NcjTemplateService {
         }).share();
     }
 
+    public getApplication(applicationId: string): Observable<Application> {
+        return this.get("index.json").map((apps) => {
+            const data = apps.filter(app => app.id === applicationId).first();
+            return data && new Application({ ...data, icon: this.getApplicationIcon(data.id) });
+        }).share();
+    }
+
     /**
      * Return the application icon path
      * @param applicationId Id of the application
