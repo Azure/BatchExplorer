@@ -1,5 +1,5 @@
 <h1 class="title">
-    Application configuration: {{ applicationId }} - {{ actionId }}
+    Application: {{ applicationId }}/{{ actionId }}
 </h1>
 
 
@@ -14,7 +14,7 @@
         </div>
     </ul>
 
-    <bl-button (click)="onSubmit" type="wide">
+    <bl-button (click)="onSubmit()" type="wide">
         Submit
     </bl-button>
 </form>
