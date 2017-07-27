@@ -6,4 +6,8 @@
             <div class="description">{{action.description}}</div>
         </md-card>
     </div>
+
+    <div *ngIf="actions?.size === 0" class="no-actions">
+        This application doesn't have any templates
+    </div>
 </bl-scrollable>
