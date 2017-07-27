@@ -35,7 +35,7 @@ class NcjParameterWrapper {
     }
 
     private _computeName() {
-        this.name = inflection.humanize(this.id);
+        this.name = inflection.humanize(inflection.underscore(this.id));
     }
 
     private _computeDescription() {
