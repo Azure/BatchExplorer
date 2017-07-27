@@ -5,9 +5,13 @@ import { ActivatedRoute } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs";
 
+import { NcjJobTemplate, NcjParameter } from "app/models";
 import { NcjTemplateService, PythonRpcService } from "app/services";
 import "./submit-market-application.scss";
 
+const ConventionNames = {
+    jobName: "jobName",
+};
 @Component({
     selector: "bl-submit-market-application",
     templateUrl: "submit-market-application.html",
@@ -17,12 +21,15 @@ export class SubmitMarketApplicationComponent implements OnInit {
         return { name: "Submit" };
     }
 
+    public jobNameParam: NcjParameter;
+
     public applicationId: string;
     public actionId: string;
     public title = "";
-    public jobTemplate;
+    public jobTemplate: NcjJobTemplate;
     public poolTemplate;
     public form: FormGroup;
+    public otherParameters: Array<{ name: string, param: NcjParameter }>;
 
     private _paramsSubscriber: Subscription;
 
@@ -60,14 +67,6 @@ export class SubmitMarketApplicationComponent implements OnInit {
         this.form = new FormGroup(fg);
     }
 
-    public getParameters() {
-        if (this.jobTemplate) {
-            return Object.keys(this.jobTemplate["parameters"]);
-        } else {
-            return [];
-        }
-    }
-
     @autobind()
     public submit() {
         console.log("submit");
@@ -87,6 +86,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
             this.poolTemplate = templates.pool;
             console.log("Job", this.jobTemplate);
             console.log("Pool", this.poolTemplate);
+            this._parseParameters();
             this.createForms();
         });
     }
@@ -98,6 +98,20 @@ export class SubmitMarketApplicationComponent implements OnInit {
         };
         console.log("Template", template);
         return template;
+    }
+
+    private _parseParameters() {
+        const parameters = this.jobTemplate.parameters;
+        const otherParameters: any[] = [];
+        for (let name of Object.keys(parameters)) {
+            const param = parameters[name];
+            if (name === ConventionNames.jobName) {
+                this.jobNameParam = param;
+            } else {
+                otherParameters.push({ name, param });
+            }
+        }
+        this.otherParameters = otherParameters;
     }
 
     private _updateTitle() {

@@ -3,15 +3,14 @@
         <bl-form-page main-form-page [title]="title" [formGroup]="form">
             <bl-form-section title="Job" subtitle="Job parameters">
                 <form [formGroup]="form">
-                    <ul>
-                        <div *ngFor="let parameter of getParameters()">
-                            <li>
-                                <md-input-container class="form-element">
-                                    <input mdInput type="text" name="name" id="name" formControlName="{{parameter}}" [placeholder]="parameter">
-                                </md-input-container>
-                            </li>
-                        </div>
-                    </ul>
+                    <md-input-container class="form-element" *ngIf="jobNameParam">
+                        <input mdInput type="text" name="name" formControlName="jobName" placeholder="Job name">
+                    </md-input-container>
+                    <div *ngFor="let item of otherParameters">
+                        <md-input-container class="form-element">
+                            <input mdInput type="text" name="name" id="name" [formControlName]="item.name" [placeholder]="item.name">
+                        </md-input-container>
+                    </div>
                 </form>
             </bl-form-section>
             <bl-form-section title="Pool">
