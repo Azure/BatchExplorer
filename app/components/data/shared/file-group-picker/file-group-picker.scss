@@ -1,7 +1,13 @@
+@import "app/styles/variables";
+
 bl-file-group-picker {
     display: inline-block;
 
     md-input-container {
         width: 100%;
+
+        .warning {
+            color: map-get($warn, 500);
+        }
     }
 }

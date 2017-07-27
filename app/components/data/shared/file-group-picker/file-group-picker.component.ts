@@ -2,7 +2,8 @@ import { Component, Input, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { Observable, Subscription } from "rxjs";
+import { List } from "immutable";
+import { Subscription } from "rxjs";
 
 import { BlobContainer } from "app/models";
 import { ListContainerParams, StorageService } from "app/services";
@@ -22,9 +23,10 @@ import "./file-group-picker.scss";
 export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
     @Input() public label: string;
 
+    public fileGroups: List<BlobContainer>;
     public value = new FormControl();
     public fileGroupsData: RxListProxy<ListContainerParams, BlobContainer>;
-    public filteredOptions: Observable<string[]>;
+    public warning = false;
 
     private _propagateChange: (value: any[]) => void = null;
     private _subscriptions: Subscription[] = [];
@@ -34,11 +36,13 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
     constructor(private storageService: StorageService) {
 
         this.fileGroupsData = this.storageService.listContainers(storageService.ncjFileGroupPrefix);
-        this.fileGroupsData.items.subscribe((fileGroupContainers) => {
-            console.log("Con", fileGroupContainers.toJS());
+        this.fileGroupsData.items.subscribe((fileGroups) => {
+            this.fileGroups = fileGroups;
         });
 
-        this._subscriptions.push(this.value.valueChanges.subscribe((value) => {
+        this._subscriptions.push(this.value.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((value) => {
+            console.log("got", value);
+            this._checkValid(value);
             if (this._propagateChange) {
                 this._propagateChange(value);
             }
@@ -68,6 +72,12 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
 
     public validate(c: FormControl) {
         return null;
+    }
+
+    private _checkValid(value: string) {
+        const valid = !value || this.fileGroups.map(x => x.name).includes(value);
+        console.log("Checled valid...", valid);
+        this.warning = !valid;
     }
 
 }
