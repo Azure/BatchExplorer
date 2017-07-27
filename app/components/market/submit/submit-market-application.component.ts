@@ -156,9 +156,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
 
     private _buildJobTemplate(): any {
         const template = { ...this.jobTemplate };
-        template.job.properties.poolInfo = {
-            poolId: this.pickedPool.value,
-        };
+        template.job.properties.poolInfo = this.pickedPool.value;
         console.log("Template", template);
         return template;
     }
