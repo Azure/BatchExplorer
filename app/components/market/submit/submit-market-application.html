@@ -1,23 +1,25 @@
-<h1 class="title">
-    Application: {{ applicationId }}/{{ actionId }}
-</h1>
-
-
-<form [formGroup]="form">
-    <ul>
-        <div *ngFor="let parameter of getParameters()">
-            <li>
-                <md-input-container class="form-element">
-                    <input mdInput type="text" name="name" id="name" formControlName="{{parameter}}" [placeholder]="parameter">
-                </md-input-container>
-            </li>
-        </div>
-    </ul>
-
-    <bl-pool-picker></bl-pool-picker>
-
-    <bl-button (click)="onSubmit()" type="wide">
+<bl-scrollable>
+    <bl-complex-form [formGroup]="form" [submit]="submit" [hideFooter]="true">
+        <bl-form-page main-form-page [title]="title" [formGroup]="form">
+            <bl-form-section title="Job" subtitle="Job parameters">
+                <form [formGroup]="form">
+                    <ul>
+                        <div *ngFor="let parameter of getParameters()">
+                            <li>
+                                <md-input-container class="form-element">
+                                    <input mdInput type="text" name="name" id="name" formControlName="{{parameter}}" [placeholder]="parameter">
+                                </md-input-container>
+                            </li>
+                        </div>
+                    </ul>
+                </form>
+            </bl-form-section>
+            <bl-form-section title="Pool">
+                <bl-pool-picker></bl-pool-picker>
+            </bl-form-section>
+        </bl-form-page>
+    </bl-complex-form>
+    <bl-button [action]="submit" type="wide">
         Submit
     </bl-button>
-</form>
-
+</bl-scrollable>

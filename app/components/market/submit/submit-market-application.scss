@@ -2,9 +2,15 @@
 
 
 bl-submit-market-application {
+    display: flex;
+    width: 100%;
+    height: $contentview-height;
+    background: $whitesmoke-darker;
+
     form {
         margin-left: 10px;
     }
+
     .appselect {
         margin-left: 10px;
         margin-top: 5px;
