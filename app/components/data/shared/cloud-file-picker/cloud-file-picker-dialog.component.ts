@@ -46,7 +46,6 @@ export class CloudFilePickerDialogComponent {
     }
 
     public close() {
-        console.log("Closed called..");
         this.done.next(this._saved);
         this.done.complete();
     }

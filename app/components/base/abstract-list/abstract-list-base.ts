@@ -35,8 +35,6 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         this.setActiveItem(key);
     }
 
-    @Input() disableRouting = false;
-
     /**
      * When the list of selected item change.
      */
