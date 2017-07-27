@@ -30,6 +30,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
 
     private _propagateChange: (value: any[]) => void = null;
     private _subscriptions: Subscription[] = [];
+    private _loading: boolean = true;
 
     constructor(private storageService: StorageService) {
 
@@ -47,7 +48,10 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
     }
 
     public ngOnInit() {
-        this.fileGroupsData.fetchNext();
+        this.fileGroupsData.fetchAll().subscribe(() => {
+            this._loading = false;
+            this._checkValid(this.value.value);
+        });
     }
 
     public ngOnDestroy() {
@@ -72,8 +76,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
     }
 
     private _checkValid(value: string) {
-        const valid = !value || this.fileGroups.map(x => x.name).includes(value);
+        const valid = this._loading || !value || this.fileGroups.map(x => x.name).includes(value);
         this.warning = !valid;
     }
-
 }

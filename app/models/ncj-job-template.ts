@@ -1,5 +1,10 @@
+enum NcjParameterRawType {
+    string = "string",
+    int = "int",
+}
+
 export interface NcjParameter {
-    type: string;
+    type: NcjParameterRawType;
     defaultValue?: any;
     allowedValues: any[];
     metadata: StringMap<string>;

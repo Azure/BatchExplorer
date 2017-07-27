@@ -7,8 +7,35 @@ import { Subscription } from "rxjs";
 
 import { NcjJobTemplate, NcjParameter } from "app/models";
 import { NcjTemplateService, PythonRpcService } from "app/services";
+import { ObjectUtils, log } from "app/utils";
 import "./submit-market-application.scss";
 
+enum NcjParameterExtendedType {
+    string = "string",
+    int = "int",
+    fileGroup = "file-group",
+    fileInFileGroup = "file-in-file-group",
+}
+
+class NcjParameterWrapper {
+    public type: NcjParameterExtendedType;
+    constructor(public name: string, private _param: NcjParameter) {
+        this._computeType();
+    }
+
+    private _computeType() {
+        const param = this._param;
+        if (param.metadata && param.metadata.advancedType) {
+            const type = param.metadata.advancedType;
+            if (!ObjectUtils.values(NcjParameterExtendedType as any).includes(type)) {
+                log.error(`Advanced typed '${type}' is unkown!`, NcjParameterExtendedType);
+            }
+            this.type = type as NcjParameterExtendedType;
+            return;
+        }
+        this.type = param.type as any;
+    }
+}
 const ConventionNames = {
     jobName: "jobName",
 };
@@ -21,7 +48,9 @@ export class SubmitMarketApplicationComponent implements OnInit {
         return { name: "Submit" };
     }
 
-    public jobNameParam: NcjParameter;
+    public NcjParameterExtendedType = NcjParameterExtendedType;
+
+    public jobNameParam: NcjParameterWrapper;
 
     public applicationId: string;
     public actionId: string;
@@ -29,7 +58,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
     public jobTemplate: NcjJobTemplate;
     public poolTemplate;
     public form: FormGroup;
-    public otherParameters: Array<{ name: string, param: NcjParameter }>;
+    public otherParameters: NcjParameterWrapper[];
 
     private _paramsSubscriber: Subscription;
 
@@ -106,9 +135,9 @@ export class SubmitMarketApplicationComponent implements OnInit {
         for (let name of Object.keys(parameters)) {
             const param = parameters[name];
             if (name === ConventionNames.jobName) {
-                this.jobNameParam = param;
+                this.jobNameParam = new NcjParameterWrapper(name, param);
             } else {
-                otherParameters.push({ name, param });
+                otherParameters.push(new NcjParameterWrapper(name, param));
             }
         }
         this.otherParameters = otherParameters;

@@ -2,16 +2,22 @@
     <bl-complex-form [formGroup]="form" [submit]="submit" [hideFooter]="true">
         <bl-form-page main-form-page [title]="title" [formGroup]="form">
             <bl-form-section title="Job" subtitle="Job parameters">
-                <form [formGroup]="form">
-                    <md-input-container class="form-element" *ngIf="jobNameParam">
-                        <input mdInput type="text" name="name" formControlName="jobName" placeholder="Job name">
-                    </md-input-container>
-                    <div *ngFor="let item of otherParameters">
+                <md-input-container class="form-element" *ngIf="jobNameParam">
+                    <input mdInput type="text" name="name" formControlName="jobName" placeholder="Job name">
+                </md-input-container>
+                <div *ngFor="let param of otherParameters" [ngSwitch]="param.type">
+                    <div *ngSwitchCase="NcjParameterExtendedType.fileGroup">
+                        <bl-file-group-picker [formControlName]="param.name" [label]="param.name"  class="form-element"></bl-file-group-picker>
+                    </div>
+                    <div *ngSwitchCase="NcjParameterExtendedType.fileInFileGroup">
+                        <bl-cloud-file-picker [containerId]="" [formControlName]="param.name" [label]="param.name" class="form-element"></bl-cloud-file-picker>
+                    </div>
+                    <div *ngSwitchDefault>
                         <md-input-container class="form-element">
-                            <input mdInput type="text" name="name" id="name" [formControlName]="item.name" [placeholder]="item.name">
+                            <input mdInput type="text" name="name" [formControlName]="param.name" [placeholder]="param.name">
                         </md-input-container>
                     </div>
-                </form>
+                </div>
             </bl-form-section>
             <bl-form-section title="Pool">
                 <bl-pool-picker></bl-pool-picker>
