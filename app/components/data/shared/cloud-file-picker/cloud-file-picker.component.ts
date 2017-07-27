@@ -71,7 +71,7 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnInit, O
     }
 
     public registerOnTouched() {
-        // Do nothing
+        this.value.markAsTouched();
     }
 
     public validate(c: FormControl) {
@@ -80,10 +80,16 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnInit, O
 
     @autobind()
     public openFilePickerDialog() {
-        console.log("Open dialog....");
         const ref = this.dialog.open(CloudFilePickerDialogComponent);
         const component = ref.componentInstance;
         component.containerId = this.fileGroup;
+        component.pickedFile = this.value.value;
+        component.done.subscribe((save) => {
+            console.log("Save?", save);
+            if (save) {
+                this.value.setValue(component.pickedFile);
+            }
+        });
     }
 
     private _checkValid(value: string) {

@@ -9,7 +9,7 @@
         </bl-quick-list-item>
     </bl-quick-list>
 
-    <bl-table *ngIf="!quickList">
+    <bl-table *ngIf="!quickList" [activeItem]="activeItem" (activeItemChange)="updateActiveItem($event)">
         <bl-thead>
             <bl-column>Name</bl-column>
             <bl-column style="width: 200px">Content Length</bl-column>
