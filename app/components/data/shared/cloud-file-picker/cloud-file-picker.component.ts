@@ -82,6 +82,8 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnInit, O
     public openFilePickerDialog() {
         console.log("Open dialog....");
         const ref = this.dialog.open(CloudFilePickerDialogComponent);
+        const component = ref.componentInstance;
+        component.containerId = this.fileGroup;
     }
 
     private _checkValid(value: string) {
