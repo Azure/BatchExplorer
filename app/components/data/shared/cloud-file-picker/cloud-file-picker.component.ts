@@ -90,6 +90,7 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnInit, O
                 this.value.setValue(component.pickedFile);
             }
         });
+        return component.done;
     }
 
     private _checkValid(value: string) {
