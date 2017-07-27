@@ -130,7 +130,6 @@ md-dialog-container.mat-dialog-container {
     max-height: 80vh;
 }
 
-
 .mat-select-content, .mat-menu-content {
     padding: 4px 0;
     md-option, .mat-menu-item {
@@ -155,5 +154,10 @@ md-input-container.bl-textarea {
 }
 
 .mat-autocomplete-panel {
-    width : 30vw;
+    max-width : 30vw;
+
+    .mat-option {
+        height: 32px;
+        line-height: 32px;
+    }
 }

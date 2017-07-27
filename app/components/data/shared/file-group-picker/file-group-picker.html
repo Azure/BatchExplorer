@@ -1,0 +1,8 @@
+<md-input-container>
+    <input type="text" mdInput [mdAutocomplete]="auto" [formControl]="value" [placeholder]="label">
+</md-input-container>'
+<md-autocomplete #auto="mdAutocomplete">
+    <md-option *ngFor="let fileGroup of fileGroupsData.items | async" [value]="fileGroup.name">
+        {{ fileGroup.name }}
+    </md-option>
+</md-autocomplete>

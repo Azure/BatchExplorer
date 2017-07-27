@@ -11,14 +11,14 @@ import { RxListProxy } from "app/services/core";
 
 // tslint:disable:no-forward-ref
 @Component({
-    selector: "bl-file-group-picker",
-    templateUrl: "file-group-picker.html",
+    selector: "bl-file-groups-picker",
+    templateUrl: "file-groups-picker.html",
     providers: [
-        { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => FileGroupPickerComponent), multi: true },
-        { provide: NG_VALIDATORS, useExisting: forwardRef(() => FileGroupPickerComponent), multi: true },
+        { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => FileGroupsPickerComponent), multi: true },
+        { provide: NG_VALIDATORS, useExisting: forwardRef(() => FileGroupsPickerComponent), multi: true },
     ],
 })
-export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
+export class FileGroupsPickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
     public fileGroups: FormControl;
     public data: RxListProxy<ListContainerParams, BlobContainer>;
     public groups: List<string>;
