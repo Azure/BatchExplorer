@@ -47,9 +47,10 @@ export class MarketComponent implements OnInit, OnDestroy {
      */
     private _filterApplications() {
         this.displayedApplications = List(this.applications.filter((application) => {
-            return this.query === ""
-                || application.id.contains(this.query)
-                || application.name.contains(this.query);
+            const query = this.query.clearWhitespace().toLowerCase();
+            return query === ""
+                || application.id.clearWhitespace().toLowerCase().contains(query)
+                || application.name.clearWhitespace().toLowerCase().contains(query);
         }));
     }
 }
