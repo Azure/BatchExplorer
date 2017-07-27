@@ -8,6 +8,7 @@ import { Subscription } from "rxjs";
 import { NcjJobTemplate, NcjParameter } from "app/models";
 import { NcjTemplateService, PythonRpcService } from "app/services";
 import { ObjectUtils, log } from "app/utils";
+import * as inflection from "inflection";
 import "./submit-market-application.scss";
 
 enum NcjParameterExtendedType {
@@ -26,7 +27,12 @@ class NcjParameterWrapper {
     public name: string;
 
     constructor(public id: string, private _param: NcjParameter) {
+        this._computeName();
         this._computeType();
+    }
+
+    private _computeName() {
+        this.name = inflection.humanize(this.id);
     }
 
     private _computeDependsOn() {
@@ -34,6 +40,7 @@ class NcjParameterWrapper {
             this.dependsOn = this._param.metadata.dependsOn;
         }
     }
+
     private _computeType() {
         this._computeDependsOn();
 
