@@ -31,8 +31,6 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
     private _propagateChange: (value: any[]) => void = null;
     private _subscriptions: Subscription[] = [];
 
-    // TODO: handle no autostorage, hide file group control if account has no autostorage settings.
-
     constructor(private storageService: StorageService) {
 
         this.fileGroupsData = this.storageService.listContainers(storageService.ncjFileGroupPrefix);
@@ -41,7 +39,6 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
         });
 
         this._subscriptions.push(this.value.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((value) => {
-            console.log("got", value);
             this._checkValid(value);
             if (this._propagateChange) {
                 this._propagateChange(value);
@@ -76,7 +73,6 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
 
     private _checkValid(value: string) {
         const valid = !value || this.fileGroups.map(x => x.name).includes(value);
-        console.log("Checled valid...", valid);
         this.warning = !valid;
     }
 
