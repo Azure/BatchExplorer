@@ -85,7 +85,6 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnInit, O
         component.containerId = this.fileGroup;
         component.pickedFile = this.value.value;
         component.done.subscribe((save) => {
-            console.log("Save?", save);
             if (save) {
                 this.value.setValue(component.pickedFile);
             }
