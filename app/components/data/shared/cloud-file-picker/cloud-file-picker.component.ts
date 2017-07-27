@@ -28,7 +28,7 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnInit, O
     /**
      * Name of the file group from which to pick a file.
      */
-    @Input() public fileGroup: string;
+    @Input() public containerId: string;
 
     public fileGroups: List<BlobContainer>;
     public value = new FormControl();
@@ -82,7 +82,7 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnInit, O
     public openFilePickerDialog() {
         const ref = this.dialog.open(CloudFilePickerDialogComponent);
         const component = ref.componentInstance;
-        component.containerId = this.fileGroup;
+        component.containerId = this.containerId;
         component.pickedFile = this.value.value;
         component.done.subscribe((save) => {
             if (save) {
