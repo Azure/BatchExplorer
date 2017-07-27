@@ -43,13 +43,19 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
                 id: "maya",
                 description: "Autodesk Maya",
                 licenseAgreement: "",
-                cost: "50c USD",
+                cost: "50c USD/node/hour",
             }),
             new ApplicationLicense({
                 id: "arnold",
                 description: "Autodesk Arnold",
                 licenseAgreement: "",
-                cost: "2c USD",
+                cost: "2c USD/core/hour",
+            }),
+            new ApplicationLicense({
+                id: "vray",
+                description: "Chaos Group V-Ray",
+                licenseAgreement: "",
+                cost: "TBD",
             }),
         ]);
     }
@@ -84,11 +90,11 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
         return null;
     }
 
-    public viewEula(name: string) {
+    public viewEula(license: ApplicationLicense) {
         let config = new MdDialogConfig();
         config.viewContainerRef = this.viewContainerRef;
         const dialogRef = this.dialog.open(LicenseEulaDialogComponent, config);
-        dialogRef.componentInstance.licenseName = name;
+        dialogRef.componentInstance.license = license;
     }
 
     public eulaCheck(event: MdCheckboxChange) {
