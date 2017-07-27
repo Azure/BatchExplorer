@@ -1,6 +1,6 @@
 <md-input-container>
     <input type="text" mdInput [mdAutocomplete]="auto" [formControl]="value" [placeholder]="label">
-    <md-hint class="warning" *ngIf="warning" align="end">
+    <md-hint class="warning" *ngIf="warning">
         This file group doesn't seem to exist.
     </md-hint>
     <md-hint *ngIf="hint" align="end">
