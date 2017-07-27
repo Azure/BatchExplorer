@@ -4,6 +4,7 @@ bl-choose-action {
     display: flex;
     width: 100%;
     height: $contentview-height;
+    background: $whitesmoke-darker;
 
     .actions {
         width: 500px;
