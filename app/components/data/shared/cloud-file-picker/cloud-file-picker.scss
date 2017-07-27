@@ -1,0 +1,12 @@
+bl-cloud-file-picker {
+    display: flex;
+    align-items: center;
+
+    md-input-container {
+        flex: 1;
+    }
+
+    bl-button {
+        margin-left: 5px;
+    }
+}

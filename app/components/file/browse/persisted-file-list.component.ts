@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from "@angular/core";
 import { autobind } from "core-decorators";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
@@ -34,6 +34,12 @@ export class PersistedFileListComponent implements OnChanges, OnDestroy {
 
     @Input()
     public manualLoading: boolean;
+
+    @Input() public disableRouting = false;
+
+    @Input() public activeItem: string;
+
+    @Output() public activeItemChange = new EventEmitter();
 
     public data: RxListProxy<ListBlobParams, File>;
     public status = new BehaviorSubject(LoadingStatus.Loading);
@@ -123,6 +129,11 @@ export class PersistedFileListComponent implements OnChanges, OnDestroy {
 
     public get filterPlaceholder() {
         return "Filter by blob name (case sensitive)";
+    }
+
+    public updateActiveItem(item: string) {
+        this.activeItem = item;
+        this.activeItemChange.emit(item);
     }
 
     private _buildOptions() {
