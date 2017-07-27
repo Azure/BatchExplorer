@@ -141,6 +141,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
             next: (data) => console.log("Submitted NCJ package", data),
             error: (err) => console.log("Error NCJ package", err),
         });
+        return obs;
     }
 
     private _getTemplates() {
