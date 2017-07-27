@@ -87,6 +87,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
     public jobTemplate: NcjJobTemplate;
     public poolTemplate;
     public form: FormGroup;
+    public pickedPool = new FormControl(null);
     public otherParameters: NcjParameterWrapper[];
 
     private _paramsSubscriber: Subscription;
@@ -135,7 +136,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
         const formItem = this.form.value;
         console.log(formItem);
         // RPC takes in Template JSON object and Parameter JSON object
-        const obs = this.pythonRpcService.callWithAuth("submitNCJ", [this._buildJobTemplate(), formItem]);
+        const obs = this.pythonRpcService.callWithAuth("submit-ncj-job", [this._buildJobTemplate(), formItem]);
         obs.subscribe({
             next: (data) => console.log("Submitted NCJ package", data),
             error: (err) => console.log("Error NCJ package", err),
@@ -156,7 +157,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
     private _buildJobTemplate(): any {
         const template = { ...this.jobTemplate };
         template.job.properties.poolInfo = {
-            poolId: "some-pool",
+            poolId: this.pickedPool.value,
         };
         console.log("Template", template);
         return template;
