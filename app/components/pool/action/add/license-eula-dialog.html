@@ -1,6 +1,6 @@
-<bl-simple-dialog [dialogRef]="dialogRef" title="EULA - {{licenseName}}">
-    <div class="eula">
-        <!-- This content will be dynamic when the API is in place -->
+<bl-simple-dialog [dialogRef]="dialogRef" title="EULA - {{ license?.description }}">
+    <!-- This content will be dynamic when the API is in place -->
+    <div *ngIf="isAutodesk" class="eula">
         <p class="title">Autodesk Products</p>
         <p>Customer's use of the Autodesk products, which may include associated materials or documentation (individually and collectively, "Autodesk Products"), provided by Microsoft in conjunction with the Azure platform is subject to the Online Terms of Service and other terms provided by Microsoft at <a class="ext-eula-link" href="https://azure.microsoft.com/en-us/support/legal" target="_blank">https://azure.microsoft.com/en-us/support/legal</a> (the "Agreement") and the following additional terms and conditions.</p>
         <p></p>
@@ -15,5 +15,14 @@
             <li><span>Provision of Information to Autodesk:</span>Customer acknowledges that Microsoft may provide Customer’s location, machine and/or persistent identifier information to Autodesk. To the extent necessary, Customer hereby consen</li>
             <li><span>Third-Party Beneficiary:</span>Autodesk is an intended third party beneficiary of the Agreement, with the right to enforce the Agreement’s provisions and verify Customer’s compliance.</li>
         </ol>
+    </div>
+    <div *ngIf="isVray" class="eula">
+        <p class="title">Chaos Group Products</p>
+        <p>Standard V-Ray EULA applies:
+            <a (click)="openLink('https://docs.chaosgroup.com/display/VRAY3MAYA/License+Agreements+and+Copyrights')" href="javascript:void(0)">
+                https://docs.chaosgroup.com/display/VRAY3MAYA/License+Agreements+and+Copyrights
+            </a>
+        </p>
+        <p></p>
     </div>
 </bl-simple-dialog>
