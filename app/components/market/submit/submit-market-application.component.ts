@@ -19,11 +19,24 @@ enum NcjParameterExtendedType {
 
 class NcjParameterWrapper {
     public type: NcjParameterExtendedType;
-    constructor(public name: string, private _param: NcjParameter) {
+    /**
+     * Id of another param it depends on
+     */
+    public dependsOn: string;
+    public name: string;
+
+    constructor(public id: string, private _param: NcjParameter) {
         this._computeType();
     }
 
+    private _computeDependsOn() {
+        if (this._param.metadata && this._param.metadata.dependsOn) {
+            this.dependsOn = this._param.metadata.dependsOn;
+        }
+    }
     private _computeType() {
+        this._computeDependsOn();
+
         const param = this._param;
         if (param.metadata && param.metadata.advancedType) {
             const type = param.metadata.advancedType;
@@ -94,6 +107,10 @@ export class SubmitMarketApplicationComponent implements OnInit {
             }
         }
         this.form = new FormGroup(fg);
+    }
+
+    public getContainerFromFileGroup(fileGroup: string) {
+        return fileGroup && `fgrp-${fileGroup}`;
     }
 
     @autobind()
