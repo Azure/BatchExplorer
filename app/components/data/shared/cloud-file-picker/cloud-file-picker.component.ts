@@ -24,6 +24,7 @@ import "./cloud-file-picker.scss";
 })
 export class CloudFilePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
     @Input() public label: string;
+    @Input() public hint: string;
 
     /**
      * Name of the file group from which to pick a file.

@@ -22,6 +22,7 @@ import "./file-group-picker.scss";
 })
 export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
     @Input() public label: string;
+    @Input() public hint: string;
 
     public fileGroups: List<BlobContainer>;
     public value = new FormControl();

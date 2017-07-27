@@ -7,15 +7,18 @@
                 </md-input-container>
                 <div *ngFor="let param of otherParameters" [ngSwitch]="param.type">
                     <div *ngSwitchCase="NcjParameterExtendedType.fileGroup">
-                        <bl-file-group-picker [formControlName]="param.id" [label]="param.name" class="form-element"></bl-file-group-picker>
+                        <bl-file-group-picker [formControlName]="param.id" [label]="param.name" class="form-element" [hint]="param.description">
+                        </bl-file-group-picker>
                     </div>
                     <div *ngSwitchCase="NcjParameterExtendedType.fileInFileGroup">
                         <bl-cloud-file-picker [containerId]="getContainerFromFileGroup(form.controls[param.dependsOn]?.value)" [formControlName]="param.id"
-                            [label]="param.name" class="form-element"></bl-cloud-file-picker>
+                            [label]="param.name" class="form-element" [hint]="param.description">
+                        </bl-cloud-file-picker>
                     </div>
                     <div *ngSwitchDefault>
                         <md-input-container class="form-element">
                             <input mdInput type="text" name="name" [formControlName]="param.id" [placeholder]="param.name">
+                            <md-hint align="end">{{param.description}}</md-hint>
                         </md-input-container>
                     </div>
                 </div>

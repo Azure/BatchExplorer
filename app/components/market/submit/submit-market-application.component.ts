@@ -24,15 +24,24 @@ class NcjParameterWrapper {
      * Id of another param it depends on
      */
     public dependsOn: string;
+
     public name: string;
+    public description: string;
 
     constructor(public id: string, private _param: NcjParameter) {
         this._computeName();
+        this._computeDescription();
         this._computeType();
     }
 
     private _computeName() {
         this.name = inflection.humanize(this.id);
+    }
+
+    private _computeDescription() {
+        if (this._param.metadata && this._param.metadata.description) {
+            this.description = this._param.metadata.description;
+        }
     }
 
     private _computeDependsOn() {
