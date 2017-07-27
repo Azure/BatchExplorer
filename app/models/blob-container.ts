@@ -25,8 +25,4 @@ export class BlobContainer extends Record<BlobContainerAttributes> {
     @Prop() public metadata: any;
     @Prop() public lastModified: Date;
     @Prop() public lease: ContainerLease;
-
-    constructor(data: Partial<BlobContainerAttributes> = {}) {
-        super(data);
-    }
 }

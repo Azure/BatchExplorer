@@ -1,0 +1,12 @@
+<md-input-container>
+    <input type="text" mdInput [mdAutocomplete]="auto" [formControl]="value" [placeholder]="label">
+    <md-hint class="warning" *ngIf="warning">
+        This file group doesn't seem to exist.
+    </md-hint>
+</md-input-container>
+
+<md-autocomplete #auto="mdAutocomplete">
+    <md-option *ngFor="let fileGroup of fileGroups" [value]="fileGroup.name">
+        {{ fileGroup.name }}
+    </md-option>
+</md-autocomplete>

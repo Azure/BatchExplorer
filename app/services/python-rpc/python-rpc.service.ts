@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { AccountResource } from "app/models";
 import { Constants, SecureUtils, log } from "app/utils";
-import { AsyncSubject, Observable } from "rxjs";
+import { AsyncSubject, Observable, Subject } from "rxjs";
 import { AccountService } from "../account.service";
 import { AdalService } from "../adal";
 
@@ -23,12 +23,13 @@ export interface JsonRpcResponse {
     jsonrpc: string;
     id: string;
     result: any;
+    stream: boolean;
     error: JsonRpcError;
 }
 
 interface RequestContainer {
     request: JsonRpcRequest;
-    subject: AsyncSubject<any>;
+    subject: Subject<any>;
 
     /**
      * setTimeout id to clear the request if it timeout
@@ -95,16 +96,16 @@ export class PythonRpcService {
     }
 
     public callWithAuth(method: string, params: any[]): Observable<any> {
-        return this.accountService.currentAccount.cascade((account: AccountResource) => {
+        return this.accountService.currentAccount.flatMap((account: AccountResource) => {
             const batchToken = this.adalService.accessTokenFor(account.subscription.tenantId, ResourceUrl.batch);
             const armToken = this.adalService.accessTokenFor(account.subscription.tenantId, ResourceUrl.arm);
-            return Observable.combineLatest(batchToken, armToken).cascade(([batchToken, armToken]) => {
+            return Observable.combineLatest(batchToken, armToken).flatMap(([batchToken, armToken]) => {
                 const authParam = { batchToken, armToken, account: account.toJS() };
                 return this.call(method, params, {
                     authentication: authParam,
                 });
             });
-        });
+        }).share();
     }
 
     /**
@@ -129,10 +130,8 @@ export class PythonRpcService {
     private _registerRequest(request: JsonRpcRequest): RequestContainer {
         const container = this._currentRequests[request.id] = {
             request,
-            subject: new AsyncSubject(),
-            timeout: null /*setTimeout(() => {
-                this._timeoutRequest(request.id);
-            }, requestTimeout)*/,
+            subject: new Subject(),
+            timeout: null,
         };
 
         return container;
@@ -152,9 +151,11 @@ export class PythonRpcService {
             request.subject.error(response.error);
         } else {
             request.subject.next(response.result);
-            request.subject.complete();
         }
-        delete this._currentRequests[response.id];
+        if (!response.stream) {
+            request.subject.complete();
+            delete this._currentRequests[response.id];
+        }
     }
 
     /**
@@ -180,22 +181,4 @@ export class PythonRpcService {
 
         return request;
     }
-
-    // TODO: As per Tim's suggestion, commented out for now so no timeouts.
-    /**
-     * Remove the request from the list of pending request and log a timeout.
-     * @param requestId Id of the request
-     */
-    // private _timeoutRequest(requestId: string) {
-    //     const request = this._currentRequests[requestId];
-    //     if (!request) {
-    //         return;
-    //     }
-    //     delete this._currentRequests[requestId];
-
-    //     request.subject.error({
-    //         code: 408,
-    //         message: `Rpc request timeout after ${requestTimeout}ms`,
-    //     });
-    // }
 }

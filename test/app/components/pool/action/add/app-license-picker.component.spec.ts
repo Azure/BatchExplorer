@@ -24,7 +24,7 @@ describe("AppLicensePickerComponent", () => {
         mdDialogSpy = {
             open: jasmine.createSpy("open").and.callFake((...args) => {
                 return {
-                    componentInstance: { licenseName: "" },
+                    componentInstance: { license: null },
                 };
             }),
         };
@@ -45,23 +45,25 @@ describe("AppLicensePickerComponent", () => {
         fixture.detectChanges();
     });
 
-    it("Should show 2 licenses for now", () => {
+    it("Should show 3 licenses for now", () => {
         const tableRows = debugElement.queryAll(By.css("bl-row"));
-        expect(tableRows.length).toBe(2);
+        expect(tableRows.length).toBe(3);
 
         const row1Columns = tableRows[0].queryAll(By.css("bl-cell"));
         expect(row1Columns.length).toBe(4, "Row has 4 columns");
-        // first column has a checkbox
         expect(row1Columns[1].nativeElement.textContent).toContain("Autodesk Maya");
         expect(row1Columns[2].nativeElement.textContent).toContain("EULA");
-        expect(row1Columns[3].nativeElement.textContent).toContain("50c USD/core/hour*");
+        expect(row1Columns[3].nativeElement.textContent).toContain("50c USD/node/hour");
 
         const row2Columns = tableRows[1].queryAll(By.css("bl-cell"));
-        expect(row2Columns.length).toBe(4, "Row has 4 columns");
-        // first column has a checkbox
         expect(row2Columns[1].nativeElement.textContent).toContain("Autodesk Arnold");
         expect(row2Columns[2].nativeElement.textContent).toContain("EULA");
-        expect(row2Columns[3].nativeElement.textContent).toContain("2c USD/core/hour*");
+        expect(row2Columns[3].nativeElement.textContent).toContain("2c USD/core/hour");
+
+        const row3Columns = tableRows[2].queryAll(By.css("bl-cell"));
+        expect(row3Columns[1].nativeElement.textContent).toContain("Chaos Group V-Ray");
+        expect(row3Columns[2].nativeElement.textContent).toContain("EULA");
+        expect(row3Columns[3].nativeElement.textContent).toContain("TBD");
     });
 
     it("Should select license by checking checkbox", fakeAsync(() => {
@@ -83,7 +85,7 @@ describe("AppLicensePickerComponent", () => {
 
     describe("EULA", () => {
         it("Calling viewEula opens dialog", () => {
-            component.viewEula("license name");
+            component.viewEula({ id: "vray", description: "license name" } as any);
             expect(mdDialogSpy.open).toHaveBeenCalledTimes(1);
         });
     });
