@@ -1,7 +1,7 @@
 <bl-scrollable>
-    <bl-complex-form [formGroup]="form" [submit]="submit" [hideFooter]="true">
+    <bl-complex-form [formGroup]="form" [submit]="submit" [hideFooter]="true" *ngIf="form">
         <bl-form-page main-form-page [title]="title" [formGroup]="form">
-            <bl-form-section title="Job" subtitle="Job parameters">
+            <bl-form-section title="Job" subtitle="Job parameters" formGroupName="job">
                 <md-input-container class="form-element" *ngIf="jobNameParam">
                     <input mdInput type="text" name="name" formControlName="jobName" placeholder="Job name">
                 </md-input-container>
@@ -11,7 +11,7 @@
                         </bl-file-group-picker>
                     </div>
                     <div *ngSwitchCase="NcjParameterExtendedType.fileInFileGroup">
-                        <bl-cloud-file-picker [containerId]="getContainerFromFileGroup(form.controls[param.dependsOn]?.value)" [formControlName]="param.id"
+                        <bl-cloud-file-picker [containerId]="getContainerFromFileGroup(jobFormGroup.controls[param.dependsOn]?.value)" [formControlName]="param.id"
                             [label]="param.name" class="form-element" [hint]="param.description">
                         </bl-cloud-file-picker>
                     </div>

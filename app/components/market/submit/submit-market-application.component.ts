@@ -1,9 +1,8 @@
 import { Component, OnInit } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 import { FormBuilder } from "@angular/forms";
-import { ActivatedRoute } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
-import { Subscription } from "rxjs";
 
 import { NcjJobTemplate, NcjParameter, ServerError } from "app/models";
 import { NcjTemplateService, PythonRpcService } from "app/services";
@@ -87,44 +86,71 @@ export class SubmitMarketApplicationComponent implements OnInit {
     public jobTemplate: NcjJobTemplate;
     public poolTemplate;
     public form: FormGroup;
+    public jobFormGroup: FormGroup;
     public pickedPool = new FormControl(null);
     public otherParameters: NcjParameterWrapper[];
     public error: ServerError;
 
-    private _paramsSubscriber: Subscription;
+    private _formValue: any;
 
     // Constructor create data structure from reading json files
     constructor(
         public formBuilder: FormBuilder,
         private pythonRpcService: PythonRpcService,
         private route: ActivatedRoute,
-        private templateService: NcjTemplateService) {
-        this.form = new FormGroup({ a: new FormControl() });
-        console.log("Entered Market");
-    }
+        private router: Router,
+        private templateService: NcjTemplateService) { }
 
     public ngOnInit() {
-        this._paramsSubscriber = this.route.params.subscribe((params) => {
+        this.route.params.subscribe((params) => {
             this.applicationId = params["applicationId"];
             this.actionId = params["actionId"];
             this._updateTitle();
             this._getTemplates();
         });
-
+        this.route.queryParams.subscribe((params) => {
+            console.log("New query params", params);
+            if (params.formParams) {
+                try {
+                    const value = JSON.parse(params.formParams);
+                    console.log("Got value", value);
+                    this._formValue = value;
+                    this.form.setValue(value);
+                } catch (e) {
+                    log.warn("Invalid form param. Not valid json.", params.formParams as any);
+                }
+            }
+        });
     }
 
     public createForms() {
-        let parameterKeys = Object.keys(this.jobTemplate["parameters"]);
-        console.log("Create forms");
+        let parameterKeys = Object.keys(this.jobTemplate.parameters);
         let fg = {};
         for (let key of parameterKeys) {
-            if ("defaultValue" in this.jobTemplate["parameters"][key]) {
-                fg[key] = new FormControl(String(this.jobTemplate["parameters"][key]["defaultValue"]));
+            if ("defaultValue" in this.jobTemplate.parameters[key]) {
+                const defaultValue = String(this.jobTemplate.parameters[key]["defaultValue"]);
+                fg[key] = new FormControl(defaultValue);
             } else {
                 fg[key] = new FormControl();
             }
         }
-        this.form = new FormGroup(fg);
+        this.jobFormGroup = this.formBuilder.group(fg);
+
+        this.form = this.formBuilder.group({
+            job: this.jobFormGroup,
+            pool: this.pickedPool,
+        });
+        if (this._formValue) {
+            this.form.setValue(this._formValue);
+        }
+        this.form.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((newFormValue) => {
+            this.router.navigate([], {
+                relativeTo: this.route,
+                queryParams: {
+                    formParams: JSON.stringify(newFormValue),
+                },
+            });
+        });
     }
 
     public getContainerFromFileGroup(fileGroup: string) {
