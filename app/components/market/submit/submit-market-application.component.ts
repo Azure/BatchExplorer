@@ -109,11 +109,9 @@ export class SubmitMarketApplicationComponent implements OnInit {
             this._getTemplates();
         });
         this.route.queryParams.subscribe((params) => {
-            console.log("New query params", params);
             if (params.formParams) {
                 try {
                     const value = JSON.parse(params.formParams);
-                    console.log("Got value", value);
                     this._formValue = value;
                     this.form.setValue(value);
                 } catch (e) {
@@ -128,7 +126,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
         let fg = {};
         for (let key of parameterKeys) {
             if ("defaultValue" in this.jobTemplate.parameters[key]) {
-                const defaultValue = String(this.jobTemplate.parameters[key]["defaultValue"]);
+                const defaultValue = String(this.jobTemplate.parameters[key].defaultValue);
                 fg[key] = new FormControl(defaultValue);
             } else {
                 fg[key] = new FormControl();
@@ -159,26 +157,29 @@ export class SubmitMarketApplicationComponent implements OnInit {
 
     @autobind()
     public submit() {
-        console.log("submit");
         this.error = null;
-        const formItem = this.form.value;
-        console.log(formItem);
+        const jobParams = this.jobFormGroup.value;
+        console.log("Submit with those params: ", jobParams);
         // RPC takes in Template JSON object and Parameter JSON object
-        const obs = this.pythonRpcService.callWithAuth("submit-ncj-job", [this._buildJobTemplate(), formItem]);
+        const obs = this.pythonRpcService.callWithAuth("submit-ncj-job", [this._buildJobTemplate(), jobParams]);
         obs.subscribe({
-            next: (data) => console.log("Submitted NCJ package", data),
+            next: (data) => this._redirectToJob(data),
             error: (err) => this.error = ServerError.fromPython(err),
             complete: () => console.log("Submitted NCJ package done"),
         });
         return obs;
     }
 
+    private _redirectToJob(data) {
+        console.log("Submitted NCJ package", data);
+        const jobId = data.properties.id;
+        this.router.navigate(["/jobs", jobId]);
+    }
+
     private _getTemplates() {
         this.templateService.getTemplates(this.applicationId, this.actionId).subscribe((templates) => {
             this.jobTemplate = templates.job;
             this.poolTemplate = templates.pool;
-            console.log("Job", this.jobTemplate);
-            console.log("Pool", this.poolTemplate);
             this._parseParameters();
             this.createForms();
         });
@@ -187,7 +188,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
     private _buildJobTemplate(): any {
         const template = { ...this.jobTemplate };
         template.job.properties.poolInfo = this.pickedPool.value;
-        console.log("Template", template);
+        console.log("Template sent", template);
         return template;
     }
 

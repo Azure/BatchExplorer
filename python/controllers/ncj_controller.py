@@ -13,7 +13,7 @@ def submitNcjJob(request: JsonRpcRequest, template, parameters):
     job = client.job.jobparameter_from_json(job_json)
     print("Job is", job)
     client.job.add(job)
-    return {"what": "it works"}
+    return job_json
 
 
 @app.procedure("create-ncj-pool")
