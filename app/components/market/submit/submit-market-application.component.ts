@@ -140,6 +140,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
         obs.subscribe({
             next: (data) => console.log("Submitted NCJ package", data),
             error: (err) => console.log("Error NCJ package", err),
+            complete: () => console.log("Submitted NCJ package done"),
         });
         return obs;
     }

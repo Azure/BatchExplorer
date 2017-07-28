@@ -22,4 +22,22 @@ bl-submit-market-application {
     .title {
         margin: 10px;
     }
+
+    bl-button.submit-job {
+        color: $whitesmoke;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        font-size: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        right: 100px;
+        bottom: 100px;
+
+        i.fa-play {
+            margin-left: 8px;
+        }
+    }
 }

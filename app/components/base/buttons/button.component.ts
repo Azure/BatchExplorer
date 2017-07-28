@@ -8,7 +8,7 @@ import { log } from "app/utils";
 import "./button.scss";
 
 export type ButtonType = "square" | "round" | "wide";
-export type ButtonColor = "primary" | "light" | "danger" | "warn";
+export type ButtonColor = "primary" | "light" | "danger" | "warn" | "success";
 export type ButtonAction = (event?: Event) => Observable<any> | void;
 
 export enum SubmitStatus {
