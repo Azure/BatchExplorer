@@ -66,9 +66,11 @@ export class PythonRpcService {
      */
     public resetConnection(): Observable<any> {
         this._ready = new AsyncSubject<any>();
-        this._currentRequests = {};
         const socket = this._socket = new WebSocket("ws://127.0.0.1:8765/ws");
         socket.onopen = (event: Event) => {
+            if (this._retryCount > 0) {
+                log.info("Reconnected to websocket successfully.");
+            }
             this._retryCount = 0;
             this._zone.run(() => {
                 this._ready.next(true);
@@ -77,15 +79,14 @@ export class PythonRpcService {
         };
 
         socket.onerror = (error: Event) => {
-            console.log("There was an error with the websocket...", error);
             this._zone.run(() => {
                 this._ready.error(event);
             });
         };
 
         socket.onclose = () => {
-            this._retryCount++;
             const waitingTime = Math.floor(2 ** this._retryCount);
+            this._retryCount++;
             log.info(`Websocket connection closed. Retrying to connect in ${waitingTime}s`);
             setTimeout(() => {
                 this.resetConnection();
@@ -111,7 +112,9 @@ export class PythonRpcService {
         const request = this._buildRequest(method, params, options);
         const container = this._registerRequest(request);
 
-        this._ready.subscribe({
+        this._ready.catch(() => {
+            return this.resetConnection(); // Tries once to reset the connection right away.
+        }).subscribe({
             next: () => {
                 this._socket.send(JSON.stringify(request));
             },

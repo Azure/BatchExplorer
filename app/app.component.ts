@@ -71,7 +71,7 @@ export class AppComponent implements AfterViewInit, OnInit {
                 error: (e) => console.log("Final error", e),
                 complete: () => console.log("Compelte?"),
             });
-        }, 1000);
+        }, 5000);
         Observable
             .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)
             .subscribe((loadedArray) => {
