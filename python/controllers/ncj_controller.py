@@ -7,16 +7,14 @@ from jsonrpc.error import JsonRpcError
 
 @app.procedure("submit-ncj-job")
 def submitNcjJob(request: JsonRpcRequest, template, parameters):
-    try:
-        client = request.auth.client
-        job_json = client.job.expand_template(template, parameters)
-        print("Job json", job_json)
-        job = client.job.jobparameter_from_json(job_json)
-        print("Job is", job)
-        client.job.add(job)
-        return {"what": "it works"}
-    except azure.batch.models.batch_error.BatchErrorException as e:
-        raise JsonRpcError(400, str(e.message), str(e.response))
+    client = request.auth.client
+    job_json = client.job.expand_template(template, parameters)
+    print("Job json", job_json)
+    job = client.job.jobparameter_from_json(job_json)
+    print("Job is", job)
+    client.job.add(job)
+    return {"what": "it works"}
+
 
 @app.procedure("create-ncj-pool")
 def createNcjPool(request: JsonRpcRequest, template, parameters):

@@ -5,7 +5,7 @@ import { ActivatedRoute } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs";
 
-import { NcjJobTemplate, NcjParameter } from "app/models";
+import { NcjJobTemplate, NcjParameter, ServerError } from "app/models";
 import { NcjTemplateService, PythonRpcService } from "app/services";
 import { ObjectUtils, log } from "app/utils";
 import * as inflection from "inflection";
@@ -89,6 +89,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
     public form: FormGroup;
     public pickedPool = new FormControl(null);
     public otherParameters: NcjParameterWrapper[];
+    public error: ServerError;
 
     private _paramsSubscriber: Subscription;
 
@@ -133,13 +134,14 @@ export class SubmitMarketApplicationComponent implements OnInit {
     @autobind()
     public submit() {
         console.log("submit");
+        this.error = null;
         const formItem = this.form.value;
         console.log(formItem);
         // RPC takes in Template JSON object and Parameter JSON object
         const obs = this.pythonRpcService.callWithAuth("submit-ncj-job", [this._buildJobTemplate(), formItem]);
         obs.subscribe({
             next: (data) => console.log("Submitted NCJ package", data),
-            error: (err) => console.log("Error NCJ package", err),
+            error: (err) => this.error = ServerError.fromPython(err),
             complete: () => console.log("Submitted NCJ package done"),
         });
         return obs;

@@ -23,6 +23,17 @@ bl-submit-market-application {
         margin: 10px;
     }
 
+    .submit-box {
+        position: fixed;
+        right: 20px;
+        bottom: 50px;
+
+        > bl-server-error {
+            width: 300px;
+            margin-bottom: 20px;
+        }
+    }
+
     bl-button.submit-job {
         color: $whitesmoke;
         width: 100px;
@@ -32,12 +43,14 @@ bl-submit-market-application {
         display: flex;
         align-items: center;
         justify-content: center;
-        position: fixed;
-        right: 100px;
-        bottom: 100px;
+        margin: auto;
 
         i.fa-play {
             margin-left: 8px;
+        }
+
+        i.fa-check {
+            color: whitesmoke;
         }
     }
 }

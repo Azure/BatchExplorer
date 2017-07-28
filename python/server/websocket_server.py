@@ -56,14 +56,11 @@ class WebsocketConnection:
 
             result = await app.call_procedure(request)
 
-            if isinstance(result, ResponseStream):
-                 self.__handle_response_stream(request, result)
-            else:
-                response = JsonRpcResponse(
-                    request=request,
-                    result=result,
-                )
-                await self.send_response(response)
+            response = JsonRpcResponse(
+                request=request,
+                result=result,
+            )
+            await self.send_response(response)
         except error.JsonRpcError as rpc_error:
             response = JsonRpcResponse(
                 request=request,

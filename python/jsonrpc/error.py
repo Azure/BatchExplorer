@@ -56,9 +56,9 @@ class JsonRpcInvalidRequestError(JsonRpcError):
 
 
 class JsonRpcInvalidParamsError(JsonRpcError):
-    def __init__(self, data: object):
+    def __init__(self, message, data: object):
         code = JsonRpcErrorCodes.INVALID_PARAMS
-        super().__init__(code, JSONRPC_ERROR_MESSAGE[code], data)
+        super().__init__(code, message, data)
 
 
 class JsonRpcMethodNotFoundError(JsonRpcError):
@@ -66,3 +66,4 @@ class JsonRpcMethodNotFoundError(JsonRpcError):
         data = dict({'methodName': method})
         code = JsonRpcErrorCodes.METHOD_NOT_FOUND
         super().__init__(code, JSONRPC_ERROR_MESSAGE[code], data)
+

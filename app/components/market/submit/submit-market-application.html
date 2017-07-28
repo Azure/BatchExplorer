@@ -28,7 +28,10 @@
             </bl-form-section>
         </bl-form-page>
     </bl-complex-form>
-    <bl-button [action]="submit" type="wide" class="submit-job" color="success">
-        <i class="fa fa-play"></i>
-    </bl-button>
+    <div class="submit-box">
+        <bl-server-error [error]="error"> </bl-server-error>
+        <bl-button [action]="submit" type="wide" class="submit-job" color="success">
+            <i class="fa fa-play"></i>
+        </bl-button>
+    </div>
 </bl-scrollable>
