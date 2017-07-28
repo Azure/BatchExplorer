@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { Injectable, NgZone } from "@angular/core";
 import { AccountResource } from "app/models";
 import { Constants, SecureUtils, log } from "app/utils";
 import { AsyncSubject, Observable, Subject } from "rxjs";
@@ -50,8 +50,9 @@ export class PythonRpcService {
     private _socket: WebSocket;
     private _ready = new AsyncSubject();
     private _currentRequests: StringMap<RequestContainer> = {};
+    private _retryCount = 0;
 
-    constructor(private accountService: AccountService, private adalService: AdalService) { }
+    constructor(private accountService: AccountService, private adalService: AdalService, private _zone: NgZone) { }
     /**
      * Initialize the connection to the rpc server
      */
@@ -63,20 +64,42 @@ export class PythonRpcService {
      * Connect to the rpc server using websocket.
      * Call this if the connection got cut to try again.
      */
-    public resetConnection() {
-        this._ready = new AsyncSubject();
+    public resetConnection(): Observable<any> {
+        this._ready = new AsyncSubject<any>();
         this._currentRequests = {};
         const socket = this._socket = new WebSocket("ws://127.0.0.1:8765/ws");
-
         socket.onopen = (event: Event) => {
-            this._ready.next(true);
-            this._ready.complete();
+            this._retryCount = 0;
+            this._zone.run(() => {
+                this._ready.next(true);
+                this._ready.complete();
+            });
+        };
+
+        socket.onerror = (error: Event) => {
+            console.log("There was an error with the websocket...", error);
+            this._zone.run(() => {
+                this._ready.error(event);
+            });
+        };
+
+        socket.onclose = () => {
+            this._retryCount++;
+            const waitingTime = Math.floor(2 ** this._retryCount);
+            log.info(`Websocket connection closed. Retrying to connect in ${waitingTime}s`);
+            setTimeout(() => {
+                this.resetConnection();
+            }, waitingTime * 1000);
         };
 
         socket.onmessage = (event: MessageEvent) => {
-            const response = JSON.parse(event.data);
-            this._processResponse(response);
+            this._zone.run(() => {
+                const response = JSON.parse(event.data);
+                this._processResponse(response);
+            });
         };
+
+        return this._ready.asObservable();
     }
 
     /**
@@ -88,8 +111,13 @@ export class PythonRpcService {
         const request = this._buildRequest(method, params, options);
         const container = this._registerRequest(request);
 
-        this._ready.subscribe(() => {
-            this._socket.send(JSON.stringify(request));
+        this._ready.subscribe({
+            next: () => {
+                this._socket.send(JSON.stringify(request));
+            },
+            error: (error) => {
+                container.subject.next(error);
+            },
         });
 
         return container.subject.asObservable();
