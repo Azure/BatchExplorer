@@ -24,7 +24,7 @@ Move to the directory `cd BatchLabs`
 #### 3. Install the dependencies
 ```bash
 yarn install
-pip3 install -r requirements.txt # or pip if on windows or only have python 3.6 installed
+pip3 install -r python/requirements.txt # or pip if on windows or only have python 3.6 installed
 ```
 Note: You can also use `npm install` at your own risk. However please do not submit an issue if you didn't use `yarn install`. Yarn will make sure you have the right set of dependencies, which reduces the likelihood of any unexpected build issues relating to third party packages.
 
