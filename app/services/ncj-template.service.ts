@@ -23,18 +23,11 @@ export class NcjTemplateService {
     constructor(private fs: FileSystemService) { }
 
     public init() {
-        const tmpZip = path.join(this.fs.commonFolders.temp, "batch-labs-data.zip");
-        const dest = this._repoDownloadRoot;
-
         this._checkIfDataNeedReload().then((needReload) => {
             if (!needReload) {
                 return null;
             }
-            return this.fs.download(dataUrl, tmpZip).then(() => {
-                return this.fs.unzip(tmpZip, dest);
-            }).then(() => {
-                return this._saveSyncData();
-            });
+            this._downloadRepo();
         }).then(() => {
             this._ready.next(true);
             this._ready.complete();
@@ -60,6 +53,10 @@ export class NcjTemplateService {
 
     public getFullPath(uri: string) {
         return path.join(this._dataRoot, uri);
+    }
+
+    public reloadData() {
+        return Observable.fromPromise(this._downloadRepo());
     }
 
     public listApplications(): Observable<List<Application>> {
@@ -122,6 +119,15 @@ export class NcjTemplateService {
         });
     }
 
+    private _downloadRepo() {
+        const tmpZip = path.join(this.fs.commonFolders.temp, "batch-labs-data.zip");
+        const dest = this._repoDownloadRoot;
+        return this.fs.download(dataUrl, tmpZip).then(() => {
+            return this.fs.unzip(tmpZip, dest);
+        }).then(() => {
+            return this._saveSyncData();
+        });
+    }
     private _saveSyncData(): Promise<string> {
         const syncFile = this._syncFile;
         const data: SyncFile = {

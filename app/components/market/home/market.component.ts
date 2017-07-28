@@ -5,6 +5,7 @@ import { Subscription } from "rxjs";
 
 import { Application } from "app/models";
 import { NcjTemplateService } from "app/services";
+import { autobind } from "core-decorators";
 import "./market.scss";
 
 @Component({
@@ -39,6 +40,20 @@ export class MarketComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._sub.unsubscribe();
+    }
+
+    @autobind()
+    public refreshApplications() {
+        const obs = this.templateService.reloadData().flatMap(() => {
+            return this.templateService.listApplications();
+        });
+
+        obs.subscribe((applications) => {
+            this.applications = applications;
+            this._filterApplications();
+        });
+
+        return obs;
     }
 
     /**

@@ -17,6 +17,11 @@ bl-market {
             flex: 1;
         }
 
+        .filter {
+            display: flex;
+            align-items: center;
+        }
+
         .filter .quicksearch {
             width: 400px;
         }
