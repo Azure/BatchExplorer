@@ -65,13 +65,6 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.predefinedFormulaService.init();
         this.hasAccount = accountService.currentAccount.map((x) => Boolean(x));
 
-        setTimeout(() => {
-            pythonRpcService.call("foo", [1]).subscribe({
-                next: (a) => console.log("Next ", a),
-                error: (e) => console.log("Final error", e),
-                complete: () => console.log("Compelte?"),
-            });
-        }, 5000);
         Observable
             .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)
             .subscribe((loadedArray) => {
