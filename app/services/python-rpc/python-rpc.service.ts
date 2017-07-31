@@ -183,9 +183,7 @@ export class PythonRpcService {
         } else {
             request.subject.next(response.result);
         }
-        console.log("IS stream", response.stream);
         if (!response.stream) {
-            console.log("Should complete then");
             request.subject.complete();
             delete this._currentRequests[response.id];
         }

@@ -159,19 +159,16 @@ export class SubmitMarketApplicationComponent implements OnInit {
     public submit() {
         this.error = null;
         const jobParams = this.jobFormGroup.value;
-        console.log("Submit with those params: ", jobParams);
         // RPC takes in Template JSON object and Parameter JSON object
         const obs = this.pythonRpcService.callWithAuth("submit-ncj-job", [this._buildJobTemplate(), jobParams]);
         obs.subscribe({
             next: (data) => this._redirectToJob(data),
             error: (err) => this.error = ServerError.fromPython(err),
-            complete: () => console.log("Submitted NCJ package done"),
         });
         return obs;
     }
 
     private _redirectToJob(data) {
-        console.log("Submitted NCJ package", data);
         const jobId = data.properties.id;
         this.router.navigate(["/jobs", jobId]);
     }
@@ -188,7 +185,6 @@ export class SubmitMarketApplicationComponent implements OnInit {
     private _buildJobTemplate(): any {
         const template = { ...this.jobTemplate };
         template.job.properties.poolInfo = this.pickedPool.value;
-        console.log("Template sent", template);
         return template;
     }
 

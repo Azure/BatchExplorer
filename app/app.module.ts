@@ -21,9 +21,9 @@ import { BaseModule } from "app/components/base";
 import { DataModule } from "app/components/data/data.module";
 import { FileModule } from "app/components/file/file.module";
 import { JobModule } from "app/components/job/job.module";
+import { MarketModule } from "app/components/market/market.module";
 import { NodeModule } from "app/components/node/node.module";
 import { PoolModule } from "app/components/pool/pool.module";
-import { MarketModule } from "app/components/market/market.module";
 import { TaskModule } from "app/components/task/task.module";
 
 // unhandled application error handler
@@ -71,7 +71,8 @@ import {
 } from "./services";
 
 const modules = [
-    AccountModule, ApplicationModule, DataModule, FileModule, JobModule, NodeModule, PoolModule, TaskModule, MarketModule,
+    AccountModule, ApplicationModule, DataModule, FileModule,
+    JobModule, NodeModule, PoolModule, TaskModule, MarketModule,
 ];
 
 @NgModule({

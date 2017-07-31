@@ -12,6 +12,10 @@ import "./choose-action.scss";
     templateUrl: "choose-action.html",
 })
 export class ChooseActionComponent implements OnInit, OnDestroy {
+    public static breadcrumb() {
+        return { name: "Choose Action" };
+    }
+
     public applicationId: string;
     public application: Application;
     public actions: List<ApplicationAction>;
@@ -26,9 +30,6 @@ export class ChooseActionComponent implements OnInit, OnDestroy {
             this._updateActions();
         });
     }
-    public static breadcrumb() {
-        return { name: "Choose Action" };
-    }
 
     public ngOnDestroy() {
         this._paramsSubscriber.unsubscribe();
@@ -36,7 +37,6 @@ export class ChooseActionComponent implements OnInit, OnDestroy {
 
     private _updateActions() {
         this.templateService.getApplication(this.applicationId).subscribe((application) => {
-            console.log("Got applicaiton", application && application.toJS());
             this.application = application;
         });
         this.templateService.listActions(this.applicationId).subscribe((actions) => {

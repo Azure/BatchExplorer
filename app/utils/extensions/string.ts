@@ -24,7 +24,6 @@ interface String {
      */
     trimEnd(...values: string[]);
 
-
     /**
      * Check if a string contains a substring
      */
