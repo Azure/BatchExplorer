@@ -153,4 +153,15 @@ describe("PoolUtils", () => {
             expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsName(vm4Pool))).toBe("linux");
         });
     });
+
+    it("#poolNodesStatus()", () => {
+        const status1 = PoolUtils.poolNodesStatus(new Pool({ allocationState: "resizing" }), 1, 4);
+        expect(status1).toEqual("1 → 4");
+
+        const status2 = PoolUtils.poolNodesStatus(new Pool({ allocationState: "steady" }), 4, 0);
+        expect(status2).toEqual("4");
+
+        const status3 = PoolUtils.poolNodesStatus(new Pool({ allocationState: "steady", resizeErrors: [{}] }), 1, 10);
+        expect(status3).toEqual("1 → 10");
+    });
 });

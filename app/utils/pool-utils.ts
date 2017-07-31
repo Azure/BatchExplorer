@@ -1,5 +1,5 @@
 import { Icon, IconSources } from "app/components/base/icon";
-import { Pool, PoolAllocationState, PoolState } from "app/models";
+import { Pool, PoolAllocationState } from "app/models";
 import * as Icons from "./icons";
 
 const iconMapping = {
