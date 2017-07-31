@@ -1,8 +1,4 @@
 <div md-tooltip="{{tooltipMessage}}" tooltip-position="{{tooltipPosition}}">
     <i class="fa fa-tv" [ngClass]="largeIcon ? 'fa-2' : ''"></i>
-    <span>{{pool.currentNodes}}</span>
-    <span *ngIf="pool.currentNodes !== pool.targetNodes">
-        <span >⇾</span>
-        <span>{{pool.targetNodes}}</span>
-    </span>
+    <span>{{prettyStatus}}</span>
 </div>

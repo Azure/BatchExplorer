@@ -1,5 +1,5 @@
 import { Icon, IconSources } from "app/components/base/icon";
-import { Pool } from "app/models";
+import { Pool, PoolAllocationState, PoolState } from "app/models";
 import * as Icons from "./icons";
 
 const iconMapping = {
@@ -133,5 +133,19 @@ export class PoolUtils {
         }
 
         return "linux";
+    }
+
+    /**
+     * Display the status of the pool nodes nicely.
+     * @param pool Pool
+     * @param current Current number of nodes
+     * @param target Target number of nodes
+     */
+    public static poolNodesStatus(pool: Pool, current: number, target: number) {
+        if (pool.allocationState === PoolAllocationState.resizing || pool.resizeErrors.size > 0) {
+            return `${current} → ${target}`;
+        } else {
+            return `${current}`;
+        }
     }
 }
