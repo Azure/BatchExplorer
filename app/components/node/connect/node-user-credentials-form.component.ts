@@ -49,6 +49,7 @@ export class NodeUserCredentialsFormComponent {
         const value = this.form.value;
         const credentials: AddNodeUserAttributes = {
             name: value.username,
+            isAdmin: value.isAdmin,
         };
         if (value.mode === CredentialsMode.SSHPublicKey) {
             credentials.sshPublicKey = value.sshPublicKey;
