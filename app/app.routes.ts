@@ -1,6 +1,7 @@
 // tslint:disable: object-literal-sort-keys
 import { Routes } from "@angular/router";
 
+import { ChooseActionComponent } from "app/components/market/application-action";
 import { Constants } from "app/utils";
 import { AccountDefaultComponent, AccountDetailsComponent } from "./components/account/details";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
@@ -12,6 +13,8 @@ import { FileDetailsComponent } from "./components/file/details/file-details.com
 import { FileHomeComponent } from "./components/file/home";
 import { JobDefaultComponent, JobDetailsComponent } from "./components/job/details";
 import { JobHomeComponent } from "./components/job/home/job-home.component";
+import { MarketComponent } from "./components/market/home";
+import { SubmitMarketApplicationComponent } from "./components/market/submit";
 import { NodeDefaultComponent, NodeDetailsComponent } from "./components/node/details";
 import { NodeHomeComponent } from "./components/node/home";
 import { PoolDetailsComponent } from "./components/pool/details";
@@ -46,6 +49,18 @@ export const routes: Routes = [
             { path: "", component: PoolDefaultComponent }, // pools/
             { path: ":id", component: PoolDetailsComponent }, // pools/{pool.id}
         ],
+    },
+    {
+        path: "market",
+        component: MarketComponent,
+    },
+    {
+        path: "market/:applicationId/actions",
+        component: ChooseActionComponent,
+    },
+    {
+        path: "market/:applicationId/actions/:actionId/submit",
+        component: SubmitMarketApplicationComponent,
     },
     {
         path: "applications",

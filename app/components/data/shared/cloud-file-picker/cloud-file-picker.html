@@ -1,4 +1,7 @@
 <md-input-container>
     <input type="text" mdInput [formControl]="value" [placeholder]="label">
+    <md-hint *ngIf="hint" align="end">
+        {{hint}}
+    </md-hint>
 </md-input-container>
 <bl-button type="round" [action]="openFilePickerDialog"><i class="fa fa-file"></i></bl-button>

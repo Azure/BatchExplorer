@@ -23,18 +23,11 @@ export class NcjTemplateService {
     constructor(private fs: FileSystemService) { }
 
     public init() {
-        const tmpZip = path.join(this.fs.commonFolders.temp, "batch-labs-data.zip");
-        const dest = this._repoDownloadRoot;
-
         this._checkIfDataNeedReload().then((needReload) => {
             if (!needReload) {
                 return null;
             }
-            return this.fs.download(dataUrl, tmpZip).then(() => {
-                return this.fs.unzip(tmpZip, dest);
-            }).then(() => {
-                return this._saveSyncData();
-            });
+            this._downloadRepo();
         }).then(() => {
             this._ready.next(true);
             this._ready.complete();
@@ -47,7 +40,13 @@ export class NcjTemplateService {
      */
     public get(uri: string): Observable<any> {
         return this._ready.flatMap(() => {
-            const promise = this.fs.readFile(this.getFullPath(uri)).then(data => JSON.parse(data));
+            const promise = this.fs.readFile(this.getFullPath(uri)).then(data => {
+                try {
+                    return JSON.parse(data);
+                } catch (e) {
+                    log.error(`Error parsing template file ${uri}`);
+                }
+            });
             return Observable.fromPromise(promise);
         }).share();
     }
@@ -56,9 +55,22 @@ export class NcjTemplateService {
         return path.join(this._dataRoot, uri);
     }
 
+    public reloadData() {
+        return Observable.fromPromise(this._downloadRepo());
+    }
+
     public listApplications(): Observable<List<Application>> {
         return this.get("index.json").map((apps) => {
-            return List<Application>(apps.map(x => new Application(x)));
+            return List<Application>(apps.map(data => {
+                return new Application({ ...data, icon: this.getApplicationIcon(data.id) });
+            }));
+        }).share();
+    }
+
+    public getApplication(applicationId: string): Observable<Application> {
+        return this.get("index.json").map((apps) => {
+            const data = apps.filter(app => app.id === applicationId).first();
+            return data && new Application({ ...data, icon: this.getApplicationIcon(data.id) });
         }).share();
     }
 
@@ -67,7 +79,7 @@ export class NcjTemplateService {
      * @param applicationId Id of the application
      */
     public getApplicationIcon(applicationId: string): string {
-        return this.getFullPath(`${applicationId}/icon.svg`);
+        return "file:" + this.getFullPath(`${applicationId}/icon.svg`);
     }
 
     public listActions(applicationId: string): Observable<List<ApplicationAction>> {
@@ -107,6 +119,15 @@ export class NcjTemplateService {
         });
     }
 
+    private _downloadRepo() {
+        const tmpZip = path.join(this.fs.commonFolders.temp, "batch-labs-data.zip");
+        const dest = this._repoDownloadRoot;
+        return this.fs.download(dataUrl, tmpZip).then(() => {
+            return this.fs.unzip(tmpZip, dest);
+        }).then(() => {
+            return this._saveSyncData();
+        });
+    }
     private _saveSyncData(): Promise<string> {
         const syncFile = this._syncFile;
         const data: SyncFile = {

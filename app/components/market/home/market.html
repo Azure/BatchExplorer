@@ -1,0 +1,17 @@
+<bl-scrollable>
+    <div class="header">
+        <h1>Market applications</h1>
+        <div class="filter">
+            <bl-refresh-btn [refresh]="refreshApplications" type="round"></bl-refresh-btn>
+            <div class="quicksearch">
+                <input [formControl]="quicksearch" placeholder="Search">
+            </div>
+        </div>
+    </div>
+    <div class="applications">
+        <md-card *ngFor="let application of displayedApplications" class="application" [title]="application.description" [routerLink]="['/market', application.id, 'actions']">
+            <img class="logo" [src]="application.icon">
+            <div class="name">{{application.name}}</div>
+        </md-card>
+    </div>
+</bl-scrollable>

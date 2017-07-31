@@ -3,6 +3,9 @@
     <md-hint class="warning" *ngIf="warning">
         This file group doesn't seem to exist.
     </md-hint>
+    <md-hint *ngIf="hint" align="end">
+        {{hint}}
+    </md-hint>
 </md-input-container>
 
 <md-autocomplete #auto="mdAutocomplete">

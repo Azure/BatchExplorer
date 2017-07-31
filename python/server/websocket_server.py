@@ -56,14 +56,11 @@ class WebsocketConnection:
 
             result = await app.call_procedure(request)
 
-            if isinstance(result, ResponseStream):
-                 self.__handle_response_stream(request, result)
-            else:
-                response = JsonRpcResponse(
-                    request=request,
-                    result=result,
-                )
-                await self.send_response(response)
+            response = JsonRpcResponse(
+                request=request,
+                result=result,
+            )
+            await self.send_response(response)
         except error.JsonRpcError as rpc_error:
             response = JsonRpcResponse(
                 request=request,
@@ -71,12 +68,12 @@ class WebsocketConnection:
             )
             await self.send_response(response)
         except Exception as e:
+            print("Error", type(e), e.args)
             response = JsonRpcResponse(
                 request=request,
                 error=error.JsonRpcError(500, "Server internal error", str(e)),
             )
             await self.send_response(response)
-            raise e
 
     def parse_request(self, message: str) -> JsonRpcRequest:
         return JsonRpcRequest.from_json(self, message)

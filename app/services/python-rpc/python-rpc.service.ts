@@ -127,10 +127,10 @@ export class PythonRpcService {
     }
 
     public callWithAuth(method: string, params: any[]): Observable<any> {
-        return this.accountService.currentAccount.flatMap((account: AccountResource) => {
+        return this.accountService.currentAccount.first().flatMap((account: AccountResource) => {
             const batchToken = this.adalService.accessTokenFor(account.subscription.tenantId, ResourceUrl.batch);
             const armToken = this.adalService.accessTokenFor(account.subscription.tenantId, ResourceUrl.arm);
-            return Observable.combineLatest(batchToken, armToken).flatMap(([batchToken, armToken]) => {
+            return Observable.combineLatest(batchToken, armToken).first().flatMap(([batchToken, armToken]) => {
                 const authParam = { batchToken, armToken, account: account.toJS() };
                 return this.call(method, params, {
                     authentication: authParam,
