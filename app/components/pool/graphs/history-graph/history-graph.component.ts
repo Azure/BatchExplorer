@@ -1,10 +1,6 @@
 import { Component, Input, OnChanges } from "@angular/core";
+import { HistoryItem } from "app/components/pool/graphs/history-data/history-data-base";
 import * as moment from "moment";
-
-interface HistoryPoint {
-    time: Date;
-    y: number;
-}
 
 @Component({
     selector: "bl-history-graph",
@@ -15,7 +11,7 @@ export class HistoryGraphComponent implements OnChanges {
     public max: number = 1;
 
     @Input()
-    public history: HistoryPoint[] = [];
+    public history: HistoryItem[] = [];
 
     @Input()
     public interactive = true;
