@@ -46,7 +46,6 @@ export class HistoryDataBase {
         const history = this.history;
         // Keep  at least 1
         while (history.length > 1) {
-            console.log("HIST", history.slice());
             const data = history.first();
             const diff = moment(data.time).diff(maxTime);
             if (diff < 0) {
