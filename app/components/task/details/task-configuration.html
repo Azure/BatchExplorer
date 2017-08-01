@@ -11,6 +11,19 @@
         <bl-text-property label="State transition time" [value]="decorator.stateTransitionTime"></bl-text-property>
         <bl-text-property label="Previous state transition time" [value]="decorator.previousStateTransitionTime"></bl-text-property>
         <bl-text-property label="Exit conditions" *ngIf="!task.exitConditions" value="None"></bl-text-property>
+
+        <bl-table-property *ngIf="task.outputFiles.size > 0" label="Output files">
+            <bl-table-property-header>
+                <div tp-column>Pattern</div>
+                <div tp-column>Destination</div>
+                <div tp-column>Upload when</div>
+            </bl-table-property-header>
+            <bl-table-property-row *ngFor="let file of task.outputFiles">
+                <bl-tp-cell [value]="file.filePattern"></bl-tp-cell>
+                <bl-tp-cell [value]="file.destination.container.containerUrl"></bl-tp-cell>
+                <bl-tp-cell [value]="file.uploadOptions.uploadCondition"></bl-tp-cell>
+            </bl-table-property-row>
+        </bl-table-property>
     </bl-property-group>
 
     <bl-property-group label="Application packages" class="wide" [collapsed]="true">
