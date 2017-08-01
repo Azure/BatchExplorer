@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges } from "@angular/core";
+import { HistoryItem } from "app/components/pool/graphs/history-data/history-data-base";
 import * as moment from "moment";
 
 @Component({
@@ -10,7 +11,7 @@ export class HistoryGraphComponent implements OnChanges {
     public max: number = 1;
 
     @Input()
-    public history: any[] = [];
+    public history: HistoryItem[] = [];
 
     @Input()
     public interactive = true;
@@ -27,6 +28,10 @@ export class HistoryGraphComponent implements OnChanges {
     constructor() {
         this.updateData();
         this.updateOptions();
+
+        setInterval(() => {
+            this.updateData();
+        }, 5000);
     }
 
     public ngOnChanges(inputs) {
@@ -42,8 +47,14 @@ export class HistoryGraphComponent implements OnChanges {
     public updateOptions() {
         const hitRadius = this.interactive ? 10 : 0;
         this.options = {
+            bezierCurve: false,
             responsive: true,
-            elements: { point: { radius: 0, hitRadius: hitRadius, hoverRadius: hitRadius } },
+            elements: {
+                point: { radius: 0, hitRadius: hitRadius, hoverRadius: hitRadius },
+                line: {
+                    tension: 0.05, // disables bezier curves
+                },
+            },
             legend: {
                 display: false,
             },
@@ -84,6 +95,7 @@ export class HistoryGraphComponent implements OnChanges {
         const minToMilli = 60 * 1000;
         const max = this.historySize * minToMilli / 100;
         const now = moment();
+        const last = this.history.last();
         this.datasets = [
             {
                 data:
@@ -95,6 +107,10 @@ export class HistoryGraphComponent implements OnChanges {
                             y: x.y,
                         };
                     }),
+                    {
+                        x: 0,
+                        y: last && last.y,
+                    },
                 ],
             },
         ];
