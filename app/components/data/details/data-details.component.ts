@@ -4,11 +4,13 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs/Subscription";
 
+import { DialogService } from "app/components/base/dialogs";
 import { SidebarManager } from "app/components/base/sidebar";
+import { DownloadFileGroupDialogComponent } from "app/components/data/details";
 import { BlobContainer } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";
 import { FileGroupCreateDto } from "app/models/dtos";
-import { GetContainerParams, StorageService  } from "app/services";
+import { GetContainerParams, StorageService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
 import { DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "../action";
 
@@ -17,7 +19,7 @@ import { DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "..
     templateUrl: "data-details.html",
 })
 export class DataDetailsComponent implements OnInit, OnDestroy {
-    public static breadcrumb({id}, {tab}) {
+    public static breadcrumb({ id }, { tab }) {
         let label = tab ? `File group - ${tab}` : "File group";
         return {
             name: id,
@@ -34,11 +36,10 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
 
     constructor(
         private activatedRoute: ActivatedRoute,
-        private dialog: MdDialog,
+        private dialog: DialogService,
         private router: Router,
         private sidebarManager: SidebarManager,
-        private storageService: StorageService,
-        private viewContainerRef: ViewContainerRef) {
+        private storageService: StorageService) {
 
         this.data = this.storageService.getContainerProperties(null);
         this.data.item.subscribe((container) => {
@@ -80,9 +81,7 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public deleteFileGroup() {
-        let config = new MdDialogConfig();
-        config.viewContainerRef = this.viewContainerRef;
-        const dialogRef = this.dialog.open(DeleteContainerDialogComponent, config);
+        const dialogRef = this.dialog.open(DeleteContainerDialogComponent);
         dialogRef.componentInstance.id = this.container.id;
         dialogRef.componentInstance.name = this.container.name;
     }
@@ -90,5 +89,11 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
     @autobind()
     public refresh() {
         return this.data.refresh();
+    }
+
+    @autobind()
+    public download() {
+        const ref = this.dialog.open(DownloadFileGroupDialogComponent);
+        ref.componentInstance.containerId = this.containerId;
     }
 }

@@ -4,6 +4,8 @@ import { List } from "immutable";
 import { BackgroundTask } from "./background-task.model";
 import { BackgroundTaskService } from "./background-task.service";
 
+import "./background-task-tracker.scss";
+
 @Component({
     selector: "bl-background-task-tracker",
     templateUrl: "background-task-tracker.html",
