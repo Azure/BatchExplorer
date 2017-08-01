@@ -93,13 +93,17 @@ export class SubmitMarketApplicationComponent implements OnInit {
 
     private _formValue: any;
 
+    private mode_state;
+
     // Constructor create data structure from reading json files
     constructor(
         public formBuilder: FormBuilder,
         private pythonRpcService: PythonRpcService,
         private route: ActivatedRoute,
         private router: Router,
-        private templateService: NcjTemplateService) { }
+        private templateService: NcjTemplateService) {
+             this.mode_state = "None";
+        }
 
     public ngOnInit() {
         this.route.params.subscribe((params) => {
