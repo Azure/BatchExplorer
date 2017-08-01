@@ -69,10 +69,6 @@ export class Task extends Record<TaskAttributes> {
     @Prop() public dependsOn: TaskDependencies;
     @Prop() public applicationPackageReferences: ApplicationPackageReference[];
 
-    constructor(data) {
-        super(data);
-        console.log("Task", this.toJS());
-    }
     /**
      * @returns true if the task timeout.
      * To happen the task must have maxWallClockTime set
