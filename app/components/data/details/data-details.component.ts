@@ -1,5 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
-import { MdDialog, MdDialogConfig } from "@angular/material";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs/Subscription";

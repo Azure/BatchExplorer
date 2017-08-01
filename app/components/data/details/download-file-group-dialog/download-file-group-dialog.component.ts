@@ -17,8 +17,15 @@ import "./download-file-group-dialog.scss";
     templateUrl: "download-file-group-dialog.html",
 })
 export class DownloadFileGroupDialogComponent {
-    public containerId: string;
+    public set containerId(containerId: string) {
+        this._containerId = containerId;
+        this.downloadFolder.setValue(this._defaultDownloadFolder);
+    }
+    public get containerId() { return this._containerId; }
+
     public patterns = new FormControl("**/*");
+    public downloadFolder = new FormControl("");
+    private _containerId: string;
 
     constructor(
         public dialogRef: MdDialogRef<DownloadFileGroupDialogComponent>,
@@ -34,6 +41,10 @@ export class DownloadFileGroupDialogComponent {
         return Observable.of({});
     }
 
+    public updateDownloadFolder(folder: string) {
+        this.downloadFolder.setValue(folder);
+    }
+
     private async _startDownloadAsync() {
         const folder = await this._getDownloadFolder();
 
@@ -42,10 +53,8 @@ export class DownloadFileGroupDialogComponent {
             task.progress.next(1);
             this._getListOfFilesToDownload().subscribe((files) => {
                 task.progress.next(10);
-                console.log("Downloading files", files.toJS());
                 const downloadObs = this._downloadFiles(task, folder, files);
                 Observable.combineLatest(downloadObs).subscribe(() => {
-                    console.log("Done downloading alll");
                     this.shell.showItemInFolder(folder);
                     subject.complete();
                 });
@@ -60,14 +69,18 @@ export class DownloadFileGroupDialogComponent {
     }
 
     private _getDownloadFolder(): Promise<string> {
-        const folder = path.join(this.fs.commonFolders.downloads, "batch-labs", this.containerId);
-        return this.fs.exists(folder).then((exists) => {
-            if (exists) {
-                return `${folder}_${SecureUtils.uuid()}`;
-            } else {
-                return folder;
-            }
-        });
+        const folder = this.downloadFolder.value;
+        if (folder === this._defaultDownloadFolder) {
+            return this.fs.exists(folder).then((exists) => {
+                if (exists) {
+                    return `${folder}_${SecureUtils.uuid()}`;
+                } else {
+                    return folder;
+                }
+            });
+        } else {
+            return Promise.resolve(folder);
+        }
     }
 
     private _downloadFiles(task: BackgroundTask, folder: string, files: List<File>): Array<Observable<any>> {
@@ -96,5 +109,9 @@ export class DownloadFileGroupDialogComponent {
             });
             return List(files);
         });
+    }
+
+    private get _defaultDownloadFolder() {
+        return path.join(this.fs.commonFolders.downloads, "batch-labs", this._containerId);
     }
 }
