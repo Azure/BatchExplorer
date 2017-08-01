@@ -41,7 +41,7 @@ export function tryPython(pythonPath: string): Promise<string> {
  * @returns Promise that resolve the first valid path. If no path are valid reject with an error.
  */
 export function tryMultiplePythons(paths: string[]): Promise<string> {
-    let promise: Promise<string> = Promise.reject(null);
+    //let promise: Promise<string> = Promise.reject(null);
     const errors = {};
     if (paths.length === 0) {
         return Promise.reject("No python path found");

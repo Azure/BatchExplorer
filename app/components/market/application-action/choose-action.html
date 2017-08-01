@@ -1,5 +1,5 @@
 <bl-scrollable>
-    <h1> What would you like to do with <span [title]="application?.description">{{application?.name}}</span> </h1>
+    <h1><img class="logo" [src]="application?.icon" height="30" width="30" alt="Smiley face"> Action selection for <span [title]="application?.description">{{application?.name}}</span> </h1>
     <div class="actions">
         <md-card *ngFor="let action of actions" class="action" [routerLink]="['/market', applicationId, 'actions', action.id, 'submit']">
             <div class="name">{{action.name}}</div>
