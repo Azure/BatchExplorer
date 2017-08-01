@@ -26,16 +26,13 @@ export class HistoryDataBase {
         let history = this.history;
         // Remove the element if it is the same value
         if (this._areLast2SameAs(value)) {
-            console.log("Last 2 are the smae?", history.slice());
             history.pop();
         }
-        console.log("tmp history", history.slice());
 
         history.push({
             time: time,
             y: value,
         });
-        console.log("new history", history.slice());
         this.history = history;
     }
 
@@ -46,18 +43,19 @@ export class HistoryDataBase {
 
     public cleanup() {
         const maxTime = moment().subtract(this._historySize, "minutes").subtract(1, "seconds");
-        if (this.history.length === 0) {
-            return;
-        }
-        while (true) {
-            const data = this.history.first();
+        const history = this.history;
+        // Keep  at least 1
+        while (history.length > 1) {
+            console.log("HIST", history.slice());
+            const data = history.first();
             const diff = moment(data.time).diff(maxTime);
             if (diff < 0) {
-                this.history.shift();
+                history.shift();
             } else {
                 break;
             }
         }
+        this.history = history;
     }
 
     public reset() {
