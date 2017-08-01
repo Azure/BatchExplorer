@@ -50,7 +50,7 @@ export class HistoryGraphComponent implements OnChanges {
             bezierCurve: false,
             responsive: true,
             elements: {
-                // point: { radius: 0, hitRadius: hitRadius, hoverRadius: hitRadius },
+                point: { radius: 0, hitRadius: hitRadius, hoverRadius: hitRadius },
                 line: {
                     tension: 0.05, // disables bezier curves
                 },
