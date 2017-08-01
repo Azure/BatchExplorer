@@ -7,7 +7,7 @@ import { Component, ElementRef, EventEmitter, Output, ViewChild } from "@angular
     selector: "bl-directory-picker",
     template: `
         <bl-button type="wide" (click)="launchBrowse()"><ng-content></ng-content></bl-button>
-        <input id="folderpicker" #picker type="file" (change)="pickDirectory($event)" [hidden]="true" webkitdirectory />
+        <input #picker type="file" (change)="pickDirectory($event)" [hidden]="true" webkitdirectory />
     `,
 })
 export class DirectoryPickerComponent {
