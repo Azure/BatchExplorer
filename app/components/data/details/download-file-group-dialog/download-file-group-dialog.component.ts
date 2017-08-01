@@ -19,7 +19,6 @@ import "./download-file-group-dialog.scss";
 export class DownloadFileGroupDialogComponent {
     public set containerId(containerId: string) {
         this._containerId = containerId;
-        this.downloadFolder.setValue(this._defaultDownloadFolder);
     }
     public get containerId() { return this._containerId; }
 
@@ -33,7 +32,9 @@ export class DownloadFileGroupDialogComponent {
         private backgroundTaskService: BackgroundTaskService,
         private fs: FileSystemService,
         private shell: ElectronShell,
-    ) { }
+    ) {
+        this.downloadFolder.setValue(this._defaultDownloadFolder);
+    }
 
     @autobind()
     public startDownload() {
@@ -69,8 +70,8 @@ export class DownloadFileGroupDialogComponent {
     }
 
     private _getDownloadFolder(): Promise<string> {
-        const folder = this.downloadFolder.value;
-        if (folder === this._defaultDownloadFolder) {
+        const folder = path.join(this.downloadFolder.value, this._containerId);
+        if (this.downloadFolder.value === this._defaultDownloadFolder) {
             return this.fs.exists(folder).then((exists) => {
                 if (exists) {
                     return `${folder}_${SecureUtils.uuid()}`;
@@ -112,6 +113,6 @@ export class DownloadFileGroupDialogComponent {
     }
 
     private get _defaultDownloadFolder() {
-        return path.join(this.fs.commonFolders.downloads, "batch-labs", this._containerId);
+        return path.join(this.fs.commonFolders.downloads, "batch-labs");
     }
 }
