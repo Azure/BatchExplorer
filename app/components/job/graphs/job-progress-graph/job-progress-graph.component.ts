@@ -18,8 +18,7 @@ export class JobProgressGraphComponent implements OnChanges {
 
     public colors: any[] = [
         {
-            backgroundColor: "rgba(170, 57, 57, 0.4)",
-            pointBackgroundColor: "#aa3939", // Start time colors(red)
+            backgroundColor: "rgba(100, 100, 100, 0.4)",
             pointBorderColor: "#aa3939",
         },
         {
@@ -57,7 +56,7 @@ export class JobProgressGraphComponent implements OnChanges {
             },
             elements: {
                 point: {
-                    radius: 1,
+                    radius: 0,
                     hitRadius: hitRadius,
                     hoverRadius: hitRadius,
                 },
@@ -68,9 +67,13 @@ export class JobProgressGraphComponent implements OnChanges {
                 //     fill: false,
                 // },
             },
+            hover: {
+                mode: "nearest",
+                intersect: true,
+            },
             tooltips: {
                 enabled: true,
-                mode: "single",
+                mode: "nearest",
                 callbacks: {
                     label: (tooltipItems, data) => {
                         return this._getToolTip(tooltipItems.datasetIndex, tooltipItems.index);
@@ -83,21 +86,21 @@ export class JobProgressGraphComponent implements OnChanges {
                     position: "bottom",
                 }],
                 yAxes: [{
-                    // type: "linear",
-                    // ticks: {
-                    //     min: 0,
-                    //     callback: (value) => {
-                    //         if (value > 180) {
-                    //             if (value % 60 === 0) {
-                    //                 return value / 60 + "m";
-                    //             }
-                    //         } else {
-                    //             if (value % 1 === 0) {
-                    //                 return value + "s";
-                    //             }
-                    //         }
-                    //     },
-                    // },
+                    type: "linear",
+                    ticks: {
+                        min: 0,
+                        // callback: (value) => {
+                        //     if (value > 180) {
+                        //         if (value % 60 === 0) {
+                        //             return value / 60 + "m";
+                        //         }
+                        //     } else {
+                        //         if (value % 1 === 0) {
+                        //             return value + "s";
+                        //         }
+                        //     }
+                        // },
+                    },
                 }],
             },
         };
@@ -116,25 +119,33 @@ export class JobProgressGraphComponent implements OnChanges {
             }
             const { startTime, endTime } = task.executionInfo;
 
-            startTimes.push(moment(startTime).diff(jobStartTime) / 1000);
+            startTimes.push({
+                time: moment(startTime).diff(jobStartTime) / 1000,
+                index: index,
+            });
 
-            endTimes.push(moment(endTime).diff(jobStartTime) / 1000);
+            endTimes.push({
+                time: moment(endTime).diff(jobStartTime) / 1000,
+                index: index,
+            });
         });
 
-        const sortedStartTimes = startTimes.sort((a, b) => a - b);
-        const sortedEndTimes = endTimes.sort((a, b) => a - b);
+        const sortedStartTimes = startTimes.sort((a, b) => a.time - b.time);
+        const sortedEndTimes = endTimes.sort((a, b) => a.time - b.time);
 
         console.log("Start sorted", sortedEndTimes);
         this.datasets = [
             {
                 label: "Starttime",
                 data: this._timesToDataSet(sortedStartTimes),
+                fill: "origin",
             },
             {
                 label: "EndTime",
                 data: this._timesToDataSet(sortedEndTimes),
+                fill: "-1",
             },
-        ];
+        ] as any;
     }
 
     private _getToolTip(datasetIndex: number, index: number) {
@@ -145,11 +156,11 @@ export class JobProgressGraphComponent implements OnChanges {
         }
     }
 
-    private _timesToDataSet(times: number[]) {
-        return times.map((time, index) => {
+    private _timesToDataSet(times: any[]) {
+        return times.map((data, index) => {
             return {
                 x: index,
-                y: Math.round(time),
+                y: Math.round(data.time),
             };
         });
     }
