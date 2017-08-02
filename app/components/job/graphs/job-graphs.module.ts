@@ -5,10 +5,11 @@ import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 
 import { BaseModule } from "app/components/base";
-import { JobGraphsComponent } from "app/components/job/graphs/job-graphs-home";
+import { JobGraphsComponent } from "./job-graphs-home";
+import { JobProgressGraphComponent } from "./job-progress-graph";
 import { TasksRunningTimeGraphComponent } from "./tasks-running-time-graph";
 
-const components = [TasksRunningTimeGraphComponent, JobGraphsComponent];
+const components = [TasksRunningTimeGraphComponent, JobProgressGraphComponent, JobGraphsComponent];
 
 @NgModule({
     declarations: components,
