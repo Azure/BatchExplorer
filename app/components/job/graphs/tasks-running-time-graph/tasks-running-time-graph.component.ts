@@ -95,6 +95,7 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges {
         const hitRadius = this.interactive ? 3 : 0;
         this.options = {
             responsive: true,
+            maintainAspectRatio: false,
             animation: { duration: 0 },
             legend: {
                 display: false,

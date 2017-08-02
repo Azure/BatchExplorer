@@ -20,16 +20,16 @@
                     <bl-tags [tags]="job.tags" [editable]="job.editable" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
                 </div>
             </div>
-            <div class="tile">
-                Task status tile
+            <div class="tile" [routerLink]="['/jobs', job.id, 'graphs']">
+                <i class="fa-line-chart"></i>
+                <div>Graph status</div>
             </div>
             <div class="tile">
                 <bl-job-progress-status [job]="job" [poolId]="job.poolId"></bl-job-progress-status>
             </div>
         </md-card>
         <bl-job-error-display [job]="job"></bl-job-error-display>
-        <bl-tasks-running-time-graph [job]="job"></bl-tasks-running-time-graph>
-        <!-- <md-card class="details">
+        <md-card class="details">
             <bl-tab-group>
                 <bl-tab key="tasks">
                     <bl-tab-label>Tasks</bl-tab-label>
@@ -49,6 +49,6 @@
                     <bl-job-hook-task-browser [job]="job" *ngIf="hasHookTask"></bl-job-hook-task-browser>
                 </bl-tab>
             </bl-tab-group>
-        </md-card> -->
+        </md-card>
     </div>
 </bl-loading>

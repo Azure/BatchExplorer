@@ -1,0 +1,20 @@
+@import "app/styles/variables";
+
+bl-job-graphs-home {
+    $padding: 10px;
+    $graph-header-height: 40px;
+    $graph-height: calc(#{$contentview-height} - #{$graph-header-height + $padding * 2});
+
+
+    display: block;
+    position: relative;
+    padding: $padding;
+    height: $contentview-height;
+
+    h1 {
+        height: $graph-header-height;
+    }
+    .graph-container {
+        height: $graph-height;
+    }
+}
