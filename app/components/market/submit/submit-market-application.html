@@ -6,9 +6,9 @@
             <bl-form-page main-form-page [title]="title" [formGroup]="form">
                 <bl-form-section title="Mode">
                     <ul>
-                        <li (click) = "mode_state = 'PoolNJob'"> new Pool + Job </li>
-                        <li (click) = "mode_state = 'PoolOJob'"> existing Pool + Job </li>
-                        <li (click) = "mode_state = 'Pool'"> new Pool </li>
+                        <button style="margin:5px; width:200px" (click) = "mode_state = 'PoolNJob'" type="button" md-raised-button>new Pool + Job</button>
+                        <button style="margin:5px; width:200px" (click) = "mode_state = 'PoolOJob'" type="button" md-raised-button>existing Pool + Job</button>
+                        <button style="margin:5px; width:200px" (click) = "mode_state = 'Pool'" type="button" md-raised-button>new Pool</button>
                     </ul>
                 </bl-form-section>
             </bl-form-page>
@@ -20,9 +20,9 @@
             <bl-form-page main-form-page [title]="title" [formGroup]="form">
                 <bl-form-section title="Mode">
                     <ul>
-                        <li style="font-weight: bold;" (click) = "mode_state = 'PoolNJob'" > new Pool + Job </li>
-                        <li (click) = "mode_state = 'PoolOJob'"> existing Pool + Job </li>
-                        <li (click) = "mode_state = 'Pool'"> new Pool </li>
+                        <button style="margin:5px; width:200px; background-color:#3e81b0;" (click) = "mode_state = 'PoolNJob'" type="button" md-raised-button>new Pool + Job</button>
+                        <button style="margin:5px; width:200px" (click) = "mode_state = 'PoolOJob'" type="button" md-raised-button>existing Pool + Job</button>
+                        <button style="margin:5px; width:200px" (click) = "mode_state = 'Pool'" type="button" md-raised-button>new Pool</button>
                     </ul>
                 </bl-form-section>
 
@@ -41,11 +41,10 @@
             <bl-form-page main-form-page [title]="title" [formGroup]="form">
                 <bl-form-section title="Mode">
                     <ul>
-                        <li (click) = "mode_state = 'PoolNJob'"> new Pool + Job </li>
-                        <li style="font-weight: bold;" (click) = "mode_state = 'PoolOJob'"> existing Pool + Job </li>
-                        <li (click) = "mode_state = 'Pool'"> new Pool </li>
+                        <button style="margin:5px; width:200px" (click) = "mode_state = 'PoolNJob'" type="button" md-raised-button>new Pool + Job</button>
+                        <button style="margin:5px; width:200px; background-color:#3e81b0;" (click) = "mode_state = 'PoolOJob'" type="button" md-raised-button>existing Pool + Job</button>
+                        <button style="margin:5px; width:200px" (click) = "mode_state = 'Pool'" type="button" md-raised-button>new Pool</button>
                     </ul>
-
                 </bl-form-section>
                 <bl-form-section title="Pool">
                     <bl-pool-picker [formControl]="pickedPool"></bl-pool-picker>
@@ -61,9 +60,9 @@
             <bl-form-page main-form-page [title]="title" [formGroup]="form">
                 <bl-form-section title="Mode">
                     <ul>
-                        <li (click) = "mode_state = 'PoolNJob'"> new Pool + Job </li>
-                        <li (click) = "mode_state = 'PoolOJob'"> existing Pool + Job </li>
-                        <li style="font-weight: bold;" (click) = "mode_state = 'Pool'"> new Pool </li>
+                        <button style="margin:5px; width:200px" (click) = "mode_state = 'PoolNJob'" type="button"  md-raised-button>new Pool + Job</button>
+                        <button style="margin:5px; width:200px" (click) = "mode_state = 'PoolOJob'" type="button" md-raised-button>existing Pool + Job</button>
+                        <button style="margin:5px; width:200px; background-color:#3e81b0;" (click) = "mode_state = 'Pool'" type="button" md-raised-button>new Pool</button>
                     </ul>
                 </bl-form-section>
                 <bl-form-section title="Pool">
