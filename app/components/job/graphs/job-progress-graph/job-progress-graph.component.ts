@@ -18,8 +18,9 @@ export class JobProgressGraphComponent implements OnChanges {
 
     public colors: any[] = [
         {
-            backgroundColor: "rgba(100, 100, 100, 0.4)",
-            pointBorderColor: "#aa3939",
+            backgroundColor: "rgba(76, 175, 80, 0.4)",
+            pointBackgroundColor: "#4caf50", // End time colors(green)
+            pointBorderColor: "#4caf50",
         },
         {
             backgroundColor: "rgba(76, 175, 80, 0.4)",
@@ -46,7 +47,7 @@ export class JobProgressGraphComponent implements OnChanges {
     }
 
     public updateOptions() {
-        const hitRadius = this.interactive ? 3 : 0;
+        const hitRadius = this.interactive ? 5 : 0;
         this.options = {
             responsive: true,
             maintainAspectRatio: false,
@@ -60,12 +61,6 @@ export class JobProgressGraphComponent implements OnChanges {
                     hitRadius: hitRadius,
                     hoverRadius: hitRadius,
                 },
-                // line: {
-                //     backgroundColor: "rgba(0, 0, 0 ,0)",
-                //     borderWidth: 0,
-                //     borderColor: "rgba(0, 0, 0, 0)",
-                //     fill: false,
-                // },
             },
             hover: {
                 mode: "nearest",
@@ -84,23 +79,23 @@ export class JobProgressGraphComponent implements OnChanges {
                 xAxes: [{
                     type: "linear",
                     position: "bottom",
+                    ticks: {
+                        min: 0,
+                        callback: (value) => {
+                            if (value > 180) {
+                                if (value % 60 === 0) {
+                                    return value / 60 + "m";
+                                }
+                            } else {
+                                if (value % 1 === 0) {
+                                    return value + "s";
+                                }
+                            }
+                        },
+                    },
                 }],
                 yAxes: [{
                     type: "linear",
-                    ticks: {
-                        min: 0,
-                        // callback: (value) => {
-                        //     if (value > 180) {
-                        //         if (value % 60 === 0) {
-                        //             return value / 60 + "m";
-                        //         }
-                        //     } else {
-                        //         if (value % 1 === 0) {
-                        //             return value + "s";
-                        //         }
-                        //     }
-                        // },
-                    },
                 }],
             },
         };
@@ -138,12 +133,12 @@ export class JobProgressGraphComponent implements OnChanges {
             {
                 label: "Starttime",
                 data: this._timesToDataSet(sortedStartTimes),
-                fill: "origin",
+                fill: "1",
             },
             {
                 label: "EndTime",
                 data: this._timesToDataSet(sortedEndTimes),
-                fill: "-1",
+                fill: false,
             },
         ] as any;
     }
@@ -159,8 +154,8 @@ export class JobProgressGraphComponent implements OnChanges {
     private _timesToDataSet(times: any[]) {
         return times.map((data, index) => {
             return {
-                x: index,
-                y: Math.round(data.time),
+                y: index,
+                x: Math.round(data.time),
             };
         });
     }

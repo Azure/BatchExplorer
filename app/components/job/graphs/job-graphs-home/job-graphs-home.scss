@@ -13,6 +13,13 @@ bl-job-graphs-home {
 
     .graph-header {
         height: $graph-header-height;
+        display: flex;
+        align-items: center;
+
+        > .summary {
+            flex: 1;
+        }
+
         h1 {
             color: $mineshaft-grey;
 
@@ -24,6 +31,21 @@ bl-job-graphs-home {
         .description {
             color: $mineshaft-grey;
             font-style: italic;
+        }
+
+        .buttons {
+            display: flex;
+
+            .btn {
+                color: map-get($primary, 400);
+                margin: 0 4px;
+                cursor: pointer;
+
+                &.active {
+                    color: $alto;
+                    cursor: default;
+                }
+            }
         }
     }
 

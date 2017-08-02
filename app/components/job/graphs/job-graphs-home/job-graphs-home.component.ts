@@ -9,6 +9,10 @@ import { log } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 import "./job-graphs-home.scss";
 
+enum AvailableGraph {
+    runningTime,
+    progress,
+}
 @Component({
     selector: "bl-job-graphs-home",
     templateUrl: "job-graphs-home.html",
@@ -17,11 +21,14 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
     public static breadcrumb(params, queryParams) {
         return { name: params.jobId, label: "Job graphs" };
     }
+    public AvailableGraph = AvailableGraph;
 
     public job: Job;
     public jobId: string;
     public tasks: List<Task> = List([]);
     public loading = false;
+    public currentGraph = AvailableGraph.progress;
+    public description: string;
 
     private _data: RxEntityProxy<JobParams, Job>;
 
@@ -34,7 +41,7 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
         this._data.item.subscribe((job) => {
             this.job = job;
         });
-
+        this._updateDescription();
     }
 
     public ngOnInit() {
@@ -72,5 +79,24 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._data.dispose();
+    }
+
+    public updateGraph(newGraph: AvailableGraph) {
+        this.currentGraph = newGraph;
+        this._updateDescription();
+    }
+
+    private _updateDescription() {
+        switch (this.currentGraph) {
+            case AvailableGraph.runningTime:
+                this.description = "Shows the running time of each completed" +
+                    "tasks in this job(Each point represent a task).";
+                break;
+            case AvailableGraph.progress:
+                this.description = "Shows the time taken to start(and end) n number of tasks.";
+                break;
+            default:
+                this.description = "Unkown graph type.";
+        }
     }
 }
