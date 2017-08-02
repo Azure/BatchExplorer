@@ -2,32 +2,53 @@ import { Component, Input } from "@angular/core";
 import { List } from "immutable";
 
 import { Job, Task } from "app/models";
+import { TaskService } from "app/services";
+import { log } from "app/utils";
 import "./tasks-running-time-graph.scss";
+
+interface TaskPoint {
+    task: Task;
+    index: number;
+}
 
 @Component({
     selector: "bl-tasks-running-time-graph",
     templateUrl: "tasks-running-time-graph.html",
 })
 export class TasksRunningTimeGraphComponent {
-    public labels: string[];
+
     @Input() public interactive: boolean = true;
     @Input() public job: Job;
 
     public type = "scatter";
+
+    public colors: any[] = [
+        {
+            pointBackgroundColor: "#aa3939",
+            pointBorderColor: "#aa3939",
+        },
+        {
+
+            pointBackgroundColor: "#4caf50",
+            pointBorderColor: "#4caf50",
+        },
+    ];
 
     public datasets: Chart.ChartDataSets[] = [];
 
     public options: Chart.ChartOptions;
 
     private _tasks: List<Task> = List([]);
+    private _failedTasks: TaskPoint[];
+    private _succeededTasks: TaskPoint[];
 
-    constructor() {
+    constructor(private taskService: TaskService) {
         const tasks = [];
 
         for (let i = 0; i < 10; i++) {
             tasks.push(new Task({
                 id: `Task_${i}`,
-                executionInfo: { startTime: new Date(), endTime: new Date(), exitCode: 0 },
+                executionInfo: { startTime: new Date(), endTime: new Date(), exitCode: Math.floor(Math.random() * 2) },
             } as any));
         }
         this._tasks = List(tasks);
@@ -35,6 +56,22 @@ export class TasksRunningTimeGraphComponent {
         this.updateData();
     }
 
+    public ngOnInit() {
+        // this.updateTasks();
+    }
+
+    public updateTasks() {
+        this.taskService.listAll(this.job.id, {
+            select: "id,executionInfo",
+        }).subscribe({
+            next: (tasks) => {
+                this._tasks = tasks;
+            },
+            error: (error) => {
+                log.error(`Error retrieving all tasks for job ${this.job.id}`, error);
+            },
+        });
+    }
     public updateOptions() {
         const hitRadius = this.interactive ? 3 : 0;
         this.options = {
@@ -60,9 +97,7 @@ export class TasksRunningTimeGraphComponent {
                 mode: "single",
                 callbacks: {
                     label: (tooltipItems, data) => {
-                        console.log(tooltipItems, data);
-                        const task = this._tasks.get(tooltipItems.index);
-                        return task ? task.id : "???";
+                        return this._getToolTip(tooltipItems.datasetIndex, tooltipItems.index);
                     },
                 },
             },
@@ -83,17 +118,49 @@ export class TasksRunningTimeGraphComponent {
     }
 
     public updateData() {
-        this.labels = this._tasks.map(x => x.id + "x").toArray();
-        this.datasets = [{
-            label: "Task running time",
-            data: this._tasks.map((x, i) => {
-                return {
-                    labelString: "Banana",
-                    x: i,
-                    y: (Math.random() ** 2) * 50 + 30,
-                };
-            }).toArray(),
-        }];
-        console.log("Data set is ", this.datasets);
+        const succeededTasks = this._succeededTasks = [];
+        const failedTasks = this._failedTasks = [];
+        this._tasks.forEach((task, index) => {
+            if (!task.executionInfo || !task.executionInfo.endTime) {
+                return;
+            }
+            if (task.executionInfo && task.executionInfo.exitCode !== 0) {
+                failedTasks.push({ task, index });
+            } else {
+                succeededTasks.push({ task, index });
+            }
+        });
+        console.log("Succ", succeededTasks, failedTasks);
+        this.datasets = [
+            {
+                label: "Failed tasks",
+                data: this._tasksToDataPoints(failedTasks),
+                radius: 2,
+            } as any,
+            {
+                label: "Succeded tasks",
+                data: this._tasksToDataPoints(succeededTasks),
+            },
+        ];
+    }
+
+    private _getTaskRunningTime(task: Task) {
+        return (Math.random() ** 2) * 50 + 30;
+    }
+
+    private _tasksToDataPoints(tasks: TaskPoint[]) {
+        return tasks.map(({ task, index }) => {
+            return { x: index, y: this._getTaskRunningTime(task) };
+        });
+    }
+
+    private _getToolTip(datasetIndex: number, index: number) {
+        let point: TaskPoint = null;
+        if (datasetIndex === 0) {
+            point = this._failedTasks[index];
+        } else {
+            point = this._succeededTasks[index];
+        }
+        return point ? point.task.id : "???";
     }
 }
