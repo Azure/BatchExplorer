@@ -48,13 +48,6 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges {
 
     constructor(private taskService: TaskService) {
         const tasks = [];
-
-        for (let i = 0; i < 10; i++) {
-            tasks.push(new Task({
-                id: `Task_${i}`,
-                executionInfo: { startTime: new Date(), endTime: new Date(), exitCode: Math.floor(Math.random() * 2) },
-            } as any));
-        }
         this._tasks = List(tasks);
         this.updateOptions();
         this.updateData();
@@ -69,14 +62,13 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges {
 
             const { previousValue, currentValue } = changes.job;
             if (!previousValue || previousValue.id !== currentValue.id) {
-                console.log("This change", changes.job);
                 this.updateTasks();
             }
         }
     }
 
     public updateTasks() {
-        console.log("Called this once");
+        console.time("update-task");
         this.loading = true;
         this.taskService.listAll(this.job.id, {
             select: "id,executionInfo",
@@ -84,10 +76,15 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges {
             pageSize: 1000,
         }).subscribe({
             next: (tasks) => {
-                console.log("Got all tasks");
+                console.log("Got all tasks", tasks.size);
+                console.timeEnd("update-task");
+                console.time("update-data");
+
                 this.loading = false;
                 this._tasks = tasks;
                 this.updateData();
+                console.timeEnd("update-data");
+
             },
             error: (error) => {
                 log.error(`Error retrieving all tasks for job ${this.job.id}`, error);
@@ -136,7 +133,7 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges {
                         callback: (value) => {
                             if (value > 180) {
                                 if (value % 60 === 0) {
-                                    return value + "m";
+                                    return value / 60 + "m";
                                 }
                             } else {
                                 if (value % 1 === 0) {
@@ -195,6 +192,10 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges {
         } else {
             point = this._succeededTasks[index];
         }
-        return point ? point.task.id : "???";
+
+        if (!point) {
+            return "???";
+        }
+        return point.task.id;
     }
 }

@@ -1,5 +1,5 @@
 <canvas blChart [datasets]="datasets" [options]="options" [chartType]="type" [colors]="colors">
 </canvas>
-<div class="loading-overlay">
+<div class="loading-overlay" *ngIf="loading">
     Loading tasks. This can take a long time.
 </div>
