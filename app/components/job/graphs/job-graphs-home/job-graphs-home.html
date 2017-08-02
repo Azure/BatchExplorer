@@ -1,6 +1,9 @@
-<h1>
-    Job <a [routerLink]="['/jobs', jobId]">{{jobId}}</a> graphs
-</h1>
+<div class="graph-header">
+    <h1>
+        Job <a [routerLink]="['/jobs', jobId]">{{jobId}}</a> graphs
+    </h1>
+    <span class="description">This graphs shows the running time of each completed tasks in this job(Each point represent a task).</span>
+</div>
 <div *ngIf="job" class="graph-container">
     <bl-tasks-running-time-graph [job]="job"></bl-tasks-running-time-graph>
 </div>

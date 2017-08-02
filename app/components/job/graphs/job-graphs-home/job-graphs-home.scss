@@ -2,7 +2,7 @@
 
 bl-job-graphs-home {
     $padding: 10px;
-    $graph-header-height: 40px;
+    $graph-header-height: 50px;
     $graph-height: calc(#{$contentview-height} - #{$graph-header-height + $padding * 2});
 
 
@@ -11,9 +11,22 @@ bl-job-graphs-home {
     padding: $padding;
     height: $contentview-height;
 
-    h1 {
+    .graph-header {
         height: $graph-header-height;
+        h1 {
+            color: $mineshaft-grey;
+
+            a {
+                color: map-get($primary, 400);
+            }
+        }
+
+        .description {
+            color: $mineshaft-grey;
+            font-style: italic;
+        }
     }
+
     .graph-container {
         height: $graph-height;
     }
