@@ -93,9 +93,17 @@ export class JobProgressGraphComponent implements OnChanges {
                             }
                         },
                     },
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Time since the job started.",
+                    },
                 }],
                 yAxes: [{
                     type: "linear",
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Task count",
+                    },
                 }],
             },
         };

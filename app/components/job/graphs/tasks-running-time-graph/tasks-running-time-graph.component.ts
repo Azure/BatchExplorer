@@ -92,7 +92,7 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges {
             scales: {
                 xAxes: [{
                     type: "linear",
-                    position: "bottom",
+                    display: false,
                 }],
                 yAxes: [{
                     type: "linear",
@@ -109,6 +109,10 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges {
                                 }
                             }
                         },
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: "Running time",
                     },
                 }],
             },

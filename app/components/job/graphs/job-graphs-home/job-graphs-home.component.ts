@@ -27,7 +27,7 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
     public jobId: string;
     public tasks: List<Task> = List([]);
     public loading = false;
-    public currentGraph = AvailableGraph.progress;
+    public currentGraph = AvailableGraph.runningTime;
     public description: string;
 
     private _data: RxEntityProxy<JobParams, Job>;
