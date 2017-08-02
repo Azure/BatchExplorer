@@ -28,7 +28,7 @@ export class ChartDirective implements OnDestroy, OnChanges, OnInit {
     @Output() public hover = new EventEmitter();
 
     public ctx: any;
-    public chart: any;
+    public chart: Chart;
     private cvs: any;
     private initFlag: boolean = false;
 
@@ -89,7 +89,7 @@ export class ChartDirective implements OnDestroy, OnChanges, OnInit {
 
         if (!options.onClick) {
             options.onClick = (event: any) => {
-                this.click.emit(event);
+                this.click.emit(this.chart.getElementAtEvent(event));
             };
         }
 

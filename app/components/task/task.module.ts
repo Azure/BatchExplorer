@@ -13,6 +13,7 @@ import {
     TaskCreateBasicDialogComponent,
     TerminateTaskDialogComponent,
 } from "app/components/task/action";
+import { TaskGraphsModule } from "app/components/task/graphs/task-graphs.module";
 
 const components = [
     TaskHomeComponent, DeleteTaskDialogComponent, RerunTaskFormComponent, TaskCreateBasicDialogComponent,
@@ -20,7 +21,7 @@ const components = [
 ];
 
 const modules = [
-    DataSharedModule, TaskBaseModule, TaskBrowseModule, TaskDetailsModule, ...commonModules,
+    DataSharedModule, TaskBaseModule, TaskBrowseModule, TaskDetailsModule, TaskGraphsModule, ...commonModules,
 ];
 
 @NgModule({

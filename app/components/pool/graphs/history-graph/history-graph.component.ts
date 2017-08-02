@@ -47,7 +47,6 @@ export class HistoryGraphComponent implements OnChanges {
     public updateOptions() {
         const hitRadius = this.interactive ? 10 : 0;
         this.options = {
-            bezierCurve: false,
             responsive: true,
             elements: {
                 point: { radius: 0, hitRadius: hitRadius, hoverRadius: hitRadius },
