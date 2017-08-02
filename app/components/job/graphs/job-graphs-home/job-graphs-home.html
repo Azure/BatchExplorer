@@ -5,5 +5,8 @@
     <span class="description">This graphs shows the running time of each completed tasks in this job(Each point represent a task).</span>
 </div>
 <div *ngIf="job" class="graph-container">
-    <bl-tasks-running-time-graph [job]="job"></bl-tasks-running-time-graph>
+    <bl-tasks-running-time-graph [job]="job" [tasks]="tasks"></bl-tasks-running-time-graph>
+</div>
+<div class="loading-overlay" *ngIf="loading">
+    Loading tasks. This can take a long time.
 </div>

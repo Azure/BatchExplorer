@@ -30,4 +30,22 @@ bl-job-graphs-home {
     .graph-container {
         height: $graph-height;
     }
+
+    .loading-overlay {
+        $loading-overlay-width: 400px;
+        $loading-overlay-height: 70px;
+        position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        top: calc(50% - #{$loading-overlay-height/2});
+        left: calc(50% - #{$loading-overlay-width/2});
+        margin: auto;
+        font-size: 16px;
+        width: $loading-overlay-width;
+        height: $loading-overlay-height;
+        background: $mineshaft-grey;
+        color: white;
+        opacity: 0.5;
+    }
 }

@@ -2,10 +2,7 @@ import { Component, Input, OnChanges, OnInit, SimpleChanges } from "@angular/cor
 import { List } from "immutable";
 import * as moment from "moment";
 
-import { Job, Task, TaskState } from "app/models";
-import { TaskService } from "app/services";
-import { log } from "app/utils";
-import { FilterBuilder } from "app/utils/filter-builder";
+import { Job, Task } from "app/models";
 import "./tasks-running-time-graph.scss";
 
 interface TaskPoint {
@@ -21,6 +18,7 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges {
 
     @Input() public interactive: boolean = true;
     @Input() public job: Job;
+    @Input() public tasks: List<Task> = List([]);
 
     public type = "scatter";
 
@@ -42,13 +40,10 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges {
 
     public loading = false;
 
-    private _tasks: List<Task> = List([]);
     private _failedTasks: TaskPoint[];
     private _succeededTasks: TaskPoint[];
 
-    constructor(private taskService: TaskService) {
-        const tasks = [];
-        this._tasks = List(tasks);
+    constructor() {
         this.updateOptions();
         this.updateData();
     }
@@ -58,39 +53,11 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges {
     }
 
     public ngOnChanges(changes: SimpleChanges) {
-        if (changes.job) {
-
-            const { previousValue, currentValue } = changes.job;
-            if (!previousValue || previousValue.id !== currentValue.id) {
-                this.updateTasks();
-            }
+        if (changes.tasks) {
+            this.updateData();
         }
     }
 
-    public updateTasks() {
-        console.time("update-task");
-        this.loading = true;
-        this.taskService.listAll(this.job.id, {
-            select: "id,executionInfo",
-            filter: FilterBuilder.prop("state").eq(TaskState.completed).toOData(),
-            pageSize: 1000,
-        }).subscribe({
-            next: (tasks) => {
-                console.log("Got all tasks", tasks.size);
-                console.timeEnd("update-task");
-                console.time("update-data");
-
-                this.loading = false;
-                this._tasks = tasks;
-                this.updateData();
-                console.timeEnd("update-data");
-
-            },
-            error: (error) => {
-                log.error(`Error retrieving all tasks for job ${this.job.id}`, error);
-            },
-        });
-    }
     public updateOptions() {
         const hitRadius = this.interactive ? 3 : 0;
         this.options = {
@@ -151,7 +118,7 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges {
     public updateData() {
         const succeededTasks = this._succeededTasks = [];
         const failedTasks = this._failedTasks = [];
-        this._tasks.forEach((task, index) => {
+        this.tasks.forEach((task, index) => {
             if (!task.executionInfo || !task.executionInfo.endTime) {
                 return;
             }
