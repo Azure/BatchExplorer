@@ -24,7 +24,10 @@ export class ChartDirective implements OnDestroy, OnChanges, OnInit {
     @Input() public colors: any[];
     @Input() public legend: boolean;
 
-    @Output() public click = new EventEmitter();
+    /**
+     * Emit when clicking on an chart element.
+     */
+    @Output() public elClick = new EventEmitter();
     @Output() public hover = new EventEmitter();
 
     public ctx: any;
@@ -89,7 +92,10 @@ export class ChartDirective implements OnDestroy, OnChanges, OnInit {
 
         if (!options.onClick) {
             options.onClick = (event: any) => {
-                this.click.emit(this.chart.getElementAtEvent(event));
+                const el = this.chart.getElementAtEvent(event)[0];
+                if (el) {
+                    this.elClick.emit(el);
+                }
             };
         }
 

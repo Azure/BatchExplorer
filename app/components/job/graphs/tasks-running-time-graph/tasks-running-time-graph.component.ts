@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
+import { Router } from "@angular/router";
 import { List } from "immutable";
 import * as moment from "moment";
 
@@ -43,7 +44,7 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges {
     private _failedTasks: TaskPoint[];
     private _succeededTasks: TaskPoint[];
 
-    constructor() {
+    constructor(private router: Router) {
         this.updateOptions();
         this.updateData();
     }
@@ -132,7 +133,6 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges {
                 succeededTasks.push({ task, index });
             }
         });
-        console.log("Succ", succeededTasks, failedTasks);
         this.datasets = [
             {
                 label: "Failed tasks",
@@ -144,6 +144,12 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges {
                 data: this._tasksToDataPoints(succeededTasks),
             },
         ];
+    }
+
+    public selectTask(el: any) {
+        const task = this._getTaskAt(el._datasetIndex, el._index);
+        console.log("Task picked", el, task);
+        this.router.navigate(["/jobs", this.job.id, "tasks", task.id]);
     }
 
     private _getTaskRunningTime(task: Task) {
@@ -158,16 +164,25 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges {
     }
 
     private _getToolTip(datasetIndex: number, index: number) {
+        const task = this._getTaskAt(datasetIndex, index);
+        if (!task) {
+            return "???";
+        }
+        return task.id;
+    }
+
+    /**
+     * Return the task at the given index.
+     * @param datasetIndex Datasetindex(0 for failed task 1 for successful)
+     * @param index Index in the given dataset
+     */
+    private _getTaskAt(datasetIndex: number, index: number): Task {
         let point: TaskPoint = null;
         if (datasetIndex === 0) {
             point = this._failedTasks[index];
         } else {
             point = this._succeededTasks[index];
         }
-
-        if (!point) {
-            return "???";
-        }
-        return point.task.id;
+        return point && point.task;
     }
 }
