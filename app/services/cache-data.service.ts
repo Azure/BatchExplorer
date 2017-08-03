@@ -14,7 +14,6 @@ export class CacheDataService {
 
     public async cache(key: string, data: any): Promise<string> {
         const filename = this._cacheFilename(key);
-        console.log("Cache", filename, data);
         return this.fs.saveFile(filename, JSON.stringify({ lastSync: new Date(), data }));
     }
 

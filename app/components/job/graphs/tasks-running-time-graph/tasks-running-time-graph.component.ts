@@ -148,7 +148,6 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges {
 
     public selectTask(el: any) {
         const task = this._getTaskAt(el._datasetIndex, el._index);
-        console.log("Task picked", el, task);
         this.router.navigate(["/jobs", this.job.id, "tasks", task.id]);
     }
 

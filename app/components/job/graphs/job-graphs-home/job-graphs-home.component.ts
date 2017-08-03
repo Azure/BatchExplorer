@@ -56,7 +56,6 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
     }
 
     public async updateTasks() {
-        console.time("update-task");
         this.loading = true;
 
         const success = await this._tryLoadTasksFromCache();
@@ -70,15 +69,9 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
             pageSize: 1000,
         }).subscribe({
             next: (tasks) => {
-                console.log("Got all tasks", tasks.size);
-                console.timeEnd("update-task");
-                console.time("update-data");
-
                 this.loading = false;
                 this.tasks = tasks;
                 this.cacheDataService.cache(this._cacheKey, tasks.toJS());
-                console.timeEnd("update-data");
-
             },
             error: (error) => {
                 log.error(`Error retrieving all tasks for job ${this.job.id}`, error);

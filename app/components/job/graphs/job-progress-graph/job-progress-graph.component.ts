@@ -3,6 +3,7 @@ import { List } from "immutable";
 import * as moment from "moment";
 
 import { Job, Task } from "app/models";
+import { DateUtils } from "app/utils";
 import "./job-progress-graph.scss";
 
 @Component({
@@ -70,8 +71,8 @@ export class JobProgressGraphComponent implements OnChanges {
                 enabled: true,
                 mode: "nearest",
                 callbacks: {
-                    label: (tooltipItems, data) => {
-                        return this._getToolTip(tooltipItems.datasetIndex, tooltipItems.index);
+                    title: (tooltipItems, data) => {
+                        return this._getToolTip(tooltipItems[0]);
                     },
                 },
             },
@@ -136,7 +137,6 @@ export class JobProgressGraphComponent implements OnChanges {
         const sortedStartTimes = startTimes.sort((a, b) => a.time - b.time);
         const sortedEndTimes = endTimes.sort((a, b) => a.time - b.time);
 
-        console.log("Start sorted", sortedEndTimes);
         this.datasets = [
             {
                 label: "Starttime",
@@ -151,12 +151,17 @@ export class JobProgressGraphComponent implements OnChanges {
         ] as any;
     }
 
-    private _getToolTip(datasetIndex: number, index: number) {
-        if (datasetIndex === 0) {
-            return "Task started";
+    private _getToolTip(tooltipItem: Chart.ChartTooltipItem) {
+        const x = parseInt(tooltipItem.xLabel, 10);
+        let type: string;
+        const time = DateUtils.prettyDuration(moment.duration({ seconds: x }));
+        if (tooltipItem.datasetIndex === 0) {
+            type = "task started ";
         } else {
-            return "Task completed";
+            type = "task completed";
         }
+
+        return `${tooltipItem.yLabel} ${type} ${time}`;
     }
 
     private _timesToDataSet(times: any[]) {
