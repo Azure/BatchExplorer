@@ -17,11 +17,12 @@ enum NcjParameterExtendedType {
     fileInFileGroup = "file-in-file-group",
 }
 
+/*
 class NcjParameterWrapper {
     public type: NcjParameterExtendedType;
     /**
      * Id of another param it depends on
-     */
+
     public dependsOn: string;
 
     public name: string;
@@ -64,9 +65,11 @@ class NcjParameterWrapper {
         this.type = param.type as any;
     }
 }
+
 const ConventionNames = {
     jobName: "jobName",
 };
+*/
 @Component({
     selector: "bl-submit-market-application",
     templateUrl: "submit-market-application.html",
@@ -78,7 +81,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
 
     public NcjParameterExtendedType = NcjParameterExtendedType;
 
-    public jobNameParam: NcjParameterWrapper;
+    //public jobNameParam: NcjParameterWrapper;
 
     public applicationId: string;
     public actionId: string;
@@ -88,7 +91,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
     public form: FormGroup;
     public jobFormGroup: FormGroup;
     public pickedPool = new FormControl(null);
-    public otherParameters: NcjParameterWrapper[];
+    //public otherParameters: NcjParameterWrapper[];
     public error: ServerError;
 
     private _formValue: any;
@@ -112,6 +115,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
             this._updateTitle();
             this._getTemplates();
         });
+/*
         this.route.queryParams.subscribe((params) => {
             if (params.formParams) {
                 try {
@@ -123,6 +127,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
                 }
             }
         });
+*/
     }
 
     public createForms() {
@@ -181,17 +186,18 @@ export class SubmitMarketApplicationComponent implements OnInit {
         this.templateService.getTemplates(this.applicationId, this.actionId).subscribe((templates) => {
             this.jobTemplate = templates.job;
             this.poolTemplate = templates.pool;
-            this._parseParameters();
+            //this._parseParameters();
             this.createForms();
         });
     }
 
     private _buildJobTemplate(): any {
         const template = { ...this.jobTemplate };
-        template.job.properties.poolInfo = this.pickedPool.value;
+        //template.job.properties.poolInfo = this.pickedPool.value;
         return template;
     }
 
+    /*
     private _parseParameters() {
         const parameters = this.jobTemplate.parameters;
         const otherParameters: any[] = [];
@@ -205,6 +211,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
         }
         this.otherParameters = otherParameters;
     }
+    */
 
     private _updateTitle() {
         this.title = `Run ${this.actionId} from ${this.applicationId}`;
