@@ -88,7 +88,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
     public title = "";
     public jobTemplate: NcjJobTemplate;
     public poolTemplate;
-    public form: FormGroup;
+    form;
     public jobFormGroup: FormGroup;
     public pickedPool = new FormControl(null);
     //public otherParameters: NcjParameterWrapper[];
@@ -106,6 +106,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
         private router: Router,
         private templateService: NcjTemplateService) {
              this.mode_state = "None";
+             this.form = new FormGroup({});
         }
 
     public ngOnInit() {
@@ -151,12 +152,13 @@ export class SubmitMarketApplicationComponent implements OnInit {
                 fg[key] = new FormControl();
             }
         }
-        //fg["pool"] = this.pickedPool;
+        fg["pool"] = this.pickedPool;
+        this.form = new FormGroup(fg);
 
-        this.jobFormGroup = this.formBuilder.group(fg);
+        //this.jobFormGroup = this.formBuilder.group(fg);
 
         //this.form = new FormGroup(fg);
-
+/*
         this.form = this.formBuilder.group({
             job: this.jobFormGroup,
             pool: this.pickedPool,
@@ -173,6 +175,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
                 },
             });
         });
+        */
     }
 
     public getContainerFromFileGroup(fileGroup: string) {
