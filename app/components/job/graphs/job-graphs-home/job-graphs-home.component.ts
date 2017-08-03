@@ -3,7 +3,7 @@ import { ActivatedRoute } from "@angular/router";
 import { List } from "immutable";
 
 import { Job, Task, TaskState } from "app/models";
-import { JobParams, JobService, TaskService } from "app/services";
+import { CacheDataService, JobParams, JobService, TaskService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
 import { log } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
@@ -35,7 +35,9 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
     constructor(
         private route: ActivatedRoute,
         private taskService: TaskService,
-        private jobService: JobService) {
+        private jobService: JobService,
+        private cacheDataService: CacheDataService,
+    ) {
 
         this._data = this.jobService.get(null, {});
         this._data.item.subscribe((job) => {
@@ -53,9 +55,15 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
         });
     }
 
-    public updateTasks() {
+    public async updateTasks() {
         console.time("update-task");
         this.loading = true;
+
+        const success = await this._tryLoadTasksFromCache();
+        if (success) {
+            this.loading = false;
+            return;
+        }
         this.taskService.listAll(this.jobId, {
             select: "id,executionInfo",
             filter: FilterBuilder.prop("state").eq(TaskState.completed).toOData(),
@@ -68,6 +76,7 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
 
                 this.loading = false;
                 this.tasks = tasks;
+                this.cacheDataService.cache(this._cacheKey, tasks.toJS());
                 console.timeEnd("update-data");
 
             },
@@ -98,5 +107,18 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
             default:
                 this.description = "Unkown graph type.";
         }
+    }
+
+    private get _cacheKey() {
+        return `/jobs-graphs/${this.jobId}/tasks`;
+    }
+
+    private async _tryLoadTasksFromCache() {
+        const data = await this.cacheDataService.read(this._cacheKey);
+        if (data) {
+            this.tasks = List(data.map(x => new Task(x)));
+            return true;
+        }
+        return false;
     }
 }
