@@ -6,6 +6,7 @@ import { autobind } from "core-decorators";
 import { log } from "app/utils";
 import { FormBase } from "../form-base";
 import { FormPageComponent } from "../form-page";
+import "./complex-form.scss";
 
 export type FormSize = "small" | "medium" | "large";
 
