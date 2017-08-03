@@ -115,7 +115,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
             this._updateTitle();
             this._getTemplates();
         });
-/*
+
         this.route.queryParams.subscribe((params) => {
             if (params.formParams) {
                 try {
@@ -127,7 +127,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
                 }
             }
         });
-*/
+
     }
 
     public createForms() {
@@ -151,10 +151,12 @@ export class SubmitMarketApplicationComponent implements OnInit {
                 fg[key] = new FormControl();
             }
         }
-        fg["pool"] = this.pickedPool;
+        //fg["pool"] = this.pickedPool;
 
         this.jobFormGroup = this.formBuilder.group(fg);
-/*
+
+        //this.form = new FormGroup(fg);
+
         this.form = this.formBuilder.group({
             job: this.jobFormGroup,
             pool: this.pickedPool,
@@ -170,7 +172,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
                     formParams: JSON.stringify(newFormValue),
                 },
             });
-        });*/
+        });
     }
 
     public getContainerFromFileGroup(fileGroup: string) {
