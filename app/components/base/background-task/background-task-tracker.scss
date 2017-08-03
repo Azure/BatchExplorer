@@ -1,3 +1,14 @@
+@import "app/styles/variables";
+
+@keyframes flash {
+    0%, 50%, 100% {
+    }
+
+    25%, 75% {
+        background: map-get($warn, 300);
+    }
+}
+
 bl-background-task-tracker {
     .current-task {
         width: 100%;
@@ -14,6 +25,10 @@ bl-background-task-tracker {
             color: $mineShaftGray;
         }
     }
+
+    .flash {
+        animation: flash 1s infinite;
+    }
     .dropdown-item {
         padding: 5px !important;
     }
@@ -27,7 +42,7 @@ bl-background-task-tracker {
             width: 24px;
             height: 24px;
             margin: 0 10px;
-            md-progress-circle {
+            md-progress-spinner {
                 width: 24px !important;
                 height: 24px !important;
 

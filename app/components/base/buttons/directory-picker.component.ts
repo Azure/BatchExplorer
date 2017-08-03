@@ -1,5 +1,4 @@
-import { Component, ElementRef, Input, ViewChild } from "@angular/core";
-import { ButtonAction } from "./button.component";
+import { Component, ElementRef, EventEmitter, Output, ViewChild } from "@angular/core";
 
 /**
  * Combine a button and a file input control into one better looking control.
@@ -8,12 +7,11 @@ import { ButtonAction } from "./button.component";
     selector: "bl-directory-picker",
     template: `
         <bl-button type="wide" (click)="launchBrowse()"><ng-content></ng-content></bl-button>
-        <input #picker type="file" (change)="onChange($event)" [hidden]="true" webkitdirectory />
+        <input #picker type="file" (change)="pickDirectory($event)" [hidden]="true" webkitdirectory />
     `,
 })
 export class DirectoryPickerComponent {
-    @Input()
-    public onChange: ButtonAction;
+    @Output() public onChange = new EventEmitter<string>();
 
     @ViewChild("picker")
     private _picker: ElementRef;
@@ -22,5 +20,16 @@ export class DirectoryPickerComponent {
         if (this._picker) {
             this._picker.nativeElement.click();
         }
+    }
+
+    public pickDirectory(event: Event) {
+        const element = event.srcElement as HTMLInputElement;
+
+        const folders = element.files;
+        let folder = null;
+        if (folders.length !== 0) {
+            folder = folders[0].path;
+        }
+        this.onChange.emit(folder);
     }
 }

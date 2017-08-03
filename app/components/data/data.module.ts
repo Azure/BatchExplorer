@@ -15,6 +15,7 @@ import {
     DataContainerFilesComponent,
     DataDefaultComponent,
     DataDetailsComponent,
+    DownloadFileGroupDialogComponent,
 } from "./details";
 import { StorageErrorDisplayComponent } from "./details/errors";
 import { DataHomeComponent } from "./home";
@@ -23,15 +24,17 @@ const components = [
     DataContainerConfigurationComponent, DataContainerFilesComponent, DataHomeComponent,
     DataDefaultComponent, DataDetailsComponent, FileGroupCreateFormComponent, DeleteContainerDialogComponent,
     FileGroupListComponent, FileGroupOptionsPickerComponent, FileGroupPreviewComponent, StorageErrorDisplayComponent,
+    DownloadFileGroupDialogComponent,
 ];
 
 @NgModule({
     declarations: components,
     exports: components,
-    imports: [ ...commonModules, DataSharedModule, FileBrowseModule, FileDetailsModule ],
+    imports: [...commonModules, DataSharedModule, FileBrowseModule, FileDetailsModule],
     entryComponents: [
         DeleteContainerDialogComponent,
         FileGroupCreateFormComponent,
+        DownloadFileGroupDialogComponent,
     ],
 })
 export class DataModule {
