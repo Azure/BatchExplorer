@@ -132,6 +132,8 @@ export class SubmitMarketApplicationComponent implements OnInit {
 
     public createForms() {
         let parameterKeys = Object.keys(this.jobTemplate.parameters);
+        let parameterKeys2 = Object.keys(this.poolTemplate.parameters);
+
         let fg = {};
         for (let key of parameterKeys) {
             if ("defaultValue" in this.jobTemplate.parameters[key]) {
@@ -141,12 +143,23 @@ export class SubmitMarketApplicationComponent implements OnInit {
                 fg[key] = new FormControl();
             }
         }
-        this.jobFormGroup = this.formBuilder.group(fg);
+        for (let key of parameterKeys2) {
+            if ("defaultValue" in this.poolTemplate.parameters[key]) {
+                const defaultValue = String(this.poolTemplate.parameters[key].defaultValue);
+                fg[key] = new FormControl(defaultValue);
+            } else {
+                fg[key] = new FormControl();
+            }
+        }
+        fg["pool"] = this.pickedPool;
 
+        this.jobFormGroup = this.formBuilder.group(fg);
+/*
         this.form = this.formBuilder.group({
             job: this.jobFormGroup,
             pool: this.pickedPool,
         });
+
         if (this._formValue) {
             this.form.setValue(this._formValue);
         }
@@ -157,7 +170,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
                     formParams: JSON.stringify(newFormValue),
                 },
             });
-        });
+        });*/
     }
 
     public getContainerFromFileGroup(fileGroup: string) {
