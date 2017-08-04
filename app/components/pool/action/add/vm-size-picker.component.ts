@@ -7,7 +7,7 @@ import { Subscription } from "rxjs";
 
 import { SpecCost, VmSize } from "app/models";
 import { PoolOsSources } from "app/models/forms";
-import { AccountService, PricingService, VmSizeService } from "app/services";
+import { PricingService, VmSizeService } from "app/services";
 import { StringUtils, prettyBytes } from "app/utils";
 
 const categoriesDisplayName = {
