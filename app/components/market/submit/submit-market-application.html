@@ -1,9 +1,8 @@
 <bl-scrollable>
-
-     {{ mode_state }}
+    {{ mode_state }}
     <div *ngIf="mode_state == 'None'">
-        <bl-complex-form [formGroup]="form" [submit]="submit" [hideFooter]="true" *ngIf="form">
-            <bl-form-page main-form-page [title]="title" [formGroup]="form">
+        <bl-complex-form [formGroup]="form" [hideFooter]="true">
+            <bl-form-page main-form-page [title]="title">
                 <bl-form-section title="Mode">
                     <ul>
                         <button style="margin:5px; width:200px" (click) = "mode_state = 'PoolNJob'" type="button" md-raised-button>new Pool + Job</button>
@@ -16,8 +15,8 @@
     </div>
 
     <div *ngIf="mode_state == 'PoolNJob'">
-        <bl-complex-form [formGroup]="form" [submit]="submit" [hideFooter]="true" *ngIf="form">
-            <bl-form-page main-form-page [title]="title" [formGroup]="form">
+        <bl-complex-form [formGroup]="form" [hideFooter]="true">
+            <bl-form-page main-form-page [title]="title">
                 <bl-form-section title="Mode">
                     <ul>
                         <button style="margin:5px; width:200px; background-color:#3e81b0;" (click) = "mode_state = 'PoolNJob'" type="button" md-raised-button>new Pool + Job</button>
@@ -27,9 +26,21 @@
                 </bl-form-section>
 
                 <bl-form-section title="Pool">
+                    <div *ngFor="let param of getParameters(poolTemplate)">
+                        <md-input-container class="form-element">
+                            <input mdInput type="text" name="name" [formControlName]="param" [placeholder]="param">
+                            <md-hint align="end">{{param}}</md-hint>
+                        </md-input-container>
+                    </div>
                 </bl-form-section>
 
                 <bl-form-section title="Job">
+                    <div *ngFor="let param of getParameters(jobTemplate)">
+                        <md-input-container class="form-element">
+                            <input mdInput type="text" name="name" [formControlName]="param" [placeholder]="param">
+                            <md-hint align="end">{{param}}</md-hint>
+                        </md-input-container>
+                    </div>
                 </bl-form-section>
 
             </bl-form-page>
@@ -37,8 +48,8 @@
     </div>
 
     <div *ngIf="mode_state == 'PoolOJob'">
-        <bl-complex-form [formGroup]="form" [submit]="submit" [hideFooter]="true" *ngIf="form">
-            <bl-form-page main-form-page [title]="title" [formGroup]="form">
+        <bl-complex-form [formGroup]="form" [hideFooter]="true">
+            <bl-form-page main-form-page [title]="title">
                 <bl-form-section title="Mode">
                     <ul>
                         <button style="margin:5px; width:200px" (click) = "mode_state = 'PoolNJob'" type="button" md-raised-button>new Pool + Job</button>
@@ -50,14 +61,20 @@
                     <bl-pool-picker [formControl]="pickedPool"></bl-pool-picker>
                 </bl-form-section>
                 <bl-form-section title="Job">
+                    <div *ngFor="let param of getParameters(jobTemplate)">
+                        <md-input-container class="form-element">
+                            <input mdInput type="text" name="name" [formControlName]="param" [placeholder]="param">
+                            <md-hint align="end">{{param}}</md-hint>
+                        </md-input-container>
+                    </div>
                 </bl-form-section>
             </bl-form-page>
         </bl-complex-form>
     </div>
 
     <div *ngIf="mode_state == 'Pool'">
-        <bl-complex-form [formGroup]="form" [submit]="submit" [hideFooter]="true" *ngIf="form">
-            <bl-form-page main-form-page [title]="title" [formGroup]="form">
+        <bl-complex-form [formGroup]="form" [hideFooter]="true">
+            <bl-form-page main-form-page [title]="title">
                 <bl-form-section title="Mode">
                     <ul>
                         <button style="margin:5px; width:200px" (click) = "mode_state = 'PoolNJob'" type="button"  md-raised-button>new Pool + Job</button>
@@ -66,10 +83,21 @@
                     </ul>
                 </bl-form-section>
                 <bl-form-section title="Pool">
+                    <div *ngFor="let param of getParameters(poolTemplate)">
+                        <md-input-container class="form-element">
+                            <input mdInput type="text" name="name" [formControlName]="param" [placeholder]="param">
+                            <md-hint align="end">{{param}}</md-hint>
+                        </md-input-container>
+                    </div>
                 </bl-form-section>
             </bl-form-page>
         </bl-complex-form>
     </div>
+
+    <button style="width:100px;background-color:#3e81b0;" (click) = "onSubmit()" type="button"  md-raised-button>Submit</button>
+
+
+
 
 
 

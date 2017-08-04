@@ -1,15 +1,18 @@
 import { Component, OnInit } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
 import { FormBuilder } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
+import { FormsModule } from "@angular/forms"
+import { ReactiveFormsModule } from "@angular/forms"
+import { FormGroup, FormControl } from "@angular/forms"
+
 
 import { NcjJobTemplate, NcjParameter, ServerError } from "app/models";
 import { NcjTemplateService, PythonRpcService } from "app/services";
 import { ObjectUtils, log } from "app/utils";
 import * as inflection from "inflection";
 import "./submit-market-application.scss";
-
+/*
 enum NcjParameterExtendedType {
     string = "string",
     int = "int",
@@ -17,7 +20,7 @@ enum NcjParameterExtendedType {
     fileInFileGroup = "file-in-file-group",
 }
 
-/*
+
 class NcjParameterWrapper {
     public type: NcjParameterExtendedType;
     /**
@@ -74,11 +77,92 @@ const ConventionNames = {
     selector: "bl-submit-market-application",
     templateUrl: "submit-market-application.html",
 })
-export class SubmitMarketApplicationComponent implements OnInit {
+export class SubmitMarketApplicationComponent {
     public static breadcrumb() {
         return { name: "Submit" };
     }
+    title;
+    form;
+    mode_state;
+    applicationId;
+    actionId;
+    jobTemplate;
+    poolTemplate;
+    pickedPool = new FormControl(null);
 
+    constructor(
+        public formBuilder: FormBuilder,
+        private pythonRpcService: PythonRpcService,
+        private route: ActivatedRoute,
+        private router: Router,
+        private templateService: NcjTemplateService) {
+             this.mode_state = "None";
+             this.form = new FormGroup({"a": new FormControl()});
+    }
+    ngOnInit() {
+        console.log("Form",this.form);
+        this.route.params.subscribe((params) => {
+            this.applicationId = params["applicationId"];
+            this.actionId = params["actionId"];
+            this.templateService.getTemplates(this.applicationId, this.actionId).subscribe((templates) => {
+                this.jobTemplate = templates.job;
+                this.poolTemplate = templates.pool;
+                this.title = `Run ${this.actionId} from ${this.applicationId}`
+                this.createForms();
+            });
+        });
+    }
+    createForms() {
+        let jobParameters = Object.keys(this.jobTemplate.parameters);
+        let poolParameters = Object.keys(this.poolTemplate.parameters);
+        let fg = {};
+        for (let key of jobParameters) {
+            if ("defaultValue" in this.jobTemplate.parameters[key]) {
+                const defaultValue = String(this.jobTemplate.parameters[key].defaultValue);
+                fg[key] = new FormControl(defaultValue);
+            } else {
+                fg[key] = new FormControl();
+            }
+        }
+        for (let key of poolParameters) {
+            if ("defaultValue" in this.poolTemplate.parameters[key]) {
+                const defaultValue = String(this.poolTemplate.parameters[key].defaultValue);
+                fg[key] = new FormControl(defaultValue);
+            } else {
+                fg[key] = new FormControl();
+            }
+        }
+        fg["pool"] = this.pickedPool;
+        this.form = new FormGroup(fg);
+    }
+    onSubmit(){
+        console.log("Form Submit",this.form.value);
+    }
+    getParameters(template){
+        if (!template){
+            return []
+        }
+        let parameterKeys = Object.keys(template.parameters);
+        return parameterKeys;
+        /*
+        let result = [];
+        for (let param of parameterKeys) {
+            let type = template.parameters[param].type;
+            if (template.parameters[param].metadata.advancedType){
+                type= template.parameters[param].metadata.advancedType;
+            }
+            result.push({ "key" : param, "val" : template.parameters[param], "type" : template.parameters[param].type});
+        }
+        return result;
+        */
+    }
+
+
+
+
+
+
+/*
     public NcjParameterExtendedType = NcjParameterExtendedType;
 
     //public jobNameParam: NcjParameterWrapper;
@@ -89,12 +173,11 @@ export class SubmitMarketApplicationComponent implements OnInit {
     public jobTemplate: NcjJobTemplate;
     public poolTemplate;
     form;
-    public jobFormGroup: FormGroup;
     public pickedPool = new FormControl(null);
     //public otherParameters: NcjParameterWrapper[];
     public error: ServerError;
 
-    private _formValue: any;
+
 
     private mode_state;
 
@@ -109,27 +192,32 @@ export class SubmitMarketApplicationComponent implements OnInit {
              this.form = new FormGroup({});
         }
 
-    public ngOnInit() {
+    ngOnInit() {
+        this.form = new FormGroup({"a": new FormControl()});
         this.route.params.subscribe((params) => {
             this.applicationId = params["applicationId"];
             this.actionId = params["actionId"];
-            this._updateTitle();
+            //this._updateTitle();
             this._getTemplates();
         });
-
-        this.route.queryParams.subscribe((params) => {
-            if (params.formParams) {
-                try {
-                    const value = JSON.parse(params.formParams);
-                    this._formValue = value;
-                    this.form.setValue(value);
-                } catch (e) {
-                    log.warn("Invalid form param. Not valid json.", params.formParams as any);
-                }
-            }
-        });
-
     }
+    getParameters(template){
+        if (!template){
+            return []
+        }
+        let parameterKeys = Object.keys(template.parameters);
+        let result = [];
+        for (let param of parameterKeys) {
+            let type = template.parameters[param].type;
+            if (template.parameters[param].metadata.advancedType){
+                type= template.parameters[param].metadata.advancedType;
+            }
+            result.push({ "key" : param, "val" : template.parameters[param], "type" : template.parameters[param].type});
+        }
+        return result;
+    }
+
+
 
     public createForms() {
         let parameterKeys = Object.keys(this.jobTemplate.parameters);
@@ -152,13 +240,17 @@ export class SubmitMarketApplicationComponent implements OnInit {
                 fg[key] = new FormControl();
             }
         }
-        fg["pool"] = this.pickedPool;
+        //fg["pool"] = this.pickedPool;
         this.form = new FormGroup(fg);
+
+
+
+
 
         //this.jobFormGroup = this.formBuilder.group(fg);
 
         //this.form = new FormGroup(fg);
-/*
+
         this.form = this.formBuilder.group({
             job: this.jobFormGroup,
             pool: this.pickedPool,
@@ -175,17 +267,20 @@ export class SubmitMarketApplicationComponent implements OnInit {
                 },
             });
         });
-        */
+
     }
 
     public getContainerFromFileGroup(fileGroup: string) {
         return fileGroup && `fgrp-${fileGroup}`;
     }
 
+    onSubmit(item){
+        console.log(item);
+    }
+
     @autobind()
     public submit() {
         this.error = null;
-        const jobParams = this.jobFormGroup.value;
         // RPC takes in Template JSON object and Parameter JSON object
         const obs = this.pythonRpcService.callWithAuth("submit-ncj-job", [this._buildJobTemplate(), jobParams]);
         obs.subscribe({
@@ -215,7 +310,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
         return template;
     }
 
-    /*
+
     private _parseParameters() {
         const parameters = this.jobTemplate.parameters;
         const otherParameters: any[] = [];
@@ -229,9 +324,10 @@ export class SubmitMarketApplicationComponent implements OnInit {
         }
         this.otherParameters = otherParameters;
     }
-    */
+
 
     private _updateTitle() {
         this.title = `Run ${this.actionId} from ${this.applicationId}`;
     }
+    */
 }
