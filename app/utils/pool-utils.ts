@@ -170,12 +170,14 @@ export class PoolUtils {
     }
 
     public static computePoolPrice(pool: Pool, cost: SpecCost, options: PoolPriceOptions = {}): PoolPrice {
+        if (!cost) {
+            return null;
+        }
         const count = PoolUtils._getPoolNodes(pool, options.target);
         const dedicatedCount = count.dedicated || 0;
         const lowPriCount = count.lowPri || 0;
 
         const lowPriDiscount = PoolUtils.isWindows(pool) ? LowPriDiscount.windows : LowPriDiscount.linux;
-        console.log("oo", pool, dedicatedCount, lowPriCount, lowPriDiscount);
 
         const dedicatedPrice = cost.amount * dedicatedCount;
         const lowPriPrice = cost.amount * lowPriCount * lowPriDiscount;

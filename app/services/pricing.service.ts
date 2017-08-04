@@ -113,10 +113,8 @@ export class PricingService {
      */
     public computePoolPrice(pool: Pool, options: PoolPriceOptions = {}): Observable<PoolPrice> {
         const os = PoolUtils.isWindows(pool) ? "windows" : "linux";
-        console.log("OS for pi", os);
         return this.getPrice(os, pool.vmSize).map((cost) => {
-            console.log("Got price", cost);
-            return PoolUtils.computePoolPrice(pool, cost, { target: true });
+            return PoolUtils.computePoolPrice(pool, cost, options);
         });
     }
 
