@@ -83,7 +83,6 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
 
     constructor(
         private vmSizeService: VmSizeService,
-        private accountService: AccountService,
         private pricingService: PricingService) {
     }
 

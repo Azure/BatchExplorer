@@ -140,7 +140,7 @@ export class PricingService {
             id: size,
             firstParty: [{
                 resourceId: data.ResourceId,
-                quantity: 744,
+                quantity: 1, // 1 hour
             }],
             thirdParty: [],
         };

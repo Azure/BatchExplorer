@@ -7,10 +7,10 @@ import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { DynamicForm } from "app/core";
 import { Pool } from "app/models";
-import { NodeFillType, SpecCost } from "app/models";
+import { NodeFillType } from "app/models";
 import { PoolCreateDto } from "app/models/dtos";
 import { CreatePoolModel, PoolOsSources, createPoolToData, poolToFormModel } from "app/models/forms";
-import { AccountService, PoolService, PricingService, VmSizeService } from "app/services";
+import { PoolService, PricingService, VmSizeService } from "app/services";
 import { Constants, NumberUtils } from "app/utils";
 
 @Component({
@@ -22,7 +22,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     public osType: "linux" | "windows" = "linux";
     public NodeFillType = NodeFillType;
 
-    public estimatedCost: string;
+    public estimatedCost: string = "-";
 
     private _osControl: FormControl;
     private _licenseControl: FormControl;
