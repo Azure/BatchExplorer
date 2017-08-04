@@ -4,8 +4,8 @@ import * as moment from "moment";
 import { Observable } from "rxjs";
 
 import { Headers, RequestOptions } from "@angular/http";
-import { SpecCost } from "app/models";
-import { SecureUtils, log } from "app/utils";
+import { Pool, SpecCost } from "app/models";
+import { PoolPrice, PoolPriceOptions, PoolUtils, SecureUtils, log } from "app/utils";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
@@ -40,10 +40,14 @@ interface ResourceSpec {
 
 const specCostUrl = "https://s2.billing.ext.azure.com/api/Billing/Subscription/GetSpecsCosts";
 
+export type OsType = "linux" | "windows";
+
 @Injectable()
 export class PricingService {
     private hardwareMap: Observable<HardwareMap>;
     private _hardwareMap = new BehaviorSubject<HardwareMap>(null);
+
+    private _prices: StringMap<List<SpecCost>> = {};
 
     constructor(
         private arm: ArmHttpService,
@@ -63,10 +67,14 @@ export class PricingService {
      * @param region Account location
      * @param os OS for the VM.
      */
-    public getPrices(region: string, os: "linux" | "windows"): Observable<List<SpecCost>> {
-        return this._getResourceFor(region, os).flatMap((specs) => {
+    public getPrices(os: OsType): Observable<List<SpecCost>> {
+        return this.accountService.currentAccount.flatMap((account) => {
+            const key = `${account.location}-${os}`;
 
-            return this.accountService.currentAccount.flatMap((account) => {
+            if (key in this._prices) {
+                return Observable.of(this._prices[key]);
+            }
+            return this._getResourceFor(account.location, os).flatMap((specs) => {
                 const subId = account.subscription.subscriptionId;
 
                 const options = new RequestOptions();
@@ -86,9 +94,28 @@ export class PricingService {
                         log.error("Unexpected format returned from GetSpecsCosts", response.json());
                         return [];
                     }
-                    return List<SpecCost>(costs.map(x => new SpecCost(x))) as any;
+                    const prices = this._prices[key] = List<SpecCost>(costs.map(x => new SpecCost(x)));
+                    return prices as any;
                 });
             });
+        });
+    }
+
+    public getPrice(os: OsType, vmSize: string): Observable<SpecCost> {
+        return this.getPrices(os).map((prices) => {
+            return prices.filter(x => x.id === vmSize).first();
+        });
+    }
+
+    /**
+     * Compute the price of a pool
+     * @param pool Pool
+     */
+    public computePoolPrice(pool: Pool, options: PoolPriceOptions = {}): Observable<PoolPrice> {
+        const os = PoolUtils.isWindows(pool) ? "windows" : "linux";
+        return this.getPrice(os, pool.vmSize).map((cost) => {
+            console.log("Got price", cost);
+            return PoolUtils.computePoolPrice(pool, cost, { target: true });
         });
     }
 

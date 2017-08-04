@@ -201,10 +201,8 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     }
 
     private _loadPrices() {
-        this.accountService.currentAccount.flatMap((account) => {
-            const os = this.osType || "linux";
-            return this.pricingService.getPrices(account.location, os);
-        }).subscribe((prices: List<SpecCost>) => {
+        const os = this.osType || "linux";
+        return this.pricingService.getPrices(os).subscribe((prices: List<SpecCost>) => {
             const map: StringMap<SpecCost> = {};
             prices.forEach(x => map[x.id] = x);
             this.prices = Map(map);
