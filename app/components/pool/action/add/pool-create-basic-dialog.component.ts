@@ -83,6 +83,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
 
         this.form.valueChanges.subscribe((value) => {
             if (!this._lastFormValue
+                || value.os !== this._lastFormValue.os
                 || value.vmSize !== this._lastFormValue.vmSize
                 || this._lastFormValue.scale !== value.scale) {
                 this._updateEstimatedPrice();
@@ -130,57 +131,16 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     private _updateEstimatedPrice() {
         const value: CreatePoolModel = this.form.value;
 
-        console.log("Value", value);
-        console.log("Value", !value.vmSize, !this.osType);
         if (!value.vmSize || !this.osType) {
             return;
         }
-        // const scale = this.form.value.scale || {};
-        // const imaginaryPool = new Pool({
-        //     currentDedicatedNodes: scale.targetDedicatedNodes,
-        //     currentLowPriorityNodes: scale.targetLowPriorityNodes,
-        //     virtualMachineConfiguration: value.os.virtualMachineConfiguration,
-        //     cloudServiceConfiguration: value.os.cloudServiceConfiguration,
-        // } as any);
         const imaginaryPool = createPoolToData(this.form.value);
         return this.pricingService.computePoolPrice(imaginaryPool as any, { target: true }).subscribe((cost) => {
-            console.log("Returned price", cost);
             if (cost) {
                 this.estimatedCost = `${cost.unit} ${NumberUtils.pretty(cost.total)}`;
             } else {
                 this.estimatedCost = "-";
             }
         });
-    }
-
-    // private _calculateEstimatedPrice() {
-    //     const cost = this._pickedSpecCost;
-    //     const totalNodes = this._nodesMultiplier;
-    //     if (!cost || totalNodes === null) {
-    //         this.estimatedCost = `-`;
-    //         return;
-    //     }
-
-    //     const amount = cost.amount * totalNodes;
-    //     this.estimatedCost = `${cost.currencyCode} ${NumberUtils.pretty(amount)}`;
-    // }
-
-    private get _nodesMultiplier(): number {
-        const scale = this.form.value.scale;
-        if (!scale) {
-            return 0;
-        }
-
-        if (scale.enableAutoScale) {
-            return null;
-        }
-
-        let lowPriMultipler: number;
-        if (this.osType === "linux") { // Linux gets 80% discount for low pri, windows gets 60%
-            lowPriMultipler = 0.2;
-        } else {
-            lowPriMultipler = 0.4;
-        }
-        return scale.targetDedicatedNodes + scale.targetLowPriorityNodes * lowPriMultipler;
     }
 }
