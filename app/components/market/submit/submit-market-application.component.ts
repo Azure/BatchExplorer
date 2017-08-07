@@ -107,15 +107,24 @@ export class SubmitMarketApplicationComponent {
             this.templateService.getTemplates(this.applicationId, this.actionId).subscribe((templates) => {
                 this.jobTemplate = templates.job;
                 this.poolTemplate = templates.pool;
+                console.log("JobTemplate",this.jobTemplate);
+                console.log("PoolTemplate",this.poolTemplate);
                 this.title = `Run ${this.actionId} from ${this.applicationId}`
                 this.createForms();
             });
         });
     }
     createForms() {
-        let jobParameters = Object.keys(this.jobTemplate.parameters);
-        let poolParameters = Object.keys(this.poolTemplate.parameters);
+        let jobParameters = [];
+        let poolParameters = [];
+        if (this.jobTemplate && this.jobTemplate.parameters){
+            jobParameters = Object.keys(this.jobTemplate.parameters);
+        }
+        if (this.poolTemplate && this.poolTemplate.parameters){
+            poolParameters = Object.keys(this.poolTemplate.parameters);
+        }
         let fg = {};
+
         for (let key of jobParameters) {
             if ("defaultValue" in this.jobTemplate.parameters[key]) {
                 const defaultValue = String(this.jobTemplate.parameters[key].defaultValue);
@@ -132,18 +141,44 @@ export class SubmitMarketApplicationComponent {
                 fg[key] = new FormControl();
             }
         }
-        fg["pool"] = this.pickedPool;
+        fg["poolpick"] = this.pickedPool;
+
         this.form = new FormGroup(fg);
     }
     onSubmit(){
         console.log("Form Submit",this.form.value);
     }
-    getParameters(template){
-        if (!template){
-            return []
+    public getContainerFromFileGroup(fileGroup: string) {
+        return fileGroup && `fgrp-${fileGroup}`;
+    }
+    getType(param){
+        if (this.getParameters(this.jobTemplate).includes(param)){
+            if (this.jobTemplate.parameters[param].metadata.advancedType){
+                return this.jobTemplate.parameters[param].metadata.advancedType;
+            }
+            else if(this.jobTemplate.parameters[param].allowedValues){
+                return "dropdown";
+            }
+            return this.jobTemplate.parameters[param].type;
         }
-        let parameterKeys = Object.keys(template.parameters);
-        return parameterKeys;
+        else if (this.getParameters(this.poolTemplate).includes(param)){
+            if (this.poolTemplate.parameters[param].metadata.advancedType){
+                return this.poolTemplate.parameters[param].metadata.advancedType;
+            }
+            else if(this.poolTemplate.parameters[param].allowedValues){
+                return "dropdown";
+            }
+            return this.poolTemplate.parameters[param].type;
+        }
+        else{
+            return "string";
+        }
+    }
+    getParameters(template){
+        if (!template || !template.parameters){
+            return [];
+        }
+        return Object.keys(template.parameters);
         /*
         let result = [];
         for (let param of parameterKeys) {
