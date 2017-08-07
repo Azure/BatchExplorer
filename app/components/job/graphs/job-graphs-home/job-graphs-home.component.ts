@@ -61,7 +61,6 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
         this.loading = true;
 
         return Observable.fromPromise(this._tryLoadTasksFromCache(force)).flatMap((success) => {
-            console.log("Success...", success);
             if (success) {
                 this.loading = false;
                 return Observable.of(null);
