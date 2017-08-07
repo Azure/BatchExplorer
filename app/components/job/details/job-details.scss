@@ -1,3 +1,5 @@
+@import "app/styles/variables";
+
 md-card.overview {
     padding: 0 !important;
     display: flex;
@@ -12,10 +14,36 @@ md-card.overview {
     }
 
     > .tile {
-        border-left: 1px solid #d5d5d5;
+        border-left: 1px solid $border-color;
     }
 }
 
+bl-job-details {
+    .job-graphs-link {
+        border-bottom: 1px solid $border-color;
+        padding: 5px;
+        text-align: center;
+        cursor: pointer;
+
+        &:hover {
+            background: $whitesmoke-darker;
+        }
+
+        .fa {
+            font-size: 24px;
+            // color: map-get($primary, 300);
+            margin: 3px;
+        }
+
+        .fa-line-chart {
+            color: map-get($warn, 500);
+        }
+
+        .fa-area-chart {
+            color: map-get($success, 500);
+        }
+    }
+}
 bl-job-progress-status {
     display: block;
     padding-top: 5px;

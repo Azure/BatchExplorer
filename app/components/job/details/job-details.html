@@ -21,6 +21,13 @@
                 </div>
             </div>
             <div class="tile">
+                <div class="job-graphs-link" [routerLink]="['/jobs', job.id, 'graphs']">
+                    <i class="fa fa-line-chart"></i>
+                    <i class="fa fa-area-chart"></i>
+                    <div>Job statistics</div>
+                </div>
+            </div>
+            <div class="tile">
                 <bl-job-progress-status [job]="job" [poolId]="job.poolId"></bl-job-progress-status>
             </div>
         </md-card>
