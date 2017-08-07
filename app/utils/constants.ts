@@ -159,3 +159,8 @@ export const PollRate = {
  * Maximum number of tasks the recent tasks attribute can have.
  */
 export const nodeRecentTaskLimit = 10;
+
+export const LowPriDiscount = {
+    windows: 0.40, // 60%
+    linux: 0.20,   // 80%
+};

@@ -51,7 +51,8 @@
             </div>
         </bl-form-section>
 
-        <bl-form-section title="Choose one or multiple application licenses" subtitle="Select application licenses to be installed on each compute node in the pool" *ngIf="renderingSkuSelected">
+        <bl-form-section title="Choose one or multiple application licenses" subtitle="Select application licenses to be installed on each compute node in the pool"
+            *ngIf="renderingSkuSelected">
             <div class="form-element">
                 <bl-app-license-picker formControlName="appLicenses"></bl-app-license-picker>
                 <bl-error controlName="appLicenses" code="required">You must agree to have read each of the end user license agreements by selecting the checkbox</bl-error>
@@ -91,4 +92,7 @@
             </bl-form-picker>
         </bl-form-section>
     </bl-form-page>
+    <div blFormSummary>
+        <div>Estimated cost: {{estimatedCost}}/h</div>
+    </div>
 </bl-complex-form>
