@@ -25,7 +25,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     public editing: boolean;
     public title: string = "Create file group";
     public description: string = "Upload files into a managed storage container that you can use " +
-        "for resource files in your jobs and tasks";
+    "for resource files in your jobs and tasks";
 
     constructor(
         public sidebarRef: SidebarRef<FileGroupCreateFormComponent>,
@@ -44,8 +44,8 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                 Validators.maxLength(validation.maxLength.fileGroup),
                 Validators.pattern(validation.regex.fileGroup),
             ], [
-                this._validateFileGroupName.bind(this),
-            ]],
+                    this._validateFileGroupName.bind(this),
+                ]],
             folder: this.folderControl,
             includeSubDirectories: [true],
             options: [null, []],
@@ -89,17 +89,10 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     }
 
     @autobind()
-    public selectFolder(changeEvent: Event) {
-        const element = changeEvent.srcElement as any;
+    public selectFolder(folder: string) {
         this.folderControl.markAsTouched();
-
-        if (element.files.length > 0) {
-            this.folder = element.files[0].path;
-            this.folderControl.setValue(this.folder);
-        } else {
-            this.folder = null;
-            this.folderControl.setValue(null);
-        }
+        this.folder = folder;
+        this.folderControl.setValue(folder);
     }
 
     public hasValidFolder(): boolean {
@@ -112,7 +105,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
      * the existing group and not creating a new one.
      */
     private _validateFileGroupName(control: FormControl): Promise<any> {
-        return new Promise ((resolve) => {
+        return new Promise((resolve) => {
             setTimeout(() => {
                 const containerName = `${this.storageService.ncjFileGroupPrefix}${control.value}`;
                 this.storageService.getContainerOnce(containerName).subscribe({
@@ -125,8 +118,8 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                         resolve(null);
                     },
                 });
-            // timeout for allowing the user to type more than one character.
-            // async validation fires after every kepress.
+                // timeout for allowing the user to type more than one character.
+                // async validation fires after every kepress.
             }, 500);
         });
     }

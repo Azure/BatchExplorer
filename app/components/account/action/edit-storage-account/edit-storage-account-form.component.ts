@@ -38,7 +38,7 @@ export class EditStorageAccountFormComponent {
         const dto = new AccountPatchDto({ autoStorage: { storageAccountId: this.storageAccountId.value } });
         const obs = this.accountService.patch(this.account.id, dto);
         obs.subscribe(() => {
-            this.accountService.getOnce(this.account.id);
+            this.accountService.refresh();
         });
         return obs;
     }
