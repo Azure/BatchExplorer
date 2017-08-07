@@ -1,10 +1,10 @@
 export class NumberUtils {
-    public static pretty(value: number, maxDecimals = 2): string {
-        const int = Math.floor(value);
-        const decimals = value - int;
-        const intStr = int.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-        const decimalStr = Math.round(decimals * 10 ** maxDecimals);
-
-        return `${intStr}.${decimalStr}`;
+    public static pretty(value: number, decimals = 2): string {
+        const [intPart, decPart] = value.toFixed(decimals).split(".");
+        const formated = intPart.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        if (value % 1 === 0) {
+            return formated;
+        }
+        return `${formated}.${decPart}`;
     }
 }

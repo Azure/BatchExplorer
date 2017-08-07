@@ -1,6 +1,6 @@
 import { NumberUtils } from "app/utils";
 
-fdescribe("NumberUtils", () => {
+describe("NumberUtils", () => {
     it("#pretty should put , between thousands", () => {
         expect(NumberUtils.pretty(123)).toEqual("123");
         expect(NumberUtils.pretty(1234)).toEqual("1,234");
