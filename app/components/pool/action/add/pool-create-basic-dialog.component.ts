@@ -9,9 +9,9 @@ import { DynamicForm } from "app/core";
 import { Pool } from "app/models";
 import { NodeFillType } from "app/models";
 import { PoolCreateDto } from "app/models/dtos";
-import { PoolOsSources, createPoolToData, poolToFormModel } from "app/models/forms";
-import { PoolService, VmSizeService } from "app/services";
-import { Constants } from "app/utils";
+import { CreatePoolModel, PoolOsSources, createPoolToData, poolToFormModel } from "app/models/forms";
+import { PoolService, PricingService, VmSizeService } from "app/services";
+import { Constants, NumberUtils } from "app/utils";
 
 @Component({
     selector: "bl-pool-create-basic-dialog",
@@ -22,16 +22,21 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     public osType: "linux" | "windows" = "linux";
     public NodeFillType = NodeFillType;
 
+    public estimatedCost: string = "-";
+
     private _osControl: FormControl;
     private _licenseControl: FormControl;
     private _renderingSkuSelected: boolean = false;
     private _sub: Subscription;
+
+    private _lastFormValue: CreatePoolModel;
 
     constructor(
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<PoolCreateBasicDialogComponent>,
         private poolService: PoolService,
         vmSizeService: VmSizeService,
+        private pricingService: PricingService,
         private notificationService: NotificationService) {
         super(PoolCreateDto);
 
@@ -75,6 +80,16 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
                 }
             }
         });
+
+        this.form.valueChanges.subscribe((value) => {
+            if (!this._lastFormValue
+                || value.os !== this._lastFormValue.os
+                || value.vmSize !== this._lastFormValue.vmSize
+                || this._lastFormValue.scale !== value.scale) {
+                this._updateEstimatedPrice();
+            }
+            this._lastFormValue = value;
+        });
     }
 
     public ngOnDestroy() {
@@ -111,5 +126,21 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
 
     public get renderingSkuSelected(): boolean {
         return this._renderingSkuSelected;
+    }
+
+    private _updateEstimatedPrice() {
+        const value: CreatePoolModel = this.form.value;
+
+        if (!value.vmSize || !this.osType) {
+            return;
+        }
+        const imaginaryPool = createPoolToData(this.form.value);
+        return this.pricingService.computePoolPrice(imaginaryPool as any, { target: true }).subscribe((cost) => {
+            if (cost) {
+                this.estimatedCost = `${cost.unit} ${NumberUtils.pretty(cost.total)}`;
+            } else {
+                this.estimatedCost = "-";
+            }
+        });
     }
 }

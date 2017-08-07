@@ -7,7 +7,7 @@ import { Subscription } from "rxjs";
 
 import { SpecCost, VmSize } from "app/models";
 import { PoolOsSources } from "app/models/forms";
-import { AccountService, PricingService, VmSizeService } from "app/services";
+import { PricingService, VmSizeService } from "app/services";
 import { StringUtils, prettyBytes } from "app/utils";
 
 const categoriesDisplayName = {
@@ -83,7 +83,6 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
 
     constructor(
         private vmSizeService: VmSizeService,
-        private accountService: AccountService,
         private pricingService: PricingService) {
     }
 
@@ -201,10 +200,8 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
     }
 
     private _loadPrices() {
-        this.accountService.currentAccount.flatMap((account) => {
-            const os = this.osType || "linux";
-            return this.pricingService.getPrices(account.location, os);
-        }).subscribe((prices: List<SpecCost>) => {
+        const os = this.osType || "linux";
+        return this.pricingService.getPrices(os).subscribe((prices: List<SpecCost>) => {
             const map: StringMap<SpecCost> = {};
             prices.forEach(x => map[x.id] = x);
             this.prices = Map(map);

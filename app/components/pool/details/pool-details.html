@@ -19,6 +19,10 @@
             </div>
             <div style="padding: 10px">
                 <bl-pool-nodes-preview [pool]="pool" size="large"></bl-pool-nodes-preview>
+
+                <div class="estimated-cost" title="Estimated cost of this pool at this current state">
+                    {{estimatedCost}}/h
+                </div>
             </div>
         </md-card>
         <bl-pool-error-display [pool]="pool"></bl-pool-error-display>
