@@ -1,12 +1,14 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { List } from "immutable";
+import { Observable } from "rxjs";
 
 import { Job, Task, TaskState } from "app/models";
 import { CacheDataService, JobParams, JobService, TaskService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
 import { log } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
+import { autobind } from "core-decorators";
 import "./job-graphs-home.scss";
 
 enum AvailableGraph {
@@ -51,32 +53,38 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
             this.jobId = params["jobId"];
             this._data.params = { id: this.jobId };
             this._data.fetch();
-            this.updateTasks();
+            this.updateTasks().subscribe();
         });
     }
 
-    public async updateTasks() {
+    public updateTasks(force = false): Observable<any> {
         this.loading = true;
 
-        const success = await this._tryLoadTasksFromCache();
-        if (success) {
-            this.loading = false;
-            return;
-        }
-        this.taskService.listAll(this.jobId, {
-            select: "id,executionInfo",
-            filter: FilterBuilder.prop("state").eq(TaskState.completed).toOData(),
-            pageSize: 1000,
-        }).subscribe({
-            next: (tasks) => {
+        return Observable.fromPromise(this._tryLoadTasksFromCache(force)).flatMap((success) => {
+            console.log("Success...", success);
+            if (success) {
                 this.loading = false;
-                this.tasks = tasks;
-                this.cacheDataService.cache(this._cacheKey, tasks.toJS());
-            },
-            error: (error) => {
-                log.error(`Error retrieving all tasks for job ${this.job.id}`, error);
-            },
-        });
+                return Observable.of(null);
+            }
+            const obs = this.taskService.listAll(this.jobId, {
+                select: "id,executionInfo",
+                filter: FilterBuilder.prop("state").eq(TaskState.completed).toOData(),
+                pageSize: 1000,
+            });
+
+            obs.subscribe({
+                next: (tasks) => {
+                    this.loading = false;
+                    this.tasks = tasks;
+                    this.cacheDataService.cache(this._cacheKey, tasks.toJS());
+                },
+                error: (error) => {
+                    log.error(`Error retrieving all tasks for job ${this.job.id}`, error);
+                },
+            });
+            return obs;
+
+        }).share();
     }
 
     public ngOnDestroy() {
@@ -86,6 +94,11 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
     public updateGraph(newGraph: AvailableGraph) {
         this.currentGraph = newGraph;
         this._updateDescription();
+    }
+
+    @autobind()
+    public refresh() {
+        return this.updateTasks(true);
     }
 
     private _updateDescription() {
@@ -106,7 +119,10 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
         return `/jobs-graphs/${this.jobId}/tasks`;
     }
 
-    private async _tryLoadTasksFromCache() {
+    private async _tryLoadTasksFromCache(force = false) {
+        if (force) {
+            return false;
+        }
         const data = await this.cacheDataService.read(this._cacheKey);
         if (data) {
             this.tasks = List(data.map(x => new Task(x)));

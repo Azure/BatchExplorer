@@ -5,6 +5,8 @@
         </h1>
         <span class="description">{{description}}</span>
     </div>
+
+    <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
     <div class="buttons">
         <div class="btn" (click)="updateGraph(AvailableGraph.runningTime)" [class.active]="currentGraph === AvailableGraph.runningTime">
             Tasks running time
