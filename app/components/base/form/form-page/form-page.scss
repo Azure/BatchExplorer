@@ -1,6 +1,7 @@
 @import "app/styles/variables";
 
 .form-section {
+    $step-index-size: 30px;
     margin-left: 8px;
 
     > .section-title {
@@ -9,9 +10,10 @@
 
 
         > .step-index {
-            width: 30px;
-            height: 30px;
-            line-height: 30px;
+            width: $step-index-size;
+            height: $step-index-size;
+            flex: 0 0 $step-index-size;
+            line-height: $step-index-size;
             text-align: center;
             background: map-get($primary, 300);
             border-radius: 99%;

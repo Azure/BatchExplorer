@@ -1,17 +1,18 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { autobind } from "core-decorators";
 
 import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";
 import { SidebarManager } from "app/components/base/sidebar";
 import { AccountResource, BatchApplication } from "app/models";
 import { AccountService } from "app/services";
+import { Subscription } from "rxjs";
 
 @Component({
     selector: "bl-application-error-display",
     templateUrl: "application-error-display.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ApplicationErrorDisplayComponent implements OnInit {
+export class ApplicationErrorDisplayComponent implements OnInit, OnDestroy {
     @Input()
     public application: BatchApplication;
 
@@ -20,6 +21,7 @@ export class ApplicationErrorDisplayComponent implements OnInit {
     }
 
     private _batchAccount: AccountResource;
+    private _sub: Subscription;
 
     constructor(
         private accountService: AccountService,
@@ -28,20 +30,23 @@ export class ApplicationErrorDisplayComponent implements OnInit {
     }
 
     public get hasLinkedStorageAccountIssue(): boolean {
-        if (this._batchAccount) {
-            return !this._batchAccount.properties
-                || !this._batchAccount.properties.autoStorage
-                || !this._batchAccount.properties.autoStorage.storageAccountId;
+        if (!this._batchAccount) {
+            return false;
         }
-
-        return false;
+        return !this._batchAccount.properties
+            || !this._batchAccount.properties.autoStorage
+            || !this._batchAccount.properties.autoStorage.storageAccountId;
     }
 
     public ngOnInit() {
-        this.accountService.currentAccount.subscribe((account) => {
+        this._sub = this.accountService.currentAccount.subscribe((account) => {
             this._batchAccount = account;
             this.changeDetector.markForCheck();
         });
+    }
+
+    public ngOnDestroy() {
+        this._sub.unsubscribe();
     }
 
     @autobind()

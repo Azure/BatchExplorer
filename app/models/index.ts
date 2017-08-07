@@ -68,6 +68,7 @@ export * from "./task-dependency";
 export * from "./task-execution-information";
 export * from "./task-exit-conditions";
 export * from "./task-scheduling-policy";
+export * from "./task-output-file";
 export * from "./user-account";
 export * from "./user-identity";
 export * from "./virtual-machine-configuration";

@@ -1,4 +1,4 @@
-import { Pool } from "app/models";
+import { Pool, SpecCost } from "app/models";
 import { PoolUtils } from "app/utils";
 
 describe("PoolUtils", () => {
@@ -152,5 +152,66 @@ describe("PoolUtils", () => {
             expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsName(vm3Pool))).toBe("windows");
             expect(PoolUtils.getComputePoolOsIcon(PoolUtils.getOsName(vm4Pool))).toBe("linux");
         });
+    });
+
+    it("#poolNodesStatus()", () => {
+        const status1 = PoolUtils.poolNodesStatus(new Pool({ allocationState: "resizing" }), 1, 4);
+        expect(status1).toEqual("1 → 4");
+
+        const status2 = PoolUtils.poolNodesStatus(new Pool({ allocationState: "steady" }), 4, 0);
+        expect(status2).toEqual("4");
+
+        const status3 = PoolUtils.poolNodesStatus(new Pool({ allocationState: "steady", resizeErrors: [{}] }), 1, 10);
+        expect(status3).toEqual("1 → 10");
+    });
+
+    describe("#computePoolPrice()", () => {
+        const cost = new SpecCost({
+            id: "standard_a1",
+            amount: 12,
+            currencyCode: "USD",
+            statusCode: 0,
+        });
+
+        it("works for a windows pool", () => {
+            const windowsConfig = {
+                imageReference: { publisher: "Microsoft", offer: "windows", sku: "2016", version: "*" },
+                nodeAgentSKUId: "agent.windows",
+            };
+
+            const pool = new Pool({
+                virtualMachineConfiguration: windowsConfig,
+                currentDedicatedNodes: 2,
+                currentLowPriorityNodes: 10,
+            });
+            const poolCost = PoolUtils.computePoolPrice(pool, cost);
+            expect(poolCost).toEqual({
+                dedicated: 24,
+                lowPri: 120 * 0.4, // AT a 60% discount
+                total: 24 + 120 * 0.4,
+                unit: "USD",
+            });
+        });
+
+        it("works for a linux pool", () => {
+            const windowsConfig = {
+                imageReference: { publisher: "Openlogic", offer: "Centos", sku: "7.2", version: "*" },
+                nodeAgentSKUId: "agent.centos",
+            };
+
+            const pool = new Pool({
+                virtualMachineConfiguration: windowsConfig,
+                currentDedicatedNodes: 2,
+                currentLowPriorityNodes: 10,
+            });
+            const poolCost = PoolUtils.computePoolPrice(pool, cost);
+            expect(poolCost).toEqual({
+                dedicated: 24,
+                lowPri: 120 * 0.2, // AT a 60% discount
+                total: 24 + 120 * 0.2,
+                unit: "USD",
+            });
+        });
+
     });
 });

@@ -85,7 +85,6 @@ export class AccountService {
         this.currentAccount = this._currentAccountId.flatMap((id) => {
             return this._currentAccount
                 .filter(x => x && id && x.account && x.account.id.toLowerCase() === id.toLowerCase())
-                .first()
                 .map(x => x && x.account);
         });
     }

@@ -1,7 +1,11 @@
 // tslint:disable: object-literal-sort-keys
 import { Routes } from "@angular/router";
 
+<<<<<<< HEAD
 import { ChooseActionComponent } from "app/components/market/application-action";
+=======
+import { JobGraphsComponent } from "app/components/job/graphs/job-graphs-home";
+>>>>>>> b1fa56d1f7ac0364a7ed6eca24e91ffb8e6f5e15
 import { Constants } from "app/utils";
 import { AccountDefaultComponent, AccountDetailsComponent } from "./components/account/details";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
@@ -93,6 +97,10 @@ export const routes: Routes = [
             { path: "", component: TaskDefaultComponent }, // jobs/{job.id}/tasks
             { path: ":id", component: TaskDetailsComponent }, // jobs/{job.id}/tasks/{task.id}
         ],
+    },
+    {
+        path: "jobs/:jobId/graphs",
+        component: JobGraphsComponent,
     },
     {
         path: "pools/:poolId/nodes/:nodeId/files/:filename",

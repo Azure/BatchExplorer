@@ -193,7 +193,7 @@ export class DownloadButtonComponent extends BaseButton {
         return this._enabled;
     }
 
-    private _enabled: boolean;
+    private _enabled: boolean = true;
 }
 
 @Component({
