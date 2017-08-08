@@ -1,7 +1,7 @@
-import { Component} from "@angular/core";
+import { Component } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { FormGroup, FormControl } from "@angular/forms"
+import { FormControl, FormGroup } from "@angular/forms"
 import { NcjTemplateService, PythonRpcService } from "app/services";
 import "./submit-market-application.scss";
 
@@ -33,7 +33,7 @@ export class SubmitMarketApplicationComponent {
              this.form = new FormGroup({"a": new FormControl()});
     }
     ngOnInit() {
-        console.log("Form",this.form);
+        console.log("Form", this.form);
         this.route.params.subscribe((params) => {
             this.applicationId = params["applicationId"];
             this.actionId = params["actionId"];
@@ -42,7 +42,7 @@ export class SubmitMarketApplicationComponent {
                 this.poolTemplate = templates.pool;
                 console.log("JobTemplate",this.jobTemplate);
                 console.log("PoolTemplate",this.poolTemplate);
-                this.title = `Run ${this.actionId} from ${this.applicationId}`
+                this.title = `Run ${this.actionId} from ${this.applicationId}`;
                 this.createForms();
             });
         });
@@ -78,7 +78,7 @@ export class SubmitMarketApplicationComponent {
     }
 
     runJobWithPool(expandedPoolTemplate, jobInputs){
-        delete expandedPoolTemplate.id
+        delete expandedPoolTemplate.id;
         this.jobTemplate.job.properties.poolInfo = {
             autoPoolSpecification: {
             autoPoolIdPrefix: "jobname",
@@ -86,7 +86,7 @@ export class SubmitMarketApplicationComponent {
             keepAlive: false,
             pool: expandedPoolTemplate
             }
-        }
+        };
         console.log(this.jobTemplate);
         const obs = this.pythonRpcService.callWithAuth("submit-ncj-job", [this.jobTemplate, jobInputs]);
         obs.subscribe({
@@ -108,7 +108,7 @@ export class SubmitMarketApplicationComponent {
                 poolInputs[param] = this.form.controls[param].value;
             }
         }
-        if (this.mode_state == "PoolNJob"){
+        if (this.mode_state === "PoolNJob"){
             const obs = this.pythonRpcService.callWithAuth("get-ncj-pool", [this.poolTemplate,poolInputs]);
             obs.subscribe({
                 next: (data) => this.runJobWithPool(data, jobInputs),
@@ -116,7 +116,7 @@ export class SubmitMarketApplicationComponent {
             });
             console.log(this.pickedPool.value);
         }
-        else if (this.mode_state == "PoolOJob"){
+        else if (this.mode_state === "PoolOJob"){
             this.jobTemplate.job.properties.poolInfo = this.pickedPool.value;
             console.log(this.pickedPool.value);
             console.log(this.jobTemplate);
@@ -126,11 +126,11 @@ export class SubmitMarketApplicationComponent {
                 error: (err) => console.log("Error: ",err),
             });
         }
-        else if (this.mode_state == "Pool"){
+        else if (this.mode_state === "Pool"){
             const obs = this.pythonRpcService.callWithAuth("create-ncj-pool", [this.poolTemplate, poolInputs]);
             obs.subscribe({
                 next: (data) => this._redirectToPool(),
-                error: (err) => console.log("Error: ",err),
+                error: (err) => console.log("Error: ", err),
             });
         }
 
@@ -151,7 +151,7 @@ export class SubmitMarketApplicationComponent {
             if (this.jobTemplate.parameters[param].metadata.advancedType){
                 return this.jobTemplate.parameters[param].metadata.advancedType;
             }
-            else if(this.jobTemplate.parameters[param].allowedValues){
+            else if (this.jobTemplate.parameters[param].allowedValues){
                 return "dropdown";
             }
             return this.jobTemplate.parameters[param].type;
@@ -160,7 +160,7 @@ export class SubmitMarketApplicationComponent {
             if (this.poolTemplate.parameters[param].metadata.advancedType){
                 return this.poolTemplate.parameters[param].metadata.advancedType;
             }
-            else if(this.poolTemplate.parameters[param].allowedValues){
+            else if (this.poolTemplate.parameters[param].allowedValues){
                 return "dropdown";
             }
             return this.poolTemplate.parameters[param].type;
