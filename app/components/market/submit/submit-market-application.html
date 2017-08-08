@@ -1,5 +1,4 @@
 <bl-scrollable>
-    {{ mode_state }}
     <div *ngIf="mode_state == 'None'">
         <bl-complex-form [formGroup]="form" [hideFooter]="true">
             <bl-form-page main-form-page [title]="title">
@@ -214,7 +213,7 @@
         </bl-complex-form>
     </div>
 
-    <button style="width:100px;background-color:#3e81b0;" (click) = "onSubmit()" type="button"  md-raised-button>Submit</button>
+    <button *ngIf="mode_state!='None'" style="width:100px;background-color:#3e81b0;" (click) = "onSubmit()" type="button"  md-raised-button>Submit</button>
 
 
 
