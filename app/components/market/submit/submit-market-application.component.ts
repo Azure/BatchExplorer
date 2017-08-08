@@ -2,6 +2,7 @@ import { Component } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { FormControl, FormGroup } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
+import { ServerError } from "app/models";
 import { NcjTemplateService, PythonRpcService } from "app/services";
 import "./submit-market-application.scss";
 
@@ -87,7 +88,7 @@ export class SubmitMarketApplicationComponent {
         const obs = this.pythonRpcService.callWithAuth("submit-ncj-job", [this.jobTemplate, jobInputs]);
         obs.subscribe({
             next: (data) => this._redirectToJob(),
-            error: (err) => console.log("Error: ", err),
+            error: (err) => this.error = ServerError.fromPython(err),
         });
     }
 
@@ -107,7 +108,7 @@ export class SubmitMarketApplicationComponent {
             const obs = this.pythonRpcService.callWithAuth("get-ncj-pool", [this.poolTemplate, poolInputs]);
             obs.subscribe({
                 next: (data) => this.runJobWithPool(data, jobInputs),
-                error: (err) => console.log("Error: ", err),
+                error: (err) => this.error = ServerError.fromPython(err),
             });
         }
         else if (this.mode_state === "PoolOJob"){
@@ -115,14 +116,14 @@ export class SubmitMarketApplicationComponent {
             const obs = this.pythonRpcService.callWithAuth("submit-ncj-job", [this.jobTemplate, jobInputs]);
             obs.subscribe({
                 next: (data) => this._redirectToJob(),
-                error: (err) => console.log("Error: ", err),
+                error: (err) => this.error = ServerError.fromPython(err),
             });
         }
         else if (this.mode_state === "Pool"){
             const obs = this.pythonRpcService.callWithAuth("create-ncj-pool", [this.poolTemplate, poolInputs]);
             obs.subscribe({
                 next: (data) => this._redirectToPool(),
-                error: (err) => console.log("Error: ", err),
+                error: (err) => this.error = ServerError.fromPython(err),
             });
         }
 
