@@ -5,7 +5,7 @@ import { BehaviorSubject } from "rxjs";
 
 import { ApplicationErrorDisplayComponent } from "app/components/application/errors";
 import { SidebarManager } from "app/components/base/sidebar";
-import { AccountResource, Application } from "app/models";
+import { AccountResource, BatchApplication } from "app/models";
 import { AccountService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { BannerMockComponent } from "test/utils/mocks/components";
@@ -14,7 +14,7 @@ import { BannerMockComponent } from "test/utils/mocks/components";
     template: `<bl-application-error-display [application]="application"></bl-application-error-display>`,
 })
 class TestApplicationErrorDisplayComponent {
-    public application: Application;
+    public application: BatchApplication;
 }
 
 describe("ApplicationErrorDisplayComponent", () => {
@@ -98,12 +98,12 @@ describe("ApplicationErrorDisplayComponent", () => {
             const banner = fixture.debugElement.query(By.css("bl-banner"));
             expect(banner.nativeElement.textContent)
                 .toContain("No linked storage account configured for this Batch account. "
-                    + "This is required for uploading application packages.");
+                + "This is required for uploading application packages.");
         });
 
         it("should link to portal storage config as quickfix", () => {
             const banner = fixture.debugElement.query(By.css("bl-banner")).componentInstance;
-            expect(banner.fixMessage).toContain("Setup linked storage account in the portal");
+            expect(banner.fixMessage).toContain("Setup linked storage account");
         });
     });
 
@@ -121,7 +121,7 @@ describe("ApplicationErrorDisplayComponent", () => {
             const banner = fixture.debugElement.query(By.css("bl-banner"));
             expect(banner.nativeElement.textContent)
                 .toContain("Package update and delete has been disabled. "
-                    + "Turn on 'Allow updates' to enable for this application.");
+                + "Turn on 'Allow updates' to enable for this application.");
         });
 
         it("there is no proposed quickfix", () => {

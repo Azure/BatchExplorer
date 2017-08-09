@@ -1,16 +1,13 @@
 <bl-loading [status]="data.newDataStatus | async">
-    <md-card bl-loading-error>
-        Task with id '{{taskId}}' doesn't exist
-    </md-card>
     <div *ngIf="task && job">
         <md-card class="overview">
             <div class="actions">
-                <bl-action-btn-group>
+                <bl-button-group>
                     <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                    <bl-terminate-button [entity]="task" (action)="terminateTask()"></bl-terminate-button>
-                    <bl-delete-button [entity]="task" (action)="deleteTask()"></bl-delete-button>
-                    <bl-clone-button (action)="cloneTask()"></bl-clone-button>
-                </bl-action-btn-group>
+                    <bl-terminate-button [entity]="task" [action]="terminateTask"></bl-terminate-button>
+                    <bl-delete-button [entity]="task" [action]="deleteTask"></bl-delete-button>
+                    <bl-clone-button [action]="cloneTask"></bl-clone-button>
+                </bl-button-group>
             </div>
             <div class="content">
                 <md-card-title>{{task.id}} <span *ngIf="!!task.displayName"> - {{task.displayName}}</span> </md-card-title>

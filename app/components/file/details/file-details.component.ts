@@ -2,13 +2,14 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { autobind } from "core-decorators";
 import { remote } from "electron";
-import { Observable, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 
 import { NotificationService } from "app/components/base/notifications";
 import { File, ServerError } from "app/models";
 import { ElectronShell, FileService, StorageService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
-import { Constants, FileUrlUtils, prettyBytes } from "app/utils";
+import { FileLoader } from "app/services/file";
+import { FileUrlUtils, StorageUtils, prettyBytes } from "app/utils";
 
 @Component({
     selector: "bl-file-details",
@@ -28,10 +29,13 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
     public contentSize: string;
     public downloadEnabled: boolean;
     public outputKind: string;
+    public container: string;
+
+    public fileLoader: FileLoader = null;
+    public fileData: RxEntityProxy<any, File>;
 
     private _sourceType: string;
     private _paramsSubscribers: Subscription[] = [];
-    private _propertyProxy: RxEntityProxy<any, File>;
 
     constructor(
         private route: ActivatedRoute,
@@ -53,19 +57,21 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
             this.poolId = params["poolId"];
             this.nodeId = params["nodeId"];
             this.outputKind = params["outputKind"];
+            this.container = params["container"];
             this.filename = params["filename"];
-
-            this._loadFileProperties();
+            this._clearFileLoader();
+            this._setupFileLoader();
         }));
     }
 
     public ngOnDestroy() {
         this._paramsSubscribers.forEach(x => x.unsubscribe());
+        this._clearFileLoader();
     }
 
     @autobind()
     public refresh() {
-        return Observable.of({});
+        return this.fileData.refresh();
     }
 
     @autobind()
@@ -82,67 +88,77 @@ export class FileDetailsComponent implements OnInit, OnDestroy {
         }
     }
 
-    private _loadFileProperties(): void {
-        if (this._sourceType === Constants.FileSourceTypes.Job) {
-            // it's a file from a job's task
-            this._propertyProxy = this.fileService.getFilePropertiesFromTask(
-                this.jobId, this.taskId, this.filename);
+    @autobind()
+    public openExternal() {
+        return this.fileLoader.cache().cascade((pathToFile) => {
+            this.shell.openItem(pathToFile);
+        });
+    }
 
-        } else if (this._sourceType === Constants.FileSourceTypes.Pool) {
-            // it's a file from a node
-            this._propertyProxy = this.fileService.getFilePropertiesFromComputeNode(
-                this.poolId, this.nodeId, this.filename);
+    public get isJobFile() {
+        return this.jobId && this.taskId && !this.outputKind;
+    }
 
-        } else if (this._sourceType === Constants.FileSourceTypes.Blob) {
-            // it's a file from blob storage
-            this._propertyProxy = this.storageService.getBlobProperties(
-                this.jobId,
-                this.taskId,
-                this.outputKind,
-                this.filename,
-            );
+    public get isPoolFile() {
+        return this.poolId && this.nodeId;
+    }
+
+    public get isBlobFile() {
+        return this.container || (this.jobId && this.taskId && this.outputKind);
+    }
+
+    private _setupFileLoader() {
+        let obs: FileLoader;
+
+        if (this.isJobFile) {
+            obs = this.fileService.fileFromTask(this.jobId, this.taskId, this.filename);
+        } else if (this.isPoolFile) {
+            obs = this.fileService.fileFromNode(this.poolId, this.nodeId, this.filename);
+        } else if (this.isBlobFile) {
+            const prefix = !this.container ? `${this.taskId}/${this.outputKind}/` : null;
+            const containerPromise = !this.container
+                ? StorageUtils.getSafeContainerName(this.jobId)
+                : Promise.resolve(this.container);
+
+            obs = this.storageService.getBlobContent(containerPromise, this.filename, prefix);
         } else {
             throw new Error("Unrecognised source type: " + this._sourceType);
         }
 
-        this._propertyProxy.fetch().subscribe((details: any) => {
-            this.contentSize = prettyBytes(details.properties.contentLength);
-            this.url = decodeURIComponent(details.url);
+        this.fileLoader = obs;
+        this.fileData = this.fileLoader.listen();
+        this.fileData.item.subscribe((file) => {
+            if (!file) { return; }
+            this.contentSize = prettyBytes(file.properties.contentLength);
+            this.url = decodeURIComponent(file.url);
         });
-
-        this._propertyProxy = null;
     }
 
     private _saveFile(pathToFile) {
         if (pathToFile === undefined) {
             return;
         }
-
-        const obj = FileUrlUtils.parseRelativePath(this.url);
-        let obs;
-        if (obj.type === Constants.FileSourceTypes.Job) {
-            obs = this.fileService.fileFromTask(this.jobId, this.taskId, this.filename).download(pathToFile);
-        } else if (this._sourceType === Constants.FileSourceTypes.Pool) {
-            obs = this.fileService.fileFromNode(this.poolId, this.nodeId, this.filename).download(pathToFile);
-        } else if (this._sourceType === Constants.FileSourceTypes.Blob) {
-            const blobName = `${this.taskId}/${this.outputKind}/${this.filename}`;
-            obs = this.storageService.saveBlobToFile(this.jobId, blobName, pathToFile).subscribe({
-                error: (error: ServerError) => {
-                    this.notificationService.error(
-                        "Download failed",
-                        `${this.filename} failed to download. ${error.body.message}`,
-                    );
-                },
-            });
-
-        } else {
-            throw new Error("Unrecognised source type: " + this._sourceType);
-        }
-
-        obs.subscribe(() => {
-            this.shell.showItemInFolder(pathToFile);
-            this.notificationService.success("Download complete!", `File was saved locally at ${pathToFile}`);
+        const obs = this.fileLoader.download(pathToFile);
+        obs.subscribe({
+            next: () => {
+                this.shell.showItemInFolder(pathToFile);
+                this.notificationService.success("Download complete!", `File was saved locally at ${pathToFile}`);
+            },
+            error: (error: ServerError) => {
+                this.notificationService.error(
+                    "Download failed",
+                    `${this.filename} failed to download. ${error.body.message}`,
+                );
+            },
         });
+
         return obs;
+    }
+
+    private _clearFileLoader() {
+        if (this.fileLoader) {
+            this.fileLoader.dispose();
+            this.fileLoader = null;
+        }
     }
 }

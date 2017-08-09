@@ -1,9 +1,9 @@
-import { Component, Input } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { List } from "immutable";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
-import { prettyBytes } from "app/utils";
+import { DateUtils, prettyBytes } from "app/utils";
 
 @Component({
     selector: "bl-file-list-display",
@@ -34,9 +34,19 @@ export class FileListDisplayComponent {
     @Input()
     public isBlob: boolean = false;
 
+    @Input() public disableRouting = false;
+
+    @Input() public activeItem: string;
+
+    @Output() public activeItemChange = new EventEmitter();
+
     public prettyFileSize(size: string) {
         // having falsy issues with contentLength = 0
         return prettyBytes(parseInt(size || "0", 10));
+    }
+
+    public prettyDate(date: Date) {
+        return DateUtils.customFormat(date, "MMM Do, YYYY, HH:mm:ss");
     }
 
     /**
@@ -44,11 +54,19 @@ export class FileListDisplayComponent {
      * @param fileName - name if the file
      */
     public urlToFile(fileName: string) {
+        if (this.disableRouting) {
+            return null;
+        }
         const filePathPart = this.isBlob ? "blobs" : "files";
         return this.baseUrl.concat([filePathPart, fileName]);
     }
 
     public isErrorState(file: any) {
         return false;
+    }
+
+    public updateActiveItem(item: string) {
+        this.activeItem = item;
+        this.activeItemChange.emit(item);
     }
 }

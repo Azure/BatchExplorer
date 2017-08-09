@@ -1,11 +1,14 @@
 // tslint:disable: object-literal-sort-keys
 import { Routes } from "@angular/router";
 
+import { JobGraphsComponent } from "app/components/job/graphs/job-graphs-home";
 import { Constants } from "app/utils";
 import { AccountDefaultComponent, AccountDetailsComponent } from "./components/account/details";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
 import { ApplicationDefaultComponent, ApplicationDetailsComponent } from "./components/application/details";
 import { ApplicationHomeComponent } from "./components/application/home/application-home.component";
+import { DataDefaultComponent, DataDetailsComponent } from "./components/data/details";
+import { DataHomeComponent } from "./components/data/home/data-home.component";
 import { FileDetailsComponent } from "./components/file/details/file-details.component";
 import { FileHomeComponent } from "./components/file/home";
 import { JobDefaultComponent, JobDetailsComponent } from "./components/job/details";
@@ -54,6 +57,14 @@ export const routes: Routes = [
         ],
     },
     {
+        path: "data",
+        component: DataHomeComponent,
+        children: [
+            { path: "", component: DataDefaultComponent }, // data/
+            { path: ":id", component: DataDetailsComponent }, // data/{file-group.id}
+        ],
+    },
+    {
         path: "pools/:poolId/nodes",
         component: NodeHomeComponent,
         children: [
@@ -68,6 +79,10 @@ export const routes: Routes = [
             { path: "", component: TaskDefaultComponent }, // jobs/{job.id}/tasks
             { path: ":id", component: TaskDetailsComponent }, // jobs/{job.id}/tasks/{task.id}
         ],
+    },
+    {
+        path: "jobs/:jobId/graphs",
+        component: JobGraphsComponent,
     },
     {
         path: "pools/:poolId/nodes/:nodeId/files/:filename",
@@ -87,6 +102,14 @@ export const routes: Routes = [
     },
     {
         path: "jobs/:jobId/tasks/:taskId/:outputKind/blobs/:filename",
+        component: FileHomeComponent,
+        data: { type: Constants.FileSourceTypes.Blob },
+        children: [
+            { path: "", component: FileDetailsComponent },
+        ],
+    },
+    {
+        path: "data/:container/blobs/:filename",
         component: FileHomeComponent,
         data: { type: Constants.FileSourceTypes.Blob },
         children: [

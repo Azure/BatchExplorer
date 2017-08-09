@@ -12,10 +12,11 @@ bl-node-connect {
     display: flex;
     justify-content: center;
 
-    > bl-submit-btn > button {
+    > bl-button {
         user-select: none;
         width: 150px;
         height: 75px;
+        line-height: 75px;
         font-size: 20px;
         margin: 10px 20px;
         text-align: center;
@@ -67,6 +68,12 @@ bl-ssh-key-picker > .ssh-key-picker {
         .saved-keys-btns {
             height: 28px;
             padding: 2px 5px;
+
+            > bl-button {
+                height: 24px;
+                line-height: 24px;
+                width: 100%;
+            }
         }
 
         .saved-keys-wrapper {
@@ -115,7 +122,7 @@ bl-ssh-key-picker > .ssh-key-picker {
                 display: flex;
                 justify-content: center;
 
-                button {
+                bl-button {
                     margin: 0 10px;
                 }
             }

@@ -1,6 +1,6 @@
 // tslint:disable
 declare namespace jasmine {
-    interface Matchers {
+    interface Matchers<T> {
         // misc-matchers
         toBeBlank(): void;
         toBeVisible(): void;

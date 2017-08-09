@@ -7,7 +7,7 @@ import { GaugeConfig } from "app/components/base/graphs/gauge";
 })
 export class GaugeMockComponent {
     @Input()
-    public value: string;
+    public value: number;
 
     @Input()
     public options: GaugeConfig;

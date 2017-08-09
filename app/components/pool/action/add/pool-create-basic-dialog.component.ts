@@ -9,8 +9,9 @@ import { DynamicForm } from "app/core";
 import { Pool } from "app/models";
 import { NodeFillType } from "app/models";
 import { PoolCreateDto } from "app/models/dtos";
-import { PoolOsSources, createPoolToData, poolToFormModel } from "app/models/forms";
-import { PoolService, VmSizeService } from "app/services";
+import { CreatePoolModel, PoolOsSources, createPoolToData, poolToFormModel } from "app/models/forms";
+import { PoolService, PricingService, VmSizeService } from "app/services";
+import { Constants, NumberUtils } from "app/utils";
 
 @Component({
     selector: "bl-pool-create-basic-dialog",
@@ -21,49 +22,73 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     public osType: "linux" | "windows" = "linux";
     public NodeFillType = NodeFillType;
 
+    public estimatedCost: string = "-";
+
     private _osControl: FormControl;
+    private _licenseControl: FormControl;
+    private _renderingSkuSelected: boolean = false;
     private _sub: Subscription;
+
+    private _lastFormValue: CreatePoolModel;
 
     constructor(
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<PoolCreateBasicDialogComponent>,
         private poolService: PoolService,
         vmSizeService: VmSizeService,
+        private pricingService: PricingService,
         private notificationService: NotificationService) {
         super(PoolCreateDto);
 
         this._osControl = this.formBuilder.control({}, Validators.required);
+        this._licenseControl = this.formBuilder.control([]);
 
         this.form = formBuilder.group({
             id: ["", [
                 Validators.required,
                 Validators.maxLength(64),
-                Validators.pattern("^[\\w\\_-]+$"),
+                Validators.pattern(Constants.forms.validation.regex.id),
             ]],
             displayName: "",
             scale: [null],
             os: this._osControl,
-            vmSize: ["Standard_D1", Validators.required],
+            // note: probably not advisable to default vmSize value
+            vmSize: ["", Validators.required],
             maxTasksPerNode: 1,
             enableInterNodeCommunication: false,
             taskSchedulingPolicy: [NodeFillType.pack],
             startTask: null,
             userAccounts: [[]],
+            appLicenses: [[]],
         });
 
         this._sub = this._osControl.valueChanges.subscribe((value) => {
             this.osSource = value.source;
             if (value.source === PoolOsSources.PaaS) {
+                this._renderingSkuSelected = false;
                 this.osType = "windows";
             } else {
                 const config = value.virtualMachineConfiguration;
                 const agentId: string = config && config.nodeAgentSKUId;
+                this._renderingSkuSelected = config && config.imageReference
+                    && config.imageReference.publisher === "batch";
+
                 if (agentId && agentId.toLowerCase().indexOf("windows") !== -1) {
                     this.osType = "windows";
                 } else {
                     this.osType = "linux";
                 }
             }
+        });
+
+        this.form.valueChanges.subscribe((value) => {
+            if (!this._lastFormValue
+                || value.os !== this._lastFormValue.os
+                || value.vmSize !== this._lastFormValue.vmSize
+                || this._lastFormValue.scale !== value.scale) {
+                this._updateEstimatedPrice();
+            }
+            this._lastFormValue = value;
         });
     }
 
@@ -97,5 +122,25 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
 
     public get startTask() {
         return this.form.controls.startTask.value;
+    }
+
+    public get renderingSkuSelected(): boolean {
+        return this._renderingSkuSelected;
+    }
+
+    private _updateEstimatedPrice() {
+        const value: CreatePoolModel = this.form.value;
+
+        if (!value.vmSize || !this.osType) {
+            return;
+        }
+        const imaginaryPool = createPoolToData(this.form.value);
+        return this.pricingService.computePoolPrice(imaginaryPool as any, { target: true }).subscribe((cost) => {
+            if (cost) {
+                this.estimatedCost = `${cost.unit} ${NumberUtils.pretty(cost.total)}`;
+            } else {
+                this.estimatedCost = "-";
+            }
+        });
     }
 }

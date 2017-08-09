@@ -1,18 +1,20 @@
 <bl-loading [status]="loadingStatus">
     <div *ngIf="loadingStatus">
+        <bl-table [activeItem]="pickedStorageAccountId?.toLowerCase()" (activeItemChange)="pickStorageAccount($event)">
+            <bl-row [key]="noSelectionKey">
+                <bl-cell>No storage account</bl-cell>
+                <bl-cell></bl-cell>
+                <bl-cell></bl-cell>
+            </bl-row>
+        </bl-table>
         <h3>Storage accounts in the same region as your batch account({{account.location}})</h3>
-        <bl-table *ngIf="preferedAccounts.size > 0" [activeItem]="pickedStorageAccountId.toLowerCase()" (activeItemChange)="pickStorageAccount($event)"
+        <bl-table *ngIf="preferedAccounts.size > 0" [activeItem]="pickedStorageAccountId?.toLowerCase()" (activeItemChange)="pickStorageAccount($event)"
             class="prefered">
             <bl-thead>
                 <bl-column [sortable]="true">Name</bl-column>
                 <bl-column [sortable]="true">Region</bl-column>
                 <bl-column [sortable]="false"></bl-column>
             </bl-thead>
-            <bl-row [key]="noSelectionKey">
-                <bl-cell>No storage account</bl-cell>
-                <bl-cell></bl-cell>
-                <bl-cell></bl-cell>
-            </bl-row>
             <bl-row *ngFor="let account of preferedAccounts" [key]="account.id.toLowerCase()">
                 <bl-cell [value]="account.name"></bl-cell>
                 <bl-cell [value]="account.location"></bl-cell>
@@ -25,7 +27,7 @@
 
         <div *ngIf="otherAccounts.size > 0">
             <h3>Other regions</h3>
-            <bl-table [activeItem]="pickedStorageAccountId.toLowerCase()" (activeItemChange)="pickStorageAccount($event)" class="others">
+            <bl-table [activeItem]="pickedStorageAccountId?.toLowerCase()" (activeItemChange)="pickStorageAccount($event)" class="others">
                 <bl-thead>
                     <bl-column [sortable]="true">Name</bl-column>
                     <bl-column [sortable]="true">Region</bl-column>

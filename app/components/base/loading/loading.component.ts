@@ -1,10 +1,16 @@
 import {
+    AfterViewInit,
     Component,
+    ElementRef,
     Input,
     Optional,
     SkipSelf,
+    ViewChild,
 } from "@angular/core";
 import { BehaviorSubject } from "rxjs";
+
+import { ServerError } from "app/models";
+import "./loading.scss";
 
 export enum LoadingStatus {
     Loading = 0,
@@ -23,9 +29,10 @@ export enum DisplayStatus {
     selector: "bl-loading",
     templateUrl: "loading.html",
 })
-export class LoadingComponent {
-    public statuses = DisplayStatus;
-    public displayStatus = new BehaviorSubject<DisplayStatus>(DisplayStatus.Loading);
+export class LoadingComponent implements AfterViewInit {
+    @ViewChild("ref")
+    public loadingContent: ElementRef;
+
     /**
      * If set to true the loading will only show the first time
      */
@@ -45,9 +52,16 @@ export class LoadingComponent {
         this._updateDisplayStatus();
     }
 
+    @Input()
+    public error: ServerError;
+
     public get status() {
         return this._status;
     }
+
+    public statuses = DisplayStatus;
+    public displayStatus = new BehaviorSubject<DisplayStatus>(DisplayStatus.Loading);
+    public isRelative: boolean = true;
 
     private _status = LoadingStatus.Loading;
     private _parentDisplayStatus = DisplayStatus.Ready;
@@ -61,6 +75,11 @@ export class LoadingComponent {
                 this._updateDisplayStatus();
             });
         }
+    }
+
+    public ngAfterViewInit() {
+        // Timeout for negating "Expression has changed after it was checked" error
+        setTimeout(() => this.isRelative = this.loadingContent.nativeElement.children.length === 0);
     }
 
     private _updateDisplayStatus() {

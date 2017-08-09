@@ -7,13 +7,14 @@ class JsonRpcErrorCodes:
     METHOD_NOT_FOUND = -32601
     INVALID_PARAMS = -32602
     INTERNAL_ERROR = -32603
+    BATCH_CLIENT_ERROR = -32604
+    BAD_REQUEST = 400
 
 
 JSONRPC_ERROR_MESSAGE = dict([
     (JsonRpcErrorCodes.PARSE_ERROR, "Parse error"),
     (JsonRpcErrorCodes.INVALID_REQUEST, "nvalid request"),
     (JsonRpcErrorCodes.METHOD_NOT_FOUND, "Method not found"),
-    (JsonRpcErrorCodes.INVALID_PARAMS, "Invalid params"),
     (JsonRpcErrorCodes.INTERNAL_ERROR, "Internal error"),
 ])
 

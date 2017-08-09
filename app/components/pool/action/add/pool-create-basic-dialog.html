@@ -51,6 +51,14 @@
             </div>
         </bl-form-section>
 
+        <bl-form-section title="Choose one or multiple application licenses" subtitle="Select application licenses to be installed on each compute node in the pool"
+            *ngIf="renderingSkuSelected">
+            <div class="form-element">
+                <bl-app-license-picker formControlName="appLicenses"></bl-app-license-picker>
+                <bl-error controlName="appLicenses" code="required">You must agree to have read each of the end user license agreements by selecting the checkbox</bl-error>
+            </div>
+        </bl-form-section>
+
         <bl-form-section title="Choose a virtual machine size" subtitle="Choose the virtual machine based on CPU, RAM and Disk capacity">
             <div class="form-element element-spacer">
                 <bl-vm-size-picker formControlName="vmSize" [osSource]="osSource" [osType]="osType"></bl-vm-size-picker>
@@ -84,4 +92,7 @@
             </bl-form-picker>
         </bl-form-section>
     </bl-form-page>
+    <div blFormSummary>
+        <div>Estimated cost: {{estimatedCost}}/h</div>
+    </div>
 </bl-complex-form>

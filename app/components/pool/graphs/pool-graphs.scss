@@ -1,0 +1,78 @@
+@import "app/styles/variables";
+
+bl-pool-graphs {
+    display: block;
+    overflow: hidden;
+
+    .charts-previews {
+        margin-bottom: 15px;
+        display: flex;
+        user-select: none;
+
+        > .preview {
+            cursor: pointer;
+            padding: 10px;
+            border-right: 1px solid $border-color;
+            border-bottom: 1px solid $border-color;
+            flex: 1;
+            .label {
+                font-size: 11px;
+                line-height: 11px;
+                margin-bottom: 3px;
+            }
+
+            &.focused {
+                display:  flex;
+                align-items: center;
+                justify-content: center;
+                border-bottom: none;
+
+                .label {
+                    font-size: 16px;
+                    color: map-get($primary, 600);
+                }
+
+                .small-preview {
+                    display: none;
+                }
+            }
+
+            &:hover {
+                background: $whitesmoke;
+            }
+        }
+
+        > .config {
+            padding: 20px 10px;
+            border-bottom: 1px solid $border-color;
+        }
+    }
+
+    .small-preview {
+        display: block;
+        width: 200px;
+        height: 110px;
+    }
+
+    .full-display {
+        display: block;
+        width: 100%;
+        height: 100%;
+    }
+
+    .full-display-heatmap {
+        display: block;
+        width: 100%;
+        height: 600px;
+    }
+
+    .focused-graph {
+        width: 100%;
+        position: relative;
+    }
+}
+
+x-chartist {
+    width: 100%;
+    height: 100%;
+}

@@ -1,5 +1,5 @@
-<bl-entity-details-list #listWrapper [showRefreshButton]="false" [showExpandButton]="false" [showFilterIcon]="false"
-    addButtonHoverText="Add package version" (onAddEntity)="list?.addPackage($event)" filterPlaceholder="Filter by package version">
+<bl-entity-details-list #listWrapper [showRefreshButton]="false" [showExpandButton]="false" [enableAdvancedFilter]="false" addButtonHoverText="Add package version"
+    (onAddEntity)="list?.addPackage($event)" filterPlaceholder="Filter by package version">
     <div bl-list-buttons>
         <!--
             multi select - "add" enabled and "delete" enabled if allow updates is true
@@ -8,15 +8,18 @@
                 - update: enabled if allow updates is true and package is active
                 - activate: enabled if package is pending
         -->
-        <button md-mini-fab color="warn" title="Delete selected" (click)="list?.deleteSelectedItems()" [disabled]="!(list?.deleteItemEnabled | async)">
+        <bl-button color="danger" type="round" title="Delete selected" [action]="list?.deleteSelectedItems" [disabled]="!(list?.deleteItemEnabled | async)"
+            tooltipPosition="left">
             <i class="fa fa-trash spin-hover"></i>
-        </button>
-        <button md-mini-fab color="primary" title="Update package" (click)="list?.updatePackageVersion()" [disabled]="!(list?.editItemEnabled | async)">
+        </bl-button>
+        <bl-button color="primary" type="round" title="Update package" [action]="list?.updatePackageVersion" [disabled]="!(list?.editItemEnabled | async)"
+            tooltipPosition="left">
             <i class="fa fa-pencil-square-o spin-hover"></i>
-        </button>
-        <button md-mini-fab color="primary" title="Activate pending package" (click)="list?.activateActiveItem()" [disabled]="!(list?.activateItemEnabled | async)">
+        </bl-button>
+        <bl-button color="primary" type="round" title="Activate pending package" [action]="list?.activateActiveItem" 
+            [disabled]="!(list?.activateItemEnabled | async)" tooltipPosition="left">
             <i class="fa fa-toggle-on spin-hover"></i>
-        </button>
+        </bl-button>
     </div>
 
     <bl-application-package-table [application]="application" [filter]="listWrapper.filter" #list></bl-application-package-table>

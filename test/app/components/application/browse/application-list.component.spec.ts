@@ -6,7 +6,7 @@ import { Subject } from "rxjs";
 
 import { ApplicationListComponent } from "app/components/application/browse";
 import { BackgroundTaskService } from "app/components/base/background-task";
-import { Application } from "app/models";
+import { BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
 import { FilterBuilder } from "app/utils/filter-builder";
 import * as Fixtures from "test/fixture";
@@ -16,11 +16,11 @@ import { NoItemMockComponent } from "test/utils/mocks/components";
 describe("ApplicationListComponent", () => {
     let fixture: ComponentFixture<ApplicationListComponent>;
     let component: ApplicationListComponent;
-    let listProxy: RxMockListProxy<any, Application>;
+    let listProxy: RxMockListProxy<any, BatchApplication>;
     let applicationServiceSpy: any;
 
     beforeEach(() => {
-        listProxy = new RxMockListProxy(Application, {
+        listProxy = new RxMockListProxy(BatchApplication, {
             cacheKey: "id",
             items: [
                 Fixtures.application.create({ id: "app-1" }),

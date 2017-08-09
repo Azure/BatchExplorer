@@ -1,6 +1,6 @@
 import { BrowserWindow } from "electron";
 
-import { BatchClientProxyFactory, StorageClientProxyFactory } from "../api";
+import { BatchClientProxyFactory, FileUtils, StorageClientProxyFactory } from "../api";
 import { Constants } from "../client-constants";
 import { UniqueWindow } from "../core";
 import { windows } from "../core";
@@ -39,6 +39,7 @@ export class MainWindow extends UniqueWindow {
         anyWindow.logger = renderLogger;
         anyWindow.splashScreen = windows.splashScreen;
         anyWindow.authenticationWindow = windows.authentication;
+        anyWindow.fileUtils = new FileUtils();
 
         // Open the DevTools.
         if (process.env.NODE_ENV !== "production") {
@@ -61,9 +62,9 @@ export class MainWindow extends UniqueWindow {
     }
 
     private _setupEvents(window: Electron.BrowserWindow) {
-        window.webContents.on("crashed", (error: Error) => {
-            logger.error("There was a crash", error);
-            windows.recover.createWithError(error.message);
+        window.webContents.on("crashed", (event: Electron.Event, killed: boolean) => {
+            logger.error("There was a crash", event, killed);
+            windows.recover.createWithError(event.returnValue);
         });
 
         window.webContents.on("did-fail-load", (error) => {

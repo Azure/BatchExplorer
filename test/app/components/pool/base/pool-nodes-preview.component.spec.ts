@@ -34,7 +34,7 @@ describe("PoolNodesPreviewComponent", () => {
     describe("when pool is steady", () => {
         beforeEach(() => {
             testComponent.pool = new Pool({
-                state: "steady",
+                allocationState: "steady",
                 currentDedicatedNodes: 4, targetDedicatedNodes: 4,
                 currentLowPriorityNodes: 1, targetLowPriorityNodes: 1,
             });
@@ -49,14 +49,14 @@ describe("PoolNodesPreviewComponent", () => {
 
         it("should not show the arrow", () => {
             const text = de.nativeElement.textContent;
-            expect(text).not.toContain("⇾");
+            expect(text).not.toContain("→");
         });
     });
 
     describe("when pool is resizing", () => {
         beforeEach(() => {
             testComponent.pool = new Pool({
-                state: "resizing",
+                allocationState: "resizing",
                 currentDedicatedNodes: 2, targetDedicatedNodes: 8,
                 currentLowPriorityNodes: 1, targetLowPriorityNodes: 1,
             });
@@ -71,14 +71,14 @@ describe("PoolNodesPreviewComponent", () => {
 
         it("should show the arrow", () => {
             const text = de.nativeElement.textContent;
-            expect(text).toContain("⇾");
+            expect(text).toContain("→");
         });
     });
 
     describe("when there is a resize error", () => {
         beforeEach(() => {
             testComponent.pool = new Pool({
-                state: "steady",
+                allocationState: "steady",
                 currentDedicatedNodes: 2, targetDedicatedNodes: 8,
                 currentLowPriorityNodes: 1, targetLowPriorityNodes: 1,
                 resizeErrors: [{ code: "StoppedResize" }] as any,
@@ -94,7 +94,7 @@ describe("PoolNodesPreviewComponent", () => {
 
         it("should show the arrow", () => {
             const text = de.nativeElement.textContent;
-            expect(text).toContain("⇾");
+            expect(text).toContain("→");
         });
 
         it("Should have the resize error class", () => {

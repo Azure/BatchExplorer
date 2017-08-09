@@ -1,4 +1,5 @@
-<bl-action-btn type="round" [type]="type" title="Refresh" (action)="onClick()" [disabled]="status !== statuses.Idle">
+<bl-button color="light" [type]="type" title="Refresh" [action]="onClick" [disabled]="status !== statuses.Idle" [skipSuccess]="true"
+    [tooltipPosition]="tooltipPosition">
     <span class="icon-container" [ngSwitch]="status">
         <i class="fa fa-refresh shake-hover"    *ngSwitchCase="statuses.Idle"></i>
         <i class="fa fa-refresh fa-spin"        *ngSwitchCase="statuses.Refreshing"></i>
@@ -7,4 +8,4 @@
         </span>
         <i class="fa fa-warning"                *ngSwitchCase="statuses.Failed"></i>
     </span>
-</bl-action-btn>
+</bl-button>

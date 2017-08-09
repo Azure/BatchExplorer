@@ -55,10 +55,6 @@ fieldset {
 
     .buttons {
         margin: 30px 0 0;
-
-        [md-raised-button] {
-            margin-right: 15px;
-        }
     }
 
     .error {
@@ -173,101 +169,6 @@ fieldset {
 
     hr {
         margin: 0.4em 0 1.4em;
-    }
-}
-
-bl-complex-form {
-    display: block;
-    // height: $contentview-height;
-    $footer-height: 60px;
-    overflow: hidden;
-
-    &.small {
-        width: 500px;
-    }
-
-    &.medium {
-        width: 600px;
-    }
-
-    &.large {
-        width: 800px;
-    }
-
-    &.sticky-footer {
-        height: 100%;
-
-        > .content {
-            padding-bottom: 100px;
-        }
-
-        > .form-footer {
-            box-shadow: 0 0 40px -10px #a5a5a5;
-        }
-    }
-
-    .header {
-        h1 {
-            padding: 0 8px;
-        }
-
-        p {
-            padding: 0 10px;
-        }
-    }
-
-    > .content {
-        overflow: auto;
-        position: relative;
-        height: calc(100% - #{$footer-height});
-        padding: 10px 5px;
-
-        > .loading-overlay {
-            position: absolute;
-            background: white;
-            opacity: 0.5;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-        }
-
-    }
-
-    > .form-server-error {
-        position: absolute;
-        bottom: $footer-height;
-        width: 100%;
-        z-index: 100;
-    }
-
-    > .form-footer {
-        height: $footer-height;
-
-        // background: map-get($primary, 500);
-        padding: 5px;
-        display: flex;
-        align-items: center;
-
-        > .toggle-error-btn {
-            button {
-                font-size: 26px;
-            }
-        }
-
-        > .summary {
-            margin: 0 5px;
-            flex: 1;
-            font-size: 16px;
-        }
-
-        > .form-buttons {
-            margin: 0 5px;
-
-            bl-submit-btn {
-                margin-right: 5px;
-            }
-        }
     }
 }
 

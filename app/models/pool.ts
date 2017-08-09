@@ -40,6 +40,7 @@ export interface PoolAttributes {
     startTask: Partial<StartTaskAttributes>;
     metadata: MetadataAttributes[];
     userAccounts: UserAccountAttributes[];
+    applicationLicenses: string[];
 }
 
 /**
@@ -108,6 +109,8 @@ export class Pool extends Record<PoolAttributes> {
 
     @ListProp(UserAccount) public userAccounts: List<UserAccount> = List([]);
 
+    @ListProp(String) public applicationLicenses: List<string> = List([]);
+
     /**
      * Tags are computed from the metadata using an internal key
      */
@@ -144,16 +147,14 @@ export class Pool extends Record<PoolAttributes> {
     }
 }
 
-export type PoolState = "active" | "upgrading" | "deleting";
-export const PoolState = {
-    active: "active" as PoolState,
-    upgrading: "upgrading" as PoolState,
-    deleting: "deleting" as PoolState,
-};
+export enum PoolState {
+    active = "active",
+    upgrading = "upgrading",
+    deleting = "deleting",
+}
 
-export type PoolAllocationState = "resizing" | "stopping" | "steady";
-export const PoolAllocationState = {
-    resizing: "resizing" as PoolAllocationState,
-    stopping: "stopping" as PoolAllocationState,
-    steady: "steady" as PoolAllocationState,
-};
+export enum PoolAllocationState {
+    resizing = "resizing",
+    stopping = "stopping",
+    steady = "steady",
+}

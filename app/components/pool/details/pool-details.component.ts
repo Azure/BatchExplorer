@@ -8,11 +8,14 @@ import { Subscription } from "rxjs";
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
-import { PoolParams, PoolService } from "app/services";
+import { PoolParams, PoolService, PricingService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
+import { NumberUtils } from "app/utils";
 import { SidebarManager } from "../../base/sidebar";
 import { DeletePoolDialogComponent, PoolResizeDialogComponent } from "../action";
 import { PoolCreateBasicDialogComponent } from "../action";
+
+import "./pool-details.scss";
 
 @Component({
     selector: "bl-pool-details",
@@ -35,6 +38,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
     }
     public get pool() { return this._pool; }
     public data: RxEntityProxy<PoolParams, Pool>;
+    public estimatedCost = "-";
 
     private _paramsSubscriber: Subscription;
     private _pool: Pool;
@@ -44,12 +48,14 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         private activatedRoute: ActivatedRoute,
         private dialog: MdDialog,
         private sidebarManager: SidebarManager,
+        private pricingService: PricingService,
         private viewContainerRef: ViewContainerRef,
         private poolService: PoolService) {
 
         this.data = this.poolService.get(null, {});
         this.data.item.subscribe((pool) => {
             this.pool = pool;
+            this._updatePrice();
         });
 
         this.data.deleted.subscribe((key) => {
@@ -65,6 +71,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
             this.data.params = { id: this.poolId };
             this.data.fetch();
         });
+
     }
 
     public ngOnDestroy() {
@@ -81,11 +88,13 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         return this.data.refresh();
     }
 
+    @autobind()
     public addJob() {
         const createRef = this.sidebarManager.open("add-basic-job", JobCreateBasicDialogComponent);
         createRef.component.preSelectPool(this.pool.id);
     }
 
+    @autobind()
     public deletePool() {
         let config = new MdDialogConfig();
         config.viewContainerRef = this.viewContainerRef;
@@ -94,11 +103,13 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         dialogRef.componentInstance.poolId = this.poolId;
     }
 
+    @autobind()
     public clonePool() {
         const ref = this.sidebarManager.open("add-basic-pool", PoolCreateBasicDialogComponent);
         ref.component.setValueFromEntity(this.pool);
     }
 
+    @autobind()
     public resizePool() {
         const sidebarRef = this.sidebarManager.open("resize-pool", PoolResizeDialogComponent);
         sidebarRef.component.pool = this.pool;
@@ -111,6 +122,20 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
     public updateTags(newTags: List<string>) {
         return this.poolService.updateTags(this.pool, newTags).flatMap(() => {
             return this.data.refresh();
+        });
+    }
+
+    private _updatePrice() {
+        if (!this.pool) {
+            this.estimatedCost = "-";
+            return;
+        }
+        this.pricingService.computePoolPrice(this.pool).subscribe((cost) => {
+            if (!cost) {
+                this.estimatedCost = "-";
+            } else {
+                this.estimatedCost = `${cost.unit} ${NumberUtils.pretty(cost.total)}`;
+            }
         });
     }
 }

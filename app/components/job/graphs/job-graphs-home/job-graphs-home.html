@@ -1,0 +1,26 @@
+<div class="graph-header">
+    <div class="summary">
+        <h1>
+            Job <a [routerLink]="['/jobs', jobId]">{{jobId}}</a> graphs
+        </h1>
+        <span class="description">{{description}}</span>
+    </div>
+
+    <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+    <div class="buttons">
+        <div class="btn" (click)="updateGraph(AvailableGraph.runningTime)" [class.active]="currentGraph === AvailableGraph.runningTime">
+            Tasks running time
+        </div>
+        <div class="btn" (click)="updateGraph(AvailableGraph.progress)" [class.active]="currentGraph === AvailableGraph.progress">
+            Job progress
+        </div>
+    </div>
+</div>
+<div *ngIf="job" class="graph-container" [ngSwitch]="currentGraph">
+    <bl-tasks-running-time-graph *ngSwitchCase="AvailableGraph.runningTime" [job]="job" [tasks]="tasks"></bl-tasks-running-time-graph>
+    <bl-job-progress-graph *ngSwitchCase="AvailableGraph.progress" [job]="job" [tasks]="tasks"></bl-job-progress-graph>
+
+</div>
+<div class="loading-overlay" *ngIf="loading">
+    Loading tasks. This can take a long time.
+</div>

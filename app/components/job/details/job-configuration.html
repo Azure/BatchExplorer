@@ -147,7 +147,7 @@
         </bl-table-property>
     </bl-property-group>
 
-    <bl-property-group label="Metadata" class="wide" [collapsed]="true">
+    <bl-property-group label="Metadata" class="wide" [collapsed]="true" [edit]="job.editable ? editMetadata : null">
         <div collapsed-preview>
             <span>{{jobMetadata?.size}} meta items</span>
         </div>

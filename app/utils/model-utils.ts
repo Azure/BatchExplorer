@@ -13,7 +13,7 @@ export class ModelUtils {
         }
     }
 
-    public static updateMetadataWithTags(metadata: List<Metadata>, tags: List<string>): List<Metadata> {
+    public static updateMetadataWithTags(metadata: List<Metadata>, tags: List<string>): Metadata[] {
         const newMetadata = metadata.filter(x => x.name !== MetadataInternalKey.tags).toJS();
         newMetadata.push({ name: MetadataInternalKey.tags, value: tags.join(",") });
         return newMetadata;

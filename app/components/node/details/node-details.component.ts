@@ -3,6 +3,7 @@ import { ActivatedRoute } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs";
 
+import { DialogService } from "app/components/base/dialogs";
 import { SidebarManager } from "app/components/base/sidebar";
 import { Node, Pool } from "app/models";
 import { FileService, NodeParams, NodeService, PoolService } from "app/services";
@@ -33,8 +34,9 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
 
     constructor(
         private route: ActivatedRoute,
-        nodeService: NodeService,
+        private nodeService: NodeService,
         private poolService: PoolService,
+        private dialog: DialogService,
         fileService: FileService,
         private sidebarManager: SidebarManager) {
 
@@ -86,9 +88,20 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
         return this.data.refresh();
     }
 
+    @autobind()
     public connect() {
         const ref = this.sidebarManager.open(`connect-node-${this.nodeId}`, NodeConnectComponent);
         ref.component.node = this.node;
         ref.component.pool = this.pool;
+    }
+
+    @autobind()
+    public delete() {
+        this.dialog.confirm("Are you sure you want to delete this node?", {
+            yes: () => {
+                return this.nodeService.delete(this.pool.id, this.nodeId)
+                    .cascade(() => this.nodeService.getOnce(this.pool.id, this.node.id));
+            },
+        });
     }
 }

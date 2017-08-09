@@ -1,0 +1,21 @@
+<bl-property-list>
+    <bl-property-group label="General" class="wide">
+        <bl-text-property label="File group name" [value]="decorator.name"></bl-text-property>
+        <bl-text-property label="Blob container name" [value]="decorator.id"></bl-text-property>
+        <bl-text-property label="Public access level" [value]="decorator.publicAccessLevel"></bl-text-property>
+        <bl-text-property label="Last modifled" [value]="decorator.lastModified"></bl-text-property>
+        <bl-text-property label="Lease status" [value]="decorator.lease.status"></bl-text-property>
+        <bl-text-property label="Lease state" [value]="decorator.lease.state"></bl-text-property>
+        <bl-text-property label="Lease duration" [value]="decorator.lease.duration"></bl-text-property>
+    </bl-property-group>
+
+    <bl-property-group label="Metadata" class="wide" [collapsed]="false">
+        <div collapsed-preview>
+            <span>{{decorator.metadata?.size}} meta items</span>
+        </div>
+        <bl-text-property *ngFor="let metaItem of decorator.metadata" label="{{metaItem.name}}" [value]="metaItem.value"></bl-text-property>
+        <bl-no-item [itemCount]="decorator.metadata?.size" [slimline]="true">
+            <span no-filter>This blob container contains no metadata</span>
+        </bl-no-item>
+    </bl-property-group>
+</bl-property-list>

@@ -6,6 +6,7 @@ import { RouterModule } from "@angular/router";
 
 import { ButtonsModule } from "../buttons";
 import { ComplexFormComponent } from "./complex-form";
+import { EditMetadataFormComponent } from "./edit-metadata-form";
 import { EditableTableColumnComponent, EditableTableComponent } from "./editable-table";
 import { FormErrorComponent } from "./form-error";
 import { FormPageComponent } from "./form-page";
@@ -34,6 +35,7 @@ const components = [
     EditableTableComponent,
     EditableTableColumnComponent,
     KeyValuePickerComponent,
+    EditMetadataFormComponent,
 ];
 
 @NgModule({
@@ -50,6 +52,7 @@ const components = [
     ],
     providers: [
     ],
+    entryComponents: [EditMetadataFormComponent],
 })
 export class FormModule {
     public static forRoot(): ModuleWithProviders {

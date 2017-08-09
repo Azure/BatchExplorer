@@ -1,15 +1,4 @@
-import { Record } from "immutable";
-
-import { Partial } from "app/utils";
-
-const ApplicationPackageRecord = Record({
-    version: null,
-    state: null,
-    format: false,
-    lastActivationTime: null,
-    storageUrl: null,
-    storageUrlExpiry: null,
-});
+import { Model, Prop, Record } from "app/core";
 
 export interface ApplicationPackageAttributes {
     version: string;
@@ -23,21 +12,17 @@ export interface ApplicationPackageAttributes {
 /**
  * Class for displaying Batch application package information.
  */
-export class ApplicationPackage extends ApplicationPackageRecord implements ApplicationPackageAttributes {
-    public version: string;
-    public state: PackageState;
-    public format: string;
-    public lastActivationTime: Date;
-    public storageUrl: string;
-    public storageUrlExpiry: Date;
-
-    constructor(data: Partial<ApplicationPackageAttributes> = {}) {
-        super(Object.assign({}, data, {  }));
-    }
+@Model()
+export class ApplicationPackage extends Record<ApplicationPackageAttributes> {
+    @Prop() public version: string;
+    @Prop() public state: PackageState;
+    @Prop() public format: string;
+    @Prop() public lastActivationTime: Date;
+    @Prop() public storageUrl: string;
+    @Prop() public storageUrlExpiry: Date;
 }
 
-export type PackageState = "active" | "pending";
-export const PackageState = {
-    active: "active" as PackageState,
-    pending: "pending" as PackageState,
-};
+export enum PackageState {
+    active = "active",
+    pending = "pending",
+}

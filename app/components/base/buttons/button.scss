@@ -1,0 +1,114 @@
+@import "app/styles/variables";
+
+bl-button-group {
+    text-align: center;
+    display: block;
+    padding-top: 3px;
+    padding-left: 3px;
+    bl-button {
+        margin-bottom: 3px;
+    }
+}
+
+bl-button {
+    display: inline-block;
+    height: $action-btn-size;
+    outline: none;
+    cursor: pointer;
+    text-align: center;
+    vertical-align: middle;
+    line-height: $action-btn-size;
+    position: relative;
+
+    .hide {
+        opacity: 0;
+    }
+
+    .overlay {
+        position: absolute;
+        top:0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+    }
+
+    .fa-check {
+        color: map-get($success, 800);
+        overflow: hidden;
+    }
+
+    .success-container {
+        width: 13px;
+        text-align: left;
+        display: inline-block;
+    }
+
+    &.disabled[color] {
+        cursor: not-allowed;
+        color: #d5d5d5;
+        background: #f5f5f5;
+
+        &:hover, &:focus, &:active {
+            color: #d5d5d5;
+            background: #f5f5f5;
+        }
+    }
+
+    &[type="square"], &[type="round"] {
+        width: $action-btn-size;
+    }
+
+    &[type="round"] {
+        border-radius: 99%;
+    }
+
+    &[type="wide"] {
+        padding: 0 10px;
+        min-width: $action-btn-size;
+    }
+
+    &[color="primary"] {
+        background: map-get($primary, 300);
+        color: $whitesmoke;
+
+        &:hover, &:focus {
+            background: map-get($primary, 500);
+        }
+
+        &:active {
+            background: map-get($primary, 600);
+        }
+    }
+
+    &[color="light"] {
+        background: $mercury-grey;
+        color: map-get($primary, 500);
+
+        &:hover, &:focus {
+            background: $alto;
+            color: map-get($primary, 200);
+        }
+
+        &:active {
+            background: $silver-grey;
+        }
+    }
+
+    &[color="danger"] {
+        background: map-get($danger, 500);
+        color: $whitesmoke;
+
+        &:hover, &:focus {
+            background: map-get($danger, 800);
+        }
+    }
+
+    &[color="warn"] {
+        background: map-get($warn, 500);
+        color: $whitesmoke;
+
+        &:hover, &:focus {
+            background: map-get($warn, 800);
+        }
+    }
+}

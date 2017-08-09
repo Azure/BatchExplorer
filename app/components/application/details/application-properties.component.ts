@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
-import { Application } from "app/models";
+import { BatchApplication } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";
 
 @Component({
@@ -10,7 +10,7 @@ import { ApplicationDecorator } from "app/models/decorators";
 })
 export class ApplicationPropertiesComponent {
     @Input()
-    public set application(application: Application) {
+    public set application(application: BatchApplication) {
         this._application = application;
         this.refresh(application);
     }
@@ -18,9 +18,9 @@ export class ApplicationPropertiesComponent {
 
     public decorator: ApplicationDecorator = {} as any;
 
-    private _application: Application;
+    private _application: BatchApplication;
 
-    public refresh(application: Application) {
+    public refresh(application: BatchApplication) {
         if (this.application) {
             this.decorator = new ApplicationDecorator(this.application);
         }

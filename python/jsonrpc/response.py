@@ -8,11 +8,12 @@ class JsonRpcResponse:
         Class for a json rpc response.
     """
 
-    def __init__(self, request: JsonRpcRequest, result: any=None, error: JsonRpcError=None):
+    def __init__(self, request: JsonRpcRequest, result: any=None, stream=False, error: JsonRpcError=None):
         self.jsonrpc = "2.0"
         self.result = result
         self.error = error
         self.request = request
+        self.stream = stream
 
     def to_json(self) -> str:
         """
@@ -20,6 +21,7 @@ class JsonRpcResponse:
         """
         data = {
             'jsonrpc': self.jsonrpc,
+            'stream': self.stream,
         }
 
         if self.request:

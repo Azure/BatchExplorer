@@ -37,7 +37,7 @@ export class SSHKeyService {
     }
 
     public loadInitialData(): Observable<List<SSHPublicKey>> {
-        const sub = new AsyncSubject();
+        const sub = new AsyncSubject<List<SSHPublicKey>>();
         storage.get(filename, (error, data) => {
             if (error) {
                 log.error("Error retrieving ssh public keys");

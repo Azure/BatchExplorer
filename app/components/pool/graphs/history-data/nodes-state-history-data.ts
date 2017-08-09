@@ -13,15 +13,8 @@ export class NodesStateHistoryData extends HistoryDataBase {
     }
 
     public update(nodes: List<Node>) {
-        const time = new Date();
-        if (!this.hasTimePassed(time)) {
-            return;
-        }
         const count = nodes.filter(x => this.states.has(x.state)).size;
-        this.history = this.history.concat([{
-            time: time,
-            y: count,
-        }]);
+        this.addPoint(count);
         this.cleanup();
     }
 }

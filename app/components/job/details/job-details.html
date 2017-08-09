@@ -2,15 +2,15 @@
     <div *ngIf="job">
         <md-card class="overview">
             <div class="actions">
-                <bl-action-btn-group>
+                <bl-button-group>
                     <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                    <bl-add-task-button title="Add task" [job]="job" (action)="addTask()"></bl-add-task-button>
-                    <bl-terminate-button [entity]="job" (action)="terminateJob()"></bl-terminate-button>
-                    <bl-delete-button [entity]="job" (action)="deleteJob()"></bl-delete-button>
-                    <bl-disable-button [job]="job" (action)="disableJob()"></bl-disable-button>
-                    <bl-enable-button [job]="job" (action)="enableJob()"></bl-enable-button>
-                    <bl-clone-button (action)="cloneJob()"></bl-clone-button>
-                </bl-action-btn-group>
+                    <bl-add-task-button title="Add task" [job]="job" [action]="addTask"></bl-add-task-button>
+                    <bl-terminate-button [entity]="job" [action]="terminateJob"></bl-terminate-button>
+                    <bl-delete-button [entity]="job" [action]="deleteJob"></bl-delete-button>
+                    <bl-disable-button [job]="job" [action]="disableJob"></bl-disable-button>
+                    <bl-enable-button [job]="job" [action]="enableJob"></bl-enable-button>
+                    <bl-clone-button [action]="cloneJob"></bl-clone-button>
+                </bl-button-group>
             </div>
             <div class="content">
                 <div class="info">
@@ -18,6 +18,13 @@
                     <md-card-subtitle><i class="fa" [ngClass]="decorator.stateIcon"></i> {{decorator.state}}</md-card-subtitle>
                     Pool: <a [routerLink]="['/pools', job.poolId]">{{job.poolId}}</a>
                     <bl-tags [tags]="job.tags" [editable]="job.editable" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
+                </div>
+            </div>
+            <div class="tile">
+                <div class="job-graphs-link" [routerLink]="['/jobs', job.id, 'graphs']">
+                    <i class="fa fa-line-chart"></i>
+                    <i class="fa fa-area-chart"></i>
+                    <div>Job statistics</div>
                 </div>
             </div>
             <div class="tile">

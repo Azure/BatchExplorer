@@ -43,6 +43,7 @@ function userAccountToDto(userAccount: UserAccountFormModel): UserAccountDto {
 })
 export class UserAccountPickerComponent implements ControlValueAccessor, Validator, OnDestroy {
     public form: FormGroup;
+
     private _propagateChange: (value: UserAccountDto) => void = null;
     private _sub: Subscription;
 
@@ -84,7 +85,9 @@ export class UserAccountPickerComponent implements ControlValueAccessor, Validat
         const valid = this.form.valid;
         if (!valid) {
             return {
-                userAccounts: false,
+                userAccounts: {
+                    valid: false,
+                },
             };
         }
 

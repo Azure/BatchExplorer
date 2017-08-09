@@ -1,19 +1,21 @@
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, Input } from "@angular/core";
+import { autobind } from "core-decorators";
+import { ButtonAction } from "./button.component";
 
 import { Job, JobState } from "app/models";
 
 export class BaseButton {
-    @Output()
-    public action = new EventEmitter();
+    @Input()
+    public action: ButtonAction;
 }
 
 @Component({
     selector: "bl-loading-button",
     template: `
-        <bl-action-btn color="primary" type="wide" (action)="action.emit()">
+        <bl-button color="light" type="wide" [action]="action">
             <ng-content *ngIf="!loading"></ng-content>
             <i class="fa fa-spinner fa-spin" *ngIf="loading"></i>
-        </bl-action-btn>
+        </bl-button>
     `,
 })
 export class LoadingButtonComponent extends BaseButton {
@@ -24,17 +26,18 @@ export class LoadingButtonComponent extends BaseButton {
 @Component({
     selector: "bl-clear-list-selection",
     template: `
-        <bl-action-btn color="accent" (action)="onClick()" md-tooltip="Clear selection">
+        <bl-button color="accent" [action]="onClick" md-tooltip="Clear selection">
             <i class="fa fa-check-square-o"></i>
-        </bl-action-btn>
+        </bl-button>
     `,
 })
 export class ClearListSelectionButtonComponent extends BaseButton {
     @Input()
     public list: any;
 
+    @autobind()
     public onClick() {
-        this.action.emit();
+        this.action();
         this.list.clearSelection();
     }
 }
@@ -45,25 +48,18 @@ export class ClearListSelectionButtonComponent extends BaseButton {
  */
 @Component({
     selector: "bl-add-button",
-    template: `<bl-action-btn icon="fa fa-plus" [title]="title" (action)="action.emit()"></bl-action-btn>`,
+    template: `<bl-button color="light" icon="fa fa-plus" [title]="title" [action]="action"></bl-button>`,
 })
 export class AddButtonComponent extends BaseButton {
     @Input()
-    public set title(value: string) {
-        this._title = value;
-    }
-    public get title() {
-        return this._title ? this._title : "Add";
-    }
-
-    private _title: string;
+    public title: string = "Add";
 }
 
 @Component({
     selector: "bl-add-task-button",
     template: `
-        <bl-action-btn (action)="action.emit()" [disabled]="!enabled" [title]="title" icon="fa fa-plus">
-        </bl-action-btn>
+        <bl-button color="light" [action]="action" [disabled]="!enabled" [title]="title" icon="fa fa-plus">
+        </bl-button>
     `,
 })
 export class AddTaskButtonComponent extends BaseButton {
@@ -71,12 +67,7 @@ export class AddTaskButtonComponent extends BaseButton {
     public job: Job;
 
     @Input()
-    public set title(value: string) {
-        this._title = value;
-    }
-    public get title() {
-        return this._title ? this._title : "Add";
-    }
+    public title: string = "Add";
 
     public get enabled() {
         return this.job
@@ -86,15 +77,13 @@ export class AddTaskButtonComponent extends BaseButton {
             && this.job.state !== JobState.disabling
             && this.job.state !== JobState.terminating;
     }
-
-    private _title: string;
 }
 
 @Component({
     selector: "bl-terminate-button",
     template: `
-        <bl-action-btn (action)="action.emit()" [disabled]="!enabled" icon="fa fa-stop" title="Terminate">
-        </bl-action-btn>
+        <bl-button color="light" [action]="action" [disabled]="!enabled" icon="fa fa-stop" title="Terminate">
+        </bl-button>
     `,
 })
 export class TerminateButtonComponent extends BaseButton {
@@ -112,13 +101,16 @@ export class TerminateButtonComponent extends BaseButton {
 @Component({
     selector: "bl-delete-button",
     template: `
-        <bl-action-btn (action)="action.emit()" [disabled]="!enabled" title="Delete" icon="fa fa-trash-o">
-        </bl-action-btn>
+        <bl-button color="light" [action]="action" [disabled]="!enabled" [title]="title" icon="fa fa-trash-o">
+        </bl-button>
     `,
 })
 export class DeleteButtonComponent extends BaseButton {
     @Input()
     public entity: any;
+
+    @Input()
+    public title: string = "Delete";
 
     public get enabled() {
         if (this.entity instanceof Job) {
@@ -134,9 +126,9 @@ export class DeleteButtonComponent extends BaseButton {
 @Component({
     selector: "bl-disable-button",
     template: `
-        <bl-action-btn (action)="action.emit()" *ngIf="visible" icon="fa fa-pause"
+        <bl-button color="light" [action]="action" *ngIf="visible" icon="fa fa-pause"
             [disabled]="!enabled" title="Disable">
-        </bl-action-btn>
+        </bl-button>
     `,
 })
 export class DisableButtonComponent extends BaseButton {
@@ -158,8 +150,9 @@ export class DisableButtonComponent extends BaseButton {
 @Component({
     selector: "bl-enable-button",
     template: `
-        <bl-action-btn *ngIf="visible" (action)="action.emit()" [disabled]="!enabled" title="Enable" icon="fa fa-play">
-        </bl-action-btn>
+        <bl-button color="light" *ngIf="visible" [action]="action" [disabled]="!enabled" title="Enable"
+            icon="fa fa-play">
+        </bl-button>
     `,
 })
 export class EnableButtonComponent extends BaseButton {
@@ -177,25 +170,18 @@ export class EnableButtonComponent extends BaseButton {
 
 @Component({
     selector: "bl-clone-button",
-    template: `<bl-action-btn (action)="action.emit()" [title]="title" icon="fa fa-clone"></bl-action-btn>`,
+    template: `<bl-button color="light" [action]="action" [title]="title" icon="fa fa-clone"></bl-button>`,
 })
 export class CloneButtonComponent extends BaseButton {
     @Input()
-    public set title(value: string) {
-        this._title = value;
-    }
-    public get title() {
-        return this._title ? this._title : "Clone";
-    }
-
-    private _title: string;
+    public title: string = "Clone";
 }
 
 @Component({
     selector: "bl-download-button",
     template: `
-        <bl-action-btn (action)="action.emit()" [disabled]="!enabled" title="Download" icon="fa fa-download">
-        </bl-action-btn>
+        <bl-button color="light" [action]="action" [disabled]="!enabled" title="Download" icon="fa fa-download">
+        </bl-button>
     `,
 })
 export class DownloadButtonComponent extends BaseButton {
@@ -207,19 +193,21 @@ export class DownloadButtonComponent extends BaseButton {
         return this._enabled;
     }
 
-    private _enabled: boolean;
+    private _enabled: boolean = true;
 }
 
 @Component({
     selector: "bl-resize-button",
-    template: `<bl-action-btn (action)="action.emit()" title="Resize" icon="fa fa-arrows-v"></bl-action-btn>`,
+    template: `<bl-button color="light" [action]="action" title="Resize" icon="fa fa-arrows-v"></bl-button>`,
 })
 export class ResizeButtonComponent extends BaseButton {
 }
 
 @Component({
     selector: "bl-edit-button",
-    template: `<bl-action-btn (action)="action.emit()" title="Edit" icon="fa fa-pencil-square-o"></bl-action-btn>`,
+    template: `<bl-button color="light" [action]="action" [title]="title" icon="fa fa-pencil-square-o"></bl-button>`,
 })
 export class EditButtonComponent extends BaseButton {
+    @Input()
+    public title: string = "Edit";
 }

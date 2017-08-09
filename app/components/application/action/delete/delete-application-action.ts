@@ -1,8 +1,8 @@
 import { BehaviorSubject } from "rxjs";
 
-import { WaitForDeletePoller } from "app/components/application/action";
 import { BackgroundTaskService } from "app/components/base/background-task";
-import { Application } from "app/models";
+import { WaitForDeletePoller } from "app/components/core/pollers";
+import { BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
 import { LongRunningDeleteAction } from "app/services/core";
 
@@ -20,7 +20,7 @@ export class DeleteApplicationAction extends LongRunningDeleteAction {
 
     protected waitForDelete(id: string, taskManager?: BackgroundTaskService) {
         this.applicationService.getOnce(id).subscribe({
-            next: (application: Application) => {
+            next: (application: BatchApplication) => {
                 const task = new WaitForDeletePoller(this.applicationService.get(id));
                 if (taskManager) {
                     const message = `Deleting application: ${id}`;

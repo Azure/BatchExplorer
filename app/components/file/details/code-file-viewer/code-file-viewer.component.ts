@@ -31,7 +31,7 @@ export class CodeFileViewerComponent implements OnChanges {
     private _loadImage() {
         this.fileTooLarge = false;
         this.loadingStatus = LoadingStatus.Loading;
-        this.fileLoader.properties().subscribe((file: File) => {
+        this.fileLoader.getProperties().subscribe((file: File) => {
             this.file = file;
             const contentLength = file.properties.contentLength;
             if (contentLength > maxSize) {

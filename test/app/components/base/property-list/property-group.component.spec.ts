@@ -1,7 +1,8 @@
-import { Component, DebugElement } from "@angular/core";
+import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
+import { ButtonComponent } from "app/components/base/buttons";
 import { PropertyGroupComponent } from "app/components/base/property-list";
 import { click } from "test/utils/helpers";
 
@@ -18,7 +19,7 @@ class TestGroupComponent {
     public warningMessage = null;
 }
 
-describe("TextPropertyComponent", () => {
+describe("PropertyGroupComponent", () => {
     let fixture: ComponentFixture<TestGroupComponent>;
     let de: DebugElement;
     let component: TestGroupComponent;
@@ -28,7 +29,8 @@ describe("TextPropertyComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [TestGroupComponent, PropertyGroupComponent],
+            declarations: [TestGroupComponent, PropertyGroupComponent, ButtonComponent],
+            schemas: [NO_ERRORS_SCHEMA],
         });
         fixture = TestBed.createComponent(TestGroupComponent);
         de = fixture.debugElement;

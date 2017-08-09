@@ -5,6 +5,7 @@
       "name": "Launch",
       "type": "node",
       "request": "launch",
+      "protocol": "legacy",
       "program": "${workspaceRoot}/src/client/main.ts",
       "stopOnEntry": false,
       "args": [],
@@ -34,7 +35,7 @@
       "request": "attach",
       "port": 9222,
       "sourceMaps": true,
-      "diagnosticLogging": true,
+      "trace": "verbose",
       "url": "file://*",
       "webRoot": "${workspaceRoot}/build"
     }

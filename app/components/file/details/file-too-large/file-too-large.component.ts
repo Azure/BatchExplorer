@@ -50,7 +50,7 @@ export class FileTooLargeComponent {
 
         this.fileLoader.cache().subscribe((pathToFile) => {
             this.downloading = false;
-            this.shell.openExternal(pathToFile);
+            this.shell.openItem(pathToFile);
         });
     }
 }

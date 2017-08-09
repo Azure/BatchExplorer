@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
 import { FormControl } from "@angular/forms";
+import { autobind } from "core-decorators";
 
 import { Filter, FilterBuilder } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
@@ -26,6 +27,7 @@ export class ApplicationHomeComponent {
         });
     }
 
+    @autobind()
     public addApplication() {
         this.sidebarManager.open("add-application", ApplicationCreateDialogComponent);
     }

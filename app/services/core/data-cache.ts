@@ -134,8 +134,8 @@ export class DataCache<T> {
         if (!this.has(key)) {
             return false;
         }
-        this._items.next(this._items.getValue().delete(key));
         this._deleted.next(key);
+        this._items.next(this._items.getValue().delete(key));
         return true;
     }
 

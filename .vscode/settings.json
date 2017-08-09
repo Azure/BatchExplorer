@@ -9,8 +9,12 @@
     "**/node_modules": true,
     "**/bower_components": true,
     "build/**": true,
+    "python/build/**": true,
     "release/**": true,
     "dll/**": true
+  },
+  "files.exclude": {
+    "**/__pycache__/**/*": true
   },
   "python.autoComplete.extraPaths": [
     "${workspaceRoot}/python"

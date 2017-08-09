@@ -4,7 +4,7 @@
             <bl-table [activeItem]="pickedSize" (activeItemChange)="pickSize($event)">
                 <bl-thead>
                     <bl-column [sortable]="true">Name</bl-column>
-                    <bl-column [sortable]="true">Price per node(Monthly)</bl-column>
+                    <bl-column [sortable]="true">Price per node (hourly)</bl-column>
                     <bl-column style="width: 60px" [sortable]="true">Cores</bl-column>
                     <bl-column style="width: 60px" [sortable]="true">RAM</bl-column>
                     <bl-column style="width: 70px" [sortable]="true">OS Disk</bl-column>
@@ -22,3 +22,4 @@
         </bl-focus-section>
     </md-tab>
 </md-tab-group>
+<p>Note: Per-month pricing for listed VM's is an approximation only and based on estimated usage.</p>

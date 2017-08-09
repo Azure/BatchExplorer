@@ -5,7 +5,7 @@ import { By } from "@angular/platform-browser";
 import { autobind } from "core-decorators";
 import { AsyncSubject } from "rxjs";
 
-import { SubmitButtonComponent } from "app/components/base/buttons";
+import { ButtonComponent } from "app/components/base/buttons";
 import {
     ComplexFormComponent, FormPageComponent, FormPickerComponent, FormSectionComponent,
 } from "app/components/base/form";
@@ -77,8 +77,8 @@ describe("ComplexFormComponent", () => {
     let createFormElement: DebugElement;
     let addButton: DebugElement;
     let addAndCloseButton: DebugElement;
-    let addButtonComponent: SubmitButtonComponent;
-    let addAndCloseButtonComponent: SubmitButtonComponent;
+    let addButtonComponent: ButtonComponent;
+    let addAndCloseButtonComponent: ButtonComponent;
 
     function getErrorElement(): DebugElement {
         return createFormElement.query(By.css(".error-banner"));
@@ -88,7 +88,7 @@ describe("ComplexFormComponent", () => {
         TestBed.configureTestingModule({
             imports: [FormsModule, ReactiveFormsModule],
             declarations: [
-                SubmitButtonComponent,
+                ButtonComponent,
                 FormTestComponent,
                 ServerErrorComponent,
                 ComplexFormComponent,
@@ -108,8 +108,8 @@ describe("ComplexFormComponent", () => {
         component = createFormElement.componentInstance;
 
         // Get the buttons
-        addButton = createFormElement.query(By.css("bl-submit-btn.add"));
-        addAndCloseButton = createFormElement.query(By.css("bl-submit-btn.add-and-close"));
+        addButton = createFormElement.query(By.css("bl-button.add"));
+        addAndCloseButton = createFormElement.query(By.css("bl-button.add-and-close"));
         addButtonComponent = addButton && addButton.componentInstance;
         addAndCloseButtonComponent = addAndCloseButton && addAndCloseButton.componentInstance;
     });
@@ -120,11 +120,6 @@ describe("ComplexFormComponent", () => {
 
         expect(addButtonComponent.disabled).toBe(true);
         expect(addAndCloseButtonComponent.disabled).toBe(true);
-    });
-
-    it("add button should allow multisubmit", () => {
-        expect(addButtonComponent.multiSubmit).toBe(true);
-        expect(addAndCloseButtonComponent.multiSubmit).toBe(true);
     });
 
     it("should not have any erros by default", () => {
@@ -147,7 +142,7 @@ describe("ComplexFormComponent", () => {
         });
         fixture.detectChanges();
 
-        addAndCloseButtonComponent.onClick();
+        addAndCloseButtonComponent.handleAction({} as any);
         expect(fixture.componentInstance.submitSpy).toHaveBeenCalledTimes(1);
         tick(); // For asyncsjubject
         tick(1000); // For the timeout to close
@@ -160,7 +155,7 @@ describe("ComplexFormComponent", () => {
         });
         fixture.detectChanges();
 
-        addButtonComponent.onClick();
+        addButtonComponent.handleAction({} as any);
         expect(fixture.componentInstance.submitSpy).toHaveBeenCalledTimes(1);
         tick();
         tick(1000);
@@ -173,7 +168,7 @@ describe("ComplexFormComponent", () => {
                 id: "error",
             });
             fixture.detectChanges();
-            addButtonComponent.onClick();
+            addButtonComponent.handleAction({} as any);
             fixture.detectChanges();
         });
 

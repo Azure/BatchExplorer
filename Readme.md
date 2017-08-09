@@ -13,6 +13,7 @@ It will also include expermiental features such as `Batch Templates` in the aim 
 ## Getting started
 #### 1. Prerequisites
 - **Install node.js version `6.9` or greater. [Download](https://nodejs.org/en/download/)**
+- Install python **3.6** (doesn't need to be in the path if that breaks your environment)
 - Install yarn `npm install -g yarn`
 
 #### 2. Clone the repo
@@ -23,12 +24,18 @@ Move to the directory `cd BatchLabs`
 #### 3. Install the dependencies
 ```bash
 yarn install
+pip3 install -r python/requirements.txt # or pip if on windows or only have python 3.6 installed
 ```
 Note: You can also use `npm install` at your own risk. However please do not submit an issue if you didn't use `yarn install`. Yarn will make sure you have the right set of dependencies, which reduces the likelihood of any unexpected build issues relating to third party packages.
 
+#### 3.5 Setup some configuration(Only in certain case)
+If you didn't installed python in the path you will need to let batchlabs know where it is.
+Set an environment variable called `BL_PYTHON_PATH` with that path to the python executable.
+Batchlabs will look first to see if this environemnt variable is set if not try `python3` and then `python` to find an installation of python 3.6
+
 #### 4. Build and run the application
 ```bash
-# Make an executable
+# Make an executable, this will bundle all needed dependencies including node and python
 npm run build-and-pack
 
 # Manual

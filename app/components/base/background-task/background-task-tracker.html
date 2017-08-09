@@ -1,5 +1,5 @@
 <bl-dropdown class="account-dropdown">
-    <div bl-dropdown-btn>
+    <div bl-dropdown-btn [class.flash]="showFlash">
         <div *ngIf="currentTask" class="current-task">
             <bl-background-task-tracker-item [task]="currentTask"></bl-background-task-tracker-item>
             <div class="other-task-count" *ngIf="otherTasks.size > 0">+{{otherTasks.size}}</div>

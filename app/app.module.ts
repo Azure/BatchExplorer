@@ -18,6 +18,7 @@ import { AADUserDropdownComponent } from "app/components/user";
 import { AccountModule } from "app/components/account/account.module";
 import { ApplicationModule } from "app/components/application/application.module";
 import { BaseModule } from "app/components/base";
+import { DataModule } from "app/components/data/data.module";
 import { FileModule } from "app/components/file/file.module";
 import { JobModule } from "app/components/job/job.module";
 import { NodeModule } from "app/components/node/node.module";
@@ -38,6 +39,7 @@ import {
     AutoscaleFormulaService,
     AzureHttpService,
     BatchClientService,
+    CacheDataService,
     CommandService,
     ComputeService,
     ElectronRemote,
@@ -49,6 +51,8 @@ import {
     JobHookTaskService,
     JobService,
     LocalFileStorage,
+    NcjFileGroupService,
+    NcjTemplateService,
     NodeService,
     NodeUserService,
     PoolService,
@@ -67,7 +71,7 @@ import {
 } from "./services";
 
 const modules = [
-    AccountModule, ApplicationModule, FileModule, JobModule, NodeModule, PoolModule, TaskModule,
+    AccountModule, ApplicationModule, DataModule, FileModule, JobModule, NodeModule, PoolModule, TaskModule,
 ];
 
 @NgModule({
@@ -102,6 +106,7 @@ const modules = [
         AzureHttpService,
         ArmHttpService,
         BatchClientService,
+        CacheDataService,
         CommandService,
         ComputeService,
         ElectronRemote,
@@ -113,6 +118,8 @@ const modules = [
         JobHookTaskService,
         JobService,
         LocalFileStorage,
+        NcjFileGroupService,
+        NcjTemplateService,
         NodeService,
         NodeUserService,
         PollService,

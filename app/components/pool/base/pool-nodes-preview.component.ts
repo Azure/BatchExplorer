@@ -2,6 +2,7 @@ import { Component, HostBinding, Input, OnChanges } from "@angular/core";
 
 import { Pool, PoolAllocationState } from "app/models";
 
+import { PoolUtils } from "app/utils";
 import "./pool-nodes-preview.scss";
 
 @Component({
@@ -20,12 +21,15 @@ export class PoolNodesPreviewComponent implements OnChanges {
     public size: ComponentSize = "normal";
     public tooltipMessage: string;
 
+    public prettyStatus: string = "";
+
     @HostBinding("class.resize-error")
     public hasResizeError: boolean = false;
     public ngOnChanges(inputs) {
         if (inputs.pool) {
             this.tooltipMessage = this._getTooltipMessage();
             this.hasResizeError = this.pool.resizeErrors.size > 0;
+            this.prettyStatus = PoolUtils.poolNodesStatus(this.pool, this.pool.currentNodes, this.pool.targetNodes);
         }
     }
 

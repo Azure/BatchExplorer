@@ -60,16 +60,17 @@ export class NodeService extends ServiceBase {
     }
 
     public listAll(poolId: string, options: PoolListOptions = {}): Observable<List<Node>> {
-        const subject = new AsyncSubject();
+        const subject = new AsyncSubject<List<Node>>();
         options.pageSize = 1000;
         const data = this.list(poolId, options);
         const sub = data.items.subscribe((x) => subject.next(x));
         data.fetchAll().subscribe(() => {
+
             subject.complete();
             sub.unsubscribe();
         });
 
-        return subject;
+        return subject.asObservable();
     }
 
     public get(initialPoolId: string, initialNodeId: string, options: any): RxEntityProxy<NodeParams, Node> {
@@ -87,7 +88,7 @@ export class NodeService extends ServiceBase {
      * Get a node once and forget.
      * You don't need to cleanup the subscription.
      */
-    public getOnce(poolId: string, nodeId: string, options: any): Observable<Node> {
+    public getOnce(poolId: string, nodeId: string, options: any = {}): Observable<Node> {
         return getOnceProxy(this.get(poolId, nodeId, options));
     }
 
@@ -174,6 +175,12 @@ export class NodeService extends ServiceBase {
         });
 
         return observable;
+    }
+
+    public delete(poolId: string, nodeId: string): Observable<any> {
+        return this.callBatchClient((client) => client.node.delete(poolId, nodeId, {}), (error) => {
+            log.error("Error deleting node: " + nodeId, Object.assign({}, error));
+        });
     }
 
     public listNodeAgentSkus(initialOptions: any = { pageSize: 1000 }): RxListProxy<{}, NodeAgentSku> {

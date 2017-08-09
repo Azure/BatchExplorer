@@ -4,7 +4,6 @@
 @import "./common/type";
 
 // Base styles
-@import "./base/background-task";
 @import "./base/breadcrumbs";
 @import "./base/buttons";
 @import "./base/graphs/gauge";
@@ -15,7 +14,6 @@
 @import "./base/scaffolding";
 @import "./base/dropdown";
 @import "./base/list";
-@import "./base/loading";
 @import "./base/notifications";
 @import "./base/scrollable";
 @import "./base/advanced-filter";
@@ -26,13 +24,10 @@
 
 // Pool styles
 @import "./pool/base";
-@import "./pool/graphs";
 @import "./pool/create";
-@import "./pool/heatmap";
 
 // Job styles
 @import "./job/base";
-@import "./job/details";
 @import "./job/form";
 
 //Task styles

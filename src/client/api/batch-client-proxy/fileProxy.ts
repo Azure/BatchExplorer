@@ -37,18 +37,8 @@ export default class FileProxy {
             this.client.file.getPropertiesFromComputeNode(poolId, nodeId, filename, wrapOptions(options),
                 (error, result, request, response) => {
                     if (error) { return reject(error); }
-                    const headers = response.headers;
-                    const out = {
-                        name: filename,
-                        isDirectory: headers["ocp-batch-file-isdirectory"],
-                        url: headers["ocp-batch-file-url"],
-                        properties: {
-                            contentLength: parseInt(headers["content-length"], 10),
-                            contentType: headers["content-type"],
-                            creationTime: headers["ocp-creation-time"],
-                            lastModified: headers["lastModified"],
-                        },
-                    };
+                    const out = this._parseHeadersToFile(response.headers, filename);
+
                     resolve({
                         data: out,
                     });
@@ -86,18 +76,7 @@ export default class FileProxy {
             this.client.file.getPropertiesFromTask(jobId, taskId, filename, wrapOptions(options),
                 (error, result, request, response) => {
                     if (error) { return reject(error); }
-                    const headers = response.headers;
-                    const out = {
-                        name: filename,
-                        isDirectory: headers["ocp-batch-file-isdirectory"],
-                        url: headers["ocp-batch-file-url"],
-                        properties: {
-                            contentLength: parseInt(headers["content-length"], 10),
-                            contentType: headers["content-type"],
-                            creationTime: headers["ocp-creation-time"],
-                            lastModified: headers["lastModified"],
-                        },
-                    };
+                    const out = this._parseHeadersToFile(response.headers, filename);
                     resolve({
                         data: out,
                     });
@@ -139,5 +118,19 @@ export default class FileProxy {
         return new ListProxy(entity,
             [poolId, nodeId],
             wrapOptions({ recursive, fileListFromComputeNodeOptions: options }));
+    }
+
+    private _parseHeadersToFile(headers, filename: string) {
+        return {
+            name: filename,
+            isDirectory: headers["ocp-batch-file-isdirectory"],
+            url: headers["ocp-batch-file-url"],
+            properties: {
+                contentLength: parseInt(headers["content-length"] as string, 10),
+                contentType: headers["content-type"],
+                creationTime: headers["ocp-creation-time"],
+                lastModified: headers["last-modified"],
+            },
+        };
     }
 }

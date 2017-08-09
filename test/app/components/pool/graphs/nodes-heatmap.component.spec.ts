@@ -1,16 +1,17 @@
 import { Component, DebugElement, Input } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { RouterTestingModule } from "@angular/router/testing";
+import { Router } from "@angular/router";
 import * as d3 from "d3";
 import { List } from "immutable";
 
+import { SidebarManager } from "app/components/base/sidebar";
 import { NodesHeatmapComponent, NodesHeatmapLegendComponent } from "app/components/pool/graphs";
 import { Node, NodeState, Pool } from "app/models";
 import { NodeService } from "app/services";
 import * as Fixture from "test/fixture";
-import { click } from "test/utils/helpers";
-import { ContextMenuServiceMock } from "test/utils/mocks";
+import { click, dblclick, rightClick } from "test/utils/helpers";
+import { ContextMenuServiceMock, NotificationServiceMock } from "test/utils/mocks";
 
 @Component({
     template: `
@@ -39,24 +40,31 @@ export class NodePreviewCardMockComponent {
     public poolId: string;
 }
 
-describe("NodesHeatmapLegendComponent", () => {
+describe("NodesHeatmapComponent", () => {
     let fixture: ComponentFixture<HeatmapMockComponent>;
     let testComponent: HeatmapMockComponent;
     let heatmap: NodesHeatmapComponent;
     let heatmapContainer: DebugElement;
     let svg: d3.Selection<any, any, any, any>;
     let contextMenuService: ContextMenuServiceMock;
-
+    let routerSpy;
+    let notificationService;
     beforeEach(() => {
         contextMenuService = new ContextMenuServiceMock();
+        notificationService = new NotificationServiceMock();
+        routerSpy = {
+            navigate: jasmine.createSpy("router.navigate"),
+        };
         TestBed.configureTestingModule({
-            imports: [RouterTestingModule],
             declarations: [
                 HeatmapMockComponent, NodesHeatmapComponent, NodesHeatmapLegendComponent, NodePreviewCardMockComponent,
             ],
             providers: [
                 { provide: NodeService, useValue: {} },
+                { provide: SidebarManager, useValue: {} },
+                { provide: Router, useValue: routerSpy },
                 contextMenuService.asProvider(),
+                notificationService.asProvider(),
             ],
         });
 
@@ -143,6 +151,46 @@ describe("NodesHeatmapLegendComponent", () => {
         });
     });
 
+    describe("Running task overlay", () => {
+        it("when there is space should show 2 green sripes", () => {
+            testComponent.nodes = createNodes(2);
+            testComponent.pool = new Pool({ id: "pool-4", maxTasksPerNode: 4 });
+            fixture.detectChanges();
+            const tiles = svg.selectAll("g.node-group");
+            expect(tiles.size()).toBe(2);
+            tiles.each((d, i, groups) => {
+                const group = d3.select(groups[i]);
+                const bg = group.select("g.tasks");
+                const taskRects = bg.selectAll("rect");
+                expect(taskRects.size()).toBe(2, "Should have 2 rect");
+                taskRects.each((d, i, rects) => {
+                    const rect = d3.select(rects[i]);
+                    expect(rect.attr("height")).not.toBe("0");
+                    expect(rect.attr("style")).toContain("fill: rgb(56, 142, 60);");
+                });
+            });
+        });
+
+        it("when there is no space should combine green sripes", () => {
+            testComponent.nodes = createNodes(2);
+            testComponent.pool = new Pool({ id: "pool-100", maxTasksPerNode: 300 });
+            fixture.detectChanges();
+            const tiles = svg.selectAll("g.node-group");
+            expect(tiles.size()).toBe(2);
+            tiles.each((d, i, groups) => {
+                const group = d3.select(groups[i]);
+                const bg = group.select("g.tasks");
+                const taskRects = bg.selectAll("rect");
+                expect(taskRects.size()).toBe(1, "Should have only 1 rect");
+                taskRects.each((d, i, rects) => {
+                    const rect = d3.select(rects[i]);
+                    expect(rect.attr("height")).not.toBe("0");
+                    expect(rect.attr("style")).toContain("fill: rgb(56, 142, 60);");
+                });
+            });
+        });
+    });
+
     describe("Lowpri stipes overlay", () => {
         it("should use fill transpart for dedicated nodes", () => {
             testComponent.nodes = createNodes(2);
@@ -216,6 +264,30 @@ describe("NodesHeatmapLegendComponent", () => {
         expect(heatmap.selectedNodeId.value).toBeNull();
     });
 
+    it("should show context menu on right click", () => {
+        testComponent.nodes = createNodes(4);
+        fixture.detectChanges();
+
+        const groups = svg.selectAll("g.node-group");
+        const el: any = groups.nodes()[1];
+        rightClick(el);
+        fixture.detectChanges();
+
+        expect(contextMenuService.openMenu).toHaveBeenCalledOnce();
+    });
+
+    it("should go to the node on double click", () => {
+        testComponent.nodes = createNodes(4);
+        fixture.detectChanges();
+
+        const groups = svg.selectAll("g.node-group");
+        const el: any = groups.nodes()[1];
+        dblclick(el);
+        fixture.detectChanges();
+
+        expect(routerSpy.navigate).toHaveBeenCalledOnce();
+    });
+
     describe("when interactive is off", () => {
         beforeEach(() => {
             testComponent.interactive = false;
@@ -233,6 +305,30 @@ describe("NodesHeatmapLegendComponent", () => {
             fixture.detectChanges();
             expect(heatmap.selectedNodeId.value).toEqual(null);
         });
+
+        it("should not double click", () => {
+            testComponent.nodes = createNodes(4);
+            fixture.detectChanges();
+
+            const groups = svg.selectAll("g.node-group");
+            const el: any = groups.nodes()[1];
+            dblclick(el);
+            fixture.detectChanges();
+
+            expect(routerSpy.navigate).not.toHaveBeenCalled();
+        });
+
+        it("should not allow right click", () => {
+            testComponent.nodes = createNodes(4);
+            fixture.detectChanges();
+
+            const groups = svg.selectAll("g.node-group");
+            const el: any = groups.nodes()[1];
+            rightClick(el);
+            fixture.detectChanges();
+
+            expect(contextMenuService.openMenu).not.toHaveBeenCalled();
+        });
     });
 });
 
@@ -240,7 +336,8 @@ function createNodes(count: number, dedicated = true) {
     const nodes: Node[] = [];
     for (let i = 0; i < count; i++) {
         nodes.push(Fixture.node.create({
-            id: `node-${i + 1}`, state: NodeState.idle,
+            id: `node-${i + 1}`,
+            state: NodeState.running,
             isDedicated: dedicated,
             runningTasksCount: 2,
         }));

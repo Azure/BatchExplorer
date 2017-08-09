@@ -7,9 +7,7 @@
             <div class="details">
                 <ng-template [ngTemplateOutlet]="itemTemplate.template"  [ngOutletContext]="{$implicit: value}"></ng-template>
             </div>
-            <div class="clear-btn" (click)="clearValue($event, i)">
-                <button md-mini-fab><i class="fa fa-times"></i></button>
-            </div>
+            <bl-button type="round" color="light" class="clear-btn" (click)="clearValue($event, i)"><i class="fa fa-times"></i></bl-button>
         </span>
     </button>
 </div>

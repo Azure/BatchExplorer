@@ -15,19 +15,19 @@ $black              :  #000;
 $white              :  #fff;
 $offWhite           :  #fdfdfd;
 $whitesmoke         :  #fafafa;
-$whiteSmoke         :    $whitesmoke;
+$whiteSmoke         :  $whitesmoke;
 $whitesmoke-darker  :  #f5f5f5;
-$whiteSmoke-darker  :    $whitesmoke-darker;
+$whiteSmoke-darker  :  $whitesmoke-darker;
 $snowDriftWhite     :  #fafcfa;
 
 // Grays
 //---------------------------------------------
 $concreteGray       :  #f2f2f2;
-$mercuryGray        :  #e5e5e5;
+$mercury-grey       :  #e5e5e5;
+$mercuryGray        :  $mercury-grey;
 $athensGrey         :  #edeef2;
 $altoGray           :  #dfdfdf;
 $alto               :  #d5d5d5;
-$tiaraGray          :  #d1d5d4;
 $silver-grey        :  #cccccc;
 $dusty-grey         :  #9e9e9e;
 $genericGray        :  #757575;
@@ -48,6 +48,7 @@ $successText        :  map-get($success, 500);
 //---------------------------------------------
 $headings-color             : map-get($primary, 700);
 $link-color                 : map-get($primary, 700);
+$link-alt-color             : map-get($primary, 300);
 $link-color-hover           : map-get($primary, 800);
 $validation-error-color     : map-get($danger, 500);
 $label-text                 : $dusty-grey;
@@ -59,6 +60,7 @@ $headingsFontWeight : semilight;
 $headingWeightBold  : semibold;
 $headingsLineHeight : $baseLineHeight;
 $textColor          : $mineShaftGray;
+$main-font          : "Roboto", Helvetica, Arial, sans-serif;
 
 $h1FontSize         : $baseFontSize * 1.8;
 $h2FontSize         : $baseFontSize * 1.6;

@@ -77,7 +77,7 @@ export class DownloadRdpComponent {
     }
 
     private _computeFullRdpFile() {
-        return `${this.rdpBaseContent}\nusername:s:.\\${this.credentials.username}\nprompt for credentials:i:1`;
+        return `${this.rdpBaseContent}\nusername:s:.\\${this.credentials.name}\nprompt for credentials:i:1`;
     }
 
     private _buildRdpFromConnection() {

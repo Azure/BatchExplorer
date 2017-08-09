@@ -19,13 +19,13 @@
         </div>
     </div>
     <div class="actions">
-        <button class="edit" (click)="edit()">
+        <bl-button type="wide" class="edit" [action]="edit">
             <span *ngIf="storageAccountId">
                 Edit
             </span>
             <span *ngIf="!storageAccountId">
                 Setup
             </span>
-        </button>
+        </bl-button>
     </div>
 </div>
