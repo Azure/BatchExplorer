@@ -1,3 +1,22 @@
+# Version 0.6.0(Beta)
+[All items](https://github.com/Azure/BatchLabs/milestone/6?closed=1)
+
+### Features
+* Show pool estimated pricing [\#595](https://github.com/Azure/BatchLabs/issues/595)
+* Added graphs for the job [\#591](https://github.com/Azure/BatchLabs/issues/591)
+* Download a file group(NCJ)  [\#589](https://github.com/Azure/BatchLabs/issues/589)
+* File picker inside a file group(NCJ) [\#571](https://github.com/Azure/BatchLabs/issues/571)
+* File group picker(NCJ)  [\#569](https://github.com/Azure/BatchLabs/issues/569)
+* File group UI(NJC)  [\#530](https://github.com/Azure/BatchLabs/issues/530)
+* Delete a node [\#554](https://github.com/Azure/BatchLabs/issues/554)
+* Propose to delete the job with the same id as the pool you are trying to delete [\#543](https://github.com/Azure/BatchLabs/issues/543)
+* Preview of files(node or storage uploaded) is more efficient with caching [\#519](https://github.com/Azure/BatchLabs/issues/519)
+* Make metadata editable [\#513](https://github.com/Azure/BatchLabs/issues/513)
+* Application license picker(Maya, 3ds Max) [\#498](https://github.com/Azure/BatchLabs/issues/498)
+* Right click functionatlities on the heatmap [\#487](https://github.com/Azure/BatchLabs/issues/487)
+
+[Many bug fixes](https://github.com/Azure/BatchLabs/issues?q=is%3Aissue+milestone%3A0.6.0+is%3Aclosed+label%3Abug)
+
 # Version 0.5.0(Beta)
 [All items](https://github.com/Azure/BatchLabs/milestone/5?closed=1)
 
