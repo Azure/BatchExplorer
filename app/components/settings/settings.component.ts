@@ -27,11 +27,14 @@ export class SettingsComponent implements OnDestroy {
 
     public userSettingsEditorConfig: CodeMirror.EditorConfiguration = {
         lineNumbers: true,
-        mode: "application/json",
+        mode: "application/javascript",
         tabSize: 2,
         indentUnit: 2,
         gutters: ["CodeMirror-lint-markers"],
         lint: true,
+        extraKeys: {
+            "Ctrl-S": this.save,
+        },
     };
 
     public defaultSettings = defaultSettings;
@@ -74,7 +77,6 @@ export class SettingsComponent implements OnDestroy {
                     JSON.parse(JSON.minify(c.value));
                     resolve(null);
                 } catch (e) {
-                    console.log("Cau");
                     resolve({
                         validJsonConfig: {
                             valid: false,

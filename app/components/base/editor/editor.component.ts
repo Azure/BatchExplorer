@@ -4,6 +4,7 @@ import {
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import * as CodeMirror from "codemirror";
+import "codemirror/addon/comment/comment";
 import "codemirror/addon/display/autorefresh";
 import "codemirror/addon/display/placeholder";
 import "codemirror/addon/hint/show-hint";
@@ -60,6 +61,13 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     }
     public ngAfterViewInit() {
         this.config = this.config || {};
+        if (!this.config.extraKeys) {
+            this.config.extraKeys = {};
+        }
+
+        this.config.extraKeys = {
+            "Ctrl-/": "toggleComment",
+        };
         this.codemirrorInit(this.config);
     }
 
