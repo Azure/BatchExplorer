@@ -1,4 +1,4 @@
-<div id="container" *ngIf="isAppReady">
+<div id="container" [hidden]="!isAppReady">
     <!--[class.no-userinteract]="!(hasAccount | async)" -->
     <header id="header" class="noselect">
         <div class="back-nav">
@@ -30,7 +30,7 @@
                 <md-sidenav #rightSidebar align="end">
                     <bl-sidebar-content #sidebarContent [sidebar]="rightSidebar"></bl-sidebar-content>
                 </md-sidenav>
-                <div>
+                <div *ngIf="isAppReady">
                     <router-outlet></router-outlet>
                 </div>
             </md-sidenav-container>
