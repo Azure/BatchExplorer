@@ -3,11 +3,15 @@ import {
     HostListener, Input, OnChanges, Output, ViewChild, forwardRef,
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import "app/utils/autoscale";
 import * as CodeMirror from "codemirror";
 import "codemirror/addon/display/autorefresh";
 import "codemirror/addon/display/placeholder";
 import "codemirror/addon/hint/show-hint";
+
+// Modes
+import "app/utils/autoscale";
+import "codemirror/mode/javascript/javascript";
+
 import "./editor.scss";
 
 @Component({
@@ -62,12 +66,14 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     public codemirrorInit(config) {
         this.instance = CodeMirror.fromTextArea(this.host.nativeElement, config);
         this.instance.setValue(this._value);
-
         this.instance.on("change", (editor, change) => {
             this.updateValue(this.instance.getValue());
 
             if (change.origin !== "complete" && change.origin !== "setValue") {
-                (this.instance as any).showHint({ hint: (CodeMirror as any).hint.autoscale, completeSingle: false });
+                const hint = (CodeMirror as any).hint[this.instance.getDoc().getMode()];
+                if (hint) {
+                    (this.instance as any).showHint({ hint: hint, completeSingle: false });
+                }
             }
         });
 
@@ -83,6 +89,10 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
             this.blur.emit();
             this.changeDetector.markForCheck();
         });
+
+        setTimeout(() => {
+            this.instance.refresh();
+        }, 200);
     }
 
     public updateValue(value) {

@@ -1,8 +1,8 @@
-export interface Settings {
-    homePage: "account" | "home" | "job";
+export enum Theme {
+    classic = "classic",
 }
 
-// TODO move to a json file
-export const defaultSettings: Settings = {
-    homePage: "account",
-};
+export interface Settings {
+    theme: string;
+    fileTypes: StringMap<string[]>;
+}

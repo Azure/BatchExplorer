@@ -2,8 +2,12 @@ import { Injectable, NgZone } from "@angular/core";
 import * as storage from "electron-json-storage";
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { KeyBindings, Settings, defaultKeybindings, defaultSettings } from "app/models";
+import { KeyBindings, Settings, defaultKeybindings } from "app/models";
+import { LocalFileStorage } from "app/services";
 import { log } from "app/utils";
+
+// tslint:disable-next-line:no-var-requires
+const defaultSettings = JSON.parse(JSON.minify(require("app/components/settings/default-settings.json")));
 
 @Injectable()
 export class SettingsService {
@@ -12,6 +16,7 @@ export class SettingsService {
 
     public hasSettingsLoaded: Observable<boolean>;
     public settings: Settings;
+    public userSettingsStr: string;
 
     private _hasSettingsLoaded = new BehaviorSubject<boolean>(false);
     private _settingsSubject = new BehaviorSubject<Settings>(null);
@@ -20,7 +25,7 @@ export class SettingsService {
     private _filename = "settings";
     private _keybindingsFilename = "keybindings";
 
-    constructor(private zone: NgZone) {
+    constructor(private zone: NgZone, private storage: LocalFileStorage) {
         this.settingsObs = this._settingsSubject.asObservable();
         this.keybindings = this._keybindings.asObservable();
         this.hasSettingsLoaded = this._hasSettingsLoaded.asObservable();
@@ -30,14 +35,21 @@ export class SettingsService {
         this.loadSettings();
     }
 
+    public saveUserSettings(userSettings: string) {
+        this.settings = { ...defaultSettings, ...this._parseUserSettings(userSettings) };
+        this._settingsSubject.next(this.settings);
+        return this.storage.set(this._filename, userSettings);
+    }
+
     private loadSettings() {
-        storage.get(this._filename, (error, data) => {
-            this.settings = Object.assign({}, defaultSettings, data);
+        this.storage.get(this._filename).subscribe((userSettings: string) => {
+            this.userSettingsStr = userSettings;
+            this.settings = { ...defaultSettings, ...this._parseUserSettings(userSettings) };
             this._hasSettingsLoaded.next(true);
             this._settingsSubject.next(this.settings);
         });
 
-        storage.get(this._keybindingsFilename, (error, data: KeyBindings[]) => {
+        this.storage.get(this._keybindingsFilename).subscribe((data: KeyBindings[]) => {
             this.zone.run(() => {
                 // If the file has never been init create it
                 if (!Array.isArray(data)) {
@@ -48,5 +60,17 @@ export class SettingsService {
                 this._keybindings.next(defaultKeybindings.concat(data));
             });
         });
+    }
+
+    private _parseUserSettings(value: string): Partial<Settings> {
+        if (!value) {
+            return {};
+        }
+
+        try {
+            return JSON.parse(value);
+        } catch (e) {
+            return {};
+        }
     }
 }

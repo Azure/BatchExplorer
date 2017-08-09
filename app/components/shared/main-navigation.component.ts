@@ -2,6 +2,8 @@ import { Component } from "@angular/core";
 
 import { AccountService } from "app/services";
 
+import "./main-navigation.scss";
+
 @Component({
     selector: "bl-app-nav",
     templateUrl: "main-navigation.html",

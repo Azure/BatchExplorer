@@ -1,0 +1,11 @@
+{
+  // Only theme available for now
+  "theme": "classic",
+
+  // Mapping file extension to what they should be displayed at
+  "fileTypes": {
+    "log": ["txt", "log"],
+    "image":  ["png", "jpg", "gif"],
+    "code": ["json", "ts2", "js", "java", "cs", "cpp", "h", "hpp", "py", "xml", "sh", "cmd", "bat"]
+  }
+}
