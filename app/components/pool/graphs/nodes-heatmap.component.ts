@@ -458,13 +458,13 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
 
     private _reboot(node: Node) {
         this._nodeAction(node, this.nodeService.reboot(this.pool.id, node.id)).cascade(() => {
-            this.notificationService.success("Node reimaging!", `Node ${node.id} started reimaging`);
+            this.notificationService.success("Node rebooting!", `Node ${node.id} started rebooting`);
         });
     }
 
     private _reimage(node: Node) {
         this._nodeAction(node, this.nodeService.reimage(this.pool.id, node.id)).cascade(() => {
-            this.notificationService.success("Node rebooting!", `Node ${node.id} started rebooting`);
+            this.notificationService.success("Node reimaging!", `Node ${node.id} started reimaging`);
         });
     }
 
