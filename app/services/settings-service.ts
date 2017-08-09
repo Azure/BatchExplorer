@@ -36,6 +36,7 @@ export class SettingsService {
     }
 
     public saveUserSettings(userSettings: string) {
+        this.userSettingsStr = userSettings;
         this.settings = { ...defaultSettings, ...this._parseUserSettings(userSettings) };
         this._settingsSubject.next(this.settings);
         return this.storage.set(this._filename, userSettings);

@@ -16,6 +16,9 @@ const emptyConfig = "{\n\n}";
     templateUrl: "settings.html",
 })
 export class SettingsComponent implements OnDestroy {
+    public static breadcrumb(params, queryParams) {
+        return { name: "Settings" };
+    }
 
     public defaultSettingsEditorConfig: CodeMirror.EditorConfiguration = {
         readOnly: true,
@@ -57,6 +60,10 @@ export class SettingsComponent implements OnDestroy {
     @autobind()
     public save(): Observable<any> {
         return this.settingsService.saveUserSettings(this.userSettings.value);
+    }
+
+    public get modified() {
+        return this._originalUserSettings !== this.userSettings.value;
     }
 
     private _updateOriginalValue() {

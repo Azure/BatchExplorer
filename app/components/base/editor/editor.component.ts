@@ -65,9 +65,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
             this.config.extraKeys = {};
         }
 
-        this.config.extraKeys = {
-            "Ctrl-/": "toggleComment",
-        };
+        this.config.extraKeys["Ctrl-/"] = "toggleComment";
         this.codemirrorInit(this.config);
     }
 

@@ -17,6 +17,12 @@ bl-settings {
         > h1 {
             flex: 1;
         }
+
+        .modified {
+            position: absolute;
+            right: 3px;
+            top: 0;
+        }
     }
 
     .settings-editor {

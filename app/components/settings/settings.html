@@ -2,10 +2,11 @@
     <h1>Settings</h1>
 
     <div class="actions">
-        <bl-button title="Save" [action]="save" tooltipPosition="below" [disabled]="!userSettings.valid">
+        <bl-button title="Save" [action]="save" tooltipPosition="below" [disabled]="!modified || !userSettings.valid">
             <i class="fa fa-floppy-o"></i>
+            <span class="modified" *ngIf="modified">*</span>
         </bl-button>
-        <bl-button title="Reset" (click)="reset" tooltipPosition="below" [disabled]="userSettings.untouched">
+        <bl-button title="Reset" (click)="reset" tooltipPosition="below" [disabled]="!modified">
             <i class="fa fa-undo"></i>
         </bl-button>
     </div>
