@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { ServerError } from "app/models";
 import { NcjTemplateService, PythonRpcService } from "app/services";
 import "./submit-market-application.scss";
+export enum Modes { None, PoolNJob, PoolOJob, Pool }
 
 @Component({
     selector: "bl-submit-market-application",
@@ -14,9 +15,11 @@ export class SubmitMarketApplicationComponent {
     public static breadcrumb() {
         return { name: "Submit" };
     }
+
+    public modes = Modes;
     private title;
     private form;
-    private mode_state;
+    private modeState = Modes.None;
     private applicationId;
     private actionId;
     private jobTemplate;
@@ -30,10 +33,9 @@ export class SubmitMarketApplicationComponent {
         private route: ActivatedRoute,
         private router: Router,
         private templateService: NcjTemplateService) {
-             this.mode_state = "None";
-             this.form = new FormGroup({a: new FormControl()});
+             this.form = new FormGroup({});
     }
-    private ngOnInit() {
+    public ngOnInit() {
         this.route.params.subscribe((params) => {
             this.applicationId = params["applicationId"];
             this.actionId = params["actionId"];
@@ -41,11 +43,11 @@ export class SubmitMarketApplicationComponent {
                 this.jobTemplate = templates.job;
                 this.poolTemplate = templates.pool;
                 this.title = `Run ${this.actionId} from ${this.applicationId}`;
-                this.createForms();
+                this._createForms();
             });
         });
     }
-    private createForms() {
+    private _createForms() {
         let jobParameters = [];
         let poolParameters = [];
         if (this.jobTemplate && this.jobTemplate.parameters){
@@ -75,7 +77,7 @@ export class SubmitMarketApplicationComponent {
         this.form = new FormGroup(fg);
     }
 
-    private runJobWithPool(expandedPoolTemplate, jobInputs){
+    private _runJobWithPool(expandedPoolTemplate, jobInputs){
         delete expandedPoolTemplate.id;
         this.jobTemplate.job.properties.poolInfo = {
             autoPoolSpecification: {
@@ -92,26 +94,26 @@ export class SubmitMarketApplicationComponent {
         });
     }
 
-    private onSubmit(){
+    private _onSubmit(){
         this.error = null;
         let jobInputs = {};
         let poolInputs = {};
         for (let param of Object.keys(this.form.controls)) {
-            if (this.getParameters(this.jobTemplate).includes(param)){
+            if (this._getParameters(this.jobTemplate).includes(param)){
                 jobInputs[param] = this.form.controls[param].value;
             }
-            else if (this.getParameters(this.poolTemplate).includes(param)) {
+            else if (this._getParameters(this.poolTemplate).includes(param)) {
                 poolInputs[param] = this.form.controls[param].value;
             }
         }
-        if (this.mode_state === "PoolNJob"){
-            const obs = this.pythonRpcService.callWithAuth("get-ncj-pool", [this.poolTemplate, poolInputs]);
+        if (this.modeState === Modes.PoolNJob) {
+            const obs = this.pythonRpcService.callWithAuth("expand-ncj-pool", [this.poolTemplate, poolInputs]);
             obs.subscribe({
-                next: (data) => this.runJobWithPool(data, jobInputs),
+                next: (data) => this._runJobWithPool(data, jobInputs),
                 error: (err) => this.error = ServerError.fromPython(err),
             });
         }
-        else if (this.mode_state === "PoolOJob"){
+        else if (this.modeState === Modes.PoolOJob) {
             this.jobTemplate.job.properties.poolInfo = this.pickedPool.value;
             const obs = this.pythonRpcService.callWithAuth("submit-ncj-job", [this.jobTemplate, jobInputs]);
             obs.subscribe({
@@ -119,7 +121,7 @@ export class SubmitMarketApplicationComponent {
                 error: (err) => this.error = ServerError.fromPython(err),
             });
         }
-        else if (this.mode_state === "Pool"){
+        else if (this.modeState === Modes.Pool) {
             const obs = this.pythonRpcService.callWithAuth("create-ncj-pool", [this.poolTemplate, poolInputs]);
             obs.subscribe({
                 next: (data) => this._redirectToPool(),
@@ -136,11 +138,11 @@ export class SubmitMarketApplicationComponent {
         this.router.navigate(["/pools"]);
     }
 
-    private getContainerFromFileGroup(fileGroup: string) {
+    private _getContainerFromFileGroup(fileGroup: string) {
         return fileGroup && `fgrp-${fileGroup}`;
     }
-    private getType(param){
-        if (this.getParameters(this.jobTemplate).includes(param)){
+    private _getType(param){
+        if (this._getParameters(this.jobTemplate).includes(param)){
             if (this.jobTemplate.parameters[param].metadata.advancedType){
                 return this.jobTemplate.parameters[param].metadata.advancedType;
             }
@@ -149,7 +151,7 @@ export class SubmitMarketApplicationComponent {
             }
             return this.jobTemplate.parameters[param].type;
         }
-        else if (this.getParameters(this.poolTemplate).includes(param)){
+        else if (this._getParameters(this.poolTemplate).includes(param)){
             if (this.poolTemplate.parameters[param].metadata.advancedType){
                 return this.poolTemplate.parameters[param].metadata.advancedType;
             }
@@ -162,7 +164,7 @@ export class SubmitMarketApplicationComponent {
             return "string";
         }
     }
-    private getParameters(template){
+    private _getParameters(template){
         if (!template || !template.parameters){
             return [];
         }

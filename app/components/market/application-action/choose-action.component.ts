@@ -22,11 +22,7 @@ export class ChooseActionComponent implements OnInit, OnDestroy {
 
     private _paramsSubscriber: Subscription;
 
-    constructor(private templateService: NcjTemplateService, private route: ActivatedRoute) {
-
-
-
-     }
+    constructor(private templateService: NcjTemplateService, private route: ActivatedRoute) { }
 
     public ngOnInit() {
         this._paramsSubscriber = this.route.params.subscribe((params) => {

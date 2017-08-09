@@ -4,9 +4,8 @@ import logging
 from jsonrpc import JsonRpcRequest
 from jsonrpc.error import JsonRpcError
 
-
 @app.procedure("submit-ncj-job")
-def submitNcjJob(request: JsonRpcRequest, template, parameters):
+def submit_ncj_job(request: JsonRpcRequest, template, parameters):
     print("Got template", template)
     client = request.auth.client
     job_json = client.job.expand_template(template, parameters)
@@ -15,9 +14,8 @@ def submitNcjJob(request: JsonRpcRequest, template, parameters):
     client.job.add(job)
     return {"what": "it works"}
 
-
 @app.procedure("create-ncj-pool")
-def createNcjPool(request: JsonRpcRequest, template, parameters):
+def create_ncj_pool(request: JsonRpcRequest, template, parameters):
     print("Got template", template)
     client = request.auth.client
     pool_json = client.pool.expand_template(template, parameters)
@@ -27,8 +25,8 @@ def createNcjPool(request: JsonRpcRequest, template, parameters):
     client.pool.add(pool)
     return {"what": "it works"}
 
-@app.procedure("get-ncj-pool")
-def getNcjPool(request: JsonRpcRequest, template, parameters):
+@app.procedure("expand-ncj-pool")
+def expand_ncj_pool(request: JsonRpcRequest, template, parameters):
     print("Got template", template)
     client = request.auth.client
     pool_json = client.pool.expand_template(template, parameters)
