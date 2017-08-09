@@ -336,7 +336,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     private _displayTileTooltip(titleNode) {
         titleNode.text((tile) => {
             const count = tile.node.runningTasksCount;
-            return `${count} tasks running on this node`;
+            return `${count} tasks running on this node(${tile.node.id})`;
         });
     }
 
