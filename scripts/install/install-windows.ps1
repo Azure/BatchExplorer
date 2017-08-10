@@ -6,6 +6,7 @@ Write-Host "Repository root is $root"
 
 $check = [Char]10004
 $cross = [Char]10008
+$warningSign = [Char]9888
 
 $summary =  New-Object System.Collections.Generic.List[System.Object]
 
@@ -19,14 +20,23 @@ function add-success([string]$message) {
     Write-Host @item
 }
 
+function add-warning([string]$message) {
+    $item = @{
+        object = "$warningSign $message";
+        foreground = "darkyellow"
+    }
+    $summary.Add($item)
+    Write-Host @text;
+}
+
 function add-failure([string]$message) {
     $item = @{
         object = "$cross $message";
         foreground = "red"
     }
     $summary.Add($item)
-
     Write-Host @text;
+    exit(1)
 }
 
 function display-summary() {
@@ -38,6 +48,18 @@ function display-summary() {
         Write-Host @item
     }
     Write-Host "===================================================="
+}
+
+function confirm-branch() {
+    $current_branch = [string](git rev-parse --abbrev-ref HEAD)
+
+    if($current_branch -eq "stable") {
+        add-success "Building from stable branch."
+    } elseif ($current_branch -eq "master") {
+        add-success "Building from master branch."
+    } else {
+        add-warning "Building from $current_branch branch it might not be stable."
+    }
 }
 
 function confirm-node-version() {
@@ -58,8 +80,7 @@ function confirm-node-version() {
     $patch = [int]$match.Matches.Groups[3].Value;
 
     if ($major -lt 5 -or ($major -eq 6 -and $minor -lt 9)) {
-        Write-Host "$cross You version of node '$node_version' is invalid. Please install node >= 6.9.0. $node_download_Link" -foreground "red"
-        exit(1)
+        add-failure "You version of node '$node_version' is invalid. Please install node >= 6.9.0. $node_download_Link"
     }
 
     add-success "Node version '$node_version' is valid";
@@ -109,6 +130,7 @@ function build-batchlabs() {
     }
 }
 
+confirm-branch
 confirm-node-version
 install-dependencies
 install-python-dependencies
