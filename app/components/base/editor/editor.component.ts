@@ -1,6 +1,6 @@
 import {
     AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter,
-    HostListener, Input, OnChanges, Output, ViewChild, forwardRef,
+    HostListener, Input, OnChanges, OnDestroy, Output, ViewChild, forwardRef,
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import * as CodeMirror from "codemirror";
@@ -30,7 +30,7 @@ import "./editor.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnChanges {
+export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy {
     @Input() public config: CodeMirror.EditorConfiguration;
     @Input() public label: string;
 
@@ -75,6 +75,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     public ngOnDestroy() {
         this._sub.unsubscribe();
     }
+
     public codemirrorInit(config) {
         this.instance = CodeMirror.fromTextArea(this.host.nativeElement, config);
         this.instance.setValue(this._value);
