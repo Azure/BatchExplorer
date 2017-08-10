@@ -16,7 +16,8 @@ import { SettingsService } from "app/services";
 const defaultSettingsStr = require("app/components/settings/default-settings.json");
 
 const userInitialSettings = `{\n"other": "overide"\n}`;
-const invalidUserInitialSettings = `{\n"other": \n}`;
+const validUserSettings = `{\n"other": "new value"\n}`;
+const invalidUserSettings = `{\n"other": \n}`;
 
 @Component({
     template: `<bl-settings></bl-settings>`,
@@ -32,6 +33,11 @@ fdescribe("SettingsComponent", () => {
 
     let leftEditor: EditorComponent;
     let rightEditor: EditorComponent;
+
+    let saveButton: ButtonComponent;
+    let saveButtonEl: DebugElement;
+    let resetButton: ButtonComponent;
+
     let settingsServiceSpy;
 
     beforeEach(() => {
@@ -55,8 +61,19 @@ fdescribe("SettingsComponent", () => {
         leftEditor = de.query(By.css(".default-settings bl-editor")).componentInstance;
         rightEditor = de.query(By.css(".user-settings bl-editor")).componentInstance;
 
+        saveButtonEl = de.query(By.css("bl-button[title='Save']"));
+        saveButton = saveButtonEl.componentInstance;
+        resetButton = de.query(By.css("bl-button[title='Reset']")).componentInstance;
         expect(leftEditor).not.toBeFalsy();
         expect(leftEditor).not.toBeFalsy();
+    });
+
+    it("Should not enable save button", () => {
+        expect(saveButton.disabled).toBe(true);
+    });
+
+    it("Should not enable reset button", () => {
+        expect(resetButton.disabled).toBe(true);
     });
 
     it("left editor should show the default settings", () => {
@@ -73,19 +90,52 @@ fdescribe("SettingsComponent", () => {
         tick(400);
         fixture.detectChanges();
         const errorEl = de.query(By.css(".user-settings .label .error"));
-        console.log("Valid?", component.userSettings.valid);
-        console.log("ERr", errorEl && errorEl.nativeElement.textContent);
+        expect(component.userSettings.valid).toBe(true);
         expect(errorEl).toBeFalsy();
     }));
 
-    it("should validate invalid user settings", fakeAsync(() => {
-        rightEditor.updateValue(invalidUserInitialSettings);
-        tick(400);
-        fixture.detectChanges();
+    describe("when using invalid settings", () => {
+        beforeEach(fakeAsync(() => {
+            rightEditor.updateValue(invalidUserSettings);
+            tick(400);
+            fixture.detectChanges();
+        }));
 
-        const errorEl = de.query(By.css(".user-settings .label .error"));
-        expect(errorEl).not.toBeFalsy();
+        it("should validate invalid user settings", () => {
+            expect(component.userSettings.valid).toBe(false);
 
-        expect(errorEl.nativeElement.textContent).toContain("Unexpected token } in JSON at position 12");
-    }));
+            const errorEl = de.query(By.css(".user-settings .label .error"));
+            expect(errorEl).not.toBeFalsy();
+
+            expect(errorEl.nativeElement.textContent).toContain("Unexpected token } in JSON at position 12");
+        });
+
+        it("should disable the save button", () => {
+            expect(saveButton.disabled).toBe(true);
+        });
+
+        it("should enable reset button", () => {
+            expect(resetButton.disabled).toBe(false);
+        });
+    });
+
+    describe("when using valid settings", () => {
+        beforeEach(fakeAsync(() => {
+            rightEditor.updateValue(validUserSettings);
+            tick(400);
+            fixture.detectChanges();
+        }));
+
+        it("should enable the save button", () => {
+            expect(saveButton.disabled).toBe(false);
+        });
+
+        it("should show asterix on save button", () => {
+            expect(saveButtonEl.nativeElement.textContent).toContain("*");
+        });
+
+        it("should enable reset button", () => {
+            expect(resetButton.disabled).toBe(false);
+        });
+    });
 });
