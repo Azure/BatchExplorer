@@ -69,7 +69,7 @@ export class SettingsService {
         }
 
         try {
-            return JSON.parse(value);
+            return JSON.parse(JSON.minify(value));
         } catch (e) {
             return {};
         }
