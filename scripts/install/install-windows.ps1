@@ -26,7 +26,7 @@ function add-warning([string]$message) {
         foreground = "darkyellow"
     }
     $summary.Add($item)
-    Write-Host @text;
+    Write-Host @item;
 }
 
 function add-failure([string]$message) {
@@ -35,7 +35,7 @@ function add-failure([string]$message) {
         foreground = "red"
     }
     $summary.Add($item)
-    Write-Host @text;
+    Write-Host @item;
     exit(1)
 }
 
@@ -63,9 +63,13 @@ function confirm-branch() {
 }
 
 function confirm-node-version() {
-    $node_version = [string](node --version)
-    $node_download_Link = "https://nodejs.org/en/download/current/"
+    $node_download_link = "https://nodejs.org/en/download/current/"
 
+    if (!(Get-Command "node" -ErrorAction SilentlyContinue)) {
+       add-failure "Node.JS is not installed. Please install node >= 6.9 and add it to the path. $node_download_link"
+    }
+
+    $node_version = [string](node --version)
     $node_version_regex = "^v(\d*)\.(\d*)\.(\d*)"
 
     $match = $node_version | Select-String -Pattern  $node_version_regex;
@@ -86,7 +90,9 @@ function confirm-node-version() {
     add-success "Node version '$node_version' is valid";
 }
 
-function install-dependencies() {
+function install-node-dependencies() {
+    npm install -g yarn
+
     Remove-Item -path .\node_modules -recurse -Force
     yarn install --force
 
@@ -124,7 +130,7 @@ function build-batchlabs() {
     npm run build-and-pack
 
     if($?) {
-        add-success "Built the app successfully. Check $root\release\win-unpacked for the executable" -foreground "green";
+        add-success "Built the app successfully. Check ${root}release\win-unpacked for the executable" -foreground "green";
     } else {
         add-failure "Failed to build the app."
     }
@@ -132,7 +138,7 @@ function build-batchlabs() {
 
 confirm-branch
 confirm-node-version
-install-dependencies
+install-node-dependencies
 install-python-dependencies
 build-batchlabs
 
