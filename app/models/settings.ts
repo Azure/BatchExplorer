@@ -2,7 +2,9 @@ export enum Theme {
     classic = "classic",
 }
 
+/**
+ * Interface mapping how the settings should be
+ */
 export interface Settings {
-    theme: string;
     fileTypes: StringMap<string[]>;
 }

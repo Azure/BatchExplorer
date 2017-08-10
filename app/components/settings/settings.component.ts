@@ -2,6 +2,7 @@ import { Component, OnDestroy } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable, Subscription } from "rxjs";
+import stripJsonComments from "strip-json-comments";
 
 import { SettingsService } from "app/services";
 import "./settings.scss";
@@ -45,7 +46,6 @@ export class SettingsComponent implements OnDestroy {
 
     private _originalUserSettings: string;
     private _subs: Subscription[] = [];
-    private _validateDebounceTimeout;
 
     constructor(private settingsService: SettingsService) {
         this._subs.push(this.settingsService.settingsObs.subscribe(() => {
@@ -76,22 +76,19 @@ export class SettingsComponent implements OnDestroy {
     }
 
     @autobind()
-    private _validJsonConfig(c: FormControl): Promise<any> {
-        clearTimeout(this._validateDebounceTimeout);
-        return new Promise((resolve, reject) => {
-            this._validateDebounceTimeout = setTimeout(() => {
-                try {
-                    JSON.parse(JSON.minify(c.value));
-                    resolve(null);
-                } catch (e) {
-                    resolve({
-                        validJsonConfig: {
-                            valid: false,
-                            message: e.message,
-                        },
-                    });
-                }
-            }, 400);
+    private _validJsonConfig(c: FormControl): Observable<any> {
+        return Observable.timer(400).map(() => {
+            try {
+                JSON.parse(stripJsonComments(c.value, { whitespace: true }));
+                return null;
+            } catch (e) {
+                return {
+                    validJsonConfig: {
+                        valid: false,
+                        message: e.message,
+                    },
+                };
+            }
         });
     }
 }

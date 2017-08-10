@@ -1,13 +1,14 @@
 import { Injectable, NgZone } from "@angular/core";
 import * as storage from "electron-json-storage";
 import { BehaviorSubject, Observable } from "rxjs";
+import stripJsonComments from "strip-json-comments";
 
 import { KeyBindings, Settings, defaultKeybindings } from "app/models";
 import { LocalFileStorage } from "app/services";
 import { log } from "app/utils";
 
 // tslint:disable-next-line:no-var-requires
-const defaultSettings = JSON.parse(JSON.minify(require("app/components/settings/default-settings.json")));
+const defaultSettings = JSON.parse(stripJsonComments(require("app/components/settings/default-settings.json")));
 
 @Injectable()
 export class SettingsService {
@@ -69,7 +70,7 @@ export class SettingsService {
         }
 
         try {
-            return JSON.parse(JSON.minify(value));
+            return JSON.parse(stripJsonComments(value));
         } catch (e) {
             return {};
         }

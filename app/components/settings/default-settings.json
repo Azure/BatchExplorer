@@ -1,7 +1,4 @@
 {
-  // Only theme available for now
-  "theme": "classic",
-
   // Mapping file extension to what they should be displayed at
   "fileTypes": {
     "log": ["txt", "log"],
