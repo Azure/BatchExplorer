@@ -65,7 +65,7 @@ export function getPythonPath(): Promise<string> {
         return Promise.resolve(computedPythonPath);
     }
     const envPython = process.env.BL_PYTHON_PATH;
-    return tryMultiplePythons([envPython, "python3", "python"].filter(x => Boolean(x))).then((path) => {
+    return tryMultiplePythons([envPython, "python3", "python3"].filter(x => Boolean(x))).then((path) => {
         computedPythonPath = path;
         return path;
     });

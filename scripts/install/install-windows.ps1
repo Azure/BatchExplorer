@@ -41,13 +41,13 @@ function add-failure([string]$message) {
 
 function display-summary() {
     Write-Host "`n"
-    Write-Host "===================================================="
-    Write-Host "                  SUMMARY                           "
-    Write-Host "----------------------------------------------------"
+    Write-Host "============================================================================="
+    Write-Host "                                SUMMARY                                      "
+    Write-Host "-----------------------------------------------------------------------------"
     foreach ($item in $summary) {
         Write-Host @item
     }
-    Write-Host "===================================================="
+    Write-Host "============================================================================="
 }
 
 function confirm-branch() {
@@ -96,7 +96,7 @@ function install-node-dependencies() {
     Remove-Item -path .\node_modules -recurse -Force
     yarn install --force
 
-    if($?) {
+    if($lastExitCode -eq 0) {
         add-success "Installed dependencies correctly" -foreground "green";
     } else {
         add-failure "Failed to install depdencies"
@@ -105,12 +105,10 @@ function install-node-dependencies() {
 
 
 function install-python-dependencies() {
-    # pipPath = npm run -s ts .\scripts\install\get-python.ts | Out-String
     $python = [string](npm run -s ts .\scripts\install\get-python.ts)
 
-    Write-Host "Python path is $python"
-
-    if($?) {
+    if($lastExitCode -eq 0) {
+        Write-Host "Python path is $python"
         add-success "Python version is valid. Using '$python'" -foreground "green";
     } else {
         add-failure "Invalid version of python installed. Need 3.6. You can either have globably available in the path as python, python3 or set the BL_PYTHON_PATH environment variable."
@@ -119,7 +117,7 @@ function install-python-dependencies() {
     Write-Host "$python $root/scripts/install/install-python-dep.py"
     cmd /c "$python $root/scripts/install/install-python-dep.py"
 
-    if($?) {
+    if($lastExitCode -eq 0) {
         add-success "Installed python dependencies correctly" -foreground "green";
     } else {
         add-failure "Failed to install depdencies"
@@ -129,7 +127,7 @@ function install-python-dependencies() {
 function build-batchlabs() {
     npm run build-and-pack
 
-    if($?) {
+    if($lastExitCode -eq 0) {
         add-success "Built the app successfully. Check ${root}release\win-unpacked for the executable" -foreground "green";
     } else {
         add-failure "Failed to build the app."
