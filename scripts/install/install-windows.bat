@@ -1,0 +1,1 @@
+@powershell install-windows.bat
