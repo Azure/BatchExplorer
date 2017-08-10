@@ -111,7 +111,7 @@ function install-python-dependencies() {
         Write-Host "Python path is $python"
         add-success "Python version is valid. Using '$python'" -foreground "green";
     } else {
-        add-failure "Invalid version of python installed. Need 3.6. You can either have globably available in the path as python, python3 or set the BL_PYTHON_PATH environment variable."
+        add-failure "Invalid version of python installed. Need python >= 3.5. You can either have globably available in the path as python, python3 or set the BL_PYTHON_PATH environment variable."
     }
 
     Write-Host "$python $root/scripts/install/install-python-dep.py"
