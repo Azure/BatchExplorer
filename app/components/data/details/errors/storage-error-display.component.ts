@@ -17,6 +17,7 @@ export class StorageErrorDisplayComponent implements OnInit, OnDestroy {
 
     private _autoStorageSub: Subscription;
     private _batchAccount: AccountResource;
+    private _currentAccountSub: Subscription;
 
     // TODO: make this the default auto storage error display.
     constructor(
@@ -33,7 +34,7 @@ export class StorageErrorDisplayComponent implements OnInit, OnDestroy {
     }
 
     public ngOnInit() {
-        this.accountService.currentAccount.subscribe((account) => {
+        this._currentAccountSub = this.accountService.currentAccount.subscribe((account) => {
             this._batchAccount = account;
             this.changeDetector.markForCheck();
         });
@@ -41,6 +42,7 @@ export class StorageErrorDisplayComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._autoStorageSub.unsubscribe();
+        this._currentAccountSub.unsubscribe();
     }
 
     @autobind()

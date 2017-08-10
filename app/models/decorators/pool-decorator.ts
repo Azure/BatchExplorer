@@ -4,6 +4,7 @@ import * as moment from "moment";
 import {
     ApplicationPackageReference, CertificateReference, Pool, UserAccount, UserAccountElevationLevel,
 } from "app/models";
+import { PoolUtils } from "app/utils";
 import { DecoratorBase } from "app/utils/decorators";
 import { CloudServiceConfigurationDecorator } from "./cloud-service-configuration-decorator";
 import { TaskSchedulingPolicyDecorator } from "./task-scheduling-policy-decorator";
@@ -69,8 +70,9 @@ export class PoolDecorator extends DecoratorBase<Pool> {
         this.vmSize = this.stringField(pool.vmSize);
         this.lastResized = moment(this.pool.allocationStateTransitionTime).fromNow();
         this.userAccounts = pool.userAccounts.map(x => this._decorateUserAccount(x)).join(", ");
-        this.dedicatedNodes = this._prettyNodes(pool.currentDedicatedNodes, pool.targetDedicatedNodes);
-        this.lowPriorityNodes = this._prettyNodes(pool.currentLowPriorityNodes, pool.targetLowPriorityNodes);
+        this.dedicatedNodes = PoolUtils.poolNodesStatus(pool, pool.currentDedicatedNodes, pool.targetDedicatedNodes);
+        this.lowPriorityNodes = PoolUtils.poolNodesStatus(pool,
+             pool.currentLowPriorityNodes, pool.targetLowPriorityNodes);
 
         this.poolOs = this._computePoolOs();
         this.poolOsIcon = this._computePoolOsIcon(this.poolOs);
@@ -96,14 +98,6 @@ export class PoolDecorator extends DecoratorBase<Pool> {
 
     private _computePoolOsIcon(os): string {
         return this.pool.osIconName();
-    }
-
-    private _prettyNodes(current: number, target: number) {
-        if (current === target) {
-            return target.toString();
-        } else {
-            return `${current} → ${target}`;
-        }
     }
 
     private _decorateUserAccount(user: UserAccount) {

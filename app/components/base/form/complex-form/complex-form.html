@@ -20,7 +20,7 @@
             <md-icon fontIcon="fa-exclamation-triangle"></md-icon>
         </button>
     </div>
-    <div class="summary"></div>
+    <div class="summary"><ng-content select="[blFormSummary]"></ng-content></div>
     <div class="form-buttons">
         <div *ngIf="isMainWindow">
             <bl-button type="wide" *ngIf="multiUse" [action]="save" [disabled]="!submitEnabled" class="add">{{actionName}}</bl-button>

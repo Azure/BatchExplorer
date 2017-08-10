@@ -75,7 +75,7 @@ export class TaskService extends ServiceBase {
         });
     }
 
-    public listAll(jobId: string, options: TaskListOptions): Observable<List<Task>> {
+    public listAll(jobId: string, options: TaskListOptions = {}): Observable<List<Task>> {
         return getAllProxy(this.list(jobId, options));
     }
 
