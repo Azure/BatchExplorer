@@ -10,12 +10,6 @@ enum FileType {
     code = "code",
 }
 
-// const fileTypes = {
-//     [FileType.log]: ["txt", "log"],
-//     [FileType.image]: ["png", "jpg", "gif"],
-//     [FileType.code]: ["json", "ts2", "js", "java", "cs", "cpp", "h", "hpp", "py", "xml", "sh", "cmd", "bat"],
-// };
-
 @Component({
     selector: "bl-file-content",
     templateUrl: "file-content.html",

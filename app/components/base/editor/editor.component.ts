@@ -4,6 +4,8 @@ import {
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import * as CodeMirror from "codemirror";
+import { Observable, Subscription } from "rxjs";
+
 import "codemirror/addon/comment/comment";
 import "codemirror/addon/display/autorefresh";
 import "codemirror/addon/display/placeholder";
@@ -43,6 +45,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     public isFocused = false;
     public placeholder: string;
     private _value = "";
+    private _sub: Subscription;
 
     get value() { return this._value; }
 
@@ -69,6 +72,9 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
         this.codemirrorInit(this.config);
     }
 
+    public ngOnDestroy() {
+        this._sub.unsubscribe();
+    }
     public codemirrorInit(config) {
         this.instance = CodeMirror.fromTextArea(this.host.nativeElement, config);
         this.instance.setValue(this._value);
@@ -96,9 +102,9 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
             this.changeDetector.markForCheck();
         });
 
-        setTimeout(() => {
+        this._sub = Observable.timer(200).subscribe(() => {
             this.instance.refresh();
-        }, 200);
+        });
     }
 
     public updateValue(value) {

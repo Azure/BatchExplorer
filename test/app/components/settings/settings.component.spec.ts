@@ -25,7 +25,7 @@ const invalidUserSettings = `{\n"other": \n}`;
 class TestComponent {
 }
 
-fdescribe("SettingsComponent", () => {
+describe("SettingsComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: SettingsComponent;

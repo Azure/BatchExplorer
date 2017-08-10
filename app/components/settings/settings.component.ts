@@ -24,7 +24,7 @@ export class SettingsComponent implements OnDestroy {
     public defaultSettingsEditorConfig: CodeMirror.EditorConfiguration = {
         readOnly: true,
         lineNumbers: true,
-        mode: "application/json",
+        mode: "application/javascript",
         tabSize: 2,
         indentUnit: 2,
     };
