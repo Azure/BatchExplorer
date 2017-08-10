@@ -124,7 +124,7 @@ function build-batchlabs() {
     npm run build-and-pack
 
     if($?) {
-        add-success "Built the app correctly. Check $root\release\win-unpacked for the executable" -foreground "green";
+        add-success "Built the app successfully. Check $root\release\win-unpacked for the executable" -foreground "green";
     } else {
         add-failure "Failed to build the app."
     }
