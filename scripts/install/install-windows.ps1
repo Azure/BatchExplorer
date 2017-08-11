@@ -1,6 +1,3 @@
-[Console]::OutputEncoding = [System.Text.Encoding]::UTF8
-
-
 $root = resolve-path "$PSScriptRoot/../../"
 Write-Host "Repository root is $root"
 
