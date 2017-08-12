@@ -18,18 +18,20 @@ export class SubmitMarketApplicationComponent {
     }
 
     public modes = Modes;
-    private title;
-    private form;
-    private modeState = Modes.None;
+    public modeState = Modes.None;
+    public title;
+    public form;
+    public jobTemplate;
+    public poolTemplate;
+    public pickedPool = new FormControl(null);
+    public jobParams;
+    public poolParams;
+
     private applicationId;
     private actionId;
     private icon;
-    private jobTemplate;
-    private poolTemplate;
-    private pickedPool = new FormControl(null);
+
     private error;
-    private jobParams;
-    private poolParams;
 
     constructor(
         public formBuilder: FormBuilder,
@@ -61,20 +63,20 @@ export class SubmitMarketApplicationComponent {
     }
 
     public getType(param){
-        if (this.getParameters(this.jobTemplate).includes(param)){
-            if (this.jobTemplate.parameters[param].metadata.advancedType){
+        if (this.getParameters(this.jobTemplate).includes(param)) {
+            if (this.jobTemplate.parameters[param].metadata.advancedType) {
                 return this.jobTemplate.parameters[param].metadata.advancedType;
             }
-            else if (this.jobTemplate.parameters[param].allowedValues){
+            else if (this.jobTemplate.parameters[param].allowedValues) {
                 return "dropdown";
             }
             return this.jobTemplate.parameters[param].type;
         }
-        else if (this.getParameters(this.poolTemplate).includes(param)){
-            if (this.poolTemplate.parameters[param].metadata.advancedType){
+        else if (this.getParameters(this.poolTemplate).includes(param)) {
+            if (this.poolTemplate.parameters[param].metadata.advancedType) {
                 return this.poolTemplate.parameters[param].metadata.advancedType;
             }
-            else if (this.poolTemplate.parameters[param].allowedValues){
+            else if (this.poolTemplate.parameters[param].allowedValues) {
                 return "dropdown";
             }
             return this.poolTemplate.parameters[param].type;
@@ -85,7 +87,7 @@ export class SubmitMarketApplicationComponent {
     }
 
     public getParameters(template){
-        if (!template || !template.parameters){
+        if (!template || !template.parameters) {
             return [];
         }
         return Object.keys(template.parameters);
