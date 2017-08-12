@@ -25,7 +25,7 @@
                 </bl-form-section>
 
                 <bl-form-section title="Pool" formGroupName="pool">
-                    <div *ngFor="let param of _getParameters(poolTemplate)" [ngSwitch]="_getType(param)">
+                    <div *ngFor="let param of getParameters(poolTemplate)" [ngSwitch]="getType(param)">
                         <div *ngSwitchCase="'string'">
                             <md-input-container class="form-element">
                             <input mdInput type="text" name="name" [formControlName]="param" [placeholder]="param">
@@ -64,7 +64,7 @@
                 </bl-form-section>
 
                 <bl-form-section title="Job" formGroupName="job">
-                    <div *ngFor="let param of _getParameters(jobTemplate)" [ngSwitch]="_getType(param)">
+                    <div *ngFor="let param of getParameters(jobTemplate)" [ngSwitch]="getType(param)">
                         <div *ngSwitchCase="'string'">
                             <md-input-container class="form-element">
                             <input mdInput type="text" name="name" [formControlName]="param" [placeholder]="param">
@@ -76,7 +76,7 @@
                             </bl-file-group-picker>
                         </div>
                         <div *ngSwitchCase="'file-in-file-group'">
-                            <bl-cloud-file-picker [containerId]="_getContainerFromFileGroup(jobParams.value[jobTemplate.parameters[param].metadata.dependsOn]?.value)" [formControlName]="param"
+                            <bl-cloud-file-picker [containerId]="getContainerFromFileGroup(jobParams.value[jobTemplate.parameters[param].metadata.dependsOn]?.value)" [formControlName]="param"
                             [label]="param" class="form-element" [hint]="jobTemplate.parameters[param].metadata.description">
                             </bl-cloud-file-picker>
                         </div>
@@ -119,7 +119,7 @@
                     <bl-pool-picker [formControl]="pickedPool"></bl-pool-picker>
                 </bl-form-section>
                 <bl-form-section title="Job" formGroupName="job">
-                    <div *ngFor="let param of _getParameters(jobTemplate)" [ngSwitch]="_getType(param)">
+                    <div *ngFor="let param of getParameters(jobTemplate)" [ngSwitch]="getType(param)">
                         <div *ngSwitchCase="'string'">
                             <md-input-container class="form-element">
                             <input mdInput type="text" name="name" [formControlName]="param" [placeholder]="param">
@@ -131,7 +131,7 @@
                             </bl-file-group-picker>
                         </div>
                         <div *ngSwitchCase="'file-in-file-group'">
-                            <bl-cloud-file-picker [containerId]="_getContainerFromFileGroup(jobParams.value[jobTemplate.parameters[param].metadata.dependsOn]?.value)" [formControlName]="param"
+                            <bl-cloud-file-picker [containerId]="getContainerFromFileGroup(jobParams.value[jobTemplate.parameters[param].metadata.dependsOn]?.value)" [formControlName]="param"
                             [label]="param" class="form-element" [hint]="jobTemplate.parameters[param].metadata.description">
                             </bl-cloud-file-picker>
                         </div>
@@ -170,7 +170,7 @@
                     </ul>
                 </bl-form-section>
                 <bl-form-section title="Pool" formGroupName="pool">
-                    <div *ngFor="let param of _getParameters(poolTemplate)" [ngSwitch]="_getType(param)">
+                    <div *ngFor="let param of getParameters(poolTemplate)" [ngSwitch]="getType(param)">
                         <div *ngSwitchCase="'string'">
                             <md-input-container class="form-element">
                             <input mdInput type="text" name="name" [formControlName]="param" [placeholder]="param">
@@ -182,7 +182,7 @@
                             </bl-file-group-picker>
                         </div>
                         <div *ngSwitchCase="'file-in-file-group'">
-                            <bl-cloud-file-picker [containerId]="_getContainerFromFileGroup(poolParams.value[poolTemplate.parameters[param].metadata.dependsOn]?.value)" [formControlName]="param"
+                            <bl-cloud-file-picker [containerId]="getContainerFromFileGroup(poolParams.value[poolTemplate.parameters[param].metadata.dependsOn]?.value)" [formControlName]="param"
                             [label]="param" class="form-element" [hint]="poolTemplate.parameters[param].metadata.description">
                             </bl-cloud-file-picker>
                         </div>
@@ -210,6 +210,6 @@
         </bl-complex-form>
     </div>
 
-    <button *ngIf="modeState != modes.None" style="width:100px;background-color:#3e81b0;" (click) = "_onSubmit()" type="button"  md-raised-button>Submit</button>
+    <button *ngIf="modeState != modes.None" style="width:100px;background-color:#3e81b0;" (click) = "onSubmit()" type="button"  md-raised-button>Submit</button>
 
 </bl-scrollable>
