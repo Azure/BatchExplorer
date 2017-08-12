@@ -4,27 +4,27 @@
             <bl-form-page main-form-page [title]="title">
                 <bl-form-section title="Mode">
                     <ul>
-                        <button style="margin:5px; width:200px" (click) = "modeState = modes.PoolNJob" type="button" md-raised-button>new Pool + Job</button>
-                        <button style="margin:5px; width:200px" (click) = "modeState = modes.PoolOJob" type="button" md-raised-button>existing Pool + Job</button>
-                        <button style="margin:5px; width:200px" (click) = "modeState = modes.Pool" type="button" md-raised-button>new Pool</button>
+                        <button style="margin:5px; width:200px" (click) = "modeState = modes.NewPoolAndJob" type="button" md-raised-button>new Pool + Job</button>
+                        <button style="margin:5px; width:200px" (click) = "modeState = modes.OldPoolAndJob" type="button" md-raised-button>existing Pool + Job</button>
+                        <button style="margin:5px; width:200px" (click) = "modeState = modes.NewPool" type="button" md-raised-button>new Pool</button>
                     </ul>
                 </bl-form-section>
             </bl-form-page>
         </bl-complex-form>
     </div>
 
-    <div *ngIf="modeState == modes.PoolNJob">
+    <div *ngIf="modeState == modes.NewPoolAndJob">
         <bl-complex-form [formGroup]="form" [hideFooter]="true">
             <bl-form-page main-form-page [title]="title">
                 <bl-form-section title="Mode">
                     <ul>
-                        <button style="margin:5px; width:200px; background-color:#3e81b0;" (click) = "modeState = modes.PoolNJob" type="button" md-raised-button>new Pool + Job</button>
-                        <button style="margin:5px; width:200px" (click) = "modeState = modes.PoolOJob" type="button" md-raised-button>existing Pool + Job</button>
-                        <button style="margin:5px; width:200px" (click) = "modeState = modes.Pool" type="button" md-raised-button>new Pool</button>
+                        <button style="margin:5px; width:200px; background-color:#3e81b0;" (click) = "modeState = modes.NewPoolAndJob" type="button" md-raised-button>new Pool + Job</button>
+                        <button style="margin:5px; width:200px" (click) = "modeState = modes.OldPoolAndJob" type="button" md-raised-button>existing Pool + Job</button>
+                        <button style="margin:5px; width:200px" (click) = "modeState = modes.NewPool" type="button" md-raised-button>new Pool</button>
                     </ul>
                 </bl-form-section>
 
-                <bl-form-section title="Pool">
+                <bl-form-section title="Pool" formGroupName="pool">
                     <div *ngFor="let param of _getParameters(poolTemplate)" [ngSwitch]="_getType(param)">
                         <div *ngSwitchCase="'string'">
                             <md-input-container class="form-element">
@@ -37,7 +37,7 @@
                             </bl-file-group-picker>
                         </div>
                         <div *ngSwitchCase="'file-in-file-group'">
-                            <bl-cloud-file-picker [containerId]="getContainerFromFileGroup(form.controls[poolTemplate.parameters[param].metadata.dependsOn]?.value)" [formControlName]="param"
+                            <bl-cloud-file-picker [containerId]="getContainerFromFileGroup(poolParams.value[poolTemplate.parameters[param].metadata.dependsOn]?.value)" [formControlName]="param"
                             [label]="param" class="form-element" [hint]="poolTemplate.parameters[param].metadata.description">
                             </bl-cloud-file-picker>
                         </div>
@@ -63,7 +63,7 @@
                     </div>
                 </bl-form-section>
 
-                <bl-form-section title="Job">
+                <bl-form-section title="Job" formGroupName="job">
                     <div *ngFor="let param of _getParameters(jobTemplate)" [ngSwitch]="_getType(param)">
                         <div *ngSwitchCase="'string'">
                             <md-input-container class="form-element">
@@ -76,7 +76,7 @@
                             </bl-file-group-picker>
                         </div>
                         <div *ngSwitchCase="'file-in-file-group'">
-                            <bl-cloud-file-picker [containerId]="_getContainerFromFileGroup(form.controls[jobTemplate.parameters[param].metadata.dependsOn]?.value)" [formControlName]="param"
+                            <bl-cloud-file-picker [containerId]="_getContainerFromFileGroup(jobParams.value[jobTemplate.parameters[param].metadata.dependsOn]?.value)" [formControlName]="param"
                             [label]="param" class="form-element" [hint]="jobTemplate.parameters[param].metadata.description">
                             </bl-cloud-file-picker>
                         </div>
@@ -105,20 +105,20 @@
         </bl-complex-form>
     </div>
 
-    <div *ngIf="modeState == modes.PoolOJob">
+    <div *ngIf="modeState == modes.OldPoolAndJob">
         <bl-complex-form [formGroup]="form" [hideFooter]="true">
             <bl-form-page main-form-page [title]="title">
                 <bl-form-section title="Mode">
                     <ul>
-                        <button style="margin:5px; width:200px" (click) = "modeState = modes.PoolNJob" type="button" md-raised-button>new Pool + Job</button>
-                        <button style="margin:5px; width:200px; background-color:#3e81b0;" (click) = "modeState = modes.PoolOJob" type="button" md-raised-button>existing Pool + Job</button>
-                        <button style="margin:5px; width:200px" (click) = "modeState = modes.Pool" type="button" md-raised-button>new Pool</button>
+                        <button style="margin:5px; width:200px" (click) = "modeState = modes.NewPoolAndJob" type="button" md-raised-button>new Pool + Job</button>
+                        <button style="margin:5px; width:200px; background-color:#3e81b0;" (click) = "modeState = modes.OldPoolAndJob" type="button" md-raised-button>existing Pool + Job</button>
+                        <button style="margin:5px; width:200px" (click) = "modeState = modes.NewPool" type="button" md-raised-button>new Pool</button>
                     </ul>
                 </bl-form-section>
                 <bl-form-section title="Pool">
                     <bl-pool-picker [formControl]="pickedPool"></bl-pool-picker>
                 </bl-form-section>
-                <bl-form-section title="Job">
+                <bl-form-section title="Job" formGroupName="job">
                     <div *ngFor="let param of _getParameters(jobTemplate)" [ngSwitch]="_getType(param)">
                         <div *ngSwitchCase="'string'">
                             <md-input-container class="form-element">
@@ -131,7 +131,7 @@
                             </bl-file-group-picker>
                         </div>
                         <div *ngSwitchCase="'file-in-file-group'">
-                            <bl-cloud-file-picker [containerId]="_getContainerFromFileGroup(form.controls[jobTemplate.parameters[param].metadata.dependsOn]?.value)" [formControlName]="param"
+                            <bl-cloud-file-picker [containerId]="_getContainerFromFileGroup(jobParams.value[jobTemplate.parameters[param].metadata.dependsOn]?.value)" [formControlName]="param"
                             [label]="param" class="form-element" [hint]="jobTemplate.parameters[param].metadata.description">
                             </bl-cloud-file-picker>
                         </div>
@@ -140,7 +140,6 @@
                                 <md-hint align="end">{{jobTemplate.parameters[param].metadata.description}}</md-hint>
                                 <md-option *ngFor="let opt of jobTemplate.parameters[param].allowedValues" [value]="opt">{{opt}}</md-option>
                             </md-select>
-
                         </div>
                         <div *ngSwitchCase="'int'">
                             <md-input-container class="form-element">
@@ -160,17 +159,17 @@
         </bl-complex-form>
     </div>
 
-    <div *ngIf="modeState == modes.Pool">
+    <div *ngIf="modeState == modes.NewPool">
         <bl-complex-form [formGroup]="form" [hideFooter]="true">
             <bl-form-page main-form-page [title]="title">
                 <bl-form-section title="Mode">
                     <ul>
-                        <button style="margin:5px; width:200px" (click) = "modeState = modes.PoolNJob" type="button"  md-raised-button>new Pool + Job</button>
-                        <button style="margin:5px; width:200px" (click) = "modeState = modes.PoolOJob" type="button" md-raised-button>existing Pool + Job</button>
-                        <button style="margin:5px; width:200px; background-color:#3e81b0;" (click) = "modeState = modes.Pool" type="button" md-raised-button>new Pool</button>
+                        <button style="margin:5px; width:200px" (click) = "modeState = modes.NewPoolAndJob" type="button"  md-raised-button>new Pool + Job</button>
+                        <button style="margin:5px; width:200px" (click) = "modeState = modes.OldPoolAndJob" type="button" md-raised-button>existing Pool + Job</button>
+                        <button style="margin:5px; width:200px; background-color:#3e81b0;" (click) = "modeState = modes.NewPool" type="button" md-raised-button>new Pool</button>
                     </ul>
                 </bl-form-section>
-                <bl-form-section title="Pool">
+                <bl-form-section title="Pool" formGroupName="pool">
                     <div *ngFor="let param of _getParameters(poolTemplate)" [ngSwitch]="_getType(param)">
                         <div *ngSwitchCase="'string'">
                             <md-input-container class="form-element">
@@ -183,7 +182,7 @@
                             </bl-file-group-picker>
                         </div>
                         <div *ngSwitchCase="'file-in-file-group'">
-                            <bl-cloud-file-picker [containerId]="_getContainerFromFileGroup(form.controls[poolTemplate.parameters[param].metadata.dependsOn]?.value)" [formControlName]="param"
+                            <bl-cloud-file-picker [containerId]="_getContainerFromFileGroup(poolParams.value[poolTemplate.parameters[param].metadata.dependsOn]?.value)" [formControlName]="param"
                             [label]="param" class="form-element" [hint]="poolTemplate.parameters[param].metadata.description">
                             </bl-cloud-file-picker>
                         </div>
@@ -192,7 +191,6 @@
                                 <md-hint align="end">{{poolTemplate.parameters[param].metadata.description}}</md-hint>
                                 <md-option *ngFor="let opt of poolTemplate.parameters[param].allowedValues" [value]="opt">{{opt}}</md-option>
                             </md-select>
-
                         </div>
                         <div *ngSwitchCase="'int'">
                             <md-input-container class="form-element">

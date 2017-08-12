@@ -12,7 +12,7 @@ def submit_ncj_job(request: JsonRpcRequest, template, parameters):
     job = client.job.jobparameter_from_json(job_json)
     print("Job is", job)
     client.job.add(job)
-    return {"what": "it works"}
+    return job_json
 
 @app.procedure("create-ncj-pool")
 def create_ncj_pool(request: JsonRpcRequest, template, parameters):
@@ -23,7 +23,7 @@ def create_ncj_pool(request: JsonRpcRequest, template, parameters):
     pool = client.pool.poolparameter_from_json(pool_json)
     print("Poolparm from json is done")
     client.pool.add(pool)
-    return {"what": "it works"}
+    return pool_json
 
 @app.procedure("expand-ncj-pool")
 def expand_ncj_pool(request: JsonRpcRequest, template, parameters):
