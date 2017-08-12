@@ -86,11 +86,11 @@ export class SubmitMarketApplicationComponent {
         }
     }
 
-    public getParameters(template){
-        if (!template || !template.parameters) {
-            return [];
+    public getParameters(template) {
+        if (template  && template.parameters) {
+            return Object.keys(template.parameters);
         }
-        return Object.keys(template.parameters);
+        return [];
     }
 
     public onSubmit(){

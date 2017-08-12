@@ -1,5 +1,5 @@
 <bl-scrollable>
-    <div *ngIf="modeState == modes.None">
+    <div *ngIf="modeState === modes.None">
         <bl-complex-form [formGroup]="form" [hideFooter]="true">
             <bl-form-page main-form-page [title]="title">
                 <bl-form-section title="Mode">
@@ -13,7 +13,7 @@
         </bl-complex-form>
     </div>
 
-    <div *ngIf="modeState == modes.NewPoolAndJob">
+    <div *ngIf="modeState === modes.NewPoolAndJob">
         <bl-complex-form [formGroup]="form" [hideFooter]="true">
             <bl-form-page main-form-page [title]="title">
                 <bl-form-section title="Mode">
@@ -105,7 +105,7 @@
         </bl-complex-form>
     </div>
 
-    <div *ngIf="modeState == modes.OldPoolAndJob">
+    <div *ngIf="modeState === modes.OldPoolAndJob">
         <bl-complex-form [formGroup]="form" [hideFooter]="true">
             <bl-form-page main-form-page [title]="title">
                 <bl-form-section title="Mode">
@@ -159,7 +159,7 @@
         </bl-complex-form>
     </div>
 
-    <div *ngIf="modeState == modes.NewPool">
+    <div *ngIf="modeState === modes.NewPool">
         <bl-complex-form [formGroup]="form" [hideFooter]="true">
             <bl-form-page main-form-page [title]="title">
                 <bl-form-section title="Mode">
