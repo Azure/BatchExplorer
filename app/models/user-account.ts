@@ -1,10 +1,9 @@
 import { Model, Prop, Record } from "app/core";
 
-export type UserAccountElevationLevel = "nonadmin" | "admin";
-export const UserAccountElevationLevel = {
-    nonadmin: "nonadmin" as UserAccountElevationLevel,
-    admin: "admin" as UserAccountElevationLevel,
-};
+export enum UserAccountElevationLevel {
+    nonadmin = "nonadmin",
+    admin = "admin",
+}
 
 export interface UserAccountAttributes {
     name: string;

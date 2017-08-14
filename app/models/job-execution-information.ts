@@ -5,20 +5,17 @@ import { FailureInfo, FailureInfoAttributes } from "./failure-info";
  * Job terminate reason.
  * Can be either of the value listen below or some string specified by the user.
  */
-export type JobTerminateReason = "JMComplete" | "MaxWallClockTimeExpiry"
-    | "TerminateJobSchedule" | "AllTasksComplete" | "TaskFailed" | "UserTerminate" | string;
-
-export const JobTerminateReason = {
-    JMComplete: "JMComplete" as JobTerminateReason,
-    MaxWallClockTimeExpiry: "MaxWallClockTimeExpiry" as JobTerminateReason,
-    TerminateJobSchedule: "TerminateJobSchedule" as JobTerminateReason,
-    AllTasksComplete: "AllTasksComplete" as JobTerminateReason,
-    TaskFailed: "TaskFailed" as JobTerminateReason,
+export enum JobTerminateReason {
+    JMComplete = "JMComplete",
+    MaxWallClockTimeExpiry = "MaxWallClockTimeExpiry",
+    TerminateJobSchedule = "TerminateJobSchedule",
+    AllTasksComplete = "AllTasksComplete",
+    TaskFailed = "TaskFailed",
     /**
      * Default user terminated value
      */
-    UserTerminate: "UserTerminate" as JobTerminateReason,
-};
+    UserTerminate = "UserTerminate",
+}
 
 export interface JobExecutionInformationAttributes {
     startTime: Date;

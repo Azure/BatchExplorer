@@ -33,12 +33,11 @@ export interface FileLoadResult {
     content: string;
 }
 
-export type FileSource = "task" | "node" | "blob";
-export const FileSource = {
-    task: "task" as FileSource,
-    node: "node" as FileSource,
-    blob: "blob" as FileSource,
-};
+export enum FileSource {
+    task = "task",
+    node = "node",
+    blob = "blob",
+}
 
 export class FileLoader {
     public readonly filename: string;

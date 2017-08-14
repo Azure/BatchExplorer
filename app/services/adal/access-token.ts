@@ -1,17 +1,9 @@
-import { Record } from "immutable";
 import * as moment from "moment";
 
+import { Model, Prop, Record } from "app/core";
 import { exists } from "app/utils";
 
-const AccessTokenRecord = Record({
-    access_token: null,
-    refresh_token: null,
-    token_type: "Bearer",
-    expires_in: null,
-    expires_on: null,
-    ext_expires_in: null,
-    not_before: null,
-});
+// tslint:disable:variable-name
 
 export interface AccessTokenAttributes {
     access_token: string;
@@ -32,8 +24,9 @@ export interface AccessTokenAttributes {
     not_before: Date;
 }
 
-export class AccessToken extends AccessTokenRecord {
-    public static isValidToken(data: AccessTokenAttributes) {
+@Model()
+export class AccessToken extends Record<AccessTokenAttributes> {
+    @Prop() public static isValidToken(data: AccessTokenAttributes) {
         return exists(data.access_token)
             && exists(data.refresh_token)
             && exists(data.token_type)
@@ -43,22 +36,22 @@ export class AccessToken extends AccessTokenRecord {
             && exists(data.not_before);
     }
 
-    public access_token: string;
-    public refresh_token: string;
-    public token_type: string;
+    @Prop() public access_token: string;
+    @Prop() public refresh_token: string = "Bearer";
+    @Prop() public token_type: string;
 
     /**
      * Number of seconds before the token expires
      */
-    public expires_in: number;
+    @Prop() public expires_in: number;
 
     /**
      * Datetime when the token expires
      */
-    public expires_on: Date;
+    @Prop() public expires_on: Date;
 
-    public ext_expires_in: number;
-    public not_before: Date;
+    @Prop() public ext_expires_in: number;
+    @Prop() public not_before: Date;
 
     constructor(data: AccessTokenAttributes) {
         super(data);
