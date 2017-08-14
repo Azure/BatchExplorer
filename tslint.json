@@ -6,6 +6,7 @@
   ],
   "rules": {
     // TSLint override
+    "no-duplicate-imports": true,
     "object-literal-shorthand": false,
     "adjacent-overload-signatures": false,
     "max-classes-per-file": [false],
