@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 
 import { Pool } from "app/models";
-import { PoolCreateDto,  PoolEnableAutoScaleDto, PoolPatchDto, PoolResizeDto } from "app/models/dtos";
+import { PoolCreateDto, PoolEnableAutoScaleDto, PoolPatchDto, PoolResizeDto } from "app/models/dtos";
 import { Constants, ModelUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";

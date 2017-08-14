@@ -6,7 +6,10 @@
   ],
   "rules": {
     // TSLint override
+    "no-this-assignment": [true, {"allow-destructuring": true}],
     "no-duplicate-imports": true,
+    "encoding": true,
+    "indent": [true, "spaces", 4],
     "object-literal-shorthand": false,
     "adjacent-overload-signatures": false,
     "max-classes-per-file": [false],
