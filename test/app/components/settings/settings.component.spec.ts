@@ -7,6 +7,7 @@ import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
 import { tick } from "@angular/core/testing";
+import { discardPeriodicTasks } from "@angular/core/testing";
 import { ButtonComponent } from "app/components/base/buttons";
 import { EditorComponent } from "app/components/base/editor";
 import { SettingsComponent } from "app/components/settings";
@@ -97,6 +98,7 @@ describe("SettingsComponent", () => {
     describe("when using invalid settings", () => {
         beforeEach(fakeAsync(() => {
             rightEditor.updateValue(invalidUserSettings);
+            discardPeriodicTasks();
             tick(400);
             fixture.detectChanges();
         }));
@@ -122,6 +124,7 @@ describe("SettingsComponent", () => {
     describe("when using valid settings", () => {
         beforeEach(fakeAsync(() => {
             rightEditor.updateValue(validUserSettings);
+            discardPeriodicTasks();
             tick(400);
             fixture.detectChanges();
         }));

@@ -77,7 +77,7 @@ export class SettingsComponent implements OnDestroy {
 
     @autobind()
     private _validJsonConfig(c: FormControl): Observable<any> {
-        return Observable.timer(400).map(() => {
+        return Observable.of(null).debounceTime(400).map(() => {
             try {
                 JSON.parse(stripJsonComments(c.value, { whitespace: true }));
                 return null;
