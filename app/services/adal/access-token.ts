@@ -26,7 +26,7 @@ export interface AccessTokenAttributes {
 
 @Model()
 export class AccessToken extends Record<AccessTokenAttributes> {
-    @Prop() public static isValidToken(data: AccessTokenAttributes) {
+    public static isValidToken(data: AccessTokenAttributes) {
         return exists(data.access_token)
             && exists(data.refresh_token)
             && exists(data.token_type)

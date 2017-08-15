@@ -57,7 +57,7 @@ export function ListProp<T>(type: any) {
 }
 
 export function Model() {
-    return <T extends { new (...args: any[]): {} }>(ctr: T) => {
+    return <T extends { new(...args: any[]): {} }>(ctr: T) => {
         if (!(ctr.prototype instanceof Record)) {
             throw new RecordMissingExtendsError(ctr);
         }
@@ -73,7 +73,10 @@ export function Model() {
             obj._completeInitialization();
             return obj;
         };
-
+        // Copy static methods
+        for (let prop of Object.keys(original)) {
+            f[prop] = original[prop];
+        }
         // copy prototype so intanceof operator still works
         f.prototype = original.prototype;
 
