@@ -35,14 +35,13 @@ export enum ListItemStatus {
  * - accent             darker blue box
  * - important          stripped blue box
  */
-export type QuickListItemStatus = "normal" | "warning" | "accent" | "lightaccent" | "important";
-export const QuickListItemStatus = {
-    normal: "normal" as QuickListItemStatus,
-    warning: "warning" as QuickListItemStatus,
-    accent: "accent" as QuickListItemStatus,
-    lightaccent: "lightaccent" as QuickListItemStatus,
-    important: "important" as QuickListItemStatus,
-};
+export enum QuickListItemStatus {
+    normal = "normal",
+    warning = "warning",
+    accent = "accent",
+    lightaccent = "lightaccent",
+    important = "important",
+}
 
 @Component({
     selector: "bl-quick-list-item-status",

@@ -2,8 +2,7 @@ import { BrowserWindow } from "electron";
 
 import { BatchClientProxyFactory, FileUtils, StorageClientProxyFactory } from "../api";
 import { Constants } from "../client-constants";
-import { UniqueWindow } from "../core";
-import { windows } from "../core";
+import { UniqueWindow, windows } from "../core";
 import { logger, renderLogger } from "../logger";
 
 // Webpack dev server url when using HOT=1

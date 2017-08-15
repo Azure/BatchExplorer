@@ -1,26 +1,23 @@
-import { Record } from "immutable";
+import { Model, Prop, Record } from "app/core";
 
 import { SecureUtils } from "app/utils";
-
-const SSHPublicKeyRecord = Record({
-    id: null,
-    name: null,
-    value: null,
-});
 
 export interface SSHPublicKeyAttributes {
     id: string;
     name: string;
     value: string;
 }
-export class SSHPublicKey extends SSHPublicKeyRecord implements SSHPublicKeyAttributes {
-    public id: string;
-    public name: string;
-    public value: string;
+
+@Model()
+export class SSHPublicKey extends Record<SSHPublicKeyAttributes> {
+    @Prop() public id: string;
+    @Prop() public name: string;
+    @Prop() public value: string;
 
     constructor(data: Partial<SSHPublicKeyAttributes>) {
-        super(Object.assign({}, {
+        super({
             id: SecureUtils.uuid(),
-        }, data));
+            ...data,
+        });
     }
 }

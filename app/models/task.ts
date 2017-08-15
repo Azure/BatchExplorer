@@ -88,10 +88,9 @@ export class Task extends Record<TaskAttributes> {
     }
 }
 
-export type TaskState = "active" | "preparing" | "running" | "completed";
-export const TaskState = {
-    active: "active" as TaskState,
-    preparing: "preparing" as TaskState,
-    running: "running" as TaskState,
-    completed: "completed" as TaskState,
-};
+export enum TaskState {
+    active = "active",
+    preparing = "preparing",
+    running = "running",
+    completed = "completed",
+}
