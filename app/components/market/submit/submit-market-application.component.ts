@@ -67,22 +67,18 @@ export class SubmitMarketApplicationComponent {
         if (this.getParameters(this.jobTemplate).includes(param)) {
             if (this.jobTemplate.parameters[param].metadata.advancedType) {
                 return this.jobTemplate.parameters[param].metadata.advancedType;
-            }
-            else if (this.jobTemplate.parameters[param].allowedValues) {
+            } else if (this.jobTemplate.parameters[param].allowedValues) {
                 return "dropdown";
             }
             return this.jobTemplate.parameters[param].type;
-        }
-        else if (this.getParameters(this.poolTemplate).includes(param)) {
+        } else if (this.getParameters(this.poolTemplate).includes(param)) {
             if (this.poolTemplate.parameters[param].metadata.advancedType) {
                 return this.poolTemplate.parameters[param].metadata.advancedType;
-            }
-            else if (this.poolTemplate.parameters[param].allowedValues) {
+            } else if (this.poolTemplate.parameters[param].allowedValues) {
                 return "dropdown";
             }
             return this.poolTemplate.parameters[param].type;
-        }
-        else {
+        } else {
             return "string";
         }
     }
@@ -100,10 +96,9 @@ export class SubmitMarketApplicationComponent {
         let obs;
         switch (this.modeState) {
             case Modes.NewPoolAndJob: {
-                console.log("Poool", this.poolParams.value, this.poolTemplate);
                 obs = this.pythonRpcService.callWithAuth("expand-ncj-pool", [this.poolTemplate, this.poolParams.value]);
                 obs.subscribe({
-                    next: (data) => this._runJobWithPool(data, this.jobParams.value),
+                    next: (data) => this._runJobWithPool(data),
                     error: (err) => this.error = ServerError.fromPython(err),
                 });
                 break;
@@ -112,7 +107,7 @@ export class SubmitMarketApplicationComponent {
                 this.jobTemplate.job.properties.poolInfo = this.pickedPool.value;
                 obs = this.pythonRpcService.callWithAuth("submit-ncj-job", [this.jobTemplate, this.jobParams.value]);
                 obs.subscribe({
-                    next: (data) => this._redirectToJob(data.id),
+                    next: (data) => this._redirectToJob(data.properties.id),
                     error: (err) => this.error = ServerError.fromPython(err),
                 });
                 break;
@@ -165,9 +160,8 @@ export class SubmitMarketApplicationComponent {
         this.form = this.formBuilder.group({ pool: this.poolParams, job: this.jobParams });
     }
 
-    private _runJobWithPool(expandedPoolTemplate, jobInputs) {
+    private _runJobWithPool(expandedPoolTemplate) {
         delete expandedPoolTemplate.id;
-        console.log("RUnnin", this.jobTemplate, jobInputs);
         this.jobTemplate.job.properties.poolInfo = {
             autoPoolSpecification: {
                 autoPoolIdPrefix: "jobname",
@@ -176,24 +170,27 @@ export class SubmitMarketApplicationComponent {
                 pool: expandedPoolTemplate,
             },
         };
-        const obs = this.pythonRpcService.callWithAuth("submit-ncj-job", [this.jobTemplate, jobInputs]);
+        const obs = this.pythonRpcService.callWithAuth("submit-ncj-job", [this.jobTemplate, this.jobParams.value]);
         obs.subscribe({
-            next: (data) => this._redirectToJob(data.id),
+            next: (data) => this._redirectToJob(data.properties.id),
             error: (err) => this.error = ServerError.fromPython(err),
         });
+        return obs;
     }
 
     private _redirectToJob(id) {
         if (id) {
             this.router.navigate(["/jobs", id]);
+        } else {
+            this.router.navigate(["/jobs"]);
         }
-        this.router.navigate(["/jobs"]);
     }
 
     private _redirectToPool(id) {
         if (id) {
             this.router.navigate(["/pools", id]);
+        } else {
+            this.router.navigate(["/pools"]);
         }
-        this.router.navigate(["/pools"]);
     }
 }
