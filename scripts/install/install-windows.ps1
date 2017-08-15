@@ -81,7 +81,7 @@ function confirm-node-version() {
     $patch = [int]$match.Matches.Groups[3].Value;
 
     if ($major -lt 5 -or ($major -eq 6 -and $minor -lt 9)) {
-        add-failure "You version of node '$node_version' is invalid. Please install node >= 6.9.0. $node_download_Link"
+        add-failure "Your version of node '$node_version' is invalid. Please install node >= 6.9.0. $node_download_Link"
     }
 
     add-success "Node version '$node_version' is valid";
@@ -108,7 +108,7 @@ function install-python-dependencies() {
         Write-Host "Python path is $python"
         add-success "Python version is valid. Using '$python'" -foreground "green";
     } else {
-        add-failure "Invalid version of python installed. Need python >= 3.5. You can either have globably available in the path as python, python3 or set the BL_PYTHON_PATH environment variable."
+        add-failure "Invalid version of python installed. Needs python >= 3.5. You can either have globably available in the path as python, python3 or set the BL_PYTHON_PATH environment variable."
     }
 
     Write-Host "$python $root/scripts/install/install-python-dep.py"
