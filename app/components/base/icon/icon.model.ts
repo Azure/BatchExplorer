@@ -1,24 +1,19 @@
-import { Record } from "immutable";
+import { Model, Prop, Record } from "app/core/record";
 
-export type IconSources = "svg" | "fa";
-export const IconSources = {
-    svg: "svg" as IconSources,
-    fa: "fa" as IconSources,
-};
-
-const IconRecord = Record({
-    src: IconSources.fa,
-    name: null,
-});
+export enum IconSources {
+    svg = "svg",
+    fa = "fa",
+}
 
 export interface IconAttributes {
     src: IconSources;
     name: string;
 }
 
-export class Icon extends IconRecord {
-    public src: IconSources;
-    public name: string;
+@Model()
+export class Icon extends Record<IconAttributes> {
+    @Prop() public src: IconSources;
+    @Prop() public name: string;
 
     constructor(data: IconAttributes)
     constructor(src: IconSources, name?: string)

@@ -51,9 +51,9 @@
         <bl-text-property label="Max task retry count" [value]="managerTask.constraints.maxTaskRetryCount"></bl-text-property>
         <bl-text-property label="Max wall-clock time" [value]="managerTask.constraints.maxWallClockTime"></bl-text-property>
         <bl-text-property label="Retention time" [value]="managerTask.constraints.retentionTime"></bl-text-property>
-        <bl-bool-property label="Kill job on completion" [value]="managerTask.killJobOnCompletion" YesNo="true"></bl-bool-property>
-        <bl-bool-property label="Run elevated" [value]="managerTask.runElevated" YesNo="true"></bl-bool-property>
-        <bl-bool-property label="Run exclusive" [value]="managerTask.runExclusive" YesNo="true"></bl-bool-property>
+        <bl-bool-property label="Kill job on completion" [value]="managerTask.killJobOnCompletion" yesNo="true"></bl-bool-property>
+        <bl-bool-property label="Run elevated" [value]="managerTask.runElevated" yesNo="true"></bl-bool-property>
+        <bl-bool-property label="Run exclusive" [value]="managerTask.runExclusive" yesNo="true"></bl-bool-property>
         <bl-table-property *ngIf="managerTask.applicationPackageReferences.length > 0" label="Package references">
             <bl-table-property-header>
                 <div tp-column>Application</div>
@@ -93,9 +93,9 @@
         <bl-text-property label="Max task retry count" [value]="prepTask.constraints.maxTaskRetryCount"></bl-text-property>
         <bl-text-property label="Max wall-clock time" [value]="prepTask.constraints.maxWallClockTime"></bl-text-property>
         <bl-text-property label="Retention time" [value]="prepTask.constraints.retentionTime"></bl-text-property>
-        <bl-bool-property label="Wait for success" [value]="prepTask.waitForSuccess" YesNo="true"></bl-bool-property>
-        <bl-bool-property label="Run elevated" [value]="prepTask.runElevated" YesNo="true"></bl-bool-property>
-        <bl-bool-property label="Re-run on node reboot" [value]="prepTask.rerunOnNodeRebootAfterSuccess" YesNo="true"></bl-bool-property>
+        <bl-bool-property label="Wait for success" [value]="prepTask.waitForSuccess" yesNo="true"></bl-bool-property>
+        <bl-bool-property label="Run elevated" [value]="prepTask.runElevated" yesNo="true"></bl-bool-property>
+        <bl-bool-property label="Re-run on node reboot" [value]="prepTask.rerunOnNodeRebootAfterSuccess" yesNo="true"></bl-bool-property>
         <bl-table-property *ngIf="prepTask.resourceFiles.length > 0" label="Resource files">
             <bl-table-property-header>
                 <div tp-column>Blob source</div>
@@ -124,7 +124,7 @@
         <bl-text-property label="Command line" [value]="releaseTask.commandLine"></bl-text-property>
         <bl-text-property label="Max wall-clock time" [value]="releaseTask.maxWallClockTime"></bl-text-property>
         <bl-text-property label="Retention time" [value]="releaseTask.retentionTime"></bl-text-property>
-        <bl-bool-property label="Run elevated" [value]="releaseTask.runElevated" YesNo="true"></bl-bool-property>
+        <bl-bool-property label="Run elevated" [value]="releaseTask.runElevated" yesNo="true"></bl-bool-property>
         <bl-table-property *ngIf="releaseTask.resourceFiles.length > 0" label="Resource files">
             <bl-table-property-header>
                 <div tp-column>Blob source</div>

@@ -8,10 +8,9 @@ import { baseUrl, objectToParams } from "./adal-constants";
 
 const contentType = "application/x-www-form-urlencoded";
 
-export type AccessTokenError = "invalid_grant";
-export const AccessTokenError = {
-    invalid_grant: "invalid_grant",
-};
+export enum AccessTokenError {
+    invalidGrant = "invalid_grant",
+}
 
 export interface AccessTokenErrorResult {
     error: AccessTokenError;
@@ -85,11 +84,11 @@ export class AccessTokenService {
         return objectToParams(params);
     }
 
-    private _refreshBody(resource, refresh_token: string) {
+    private _refreshBody(resource, refreshToken: string) {
         const params = {
             grant_type: "refresh_token",
             client_id: this.config.clientId,
-            refresh_token: refresh_token,
+            refresh_token: refreshToken,
             resource: resource,
             redirect_uri: this.config.redirectUri,
         };

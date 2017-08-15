@@ -1,11 +1,4 @@
-import { Record } from "immutable";
-
-import { Partial } from "app/utils";
-
-const StorageKeysRecord = Record({
-    primaryKey: null,
-    secondaryKey: null,
-});
+import { Model, Prop, Record } from "app/core";
 
 export interface StorageKeysAttributes {
     primaryKey: string;
@@ -15,11 +8,8 @@ export interface StorageKeysAttributes {
 /**
  * Class for storing storage account access keys returned from ARM /listkeys operation
  */
-export class StorageKeys extends StorageKeysRecord implements StorageKeysAttributes {
-    public primaryKey: string;
-    public secondaryKey: string;
-
-    constructor(data: Partial<StorageKeysAttributes> = {}) {
-        super(Object.assign({}, data, {  }));
-    }
+@Model()
+export class StorageKeys extends Record<StorageKeysAttributes> {
+    @Prop() public primaryKey: string;
+    @Prop() public secondaryKey: string;
 }

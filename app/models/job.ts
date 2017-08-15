@@ -93,13 +93,12 @@ export class Job extends Record<JobAttributes> {
     }
 }
 
-export type JobState = "active" | "disabling" | "disabled" | "enabling" | "terminating" | "completed" | "deleting";
-export const JobState = {
-    active: "active" as JobState,
-    disabling: "disabling" as JobState,
-    disabled: "disabled" as JobState,
-    enabling: "enabling" as JobState,
-    terminating: "terminating" as JobState,
-    completed: "completed" as JobState,
-    deleting: "deleting" as JobState,
-};
+export enum JobState {
+    active = "active",
+    disabling = "disabling",
+    disabled = "disabled",
+    enabling = "enabling",
+    terminating = "terminating",
+    completed = "completed",
+    deleting = "deleting",
+}
