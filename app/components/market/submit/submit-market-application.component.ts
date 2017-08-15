@@ -27,11 +27,9 @@ export class SubmitMarketApplicationComponent {
     public pickedPool = new FormControl(null);
     public jobParams;
     public poolParams;
-
     private applicationId;
     private actionId;
     private icon;
-
     private error;
 
     constructor(
@@ -96,34 +94,29 @@ export class SubmitMarketApplicationComponent {
         let obs;
         switch (this.modeState) {
             case Modes.NewPoolAndJob: {
-                obs = this.pythonRpcService.callWithAuth("expand-ncj-pool", [this.poolTemplate, this.poolParams.value]);
-                obs.subscribe({
-                    next: (data) => this._runJobWithPool(data),
-                    error: (err) => this.error = ServerError.fromPython(err),
-                });
+                obs = this.pythonRpcService.callWithAuth("expand-ncj-pool", [this.poolTemplate, this.poolParams.value])
+                    .cascade((data) => this._runJobWithPool(data));
                 break;
             }
             case Modes.OldPoolAndJob: {
                 this.jobTemplate.job.properties.poolInfo = this.pickedPool.value;
-                obs = this.pythonRpcService.callWithAuth("submit-ncj-job", [this.jobTemplate, this.jobParams.value]);
-                obs.subscribe({
-                    next: (data) => this._redirectToJob(data.properties.id),
-                    error: (err) => this.error = ServerError.fromPython(err),
-                });
+                obs = this.pythonRpcService.callWithAuth("submit-ncj-job", [this.jobTemplate, this.jobParams.value])
+                    .cascade((data) => this._redirectToJob(data.properties.id));
                 break;
             }
             case Modes.NewPool: {
-                obs = this.pythonRpcService.callWithAuth("create-ncj-pool", [this.poolTemplate, this.poolParams.value]);
-                obs.subscribe({
-                    next: (data) => this._redirectToPool(data.id),
-                    error: (err) => this.error = ServerError.fromPython(err),
-                });
+                obs = this.pythonRpcService.callWithAuth("create-ncj-pool", [this.poolTemplate, this.poolParams.value])
+                    .cascade((data) => this._redirectToPool(data.id));
                 break;
             }
             default: {
-                return;
+                return obs;
             }
         }
+
+        obs.subscribe({
+            error: (err) => this.error = ServerError.fromPython(err),
+        });
         return obs;
     }
 
@@ -146,7 +139,6 @@ export class SubmitMarketApplicationComponent {
             }
         }
         this.jobParams = new FormGroup(jobFormGroup);
-
         let poolFormGroup = {};
         for (let key of poolParameters) {
             if (this.poolTemplate.parameters[key].defaultValue) {
@@ -170,12 +162,8 @@ export class SubmitMarketApplicationComponent {
                 pool: expandedPoolTemplate,
             },
         };
-        const obs = this.pythonRpcService.callWithAuth("submit-ncj-job", [this.jobTemplate, this.jobParams.value]);
-        obs.subscribe({
-            next: (data) => this._redirectToJob(data.properties.id),
-            error: (err) => this.error = ServerError.fromPython(err),
-        });
-        return obs;
+        return this.pythonRpcService.callWithAuth("submit-ncj-job", [this.jobTemplate, this.jobParams.value])
+            .cascade((data) => this._redirectToJob(data.properties.id));
     }
 
     private _redirectToJob(id) {
