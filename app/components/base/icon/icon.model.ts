@@ -1,4 +1,4 @@
-import { Model, Prop, Record } from "app/core";
+import { Model, Prop, Record } from "app/core/record";
 
 export enum IconSources {
     svg = "svg",
