@@ -59,6 +59,20 @@ function confirm-branch() {
     }
 }
 
+function confirm-latest-commit() {
+    git fetch
+
+   $local_commit = [string](git rev-parse HEAD)
+   $remote_commit = [string](git rev-parse "@{u}")
+
+   if($local_commit -eq $remote_commit) {
+        add-success "Branch is up to date."
+   } else {
+        $behind = [string](git rev-list --count $local_commit...$remote_commit)
+        add-warning "Branch is out of date by $behind commits. Run 'git pull' to update."
+   }
+}
+
 function confirm-node-version() {
     $node_download_link = "https://nodejs.org/en/download/current/"
 
@@ -132,6 +146,7 @@ function build-batchlabs() {
 }
 
 confirm-branch
+confirm-latest-commit
 confirm-node-version
 install-node-dependencies
 install-python-dependencies
