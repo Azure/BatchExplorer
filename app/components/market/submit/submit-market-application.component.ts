@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { ServerError } from "app/models";
 import { NcjTemplateService, PythonRpcService } from "app/services";
 
+import { autobind } from "core-decorators";
 import "./submit-market-application.scss";
 export enum Modes { None, NewPoolAndJob, OldPoolAndJob, NewPool }
 
@@ -39,7 +40,7 @@ export class SubmitMarketApplicationComponent {
         private route: ActivatedRoute,
         private router: Router,
         private templateService: NcjTemplateService) {
-             this.form = new FormGroup({});
+        this.form = new FormGroup({});
     }
 
     public ngOnInit() {
@@ -62,7 +63,7 @@ export class SubmitMarketApplicationComponent {
         return fileGroup && `fgrp-${fileGroup}`;
     }
 
-    public getType(param){
+    public getType(param) {
         if (this.getParameters(this.jobTemplate).includes(param)) {
             if (this.jobTemplate.parameters[param].metadata.advancedType) {
                 return this.jobTemplate.parameters[param].metadata.advancedType;
@@ -93,20 +94,23 @@ export class SubmitMarketApplicationComponent {
         return [];
     }
 
-    public onSubmit() {
+    @autobind()
+    public submit() {
         this.error = null;
+        let obs;
         switch (this.modeState) {
             case Modes.NewPoolAndJob: {
-                const obs = this.pythonRpcService.callWithAuth("expand-ncj-pool", [this.poolTemplate, this.poolParams.value]);
+                console.log("Poool", this.poolParams.value, this.poolTemplate);
+                obs = this.pythonRpcService.callWithAuth("expand-ncj-pool", [this.poolTemplate, this.poolParams.value]);
                 obs.subscribe({
-                    next: (data) => this._runJobWithPool(data, this.jobTemplate),
+                    next: (data) => this._runJobWithPool(data, this.jobParams.value),
                     error: (err) => this.error = ServerError.fromPython(err),
                 });
                 break;
             }
             case Modes.OldPoolAndJob: {
                 this.jobTemplate.job.properties.poolInfo = this.pickedPool.value;
-                const obs = this.pythonRpcService.callWithAuth("submit-ncj-job", [this.jobTemplate, this.jobParams.value]);
+                obs = this.pythonRpcService.callWithAuth("submit-ncj-job", [this.jobTemplate, this.jobParams.value]);
                 obs.subscribe({
                     next: (data) => this._redirectToJob(data.id),
                     error: (err) => this.error = ServerError.fromPython(err),
@@ -114,7 +118,7 @@ export class SubmitMarketApplicationComponent {
                 break;
             }
             case Modes.NewPool: {
-                const obs = this.pythonRpcService.callWithAuth("create-ncj-pool", [this.poolTemplate, this.poolParams.value]);
+                obs = this.pythonRpcService.callWithAuth("create-ncj-pool", [this.poolTemplate, this.poolParams.value]);
                 obs.subscribe({
                     next: (data) => this._redirectToPool(data.id),
                     error: (err) => this.error = ServerError.fromPython(err),
@@ -125,6 +129,7 @@ export class SubmitMarketApplicationComponent {
                 return;
             }
         }
+        return obs;
     }
 
     private _createForms() {
@@ -157,17 +162,18 @@ export class SubmitMarketApplicationComponent {
             }
         }
         this.poolParams = new FormGroup(poolFormGroup);
-        this.form = this.formBuilder.group({pool: this.poolParams, job: this.jobParams});
+        this.form = this.formBuilder.group({ pool: this.poolParams, job: this.jobParams });
     }
 
     private _runJobWithPool(expandedPoolTemplate, jobInputs) {
         delete expandedPoolTemplate.id;
+        console.log("RUnnin", this.jobTemplate, jobInputs);
         this.jobTemplate.job.properties.poolInfo = {
             autoPoolSpecification: {
-            autoPoolIdPrefix: "jobname",
-            poolLifetimeOption: "job",
-            keepAlive: false,
-            pool: expandedPoolTemplate,
+                autoPoolIdPrefix: "jobname",
+                poolLifetimeOption: "job",
+                keepAlive: false,
+                pool: expandedPoolTemplate,
             },
         };
         const obs = this.pythonRpcService.callWithAuth("submit-ncj-job", [this.jobTemplate, jobInputs]);
