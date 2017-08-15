@@ -3,7 +3,7 @@ import { List } from "immutable";
 import * as moment from "moment";
 
 import { Job, Task } from "app/models";
-import { DateUtils } from "app/utils";
+import { DateUtils, NumberUtils } from "app/utils";
 import "./job-progress-graph.scss";
 
 @Component({
@@ -11,6 +11,7 @@ import "./job-progress-graph.scss";
     templateUrl: "job-progress-graph.html",
 })
 export class JobProgressGraphComponent implements OnChanges {
+
     @Input() public interactive: boolean = true;
     @Input() public job: Job;
     @Input() public tasks: List<Task> = List([]);
@@ -35,6 +36,9 @@ export class JobProgressGraphComponent implements OnChanges {
     public options: Chart.ChartOptions;
 
     public loading = false;
+
+    private _sortedEndTimes: any[];
+    private _sortedStartTimes: any[];
 
     constructor() {
         this.updateOptions();
@@ -74,6 +78,7 @@ export class JobProgressGraphComponent implements OnChanges {
                     title: (tooltipItems, data) => {
                         return this._getToolTip(tooltipItems[0]);
                     },
+                    label: () => null,
                 },
             },
             scales: {
@@ -126,16 +131,18 @@ export class JobProgressGraphComponent implements OnChanges {
             startTimes.push({
                 time: moment(startTime).diff(jobStartTime) / 1000,
                 index: index,
+                task: task,
             });
 
             endTimes.push({
                 time: moment(endTime).diff(jobStartTime) / 1000,
                 index: index,
+                task: task,
             });
         });
 
-        const sortedStartTimes = startTimes.sort((a, b) => a.time - b.time);
-        const sortedEndTimes = endTimes.sort((a, b) => a.time - b.time);
+        const sortedStartTimes = this._sortedStartTimes = startTimes.sort((a, b) => a.time - b.time);
+        const sortedEndTimes = this._sortedEndTimes = endTimes.sort((a, b) => a.time - b.time);
 
         this.datasets = [
             {
@@ -154,14 +161,19 @@ export class JobProgressGraphComponent implements OnChanges {
     private _getToolTip(tooltipItem: Chart.ChartTooltipItem) {
         const x = parseInt(tooltipItem.xLabel, 10);
         let type: string;
+        let task: Task;
         const time = DateUtils.prettyDuration(moment.duration({ seconds: x }));
         if (tooltipItem.datasetIndex === 0) {
+            task = this._sortedStartTimes[tooltipItem.index].task;
             type = "task started ";
         } else {
+            task = this._sortedEndTimes[tooltipItem.index].task;
             type = "task completed";
         }
 
-        return `${tooltipItem.yLabel} ${type} ${time}`;
+        const taskCount = parseInt(tooltipItem.yLabel, 10);
+        const taskId = task ? task.id : "?";
+        return [`${NumberUtils.nth(taskCount)} ${type} at ${time}`, `Task id: ${taskId}`];
     }
 
     private _timesToDataSet(times: any[]) {
