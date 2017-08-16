@@ -5,8 +5,8 @@
 </div>
 
 <!-- list any task outputs on the node -->
-<bl-entity-details-list *ngIf="selectedTab === 'node'" #nodeWrapper [refresh]="nodeList.refresh" [filterPlaceholder]="nodeList.filterPlaceholder"
-    [showAddButton]="false" quickSearchField="name">
+<bl-entity-details-list *ngIf="selectedTab === 'node'" #nodeWrapper [refresh]="nodeList.refresh" [filterPlaceholder]="nodeList.quicksearchPlaceholder" [showAddButton]="false"
+    [enableAdvancedFilter]="false" [showExpandButton]="false" quickSearchField="name">
     <div class="layout-container" [class.filtering]="showAdvancedFilter | async">
         <section class="list-view">
             <div class="left-pane">

@@ -149,7 +149,9 @@ export class TaskFileListComponent implements OnChanges, OnDestroy {
         let jobIdInput: SimpleChange = inputs.jobId;
         let taskIdInput: SimpleChange = inputs.taskId;
         if (this._hasInputChanged(jobIdInput) || this._hasInputChanged(taskIdInput)) {
-            this.treeDisplay.treeNodes = [];
+            if (this.treeDisplay) {
+                this.treeDisplay.treeNodes = [];
+            }
             this._disposeListProxy();
             this._fileProxyMap = {} as StringMap<RxListProxy<TaskFileListParams, File>>;
             this.moreFileMap = {} as StringMap<boolean>;

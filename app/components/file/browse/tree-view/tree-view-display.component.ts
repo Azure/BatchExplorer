@@ -65,7 +65,6 @@ export class TreeViewDisplayComponent implements OnInit {
                 nodes = this._decorateNodesWithMoreOption(nodes, pathToLoad);
                 this.treeNodes = (files.size > 0) ? nodes : [];
             }
-            this.expandTreeNodes();
         });
         return filesObservable;
     }
@@ -125,17 +124,6 @@ export class TreeViewDisplayComponent implements OnInit {
         return null;
     }
 
-    /**
-     * Recursively expand tree nodes if current node has expanded status
-     */
-    public expandTreeNodes(): void {
-        // Keep tree nodes expanded if routing to a different route
-        this.tree.treeModel.doForAll((node: TreeNode) => {
-            if (node.data.state === FileState.EXPANDED_DIRECTORY) {
-                node.expand();
-            }
-        });
-    }
     /**
      * Handle linking to files from blob storage as well as the task and node API
      * @param fileName - name if the file

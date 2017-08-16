@@ -1,7 +1,7 @@
 <bl-loading [status]="data.status | async">
     <div>
         <bl-entity-details-list #listWrapper [refresh]="list.refresh" [filterPlaceholder]="quicksearchPlaceholder" [showAddButton]="false"
-            [enableAdvancedFilter]="false" [showExpandButton]="false" quickSearchField="name" [loadMore]="list.loadMore">
+            [enableAdvancedFilter]="false" [showExpandButton]="false" quickSearchField="name">
             <div class="layout-container" [class.filtering]="showAdvancedFilter | async">
                 <section class="list-view">
                     <div class="left-pane">
