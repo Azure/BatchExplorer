@@ -53,7 +53,7 @@ const baseConfig = {
         new CheckerPlugin(),
 
         new CopyWebpackPlugin([
-            { from: "./client/splash-screen/**/*" },
+            { context: "src/client/splash-screen", from: "**/*", to: "client/splash-screen" },
             { context: "app/assets", from: "**/*", to: "assets" },
         ]),
         new CommonsChunkPlugin({
