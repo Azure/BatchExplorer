@@ -71,20 +71,28 @@ export function getPythonPath(): Promise<string> {
     });
 }
 
-const pythonVersionRegex = /Python\s*([\d.]+)/;
-const pythonVersion = "3.6";
+const pythonVersionRegex = /Python\s*(\d+)\.(\d+)\.(\d+)/;
 
+export interface SemVersion {
+    major: number;
+    minor: number;
+    patch: number;
+}
 /**
  * Parse the version from the stdout
  * @param str Stdout of running python --version
  */
-function parsePythonVersion(str: string) {
+function parsePythonVersion(str: string): SemVersion {
     const out = pythonVersionRegex.exec(str);
 
-    if (!out || out.length < 2) {
+    if (!out || out.length < 4) {
         return null;
     } else {
-        return out[1];
+        return {
+            major: parseInt(out[1], 10),
+            minor: parseInt(out[2], 10),
+            patch: parseInt(out[3], 10),
+        };
     }
 }
 
@@ -92,6 +100,6 @@ function parsePythonVersion(str: string) {
  * Check if the version is the right for batchlabs.
  * @param version Python version
  */
-function isValidVersion(version: string) {
-    return version.startsWith(pythonVersion);
+function isValidVersion(version: SemVersion) {
+    return version.major === 3 && version.minor >= 5;
 }
