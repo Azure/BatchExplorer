@@ -3,34 +3,39 @@ import { FormBuilder } from "@angular/forms";
 import { FormControl, FormGroup } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { ServerError } from "app/models";
+import { NcjJobTemplate, NcjParameter, NcjPoolTemplate } from "app/models";
 import { NcjTemplateService, PythonRpcService } from "app/services";
-
 import { ObjectUtils, log } from "app/utils";
 import { autobind } from "core-decorators";
 import * as inflection from "inflection";
 import "./submit-market-application.scss";
-export enum Modes { None, NewPoolAndJob, OldPoolAndJob, NewPool }
+
+enum Modes {
+    None,
+    NewPoolAndJob,
+    OldPoolAndJob,
+    NewPool,
+}
 
 enum NcjParameterExtendedType {
      string = "string",
      int = "int",
      fileGroup = "file-group",
      fileInFileGroup = "file-in-file-group",
+     dropDown = "drop-down",
 }
 
 class NcjParameterWrapper {
     public type: NcjParameterExtendedType;
-    /**
-     * Id of another param it depends on
-     */
-     public dependsOn: string;
-     public name: string;
-     public description: string;
-     constructor(public id: string, private _param: NcjParameter) {
-         this._computeName();
-         this._computeDescription();
-         this._computeType();
-     }
+    public dependsOn: string;
+    public name: string;
+    public description: string;
+    public allowedValues: string[];
+    constructor(public id: string, private _param: NcjParameter) {
+        this._computeName();
+        this._computeDescription();
+        this._computeType();
+    }
     private _computeName() {
         this.name = inflection.humanize(inflection.underscore(this.id));
     }
@@ -44,10 +49,22 @@ class NcjParameterWrapper {
             this.dependsOn = this._param.metadata.dependsOn;
         }
     }
+    private _computeAllowedValues() {
+        const param = this._param;
+        if (param.allowedValues) {
+            this.allowedValues = param.allowedValues;
+        } else {
+            this.allowedValues = [];
+        }
+    }
     private _computeType() {
         this._computeDependsOn();
+        this._computeAllowedValues();
         const param = this._param;
-        if (param.metadata && param.metadata.advancedType) {
+        if (param.allowedValues) {
+            this.type = NcjParameterExtendedType.dropDown;
+            return;
+        } else if (param.metadata && param.metadata.advancedType) {
             const type = param.metadata.advancedType;
             if (!ObjectUtils.values(NcjParameterExtendedType as any).includes(type)) {
                 log.error(`Advanced typed '${type}' is unkown!`, NcjParameterExtendedType);
@@ -69,17 +86,20 @@ export class SubmitMarketApplicationComponent {
     }
 
     public modes = Modes;
+    public types = NcjParameterExtendedType;
     public modeState = Modes.None;
-    public title;
+    public title: string;
     public form;
-    public jobTemplate;
-    public poolTemplate;
+    public jobTemplate: NcjJobTemplate;
+    public poolTemplate: NcjPoolTemplate;
     public pickedPool = new FormControl(null);
-    public jobParams;
-    public poolParams;
-    private applicationId;
-    private actionId;
-    private icon;
+    public jobParams: FormGroup;
+    public poolParams: FormGroup;
+    public jobParametersWrapper: NcjParameterWrapper[];
+    public poolParametersWrapper: NcjParameterWrapper[];
+    private applicationId: string;
+    private actionId: string;
+    private icon: string;
     private error;
 
     constructor(
@@ -99,6 +119,12 @@ export class SubmitMarketApplicationComponent {
             this.templateService.getTemplates(this.applicationId, this.actionId).subscribe((templates) => {
                 this.jobTemplate = templates.job;
                 this.poolTemplate = templates.pool;
+                this._parseParameters();
+                console.log(this.jobParametersWrapper);
+                console.log(this.poolParametersWrapper);
+
+                console.log(this.jobTemplate);
+                console.log(this.poolTemplate);
                 this._createForms();
             });
             this.templateService.getApplication(this.applicationId).subscribe((application) => {
@@ -109,33 +135,6 @@ export class SubmitMarketApplicationComponent {
 
     public getContainerFromFileGroup(fileGroup: string) {
         return fileGroup && `fgrp-${fileGroup}`;
-    }
-
-    public getType(param) {
-        if (this.getParameters(this.jobTemplate).includes(param)) {
-            if (this.jobTemplate.parameters[param].metadata.advancedType) {
-                return this.jobTemplate.parameters[param].metadata.advancedType;
-            } else if (this.jobTemplate.parameters[param].allowedValues) {
-                return "dropdown";
-            }
-            return this.jobTemplate.parameters[param].type;
-        } else if (this.getParameters(this.poolTemplate).includes(param)) {
-            if (this.poolTemplate.parameters[param].metadata.advancedType) {
-                return this.poolTemplate.parameters[param].metadata.advancedType;
-            } else if (this.poolTemplate.parameters[param].allowedValues) {
-                return "dropdown";
-            }
-            return this.poolTemplate.parameters[param].type;
-        } else {
-            return "string";
-        }
-    }
-
-    public getParameters(template) {
-        if (template && template.parameters) {
-            return Object.keys(template.parameters);
-        }
-        return [];
     }
 
     @autobind()
@@ -163,11 +162,29 @@ export class SubmitMarketApplicationComponent {
                 return obs;
             }
         }
-
         obs.subscribe({
             error: (err) => this.error = ServerError.fromPython(err),
         });
         return obs;
+    }
+
+    private _parseParameters() {
+        const parameters = this.jobTemplate.parameters;
+        const otherParameters: any[] = [];
+        for (let name of Object.keys(parameters)) {
+            const param = parameters[name];
+            otherParameters.push(new NcjParameterWrapper(name, param));
+        }
+        this.jobParametersWrapper = otherParameters;
+
+        const parameters2 = this.poolTemplate.parameters;
+        const otherParameters2: any[] = [];
+        for (let name of Object.keys(parameters2)) {
+            const param = parameters2[name];
+            otherParameters2.push(new NcjParameterWrapper(name, param));
+        }
+        this.poolParametersWrapper = otherParameters2;
+
     }
 
     private _createForms() {
@@ -209,8 +226,8 @@ export class SubmitMarketApplicationComponent {
                 autoPoolIdPrefix: "jobname",
                 poolLifetimeOption: "job",
                 keepAlive: false,
-                pool: expandedPoolTemplate,
             },
+            pool: expandedPoolTemplate,
         };
         return this.pythonRpcService.callWithAuth("submit-ncj-job", [this.jobTemplate, this.jobParams.value])
             .cascade((data) => this._redirectToJob(data.properties.id));

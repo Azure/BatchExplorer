@@ -23,76 +23,75 @@
                     </ul>
                 </bl-form-section>
                 <bl-form-section title="Pool" formGroupName="pool">
-                    <div *ngFor="let param of getParameters(poolTemplate)" [ngSwitch]="getType(param)">
-                        <div *ngSwitchCase="'string'">
+                    <div *ngFor="let param of poolParametersWrapper" [ngSwitch]="param.type">
+                        <div *ngSwitchCase="types.string">
                             <md-input-container class="form-element">
-                            <input mdInput type="text" name="name" [formControlName]="param" [placeholder]="param">
-                                <md-hint align="end">{{poolTemplate.parameters[param].metadata.description}}</md-hint>
+                                <input mdInput type="text" name="param.name" [formControlName]="param.id" [placeholder]="param.name">
+                                <md-hint align="end">{{param.description}}</md-hint>
                             </md-input-container>
                         </div>
-                        <div *ngSwitchCase="'file-group'">
-                            <bl-file-group-picker [formControlName]="param" [label]="param" class="form-element" [hint]="poolTemplate.parameters[param].metadata.description">
+                        <div *ngSwitchCase="types.fileGroup">
+                            <bl-file-group-picker [formControlName]="param.id" [label]="param.name" class="form-element" [hint]="param.description">
                             </bl-file-group-picker>
                         </div>
-                        <div *ngSwitchCase="'file-in-file-group'">
-                            <bl-cloud-file-picker [containerId]="getContainerFromFileGroup(poolParams.value[poolTemplate.parameters[param].metadata.dependsOn])" [formControlName]="param"
-                            [label]="param" class="form-element" [hint]="poolTemplate.parameters[param].metadata.description">
+                        <div *ngSwitchCase="types.fileInFileGroup">
+                            <bl-cloud-file-picker [containerId]="getContainerFromFileGroup(poolParams.value[param.dependsOn])" [formControlName]="param.id"
+                            [label]="param" class="form-element" [hint]="param.description">
                             </bl-cloud-file-picker>
                         </div>
-                        <div *ngSwitchCase="'dropdown'">
-                            <md-select [formControlName]="param" [placeholder]="param">
-                                <md-hint align="end">{{poolTemplate.parameters[param].metadata.description}}</md-hint>
-                                <md-option *ngFor="let opt of poolTemplate.parameters[param].allowedValues" [value]="opt">{{opt}}</md-option>
+                        <div *ngSwitchCase="types.dropDown">
+                            <md-select [formControlName]="param.id" [placeholder]="param.name">
+                                <md-hint align="end">{{param.description}}</md-hint>
+                                <md-option *ngFor="let opt of param.allowedValues" [value]="opt">{{opt}}</md-option>
                             </md-select>
-
                         </div>
-                        <div *ngSwitchCase="'int'">
+                        <div *ngSwitchCase="types.int">
                             <md-input-container class="form-element">
-                            <input mdInput type="number" name="name" [formControlName]="param" [placeholder]="param">
-                                <md-hint align="end">{{poolTemplate.parameters[param].metadata.description}}</md-hint>
+                            <input mdInput type="number" name="param.name" [formControlName]="param.id" [placeholder]="param.name">
+                                <md-hint align="end">{{param.description}}</md-hint>
                             </md-input-container>
                         </div>
                         <div *ngSwitchDefault>
                             <md-input-container class="form-element">
-                            <input mdInput type="text" name="name" [formControlName]="param" [placeholder]="param">
-                                <md-hint align="end">{{poolTemplate.parameters[param].metadata.description}}</md-hint>
+                                <input mdInput type="text" name="param.name" [formControlName]="param.id" [placeholder]="param.name">
+                                <md-hint align="end">{{param.description}}</md-hint>
                             </md-input-container>
                         </div>
                     </div>
                 </bl-form-section>
                 <bl-form-section title="Job" formGroupName="job">
-                    <div *ngFor="let param of getParameters(jobTemplate)" [ngSwitch]="getType(param)">
-                        <div *ngSwitchCase="'string'">
+                    <div *ngFor="let param of jobParametersWrapper" [ngSwitch]="param.type">
+                        <div *ngSwitchCase="types.string">
                             <md-input-container class="form-element">
-                            <input mdInput type="text" name="name" [formControlName]="param" [placeholder]="param">
-                                <md-hint align="end">{{jobTemplate.parameters[param].metadata.description}}</md-hint>
+                                <input mdInput type="text" name="param.name" [formControlName]="param.id" [placeholder]="param.name">
+                                <md-hint align="end">{{param.description}}</md-hint>
                             </md-input-container>
                         </div>
-                        <div *ngSwitchCase="'file-group'">
-                            <bl-file-group-picker [formControlName]="param" [label]="param" class="form-element" [hint]="jobTemplate.parameters[param].metadata.description">
+                        <div *ngSwitchCase="types.fileGroup">
+                            <bl-file-group-picker [formControlName]="param.id" [label]="param.name" class="form-element" [hint]="param.description">
                             </bl-file-group-picker>
                         </div>
-                        <div *ngSwitchCase="'file-in-file-group'">
-                            <bl-cloud-file-picker [containerId]="getContainerFromFileGroup(jobParams.value[jobTemplate.parameters[param].metadata.dependsOn])" [formControlName]="param"
-                            [label]="param" class="form-element" [hint]="jobTemplate.parameters[param].metadata.description">
+                        <div *ngSwitchCase="types.fileInFileGroup">
+                            <bl-cloud-file-picker [containerId]="getContainerFromFileGroup(jobParams.value[param.dependsOn])" [formControlName]="param.id"
+                            [label]="param.name" class="form-element" [hint]="param.description">
                             </bl-cloud-file-picker>
                         </div>
-                        <div *ngSwitchCase="'dropdown'">
-                            <md-select [formControlName]="param" [placeholder]="param">
-                                <md-hint align="end">{{jobTemplate.parameters[param].metadata.description}}</md-hint>
-                                <md-option *ngFor="let opt of jobTemplate.parameters[param].allowedValues" [value]="opt">{{opt}}</md-option>
+                        <div *ngSwitchCase="types.dropDown">
+                            <md-select [formControlName]="param.id" [placeholder]="param.name">
+                                <md-hint align="end">{{param.description}}</md-hint>
+                                <md-option *ngFor="let opt of param.allowedValues" [value]="opt">{{opt}}</md-option>
                             </md-select>
                         </div>
-                        <div *ngSwitchCase="'int'">
+                        <div *ngSwitchCase="types.int">
                             <md-input-container class="form-element">
-                            <input mdInput type="number" name="name" [formControlName]="param" [placeholder]="param">
-                                <md-hint align="end">{{jobTemplate.parameters[param].metadata.description}}</md-hint>
+                            <input mdInput type="number" name="param.name" [formControlName]="param.id" [placeholder]="param.name">
+                                <md-hint align="end">{{param.description}}</md-hint>
                             </md-input-container>
                         </div>
                         <div *ngSwitchDefault>
                             <md-input-container class="form-element">
-                            <input mdInput type="text" name="name" [formControlName]="param" [placeholder]="param">
-                                <md-hint align="end">{{jobTemplate.parameters[param].metadata.description}}</md-hint>
+                                <input mdInput type="text" name="param.name" [formControlName]="param.id" [placeholder]="param.name">
+                                <md-hint align="end">{{param.description}}</md-hint>
                             </md-input-container>
                         </div>
                     </div>
@@ -114,38 +113,38 @@
                     <bl-pool-picker [formControl]="pickedPool"></bl-pool-picker>
                 </bl-form-section>
                 <bl-form-section title="Job" formGroupName="job">
-                    <div *ngFor="let param of getParameters(jobTemplate)" [ngSwitch]="getType(param)">
-                        <div *ngSwitchCase="'string'">
+                   <div *ngFor="let param of jobParametersWrapper" [ngSwitch]="param.type">
+                        <div *ngSwitchCase="types.string">
                             <md-input-container class="form-element">
-                            <input mdInput type="text" name="name" [formControlName]="param" [placeholder]="param">
-                                <md-hint align="end">{{jobTemplate.parameters[param].metadata.description}}</md-hint>
+                                <input mdInput type="text" name="param.name" [formControlName]="param.id" [placeholder]="param.name">
+                                <md-hint align="end">{{param.description}}</md-hint>
                             </md-input-container>
                         </div>
-                        <div *ngSwitchCase="'file-group'">
-                            <bl-file-group-picker [formControlName]="param" [label]="param" class="form-element" [hint]="jobTemplate.parameters[param].metadata.description">
+                        <div *ngSwitchCase="types.fileGroup">
+                            <bl-file-group-picker [formControlName]="param.id" [label]="param.name" class="form-element" [hint]="param.description">
                             </bl-file-group-picker>
                         </div>
-                        <div *ngSwitchCase="'file-in-file-group'">
-                            <bl-cloud-file-picker [containerId]="getContainerFromFileGroup(jobParams.value[jobTemplate.parameters[param].metadata.dependsOn])" [formControlName]="param"
-                            [label]="param" class="form-element" [hint]="jobTemplate.parameters[param].metadata.description">
+                        <div *ngSwitchCase="types.fileInFileGroup">
+                            <bl-cloud-file-picker [containerId]="getContainerFromFileGroup(jobParams.value[param.dependsOn])" [formControlName]="param.id"
+                            [label]="param.name" class="form-element" [hint]="param.description">
                             </bl-cloud-file-picker>
                         </div>
-                        <div *ngSwitchCase="'dropdown'">
-                            <md-select [formControlName]="param" [placeholder]="param">
-                                <md-hint align="end">{{jobTemplate.parameters[param].metadata.description}}</md-hint>
-                                <md-option *ngFor="let opt of jobTemplate.parameters[param].allowedValues" [value]="opt">{{opt}}</md-option>
+                        <div *ngSwitchCase="types.dropDown">
+                            <md-select [formControlName]="param.id" [placeholder]="param.name">
+                                <md-hint align="end">{{param.description}}</md-hint>
+                                <md-option *ngFor="let opt of param.allowedValues" [value]="opt">{{opt}}</md-option>
                             </md-select>
                         </div>
-                        <div *ngSwitchCase="'int'">
+                        <div *ngSwitchCase="types.int">
                             <md-input-container class="form-element">
-                            <input mdInput type="number" name="name" [formControlName]="param" [placeholder]="param">
-                                <md-hint align="end">{{jobTemplate.parameters[param].metadata.description}}</md-hint>
+                            <input mdInput type="number" name="param.name" [formControlName]="param.id" [placeholder]="param.name">
+                                <md-hint align="end">{{param.description}}</md-hint>
                             </md-input-container>
                         </div>
                         <div *ngSwitchDefault>
                             <md-input-container class="form-element">
-                            <input mdInput type="text" name="name" [formControlName]="param" [placeholder]="param">
-                                <md-hint align="end">{{jobTemplate.parameters[param].metadata.description}}</md-hint>
+                                <input mdInput type="text" name="param.name" [formControlName]="param.id" [placeholder]="param.name">
+                                <md-hint align="end">{{param.description}}</md-hint>
                             </md-input-container>
                         </div>
                     </div>
@@ -164,38 +163,38 @@
                     </ul>
                 </bl-form-section>
                 <bl-form-section title="Pool" formGroupName="pool">
-                    <div *ngFor="let param of getParameters(poolTemplate)" [ngSwitch]="getType(param)">
-                        <div *ngSwitchCase="'string'">
+                    <div *ngFor="let param of poolParametersWrapper" [ngSwitch]="param.type">
+                        <div *ngSwitchCase="types.string">
                             <md-input-container class="form-element">
-                            <input mdInput type="text" name="name" [formControlName]="param" [placeholder]="param">
-                                <md-hint align="end">{{poolTemplate.parameters[param].metadata.description}}</md-hint>
+                                <input mdInput type="text" name="param.name" [formControlName]="param.id" [placeholder]="param.name">
+                                <md-hint align="end">{{param.description}}</md-hint>
                             </md-input-container>
                         </div>
-                        <div *ngSwitchCase="'file-group'">
-                            <bl-file-group-picker [formControlName]="param" [label]="param" class="form-element" [hint]="poolTemplate.parameters[param].metadata.description">
+                        <div *ngSwitchCase="types.fileGroup">
+                            <bl-file-group-picker [formControlName]="param.id" [label]="param.name" class="form-element" [hint]="param.description">
                             </bl-file-group-picker>
                         </div>
-                        <div *ngSwitchCase="'file-in-file-group'">
-                            <bl-cloud-file-picker [containerId]="getContainerFromFileGroup(poolParams.value[poolTemplate.parameters[param].metadata.dependsOn])" [formControlName]="param"
-                            [label]="param" class="form-element" [hint]="poolTemplate.parameters[param].metadata.description">
+                        <div *ngSwitchCase="types.fileInFileGroup">
+                            <bl-cloud-file-picker [containerId]="getContainerFromFileGroup(poolParams.value[param.dependsOn])" [formControlName]="param.id"
+                            [label]="param.name" class="form-element" [hint]="param.description">
                             </bl-cloud-file-picker>
                         </div>
-                        <div *ngSwitchCase="'dropdown'">
-                            <md-select [formControlName]="param" [placeholder]="param">
-                                <md-hint align="end">{{poolTemplate.parameters[param].metadata.description}}</md-hint>
-                                <md-option *ngFor="let opt of poolTemplate.parameters[param].allowedValues" [value]="opt">{{opt}}</md-option>
+                        <div *ngSwitchCase="types.dropDown">
+                            <md-select [formControlName]="param.id" [placeholder]="param.name">
+                                <md-hint align="end">{{param.description}}</md-hint>
+                                <md-option *ngFor="let opt of param.allowedValues" [value]="opt">{{opt}}</md-option>
                             </md-select>
                         </div>
-                        <div *ngSwitchCase="'int'">
+                        <div *ngSwitchCase="types.int">
                             <md-input-container class="form-element">
-                            <input mdInput type="number" name="name" [formControlName]="param" [placeholder]="param">
-                                <md-hint align="end">{{poolTemplate.parameters[param].metadata.description}}</md-hint>
+                            <input mdInput type="number" name="param.name" [formControlName]="param.id" [placeholder]="param.name">
+                                <md-hint align="end">{{param.description}}</md-hint>
                             </md-input-container>
                         </div>
                         <div *ngSwitchDefault>
                             <md-input-container class="form-element">
-                            <input mdInput type="text" name="name" [formControlName]="param" [placeholder]="param">
-                                <md-hint align="end">{{poolTemplate.parameters[param].metadata.description}}</md-hint>
+                                <input mdInput type="text" name="param.name" [formControlName]="param.id" [placeholder]="param.name">
+                                <md-hint align="end">{{param.description}}</md-hint>
                             </md-input-container>
                         </div>
                     </div>

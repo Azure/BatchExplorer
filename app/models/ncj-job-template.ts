@@ -19,3 +19,9 @@ export interface NcjJobTemplate {
     parameters: StringMap<NcjParameter>;
     job: NcjJobConfiguration;
 }
+
+export interface NcjPoolTemplate {
+    parameters: StringMap<NcjParameter>;
+    pool: NcjJobConfiguration;
+    variables: NcjJobConfiguration;
+}
