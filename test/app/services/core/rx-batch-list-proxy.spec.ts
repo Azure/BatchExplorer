@@ -111,6 +111,10 @@ describe("RxBatchListProxy", () => {
         proxy.error.subscribe((x) => error = x);
     });
 
+    afterEach(() => {
+        proxy.dispose();
+    });
+
     it("It retrieve the first batch of items", fakeAsync(() => {
         proxy.fetchNext();
         tick();
@@ -133,7 +137,7 @@ describe("RxBatchListProxy", () => {
         expect(hasMore).toBe(false);
     }));
 
-    it("should not clear the items when refresing with params true", fakeAsync(() => {
+    it("should clear the items when refresing with params true", fakeAsync(() => {
         proxy.fetchNext();
         tick();
         proxy.refresh(true);
@@ -148,8 +152,9 @@ describe("RxBatchListProxy", () => {
         proxy.refresh(false);
         expect(items.size).not.toBe(0);
         expect(items).toEqualImmutable(List(data[0].map((x) => new FakeModel(x))));
-        items = null; // To make sure items get reassigned
+        items = null; // Make sure it get the new value
         tick();
+        proxy.items.subscribe((x) => items = x);
         expect(items).not.toBe(null);
         expect(items).toEqualImmutable(List(data[0].map((x) => new FakeModel(x))));
     }));
@@ -177,8 +182,12 @@ describe("RxBatchListProxy", () => {
     it("Should remove item from the list when the cache call onItemDeleted", fakeAsync(() => {
         proxy.fetchNext();
         tick();
-
+        const subSpy = jasmine.createSpy("items sub");
+        proxy.items.subscribe(subSpy);
+        expect(subSpy).toHaveBeenCalledTimes(1); // Should initialy get called
         cache.deleteItemByKey("2");
+        expect(subSpy).toHaveBeenCalledTimes(2); // Should not have been called more than once
+
         const newList = [
             { id: "1", state: "active", name: "Fake1" },
             { id: "3", state: "running", name: "Fake3" },

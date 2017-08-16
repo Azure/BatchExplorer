@@ -1,0 +1,35 @@
+<bl-loading [status]="data.newDataStatus | async">
+    <div *ngIf="container">
+        <md-card class="overview">
+            <div class="actions">
+                <bl-button-group>
+                    <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+                    <bl-edit-button title="Add more files to the file group" [action]="manageFileGroup"></bl-edit-button>
+                    <bl-delete-button title="Delete this file group" [entity]="container" [action]="deleteFileGroup"></bl-delete-button>
+                    <bl-download-button title="Download this file group" [action]="download"></bl-download-button>
+                </bl-button-group>
+            </div>
+            <div class="content">
+                <md-card-title>{{container?.name}}</md-card-title>
+                <md-card-subtitle>
+                    {{container.lease?.state}}
+                </md-card-subtitle>
+            </div>
+        </md-card>
+        <bl-storage-error-display></bl-storage-error-display>
+        <md-card class="details">
+            <bl-tab-group>
+                <bl-tab key="files">
+                    <bl-tab-label>Files</bl-tab-label>
+                    <div class="tab-padding">
+                        <bl-data-container-files [container]="container"></bl-data-container-files>
+                    </div>
+                </bl-tab>
+                <bl-tab key="configuration">
+                    <bl-tab-label>Configuration</bl-tab-label>
+                    <bl-data-container-configuration [container]="container"></bl-data-container-configuration>
+                </bl-tab>
+            </bl-tab-group>
+        </md-card>
+    </div>
+</bl-loading>

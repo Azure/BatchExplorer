@@ -14,6 +14,7 @@ import { BreadcrumbModule } from "./breadcrumbs";
 import { ButtonsModule } from "./buttons";
 import { ChartsModule } from "./charts";
 import { ContextMenuModule } from "./context-menu";
+import { DialogsModule } from "./dialogs";
 import { DropdownModule } from "./dropdown";
 import { EditorModule } from "./editor";
 import { ElapsedTimeComponent } from "./elapsed-time";
@@ -31,6 +32,7 @@ import { QuickListModule } from "./quick-list";
 import { RefreshButtonComponent } from "./refresh-btn";
 import { ScrollableModule } from "./scrollable";
 import { SidebarModule } from "./sidebar";
+import { SimpleDialogComponent } from "./simple-dialog";
 import { TableModule } from "./table";
 import { TabsModule } from "./tabs";
 import { TagsModule } from "./tags";
@@ -43,6 +45,7 @@ const modules = [
     BackgroundTaskModule,
     ChartsModule,
     ContextMenuModule,
+    DialogsModule,
     DropdownModule,
     EditorModule,
     FocusSectionModule,
@@ -69,6 +72,7 @@ const components = [
     IconComponent,
     ListAndShowLayoutComponent,
     SimpleLoadingComponent,
+    SimpleDialogComponent,
     LoadingComponent,
     RefreshButtonComponent,
     ListLoadingComponent,
@@ -79,6 +83,7 @@ const components = [
     declarations: components,
     entryComponents: [
         DeleteSelectedItemsDialogComponent,
+        SimpleDialogComponent,
     ],
     exports: [...modules, ...components],
     imports: [

@@ -12,6 +12,7 @@ import { TaskConstraints } from "./task-constraints";
 import { TaskDependencies } from "./task-dependencies";
 import { TaskExecutionInformation } from "./task-execution-information";
 import { TaskExitConditions } from "./task-exit-conditions";
+import { TaskOutputFile } from "./task-output-file";
 
 export interface TaskAttributes {
     id: string;
@@ -57,6 +58,7 @@ export class Task extends Record<TaskAttributes> {
     @Prop() public runElevated: boolean;
     @Prop() public exitConditions: TaskExitConditions = new TaskExitConditions();
     @ListProp(ResourceFile) public resourceFiles: List<ResourceFile> = List([]);
+    @ListProp(TaskOutputFile) public outputFiles: List<TaskOutputFile> = List([]);
     @ListProp(NameValuePair) public environmentSettings: List<NameValuePair> = List([]);
     @Prop() public affinityInfo: AffinityInformation;
     @Prop() public constraints: TaskConstraints;
@@ -86,10 +88,9 @@ export class Task extends Record<TaskAttributes> {
     }
 }
 
-export type TaskState = "active" | "preparing" | "running" | "completed";
-export const TaskState = {
-    active: "active" as TaskState,
-    preparing: "preparing" as TaskState,
-    running: "running" as TaskState,
-    completed: "completed" as TaskState,
-};
+export enum TaskState {
+    active = "active",
+    preparing = "preparing",
+    running = "running",
+    completed = "completed",
+}

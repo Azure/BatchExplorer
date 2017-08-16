@@ -18,8 +18,7 @@ export class AutoUser extends Record<AutoUserAttributes> {
     public elevationLevel: UserAccountElevationLevel;
 }
 
-export type AutoUserScope = "pool" | "task";
-export const AutoUserScope = {
-    pool: "pool" as AutoUserScope,
-    task: "task" as AutoUserScope,
-};
+export enum AutoUserScope {
+    pool = "pool",
+    task = "task",
+}

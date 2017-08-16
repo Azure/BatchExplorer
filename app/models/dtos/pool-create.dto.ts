@@ -71,4 +71,7 @@ export class PoolCreateDto extends Dto<PoolCreateDto> {
 
     @DtoAttr()
     public userAccounts: UserAccountDto[];
+
+    @DtoAttr()
+    public applicationLicenses: string[];
 }

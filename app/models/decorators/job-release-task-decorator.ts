@@ -10,7 +10,7 @@ export class JobReleaseTaskDecorator extends DecoratorBase<JobReleaseTask> {
     public resourceFiles: {};
     public environmentSettings: {};
 
-    constructor(task?: JobReleaseTask) {
+    constructor(task: JobReleaseTask) {
         super(task);
 
         this.commandLine = this.stringField(task.commandLine);

@@ -39,7 +39,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
                 }
                 return List<TEntity>(keys.map((x) => items.get(x)));
             });
-        }).switch().distinctUntilChanged().takeUntil(this.isDisposed);
+        }).switch().distinctUntilChanged((a, b) => a.equals(b)).takeUntil(this.isDisposed);
 
         this.deleted.subscribe((deletedKey) => {
             this._itemKeys.next(OrderedSet<string>(this._itemKeys.value.filter((key) => key !== deletedKey)));
@@ -190,7 +190,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
      * Load the next set of items from the server and returns the keys of those items.
      */
     private _fetchNextKeys(): Observable<OrderedSet<string>> {
-        const subject = new AsyncSubject();
+        const subject = new AsyncSubject<OrderedSet<string>>();
         this.fetchData({
             getData: () => {
                 return this.fetchNextItems();

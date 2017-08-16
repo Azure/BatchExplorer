@@ -27,7 +27,7 @@ export class JobDecorator extends DecoratorBase<Job> {
     public jobReleaseTask: JobReleaseTaskDecorator;
     public poolInfo: {};
 
-    constructor(job?: Job) {
+    constructor(job: Job) {
         super(job);
 
         this.state = this.stateField(job.state);

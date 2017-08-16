@@ -47,7 +47,7 @@ export class StorageAccountService {
                     .map(response => {
                         return List(response.json().value.map((data) => {
                             return new StorageAccount(data);
-                        }));
+                        })) as any;
                     });
             })
             .share();

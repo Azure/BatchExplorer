@@ -6,8 +6,9 @@ import { Observable } from "rxjs";
 import { DomSanitizer } from "@angular/platform-browser";
 import { registerIcons } from "app/config";
 import {
-    AccountService, AdalService, AutoscaleFormulaService, CommandService, NodeService,
-    PredefinedFormulaService, PricingService, PythonRpcService, SSHKeyService, SettingsService, SubscriptionService,
+    AccountService, AdalService, AutoscaleFormulaService, CommandService, NcjTemplateService,
+    NodeService, PredefinedFormulaService, PricingService, PythonRpcService, SSHKeyService, SettingsService,
+    SubscriptionService,
     VmSizeService,
 } from "app/services";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
@@ -48,8 +49,9 @@ export class AppComponent implements AfterViewInit, OnInit {
         pythonRpcService: PythonRpcService,
         private vmSizeService: VmSizeService,
         private pricingService: PricingService,
+        private ncjTemplateService: NcjTemplateService,
         private predefinedFormulaService: PredefinedFormulaService,
-        ) {
+    ) {
         this.autoscaleFormulaService.init();
         this.settingsService.init();
         this.sshKeyService.init();
@@ -58,8 +60,8 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.vmSizeService.init();
         this.adalService.init(adalConfig);
         this.accountService.loadInitialData();
+        this.ncjTemplateService.init();
         pythonRpcService.init();
-
         this.predefinedFormulaService.init();
         this.hasAccount = accountService.currentAccount.map((x) => Boolean(x));
 

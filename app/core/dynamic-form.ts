@@ -1,6 +1,6 @@
 import { Type } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { Dto } from "app/core";
+import { Dto } from "app/core/dto";
 import { FormUtils } from "app/utils";
 
 export abstract class DynamicForm<TEntity, TDto extends Dto<TDto>> {
@@ -23,7 +23,8 @@ export abstract class DynamicForm<TEntity, TDto extends Dto<TDto>> {
     }
 
     public getCurrentValue(): TDto {
-        return new this.dtoType(Object.assign({}, this.originalData, this.formToDto(this.form.value)));
+        // Change to form.getRawValue() as form.value does not return disabled control values
+        return new this.dtoType(Object.assign({}, this.originalData, this.formToDto(this.form.getRawValue())));
     }
 
     public abstract formToDto(value: any): TDto;

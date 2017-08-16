@@ -18,6 +18,7 @@ import {
     ResizeButtonComponent,
     TerminateButtonComponent,
 } from "./buttons.component";
+import { DirectoryPickerComponent } from "./directory-picker.component";
 
 const components = [
     ButtonComponent,
@@ -27,6 +28,7 @@ const components = [
     ClearListSelectionButtonComponent,
     CloneButtonComponent,
     DeleteButtonComponent,
+    DirectoryPickerComponent,
     DisableButtonComponent,
     DownloadButtonComponent,
     EditButtonComponent,

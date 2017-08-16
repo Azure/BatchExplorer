@@ -5,12 +5,11 @@ import { ElectronRemote } from "../electron";
 import { AdalConfig } from "./adal-config";
 import * as AdalConstants from "./adal-constants";
 
-type AuthorizePromptType = "login" | "none" | "consent";
-const AuthorizePromptType = {
-    login: "login" as AuthorizePromptType,
-    none: "none" as AuthorizePromptType,
-    consent: "consent" as AuthorizePromptType,
-};
+enum AuthorizePromptType {
+    login = "login",
+    none = "none",
+    consent = "consent",
+}
 
 export interface AuthorizeResult {
     code: string;
@@ -52,7 +51,7 @@ export class UserAuthorization {
         if (this._isAuthorizingTenant(tenantId)) {
             return this._getTenantSubject(tenantId).asObservable();
         }
-        const subject = new AsyncSubject();
+        const subject = new AsyncSubject<AuthorizeResult>();
         this._authorizeQueue.push({ tenantId, silent, subject });
         this._authorizeNext();
         return subject.asObservable();

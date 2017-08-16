@@ -15,6 +15,7 @@ export class FileHomeComponent implements OnInit, OnDestroy {
 
     public outputKind: string;
     public filename: string;
+    public container: string;
 
     private _dataSub: Subscription;
     private _paramsSubscriber: Subscription;
@@ -33,6 +34,7 @@ export class FileHomeComponent implements OnInit, OnDestroy {
         this._paramsSubscriber = this.activatedRoute.params.subscribe((params) => {
             this.outputKind = params["outputKind"];
             this.filename = params["filename"];
+            this.container = params["container"];
         });
     }
 

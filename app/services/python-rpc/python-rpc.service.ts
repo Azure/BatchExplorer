@@ -1,12 +1,16 @@
-import { Injectable } from "@angular/core";
-import { SecureUtils, log } from "app/utils";
-import { AsyncSubject, Observable } from "rxjs";
+import { Injectable, NgZone } from "@angular/core";
+import { AccountResource } from "app/models";
+import { Constants, SecureUtils, log } from "app/utils";
+import { AsyncSubject, Observable, Subject } from "rxjs";
+import { AccountService } from "../account.service";
+import { AdalService } from "../adal";
 
 export interface JsonRpcRequest {
     jsonrpc: string;
     id: string;
     method: string;
     params: any[];
+    options: RequestOptions;
 }
 
 export interface JsonRpcError {
@@ -19,12 +23,13 @@ export interface JsonRpcResponse {
     jsonrpc: string;
     id: string;
     result: any;
+    stream: boolean;
     error: JsonRpcError;
 }
 
 interface RequestContainer {
     request: JsonRpcRequest;
-    subject: AsyncSubject<any>;
+    subject: Subject<any>;
 
     /**
      * setTimeout id to clear the request if it timeout
@@ -32,14 +37,22 @@ interface RequestContainer {
     timeout: any;
 }
 
-const requestTimeout = 10000;
+interface RequestOptions {
+    authentication?: any;
+}
+// TODO: comment out unused for now.
+// const requestTimeout = 10000;
+
+const ResourceUrl = Constants.ResourceUrl;
 
 @Injectable()
 export class PythonRpcService {
     private _socket: WebSocket;
     private _ready = new AsyncSubject();
     private _currentRequests: StringMap<RequestContainer> = {};
+    private _retryCount = 0;
 
+    constructor(private accountService: AccountService, private adalService: AdalService, private _zone: NgZone) { }
     /**
      * Initialize the connection to the rpc server
      */
@@ -51,20 +64,43 @@ export class PythonRpcService {
      * Connect to the rpc server using websocket.
      * Call this if the connection got cut to try again.
      */
-    public resetConnection() {
-        this._ready = new AsyncSubject();
-        this._currentRequests = {};
+    public resetConnection(): Observable<any> {
+        this._ready = new AsyncSubject<any>();
         const socket = this._socket = new WebSocket("ws://127.0.0.1:8765/ws");
-
         socket.onopen = (event: Event) => {
-            this._ready.next(true);
-            this._ready.complete();
+            if (this._retryCount > 0) {
+                log.info("Reconnected to websocket successfully.");
+            }
+            this._retryCount = 0;
+            this._zone.run(() => {
+                this._ready.next(true);
+                this._ready.complete();
+            });
+        };
+
+        socket.onerror = (error: Event) => {
+            this._zone.run(() => {
+                this._ready.error(event);
+            });
+        };
+
+        socket.onclose = () => {
+            const waitingTime = Math.floor(2 ** this._retryCount);
+            this._retryCount++;
+            log.info(`Websocket connection closed. Retrying to connect in ${waitingTime}s`);
+            setTimeout(() => {
+                this.resetConnection();
+            }, waitingTime * 1000);
         };
 
         socket.onmessage = (event: MessageEvent) => {
-            const response = JSON.parse(event.data);
-            this._processResponse(response);
+            this._zone.run(() => {
+                const response = JSON.parse(event.data);
+                this._processResponse(response);
+            });
         };
+
+        return this._ready.asObservable();
     }
 
     /**
@@ -72,15 +108,35 @@ export class PythonRpcService {
      * @param method Name of the method registered in the python
      * @param params Params for the method
      */
-    public call(method: string, params: any[]): Observable<any> {
-        const request = this._buildRequest(method, params);
+    public call(method: string, params: any[], options: RequestOptions = {}): Observable<any> {
+        const request = this._buildRequest(method, params, options);
         const container = this._registerRequest(request);
 
-        this._ready.subscribe(() => {
-            this._socket.send(JSON.stringify(request));
+        this._ready.catch(() => {
+            return this.resetConnection(); // Tries once to reset the connection right away.
+        }).subscribe({
+            next: () => {
+                this._socket.send(JSON.stringify(request));
+            },
+            error: (error) => {
+                container.subject.next(error);
+            },
         });
 
         return container.subject.asObservable();
+    }
+
+    public callWithAuth(method: string, params: any[]): Observable<any> {
+        return this.accountService.currentAccount.flatMap((account: AccountResource) => {
+            const batchToken = this.adalService.accessTokenFor(account.subscription.tenantId, ResourceUrl.batch);
+            const armToken = this.adalService.accessTokenFor(account.subscription.tenantId, ResourceUrl.arm);
+            return Observable.combineLatest(batchToken, armToken).flatMap(([batchToken, armToken]) => {
+                const authParam = { batchToken, armToken, account: account.toJS() };
+                return this.call(method, params, {
+                    authentication: authParam,
+                });
+            });
+        }).share();
     }
 
     /**
@@ -88,12 +144,13 @@ export class PythonRpcService {
      * @param method Name of the procedure in the python controller
      * @param params Params for the procedure
      */
-    private _buildRequest(method: string, params: any[]): JsonRpcRequest {
+    private _buildRequest(method: string, params: any[], options: RequestOptions): JsonRpcRequest {
         return {
             jsonrpc: "2.0",
             id: SecureUtils.uuid(),
             method,
             params,
+            options,
         };
     }
 
@@ -104,10 +161,8 @@ export class PythonRpcService {
     private _registerRequest(request: JsonRpcRequest): RequestContainer {
         const container = this._currentRequests[request.id] = {
             request,
-            subject: new AsyncSubject(),
-            timeout: setTimeout(() => {
-                this._timeoutRequest(request.id);
-            }, requestTimeout),
+            subject: new Subject(),
+            timeout: null,
         };
 
         return container;
@@ -127,9 +182,11 @@ export class PythonRpcService {
             request.subject.error(response.error);
         } else {
             request.subject.next(response.result);
-            request.subject.complete();
         }
-        delete this._currentRequests[response.id];
+        if (!response.stream) {
+            request.subject.complete();
+            delete this._currentRequests[response.id];
+        }
     }
 
     /**
@@ -154,22 +211,5 @@ export class PythonRpcService {
         }
 
         return request;
-    }
-
-    /**
-     * Remove the request from the list of pending request and log a timeout.
-     * @param requestId Id of the request
-     */
-    private _timeoutRequest(requestId: string) {
-        const request = this._currentRequests[requestId];
-        if (!request) {
-            return;
-        }
-        delete this._currentRequests[requestId];
-
-        request.subject.error({
-            code: 408,
-            message: `Rpc request timeout after ${requestTimeout}ms`,
-        });
     }
 }

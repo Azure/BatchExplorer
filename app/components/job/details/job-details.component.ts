@@ -11,7 +11,6 @@ import { JobParams, JobService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
 import { SidebarManager } from "../../base/sidebar";
 import { TaskCreateBasicDialogComponent } from "../../task/action";
-
 import {
     DeleteJobDialogComponent,
     DisableJobDialogComponent,
@@ -19,6 +18,7 @@ import {
     JobCreateBasicDialogComponent,
     TerminateJobDialogComponent,
 } from "../action";
+import "./job-details.scss";
 
 @Component({
     selector: "bl-job-details",

@@ -23,14 +23,16 @@
 
 <!-- list any persisted task outputs -->
 <bl-entity-details-list *ngIf="selectedTab === 'outputs'" #outputWrapper [refresh]="outputList.refresh" [filterPlaceholder]="outputList.filterPlaceholder"
-    [showAddButton]="false">
-    <bl-persisted-file-list #outputList [jobId]="jobId" [taskId]="taskId" outputKind="$TaskOutput" [filter]="outputWrapper.filter" [quickList]="false">
+    [showAddButton]="false" [loadMore]="outputList.loadMore">
+    <bl-persisted-file-list #outputList [jobId]="jobId" [taskId]="taskId" outputKind="$TaskOutput" [filter]="outputWrapper.filter" 
+        [quickList]="false" [manualLoading]="true">
     </bl-persisted-file-list>
 </bl-entity-details-list>
 
 <!-- list any persisted task logs -->
 <bl-entity-details-list *ngIf="selectedTab === 'logs'" #logWrapper [refresh]="logList.refresh" [filterPlaceholder]="logList.filterPlaceholder"
-    [showAddButton]="false">
-    <bl-persisted-file-list #logList [jobId]="jobId" [taskId]="taskId" outputKind="$TaskLog" [filter]="logWrapper.filter" [quickList]="false">
+    [showAddButton]="false" [loadMore]="logList.loadMore">
+    <bl-persisted-file-list #logList [jobId]="jobId" [taskId]="taskId" outputKind="$TaskLog" [filter]="logWrapper.filter" 
+        [quickList]="false" [manualLoading]="true">
     </bl-persisted-file-list>
 </bl-entity-details-list>

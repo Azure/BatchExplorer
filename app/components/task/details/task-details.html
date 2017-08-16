@@ -1,7 +1,4 @@
 <bl-loading [status]="data.newDataStatus | async">
-    <md-card bl-loading-error>
-        Task with id '{{taskId}}' doesn't exist
-    </md-card>
     <div *ngIf="task && job">
         <md-card class="overview">
             <div class="actions">

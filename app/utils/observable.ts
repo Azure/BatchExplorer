@@ -23,7 +23,7 @@ export class ObservableUtils {
     }
 
     private static _queueNext(callback: ObservableBuilder[], index: number = 0): Observable<any[]> {
-        const subject = new AsyncSubject();
+        const subject = new AsyncSubject<any[]>();
         if (index === callback.length) {
             return Observable.of([]);
         }

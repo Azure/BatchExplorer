@@ -1,4 +1,4 @@
-<bl-loading [status]="data.newDataStatus | async">
+<bl-loading [status]="data.newDataStatus | async" [error]="data.error | async">
     <div *ngIf="pool && poolDecorator">
         <md-card class="overview">
             <div class="actions">
@@ -19,6 +19,10 @@
             </div>
             <div style="padding: 10px">
                 <bl-pool-nodes-preview [pool]="pool" size="large"></bl-pool-nodes-preview>
+
+                <div class="estimated-cost" title="Estimated cost of this pool at this current state">
+                    {{estimatedCost}}/h
+                </div>
             </div>
         </md-card>
         <bl-pool-error-display [pool]="pool"></bl-pool-error-display>
@@ -31,10 +35,6 @@
                 <bl-tab key="configuration">
                     <bl-tab-label>Configuration</bl-tab-label>
                     <bl-pool-configuration [pool]="pool"></bl-pool-configuration>
-                </bl-tab>
-                <bl-tab key="startTask">
-                    <bl-tab-label>Start Task</bl-tab-label>
-                    <bl-start-task-properties [pool]="pool"></bl-start-task-properties>
                 </bl-tab>
                 <bl-tab key="nodes">
                     <bl-tab-label>Nodes</bl-tab-label>

@@ -4,8 +4,7 @@ import { AsyncSubject, Observable } from "rxjs";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
 import { Node, NodeAgentSku, NodeConnectionSettings, NodeState } from "app/models";
-import { ArrayUtils, ObservableUtils, log } from "app/utils";
-import { Constants } from "app/utils";
+import { ArrayUtils, Constants, ObservableUtils, log } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 import { BatchClientService } from "./batch-client.service";
 import {
@@ -60,16 +59,17 @@ export class NodeService extends ServiceBase {
     }
 
     public listAll(poolId: string, options: PoolListOptions = {}): Observable<List<Node>> {
-        const subject = new AsyncSubject();
+        const subject = new AsyncSubject<List<Node>>();
         options.pageSize = 1000;
         const data = this.list(poolId, options);
         const sub = data.items.subscribe((x) => subject.next(x));
         data.fetchAll().subscribe(() => {
+
             subject.complete();
             sub.unsubscribe();
         });
 
-        return subject;
+        return subject.asObservable();
     }
 
     public get(initialPoolId: string, initialNodeId: string, options: any): RxEntityProxy<NodeParams, Node> {
@@ -174,6 +174,12 @@ export class NodeService extends ServiceBase {
         });
 
         return observable;
+    }
+
+    public delete(poolId: string, nodeId: string): Observable<any> {
+        return this.callBatchClient((client) => client.node.delete(poolId, nodeId, {}), (error) => {
+            log.error("Error deleting node: " + nodeId, Object.assign({}, error));
+        });
     }
 
     public listNodeAgentSkus(initialOptions: any = { pageSize: 1000 }): RxListProxy<{}, NodeAgentSku> {

@@ -1,7 +1,7 @@
 import { Type } from "@angular/core";
 import * as moment from "moment";
 
-import { AccountResource, Application, ApplicationPackage, File, Job, Node, PackageState, Pool,
+import { AccountResource, ApplicationPackage, BatchApplication, File, Job, Node, PackageState, Pool,
     Subscription, SubtaskInformation, Task,
 } from "app/models";
 
@@ -221,7 +221,7 @@ export const account = new FixtureFactory<AccountResource>(AccountResource, {
     },
 });
 
-export const application = new FixtureFactory<Application>(Application, {
+export const application = new FixtureFactory<BatchApplication>(BatchApplication, {
     id: "app-1",
     displayName: "test application",
     allowUpdates: true,

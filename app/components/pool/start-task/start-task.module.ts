@@ -8,9 +8,8 @@ import { BaseModule } from "app/components/base";
 import { TaskBaseModule } from "app/components/task/base";
 import { StartTaskEditFormComponent } from "./start-task-edit-form.component";
 import { StartTaskPickerComponent } from "./start-task-picker.component";
-import { StartTaskPropertiesComponent } from "./start-task-properties.component";
 
-const components = [StartTaskEditFormComponent, StartTaskPickerComponent, StartTaskPropertiesComponent];
+const components = [StartTaskEditFormComponent, StartTaskPickerComponent];
 
 @NgModule({
     declarations: components,

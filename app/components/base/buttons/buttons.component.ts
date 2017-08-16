@@ -52,14 +52,7 @@ export class ClearListSelectionButtonComponent extends BaseButton {
 })
 export class AddButtonComponent extends BaseButton {
     @Input()
-    public set title(value: string) {
-        this._title = value;
-    }
-    public get title() {
-        return this._title ? this._title : "Add";
-    }
-
-    private _title: string;
+    public title: string = "Add";
 }
 
 @Component({
@@ -74,12 +67,7 @@ export class AddTaskButtonComponent extends BaseButton {
     public job: Job;
 
     @Input()
-    public set title(value: string) {
-        this._title = value;
-    }
-    public get title() {
-        return this._title ? this._title : "Add";
-    }
+    public title: string = "Add";
 
     public get enabled() {
         return this.job
@@ -89,8 +77,6 @@ export class AddTaskButtonComponent extends BaseButton {
             && this.job.state !== JobState.disabling
             && this.job.state !== JobState.terminating;
     }
-
-    private _title: string;
 }
 
 @Component({
@@ -115,13 +101,16 @@ export class TerminateButtonComponent extends BaseButton {
 @Component({
     selector: "bl-delete-button",
     template: `
-        <bl-button color="light" [action]="action" [disabled]="!enabled" title="Delete" icon="fa fa-trash-o">
+        <bl-button color="light" [action]="action" [disabled]="!enabled" [title]="title" icon="fa fa-trash-o">
         </bl-button>
     `,
 })
 export class DeleteButtonComponent extends BaseButton {
     @Input()
     public entity: any;
+
+    @Input()
+    public title: string = "Delete";
 
     public get enabled() {
         if (this.entity instanceof Job) {
@@ -185,14 +174,7 @@ export class EnableButtonComponent extends BaseButton {
 })
 export class CloneButtonComponent extends BaseButton {
     @Input()
-    public set title(value: string) {
-        this._title = value;
-    }
-    public get title() {
-        return this._title ? this._title : "Clone";
-    }
-
-    private _title: string;
+    public title: string = "Clone";
 }
 
 @Component({
@@ -211,7 +193,7 @@ export class DownloadButtonComponent extends BaseButton {
         return this._enabled;
     }
 
-    private _enabled: boolean;
+    private _enabled: boolean = true;
 }
 
 @Component({
@@ -223,7 +205,9 @@ export class ResizeButtonComponent extends BaseButton {
 
 @Component({
     selector: "bl-edit-button",
-    template: `<bl-button color="light" [action]="action" title="Edit" icon="fa fa-pencil-square-o"></bl-button>`,
+    template: `<bl-button color="light" [action]="action" [title]="title" icon="fa fa-pencil-square-o"></bl-button>`,
 })
 export class EditButtonComponent extends BaseButton {
+    @Input()
+    public title: string = "Edit";
 }

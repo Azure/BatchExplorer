@@ -66,6 +66,13 @@ export function formatLineColor(colors: number[]): Color {
     };
 }
 
+export function formatScatterColor(colors: number[]): Color {
+    return {
+        pointBackgroundColor: rgba(colors, 1),
+        pointBorderColor: rgba(colors, 1),
+    };
+}
+
 export function formatBarColor(colors: number[]): Color {
     return {
         backgroundColor: rgba(colors, 0.6),
@@ -129,20 +136,21 @@ export function generateColors(count: number): number[][] {
  * @returns {Color}
  */
 export function getColors(chartType: string, index: number, count: number): Color {
-    if (chartType === "pie" || chartType === "doughnut") {
-        return formatPieColors(generateColors(count));
+    switch (chartType) {
+        case "pie":
+        case "doughnut":
+            return formatPieColors(generateColors(count));
+        case "polarArea":
+            return formatPolarAreaColors(generateColors(count));
+        case "line":
+        case "radar":
+            return formatLineColor(generateColor(index));
+        case "scatter":
+            return formatScatterColor(generateColor(index));
+        case "bar":
+        case "horizontalBar":
+            return formatBarColor(generateColor(index));
+        default:
+            return generateColor(index) as any;
     }
-
-    if (chartType === "polarArea") {
-        return formatPolarAreaColors(generateColors(count));
-    }
-
-    if (chartType === "line" || chartType === "radar") {
-        return formatLineColor(generateColor(index));
-    }
-
-    if (chartType === "bar" || chartType === "horizontalBar") {
-        return formatBarColor(generateColor(index));
-    }
-    return generateColor(index);
 }

@@ -18,7 +18,7 @@ import { OS } from "app/utils";
 })
 class DownloadRdpMockComponent {
     public rdpContent: string = "full address:s:0.0.0.0";
-    public credentials = { username: "foo" };
+    public credentials = { name: "foo" };
     public connectionSettings: NodeConnectionSettings;
 }
 
@@ -80,7 +80,7 @@ describe("DownloadRdpComponent", () => {
     describe("When OS is windows", () => {
         beforeEach(() => {
             spyOn(OS, "isWindows").and.returnValue(true);
-            testComponent.credentials = { username: "bar" };
+            testComponent.credentials = { name: "bar" };
             fixture.detectChanges();
         });
 
@@ -113,7 +113,7 @@ describe("DownloadRdpComponent", () => {
     describe("When OS is NOT windows", () => {
         beforeEach(() => {
             spyOn(OS, "isWindows").and.returnValue(false);
-            testComponent.credentials = { username: "bar" };
+            testComponent.credentials = { name: "bar" };
             fixture.detectChanges();
         });
 

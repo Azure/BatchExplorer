@@ -1,37 +1,17 @@
-import { List, Record } from "immutable";
-
-import { Partial } from "app/utils";
-import { ApplicationPackage } from "./application-package";
-
-const ApplicationRecord = Record({
-    id: null,
-    displayName: null,
-    allowUpdates: false,
-    defaultVersion: null,
-    packages: null,
-});
+import { Model, Prop, Record } from "app/core";
 
 export interface ApplicationAttributes {
     id: string;
-    displayName: string;
-    allowUpdates: boolean;
-    defaultVersion: string;
-    packages: List<ApplicationPackage>;
+    name: string;
+    description: string;
 }
 
 /**
  * Class for displaying Batch application information.
  */
-export class Application extends ApplicationRecord implements ApplicationAttributes {
-    public id: string;
-    public displayName: string;
-    public allowUpdates: boolean;
-    public defaultVersion: string;
-    public packages: List<ApplicationPackage>;
-
-    constructor(data: Partial<ApplicationAttributes> = {}) {
-        super(Object.assign({}, data, {
-            packages: List(data.packages),
-        }));
-    }
+@Model()
+export class Application extends Record<ApplicationAttributes> {
+    @Prop() public id: string;
+    @Prop() public name: string;
+    @Prop() public description: string;
 }

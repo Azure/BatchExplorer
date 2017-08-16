@@ -6,12 +6,13 @@ import { Router } from "@angular/router";
 import * as d3 from "d3";
 import * as elementResizeDetectorMaker from "element-resize-detector";
 import { List } from "immutable";
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
+import { NotificationService } from "app/components/base/notifications";
 import { SidebarManager } from "app/components/base/sidebar";
 import { NodeConnectComponent } from "app/components/node/connect";
-import { Job, Node, NodeState, Pool } from "app/models";
+import { Job, Node, NodeState, Pool, ServerError } from "app/models";
 import { NodeService } from "app/services";
 import { log } from "app/utils";
 import { HeatmapColor } from "./heatmap-color";
@@ -117,6 +118,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         private contextMenuService: ContextMenuService,
         private nodeService: NodeService,
         private sidebarManager: SidebarManager,
+        private notificationService: NotificationService,
         private router: Router,
     ) {
         this.colors = new HeatmapColor(stateTree);
@@ -160,6 +162,19 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         this._svg = d3.select(this.svgEl.nativeElement)
             .attr("width", this._width)
             .attr("height", this._height);
+
+        const defs = this._svg.append("defs");
+        const pattern = defs.append("pattern")
+            .attr("id", "low-pri-stripes")
+            .attr("width", "10")
+            .attr("height", "10")
+            .attr("patternUnits", "userSpaceOnUse")
+            .attr("patternTransform", "rotate(45 50 50)");
+
+        pattern.append("line")
+            .attr("stroke", "#fff")
+            .attr("stroke-width", "2px")
+            .attr("y2", "10");
 
         this._processNewData();
     }
@@ -286,30 +301,33 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     }
 
     private _displayRunningTasks(taskGroup, z) {
-        const maxTaskPerNode = this.pool.maxTasksPerNode;
-        const taskWidth = Math.floor(z / maxTaskPerNode);
         if (z === 0) { // When switching between the graphs there is a moment where the width/height is 0
             return;
         }
+
         const runningTaskRects = taskGroup.selectAll("rect")
             .data((d) => {
                 const node: Node = d.node;
-                if (node.state !== NodeState.running || !node.recentTasks) {
+                if (node.state !== NodeState.running) {
                     return [];
                 }
+                const { taskHeight, combine } = this._getTaskHeight(z, node);
+                if (combine) {
+                    return [{ node, index: 0, taskHeight }];
+                }
                 const count = node.runningTasksCount;
-                const array = new Array(count).fill(0).map((task, index) => ({ node, index }));
+                const array = new Array(count).fill(0).map((task, index) => ({ node, index, taskHeight }));
                 return array;
             });
 
         runningTaskRects.enter().append("rect")
             .attr("transform", (data) => {
                 const index = data.index;
-                const x = z - (index + 1) * taskWidth;
+                const x = z - (index + 1) * (data.taskHeight + 1);
                 return `translate(0,${x})`;
             })
             .attr("width", z)
-            .attr("height", taskWidth - 1)
+            .attr("height", (data) => data.taskHeight)
             .style("fill", runningColor);
 
         runningTaskRects.exit().remove();
@@ -318,10 +336,22 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     private _displayTileTooltip(titleNode) {
         titleNode.text((tile) => {
             const count = tile.node.runningTasksCount;
-            return `${count} tasks running on this node`;
+            return `${count} tasks running on this node (${tile.node.id})`;
         });
     }
 
+    private _getTaskHeight(tileSize: number, node: Node) {
+        const maxTaskPerNode = this.pool.maxTasksPerNode;
+        const taskHeight = Math.floor(tileSize / maxTaskPerNode);
+        let height;
+        const combine = taskHeight < 2;
+        if (combine) {
+            height = Math.floor(tileSize / maxTaskPerNode * node.runningTasksCount);
+        } else {
+            height = taskHeight - 1;
+        }
+        return { taskHeight: Math.max(1, height), combine };
+    }
     /**
      * Compute the dimension of the heatmap.
      *  - rows
@@ -412,24 +442,56 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     }
 
     private _buildContextMenu(node: Node) {
-        return new ContextMenu([
+        const actions = [
             new ContextMenuItem({ label: "Go to", click: () => this._gotoNode(node) }),
+            new ContextMenuItem({ label: "Connect", click: () => this._connectTo(node) }),
             new ContextMenuItem({ label: "Reboot", click: () => this._reboot(node) }),
             new ContextMenuItem({ label: "Reimage", click: () => this._reimage(node) }),
-            new ContextMenuItem({ label: "Connect", click: () => this._connectTo(node) }),
-        ]);
+            new ContextMenuItem({ label: "Delete", click: () => this._delete(node) }),
+        ];
+
+        if (node.state === NodeState.startTaskFailed) {
+            actions.push(new ContextMenuItem({ label: "View start task output", click: () => this._gotoNode(node) }));
+        }
+        return new ContextMenu(actions);
     }
 
     private _reboot(node: Node) {
-        this.nodeService.reboot(this.pool.id, node.id).cascade(() => this.nodeService.getOnce(this.pool.id, node.id));
+        this._nodeAction(node, this.nodeService.reboot(this.pool.id, node.id)).cascade(() => {
+            this.notificationService.success("Node rebooting!", `Node ${node.id} started rebooting`);
+        });
     }
 
     private _reimage(node: Node) {
-        this.nodeService.reimage(this.pool.id, node.id).cascade(() => this.nodeService.getOnce(this.pool.id, node.id));
+        this._nodeAction(node, this.nodeService.reimage(this.pool.id, node.id)).cascade(() => {
+            this.notificationService.success("Node reimaging!", `Node ${node.id} started reimaging`);
+        });
+    }
+
+    private _delete(node: Node) {
+        this._nodeAction(node, this.nodeService.delete(this.pool.id, node.id)).cascade(() => {
+            this.notificationService.success("Node deleting!", `Node ${node.id} is being removed from the pool.`);
+        });
+    }
+
+    private _nodeAction(node: Node, action: Observable<any>): Observable<any> {
+        action.subscribe({
+            next: () => {
+                this.nodeService.getOnce(this.pool.id, node.id);
+            },
+            error: (error: ServerError) => {
+                this.notificationService.error(error.body.code, error.body.message);
+            },
+        });
+        return action;
     }
 
     private _gotoNode(node: Node) {
-        this.router.navigate(["/pools", this.pool.id, "nodes", node.id]);
+        this.router.navigate(["/pools", this.pool.id, "nodes", node.id], {
+            queryParams: {
+                tab: "files",
+            },
+        });
     }
 
     private _connectTo(node: Node) {

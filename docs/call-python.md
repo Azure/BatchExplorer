@@ -13,11 +13,10 @@ In `python/controllers` open/create a controller file(It will be loaded automati
 from server.app import app
 # Give the name of the procedure in `app.procedure` decorator.
 @app.procedure("foo")
-def foo(params):
-    print("got data", params)
+def foo(request, param1, param2):
+    print("got data", param1, param2)
     # Return a dict that can be converted to JSON(The conversion is done automatically)
     return {"what": "it works!"}
-
 ```
 
 ## Step 2: Call the python procedure from the javascript.
@@ -40,4 +39,51 @@ pythonRpcService.call("other", ["abc", "def"]).subscribe({
     // Here it will return an
     error: (err) => console.log("Error other", err),
 });
+```
+
+
+## Throw an error from the python server
+
+You need to raise an error that is a child of `JsonRpcError` or `JsonRpcError` itself to get the best result.
+Any other exception will act as a Server internal error and also get logged in the python
+
+## Authenticate with the python
+```ts
+pythonService.callWithAuth("foo", [1, 2]).subscribe(...)
+```
+
+```py
+@app.procedure("foo")
+def foo(request, param1, param2):
+    request.client #=> This is the NCJ client you can use. It automatically retrieved the AAD tokens
+    return {"what": "it works!"}
+```
+
+
+## Stream data from the python
+
+If you have some long running task to do in the python and would like to send status update to the user you can stream some data.
+
+```py
+# In the controller
+@app.procedure("foo")
+async def foo(request, param1, param2):
+    for i in range(10):
+        # Call the send_stream method on the request object with await(Also make this function async)
+        await request.send_stream({'streamStatus': i})
+        sleep(1)
+    # Finally return when done
+    return {"action": "completed"}
+```
+
+In the typescript
+```ts
+pythonService.call("foo", [1, 2]).subscribe({
+    next: (data) => {
+        console.log("Streamed data:", data);
+    },
+    completed: () => {
+        console.log("done streaming");
+    },
+})
 ```

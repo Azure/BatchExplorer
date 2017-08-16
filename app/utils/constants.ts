@@ -1,3 +1,5 @@
+// tslint:disable:variable-name
+
 export const caching = {
     /**
      * Max number of filtered query that it should remember.
@@ -52,11 +54,13 @@ export const forms = {
             displayName: 1024,
             applicationName: 64,
             version: 64,
+            fileGroup: 63,
         },
         regex: {
             id: /^[\w\_-]+$/i,
             appVersion: /^[a-zA-Z0-9_-][a-zA-Z0-9_.-]*$/i,
             appFilename: /\.zip$/i,
+            fileGroup: /^[a-z0-9]([a-z0-9]|-(?!-|\z))*$/,
         },
         range: {
             retry: { min: -1, max: 100 },
@@ -133,6 +137,11 @@ export const ServiceUrl = {
     githubRaw: "https://raw.githubusercontent.com",
 };
 
+export const ResourceUrl = {
+    batch: "https://batch.core.windows.net/",
+    arm: "https://management.core.windows.net/",
+};
+
 export const APIErrorCodes = {
     containerNotFound: "ContainerNotFound",
     operationInvalidForCurrentState: "OperationInvalidForCurrentState",
@@ -152,3 +161,8 @@ export const PollRate = {
  * Maximum number of tasks the recent tasks attribute can have.
  */
 export const nodeRecentTaskLimit = 10;
+
+export const LowPriDiscount = {
+    windows: 0.40, // 60%
+    linux: 0.20,   // 80%
+};
