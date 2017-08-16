@@ -1,5 +1,4 @@
 import { Component, Input, OnChanges, ViewChild, forwardRef } from "@angular/core";
-import { List } from "immutable";
 
 import { NodeFileListComponent } from "app/components/file/browse";
 import { FileDetailsQuickviewComponent } from "app/components/file/details";
@@ -7,13 +6,7 @@ import { IfileDetails } from "app/components/file/details/file-details-quickview
 import { File, Node } from "app/models";
 import { FileService, NodeFileListParams } from "app/services";
 import { RxListProxy } from "app/services/core";
-
-const folderFriendlyName = {
-    workitems: "Job task files",
-    shared: "Shared files",
-    startup: "Start task files",
-    applications: "Application packages files",
-};
+import "./node-file-browse.scss";
 
 export interface Folder {
     name: string;
@@ -37,10 +30,7 @@ export class NodeFileBrowseComponent implements OnChanges {
     public node: Node;
 
     public data: RxListProxy<NodeFileListParams, File>;
-    public folders: List<Folder>;
-    public currentFolder: string = null;
     public options: IfileDetails;
-    public hiddenFields: string[] = ["breadcrumb", "quicksearch"];
 
     @ViewChild(FileDetailsQuickviewComponent)
     public quickview: FileDetailsQuickviewComponent;
@@ -51,19 +41,10 @@ export class NodeFileBrowseComponent implements OnChanges {
 
     constructor(private fileService: FileService) {
         this.data = this.fileService.listFromComputeNode(null, null, false);
-        this.data.items.subscribe((files) => {
-            this.folders = List<Folder>(files.map(x => {
-                return {
-                    name: x.name,
-                    friendlyName: folderFriendlyName[x.name],
-                };
-            }));
-        });
     }
 
     public ngOnChanges(inputs) {
         if (inputs.poolId || inputs.nodeId) {
-            this.currentFolder = null;
             this.options = {
                 sourceType: "pool",
                 poolId: this.poolId,
@@ -79,15 +60,7 @@ export class NodeFileBrowseComponent implements OnChanges {
         this.quickview.initFileLoader();
     }
 
-    public selectFolder(folderName: string) {
-        this.currentFolder = folderName;
-    }
-
     public get quicksearchPlaceholder() {
-        if (this.currentFolder) {
-            return `Filter by file name under folder "${this.currentFolder}"`;
-        } else {
-            return "Filter by file name";
-        }
+        return "Filter by full file path";
     }
 }

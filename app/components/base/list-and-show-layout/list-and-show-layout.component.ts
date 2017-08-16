@@ -51,9 +51,6 @@ export class ListAndShowLayoutComponent implements AfterViewInit, OnChanges, OnD
     @Input()
     public quickSearchField = "id";
 
-    @Input()
-    public hiddenFields: string[];
-
     @Output()
     public listScrolledToBottom = new EventEmitter<any>();
 
@@ -99,9 +96,7 @@ export class ListAndShowLayoutComponent implements AfterViewInit, OnChanges, OnD
 
     public ngAfterViewInit() {
         // Focus the quick search input when component get created
-        if (this.quickSearchInput) {
-            this.quickSearchInput.nativeElement.focus();
-        }
+        this.quickSearchInput.nativeElement.focus();
     }
 
     public ngOnChanges(inputs) {
@@ -160,10 +155,6 @@ export class ListAndShowLayoutComponent implements AfterViewInit, OnChanges, OnD
                 this.list.clearSelection();
             }
         });
-    }
-
-    public isFieldHidden(field: string): boolean {
-        return this.hiddenFields && this.hiddenFields.indexOf(field) !== -1;
     }
 
     private _itemActivated(item: any) {

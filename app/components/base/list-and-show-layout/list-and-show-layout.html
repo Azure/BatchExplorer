@@ -1,11 +1,11 @@
 <div class="layout-container" [class.filtering]="showAdvancedFilter | async">
     <section class="list-view">
         <div class="left-pane">
-            <div class="bl-breadcrumbs" *ngIf="!isFieldHidden('breadcrumb')">
+            <div class="bl-breadcrumbs">
                 <bl-breadcrumb-group>
                 </bl-breadcrumb-group>
             </div>
-            <div class="bl-quick-filter-content" *ngIf="!isFieldHidden('quicksearch')">
+            <div class="bl-quick-filter-content">
                 <div class="quicksearch">
                     <div class="pre-quicksearch">
                         <ng-content select="[pre-quicksearch]"></ng-content>

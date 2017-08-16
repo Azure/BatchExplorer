@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges, ViewChild, forwardRef } from "@angular/core";
 import { TaskFileListComponent } from "app/components/file/browse";
 import { FileDetailsQuickviewComponent, IfileDetails } from "app/components/file/details";
+import "./task-outputs.scss";
 
 const outputTabs = [
     { key: "node", label: "Files on node" },
@@ -22,7 +23,6 @@ export class TaskOutputsComponent implements OnChanges {
     public outputTabs = outputTabs;
     public selectedTab: "node" | "outputs" | "logs" = "node";
 
-    public hiddenFields: string[] = ["breadcrumb", "quicksearch"];
     public options: IfileDetails;
 
     @ViewChild(FileDetailsQuickviewComponent)
