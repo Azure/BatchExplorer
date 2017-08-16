@@ -7,7 +7,7 @@ import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
 import { FileState, TreeNodeData, TreeNodeOption } from "./tree-component";
 import "./tree-view-display.scss";
-import { mapFileToTree } from "./tree-view-helper";
+import { mapFileToTree, sortFileNames } from "./tree-view-helper";
 
 @Component({
     selector: "bl-tree-view-display",
@@ -61,7 +61,7 @@ export class TreeViewDisplayComponent implements OnInit {
         filesObservable.subscribe((files) => {
             // Only map tree children when this function is first time loaded or 'force' is true
             if (this.treeNodes.length === 0 || force) {
-                let nodes = files.map(mapFileToTree).toArray();
+                let nodes = files.map(mapFileToTree).sort(sortFileNames).toArray();
                 nodes = this._decorateNodesWithMoreOption(nodes, pathToLoad);
                 this.treeNodes = (files.size > 0) ? nodes : [];
             }
@@ -81,7 +81,7 @@ export class TreeViewDisplayComponent implements OnInit {
         currTreeNode.state = FileState.LOADING_DIRECTORY;
         filesObs.subscribe((files) => {
             currTreeNode.hasChildren = (files.size > 0);
-            let nodes = files.map(mapFileToTree).toArray();
+            let nodes = files.map(mapFileToTree).sort(sortFileNames).toArray();
             nodes = this._decorateNodesWithMoreOption(nodes, pathToLoad);
             // Special root level nodes
             if (pathToLoad === "") {

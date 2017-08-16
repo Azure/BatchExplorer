@@ -64,3 +64,8 @@ export function mapFileToTree(file: File): TreeNodeData {
         state: file.isDirectory ? FileState.COLLAPSED_DIRECTORY : FileState.FILE,
     } as TreeNodeData;
 }
+
+/** Sort tree node function */
+export function sortFileNames(fileA: TreeNodeData, fileB: TreeNodeData) {
+    return fileA.name.localeCompare(fileB.name);
+}
