@@ -6,11 +6,17 @@ import { JobCreateDto, JobPatchDto } from "app/models/dtos";
 import { Constants, ModelUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";
-import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
+import {
+    DataCache, ListOptionsAttributes, RxBatchEntityProxy, RxBatchListProxy,
+    RxEntityProxy, RxListProxy, getAllProxy, getOnceProxy,
+} from "./core";
 import { ServiceBase } from "./service-base";
 
 export interface JobParams {
     id?: string;
+}
+
+export interface JobListOptions extends ListOptionsAttributes {
 }
 
 @Injectable()
@@ -32,12 +38,16 @@ export class JobService extends ServiceBase {
         return this._basicProperties;
     }
 
-    public list(initialOptions: any = {}): RxListProxy<{}, Job> {
+    public list(initialOptions: JobListOptions = {}): RxListProxy<{}, Job> {
         return new RxBatchListProxy<{}, Job>(Job, this.batchService, {
             cache: () => this.cache,
             proxyConstructor: (client, params, options) => client.job.list(options),
             initialOptions,
         });
+    }
+
+    public listAll(options: JobListOptions = {}): Observable<List<Job>> {
+        return getAllProxy(this.list(options));
     }
 
     public get(jobId: string, options: any = {}): RxEntityProxy<JobParams, Job> {

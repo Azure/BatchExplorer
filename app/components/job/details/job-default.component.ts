@@ -6,6 +6,8 @@ import { Component } from "@angular/core";
         <div class="no-entity-home">
             <i class="fa fa-tasks large"></i>
             <p>Please select a job from the list</p>
+
+            <bl-all-job-graphs-home></bl-all-job-graphs-home>
         </div>
     `,
 })
