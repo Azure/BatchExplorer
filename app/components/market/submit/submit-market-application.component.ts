@@ -84,7 +84,6 @@ export class SubmitMarketApplicationComponent {
     public static breadcrumb() {
         return { name: "Submit" };
     }
-
     public modes = Modes;
     public types = NcjParameterExtendedType;
     public modeState = Modes.None;
@@ -122,7 +121,6 @@ export class SubmitMarketApplicationComponent {
                 this._parseParameters();
                 console.log(this.jobParametersWrapper);
                 console.log(this.poolParametersWrapper);
-
                 console.log(this.jobTemplate);
                 console.log(this.poolTemplate);
                 this._createForms();
@@ -169,22 +167,20 @@ export class SubmitMarketApplicationComponent {
     }
 
     private _parseParameters() {
-        const parameters = this.jobTemplate.parameters;
-        const otherParameters: any[] = [];
-        for (let name of Object.keys(parameters)) {
-            const param = parameters[name];
-            otherParameters.push(new NcjParameterWrapper(name, param));
+        const jobParameters = this.jobTemplate.parameters;
+        const jobTempWrapper: any[] = [];
+        for (let name of Object.keys(jobParameters)) {
+            const param = jobParameters[name];
+            jobTempWrapper.push(new NcjParameterWrapper(name, param));
         }
-        this.jobParametersWrapper = otherParameters;
-
-        const parameters2 = this.poolTemplate.parameters;
-        const otherParameters2: any[] = [];
-        for (let name of Object.keys(parameters2)) {
-            const param = parameters2[name];
-            otherParameters2.push(new NcjParameterWrapper(name, param));
+        this.jobParametersWrapper = jobTempWrapper;
+        const poolParameters = this.poolTemplate.parameters;
+        const poolTempWrapper: any[] = [];
+        for (let name of Object.keys(poolParameters)) {
+            const param = poolParameters[name];
+            poolTempWrapper.push(new NcjParameterWrapper(name, param));
         }
-        this.poolParametersWrapper = otherParameters2;
-
+        this.poolParametersWrapper = poolTempWrapper;
     }
 
     private _createForms() {
@@ -220,15 +216,28 @@ export class SubmitMarketApplicationComponent {
     }
 
     private _runJobWithPool(expandedPoolTemplate) {
+        const jobName: string = this.jobParams.value.jobName;
         delete expandedPoolTemplate.id;
-        this.jobTemplate.job.properties.poolInfo = {
-            autoPoolSpecification: {
-                autoPoolIdPrefix: "jobname",
-                poolLifetimeOption: "job",
-                keepAlive: false,
-            },
-            pool: expandedPoolTemplate,
-        };
+
+        if (jobName) {
+            this.jobTemplate.job.properties.poolInfo = {
+                autoPoolSpecification: {
+                    autoPoolIdPrefix: jobName,
+                    poolLifetimeOption: "job",
+                    keepAlive: false,
+                },
+                pool: expandedPoolTemplate,
+            };
+        } else {
+            this.jobTemplate.job.properties.poolInfo = {
+                autoPoolSpecification: {
+                    autoPoolIdPrefix: "",
+                    poolLifetimeOption: "job",
+                    keepAlive: false,
+                },
+                pool: expandedPoolTemplate,
+            };
+        }
         return this.pythonRpcService.callWithAuth("submit-ncj-job", [this.jobTemplate, this.jobParams.value])
             .cascade((data) => this._redirectToJob(data.properties.id));
     }
