@@ -3,22 +3,10 @@
         <bl-entity-details-list #listWrapper [refresh]="list.refresh" [filterPlaceholder]="quicksearchPlaceholder" [showAddButton]="false"
             [enableAdvancedFilter]="false" [showExpandButton]="false" quickSearchField="name">
             <div class="layout-container" [class.filtering]="showAdvancedFilter | async">
-                <section class="list-view">
-                    <div class="left-pane">
-                        <bl-focus-section>
-                            <bl-node-file-list #list [poolId]="poolId" [nodeId]="node.id" [filter]="listWrapper.filter" [folder]="currentFolder"
-                                            (fileNameUpdate)="updateOptions($event)">
-                            </bl-node-file-list>
-                        </bl-focus-section>
-                    </div>
-                </section>
-                <section class="content-view">
-                    <div class="content-wrapper">
-                        <div style="position:relative">
-                            <!-- <bl-file-details-quickview #quickview [options]="options"></bl-file-details-quickview> -->
-                        </div>
-                    </div>
-                </section>
+                <bl-file-explorer [fileLoader]="pickedFileLoader">
+                    <bl-node-file-list tree-view #list [poolId]="poolId" [nodeId]="node.id" [filter]="listWrapper.filter" [folder]="currentFolder" (fileNameUpdate)="updatePickedFile($event)">
+                    </bl-node-file-list>
+                </bl-file-explorer>
             </div>
         </bl-entity-details-list>
     </div>

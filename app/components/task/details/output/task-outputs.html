@@ -9,7 +9,7 @@
     [showAddButton]="false" [enableAdvancedFilter]="false" [showExpandButton]="false" quickSearchField="name">
     <div class="layout-container" [class.filtering]="showAdvancedFilter | async">
         <bl-file-explorer [fileLoader]="pickedFileLoader">
-            <bl-task-file-list tree-view #nodeList [jobId]="jobId" [taskId]="taskId" (fileNameUpdate)="updatePickedFile($event)">
+            <bl-task-file-list tree-view #nodeList [jobId]="jobId" [taskId]="taskId" [filter]="nodeWrapper.filter" (fileNameUpdate)="updatePickedFile($event)">
             </bl-task-file-list>
         </bl-file-explorer>
     </div>

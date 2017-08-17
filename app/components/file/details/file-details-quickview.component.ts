@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import { Component, Input, OnChanges } from "@angular/core";
 import { autobind } from "core-decorators";
 import { remote } from "electron";
 
@@ -8,14 +8,6 @@ import { ElectronShell } from "app/services";
 import { RxEntityProxy } from "app/services/core";
 import { FileLoader } from "app/services/file";
 import { FileUrlUtils } from "app/utils";
-
-export interface IfileDetails {
-    jobId: string;
-    taskId: string;
-    nodeId: string;
-    poolId: string;
-    sourceType: string;
-}
 
 @Component({
     selector: "bl-file-details-quickview",

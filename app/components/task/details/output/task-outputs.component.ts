@@ -1,6 +1,5 @@
 import { Component, Input, OnChanges, ViewChild, forwardRef } from "@angular/core";
 import { TaskFileListComponent } from "app/components/file/browse";
-import { IfileDetails } from "app/components/file/details";
 import { FileService } from "app/services";
 import { FileLoader } from "app/services/file";
 import "./task-outputs.scss";
@@ -25,11 +24,6 @@ export class TaskOutputsComponent implements OnChanges {
     public outputTabs = outputTabs;
     public selectedTab: "node" | "outputs" | "logs" = "node";
 
-    public options: IfileDetails;
-
-    // @ViewChild(FileDetailsQuickviewComponent)
-    // public quickview: FileDetailsQuickviewComponent;
-
     // tslint:disable-next-line:no-forward-ref
     @ViewChild(forwardRef(() => TaskFileListComponent))
     public nodeList: TaskFileListComponent;
@@ -39,11 +33,7 @@ export class TaskOutputsComponent implements OnChanges {
     constructor(private fileService: FileService) { }
     public ngOnChanges(inputs) {
         if (inputs.jobId || inputs.taskId) {
-            this.options = {
-                sourceType: "job",
-                taskId: this.taskId,
-                jobId: this.jobId,
-            } as IfileDetails;
+            this.pickedFileLoader = null;
         }
     }
 

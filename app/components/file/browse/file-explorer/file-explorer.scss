@@ -8,8 +8,7 @@ bl-file-explorer {
         transition:width 100ms;
         width: $listview-width;
         height: $contentview-height;
-        // overflow: hidden; // [Tim] removed for the breadcrumb expand
-        z-index: 1;
+        flex: 0 0 $listview-width;
 
         .header {
             height: $listview-header-height;
@@ -30,6 +29,7 @@ bl-file-explorer {
         width: 100%;
         height: auto;
         background-color: $content-background;
+        flex: 1;
     }
 
 }
