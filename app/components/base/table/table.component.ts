@@ -13,7 +13,7 @@ import "./table.scss";
 
 @Component({
     selector: "bl-thead",
-    template: `<tr><ng-content></ng-content></tr>`,
+    template: `<tr><th style="width: 30px"></th><ng-content></ng-content></tr>`,
 })
 export class TableHeadComponent implements AfterViewInit {
     @ContentChildren(TableColumnComponent)

@@ -113,6 +113,7 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
             this.activateItem(true);
         }
     }
+
     /**
      * Mark the item as active and trigger the router if applicable
      * Will desactivate the current activate item
@@ -121,6 +122,12 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
     public activateItem(andFocus = false) {
         this.list.setActiveItem(this.key);
         this._triggerRouter();
+    }
+
+    public toggleSelected(event: Event) {
+        event.stopPropagation();
+        this.selected = !this.selected;
+        this.list.onSelectedChange(this.key, this.selected);
     }
 
     public openContextMenu() {
