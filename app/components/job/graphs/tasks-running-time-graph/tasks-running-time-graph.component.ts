@@ -46,6 +46,8 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges, OnDest
         },
     ];
 
+    public labels = null;
+
     public datasets: Chart.ChartDataSets[] = [];
 
     public options: Chart.ChartOptions;
@@ -114,7 +116,6 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges, OnDest
             },
             scales: {
                 xAxes: [{
-                    type: "linear",
                     display: false,
                 }],
                 yAxes: [{
@@ -145,8 +146,9 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges, OnDest
     public updateData() {
         const succeededTasks = this._succeededTasks = [];
         const failedTasks = this._failedTasks = [];
+        const sortedTasks = this._sortTasks();
 
-        this._sortTasks().forEach((task, index) => {
+        sortedTasks.forEach((task, index) => {
             if (!task.executionInfo || !task.executionInfo.endTime) {
                 return;
             }
@@ -193,6 +195,7 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges, OnDest
         return [
             `Task id: ${task.id}`,
             `Runing time: ${DateUtils.prettyDuration(task.executionInfo.runningTime, true)}`,
+            `Node id: ${task.nodeInfo.nodeId}`,
         ];
     }
 
