@@ -1,47 +1,20 @@
 @import "app/styles/variables";
 
-.layout-container {
-    // display: flex;
 
-    &.filtering {
-        .list-view {
-            width: $listview-filtering-width;
-
-            > .left-pane {
+bl-task-outputs {
+    .layout-container {
+        &.filtering {
+            .list-view {
                 width: $listview-filtering-width;
+
+                > .left-pane {
+                    width: $listview-filtering-width;
+                }
+            }
+
+            .content-view {
+                width: calc(100vw - #{$listview-filtering-width} - #{$navigationbar-width});
             }
         }
-
-        .content-view {
-            width: calc(100vw - #{$listview-filtering-width} - #{$navigationbar-width});
-        }
-    }
-
-    > .tree-explorer-container {
-        transition:width 100ms;
-        width: $listview-width;
-        height: $contentview-height;
-        // overflow: hidden; // [Tim] removed for the breadcrumb expand
-        z-index: 1;
-
-        .header {
-            height: $listview-header-height;
-            padding: 15px 15px 0;
-        }
-
-        .scrollable {
-            height: 100%;
-            overflow-y: hidden;
-
-            &:hover {
-                overflow-y: auto;
-            }
-        }
-    }
-
-    > .file-content-container {
-        width: 100%;
-        height: auto;
-        background-color: $content-background;
     }
 }

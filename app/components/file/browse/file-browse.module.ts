@@ -1,5 +1,6 @@
 import { NgModule } from "@angular/core";
 import { commonModules } from "app/common";
+import { FileExplorerComponent } from "app/components/file/browse/file-explorer";
 import { FileDetailsModule } from "app/components/file/details";
 import { FileDirectoryFilter, FileListDisplayComponent } from "./display";
 import { NodeFileBrowseComponent } from "./node-file-browse.component";
@@ -12,6 +13,7 @@ const components = [
     FileDirectoryFilter, TreeViewDisplayComponent, FileListDisplayComponent,
     NodeFileBrowseComponent, NodeFileListComponent,
     PersistedFileListComponent, TaskFileListComponent,
+    FileExplorerComponent,
 ];
 
 @NgModule({

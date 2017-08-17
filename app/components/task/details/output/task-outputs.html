@@ -8,15 +8,10 @@
 <bl-entity-details-list *ngIf="selectedTab === 'node'" #nodeWrapper [refresh]="nodeList.refresh" [filterPlaceholder]="nodeList.quicksearchPlaceholder"
     [showAddButton]="false" [enableAdvancedFilter]="false" [showExpandButton]="false" quickSearchField="name">
     <div class="layout-container" [class.filtering]="showAdvancedFilter | async">
-        <section class="tree-explorer-container">
-            <bl-focus-section>
-                <bl-task-file-list #nodeList [jobId]="jobId" [taskId]="taskId" [filter]="nodeWrapper.filter" (fileNameUpdate)="updateOptions($event)">
-                </bl-task-file-list>
-            </bl-focus-section>
-        </section>
-        <section class="file-content-container">
-            <bl-file-details-quickview #quickview [options]="options"></bl-file-details-quickview>
-        </section>
+        <bl-file-explorer [fileLoader]="pickedFileLoader">
+            <bl-task-file-list tree-view #nodeList [jobId]="jobId" [taskId]="taskId" (fileNameUpdate)="updatePickedFile($event)">
+            </bl-task-file-list>
+        </bl-file-explorer>
     </div>
 </bl-entity-details-list>
 
