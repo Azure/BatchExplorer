@@ -2,10 +2,10 @@
     <tree-root #tree [nodes]="treeNodes" [options]="treeOptions">
         <ng-template #treeNodeWrapperTemplate let-node let-index="index">
             <div class="node-wrapper"
-                [class.tree-node-expanded]="node.data.state===FileState.EXPANDED_DIRECTORY"
-                [class.tree-node-collapsed]="node.data.state===FileState.COLLAPSED_DIRECTORY"
-                [class.tree-node-spin]="node.data.state===FileState.LOADING_DIRECTORY"
-                [class.tree-node-file]="node.data.state===FileState.FILE">
+                [class.tree-node-expanded]="node.data.state === FileState.EXPANDED_DIRECTORY"
+                [class.tree-node-collapsed]="node.data.state === FileState.COLLAPSED_DIRECTORY"
+                [class.tree-node-spin]="node.data.state === FileState.LOADING_DIRECTORY"
+                [class.tree-node-file]="node.data.state === FileState.FILE">
                 <tree-node-expander [node]="node"></tree-node-expander>
                 <div class="node-content-wrapper"
                     (click)="onNodeClick(node, $event)">

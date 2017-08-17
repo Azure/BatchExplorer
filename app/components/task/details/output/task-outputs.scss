@@ -1,7 +1,7 @@
 @import "app/styles/variables";
 
 .layout-container {
-    display: flex;
+    // display: flex;
 
     &.filtering {
         .list-view {
@@ -17,27 +17,12 @@
         }
     }
 
-    > .list-view {
+    > .tree-explorer-container {
         transition:width 100ms;
         width: $listview-width;
         height: $contentview-height;
-        background-color: $listview-background;
         // overflow: hidden; // [Tim] removed for the breadcrumb expand
-        box-shadow: 1px 1px 5px 0 #d5d5d5;
         z-index: 1;
-
-        > .left-pane {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-            width: $listview-width;
-
-            .bl-list-content {
-                flex: 1 1 auto;
-                position: relative;
-                display: flex;
-            }
-        }
 
         .header {
             height: $listview-header-height;
@@ -54,17 +39,9 @@
         }
     }
 
-    > .content-view {
-        width: calc(100vw - #{$listview-width} - #{$navigationbar-width});
-        height: $contentview-height;
-        overflow-y: auto;
+    > .file-content-container {
+        width: 100%;
+        height: auto;
         background-color: $content-background;
-        position: relative;
-
-        .content-wrapper {
-            padding-left: 5px;
-            padding-top: 0;
-            position: relative;
-        }
     }
 }
