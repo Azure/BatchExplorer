@@ -88,7 +88,7 @@ export class SubmitMarketApplicationComponent {
     public types = NcjParameterExtendedType;
     public modeState = Modes.None;
     public title: string;
-    public form;
+    public form: FormGroup;
     public jobTemplate: NcjJobTemplate;
     public poolTemplate: NcjPoolTemplate;
     public pickedPool = new FormControl(null);
@@ -99,7 +99,7 @@ export class SubmitMarketApplicationComponent {
     private applicationId: string;
     private actionId: string;
     private icon: string;
-    private error;
+    private error: ServerError;
 
     constructor(
         public formBuilder: FormBuilder,
