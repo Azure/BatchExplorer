@@ -1,4 +1,5 @@
-import { Component } from "@angular/core";
+import { Component, Input } from "@angular/core";
+import { NcjJobTemplate, NcjParameter, NcjPoolTemplate } from "app/models";
 import "./parameter-input.scss";
 
 @Component({
@@ -9,7 +10,18 @@ export class ParameterInputComponent {
     public static breadcrumb() {
         return { name: "Parameter Input" };
     }
+
+    @Input()
+    public parameter: NcjParameter;
+
+    @Input()
+    public type;
+
     constructor() {
-        console.log("hello world");
+        console.log(this.parameter, this.type);
+    }
+
+    public printTypes(){
+        console.log(this.type);
     }
 }

@@ -1,3 +1,20 @@
-<div>
-    Hello world
+<div (click)="printTypes()">
+    Hello world {{ parameter.id }}
+
+</div>
+
+<div *ngIf="type && parameter" [ngSwitch]="parameter.type">
+    <div *ngSwitchCase="type.string">
+        <input mdInput type="text" name="parameter.name" [placeholder]="parameter.name">
+            <md-hint align="end">{{parameter.description}}</md-hint>
+    </div>
+    <div *ngSwitchCase="type.fileGroup">
+    </div>
+    <div *ngSwitchCase="type.dropDown">
+    </div>
+    <div *ngSwitchCase="type.int">
+    </div>
+    <div *ngSwitchDefault>
+    </div>
+
 </div>
