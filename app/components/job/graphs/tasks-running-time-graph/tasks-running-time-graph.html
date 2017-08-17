@@ -1,2 +1,15 @@
-<canvas blChart [datasets]="datasets" [options]="options" [chartType]="type" [colors]="colors" (elClick)="selectTask($event)">
-</canvas>
+<div class="graph-container">
+    <canvas blChart [datasets]="datasets" [options]="options" [chartType]="type" [colors]="colors" (elClick)="selectTask($event)">
+    </canvas>
+</div>
+<div class="graph-options">
+    <div class="sort-by">
+        Sort/group by
+        <md-select class="small" [formControl]="sortControl">
+            <md-option [value]="SortOption.default">Default</md-option>
+            <md-option [value]="SortOption.startTime">Start time</md-option>
+            <md-option [value]="SortOption.endTime">End time</md-option>
+            <md-option [value]="SortOption.node">Node</md-option>
+        </md-select>
+    </div>
+</div>
