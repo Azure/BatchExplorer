@@ -103,7 +103,7 @@ export function fileToTreeNode(file: File): TreeNodeData {
         fileName: standardizeFilePath(file.name),
         hasChildren: file.isDirectory,
         children: [] as TreeNodeData[],
-        state: file.isDirectory ? FileState.EXPANDED_DIRECTORY : FileState.FILE,
+        state: file.isDirectory ? FileState.COLLAPSED_DIRECTORY : FileState.FILE,
     } as TreeNodeData;
 }
 
@@ -113,7 +113,7 @@ function generateDir(dirname): TreeNodeData {
         fileName: dirname,
         hasChildren: true,
         children: [] as TreeNodeData[],
-        state: FileState.EXPANDED_DIRECTORY,
+        state: FileState.COLLAPSED_DIRECTORY,
     } as TreeNodeData;
 }
 

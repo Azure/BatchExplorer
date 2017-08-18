@@ -48,7 +48,6 @@ export class TreeViewDisplayComponent implements OnInit {
      * @param currPath
      */
     public initNodes(currentPath: string, force: boolean = false): Observable<any> {
-        console.log("Init nodes");
         const pathToLoad = currentPath || "";
         let filesObservable = this.loadPath(pathToLoad, force);
         filesObservable.subscribe((files) => {
@@ -60,8 +59,19 @@ export class TreeViewDisplayComponent implements OnInit {
                 this.treeNodes = (files.size > 0) ? nodes : [];
 
                 console.log("tree nodes", this.treeNodes);
+
+                setTimeout(() => {
+                    this.tree.treeModel.doForAll((node) => {
+                        if (node.data.children.length > 1) {
+                            node.data.state = FileState.EXPANDED_DIRECTORY;
+                            return node.expand();
+                        }
+                        // console.log("Node?", node);
+                    });
+                });
             }
         });
+
         return filesObservable;
     }
 
@@ -73,6 +83,11 @@ export class TreeViewDisplayComponent implements OnInit {
     public loadNodes(treeModel: TreeModel, treeNode: TreeNode) {
         const currTreeNode: TreeNodeData = treeNode.data;
         const pathToLoad = currTreeNode.fileName ? `${currTreeNode.fileName}\/` : "";
+        if (currTreeNode.children.length > 0) {
+            currTreeNode.state = FileState.EXPANDED_DIRECTORY;
+            treeNode.expand();
+            return;
+        }
         const filesObs = this.loadPath(pathToLoad, false);
         currTreeNode.state = FileState.LOADING_DIRECTORY;
         filesObs.subscribe((files) => {
@@ -114,12 +129,14 @@ export class TreeViewDisplayComponent implements OnInit {
                 return TREE_ACTIONS.TOGGLE_SELECTED(node.treeModel, node, $event);
             case FileState.COLLAPSED_DIRECTORY:
                 this.loadNodes(node.treeModel, node);
-                return TREE_ACTIONS.TOGGLE_EXPANDED(node.treeModel, node, $event);
+                node.data.state = FileState.EXPANDED_DIRECTORY;
+                return node.expand();
             case FileState.EXPANDED_DIRECTORY:
                 node.data.state = FileState.COLLAPSED_DIRECTORY;
-                return TREE_ACTIONS.TOGGLE_EXPANDED(node.treeModel, node, $event);
+                return node.collapse();
+            default:
+                break;
         }
-        return null;
     }
 
     /**
