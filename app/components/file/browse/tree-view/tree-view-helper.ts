@@ -1,8 +1,10 @@
+import { List } from "immutable";
+import * as path from "path";
+
 import { File } from "app/models";
 import { prettyBytes } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 import { FileState, TreeNodeData } from "./tree-component";
-
 /**
  * Max treenodes number, default to 100 children
  */
@@ -53,15 +55,73 @@ export function standardizeFilePath(filePath: string): string {
 }
 
 /**
- * Helper function that map File to tree node
+ * Helper function that map File to tree nodes
  */
-export function mapFileToTree(file: File): TreeNodeData {
+export function mapFilesToTree(files: List<File>, baseFolder: string = ""): TreeNodeData[] {
+    const directories = {};
+
+    for (let file of files.toArray()) {
+        const node = fileToTreeNode(file);
+
+        const folder = path.dirname(file.name);
+
+        const relativePath = standardizeFilePath(path.relative(baseFolder, folder));
+
+        checkDirInTree(directories, relativePath);
+
+        if (file.isDirectory) {
+            console.log("Directory is being added", file.name, node.name, node.fileName);
+
+            if (!directories[standardizeFilePath(file.name)]) {
+                directories[standardizeFilePath(file.name)] = node;
+                directories[relativePath].children.push(node);
+            }
+        } else {
+            directories[relativePath].children.push(node);
+        }
+
+        console.log("Relative", relativePath, file.name);
+    }
+
+    console.log("Banana", directories);
+    const root = directories[""];
+    return root ? root.children : [];
+}
+
+function checkDirInTree(directories: StringMap<TreeNodeData>, directory: string) {
+    if (directories[directory]) {
+        return;
+    }
+    directories[directory] = generateDir(directory);
+
+    const segments = directory.split("/");
+    const parent = segments.slice(0, -1).join("/");
+    console.log("checking for dire", directory, typeof parent, segments);
+    if (directory !== parent) {
+        checkDirInTree(directories, parent);
+        console.log(`Adding dir ${directory} to ${parent}`);
+        directories[parent].children.push(directories[directory]);
+    }
+    // console.log("Dires", directories);
+}
+
+export function fileToTreeNode(file: File): TreeNodeData {
     return {
         name: getNameFromPath(file),
         fileName: standardizeFilePath(file.name),
         hasChildren: file.isDirectory,
         children: [] as TreeNodeData[],
-        state: file.isDirectory ? FileState.COLLAPSED_DIRECTORY : FileState.FILE,
+        state: file.isDirectory ? FileState.EXPANDED_DIRECTORY : FileState.FILE,
+    } as TreeNodeData;
+}
+
+function generateDir(dirname): TreeNodeData {
+    return {
+        name: path.basename(dirname),
+        fileName: dirname,
+        hasChildren: true,
+        children: [] as TreeNodeData[],
+        state: FileState.EXPANDED_DIRECTORY,
     } as TreeNodeData;
 }
 

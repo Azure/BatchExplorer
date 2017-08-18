@@ -7,45 +7,37 @@ import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
 import { FileState, TreeNodeData, TreeNodeOption } from "./tree-component";
 import "./tree-view-display.scss";
-import { mapFileToTree, sortFileNames } from "./tree-view-helper";
+import { mapFilesToTree, sortFileNames } from "./tree-view-helper";
 
 @Component({
     selector: "bl-tree-view-display",
     templateUrl: "tree-view-display.html",
 })
 export class TreeViewDisplayComponent implements OnInit {
-    @Input()
-    public status: LoadingStatus;
+    @Input() public status: LoadingStatus;
 
-    @Input()
-    public filter: any;
+    @Input() public filter: any;
 
-    @Input()
-    public baseUrl: any[];
+    @Input() public baseUrl: any[];
 
     /**
      * If true then create link to /blobs/filename rather than /files/filename
      */
-    @Input()
-    public isBlob: boolean = false;
+    @Input() public isBlob: boolean = false;
 
-    @Input()
-    public loadPath: (path: string, refresh?: boolean) => Observable<List<File>>;
+    @Input() public loadPath: (path: string, refresh?: boolean) => Observable<List<File>>;
 
-    @Input()
-    public hasMoreMap: StringMap<boolean>;
+    @Input() public hasMoreMap: StringMap<boolean>;
+
+    @Output() public treeNodeClicked = new EventEmitter<string>();
+
+    @ViewChild(TreeComponent) public tree: TreeComponent;
 
     public FileState = FileState;
     public node: TreeNode;
 
-    @ViewChild(TreeComponent)
-    public tree: TreeComponent;
-
     public treeNodes: TreeNodeData[] = [];
     public treeOptions: TreeNodeOption = { actionMapping: { mouse: { expanderClick: null } } };
-
-    @Output()
-    public treeNodeClicked: EventEmitter<string> = new EventEmitter<string>();
 
     public ngOnInit() {
         this.initNodes("");
@@ -56,14 +48,18 @@ export class TreeViewDisplayComponent implements OnInit {
      * @param currPath
      */
     public initNodes(currentPath: string, force: boolean = false): Observable<any> {
+        console.log("Init nodes");
         const pathToLoad = currentPath || "";
         let filesObservable = this.loadPath(pathToLoad, force);
         filesObservable.subscribe((files) => {
             // Only map tree children when this function is first time loaded or 'force' is true
             if (this.treeNodes.length === 0 || force) {
-                let nodes = files.map(mapFileToTree).sort(sortFileNames).toArray();
-                nodes = this._decorateNodesWithMoreOption(nodes, pathToLoad);
+                // let nodes = files.map(mapFileToTree).sort(sortFileNames).toArray();
+                let nodes = mapFilesToTree(files, pathToLoad);
+                // nodes = this._decorateNodesWithMoreOption(nodes, pathToLoad);
                 this.treeNodes = (files.size > 0) ? nodes : [];
+
+                console.log("tree nodes", this.treeNodes);
             }
         });
         return filesObservable;
@@ -75,13 +71,15 @@ export class TreeViewDisplayComponent implements OnInit {
      * @param treeNode tree node instance
      */
     public loadNodes(treeModel: TreeModel, treeNode: TreeNode) {
-        let currTreeNode: TreeNodeData = treeNode.data;
+        const currTreeNode: TreeNodeData = treeNode.data;
         const pathToLoad = currTreeNode.fileName ? `${currTreeNode.fileName}\/` : "";
-        let filesObs = this.loadPath(pathToLoad, false);
+        const filesObs = this.loadPath(pathToLoad, false);
         currTreeNode.state = FileState.LOADING_DIRECTORY;
         filesObs.subscribe((files) => {
             currTreeNode.hasChildren = (files.size > 0);
-            let nodes = files.map(mapFileToTree).sort(sortFileNames).toArray();
+            // files.map(mapFileToTree).sort(sortFileNames).toArray();
+            console.log("Here...");
+            let nodes = mapFilesToTree(files, pathToLoad);
             nodes = this._decorateNodesWithMoreOption(nodes, pathToLoad);
             // Special root level nodes
             if (pathToLoad === "") {

@@ -89,11 +89,13 @@ export class TaskFileListComponent implements OnChanges, OnDestroy {
 
     @autobind()
     public loadPath(path: string, refresh: boolean = false): Observable<List<File>> {
+        const loadAll = !path;
         if (!(path in this._fileProxyMap)) {
-            const options = buildTreeRootFilter(path);
+            const options = loadAll ? null : buildTreeRootFilter(path);
             const jobId = this.jobId;
             const taskId = this.taskId;
-            this._fileProxyMap[path] = this.fileService.listFromTask(jobId, taskId, false, options);
+            console.log("Load all", loadAll, options);
+            this._fileProxyMap[path] = this.fileService.listFromTask(jobId, taskId, loadAll, options);
             this._fileProxyMap[path].hasMore.subscribe((hasMore) => {
                 this.moreFileMap[path] = hasMore;
             });
@@ -108,9 +110,9 @@ export class TaskFileListComponent implements OnChanges, OnDestroy {
                 this.error.next(error);
             });
         }
-        let observable = refresh ?  this._fileProxyMap[path].refresh() : this._fileProxyMap[path].fetchNext();
+        let observable = refresh ? this._fileProxyMap[path].refresh() : this._fileProxyMap[path].fetchNext();
         return observable.flatMap(() => {
-            return this._fileProxyMap[path].items.first();
+            return this._fileProxyMap[path].items.first().do((f) => console.log("F", f.toJS()));
         });
     }
 
@@ -129,8 +131,8 @@ export class TaskFileListComponent implements OnChanges, OnDestroy {
                 next: (node: Node) => {
                     if (validStates.includes(node.state)) {
                         const filterProp = this.filter as Property;
-                        const loadPath = filterProp && filterProp.value;
-                        this.treeDisplay.initNodes(loadPath, true);
+                        // const loadPath = filterProp && filterProp.value;
+                        // this.treeDisplay.initNodes(loadPath, true);
                     } else {
                         this.nodeState = node.state;
                         this.status.next(LoadingStatus.Ready);

@@ -10,7 +10,15 @@ export enum FileState {
 
 export class TreeNodeData {
     public id: number;
+
+    /**
+     * Just the filename TODO change
+     */
     public name: string;
+
+    /**
+     * Full path
+     */
     public fileName: string;
     public hasChildren: boolean;
     public children: TreeNodeData[];
