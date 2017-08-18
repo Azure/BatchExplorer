@@ -29,7 +29,6 @@ export interface AccountParams {
 
 export interface SelectedAccount {
     account: AccountResource;
-    keys: AccountKeys;
 }
 
 @Injectable()
@@ -113,14 +112,11 @@ export class AccountService {
         const accountId = this._currentAccountId.value;
         this._currentAccountValid.next(AccountStatus.Loading);
 
-        const accountObs = this.getOnce(accountId);
-        const keyObs = this.getAccountKeys(accountId);
+        const obs = this.getOnce(accountId);
         DataCacheTracker.clearAllCaches(this._accountCache);
-
-        const obs = Observable.forkJoin(accountObs, keyObs);
         obs.subscribe({
-            next: ([account, keys]) => {
-                this._currentAccount.next({ account, keys });
+            next: (account) => {
+                this._currentAccount.next({ account });
                 if (!this._accountLoaded.value) {
                     this._accountLoaded.next(true);
                 }
