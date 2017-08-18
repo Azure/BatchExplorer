@@ -70,8 +70,6 @@ export function mapFilesToTree(files: List<File>, baseFolder: string = ""): Tree
         checkDirInTree(directories, relativePath);
 
         if (file.isDirectory) {
-            console.log("Directory is being added", file.name, node.name, node.fileName);
-
             if (!directories[standardizeFilePath(file.name)]) {
                 directories[standardizeFilePath(file.name)] = node;
                 directories[relativePath].children.push(node);
@@ -79,11 +77,8 @@ export function mapFilesToTree(files: List<File>, baseFolder: string = ""): Tree
         } else {
             directories[relativePath].children.push(node);
         }
-
-        console.log("Relative", relativePath, file.name);
     }
 
-    console.log("Banana", directories);
     const root = directories[""];
     return root ? root.children : [];
 }
@@ -96,13 +91,10 @@ function checkDirInTree(directories: StringMap<TreeNodeData>, directory: string)
 
     const segments = directory.split("/");
     const parent = segments.slice(0, -1).join("/");
-    console.log("checking for dire", directory, typeof parent, segments);
     if (directory !== parent) {
         checkDirInTree(directories, parent);
-        console.log(`Adding dir ${directory} to ${parent}`);
         directories[parent].children.push(directories[directory]);
     }
-    // console.log("Dires", directories);
 }
 
 export function fileToTreeNode(file: File): TreeNodeData {

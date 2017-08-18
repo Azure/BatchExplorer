@@ -89,13 +89,11 @@ export class TaskFileListComponent implements OnChanges, OnDestroy {
 
     @autobind()
     public loadPath(path: string, refresh: boolean = false): Observable<List<File>> {
-        const loadAll = !path;
         if (!(path in this._fileProxyMap)) {
-            const options = loadAll ? null : buildTreeRootFilter(path);
+            const options = buildTreeRootFilter(path);
             const jobId = this.jobId;
             const taskId = this.taskId;
-            console.log("Load all", loadAll, options);
-            this._fileProxyMap[path] = this.fileService.listFromTask(jobId, taskId, loadAll, options);
+            this._fileProxyMap[path] = this.fileService.listFromTask(jobId, taskId, true, options);
             this._fileProxyMap[path].hasMore.subscribe((hasMore) => {
                 this.moreFileMap[path] = hasMore;
             });
