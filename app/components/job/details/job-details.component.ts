@@ -70,6 +70,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
         this._paramsSubscriber = this.activatedRoute.params.subscribe((params) => {
             this.jobId = params["id"];
             this.data.params = { id: this.jobId };
+            this.jobService.getTaskCounts(this.jobId).subscribe(data => console.log("Task count is", { ...data }));
             this.data.fetch();
         });
     }

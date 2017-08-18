@@ -92,4 +92,10 @@ export class JobService extends ServiceBase {
         });
         return this.patch(job.id, attributes);
     }
+
+    public getTaskCounts(jobId: string): Observable<any> {
+        return this.callBatchClient((client) => client.job.getTaskCounts(jobId), (error) => {
+            log.error(`Error getting job task counts: ${jobId}`, error);
+        });
+    }
 }
