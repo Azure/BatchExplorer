@@ -55,7 +55,7 @@ export function standardizeFilePath(filePath: string): string {
 }
 
 /**
- * Helper function that map File to tree nodes
+ * Helper function that map File to tree nodes. It will build the nested data structure
  */
 export function mapFilesToTree(files: List<File>, baseFolder: string = ""): TreeNodeData[] {
     const directories = {};
@@ -79,6 +79,9 @@ export function mapFilesToTree(files: List<File>, baseFolder: string = ""): Tree
         }
     }
 
+    for (let dir of Object.keys(directories)) {
+        directories[dir].children = sortTreeNodes(directories[dir].children);
+    }
     const root = directories[""];
     return root ? root.children : [];
 }
@@ -98,26 +101,36 @@ function checkDirInTree(directories: StringMap<TreeNodeData>, directory: string)
 }
 
 export function fileToTreeNode(file: File): TreeNodeData {
+    const fullPath = standardizeFilePath(file.name);
     return {
+        id: fullPath,
         name: getNameFromPath(file),
-        fileName: standardizeFilePath(file.name),
+        fileName: fullPath,
         hasChildren: file.isDirectory,
         children: [] as TreeNodeData[],
         state: file.isDirectory ? FileState.COLLAPSED_DIRECTORY : FileState.FILE,
-    } as TreeNodeData;
+    };
 }
 
 function generateDir(dirname): TreeNodeData {
     return {
+        id: dirname,
         name: path.basename(dirname),
         fileName: dirname,
         hasChildren: true,
         children: [] as TreeNodeData[],
         state: FileState.COLLAPSED_DIRECTORY,
-    } as TreeNodeData;
+    };
 }
 
-/** Sort tree node function */
-export function sortFileNames(fileA: TreeNodeData, fileB: TreeNodeData) {
-    return fileA.name.localeCompare(fileB.name);
+function sortTreeNodes(nodes: TreeNodeData[]): TreeNodeData[] {
+    return nodes.sort((a, b) => {
+        if (a.hasChildren === b.hasChildren) {
+            return a.name.localeCompare(b.name);
+        } else if (a.hasChildren) {
+            return -1;
+        } else {
+            return 1;
+        }
+    });
 }

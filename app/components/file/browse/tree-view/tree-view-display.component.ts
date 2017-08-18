@@ -7,7 +7,7 @@ import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
 import { FileState, TreeNodeData, TreeNodeOption } from "./tree-component";
 import "./tree-view-display.scss";
-import { mapFilesToTree, sortFileNames } from "./tree-view-helper";
+import { mapFilesToTree } from "./tree-view-helper";
 
 @Component({
     selector: "bl-tree-view-display",
@@ -58,15 +58,12 @@ export class TreeViewDisplayComponent implements OnInit {
                 // nodes = this._decorateNodesWithMoreOption(nodes, pathToLoad);
                 this.treeNodes = (files.size > 0) ? nodes : [];
 
-                console.log("tree nodes", this.treeNodes);
-
                 setTimeout(() => {
                     this.tree.treeModel.doForAll((node) => {
-                        if (node.data.children.length > 1) {
+                        if (node.data.children.length > 0) {
                             node.data.state = FileState.EXPANDED_DIRECTORY;
                             return node.expand();
                         }
-                        // console.log("Node?", node);
                     });
                 });
             }
@@ -92,8 +89,6 @@ export class TreeViewDisplayComponent implements OnInit {
         currTreeNode.state = FileState.LOADING_DIRECTORY;
         filesObs.subscribe((files) => {
             currTreeNode.hasChildren = (files.size > 0);
-            // files.map(mapFileToTree).sort(sortFileNames).toArray();
-            console.log("Here...");
             let nodes = mapFilesToTree(files, pathToLoad);
             nodes = this._decorateNodesWithMoreOption(nodes, pathToLoad);
             // Special root level nodes

@@ -9,7 +9,7 @@ export enum FileState {
 }
 
 export class TreeNodeData {
-    public id: number;
+    public id: any;
 
     /**
      * Just the filename TODO change
