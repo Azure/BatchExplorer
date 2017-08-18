@@ -163,6 +163,7 @@
     "@angular/platform-browser-dynamic": "4.3.1",
     "@angular/router": "4.3.1",
     "@angular/tsc-wrapped": "4.3.1",
+    "angular-tree-component": "^3.7.3",
     "@types/codemirror": "~0.0.40",
     "@types/extract-zip": "~1.6.2",
     "@types/jasmine": "~2.5.53",
