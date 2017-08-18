@@ -5,9 +5,9 @@ import { Observable } from "rxjs/Observable";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
-import { FileState, TreeNodeData, TreeNodeOption } from "./tree-component";
 import "./tree-view-display.scss";
 import { mapFilesToTree } from "./tree-view-helper";
+import { FileState, TreeNodeData, TreeNodeOption } from "./tree-view.model";
 
 @Component({
     selector: "bl-tree-view-display",

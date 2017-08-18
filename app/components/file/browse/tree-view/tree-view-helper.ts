@@ -4,7 +4,7 @@ import * as path from "path";
 import { File } from "app/models";
 import { prettyBytes } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
-import { FileState, TreeNodeData } from "./tree-component";
+import { FileState, TreeNodeData } from "./tree-view.model";
 /**
  * Max treenodes number, default to 1000 children
  */
