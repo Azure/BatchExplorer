@@ -53,9 +53,8 @@ export class TreeViewDisplayComponent implements OnInit {
         filesObservable.subscribe((files) => {
             // Only map tree children when this function is first time loaded or 'force' is true
             if (this.treeNodes.length === 0 || force) {
-                // let nodes = files.map(mapFileToTree).sort(sortFileNames).toArray();
                 let nodes = mapFilesToTree(files, pathToLoad);
-                // nodes = this._decorateNodesWithMoreOption(nodes, pathToLoad);
+                nodes = this._decorateNodesWithMoreOption(nodes, pathToLoad);
                 this.treeNodes = (files.size > 0) ? nodes : [];
 
                 setTimeout(() => {
@@ -77,14 +76,15 @@ export class TreeViewDisplayComponent implements OnInit {
      * @param treeModel tree instance
      * @param treeNode tree node instance
      */
-    public loadNodes(treeModel: TreeModel, treeNode: TreeNode) {
+    public loadNodes(treeModel: TreeModel, treeNode: TreeNode, force = false) {
         const currTreeNode: TreeNodeData = treeNode.data;
         const pathToLoad = currTreeNode.fileName ? `${currTreeNode.fileName}\/` : "";
-        if (currTreeNode.children.length > 0) {
+        if (!force && currTreeNode.children.length > 0) {
             currTreeNode.state = FileState.EXPANDED_DIRECTORY;
             treeNode.expand();
             return;
         }
+
         const filesObs = this.loadPath(pathToLoad, false);
         currTreeNode.state = FileState.LOADING_DIRECTORY;
         filesObs.subscribe((files) => {
@@ -117,7 +117,7 @@ export class TreeViewDisplayComponent implements OnInit {
         let nodeState: FileState = node.data.state;
         switch (nodeState) {
             case FileState.MORE_BUTTON:
-                this.loadNodes(node.parent.treeModel, node.parent);
+                this.loadNodes(node.parent.treeModel, node.parent, true);
                 break;
             case FileState.FILE:
                 this.treeNodeClicked.emit(node.data.fileName);

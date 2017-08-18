@@ -6,9 +6,9 @@ import { prettyBytes } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 import { FileState, TreeNodeData } from "./tree-component";
 /**
- * Max treenodes number, default to 100 children
+ * Max treenodes number, default to 1000 children
  */
-export const MAX_TREENODES_ITEMS: number = 100;
+export const MAX_TREENODES_ITEMS: number = 1000;
 
 /**
  * Helper function that builds tree options with maxItems and filter
