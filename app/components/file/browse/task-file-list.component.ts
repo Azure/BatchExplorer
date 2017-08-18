@@ -5,7 +5,7 @@ import { File, Node, NodeState, ServerError, Task } from "app/models";
 import { FileService, NodeService, TaskFileListParams, TaskService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Constants } from "app/utils";
-import { Filter, Property } from "app/utils/filter-builder";
+import { Filter } from "app/utils/filter-builder";
 import { autobind } from "core-decorators";
 import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -110,7 +110,7 @@ export class TaskFileListComponent implements OnChanges, OnDestroy {
         }
         let observable = refresh ? this._fileProxyMap[path].refresh() : this._fileProxyMap[path].fetchNext();
         return observable.flatMap(() => {
-            return this._fileProxyMap[path].items.first().do((f) => console.log("F", f.toJS()));
+            return this._fileProxyMap[path].items.first();
         });
     }
 
@@ -127,11 +127,7 @@ export class TaskFileListComponent implements OnChanges, OnDestroy {
             }
             this.nodeService.getOnce(task.nodeInfo.poolId, task.nodeInfo.nodeId, {}).subscribe({
                 next: (node: Node) => {
-                    if (validStates.includes(node.state)) {
-                        const filterProp = this.filter as Property;
-                        // const loadPath = filterProp && filterProp.value;
-                        // this.treeDisplay.initNodes(loadPath, true);
-                    } else {
+                    if (!validStates.includes(node.state)) {
                         this.nodeState = node.state;
                         this.status.next(LoadingStatus.Ready);
                         this.nodeInInvalidState = true;
