@@ -1,0 +1,22 @@
+<bl-focus-section>
+    <tree-root #tree [nodes]="treeNodes" [options]="treeOptions">
+        <ng-template #treeNodeWrapperTemplate let-node let-index="index">
+            <div class="node-wrapper"
+                [class.tree-node-expanded]="node.data.state === FileState.EXPANDED_DIRECTORY"
+                [class.tree-node-collapsed]="node.data.state === FileState.COLLAPSED_DIRECTORY"
+                [class.tree-node-spin]="node.data.state === FileState.LOADING_DIRECTORY"
+                [class.tree-node-file]="node.data.state === FileState.FILE"
+                (click)="onNodeClick(node, $event)">
+                <tree-node-expander [node]="node"></tree-node-expander>
+                <div class="node-content-wrapper">
+                    <tree-node-content [node]="node" [index]="index"></tree-node-content>
+                </div>
+            </div>
+        </ng-template>
+    </tree-root>
+    <bl-no-item [itemCount]="treeNodes.length" [filter]="filter" [status]="status">
+        <i icon class="fa fa-tv"></i>
+        <span no-filter>No files</span>
+        <span with-filter>No files match this filter</span>
+    </bl-no-item>
+</bl-focus-section>
