@@ -5,6 +5,20 @@
     font-size: 14px;
 }
 
+bl-tree-view-display {
+    .node-content-wrapper:hover {
+        box-shadow: none;
+        background: none;
+    }
+
+    .node-wrapper {
+        &:hover {
+            background: $whitesmoke-darker;
+        }
+    }
+
+}
+
 .toggle-children-wrapper {
     padding: 0!important;
 }
