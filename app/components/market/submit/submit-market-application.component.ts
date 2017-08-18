@@ -1,4 +1,4 @@
-import { Component } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { FormBuilder } from "@angular/forms";
 import { FormControl, FormGroup } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
@@ -80,7 +80,7 @@ class NcjParameterWrapper {
     selector: "bl-submit-market-application",
     templateUrl: "submit-market-application.html",
 })
-export class SubmitMarketApplicationComponent {
+export class SubmitMarketApplicationComponent implements OnInit {
     public static breadcrumb() {
         return { name: "Submit" };
     }
@@ -212,6 +212,7 @@ export class SubmitMarketApplicationComponent {
             }
         }
         this.poolParams = new FormGroup(poolFormGroup);
+        console.log("Pool params: ",this.poolParams);
         this.form = this.formBuilder.group({ pool: this.poolParams, job: this.jobParams });
     }
 
