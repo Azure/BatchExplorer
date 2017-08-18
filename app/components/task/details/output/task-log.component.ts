@@ -3,10 +3,10 @@ import { FormControl } from "@angular/forms";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
 import { File, ServerError, Task, TaskState } from "app/models";
-import { FileService } from "app/services";
 import { PollObservable } from "app/services/core";
 import { FileLoader } from "app/services/file";
-import { prettyBytes } from "app/utils";
+import { FileService, fileIgnoredErrors } from "app/services/file-service";
+import { log, prettyBytes } from "app/utils";
 
 const defaultOutputFileNames = ["stdout.txt", "stderr.txt"];
 
@@ -161,11 +161,21 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
             this.fileLoaderMap[filename] = fileLoader;
 
             if (this._shouldGetFileSize(filename)) {
-                fileLoader.getProperties().subscribe((file: File) => {
-                    if (file) {
-                        const props = file.properties;
-                        this.fileSizes[filename] = prettyBytes(props && props.contentLength);
-                    }
+                fileLoader.getProperties().subscribe({
+                    next: (file: File) => {
+                        if (file) {
+                            const props = file.properties;
+                            this.fileSizes[filename] = prettyBytes(props && props.contentLength);
+                        }
+                    },
+                    error: (error) => {
+                        // TODO: Question for Tim ... Puzzled why this is not trapped by fileLoader.getProperties()
+                        // getOnceProxy subscriber error handler? That error handler definately catches and ignores 404
+                        // and 409 errors, but 1 error for each file (stderr and stdout) makes it up to here.
+                        if (error && error.status && !fileIgnoredErrors.includes(error.status)) {
+                            log.error("Unexpected error getting file properties", Object.assign({}, error));
+                        }
+                    },
                 });
             }
         }
