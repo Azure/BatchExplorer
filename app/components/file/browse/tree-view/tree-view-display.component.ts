@@ -76,15 +76,9 @@ export class TreeViewDisplayComponent implements OnInit {
      * @param treeModel tree instance
      * @param treeNode tree node instance
      */
-    public loadNodes(treeModel: TreeModel, treeNode: TreeNode, force = false) {
+    public loadNodes(treeModel: TreeModel, treeNode: TreeNode) {
         const currTreeNode: TreeNodeData = treeNode.data;
         const pathToLoad = currTreeNode.fileName ? `${currTreeNode.fileName}\/` : "";
-        if (!force && currTreeNode.children.length > 0) {
-            currTreeNode.state = FileState.EXPANDED_DIRECTORY;
-            treeNode.expand();
-            return;
-        }
-
         const filesObs = this.loadPath(pathToLoad, false);
         currTreeNode.state = FileState.LOADING_DIRECTORY;
         filesObs.subscribe((files) => {
@@ -105,6 +99,20 @@ export class TreeViewDisplayComponent implements OnInit {
     }
 
     /**
+     * Method to call when user want to expand a directory
+     */
+    public expandDirectory(treeModel: TreeModel, treeNode: TreeNode) {
+        const nodeData = treeNode.data;
+        if (treeNode.data.children.length > 0) {
+            nodeData.state = FileState.EXPANDED_DIRECTORY;
+            treeNode.expand();
+            return;
+        }
+
+        this.loadNodes(treeModel, treeNode);
+    }
+
+    /**
      * onNodeClick event handler when tree node is clicked
      * 1, If current selected node is 'load more(...)' option, then call load path for fetching next nodes
      * 2, If current selected path is a file, then open file in content page
@@ -117,13 +125,13 @@ export class TreeViewDisplayComponent implements OnInit {
         let nodeState: FileState = node.data.state;
         switch (nodeState) {
             case FileState.MORE_BUTTON:
-                this.loadNodes(node.parent.treeModel, node.parent, true);
+                this.loadNodes(node.parent.treeModel, node.parent);
                 break;
             case FileState.FILE:
                 this.treeNodeClicked.emit(node.data.fileName);
                 return TREE_ACTIONS.TOGGLE_SELECTED(node.treeModel, node, $event);
             case FileState.COLLAPSED_DIRECTORY:
-                this.loadNodes(node.treeModel, node);
+                this.expandDirectory(node.treeModel, node);
                 node.data.state = FileState.EXPANDED_DIRECTORY;
                 return node.expand();
             case FileState.EXPANDED_DIRECTORY:
