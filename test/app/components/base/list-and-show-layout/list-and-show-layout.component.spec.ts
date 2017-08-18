@@ -10,8 +10,7 @@ import { BehaviorSubject } from "rxjs";
 import { BreadcrumbService } from "app/components/base/breadcrumbs";
 import { ListAndShowLayoutComponent } from "app/components/base/list-and-show-layout";
 import { RefreshButtonComponent } from "app/components/base/refresh-btn";
-import { ScrollableComponent } from "app/components/base/scrollable";
-import { ScrollableService } from "app/components/base/scrollable";
+import { ScrollableComponent, ScrollableService } from "app/components/base/scrollable";
 import { FilterBuilder } from "app/utils/filter-builder";
 import { click } from "test/utils/helpers";
 

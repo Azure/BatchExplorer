@@ -68,10 +68,10 @@ export class BoolPropertyComponent {
     public value: boolean;
 
     @Input()
-    public YesNo: boolean;
+    public yesNo: boolean;
 
     private get ValueSting() {
-        return this.YesNo
+        return this.yesNo
             ? (this.value ? "Yes" : "No")
             : (this.value ? "Enabled" : "Disabled");
     }

@@ -16,11 +16,9 @@ export class ResizeError extends Record<ResizeErrorAttributes> {
     @ListProp(Object) public values: List<NameValuePair> = List([]);
 }
 
-export type ResizeErrorCode = "AccountCoreQuotaReached" | "ResizeStopped"
-    | "AllocationFailed" | "AccountLowPriorityCoreQuotaReached";
-export const ResizeErrorCode = {
-    accountCoreQuotaReached: "AccountCoreQuotaReached" as ResizeErrorCode,
-    accountLowPriorityCoreQuotaReached: "AccountLowPriorityCoreQuotaReached" as ResizeErrorCode,
-    resizeStopped: "ResizeStopped" as ResizeErrorCode,
-    allocationFailed: "AllocationFailed" as ResizeErrorCode,
-};
+export enum ResizeErrorCode {
+    accountCoreQuotaReached = "AccountCoreQuotaReached",
+    accountLowPriorityCoreQuotaReached = "AccountLowPriorityCoreQuotaReached",
+    resizeStopped = "ResizeStopped",
+    allocationFailed = "AllocationFailed",
+}

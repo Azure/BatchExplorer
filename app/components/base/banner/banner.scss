@@ -79,8 +79,9 @@ bl-banner > md-card {
         }
 
         > .caret {
-            width: 20px;
-            font-size: 16px;
+            width: 32px;
+            text-align: center;
+            font-size: 24px;
         }
     }
 
@@ -112,10 +113,10 @@ bl-banner > md-card {
                 }
             }
         }
+    }
 
-        > .details-container {
-            border-top: 1px solid $accent;
-        }
+    > .details-container {
+        border-top: 1px solid $accent;
     }
 
     .other-fixes {

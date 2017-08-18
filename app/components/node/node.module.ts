@@ -4,8 +4,9 @@ import { commonModules } from "app/common";
 import { FileBrowseModule } from "app/components/file/browse";
 import { NodeBrowseModule } from "app/components/node/browse";
 import { NodeConnectModule } from "app/components/node/connect";
-import { NodeConfigurationComponent, NodeDefaultComponent, NodeDetailsComponent } from "app/components/node/details";
-import { StartTaskErrorDisplayComponent } from "app/components/node/details";
+import {
+    NodeConfigurationComponent, NodeDefaultComponent, NodeDetailsComponent, StartTaskErrorDisplayComponent,
+} from "app/components/node/details";
 import { NodeHomeComponent } from "app/components/node/home";
 
 const components = [

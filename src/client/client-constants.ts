@@ -26,6 +26,7 @@ const urls = {
 
 const isAsar = process.mainModule.filename.indexOf("app.asar") !== -1;
 
+// tslint:disable-next-line:variable-name
 export const Constants = {
     isAsar,
     root,

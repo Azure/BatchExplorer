@@ -1,16 +1,17 @@
-import { Record } from "immutable";
+import { Model, Prop, Record } from "app/core";
 
-const NodeAgentSkuRecord = Record({
-    id: null,
-    verifiedImageReferences: null,
-    osType: null,
-});
+export interface NodeAgentSkuAttributes {
+    id: string;
+    verifiedImageReferences: any[];
+    osType: string;
+}
 
 /**
  * Class for displaying Batch Node Agent SKU information.
  */
-export class NodeAgentSku extends NodeAgentSkuRecord {
-    public id: string;
-    public verifiedImageReferences: any[];
-    public osType: string;
+@Model()
+export class NodeAgentSku extends Record<NodeAgentSkuAttributes> {
+    @Prop() public id: string;
+    @Prop() public verifiedImageReferences: any[];
+    @Prop() public osType: string;
 }

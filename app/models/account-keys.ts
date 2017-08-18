@@ -1,13 +1,14 @@
-import { Record } from "immutable";
+import { Model, Prop, Record } from "app/core";
 
-const AccountKeysRecord = Record({
-    accountName: null,
-    primary: null,
-    secondary: null,
-});
+export interface AccountKeysAttributes {
+    accountName: string;
+    primary: string;
+    secondary: string;
+}
 
-export class AccountKeys extends AccountKeysRecord {
-    public accountName: string;
-    public primary: string;
-    public secondary: string;
+@Model()
+export class AccountKeys extends Record<AccountKeysAttributes> {
+    @Prop() public accountName: string;
+    @Prop() public primary: string;
+    @Prop() public secondary: string;
 }

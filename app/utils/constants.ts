@@ -1,3 +1,5 @@
+// tslint:disable:variable-name
+
 export const caching = {
     /**
      * Max number of filtered query that it should remember.
