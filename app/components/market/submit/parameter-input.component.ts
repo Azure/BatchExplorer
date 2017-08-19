@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { NcjJobTemplate, NcjParameter, NcjPoolTemplate } from "app/models";
+import { NcjParameter } from "app/models";
+import { Subscription } from "rxjs";
 import "./parameter-input.scss";
 
 // tslint:disable:no-forward-ref
@@ -14,31 +15,39 @@ import "./parameter-input.scss";
 })
 export class ParameterInputComponent implements ControlValueAccessor, OnInit, OnDestroy {
 
-    @Input()
-    public parameter: NcjParameter;
+    @Input() public parameter: NcjParameter;
 
-    @Input()
-    public type;
+    @Input() public type;
 
+    @Input() public parameterValues: StringMap<any>;
+
+    public parameterValue = new FormControl();
     private _propagateChange: (value: any) => void = null;
+    private _subs: Subscription[] = [];
 
     constructor() {
-        console.log("Contructor:", this.parameter, this.type);
+        this._subs.push(this.parameterValue.valueChanges.debounceTime(100).distinctUntilChanged()
+            .subscribe((query: string) => {
+                if (this._propagateChange) {
+                    this._propagateChange(query);
+                }
+            }),
+        );
     }
 
-    public printTypes(){
-        // do nothing
+    public getContainerFromFileGroup(fileGroup: string) {
+        return fileGroup && `fgrp-${fileGroup}`;
     }
 
     public ngOnInit(): void {
-        // do nothing yet
+        this.parameterValue.setValue(this.parameter.defaultValue);
     }
 
     public ngOnDestroy(): void {
-        // do nothing
+        this._subs.forEach(x => x.unsubscribe());
     }
-    public writeValue(poolInfo: any) {
-        console.log("Write value: ", poolInfo);
+    public writeValue(value: any) {
+        this.parameterValue.setValue(value);
     }
 
     public validate() {
@@ -47,11 +56,9 @@ export class ParameterInputComponent implements ControlValueAccessor, OnInit, On
 
     public registerOnChange(fn: any): void {
         this._propagateChange = fn;
-        console.log("RegisterOnChange: ", this._propagateChange);
-
     }
+
     public registerOnTouched(fn: any): void {
-        // do nothing
+        this.parameterValue.markAsTouched();
     }
-
 }

@@ -30,14 +30,21 @@ class NcjParameterWrapper {
     public dependsOn: string;
     public name: string;
     public description: string;
+    public defaultValue: any;
     public allowedValues: string[];
     constructor(public id: string, private _param: NcjParameter) {
         this._computeName();
+        this._computeDefaultValue();
         this._computeDescription();
         this._computeType();
     }
     private _computeName() {
         this.name = inflection.humanize(inflection.underscore(this.id));
+    }
+    private _computeDefaultValue() {
+        if (this._param.defaultValue) {
+            this.defaultValue = this._param.defaultValue;
+        }
     }
     private _computeDescription() {
         if (this._param.metadata && this._param.metadata.description) {
@@ -119,20 +126,12 @@ export class SubmitMarketApplicationComponent implements OnInit {
                 this.jobTemplate = templates.job;
                 this.poolTemplate = templates.pool;
                 this._parseParameters();
-                console.log(this.jobParametersWrapper);
-                console.log(this.poolParametersWrapper);
-                console.log(this.jobTemplate);
-                console.log(this.poolTemplate);
                 this._createForms();
             });
             this.templateService.getApplication(this.applicationId).subscribe((application) => {
                 this.icon = application.icon;
             });
         });
-    }
-
-    public getContainerFromFileGroup(fileGroup: string) {
-        return fileGroup && `fgrp-${fileGroup}`;
     }
 
     @autobind()
@@ -160,9 +159,11 @@ export class SubmitMarketApplicationComponent implements OnInit {
                 return obs;
             }
         }
-        obs.subscribe({
-            error: (err) => this.error = ServerError.fromPython(err),
-        });
+        if (obs) {
+            obs.subscribe({
+                error: (err) => this.error = ServerError.fromPython(err),
+            });
+        }
         return obs;
     }
 
@@ -212,33 +213,19 @@ export class SubmitMarketApplicationComponent implements OnInit {
             }
         }
         this.poolParams = new FormGroup(poolFormGroup);
-        console.log("Pool params: ",this.poolParams);
         this.form = this.formBuilder.group({ pool: this.poolParams, job: this.jobParams });
     }
 
     private _runJobWithPool(expandedPoolTemplate) {
-        const jobName: string = this.jobParams.value.jobName;
         delete expandedPoolTemplate.id;
-
-        if (jobName) {
-            this.jobTemplate.job.properties.poolInfo = {
-                autoPoolSpecification: {
-                    autoPoolIdPrefix: jobName,
-                    poolLifetimeOption: "job",
-                    keepAlive: false,
-                },
+        this.jobTemplate.job.properties.poolInfo = {
+            autoPoolSpecification: {
+                autoPoolIdPrefix: "autopool",
+                poolLifetimeOption: "job",
+                keepAlive: false,
                 pool: expandedPoolTemplate,
-            };
-        } else {
-            this.jobTemplate.job.properties.poolInfo = {
-                autoPoolSpecification: {
-                    autoPoolIdPrefix: "",
-                    poolLifetimeOption: "job",
-                    keepAlive: false,
-                },
-                pool: expandedPoolTemplate,
-            };
-        }
+            },
+        };
         return this.pythonRpcService.callWithAuth("submit-ncj-job", [this.jobTemplate, this.jobParams.value])
             .cascade((data) => this._redirectToJob(data.properties.id));
     }

@@ -1,20 +1,35 @@
-<div (click)="printTypes()">
-    Hello world {{ parameter.id }}
-
-</div>
-
-<div *ngIf="type && parameter" [ngSwitch]="parameter.type">
+<div [ngSwitch]="parameter.type">
     <div *ngSwitchCase="type.string">
-        <input mdInput type="text" name="parameter.name" [placeholder]="parameter.name">
-            <md-hint align="end">{{parameter.description}}</md-hint>
+        <md-input-container class="form-element">
+            <input mdInput type="text" name="parameter.name" [formControl]="parameterValue" [placeholder]="parameter.name">
+            <md-hint align="end"> {{ parameter.description }} </md-hint>
+        </md-input-container>
     </div>
     <div *ngSwitchCase="type.fileGroup">
+        <bl-file-group-picker [formControl]="parameterValue" [label]="parameter.name" class="form-element" [hint]="parameter.description">
+        </bl-file-group-picker>
+    </div>
+    <div *ngSwitchCase="type.fileInFileGroup">
+        <bl-cloud-file-picker [containerId]="getContainerFromFileGroup(parameterValues[parameter.dependsOn])" [formControl]="parameterValue"
+        [label]="parameter.name" class="form-element" [hint]="parameter.description">
+        </bl-cloud-file-picker>
     </div>
     <div *ngSwitchCase="type.dropDown">
+        <md-select [formControl]="parameterValue" [placeholder]="parameter.name">
+            <md-hint align="end"> {{ parameter.description }} </md-hint>
+            <md-option *ngFor="let opt of parameter.allowedValues" [value]="opt"> {{ opt }} </md-option>
+        </md-select>
     </div>
     <div *ngSwitchCase="type.int">
+        <md-input-container class="form-element">
+            <input mdInput type="number" name="parameter.name" [formControl]="parameterValue" [placeholder]="parameter.name">
+            <md-hint align="end"> {{ parameter.description }} </md-hint>
+        </md-input-container>
     </div>
     <div *ngSwitchDefault>
+        <md-input-container class="form-element">
+            <input mdInput type="text" name="parameter.name" [formControl]="parameterValue" [placeholder]="parameter.name">
+            <md-hint align="end"> {{ parameter.description }} </md-hint>
+        </md-input-container>
     </div>
-
 </div>
