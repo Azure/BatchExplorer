@@ -5,8 +5,8 @@ import { BehaviorSubject, Observable, Subscription } from "rxjs";
 import { File, ServerError, Task, TaskState } from "app/models";
 import { PollObservable } from "app/services/core";
 import { FileLoader } from "app/services/file";
-import { FileService, fileIgnoredErrors } from "app/services/file-service";
-import { log, prettyBytes } from "app/utils";
+import { FileService } from "app/services/file-service";
+import { prettyBytes } from "app/utils";
 
 const defaultOutputFileNames = ["stdout.txt", "stderr.txt"];
 
@@ -168,14 +168,8 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
                             this.fileSizes[filename] = prettyBytes(props && props.contentLength);
                         }
                     },
-                    error: (error) => {
-                        // TODO: Question for Tim ... Puzzled why this is not trapped by fileLoader.getProperties()
-                        // getOnceProxy subscriber error handler? That error handler definately catches and ignores 404
-                        // and 409 errors, but 1 error for each file (stderr and stdout) makes it up to here.
-                        if (error && error.status && !fileIgnoredErrors.includes(error.status)) {
-                            log.error("Unexpected error getting file properties", Object.assign({}, error));
-                        }
-                    },
+                    // unexpected are logged in fileLoader.getProperties()
+                    error: (error) => null,
                 });
             }
         }
