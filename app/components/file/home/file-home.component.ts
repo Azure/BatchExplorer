@@ -11,15 +11,8 @@ import { SidebarManager } from "../../base/sidebar";
 })
 export class FileHomeComponent implements OnInit, OnDestroy {
     public url: string;
-
-    public isPool: boolean;
-    public isJob: boolean;
     public isBlob: boolean;
 
-    public poolId: string;
-    public nodeId: string;
-    public jobId: string;
-    public taskId: string;
     public outputKind: string;
     public filename: string;
     public container: string;
@@ -35,16 +28,10 @@ export class FileHomeComponent implements OnInit, OnDestroy {
     public ngOnInit() {
         this._dataSub = this.activatedRoute.data.subscribe((data) => {
             const type = data["type"];
-            this.isJob = type === Constants.FileSourceTypes.Job;
-            this.isPool = type === Constants.FileSourceTypes.Pool;
             this.isBlob = type === Constants.FileSourceTypes.Blob;
         });
 
         this._paramsSubscriber = this.activatedRoute.params.subscribe((params) => {
-            this.jobId = params["jobId"];
-            this.taskId = params["taskId"];
-            this.poolId = params["poolId"];
-            this.nodeId = params["nodeId"];
             this.outputKind = params["outputKind"];
             this.filename = params["filename"];
             this.container = params["container"];
