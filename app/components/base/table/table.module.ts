@@ -1,4 +1,5 @@
 import { ModuleWithProviders, NgModule } from "@angular/core";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
@@ -25,6 +26,8 @@ const components = [
         BrowserModule,
         RouterModule,
         FocusSectionModule,
+        FormsModule,
+        ReactiveFormsModule,
         MaterialModule,
     ],
     exports: components,

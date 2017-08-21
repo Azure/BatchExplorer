@@ -1,8 +1,9 @@
 <ng-template>
     <tr (click)="handleClick($event)" (contextmenu)="openContextMenu($event)" [class.selected]="active || selected" [class.focused]="isFocused | async">
-        <td class="select-column">
-            <md-checkbox color="primary" [value]="selected" (click)="toggleSelected($event)"></md-checkbox>
+        <td class="select-column" (click)="toggleSelected($event)">
+            <md-checkbox color="primary" [ngModel]="selected"></md-checkbox>
         </td>
+        {{selected}}
         <ng-content></ng-content>
     </tr>
 </ng-template>
