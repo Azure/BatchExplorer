@@ -2,6 +2,8 @@ import { Component, Input, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { NcjParameter } from "app/models";
 import { Subscription } from "rxjs";
+
+import { NcjParameterExtendedType } from "./market-application.model";
 import "./parameter-input.scss";
 
 // tslint:disable:no-forward-ref
@@ -14,9 +16,9 @@ import "./parameter-input.scss";
     ],
 })
 export class ParameterInputComponent implements ControlValueAccessor, OnInit, OnDestroy {
+    public NcjParameterExtendedType = NcjParameterExtendedType;
 
     @Input() public parameter: NcjParameter;
-    @Input() public type;
     @Input() public parameterValues: StringMap<any>;
     public parameterValue = new FormControl();
     private _propagateChange: (value: any) => void = null;
