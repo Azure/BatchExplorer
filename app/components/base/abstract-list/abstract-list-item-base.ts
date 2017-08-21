@@ -125,7 +125,9 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
     }
 
     public toggleSelected(event: Event) {
-        event.stopPropagation();
+        if (event) {
+            event.stopPropagation();
+        }
         this.selected = !this.selected;
         this.list.onSelectedChange(this.key, this.selected);
     }
