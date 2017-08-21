@@ -19,7 +19,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
     }
     public Modes = Modes;
 
-    public modeState: = Modes.None;
+    public modeState = Modes.None;
     public title: string;
     public form: FormGroup;
     public jobTemplate: NcjJobTemplate;
