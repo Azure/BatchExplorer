@@ -271,7 +271,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
 
     @autobind()
     public onBlur(event) {
-        console.log("Blured");
+        console.log("Blured", document.activeElement);
 
         this.listFocused = false;
         this.focusedItem.next(null);

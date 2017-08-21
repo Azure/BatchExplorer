@@ -4,7 +4,7 @@
         <tr *ngFor="let item of displayItems, trackBy: trackByFn" (click)="item.handleClick($event)" (contextmenu)="item.openContextMenu($event)"
             [class.selected]="item.selected" [class.focused]="item.key === (focusedItem | async)">
 
-            <td class="select-column" (click)="item.handleClick(null, false)" *ngIf="config.showCheckbox">
+            <td class="checkbox-column" (click)="item.handleClick($event, false)" *ngIf="config.showCheckbox">
                 <md-checkbox color="primary" (click)="$event.stopPropagation()" (change)="item.handleClick(null, false)" [checked]="item.selected"></md-checkbox>
             </td>
             <td *ngFor="let cell of item.cells; trackBy: cellTrackByFn">
