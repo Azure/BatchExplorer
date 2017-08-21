@@ -72,6 +72,9 @@ export class SubmitMarketApplicationComponent implements OnInit {
             case Modes.NewPoolAndJob: {
                 obs = this.pythonRpcService.callWithAuth("expand-ncj-pool", [this.poolTemplate, this.poolParams.value])
                     .cascade((data) => this._runJobWithPool(data));
+                console.log(this.jobParametersWrapper);
+                console.log(this.jobParams.value);
+                console.log(this.jobTemplate);
                 break;
             }
             case Modes.OldPoolAndJob: {

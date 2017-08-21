@@ -1,4 +1,4 @@
-enum NcjParameterRawType {
+export enum NcjParameterRawType {
     string = "string",
     int = "int",
 }
