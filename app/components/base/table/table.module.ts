@@ -7,11 +7,9 @@ import { RouterModule } from "@angular/router";
 import { FocusSectionModule } from "../focus-section";
 import { TableCellComponent } from "./table-cell.component";
 import { TableColumnComponent } from "./table-column.component";
+import { TableHeadComponent } from "./table-head.component";
 import { TableRowComponent } from "./table-row.component";
-import {
-    TableComponent,
-    TableHeadComponent,
-} from "./table.component";
+import { TableComponent } from "./table.component";
 
 const components = [
     TableCellComponent,

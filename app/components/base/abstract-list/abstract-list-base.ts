@@ -13,6 +13,19 @@ export interface ActivatedItemChangeEvent {
     initialValue?: boolean;
 }
 
+export interface AbstractListBaseConfig {
+    /**
+     * If it should allow the user to activate an item(And the routerlink if applicable)
+     * @default true
+     */
+    activable?: boolean;
+
+}
+
+export const abstractListDefaultConfig: AbstractListBaseConfig = {
+    activable: true,
+};
+
 /**
  * Base class for a list component. Used by quicklist and table
  *
@@ -28,6 +41,11 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      * List of items to display(Which might be different from the full items list because of sorting and other)
      */
     public displayItems: AbstractListItemBase[] = [];
+
+    @Input() public set config(config: AbstractListBaseConfig) {
+        this._config = { ...abstractListDefaultConfig, ...config };
+    }
+    public get config() { return this._config; }
 
     @Input()
     public set activeItem(key) {
@@ -76,6 +94,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      */
     private _activeItemInput = null;
     private _subs: Subscription[] = [];
+    protected _config: AbstractListBaseConfig;
 
     constructor(
         private router: Router,
