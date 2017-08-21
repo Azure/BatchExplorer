@@ -80,29 +80,35 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
         }
     }
 
-    public handleClick(event: MouseEvent) {
-        const shiftKey = event.shiftKey;
-        const ctrlKey = event.ctrlKey || event.metaKey;
+    public handleClick(event: MouseEvent, activate = true) {
+        this.list.setFocusedItem(this.key);
+        if (event) {
+            const shiftKey = event.shiftKey;
+            const ctrlKey = event.ctrlKey || event.metaKey;
+            // Prevent the routerlink from being activated if we have shift or ctrl
+            if (shiftKey || ctrlKey) {
+                const focusedItem = this.list.focusedItem.value;
+                if (!focusedItem) {
+                    return;
+                }
 
-        // Prevent the routerlink from being activated if we have shift or ctrl
-        if (shiftKey || ctrlKey) {
-            const activeItem = this._activeItemKey;
-            if (!activeItem) {
-                return;
+                if (shiftKey) {
+                    this.list.selectTo(this.key);
+                } else if (ctrlKey) {
+                    this.selected = !this.selected;
+                    this.list.onSelectedChange(this.key, this.selected);
+                }
+                event.stopPropagation();
+                event.stopImmediatePropagation();
+                return false;
             }
+        }
 
-            if (shiftKey) {
-                this.list.selectTo(this.key);
-            } else if (ctrlKey) {
-                this.selected = !this.selected;
-                this.list.onSelectedChange(this.key, this.selected);
-            }
-            event.stopPropagation();
-            event.stopImmediatePropagation();
-            return false;
-        } else {
+        if (activate) {
             // Means the user actually selected the item
             this.activateItem(true);
+        } else {
+            this.list.toggleSelected(this.key, event);
         }
     }
 
@@ -122,6 +128,7 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
             this.contextmenuService.openMenu(menu);
         }
     }
+
     /**
      * Just trigger the router the item will not be marked as active
      */

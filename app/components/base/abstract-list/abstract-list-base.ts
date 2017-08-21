@@ -173,6 +173,11 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         return event && event.key;
     }
 
+    /**
+     * Toggle selection of given
+     * @param key Key of the item to toggle
+     * @param event Optional event to prevent propagation
+     */
     public toggleSelected(key: string, event?: Event) {
         if (event) {
             event.stopPropagation();
@@ -256,15 +261,24 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
 
     @autobind()
     public onFocus(event: FocusEvent) {
+        console.log("Focuesed");
         this.listFocused = true;
-        const active = this._activeItemKey.getValue();
-        this.focusedItem.next(active && active.key);
+        const active = this._activeItemKey.value;
+        if (!this.focusedItem.value) {
+            this.focusedItem.next(active && active.key);
+        }
     }
 
     @autobind()
     public onBlur(event) {
+        console.log("Blured");
+
         this.listFocused = false;
         this.focusedItem.next(null);
+    }
+
+    public setFocusedItem(key: string) {
+        this.focusedItem.next(key);
     }
 
     @autobind()
@@ -300,6 +314,10 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         this.focusedItem.next(newItem.key);
     }
 
+    public trackByFn(index, item) {
+        return item.key;
+    }
+
     /**
      * Implement this to apply some sorting or other logic
      */
@@ -309,6 +327,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         const item = this.getActiveItemFromRouter();
         if (item) {
             this.setActiveItem(item.key, true);
+            this._updateSelectedItems();
         }
     }
 
@@ -337,6 +356,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         } else {
             this.displayItems = this.items.toArray();
         }
+        this._updateSelectedItems();
     }
 
     /**

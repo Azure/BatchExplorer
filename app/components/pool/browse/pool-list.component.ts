@@ -142,4 +142,8 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
             new ContextMenuItem({ label: "Resize", click: () => this.resizePool(pool) }),
         ]);
     }
+
+    public trackById(index, pool) {
+        return pool.id;
+    }
 }

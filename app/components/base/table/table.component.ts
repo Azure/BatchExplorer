@@ -6,6 +6,7 @@ import { Router } from "@angular/router";
 import { FocusSectionComponent } from "app/components/base/focus-section";
 import { log } from "app/utils";
 import { AbstractListBase, AbstractListBaseConfig, abstractListDefaultConfig } from "../abstract-list";
+import { TableCellComponent } from "./table-cell.component";
 import { SortDirection, TableColumnComponent } from "./table-column.component";
 import { TableHeadComponent } from "./table-head.component";
 import { TableRowComponent } from "./table-row.component";
@@ -53,6 +54,10 @@ export class TableComponent extends AbstractListBase {
         column.isSorting = true;
         this._sortingColumn = column;
         this.displayItems = this.updateDisplayedItems();
+    }
+
+    public cellTrackByFn(index, cell: TableCellComponent) {
+        return index;
     }
 
     protected updateDisplayedItems() {
