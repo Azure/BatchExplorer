@@ -16,11 +16,8 @@ import "./parameter-input.scss";
 export class ParameterInputComponent implements ControlValueAccessor, OnInit, OnDestroy {
 
     @Input() public parameter: NcjParameter;
-
     @Input() public type;
-
     @Input() public parameterValues: StringMap<any>;
-
     public parameterValue = new FormControl();
     private _propagateChange: (value: any) => void = null;
     private _subs: Subscription[] = [];

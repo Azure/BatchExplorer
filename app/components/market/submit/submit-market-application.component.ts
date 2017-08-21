@@ -32,30 +32,36 @@ class NcjParameterWrapper {
     public description: string;
     public defaultValue: any;
     public allowedValues: string[];
+
     constructor(public id: string, private _param: NcjParameter) {
         this._computeName();
         this._computeDefaultValue();
         this._computeDescription();
         this._computeType();
     }
+
     private _computeName() {
         this.name = inflection.humanize(inflection.underscore(this.id));
     }
+
     private _computeDefaultValue() {
         if (this._param.defaultValue) {
             this.defaultValue = this._param.defaultValue;
         }
     }
+
     private _computeDescription() {
         if (this._param.metadata && this._param.metadata.description) {
             this.description = this._param.metadata.description;
         }
     }
+
     private _computeDependsOn() {
         if (this._param.metadata && this._param.metadata.dependsOn) {
             this.dependsOn = this._param.metadata.dependsOn;
         }
     }
+
     private _computeAllowedValues() {
         const param = this._param;
         if (param.allowedValues) {
@@ -64,6 +70,7 @@ class NcjParameterWrapper {
             this.allowedValues = [];
         }
     }
+
     private _computeType() {
         this._computeDependsOn();
         this._computeAllowedValues();
