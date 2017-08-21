@@ -256,12 +256,11 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
                 }
             }
         });
-        this.selectedItemsChange.emit(this.selectedItems);
+        this._updateSelectedItems();
     }
 
     @autobind()
     public onFocus(event: FocusEvent) {
-        console.log("Focuesed");
         this.listFocused = true;
         const active = this._activeItemKey.value;
         if (!this.focusedItem.value) {
@@ -271,8 +270,6 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
 
     @autobind()
     public onBlur(event) {
-        console.log("Blured", document.activeElement);
-
         this.listFocused = false;
         this.focusedItem.next(null);
     }
@@ -363,8 +360,13 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      * Update the items to mark which ones are selected
      */
     private _updateSelectedItems() {
+        let i = 0;
         this.displayItems.forEach((item) => {
+            if (this._selectedItems[item.key]) {
+                i++;
+            }
             item.selected = Boolean(this._selectedItems[item.key]);
         });
+        this.selectedItemsChange.emit(this.selectedItems);
     }
 }
