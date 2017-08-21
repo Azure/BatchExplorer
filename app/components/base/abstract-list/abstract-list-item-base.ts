@@ -124,7 +124,7 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
         this._triggerRouter();
     }
 
-    public toggleSelected(event: Event) {
+    public toggleSelected(event?: Event) {
         if (event) {
             event.stopPropagation();
         }
