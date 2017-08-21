@@ -50,7 +50,6 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
     private _routerLink: any = null;
     private _activeItemKey: string = null;
     private _activeSub: Subscription;
-    private _selectedSub: Subscription;
     /**
      * Need to inject list
      * e.g.  @Inject(forwardRef(() => QuickListComponent)) list: QuickListComponent
@@ -65,10 +64,6 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
         this._activeSub = list.activatedItemChange.subscribe((event) => {
             this._activeItemKey = event && event.key;
         });
-
-        this._selectedSub = list.selectedItemsChange.subscribe(() => {
-            this.selected = this.list.isSelected(this.key);
-        });
     }
 
     public ngOnInit() {
@@ -82,9 +77,6 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
         this.list = null;
         if (this._activeSub) {
             this._activeSub.unsubscribe();
-        }
-        if (this._selectedSub) {
-            this._selectedSub.unsubscribe();
         }
     }
 
@@ -122,14 +114,6 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
     public activateItem(andFocus = false) {
         this.list.setActiveItem(this.key);
         this._triggerRouter();
-    }
-
-    public toggleSelected(event?: Event) {
-        if (event) {
-            event.stopPropagation();
-        }
-        this.selected = !this.selected;
-        this.list.onSelectedChange(this.key, this.selected);
     }
 
     public openContextMenu() {

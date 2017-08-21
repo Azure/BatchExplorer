@@ -83,6 +83,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     public listFocused: boolean = false;
     public focusedItem = new BehaviorSubject<string>(null);
 
+    protected _config: AbstractListBaseConfig;
     /**
      * Map of the selected items. Used for better performance to check if an item is selected.
      */
@@ -94,7 +95,6 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      */
     private _activeItemInput = null;
     private _subs: Subscription[] = [];
-    protected _config: AbstractListBaseConfig;
 
     constructor(
         private router: Router,
@@ -173,6 +173,13 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         return event && event.key;
     }
 
+    public toggleSelected(key: string, event?: Event) {
+        if (event) {
+            event.stopPropagation();
+        }
+        this.onSelectedChange(key, !this._selectedItems[key]);
+    }
+
     /**
      * Toggle selection on the given item.
      * If there is one item selected it will also select the active item.
@@ -186,7 +193,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         } else {
             delete this._selectedItems[key];
         }
-        this.selectedItemsChange.emit(this.selectedItems);
+        this._updateSelectedItems();
     }
 
     /**
@@ -198,7 +205,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
             this._selectedItems[this._activeItemKey.value.key] = true;
         }
 
-        this.selectedItemsChange.emit(this.selectedItems);
+        this._updateSelectedItems();
     }
 
     /**
@@ -330,5 +337,14 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         } else {
             this.displayItems = this.items.toArray();
         }
+    }
+
+    /**
+     * Update the items to mark which ones are selected
+     */
+    private _updateSelectedItems() {
+        this.displayItems.forEach((item) => {
+            item.selected = Boolean(this._selectedItems[item.key]);
+        });
     }
 }

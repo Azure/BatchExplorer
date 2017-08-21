@@ -29,11 +29,11 @@ export class TableRowComponent extends AbstractListItemBase implements AfterView
 
     // tslint:disable:no-forward-ref
     constructor(
-        @Inject(forwardRef(() => TableComponent)) list: TableComponent,
+        @Inject(forwardRef(() => TableComponent)) public table: TableComponent,
         router: Router,
         contextmenuService: ContextMenuService,
         breadcrumbService: BreadcrumbService) {
-        super(list, router, contextmenuService, breadcrumbService);
+        super(table, router, contextmenuService, breadcrumbService);
     }
 
     public ngAfterViewInit() {

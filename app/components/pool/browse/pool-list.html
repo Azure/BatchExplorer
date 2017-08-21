@@ -15,7 +15,7 @@
     </bl-quick-list-item>
 </bl-quick-list>
 
-<bl-table *ngIf="!quickList">
+<bl-table *ngIf="!quickList" [config]="tableConfig">
     <bl-thead>
         <bl-column>Id</bl-column>
         <bl-column>State</bl-column>

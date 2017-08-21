@@ -31,11 +31,12 @@ export class TableComponent extends AbstractListBase {
     @Input() public set config(config: TableConfig) {
         this._config = { ...tableDefaultConfig, ...config };
     }
+    public get config() { return this._config; }
 
     @ContentChild(TableHeadComponent) public head: TableHeadComponent;
     @ContentChildren(TableRowComponent) public items: QueryList<TableRowComponent>;
 
-    protected _config: TableConfig;
+    protected _config: TableConfig = tableDefaultConfig;
     private _sortingColumn: TableColumnComponent;
 
     /**

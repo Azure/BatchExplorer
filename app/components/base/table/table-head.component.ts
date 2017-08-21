@@ -1,12 +1,13 @@
 import {
-    AfterViewInit, Component, ContentChildren, QueryList,
+    AfterViewInit, Component, ContentChildren, Inject, QueryList, forwardRef,
 } from "@angular/core";
 
 import { TableColumnComponent } from "./table-column.component";
+import { TableComponent } from "./table.component";
 
 @Component({
     selector: "bl-thead",
-    template: `<tr><th style="width: 30px"></th><ng-content></ng-content></tr>`,
+    templateUrl: "table-head.html",
 })
 export class TableHeadComponent implements AfterViewInit {
     @ContentChildren(TableColumnComponent)
@@ -14,6 +15,8 @@ export class TableHeadComponent implements AfterViewInit {
 
     private _columnIndexMap: StringMap<number>;
 
+    // tslint:disable-next-line:no-forward-ref
+    constructor( @Inject(forwardRef(() => TableComponent)) public table: TableComponent) { }
     public ngAfterViewInit() {
         this.items.changes.subscribe(() => {
             this._updateColumnIndexMap();
