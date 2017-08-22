@@ -1,11 +1,11 @@
-import { ServiceClient } from "azure-batch";
+import { BatchServiceClient } from "azure-batch-ts";
 
 import * as models from "./batch-models";
 import { ListProxy, mapGet, wrapOptions } from "./shared";
 
 export default class JobProxy {
 
-    constructor(private client: ServiceClient) {
+    constructor(private client: BatchServiceClient) {
     }
 
     /**
@@ -24,6 +24,7 @@ export default class JobProxy {
      * @param options: Optional Parameters.
      */
     public get(jobId: string, options?: models.JobGetOptions): Promise<any> {
+        console.log("Getting job", jobId);
         return mapGet(this.client.job.get(jobId, wrapOptions({ jobGetOptions: options })));
     }
 

@@ -33,7 +33,7 @@ export class MainWindow extends UniqueWindow {
         window.loadURL(url);
 
         const anyWindow = window as any;
-        anyWindow.batchClientFactory = new BatchClientProxyFactory();
+        // anyWindow.batchClientFactory = new BatchClientProxyFactory();
         anyWindow.storageClientFactory = new StorageClientProxyFactory();
         anyWindow.logger = renderLogger;
         anyWindow.splashScreen = windows.splashScreen;
