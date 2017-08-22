@@ -268,6 +268,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         const active = this._activeItemKey.value;
         if (!this.focusedItem.value) {
             this.focusedItem.next(active && active.key);
+            this.changeDetection.markForCheck();
         }
     }
 
@@ -275,6 +276,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     public onBlur(event) {
         this.listFocused = false;
         this.focusedItem.next(null);
+        this.changeDetection.markForCheck();
     }
 
     public setFocusedItem(key: string) {
@@ -325,6 +327,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
 
     private _setInitialActivatedItem() {
         const item = this.getActiveItemFromRouter();
+
         if (item) {
             this.setActiveItem(item.key, true);
             this._updateSelectedItems();
@@ -371,5 +374,6 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
             item.selected = Boolean(this._selectedItems[item.key]);
         });
         this.selectedItemsChange.emit(this.selectedItems);
+        this.changeDetection.markForCheck();
     }
 }
