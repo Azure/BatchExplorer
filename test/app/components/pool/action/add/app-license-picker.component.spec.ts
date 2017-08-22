@@ -58,12 +58,12 @@ describe("AppLicensePickerComponent", () => {
         const row2Columns = tableRows[1].queryAll(By.css("bl-cell"));
         expect(row2Columns[0].nativeElement.textContent).toContain("Autodesk 3ds Max");
         expect(row2Columns[1].nativeElement.textContent).toContain("EULA");
-        expect(row2Columns[2].nativeElement.textContent).toContain("62.5c USD/core/hour");
+        expect(row2Columns[2].nativeElement.textContent).toContain("62.5c USD/node/hour");
 
         const row3Columns = tableRows[2].queryAll(By.css("bl-cell"));
-        expect(row3Columns[1].nativeElement.textContent).toContain("Autodesk Arnold");
-        expect(row3Columns[2].nativeElement.textContent).toContain("EULA");
-        expect(row3Columns[3].nativeElement.textContent).toContain("2.5c USD/core/hour");
+        expect(row3Columns[0].nativeElement.textContent).toContain("Autodesk Arnold");
+        expect(row3Columns[1].nativeElement.textContent).toContain("EULA");
+        expect(row3Columns[2].nativeElement.textContent).toContain("2.5c USD/core/hour");
 
         const row4Columns = tableRows[3].queryAll(By.css("bl-cell"));
         expect(row4Columns[0].nativeElement.textContent).toContain("Chaos Group V-Ray");
