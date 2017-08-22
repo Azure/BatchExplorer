@@ -111,7 +111,6 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
                 this.activateItem(true);
             } else {
                 const isSelected = this.selected;
-                console.log("Not activable", isSelected);
                 this.list.clearSelection();
                 this.list.onSelectedChange(this.key, !isSelected);
             }
