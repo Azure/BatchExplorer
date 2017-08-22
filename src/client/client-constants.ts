@@ -6,7 +6,8 @@ import * as path from "path";
 const root = path.join(__dirname, "../..");
 
 // tslint:disable-next-line:no-var-requires
-const packageConfig = require(`${root}/package.json`);
+// const packageConfig = require(`${root}/package.json`);
+const packageConfig = {version: "X.Y.Z"};
 
 const urls = {
     main: {

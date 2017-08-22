@@ -1,4 +1,4 @@
-import * as batch from "azure-batch";
+import * as batch from "azure-batch-ts";
 
 import AccountProxy from "./accountProxy";
 import FileProxy from "./fileProxy";
@@ -22,8 +22,8 @@ export class BatchClientProxy {
     private _node: NodeProxy;
     private _serviceClient: any;
 
-    constructor(url, credentials) {
-        this._serviceClient = new batch.ServiceClient(credentials, url);
+    constructor(credentials, url) {
+        this._serviceClient = new batch.BatchServiceClient(credentials, url);
 
         this._account = new AccountProxy(this._serviceClient);
         this._file = new FileProxy(this._serviceClient);

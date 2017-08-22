@@ -1,5 +1,4 @@
-import * as batch from "azure-batch";
-import * as msRest from "ms-rest";
+import * as msRest from "ms-rest-ts";
 
 import { BatchClientProxy } from "./batch-client-proxy";
 
@@ -37,7 +36,7 @@ export class BatchClientProxyFactory {
         if (token !== this._currentToken || accountUrl !== this._currentUrl) {
             this._currentToken = token;
             this._currentUrl = accountUrl;
-            this._currentAADClient = new BatchClientProxy(accountUrl, this._newAADCredenials(token));
+            this._currentAADClient = new BatchClientProxy(this._newAADCredenials(token), accountUrl);
         }
         return this._currentAADClient;
     }
@@ -48,8 +47,8 @@ export class BatchClientProxyFactory {
             && options.url === this._currentSharedKeyOptions.url
             && options.key === this._currentSharedKeyOptions.key)) {
             this._currentSharedKeyOptions = options;
-            const credentials = new batch.SharedKeyCredentials(options.account, options.key);
-            this._currentSharedKeyClient = new BatchClientProxy(options.account, credentials);
+            // const credentials = new batch.SharedKeyCredentials(options.account, options.key);
+            // this._currentSharedKeyClient = new BatchClientProxy(options.account, credentials);
         }
         return this._currentSharedKeyClient;
     }

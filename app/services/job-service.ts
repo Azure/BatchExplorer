@@ -4,6 +4,7 @@ import { Observable, Subject } from "rxjs";
 import { Job } from "app/models";
 import { JobCreateDto, JobPatchDto } from "app/models/dtos";
 import { Constants, ModelUtils, log } from "app/utils";
+import * as batch from "azure-batch-ts";
 import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";
 import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";

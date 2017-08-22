@@ -1,12 +1,15 @@
 import { Injectable } from "@angular/core";
+import { BatchServiceClient } from "azure-batch-ts";
+import { TokenCredentials } from "ms-rest-ts";
 import { Observable } from "rxjs";
 
 import { Constants } from "app/utils";
-import { BatchClientProxyFactory, SharedKeyOptions } from "client/api";
+import { BatchClientProxyFactory } from "client/api/batch-client-proxy/batch-client-proxy-factory";
 import { AccountService } from "./account.service";
 import { AdalService } from "./adal";
 import { ElectronRemote } from "./electron";
 
+const factory = new BatchClientProxyFactory();
 @Injectable()
 export class BatchClientService {
     private _currentAccountId: string;
@@ -33,11 +36,29 @@ export class BatchClientService {
         }).share();
     }
 
-    public getForAADToken(accountUrl: string, token: string) {
-        return this._batchClientFactory.getForAADToken(accountUrl, token);
+    public getTS(): Observable<BatchServiceClient> {
+        if (!this._currentAccountId) {
+            throw new Error("No account currently selected....");
+        }
+
+        const resource = Constants.ResourceUrl.batch;
+        return this.currentAccount.flatMap((account) => {
+            return this.adal.accessTokenFor(account.subscription.tenantId, resource).map((token) => {
+                const url = `https://${account.properties.accountEndpoint}`;
+                return this.getForAADTokenTS(url, token);
+            });
+        }).share();
     }
 
-    public getForSharedKey(options: SharedKeyOptions) {
+    public getForAADToken(accountUrl: string, token: string) {
+        return factory.getForAADToken(accountUrl, token);
+    }
+
+    public getForAADTokenTS(accountUrl: string, token: string): BatchServiceClient {
+        return new BatchServiceClient(new TokenCredentials(token, "Bearer"), accountUrl);
+    }
+
+    public getForSharedKey(options: any) {
         return this._batchClientFactory.getForSharedKey(options);
     }
 
