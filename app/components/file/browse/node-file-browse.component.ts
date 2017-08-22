@@ -1,16 +1,12 @@
-import { Component, Input, OnChanges } from "@angular/core";
-import { List } from "immutable";
+import { Component, Input, OnChanges, ViewChild, forwardRef } from "@angular/core";
 
+import { NodeFileListComponent } from "app/components/file/browse";
+import { FileDetailsQuickviewComponent } from "app/components/file/details";
 import { File, Node } from "app/models";
 import { FileService, NodeFileListParams } from "app/services";
 import { RxListProxy } from "app/services/core";
-
-const folderFriendlyName = {
-    workitems: "Job task files",
-    shared: "Shared files",
-    startup: "Start task files",
-    applications: "Application packages files",
-};
+import { FileLoader } from "app/services/file";
+import "./node-file-browse.scss";
 
 export interface Folder {
     name: string;
@@ -28,41 +24,38 @@ export class NodeFileBrowseComponent implements OnChanges {
     public poolId: string;
 
     @Input()
+    public nodeId: string;
+
+    @Input()
     public node: Node;
 
     public data: RxListProxy<NodeFileListParams, File>;
-    public folders: List<Folder>;
-    public currentFolder: string = null;
+
+    @ViewChild(FileDetailsQuickviewComponent)
+    public quickview: FileDetailsQuickviewComponent;
+
+    // tslint:disable-next-line:no-forward-ref
+    @ViewChild(forwardRef(() => NodeFileListComponent))
+    public list: NodeFileListComponent;
+
+    public pickedFileLoader: FileLoader;
 
     constructor(private fileService: FileService) {
         this.data = this.fileService.listFromComputeNode(null, null, false);
-        this.data.items.subscribe((files) => {
-            this.folders = List<Folder>(files.map(x => {
-                return {
-                    name: x.name,
-                    friendlyName: folderFriendlyName[x.name],
-                };
-            }));
-        });
     }
 
     public ngOnChanges(inputs) {
-        if (inputs.poolId || inputs.node) {
-            this.currentFolder = null;
-            this.data.updateParams({ poolId: this.poolId, nodeId: this.node.id });
+        if (inputs.poolId || inputs.nodeId) {
+            this.data.updateParams({ poolId: this.poolId, nodeId: this.nodeId });
             this.data.fetchNext(true);
         }
     }
 
-    public selectFolder(folderName: string) {
-        this.currentFolder = folderName;
+    public updatePickedFile(filename) {
+        this.pickedFileLoader = this.fileService.fileFromNode(this.poolId, this.nodeId, filename);
     }
 
     public get quicksearchPlaceholder() {
-        if (this.currentFolder) {
-            return `Filter by file name under folder "${this.currentFolder}"`;
-        } else {
-            return "Filter by file name";
-        }
+        return "Filter by full file path";
     }
 }
