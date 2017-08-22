@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, TemplateRef, ViewChild } from "@angular/core";
+import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 
 @Component({
     selector: "bl-cell",
@@ -13,9 +13,6 @@ export class TableCellComponent {
     public get value() {
         return this._value;
     }
-
-    @ViewChild(TemplateRef)
-    public content: TemplateRef<any>;
 
     private _value: string;
 }

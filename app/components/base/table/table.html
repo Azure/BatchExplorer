@@ -7,9 +7,7 @@
             <td class="checkbox-column" (click)="item.handleClick($event, false)" *ngIf="config.showCheckbox">
                 <md-checkbox color="primary" (click)="$event.stopPropagation()" (change)="item.handleClick(null, false)" [checked]="item.selected"></md-checkbox>
             </td>
-            <td *ngFor="let cell of item.cells; trackBy: cellTrackByFn">
-                <ng-template [ngTemplateOutlet]="cell.content"></ng-template>
-            </td>
+            <ng-template [ngTemplateOutlet]="item.content"></ng-template>
         </tr>
     </tbody>
 </table>

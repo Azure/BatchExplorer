@@ -13,7 +13,7 @@ class TestComponent {
     public appLicenses: string[] = [];
 }
 
-fdescribe("AppLicensePickerComponent", () => {
+describe("AppLicensePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: AppLicensePickerComponent;
