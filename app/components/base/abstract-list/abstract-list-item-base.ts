@@ -50,7 +50,6 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
     private _routerLink: any = null;
     private _activeItemKey: string = null;
     private _activeSub: Subscription;
-    private _selectedSub: Subscription;
     /**
      * Need to inject list
      * e.g.  @Inject(forwardRef(() => QuickListComponent)) list: QuickListComponent
@@ -64,10 +63,6 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
         this.isFocused = this.list.focusedItem.map(x => x === this.key);
         this._activeSub = list.activatedItemChange.subscribe((event) => {
             this._activeItemKey = event && event.key;
-        });
-
-        this._selectedSub = list.selectedItemsChange.subscribe(() => {
-            this.selected = this.list.isSelected(this.key);
         });
     }
 
@@ -83,36 +78,47 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
         if (this._activeSub) {
             this._activeSub.unsubscribe();
         }
-        if (this._selectedSub) {
-            this._selectedSub.unsubscribe();
-        }
     }
 
-    public handleClick(event: MouseEvent) {
-        const shiftKey = event.shiftKey;
-        const ctrlKey = event.ctrlKey || event.metaKey;
+    public handleClick(event: MouseEvent, activate = true) {
+        this.list.setFocusedItem(this.key);
 
-        // Prevent the routerlink from being activated if we have shift or ctrl
-        if (shiftKey || ctrlKey) {
-            const activeItem = this._activeItemKey;
-            if (!activeItem) {
-                return;
-            }
+        if (event) {
+            const shiftKey = event.shiftKey;
+            const ctrlKey = event.ctrlKey || event.metaKey;
+            // Prevent the routerlink from being activated if we have shift or ctrl
+            if (shiftKey || ctrlKey) {
+                const focusedItem = this.list.focusedItem.value;
+                if (!focusedItem) {
+                    return;
+                }
 
-            if (shiftKey) {
-                this.list.selectTo(this.key);
-            } else if (ctrlKey) {
-                this.selected = !this.selected;
-                this.list.onSelectedChange(this.key, this.selected);
+                if (shiftKey) {
+                    this.list.selectTo(this.key);
+                } else if (ctrlKey) {
+                    this.selected = !this.selected;
+                    this.list.onSelectedChange(this.key, this.selected);
+                }
+                event.stopPropagation();
+                event.stopImmediatePropagation();
+                return false;
             }
-            event.stopPropagation();
-            event.stopImmediatePropagation();
-            return false;
+        }
+
+        if (activate) {
+            if (this.list.config.activable) {
+                // Means the user actually selected the item
+                this.activateItem(true);
+            } else {
+                const isSelected = this.selected;
+                this.list.clearSelection();
+                this.list.onSelectedChange(this.key, !isSelected);
+            }
         } else {
-            // Means the user actually selected the item
-            this.activateItem(true);
+            this.list.toggleSelected(this.key, event);
         }
     }
+
     /**
      * Mark the item as active and trigger the router if applicable
      * Will desactivate the current activate item
@@ -129,6 +135,7 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
             this.contextmenuService.openMenu(menu);
         }
     }
+
     /**
      * Just trigger the router the item will not be marked as active
      */
