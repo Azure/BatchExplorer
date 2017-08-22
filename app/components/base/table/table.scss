@@ -30,6 +30,16 @@ bl-table {
     .checkbox-column {
         width: 30px;
         padding: 5px;
+
+        .mat-checkbox-frame {
+            border-color: $alto;
+        }
+
+        &:hover {
+            .mat-checkbox-frame {
+                border-color: map-get($primary, 600);
+            }
+        }
     }
 
     table.activable {
