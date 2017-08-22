@@ -56,7 +56,7 @@ describe("AppLicensePickerComponent", () => {
         expect(row1Columns[2].nativeElement.textContent).toContain("62.5c USD/node/hour");
 
         const row2Columns = tableRows[1].queryAll(By.css("bl-cell"));
-        expect(row2Columns[0].nativeElement.textContent).toContain("Autodesk Arnold");
+        expect(row2Columns[0].nativeElement.textContent).toContain("Autodesk 3ds Max");
         expect(row2Columns[1].nativeElement.textContent).toContain("EULA");
         expect(row2Columns[2].nativeElement.textContent).toContain("62.5c USD/core/hour");
 
