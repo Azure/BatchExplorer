@@ -1,4 +1,4 @@
-<table>
+<table [class.activable]="config.activable">
     <ng-content select="bl-thead"></ng-content>
     <tbody>
         <tr *ngFor="let item of displayItems, trackBy: trackByFn" (click)="item.handleClick($event)" (contextmenu)="item.openContextMenu($event)"

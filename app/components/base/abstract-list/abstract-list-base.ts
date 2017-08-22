@@ -68,7 +68,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     @Output()
     public activeItemChange = new EventEmitter<string>();
 
-    public set selectedItems(items: string[]) {
+    @Input() public set selectedItems(items: string[]) {
         let map = {};
         items.forEach(x => map[x] = true);
         this._selectedItems = map;
@@ -83,7 +83,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
     public listFocused: boolean = false;
     public focusedItem = new BehaviorSubject<string>(null);
 
-    protected _config: AbstractListBaseConfig;
+    protected _config: AbstractListBaseConfig = abstractListDefaultConfig;
     /**
      * Map of the selected items. Used for better performance to check if an item is selected.
      */
@@ -162,7 +162,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      * Test to check if the given key is the active item.
      */
     public isActive(key: string): boolean {
-        return Boolean(this.activeKey === key);
+        return this.config.activable && Boolean(this.activeKey === key);
     }
 
     /**
@@ -230,6 +230,9 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
      * @param key Key of the initial item
      */
     public setActiveItem(key: string, initialValue = false) {
+        if (!this.config.activable) {
+            return;
+        }
         const activeKey = this._activeItemKey;
         const sameKey = activeKey.value && activeKey.value.key === key;
         if (!sameKey) {

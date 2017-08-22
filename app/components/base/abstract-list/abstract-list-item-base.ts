@@ -82,6 +82,7 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
 
     public handleClick(event: MouseEvent, activate = true) {
         this.list.setFocusedItem(this.key);
+
         if (event) {
             const shiftKey = event.shiftKey;
             const ctrlKey = event.ctrlKey || event.metaKey;
@@ -105,8 +106,15 @@ export class AbstractListItemBase implements OnDestroy, OnInit {
         }
 
         if (activate) {
-            // Means the user actually selected the item
-            this.activateItem(true);
+            if (this.list.config.activable) {
+                // Means the user actually selected the item
+                this.activateItem(true);
+            } else {
+                const isSelected = this.selected;
+                console.log("Not activable", isSelected);
+                this.list.clearSelection();
+                this.list.onSelectedChange(this.key, !isSelected);
+            }
         } else {
             this.list.toggleSelected(this.key, event);
         }

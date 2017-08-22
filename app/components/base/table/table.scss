@@ -32,11 +32,16 @@ bl-table {
         padding: 5px;
     }
 
+    table.activable {
+        tbody > tr {
+            cursor: pointer;
+        }
+    }
+
     tbody {
         display: table-header-group;
 
         > tr {
-            cursor: default;
             border-top: 1px $athensGrey solid;
             height: $table-row-height;
 
@@ -49,7 +54,7 @@ bl-table {
             }
 
             &.focused {
-                background-color: map-get($primary, 200);
+                outline: 2px dashed map-get($primary, 200);
             }
 
             &:hover:not(.selected) {
