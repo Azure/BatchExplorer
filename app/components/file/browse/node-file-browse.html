@@ -1,18 +1,13 @@
 <bl-loading [status]="data.status | async">
     <div>
         <bl-entity-details-list #listWrapper [refresh]="list.refresh" [filterPlaceholder]="quicksearchPlaceholder" [showAddButton]="false"
-            [enableAdvancedFilter]="false" quickSearchField="name" [loadMore]="list.loadMore">
-            <div pre-quicksearch class="folders">
-                <md-select placeholder="Filter by folder" [(ngModel)]="currentFolder">
-                    <md-option [value]="null">All</md-option>
-                    <md-option *ngFor="let folder of folders" [value]="folder.name">
-                        {{folder.name}} - {{folder.friendlyName}}
-                    </md-option>
-                </md-select>
+            [enableAdvancedFilter]="false" [showExpandButton]="false" quickSearchField="name">
+            <div class="layout-container" [class.filtering]="showAdvancedFilter | async">
+                <bl-file-explorer [fileLoader]="pickedFileLoader">
+                    <bl-node-file-list tree-view #list [poolId]="poolId" [nodeId]="node.id" [filter]="listWrapper.filter" [folder]="currentFolder" (fileNameUpdate)="updatePickedFile($event)">
+                    </bl-node-file-list>
+                </bl-file-explorer>
             </div>
-
-            <bl-node-file-list #list [poolId]="poolId" [nodeId]="node.id" [filter]="listWrapper.filter" [quickList]="false" [folder]="currentFolder" [manualLoading]="true">
-            </bl-node-file-list>
         </bl-entity-details-list>
     </div>
 </bl-loading>

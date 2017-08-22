@@ -5,16 +5,20 @@
 </div>
 
 <!-- list any task outputs on the node -->
-<bl-entity-details-list *ngIf="selectedTab === 'node'" #nodeWrapper [refresh]="nodeList.refresh" [filterPlaceholder]="nodeList.filterPlaceholder"
-    [showAddButton]="false" quickSearchField="name">
-    <bl-task-file-list #nodeList [jobId]="jobId" [taskId]="taskId" [filter]="nodeWrapper.filter" [quickList]="false">
-    </bl-task-file-list>
+<bl-entity-details-list *ngIf="selectedTab === 'node'" #nodeWrapper [refresh]="nodeList.refresh" [filterPlaceholder]="nodeList.quicksearchPlaceholder"
+    [showAddButton]="false" [enableAdvancedFilter]="false" [showExpandButton]="false" quickSearchField="name">
+    <div class="layout-container" [class.filtering]="showAdvancedFilter | async">
+        <bl-file-explorer [fileLoader]="pickedFileLoader">
+            <bl-task-file-list tree-view #nodeList [jobId]="jobId" [taskId]="taskId" [filter]="nodeWrapper.filter" (fileNameUpdate)="updatePickedFile($event)">
+            </bl-task-file-list>
+        </bl-file-explorer>
+    </div>
 </bl-entity-details-list>
 
 <!-- list any persisted task outputs -->
 <bl-entity-details-list *ngIf="selectedTab === 'outputs'" #outputWrapper [refresh]="outputList.refresh" [filterPlaceholder]="outputList.filterPlaceholder"
     [showAddButton]="false" [loadMore]="outputList.loadMore">
-    <bl-persisted-file-list #outputList [jobId]="jobId" [taskId]="taskId" outputKind="$TaskOutput" [filter]="outputWrapper.filter" 
+    <bl-persisted-file-list #outputList [jobId]="jobId" [taskId]="taskId" outputKind="$TaskOutput" [filter]="outputWrapper.filter"
         [quickList]="false" [manualLoading]="true">
     </bl-persisted-file-list>
 </bl-entity-details-list>
@@ -22,7 +26,7 @@
 <!-- list any persisted task logs -->
 <bl-entity-details-list *ngIf="selectedTab === 'logs'" #logWrapper [refresh]="logList.refresh" [filterPlaceholder]="logList.filterPlaceholder"
     [showAddButton]="false" [loadMore]="logList.loadMore">
-    <bl-persisted-file-list #logList [jobId]="jobId" [taskId]="taskId" outputKind="$TaskLog" [filter]="logWrapper.filter" 
-        [quickList]="false" [manualLoading]="true">
+    <bl-persisted-file-list #logList [jobId]="jobId" [taskId]="taskId" outputKind="$TaskLog" [filter]="logWrapper.filter" [quickList]="false"
+        [manualLoading]="true">
     </bl-persisted-file-list>
 </bl-entity-details-list>

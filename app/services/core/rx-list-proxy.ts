@@ -92,9 +92,9 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
                 if (currentKeys.size === 0) {
                     this.cache.queryCache.cacheQuery(this._options.filter, keys, null);
                 }
+                this._updateNewKeys(keys);
                 subject.next(true);
                 subject.complete();
-                this._updateNewKeys(keys);
             },
             error: (error) => {
                 this._hasMore.next(false);
