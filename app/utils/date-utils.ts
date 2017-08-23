@@ -43,9 +43,13 @@ export class DateUtils {
      * Return a pretty duration
      * 3d 2h 4m 1s
      */
-    public static prettyDuration(duration: moment.Duration) {
+    public static prettyDuration(duration: moment.Duration, showMilli = false) {
         duration = moment.duration(duration);
-        return (duration as any).format("d[d] h[h] mm[m] ss[s]");
+        let format = "d[d] h[h] mm[m] ss[s]";
+        if (showMilli) {
+            format += " SSS[ms]";
+        }
+        return (duration as any).format(format);
     }
 
     /**

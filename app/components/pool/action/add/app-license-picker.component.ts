@@ -5,7 +5,7 @@ import {
 import { MdCheckboxChange, MdDialog, MdDialogConfig } from "@angular/material";
 import { List, Map } from "immutable";
 
-import { TableComponent } from "app/components/base/table";
+import { TableComponent, TableConfig } from "app/components/base/table";
 import { ApplicationLicense } from "app/models";
 import { LicenseEulaDialogComponent } from "./";
 
@@ -24,7 +24,13 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
     @ViewChild("licenseTable")
     public table: TableComponent;
 
+    public tableConfig: TableConfig = {
+        showCheckbox: true,
+        activable: false,
+    };
+
     public licenses: List<ApplicationLicense> = List([]);
+    public pickedLicenses: string[] = [];
 
     private _propagateChange: (value: string[]) => void = null;
     private _propagateTouched: (value: boolean) => void = null;
@@ -81,13 +87,13 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
         this._propagateTouched = fn;
     }
 
-    public pickLicense(id: string, event: MdCheckboxChange) {
-        this._pickedLicenses[id] = event.checked;
+    public updateSelection(ids: string[]) {
+        this.pickedLicenses = ids;
         this._emitChangeAndTouchedEvents();
     }
 
     public validate(control: FormControl) {
-        if (this._getPicked().length > 0 && !this._eulaRead) {
+        if (this.pickedLicenses.length > 0 && !this._eulaRead) {
             return {
                 required: true,
             };
@@ -108,8 +114,8 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
         this._fireChangeEvent();
     }
 
-    private _getPicked(): string[] {
-        return Object.keys(this._pickedLicenses).filter(x => this._pickedLicenses[x] === true);
+    public trackByFn(index, license) {
+        return license.id;
     }
 
     private _emitChangeAndTouchedEvents() {
@@ -124,7 +130,7 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
     private _fireChangeEvent() {
         if (this._propagateChange) {
             setTimeout(() => {
-                this._propagateChange(this._getPicked());
+                this._propagateChange(this.pickedLicenses);
             });
         }
     }

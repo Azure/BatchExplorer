@@ -1,9 +1,12 @@
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from "@angular/core";
+import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from "@angular/core";
+import { FormControl } from "@angular/forms";
 import { Router } from "@angular/router";
 import { List } from "immutable";
 import * as moment from "moment";
+import { Subscription } from "rxjs";
 
 import { Job, Task } from "app/models";
+import { DateUtils } from "app/utils";
 import "./tasks-running-time-graph.scss";
 
 interface TaskPoint {
@@ -11,11 +14,19 @@ interface TaskPoint {
     index: number;
 }
 
+export enum SortOption {
+    default,
+    startTime,
+    endTime,
+    node,
+}
+
 @Component({
     selector: "bl-tasks-running-time-graph",
     templateUrl: "tasks-running-time-graph.html",
 })
-export class TasksRunningTimeGraphComponent implements OnInit, OnChanges {
+export class TasksRunningTimeGraphComponent implements OnInit, OnChanges, OnDestroy {
+    public SortOption = SortOption;
 
     @Input() public interactive: boolean = true;
     @Input() public job: Job;
@@ -35,22 +46,34 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges {
         },
     ];
 
+    public labels = null;
+
     public datasets: Chart.ChartDataSets[] = [];
 
     public options: Chart.ChartOptions;
 
     public loading = false;
 
+    public sortControl = new FormControl(SortOption.default);
+
     private _failedTasks: TaskPoint[];
     private _succeededTasks: TaskPoint[];
+    private _sub: Subscription;
 
     constructor(private router: Router) {
         this.updateOptions();
         this.updateData();
+        this._sub = this.sortControl.valueChanges.subscribe(() => {
+            this.updateData();
+        });
     }
 
     public ngOnInit() {
         // Nothing
+    }
+
+    public ngOnDestroy() {
+        this._sub.unsubscribe();
     }
 
     public ngOnChanges(changes: SimpleChanges) {
@@ -85,14 +108,14 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges {
                 enabled: true,
                 mode: "single",
                 callbacks: {
-                    label: (tooltipItems, data) => {
-                        return this._getToolTip(tooltipItems.datasetIndex, tooltipItems.index);
+                    title: (tooltipItems, data) => {
+                        return this._getToolTip(tooltipItems[0]);
                     },
+                    label: () => null,
                 },
             },
             scales: {
                 xAxes: [{
-                    type: "linear",
                     display: false,
                 }],
                 yAxes: [{
@@ -123,7 +146,9 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges {
     public updateData() {
         const succeededTasks = this._succeededTasks = [];
         const failedTasks = this._failedTasks = [];
-        this.tasks.forEach((task, index) => {
+        const sortedTasks = this._sortTasks();
+
+        sortedTasks.forEach((task, index) => {
             if (!task.executionInfo || !task.executionInfo.endTime) {
                 return;
             }
@@ -162,12 +187,38 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges {
         });
     }
 
-    private _getToolTip(datasetIndex: number, index: number) {
-        const task = this._getTaskAt(datasetIndex, index);
+    private _getToolTip(tooltipItem: Chart.ChartTooltipItem) {
+        const task = this._getTaskAt(tooltipItem.datasetIndex, tooltipItem.index);
         if (!task) {
             return "???";
         }
-        return task.id;
+        return [
+            `Task id: ${task.id}`,
+            `Runing time: ${DateUtils.prettyDuration(task.executionInfo.runningTime, true)}`,
+            `Node id: ${task.nodeInfo.nodeId}`,
+        ];
+    }
+
+    private _sortTasks() {
+        switch (this.sortControl.value) {
+            case SortOption.default:
+                return this.tasks;
+            case SortOption.startTime:
+                return this.tasks.sort((a, b) => {
+                    return a.executionInfo.startTime.getTime() - b.executionInfo.startTime.getTime();
+                });
+            case SortOption.endTime:
+                return this.tasks.sort((a, b) => {
+                    return a.executionInfo.endTime.getTime() - b.executionInfo.endTime.getTime();
+                });
+            case SortOption.node:
+                return this.tasks.sort((a, b) => {
+                    return a.nodeInfo.nodeId.localeCompare(b.nodeInfo.nodeId);
+                });
+            default:
+                return this.tasks;
+        }
+
     }
 
     /**
