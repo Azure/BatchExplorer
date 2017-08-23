@@ -66,7 +66,7 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
                 return Observable.of(null);
             }
             const obs = this.taskService.listAll(this.jobId, {
-                select: "id,executionInfo",
+                select: "id,executionInfo,nodeInfo",
                 filter: FilterBuilder.prop("state").eq(TaskState.completed).toOData(),
                 pageSize: 1000,
             });
