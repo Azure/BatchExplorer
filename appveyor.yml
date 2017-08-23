@@ -34,10 +34,8 @@ build_script:
     - npm run -s build:prod
     - npm run -s build-python
     - IF [%APPVEYOR_REPO_BRANCH%]==[feature/publish] (
-        echo Packaging and publish app.\n
         npm run -s package --win
       ) ELSE (
-        echo Packaging app.\n
         npm run -s package --publish never
       )
 
