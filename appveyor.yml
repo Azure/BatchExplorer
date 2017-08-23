@@ -34,10 +34,10 @@ build_script:
     - npm run -s build:prod
     - npm run -s build-python
     - IF [%APPVEYOR_REPO_BRANCH%]==[feature/publish] (
-        echo Packaging and publish app.
-        npm run -s package
+        echo Packaging and publish app.\n
+        npm run -s package --win
       ) ELSE (
-        echo Packaging app.
+        echo Packaging app.\n
         npm run -s package --publish never
       )
 
@@ -45,13 +45,7 @@ test_script:
     # - npm run test -s
 
 artifacts:
-  - path: release\Batchlabs-Setup.exe
-    name: AtomSetup.exe
-  - path: out\BatchLabs-windows.zip
-    name: atom-windows.zip
-  - path: out\RELEASES
-    name: RELEASES
-  - path: out\atom-*-delta.nupkg
-    name: atom-delta.nupkg
-  - path: out\atom-*-full.nupkg
-    name: atom-full.nupkg
+  - path: release\Batchlabs-win-setup.exe
+    name: Batchlabs-windows-setup.exe
+  - path: release\BatchLabs-win.zip
+    name: Batchlabs-windows.zip

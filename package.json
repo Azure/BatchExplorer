@@ -6,7 +6,8 @@
     "url": "https://github.com/Azure/BatchLabs"
   },
   "author": {
-    "name": "Microsoft Corporation"
+    "name": "Microsoft Corporation",
+    "email": "tiguerin@microsoft.com"
   },
   "version": "0.7.0-alpha",
   "main": "build/client/main.prod.js",
@@ -46,6 +47,7 @@
   },
   "build": {
     "productName": "BatchLabs",
+    "artifactName": "${productName}-${os}.${ext}",
     "appId": "microsoft.azure.batchlabs",
     "files": [
       "build/",
@@ -89,6 +91,9 @@
       "target": [
         "AppImage"
       ]
+    },
+    "nsis": {
+      "artifactName": "${productName}-${os}-setup.${ext}"
     },
     "directories": {
       "buildResources": "resources",
