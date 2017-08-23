@@ -2,14 +2,38 @@ branches:
   only:
     - master
     - stable
+    - feature/publish
+environment:
+  matrix:
+    - PYTHON: "C:\\Python36-x64"
+      PYTHON_VERSION: "3.6.1"
+      PYTHON_ARCH: "64"
+
+
 install:
-    - ps: Install-Product node 6.9.1 x64
-    - npm install -g npm -s
-    - npm install -g yarn -s
-    - yarn install --force
+
+  # Prepend newly installed Python to the PATH of this build (this cannot be
+  # done from inside the powershell script as it would require to restart
+  # the parent CMD process).
+  - "SET PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
+
+  # Check that we have the expected version and architecture for Python
+  - "python --version"
+
+  # Upgrade to the latest version of pip to avoid it displaying warnings
+  # about it being out of date.
+  - "pip install --disable-pip-version-check --user --upgrade pip"
+
+  - ps: Install-Product node 6.9.1 x64
+  - npm install -g npm -s
+  - npm install -g yarn -s
+  - yarn install --force
+  - pip install -r python/requirements.txt
 
 build_script:
-    - npm run build -s
+    - npm run -s build:prod
+    - npm run -s build-python
+    - npm run -s package --win nsis
 
 test_script:
     # - npm run test -s
