@@ -33,7 +33,25 @@ install:
 build_script:
     - npm run -s build:prod
     - npm run -s build-python
-    - npm run -s package --win nsis
+    - IF [%APPVEYOR_REPO_BRANCH%]==[feature/publish] (
+        echo Packaging and publish app.
+        npm run -s package
+      ) ELSE (
+        echo Packaging app.
+        npm run -s package --publish never
+      )
 
 test_script:
     # - npm run test -s
+
+artifacts:
+  - path: release\Batchlabs-Setup.exe
+    name: AtomSetup.exe
+  - path: out\BatchLabs-windows.zip
+    name: atom-windows.zip
+  - path: out\RELEASES
+    name: RELEASES
+  - path: out\atom-*-delta.nupkg
+    name: atom-delta.nupkg
+  - path: out\atom-*-full.nupkg
+    name: atom-full.nupkg
