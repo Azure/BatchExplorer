@@ -56,3 +56,7 @@ branches:
   - master
   - stable
   - feature/publish
+
+cache:
+  directories:
+    - node_modules
