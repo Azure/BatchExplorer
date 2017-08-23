@@ -43,7 +43,7 @@ test_script:
     # - npm run test -s
 
 artifacts:
-  - path: release\Batchlabs-win-setup.exe
+  - path: release\*Setup*.exe
     name: Batchlabs-windows-setup.exe
-  - path: release\BatchLabs-win.zip
+  - path: release\*win.zip
     name: Batchlabs-windows.zip

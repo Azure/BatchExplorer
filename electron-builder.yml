@@ -1,5 +1,4 @@
 productName: "BatchLabs"
-artifactName: "${productName}-${os}.${ext}"
 appId: "microsoft.azure.batchlabs"
 
 # Package electron code into a asar archive. Set to false to debug issues.
@@ -40,9 +39,6 @@ linux:
     - "AppImage"
     - "deb"
     - "rpm"
-
-nsis:
-  artifactName: "${productName}-${os}-setup.${ext}"
 
 directories:
   buildResources: "resources"
