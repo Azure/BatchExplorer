@@ -1,6 +1,18 @@
 import json
+import asyncio
+import threading
 from server.aad_auth import AADAuth
 from .error import JsonRpcParseError
+stream_loop = asyncio.new_event_loop()
+
+
+def worker():
+    stream_loop.run_forever()
+    return
+
+
+t = threading.Thread(target=worker)
+t.start()
 
 
 class JsonRpcRequestOptions:
@@ -53,6 +65,10 @@ class JsonRpcRequest:
             stream=True,
         )
         await self.connection.send_response(response)
+
+    def push_stream(self, data: any):
+        stream_loop.call_soon_threadsafe(
+            lambda: stream_loop.create_task(self.send_stream(data)))
 
     @staticmethod
     def from_json(connection, json_str: str):

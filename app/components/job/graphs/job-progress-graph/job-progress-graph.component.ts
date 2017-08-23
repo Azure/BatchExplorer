@@ -88,13 +88,14 @@ export class JobProgressGraphComponent implements OnChanges {
                     ticks: {
                         min: 0,
                         callback: (value) => {
-                            if (value > 180) {
-                                if (value % 60 === 0) {
-                                    return value / 60 + "m";
+                            const seconds = Math.floor(value / 1000);
+                            if (seconds > 180) {
+                                if (seconds % 60 === 0) {
+                                    return seconds / 60 + "m";
                                 }
                             } else {
-                                if (value % 1 === 0) {
-                                    return value + "s";
+                                if (seconds % 1 === 0) {
+                                    return seconds + "s";
                                 }
                             }
                         },
@@ -129,13 +130,13 @@ export class JobProgressGraphComponent implements OnChanges {
             const { startTime, endTime } = task.executionInfo;
 
             startTimes.push({
-                time: moment(startTime).diff(jobStartTime) / 1000,
+                time: moment(startTime).diff(jobStartTime),
                 index: index,
                 task: task,
             });
 
             endTimes.push({
-                time: moment(endTime).diff(jobStartTime) / 1000,
+                time: moment(endTime).diff(jobStartTime),
                 index: index,
                 task: task,
             });
@@ -162,7 +163,7 @@ export class JobProgressGraphComponent implements OnChanges {
         const x = parseInt(tooltipItem.xLabel, 10);
         let type: string;
         let task: Task;
-        const time = DateUtils.prettyDuration(moment.duration({ seconds: x }));
+        const time = DateUtils.prettyDuration(moment.duration({ milliseconds: x }), true);
         if (tooltipItem.datasetIndex === 0) {
             task = this._sortedStartTimes[tooltipItem.index].task;
             type = "task started ";
