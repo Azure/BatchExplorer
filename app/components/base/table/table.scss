@@ -18,6 +18,7 @@ bl-table {
         table-layout: fixed;
     }
 
+
     bl-thead {
         display: table-header-group;
         color: $genericGray;
@@ -65,6 +66,10 @@ bl-table {
 
             &.focused {
                 outline: 2px dashed map-get($primary, 200);
+            }
+
+            &.drop-target {
+                background: $altoGray;
             }
 
             &:hover:not(.selected) {

@@ -1,5 +1,5 @@
 import {
-    ChangeDetectorRef, Component, ContentChild, ContentChildren, Input, Optional, QueryList,
+    ChangeDetectorRef, Component, ContentChild, ContentChildren, HostBinding, Input, Optional, QueryList,
 } from "@angular/core";
 import { Router } from "@angular/router";
 
@@ -36,6 +36,9 @@ export class TableComponent extends AbstractListBase {
 
     @ContentChild(TableHeadComponent) public head: TableHeadComponent;
     @ContentChildren(TableRowComponent) public items: QueryList<TableRowComponent>;
+    @HostBinding("class.drag-hover") public isDraging = 0;
+
+    public dropTargetRowKey: string = null;
 
     protected _config: TableConfig = tableDefaultConfig;
     private _sortingColumn: TableColumnComponent;
@@ -45,6 +48,29 @@ export class TableComponent extends AbstractListBase {
      */
     constructor(router: Router, changeDetection: ChangeDetectorRef, @Optional() focusSection?: FocusSectionComponent) {
         super(router, changeDetection, focusSection);
+    }
+
+    public dragEnter(item: TableRowComponent, event: DragEvent) {
+        this.isDraging++;
+        event.dataTransfer.effectAllowed = "copyMove";
+        this.dropTargetRowKey = item.key;
+    }
+
+    public dragLeave(item: TableRowComponent, event: DragEvent) {
+        this.isDraging--;
+        event.dataTransfer.effectAllowed = "copy";
+        if (item.key === this.dropTargetRowKey && this.isDraging <= 0) {
+            this.dropTargetRowKey = null;
+        }
+
+    }
+
+    public drop(item: TableRowComponent, event: DragEvent) {
+        this.dropTargetRowKey = null;
+        this.isDraging = 0;
+        event.stopPropagation();
+        event.preventDefault();
+        console.log("Drop ", event.dataTransfer.files, event.dataTransfer.types);
     }
 
     public sort(column: TableColumnComponent) {
