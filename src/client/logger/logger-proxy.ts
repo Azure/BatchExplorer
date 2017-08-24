@@ -28,12 +28,9 @@ export const logger = bunyan.createLogger({
         },
     ],
 });
-console.error("WHERE IS THE LOGGING>");
-logger.info("Banana");
-logger.error("Something");
 
 export const renderLogger = bunyan.createLogger({
-    name: "BatchLabs Render",
+    name: "BatchLabs Renderer",
     level: "debug",
     streams: [
         {
