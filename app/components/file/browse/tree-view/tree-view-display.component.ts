@@ -1,19 +1,30 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, ViewChild } from "@angular/core";
 import { TREE_ACTIONS, TreeComponent, TreeModel, TreeNode } from "angular-tree-component";
 import { List } from "immutable";
-import { Observable } from "rxjs/Observable";
+import { Observable, Subscription } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
+import { FileNavigator } from "app/services/file";
 import "./tree-view-display.scss";
 import { mapFilesToTree } from "./tree-view-helper";
 import { FileState, TreeNodeData, TreeNodeOption } from "./tree-view.model";
+
+export interface TreeRow {
+    name: string;
+    path: string;
+    expanded: boolean;
+    isDirectory: boolean;
+    indent: number;
+}
 
 @Component({
     selector: "bl-tree-view-display",
     templateUrl: "tree-view-display.html",
 })
-export class TreeViewDisplayComponent implements OnInit {
+export class TreeViewDisplayComponent implements OnChanges, OnDestroy {
+    @Input() public fileNavigator: FileNavigator;
+
     @Input() public status: LoadingStatus;
 
     @Input() public filter: any;
@@ -35,12 +46,41 @@ export class TreeViewDisplayComponent implements OnInit {
 
     public FileState = FileState;
     public node: TreeNode;
+    public expandedDirs: Set<string> = new Set();
 
     public treeNodes: TreeNodeData[] = [];
     public treeOptions: TreeNodeOption = { actionMapping: { mouse: { expanderClick: null } } };
+    public treeRows: TreeRow[] = [];
+    private _treeSub: Subscription;
 
-    public ngOnInit() {
-        this.initNodes("");
+    public ngOnChanges(inputs) {
+        if (inputs.fileNavigator) {
+
+            console.log("NAv changed...");
+            this._clearTreeSub();
+
+            this._treeSub = this.fileNavigator.tree.subscribe((tree) => {
+                console.log("Got a new tree", tree);
+                this._buildTreeRows(tree);
+            });
+        }
+    }
+
+    public ngOnDestroy() {
+        this._clearTreeSub();
+    }
+
+    public handleClick(treeRow: TreeRow) {
+        if (this.expandedDirs.has(treeRow.path)) {
+            this.expandedDirs.delete(treeRow.path);
+        } else {
+            this.expandedDirs.add(treeRow.path);
+            this.fileNavigator.navigateTo(treeRow.path);
+        }
+    }
+
+    public toggleExpanded(treeRow: TreeRow) {
+        // TOOD
     }
 
     /**
@@ -175,5 +215,35 @@ export class TreeViewDisplayComponent implements OnInit {
             children: [] as TreeNodeData[],
             state: FileState.MORE_BUTTON,
         } as TreeNodeData;
+    }
+
+    private _buildTreeRows(tree) {
+        const root = tree.root;
+        this.treeRows = this._getTreeRowsForNode(root);
+    }
+
+    private _getTreeRowsForNode(node: FileTreeNode, indent = 0): TreeRow[] {
+        let rows = [];
+        for (let child of node.children) {
+            rows.push({
+                name: child.name,
+                path: child.path,
+                isDirectory: child.isDirectory,
+                indent: indent,
+            });
+
+            if (child.children.length > 0) {
+                for (let row of this._getTreeRowsForNode(child, indent + 1)) {
+                    rows.push(row);
+                }
+            }
+        }
+        return rows;
+    }
+
+    private _clearTreeSub() {
+        if (this._treeSub) {
+            this._treeSub.unsubscribe();
+        }
     }
 }

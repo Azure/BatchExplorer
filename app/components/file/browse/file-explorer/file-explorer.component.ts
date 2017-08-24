@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 
-import { FileLoader } from "app/services/file";
+import { FileLoader, FileNavigator } from "app/services/file";
 import "./file-explorer.scss";
 
 /**
@@ -11,5 +11,6 @@ import "./file-explorer.scss";
     templateUrl: "file-explorer.html",
 })
 export class FileExplorerComponent {
+    @Input() public fileNavigator: FileNavigator;
     @Input() public fileLoader: FileLoader;
 }

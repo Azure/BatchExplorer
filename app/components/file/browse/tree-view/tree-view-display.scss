@@ -6,17 +6,35 @@
 }
 
 bl-tree-view-display {
-    .node-content-wrapper:hover {
-        box-shadow: none;
-        background: none;
-    }
+    .tree-row {
+        cursor: pointer;
+        height: 22px;
+        vertical-align: middle;
+        user-select: none;
 
-    .node-wrapper {
         &:hover {
             background: $whitesmoke-darker;
         }
-    }
 
+        > .caret, > .icon {
+            width: 16px;
+            font-size: 16px;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        > .caret {
+            color: $dove-grey;
+        }
+
+        > .icon > .fa-folder {
+            color: #f8d979;
+        }
+
+        > .icon > .fa-file {
+            color: $dove-grey;
+        }
+    }
 }
 
 .toggle-children-wrapper {

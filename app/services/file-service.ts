@@ -7,7 +7,7 @@ import { BatchClientService } from "./batch-client.service";
 import {
     DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache,
 } from "./core";
-import { FileLoader, FileSource } from "./file";
+import { FileLoader, FileNavigator, FileSource } from "./file";
 import { FileSystemService } from "./fs.service";
 import { ServiceBase } from "./service-base";
 
@@ -81,6 +81,12 @@ export class FileService extends ServiceBase {
             initialOptions,
             logIgnoreError: fileIgnoredErrors,
             onError: onError,
+        });
+    }
+
+    public navigateNodeFiles(poolId: string, nodeId: string) {
+        return new FileNavigator({
+            loadPath: (options) => this.listFromComputeNode(poolId, nodeId, false, options),
         });
     }
 

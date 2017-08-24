@@ -1,7 +1,5 @@
 <section class="tree-explorer-container">
-    <bl-focus-section>
-        <ng-content select="[tree-view]"></ng-content>
-    </bl-focus-section>
+    <bl-tree-view-display [fileNavigator]="fileNavigator"></bl-tree-view-display>
 </section>
 <section class="file-content-container">
     <bl-file-details-quickview #quickview [fileLoader]="fileLoader"></bl-file-details-quickview>
