@@ -13,7 +13,7 @@ import { LoadingStatus } from "app/components/base/loading";
 import { QuickListComponent, QuickListItemStatus } from "app/components/base/quick-list";
 import { ListOrTableBase } from "app/components/base/selectable-list";
 import { SidebarManager } from "app/components/base/sidebar";
-import { TableComponent } from "app/components/base/table";
+import { TableComponent, TableConfig } from "app/components/base/table";
 import { Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
 import { PoolService } from "app/services";
@@ -58,6 +58,10 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         this.data.fetchNext();
     }
     public get filter(): Filter { return this._filter; }
+
+    public tableConfig: TableConfig = {
+        showCheckbox: true,
+    };
 
     public pools: List<PoolDecorator> = List([]);
     private _filter: Filter;
@@ -137,5 +141,9 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
             new ContextMenuItem({ label: "Delete", click: () => this.deletePool(pool) }),
             new ContextMenuItem({ label: "Resize", click: () => this.resizePool(pool) }),
         ]);
+    }
+
+    public trackById(index, pool) {
+        return pool.id;
     }
 }

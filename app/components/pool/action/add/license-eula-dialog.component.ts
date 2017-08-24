@@ -17,7 +17,9 @@ export class LicenseEulaDialogComponent {
     }
 
     public get isAutodesk(): boolean {
-        return this.license && (this.license.id === "maya" || this.license.id === "arnold");
+        return this.license && (this.license.id === "maya"
+            || this.license.id === "arnold"
+            || this.license.id === "3dsmax");
     }
 
     public get isVray(): boolean {

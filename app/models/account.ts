@@ -1,16 +1,14 @@
 import { ArmRecord, Model, Prop, Record } from "app/core";
 import { Subscription } from "./subscription";
 
-export type PoolAllocationMode = "UserSubscription";
-export const PoolAllocationMode = {
-    BatchService: "batchservice" as PoolAllocationMode,
-    UserSubscription: "usersubscription" as PoolAllocationMode,
-};
+export enum PoolAllocationMode {
+    BatchService = "batchservice",
+    UserSubscription = "usersubscription",
+}
 
-export type AccountProvisingState = "Succeeded";
-export const AccountProvisingState = {
-    Succeeded: "Succeeded" as AccountProvisingState,
-};
+export enum AccountProvisingState {
+    Succeeded = "Succeeded",
+}
 
 export interface AutoStorageAccountAttributes {
     storageAccountId: string;

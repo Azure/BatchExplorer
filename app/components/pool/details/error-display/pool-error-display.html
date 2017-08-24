@@ -4,8 +4,8 @@
             <div [other-fix]="fixStopResizeError" fixMessage="Rescale"></div>
             <div code>{{resizeError.code}}</div>
             <div message>{{resizeError.message}} ({{dedicatedQuota | async}} cores)</div>
-            <div details *ngIf="resizeError.values.size !== 0">
-                <div *ngFor="let entry of resizeError.values.vals">
+            <div details *ngIf="resizeError.values !== 0">
+                <div *ngFor="let entry of resizeError.values">
                     <div>{{entry.key}}: {{entry.value}}</div>
                 </div>
             </div>
@@ -14,8 +14,8 @@
             <div [other-fix]="fixStopResizeError" fixMessage="Rescale"></div>
             <div code>{{resizeError.code}}</div>
             <div message>{{resizeError.message}} ({{lowPriorityQuota | async}} cores)</div>
-            <div details *ngIf="resizeError.values.size !== 0">
-                <div *ngFor="let entry of resizeError.values.vals">
+            <div details *ngIf="resizeError.values !== 0">
+                <div *ngFor="let entry of resizeError.values">
                     <div>{{entry.key}}: {{entry.value}}</div>
                 </div>
             </div>
@@ -24,7 +24,7 @@
             <div code>{{resizeError.code}}</div>
             <div message>{{resizeError.message}}</div>
             <div details *ngIf="resizeError.values.size !== 0">
-                <div *ngFor="let entry of resizeError.values.vals">
+                <div *ngFor="let entry of resizeError.values">
                     <div>{{entry.key}}: {{entry.value}}</div>
                 </div>
             </div>

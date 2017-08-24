@@ -9,14 +9,14 @@ describe("python-executable", () => {
                 case "/custom/path/python --version":
                     return Promise.reject("Not found command");
                 case "python3 --version":
-                    return Promise.resolve({ stdout: "Python 3.5.1" });
+                    return Promise.resolve({ stdout: "Python 3.4.1" });
                 case "python --version":
                     return Promise.resolve({ stdout: "Python 3.6.2" });
                 default:
                     return Promise.reject("Unkown python...");
             }
-
         });
+
         const options = ["/custom/path/python", "python3", "python", "otherPython"];
         pythonExecutable.tryMultiplePythons(options).then((path) => {
             expect(path).toBe("python");

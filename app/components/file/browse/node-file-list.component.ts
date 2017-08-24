@@ -1,28 +1,21 @@
-import { Component, Input, OnChanges, OnInit, ViewChild } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, SimpleChange, ViewChild } from "@angular/core";
 import { autobind } from "core-decorators";
-import { Observable } from "rxjs";
+import { List } from "immutable";
+import { BehaviorSubject, Observable } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
-import { File, Node } from "app/models";
+import { TreeViewDisplayComponent, buildTreeRootFilter } from "app/components/file/browse/tree-view";
+import { File, ServerError } from "app/models";
 import { FileService, NodeFileListParams } from "app/services";
 import { RxListProxy } from "app/services/core";
-import { Filter, FilterBuilder, Property } from "app/utils/filter-builder";
+import { Filter, Property } from "app/utils/filter-builder";
 
 @Component({
     selector: "bl-node-file-list",
     templateUrl: "file-list.html",
 })
-export class NodeFileListComponent implements OnInit, OnChanges {
+export class NodeFileListComponent implements OnChanges, OnDestroy {
     public LoadingStatus = LoadingStatus;
-
-    /**
-     * If set to true it will display the quick list view, if false will use the table view
-     */
-    @Input()
-    public quickList: boolean;
-
-    @Input()
-    public manualLoading: boolean;
 
     @Input()
     public poolId: string;
@@ -40,69 +33,97 @@ export class NodeFileListComponent implements OnInit, OnChanges {
     @Input()
     public folder: string = "";
 
-    @ViewChild(NodeFileListComponent)
-    public list: NodeFileListComponent;
+    @Output()
+    public fileNameUpdate: EventEmitter<string> = new EventEmitter<string>();
 
-    public status: Observable<LoadingStatus>;
-    public data: RxListProxy<NodeFileListParams, File>;
-    public node: Node;
-    public notFound: boolean;
+    @ViewChild(TreeViewDisplayComponent)
+    public treeDisplay: TreeViewDisplayComponent;
+    public moreFileMap: StringMap<boolean> = {};
+    public status: BehaviorSubject<LoadingStatus> = new BehaviorSubject(LoadingStatus.Loading);
+    public error: BehaviorSubject<ServerError> = new BehaviorSubject(null);
 
-    constructor(private fileService: FileService) {
-        this.notFound = false;
-        this.data = this.fileService.listFromComputeNode(null, null, true, {});
-        this.status = this.data.status;
-    }
+    private _fileProxyMap: StringMap<RxListProxy<NodeFileListParams, File>> = {};
 
-    public ngOnInit() {
-        return;
-   }
+    constructor(private fileService: FileService) { }
 
     public ngOnChanges(inputs) {
         if (inputs.poolId || inputs.nodeId || inputs.folder || inputs.filter) {
+            this._initProxyMap(inputs);
             this.refresh();
         }
     }
 
-    @autobind()
-    public refresh(): Observable<any> {
-        if (!(this.poolId && this.nodeId)) {
-            return;
-        }
-
-        let options = {};
-        const filter = this._buildFilter();
-        if (!filter.isEmpty()) {
-            options = {
-                filter: filter.toOData(),
-            };
-        }
-
-        this.data.updateParams({ poolId: this.poolId, nodeId: this.nodeId });
-        this.data.setOptions(options); // This clears the previous list objects
-        this.notFound = false;
-
-        return this.data.fetchNext(true);
+    public ngOnDestroy(): void {
+        this.status.unsubscribe();
+        this.error.unsubscribe();
     }
 
     @autobind()
-    public loadMore(): Observable<any> {
-        return this.data.fetchNext();
+    public refresh(): Observable<any> {
+        if (this.poolId && this.nodeId) {
+            // filter is changed in two different situation (search field of node file list and file nav list)
+            const filterProp = ((this.filter.properties && this.filter.properties.length > 0) ?
+                                        this.filter.properties[0] : this.filter) as Property;
+            const quickSearch = filterProp && filterProp.value;
+            const loadPath = [this.folder, quickSearch].filter(x => Boolean(x)).join("/");
+            if (this.treeDisplay) {
+                return this.treeDisplay.initNodes(loadPath, true);
+            }
+        }
+        return Observable.of(true);
     }
 
     public get baseUrl() {
         return ["/pools", this.poolId, "nodes", this.nodeId];
     }
 
-    private _buildFilter() {
-        const filter: Property = this.filter as Property;
-        const quickSearch = filter && filter.value;
-
-        const name = [this.folder, quickSearch].filter(x => Boolean(x)).join("/");
-        if (name) {
-            return FilterBuilder.prop("name").startswith(name);
-        } else {
-            return FilterBuilder.none();
+    @autobind()
+    public loadPath(path: string, refresh: boolean = false): Observable<List<File>> {
+        if (!(path in this._fileProxyMap)) {
+            const options = buildTreeRootFilter(path);
+            const poolId = this.poolId;
+            const nodeId = this.nodeId;
+            this._fileProxyMap[path] = this.fileService.listFromComputeNode(poolId, nodeId, false, options);
+            this._fileProxyMap[path].hasMore.subscribe((hasMore) => {
+                this.moreFileMap[path] = hasMore;
+            });
+            this._fileProxyMap[path].status.subscribe((status) => {
+                this.status.next(status);
+            });
+            this._fileProxyMap[path].error.subscribe((error) => {
+                this.error.next(error);
+            });
         }
+        let observable = refresh ? this._fileProxyMap[path].refresh() : this._fileProxyMap[path].fetchNext();
+        return observable.flatMap(() => {
+            return this._fileProxyMap[path].items.first();
+        });
+    }
+
+    public treeNodeClicked(event) {
+        this.fileNameUpdate.emit(event);
+    }
+
+    private _initProxyMap(inputs) {
+        let poolIdInput: SimpleChange = inputs.poolId;
+        let nodeIdInput: SimpleChange = inputs.nodeId;
+        if (this._hasInputChanged(poolIdInput) || this._hasInputChanged(nodeIdInput)) {
+            this.treeDisplay.treeNodes = [];
+            this._disposeListProxy();
+            this._fileProxyMap = {} as StringMap<RxListProxy<NodeFileListParams, File>>;
+            this.moreFileMap = {} as StringMap<boolean>;
+        }
+    }
+
+    private _disposeListProxy() {
+        for (let path in this._fileProxyMap) {
+            if (path !== null) {
+                this._fileProxyMap[path].dispose();
+            }
+        }
+    }
+
+    private _hasInputChanged(input: SimpleChange): boolean {
+        return input && input.previousValue && input.currentValue !== input.previousValue;
     }
 }

@@ -249,6 +249,14 @@ export class StorageService {
     }
 
     /**
+     * Return the container name from a file group name
+     * @param fileGroupName Name of the file group
+     */
+    public fileGroupContainer(fileGroupName: string) {
+        return `${this.ncjFileGroupPrefix}${fileGroupName}`;
+    }
+
+    /**
      * Helper function to call an action on the storage client library. Will handle converting
      * any Storage error to a ServerError.
      * @param promise Promise returned by the batch client

@@ -21,6 +21,10 @@ class TestRec extends Record<any> {
 
 @Model()
 class SimpleTestRec extends Record<any> {
+    public static isStaticMethod() {
+        return true;
+    }
+
     @Prop()
     public id: string;
 
@@ -166,5 +170,10 @@ describe("Record", () => {
     it("should work with inherited models", () => {
         const rec = new InheritedTestRec({ a: 1, b: 2, c: 3, d: 4, invalid: 10 });
         expect(rec.toJS()).toEqual({ id: null, a: 1, b: 2, c: 3, d: 4 });
+    });
+
+    it("Should keep static methods", () => {
+        expect(SimpleTestRec.isStaticMethod).not.toBeFalsy();
+        expect(SimpleTestRec.isStaticMethod()).toBe(true);
     });
 });

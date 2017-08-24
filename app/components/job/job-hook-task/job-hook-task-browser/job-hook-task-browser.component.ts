@@ -11,11 +11,10 @@ import { FilterBuilder } from "app/utils/filter-builder";
 
 import "./job-hook-task-browser.scss";
 
-type HookTaskType = "preparationTask" | "releaseTask";
-const HookTaskType = {
-    preparationTask: "preparationTask" as HookTaskType,
-    releaseTask: "releaseTask" as HookTaskType,
-};
+enum HookTaskType {
+    preparationTask = "preparationTask",
+    releaseTask = "releaseTask",
+}
 
 @Component({
     selector: "bl-job-hook-task-browser",
@@ -36,7 +35,7 @@ export class JobHookTaskBrowserComponent implements OnDestroy, OnChanges {
     public pickedTaskId: string;
     public pickedTask: JobHookTask;
 
-    public type: HookTaskType = "preparationTask";
+    public type: HookTaskType = HookTaskType.preparationTask;
     private _sub: Subscription;
 
     constructor(jobHookTaskService: JobHookTaskService) {

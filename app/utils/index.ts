@@ -1,3 +1,4 @@
+// tslint:disable:variable-name
 export * from "./array";
 export * from "./color";
 export * from "./date-utils";
