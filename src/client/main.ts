@@ -9,6 +9,8 @@ import { PythonRpcServerProcess } from "./python-process";
 const pythonServer = new PythonRpcServerProcess();
 pythonServer.start();
 
+batchLabsApp.init();
+
 // Create the browser window.
 function startApplication() {
     // This call needs to be done after electron app is ready.

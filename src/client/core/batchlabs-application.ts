@@ -12,7 +12,7 @@ export class BatchLabsApplication {
     public recoverWindow = new RecoverWindow();
     public mainWindow = new MainWindow();
 
-    constructor() {
+    public init() {
         this.setupProcessEvents();
     }
 
