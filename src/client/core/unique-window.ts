@@ -1,3 +1,5 @@
+import { batchLabsApp } from ".";
+
 /**
  * Unique window is a wrapper around a electron browser window which makes sure there is only 1 window of this type.
  */
@@ -49,6 +51,12 @@ export abstract class UniqueWindow {
         }
     }
 
+    public setupCommonEvents(window: Electron.BrowserWindow) {
+        window.on("closed", () => {
+            console.log("Quit");
+            batchLabsApp.quit();
+        });
+    }
     protected abstract createWindow(): Electron.BrowserWindow;
 
 }
