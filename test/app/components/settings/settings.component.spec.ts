@@ -1,13 +1,11 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { fakeAsync } from "@angular/core/testing";
+import { discardPeriodicTasks, fakeAsync, tick } from "@angular/core/testing";
 import { ReactiveFormsModule } from "@angular/forms";
 import { MaterialModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
-import { tick } from "@angular/core/testing";
-import { discardPeriodicTasks } from "@angular/core/testing";
 import { ButtonComponent } from "app/components/base/buttons";
 import { EditorComponent } from "app/components/base/editor";
 import { SettingsComponent } from "app/components/settings";
