@@ -11,7 +11,7 @@
             </span>
             <span>{{treeNode.name}}</span>
         </bl-cell>
-        <bl-cell [value]="prettyFileSize(treeNode.contentLength)"></bl-cell>
+        <bl-cell [value]="!treeNode.isDirectory && prettyFileSize(treeNode.contentLength)"></bl-cell>
         <bl-cell [value]="prettyDate(treeNode.lastModified)"></bl-cell>
     </bl-row>
 </bl-table>
