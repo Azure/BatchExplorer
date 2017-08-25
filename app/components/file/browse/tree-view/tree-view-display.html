@@ -1,6 +1,6 @@
 <bl-focus-section>
     <div>
-        <div *ngFor="let treeRow of treeRows" [style.padding-left]="((treeRow.indent + 1) * 12) + 'px'" class="tree-row" [title]="treeRow.path" (click)="handleClick(treeRow)">
+        <div *ngFor="let treeRow of treeRows, trackBy: treeRowTrackBy" [style.padding-left]="((treeRow.indent + 1) * 12) + 'px'" class="tree-row" [title]="treeRow.path" (click)="handleClick(treeRow)">
             <span class="caret" (click)="toggleExpanded(treeRow)">
                 <i class="fa" [class.fa-caret-down]="expandedDirs.has(treeRow.path)" [class.fa-caret-right]="!expandedDirs.has(treeRow.path)" *ngIf="treeRow.isDirectory"></i>
             </span>

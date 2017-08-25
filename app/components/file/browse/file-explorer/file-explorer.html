@@ -2,5 +2,9 @@
     <bl-tree-view-display [fileNavigator]="fileNavigator"></bl-tree-view-display>
 </section>
 <section class="file-content-container">
-    <bl-file-details-quickview #quickview [fileLoader]="fileLoader"></bl-file-details-quickview>
+    <bl-loading [status]="fileNavigator.loadingStatus">
+        <bl-file-details-quickview #quickview [fileLoader]="fileLoader"></bl-file-details-quickview>
+        {{fileNavigator.loading}}
+
+    </bl-loading>
 </section>

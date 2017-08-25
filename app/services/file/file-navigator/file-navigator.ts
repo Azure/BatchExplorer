@@ -1,6 +1,7 @@
 import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
+import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
 import { RxListProxy } from "app/services/core";
 import { ObjectUtils } from "app/utils";
@@ -17,7 +18,7 @@ export interface FileNavigatorConfig {
  */
 export class FileNavigator {
     public currentPath: Observable<string>;
-    public loading = false;
+    public loadingStatus = LoadingStatus.Ready;
     public basePath: string;
     public tree: Observable<FileTreeStructure>;
 
@@ -58,12 +59,14 @@ export class FileNavigator {
     }
 
     public dispose() {
+        console.log("Dispose navigator....");
         for (let proxy of ObjectUtils.values(this._proxies)) {
             proxy.dispose();
         }
     }
 
     private _loadFileInPath(path: string = null) {
+        this.loadingStatus = LoadingStatus.Loading;
         if (path === null) { path = this._currentPath.value; }
         console.log("Load in path", path);
         if (!this._proxies[path]) {
@@ -71,15 +74,16 @@ export class FileNavigator {
         }
         const proxy = this._proxies[path];
         console.log("PRixy", proxy);
-        proxy.refresh().subscribe((d) => {
-            console.log("FNex");
-            proxy.items.first().subscribe((files: List<File>) => {
+        proxy.refresh()
+            .flatMap(() => proxy.items.first())
+            .subscribe((files: List<File>) => {
+                this.loadingStatus = LoadingStatus.Ready;
+
                 console.log("Got files", files.toJS());
                 const tree = this._tree.value;
                 tree.addFiles(files);
                 this._tree.next(tree);
             });
-        });
     }
 
     private _buildLoadPathOptions(path: string) {

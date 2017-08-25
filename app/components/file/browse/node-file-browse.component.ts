@@ -31,11 +31,14 @@ export class NodeFileBrowseComponent implements OnChanges, OnDestroy {
     }
 
     public ngOnChanges(inputs) {
-        this._clearFileNavigator();
-        if (inputs.poolId || inputs.nodeId && this.poolId && this.nodeId) {
-            console.log("Create navigator");
-            this.fileNavigator = this.fileService.navigateNodeFiles(this.poolId, this.nodeId);
-            this.fileNavigator.init();
+        if (inputs.poolId || inputs.nodeId) {
+            this._clearFileNavigator();
+
+            if (this.poolId && this.nodeId) {
+
+                this.fileNavigator = this.fileService.navigateNodeFiles(this.poolId, this.nodeId);
+                this.fileNavigator.init();
+            }
         }
     }
 

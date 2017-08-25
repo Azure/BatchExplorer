@@ -5,7 +5,7 @@ import { Observable, Subscription } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
-import { FileNavigator } from "app/services/file";
+import { FileNavigator, FileTreeNode, FileTreeStructure } from "app/services/file";
 import "./tree-view-display.scss";
 import { mapFilesToTree } from "./tree-view-helper";
 import { FileState, TreeNodeData, TreeNodeOption } from "./tree-view.model";
@@ -51,6 +51,7 @@ export class TreeViewDisplayComponent implements OnChanges, OnDestroy {
     public treeNodes: TreeNodeData[] = [];
     public treeOptions: TreeNodeOption = { actionMapping: { mouse: { expanderClick: null } } };
     public treeRows: TreeRow[] = [];
+    private _tree: FileTreeStructure;
     private _treeSub: Subscription;
 
     public ngOnChanges(inputs) {
@@ -61,6 +62,7 @@ export class TreeViewDisplayComponent implements OnChanges, OnDestroy {
 
             this._treeSub = this.fileNavigator.tree.subscribe((tree) => {
                 console.log("Got a new tree", tree);
+                this._tree = tree;
                 this._buildTreeRows(tree);
             });
         }
@@ -71,16 +73,24 @@ export class TreeViewDisplayComponent implements OnChanges, OnDestroy {
     }
 
     public handleClick(treeRow: TreeRow) {
+        this.toggleExpanded(treeRow);
+        if (!this.expandedDirs.has(treeRow.path)) {
+            this.fileNavigator.navigateTo(treeRow.path);
+        }
+    }
+
+    public toggleExpanded(treeRow: TreeRow) {
         if (this.expandedDirs.has(treeRow.path)) {
             this.expandedDirs.delete(treeRow.path);
         } else {
             this.expandedDirs.add(treeRow.path);
             this.fileNavigator.navigateTo(treeRow.path);
         }
+        this._buildTreeRows(this._tree);
     }
 
-    public toggleExpanded(treeRow: TreeRow) {
-        // TOOD
+    public treeRowTrackBy(treeRow: TreeRow) {
+        return treeRow.path;
     }
 
     /**
@@ -225,16 +235,19 @@ export class TreeViewDisplayComponent implements OnChanges, OnDestroy {
     private _getTreeRowsForNode(node: FileTreeNode, indent = 0): TreeRow[] {
         let rows = [];
         for (let child of node.children) {
+            const expanded = this.expandedDirs.has(child.path);
             rows.push({
                 name: child.name,
                 path: child.path,
+                expanded,
                 isDirectory: child.isDirectory,
                 indent: indent,
             });
-
-            if (child.children.length > 0) {
-                for (let row of this._getTreeRowsForNode(child, indent + 1)) {
-                    rows.push(row);
+            if (expanded) {
+                if (child.children.length > 0) {
+                    for (let row of this._getTreeRowsForNode(child, indent + 1)) {
+                        rows.push(row);
+                    }
                 }
             }
         }
@@ -243,6 +256,7 @@ export class TreeViewDisplayComponent implements OnChanges, OnDestroy {
 
     private _clearTreeSub() {
         if (this._treeSub) {
+            console.log("Clear tree sub");
             this._treeSub.unsubscribe();
         }
     }
