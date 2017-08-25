@@ -1,10 +1,7 @@
-import { Component, Input, OnChanges, OnDestroy, ViewChild, forwardRef } from "@angular/core";
+import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
 
-import { NodeFileListComponent } from "app/components/file/browse";
-import { FileDetailsQuickviewComponent } from "app/components/file/details";
-import { File, Node } from "app/models";
-import { FileService, NodeFileListParams } from "app/services";
-import { RxListProxy } from "app/services/core";
+import { Node } from "app/models";
+import { FileService } from "app/services";
 import { FileLoader, FileNavigator } from "app/services/file";
 import "./node-file-browse.scss";
 

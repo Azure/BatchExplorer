@@ -6,7 +6,7 @@ import { File } from "app/models";
 import { RxListProxy } from "app/services/core";
 import { ObjectUtils } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
-import { FileTreeStructure } from "./file-tree.model";
+import { FileTreeNode, FileTreeStructure } from "./file-tree.model";
 
 export interface FileNavigatorConfig {
     basePath?: string;
@@ -18,11 +18,13 @@ export interface FileNavigatorConfig {
  */
 export class FileNavigator {
     public currentPath: Observable<string>;
+    public currentNode: Observable<FileTreeNode>;
     public loadingStatus = LoadingStatus.Ready;
     public basePath: string;
     public tree: Observable<FileTreeStructure>;
 
     private _currentPath = new BehaviorSubject("");
+    private _currentNode = new BehaviorSubject(null);
     private _tree = new BehaviorSubject(new FileTreeStructure());
 
     private _history: string[] = [];
@@ -34,6 +36,7 @@ export class FileNavigator {
         this.basePath = config.basePath || "";
         this._loadPath = config.loadPath;
         this.currentPath = this._currentPath.asObservable();
+        this.currentNode = this._currentNode.asObservable();
         this.tree = this._tree.asObservable();
     }
 
