@@ -2,12 +2,13 @@ import { Component, Input, OnChanges } from "@angular/core";
 import { autobind } from "core-decorators";
 import { remote } from "electron";
 
+import "./file-details-quickview.scss";
+
 import { NotificationService } from "app/components/base/notifications";
 import { File, ServerError } from "app/models";
 import { ElectronShell } from "app/services";
-import { RxEntityProxy } from "app/services/core";
 import { FileLoader } from "app/services/file";
-import { FileUrlUtils } from "app/utils";
+import { DateUtils, prettyBytes } from "app/utils";
 
 @Component({
     selector: "bl-file-details-quickview",
@@ -16,12 +17,11 @@ import { FileUrlUtils } from "app/utils";
 export class FileDetailsQuickviewComponent implements OnChanges {
     @Input() public fileLoader: FileLoader;
 
-    public sourceType: string;
     public filename: string;
-    public contentSize: string;
+    public file: File;
+    public contentSize: string = "-";
+    public lastModified: string = "-";
     public downloadEnabled: boolean;
-    public url: string;
-    public fileData: RxEntityProxy<any, File>;
 
     constructor(
         private shell: ElectronShell,
@@ -32,12 +32,13 @@ export class FileDetailsQuickviewComponent implements OnChanges {
     public ngOnChanges(inputs) {
         if (inputs.fileLoader) {
             this.filename = this.fileLoader && this.fileLoader.filename;
+            this._updateFileProperties();
         }
     }
 
     @autobind()
     public refresh() {
-        return this.fileData.refresh();
+        return this._updateFileProperties(true);
     }
 
     @autobind()
@@ -45,8 +46,7 @@ export class FileDetailsQuickviewComponent implements OnChanges {
         const dialog = remote.dialog;
         const localPath = dialog.showSaveDialog({
             buttonLabel: "Download",
-            // Set default filename of file to download
-            defaultPath: FileUrlUtils.getFileName(this.url),
+            defaultPath: this.filename,
         });
 
         if (localPath) {
@@ -80,5 +80,13 @@ export class FileDetailsQuickviewComponent implements OnChanges {
             },
         });
         return obs;
+    }
+
+    private _updateFileProperties(forceNew = false) {
+        this.fileLoader.getProperties(forceNew).subscribe((file: File) => {
+            this.file = file;
+            this.contentSize = prettyBytes(file.properties.contentLength);
+            this.lastModified = DateUtils.prettyDate(file.properties.lastModified);
+        });
     }
 }

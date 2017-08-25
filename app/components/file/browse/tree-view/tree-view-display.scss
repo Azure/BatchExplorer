@@ -25,6 +25,10 @@ bl-tree-view-display {
 
         > .caret {
             color: $dove-grey;
+
+            &:hover {
+                color: $dusty-grey;
+            }
         }
 
         > .icon > .fa-folder {

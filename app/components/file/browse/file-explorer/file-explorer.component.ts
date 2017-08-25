@@ -14,7 +14,7 @@ import "./file-explorer.scss";
 })
 export class FileExplorerComponent implements OnChanges, OnDestroy {
     @Input() public fileNavigator: FileNavigator;
-    @Input() public fileLoader: FileLoader;
+    @Input() public autoExpand = false;
 
     public LoadingStatus = LoadingStatus;
     public currentNode: FileTreeNode;

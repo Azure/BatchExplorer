@@ -1,13 +1,9 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output, ViewChild } from "@angular/core";
-import { TreeComponent, TreeNode } from "angular-tree-component";
-import { List } from "immutable";
-import { Observable, Subscription } from "rxjs";
+import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import { Subscription } from "rxjs";
 
-import { LoadingStatus } from "app/components/base/loading";
-import { File } from "app/models";
 import { FileNavigator, FileTreeNode, FileTreeStructure } from "app/services/file";
 import "./tree-view-display.scss";
-import { FileState, TreeNodeData, TreeNodeOption } from "./tree-view.model";
+import { FileState } from "./tree-view.model";
 
 export interface TreeRow {
     name: string;
@@ -23,33 +19,12 @@ export interface TreeRow {
 })
 export class TreeViewDisplayComponent implements OnChanges, OnDestroy {
     @Input() public fileNavigator: FileNavigator;
-
-    @Input() public status: LoadingStatus;
-
-    @Input() public filter: any;
-
-    @Input() public baseUrl: any[];
-
-    /**
-     * If true then create link to /blobs/filename rather than /files/filename
-     */
-    @Input() public isBlob: boolean = false;
-
-    @Input() public loadPath: (path: string, refresh?: boolean) => Observable<List<File>>;
-
-    @Input() public hasMoreMap: StringMap<boolean>;
-
-    @Output() public treeNodeClicked = new EventEmitter<string>();
-
-    @ViewChild(TreeComponent) public tree: TreeComponent;
+    @Input() public autoExpand = false;
 
     public FileState = FileState;
-    public node: TreeNode;
     public currentNode: FileTreeNode;
-    public expandedDirs: Set<string> = new Set();
+    public expandedDirs: StringMap<boolean> = {};
 
-    public treeNodes: TreeNodeData[] = [];
-    public treeOptions: TreeNodeOption = { actionMapping: { mouse: { expanderClick: null } } };
     public treeRows: TreeRow[] = [];
     private _tree: FileTreeStructure;
     private _navigatorSubs: Subscription[] = [];
@@ -77,20 +52,31 @@ export class TreeViewDisplayComponent implements OnChanges, OnDestroy {
     }
 
     public handleClick(treeRow: TreeRow) {
-        this.toggleExpanded(treeRow);
-        if (!this.expandedDirs.has(treeRow.path)) {
-            this.fileNavigator.navigateTo(treeRow.path);
+        if (treeRow.isDirectory && !treeRow.expanded) {
+            this.toggleExpanded(treeRow);
         }
+        this.fileNavigator.navigateTo(treeRow.path);
     }
 
-    public toggleExpanded(treeRow: TreeRow) {
-        if (this.expandedDirs.has(treeRow.path)) {
-            this.expandedDirs.delete(treeRow.path);
+    public handleCaretClick(treeRow: TreeRow, event: MouseEvent) {
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        this.toggleExpanded(treeRow);
+    }
+
+    /**
+     * @param treeRow Tree row that should toggle the expansion
+     * @returns boolean if the row is now expanded or not
+     */
+    public toggleExpanded(treeRow: TreeRow): boolean {
+        const isExpanded = this.expandedDirs[treeRow.path];
+        if (isExpanded) {
+            this.expandedDirs[treeRow.path] = false;
         } else {
-            this.expandedDirs.add(treeRow.path);
-            this.fileNavigator.navigateTo(treeRow.path);
+            this.expandedDirs[treeRow.path] = true;
         }
         this._buildTreeRows(this._tree);
+        return !isExpanded;
     }
 
     /**
@@ -102,24 +88,15 @@ export class TreeViewDisplayComponent implements OnChanges, OnDestroy {
         for (let i = 0; i < segments.length; i++) {
 
             const pathToExpand = segments.slice(0, segments.length - i).join("/");
-            this.expandedDirs.add(pathToExpand);
+            this.expandedDirs[pathToExpand] = true;
         }
-        if (this.tree) {
-            this._buildTreeRows(this.tree);
+        if (this._tree) {
+            this._buildTreeRows(this._tree);
         }
     }
 
     public treeRowTrackBy(treeRow: TreeRow) {
         return treeRow.path;
-    }
-
-    /**
-     * Handle linking to files from blob storage as well as the task and node API
-     * @param fileName - name if the file
-     */
-    public urlToFile(fileName: string) {
-        const filePathPart = this.isBlob ? "blobs" : "files";
-        return this.baseUrl.concat([filePathPart, fileName]);
     }
 
     private _buildTreeRows(tree) {
@@ -130,7 +107,10 @@ export class TreeViewDisplayComponent implements OnChanges, OnDestroy {
     private _getTreeRowsForNode(node: FileTreeNode, indent = 0): TreeRow[] {
         let rows = [];
         for (let child of node.children) {
-            const expanded = this.expandedDirs.has(child.path);
+            if (this.autoExpand && !(child.path in this.expandedDirs)) {
+                this.expandedDirs[child.path] = true;
+            }
+            const expanded = this.expandedDirs[child.path];
             rows.push({
                 name: child.name,
                 path: child.path,
