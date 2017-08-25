@@ -73,7 +73,7 @@ export class NcjParameterWrapper {
         } else if (param.metadata && param.metadata.advancedType) {
             const type = param.metadata.advancedType;
             if (!ObjectUtils.values(NcjParameterExtendedType as any).includes(type)) {
-                log.error(`Advanced typed '${type}' is unkown!`, NcjParameterExtendedType);
+                log.error(`Advanced typed '${type}' is unknown!`, NcjParameterExtendedType);
             }
             this.type = type as NcjParameterExtendedType;
             return;

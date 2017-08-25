@@ -1,9 +1,8 @@
 import { Component, Input, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { NcjParameter } from "app/models";
 import { Subscription } from "rxjs";
 
-import { NcjParameterExtendedType } from "./market-application.model";
+import { NcjParameterExtendedType, NcjParameterWrapper } from "./market-application.model";
 import "./parameter-input.scss";
 
 // tslint:disable:no-forward-ref
@@ -18,14 +17,14 @@ import "./parameter-input.scss";
 export class ParameterInputComponent implements ControlValueAccessor, OnInit, OnDestroy {
     public NcjParameterExtendedType = NcjParameterExtendedType;
 
-    @Input() public parameter: NcjParameter;
+    @Input() public parameter: NcjParameterWrapper;
     @Input() public parameterValues: StringMap<any>;
     public parameterValue = new FormControl();
     private _propagateChange: (value: any) => void = null;
     private _subs: Subscription[] = [];
 
     constructor() {
-        this._subs.push(this.parameterValue.valueChanges.debounceTime(100).distinctUntilChanged()
+        this._subs.push(this.parameterValue.valueChanges.distinctUntilChanged()
             .subscribe((query: string) => {
                 if (this._propagateChange) {
                     this._propagateChange(query);
@@ -39,12 +38,13 @@ export class ParameterInputComponent implements ControlValueAccessor, OnInit, On
     }
 
     public ngOnInit(): void {
-        this.parameterValue.setValue(this.parameter.defaultValue);
+        // do not need
     }
 
     public ngOnDestroy(): void {
         this._subs.forEach(x => x.unsubscribe());
     }
+
     public writeValue(value: any) {
         this.parameterValue.setValue(value);
     }
@@ -58,6 +58,6 @@ export class ParameterInputComponent implements ControlValueAccessor, OnInit, On
     }
 
     public registerOnTouched(fn: any): void {
-        this.parameterValue.markAsTouched();
+        // do not need
     }
 }

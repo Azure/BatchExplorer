@@ -6,7 +6,7 @@ export enum NcjParameterRawType {
 export interface NcjParameter {
     type: NcjParameterRawType;
     defaultValue?: any;
-    allowedValues: any[];
+    allowedValues?: any[];
     metadata: StringMap<string>;
 }
 

@@ -1,11 +1,23 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { MaterialModule, MdOption, MdSelect } from "@angular/material";
 import { By } from "@angular/platform-browser";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
-import { FormControl } from "@angular/forms";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { RouterTestingModule } from "@angular/router/testing";
+import { DialogService } from "app/components/base/dialogs";
+import { FileGroupPickerComponent } from "app/components/data/shared";
+import { CloudFilePickerComponent } from "app/components/data/shared/cloud-file-picker";
+import { NcjParameterExtendedType, NcjParameterWrapper } from "app/components/market/submit";
 import { ParameterInputComponent } from "app/components/market/submit";
-import { NcjParameterWrapper } from "app/components/market/submit";
-import { NcjParameterRawType } from "app/models";
+import { BatchApplication, NcjParameterRawType } from "app/models";
+import { StorageService } from "app/services";
+import { Subject } from "rxjs";
+import * as Fixtures from "test/fixture";
+import { updateInput } from "test/utils/helpers";
+import { RxMockListProxy } from "test/utils/mocks";
+import { NoItemMockComponent } from "test/utils/mocks/components";
 
 @Component({
     template: `
@@ -14,24 +26,23 @@ import { NcjParameterRawType } from "app/models";
     `,
 })
 class TestComponent {
-    public paramControl = new FormControl("blender-render-movie-213wads");
+    public paramControl = new FormControl("jobname");
 
     public param = new NcjParameterWrapper("jobName", {
-        defaultValue: "blender-render-movie-",
+        defaultValue: "",
         type: NcjParameterRawType.string,
         metadata : {
-            description: "The prefix of the name of the Azure Batch job, also used to prefix rendered outputs",
+            description: "Param Description",
         },
-        allowedValues: [],
     });
 
     public paramValue = {
         blendFile: "scene.blend",
         frameEnd: 4,
         frameStart: 1,
-        jobName: "blender-render-movie-213wads",
-        outputFileGroup: "blender-outputs",
-        sceneData: "blender-data",
+        jobName: "jobname",
+        outputFileGroup: "outputfilegroup",
+        sceneData: "scenedata",
     };
 }
 
@@ -40,13 +51,41 @@ fdescribe("ParameterInputComponent", () => {
     let testComponent: TestComponent;
     let component: ParameterInputComponent;
     let de: DebugElement;
+    let storageServiceSpy: any;
+    let dialogServiceSpy: any;
+    let listProxy: RxMockListProxy<any, BatchApplication>;
 
     beforeEach(() => {
+        listProxy = new RxMockListProxy(BatchApplication, {
+            cacheKey: "id",
+            items: [
+                Fixtures.application.create({ id: "app-1" }),
+            ],
+        });
+
+        dialogServiceSpy = {
+            list: () => listProxy,
+            onApplicationAdded: new Subject(),
+            listContainers: () => listProxy,
+        };
+
+        storageServiceSpy = {
+            list: () => listProxy,
+            onApplicationAdded: new Subject(),
+            listContainers: () => listProxy,
+        };
+
         TestBed.configureTestingModule({
-            imports: [],
-            declarations: [ParameterInputComponent, TestComponent],
+            imports: [RouterTestingModule, ReactiveFormsModule, FormsModule, MaterialModule, NoopAnimationsModule],
+            declarations: [NoItemMockComponent, ParameterInputComponent,
+                TestComponent, FileGroupPickerComponent, CloudFilePickerComponent],
+            providers: [
+                { provide: StorageService, useValue: storageServiceSpy },
+                { provide: DialogService, useValue: dialogServiceSpy },
+            ],
             schemas: [NO_ERRORS_SCHEMA],
         });
+
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-parameter-input"));
@@ -54,7 +93,192 @@ fdescribe("ParameterInputComponent", () => {
         fixture.detectChanges();
     });
 
-    describe("1st tests", () => {
-        it("true is true", () => expect(true).toBe(true));
+    it("should propogate form control value to class", () => {
+        expect(testComponent.paramControl.value).toBe(component.parameterValue.value);
+    });
+
+    describe("text parameter type", () => {
+        let inputEl: DebugElement;
+        const initialInput: string = "initial input value";
+        const newInput: string = "new input value";
+        const updatedInput: string = "updated input";
+
+        beforeEach(() => {
+            testComponent.param = new NcjParameterWrapper("jobName", {
+                type: NcjParameterRawType.string,
+                metadata : {
+                    description: "Param Description",
+                },
+                defaultValue: initialInput,
+            });
+            testComponent.paramControl.setValue(initialInput);
+            fixture.detectChanges();
+            inputEl = de.query(By.css("input[type=text]"));
+            expect(inputEl).not.toBeFalsy();
+        });
+
+        it("should show default string input", () => {
+           expect(inputEl.nativeElement.value).toBe(initialInput);
+        });
+
+        it("should update input when form changes", () => {
+            testComponent.paramControl.setValue(newInput);
+            fixture.detectChanges();
+            expect(inputEl.nativeElement.value).toBe(newInput);
+        });
+
+        it("should update form when input changes", () => {
+            updateInput(inputEl, updatedInput);
+            fixture.detectChanges();
+            expect(inputEl.nativeElement.value).toBe(updatedInput);
+        });
+    });
+
+    describe("int parameter type", () => {
+        let inputEl: DebugElement;
+        const initialInput: number = 10;
+        const newInput: number = 12;
+        const updatedInput: number = 13;
+
+        beforeEach(() => {
+            testComponent.param = new NcjParameterWrapper("frameEnd", {
+                type: NcjParameterRawType.int,
+                metadata : {
+                    description: "description",
+                },
+                defaultValue: initialInput,
+            });
+
+            testComponent.paramControl.setValue(initialInput);
+            fixture.detectChanges();
+            inputEl = de.query(By.css("input[type=number]"));
+            expect(inputEl).not.toBeFalsy();
+        });
+
+        it("should show default int input", () => {
+           expect(inputEl.nativeElement.value).toBe(String(initialInput));
+        });
+
+        it("should update input when form changes", () => {
+            testComponent.paramControl.setValue(newInput);
+            fixture.detectChanges();
+            expect(inputEl.nativeElement.value).toBe(String(newInput));
+        });
+
+        it("should update form when input changes", () => {
+            updateInput(inputEl, updatedInput);
+            fixture.detectChanges();
+            expect(inputEl.nativeElement.value).toBe(String(updatedInput));
+        });
+
+        it("should update form when input changes", () => {
+            updateInput(inputEl, updatedInput);
+            fixture.detectChanges();
+            expect(inputEl.nativeElement.value).toBe(String(updatedInput));
+        });
+
+    });
+
+    describe("dropdown parameter type", () => {
+        let selectEl: DebugElement;
+        let selectComponent: MdSelect;
+        const initialInput: string = "a";
+        const newInput: string = "b";
+
+        beforeEach(() => {
+            testComponent.param = new NcjParameterWrapper("jobName", {
+                type: NcjParameterRawType.string,
+                metadata : {
+                    description: "description",
+                },
+                allowedValues : ["a", "b", "c"],
+                defaultValue: initialInput,
+            });
+            testComponent.paramControl.setValue(initialInput);
+            fixture.detectChanges();
+            selectEl = de.query(By.css("md-select"));
+            expect(selectEl).not.toBeFalsy();
+            selectComponent = selectEl.componentInstance;
+        });
+
+        it("should show all options", () => {
+            const options = selectComponent.options.toArray();
+            expect(options.length).toBe(3);
+            expect(options[0].value).toEqual("a");
+            expect(options[1].value).toEqual("b");
+            expect(options[2].value).toEqual("c");
+        });
+
+        it("should select new input", () => {
+            testComponent.paramControl.setValue(newInput);
+            fixture.detectChanges();
+            expect((selectComponent.selected as MdOption).value).toBe(newInput);
+        });
+    });
+
+    describe("filegroup parameter type", () => {
+        const initialInput: string = "blender-outputs";
+        const newInput: string = "newinput";
+        let fileGroupComponent: FileGroupPickerComponent;
+        let fileGroupEl: DebugElement;
+
+        beforeEach(() => {
+            testComponent.param = new NcjParameterWrapper("outputFileGroup", {
+                type: NcjParameterRawType.string,
+                metadata : {
+                    description: "description",
+                    advancedType: NcjParameterExtendedType.fileGroup,
+                },
+            });
+            testComponent.paramControl.setValue(initialInput);
+            fixture.detectChanges();
+            fileGroupEl = de.query(By.css("bl-file-group-picker"));
+            expect(fileGroupEl).not.toBeFalsy();
+            fileGroupComponent = fileGroupEl.componentInstance;
+        });
+
+        it("should show initial input", () => {
+            expect(fileGroupComponent.value.value).toBe(initialInput);
+        });
+
+        it("should show updated input", () => {
+            testComponent.paramControl.setValue(newInput);
+            fixture.detectChanges();
+            fileGroupComponent = fileGroupEl.componentInstance;
+            expect(fileGroupComponent.value.value).toBe(newInput);
+        });
+    });
+
+    describe("fileinput parameter type", () => {
+        const initialInput: string = "scene.blend";
+        const newInput: string = "newinput";
+        let fileInputComponent: CloudFilePickerComponent;
+        let fileInputEl: DebugElement;
+
+        beforeEach(() => {
+            testComponent.param = new NcjParameterWrapper("blendFile", {
+                type: NcjParameterRawType.string,
+                metadata : {
+                    description: "description",
+                    advancedType: NcjParameterExtendedType.fileInFileGroup,
+                    dependsOn: "sceneData",
+                },
+            });
+            testComponent.paramControl.setValue(initialInput);
+            fixture.detectChanges();
+            fileInputEl = de.query(By.css("bl-cloud-file-picker"));
+            expect(fileInputEl).not.toBeFalsy();
+            fileInputComponent = fileInputEl.componentInstance;
+        });
+
+        it("should show initial input", () => {
+            expect(fileInputComponent.value.value).toBe(initialInput);
+        });
+
+        it("should show updated input", () => {
+            testComponent.paramControl.setValue(newInput);
+            fixture.detectChanges();
+            expect(fileInputComponent.value.value).toBe(newInput);
+        });
     });
 });
