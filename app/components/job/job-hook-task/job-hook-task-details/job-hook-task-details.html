@@ -2,8 +2,6 @@
     <bl-property-group>
         <bl-link-property label="Pool" [value]="task.poolId" [link]="['/pools', task.poolId]"></bl-link-property>
         <bl-link-property label="Node" [value]="task.nodeId" [link]="['/pools', task.poolId, 'nodes', task.nodeId]"></bl-link-property>
-
-        <bl-node-file-list #list [poolId]="task.poolId" [nodeId]="task.nodeId" [folder]="currentFolder" *ngIf="currentFolder">
-        </bl-node-file-list>
+<!-- TODO Check that -->
     </bl-property-group>
 </div>

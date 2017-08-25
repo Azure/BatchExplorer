@@ -1,5 +1,4 @@
-import { Component, Input, OnChanges, ViewChild, forwardRef } from "@angular/core";
-import { TaskFileListComponent } from "app/components/file/browse";
+import { Component, Input, OnChanges } from "@angular/core";
 import { FileService } from "app/services";
 import { FileLoader, FileNavigator } from "app/services/file";
 import "./task-outputs.scss";
@@ -23,10 +22,6 @@ export class TaskOutputsComponent implements OnChanges {
 
     public outputTabs = outputTabs;
     public selectedTab: "node" | "outputs" | "logs" = "node";
-
-    // tslint:disable-next-line:no-forward-ref
-    @ViewChild(forwardRef(() => TaskFileListComponent))
-    public nodeList: TaskFileListComponent;
 
     public pickedFileLoader: FileLoader = null;
     public fileNavigator: FileNavigator;

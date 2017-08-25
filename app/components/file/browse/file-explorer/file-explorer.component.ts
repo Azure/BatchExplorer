@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
-import { FileLoader, FileNavigator, FileTreeNode } from "app/services/file";
+import { FileNavigator, FileTreeNode } from "app/services/file";
 import "./file-explorer.scss";
 
 /**
