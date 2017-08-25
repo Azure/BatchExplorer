@@ -1,0 +1,137 @@
+import { NcjParameterExtendedType, NcjParameterWrapper } from "app/components/market/submit";
+import { NcjParameterRawType } from "app/models";
+
+describe("marketApplicationModel", () => {
+    let parameter: NcjParameterWrapper;
+
+    it("should detect text type", () => {
+        parameter = new NcjParameterWrapper("jobName", {
+            type: NcjParameterRawType.string,
+            metadata : {
+                description: "Param Description",
+            },
+            defaultValue: "jobname",
+        });
+        expect(parameter.type).toBe(NcjParameterExtendedType.string);
+    });
+
+    it("should have default", () => {
+        parameter = new NcjParameterWrapper("jobName", {
+            type: NcjParameterRawType.string,
+            metadata : {
+                description: "Param Description",
+            },
+            defaultValue: "jobname",
+        });
+        expect(parameter.defaultValue).toBe("jobname");
+    });
+
+    it("should not have default", () => {
+        parameter = new NcjParameterWrapper("jobName", {
+            type: NcjParameterRawType.string,
+            metadata : {
+                description: "Param Description",
+            },
+        });
+        expect(parameter.defaultValue).toBeUndefined();
+    });
+
+    it("should have allowedValues", () => {
+        parameter = new NcjParameterWrapper("jobName", {
+            type: NcjParameterRawType.string,
+            metadata : {
+                description: "Param Description",
+            },
+            allowedValues : ["a", "b", "c", "d"],
+        });
+        expect(parameter.allowedValues.length).toBe(4);
+    });
+
+    it("should not have allowedValues", () => {
+        parameter = new NcjParameterWrapper("jobName", {
+            type: NcjParameterRawType.string,
+            metadata : {
+                description: "Param Description",
+            },
+        });
+        expect(parameter.allowedValues.length).toBe(0);
+    });
+
+    it("should have description", () => {
+        parameter = new NcjParameterWrapper("jobName", {
+            type: NcjParameterRawType.string,
+            metadata : {
+                description: "description",
+            },
+        });
+        expect(parameter.description).toBe("description");
+    });
+
+    it("should have dependsOn", () => {
+        parameter = new NcjParameterWrapper("jobName", {
+            type: NcjParameterRawType.string,
+            metadata : {
+                description: "description",
+                dependsOn: "dependson",
+            },
+        });
+        expect(parameter.dependsOn).toBe("dependson");
+    });
+
+    it("should not have dependsOn", () => {
+        parameter = new NcjParameterWrapper("jobName", {
+            type: NcjParameterRawType.string,
+            metadata : {
+                description: "description",
+            },
+        });
+        expect(parameter.dependsOn).toBeUndefined();
+    });
+
+    it("should detect int type", () => {
+        parameter = new NcjParameterWrapper("frameEnd", {
+            type: NcjParameterRawType.int,
+            metadata : {
+                description: "description",
+            },
+            defaultValue: 4,
+        });
+        expect(parameter.type).toBe(NcjParameterExtendedType.int);
+    });
+
+    it("should detect dropdown type", () => {
+        parameter = new NcjParameterWrapper("jobName", {
+            type: NcjParameterRawType.string,
+            metadata : {
+                description: "description",
+            },
+            allowedValues : ["a", "b", "c"],
+            defaultValue: "jobname",
+        });
+        expect(parameter.type).toBe(NcjParameterExtendedType.dropDown);
+    });
+
+    it("should detect filegroup type", () => {
+        parameter = new NcjParameterWrapper("outputFileGroup", {
+            type: NcjParameterRawType.string,
+            metadata : {
+                description: "description",
+                advancedType: NcjParameterExtendedType.fileGroup,
+            },
+        });
+        expect(parameter.type).toBe(NcjParameterExtendedType.fileGroup);
+    });
+
+    it("should detect fileinput type", () => {
+        parameter = new NcjParameterWrapper("blendFile", {
+            type: NcjParameterRawType.string,
+            metadata : {
+                description: "description",
+                advancedType: NcjParameterExtendedType.fileInFileGroup,
+                dependsOn: "sceneData",
+            },
+        });
+        expect(parameter.type).toBe(NcjParameterExtendedType.fileInFileGroup);
+    });
+
+});
