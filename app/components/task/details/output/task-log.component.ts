@@ -3,9 +3,9 @@ import { FormControl } from "@angular/forms";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
 import { File, ServerError, Task, TaskState } from "app/models";
-import { FileService } from "app/services";
 import { PollObservable } from "app/services/core";
 import { FileLoader } from "app/services/file";
+import { FileService } from "app/services/file-service";
 import { prettyBytes } from "app/utils";
 
 const defaultOutputFileNames = ["stdout.txt", "stderr.txt"];
@@ -161,11 +161,15 @@ export class TaskLogComponent implements OnInit, OnChanges, OnDestroy {
             this.fileLoaderMap[filename] = fileLoader;
 
             if (this._shouldGetFileSize(filename)) {
-                fileLoader.getProperties().subscribe((file: File) => {
-                    if (file) {
-                        const props = file.properties;
-                        this.fileSizes[filename] = prettyBytes(props && props.contentLength);
-                    }
+                fileLoader.getProperties().subscribe({
+                    next: (file: File) => {
+                        if (file) {
+                            const props = file.properties;
+                            this.fileSizes[filename] = prettyBytes(props && props.contentLength);
+                        }
+                    },
+                    // unexpected are logged in fileLoader.getProperties()
+                    error: (error) => null,
                 });
             }
         }
