@@ -8,7 +8,6 @@
                     <bl-button type="wide" [class.selected]="modeState === Modes.NewPool" (click)="pickMode(Modes.NewPool)">Create pool for later use</bl-button>
                 </div>
             </bl-form-section>
-
             <div *ngIf="modeState === Modes.NewPoolAndJob">
                 <bl-form-section title="Pool" formGroupName="pool">
                     <div *ngFor="let param of poolParametersWrapper">

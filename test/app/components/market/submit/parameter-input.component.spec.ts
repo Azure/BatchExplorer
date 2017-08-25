@@ -1,10 +1,9 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { MaterialModule, MdOption, MdSelect } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
-
-import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { RouterTestingModule } from "@angular/router/testing";
 import { DialogService } from "app/components/base/dialogs";
 import { FileGroupPickerComponent } from "app/components/data/shared";
@@ -46,7 +45,7 @@ class TestComponent {
     };
 }
 
-fdescribe("ParameterInputComponent", () => {
+describe("ParameterInputComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: ParameterInputComponent;

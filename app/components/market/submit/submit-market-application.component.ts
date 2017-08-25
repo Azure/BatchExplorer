@@ -18,7 +18,6 @@ export class SubmitMarketApplicationComponent implements OnInit {
         return { name: "Submit" };
     }
     public Modes = Modes;
-
     public modeState = Modes.None;
     public title: string;
     public form: FormGroup;
