@@ -1,0 +1,17 @@
+<bl-table (activeItemChange)="updateActiveItem($event)">
+    <bl-thead>
+        <bl-column>Name</bl-column>
+        <bl-column style="width: 200px">Content Length</bl-column>
+        <bl-column style="width: 200px">Last Modified</bl-column>
+    </bl-thead>
+    <bl-row *ngFor="let treeNode of treeNode.children" [key]="treeNode.path">
+        <bl-cell [value]="treeNode.name">
+            <span class="icon">
+                <i class="fa" [class.fa-folder]="treeNode.isDirectory" [class.fa-file]="!treeNode.isDirectory"></i>
+            </span>
+            <span>{{treeNode.name}}</span>
+        </bl-cell>
+        <bl-cell [value]="prettyFileSize(treeNode.contentLength)"></bl-cell>
+        <bl-cell [value]="prettyDate(treeNode.lastModified)"></bl-cell>
+    </bl-row>
+</bl-table>

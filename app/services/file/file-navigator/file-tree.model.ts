@@ -1,6 +1,7 @@
 import { List } from "immutable";
 import * as path from "path";
 
+import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
 import { fileToTreeNode, generateDir, prettyFileSize, sortTreeNodes, standardizeFilePath } from "./helper";
 
@@ -8,30 +9,37 @@ export interface FileTreeNodeParams {
     path: string;
     isDirectory: boolean;
     children?: FileTreeNode[];
-    loaded?: boolean;
+    loadingStatus?: LoadingStatus;
     contentLength?: number;
+    lastModified?: Date;
 }
 
 export class FileTreeNode {
     public path: string;
     public isDirectory: boolean;
     public children: FileTreeNode[];
-    public loaded: boolean;
+    public loadingStatus: LoadingStatus;
     public name: string;
 
     /**
      * Content length if node is a file
      */
     public contentLength: number;
+    public lastModified: Date;
 
     constructor(params: FileTreeNodeParams) {
         this.path = params.path;
         this.isDirectory = params.isDirectory;
         this.children = params.children || [];
-        this.loaded = params.loaded || false;
+        this.loadingStatus = params.loadingStatus || LoadingStatus.Loading;
         this.contentLength = params.contentLength;
+        this.lastModified = params.lastModified;
 
         this.name = this._computeName();
+    }
+
+    public markAsLoaded() {
+        this.loadingStatus = LoadingStatus.Ready;
     }
 
     /**
@@ -84,19 +92,37 @@ export class FileTreeStructure {
         }
     }
 
+    public getNode(path: string) {
+        path = standardizeFilePath(path);
+        if (path === "") { path = "."; }
+        console.log("Getting path for", path);
+        if (path in this.directories) {
+            console.log("IS is dir");
+            return this.directories[path];
+        } else {
+            console.log("IS is NOT dir");
+            return new FileTreeNode({
+                path: path,
+                loadingStatus: LoadingStatus.Loading,
+                isDirectory: true,
+            });
+        }
+    }
+
     public isPathLoaded(path: string) {
         path = standardizeFilePath(path);
         if (!(path in this.directories)) {
             return false;
         }
 
-        return this.directories[path].loaded;
+        return this.directories[path].loadingStatus === LoadingStatus.Ready;
     }
 
     private _checkDirInTree(directory: string) {
         console.log("check dir in tree", directory);
         const directories = this.directories;
         if (this.directories[directory]) {
+            this.directories[directory].loadingStatus = LoadingStatus.Ready;
             return;
         }
         directories[directory] = generateDir(directory);

@@ -1,6 +1,7 @@
 import { List } from "immutable";
 import * as path from "path";
 
+import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
 import { prettyBytes } from "app/utils";
 import { FileTreeNode } from "./file-tree.model";
@@ -60,7 +61,8 @@ export function fileToTreeNode(file: File): FileTreeNode {
         path: fullPath,
         isDirectory: file.isDirectory,
         contentLength: !file.isDirectory && file.properties.contentLength,
-        loaded: false,
+        lastModified: file.properties && file.properties.lastModified,
+        loadingStatus: LoadingStatus.Loading,
     });
 }
 
@@ -94,6 +96,6 @@ export function generateDir(dirname): FileTreeNode {
     return new FileTreeNode({
         path: dirname,
         isDirectory: true,
-        expanded: true,
+        loadingStatus: LoadingStatus.Ready,
     });
 }

@@ -24,7 +24,6 @@ export class FileNavigator {
     public tree: Observable<FileTreeStructure>;
 
     private _currentPath = new BehaviorSubject("");
-    private _currentNode = new BehaviorSubject(null);
     private _tree = new BehaviorSubject(new FileTreeStructure());
 
     private _history: string[] = [];
@@ -36,7 +35,11 @@ export class FileNavigator {
         this.basePath = config.basePath || "";
         this._loadPath = config.loadPath;
         this.currentPath = this._currentPath.asObservable();
-        this.currentNode = this._currentNode.asObservable();
+        this.currentNode = this._currentPath.flatMap((path: string) => {
+            return this._tree.map((tree) => {
+                return tree.getNode(path);
+            });
+        }).share();
         this.tree = this._tree.asObservable();
     }
 

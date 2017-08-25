@@ -1,6 +1,8 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import { Subscription } from "rxjs";
 
-import { FileLoader, FileNavigator } from "app/services/file";
+import { LoadingStatus } from "app/components/base/loading";
+import { FileLoader, FileNavigator, FileTreeNode } from "app/services/file";
 import "./file-explorer.scss";
 
 /**
@@ -10,7 +12,37 @@ import "./file-explorer.scss";
     selector: "bl-file-explorer",
     templateUrl: "file-explorer.html",
 })
-export class FileExplorerComponent {
+export class FileExplorerComponent implements OnChanges, OnDestroy {
     @Input() public fileNavigator: FileNavigator;
     @Input() public fileLoader: FileLoader;
+
+    public LoadingStatus = LoadingStatus;
+    public currentNode: FileTreeNode;
+
+    private _currentNodeSub: Subscription;
+
+    public ngOnChanges(inputs) {
+        if (inputs.fileNavigator) {
+            this._clearCurrentNodeSub();
+            this._currentNodeSub = this.fileNavigator.currentNode.subscribe((node) => {
+                console.log("Update current node .....", node);
+                this.currentNode = node;
+            });
+        }
+    }
+
+    public ngOnDestroy() {
+        this._clearCurrentNodeSub();
+    }
+
+    public navigateTo(path: string) {
+        console.log("NAv to", path);
+        this.fileNavigator.navigateTo(path);
+    }
+
+    private _clearCurrentNodeSub() {
+        if (this._currentNodeSub) {
+            this._currentNodeSub.unsubscribe();
+        }
+    }
 }
