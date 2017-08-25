@@ -1,0 +1,16 @@
+@import "app/styles/variables";
+
+bl-file-table-view {
+    .icon {
+        display: inline-block;
+        width: 16px;
+
+        .fa-folder {
+            color: #f8d979;
+        }
+
+        .fa-file {
+            color: $dove-grey;
+        }
+    }
+}
