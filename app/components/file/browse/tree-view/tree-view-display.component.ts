@@ -45,27 +45,35 @@ export class TreeViewDisplayComponent implements OnChanges, OnDestroy {
 
     public FileState = FileState;
     public node: TreeNode;
+    public currentNode: FileTreeNode;
     public expandedDirs: Set<string> = new Set();
 
     public treeNodes: TreeNodeData[] = [];
     public treeOptions: TreeNodeOption = { actionMapping: { mouse: { expanderClick: null } } };
     public treeRows: TreeRow[] = [];
     private _tree: FileTreeStructure;
-    private _treeSub: Subscription;
+    private _navigatorSubs: Subscription[] = [];
 
     public ngOnChanges(inputs) {
         if (inputs.fileNavigator) {
-            this._clearTreeSub();
+            this._clearNavigatorSubs();
 
-            this._treeSub = this.fileNavigator.tree.subscribe((tree) => {
+            this._navigatorSubs.push(this.fileNavigator.tree.subscribe((tree) => {
                 this._tree = tree;
                 this._buildTreeRows(tree);
-            });
+            }));
+
+            this._navigatorSubs.push(this.fileNavigator.currentNode.subscribe((node) => {
+                if (!this.currentNode || node.path !== this.currentNode.path) {
+                    this.expandPath(node.path);
+                }
+                this.currentNode = node;
+            }));
         }
     }
 
     public ngOnDestroy() {
-        this._clearTreeSub();
+        this._clearNavigatorSubs();
     }
 
     public handleClick(treeRow: TreeRow) {
@@ -83,6 +91,22 @@ export class TreeViewDisplayComponent implements OnChanges, OnDestroy {
             this.fileNavigator.navigateTo(treeRow.path);
         }
         this._buildTreeRows(this._tree);
+    }
+
+    /**
+     * Expand all folder down to the given path
+     */
+    public expandPath(path: string) {
+        if (path === "") { return; }
+        const segments = path.split("/");
+        for (let i = 0; i < segments.length; i++) {
+
+            const pathToExpand = segments.slice(0, segments.length - i).join("/");
+            this.expandedDirs.add(pathToExpand);
+        }
+        if (this.tree) {
+            this._buildTreeRows(this.tree);
+        }
     }
 
     public treeRowTrackBy(treeRow: TreeRow) {
@@ -125,9 +149,7 @@ export class TreeViewDisplayComponent implements OnChanges, OnDestroy {
         return rows;
     }
 
-    private _clearTreeSub() {
-        if (this._treeSub) {
-            this._treeSub.unsubscribe();
-        }
+    private _clearNavigatorSubs() {
+        this._navigatorSubs.forEach(x => x.unsubscribe());
     }
 }

@@ -95,12 +95,9 @@ export class FileTreeStructure {
     public getNode(path: string) {
         path = standardizeFilePath(path);
         if (path === "") { path = "."; }
-        console.log("Getting path for", path);
         if (path in this.directories) {
-            console.log("IS is dir");
             return this.directories[path];
         } else {
-            console.log("IS is NOT dir");
             return new FileTreeNode({
                 path: path,
                 loadingStatus: LoadingStatus.Loading,
@@ -119,7 +116,6 @@ export class FileTreeStructure {
     }
 
     private _checkDirInTree(directory: string) {
-        console.log("check dir in tree", directory);
         const directories = this.directories;
         if (this.directories[directory]) {
             this.directories[directory].loadingStatus = LoadingStatus.Ready;
@@ -129,7 +125,6 @@ export class FileTreeStructure {
 
         const segments = directory.split("/");
         const parent = segments.slice(0, -1).join("/");
-        console.log("Parent is", parent);
         if (directory !== parent) {
             this._checkDirInTree(parent);
             directories[parent].children.push(directories[directory]);

@@ -27,7 +27,6 @@ export class FileTableViewerComponent {
     }
 
     public updateActiveItem(path: string) {
-        console.log("got to ", path);
         this.pathChange.emit(path);
     }
 }

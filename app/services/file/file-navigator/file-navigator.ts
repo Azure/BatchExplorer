@@ -35,10 +35,8 @@ export class FileNavigator {
         this.basePath = config.basePath || "";
         this._loadPath = config.loadPath;
         this.currentPath = this._currentPath.asObservable();
-        this.currentNode = this._currentPath.flatMap((path: string) => {
-            return this._tree.map((tree) => {
-                return tree.getNode(path);
-            });
+        this.currentNode = Observable.combineLatest(this._currentPath, this._tree).map(([path, tree]) => {
+            return tree.getNode(path);
         }).share();
         this.tree = this._tree.asObservable();
     }
@@ -54,7 +52,6 @@ export class FileNavigator {
         if (this._currentPath.value === path) { return; }
         this._history.push(this._currentPath.value);
         this._currentPath.next(path);
-        console.log("Path loaded?", this._tree.value.isPathLoaded(path));
         if (!this._tree.value.isPathLoaded(path)) {
             this._loadFileInPath(path);
         }
@@ -65,7 +62,6 @@ export class FileNavigator {
     }
 
     public dispose() {
-        console.log("Dispose navigator....");
         for (let proxy of ObjectUtils.values(this._proxies)) {
             proxy.dispose();
         }
@@ -74,21 +70,24 @@ export class FileNavigator {
     private _loadFileInPath(path: string = null) {
         this.loadingStatus = LoadingStatus.Loading;
         if (path === null) { path = this._currentPath.value; }
-        console.log("Load in path", path);
         if (!this._proxies[path]) {
             this._proxies[path] = this._loadPath(this._buildLoadPathOptions(path));
         }
         const proxy = this._proxies[path];
-        console.log("PRixy", proxy);
         proxy.refresh()
             .flatMap(() => proxy.items.first())
-            .subscribe((files: List<File>) => {
-                this.loadingStatus = LoadingStatus.Ready;
+            .subscribe({
+                next: (files: List<File>) => {
+                    this.loadingStatus = LoadingStatus.Ready;
 
-                console.log("Got files", files.toJS());
-                const tree = this._tree.value;
-                tree.addFiles(files);
-                this._tree.next(tree);
+                    const tree = this._tree.value;
+                    tree.addFiles(files);
+                    tree.getNode(path).markAsLoaded();
+                    this._tree.next(tree);
+                },
+                error: (error) => {
+                    console.error("ERRROROR loading navigato", error);
+                },
             });
     }
 

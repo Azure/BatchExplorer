@@ -25,7 +25,6 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
         if (inputs.fileNavigator) {
             this._clearCurrentNodeSub();
             this._currentNodeSub = this.fileNavigator.currentNode.subscribe((node) => {
-                console.log("Update current node .....", node);
                 this.currentNode = node;
             });
         }
@@ -36,7 +35,6 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
     }
 
     public navigateTo(path: string) {
-        console.log("NAv to", path);
         this.fileNavigator.navigateTo(path);
     }
 

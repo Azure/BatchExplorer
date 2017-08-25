@@ -15,3 +15,8 @@
         <bl-cell [value]="prettyDate(treeNode.lastModified)"></bl-cell>
     </bl-row>
 </bl-table>
+
+<bl-no-item [itemCount]="treeNode.children.length">
+    <i icon class="fa fa-file small"></i>
+    <span no-filter>There is no files in this directory</span>
+</bl-no-item>
