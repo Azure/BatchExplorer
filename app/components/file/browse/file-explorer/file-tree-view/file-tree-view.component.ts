@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { FileNavigator, FileTreeNode, FileTreeStructure } from "app/services/file";
@@ -20,6 +20,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     @Input() public fileNavigator: FileNavigator;
     @Input() public name: string;
     @Input() public autoExpand = false;
+    @Output() public navigate = new EventEmitter<string>();
 
     public expanded = true;
     public currentNode: FileTreeNode;
@@ -57,6 +58,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
         if (treeRow.isDirectory && !treeRow.expanded) {
             this.toggleExpanded(treeRow);
         }
+        this.navigate.emit(treeRow.path);
         this.fileNavigator.navigateTo(treeRow.path);
     }
 

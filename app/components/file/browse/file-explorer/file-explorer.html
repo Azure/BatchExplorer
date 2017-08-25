@@ -1,15 +1,16 @@
 <section class="tree-explorer-container">
     <div *ngFor="let entry of this.fileNavigators">
-        <bl-file-tree-view [fileNavigator]="entry.navigator" [name]="entry.name" [autoExpand]="autoExpand"></bl-file-tree-view>
+        <bl-file-tree-view [fileNavigator]="entry.navigator" [name]="entry.name" [autoExpand]="autoExpand" (navigate)="updateCurrentNavigator(entry.navigator)">
+        </bl-file-tree-view>
     </div>
 </section>
 <section class="file-content-container">
-    <div *ngIf="currentNode">
+    <div *ngIf="currentFileNavigator && currentNode">
         <bl-loading [status]="currentNode.loadingStatus">
             <div *ngIf="currentNode.loadingStatus === LoadingStatus.Ready">
                 <bl-file-table-view *ngIf="currentNode.isDirectory" [treeNode]="currentNode" (pathChange)="navigateTo($event)"> </bl-file-table-view>
             </div>
-            <bl-file-details-quickview *ngIf="!currentNode.isDirectory" [fileLoader]="fileNavigator.currentFileLoader"></bl-file-details-quickview>
+            <bl-file-details-quickview *ngIf="!currentNode.isDirectory" [fileLoader]="currentFileNavigator.currentFileLoader"></bl-file-details-quickview>
         </bl-loading>
     </div>
 </section>

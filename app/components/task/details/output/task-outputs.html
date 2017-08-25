@@ -1,8 +1,2 @@
-<div class="file-tabs pad-bottom">
-    <div class="file-tab" *ngFor="let tab of outputTabs" [class.active]="tab.key === selectedTab" (click)="selectOutputType(tab.key)">
-        {{tab.label}}
-    </div>
-</div>
-
-<bl-file-explorer [fileNavigator]="fileNavigator" [autoExpand]="selectedTab === OutputType.node" *ngIf="fileNavigator">
+<bl-file-explorer [fileNavigators]="fileNavigators" *ngIf="fileNavigators.length > 0">
 </bl-file-explorer>

@@ -24,20 +24,17 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
 
     public LoadingStatus = LoadingStatus;
     public currentNode: FileTreeNode;
+    public currentFileNavigator: FileNavigator;
 
-    private _currentNodeSubs: Subscription[] = [];
+    private _currentNodeSub: Subscription;
 
     public ngOnChanges(inputs) {
         if (inputs.fileNavigator) {
             this.fileNavigators = [{ name: "Files", navigator: this.fileNavigator }];
         }
         if (inputs.fileNavigator || inputs.fileNavigators) {
-            this._clearCurrentNodeSub();
-            this._currentNodeSubs = this.fileNavigators.map(entry => {
-                return entry.navigator.currentNode.subscribe((node) => {
-                    this.currentNode = node;
-                });
-            });
+            this.currentFileNavigator = this.fileNavigators.first().navigator;
+            this._updateNavigatorEvents();
         }
     }
 
@@ -46,10 +43,23 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
     }
 
     public navigateTo(path: string) {
-        this.fileNavigator.navigateTo(path);
+        this.currentFileNavigator.navigateTo(path);
+    }
+
+    public updateCurrentNavigator(navigator: FileNavigator) {
+        this.currentFileNavigator = navigator;
+    }
+
+    private _updateNavigatorEvents() {
+        this._clearCurrentNodeSub();
+        return this.currentFileNavigator.currentNode.subscribe((node) => {
+            this.currentNode = node;
+        });
     }
 
     private _clearCurrentNodeSub() {
-        this._currentNodeSubs.forEach(x => x.unsubscribe());
+        if (this._currentNodeSub) {
+            this._currentNodeSub.unsubscribe();
+        }
     }
 }

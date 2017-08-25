@@ -1,6 +1,7 @@
 import { Component, Input, OnChanges } from "@angular/core";
+import { FileNavigatorEntry } from "app/components/file/browse/file-explorer";
 import { FileService, StorageService } from "app/services";
-import { FileLoader, FileNavigator } from "app/services/file";
+import { FileLoader } from "app/services/file";
 import { StorageUtils } from "app/utils";
 import "./task-outputs.scss";
 
@@ -29,7 +30,7 @@ export class TaskOutputsComponent implements OnChanges {
     public selectedTab: OutputType = OutputType.node;
 
     public pickedFileLoader: FileLoader = null;
-    public fileNavigator: FileNavigator;
+    public fileNavigators: FileNavigatorEntry[] = [];
 
     constructor(private fileService: FileService, private storageService: StorageService) { }
 
@@ -49,25 +50,28 @@ export class TaskOutputsComponent implements OnChanges {
     }
 
     private _updateNavigator() {
-        this._clearFileNavigator();
-        switch (this.selectedTab) {
-            case OutputType.node:
-                this.fileNavigator = this.fileService.navigateTaskFile(this.jobId, this.taskId);
-                this.fileNavigator.init();
-                break;
-            case OutputType.output:
-            case OutputType.logs:
-                const prefix = `${this.taskId}/`;
-                StorageUtils.getSafeContainerName(this.jobId).then((container) => {
-                    this.fileNavigator = this.storageService.navigateContainerBlobs(container, { prefix: prefix });
-                    this.fileNavigator.init();
-                });
-                break;
-        }
+        StorageUtils.getSafeContainerName(this.jobId).then((container) => {
+            this._clearFileNavigator();
+            const nodeNavigator = this.fileService.navigateTaskFile(this.jobId, this.taskId);
+            nodeNavigator.init();
+
+            const prefix = `${this.taskId}/`;
+            const taskOutputNavigator = this.storageService.navigateContainerBlobs(container, { prefix: prefix });
+            // taskOutputNavigator.init();
+
+            // const prefix = `${this.taskId}/`;
+            // const taskLogsNavigator = this.storageService.navigateContainerBlobs(container, { prefix: prefix });
+            // taskLogsNavigator.init();
+
+            this.fileNavigators = [
+                { name: "Node files", navigator: nodeNavigator },
+                { name: "Persisted output", navigator: nodeNavigator },
+                { name: "Persisted logs", navigator: nodeNavigator },
+            ];
+            console.log("File navigators...", this.fileNavigators);
+        });
     }
     private _clearFileNavigator() {
-        if (this.fileNavigator) {
-            this.fileNavigator.dispose();
-        }
+        this.fileNavigators.forEach(x => x.navigator.dispose());
     }
 }
