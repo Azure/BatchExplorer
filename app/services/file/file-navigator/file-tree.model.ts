@@ -31,7 +31,7 @@ export class FileTreeNode {
         this.path = params.path;
         this.isDirectory = params.isDirectory;
         this.children = params.children || [];
-        this.loadingStatus = params.loadingStatus || LoadingStatus.Loading;
+        this.loadingStatus = params.loadingStatus || (this.isDirectory ? LoadingStatus.Loading : LoadingStatus.Ready);
         this.contentLength = params.contentLength;
         this.lastModified = params.lastModified;
 
@@ -92,14 +92,21 @@ export class FileTreeStructure {
         }
     }
 
-    public getNode(path: string) {
-        path = standardizeFilePath(path);
-        if (path === "") { path = "."; }
-        if (path in this.directories) {
-            return this.directories[path];
+    public getNode(nodePath: string) {
+        nodePath = standardizeFilePath(nodePath);
+        if (nodePath === "") { nodePath = "."; }
+        if (nodePath in this.directories) {
+            return this.directories[nodePath];
         } else {
+            const parent = path.dirname(nodePath);
+            if (parent in this.directories) {
+                const matchingChild = this.directories[parent].children.filter(x => x.path === nodePath).first();
+                if (matchingChild) {
+                    return matchingChild;
+                }
+            }
             return new FileTreeNode({
-                path: path,
+                path: nodePath,
                 loadingStatus: LoadingStatus.Loading,
                 isDirectory: true,
             });

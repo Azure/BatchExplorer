@@ -62,7 +62,6 @@ export function fileToTreeNode(file: File): FileTreeNode {
         isDirectory: file.isDirectory,
         contentLength: !file.isDirectory && file.properties.contentLength,
         lastModified: file.properties && file.properties.lastModified,
-        loadingStatus: LoadingStatus.Loading,
     });
 }
 

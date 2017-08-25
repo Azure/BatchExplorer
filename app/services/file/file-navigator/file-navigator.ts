@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
 import { RxListProxy } from "app/services/core";
+import { FileLoader } from "app/services/file";
 import { ObjectUtils } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 import { FileTreeNode, FileTreeStructure } from "./file-tree.model";
@@ -11,6 +12,7 @@ import { FileTreeNode, FileTreeStructure } from "./file-tree.model";
 export interface FileNavigatorConfig {
     basePath?: string;
     loadPath: (options: any) => RxListProxy<any, File>;
+    getFile: (filename: string) => FileLoader;
 }
 /**
  * Generic navigator class for a file explorer.
@@ -22,6 +24,7 @@ export class FileNavigator {
     public loadingStatus = LoadingStatus.Ready;
     public basePath: string;
     public tree: Observable<FileTreeStructure>;
+    public currentFileLoader: FileLoader;
 
     private _currentPath = new BehaviorSubject("");
     private _tree = new BehaviorSubject(new FileTreeStructure());
@@ -30,10 +33,12 @@ export class FileNavigator {
     private _loadPath: (options: any) => RxListProxy<any, File>;
 
     private _proxies: StringMap<RxListProxy<any, File>> = {};
+    private _getFileLoader: (filename: string) => FileLoader;
 
     constructor(config: FileNavigatorConfig) {
         this.basePath = config.basePath || "";
         this._loadPath = config.loadPath;
+        this._getFileLoader = config.getFile;
         this.currentPath = this._currentPath.asObservable();
         this.currentNode = Observable.combineLatest(this._currentPath, this._tree).map(([path, tree]) => {
             return tree.getNode(path);
@@ -52,8 +57,14 @@ export class FileNavigator {
         if (this._currentPath.value === path) { return; }
         this._history.push(this._currentPath.value);
         this._currentPath.next(path);
-        if (!this._tree.value.isPathLoaded(path)) {
-            this._loadFileInPath(path);
+        const node = this._tree.value.getNode(path);
+        if (node.isDirectory) {
+            if (!this._tree.value.isPathLoaded(path)) {
+                this._loadFileInPath(path);
+            }
+        } else {
+            console.log("Tis a file do somehting....");
+            this.currentFileLoader = this._getFileLoader(node.path);
         }
     }
 

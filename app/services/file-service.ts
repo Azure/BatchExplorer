@@ -87,6 +87,14 @@ export class FileService extends ServiceBase {
     public navigateNodeFiles(poolId: string, nodeId: string) {
         return new FileNavigator({
             loadPath: (options) => this.listFromComputeNode(poolId, nodeId, false, options),
+            getFile: (filename: string) => this.fileFromNode(poolId, nodeId, filename),
+        });
+    }
+
+    public navigateTaskFile(jobId: string, taskId: string) {
+        return new FileNavigator({
+            loadPath: (options) => this.listFromTask(jobId, taskId, true, options),
+            getFile: (filename: string) => this.fileFromTask(jobId, taskId, filename),
         });
     }
 
