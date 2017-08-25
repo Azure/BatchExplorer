@@ -89,6 +89,7 @@ export class FileNavigator {
             .flatMap(() => proxy.items.first())
             .subscribe({
                 next: (files: List<File>) => {
+                    console.log("Got files", files.toJS());
                     this.loadingStatus = LoadingStatus.Ready;
 
                     const tree = this._tree.value;

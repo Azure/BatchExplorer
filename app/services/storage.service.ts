@@ -13,7 +13,7 @@ import {
     TargetedDataCache,
     getOnceProxy,
 } from "./core";
-import { FileLoadOptions, FileLoader, FileSource } from "./file";
+import { FileLoadOptions, FileLoader, FileNavigator, FileSource } from "./file";
 import { StorageClientService } from "./storage-client.service";
 
 export interface ListBlobParams {
@@ -26,6 +26,10 @@ export interface GetContainerParams {
 }
 
 export interface ListContainerParams {
+    prefix?: string;
+}
+
+export interface NaviagateContainerBlobOptions {
     prefix?: string;
 }
 
@@ -80,6 +84,7 @@ export class StorageService {
         return new RxStorageListProxy<ListBlobParams, File>(File, this.storageClient, {
             cache: (params) => this.getBlobFileCache(params),
             getData: (client, params, options, continuationToken) => {
+                console.log("Getting data", blobPrefix, params.blobPrefix);
                 return params.container.then((containerName) => {
                     return client.listBlobsWithPrefix(
                         containerName,
@@ -93,6 +98,14 @@ export class StorageService {
             initialOptions,
             logIgnoreError: storageIgnoredErrors,
             onError: onError,
+        });
+    }
+
+    public navigateContainerBlobs(container: string, options: NaviagateContainerBlobOptions = {}) {
+        console.log("NAv options", options);
+        return new FileNavigator({
+            loadPath: () => this.listBlobs(Promise.resolve(container), options.prefix),
+            getFile: (filename: string) => this.getBlobContent(Promise.resolve(container), filename, options.prefix),
         });
     }
 
@@ -130,6 +143,7 @@ export class StorageService {
      * @param blobPrefix - Optional prefix of the blob, i.e. {container}/{blobPrefix}+{blobName}
      */
     public getBlobContent(container: Promise<string>, blobName: string, blobPrefix?: string): FileLoader {
+        console.log("Get blob content...", blobName);
         return new FileLoader({
             filename: blobName,
             source: FileSource.blob,

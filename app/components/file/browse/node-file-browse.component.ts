@@ -24,8 +24,7 @@ export class NodeFileBrowseComponent implements OnChanges, OnDestroy {
     public fileNavigator: FileNavigator;
     public pickedFileLoader: FileLoader;
 
-    constructor(private fileService: FileService) {
-    }
+    constructor(private fileService: FileService) { }
 
     public ngOnChanges(inputs) {
         if (inputs.poolId || inputs.nodeId) {

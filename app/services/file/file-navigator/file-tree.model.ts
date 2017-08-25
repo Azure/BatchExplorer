@@ -131,7 +131,9 @@ export class FileTreeStructure {
         directories[directory] = generateDir(directory);
 
         const segments = directory.split("/");
-        const parent = segments.slice(0, -1).join("/");
+        let parent = segments.slice(0, -1).join("/");
+        if (parent === "") { parent = "."; }
+
         if (directory !== parent) {
             this._checkDirInTree(parent);
             directories[parent].children.push(directories[directory]);

@@ -7,7 +7,6 @@ bl-file-explorer {
     > .tree-explorer-container {
         transition:width 100ms;
         width: $listview-width;
-        height: $contentview-height;
         flex: 0 0 $listview-width;
 
         .header {

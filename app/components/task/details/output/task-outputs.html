@@ -1,26 +1,8 @@
 <div class="file-tabs pad-bottom">
-    <div class="file-tab" *ngFor="let tab of outputTabs" [class.active]="tab.key === selectedTab" (click)="selectedTab = tab.key">
+    <div class="file-tab" *ngFor="let tab of outputTabs" [class.active]="tab.key === selectedTab" (click)="selectOutputType(tab.key)">
         {{tab.label}}
     </div>
 </div>
 
-<!-- list any task outputs on the node -->
-
-<bl-file-explorer [fileNavigator]="fileNavigator" [autoExpand]="true" *ngIf="fileNavigator">
+<bl-file-explorer [fileNavigator]="fileNavigator" [autoExpand]="selectedTab === OutputType.node" *ngIf="fileNavigator">
 </bl-file-explorer>
-
-<!-- list any persisted task outputs -->
-<!-- <bl-entity-details-list *ngIf="selectedTab === 'outputs'" #outputWrapper [refresh]="outputList.refresh" [filterPlaceholder]="outputList.filterPlaceholder"
-    [showAddButton]="false" [loadMore]="outputList.loadMore">
-    <bl-persisted-file-list #outputList [jobId]="jobId" [taskId]="taskId" outputKind="$TaskOutput" [filter]="outputWrapper.filter"
-        [quickList]="false" [manualLoading]="true">
-    </bl-persisted-file-list>
-</bl-entity-details-list> -->
-
-<!-- list any persisted task logs -->
-<!-- <bl-entity-details-list *ngIf="selectedTab === 'logs'" #logWrapper [refresh]="logList.refresh" [filterPlaceholder]="logList.filterPlaceholder"
-    [showAddButton]="false" [loadMore]="logList.loadMore">
-    <bl-persisted-file-list #logList [jobId]="jobId" [taskId]="taskId" outputKind="$TaskLog" [filter]="logWrapper.filter" [quickList]="false"
-        [manualLoading]="true">
-    </bl-persisted-file-list>
-</bl-entity-details-list> -->
