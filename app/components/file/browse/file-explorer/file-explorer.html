@@ -1,5 +1,7 @@
 <section class="tree-explorer-container">
-    <bl-file-tree-view [fileNavigator]="fileNavigator" [autoExpand]="autoExpand"></bl-file-tree-view>
+    <div *ngFor="let entry of this.fileNavigators">
+        <bl-file-tree-view [fileNavigator]="entry.navigator" [name]="entry.name" [autoExpand]="autoExpand"></bl-file-tree-view>
+    </div>
 </section>
 <section class="file-content-container">
     <div *ngIf="currentNode">

@@ -1,11 +1,18 @@
 <bl-focus-section>
-    <div>
+    <div class="tree-view-header">
+        <span class="caret" (click)="toggleExpandTreeView()">
+                <i class="fa" [class.fa-caret-down]="expanded" [class.fa-caret-right]="!expanded"></i>
+        </span>
+        <span class="name" (click)="toggleExpandTreeView()">{{name}}</span>
+        <i class="fa fa-compress collapse-all" title="Collapse all" (click)="collapseAll()"></i>
+    </div>
+    <div *ngIf="expanded">
         <div *ngFor="let treeRow of treeRows, trackBy: treeRowTrackBy" [style.padding-left]="((treeRow.indent + 1) * 12) + 'px'"
             class="tree-row" [title]="treeRow.path" (click)="handleClick(treeRow)">
             <span class="caret" (click)="handleCaretClick(treeRow, $event)">
                 <i class="fa" [class.fa-caret-down]="treeRow.expanded" [class.fa-caret-right]="!treeRow.expanded" *ngIf="treeRow.isDirectory"></i>
             </span>
-            <span class="icon">
+            <span class="file-icon">
                 <i class="fa" [class.fa-folder]="treeRow.isDirectory" [class.fa-file]="!treeRow.isDirectory"></i>
             </span>
             <span class="label">{{treeRow.name}}</span>

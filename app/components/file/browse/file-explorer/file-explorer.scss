@@ -8,6 +8,7 @@ bl-file-explorer {
         transition:width 100ms;
         width: $listview-width;
         flex: 0 0 $listview-width;
+        border-right: 1px solid $border-color;
 
         .header {
             height: $listview-header-height;

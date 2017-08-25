@@ -18,14 +18,17 @@ export interface TreeRow {
 })
 export class FileTreeViewComponent implements OnChanges, OnDestroy {
     @Input() public fileNavigator: FileNavigator;
+    @Input() public name: string;
     @Input() public autoExpand = false;
 
+    public expanded = true;
     public currentNode: FileTreeNode;
     public expandedDirs: StringMap<boolean> = {};
 
     public treeRows: TreeRow[] = [];
     private _tree: FileTreeStructure;
     private _navigatorSubs: Subscription[] = [];
+    private _filterSub: Subscription;
 
     public ngOnChanges(inputs) {
         if (inputs.fileNavigator) {
@@ -47,6 +50,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
 
     public ngOnDestroy() {
         this._clearNavigatorSubs();
+        this._filterSub.unsubscribe();
     }
 
     public handleClick(treeRow: TreeRow) {
@@ -91,6 +95,20 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
         if (this._tree) {
             this._buildTreeRows(this._tree);
         }
+    }
+
+    /**
+     * Toggle expanding the global tree view
+     */
+    public toggleExpandTreeView() {
+        this.expanded = !this.expanded;
+    }
+
+    public collapseAll() {
+        for (let key of Object.keys(this.expandedDirs)) {
+            this.expandedDirs[key] = false;
+        }
+        this._buildTreeRows(this._tree);
     }
 
     public treeRowTrackBy(treeRow: TreeRow) {

@@ -26,7 +26,7 @@ export class TaskOutputsComponent implements OnChanges {
 
     public OutputType = OutputType;
     public outputTabs = outputTabs;
-    public selectedTab: OutputType = OutputType.output;
+    public selectedTab: OutputType = OutputType.node;
 
     public pickedFileLoader: FileLoader = null;
     public fileNavigator: FileNavigator;

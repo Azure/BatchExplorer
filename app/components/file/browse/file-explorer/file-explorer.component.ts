@@ -5,6 +5,11 @@ import { LoadingStatus } from "app/components/base/loading";
 import { FileNavigator, FileTreeNode } from "app/services/file";
 import "./file-explorer.scss";
 
+export interface FileNavigatorEntry {
+    name: string;
+    navigator: FileNavigator;
+}
+
 /**
  * File explorer is a combination of the tree view and the file preview.
  */
@@ -14,18 +19,24 @@ import "./file-explorer.scss";
 })
 export class FileExplorerComponent implements OnChanges, OnDestroy {
     @Input() public fileNavigator: FileNavigator;
+    @Input() public fileNavigators: FileNavigatorEntry[];
     @Input() public autoExpand = false;
 
     public LoadingStatus = LoadingStatus;
     public currentNode: FileTreeNode;
 
-    private _currentNodeSub: Subscription;
+    private _currentNodeSubs: Subscription[] = [];
 
     public ngOnChanges(inputs) {
         if (inputs.fileNavigator) {
+            this.fileNavigators = [{ name: "Files", navigator: this.fileNavigator }];
+        }
+        if (inputs.fileNavigator || inputs.fileNavigators) {
             this._clearCurrentNodeSub();
-            this._currentNodeSub = this.fileNavigator.currentNode.subscribe((node) => {
-                this.currentNode = node;
+            this._currentNodeSubs = this.fileNavigators.map(entry => {
+                return entry.navigator.currentNode.subscribe((node) => {
+                    this.currentNode = node;
+                });
             });
         }
     }
@@ -39,8 +50,6 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
     }
 
     private _clearCurrentNodeSub() {
-        if (this._currentNodeSub) {
-            this._currentNodeSub.unsubscribe();
-        }
+        this._currentNodeSubs.forEach(x => x.unsubscribe());
     }
 }
