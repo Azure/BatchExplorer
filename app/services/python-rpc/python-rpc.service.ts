@@ -127,10 +127,10 @@ export class PythonRpcService {
     }
 
     public callWithAuth(method: string, params: any[]): Observable<any> {
-        return this.accountService.currentAccount.flatMap((account: AccountResource) => {
+        return this.accountService.currentAccount.first().flatMap((account: AccountResource) => {
             const batchToken = this.adalService.accessTokenFor(account.subscription.tenantId, ResourceUrl.batch);
             const armToken = this.adalService.accessTokenFor(account.subscription.tenantId, ResourceUrl.arm);
-            return Observable.combineLatest(batchToken, armToken).flatMap(([batchToken, armToken]) => {
+            return Observable.combineLatest(batchToken, armToken).first().flatMap(([batchToken, armToken]) => {
                 const authParam = { batchToken, armToken, account: account.toJS() };
                 return this.call(method, params, {
                     authentication: authParam,
@@ -201,7 +201,9 @@ export class PythonRpcService {
         }
         const request = this._currentRequests[requestId];
         if (!request) {
-            log.error(`Request with id ${requestId} doesn't exists. Maybe it timed out!`, response);
+            if (!response.stream) {
+                log.error(`Request with id ${requestId} doesn't exists. Maybe it timed out!`, response);
+            }
             return null;
         }
         if (!response.result && !response.error) {
