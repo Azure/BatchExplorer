@@ -91,9 +91,16 @@ export class ServerError {
     public status: number;
     public statusText: string;
     public body: ServerErrorBodyAttributes;
+    public message: string;
 
     constructor(attributes: ServerErrorAttributes) {
         Object.assign(this, attributes);
+
+        const value = this.body.message;
+        // Remove the request id from the the message
+        const lines = value.split("\n");
+
+        this.message = lines.first();
     }
 
     public toString() {

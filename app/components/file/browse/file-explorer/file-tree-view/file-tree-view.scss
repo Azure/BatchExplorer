@@ -32,6 +32,10 @@ bl-file-tree-view {
             text-transform: uppercase;
         }
 
+        .error {
+            color: map-get($danger, 500);
+        }
+
         .collapse-all {
             padding: 0 10px 0 5px;
             cursor: pointer;

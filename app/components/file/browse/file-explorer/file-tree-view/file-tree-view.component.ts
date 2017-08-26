@@ -29,7 +29,6 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     public treeRows: TreeRow[] = [];
     private _tree: FileTreeStructure;
     private _navigatorSubs: Subscription[] = [];
-    private _filterSub: Subscription;
 
     public ngOnChanges(inputs) {
         if (inputs.fileNavigator) {
@@ -51,7 +50,6 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
 
     public ngOnDestroy() {
         this._clearNavigatorSubs();
-        this._filterSub.unsubscribe();
     }
 
     public handleClick(treeRow: TreeRow) {

@@ -4,9 +4,15 @@
                 <i class="fa" [class.fa-caret-down]="expanded" [class.fa-caret-right]="!expanded"></i>
         </span>
         <span class="name" (click)="toggleExpandTreeView()">{{name}}</span>
+        <span class="error" *ngIf="fileNavigator.error" [title]="fileNavigator.error.body?.code">
+            <i class="fa fa-warning"></i>
+        </span>
         <i class="fa fa-compress collapse-all" title="Collapse all" (click)="collapseAll()"></i>
     </div>
     <div *ngIf="expanded">
+        <div *ngIf="fileNavigator.error">
+            {{fileNavigator.error.message}}
+        </div>
         <div *ngFor="let treeRow of treeRows, trackBy: treeRowTrackBy" [style.padding-left]="((treeRow.indent + 1) * 12) + 'px'"
             class="tree-row" [title]="treeRow.path" (click)="handleClick(treeRow)">
             <span class="caret" (click)="handleCaretClick(treeRow, $event)">

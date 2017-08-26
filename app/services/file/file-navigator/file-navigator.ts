@@ -2,7 +2,7 @@ import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
-import { File } from "app/models";
+import { File, ServerError } from "app/models";
 import { RxListProxy } from "app/services/core";
 import { FileLoader } from "app/services/file";
 import { ObjectUtils } from "app/utils";
@@ -25,6 +25,7 @@ export class FileNavigator {
     public basePath: string;
     public tree: Observable<FileTreeStructure>;
     public currentFileLoader: FileLoader;
+    public error: ServerError;
 
     private _currentPath = new BehaviorSubject("");
     private _tree = new BehaviorSubject(new FileTreeStructure());
@@ -99,6 +100,10 @@ export class FileNavigator {
                 },
                 error: (error) => {
                     console.error("ERRROROR loading navigato", error);
+                    this.error = error;
+                    const tree = this._tree.value;
+                    tree.getNode(path).loadingStatus = LoadingStatus.Error;
+                    this._tree.next(tree);
                 },
             });
     }

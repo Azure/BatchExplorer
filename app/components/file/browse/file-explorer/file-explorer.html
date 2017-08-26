@@ -6,7 +6,7 @@
 </section>
 <section class="file-content-container">
     <div *ngIf="currentFileNavigator && currentNode">
-        <bl-loading [status]="currentNode.loadingStatus">
+        <bl-loading [status]="currentNode.loadingStatus" [error]="currentFileNavigator.error">
             <div *ngIf="currentNode.loadingStatus === LoadingStatus.Ready">
                 <bl-file-table-view *ngIf="currentNode.isDirectory" [treeNode]="currentNode" (pathChange)="navigateTo($event)"> </bl-file-table-view>
             </div>
