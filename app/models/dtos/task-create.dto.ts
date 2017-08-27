@@ -30,7 +30,7 @@ export class TaskCreateDto extends Dto<TaskCreateDto> {
     public constraints?: ConstraintDto;
 
     @DtoAttr()
-    public runElevated?: boolean;
+    public userIdentity?: any;
 
     @DtoAttr()
     public multiInstanceSettings?: any;
