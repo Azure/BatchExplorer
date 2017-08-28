@@ -73,7 +73,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
                     .cascade((data) => this._runJobWithPool(data));
                 break;
             }
-            case Modes.OldPoolAndJob: {
+            case Modes.ExistingPoolAndJob: {
                 this.jobTemplate.job.properties.poolInfo = this.pickedPool.value;
                 obs = this.pythonRpcService.callWithAuth("submit-ncj-job", [this.jobTemplate, this.jobParams.value])
                     .cascade((data) => this._redirectToJob(data.properties.id));

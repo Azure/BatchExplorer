@@ -5,7 +5,7 @@ import * as inflection from "inflection";
 export enum Modes {
     None,
     NewPoolAndJob,
-    OldPoolAndJob,
+    ExistingPoolAndJob,
     NewPool,
 }
 

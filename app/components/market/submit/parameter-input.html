@@ -1,7 +1,7 @@
 <div [ngSwitch]="parameter.type">
     <div *ngSwitchCase="NcjParameterExtendedType.string">
         <md-input-container class="form-element">
-            <input mdInput type="text" name="parameter.name" [formControl]="parameterValue" [placeholder]="parameter.name">
+            <input mdInput type="text" [formControl]="parameterValue" [placeholder]="parameter.name">
             <md-hint align="end"> {{ parameter.description }} </md-hint>
         </md-input-container>
     </div>
@@ -22,13 +22,13 @@
     </div>
     <div *ngSwitchCase="NcjParameterExtendedType.int">
         <md-input-container class="form-element">
-            <input mdInput type="number" name="parameter.name" [formControl]="parameterValue" [placeholder]="parameter.name">
+            <input mdInput type="number" [formControl]="parameterValue" [placeholder]="parameter.name">
             <md-hint align="end"> {{ parameter.description }} </md-hint>
         </md-input-container>
     </div>
     <div *ngSwitchDefault>
         <md-input-container class="form-element">
-            <input mdInput type="text" name="parameter.name" [formControl]="parameterValue" [placeholder]="parameter.name">
+            <input mdInput type="text" [formControl]="parameterValue" [placeholder]="parameter.name">
             <md-hint align="end"> {{ parameter.description }} </md-hint>
         </md-input-container>
     </div>
