@@ -98,6 +98,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     }
 
     public handleClickTreeViewHeader() {
+        this.expanded = true;
         this.navigate.emit("");
         this.fileNavigator.navigateTo("");
     }

@@ -6,6 +6,7 @@ import { Observable } from "rxjs";
 
 import { log } from "app/utils";
 import "./button.scss";
+import { ClickableComponent } from "./clickable";
 
 export type ButtonType = "square" | "round" | "wide";
 export type ButtonColor = "primary" | "light" | "danger" | "warn";
@@ -32,7 +33,7 @@ export enum SubmitStatus {
     changeDetection: ChangeDetectionStrategy.OnPush,
 
 })
-export class ButtonComponent implements OnChanges {
+export class ButtonComponent extends ClickableComponent implements OnChanges {
     public SubmitStatus = SubmitStatus;
 
     @Input() public action: ButtonAction;

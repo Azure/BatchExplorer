@@ -1,13 +1,17 @@
 <div class="tree-view-header">
-    <span class="caret" (click)="toggleExpandTreeView()" tabindex="0">
+    <bl-clickable class="caret" (do)="toggleExpandTreeView()">
         <i class="fa" [class.fa-caret-down]="expanded" [class.fa-caret-right]="!expanded"></i>
-    </span>
-    <span class="name" (click)="handleClickTreeViewHeader()" tabindex="0">{{name}}</span>
+    </bl-clickable>
+    <bl-clickable class="name" (do)="handleClickTreeViewHeader()">{{name}}</bl-clickable>
     <span class="error" *ngIf="fileNavigator.error" [title]="fileNavigator.error.body?.code">
         <i class="fa fa-warning"></i>
     </span>
-    <i class="fa fa-refresh action" title="Refresh" (click)="refresh()" tabindex="0"></i>
-    <i class="fa fa-compress collapse-all action" title="Collapse all" (click)="collapseAll()" tabindex="0"></i>
+    <bl-clickable (do)="refresh()">
+        <i class="fa fa-refresh action" title="Refresh"></i>
+    </bl-clickable>
+    <bl-clickable (do)="collapseAll()">
+        <i class="fa fa-compress collapse-all action" title="Collapse all"></i>
+    </bl-clickable>
 </div>
 <div *ngIf="expanded">
     <div *ngIf="fileNavigator.error">
