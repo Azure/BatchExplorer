@@ -65,7 +65,7 @@ export class BlobStorageClientProxy {
 
                     const folders = this._getFolderNames(response).map((name) => {
                         return {
-                            name: name,
+                            name: this._removePrefixFrom(name, blobPrefix),
                             url: `${container}/${name}`,
                             isDirectory: true,
                         };
@@ -74,7 +74,7 @@ export class BlobStorageClientProxy {
                     resolve({
                         data: folders.concat(result.entries.map((blob) => {
                             return {
-                                name: blob.name,
+                                name: this._removePrefixFrom(blob.name, blobPrefix),
                                 url: `${container}/${blob.name}`,
                                 isDirectory: false,
                                 properties: {
@@ -276,5 +276,18 @@ export class BlobStorageClientProxy {
         }
         const data = Array.isArray(blobPrefix) ? blobPrefix : [blobPrefix];
         return data.map(x => x["Name"].slice(0, -1));
+    }
+
+    /**
+     * Remove the given prefix from the given string. Returns the output.
+     * @param name Name containing the prefix
+     * @param prefix Prefix to remove
+     */
+    private _removePrefixFrom(name: string, prefix: string): string {
+        if (name.startsWith(prefix)) {
+            return name.substring(prefix.length, name.length);
+        } else {
+            return name;
+        }
     }
 }

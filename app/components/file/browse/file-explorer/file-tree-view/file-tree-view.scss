@@ -19,7 +19,8 @@ bl-file-tree-view {
         }
 
         .caret {
-            margin-left: 3px;
+            padding: 0 5px;
+            width: 20px;
         }
 
         .name {
@@ -34,10 +35,11 @@ bl-file-tree-view {
 
         .error {
             color: map-get($danger, 500);
+            padding: 0 5px;
         }
 
-        .collapse-all {
-            padding: 0 10px 0 5px;
+        .action {
+            padding: 0 5px;
             cursor: pointer;
             color: $mineshaft-grey;
             font-size: 16px;

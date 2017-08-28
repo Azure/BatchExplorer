@@ -92,6 +92,7 @@ export class ServerError {
     public statusText: string;
     public body: ServerErrorBodyAttributes;
     public message: string;
+    public original: any;
 
     constructor(attributes: ServerErrorAttributes) {
         Object.assign(this, attributes);

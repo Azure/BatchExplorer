@@ -34,3 +34,12 @@ ol ul {
 textarea {
     resize: vertical;
 }
+
+[tabindex="0"]:focus {
+    // outline-color: map-get($primary, 300);
+    outline-color: #528bff;
+    outline-width: 1px;
+    outline-style: solid;
+    outline-offset: -1px;
+    opacity: 1!important;
+}

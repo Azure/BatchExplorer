@@ -48,11 +48,12 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
 
     public updateCurrentNavigator(navigator: FileNavigator) {
         this.currentFileNavigator = navigator;
+        this._updateNavigatorEvents();
     }
 
     private _updateNavigatorEvents() {
         this._clearCurrentNodeSub();
-        return this.currentFileNavigator.currentNode.subscribe((node) => {
+        this._currentNodeSub = this.currentFileNavigator.currentNode.subscribe((node) => {
             this.currentNode = node;
         });
     }

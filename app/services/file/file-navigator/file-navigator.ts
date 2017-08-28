@@ -12,6 +12,14 @@ export interface FileNavigatorConfig {
     basePath?: string;
     loadPath: (options: any) => RxListProxy<any, File>;
     getFile: (filename: string) => FileLoader;
+
+    /**
+     * Optional callback that gets called when an error is returned listing files.
+     * You can that way ignore the error or modify it.
+     * Return null to ignore error.
+     */
+    onError?: (error: ServerError) => ServerError;
+
 }
 /**
  * Generic navigator class for a file explorer.
@@ -34,15 +42,17 @@ export class FileNavigator {
 
     private _proxies: StringMap<RxListProxy<any, File>> = {};
     private _getFileLoader: (filename: string) => FileLoader;
+    private _onError: (error: ServerError) => ServerError;
 
     constructor(config: FileNavigatorConfig) {
         this.basePath = config.basePath || "";
         this._loadPath = config.loadPath;
         this._getFileLoader = config.getFile;
+        this._onError = config.onError;
         this.currentPath = this._currentPath.asObservable();
         this.currentNode = Observable.combineLatest(this._currentPath, this._tree).map(([path, tree]) => {
             return tree.getNode(path);
-        }).share();
+        }).shareReplay(1);
         this.tree = this._tree.asObservable();
     }
 
@@ -63,13 +73,16 @@ export class FileNavigator {
                 this._loadFileInPath(path);
             }
         } else {
-            console.log("Tis a file do somehting....");
             this.currentFileLoader = this._getFileLoader(node.path);
         }
     }
 
     public list(): Observable<List<File>> {
         return this._proxies[this._currentPath.value].items.first();
+    }
+
+    public refresh(path: string = "") {
+        this._loadFileInPath(path);
     }
 
     public dispose() {
@@ -89,7 +102,6 @@ export class FileNavigator {
             .flatMap(() => proxy.items.first())
             .subscribe({
                 next: (files: List<File>) => {
-                    console.log("Got files", files.toJS());
                     this.loadingStatus = LoadingStatus.Ready;
 
                     const tree = this._tree.value;
@@ -98,7 +110,10 @@ export class FileNavigator {
                     this._tree.next(tree);
                 },
                 error: (error) => {
-                    console.error("ERRROROR loading navigato", error);
+                    if (this._onError) {
+                        error = this._onError(error);
+                        if (!error) { return; }
+                    }
                     this.error = error;
                     const tree = this._tree.value;
                     tree.getNode(path).loadingStatus = LoadingStatus.Error;

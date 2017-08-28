@@ -38,6 +38,13 @@ export interface BlobContentResult {
     content: string;
 }
 
+export interface NavigateBlobsOptions {
+    /**
+     * Optional callback that gets called when an error is returned listing files.
+     * You can that way ignore the error or modify it.
+     */
+    onError?: (error: ServerError) => ServerError;
+}
 // List of error we don't want to log for storage requests
 const storageIgnoredErrors = [
     Constants.HttpCode.NotFound,
@@ -80,7 +87,7 @@ export class StorageService {
         : RxListProxy<ListBlobParams, File> {
 
         const initialOptions: any = { maxResults: this.maxBlobPageSize, recursive: false, ...options };
-        console.log("Initial options...", initialOptions);
+        console.log("Initial options...", blobPrefix, initialOptions);
         return new RxStorageListProxy<ListBlobParams, File>(File, this.storageClient, {
             cache: (params) => this.getBlobFileCache(params),
             getData: (client, params, options, continuationToken) => {
@@ -109,16 +116,16 @@ export class StorageService {
      * @param prefix Prefix to make the root of the tree
      * @param options List options
      */
-    public navigateContainerBlobs(container: string, prefix: string) {
+    public navigateContainerBlobs(container: string, prefix?: string, options: NavigateBlobsOptions = {}) {
         return new FileNavigator({
             loadPath: (options) => {
-                console.log("Options...", options);
                 return this.listBlobs(Promise.resolve(container), prefix, {
                     recursive: false,
                     startswith: options.filter,
                 });
             },
             getFile: (filename: string) => this.getBlobContent(Promise.resolve(container), filename, prefix),
+            onError: options.onError,
         });
     }
 

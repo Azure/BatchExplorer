@@ -1,8 +1,9 @@
 import { Component, Input, OnChanges } from "@angular/core";
 import { FileNavigatorEntry } from "app/components/file/browse/file-explorer";
+import { ServerError } from "app/models";
 import { FileService, StorageService } from "app/services";
 import { FileLoader } from "app/services/file";
-import { StorageUtils } from "app/utils";
+import { Constants, StorageUtils } from "app/utils";
 import "./task-outputs.scss";
 
 enum OutputType {
@@ -32,6 +33,8 @@ export class TaskOutputsComponent implements OnChanges {
     public pickedFileLoader: FileLoader = null;
     public fileNavigators: FileNavigatorEntry[] = [];
 
+    private _taskOutputContainer: string;
+
     constructor(private fileService: FileService, private storageService: StorageService) { }
 
     public ngOnChanges(inputs) {
@@ -51,27 +54,50 @@ export class TaskOutputsComponent implements OnChanges {
 
     private _updateNavigator() {
         StorageUtils.getSafeContainerName(this.jobId).then((container) => {
+            this._taskOutputContainer = container;
             this._clearFileNavigator();
             const nodeNavigator = this.fileService.navigateTaskFile(this.jobId, this.taskId);
             nodeNavigator.init();
 
-            const prefix = `${this.taskId}/`;
-            const taskOutputNavigator = this.storageService.navigateContainerBlobs(container, prefix);
+            const taskOutputPrefix = `${this.taskId}/$TaskOutput/`;
+            const taskOutputNavigator = this.storageService.navigateContainerBlobs(container, taskOutputPrefix, {
+                onError: (error) => this._processBlobError(error),
+            });
             taskOutputNavigator.init();
 
-            // const prefix = `${this.taskId}/`;
-            // const taskLogsNavigator = this.storageService.navigateContainerBlobs(container, { prefix: prefix });
-            // taskLogsNavigator.init();
+            const taskLogsPrefix = `${this.taskId}/$TaskLog/`;
+            const taskLogsNavigator = this.storageService.navigateContainerBlobs(container, taskLogsPrefix);
+            taskLogsNavigator.init();
 
             this.fileNavigators = [
                 { name: "Node files", navigator: nodeNavigator },
-                { name: "Persisted output", navigator: nodeNavigator },
-                // { name: "Persisted logs", navigator: nodeNavigator },
+                { name: "Persisted output", navigator: taskOutputNavigator },
+                { name: "Persisted logs", navigator: taskLogsNavigator },
             ];
-            console.log("File navigators...", this.fileNavigators);
         });
     }
+
+    private _processBlobError(error: ServerError): ServerError {
+        if (error.status === Constants.HttpCode.NotFound && error.body.code === "ContainerNotFound") {
+            return new ServerError({
+                status: 404,
+                body: {
+                    code: "NoPersistedOutput",
+                    message: this._fileConventionErrorMessage(),
+                },
+                original: error.original,
+            });
+        }
+        return error;
+    }
+
     private _clearFileNavigator() {
         this.fileNavigators.forEach(x => x.navigator.dispose());
+    }
+
+    private _fileConventionErrorMessage() {
+        return `This task is not following the file output convention\n`
+            + `There is no blob container with the name ${this._taskOutputContainer}\n`
+            + `Learn more here https://docs.microsoft.com/en-us/azure/batch/batch-task-output-file-conventions`;
     }
 }

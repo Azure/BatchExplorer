@@ -97,11 +97,17 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
         }
     }
 
+    public handleClickTreeViewHeader() {
+        this.navigate.emit("");
+        this.fileNavigator.navigateTo("");
+    }
+
     /**
      * Toggle expanding the global tree view
      */
-    public toggleExpandTreeView() {
+    public toggleExpandTreeView(): boolean {
         this.expanded = !this.expanded;
+        return this.expanded;
     }
 
     public collapseAll() {
@@ -113,6 +119,10 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
 
     public treeRowTrackBy(treeRow: TreeRow) {
         return treeRow.path;
+    }
+
+    public refresh() {
+        this.fileNavigator.refresh();
     }
 
     private _buildTreeRows(tree) {
