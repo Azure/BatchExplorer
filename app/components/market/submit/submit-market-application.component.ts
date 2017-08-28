@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { NcjJobTemplate, NcjPoolTemplate, ServerError } from "app/models";
+import { NcjJobTemplate, NcjParameterRawType, NcjPoolTemplate, ServerError } from "app/models";
 import { NcjTemplateService, PythonRpcService } from "app/services";
 import { autobind } from "core-decorators";
 import { Modes, NcjParameterWrapper } from "./market-application.model";
@@ -111,35 +111,44 @@ export class SubmitMarketApplicationComponent implements OnInit {
         this.poolParametersWrapper = poolTempWrapper;
     }
 
+    private _getFormGroup(template) {
+        let templateParameters = [];
+        if (template && template.parameters) {
+            templateParameters = Object.keys(template.parameters);
+        }
+        const templateFormGroup = {};
+        for (let key of templateParameters) {
+            const validatorGroup: any[] = [];
+            validatorGroup.push(Validators.required);
+            if (template.parameters[key].type === NcjParameterRawType.int) {
+                if (template.parameters[key].minValue) {
+                    validatorGroup.push(Validators.min(template.parameters[key].minValue));
+                }
+                if (template.parameters[key].maxValue) {
+                    validatorGroup.push(Validators.max(template.parameters[key].maxValue));
+                }
+            }
+            if (template.parameters[key].type === NcjParameterRawType.string) {
+                if (template.parameters[key].minLength) {
+                    validatorGroup.push(Validators.minLength(template.parameters[key].minLength));
+                }
+                if (template.parameters[key].maxLength) {
+                    validatorGroup.push(Validators.maxLength(template.parameters[key].maxLength));
+                }
+            }
+            if (template.parameters[key].defaultValue) {
+                const defaultValue = String(template.parameters[key].defaultValue);
+                templateFormGroup[key] = new FormControl(defaultValue, Validators.compose(validatorGroup) );
+            } else {
+                templateFormGroup[key] = new FormControl(null, Validators.compose(validatorGroup));
+            }
+        }
+        return new FormGroup(templateFormGroup);
+    }
+
     private _createForms() {
-        let jobParameters = [];
-        let poolParameters = [];
-        if (this.jobTemplate && this.jobTemplate.parameters) {
-            jobParameters = Object.keys(this.jobTemplate.parameters);
-        }
-        if (this.poolTemplate && this.poolTemplate.parameters) {
-            poolParameters = Object.keys(this.poolTemplate.parameters);
-        }
-        let jobFormGroup = {};
-        for (let key of jobParameters) {
-            if (this.jobTemplate.parameters[key].defaultValue) {
-                const defaultValue = String(this.jobTemplate.parameters[key].defaultValue);
-                jobFormGroup[key] = new FormControl(defaultValue);
-            } else {
-                jobFormGroup[key] = new FormControl();
-            }
-        }
-        this.jobParams = new FormGroup(jobFormGroup);
-        let poolFormGroup = {};
-        for (let key of poolParameters) {
-            if (this.poolTemplate.parameters[key].defaultValue) {
-                const defaultValue = String(this.poolTemplate.parameters[key].defaultValue);
-                poolFormGroup[key] = new FormControl(defaultValue);
-            } else {
-                poolFormGroup[key] = new FormControl();
-            }
-        }
-        this.poolParams = new FormGroup(poolFormGroup);
+        this.jobParams = this._getFormGroup(this.jobTemplate);
+        this.poolParams = this._getFormGroup(this.poolTemplate);
         this.form = this.formBuilder.group({ pool: this.poolParams, job: this.jobParams });
     }
 
