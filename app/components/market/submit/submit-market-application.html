@@ -1,34 +1,45 @@
 <bl-scrollable>
-    <bl-complex-form [formGroup]="form" [submit]="submit" [hideFooter]="true" *ngIf="form">
-        <bl-form-page main-form-page [title]="title" [formGroup]="form">
-            <bl-form-section title="Job" subtitle="Job parameters" formGroupName="job">
-                <md-input-container class="form-element" *ngIf="jobNameParam">
-                    <input mdInput type="text" name="name" formControlName="jobName" placeholder="Job name">
-                </md-input-container>
-                <div *ngFor="let param of otherParameters" [ngSwitch]="param.type">
-                    <div *ngSwitchCase="NcjParameterExtendedType.fileGroup">
-                        <bl-file-group-picker [formControlName]="param.id" [label]="param.name" class="form-element" [hint]="param.description">
-                        </bl-file-group-picker>
-                    </div>
-                    <div *ngSwitchCase="NcjParameterExtendedType.fileInFileGroup">
-                        <bl-cloud-file-picker [containerId]="getContainerFromFileGroup(jobFormGroup.controls[param.dependsOn]?.value)" [formControlName]="param.id"
-                            [label]="param.name" class="form-element" [hint]="param.description">
-                        </bl-cloud-file-picker>
-                    </div>
-                    <div *ngSwitchDefault>
-                        <md-input-container class="form-element">
-                            <input mdInput type="text" name="name" [formControlName]="param.id" [placeholder]="param.name">
-                            <md-hint align="end">{{param.description}}</md-hint>
-                        </md-input-container>
-                    </div>
+    <bl-complex-form [formGroup]="form" [hideFooter]="true">
+        <bl-form-page main-form-page [title]="title">
+            <bl-form-section title="Mode">
+                <div class="modes">
+                    <bl-button type="wide" [class.selected]="modeState === Modes.NewPoolAndJob" (click)="pickMode(Modes.NewPoolAndJob)">Run job with auto pool</bl-button>
+                    <bl-button type="wide" [class.selected]="modeState === Modes.ExistingPoolAndJob" (click)="pickMode(Modes.ExistingPoolAndJob)">Run job with existing pool</bl-button>
+                    <bl-button type="wide" [class.selected]="modeState === Modes.NewPool" (click)="pickMode(Modes.NewPool)">Create pool for later use</bl-button>
                 </div>
             </bl-form-section>
-            <bl-form-section title="Pool">
-                <bl-pool-picker [formControl]="pickedPool"></bl-pool-picker>
-            </bl-form-section>
+            <div *ngIf="modeState === Modes.NewPoolAndJob">
+                <bl-form-section title="Pool" formGroupName="pool">
+                    <div *ngFor="let param of poolParametersWrapper">
+                        <bl-parameter-input [formControlName]="param.id" [parameter]="param" [parameterValues]="poolParams.value"> </bl-parameter-input>
+                    </div>
+                </bl-form-section>
+                <bl-form-section title="Job" formGroupName="job">
+                    <div *ngFor="let param of jobParametersWrapper">
+                        <bl-parameter-input [formControlName]="param.id" [parameter]="param" [parameterValues]="jobParams.value"> </bl-parameter-input>
+                    </div>
+                </bl-form-section>
+            </div>
+            <div *ngIf="modeState === Modes.ExistingPoolAndJob">
+                <bl-form-section title="Pool">
+                    <bl-pool-picker [formControl]="pickedPool"></bl-pool-picker>
+                </bl-form-section>
+                <bl-form-section title="Job" formGroupName="job">
+                    <div *ngFor="let param of jobParametersWrapper">
+                        <bl-parameter-input [formControlName]="param.id" [parameter]="param" [parameterValues]="jobParams.value"> </bl-parameter-input>
+                    </div>
+                </bl-form-section>
+            </div>
+            <div *ngIf="modeState === Modes.NewPool">
+                <bl-form-section title="Pool" formGroupName="pool">
+                    <div *ngFor="let param of poolParametersWrapper">
+                        <bl-parameter-input [formControlName]="param.id" [parameter]="param" [parameterValues]="poolParams.value"> </bl-parameter-input>
+                    </div>
+                </bl-form-section>
+            </div>
         </bl-form-page>
     </bl-complex-form>
-    <div class="submit-box">
+    <div class="submit-box" *ngIf="modeState !== Modes.None">
         <bl-server-error [error]="error"> </bl-server-error>
         <bl-button [action]="submit" type="wide" class="submit-job" color="success">
             <i class="fa fa-play"></i>

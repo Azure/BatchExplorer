@@ -1,0 +1,35 @@
+<div [ngSwitch]="parameter.type">
+    <div *ngSwitchCase="NcjParameterExtendedType.string">
+        <md-input-container class="form-element">
+            <input mdInput type="text" [formControl]="parameterValue" [placeholder]="parameter.name">
+            <md-hint align="end"> {{ parameter.description }} </md-hint>
+        </md-input-container>
+    </div>
+    <div *ngSwitchCase="NcjParameterExtendedType.fileGroup">
+        <bl-file-group-picker [formControl]="parameterValue" [label]="parameter.name" class="form-element" [hint]="parameter.description">
+        </bl-file-group-picker>
+    </div>
+    <div *ngSwitchCase="NcjParameterExtendedType.fileInFileGroup">
+        <bl-cloud-file-picker [containerId]="getContainerFromFileGroup(parameterValues[parameter.dependsOn])" [formControl]="parameterValue"
+        [label]="parameter.name" class="form-element" [hint]="parameter.description">
+        </bl-cloud-file-picker>
+    </div>
+    <div *ngSwitchCase="NcjParameterExtendedType.dropDown">
+        <md-select [formControl]="parameterValue" [placeholder]="parameter.name">
+            <md-hint align="end"> {{ parameter.description }} </md-hint>
+            <md-option *ngFor="let opt of parameter.allowedValues" [value]="opt"> {{ opt }} </md-option>
+        </md-select>
+    </div>
+    <div *ngSwitchCase="NcjParameterExtendedType.int">
+        <md-input-container class="form-element">
+            <input mdInput type="number" [formControl]="parameterValue" [placeholder]="parameter.name">
+            <md-hint align="end"> {{ parameter.description }} </md-hint>
+        </md-input-container>
+    </div>
+    <div *ngSwitchDefault>
+        <md-input-container class="form-element">
+            <input mdInput type="text" [formControl]="parameterValue" [placeholder]="parameter.name">
+            <md-hint align="end"> {{ parameter.description }} </md-hint>
+        </md-input-container>
+    </div>
+</div>

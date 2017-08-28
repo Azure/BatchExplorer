@@ -34,6 +34,16 @@ bl-submit-market-application {
         }
     }
 
+    .modes {
+        bl-button {
+            width: 200px;
+            margin-right: 10px;
+            &.selected {
+                background: map-get($primary, 600);
+            }
+        }
+    }
+
     bl-button.submit-job {
         color: $whitesmoke;
         width: 100px;

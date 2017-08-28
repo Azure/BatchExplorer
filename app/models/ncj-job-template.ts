@@ -1,4 +1,4 @@
-enum NcjParameterRawType {
+export enum NcjParameterRawType {
     string = "string",
     int = "int",
 }
@@ -6,7 +6,7 @@ enum NcjParameterRawType {
 export interface NcjParameter {
     type: NcjParameterRawType;
     defaultValue?: any;
-    allowedValues: any[];
+    allowedValues?: any[];
     metadata: StringMap<string>;
 }
 
@@ -18,4 +18,10 @@ export interface NcjJobConfiguration {
 export interface NcjJobTemplate {
     parameters: StringMap<NcjParameter>;
     job: NcjJobConfiguration;
+}
+
+export interface NcjPoolTemplate {
+    parameters: StringMap<NcjParameter>;
+    pool: NcjJobConfiguration;
+    variables: NcjJobConfiguration;
 }
