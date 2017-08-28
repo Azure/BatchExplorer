@@ -275,7 +275,7 @@ describe("ParameterInputComponent", () => {
             expect(fileInputComponent.value.value).toBe(initialInput);
         });
 
-        it("should be input of dependsOn", () => {
+        it("should be ensure containerId is set to input of dependsOn", () => {
             expect(fileInputComponent.containerId).toBe(containerIdValue);
         });
 
