@@ -45,7 +45,7 @@ class TestComponent {
     };
 }
 
-describe("ParameterInputComponent", () => {
+fdescribe("ParameterInputComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: ParameterInputComponent;
@@ -98,9 +98,9 @@ describe("ParameterInputComponent", () => {
 
     describe("text parameter type", () => {
         let inputEl: DebugElement;
-        const initialInput: string = "initial input value";
-        const newInput: string = "new input value";
-        const updatedInput: string = "updated input";
+        const initialInput = "initial input value";
+        const newInput = "new input value";
+        const updatedInput = "updated input";
 
         beforeEach(() => {
             testComponent.param = new NcjParameterWrapper("jobName", {
@@ -135,9 +135,9 @@ describe("ParameterInputComponent", () => {
 
     describe("int parameter type", () => {
         let inputEl: DebugElement;
-        const initialInput: number = 10;
-        const newInput: number = 12;
-        const updatedInput: number = 13;
+        const initialInput = 10;
+        const newInput = 12;
+        const updatedInput = 13;
 
         beforeEach(() => {
             testComponent.param = new NcjParameterWrapper("frameEnd", {
@@ -181,8 +181,8 @@ describe("ParameterInputComponent", () => {
     describe("dropdown parameter type", () => {
         let selectEl: DebugElement;
         let selectComponent: MdSelect;
-        const initialInput: string = "a";
-        const newInput: string = "b";
+        const initialInput = "a";
+        const newInput = "b";
 
         beforeEach(() => {
             testComponent.param = new NcjParameterWrapper("jobName", {
@@ -216,8 +216,8 @@ describe("ParameterInputComponent", () => {
     });
 
     describe("filegroup parameter type", () => {
-        const initialInput: string = "blender-outputs";
-        const newInput: string = "newinput";
+        const initialInput = "blender-outputs";
+        const newInput = "newinput";
         let fileGroupComponent: FileGroupPickerComponent;
         let fileGroupEl: DebugElement;
 
@@ -249,8 +249,9 @@ describe("ParameterInputComponent", () => {
     });
 
     describe("fileinput parameter type", () => {
-        const initialInput: string = "scene.blend";
-        const newInput: string = "newinput";
+        const initialInput = "scene.blend";
+        const newInput = "newinput";
+        const containerIdValue = "fgrp-scenedata";
         let fileInputComponent: CloudFilePickerComponent;
         let fileInputEl: DebugElement;
 
@@ -272,6 +273,16 @@ describe("ParameterInputComponent", () => {
 
         it("should show initial input", () => {
             expect(fileInputComponent.value.value).toBe(initialInput);
+        });
+
+        it("should be input of dependsOn", () => {
+            expect(fileInputComponent.containerId).toBe(containerIdValue);
+        });
+
+        it("should show updated input", () => {
+            testComponent.paramControl.setValue(newInput);
+            fixture.detectChanges();
+            expect(fileInputComponent.value.value).toBe(newInput);
         });
 
         it("should show updated input", () => {

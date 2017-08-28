@@ -1,7 +1,6 @@
-import { Component, Input, OnDestroy, OnInit, forwardRef } from "@angular/core";
+import { Component, Input, OnDestroy, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { Subscription } from "rxjs";
-
 import { NcjParameterExtendedType, NcjParameterWrapper } from "./market-application.model";
 import "./parameter-input.scss";
 
@@ -14,7 +13,7 @@ import "./parameter-input.scss";
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => ParameterInputComponent), multi: true },
     ],
 })
-export class ParameterInputComponent implements ControlValueAccessor, OnInit, OnDestroy {
+export class ParameterInputComponent implements ControlValueAccessor, OnDestroy {
     public NcjParameterExtendedType = NcjParameterExtendedType;
 
     @Input() public parameter: NcjParameterWrapper;
@@ -35,10 +34,6 @@ export class ParameterInputComponent implements ControlValueAccessor, OnInit, On
 
     public getContainerFromFileGroup(fileGroup: string) {
         return fileGroup && `fgrp-${fileGroup}`;
-    }
-
-    public ngOnInit(): void {
-        // do not need
     }
 
     public ngOnDestroy(): void {
