@@ -66,6 +66,10 @@ export class BatchLabsApplication {
 
     }
 
+    public debugCrash() {
+        this.mainWindow.debugCrash();
+    }
+
     public quit() {
         app.quit();
     }

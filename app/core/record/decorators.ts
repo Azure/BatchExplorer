@@ -1,3 +1,4 @@
+import { List } from "immutable";
 import { RecordMissingExtendsError } from "./errors";
 import { setProp, updateTypeMetadata } from "./helpers";
 import { Record } from "./record";
@@ -61,26 +62,28 @@ export function Model() {
         if (!(ctr.prototype instanceof Record)) {
             throw new RecordMissingExtendsError(ctr);
         }
-        // save a reference to the original constructor
-        const original = ctr;
+        // // save a reference to the original constructor
+        // const original = ctr;
 
-        // the new constructor behaviour
-        const f: any = function (this: T, data, ...args) {
-            if (data instanceof ctr) {
-                return data;
-            }
-            const obj = original.apply(this, [data, ...args]);
-            obj._completeInitialization();
-            return obj;
-        };
-        // Copy static methods
-        for (let prop of Object.keys(original)) {
-            f[prop] = original[prop];
-        }
-        // copy prototype so intanceof operator still works
-        f.prototype = original.prototype;
+        // // the new constructor behaviour
+        // const f: any = function (this: T, data, ...args) {
+        //     if (data instanceof ctr) {
+        //         return data;
+        //     }
+        //     const obj = new original(data, ...args) as any;
+        //     console.log("origina", original, obj);
+        //     obj._completeInitialization();
+        //     return obj;
+        // };
+        // // Copy static methods
+        // for (let prop of Object.keys(original)) {
+        //     f[prop] = original[prop];
+        // }
+        // // copy prototype so intanceof operator still works
+        // f.prototype = original.prototype;
 
-        // return new constructor (will override original)
-        return f;
+        // // return new constructor (will override original)
+        // return f;
+        return ctr;
     };
 }
