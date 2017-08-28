@@ -1,9 +1,7 @@
 import { Component, OnInit } from "@angular/core";
-import { FormBuilder } from "@angular/forms";
-import { FormControl, FormGroup } from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { ServerError } from "app/models";
-import { NcjJobTemplate, NcjPoolTemplate } from "app/models";
+import { NcjJobTemplate, NcjPoolTemplate, ServerError } from "app/models";
 import { NcjTemplateService, PythonRpcService } from "app/services";
 import { autobind } from "core-decorators";
 import { Modes, NcjParameterWrapper } from "./market-application.model";
