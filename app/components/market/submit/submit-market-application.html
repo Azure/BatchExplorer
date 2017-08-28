@@ -4,7 +4,7 @@
             <bl-form-section title="Mode">
                 <div class="modes">
                     <bl-button type="wide" [class.selected]="modeState === Modes.NewPoolAndJob" (click)="pickMode(Modes.NewPoolAndJob)">Run job with auto pool</bl-button>
-                    <bl-button type="wide" [class.selected]="modeState === Modes.OldPoolAndJob" (click)="pickMode(Modes.OldPoolAndJob)">Run job with existing pool</bl-button>
+                    <bl-button type="wide" [class.selected]="modeState === Modes.ExistingPoolAndJob" (click)="pickMode(Modes.ExistingPoolAndJob)">Run job with existing pool</bl-button>
                     <bl-button type="wide" [class.selected]="modeState === Modes.NewPool" (click)="pickMode(Modes.NewPool)">Create pool for later use</bl-button>
                 </div>
             </bl-form-section>
@@ -20,7 +20,7 @@
                     </div>
                 </bl-form-section>
             </div>
-            <div *ngIf="modeState === Modes.OldPoolAndJob">
+            <div *ngIf="modeState === Modes.ExistingPoolAndJob">
                 <bl-form-section title="Pool">
                     <bl-pool-picker [formControl]="pickedPool"></bl-pool-picker>
                 </bl-form-section>

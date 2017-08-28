@@ -15,6 +15,17 @@ describe("marketApplicationModel", () => {
         expect(parameter.type).toBe(NcjParameterExtendedType.string);
     });
 
+    it("should compute friendly name", () => {
+        parameter = new NcjParameterWrapper("jobName", {
+            type: NcjParameterRawType.string,
+            metadata : {
+                description: "Param Description",
+            },
+            defaultValue: "jobname",
+        });
+        expect(parameter.name).toBe("Job name");
+    });
+
     it("should have default", () => {
         parameter = new NcjParameterWrapper("jobName", {
             type: NcjParameterRawType.string,
@@ -99,6 +110,17 @@ describe("marketApplicationModel", () => {
         expect(parameter.type).toBe(NcjParameterExtendedType.int);
     });
 
+    it("should detect int defaultValue", () => {
+        parameter = new NcjParameterWrapper("frameEnd", {
+            type: NcjParameterRawType.int,
+            metadata : {
+                description: "description",
+            },
+            defaultValue: 4,
+        });
+        expect(parameter.defaultValue).toBe(4);
+    });
+
     it("should detect dropdown type", () => {
         parameter = new NcjParameterWrapper("jobName", {
             type: NcjParameterRawType.string,
@@ -109,6 +131,18 @@ describe("marketApplicationModel", () => {
             defaultValue: "jobname",
         });
         expect(parameter.type).toBe(NcjParameterExtendedType.dropDown);
+    });
+
+    it("should detect dropdown defaultValue", () => {
+        parameter = new NcjParameterWrapper("jobName", {
+            type: NcjParameterRawType.string,
+            metadata : {
+                description: "description",
+            },
+            allowedValues : ["a", "b", "c"],
+            defaultValue: "c",
+        });
+        expect(parameter.defaultValue).toBe("c");
     });
 
     it("should detect filegroup type", () => {
@@ -122,6 +156,18 @@ describe("marketApplicationModel", () => {
         expect(parameter.type).toBe(NcjParameterExtendedType.fileGroup);
     });
 
+    it("should detect filegroup defaultValue", () => {
+        parameter = new NcjParameterWrapper("outputFileGroup", {
+            type: NcjParameterRawType.string,
+            metadata : {
+                description: "description",
+                advancedType: NcjParameterExtendedType.fileGroup,
+            },
+            defaultValue: "filegroup",
+        });
+        expect(parameter.defaultValue).toBe("filegroup");
+    });
+
     it("should detect fileinput type", () => {
         parameter = new NcjParameterWrapper("blendFile", {
             type: NcjParameterRawType.string,
@@ -132,6 +178,19 @@ describe("marketApplicationModel", () => {
             },
         });
         expect(parameter.type).toBe(NcjParameterExtendedType.fileInFileGroup);
+    });
+
+    it("should detect fileinput defaultValue", () => {
+        parameter = new NcjParameterWrapper("blendFile", {
+            type: NcjParameterRawType.string,
+            metadata : {
+                description: "description",
+                advancedType: NcjParameterExtendedType.fileInFileGroup,
+                dependsOn: "sceneData",
+            },
+            defaultValue: "fileinput",
+        });
+        expect(parameter.defaultValue).toBe("fileinput");
     });
 
 });
