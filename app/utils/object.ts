@@ -2,7 +2,9 @@ export class ObjectUtils {
     /**
      * Return the values of an object.
      */
-    public static values<T>(obj: { [key: string]: T }): T[] {
+    public static values<T>(obj: { [key: string]: T }): T[];
+    public static values(obj: any): any;
+    public static values(obj: any): any {
         return Object.keys(obj).map(x => obj[x]);
     }
 

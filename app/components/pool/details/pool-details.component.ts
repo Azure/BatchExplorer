@@ -12,8 +12,7 @@ import { PoolParams, PoolService, PricingService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
 import { NumberUtils } from "app/utils";
 import { SidebarManager } from "../../base/sidebar";
-import { DeletePoolDialogComponent, PoolResizeDialogComponent } from "../action";
-import { PoolCreateBasicDialogComponent } from "../action";
+import { DeletePoolDialogComponent, PoolCreateBasicDialogComponent, PoolResizeDialogComponent } from "../action";
 
 import "./pool-details.scss";
 

@@ -1,12 +1,5 @@
-import { Record } from "immutable";
-
+import { Model, Prop, Record } from "app/core";
 import { SecureUtils } from "app/utils";
-
-const AutoscaleFormulaRecord = Record({
-    id: null,
-    name: null,
-    value: null,
-});
 
 export interface AutoscaleFormulaAttributes {
     id: string;
@@ -14,14 +7,16 @@ export interface AutoscaleFormulaAttributes {
     value: string;
 }
 
-export class AutoscaleFormula extends AutoscaleFormulaRecord implements AutoscaleFormulaAttributes {
-    public id: string;
-    public name: string;
-    public value: string;
+@Model()
+export class AutoscaleFormula extends Record<AutoscaleFormulaAttributes> {
+    @Prop() public id: string;
+    @Prop() public name: string;
+    @Prop() public value: string;
 
     constructor(data: Partial<AutoscaleFormulaAttributes>) {
-        super(Object.assign({}, {
+        super({
             id: SecureUtils.uuid(),
-        }, data));
+            ...data,
+        });
     }
 }

@@ -1,35 +1,35 @@
-import { Record } from "immutable";
 
+import { Model, Prop, Record } from "app/core";
 import { ApplicationPackageReference } from "./application-package-reference";
 import { NameValuePair } from "./name-value-pair";
 import { ResourceFile } from "./resource-file";
 import { TaskConstraints } from "./task-constraints";
 
-const JobManagerTaskRecord = Record({
-    id: null,
-    displayName: null,
-    commandLine: null,
-    resourceFiles: [],
-    applicationPackageReferences: null,
-    environmentSettings: null,
-    constraints: null,
-    killJobOnCompletion: null,
-    runElevated: null,
-    runExclusive: null,
-});
-
+export interface JobManagerTaskAttributes {
+    id: string;
+    displayName: string;
+    commandLine: string;
+    resourceFiles: ResourceFile[];
+    applicationPackageReferences: ApplicationPackageReference[];
+    environmentSettings: NameValuePair[];
+    constraints: TaskConstraints;
+    killJobOnCompletion: boolean;
+    runElevated: boolean;
+    runExclusive: boolean;
+}
 /**
  * Class for displaying job manager task information.
  */
-export class JobManagerTask extends JobManagerTaskRecord {
-    public id: string;
-    public displayName: string;
-    public commandLine: string;
-    public resourceFiles: ResourceFile[];
-    public applicationPackageReferences: ApplicationPackageReference[];
-    public environmentSettings: NameValuePair[];
-    public constraints: TaskConstraints;
-    public killJobOnCompletion: boolean;
-    public runElevated: boolean;
-    public runExclusive: boolean;
+@Model()
+export class JobManagerTask extends Record<JobManagerTaskAttributes> {
+    @Prop() public id: string;
+    @Prop() public displayName: string;
+    @Prop() public commandLine: string;
+    @Prop() public resourceFiles: ResourceFile[];
+    @Prop() public applicationPackageReferences: ApplicationPackageReference[];
+    @Prop() public environmentSettings: NameValuePair[];
+    @Prop() public constraints: TaskConstraints;
+    @Prop() public killJobOnCompletion: boolean;
+    @Prop() public runElevated: boolean;
+    @Prop() public runExclusive: boolean;
 }

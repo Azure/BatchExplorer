@@ -50,22 +50,18 @@ export class Node extends Record<NodeAttributes> {
     @ListProp(CertificateReference) public certificateReferences: List<CertificateReference> = List([]);
 }
 
-export type NodeState = "creating" | "starting" | "waitingforstarttask" | "starttaskfailed" |
-    "idle" | "offline" | "leavingpool" | "rebooting" | "reimaging" | "running" | "unknown" | "unusable" |
-    "preempted";
-
-export const NodeState = {
-    creating: "creating" as NodeState,
-    starting: "starting" as NodeState,
-    waitingForStartTask: "waitingforstarttask" as NodeState,
-    startTaskFailed: "starttaskfailed" as NodeState,
-    idle: "idle" as NodeState,
-    offline: "offline" as NodeState,
-    leavingPool: "leavingpool" as NodeState,
-    rebooting: "rebooting" as NodeState,
-    reimaging: "reimaging" as NodeState,
-    running: "running" as NodeState,
-    unknown: "unknown" as NodeState,
-    unusable: "unusable" as NodeState,
-    preempted: "preempted" as NodeState,
-};
+export enum NodeState {
+    creating = "creating",
+    starting = "starting",
+    waitingForStartTask = "waitingforstarttask",
+    startTaskFailed = "starttaskfailed",
+    idle = "idle",
+    offline = "offline",
+    leavingPool = "leavingpool",
+    rebooting = "rebooting",
+    reimaging = "reimaging",
+    running = "running",
+    unknown = "unknown",
+    unusable = "unusable",
+    preempted = "preempted",
+}

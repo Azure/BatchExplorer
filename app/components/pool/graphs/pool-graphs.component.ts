@@ -19,7 +19,7 @@ enum AvailableGraph {
     RunningTasks,
 }
 
-const HistoryLength = {
+const historyLength = {
     OneMinute: 1,
     TenMinute: 10,
     OneHour: 60,
@@ -33,7 +33,7 @@ const refreshRate = 5000;
 })
 export class PoolGraphsComponent implements OnChanges, OnDestroy {
     public AvailableGraph = AvailableGraph;
-    public HistoryLength = HistoryLength;
+    public historyLength = historyLength;
 
     @Input()
     public pool: Pool;
@@ -54,7 +54,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     public maxRunningTasks = 0;
 
     public focusedGraph = AvailableGraph.Heatmap;
-    public selectedHistoryLength = new FormControl(HistoryLength.TenMinute);
+    public selectedHistoryLength = new FormControl(historyLength.TenMinute);
 
     private _jobData: RxListProxy<{}, Job>;
     private _stateCounter = new StateCounter();

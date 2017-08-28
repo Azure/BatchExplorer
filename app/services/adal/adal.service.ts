@@ -240,7 +240,7 @@ export class AdalService {
 
     private _processAccessTokenError(tenantId: string, resource: string, error: Response) {
         const data: AccessTokenErrorResult = error.json();
-        if (data.error === AccessTokenError.invalid_grant) {
+        if (data.error === AccessTokenError.invalidGrant) {
             // TODO redeem a new token once(need to track number of failure)
             // this._redeemNewAccessToken(tenantId, resource, true);
         }

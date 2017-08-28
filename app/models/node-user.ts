@@ -1,4 +1,4 @@
-import { Record } from "immutable";
+import { Model, Prop, Record } from "app/core";
 
 interface NodeUserAttributes {
     name: string;
@@ -8,16 +8,11 @@ interface NodeUserAttributes {
     sshPublicKey: string;
 }
 
-const NodeUserRecord = Record({
-    name: null,
-    isAdmin: false,
-    expiryTime: null,
-    password: null,
-    sshPublicKey: null,
-});
-
-export class NodeUser extends NodeUserRecord {
-    constructor(data: Partial<NodeUserAttributes>) {
-        super(data);
-    }
+@Model()
+export class NodeUser extends Record<NodeUserAttributes> {
+    @Prop() public name: string;
+    @Prop() public isAdmin: boolean;
+    @Prop() public expiryTime: Date;
+    @Prop() public password: string;
+    @Prop() public sshPublicKey: string;
 }
