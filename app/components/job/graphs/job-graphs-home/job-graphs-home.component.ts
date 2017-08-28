@@ -66,7 +66,7 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
                 return Observable.of(null);
             }
             const obs = this.taskService.listAll(this.jobId, {
-                select: "id,executionInfo",
+                select: "id,executionInfo,nodeInfo",
                 filter: FilterBuilder.prop("state").eq(TaskState.completed).toOData(),
                 pageSize: 1000,
             });
@@ -103,8 +103,8 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
     private _updateDescription() {
         switch (this.currentGraph) {
             case AvailableGraph.runningTime:
-                this.description = "Shows the running time of each completed" +
-                    "tasks in this job(Each point represent a task).";
+                this.description = "Shows the run time of each of the job's completed tasks. " +
+                    "Each point represents a completed task. Red point means non-zero exit code.";
                 break;
             case AvailableGraph.progress:
                 this.description = "Shows the time taken to start(and end) n number of tasks.";

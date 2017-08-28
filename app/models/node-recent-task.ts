@@ -1,15 +1,6 @@
-import { Record } from "immutable";
+import { Model, Prop, Record } from "app/core";
 
 import { TaskState } from "app/models/task";
-
-const NodeRecentTaskRecord = Record({
-    taskUrl: null,
-    jobId: null,
-    taskId: null,
-    subtaskId: null,
-    taskState: null,
-    executionInfo: null,
-});
 
 export interface NodeRecentTaskAttributes {
     taskUrl: string;
@@ -20,15 +11,12 @@ export interface NodeRecentTaskAttributes {
     executionInfo: any;
 }
 
-export class NodeRecentTask extends NodeRecentTaskRecord implements NodeRecentTaskAttributes {
-    public taskUrl: string;
-    public jobId: string;
-    public taskId: string;
-    public subtaskId: number;
-    public taskState: TaskState;
-    public executionInfo: any;
-
-    constructor(data: Partial<NodeRecentTaskAttributes>) {
-        super(data);
-    }
+@Model()
+export class NodeRecentTask extends Record<NodeRecentTaskAttributes> {
+    @Prop() public taskUrl: string;
+    @Prop() public jobId: string;
+    @Prop() public taskId: string;
+    @Prop() public subtaskId: number;
+    @Prop() public taskState: TaskState;
+    @Prop() public executionInfo: any;
 }

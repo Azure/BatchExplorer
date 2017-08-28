@@ -5,8 +5,7 @@ export class TaskSchedulingPolicy {
     public nodeFillType: NodeFillType;
 }
 
-export type NodeFillType = "pack" | "spread ";
-export const NodeFillType = {
-    pack: "pack" as NodeFillType,
-    spread: "spread" as NodeFillType,
-};
+export enum NodeFillType {
+    pack = "pack",
+    spread = "spread",
+}

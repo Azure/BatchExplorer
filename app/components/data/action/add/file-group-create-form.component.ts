@@ -12,6 +12,7 @@ import { CreateFileGroupModel, createFileGroupFormToJsonData, fileGroupToFormMod
 import { NcjFileGroupService, StorageService } from "app/services";
 import { Constants, log } from "app/utils";
 
+import { BackgroundTaskService } from "app/components/base/background-task";
 import "./file-group-create-form.scss";
 
 @Component({
@@ -32,6 +33,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
         private formBuilder: FormBuilder,
         private fileGroupService: NcjFileGroupService,
         private notificationService: NotificationService,
+        private backgroundTaskService: BackgroundTaskService,
         private storageService: StorageService) {
         super(FileGroupCreateDto);
 
@@ -60,19 +62,29 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     @autobind()
     public submit(): Observable<any> {
         const formData = this.getCurrentValue();
-        const observable = this.fileGroupService.createFileGroup(formData);
-        observable.subscribe({
-            next: (data) => {
-                const message = `${data.uploaded} files were successfully uploaded to the file group`;
-                this.storageService.onFileGroupAdded.next(`${this.storageService.ncjFileGroupPrefix}${formData.name}`);
-                this.notificationService.success("Create file group", message, { persist: true });
-            },
-            error: (error) => {
-                log.error("Failed to create form group", error);
-            },
+        this.backgroundTaskService.startTask(`Upload file group ${formData.name}`, (task) => {
+            const observable = this.fileGroupService.createFileGroup(formData);
+            let lastData;
+            observable.subscribe({
+                next: (data) => {
+                    lastData = data;
+                    task.progress.next(data.uploaded / data.total * 100);
+                },
+                complete: () => {
+                    task.progress.next(100);
+                    const message = `${lastData.uploaded} files were successfully uploaded to the file group`;
+                    this.storageService.onFileGroupAdded.next(this.storageService.fileGroupContainer(formData.name));
+                    this.notificationService.success("Create file group", message, { persist: true });
+                },
+                error: (error) => {
+                    log.error("Failed to create form group", error);
+                },
+            });
+
+            return observable;
         });
 
-        return observable;
+        return Observable.of(true);
     }
 
     public dtoToForm(fileGroup: FileGroupCreateDto): CreateFileGroupModel {

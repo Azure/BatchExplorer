@@ -1,12 +1,11 @@
 import { SecureUtils } from "app/utils";
 
-export type NotificationLevel = "info" | "warn" | "error" | "success";
-export const NotificationLevel = {
-    info: "info" as NotificationLevel,
-    error: "error" as NotificationLevel,
-    success: "success" as NotificationLevel,
-    warn: "warn" as NotificationLevel,
-};
+export enum NotificationLevel {
+    info = "info",
+    error = "error",
+    success = "success",
+    warn = "warn",
+}
 
 export interface NotificationConfig {
     /**

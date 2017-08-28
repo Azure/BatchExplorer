@@ -68,3 +68,4 @@ class BatchLabsApp:
 
 
 app = BatchLabsApp()
+
