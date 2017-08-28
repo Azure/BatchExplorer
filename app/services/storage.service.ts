@@ -4,6 +4,7 @@ import { Observable, Subject } from "rxjs";
 import { BlobContainer, File, ServerError } from "app/models";
 import { FileSystemService } from "app/services";
 import { Constants, log } from "app/utils";
+import { ListBlobOptions } from "client/api";
 import {
     DataCache,
     RxEntityProxy,
@@ -26,10 +27,6 @@ export interface GetContainerParams {
 }
 
 export interface ListContainerParams {
-    prefix?: string;
-}
-
-export interface NaviagateContainerBlobOptions {
     prefix?: string;
 }
 
@@ -64,8 +61,7 @@ export class StorageService {
         key: ({ container, blobPrefix }) => container + "/" + blobPrefix,
     }, "url");
 
-    constructor(private storageClient: StorageClientService, private fs: FileSystemService) {
-    }
+    constructor(private storageClient: StorageClientService, private fs: FileSystemService) { }
 
     public getBlobFileCache(params: ListBlobParams): DataCache<File> {
         return this._blobListCache.getCache(params);
@@ -77,35 +73,52 @@ export class StorageService {
      * @param blobPrefix - Optional prefix usesd for filtering blobs
      * @param onError - Callback for interrogating the server error to see if we want to handle it.
      */
-    public listBlobs(container: Promise<string>, blobPrefix?: string, onError?: (error: ServerError) => boolean)
+    public listBlobs(
+        container: Promise<string>,
+        blobPrefix?: string,
+        options: ListBlobOptions = {})
         : RxListProxy<ListBlobParams, File> {
 
-        const initialOptions: any = { maxResults: this.maxBlobPageSize };
+        const initialOptions: any = { maxResults: this.maxBlobPageSize, recursive: false, ...options };
+        console.log("Initial options...", initialOptions);
         return new RxStorageListProxy<ListBlobParams, File>(File, this.storageClient, {
             cache: (params) => this.getBlobFileCache(params),
             getData: (client, params, options, continuationToken) => {
-                console.log("Getting data", blobPrefix, params.blobPrefix);
+                console.log("Getting data", options, params.blobPrefix);
                 return params.container.then((containerName) => {
                     return client.listBlobsWithPrefix(
                         containerName,
                         params.blobPrefix,
-                        options.filter,
+                        options,
                         continuationToken,
-                        initialOptions);
+                    ).then((data) => {
+                        console.log("Got data..", data);
+                        return data;
+                    });
                 });
             },
             initialParams: { container: container, blobPrefix: blobPrefix },
             initialOptions,
             logIgnoreError: storageIgnoredErrors,
-            onError: onError,
         });
     }
 
-    public navigateContainerBlobs(container: string, options: NaviagateContainerBlobOptions = {}) {
-        console.log("NAv options", options);
+    /**
+     * Create a blob files naviagotor to be used in a tree view.
+     * @param container Azure storage container id
+     * @param prefix Prefix to make the root of the tree
+     * @param options List options
+     */
+    public navigateContainerBlobs(container: string, prefix: string) {
         return new FileNavigator({
-            loadPath: () => this.listBlobs(Promise.resolve(container), options.prefix),
-            getFile: (filename: string) => this.getBlobContent(Promise.resolve(container), filename, options.prefix),
+            loadPath: (options) => {
+                console.log("Options...", options);
+                return this.listBlobs(Promise.resolve(container), prefix, {
+                    recursive: false,
+                    startswith: options.filter,
+                });
+            },
+            getFile: (filename: string) => this.getBlobContent(Promise.resolve(container), filename, prefix),
         });
     }
 

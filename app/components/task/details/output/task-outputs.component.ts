@@ -56,8 +56,8 @@ export class TaskOutputsComponent implements OnChanges {
             nodeNavigator.init();
 
             const prefix = `${this.taskId}/`;
-            const taskOutputNavigator = this.storageService.navigateContainerBlobs(container, { prefix: prefix });
-            // taskOutputNavigator.init();
+            const taskOutputNavigator = this.storageService.navigateContainerBlobs(container, prefix);
+            taskOutputNavigator.init();
 
             // const prefix = `${this.taskId}/`;
             // const taskLogsNavigator = this.storageService.navigateContainerBlobs(container, { prefix: prefix });
@@ -65,7 +65,7 @@ export class TaskOutputsComponent implements OnChanges {
 
             this.fileNavigators = [
                 { name: "Node files", navigator: nodeNavigator },
-                // { name: "Persisted output", navigator: nodeNavigator },
+                { name: "Persisted output", navigator: nodeNavigator },
                 // { name: "Persisted logs", navigator: nodeNavigator },
             ];
             console.log("File navigators...", this.fileNavigators);

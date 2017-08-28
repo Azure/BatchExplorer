@@ -75,7 +75,11 @@ export class FileService extends ServiceBase {
         return new RxBatchListProxy<NodeFileListParams, File>(File, this.batchService, {
             cache: (params) => this.getNodeFileCache(params),
             proxyConstructor: (client, params, options) => {
-                return client.file.listFromComputeNode(params.poolId, params.nodeId, recursive, options);
+                const batchOptions = { ...options };
+                if (options.filter) {
+                    batchOptions.filter = `startswith(name, ${options.filter})`;
+                }
+                return client.file.listFromComputeNode(params.poolId, params.nodeId, recursive, batchOptions);
             },
             initialParams: { poolId: initialPoolId, nodeId: initialNodeId },
             initialOptions,
@@ -143,7 +147,11 @@ export class FileService extends ServiceBase {
         return new RxBatchListProxy<TaskFileListParams, File>(File, this.batchService, {
             cache: (params) => this.getTaskFileCache(params),
             proxyConstructor: (client, params, options) => {
-                return client.file.listFromTask(params.jobId, params.taskId, recursive, options);
+                const batchOptions = { ...options };
+                if (options.filter) {
+                    batchOptions.filter = `startswith(name, ${options.filter})`;
+                }
+                return client.file.listFromTask(params.jobId, params.taskId, recursive, batchOptions);
             },
             initialParams: { jobId: initialJobId, taskId: initialTaskId },
             initialOptions,

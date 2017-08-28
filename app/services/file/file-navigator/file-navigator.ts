@@ -6,7 +6,6 @@ import { File, ServerError } from "app/models";
 import { RxListProxy } from "app/services/core";
 import { FileLoader } from "app/services/file";
 import { ObjectUtils } from "app/utils";
-import { FilterBuilder } from "app/utils/filter-builder";
 import { FileTreeNode, FileTreeStructure } from "./file-tree.model";
 
 export interface FileNavigatorConfig {
@@ -114,7 +113,7 @@ export class FileNavigator {
             if (!path.endsWith("/")) {
                 path = path + "/";
             }
-            options["filter"] = FilterBuilder.prop("name").startswith(path).toOData();
+            options["filter"] = path;
         }
         return options;
     }
