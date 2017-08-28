@@ -7,12 +7,11 @@ export enum ErrorState {
     Fixed,
 }
 
-export type BannerType = "error" | "warning" | "notice";
-export const BannerType = {
-    error: "error" as BannerType,
-    warning: "warning" as BannerType,
-    notice: "notice" as BannerType,
-};
+export enum BannerType {
+    error = "error",
+    warning = "warning",
+    notice = "notice",
+}
 
 import "./banner.scss";
 

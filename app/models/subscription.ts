@@ -1,20 +1,21 @@
-import { Record } from "immutable";
+import { Model, Prop, Record } from "app/core";
 
-const SubscriptionRecord = Record({
-    id: null,
-    subscriptionId: null,
-    tenantId: null,
-    displayName: null,
-    state: null,
-});
+export interface SubscriptionAttributes {
+    id: string;
+    subscriptionId: string;
+    tenantId: string;
+    displayName: string;
+    state: string;
+}
 
 /**
  * Class for displaying MPI sub task information.
  */
-export class Subscription extends SubscriptionRecord {
-    public id: string;
-    public subscriptionId: string;
-    public tenantId: string;
-    public displayName: string;
-    public state: string;
+@Model()
+export class Subscription extends Record<SubscriptionAttributes> {
+    @Prop() public id: string;
+    @Prop() public subscriptionId: string;
+    @Prop() public tenantId: string;
+    @Prop() public displayName: string;
+    @Prop() public state: string;
 }

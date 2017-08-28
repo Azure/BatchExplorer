@@ -1,4 +1,5 @@
 import os
+import asyncio
 
 from server.app import app
 from jsonrpc import JsonRpcErrorCodes, error, JsonRpcRequest
@@ -22,7 +23,7 @@ ERROR_REQUIRED_PARAM = "{} is a required parameter"
 
 
 @app.procedure("create_file_group")
-def create_file_group(request: JsonRpcRequest, name, directory, options):
+async def create_file_group(request: JsonRpcRequest, name, directory, options):
     # default these parameters as they are optional
     prefix, flatten, fullPath = [None, False, False]
     if options:
@@ -35,13 +36,33 @@ def create_file_group(request: JsonRpcRequest, name, directory, options):
         if options.get(PARAM_FLATTEN):
             flatten = options.get(PARAM_FLATTEN)
 
+    total_files = 0
+    for _, _, files in os.walk(directory.replace(SUBDIR_FILTER, "")):
+        total_files += len(files)
+
+    uploaded_files = 0
+
+    def __uploadCallback(current, file_size):
+        """
+            Callback from file upload. Anna is going to change to return filename as well.
+        """
+        nonlocal uploaded_files
+        # TODO: Create a dictionary and pass back upload progress to the
+        # caller.
+        if current == file_size:
+            uploaded_files += 1
+            request.push_stream(
+                dict(uploaded=uploaded_files, total=total_files))
+            print("Uploded {0}/{1}".format(uploaded_files, total_files))
+
     # If fullPath is true, the the prefix becomes the directory path.
     # Any existing prefix is overwritten/ignored
     if fullPath:
         prefix = directory.replace(SUBDIR_FILTER, "")
 
     try:
-        request.auth.client.file.upload(directory, name, prefix, flatten, __uploadCallback)
+        request.auth.client.file.upload(
+            directory, name, prefix, flatten, __uploadCallback)
     except ValueError as valueError:
         raise error.JsonRpcError(
             code=JsonRpcErrorCodes.BATCH_CLIENT_ERROR,
@@ -51,21 +72,8 @@ def create_file_group(request: JsonRpcRequest, name, directory, options):
     # just return this count to the user, can do something better later
     # TODO: keep track of uploading files in the callback below and remove
     # this code.
-    uploadCount = 0
-    for _, _, files in os.walk(directory.replace(SUBDIR_FILTER, "")):
-        uploadCount += len(files)
 
-    return {
-        "uploaded": uploadCount,
-    }
-
-
-def __uploadCallback(param1, param2):
-    """
-        Callback from file upload. Anna is going to change to return filename as well.
-    """
-    # TODO: Create a dictionary and pass back upload progress to the caller.
-    print("uploading {} of {} bytes".format(param1, param2))
+    return dict(uploaded=uploaded_files, total=total_files)
 
 
 def __getRequiredParameterError(parameter):

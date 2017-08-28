@@ -1,6 +1,6 @@
 import { Type } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { Dto } from "app/core";
+import { Dto } from "app/core/dto";
 import { FormUtils } from "app/utils";
 
 export abstract class DynamicForm<TEntity, TDto extends Dto<TDto>> {

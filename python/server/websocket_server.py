@@ -80,6 +80,7 @@ class WebsocketConnection:
 
     async def send_response(self, response: JsonRpcResponse):
         data = response.to_json()
+        print("Sending response")
         await self.websocket.send(data)
         print("> {}".format(data))
 

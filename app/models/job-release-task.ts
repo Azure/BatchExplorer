@@ -1,28 +1,29 @@
-import { Record } from "immutable";
+import { Model, Prop, Record } from "app/core";
 import { Duration } from "moment";
 
 import { NameValuePair } from "./name-value-pair";
 import { ResourceFile } from "./resource-file";
 
-const JobReleaseTaskRecord = Record({
-    id: null,
-    commandLine: null,
-    resourceFiles: [],
-    environmentSettings: [],
-    maxWallClockTime: null,
-    retentionTime: null,
-    runElevated: null,
-});
+export interface JobReleaseTaskAttributes {
+    id: string;
+    commandLine: string;
+    resourceFiles: ResourceFile[];
+    environmentSettings: NameValuePair[];
+    maxWallClockTime: Duration;
+    retentionTime: Duration;
+    runElevated: boolean;
+}
 
 /**
  * Class for displaying job release task information.
  */
-export class JobReleaseTask extends JobReleaseTaskRecord {
-    public id: string;
-    public commandLine: string;
-    public resourceFiles: ResourceFile[];
-    public environmentSettings: NameValuePair[];
-    public maxWallClockTime: Duration;
-    public retentionTime: Duration;
-    public runElevated: boolean;
+@Model()
+export class JobReleaseTask extends Record<JobReleaseTaskAttributes> {
+    @Prop() public id: string;
+    @Prop() public commandLine: string;
+    @Prop() public resourceFiles: ResourceFile[];
+    @Prop() public environmentSettings: NameValuePair[];
+    @Prop() public maxWallClockTime: Duration;
+    @Prop() public retentionTime: Duration;
+    @Prop() public runElevated: boolean;
 }

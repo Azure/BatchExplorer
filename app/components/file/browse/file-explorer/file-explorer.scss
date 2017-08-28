@@ -1,0 +1,35 @@
+@import "app/styles/variables";
+
+bl-file-explorer {
+    display: flex;
+    width: 100%;
+
+    > .tree-explorer-container {
+        transition:width 100ms;
+        width: $listview-width;
+        height: $contentview-height;
+        flex: 0 0 $listview-width;
+
+        .header {
+            height: $listview-header-height;
+            padding: 15px 15px 0;
+        }
+
+        .scrollable {
+            height: 100%;
+            overflow-y: hidden;
+
+            &:hover {
+                overflow-y: auto;
+            }
+        }
+    }
+
+    > .file-content-container {
+        width: 100%;
+        height: auto;
+        background-color: $content-background;
+        flex: 1;
+    }
+
+}

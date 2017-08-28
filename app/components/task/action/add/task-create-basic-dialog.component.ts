@@ -51,7 +51,7 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
             displayName: ["", Validators.maxLength(validation.maxLength.displayName)],
             commandLine: ["", Validators.required],
             constraints: this.constraintsGroup,
-            runElevated: ["0"],
+            userIdentity: [null],
             fileGroups: [[]],
             resourceFiles: [[]],
             environmentSettings: [[]],

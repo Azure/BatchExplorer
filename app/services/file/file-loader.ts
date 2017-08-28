@@ -3,7 +3,7 @@ import { Observable, Subject } from "rxjs";
 
 import { File } from "app/models";
 import { RxEntityProxy, getOnceProxy } from "app/services/core";
-import { log } from "app/utils";
+import { exists, log } from "app/utils";
 import { FileSystemService } from "../fs.service";
 
 export type PropertiesFunc = () => RxEntityProxy<any, File>;
@@ -22,6 +22,11 @@ export interface FileLoaderConfig {
      * If not provided it will read the content and write it to file.
      */
     download?: DownloadFunc;
+
+    /**
+     * Optional list of error codes to not log in the console.
+     */
+    logIgnoreError?: number[];
 }
 
 export interface FileLoadOptions {
@@ -33,12 +38,11 @@ export interface FileLoadResult {
     content: string;
 }
 
-export type FileSource = "task" | "node" | "blob";
-export const FileSource = {
-    task: "task" as FileSource,
-    node: "node" as FileSource,
-    blob: "blob" as FileSource,
-};
+export enum FileSource {
+    task = "task",
+    node = "node",
+    blob = "blob",
+}
 
 export class FileLoader {
     public readonly filename: string;
@@ -61,6 +65,7 @@ export class FileLoader {
     private _cachedProperties: File;
     private _proxy: RxEntityProxy<any, File>;
     private _fileChanged = new Subject<File>();
+    private _logIgnoreError: number[];
 
     constructor(config: FileLoaderConfig) {
         this.filename = config.filename;
@@ -70,6 +75,7 @@ export class FileLoader {
         this.source = config.source;
         this._fs = config.fs;
         this._download = config.download;
+        this._logIgnoreError = exists(config.logIgnoreError) ? config.logIgnoreError : [];
 
         this.fileChanged = this._fileChanged.asObservable();
     }
@@ -98,15 +104,19 @@ export class FileLoader {
         if (!forceNew && this._cachedProperties) {
             return Observable.of(this._cachedProperties);
         }
+
         const obs = getOnceProxy(this._properties());
         obs.subscribe({
             next: (file) => {
                 this._updateProperties(file);
             },
             error: (error) => {
-                log.error("Error getting the file properties!", Object.assign({}, error));
+                if (error && error.status && !this._logIgnoreError.includes(error.status)) {
+                    log.error("Error getting the file properties!", Object.assign({}, error));
+                }
             },
         });
+
         return obs;
     }
 
