@@ -21,7 +21,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
     public form: FormGroup;
     public jobTemplate: NcjJobTemplate;
     public poolTemplate: NcjPoolTemplate;
-    public pickedPool = new FormControl(null);
+    public pickedPool = new FormControl(null, Validators.required);
     public jobParams: FormGroup;
     public poolParams: FormGroup;
     public jobParametersWrapper: NcjParameterWrapper[];
@@ -59,6 +59,12 @@ export class SubmitMarketApplicationComponent implements OnInit {
 
     public pickMode(mode: Modes) {
         this.modeState = mode;
+    }
+
+    public isFormValid() {
+        return (this.modeState ===  Modes.NewPoolAndJob && this.jobParams.valid && this.poolParams.valid) ||
+            (this.modeState ===  Modes.ExistingPoolAndJob && this.jobParams.valid && this.pickedPool.valid) ||
+            (this.modeState ===  Modes.NewPool && this.poolParams.valid);
     }
 
     @autobind()
@@ -149,7 +155,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
     private _createForms() {
         this.jobParams = this._getFormGroup(this.jobTemplate);
         this.poolParams = this._getFormGroup(this.poolTemplate);
-        this.form = this.formBuilder.group({ pool: this.poolParams, job: this.jobParams });
+        this.form = this.formBuilder.group({ pool: this.poolParams, job: this.jobParams, poolpicker: this.pickedPool });
     }
 
     private _runJobWithPool(expandedPoolTemplate) {
