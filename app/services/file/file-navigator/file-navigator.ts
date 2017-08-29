@@ -81,8 +81,8 @@ export class FileNavigator {
         return this._proxies[this._currentPath.value].items.first();
     }
 
-    public refresh(path: string = "") {
-        this._loadFileInPath(path);
+    public refresh(path: string = ""): Observable<any> {
+        return this._loadFileInPath(path);
     }
 
     public dispose() {
@@ -91,35 +91,36 @@ export class FileNavigator {
         }
     }
 
-    private _loadFileInPath(path: string = null) {
+    private _loadFileInPath(path: string = null): Observable<any> {
         this.loadingStatus = LoadingStatus.Loading;
         if (path === null) { path = this._currentPath.value; }
         if (!this._proxies[path]) {
             this._proxies[path] = this._loadPath(this._buildLoadPathOptions(path));
         }
         const proxy = this._proxies[path];
-        proxy.refresh()
-            .flatMap(() => proxy.items.first())
-            .subscribe({
-                next: (files: List<File>) => {
-                    this.loadingStatus = LoadingStatus.Ready;
+        const obs = proxy.refresh().flatMap(() => proxy.items.first()).share();
+        obs.subscribe({
+            next: (files: List<File>) => {
+                this.loadingStatus = LoadingStatus.Ready;
 
-                    const tree = this._tree.value;
-                    tree.addFiles(files);
-                    tree.getNode(path).markAsLoaded();
-                    this._tree.next(tree);
-                },
-                error: (error) => {
-                    if (this._onError) {
-                        error = this._onError(error);
-                        if (!error) { return; }
-                    }
-                    this.error = error;
-                    const tree = this._tree.value;
-                    tree.getNode(path).loadingStatus = LoadingStatus.Error;
-                    this._tree.next(tree);
-                },
-            });
+                const tree = this._tree.value;
+                tree.addFiles(files);
+                tree.getNode(path).markAsLoaded();
+                this._tree.next(tree);
+            },
+            error: (error) => {
+                if (this._onError) {
+                    error = this._onError(error);
+                    if (!error) { return; }
+                }
+                this.error = error;
+                const tree = this._tree.value;
+                tree.getNode(path).loadingStatus = LoadingStatus.Error;
+                this._tree.next(tree);
+            },
+        });
+
+        return obs;
     }
 
     private _buildLoadPathOptions(path: string) {

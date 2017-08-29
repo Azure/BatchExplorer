@@ -10,6 +10,7 @@ export class ClickableComponent {
     @Output() public do = new EventEmitter<Event>();
 
     @HostBinding("tabindex") public tabindex = "0";
+    @HostBinding("class.focus-outline") public focusOutline = true;
 
     @HostListener("click", ["$event"])
     public handleClick(event: Event) {

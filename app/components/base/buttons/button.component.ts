@@ -1,5 +1,5 @@
 import {
-    ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, HostListener,
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding,
     Input, OnChanges, SimpleChanges, animate, style, transition, trigger,
 } from "@angular/core";
 import { Observable } from "rxjs";

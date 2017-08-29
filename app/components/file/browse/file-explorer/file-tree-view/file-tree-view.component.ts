@@ -27,6 +27,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     public expandedDirs: StringMap<boolean> = {};
 
     public treeRows: TreeRow[] = [];
+    public refreshing: boolean;
     private _tree: FileTreeStructure;
     private _navigatorSubs: Subscription[] = [];
 
@@ -123,7 +124,14 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     }
 
     public refresh() {
-        this.fileNavigator.refresh();
+        this.refreshing = true;
+        this.fileNavigator.refresh().subscribe({
+            next: () => {
+                this.refreshing = false;
+            }, error: () => {
+                this.refreshing = false;
+            },
+        });
     }
 
     private _buildTreeRows(tree) {

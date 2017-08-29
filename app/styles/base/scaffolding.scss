@@ -35,7 +35,7 @@ textarea {
     resize: vertical;
 }
 
-[tabindex="0"]:focus {
+.focus-outline:focus {
     outline-color: $outline-color;
     outline-width: 1px;
     outline-style: solid;

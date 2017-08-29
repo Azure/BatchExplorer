@@ -6,8 +6,9 @@
     <span class="error" *ngIf="fileNavigator.error" [title]="fileNavigator.error.body?.code">
         <i class="fa fa-warning"></i>
     </span>
-    <bl-clickable (do)="refresh()">
-        <i class="fa fa-refresh action" title="Refresh"></i>
+    <bl-clickable (do)="refresh()" [disabled]="refreshing">
+        <i class="fa fa-refresh action" title="Refresh" *ngIf="!refreshing"></i>
+        <i class="fa fa-refresh fa-spin action" title="Refreshing" *ngIf="refreshing"></i>
     </bl-clickable>
     <bl-clickable (do)="collapseAll()">
         <i class="fa fa-compress collapse-all action" title="Collapse all"></i>
