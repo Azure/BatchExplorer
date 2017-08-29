@@ -35,7 +35,7 @@ export interface FileContentResult {
 }
 
 // List of error we don't want to log for files
-const fileIgnoredErrors = [
+export const fileIgnoredErrors = [
     Constants.HttpCode.NotFound,
     Constants.HttpCode.Conflict,
 ];
@@ -179,6 +179,7 @@ export class FileService extends ServiceBase {
                     return client.file.getTaskFile(jobId, taskId, filename, batchOptions);
                 });
             },
+            logIgnoreError: fileIgnoredErrors,
         });
     }
 

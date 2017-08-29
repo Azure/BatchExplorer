@@ -23,7 +23,7 @@
         "NODE_ENV": "development",
         "HOT": "1"
       },
-      "console": "internalConsole",
+      "console": "integratedTerminal",
       "sourceMaps": true,
       "outFiles": [
         "${workspaceRoot}/build/**/*.js"
