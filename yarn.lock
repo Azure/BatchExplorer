@@ -302,12 +302,6 @@
   version "0.0.19"
   resolved "https://registry.yarnpkg.com/@types/electron-json-storage/-/electron-json-storage-0.0.19.tgz#91833b532aec3c909734e3d0e277fe55b0ebcb5a"
 
-"@types/electron@^1.4.31":
-  version "1.6.10"
-  resolved "https://registry.yarnpkg.com/@types/electron/-/electron-1.6.10.tgz#7e87888ed3888767cca68e92772c2c8ea46bc873"
-  dependencies:
-    electron "*"
-
 "@types/extract-zip@~1.6.2":
   version "1.6.2"
   resolved "https://registry.yarnpkg.com/@types/extract-zip/-/extract-zip-1.6.2.tgz#5c7eb441c41136167a42b88b64051e6260c29e86"
@@ -480,12 +474,6 @@ angular-tree-component@~4.1.0:
     lodash "4.17.4"
     mobx "3.1.11"
     mobx-angular "1.5.0"
-
-angular2-template-loader@0.6.0:
-  version "0.6.0"
-  resolved "https://registry.yarnpkg.com/angular2-template-loader/-/angular2-template-loader-0.6.0.tgz#8a7fae4cf5a2494968da512aa43152a82a0c99b6"
-  dependencies:
-    loader-utils "^0.2.15"
 
 ansi-align@^2.0.0:
   version "2.0.0"
@@ -2481,14 +2469,6 @@ electron-publish@19.16.3:
 electron-to-chromium@^1.2.7, electron-to-chromium@^1.3.18:
   version "1.3.18"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.18.tgz#3dcc99da3e6b665f6abbc71c28ad51a2cd731a9c"
-
-electron@*:
-  version "1.7.6"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-1.7.6.tgz#fb69ea31bd03df0eff247f26f0b538bd29b6ee72"
-  dependencies:
-    "@types/node" "^7.0.18"
-    electron-download "^3.0.1"
-    extract-zip "^1.0.3"
 
 electron@1.6.11:
   version "1.6.11"

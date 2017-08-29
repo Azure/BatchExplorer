@@ -157,7 +157,6 @@ export class StorageService {
      * @param blobPrefix - Optional prefix of the blob, i.e. {container}/{blobPrefix}+{blobName}
      */
     public getBlobContent(container: Promise<string>, blobName: string, blobPrefix?: string): FileLoader {
-        console.log("Get blob content...", blobName);
         return new FileLoader({
             filename: blobName,
             source: FileSource.blob,
