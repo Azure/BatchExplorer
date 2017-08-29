@@ -5,16 +5,20 @@ import { StorageService } from "app/services";
 import { FileNavigator } from "app/services/file";
 
 @Component({
-    selector: "bl-persisted-file-list",
-    templateUrl: "persisted-file-list.html",
+    selector: "bl-blob-files-browser",
+    templateUrl: "blob-files-browser.html",
 })
-export class PersistedFileListComponent implements OnChanges, OnDestroy {
+export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
     @Input() public container: string;
     @Input() public fileExplorerConfig: FileExplorerConfig = {};
 
     public fileNavigator: FileNavigator;
 
     constructor(private storageService: StorageService) { }
+
+    public refresh() {
+        this.fileNavigator.refresh();
+    }
 
     public ngOnChanges(inputs) {
         this._clearFileNavigator();

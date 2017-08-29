@@ -1,7 +1,6 @@
 <bl-simple-form [submit]="submit" (done)="close()" [containerRef]="dialogRef" [multiUse]="false">
     <div *ngIf="container">
         <!-- [activeItem]="pickedFile" (activeItemChange)="updatePickedFile($event)" -->
-        <bl-persisted-file-list #blobList [container]="container.id" >
-        </bl-persisted-file-list>
+        <bl-blob-files-browser #blobList [container]="container.id"> </bl-blob-files-browser>
     </div>
 </bl-simple-form>
