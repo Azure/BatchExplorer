@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
 
+import { FileExplorerConfig } from "app/components/file/browse/file-explorer";
 import { StorageService } from "app/services";
 import { FileNavigator } from "app/services/file";
 
@@ -8,8 +9,8 @@ import { FileNavigator } from "app/services/file";
     templateUrl: "persisted-file-list.html",
 })
 export class PersistedFileListComponent implements OnChanges, OnDestroy {
-    @Input()
-    public container: string;
+    @Input() public container: string;
+    @Input() public fileExplorerConfig: FileExplorerConfig = {};
 
     public fileNavigator: FileNavigator;
 

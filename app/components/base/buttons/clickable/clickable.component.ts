@@ -1,5 +1,7 @@
 import { Component, EventEmitter, HostBinding, HostListener, Input, Output } from "@angular/core";
 
+import "./clickable.scss";
+
 @Component({
     selector: "bl-clickable",
     template: `<ng-content></ng-content>`,

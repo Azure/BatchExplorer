@@ -77,6 +77,15 @@ export class FileNavigator {
         }
     }
 
+    /**
+     * Go back up one level
+     */
+    public goBack() {
+        const path = this._currentPath.value;
+        if (path === "") { return; }
+        this.navigateTo(path.split("/").slice(0, -1).join("/"));
+    }
+
     public list(): Observable<List<File>> {
         return this._proxies[this._currentPath.value].items.first();
     }

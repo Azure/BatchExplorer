@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
 import { autobind } from "core-decorators";
 import { remote } from "electron";
 
@@ -16,6 +16,7 @@ import { DateUtils, prettyBytes } from "app/utils";
 })
 export class FileDetailsQuickviewComponent implements OnChanges {
     @Input() public fileLoader: FileLoader;
+    @Output() public back = new EventEmitter();
 
     public filename: string;
     public file: File;
@@ -59,6 +60,10 @@ export class FileDetailsQuickviewComponent implements OnChanges {
         return this.fileLoader.cache().cascade((pathToFile) => {
             this.shell.openExternal(pathToFile);
         });
+    }
+
+    public goBack() {
+        this.back.emit();
     }
 
     private _saveFile(pathToFile) {

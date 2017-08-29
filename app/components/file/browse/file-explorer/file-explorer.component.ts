@@ -10,6 +10,18 @@ export interface FileNavigatorEntry {
     navigator: FileNavigator;
 }
 
+export interface FileExplorerConfig {
+    /**
+     * If the file explorer should show the tree view on the left
+     * @default true
+     */
+    showTreeView?: boolean;
+}
+
+const fileExplorerDefaultConfig: FileExplorerConfig = {
+    showTreeView: true,
+};
+
 /**
  * File explorer is a combination of the tree view and the file preview.
  */
@@ -21,12 +33,18 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
     @Input() public fileNavigator: FileNavigator;
     @Input() public fileNavigators: FileNavigatorEntry[];
     @Input() public autoExpand = false;
+    @Input() public set config(config: FileExplorerConfig) {
+        this._config = { ...fileExplorerDefaultConfig, ...config };
+    }
+    public get config() { return this._config; }
 
     public LoadingStatus = LoadingStatus;
     public currentNode: FileTreeNode;
     public currentFileNavigator: FileNavigator;
 
     private _currentNodeSub: Subscription;
+
+    private _config: FileExplorerConfig = fileExplorerDefaultConfig;
 
     public ngOnChanges(inputs) {
         if (inputs.fileNavigator) {
@@ -49,6 +67,10 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
     public updateCurrentNavigator(navigator: FileNavigator) {
         this.currentFileNavigator = navigator;
         this._updateNavigatorEvents();
+    }
+
+    public goBack() {
+        this.currentFileNavigator.goBack();
     }
 
     private _updateNavigatorEvents() {
