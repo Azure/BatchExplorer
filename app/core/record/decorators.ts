@@ -69,7 +69,7 @@ export function Model() {
                 if (data instanceof ctr) {
                     return data;
                 }
-                super(data);
+                super(...args);
                 (this as any)._completeInitialization();
             }
         });
