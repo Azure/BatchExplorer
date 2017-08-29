@@ -1,6 +1,6 @@
 import { Type } from "@angular/core";
 
-import { exists } from "app/utils";
+import { exists } from "app/utils/object";
 import { RecordSetAttributeError } from "./errors";
 import { Record } from "./record";
 
@@ -12,7 +12,7 @@ export function metadataForRecord(record: Record<any>) {
 }
 
 function metadataForCtr(ctr: any) {
-    const data = Reflect.getMetadata(attrMetadataKey, ctr) || {};
+    const data = Reflect.getMetadata(attrMetadataKey + ctr.name, ctr) || {};
     const parent = Object.getPrototypeOf(ctr.prototype);
     const parentCtr = parent.constructor;
     if (parentCtr.name !== "Record") {
@@ -29,9 +29,9 @@ interface TypeMetadata {
 }
 
 export function updateTypeMetadata(ctr: Type<any>, attr: string, type: TypeMetadata) {
-    const metadata = Reflect.getMetadata(attrMetadataKey, ctr) || {};
+    const metadata = Reflect.getMetadata(attrMetadataKey + ctr.name, ctr) || {};
     metadata[attr] = type;
-    Reflect.defineMetadata(attrMetadataKey, metadata, ctr);
+    Reflect.defineMetadata(attrMetadataKey + ctr.name, metadata, ctr);
 }
 
 export function setProp(ctr: Type<any>, attr: string) {
