@@ -5,7 +5,7 @@ import { LoadingStatus } from "app/components/base/loading";
 import { File, ServerError } from "app/models";
 import { RxListProxy } from "app/services/core";
 import { FileLoader } from "app/services/file";
-import { ObjectUtils } from "app/utils";
+import { CloudPathUtils, ObjectUtils } from "app/utils";
 import { FileTreeNode, FileTreeStructure } from "./file-tree.model";
 
 export interface FileNavigatorConfig {
@@ -35,7 +35,7 @@ export class FileNavigator {
     public error: ServerError;
 
     private _currentPath = new BehaviorSubject("");
-    private _tree = new BehaviorSubject(new FileTreeStructure());
+    private _tree = new BehaviorSubject<FileTreeStructure>(null);
 
     private _history: string[] = [];
     private _loadPath: (options: any) => RxListProxy<any, File>;
@@ -50,6 +50,7 @@ export class FileNavigator {
         this._getFileLoader = config.getFile;
         this._onError = config.onError;
         this.currentPath = this._currentPath.asObservable();
+        this._tree.next(new FileTreeStructure(this.basePath));
         this.currentNode = Observable.combineLatest(this._currentPath, this._tree).map(([path, tree]) => {
             return tree.getNode(path);
         }).shareReplay(1);
@@ -134,11 +135,9 @@ export class FileNavigator {
 
     private _buildLoadPathOptions(path: string) {
         const options = {};
-        if (path) {
-            if (!path.endsWith("/")) {
-                path = path + "/";
-            }
-            options["filter"] = path;
+        let fullPath = [this.basePath, path].filter(x => Boolean(x)).join("/");
+        if (fullPath) {
+            options["filter"] = CloudPathUtils.asBaseDirectory(fullPath);
         }
         return options;
     }

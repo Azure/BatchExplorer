@@ -44,16 +44,13 @@ export class BlobStorageClientProxy {
      * @param {string} continuationToken - Token that was returned from the last call, if any
      * @param {StorageRequestOptions} options - Optional request parameters
      */
-    public listBlobsWithPrefix(
+    public listBlobs(
         container: string,
-        blobPrefix?: string,
         options: ListBlobOptions = {},
         continuationToken?: any): Promise<BlobStorageResult> {
 
         // we want to keep the filter and prefix separate for mapping files in the response.
-        const prefix = options.startswith
-            ? `${blobPrefix || ""}${options.startswith}`
-            : blobPrefix;
+        const prefix = options.startswith;
 
         const storageOptions: StorageRequestOptions = {
             delimiter: options.recursive ? null : "/",
@@ -65,7 +62,7 @@ export class BlobStorageClientProxy {
 
                     const folders = this._getFolderNames(response).map((name) => {
                         return {
-                            name: this._removePrefixFrom(name, blobPrefix),
+                            name: name,
                             url: `${container}/${name}`,
                             isDirectory: true,
                         };
@@ -74,7 +71,7 @@ export class BlobStorageClientProxy {
                     resolve({
                         data: folders.concat(result.entries.map((blob) => {
                             return {
-                                name: this._removePrefixFrom(blob.name, blobPrefix),
+                                name: blob.name,
                                 url: `${container}/${blob.name}`,
                                 isDirectory: false,
                                 properties: {
@@ -276,18 +273,5 @@ export class BlobStorageClientProxy {
         }
         const data = Array.isArray(blobPrefix) ? blobPrefix : [blobPrefix];
         return data.map(x => x["Name"].slice(0, -1));
-    }
-
-    /**
-     * Remove the given prefix from the given string. Returns the output.
-     * @param name Name containing the prefix
-     * @param prefix Prefix to remove
-     */
-    private _removePrefixFrom(name: string, prefix: string): string {
-        if (name.startsWith(prefix)) {
-            return name.substring(prefix.length, name.length);
-        } else {
-            return name;
-        }
     }
 }

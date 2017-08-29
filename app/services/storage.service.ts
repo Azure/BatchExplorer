@@ -82,29 +82,22 @@ export class StorageService {
      */
     public listBlobs(
         container: Promise<string>,
-        blobPrefix?: string,
         options: ListBlobOptions = {})
         : RxListProxy<ListBlobParams, File> {
 
         const initialOptions: any = { maxResults: this.maxBlobPageSize, recursive: false, ...options };
-        console.log("Initial options...", blobPrefix, initialOptions);
         return new RxStorageListProxy<ListBlobParams, File>(File, this.storageClient, {
             cache: (params) => this.getBlobFileCache(params),
             getData: (client, params, options, continuationToken) => {
-                console.log("Getting data", options, params.blobPrefix);
                 return params.container.then((containerName) => {
-                    return client.listBlobsWithPrefix(
+                    return client.listBlobs(
                         containerName,
-                        params.blobPrefix,
                         options,
                         continuationToken,
-                    ).then((data) => {
-                        console.log("Got data..", data);
-                        return data;
-                    });
+                    );
                 });
             },
-            initialParams: { container: container, blobPrefix: blobPrefix },
+            initialParams: { container: container },
             initialOptions,
             logIgnoreError: storageIgnoredErrors,
         });
@@ -118,8 +111,9 @@ export class StorageService {
      */
     public navigateContainerBlobs(container: string, prefix?: string, options: NavigateBlobsOptions = {}) {
         return new FileNavigator({
+            basePath: prefix,
             loadPath: (options) => {
-                return this.listBlobs(Promise.resolve(container), prefix, {
+                return this.listBlobs(Promise.resolve(container), {
                     recursive: false,
                     startswith: options.filter,
                 });

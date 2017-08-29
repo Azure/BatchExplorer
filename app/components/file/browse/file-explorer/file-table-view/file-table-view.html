@@ -1,3 +1,12 @@
+<div class="file-table-view-header">
+    <bl-clickable (do)="goBack()" title="Go back" class="go-back">
+        <i class="fa fa-arrow-circle-left"></i>
+    </bl-clickable>
+
+    <div class="current-path">
+        {{treeNode.path}}
+    </div>
+</div>
 <bl-table (activeItemChange)="updateActiveItem($event)">
     <bl-thead>
         <bl-column>Name</bl-column>

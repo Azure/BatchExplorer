@@ -8,7 +8,8 @@
     <div *ngIf="currentFileNavigator && currentNode">
         <bl-loading [status]="currentNode.loadingStatus" [error]="currentFileNavigator.error">
             <div *ngIf="currentNode.loadingStatus === LoadingStatus.Ready">
-                <bl-file-table-view *ngIf="currentNode.isDirectory" [treeNode]="currentNode" (pathChange)="navigateTo($event)"> </bl-file-table-view>
+                <bl-file-table-view *ngIf="currentNode.isDirectory" [treeNode]="currentNode" (pathChange)="navigateTo($event)" (back)="goBack()">
+                </bl-file-table-view>
             </div>
             <bl-file-details-view *ngIf="!currentNode.isDirectory" [fileLoader]="currentFileNavigator.currentFileLoader" (back)="goBack()"></bl-file-details-view>
         </bl-loading>

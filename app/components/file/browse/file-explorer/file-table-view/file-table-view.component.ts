@@ -12,6 +12,7 @@ import "./file-table-view.scss";
 export class FileTableViewerComponent {
     @Input() public treeNode: FileTreeNode;
     @Output() public pathChange = new EventEmitter<string>();
+    @Output() public back = new EventEmitter<string>();
 
     public prettyFileSize(size: string) {
         // having falsy issues with contentLength = 0
@@ -28,5 +29,9 @@ export class FileTableViewerComponent {
 
     public updateActiveItem(path: string) {
         this.pathChange.emit(path);
+    }
+
+    public goBack() {
+        this.back.emit();
     }
 }

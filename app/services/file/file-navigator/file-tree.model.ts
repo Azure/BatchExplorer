@@ -3,7 +3,8 @@ import * as path from "path";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
-import { fileToTreeNode, generateDir, prettyFileSize, sortTreeNodes, standardizeFilePath } from "./helper";
+import { CloudPathUtils } from "app/utils";
+import { fileToTreeNode, generateDir, sortTreeNodes, standardizeFilePath } from "./helper";
 
 export interface FileTreeNodeParams {
     path: string;
@@ -50,21 +51,17 @@ export class FileTreeNode {
      * @param file
      */
     private _computeName(): string {
-        const displayName = this.path.split("\/").last();
-        if (this.isDirectory) {
-            return displayName;
-
-        } else {
-            return `${displayName} (${prettyFileSize(this.contentLength.toString())})`;
-        }
+        return this.path.split("\/").last();
     }
 }
 
 export class FileTreeStructure {
     public root: FileTreeNode;
     public directories: StringMap<FileTreeNode> = {};
+    public readonly basePath: string;
 
-    constructor() {
+    constructor(basePath: string) {
+        this.basePath = CloudPathUtils.asBaseDirectory(basePath);
         this.root = new FileTreeNode({
             path: "",
             isDirectory: true,
@@ -75,14 +72,14 @@ export class FileTreeStructure {
     public addFiles(files: List<File>) {
         const directories = this.directories;
         for (let file of files.toArray()) {
-            const node = fileToTreeNode(file);
+            const node = fileToTreeNode(file, this.basePath);
 
-            const folder = standardizeFilePath(path.dirname(file.name));
+            const folder = CloudPathUtils.normalized(path.dirname(node.path));
             this._checkDirInTree(folder);
 
             if (file.isDirectory) {
-                if (!directories[standardizeFilePath(file.name)]) {
-                    directories[standardizeFilePath(file.name)] = node;
+                if (!directories[node.path]) {
+                    directories[node.path] = node;
                     directories[folder].children.set(node.path, node);
                 }
             } else {

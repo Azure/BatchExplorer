@@ -3,7 +3,7 @@ import * as path from "path";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
-import { prettyBytes } from "app/utils";
+import { StringUtils, prettyBytes } from "app/utils";
 import { FileTreeNode } from "./file-tree.model";
 
 /**
@@ -55,10 +55,12 @@ export function prettyFileSize(size: string): string {
     return prettyBytes(parseInt(size || "0", 10));
 }
 
-export function fileToTreeNode(file: File): FileTreeNode {
+export function fileToTreeNode(file: File, basePath: string = ""): FileTreeNode {
     const fullPath = standardizeFilePath(file.name);
+    const relativePath = StringUtils.removePrefix(fullPath, basePath);
+
     return new FileTreeNode({
-        path: fullPath,
+        path: relativePath,
         isDirectory: file.isDirectory,
         contentLength: !file.isDirectory && file.properties.contentLength,
         lastModified: file.properties && file.properties.lastModified,

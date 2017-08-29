@@ -34,6 +34,13 @@ export interface FileContentResult {
     result: any;
 }
 
+export interface NaviagateNodeFileConfig {
+    /**
+     * Path to the base folder the navigation should be returned
+     */
+    basePath?: string;
+}
+
 // List of error we don't want to log for files
 export const fileIgnoredErrors = [
     Constants.HttpCode.NotFound,
@@ -77,7 +84,7 @@ export class FileService extends ServiceBase {
             proxyConstructor: (client, params, options) => {
                 const batchOptions = { ...options };
                 if (options.filter) {
-                    batchOptions.filter = `startswith(name, ${options.filter})`;
+                    batchOptions.filter = `startswith(name, '${options.filter}')`;
                 }
                 return client.file.listFromComputeNode(params.poolId, params.nodeId, recursive, batchOptions);
             },
@@ -88,8 +95,9 @@ export class FileService extends ServiceBase {
         });
     }
 
-    public navigateNodeFiles(poolId: string, nodeId: string) {
+    public navigateNodeFiles(poolId: string, nodeId: string, config: NaviagateNodeFileConfig = {}) {
         return new FileNavigator({
+            basePath: config.basePath,
             loadPath: (options) => this.listFromComputeNode(poolId, nodeId, false, options),
             getFile: (filename: string) => this.fileFromNode(poolId, nodeId, filename),
         });
@@ -149,7 +157,7 @@ export class FileService extends ServiceBase {
             proxyConstructor: (client, params, options) => {
                 const batchOptions = { ...options };
                 if (options.filter) {
-                    batchOptions.filter = `startswith(name, ${options.filter})`;
+                    batchOptions.filter = `startswith(name, '${options.filter}')`;
                 }
                 return client.file.listFromTask(params.jobId, params.taskId, recursive, batchOptions);
             },
