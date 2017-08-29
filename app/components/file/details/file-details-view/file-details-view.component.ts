@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, Output } from "@angular/core
 import { autobind } from "core-decorators";
 import { remote } from "electron";
 
-import "./file-details-quickview.scss";
+import "./file-details-view.scss";
 
 import { NotificationService } from "app/components/base/notifications";
 import { File, ServerError } from "app/models";
@@ -11,10 +11,10 @@ import { FileLoader } from "app/services/file";
 import { DateUtils, prettyBytes } from "app/utils";
 
 @Component({
-    selector: "bl-file-details-quickview",
-    templateUrl: "file-details.html",
+    selector: "bl-file-details-view",
+    templateUrl: "file-details-view.html",
 })
-export class FileDetailsQuickviewComponent implements OnChanges {
+export class FileDetailsViewComponent implements OnChanges {
     @Input() public fileLoader: FileLoader;
     @Output() public back = new EventEmitter();
 
