@@ -117,7 +117,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
         this.poolParametersWrapper = poolTempWrapper;
     }
 
-    private _getFormGroup(template) {
+    private _getFormGroup(template): FormGroup {
         let templateParameters = [];
         if (template && template.parameters) {
             templateParameters = Object.keys(template.parameters);
