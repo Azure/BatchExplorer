@@ -98,10 +98,12 @@ export class ServerError {
         Object.assign(this, attributes);
 
         const value = this.body.message;
-        // Remove the request id from the the message
-        const lines = value.split("\n");
+        if (value) {
+            // Remove the request id from the the message
+            const lines = value.split("\n");
 
-        this.message = lines.first();
+            this.message = lines.first();
+        }
     }
 
     public toString() {
