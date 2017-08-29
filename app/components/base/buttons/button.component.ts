@@ -45,12 +45,9 @@ export class ButtonComponent extends ClickableComponent implements OnChanges {
      * If set to true the check mark animation will not be shown
      */
     @Input() public skipSuccess: boolean = false;
-    @Input() @HostBinding("class.disabled") public disabled = false;
     @Input() @HostBinding("attr.type") public type: ButtonType = "square";
     @Input() @HostBinding("attr.color") public color: ButtonColor = "primary";
     @Input() public routerLink: string;
-
-    @HostBinding("tabindex") public tabindex = "0";
 
     public set status(value: SubmitStatus) {
         this._status = value;
@@ -60,22 +57,16 @@ export class ButtonComponent extends ClickableComponent implements OnChanges {
     public get status() { return this._status; }
     private _status = SubmitStatus.Idle;
 
-    constructor(private changeDetectionRef: ChangeDetectorRef) { }
+    constructor(private changeDetectionRef: ChangeDetectorRef) {
+        super();
+    }
 
-    @HostListener("click", ["$event"])
     public handleAction(event: Event) {
+        super.handleAction(event);
         if (this.disabled || !this.action) {
             return;
         }
         this._execute(event);
-    }
-
-    @HostListener("keydown", ["$event"])
-    public onkeydown(event: KeyboardEvent) {
-        if (event.code === "Space" || event.code === "Enter") {
-            this.handleAction(event);
-            event.preventDefault();
-        }
     }
 
     public ngOnChanges(changes: SimpleChanges) {

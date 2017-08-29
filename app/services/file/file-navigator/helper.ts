@@ -65,8 +65,8 @@ export function fileToTreeNode(file: File): FileTreeNode {
     });
 }
 
-export function sortTreeNodes(nodes: FileTreeNode[]): FileTreeNode[] {
-    return nodes.sort((a, b) => {
+export function sortTreeNodes(nodes: Map<string, FileTreeNode>): Map<string, FileTreeNode> {
+    return new Map([...nodes.entries()].sort(([aPath, a], [bPath, b]) => {
         if (a.isDirectory === b.isDirectory) {
             return a.name.localeCompare(b.name);
         } else if (a.isDirectory) {
@@ -74,7 +74,7 @@ export function sortTreeNodes(nodes: FileTreeNode[]): FileTreeNode[] {
         } else {
             return 1;
         }
-    });
+    }));
 }
 
 function checkDirInTree(directories: StringMap<FileTreeNode>, directory: string) {
@@ -87,7 +87,7 @@ function checkDirInTree(directories: StringMap<FileTreeNode>, directory: string)
     const parent = segments.slice(0, -1).join("/");
     if (directory !== parent) {
         checkDirInTree(directories, parent);
-        directories[parent].children.push(directories[directory]);
+        directories[parent].children.set(directory, directories[directory]);
     }
 }
 

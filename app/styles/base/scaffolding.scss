@@ -36,8 +36,7 @@ textarea {
 }
 
 [tabindex="0"]:focus {
-    // outline-color: map-get($primary, 300);
-    outline-color: #528bff;
+    outline-color: $outline-color;
     outline-width: 1px;
     outline-style: solid;
     outline-offset: -1px;

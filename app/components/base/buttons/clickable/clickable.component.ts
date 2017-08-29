@@ -12,11 +12,8 @@ export class ClickableComponent {
     @HostBinding("tabindex") public tabindex = "0";
 
     @HostListener("click", ["$event"])
-    public handleAction(event: Event) {
-        if (this.disabled) {
-            return;
-        }
-        this.do.emit(event);
+    public handleClick(event: Event) {
+        this.handleAction(event);
     }
 
     @HostListener("keydown", ["$event"])
@@ -25,5 +22,12 @@ export class ClickableComponent {
             this.handleAction(event);
             event.preventDefault();
         }
+    }
+
+    public handleAction(event: Event) {
+        if (this.disabled) {
+            return;
+        }
+        this.do.emit(event);
     }
 }

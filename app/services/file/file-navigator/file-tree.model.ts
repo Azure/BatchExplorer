@@ -8,7 +8,7 @@ import { fileToTreeNode, generateDir, prettyFileSize, sortTreeNodes, standardize
 export interface FileTreeNodeParams {
     path: string;
     isDirectory: boolean;
-    children?: FileTreeNode[];
+    children?: Map<string, FileTreeNode>;
     loadingStatus?: LoadingStatus;
     contentLength?: number;
     lastModified?: Date;
@@ -17,7 +17,7 @@ export interface FileTreeNodeParams {
 export class FileTreeNode {
     public path: string;
     public isDirectory: boolean;
-    public children: FileTreeNode[];
+    public children: Map<string, FileTreeNode>;
     public loadingStatus: LoadingStatus;
     public name: string;
 
@@ -30,7 +30,7 @@ export class FileTreeNode {
     constructor(params: FileTreeNodeParams) {
         this.path = params.path;
         this.isDirectory = params.isDirectory;
-        this.children = params.children || [];
+        this.children = params.children || new Map();
         this.loadingStatus = params.loadingStatus || (this.isDirectory ? LoadingStatus.Loading : LoadingStatus.Ready);
         this.contentLength = params.contentLength;
         this.lastModified = params.lastModified;
@@ -38,6 +38,9 @@ export class FileTreeNode {
         this.name = this._computeName();
     }
 
+    public walk() {
+        return this.children.values();
+    }
     public markAsLoaded() {
         this.loadingStatus = LoadingStatus.Ready;
     }
@@ -80,10 +83,10 @@ export class FileTreeStructure {
             if (file.isDirectory) {
                 if (!directories[standardizeFilePath(file.name)]) {
                     directories[standardizeFilePath(file.name)] = node;
-                    directories[folder].children.push(node);
+                    directories[folder].children.set(node.path, node);
                 }
             } else {
-                directories[folder].children.push(node);
+                directories[folder].children.set(node.path, node);
             }
         }
 
@@ -100,7 +103,8 @@ export class FileTreeStructure {
         } else {
             const parent = path.dirname(nodePath);
             if (parent in this.directories) {
-                const matchingChild = this.directories[parent].children.filter(x => x.path === nodePath).first();
+                // const matchingChild = this.directories[parent].children.filter(x => x.path === nodePath).first();
+                const matchingChild = this.directories[parent].children.get(nodePath);
                 if (matchingChild) {
                     return matchingChild;
                 }
@@ -136,7 +140,7 @@ export class FileTreeStructure {
 
         if (directory !== parent) {
             this._checkDirInTree(parent);
-            directories[parent].children.push(directories[directory]);
+            directories[parent].children.set(directory, directories[directory]);
         }
     }
 }

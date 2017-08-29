@@ -133,7 +133,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
 
     private _getTreeRowsForNode(node: FileTreeNode, indent = 0): TreeRow[] {
         let rows = [];
-        for (let child of node.children) {
+        for (let [_, child] of node.children) {
             if (this.autoExpand && !(child.path in this.expandedDirs)) {
                 this.expandedDirs[child.path] = true;
             }
@@ -146,7 +146,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
                 indent: indent,
             });
             if (expanded) {
-                if (child.children.length > 0) {
+                if (child.children.size > 0) {
                     for (let row of this._getTreeRowsForNode(child, indent + 1)) {
                         rows.push(row);
                     }
