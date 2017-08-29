@@ -3,7 +3,7 @@ import * as path from "path";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
-import { StringUtils, prettyBytes } from "app/utils";
+import { CloudPathUtils, StringUtils, prettyBytes } from "app/utils";
 import { FileTreeNode } from "./file-tree.model";
 
 /**
@@ -17,13 +17,13 @@ export function mapFilesToTree(files: List<File>, baseFolder: string = ""): File
 
         const folder = path.dirname(file.name);
 
-        const relativePath = standardizeFilePath(path.relative(baseFolder, folder));
+        const relativePath = CloudPathUtils.normalize(path.relative(baseFolder, folder));
 
         checkDirInTree(directories, relativePath);
 
         if (file.isDirectory) {
-            if (!directories[standardizeFilePath(file.name)]) {
-                directories[standardizeFilePath(file.name)] = node;
+            if (!directories[CloudPathUtils.normalize(file.name)]) {
+                directories[CloudPathUtils.normalize(file.name)] = node;
                 directories[relativePath].children.push(node);
             }
         } else {
@@ -39,14 +39,6 @@ export function mapFilesToTree(files: List<File>, baseFolder: string = ""): File
 }
 
 /**
- * Replace all '\' with '/' in given path
- * @param filePath
- */
-export function standardizeFilePath(filePath: string): string {
-    return filePath.replace(/\\/g, "/");
-}
-
-/**
  * Helper function that prettify file size
  * @param size raw file size
  */
@@ -56,7 +48,7 @@ export function prettyFileSize(size: string): string {
 }
 
 export function fileToTreeNode(file: File, basePath: string = ""): FileTreeNode {
-    const fullPath = standardizeFilePath(file.name);
+    const fullPath = CloudPathUtils.normalize(file.name);
     const relativePath = StringUtils.removePrefix(fullPath, basePath);
 
     return new FileTreeNode({

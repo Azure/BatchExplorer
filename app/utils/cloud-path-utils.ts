@@ -1,5 +1,5 @@
 export class CloudPathUtils {
-    public static normalized(path: string): string {
+    public static normalize(path: string): string {
         return path.replace(/\\/g, "/");
     }
 
@@ -8,7 +8,7 @@ export class CloudPathUtils {
     }
 
     public static asBaseDirectory(path: string): string {
-        const norm = CloudPathUtils.normalized(path);
+        const norm = CloudPathUtils.normalize(path);
         if (norm.endsWith("/")) {
             return norm;
         }

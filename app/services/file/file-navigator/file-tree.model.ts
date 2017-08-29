@@ -4,7 +4,7 @@ import * as path from "path";
 import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
 import { CloudPathUtils } from "app/utils";
-import { fileToTreeNode, generateDir, sortTreeNodes, standardizeFilePath } from "./helper";
+import { fileToTreeNode, generateDir, sortTreeNodes } from "./helper";
 
 export interface FileTreeNodeParams {
     path: string;
@@ -74,7 +74,7 @@ export class FileTreeStructure {
         for (let file of files.toArray()) {
             const node = fileToTreeNode(file, this.basePath);
 
-            const folder = CloudPathUtils.normalized(path.dirname(node.path));
+            const folder = CloudPathUtils.normalize(path.dirname(node.path));
             this._checkDirInTree(folder);
 
             if (file.isDirectory) {
@@ -93,7 +93,7 @@ export class FileTreeStructure {
     }
 
     public getNode(nodePath: string) {
-        nodePath = standardizeFilePath(nodePath);
+        nodePath = CloudPathUtils.normalize(nodePath);
         if (nodePath === "") { nodePath = "."; }
         if (nodePath in this.directories) {
             return this.directories[nodePath];
@@ -115,7 +115,7 @@ export class FileTreeStructure {
     }
 
     public isPathLoaded(path: string) {
-        path = standardizeFilePath(path);
+        path = CloudPathUtils.normalize(path);
         if (!(path in this.directories)) {
             return false;
         }
