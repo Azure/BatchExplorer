@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
@@ -10,12 +10,25 @@ export interface FileNavigatorEntry {
     navigator: FileNavigator;
 }
 
+export enum FileExplorerSelectable {
+    none = 1,
+    file = 2,
+    folder = 4,
+    all = 6,
+}
+
 export interface FileExplorerConfig {
     /**
      * If the file explorer should show the tree view on the left
      * @default true
      */
     showTreeView?: boolean;
+
+    /**
+     * If the explorer should just select the file(not open)
+     * @default FileExplorerSelectable.none
+     */
+    selectable?: FileExplorerSelectable;
 }
 
 const fileExplorerDefaultConfig: FileExplorerConfig = {
@@ -33,14 +46,17 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
     @Input() public fileNavigator: FileNavigator;
     @Input() public fileNavigators: FileNavigatorEntry[];
     @Input() public autoExpand = false;
+    @Input() public activeFile: string;
     @Input() public set config(config: FileExplorerConfig) {
         this._config = { ...fileExplorerDefaultConfig, ...config };
     }
     public get config() { return this._config; }
+    @Output() public activeFileChange = new EventEmitter<string>();
 
     public LoadingStatus = LoadingStatus;
     public currentNode: FileTreeNode;
     public currentFileNavigator: FileNavigator;
+    public currentFileNavigatorEntry: FileNavigatorEntry;
 
     private _currentNodeSub: Subscription;
 
@@ -51,8 +67,7 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
             this.fileNavigators = [{ name: "Files", navigator: this.fileNavigator }];
         }
         if (inputs.fileNavigator || inputs.fileNavigators) {
-            this.currentFileNavigator = this.fileNavigators.first().navigator;
-            this._updateNavigatorEvents();
+            this.updateCurrentNavigator(this.fileNavigators.first());
         }
     }
 
@@ -60,12 +75,25 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
         this._clearCurrentNodeSub();
     }
 
+    public nodeSelected(node: FileTreeNode) {
+        // tslint:disable-next-line:no-bitwise
+        if (node.isDirectory && (this.config.selectable & FileExplorerSelectable.folder)) {
+            this.activeFileChange.emit(node.path);
+            // tslint:disable-next-line:no-bitwise
+        } else if (!node.isDirectory && (this.config.selectable & FileExplorerSelectable.file)) {
+            this.activeFileChange.emit(node.path);
+        } else {
+            this.navigateTo(node.path);
+        }
+    }
+
     public navigateTo(path: string) {
         this.currentFileNavigator.navigateTo(path);
     }
 
-    public updateCurrentNavigator(navigator: FileNavigator) {
-        this.currentFileNavigator = navigator;
+    public updateCurrentNavigator(entry: FileNavigatorEntry) {
+        this.currentFileNavigatorEntry = entry;
+        this.currentFileNavigator = entry.navigator;
         this._updateNavigatorEvents();
     }
 

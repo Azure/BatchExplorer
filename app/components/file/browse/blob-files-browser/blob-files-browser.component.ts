@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from "@angular/core";
 
 import { FileExplorerConfig } from "app/components/file/browse/file-explorer";
 import { StorageService } from "app/services";
@@ -11,6 +11,8 @@ import { FileNavigator } from "app/services/file";
 export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
     @Input() public container: string;
     @Input() public fileExplorerConfig: FileExplorerConfig = {};
+    @Input() public activeFile: string;
+    @Output() public activeFileChange = new EventEmitter<string>();
 
     public fileNavigator: FileNavigator;
 

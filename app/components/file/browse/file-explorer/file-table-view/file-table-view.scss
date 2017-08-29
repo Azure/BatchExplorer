@@ -30,6 +30,10 @@ bl-file-table-view {
                 color: map-get($primary, 400);
             }
         }
+        .current-path {
+            line-height: $file-header-height;
+            vertical-align: middle;
+        }
     }
     .icon {
         display: inline-block;

@@ -4,10 +4,11 @@
     </bl-clickable>
 
     <div class="current-path">
-        {{treeNode.path}}
+        <span *ngIf="name" class="file-navigator-name">{{name}}:</span>
+        <span>/{{treeNode.path}}</span>
     </div>
 </div>
-<bl-table (activeItemChange)="updateActiveItem($event)">
+<bl-table (activeItemChange)="selectNode($event)">
     <bl-thead>
         <bl-column>Name</bl-column>
         <bl-column style="width: 200px">Content Length</bl-column>

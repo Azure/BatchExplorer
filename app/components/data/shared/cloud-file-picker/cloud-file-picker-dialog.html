@@ -1,6 +1,15 @@
 <bl-simple-form [submit]="submit" (done)="close()" [containerRef]="dialogRef" [multiUse]="false">
     <div *ngIf="container">
-        <!-- [activeItem]="pickedFile" (activeItemChange)="updatePickedFile($event)" -->
-        <bl-blob-files-browser #blobList [container]="container.id"> </bl-blob-files-browser>
+        <bl-blob-files-browser #blobList [container]="container.id" [fileExplorerConfig]="fileExplorerConfig" [activeFile]="pickedFile"
+            (activeFileChange)="updatePickedFile($event)">
+        </bl-blob-files-browser>
+    </div>
+
+    <div *ngIf="containerError" class="container-error">
+        Error loading container '{{containerId}}' make sure it exists.
+    </div>
+    <div blFormSummary>
+        <div *ngIf="pickedFile">Picked file: {{pickedFile}}</div>
+        <div *ngIf="!pickedFile">No file picked</div>
     </div>
 </bl-simple-form>
