@@ -14,7 +14,6 @@ export class ArmRecord<T extends ArmRecordAttributes> extends Record<T> {
     @Prop() public type: string;
 
     constructor(data: T) {
-        if (data instanceof ArmRecord) { return data; }
         super({ ...data as any, id: data.id && data.id.toLowerCase() });
     }
 }
