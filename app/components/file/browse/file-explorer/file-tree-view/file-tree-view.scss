@@ -77,6 +77,10 @@ bl-file-tree-view {
             background: $whitesmoke-darker;
         }
 
+        &.active {
+            background: $whitesmoke-darker;
+        }
+
         > .file-icon > .fa-folder {
             color: #f8d979;
         }
