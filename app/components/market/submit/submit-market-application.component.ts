@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
-import { NcjJobTemplate, NcjParameterRawType, NcjPoolTemplate, ServerError } from "app/models";
+import { NcjJobTemplate, NcjPoolTemplate, ServerError } from "app/models";
 import { NcjTemplateService, PythonRpcService } from "app/services";
 import { autobind } from "core-decorators";
 import { Modes, NcjParameterWrapper } from "./market-application.model";
@@ -59,6 +59,13 @@ export class SubmitMarketApplicationComponent implements OnInit {
 
     public pickMode(mode: Modes) {
         this.modeState = mode;
+    }
+
+    public getToolTip(): string {
+        if (this.isFormValid()) {
+            return "Click to submit form";
+        }
+        return "Form is not valid";
     }
 
     public isFormValid() {
@@ -124,29 +131,11 @@ export class SubmitMarketApplicationComponent implements OnInit {
         }
         const templateFormGroup = {};
         for (let key of templateParameters) {
-            const validatorGroup: any[] = [];
-            validatorGroup.push(Validators.required);
-            if (template.parameters[key].type === NcjParameterRawType.int) {
-                if (template.parameters[key].minValue) {
-                    validatorGroup.push(Validators.min(template.parameters[key].minValue));
-                }
-                if (template.parameters[key].maxValue) {
-                    validatorGroup.push(Validators.max(template.parameters[key].maxValue));
-                }
-            }
-            if (template.parameters[key].type === NcjParameterRawType.string) {
-                if (template.parameters[key].minLength) {
-                    validatorGroup.push(Validators.minLength(template.parameters[key].minLength));
-                }
-                if (template.parameters[key].maxLength) {
-                    validatorGroup.push(Validators.maxLength(template.parameters[key].maxLength));
-                }
-            }
             if (template.parameters[key].defaultValue) {
                 const defaultValue = String(template.parameters[key].defaultValue);
-                templateFormGroup[key] = new FormControl(defaultValue, Validators.compose(validatorGroup) );
+                templateFormGroup[key] = new FormControl(defaultValue, Validators.required );
             } else {
-                templateFormGroup[key] = new FormControl(null, Validators.compose(validatorGroup));
+                templateFormGroup[key] = new FormControl(null, Validators.required);
             }
         }
         return new FormGroup(templateFormGroup);

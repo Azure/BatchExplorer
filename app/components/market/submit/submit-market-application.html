@@ -39,7 +39,7 @@
             </div>
         </bl-form-page>
     </bl-complex-form>
-    <div class="submit-box" *ngIf="modeState !== Modes.None">
+    <div [title]="getToolTip()" class="submit-box" *ngIf="modeState !== Modes.None">
         <bl-server-error [error]="error"> </bl-server-error>
         <bl-button [disabled]="!isFormValid()" [action]="submit" type="wide" class="submit-job" color="success">
             <i class="fa fa-play"></i>
