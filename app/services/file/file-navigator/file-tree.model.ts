@@ -61,7 +61,7 @@ export class FileTreeStructure {
     public directories: StringMap<FileTreeNode> = {};
     public readonly basePath: string;
 
-    constructor(basePath: string) {
+    constructor(basePath: string = "") {
         this.basePath = CloudPathUtils.asBaseDirectory(basePath);
         this.root = new FileTreeNode({
             path: "",
