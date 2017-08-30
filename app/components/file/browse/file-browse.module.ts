@@ -3,14 +3,14 @@ import { commonModules } from "app/common";
 import { FileDetailsModule } from "app/components/file/details";
 import { BlobFilesBrowserComponent } from "./blob-files-browser";
 import { FileDirectoryFilter, FileListDisplayComponent } from "./display";
-import { FileExplorerComponent, FileTableViewerComponent, FileTreeViewComponent } from "./file-explorer";
+import { FileExplorerComponent, FileTableViewComponent, FileTreeViewComponent } from "./file-explorer";
 import { NodeFileBrowseComponent } from "./node-file-browse.component";
 
 const components = [
     FileDirectoryFilter, FileTreeViewComponent, FileListDisplayComponent,
     NodeFileBrowseComponent,
     BlobFilesBrowserComponent,
-    FileExplorerComponent, FileTableViewerComponent,
+    FileExplorerComponent, FileTableViewComponent,
 ];
 
 @NgModule({
