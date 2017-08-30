@@ -240,64 +240,42 @@ describe("ParameterInputComponent", () => {
             expect(inputEl.nativeElement.value).toBe(String(updatedInput));
         });
 
-        it("should validate minimum value constraint", () => {
-            const input = 5;
+    });
+
+    describe("int parameter type validation", () => {
+        beforeEach(() => {
             testComponent.param = new NcjParameterWrapper("frameEnd", {
                 type: NcjParameterRawType.int,
                 metadata : {
                     description: "Param Description",
                 },
                 minValue: 3,
+                maxValue: 6,
             });
             fixture.detectChanges();
-            testComponent.paramControl.setValue(input);
+        });
+
+        it("should validate minimum/maximum value constraint", () => {
+            testComponent.paramControl.setValue(4);
             fixture.detectChanges();
             expect(component.parameterValue.valid).toBe(true);
+            expect(component.parameterValue.errors).toBeNull();
         });
 
         it("should invalidate minimum value constraint", () => {
-            const input = 2;
-            testComponent.param = new NcjParameterWrapper("frameEnd", {
-                type: NcjParameterRawType.int,
-                metadata : {
-                    description: "Param Description",
-                },
-                minValue: 4,
-            });
-            fixture.detectChanges();
-            testComponent.paramControl.setValue(input);
+            testComponent.paramControl.setValue(2);
             fixture.detectChanges();
             expect(component.parameterValue.valid).toBe(false);
-        });
-
-        it("should validate maximum value constraint", () => {
-            const input = 2;
-            testComponent.param = new NcjParameterWrapper("frameEnd", {
-                type: NcjParameterRawType.int,
-                metadata : {
-                    description: "Param Description",
-                },
-                maxValue: 4,
-            });
-            fixture.detectChanges();
-            testComponent.paramControl.setValue(input);
-            fixture.detectChanges();
-            expect(component.parameterValue.valid).toBe(true);
+            expect(component.parameterValue.errors.minValue).not.toBeUndefined();
+            expect(component.parameterValue.errors.minValue).toBe(true);
         });
 
         it("should invalidate maximum value constraint", () => {
-            const input = 7;
-            testComponent.param = new NcjParameterWrapper("frameEnd", {
-                type: NcjParameterRawType.int,
-                metadata : {
-                    description: "Param Description",
-                },
-                maxValue: 4,
-            });
-            fixture.detectChanges();
-            testComponent.paramControl.setValue(input);
+            testComponent.paramControl.setValue(7);
             fixture.detectChanges();
             expect(component.parameterValue.valid).toBe(false);
+            expect(component.parameterValue.errors.maxValue).not.toBeUndefined();
+            expect(component.parameterValue.errors.maxValue).toBe(true);
         });
 
     });
