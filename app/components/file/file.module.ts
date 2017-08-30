@@ -3,11 +3,8 @@ import { NgModule } from "@angular/core";
 import { commonModules } from "app/common";
 import { FileBrowseModule } from "app/components/file/browse";
 import { FileDetailsModule } from "app/components/file/details";
-import { FileHomeComponent } from "app/components/file/home";
 
-const components = [
-    FileHomeComponent,
-];
+const components = [];
 
 const modules = [
     FileBrowseModule, FileDetailsModule, ...commonModules,

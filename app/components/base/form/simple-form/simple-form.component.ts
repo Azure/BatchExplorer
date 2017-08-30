@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 
 import { FormSize } from "../complex-form";
 import { ContainerRef } from "../form-base";
+import "./simple-form.scss";
 
 /**
  * SimpleForm is an helper component that use a ComplexForm with only 1 page and section.

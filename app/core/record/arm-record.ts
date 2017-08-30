@@ -14,6 +14,6 @@ export class ArmRecord<T extends ArmRecordAttributes> extends Record<T> {
     @Prop() public type: string;
 
     constructor(data: T) {
-        super(Object.assign({}, data, { id: data.id && data.id.toLowerCase() }));
+        super({ ...data as any, id: data.id && data.id.toLowerCase() });
     }
 }

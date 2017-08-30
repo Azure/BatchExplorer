@@ -7,7 +7,7 @@ import { BatchClientService } from "./batch-client.service";
 import {
     DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache,
 } from "./core";
-import { FileLoader, FileSource } from "./file";
+import { FileLoader, FileNavigator, FileSource } from "./file";
 import { FileSystemService } from "./fs.service";
 import { ServiceBase } from "./service-base";
 
@@ -34,8 +34,15 @@ export interface FileContentResult {
     result: any;
 }
 
+export interface NaviagateNodeFileConfig {
+    /**
+     * Path to the base folder the navigation should be returned
+     */
+    basePath?: string;
+}
+
 // List of error we don't want to log for files
-const fileIgnoredErrors = [
+export const fileIgnoredErrors = [
     Constants.HttpCode.NotFound,
     Constants.HttpCode.Conflict,
 ];
@@ -75,12 +82,31 @@ export class FileService extends ServiceBase {
         return new RxBatchListProxy<NodeFileListParams, File>(File, this.batchService, {
             cache: (params) => this.getNodeFileCache(params),
             proxyConstructor: (client, params, options) => {
-                return client.file.listFromComputeNode(params.poolId, params.nodeId, recursive, options);
+                const batchOptions = { ...options };
+                if (options.folder) {
+                    batchOptions.filter = `startswith(name, '${options.folder}')`;
+                }
+                return client.file.listFromComputeNode(params.poolId, params.nodeId, recursive, batchOptions);
             },
             initialParams: { poolId: initialPoolId, nodeId: initialNodeId },
             initialOptions,
             logIgnoreError: fileIgnoredErrors,
             onError: onError,
+        });
+    }
+
+    public navigateNodeFiles(poolId: string, nodeId: string, config: NaviagateNodeFileConfig = {}) {
+        return new FileNavigator({
+            basePath: config.basePath,
+            loadPath: (folder) => this.listFromComputeNode(poolId, nodeId, false, { folder }),
+            getFile: (filename: string) => this.fileFromNode(poolId, nodeId, filename),
+        });
+    }
+
+    public navigateTaskFile(jobId: string, taskId: string) {
+        return new FileNavigator({
+            loadPath: (folder) => this.listFromTask(jobId, taskId, true, { folder }),
+            getFile: (filename: string) => this.fileFromTask(jobId, taskId, filename),
         });
     }
 
@@ -129,7 +155,11 @@ export class FileService extends ServiceBase {
         return new RxBatchListProxy<TaskFileListParams, File>(File, this.batchService, {
             cache: (params) => this.getTaskFileCache(params),
             proxyConstructor: (client, params, options) => {
-                return client.file.listFromTask(params.jobId, params.taskId, recursive, options);
+                const batchOptions = { ...options };
+                if (options.folder) {
+                    batchOptions.filter = `startswith(name, '${options.folder}')`;
+                }
+                return client.file.listFromTask(params.jobId, params.taskId, recursive, batchOptions);
             },
             initialParams: { jobId: initialJobId, taskId: initialTaskId },
             initialOptions,
@@ -157,6 +187,7 @@ export class FileService extends ServiceBase {
                     return client.file.getTaskFile(jobId, taskId, filename, batchOptions);
                 });
             },
+            logIgnoreError: fileIgnoredErrors,
         });
     }
 
