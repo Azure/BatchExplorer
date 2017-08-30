@@ -33,6 +33,7 @@ export * from "./job-preparation-task";
 export * from "./job-release-task";
 export * from "./job-stats";
 export * from "./key-bindings";
+export * from "./key-value";
 export * from "./list-result";
 export * from "./metadata";
 export * from "./multi-instance-settings";
