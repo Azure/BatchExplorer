@@ -6,18 +6,19 @@
 }
 
 bl-file-tree-view {
+    $tree-view-header-height: 24px;
     height: 100%;
 
     .tree-view-header {
         background: $mercury-grey;
         display: flex;
         align-items: stretch;
-        height: 24px;
+        height: $tree-view-header-height;
         cursor: pointer;
 
         > * {
             vertical-align: middle;
-            line-height: 24px;
+            line-height: $tree-view-header-height;
         }
 
         .caret {
@@ -68,6 +69,13 @@ bl-file-tree-view {
         }
     }
 
+    .tree-view-content {
+        position: relative;
+        height: calc(100% - #{$tree-view-header-height});
+    }
+    .tree-rows-container {
+        height: 100%;
+    }
 
     .tree-row {
         cursor: pointer;
