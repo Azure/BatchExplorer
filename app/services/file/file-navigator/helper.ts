@@ -14,9 +14,7 @@ export function mapFilesToTree(files: List<File>, baseFolder: string = ""): File
 
     for (let file of files.toArray()) {
         const node = fileToTreeNode(file);
-
         const folder = path.dirname(file.name);
-
         const relativePath = CloudPathUtils.normalize(path.relative(baseFolder, folder));
 
         checkDirInTree(directories, relativePath);
