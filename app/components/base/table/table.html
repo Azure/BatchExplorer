@@ -7,7 +7,7 @@
             [class.drop-target]="item.key === dropTargetRowKey"
             (dragenter)="dragEnter(item, $event)"
             (dragleave)="dragLeave(item, $event)"
-            (drop)="drop(item, $event)"
+            (drop)="dropOnRow(item, $event)"
         >
 
             <td class="checkbox-column" (click)="item.handleClick($event, false)" *ngIf="config.showCheckbox">

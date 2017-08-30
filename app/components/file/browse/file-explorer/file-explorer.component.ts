@@ -4,6 +4,7 @@ import { Subscription } from "rxjs";
 import { LoadingStatus } from "app/components/base/loading";
 import { FileNavigator, FileTreeNode } from "app/services/file";
 import "./file-explorer.scss";
+import { FileDropEvent } from "./file-table-view";
 
 export interface FileNavigatorEntry {
     name: string;
@@ -29,10 +30,18 @@ export interface FileExplorerConfig {
      * @default FileExplorerSelectable.none
      */
     selectable?: FileExplorerSelectable;
+
+    /**
+     * If the explorer allows dropping external files
+     * @default false
+     */
+    canDropExternalFiles?: boolean;
 }
 
 const fileExplorerDefaultConfig: FileExplorerConfig = {
     showTreeView: true,
+    selectable: FileExplorerSelectable.none,
+    canDropExternalFiles: false,
 };
 
 /**
@@ -99,6 +108,10 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
 
     public goBack() {
         this.currentFileNavigator.goBack();
+    }
+
+    public handleDrop(event: FileDropEvent) {
+        console.log("File", event.files, event.node.path);
     }
 
     private _updateNavigatorEvents() {

@@ -1,5 +1,5 @@
 import {
-    ChangeDetectorRef, Component, ContentChild, ContentChildren, HostBinding, Input, Optional, QueryList,
+    ChangeDetectorRef, Component, ContentChild, ContentChildren, EventEmitter, HostBinding, Input, Optional, Output, QueryList,
 } from "@angular/core";
 import { Router } from "@angular/router";
 
@@ -18,12 +18,25 @@ export interface TableConfig extends AbstractListBaseConfig {
      * @default false
      */
     showCheckbox?: boolean;
+
+    /**
+     * If we should allow to drop on the table
+     * @default false
+     */
+    droppable?: boolean;
 }
 
 export const tableDefaultConfig = {
     ...abstractListDefaultConfig,
     showCheckbox: false,
+    droppable: false,
 };
+
+export interface DropEvent {
+    key: string;
+    data: DataTransfer;
+}
+
 @Component({
     selector: "bl-table",
     templateUrl: "table.html",
@@ -33,6 +46,8 @@ export class TableComponent extends AbstractListBase {
         this._config = { ...tableDefaultConfig, ...config };
     }
     public get config() { return this._config; }
+
+    @Output() public drop = new EventEmitter<DropEvent>();
 
     @ContentChild(TableHeadComponent) public head: TableHeadComponent;
     @ContentChildren(TableRowComponent) public items: QueryList<TableRowComponent>;
@@ -65,12 +80,14 @@ export class TableComponent extends AbstractListBase {
 
     }
 
-    public drop(item: TableRowComponent, event: DragEvent) {
+    public dropOnRow(item: TableRowComponent, event: DragEvent) {
         this.dropTargetRowKey = null;
         this.isDraging = 0;
         event.stopPropagation();
+        event.stopImmediatePropagation();
         event.preventDefault();
-        console.log("Drop ", event.dataTransfer.files, event.dataTransfer.types);
+
+        this.drop.emit({ key: item.key, data: event.dataTransfer });
     }
 
     public sort(column: TableColumnComponent) {

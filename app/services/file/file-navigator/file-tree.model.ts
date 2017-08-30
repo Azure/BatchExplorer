@@ -123,6 +123,11 @@ export class FileTreeStructure {
         return this.directories[path].loadingStatus === LoadingStatus.Ready;
     }
 
+    public getParent(node: FileTreeNode) {
+        const parentPath = path.dirname(node.path);
+        return this.directories[parentPath];
+    }
+
     private _checkDirInTree(directory: string) {
         const directories = this.directories;
         if (this.directories[directory]) {
