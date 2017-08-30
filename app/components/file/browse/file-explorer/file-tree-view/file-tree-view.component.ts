@@ -25,9 +25,9 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     public expanded = true;
     public currentNode: FileTreeNode;
     public expandedDirs: StringMap<boolean> = {};
-
     public treeRows: TreeRow[] = [];
     public refreshing: boolean;
+
     private _tree: FileTreeStructure;
     private _navigatorSubs: Subscription[] = [];
 

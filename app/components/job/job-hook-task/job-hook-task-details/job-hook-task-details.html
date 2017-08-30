@@ -2,7 +2,6 @@
     <bl-property-group>
         <bl-link-property label="Pool" [value]="task.poolId" [link]="['/pools', task.poolId]"></bl-link-property>
         <bl-link-property label="Node" [value]="task.nodeId" [link]="['/pools', task.poolId, 'nodes', task.nodeId]"></bl-link-property>
-        Cur: {{currentFolder}}
         <bl-node-file-browse [poolId]="task.poolId" [nodeId]="task.nodeId" [fileExplorerConfig]="fileExplorerConfig" [folder]="currentFolder"
             *ngIf="currentFolder">
         </bl-node-file-browse>

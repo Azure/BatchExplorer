@@ -42,6 +42,7 @@ export class FileTreeNode {
     public walk() {
         return this.children.values();
     }
+
     public markAsLoaded() {
         this.loadingStatus = LoadingStatus.Ready;
     }
@@ -100,7 +101,6 @@ export class FileTreeStructure {
         } else {
             const parent = path.dirname(nodePath);
             if (parent in this.directories) {
-                // const matchingChild = this.directories[parent].children.filter(x => x.path === nodePath).first();
                 const matchingChild = this.directories[parent].children.get(nodePath);
                 if (matchingChild) {
                     return matchingChild;
