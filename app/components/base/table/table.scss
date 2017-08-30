@@ -65,6 +65,7 @@ bl-table {
 
             &.focused {
                 outline: 2px dashed map-get($primary, 200);
+                outline-offset: -2px;
             }
 
             &:hover:not(.selected) {

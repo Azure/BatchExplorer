@@ -2,6 +2,29 @@ import * as storage from "azure-storage";
 
 import { BlobStorageResult, StorageRequestOptions } from "./models";
 
+export interface ListBlobOptions {
+    /**
+     * Filter for the path.(Relative to the prefix if given)
+     */
+    startswith?: string;
+
+    /**
+     * If it should list all files or 1 directory deep.
+     */
+    recursive?: boolean;
+}
+
+export interface ListBlobResponse {
+    body: {
+        EnumerationResults: {
+            Blobs: {
+                Blob: any | any[],
+                BlobPrefix: any | any[],
+            },
+        },
+    };
+}
+
 export class BlobStorageClientProxy {
     private _blobService: storage.BlobService;
 
@@ -21,28 +44,34 @@ export class BlobStorageClientProxy {
      * @param {string} continuationToken - Token that was returned from the last call, if any
      * @param {StorageRequestOptions} options - Optional request parameters
      */
-    public listBlobsWithPrefix(
+    public listBlobs(
         container: string,
-        blobPrefix?: string,
-        filter?: string,
-        continuationToken?: any,
-        options?: StorageRequestOptions): Promise<BlobStorageResult> {
+        options: ListBlobOptions = {},
+        continuationToken?: any): Promise<BlobStorageResult> {
 
         // we want to keep the filter and prefix separate for mapping files in the response.
-        const prefix = filter
-            ? `${blobPrefix || ""}${filter}`
-            : blobPrefix;
+        const prefix = options.startswith;
 
+        const storageOptions: StorageRequestOptions = {
+            delimiter: options.recursive ? null : "/",
+        };
         return new Promise((resolve, reject) => {
-            this._blobService.listBlobsSegmentedWithPrefix(container, prefix, continuationToken, options,
-                (error, result, response) => {
-                if (error) {
-                    reject(error);
-                } else {
+            this._blobService.listBlobsSegmentedWithPrefix(container, prefix, continuationToken, storageOptions,
+                (error, result, response: any) => {
+                    if (error) { return reject(error); }
+
+                    const folders = this._getFolderNames(response).map((name) => {
+                        return {
+                            name: name,
+                            url: `${container}/${name}`,
+                            isDirectory: true,
+                        };
+                    });
+
                     resolve({
-                        data: result.entries.map((blob) =>  {
+                        data: folders.concat(result.entries.map((blob) => {
                             return {
-                                name: blob.name.replace(blobPrefix, ""),
+                                name: blob.name,
                                 url: `${container}/${blob.name}`,
                                 isDirectory: false,
                                 properties: {
@@ -52,11 +81,10 @@ export class BlobStorageClientProxy {
                                     lastModified: blob.lastModified,
                                 },
                             };
-                        }),
+                        })),
                         continuationToken: result.continuationToken,
                     });
-                }
-            });
+                });
         });
     }
 
@@ -113,7 +141,7 @@ export class BlobStorageClientProxy {
                 if (error) {
                     reject(error);
                 } else {
-                   resolve({
+                    resolve({
                         content: text,
                     });
                 }
@@ -138,7 +166,7 @@ export class BlobStorageClientProxy {
                     reject(error);
                 } else {
                     // resolve with no content
-                    resolve({ });
+                    resolve({});
                 }
             });
         });
@@ -166,20 +194,20 @@ export class BlobStorageClientProxy {
         return new Promise((resolve, reject) => {
             this._blobService.listContainersSegmentedWithPrefix(prefixAndFilter, continuationToken, options,
                 (error, result, response) => {
-                if (error) {
-                    reject(error);
-                } else {
-                    resolve({
-                        data: result.entries.map((container) =>  {
-                            return Object.assign(container, {
-                                id: container.name,
-                                name: container.name.replace(prefix, ""),
-                            });
-                        }),
-                        continuationToken: result.continuationToken,
-                    });
-                }
-            });
+                    if (error) {
+                        reject(error);
+                    } else {
+                        resolve({
+                            data: result.entries.map((container) => {
+                                return Object.assign(container, {
+                                    id: container.name,
+                                    name: container.name.replace(prefix, ""),
+                                });
+                            }),
+                            continuationToken: result.continuationToken,
+                        });
+                    }
+                });
         });
     }
 
@@ -231,5 +259,19 @@ export class BlobStorageClientProxy {
                 }
             });
         });
+    }
+
+    /**
+     * Return the list of folder names return by listing blobs with a delimiter
+     * @param response
+     */
+    private _getFolderNames(response: ListBlobResponse) {
+        const results = response.body["EnumerationResults"]["Blobs"];
+        const blobPrefix = results["BlobPrefix"];
+        if (!blobPrefix) {
+            return [];
+        }
+        const data = Array.isArray(blobPrefix) ? blobPrefix : [blobPrefix];
+        return data.map(x => x["Name"].slice(0, -1));
     }
 }
