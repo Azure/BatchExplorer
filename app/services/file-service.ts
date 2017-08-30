@@ -84,7 +84,7 @@ export class FileService extends ServiceBase {
             proxyConstructor: (client, params, options) => {
                 const batchOptions = { ...options };
                 if (options.folder) {
-                    batchOptions.folder = `startswith(name, '${options.filter}')`;
+                    batchOptions.filter = `startswith(name, '${options.folder}')`;
                 }
                 return client.file.listFromComputeNode(params.poolId, params.nodeId, recursive, batchOptions);
             },
