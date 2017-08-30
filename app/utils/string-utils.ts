@@ -9,4 +9,17 @@ export class StringUtils {
     public static matchWildcard(str: string, wildcard: string) {
         return new RegExp(`^${wildcard.replace("*", ".*")}$`).test(str);
     }
+
+    /**
+     * Remove the given prefix from the given string. Returns the output.
+     * @param name Name containing the prefix
+     * @param prefix Prefix to remove
+     */
+    public static removePrefix(name: string, prefix: string): string {
+        if (name.startsWith(prefix)) {
+            return name.substring(prefix.length, name.length);
+        } else {
+            return name;
+        }
+    }
 }

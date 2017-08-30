@@ -18,6 +18,7 @@ import {
     ResizeButtonComponent,
     TerminateButtonComponent,
 } from "./buttons.component";
+import { ClickableComponent } from "./clickable";
 import { DirectoryPickerComponent } from "./directory-picker.component";
 
 const components = [
@@ -36,6 +37,7 @@ const components = [
     LoadingButtonComponent,
     ResizeButtonComponent,
     TerminateButtonComponent,
+    ClickableComponent,
 ];
 
 @NgModule({
