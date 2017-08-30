@@ -1,0 +1,47 @@
+<div>
+    <div>
+        <h2> Application </h2>
+        <div>
+            <img class="logo" [src]="logo" height="30" width="30" alt="alt">
+            <span> {{ title }} </span>
+        </div>
+    </div>
+    <div>
+        <h2> Action </h2>
+        <div>
+            <span> {{ action }} </span>
+        </div>
+    </div>
+    <div *ngIf="modeState != Modes.None" >
+        <h2> Mode </h2>
+        <div>
+            {{ modeText[modeState] }}
+        </div>
+    </div>
+    <div *ngIf="(modeState == Modes.NewPoolAndJob || modeState == Modes.ExistingPoolAndJob) && isJobComplete()">
+        <h2> Job </h2>
+        <div *ngFor="let param of jobParametersWrapper">
+            {{ param.name }}: {{ this.form.value.job[param.id] }}
+        </div>
+    </div>
+    <div *ngIf="(modeState == Modes.ExistingPoolAndJob) && isPoolComplete()">
+        <h2> Pool </h2>
+        <div>
+            Pool picked: {{ this.form.value.poolpicker.poolId }}
+        </div>
+    </div>
+    <div *ngIf="(modeState == Modes.NewPoolAndJob || modeState == Modes.NewPool) && isPoolComplete()">
+        <h2> Pool </h2>
+        <div *ngFor="let param of poolParametersWrapper">
+            {{ param.name }}: {{ this.form.value.pool[param.id] }}
+        </div>
+    </div>
+    <div *ngIf="(modeState == Modes.NewPoolAndJob || modeState == Modes.NewPool) && isPoolComplete() && isCostComplete()">
+        <h2> Cost </h2>
+
+    </div>
+
+
+
+
+</div>
