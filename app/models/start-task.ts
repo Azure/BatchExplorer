@@ -1,7 +1,7 @@
 import { List } from "immutable";
 
 import { ListProp, Model, Prop, Record } from "app/core";
-import { KeyValue } from "./key-value";
+import { NameValuePair } from "./name-value-pair";
 import { ResourceFile } from "./resource-file";
 import { UserIdentity } from "./user-identity";
 
@@ -29,5 +29,5 @@ export class StartTask extends Record<StartTaskAttributes> {
 
     @ListProp(ResourceFile) public resourceFiles: List<ResourceFile> = List([]);
 
-    @ListProp(KeyValue) public environmentSettings: List<KeyValue> = List([]);
+    @ListProp(NameValuePair) public environmentSettings: List<NameValuePair> = List([]);
 }
