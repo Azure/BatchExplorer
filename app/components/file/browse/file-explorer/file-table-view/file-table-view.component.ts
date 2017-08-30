@@ -5,12 +5,8 @@ import { DropEvent, TableConfig } from "app/components/base/table";
 import { ServerError } from "app/models";
 import { FileTreeNode } from "app/services/file";
 import { DateUtils, prettyBytes } from "app/utils";
+import { FileDropEvent } from "../file-explorer.component";
 import "./file-table-view.scss";
-
-export interface FileDropEvent {
-    node: FileTreeNode;
-    files: File[];
-}
 
 @Component({
     selector: "bl-file-table-view",
@@ -65,7 +61,7 @@ export class FileTableViewComponent implements OnChanges {
             node = this.treeNode;
         }
         const files = [...data.files as any];
-        this.drop.emit({ node, files });
+        this.drop.emit({ path: node.path, files });
     }
 
     private _updateTableConfig() {

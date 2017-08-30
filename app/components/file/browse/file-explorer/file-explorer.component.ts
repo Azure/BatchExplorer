@@ -4,7 +4,6 @@ import { Subscription } from "rxjs";
 import { LoadingStatus } from "app/components/base/loading";
 import { FileNavigator, FileTreeNode } from "app/services/file";
 import "./file-explorer.scss";
-import { FileDropEvent } from "./file-table-view";
 
 export interface FileNavigatorEntry {
     name: string;
@@ -16,6 +15,11 @@ export enum FileExplorerSelectable {
     file = 2,
     folder = 4,
     all = 6,
+}
+
+export interface FileDropEvent {
+    path: string;
+    files: File[];
 }
 
 export interface FileExplorerConfig {
@@ -61,6 +65,7 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
     }
     public get config() { return this._config; }
     @Output() public activeFileChange = new EventEmitter<string>();
+    @Output() public drop = new EventEmitter<FileDropEvent>();
 
     public LoadingStatus = LoadingStatus;
     public currentNode: FileTreeNode;
@@ -111,7 +116,7 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
     }
 
     public handleDrop(event: FileDropEvent) {
-        console.log("File", event.files, event.node.path);
+        this.drop.emit(event);
     }
 
     private _updateNavigatorEvents() {

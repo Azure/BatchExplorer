@@ -1,5 +1,6 @@
 import os
 import asyncio
+from typing import List
 
 from server.app import app
 from jsonrpc import JsonRpcErrorCodes, error, JsonRpcRequest
@@ -22,58 +23,93 @@ PARAM_INDEX_ACCOUNT = 5
 ERROR_REQUIRED_PARAM = "{} is a required parameter"
 
 
-@app.procedure("create_file_group")
+@app.procedure("create-file-group")
 async def create_file_group(request: JsonRpcRequest, name, directory, options):
     # default these parameters as they are optional
-    prefix, flatten, fullPath = [None, False, False]
+    prefix, flatten, full_path = [None, False, False]
     if options:
         if options.get(PARAM_PREFIX):
             prefix = options.get(PARAM_PREFIX)
 
         if options.get(PARAM_FULL_PATH):
-            fullPath = options.get(PARAM_FULL_PATH)
+            full_path = options.get(PARAM_FULL_PATH)
 
         if options.get(PARAM_FLATTEN):
             flatten = options.get(PARAM_FLATTEN)
 
-    total_files = 0
-    for _, _, files in os.walk(directory.replace(SUBDIR_FILTER, "")):
-        total_files += len(files)
+    return await upload_files(request, name, [directory], full_path=full_path, flatten=flatten, root=prefix, merge=True)
+
+
+@app.procedure("add-files-to-file-group")
+async def add_files_to_file_group(request: JsonRpcRequest, file_group_name: str, paths: List[str], root):
+    return await upload_files(request, file_group_name, paths, root=root)
+
+
+async def upload_files(
+        request: JsonRpcRequest,
+        file_group_name: str,
+        paths: List[str],
+        full_path: bool=False,
+        root=None,
+        flatten=False,
+        merge=False):
+
+    total_files = count_files_in_paths(paths)
 
     uploaded_files = 0
+    remote_path = None
 
     def __uploadCallback(current, file_size):
         """
-            Callback from file upload. Anna is going to change to return filename as well.
+            Callback from file upload.
         """
         nonlocal uploaded_files
-        # TODO: Create a dictionary and pass back upload progress to the
-        # caller.
+
         if current == file_size:
             uploaded_files += 1
             request.push_stream(
                 dict(uploaded=uploaded_files, total=total_files))
             print("Uploded {0}/{1}".format(uploaded_files, total_files))
 
-    # If fullPath is true, the the prefix becomes the directory path.
-    # Any existing prefix is overwritten/ignored
-    if fullPath:
-        prefix = directory.replace(SUBDIR_FILTER, "")
+    for path in paths:
+        # If fullPath is true, the the prefix becomes the directory path.
+        # Any existing prefix is overwritten/ignored
+        if full_path:
+            remote_path = path.replace(SUBDIR_FILTER, "")
+        elif not merge:
+            remote_path = os.path.join(root, os.path.basename(path))
+        else:
+            remote_path = root
 
-    try:
-        request.auth.client.file.upload(
-            directory, name, prefix, flatten, __uploadCallback)
-    except ValueError as valueError:
-        raise error.JsonRpcError(
-            code=JsonRpcErrorCodes.BATCH_CLIENT_ERROR,
-            message="Failed to upload files to file group",
-            data={"original": str(valueError)})
+        try:
+            request.auth.client.file.upload(
+                local_path=path,
+                file_group=file_group_name,
+                remote_path=remote_path,
+                flatten=flatten,
+                progress_callback=__uploadCallback)
 
-    # just return this count to the user, can do something better later
-    # TODO: keep track of uploading files in the callback below and remove
-    # this code.
+        except ValueError as valueError:
+            raise error.JsonRpcError(
+                code=JsonRpcErrorCodes.BATCH_CLIENT_ERROR,
+                message="Failed to upload files to file group",
+                data={"original": str(valueError)})
 
     return dict(uploaded=uploaded_files, total=total_files)
+
+
+def count_files_in_paths(paths: List[str]):
+    total_files = 0
+    for path in paths:
+        print("Walking path", path)
+        if os.path.isfile(path):
+            total_files += 1
+            continue
+
+        for _, _, files in os.walk(path.replace(SUBDIR_FILTER, "")):
+            print("Path has", len(files))
+            total_files += len(files)
+    return total_files
 
 
 def __getRequiredParameterError(parameter):
