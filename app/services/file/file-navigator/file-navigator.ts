@@ -9,8 +9,25 @@ import { CloudPathUtils, ObjectUtils } from "app/utils";
 import { FileTreeNode, FileTreeStructure } from "./file-tree.model";
 
 export interface FileNavigatorConfig {
+    /**
+     * Base path for the navigation. If you need to only show a sub folder.
+     * If given it will act as if the root is that base path
+     * and will not be aware of anyother folder at the same level and above
+     */
     basePath?: string;
-    loadPath: (options: any) => RxListProxy<any, File>;
+
+    /**
+     * Callback to be called everytime it loads a new folder.
+     * @param folder: Folder that needs to be loaded. If root. will be null.
+     * @returns  a new RxListProxy
+     */
+    loadPath: (folder: string) => RxListProxy<any, File>;
+
+    /**
+     * Callback called when navigating to a file.
+     * @param filename Fullpath to the file to load.
+     * @returns a new file loader
+     */
     getFile: (filename: string) => FileLoader;
 
     /**
@@ -38,7 +55,7 @@ export class FileNavigator {
     private _tree = new BehaviorSubject<FileTreeStructure>(null);
 
     private _history: string[] = [];
-    private _loadPath: (options: any) => RxListProxy<any, File>;
+    private _loadPath: (folder: string) => RxListProxy<any, File>;
 
     private _proxies: StringMap<RxListProxy<any, File>> = {};
     private _getFileLoader: (filename: string) => FileLoader;
@@ -105,7 +122,7 @@ export class FileNavigator {
         this.loadingStatus = LoadingStatus.Loading;
         if (path === null) { path = this._currentPath.value; }
         if (!this._proxies[path]) {
-            this._proxies[path] = this._loadPath(this._buildLoadPathOptions(path));
+            this._proxies[path] = this._loadPath(this._getFolderToLoad(path));
         }
         const proxy = this._proxies[path];
         const obs = proxy.refresh().flatMap(() => proxy.items.first()).share();
@@ -133,12 +150,11 @@ export class FileNavigator {
         return obs;
     }
 
-    private _buildLoadPathOptions(path: string) {
-        const options = {};
+    private _getFolderToLoad(path: string) {
         let fullPath = [this.basePath, path].filter(x => Boolean(x)).join("/");
         if (fullPath) {
-            options["filter"] = CloudPathUtils.asBaseDirectory(fullPath);
+            return CloudPathUtils.asBaseDirectory(fullPath);
         }
-        return options;
+        return null;
     }
 }

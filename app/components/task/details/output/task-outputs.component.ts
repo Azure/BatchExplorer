@@ -66,7 +66,9 @@ export class TaskOutputsComponent implements OnChanges {
             taskOutputNavigator.init();
 
             const taskLogsPrefix = `${this.taskId}/$TaskLog/`;
-            const taskLogsNavigator = this.storageService.navigateContainerBlobs(container, taskLogsPrefix);
+            const taskLogsNavigator = this.storageService.navigateContainerBlobs(container, taskLogsPrefix, {
+                onError: (error) => this._processBlobError(error),
+            });
             taskLogsNavigator.init();
 
             this.fileNavigators = [
@@ -97,7 +99,7 @@ export class TaskOutputsComponent implements OnChanges {
 
     private _fileConventionErrorMessage() {
         return `This task is not following the file output convention\n`
-            + `There is no blob container with the name ${this._taskOutputContainer}\n`
+            + `There is no blob container with the name '${this._taskOutputContainer}'\n`
             + `Learn more here https://docs.microsoft.com/en-us/azure/batch/batch-task-output-file-conventions`;
     }
 }

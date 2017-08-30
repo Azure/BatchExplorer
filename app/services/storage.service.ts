@@ -112,10 +112,10 @@ export class StorageService {
     public navigateContainerBlobs(container: string, prefix?: string, options: NavigateBlobsOptions = {}) {
         return new FileNavigator({
             basePath: prefix,
-            loadPath: (options) => {
+            loadPath: (folder) => {
                 return this.listBlobs(Promise.resolve(container), {
                     recursive: false,
-                    startswith: options.filter,
+                    startswith: folder,
                 });
             },
             getFile: (filename: string) => this.getBlobContent(Promise.resolve(container), filename, prefix),

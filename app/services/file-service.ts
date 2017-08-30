@@ -83,8 +83,8 @@ export class FileService extends ServiceBase {
             cache: (params) => this.getNodeFileCache(params),
             proxyConstructor: (client, params, options) => {
                 const batchOptions = { ...options };
-                if (options.filter) {
-                    batchOptions.filter = `startswith(name, '${options.filter}')`;
+                if (options.folder) {
+                    batchOptions.folder = `startswith(name, '${options.filter}')`;
                 }
                 return client.file.listFromComputeNode(params.poolId, params.nodeId, recursive, batchOptions);
             },
@@ -98,14 +98,14 @@ export class FileService extends ServiceBase {
     public navigateNodeFiles(poolId: string, nodeId: string, config: NaviagateNodeFileConfig = {}) {
         return new FileNavigator({
             basePath: config.basePath,
-            loadPath: (options) => this.listFromComputeNode(poolId, nodeId, false, options),
+            loadPath: (folder) => this.listFromComputeNode(poolId, nodeId, false, { folder }),
             getFile: (filename: string) => this.fileFromNode(poolId, nodeId, filename),
         });
     }
 
     public navigateTaskFile(jobId: string, taskId: string) {
         return new FileNavigator({
-            loadPath: (options) => this.listFromTask(jobId, taskId, true, options),
+            loadPath: (folder) => this.listFromTask(jobId, taskId, true, { folder }),
             getFile: (filename: string) => this.fileFromTask(jobId, taskId, filename),
         });
     }
@@ -156,8 +156,8 @@ export class FileService extends ServiceBase {
             cache: (params) => this.getTaskFileCache(params),
             proxyConstructor: (client, params, options) => {
                 const batchOptions = { ...options };
-                if (options.filter) {
-                    batchOptions.filter = `startswith(name, '${options.filter}')`;
+                if (options.folder) {
+                    batchOptions.filter = `startswith(name, '${options.folder}')`;
                 }
                 return client.file.listFromTask(params.jobId, params.taskId, recursive, batchOptions);
             },
