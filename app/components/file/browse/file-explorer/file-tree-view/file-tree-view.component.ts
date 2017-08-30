@@ -64,6 +64,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     public handleCaretClick(treeRow: TreeRow, event: MouseEvent) {
         event.stopPropagation();
         event.stopImmediatePropagation();
+        this.fileNavigator.loadPath(treeRow.path);
         this.toggleExpanded(treeRow);
     }
 

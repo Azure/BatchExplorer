@@ -5,10 +5,10 @@
     </div>
 </section>
 <section class="file-content-container">
-    <div *ngIf="currentFileNavigator && currentNode">
+    <ng-container *ngIf="currentFileNavigator && currentNode && true">
         <bl-file-table-view *ngIf="currentNode.isDirectory" [name]="currentFileNavigatorEntry.name" [treeNode]="currentNode" [loadingStatus]="currentNode.loadingStatus"
             [error]="currentFileNavigator.error" (select)="nodeSelected($event)" (back)="goBack()" (dropFiles)="handleDrop($event)">
         </bl-file-table-view>
         <bl-file-details-view *ngIf="!currentNode.isDirectory" [fileLoader]="currentFileNavigator.currentFileLoader" (back)="goBack()"></bl-file-details-view>
-    </div>
+    </ng-container>
 </section>

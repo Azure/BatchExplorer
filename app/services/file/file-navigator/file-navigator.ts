@@ -112,6 +112,16 @@ export class FileNavigator {
         return this._loadFileInPath(path);
     }
 
+    public loadPath(path: string = ""): Observable<any> {
+        const node = this._tree.value.getNode(path);
+        if (node.isDirectory) {
+            if (!this._tree.value.isPathLoaded(path)) {
+                return this._loadFileInPath(path);
+            }
+        }
+        return Observable.of(null);
+    }
+
     public dispose() {
         for (let proxy of ObjectUtils.values(this._proxies)) {
             proxy.dispose();
