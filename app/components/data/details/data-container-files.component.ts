@@ -1,4 +1,5 @@
 import { Component, Input, OnDestroy, ViewChild } from "@angular/core";
+import { autobind } from "core-decorators";
 import { Subscription } from "rxjs";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
@@ -37,11 +38,11 @@ export class DataContainerFilesComponent implements OnDestroy {
         this._onGroupUpdatedSub.unsubscribe();
     }
 
+    @autobind()
     public handleFileUpload(event: FileDropEvent) {
-        console.log("UPload files here", event);
         const paths = event.files.map(x => x.path);
 
-        this.backgroundTaskService.startTask(`Upload file group ${this.container.name}`, (task) => {
+        return this.backgroundTaskService.startTask(`Upload file group ${this.container.name}`, (task) => {
             const observable = this.fileGroupService.addFilesToFileGroup(this.container.name, paths, event.path);
             let lastData;
             observable.subscribe({

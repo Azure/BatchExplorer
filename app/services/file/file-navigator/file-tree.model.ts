@@ -39,6 +39,10 @@ export class FileTreeNode {
         this.name = this._computeName();
     }
 
+    public clone() {
+        return new FileTreeNode(this);
+    }
+
     public walk() {
         return this.children.values();
     }

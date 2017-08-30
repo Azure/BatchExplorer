@@ -76,7 +76,7 @@ async def upload_files(
         # Any existing prefix is overwritten/ignored
         if full_path:
             remote_path = path.replace(SUBDIR_FILTER, "")
-        elif not merge:
+        elif not merge and not os.path.isfile(path):
             remote_path = os.path.join(root, os.path.basename(path))
         else:
             remote_path = root
@@ -101,13 +101,11 @@ async def upload_files(
 def count_files_in_paths(paths: List[str]):
     total_files = 0
     for path in paths:
-        print("Walking path", path)
         if os.path.isfile(path):
             total_files += 1
             continue
 
         for _, _, files in os.walk(path.replace(SUBDIR_FILTER, "")):
-            print("Path has", len(files))
             total_files += len(files)
     return total_files
 

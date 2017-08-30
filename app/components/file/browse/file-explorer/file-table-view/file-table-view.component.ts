@@ -21,7 +21,7 @@ export class FileTableViewComponent implements OnChanges {
     @Input() public dropable: boolean;
     @Output() public select = new EventEmitter<FileTreeNode>();
     @Output() public back = new EventEmitter();
-    @Output() public drop = new EventEmitter<FileDropEvent>();
+    @Output() public dropFiles = new EventEmitter<FileDropEvent>();
 
     public tableConfig: TableConfig;
 
@@ -54,14 +54,22 @@ export class FileTableViewComponent implements OnChanges {
         this.back.emit();
     }
 
-    public handleDrop(event: DropEvent) {
+    public handleDrop(event: DragEvent) {
+        event.preventDefault();
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        const files = [...event.dataTransfer.files as any];
+        this.dropFiles.emit({ path: this.treeNode.path, files });
+    }
+
+    public handleDropOnRow(event: DropEvent) {
         let node = this.treeNode.children.get(event.key);
         const data = event.data;
         if (!node.isDirectory) {
             node = this.treeNode;
         }
         const files = [...data.files as any];
-        this.drop.emit({ path: node.path, files });
+        this.dropFiles.emit({ path: node.path, files });
     }
 
     private _updateTableConfig() {

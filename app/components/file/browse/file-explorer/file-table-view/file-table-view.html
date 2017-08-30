@@ -9,8 +9,8 @@
     </div>
 </div>
 <bl-loading [status]="loadingStatus" [error]="error">
-    <div *ngIf="loadingStatus === LoadingStatus.Ready">
-        <bl-table (activeItemChange)="selectNode($event)" [config]="tableConfig" (drop)="handleDrop($event)">
+    <div *ngIf="loadingStatus === LoadingStatus.Ready" (drop)="handleDrop($event)" class="table-wrapper">
+        <bl-table (activeItemChange)="selectNode($event)" [config]="tableConfig" (dropOnRow)="handleDropOnRow($event)">
             <bl-thead>
                 <bl-column>Name</bl-column>
                 <bl-column style="width: 200px">Content Length</bl-column>

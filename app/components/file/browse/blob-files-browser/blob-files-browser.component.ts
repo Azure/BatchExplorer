@@ -14,8 +14,8 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
     @Input() public container: string;
     @Input() public fileExplorerConfig: FileExplorerConfig = {};
     @Input() public activeFile: string;
+    @Input() public upload: (event: FileDropEvent) => Observable<any>;
     @Output() public activeFileChange = new EventEmitter<string>();
-    @Output() public upload = new EventEmitter<FileDropEvent>();
 
     public fileNavigator: FileNavigator;
 
@@ -39,14 +39,14 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
     }
 
     public handleFileDrop(event: FileDropEvent) {
-        const { files, path } = event;
-        console.log("Drop cloud file", files, path);
+        const { path } = event;
         const location = path ? `under "${path}".` : "at the root.";
         this.dialogService.confirm(`Upload files dropped.`, {
             description: `Files will be uploaded ${location}`,
             yes: () => {
-                console.log("UPloading...", files);
-                this.upload.emit(event);
+                this.upload(event).subscribe(() => {
+                    this.fileNavigator.refresh(path);
+                });
                 return Observable.of(null);
             },
         });

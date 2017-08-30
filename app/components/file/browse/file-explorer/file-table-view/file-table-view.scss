@@ -2,6 +2,12 @@
 
 bl-file-table-view {
     $file-header-height: 40px;
+    display: block;
+    height: 100%;
+
+    .table-wrapper {
+        height: 100%;
+    }
 
     .file-table-view-header {
         display: flex;
@@ -30,6 +36,7 @@ bl-file-table-view {
                 color: map-get($primary, 400);
             }
         }
+
         .current-path {
             line-height: $file-header-height;
             vertical-align: middle;

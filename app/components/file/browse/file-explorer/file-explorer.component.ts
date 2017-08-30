@@ -65,7 +65,7 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
     }
     public get config() { return this._config; }
     @Output() public activeFileChange = new EventEmitter<string>();
-    @Output() public drop = new EventEmitter<FileDropEvent>();
+    @Output() public dropFiles = new EventEmitter<FileDropEvent>();
 
     public LoadingStatus = LoadingStatus;
     public currentNode: FileTreeNode;
@@ -116,7 +116,7 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
     }
 
     public handleDrop(event: FileDropEvent) {
-        this.drop.emit(event);
+        this.dropFiles.emit(event);
     }
 
     private _updateNavigatorEvents() {
