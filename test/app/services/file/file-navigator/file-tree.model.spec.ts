@@ -1,8 +1,8 @@
 import { List } from "immutable";
 
+import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
 import { FileTreeNode, FileTreeStructure } from "app/services/file";
-import { LoadingStatus } from "app/components/base/loading";
 
 function reprTree(tree: FileTreeStructure) {
     const rows = reprNode(tree.root);
@@ -49,7 +49,7 @@ function cleanupRepr(repr: string): string {
     return "\n" + lines.map(x => x.trim()).join("\n") + "\n";
 }
 
-fdescribe("FileTreeStructure", () => {
+describe("FileTreeStructure", () => {
     let tree: FileTreeStructure;
 
     describe("#addFiles()", () => {
