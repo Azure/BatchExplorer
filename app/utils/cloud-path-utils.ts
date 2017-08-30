@@ -7,6 +7,10 @@ export class CloudPathUtils {
         return paths.join("/");
     }
 
+    public static dirname(path: string): string {
+        return path.split("/").slice(0, -1).join("/");
+    }
+
     public static asBaseDirectory(path: string): string {
         const norm = CloudPathUtils.normalize(path);
         if (norm.endsWith("/")) {

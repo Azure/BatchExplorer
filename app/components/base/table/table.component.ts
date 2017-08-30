@@ -77,7 +77,6 @@ export class TableComponent extends AbstractListBase {
         if (item.key === this.dropTargetRowKey && this.isDraging <= 0) {
             this.dropTargetRowKey = null;
         }
-
     }
 
     public handleDropOnRow(item: TableRowComponent, event: DragEvent) {

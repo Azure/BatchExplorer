@@ -2,6 +2,8 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from "@a
 import { Subscription } from "rxjs";
 
 import { FileNavigator, FileTreeNode, FileTreeStructure } from "app/services/file";
+import { CloudPathUtils } from "app/utils";
+import { FileDropEvent } from "../file-explorer.component";
 import "./file-tree-view.scss";
 
 export interface TreeRow {
@@ -21,12 +23,15 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     @Input() public name: string;
     @Input() public autoExpand = false;
     @Output() public navigate = new EventEmitter<string>();
+    @Output() public dropFiles = new EventEmitter<FileDropEvent>();
 
     public expanded = true;
     public currentNode: FileTreeNode;
     public expandedDirs: StringMap<boolean> = {};
     public treeRows: TreeRow[] = [];
     public refreshing: boolean;
+    public isDraging = 0;
+    public dropTargetPath: string = null;
 
     private _tree: FileTreeStructure;
     private _navigatorSubs: Subscription[] = [];
@@ -135,6 +140,38 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
         });
     }
 
+    public dragEnterRow(treeRow: TreeRow, event: DragEvent) {
+        this.isDraging++;
+        event.dataTransfer.effectAllowed = "copyMove";
+
+        this.dropTargetPath = this._getDropTarget(treeRow);
+    }
+
+    public dragLeaveRow(treeRow: TreeRow, event: DragEvent) {
+        this.isDraging--;
+        event.dataTransfer.effectAllowed = "copy";
+        if (this._getDropTarget(treeRow) === this.dropTargetPath && this.isDraging <= 0) {
+            this.dropTargetPath = null;
+        }
+    }
+
+    public handleDropOnRow(treeRow: TreeRow, event: DragEvent) {
+        event.preventDefault();
+        event.stopPropagation();
+        const path = this._getDropTarget(treeRow);
+        const files = [...event.dataTransfer.files as any];
+        this.dropTargetPath = null;
+        this.isDraging = 0;
+        this.dropFiles.emit({ path, files });
+    }
+
+    public dropAtRoot(event: DragEvent) {
+        event.preventDefault();
+        event.stopPropagation();
+        const files = [...event.dataTransfer.files as any];
+        this.dropFiles.emit({ path: "", files });
+    }
+
     private _buildTreeRows(tree) {
         const root = tree.root;
         this.treeRows = this._getTreeRowsForNode(root);
@@ -163,6 +200,18 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
             }
         }
         return rows;
+    }
+
+    /**
+     * Returns the path of the folder where the drop is actually happening
+     * @param treeRow Tree row being targeted
+     */
+    private _getDropTarget(treeRow: TreeRow): string {
+        if (treeRow.isDirectory) {
+            return treeRow.path;
+        } else {
+            return CloudPathUtils.dirname(treeRow.path);
+        }
     }
 
     private _clearNavigatorSubs() {

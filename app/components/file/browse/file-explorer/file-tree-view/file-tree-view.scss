@@ -6,6 +6,8 @@
 }
 
 bl-file-tree-view {
+    height: 100%;
+
     .tree-view-header {
         background: $mercury-grey;
         display: flex;
@@ -78,6 +80,10 @@ bl-file-tree-view {
         }
 
         &.active {
+            background: $whitesmoke-darker;
+        }
+
+        &.drop-target {
             background: $whitesmoke-darker;
         }
 
