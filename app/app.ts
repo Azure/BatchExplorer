@@ -34,3 +34,7 @@ MouseTrap.bind("ctrl+shift+i", () => {
         remote.getCurrentWindow().webContents.openDevTools();
     }
 });
+
+MouseTrap.bind("ctrl+r", () => {
+    location.reload();
+});
