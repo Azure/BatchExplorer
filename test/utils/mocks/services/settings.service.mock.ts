@@ -1,5 +1,6 @@
 import { Observable } from "rxjs";
-import stripJsonComments from "strip-json-comments";
+// tslint:disable-next-line:no-var-requires
+const stripJsonComments = require("strip-json-comments");
 
 import { SettingsService } from "app/services";
 

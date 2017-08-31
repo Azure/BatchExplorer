@@ -1,7 +1,8 @@
 import { Injectable, NgZone } from "@angular/core";
 import * as storage from "electron-json-storage";
 import { BehaviorSubject, Observable } from "rxjs";
-import stripJsonComments from "strip-json-comments";
+// tslint:disable-next-line:no-var-requires
+const stripJsonComments = require("strip-json-comments");
 
 import { KeyBindings, Settings, defaultKeybindings } from "app/models";
 import { LocalFileStorage } from "app/services";
