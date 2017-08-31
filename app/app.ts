@@ -36,6 +36,7 @@ MouseTrap.bind("ctrl+shift+i", () => {
 });
 
 document.addEventListener("dragover", (event) => {
+    event.dataTransfer.dropEffect = "none";
     event.preventDefault();
     return false;
 }, false);

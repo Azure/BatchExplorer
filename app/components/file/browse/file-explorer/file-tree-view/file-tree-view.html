@@ -22,6 +22,7 @@
         [class.drop-target]="dropTargetPath === ''"
         (dragenter)="dragEnterRow($event)"
         (dragleave)="dragLeaveRow($event)"
+        (dragover)="handleDragHover($event)"
         (drop)="handleDropOnRow($event)">
 
         <div *ngFor="let treeRow of treeRows, trackBy: treeRowTrackBy"

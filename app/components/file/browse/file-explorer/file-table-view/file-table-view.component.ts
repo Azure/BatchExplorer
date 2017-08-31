@@ -4,7 +4,7 @@ import { LoadingStatus } from "app/components/base/loading";
 import { DropEvent, TableConfig } from "app/components/base/table";
 import { ServerError } from "app/models";
 import { FileTreeNode } from "app/services/file";
-import { DateUtils, prettyBytes } from "app/utils";
+import { DateUtils, DragUtils, prettyBytes } from "app/utils";
 import { FileDropEvent } from "../file-explorer.component";
 import "./file-table-view.scss";
 
@@ -18,7 +18,7 @@ export class FileTableViewComponent implements OnChanges {
     @Input() public loadingStatus: LoadingStatus;
     @Input() public error: ServerError;
     @Input() public name: string;
-    @Input() public dropable: boolean;
+    @Input() public canDropExternalFiles: boolean;
     @Output() public select = new EventEmitter<FileTreeNode>();
     @Output() public back = new EventEmitter();
     @Output() public dropFiles = new EventEmitter<FileDropEvent>();
@@ -28,7 +28,7 @@ export class FileTableViewComponent implements OnChanges {
     public LoadingStatus = LoadingStatus;
 
     public ngOnChanges(inputs) {
-        if (inputs.dropable) {
+        if (inputs.canDropExternalFiles) {
             this._updateTableConfig();
         }
     }
@@ -54,14 +54,23 @@ export class FileTableViewComponent implements OnChanges {
         this.back.emit();
     }
 
+    /**
+     * Called when dropping outside the table element(in the blank space)
+     * @param event Drag event
+     */
     public handleDrop(event: DragEvent) {
         event.preventDefault();
         event.stopPropagation();
         event.stopImmediatePropagation();
+        if (!this.canDropExternalFiles) { return; }
         const files = [...event.dataTransfer.files as any];
         this.dropFiles.emit({ path: this.treeNode.path, files });
     }
 
+    /**
+     * Called when dropping on a row in the table.
+     * @param event Drag event
+     */
     public handleDropOnRow(event: DropEvent) {
         let node = this.treeNode.children.get(event.key);
         const data = event.data;
@@ -72,9 +81,13 @@ export class FileTableViewComponent implements OnChanges {
         this.dropFiles.emit({ path: node.path, files });
     }
 
+    public handleDragHover(event: DragEvent) {
+        DragUtils.allowDrop(event, this.canDropExternalFiles);
+    }
+
     private _updateTableConfig() {
         this.tableConfig = {
-            droppable: true,
+            droppable: this.canDropExternalFiles,
         };
     }
 }

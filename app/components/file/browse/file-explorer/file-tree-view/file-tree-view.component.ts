@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from "@a
 import { Subscription } from "rxjs";
 
 import { FileNavigator, FileTreeNode, FileTreeStructure } from "app/services/file";
-import { CloudPathUtils } from "app/utils";
+import { CloudPathUtils, DragUtils } from "app/utils";
 import { FileDropEvent } from "../file-explorer.component";
 import "./file-tree-view.scss";
 
@@ -22,6 +22,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     @Input() public fileNavigator: FileNavigator;
     @Input() public name: string;
     @Input() public autoExpand = false;
+    @Input() public canDropExternalFiles = false;
     @Output() public navigate = new EventEmitter<string>();
     @Output() public dropFiles = new EventEmitter<FileDropEvent>();
 
@@ -142,30 +143,35 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
 
     public dragEnterRow(event: DragEvent, treeRow?: TreeRow) {
         event.stopPropagation();
+        if (!this.canDropExternalFiles) { return; }
         this.isDraging++;
-        event.dataTransfer.effectAllowed = "copyMove";
-
         this.dropTargetPath = this._getDropTarget(treeRow);
     }
 
     public dragLeaveRow(event: DragEvent, treeRow?: TreeRow) {
         event.stopPropagation();
+        if (!this.canDropExternalFiles) { return; }
 
         this.isDraging--;
-        event.dataTransfer.effectAllowed = "copy";
         if (this._getDropTarget(treeRow) === this.dropTargetPath && this.isDraging <= 0) {
             this.dropTargetPath = null;
         }
     }
 
-    public handleDropOnRow( event: DragEvent, treeRow?: TreeRow) {
+    public handleDropOnRow(event: DragEvent, treeRow?: TreeRow) {
         event.preventDefault();
         event.stopPropagation();
+        if (!this.canDropExternalFiles) { return; }
+
         const path = this._getDropTarget(treeRow);
         const files = [...event.dataTransfer.files as any];
         this.dropTargetPath = null;
         this.isDraging = 0;
         this.dropFiles.emit({ path, files });
+    }
+
+    public handleDragHover(event: DragEvent) {
+        DragUtils.allowDrop(event, this.canDropExternalFiles);
     }
 
     private _buildTreeRows(tree) {

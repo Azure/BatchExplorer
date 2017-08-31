@@ -4,7 +4,7 @@ import {
 import { Router } from "@angular/router";
 
 import { FocusSectionComponent } from "app/components/base/focus-section";
-import { log } from "app/utils";
+import { DragUtils, log } from "app/utils";
 import { AbstractListBase, AbstractListBaseConfig, abstractListDefaultConfig } from "../abstract-list";
 import { TableCellComponent } from "./table-cell.component";
 import { SortDirection, TableColumnComponent } from "./table-column.component";
@@ -65,26 +65,35 @@ export class TableComponent extends AbstractListBase {
         super(router, changeDetection, focusSection);
     }
 
+    public handleDragHover(event: DragEvent) {
+        DragUtils.allowDrop(event, this.config.droppable);
+    }
+
     public dragEnter(item: TableRowComponent, event: DragEvent) {
+        event.stopPropagation();
+        if (!this.config.droppable) { return; }
         this.isDraging++;
-        event.dataTransfer.effectAllowed = "copyMove";
         this.dropTargetRowKey = item.key;
     }
 
     public dragLeave(item: TableRowComponent, event: DragEvent) {
+        event.stopPropagation();
+
+        if (!this.config.droppable) { return; }
         this.isDraging--;
-        event.dataTransfer.effectAllowed = "copy";
         if (item.key === this.dropTargetRowKey && this.isDraging <= 0) {
             this.dropTargetRowKey = null;
         }
     }
 
     public handleDropOnRow(item: TableRowComponent, event: DragEvent) {
-        this.dropTargetRowKey = null;
-        this.isDraging = 0;
         event.stopPropagation();
         event.stopImmediatePropagation();
         event.preventDefault();
+        if (!this.config.droppable) { return; }
+
+        this.dropTargetRowKey = null;
+        this.isDraging = 0;
 
         this.dropOnRow.emit({ key: item.key, data: event.dataTransfer });
     }

@@ -8,7 +8,7 @@
         <span>/{{treeNode.path}}</span>
     </div>
 </div>
-<div (drop)="handleDrop($event)" class="table-wrapper">
+<div class="table-wrapper" (drop)="handleDrop($event)" (dragover)="handleDragHover($event)">
     <bl-loading [status]="loadingStatus" [error]="error">
         <div *ngIf="loadingStatus === LoadingStatus.Ready">
             <bl-table (activeItemChange)="selectNode($event)" [config]="tableConfig" (dropOnRow)="handleDropOnRow($event)">

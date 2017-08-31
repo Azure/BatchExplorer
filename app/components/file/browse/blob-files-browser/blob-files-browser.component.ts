@@ -32,6 +32,12 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
             this.fileNavigator = this.storageService.navigateContainerBlobs(this.container);
             this.fileNavigator.init();
         }
+
+        if (inputs.upload) {
+            this.fileExplorerConfig = {
+                canDropExternalFiles: Boolean(this.upload),
+            };
+        }
     }
 
     public ngOnDestroy() {

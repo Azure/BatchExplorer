@@ -3,6 +3,7 @@
         [fileNavigator]="entry.navigator"
         [name]="entry.name"
         [autoExpand]="autoExpand"
+        [canDropExternalFiles]="config.canDropExternalFiles"
         (navigate)="updateCurrentNavigator(entry)"
         (dropFiles)="handleDrop($event)">
     </bl-file-tree-view>
@@ -12,6 +13,7 @@
         <bl-file-table-view *ngIf="currentNode.isDirectory"
             [name]="currentFileNavigatorEntry.name"
             [treeNode]="currentNode"
+            [canDropExternalFiles]="config.canDropExternalFiles"
             [loadingStatus]="currentNode.loadingStatus"
             [error]="currentFileNavigator.error"
             (select)="nodeSelected($event)"
