@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import * as path from "path";
 import { Observable } from "rxjs";
 
 import { ServerError } from "app/models";
@@ -28,8 +27,8 @@ export class NcjFileGroupService {
          */
         const observable = this.pythonRpcService.callWithAuth("create-file-group", [
             fileGroup.name,
-            fileGroup.includeSubDirectories ? path.join(fileGroup.folder, "**/*") : fileGroup.folder,
-            fileGroup.options,
+            fileGroup.folder,
+            { ...fileGroup.options, recursive: fileGroup.includeSubDirectories },
         ]).catch((error) => {
             return Observable.throw(ServerError.fromPython(error));
         });

@@ -10,6 +10,7 @@ SUBDIR_FILTER = os.path.join('**', '*')
 PARAM_PREFIX = "prefix"
 PARAM_FULL_PATH = "fullPath"
 PARAM_FLATTEN = "flatten"
+PARAM_RECURSIVE = "recursive"
 PARAM_ACCOUNT_NAME = "name"
 PARAM_ACCOUNT_PROPERTIES = "properties"
 
@@ -26,7 +27,7 @@ ERROR_REQUIRED_PARAM = "{} is a required parameter"
 @app.procedure("create-file-group")
 async def create_file_group(request: JsonRpcRequest, name, directory, options):
     # default these parameters as they are optional
-    prefix, flatten, full_path = [None, False, False]
+    prefix, flatten, full_path, recursive = [None, False, False, False]
     if options:
         if options.get(PARAM_PREFIX):
             prefix = options.get(PARAM_PREFIX)
@@ -37,12 +38,15 @@ async def create_file_group(request: JsonRpcRequest, name, directory, options):
         if options.get(PARAM_FLATTEN):
             flatten = options.get(PARAM_FLATTEN)
 
-    return await upload_files(request, name, [directory], full_path=full_path, flatten=flatten, root=prefix, merge=True)
+        if options.get(PARAM_RECURSIVE):
+            recursive = options.get(PARAM_RECURSIVE)
+    print("rec", recursive)
+    return await upload_files(request, name, [directory], full_path=full_path, flatten=flatten, root=prefix, merge=True, recursive=recursive)
 
 
 @app.procedure("add-files-to-file-group")
 async def add_files_to_file_group(request: JsonRpcRequest, file_group_name: str, paths: List[str], root):
-    return await upload_files(request, file_group_name, paths, root=root)
+    return await upload_files(request, file_group_name, paths=paths, root=root, recursive=True)
 
 
 async def upload_files(
@@ -52,12 +56,12 @@ async def upload_files(
         full_path: bool=False,
         root=None,
         flatten=False,
+        recursive=True,
         merge=False):
 
     total_files = count_files_in_paths(paths)
 
     uploaded_files = 0
-    remote_path = None
 
     def __uploadCallback(current, file_size):
         """
@@ -72,18 +76,24 @@ async def upload_files(
             print("Uploded {0}/{1}".format(uploaded_files, total_files))
 
     for path in paths:
+        remote_path = None
+        local_path = path
+        is_dir = os.path.isdir(path)
         # If fullPath is true, the the prefix becomes the directory path.
         # Any existing prefix is overwritten/ignored
         if full_path:
-            remote_path = path.replace(SUBDIR_FILTER, "")
-        elif not merge and not os.path.isfile(path):
+            remote_path = path
+        elif not merge and is_dir:
             remote_path = os.path.join(root, os.path.basename(path))
         else:
             remote_path = root
 
+        if recursive and is_dir:
+            local_path = os.path.join(path, SUBDIR_FILTER)
+
         try:
             request.auth.client.file.upload(
-                local_path=path,
+                local_path=local_path,
                 file_group=file_group_name,
                 remote_path=remote_path,
                 flatten=flatten,
@@ -105,7 +115,7 @@ def count_files_in_paths(paths: List[str]):
             total_files += 1
             continue
 
-        for _, _, files in os.walk(path.replace(SUBDIR_FILTER, "")):
+        for _, _, files in os.walk(path):
             total_files += len(files)
     return total_files
 
