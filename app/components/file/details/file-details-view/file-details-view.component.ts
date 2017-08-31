@@ -88,6 +88,8 @@ export class FileDetailsViewComponent implements OnChanges {
     }
 
     private _updateFileProperties(forceNew = false) {
+        this.contentSize = "-";
+        this.lastModified = "-";
         this.fileLoader.getProperties(forceNew).subscribe((file: File) => {
             this.file = file;
             this.contentSize = prettyBytes(file.properties.contentLength);
