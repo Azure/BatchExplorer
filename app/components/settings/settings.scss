@@ -31,7 +31,7 @@ bl-settings {
         width: 100%;
 
         > .default-settings, > .user-settings {
-            flex: 1 1 50%;
+            flex-grow: 1;
             margin: 0 10px;
             min-height: 100px;
             position: relative;
