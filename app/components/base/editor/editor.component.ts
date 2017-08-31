@@ -17,6 +17,9 @@ import "codemirror/mode/javascript/javascript";
 
 import "./editor.scss";
 
+(CodeMirror as any).keyMap.default["Shift-Tab"] = "indentLess";
+(CodeMirror as any).keyMap.default["Ctrl-/"] = "toggleComment";
+
 @Component({
     selector: "bl-editor",
     providers: [
@@ -68,7 +71,6 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
             this.config.extraKeys = {};
         }
 
-        this.config.extraKeys["Ctrl-/"] = "toggleComment";
         this.codemirrorInit(this.config);
     }
 

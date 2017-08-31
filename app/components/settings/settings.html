@@ -6,20 +6,20 @@
             <i class="fa fa-floppy-o"></i>
             <span class="modified" *ngIf="modified">*</span>
         </bl-button>
-        <bl-button title="Reset" (click)="reset" tooltipPosition="below" [disabled]="!modified">
+        <bl-button title="Reset" (click)="reset()" tooltipPosition="below" [disabled]="!modified">
             <i class="fa fa-undo"></i>
         </bl-button>
     </div>
 </div>
 <div class="settings-editor">
     <div class="default-settings">
-        <div class="label">Default settings</div>
+        <div class="editor-header"><div class="label">Default settings</div></div>
         <bl-editor [value]="defaultSettings" [config]="defaultSettingsEditorConfig"></bl-editor>
     </div>
 
     <div class="user-settings">
-        <div class="label">
-            <div>User settings.</div>
+        <div class="editor-header">
+            <div class="label">User settings.</div>
             <div class="error" *ngIf="!userSettings.valid">{{userSettings.errors?.validJsonConfig?.message}}</div>
         </div>
 

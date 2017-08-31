@@ -64,6 +64,10 @@ export class SettingsComponent implements OnDestroy {
         return this.settingsService.saveUserSettings(this.userSettings.value);
     }
 
+    public reset() {
+        this.userSettings.setValue(this._originalUserSettings);
+    }
+
     public get modified() {
         return this._originalUserSettings !== this.userSettings.value;
     }
