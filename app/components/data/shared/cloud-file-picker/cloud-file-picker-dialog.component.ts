@@ -3,7 +3,8 @@ import { MdDialogRef } from "@angular/material";
 import { autobind } from "core-decorators";
 import { AsyncSubject, Observable } from "rxjs";
 
-import { BlobContainer } from "app/models";
+import { FileExplorerConfig, FileExplorerSelectable } from "app/components/file/browse/file-explorer";
+import { BlobContainer, ServerError } from "app/models";
 import { GetContainerParams, StorageService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
 import "./cloud-file-picker-dialog.scss";
@@ -17,7 +18,12 @@ export class CloudFilePickerDialogComponent {
     public data: RxEntityProxy<GetContainerParams, BlobContainer>;
     public done = new AsyncSubject();
     public pickedFile: string = null;
+    public containerError: ServerError;
 
+    public fileExplorerConfig: FileExplorerConfig = {
+        showTreeView: false,
+        selectable: FileExplorerSelectable.file,
+    };
     private _saved = false;
 
     public set containerId(containerId: string) {
@@ -25,6 +31,7 @@ export class CloudFilePickerDialogComponent {
         this.data.params = { id: containerId };
         this.data.fetch();
     }
+    public get containerId() { return this._containerId; }
 
     private _containerId: string;
 
@@ -32,6 +39,10 @@ export class CloudFilePickerDialogComponent {
         this.data = this.storageService.getContainerProperties(null);
         this.data.item.subscribe((container) => {
             this.container = container;
+        });
+
+        this.data.error.subscribe((error) => {
+            this.containerError = error;
         });
     }
 

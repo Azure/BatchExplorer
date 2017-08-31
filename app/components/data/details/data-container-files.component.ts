@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, ViewChild } from "@angular/core";
 import { Subscription } from "rxjs";
 
-import { PersistedFileListComponent } from "app/components/file/browse";
+import { BlobFilesBrowserComponent } from "app/components/file/browse";
 import { BlobContainer } from "app/models";
 import { StorageService } from "app/services";
 
@@ -11,8 +11,8 @@ import { StorageService } from "app/services";
 })
 
 export class DataContainerFilesComponent implements OnDestroy {
-    @ViewChild("blobList")
-    public blobList: PersistedFileListComponent;
+    @ViewChild("blobExplorer")
+    public blobExplorer: BlobFilesBrowserComponent;
 
     @Input()
     public container: BlobContainer;
@@ -21,7 +21,7 @@ export class DataContainerFilesComponent implements OnDestroy {
 
     constructor(private storageService: StorageService) {
         this._onGroupUpdatedSub = this.storageService.onFileGroupUpdated.subscribe(() => {
-            this.blobList.refresh();
+            this.blobExplorer.refresh();
         });
     }
 
