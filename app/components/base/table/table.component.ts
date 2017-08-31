@@ -88,7 +88,6 @@ export class TableComponent extends AbstractListBase {
 
     public handleDropOnRow(item: TableRowComponent, event: DragEvent) {
         event.stopPropagation();
-        event.stopImmediatePropagation();
         event.preventDefault();
         if (!this.config.droppable) { return; }
 
