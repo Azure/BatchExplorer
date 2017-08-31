@@ -57,13 +57,13 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
             return null;
         } else {
             let messageText = "unknown error";
-            if (this.parameterValue.errors.minLength) {
+            if (this.parameterValue.errors.minlength) {
                 messageText = "FormControl minLength error";
-            } else if (this.parameterValue.errors.maxLength) {
+            } else if (this.parameterValue.errors.maxlength) {
                 messageText = "FormControl maxLength error";
-            } else if (this.parameterValue.errors.minValue) {
+            } else if (this.parameterValue.errors.min) {
                 messageText = "FormControl maxValue error";
-            } else if (this.parameterValue.errors.maxValue) {
+            } else if (this.parameterValue.errors.max) {
                 messageText = "FormControl maxValue error";
             }
             return {

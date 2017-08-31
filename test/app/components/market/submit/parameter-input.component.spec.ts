@@ -197,6 +197,42 @@ describe("ParameterInputComponent", () => {
 
     });
 
+    describe("text parameter type validation", () => {
+        beforeEach(() => {
+            testComponent.param = new NcjParameterWrapper("jobName", {
+                type: NcjParameterRawType.string,
+                metadata : {
+                    description: "Param Description",
+                },
+                minLength: 3,
+                maxLength: 6,
+            });
+            fixture.detectChanges();
+        });
+
+        it("should validate minimum/maximum length constraint", () => {
+            testComponent.paramControl.setValue("abcd");
+            fixture.detectChanges();
+            expect(component.parameterValue.valid).toBe(true);
+            expect(component.parameterValue.errors).toBeNull();
+        });
+
+        it("should invalidate minimum length constraint", () => {
+            testComponent.paramControl.setValue("ab");
+            fixture.detectChanges();
+            expect(component.parameterValue.valid).toBe(false);
+            expect(component.parameterValue.errors.minlength).not.toBeUndefined();
+        });
+
+        it("should invalidate maximum length constraint", () => {
+            testComponent.paramControl.setValue("abcdefg");
+            fixture.detectChanges();
+            expect(component.parameterValue.valid).toBe(false);
+            expect(component.parameterValue.errors.maxlength).not.toBeUndefined();
+        });
+
+    });
+
     describe("int parameter type", () => {
         let inputEl: DebugElement;
         const initialInput = 10;
@@ -266,16 +302,14 @@ describe("ParameterInputComponent", () => {
             testComponent.paramControl.setValue(2);
             fixture.detectChanges();
             expect(component.parameterValue.valid).toBe(false);
-            expect(component.parameterValue.errors.minValue).not.toBeUndefined();
-            expect(component.parameterValue.errors.minValue).toBe(true);
+            expect(component.parameterValue.errors.min).not.toBeUndefined();
         });
 
         it("should invalidate maximum value constraint", () => {
             testComponent.paramControl.setValue(7);
             fixture.detectChanges();
             expect(component.parameterValue.valid).toBe(false);
-            expect(component.parameterValue.errors.maxValue).not.toBeUndefined();
-            expect(component.parameterValue.errors.maxValue).toBe(true);
+            expect(component.parameterValue.errors.max).not.toBeUndefined();
         });
 
     });
