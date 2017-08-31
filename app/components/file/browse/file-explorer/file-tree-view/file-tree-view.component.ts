@@ -140,14 +140,17 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
         });
     }
 
-    public dragEnterRow(treeRow: TreeRow, event: DragEvent) {
+    public dragEnterRow(event: DragEvent, treeRow?: TreeRow) {
+        event.stopPropagation();
         this.isDraging++;
         event.dataTransfer.effectAllowed = "copyMove";
 
         this.dropTargetPath = this._getDropTarget(treeRow);
     }
 
-    public dragLeaveRow(treeRow: TreeRow, event: DragEvent) {
+    public dragLeaveRow(event: DragEvent, treeRow?: TreeRow) {
+        event.stopPropagation();
+
         this.isDraging--;
         event.dataTransfer.effectAllowed = "copy";
         if (this._getDropTarget(treeRow) === this.dropTargetPath && this.isDraging <= 0) {
@@ -155,7 +158,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
         }
     }
 
-    public handleDropOnRow(treeRow: TreeRow, event: DragEvent) {
+    public handleDropOnRow( event: DragEvent, treeRow?: TreeRow) {
         event.preventDefault();
         event.stopPropagation();
         const path = this._getDropTarget(treeRow);
@@ -163,13 +166,6 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
         this.dropTargetPath = null;
         this.isDraging = 0;
         this.dropFiles.emit({ path, files });
-    }
-
-    public dropAtRoot(event: DragEvent) {
-        event.preventDefault();
-        event.stopPropagation();
-        const files = [...event.dataTransfer.files as any];
-        this.dropFiles.emit({ path: "", files });
     }
 
     private _buildTreeRows(tree) {
@@ -207,7 +203,9 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
      * @param treeRow Tree row being targeted
      */
     private _getDropTarget(treeRow: TreeRow): string {
-        if (treeRow.isDirectory) {
+        if (!treeRow) {
+            return "";
+        } else if (treeRow.isDirectory) {
             return treeRow.path;
         } else {
             return CloudPathUtils.dirname(treeRow.path);

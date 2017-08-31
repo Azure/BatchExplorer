@@ -18,7 +18,12 @@
     <div *ngIf="fileNavigator.error">
         {{fileNavigator.error.message}}
     </div>
-    <div (drop)="dropAtRoot($event)" class="tree-rows-container">
+    <div class="tree-rows-container"
+        [class.drop-target]="dropTargetPath === ''"
+        (dragenter)="dragEnterRow($event)"
+        (dragleave)="dragLeaveRow($event)"
+        (drop)="handleDropOnRow($event)">
+
         <div *ngFor="let treeRow of treeRows, trackBy: treeRowTrackBy"
             class="tree-row"
             [style.padding-left]="((treeRow.indent + 1) * 12) + 'px'"
@@ -26,10 +31,10 @@
             [class.active]="treeRow.path === currentNode?.path"
             [class.drop-target]="treeRow.path.startsWith(dropTargetPath)"
             (click)="handleClick(treeRow)"
-            (dragenter)="dragEnterRow(treeRow, $event)"
-            (dragleave)="dragLeaveRow(treeRow, $event)"
-            (drop)="handleDropOnRow(treeRow, $event)"
-        >
+            (dragenter)="dragEnterRow($event, treeRow)"
+            (dragleave)="dragLeaveRow($event, treeRow)"
+            (drop)="handleDropOnRow($event, treeRow)">
+
             <span class="caret" (click)="handleCaretClick(treeRow, $event)">
                 <i class="fa" [class.fa-caret-down]="treeRow.expanded" [class.fa-caret-right]="!treeRow.expanded" *ngIf="treeRow.isDirectory"></i>
             </span>

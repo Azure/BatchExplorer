@@ -73,8 +73,12 @@ bl-file-tree-view {
         position: relative;
         height: calc(100% - #{$tree-view-header-height});
     }
+
     .tree-rows-container {
         height: 100%;
+        &.drop-target {
+            background: $whitesmoke-darker;
+        }
     }
 
     .tree-row {
