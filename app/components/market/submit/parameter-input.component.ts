@@ -58,13 +58,21 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
         } else {
             let messageText = "unknown error";
             if (this.parameterValue.errors.minlength) {
-                messageText = "FormControl minLength error";
+                messageText = "FormControl minLength error:";
+                messageText = messageText + " minlength: " +  this.parameterValue.errors.minlength.requiredLength;
+                messageText = messageText + " actual: " +  this.parameterValue.errors.minlength.actualLength;
             } else if (this.parameterValue.errors.maxlength) {
-                messageText = "FormControl maxLength error";
+                messageText = "FormControl maxLength error: ";
+                messageText = messageText + " maxlength: " +  this.parameterValue.errors.maxlength.requiredLength;
+                messageText = messageText + " actual: " +  this.parameterValue.errors.maxlength.actualLength;
             } else if (this.parameterValue.errors.min) {
-                messageText = "FormControl maxValue error";
+                messageText = "FormControl minValue error: ";
+                messageText = messageText + " min: " +  this.parameterValue.errors.min.min;
+                messageText = messageText + " actual: " +  this.parameterValue.errors.min.actual;
             } else if (this.parameterValue.errors.max) {
-                messageText = "FormControl maxValue error";
+                messageText = "FormControl maxValue error: ";
+                messageText = messageText + " max: " +  this.parameterValue.errors.max.max;
+                messageText = messageText + " actual: " +  this.parameterValue.errors.max.actual;
             }
             return {
                 validFormInput: {
