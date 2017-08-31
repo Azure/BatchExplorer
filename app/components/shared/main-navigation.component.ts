@@ -1,9 +1,10 @@
 import { Component } from "@angular/core";
 import { Router } from "@angular/router";
 
+import {
+    ContextMenu, ContextMenuItem, ContextMenuSeparator, ContextMenuService,
+} from "app/components/base/context-menu";
 import { AccountService, AdalService } from "app/services";
-
-import { ContextMenu, ContextMenuItem, ContextMenuSeparator, ContextMenuService } from "app/components/base/context-menu";
 import "./main-navigation.scss";
 
 @Component({
