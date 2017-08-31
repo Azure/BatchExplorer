@@ -28,8 +28,8 @@
 <div class="spacer"></div>
 <ul class="bottom">
     <li>
-        <a href="#" routerLink="/settings" routerLinkActive="active" title="Settings">
-            <i class="fa fa-cog fa-lg"></i><div class="label">Settings</div>
+        <a href="#" (click)="openSettingsContextMenu()" [title]="currentUserName" class="profile">
+            <i class="fa fa-user fa-lg"></i><div class="label">Profile</div>
         </a>
     </li>
 </ul>
