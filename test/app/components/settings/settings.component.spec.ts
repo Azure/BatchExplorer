@@ -3,12 +3,14 @@ import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, tick } from
 import { ReactiveFormsModule } from "@angular/forms";
 import { MaterialModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { Observable } from "rxjs";
 
 import { ButtonComponent } from "app/components/base/buttons";
 import { EditorComponent } from "app/components/base/editor";
 import { SettingsComponent } from "app/components/settings";
 import { SettingsService } from "app/services";
+import { click } from "test/utils/helpers";
 
 // tslint:disable-next-line:no-var-requires
 const defaultSettingsStr = require("app/components/settings/default-settings.json");
@@ -32,8 +34,9 @@ describe("SettingsComponent", () => {
     let leftEditor: EditorComponent;
     let rightEditor: EditorComponent;
 
-    let saveButton: ButtonComponent;
     let saveButtonEl: DebugElement;
+    let saveButton: ButtonComponent;
+    let resetButtonEl: DebugElement;
     let resetButton: ButtonComponent;
 
     let settingsServiceSpy;
@@ -42,9 +45,10 @@ describe("SettingsComponent", () => {
         settingsServiceSpy = {
             userSettingsStr: userInitialSettings,
             settingsObs: Observable.of({ some: "value" }),
+            saveUserSettings: jasmine.createSpy("saveUserSettings"),
         };
         TestBed.configureTestingModule({
-            imports: [ReactiveFormsModule, MaterialModule],
+            imports: [ReactiveFormsModule, MaterialModule, NoopAnimationsModule],
             declarations: [SettingsComponent, TestComponent, ButtonComponent, EditorComponent],
             providers: [
                 { provide: SettingsService, useValue: settingsServiceSpy },
@@ -61,7 +65,8 @@ describe("SettingsComponent", () => {
 
         saveButtonEl = de.query(By.css("bl-button[title='Save']"));
         saveButton = saveButtonEl.componentInstance;
-        resetButton = de.query(By.css("bl-button[title='Reset']")).componentInstance;
+        resetButtonEl = de.query(By.css("bl-button[title='Reset']"));
+        resetButton = resetButtonEl.componentInstance;
         expect(leftEditor).not.toBeFalsy();
         expect(leftEditor).not.toBeFalsy();
     });
@@ -103,7 +108,7 @@ describe("SettingsComponent", () => {
         it("should validate invalid user settings", () => {
             expect(component.userSettings.valid).toBe(false);
 
-            const errorEl = de.query(By.css(".user-settings .label .error"));
+            const errorEl = de.query(By.css(".user-settings .editor-header .error"));
             expect(errorEl).not.toBeFalsy();
 
             expect(errorEl.nativeElement.textContent).toContain("Unexpected token } in JSON at position 12");
@@ -115,6 +120,13 @@ describe("SettingsComponent", () => {
 
         it("should enable reset button", () => {
             expect(resetButton.disabled).toBe(false);
+        });
+
+        it("clicking reset button should reset form", () => {
+            click(resetButtonEl);
+            fixture.detectChanges();
+
+            expect(rightEditor.value).toEqual(userInitialSettings);
         });
     });
 
@@ -136,6 +148,15 @@ describe("SettingsComponent", () => {
 
         it("should enable reset button", () => {
             expect(resetButton.disabled).toBe(false);
+        });
+
+        it("clicking save button should call the save settings", () => {
+            click(saveButtonEl);
+            fixture.detectChanges();
+
+            expect(settingsServiceSpy.saveUserSettings).toHaveBeenCalledOnce();
+            expect(settingsServiceSpy.saveUserSettings).toHaveBeenCalledWith(validUserSettings);
+            expect(rightEditor.value).toEqual(validUserSettings);
         });
     });
 });
