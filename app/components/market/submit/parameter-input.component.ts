@@ -56,23 +56,20 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
         if (valid) {
             return null;
         } else {
-            let messageText = "unknown error";
-            if (this.parameterValue.errors.minlength) {
-                messageText = "FormControl minLength error:";
-                messageText = messageText + " minlength: " +  this.parameterValue.errors.minlength.requiredLength;
-                messageText = messageText + " actual: " +  this.parameterValue.errors.minlength.actualLength;
-            } else if (this.parameterValue.errors.maxlength) {
-                messageText = "FormControl maxLength error: ";
-                messageText = messageText + " maxlength: " +  this.parameterValue.errors.maxlength.requiredLength;
-                messageText = messageText + " actual: " +  this.parameterValue.errors.maxlength.actualLength;
-            } else if (this.parameterValue.errors.min) {
-                messageText = "FormControl minValue error: ";
-                messageText = messageText + " min: " +  this.parameterValue.errors.min.min;
-                messageText = messageText + " actual: " +  this.parameterValue.errors.min.actual;
+            let messageText = `unknown error`;
+            const error = this.parameterValue.errors;
+            if (error.minlength) {
+                const minLength = String(error.minlength.requiredLength);
+                messageText = `Should be atleast ${minLength} characters`;
+            } else if (error.maxlength) {
+                const maxLength = String(error.maxlength.requiredLength);
+                messageText = `Should be atmost ${maxLength} characters`;
+            } else if (error.min) {
+                const minValue = String(error.min.min);
+                messageText = `Should be greater than ${minValue}`;
             } else if (this.parameterValue.errors.max) {
-                messageText = "FormControl maxValue error: ";
-                messageText = messageText + " max: " +  this.parameterValue.errors.max.max;
-                messageText = messageText + " actual: " +  this.parameterValue.errors.max.actual;
+                const maxValue = String(error.max.max);
+                messageText = `Should be less than ${maxValue}`;
             }
             return {
                 validFormInput: {
