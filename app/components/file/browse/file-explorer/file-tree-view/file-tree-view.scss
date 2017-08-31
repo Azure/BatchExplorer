@@ -7,7 +7,9 @@
 
 bl-file-tree-view {
     $tree-view-header-height: 24px;
-    height: 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
 
     .tree-view-header {
         background: $mercury-grey;

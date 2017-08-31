@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from "@angular/core";
+import { Component, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { FileNavigator, FileTreeNode, FileTreeStructure } from "app/services/file";
@@ -26,7 +26,8 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     @Output() public navigate = new EventEmitter<string>();
     @Output() public dropFiles = new EventEmitter<FileDropEvent>();
 
-    public expanded = true;
+    @HostBinding("class.expanded") public expanded = true;
+
     public currentNode: FileTreeNode;
     public expandedDirs: StringMap<boolean> = {};
     public treeRows: TreeRow[] = [];
