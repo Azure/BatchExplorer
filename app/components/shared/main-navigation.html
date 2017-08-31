@@ -1,27 +1,35 @@
-<ul>
+<ul class="top">
     <li>
         <a href="#" [routerLink]="['/accounts', selectedId]" routerLinkActive="active" title="Dashboard">
             <i class="fa fa-th fa-lg"></i><div class="label">Dash</div>
         </a>
     </li>
     <li>
-        <a href="#" routerLink="jobs" routerLinkActive="active">
+        <a href="#" routerLink="/jobs" routerLinkActive="active">
             <i class="fa fa-tasks fa-lg"></i><div class="label">Jobs</div>
         </a>
     </li>
     <li>
-        <a href="#" routerLink="pools" routerLinkActive="active">
+        <a href="#" routerLink="/pools" routerLinkActive="active">
             <i class="fa fa-database fa-lg"></i><div class="label">Pools</div>
         </a>
     </li>
     <li>
-        <a href="#" routerLink="applications" routerLinkActive="active" title="Application packages">
+        <a href="#" routerLink="/applications" routerLinkActive="active" title="Application packages">
             <i class="fa fa-file-archive-o fa-lg"></i><div class="label">Packages</div>
         </a>
     </li>
     <li>
-        <a href="#" routerLink="data" routerLinkActive="active" title="File groups">
+        <a href="#" routerLink="/data" routerLinkActive="active" title="File groups">
             <i class="fa fa-cloud-upload fa-lg"></i><div class="label">Data</div>
+        </a>
+    </li>
+</ul>
+<div class="spacer"></div>
+<ul class="bottom">
+    <li>
+        <a href="#" (click)="openSettingsContextMenu()" [title]="currentUserName" class="profile">
+            <i class="fa fa-user fa-lg"></i><div class="label">Profile</div>
         </a>
     </li>
 </ul>

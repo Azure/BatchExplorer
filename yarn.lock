@@ -361,6 +361,10 @@
     "@types/form-data" "*"
     "@types/node" "*"
 
+"@types/strip-json-comments@~0.0.28":
+  version "0.0.28"
+  resolved "https://registry.yarnpkg.com/@types/strip-json-comments/-/strip-json-comments-0.0.28.tgz#a445d85d63616970294d079327597074f9ca7700"
+
 "@types/underscore@^1.8.0":
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/@types/underscore/-/underscore-1.8.2.tgz#42a313784a8611cf425038cf0e33f4e8d79c9fca"

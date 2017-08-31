@@ -2,6 +2,7 @@
 import { Routes } from "@angular/router";
 
 import { JobGraphsComponent } from "app/components/job/graphs/job-graphs-home";
+import { SettingsComponent } from "app/components/settings";
 import { AccountDefaultComponent, AccountDetailsComponent } from "./components/account/details";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
 import { ApplicationDefaultComponent, ApplicationDetailsComponent } from "./components/application/details";
@@ -27,6 +28,10 @@ export const routes: Routes = [
             { path: "", component: AccountDefaultComponent }, // accounts/
             { path: ":id", component: AccountDetailsComponent }, // accounts/{account.id}
         ],
+    },
+    {
+        component: SettingsComponent,
+        path: "settings",
     },
     {
         path: "jobs",

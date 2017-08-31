@@ -7,6 +7,7 @@ import { FileContentComponent } from "app/components/file/details";
 import { File } from "app/models";
 import { FileService, StorageService } from "app/services";
 import { click } from "test/utils/helpers";
+import { MockSettingsService } from "test/utils/mocks";
 
 @Component({
     template: `<bl-file-content [fileLoader]="fileLoader"></bl-file-content>`,
@@ -34,6 +35,7 @@ describe("FileContentComponent", () => {
                 content: () => Observable.of({ content: "something" }),
             }),
         };
+
         TestBed.configureTestingModule({
             imports: [],
             declarations: [FileContentComponent, TestComponent],
@@ -41,6 +43,7 @@ describe("FileContentComponent", () => {
             providers: [
                 { provide: StorageService, useValue: storageServiceSpy },
                 { provide: FileService, useValue: fileServiceSpy },
+                MockSettingsService.asProvider(),
             ],
         });
         fixture = TestBed.createComponent(TestComponent);
