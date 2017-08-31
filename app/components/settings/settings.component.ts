@@ -2,7 +2,9 @@ import { Component, OnDestroy } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable, Subscription } from "rxjs";
-import stripJsonComments from "strip-json-comments";
+
+// tslint:disable-next-line:no-var-requires
+const stripJsonComments = require("strip-json-comments");
 
 import { SettingsService } from "app/services";
 import "./settings.scss";
