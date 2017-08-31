@@ -42,7 +42,7 @@ export class DataContainerFilesComponent implements OnDestroy {
     public handleFileUpload(event: FileDropEvent) {
         const paths = event.files.map(x => x.path);
 
-        return this.backgroundTaskService.startTask(`Upload file group ${this.container.name}`, (task) => {
+        return this.backgroundTaskService.startTask(`Upload files group ${this.container.name}`, (task) => {
             const observable = this.fileGroupService.addFilesToFileGroup(this.container.name, paths, event.path);
             let lastData;
             observable.subscribe({

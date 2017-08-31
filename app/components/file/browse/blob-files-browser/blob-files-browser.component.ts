@@ -40,9 +40,8 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
 
     public handleFileDrop(event: FileDropEvent) {
         const { path } = event;
-        const location = path ? `under "${path}".` : "at the root.";
-        this.dialogService.confirm(`Upload files dropped.`, {
-            description: `Files will be uploaded ${location}`,
+        this.dialogService.confirm(`Upload files`, {
+            description: `Files will be uploaded to /${path}`,
             yes: () => {
                 this.upload(event).subscribe(() => {
                     this.fileNavigator.refresh(path);
