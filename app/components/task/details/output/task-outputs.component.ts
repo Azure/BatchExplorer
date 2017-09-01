@@ -82,8 +82,6 @@ export class TaskOutputsComponent implements OnChanges {
     }
 
     private _processTaskFilesError(error: ServerError): ServerError {
-        console.log("Node Error", error);
-
         if (error.status === Constants.HttpCode.NotFound) {
             return new ServerError({
                 status: 404,
@@ -106,7 +104,6 @@ export class TaskOutputsComponent implements OnChanges {
         return error;
     }
     private _processBlobError(error: ServerError): ServerError {
-        console.log("Blob Error", error);
         if (error.status === Constants.HttpCode.NotFound && error.body.code === "ContainerNotFound") {
             return new ServerError({
                 status: 404,
