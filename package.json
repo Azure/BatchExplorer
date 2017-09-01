@@ -101,7 +101,6 @@
     "@types/codemirror": "~0.0.40",
     "@types/core-decorators": "^0.10.30",
     "@types/d3": "^4.4.0",
-    "@types/electron-json-storage": "0.0.19",
     "@types/extract-zip": "~1.6.2",
     "@types/hammerjs": "^2.0.33",
     "@types/inflection": "^1.5.28",

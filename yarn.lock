@@ -298,10 +298,6 @@
     "@types/d3-voronoi" "*"
     "@types/d3-zoom" "*"
 
-"@types/electron-json-storage@0.0.19":
-  version "0.0.19"
-  resolved "https://registry.yarnpkg.com/@types/electron-json-storage/-/electron-json-storage-0.0.19.tgz#91833b532aec3c909734e3d0e277fe55b0ebcb5a"
-
 "@types/extract-zip@~1.6.2":
   version "1.6.2"
   resolved "https://registry.yarnpkg.com/@types/extract-zip/-/extract-zip-1.6.2.tgz#5c7eb441c41136167a42b88b64051e6260c29e86"
