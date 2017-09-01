@@ -61,9 +61,8 @@ export class SideMenuComponent implements OnChanges {
 
     private _updateEstimatedPrice() {
         if (this.isPoolComplete() && this.isCostComplete()) {
-            let obs;
             this.error = null;
-            obs = this.pythonRpcService.callWithAuth("expand-ncj-pool", [this.poolTemplate, this.form.value.pool])
+            const obs = this.pythonRpcService.callWithAuth("expand-ncj-pool", [this.poolTemplate, this.form.value.pool])
                 .cascade((data) => {
                     data.vmSize = data.vmSize.toLowerCase();
                     this.pricingService.computePoolPrice(data as any, { target: true }).subscribe((cost) => {
