@@ -38,10 +38,8 @@
     </div>
     <div *ngIf="(modeState == Modes.NewPoolAndJob || modeState == Modes.NewPool) && isPoolComplete() && isCostComplete()">
         <h2> Cost </h2>
-
+        <div>
+            Estimated cost: {{ estimatedCost }}
+        </div>
     </div>
-
-
-
-
 </div>
