@@ -1,12 +1,11 @@
 import { Injectable, NgZone } from "@angular/core";
 import * as storage from "electron-json-storage";
-import * as path from "path";
 import { BehaviorSubject, Observable } from "rxjs";
 // tslint:disable-next-line:no-var-requires
 const stripJsonComments = require("strip-json-comments");
 
 import { KeyBindings, Settings, defaultKeybindings } from "app/models";
-import { FileSystemService, LocalFileStorage } from "app/services";
+import {  LocalFileStorage } from "app/services";
 import { log } from "app/utils";
 
 // tslint:disable-next-line:no-var-requires
@@ -25,14 +24,13 @@ export class SettingsService {
     private _settingsSubject = new BehaviorSubject<Settings>(null);
     private _keybindings = new BehaviorSubject<KeyBindings[]>(null);
 
-    private _filename: string;
+    private _filename = "settings";
     private _keybindingsFilename = "keybindings";
 
-    constructor(private zone: NgZone, private storage: LocalFileStorage, private fs: FileSystemService) {
+    constructor(private zone: NgZone, private storage: LocalFileStorage) {
         this.settingsObs = this._settingsSubject.asObservable();
         this.keybindings = this._keybindings.asObservable();
         this.hasSettingsLoaded = this._hasSettingsLoaded.asObservable();
-        this._filename = path.join(this.fs.commonFolders.userData, "settings.json");
     }
 
     public init() {
@@ -43,13 +41,13 @@ export class SettingsService {
         this.userSettingsStr = userSettings;
         this.settings = { ...defaultSettings, ...this._parseUserSettings(userSettings) };
         this._settingsSubject.next(this.settings);
-        return Observable.fromPromise(this.fs.saveFile(this._filename, userSettings));
+        return this.storage.write(this._filename, userSettings);
     }
 
     private loadSettings() {
-        this.fs.readFile(this._filename).catch(() => {
+        this.storage.read(this._filename).catch(() => {
             return null;
-        }).then((userSettings: string) => {
+        }).subscribe((userSettings: string) => {
             this.userSettingsStr = userSettings;
             this.settings = { ...defaultSettings, ...this._parseUserSettings(userSettings) };
             this._hasSettingsLoaded.next(true);
