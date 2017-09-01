@@ -31,6 +31,7 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
         mode: "autoscale",
         autoRefresh: true,
     };
+
     public customFormulaMode = true;
     private _subs: Subscription[];
     private _propagateChange: (value: string) => void;
