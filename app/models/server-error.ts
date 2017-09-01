@@ -8,7 +8,7 @@ interface ServerErrorAttributes {
     status: number;
     statusText?: string;
     body: ServerErrorBodyAttributes;
-    original: any;
+    original?: any;
 }
 
 interface ServerErrorBodyAttributes {
