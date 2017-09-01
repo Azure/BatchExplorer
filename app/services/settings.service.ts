@@ -1,11 +1,10 @@
 import { Injectable, NgZone } from "@angular/core";
-import * as storage from "electron-json-storage";
 import { BehaviorSubject, Observable } from "rxjs";
 // tslint:disable-next-line:no-var-requires
 const stripJsonComments = require("strip-json-comments");
 
 import { KeyBindings, Settings, defaultKeybindings } from "app/models";
-import {  LocalFileStorage } from "app/services";
+import { LocalFileStorage } from "app/services";
 import { log } from "app/utils";
 
 // tslint:disable-next-line:no-var-requires
@@ -58,9 +57,10 @@ export class SettingsService {
             this.zone.run(() => {
                 // If the file has never been init create it
                 if (!Array.isArray(data)) {
-                    storage.set(this._keybindingsFilename, [], () => {
-                        log.error("Error saving the initial keybinding settings.");
-                    });
+                    this.storage.set(this._keybindingsFilename, []).catch((e) => {
+                        log.error("Error saving the initial keybinding settings.", e);
+                        return null;
+                    }).subscribe();
                 }
                 this._keybindings.next(defaultKeybindings.concat(data));
             });
