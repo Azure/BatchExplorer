@@ -85,7 +85,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
             this.updateValue(this.instance.getValue());
 
             if (change.origin !== "complete" && change.origin !== "setValue") {
-                const hint = (CodeMirror as any).hint[this.instance.getDoc().getMode()];
+                const hint = (CodeMirror as any).hint[this.instance.getDoc().getMode().name];
                 if (hint) {
                     (this.instance as any).showHint({ hint: hint, completeSingle: false });
                 }
