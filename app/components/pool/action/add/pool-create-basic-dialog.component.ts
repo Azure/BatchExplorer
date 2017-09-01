@@ -59,6 +59,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             startTask: null,
             userAccounts: [[]],
             appLicenses: [[]],
+            appPackages: [[]],
         });
 
         this._sub = this._osControl.valueChanges.subscribe((value) => {

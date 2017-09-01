@@ -66,6 +66,13 @@
             </div>
         </bl-form-section>
 
+        <bl-form-section title="Choose one or multiple application packages" subtitle="Select application packages to be downloaded onto each compute node in the pool">
+            <div class="form-element">
+                <bl-app-package-picker formControlName="appPackages"></bl-app-package-picker>
+                <bl-error controlName="appPackages" code="required">Please select valid combinations of application package versions</bl-error>
+            </div>
+        </bl-form-section>
+
         <bl-form-section title="User accounts" subtitle="Set of user accounts to be created on each node in the pool. By default, pools come with one non-admin user and one admin user. You can add up to 5 specific users for running tasks.">
             <bl-form-multi-picker formControlName="userAccounts" #userAccountsPicker addTitle="Add a user account" [max]="5">
                 <ng-template blFormPickerItem let-value>
