@@ -55,6 +55,7 @@ export class SideMenuComponent implements OnChanges {
         }
     }
 
+    // asserts numberNodes and vmSize is present as parameters in the pool form
     public isCostComplete() {
         return this.form.value.pool.numberNodes && this.form.value.pool.vmSize;
     }
