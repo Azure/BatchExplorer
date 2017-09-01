@@ -50,7 +50,7 @@ export class SettingsComponent implements OnDestroy {
     private _subs: Subscription[] = [];
 
     constructor(private settingsService: SettingsService) {
-        this._subs.push(this.settingsService.settingsObs.subscribe(() => {
+        this._subs.push(this.settingsService.settingsObs.subscribe((e) => {
             this._updateOriginalValue();
         }));
     }
