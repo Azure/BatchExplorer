@@ -2,8 +2,8 @@ import { Injectable } from "@angular/core";
 import * as path from "path";
 import { Observable } from "rxjs";
 
-import { FileSystemService } from "./fs.service";
 import { log } from "app/utils";
+import { FileSystemService } from "./fs.service";
 
 /**
  * This service is used to read/write files to the user data folder.
