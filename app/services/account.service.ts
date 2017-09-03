@@ -1,6 +1,5 @@
 import { Injectable } from "@angular/core";
 import { RequestOptions, URLSearchParams } from "@angular/http";
-import * as storage from "electron-json-storage";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
@@ -11,6 +10,7 @@ import { AzureHttpService } from "./azure-http.service";
 import {
     DataCache, DataCacheTracker, RxBasicEntityProxy, RxEntityProxy, getOnceProxy,
 } from "./core";
+import { LocalFileStorage } from "./local-file-storage.service";
 import { SubscriptionService } from "./subscription.service";
 
 export enum AccountStatus {
@@ -62,6 +62,7 @@ export class AccountService {
     private _cache = new DataCache<AccountResource>();
 
     constructor(
+        private storage: LocalFileStorage,
         private azure: AzureHttpService,
         private subscriptionService: SubscriptionService) {
 
@@ -267,40 +268,18 @@ export class AccountService {
     }
 
     private _loadFavoriteAccounts(): Observable<List<AccountResource>> {
-        let sub = new AsyncSubject<List<AccountResource>>();
-        storage.get(this._accountJsonFileName, (error, data) => {
-            if (error) {
-                log.error("Error retrieving accounts");
-                sub.error(error);
-            }
-
+        return this.storage.get(this._accountJsonFileName).map((data) => {
             if (Array.isArray(data)) {
-                sub.next(List(data.map(x => new AccountResource(x))));
+                return List(data.map(x => new AccountResource(x)));
             } else {
-                sub.next(List([]));
+                return List([]);
             }
-
-            sub.complete();
-        });
-
-        return sub.asObservable();
+        }).share();
     }
 
     private _saveAccountFavorites(accounts: List<AccountResource> = null): Observable<any> {
-        let sub = new AsyncSubject();
-
         accounts = accounts === null ? this._accountFavorites.getValue() : accounts;
-        storage.set(this._accountJsonFileName, accounts.toJS(), (error) => {
-            if (error) {
-                log.error("Error saving accounts", error);
-                sub.error(error);
-            }
-
-            sub.next(true);
-            sub.complete();
-        });
-
-        return sub;
+        return this.storage.set(this._accountJsonFileName, accounts.toJS());
     }
 
     private _getAccount(accountId: string): Observable<AccountResource> {
