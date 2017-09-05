@@ -53,9 +53,6 @@ export class JobsBarChartComponent implements OnInit, OnChanges {
             responsive: true,
             maintainAspectRatio: false,
             animation: { duration: 0 },
-            legend: {
-                display: false,
-            },
             tooltips: {
                 enabled: true,
                 mode: "single",
@@ -91,7 +88,6 @@ export class JobsBarChartComponent implements OnInit, OnChanges {
                     },
                     scaleLabel: {
                         display: true,
-                        labelString: "Running time",
                     },
                 }],
             },

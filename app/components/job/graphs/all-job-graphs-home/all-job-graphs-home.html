@@ -15,3 +15,7 @@
         <bl-jobs-cpu-wait-time-graph [jobs]="jobs"></bl-jobs-cpu-wait-time-graph>
     </div>
 </div>
+
+<div class="loading-overlay" *ngIf="loading">
+    Loading jobs for graphs.
+</div>

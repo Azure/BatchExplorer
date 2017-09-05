@@ -13,9 +13,11 @@ import "./all-job-graphs-home.scss";
 })
 export class AllJobGraphsComponent implements OnInit {
     public jobs: List<Job>;
+    public loading = false;
     constructor(private jobService: JobService) { }
 
     public ngOnInit() {
+        this.loading = true;
         this._loadJobs();
     }
 
@@ -25,12 +27,14 @@ export class AllJobGraphsComponent implements OnInit {
     }
 
     private _loadJobs() {
+
         const obs = this.jobService.listAll({
             select: "id,executionInfo,stats",
             filter: FilterBuilder.prop("state").eq(JobState.completed).toOData(),
             pageSize: 1000,
         });
         obs.subscribe((jobs) => {
+            this.loading = false;
             this.jobs = List(jobs.filter(x => Boolean(x.stats && x.executionInfo)));
         });
         return obs;

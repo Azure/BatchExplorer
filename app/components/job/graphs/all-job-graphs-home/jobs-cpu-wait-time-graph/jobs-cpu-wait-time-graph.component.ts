@@ -18,10 +18,10 @@ export class JobsCpuWaitTimeGraphComponent {
     @autobind()
     public computeDataSets(displayedJobs: List<Job>) {
         const dataCpu = displayedJobs.map((job) => {
-            return job.stats.userCPUTime;
+            return job.stats.userCPUTime.asMilliseconds();
         }).toArray();
         const dataWait = displayedJobs.map((job) => {
-            return job.stats.waitTime;
+            return job.stats.waitTime.asMilliseconds();
         }).toArray();
         return [
             {
