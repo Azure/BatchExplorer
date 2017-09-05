@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
 import { autobind } from "core-decorators";
 import { remote } from "electron";
+import { Observable } from "rxjs";
 
 import "./file-details-view.scss";
 
@@ -87,11 +88,15 @@ export class FileDetailsViewComponent implements OnChanges {
         return obs;
     }
 
-    private _updateFileProperties(forceNew = false) {
-        this.fileLoader.getProperties(forceNew).subscribe((file: File) => {
+    private _updateFileProperties(forceNew = false): Observable<any> {
+        this.contentSize = "-";
+        this.lastModified = "-";
+        const obs = this.fileLoader.getProperties(forceNew);
+        obs.subscribe((file: File) => {
             this.file = file;
             this.contentSize = prettyBytes(file.properties.contentLength);
             this.lastModified = DateUtils.prettyDate(file.properties.lastModified);
         });
+        return obs;
     }
 }

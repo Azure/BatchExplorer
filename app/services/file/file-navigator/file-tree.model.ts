@@ -39,6 +39,10 @@ export class FileTreeNode {
         this.name = this._computeName();
     }
 
+    public clone() {
+        return new FileTreeNode(this);
+    }
+
     public walk() {
         return this.children.values();
     }
@@ -121,6 +125,11 @@ export class FileTreeStructure {
         }
 
         return this.directories[path].loadingStatus === LoadingStatus.Ready;
+    }
+
+    public getParent(node: FileTreeNode) {
+        const parentPath = path.dirname(node.path);
+        return this.directories[parentPath];
     }
 
     private _checkDirInTree(directory: string) {
