@@ -16,7 +16,6 @@
         </div>
         <bl-sidebar-bookmarks></bl-sidebar-bookmarks>
         <bl-persistent-notifications-dropdown></bl-persistent-notifications-dropdown>
-        <bl-aad-user-dropdown></bl-aad-user-dropdown>
         <bl-account-dropdown></bl-account-dropdown>
         <bl-background-task-tracker></bl-background-task-tracker>
     </header>
@@ -30,7 +29,7 @@
                 <md-sidenav #rightSidebar align="end">
                     <bl-sidebar-content #sidebarContent [sidebar]="rightSidebar"></bl-sidebar-content>
                 </md-sidenav>
-                <div>
+                <div *ngIf="isAppReady">
                     <router-outlet></router-outlet>
                 </div>
             </md-sidenav-container>

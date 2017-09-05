@@ -1,6 +1,13 @@
-<table>
+<table [class.activable]="config.activable">
     <ng-content select="bl-thead"></ng-content>
     <tbody>
-        <ng-template [ngTemplateOutlet]="item.content" *ngFor="let item of displayItems, trackBy: item?.key"></ng-template>
+        <tr *ngFor="let item of displayItems, trackBy: trackByFn" (click)="item.handleClick($event)" (contextmenu)="item.openContextMenu($event)"
+            [class.selected]="item.selected" [class.focused]="listFocused && item.key === (focusedItem | async)">
+
+            <td class="checkbox-column" (click)="item.handleClick($event, false)" *ngIf="config.showCheckbox">
+                <md-checkbox color="primary" (click)="$event.stopPropagation()" (change)="item.handleClick(null, false)" [checked]="item.selected"></md-checkbox>
+            </td>
+            <ng-template [ngTemplateOutlet]="item.content"></ng-template>
+        </tr>
     </tbody>
 </table>

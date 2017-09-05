@@ -41,18 +41,21 @@ export function tryPython(pythonPath: string): Promise<string> {
  * @returns Promise that resolve the first valid path. If no path are valid reject with an error.
  */
 export function tryMultiplePythons(paths: string[]): Promise<string> {
-    let promise: Promise<string> = Promise.reject(null);
     const errors = {};
     if (paths.length === 0) {
-        return Promise.reject("No python path found");
+        return Promise.reject({});
     }
     const firstPath = paths[0];
 
     return tryPython(firstPath).then(() => {
         return firstPath;
     }).catch((error) => {
-        logger.info(`Python path is not a valid python 3.6 installation`, error);
-        return tryMultiplePythons(paths.slice(1));
+        return tryMultiplePythons(paths.slice(1)).catch((errors) => {
+            return Promise.reject({
+                ...errors,
+                [firstPath]: error,
+            });
+        });
     });
 }
 
@@ -68,23 +71,38 @@ export function getPythonPath(): Promise<string> {
     return tryMultiplePythons([envPython, "python3", "python"].filter(x => Boolean(x))).then((path) => {
         computedPythonPath = path;
         return path;
+    }).catch((errors) => {
+        let msg = "Fail to find a valid python 3.6 installation:";
+        for (let path of Object.keys(errors)) {
+            msg += `\n  - ${path}: ${errors[path].message}`;
+        }
+        logger.error(msg);
+        return null;
     });
 }
 
-const pythonVersionRegex = /Python\s*([\d.]+)/;
-const pythonVersion = "3.6";
+const pythonVersionRegex = /Python\s*(\d+)\.(\d+)\.(\d+)/;
 
+export interface SemVersion {
+    major: number;
+    minor: number;
+    patch: number;
+}
 /**
  * Parse the version from the stdout
  * @param str Stdout of running python --version
  */
-function parsePythonVersion(str: string) {
+function parsePythonVersion(str: string): SemVersion {
     const out = pythonVersionRegex.exec(str);
 
-    if (!out || out.length < 2) {
+    if (!out || out.length < 4) {
         return null;
     } else {
-        return out[1];
+        return {
+            major: parseInt(out[1], 10),
+            minor: parseInt(out[2], 10),
+            patch: parseInt(out[3], 10),
+        };
     }
 }
 
@@ -92,6 +110,6 @@ function parsePythonVersion(str: string) {
  * Check if the version is the right for batchlabs.
  * @param version Python version
  */
-function isValidVersion(version: string) {
-    return version.startsWith(pythonVersion);
+function isValidVersion(version: SemVersion) {
+    return version.major === 3 && version.minor >= 5;
 }

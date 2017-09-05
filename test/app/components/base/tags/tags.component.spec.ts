@@ -13,7 +13,6 @@ import { click } from "test/utils/helpers";
 class TestComponent {
     public tags = List(["tag1", "tag2"]);
     public editable = false;
-
     public save: jasmine.Spy;
 }
 

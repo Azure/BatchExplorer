@@ -1,7 +1,17 @@
 @import "app/styles/variables";
 
 bl-tasks-running-time-graph {
+    $graph-option-height: 40px;
     display: block;
     width: 100%;
     height: 100%;
+
+    .graph-container {
+        height: calc(100% - #{$graph-option-height});
+    }
+
+    .graph-options {
+        padding: 5px 50px;
+        height: $graph-option-height;
+    }
 }

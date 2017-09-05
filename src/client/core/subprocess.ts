@@ -16,7 +16,7 @@ export interface ExecCommandResult {
  */
 export function execCommand(command: string): Promise<ExecCommandResult> {
     return new Promise((resolve, reject) => {
-        exec(command, (error: string, stdout: string, stderr: string) => {
+        exec(command, (error: Error, stdout: string, stderr: string) => {
             if (error) {
                 reject(error);
             } else {
