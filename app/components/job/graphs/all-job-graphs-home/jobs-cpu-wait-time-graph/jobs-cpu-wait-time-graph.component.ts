@@ -23,6 +23,7 @@ export class JobsCpuWaitTimeGraphComponent {
         const dataWait = displayedJobs.map((job) => {
             return job.stats.waitTime.asMilliseconds();
         }).toArray();
+
         return [
             {
                 label: "Cpu time",

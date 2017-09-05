@@ -79,7 +79,7 @@ export class AllJobGraphsComponent implements OnInit, OnDestroy {
                 date = now.subtract(1, "day");
                 break;
             case TimeRange.week:
-                date = now.subtract(1, "month");
+                date = now.subtract(1, "week");
                 break;
             default:
                 date = now.subtract(1, "day");

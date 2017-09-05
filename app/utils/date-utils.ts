@@ -58,7 +58,10 @@ export class DateUtils {
      */
     public static compactDuration(duration: moment.Duration, showMilli = false) {
         duration = moment.duration(duration);
-        let format = "d:h:mm:ss";
+        if (duration.asMilliseconds() < 1000) {
+            return `0.${(duration as any).format("SSS")}`;
+        }
+        let format = "d:hh:mm:ss";
         if (showMilli) {
             format += ".SSS";
         }
