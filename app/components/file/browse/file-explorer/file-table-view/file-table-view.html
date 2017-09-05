@@ -35,4 +35,8 @@
             </bl-no-item>
         </div>
     </bl-loading>
+    <div class="flex-separator"></div>
+    <div class="drop-hint" *ngIf="canDropExternalFiles">
+        <i class="fa fa-cloud-upload"></i> Drag and drop local files here to upload.
+    </div>
 </div>

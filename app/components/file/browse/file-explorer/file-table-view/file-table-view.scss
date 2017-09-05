@@ -7,6 +7,12 @@ bl-file-table-view {
 
     .table-wrapper {
         height: calc(100% - #{$file-header-height});
+        display: flex;
+        flex-direction: column;
+
+        > .flex-separator {
+            flex: 1;
+        }
     }
 
     .file-table-view-header {
@@ -53,5 +59,11 @@ bl-file-table-view {
         .fa-file {
             color: $dove-grey;
         }
+    }
+
+    .drop-hint {
+        color: $dusty-grey;
+        text-align: center;
+        font-style: italic;
     }
 }
