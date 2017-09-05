@@ -69,7 +69,7 @@ export class FileNavigator {
         this.currentPath = this._currentPath.asObservable();
         this._tree.next(new FileTreeStructure(this.basePath));
         this.currentNode = Observable.combineLatest(this._currentPath, this._tree).map(([path, tree]) => {
-            return tree.getNode(path);
+            return tree.getNode(path).clone();
         }).shareReplay(1);
         this.tree = this._tree.asObservable();
     }
@@ -110,6 +110,16 @@ export class FileNavigator {
 
     public refresh(path: string = ""): Observable<any> {
         return this._loadFileInPath(path);
+    }
+
+    public loadPath(path: string = ""): Observable<any> {
+        const node = this._tree.value.getNode(path);
+        if (node.isDirectory) {
+            if (!this._tree.value.isPathLoaded(path)) {
+                return this._loadFileInPath(path);
+            }
+        }
+        return Observable.of(null);
     }
 
     public dispose() {

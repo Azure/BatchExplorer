@@ -14,18 +14,35 @@
         <i class="fa fa-compress collapse-all action" title="Collapse all"></i>
     </bl-clickable>
 </div>
-<div *ngIf="expanded">
+<div *ngIf="expanded" class="tree-view-content">
     <div *ngIf="fileNavigator.error">
         {{fileNavigator.error.message}}
     </div>
-    <div *ngFor="let treeRow of treeRows, trackBy: treeRowTrackBy" [style.padding-left]="((treeRow.indent + 1) * 12) + 'px'"
-        class="tree-row" [title]="treeRow.path" (click)="handleClick(treeRow)" [class.active]="treeRow.path === currentNode?.path">
-        <span class="caret" (click)="handleCaretClick(treeRow, $event)">
-            <i class="fa" [class.fa-caret-down]="treeRow.expanded" [class.fa-caret-right]="!treeRow.expanded" *ngIf="treeRow.isDirectory"></i>
-        </span>
-        <span class="file-icon">
-            <i class="fa" [class.fa-folder]="treeRow.isDirectory" [class.fa-file]="!treeRow.isDirectory"></i>
-        </span>
-        <span class="label">{{treeRow.name}}</span>
+    <div class="tree-rows-container"
+        [class.drop-target]="dropTargetPath === ''"
+        (dragenter)="dragEnterRow($event)"
+        (dragleave)="dragLeaveRow($event)"
+        (dragover)="handleDragHover($event)"
+        (drop)="handleDropOnRow($event)">
+
+        <div *ngFor="let treeRow of treeRows, trackBy: treeRowTrackBy"
+            class="tree-row"
+            [style.padding-left]="((treeRow.indent + 1) * 12) + 'px'"
+            [title]="treeRow.path"
+            [class.active]="treeRow.path === currentNode?.path"
+            [class.drop-target]="treeRow.path.startsWith(dropTargetPath)"
+            (click)="handleClick(treeRow)"
+            (dragenter)="dragEnterRow($event, treeRow)"
+            (dragleave)="dragLeaveRow($event, treeRow)"
+            (drop)="handleDropOnRow($event, treeRow)">
+
+            <span class="caret" (click)="handleCaretClick(treeRow, $event)">
+                <i class="fa" [class.fa-caret-down]="treeRow.expanded" [class.fa-caret-right]="!treeRow.expanded" *ngIf="treeRow.isDirectory"></i>
+            </span>
+            <span class="file-icon">
+                <i class="fa" [class.fa-folder]="treeRow.isDirectory" [class.fa-file]="!treeRow.isDirectory"></i>
+            </span>
+            <span class="label">{{treeRow.name}}</span>
+        </div>
     </div>
 </div>

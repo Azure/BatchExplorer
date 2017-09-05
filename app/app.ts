@@ -39,3 +39,14 @@ MouseTrap.bind("ctrl+shift+i", () => {
 MouseTrap.bind("ctrl+r", () => {
     location.reload();
 });
+
+document.addEventListener("dragover", (event) => {
+    event.dataTransfer.dropEffect = "none";
+    event.preventDefault();
+    return false;
+}, false);
+
+document.addEventListener("drop", (event) => {
+    event.preventDefault();
+    return false;
+}, false);

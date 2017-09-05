@@ -1,7 +1,9 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from "@angular/core";
+import { Component, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { FileNavigator, FileTreeNode, FileTreeStructure } from "app/services/file";
+import { CloudPathUtils, DragUtils } from "app/utils";
+import { FileDropEvent } from "../file-explorer.component";
 import "./file-tree-view.scss";
 
 export interface TreeRow {
@@ -20,13 +22,18 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     @Input() public fileNavigator: FileNavigator;
     @Input() public name: string;
     @Input() public autoExpand = false;
+    @Input() public canDropExternalFiles = false;
     @Output() public navigate = new EventEmitter<string>();
+    @Output() public dropFiles = new EventEmitter<FileDropEvent>();
 
-    public expanded = true;
+    @HostBinding("class.expanded") public expanded = true;
+
     public currentNode: FileTreeNode;
     public expandedDirs: StringMap<boolean> = {};
     public treeRows: TreeRow[] = [];
     public refreshing: boolean;
+    public isDraging = 0;
+    public dropTargetPath: string = null;
 
     private _tree: FileTreeStructure;
     private _navigatorSubs: Subscription[] = [];
@@ -64,6 +71,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     public handleCaretClick(treeRow: TreeRow, event: MouseEvent) {
         event.stopPropagation();
         event.stopImmediatePropagation();
+        this.fileNavigator.loadPath(treeRow.path);
         this.toggleExpanded(treeRow);
     }
 
@@ -134,6 +142,39 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
         });
     }
 
+    public dragEnterRow(event: DragEvent, treeRow?: TreeRow) {
+        event.stopPropagation();
+        if (!this.canDropExternalFiles) { return; }
+        this.isDraging++;
+        this.dropTargetPath = this._getDropTarget(treeRow);
+    }
+
+    public dragLeaveRow(event: DragEvent, treeRow?: TreeRow) {
+        event.stopPropagation();
+        if (!this.canDropExternalFiles) { return; }
+
+        this.isDraging--;
+        if (this._getDropTarget(treeRow) === this.dropTargetPath && this.isDraging <= 0) {
+            this.dropTargetPath = null;
+        }
+    }
+
+    public handleDropOnRow(event: DragEvent, treeRow?: TreeRow) {
+        event.preventDefault();
+        event.stopPropagation();
+        if (!this.canDropExternalFiles) { return; }
+
+        const path = this._getDropTarget(treeRow);
+        const files = [...event.dataTransfer.files as any];
+        this.dropTargetPath = null;
+        this.isDraging = 0;
+        this.dropFiles.emit({ path, files });
+    }
+
+    public handleDragHover(event: DragEvent) {
+        DragUtils.allowDrop(event, this.canDropExternalFiles);
+    }
+
     private _buildTreeRows(tree) {
         const root = tree.root;
         this.treeRows = this._getTreeRowsForNode(root);
@@ -162,6 +203,20 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
             }
         }
         return rows;
+    }
+
+    /**
+     * Returns the path of the folder where the drop is actually happening
+     * @param treeRow Tree row being targeted
+     */
+    private _getDropTarget(treeRow: TreeRow): string {
+        if (!treeRow) {
+            return "";
+        } else if (treeRow.isDirectory) {
+            return treeRow.path;
+        } else {
+            return CloudPathUtils.dirname(treeRow.path);
+        }
     }
 
     private _clearNavigatorSubs() {
