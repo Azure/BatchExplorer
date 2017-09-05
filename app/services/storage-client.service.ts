@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { StorageAccountSharedKeyOptions, StorageClientProxyFactory } from "client/api";
 import { Observable } from "rxjs";
 
-import { AutoStorageAccount, StorageKeys, StorageKeysAttributes } from "app/models";
+import { AutoStorageAccount, ServerError, StorageKeys, StorageKeysAttributes } from "app/models";
 import { ArmResourceUtils } from "app/utils";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
@@ -55,6 +55,15 @@ export class StorageClientService {
 
         return this.accountService.currentAccount.first().flatMap((account) => {
             const settings = account.properties && account.properties.autoStorage;
+            if (!settings) {
+                return Observable.throw(new ServerError({
+                    status: 404,
+                    body: {
+                        code: "AutostorageNotSetup",
+                        message: "Autostorage not setup for this account",
+                    },
+                }));
+            }
             const cachedItem = this._getCachedItem(settings.storageAccountId);
 
             // check if we have keys or if the lastKeySync date has changed

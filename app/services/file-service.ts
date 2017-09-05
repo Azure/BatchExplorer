@@ -41,6 +41,10 @@ export interface NaviagateNodeFileConfig {
     basePath?: string;
 }
 
+export interface NaviagateTaskFileOptions {
+    onError: (error: ServerError) => ServerError;
+}
+
 // List of error we don't want to log for files
 export const fileIgnoredErrors = [
     Constants.HttpCode.NotFound,
@@ -103,10 +107,11 @@ export class FileService extends ServiceBase {
         });
     }
 
-    public navigateTaskFile(jobId: string, taskId: string) {
+    public navigateTaskFile(jobId: string, taskId: string, options: NaviagateTaskFileOptions) {
         return new FileNavigator({
             loadPath: (folder) => this.listFromTask(jobId, taskId, true, { folder }),
             getFile: (filename: string) => this.fileFromTask(jobId, taskId, filename),
+            onError: options.onError,
         });
     }
 

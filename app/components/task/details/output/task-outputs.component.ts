@@ -56,7 +56,9 @@ export class TaskOutputsComponent implements OnChanges {
         StorageUtils.getSafeContainerName(this.jobId).then((container) => {
             this._taskOutputContainer = container;
             this._clearFileNavigator();
-            const nodeNavigator = this.fileService.navigateTaskFile(this.jobId, this.taskId);
+            const nodeNavigator = this.fileService.navigateTaskFile(this.jobId, this.taskId, {
+                onError: (error) => this._processTaskFilesError(error),
+            });
             nodeNavigator.init();
 
             const taskOutputPrefix = `${this.taskId}/$TaskOutput/`;
@@ -79,6 +81,28 @@ export class TaskOutputsComponent implements OnChanges {
         });
     }
 
+    private _processTaskFilesError(error: ServerError): ServerError {
+        if (error.status === Constants.HttpCode.NotFound) {
+            return new ServerError({
+                status: 404,
+                body: {
+                    code: "NodeNotFound",
+                    message: "The node the task ran on doesn't exists anymore or is in an invalid state.",
+                },
+                original: error.original,
+            });
+        } else if (error.status === Constants.HttpCode.Conflict) {
+            return new ServerError({
+                status: 404,
+                body: {
+                    code: "TaskFilesDeleted",
+                    message: "The task files were cleaned from the node.",
+                },
+                original: error.original,
+            });
+        }
+        return error;
+    }
     private _processBlobError(error: ServerError): ServerError {
         if (error.status === Constants.HttpCode.NotFound && error.body.code === "ContainerNotFound") {
             return new ServerError({
@@ -98,7 +122,7 @@ export class TaskOutputsComponent implements OnChanges {
     }
 
     private _fileConventionErrorMessage() {
-        return `This task is not following the file output convention\n`
+        return `There is no uploaded outputs\n`
             + `There is no blob container with the name '${this._taskOutputContainer}'\n`
             + `Learn more here https://docs.microsoft.com/en-us/azure/batch/batch-task-output-file-conventions`;
     }

@@ -1,5 +1,4 @@
 import { Injectable, NgZone } from "@angular/core";
-import * as storage from "electron-json-storage";
 import { BehaviorSubject, Observable } from "rxjs";
 // tslint:disable-next-line:no-var-requires
 const stripJsonComments = require("strip-json-comments");
@@ -37,15 +36,17 @@ export class SettingsService {
         this.loadSettings();
     }
 
-    public saveUserSettings(userSettings: string) {
+    public saveUserSettings(userSettings: string): Observable<any> {
         this.userSettingsStr = userSettings;
         this.settings = { ...defaultSettings, ...this._parseUserSettings(userSettings) };
         this._settingsSubject.next(this.settings);
-        return this.storage.set(this._filename, userSettings);
+        return this.storage.write(this._filename, userSettings);
     }
 
     private loadSettings() {
-        this.storage.get(this._filename).subscribe((userSettings: string) => {
+        this.storage.read(this._filename).catch(() => {
+            return null;
+        }).subscribe((userSettings: string) => {
             this.userSettingsStr = userSettings;
             this.settings = { ...defaultSettings, ...this._parseUserSettings(userSettings) };
             this._hasSettingsLoaded.next(true);
@@ -56,9 +57,10 @@ export class SettingsService {
             this.zone.run(() => {
                 // If the file has never been init create it
                 if (!Array.isArray(data)) {
-                    storage.set(this._keybindingsFilename, [], () => {
-                        log.error("Error saving the initial keybinding settings.");
-                    });
+                    this.storage.set(this._keybindingsFilename, []).catch((e) => {
+                        log.error("Error saving the initial keybinding settings.", e);
+                        return null;
+                    }).subscribe();
                 }
                 this._keybindings.next(defaultKeybindings.concat(data));
             });
