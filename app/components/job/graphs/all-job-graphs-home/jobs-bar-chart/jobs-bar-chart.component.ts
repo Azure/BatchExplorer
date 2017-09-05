@@ -18,6 +18,15 @@ export class JobsBarChartComponent implements OnInit, OnChanges {
 
     @HostBinding("class.job-bar-chart") public cssCls = true;
 
+    public colors: any[] = [
+        {
+            backgroundColor: "rgba(76, 175, 80, 0.4)",
+        },
+        {
+            backgroundColor: "rgba(170, 57, 57, 0.4)",
+        },
+    ];
+
     public chartType = "bar";
     public datasets: Chart.ChartDataSets[] = [];
     public labels: string[] = [];

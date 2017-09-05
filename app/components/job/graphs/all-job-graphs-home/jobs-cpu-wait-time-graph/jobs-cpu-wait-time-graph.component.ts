@@ -41,6 +41,8 @@ export class JobsCpuWaitTimeGraphComponent {
         return [
             `Job id: ${job.id}`,
             `Running time: ${DateUtils.prettyDuration(runningTime, true)}`,
+            `Cpu time: ${DateUtils.prettyDuration(job.stats.userCPUTime, true)}`,
+            `Waiting time: ${DateUtils.prettyDuration(job.stats.waitTime, true)}`,
         ];
     }
 }

@@ -28,8 +28,13 @@ bl-all-job-graphs-home {
         }
     }
 
-    .job-graph {
-        width: 600px;
-        height: 400px;
+    .graph-content {
+        height: $graphs-content-height;
+        position: relative;
+
+        .job-graph {
+            width: 600px;
+            height: 50%;
+        }
     }
 }
