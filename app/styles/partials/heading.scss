@@ -6,7 +6,7 @@
     align-items: stretch;
     height: $basic-header-height;
     cursor: pointer;
-    padding: 0 10px;
+    padding-left: 10px;
 
     > * {
         vertical-align: middle;
@@ -29,7 +29,7 @@
     }
 
     .action {
-        padding: 4px 5px;
+        padding: 2px 5px;
         cursor: pointer;
         color: $mineshaft-grey;
         font-size: 16px;
