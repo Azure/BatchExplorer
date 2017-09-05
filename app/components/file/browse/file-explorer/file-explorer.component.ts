@@ -17,6 +17,11 @@ export enum FileExplorerSelectable {
     all = 6,
 }
 
+export interface FileDropEvent {
+    path: string;
+    files: File[];
+}
+
 export interface FileExplorerConfig {
     /**
      * If the file explorer should show the tree view on the left
@@ -29,10 +34,18 @@ export interface FileExplorerConfig {
      * @default FileExplorerSelectable.none
      */
     selectable?: FileExplorerSelectable;
+
+    /**
+     * If the explorer allows dropping external files
+     * @default false
+     */
+    canDropExternalFiles?: boolean;
 }
 
 const fileExplorerDefaultConfig: FileExplorerConfig = {
     showTreeView: true,
+    selectable: FileExplorerSelectable.none,
+    canDropExternalFiles: false,
 };
 
 /**
@@ -52,6 +65,7 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
     }
     public get config() { return this._config; }
     @Output() public activeFileChange = new EventEmitter<string>();
+    @Output() public dropFiles = new EventEmitter<FileDropEvent>();
 
     public LoadingStatus = LoadingStatus;
     public currentNode: FileTreeNode;
@@ -99,6 +113,10 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
 
     public goBack() {
         this.currentFileNavigator.goBack();
+    }
+
+    public handleDrop(event: FileDropEvent) {
+        this.dropFiles.emit(event);
     }
 
     private _updateNavigatorEvents() {

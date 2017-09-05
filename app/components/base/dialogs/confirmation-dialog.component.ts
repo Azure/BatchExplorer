@@ -3,6 +3,8 @@ import { MdDialogRef } from "@angular/material";
 import { autobind } from "core-decorators";
 import { AsyncSubject, Observable } from "rxjs";
 
+import "./confirmation-dialog.scss";
+
 @Component({
     selector: "bl-confirmation-dialog",
     templateUrl: "confirmation-dialog.html",
