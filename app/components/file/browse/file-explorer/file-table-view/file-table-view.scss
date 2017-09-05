@@ -2,6 +2,18 @@
 
 bl-file-table-view {
     $file-header-height: 40px;
+    display: block;
+    height: 100%;
+
+    .table-wrapper {
+        height: calc(100% - #{$file-header-height});
+        display: flex;
+        flex-direction: column;
+
+        > .flex-separator {
+            flex: 1;
+        }
+    }
 
     .file-table-view-header {
         display: flex;
@@ -30,6 +42,7 @@ bl-file-table-view {
                 color: map-get($primary, 400);
             }
         }
+
         .current-path {
             line-height: $file-header-height;
             vertical-align: middle;
@@ -46,5 +59,11 @@ bl-file-table-view {
         .fa-file {
             color: $dove-grey;
         }
+    }
+
+    .drop-hint {
+        color: $dusty-grey;
+        text-align: center;
+        font-style: italic;
     }
 }

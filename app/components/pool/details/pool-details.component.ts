@@ -110,7 +110,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public resizePool() {
-        const sidebarRef = this.sidebarManager.open("resize-pool", PoolResizeDialogComponent);
+        const sidebarRef = this.sidebarManager.open(`resize-pool-${this.pool.id}`, PoolResizeDialogComponent);
         sidebarRef.component.pool = this.pool;
         this.sidebarManager.onClosed.subscribe(() => {
             this.refreshPool();
