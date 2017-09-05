@@ -34,7 +34,7 @@ export class JobsRunningTimeComponent {
         const runningTime = moment.duration(moment(job.executionInfo.endTime).diff(job.executionInfo.startTime));
         return [
             `Job id: ${job.id}`,
-            `Running time: ${DateUtils.prettyDuration(runningTime, true)}`,
+            `Running time: ${DateUtils.compactDuration(runningTime, true)}`,
         ];
     }
 }

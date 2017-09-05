@@ -40,9 +40,10 @@ export class JobsCpuWaitTimeGraphComponent {
         const runningTime = moment.duration(moment(job.executionInfo.endTime).diff(job.executionInfo.startTime));
         return [
             `Job id: ${job.id}`,
-            `Running time: ${DateUtils.prettyDuration(runningTime, true)}`,
-            `Cpu time: ${DateUtils.prettyDuration(job.stats.userCPUTime, true)}`,
-            `Waiting time: ${DateUtils.prettyDuration(job.stats.waitTime, true)}`,
+            "",
+            `Running time: ${DateUtils.compactDuration(runningTime, true)}`,
+            `Cpu time: ${DateUtils.compactDuration(job.stats.userCPUTime, true)}`,
+            `Waiting time: ${DateUtils.compactDuration(job.stats.waitTime, true)}`,
         ];
     }
 }

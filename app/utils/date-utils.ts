@@ -53,6 +53,19 @@ export class DateUtils {
     }
 
     /**
+     * Return a compact duration
+     * 3:02:04:1.902
+     */
+    public static compactDuration(duration: moment.Duration, showMilli = false) {
+        duration = moment.duration(duration);
+        let format = "d:h:mm:ss";
+        if (showMilli) {
+            format += ".SSS";
+        }
+        return (duration as any).format(format);
+    }
+
+    /**
      * Returns a full date and time
      * @example Feb 14th, 2017, 14:03:01
      */
