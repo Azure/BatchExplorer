@@ -1,5 +1,6 @@
 import {
-    ChangeDetectorRef, Component, ContentChild, ContentChildren, EventEmitter, HostBinding, Input, Optional, Output, QueryList,
+    ChangeDetectorRef, Component, ContentChild, ContentChildren, EventEmitter,
+    HostBinding, Input, Optional, Output, QueryList,
 } from "@angular/core";
 import { Router } from "@angular/router";
 
