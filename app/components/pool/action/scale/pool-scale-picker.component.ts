@@ -32,6 +32,7 @@ export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor
 
         this._sub = this.form.valueChanges.distinctUntilChanged().subscribe((value) => {
             if (this._propagateChange) {
+                console.log("Change", value.enableAutoScale);
                 this._propagateChange(value);
             }
         });
