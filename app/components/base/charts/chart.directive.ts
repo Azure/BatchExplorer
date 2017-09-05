@@ -2,13 +2,13 @@ import {
     Directive,
     ElementRef,
     EventEmitter,
+    HostListener,
     Input,
     OnChanges,
     OnDestroy,
     OnInit,
     Output,
     SimpleChanges,
-    HostListener,
 } from "@angular/core";
 
 // tslint:disable-next-line
@@ -45,7 +45,7 @@ export class ChartDirective implements OnDestroy, OnChanges, OnInit {
     public handleClick(event: MouseEvent) {
         const el = this.chart.getElementAtEvent(event)[0];
         if (el) {
-            this.elContextMenu.emit(el);
+            this.elClick.emit(el);
         }
     }
 
@@ -53,7 +53,7 @@ export class ChartDirective implements OnDestroy, OnChanges, OnInit {
     public handleDblClick(event: MouseEvent) {
         const el = this.chart.getElementAtEvent(event)[0];
         if (el) {
-            this.elContextMenu.emit(el);
+            this.elDblClick.emit(el);
         }
     }
     @HostListener("contextmenu", ["$event"])

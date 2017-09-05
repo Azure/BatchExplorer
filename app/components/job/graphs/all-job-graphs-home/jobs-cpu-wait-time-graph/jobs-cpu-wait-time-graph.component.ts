@@ -1,30 +1,36 @@
 import { Component, Input } from "@angular/core";
+import { autobind } from "core-decorators";
 import { List } from "immutable";
 import * as moment from "moment";
 
 import { Job } from "app/models";
 import { DateUtils } from "app/utils";
 
-import { autobind } from "core-decorators";
-import "./jobs-running-time-graph.scss";
+import "./jobs-cpu-wait-time-graph.scss";
 
 @Component({
-    selector: "bl-jobs-running-time-graph",
-    templateUrl: "jobs-running-time-graph.html",
+    selector: "bl-jobs-cpu-wait-time-graph",
+    templateUrl: "jobs-cpu-wait-time-graph.html",
 })
-export class JobsRunningTimeComponent {
-
+export class JobsCpuWaitTimeGraphComponent {
     @Input() public jobs: List<Job> = List([]);
 
     @autobind()
     public computeDataSets(displayedJobs: List<Job>) {
-        const data = displayedJobs.map((job) => {
-            return moment(job.executionInfo.endTime).diff(job.executionInfo.startTime);
+        const dataCpu = displayedJobs.map((job) => {
+            return job.stats.userCPUTime;
+        }).toArray();
+        const dataWait = displayedJobs.map((job) => {
+            return job.stats.waitTime;
         }).toArray();
         return [
             {
-                label: "Running time",
-                data: data,
+                label: "Cpu time",
+                data: dataCpu,
+            },
+            {
+                label: "Wait time",
+                data: dataWait,
             },
         ] as any;
     }
