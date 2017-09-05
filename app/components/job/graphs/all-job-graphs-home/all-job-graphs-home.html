@@ -1,4 +1,12 @@
-<h1>Jobs graphs</h1>
+<div class="graph-header">
+    <div class="summary">
+        <h1>
+            Jobs graphs
+        </h1>
+    </div>
+
+    <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+</div>
 <div *ngIf="jobs">
     <div class="job-graph">
         <bl-jobs-running-time-graph [jobs]="jobs"></bl-jobs-running-time-graph>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from "@angular/core";
+import { autobind } from "core-decorators";
 import { List } from "immutable";
 
 import { Job, JobState } from "app/models";
@@ -15,12 +16,23 @@ export class AllJobGraphsComponent implements OnInit {
     constructor(private jobService: JobService) { }
 
     public ngOnInit() {
-        this.jobService.listAll({
+        this._loadJobs();
+    }
+
+    @autobind()
+    public refresh() {
+        return this._loadJobs();
+    }
+
+    private _loadJobs() {
+        const obs = this.jobService.listAll({
             select: "id,executionInfo,stats",
             filter: FilterBuilder.prop("state").eq(JobState.completed).toOData(),
             pageSize: 1000,
-        }).subscribe((jobs) => {
+        });
+        obs.subscribe((jobs) => {
             this.jobs = List(jobs.filter(x => Boolean(x.stats && x.executionInfo)));
         });
+        return obs;
     }
 }

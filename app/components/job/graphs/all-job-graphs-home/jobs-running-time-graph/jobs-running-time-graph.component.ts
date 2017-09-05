@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges, OnInit } from "@angular/core";
+import { Router } from "@angular/router";
 import { List } from "immutable";
 import * as moment from "moment";
 
@@ -23,7 +24,7 @@ export class JobsRunningTimeComponent implements OnInit, OnChanges {
 
     private _displayedJobs: List<Job> = List([]);
 
-    constructor(private contextMenuService: ContextMenuService) { }
+    constructor(private contextMenuService: ContextMenuService, private router: Router) { }
 
     public ngOnInit() {
         this.updateOptions();
@@ -85,8 +86,8 @@ export class JobsRunningTimeComponent implements OnInit, OnChanges {
     }
 
     public showContextMenu(element) {
-        console.log("Elemn", element);
         this.contextMenuService.openMenu(new ContextMenu([
+            new ContextMenuItem("Go to", () => this._goto(element._index)),
             new ContextMenuItem("Hide", () => this._hideAt(element._index)),
         ]));
     }
@@ -111,12 +112,17 @@ export class JobsRunningTimeComponent implements OnInit, OnChanges {
     }
 
     private _getToolTip(tooltipItem: Chart.ChartTooltipItem) {
-        const job = this.jobs.get(tooltipItem.index);
+        const job = this._displayedJobs.get(tooltipItem.index);
         const runningTime = moment.duration(moment(job.executionInfo.endTime).diff(job.executionInfo.startTime));
         return [
             `Job id: ${job.id}`,
             `Running time: ${DateUtils.prettyDuration(runningTime, true)}`,
         ];
+    }
+
+    private _goto(index) {
+        const job = this._displayedJobs.get(index);
+        this.router.navigate(["/jobs", job.id]);
     }
 
     private _hideAt(index) {
