@@ -45,6 +45,5 @@ export class JobStats extends Record<JobStatsAttributes> {
             numSucceededTasks: parseInt(data.numSucceededTasks, 10),
             numTaskRetries: parseInt(data.numTaskRetries, 10),
         });
-        console.log("Stats", data);
     }
 }

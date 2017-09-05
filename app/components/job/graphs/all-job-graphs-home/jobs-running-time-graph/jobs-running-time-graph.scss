@@ -1,0 +1,19 @@
+@import "app/styles/variables";
+
+bl-jobs-running-time-graph {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    > .graph {
+        flex-grow: 1;
+    }
+
+    > .footer {
+        flex-basis: 20px;
+        height: 20px;
+        line-height: 20px;
+        text-align: right;
+        color: $link-color;
+    }
+}
