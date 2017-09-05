@@ -1,0 +1,55 @@
+@import "app/styles/variables";
+
+bl-file-details-view {
+    $file-header-height: 40px;
+
+    .file-header {
+        display: flex;
+        height: $file-header-height;
+        align-items: stretch;
+        color: $mineshaft-grey;
+        border-bottom: 1px solid $border-color;
+        margin-bottom: 5px;
+        > * {
+            padding: 0 10px;
+            &:not(:last-child) {
+                border-right: 1px solid $border-color;
+            }
+        }
+
+        .go-back {
+            font-size: 24px;
+            line-height: $file-header-height;
+            vertical-align: middle;
+
+            &:hover {
+                background: $alto;
+            }
+            .fa {
+                // color: $minshaft-grey;
+                color: map-get($primary, 400);
+            }
+        }
+
+        > .content-length, > .last-modified {
+            > .label {
+                color: map-get($primary, 400);
+            }
+
+            > .value {
+                font-size: 16px;
+            }
+        }
+
+        .filename {
+            font-size: 16px;
+            flex: 1;
+            vertical-align: middle;
+            line-height: $file-header-height;
+        }
+
+        .actions {
+            padding: 4px 5px;
+        }
+    }
+}

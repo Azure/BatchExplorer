@@ -10,7 +10,8 @@ import {
     SimpleChanges,
 } from "@angular/core";
 
-import Chart from "chart.js";
+// tslint:disable-next-line
+const Chart = require("chart.js");
 import { getColors } from "./helpers";
 
 @Directive({ selector: "canvas[blChart]" })

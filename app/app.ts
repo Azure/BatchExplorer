@@ -2,6 +2,8 @@ import { platformBrowserDynamic } from "@angular/platform-browser-dynamic";
 import { remote } from "electron";
 import * as MouseTrap from "mousetrap";
 
+import "./utils/extensions";
+
 import { log } from "app/utils";
 import { AppModule } from "./app.module";
 import { handleCoreError } from "./error-handler";
@@ -9,7 +11,6 @@ import { handleCoreError } from "./error-handler";
 // Setup extension methods
 import "chart.js";
 import "hammerjs";
-import "./utils/extensions";
 
 import "codemirror/addon/hint/show-hint.css";
 import "codemirror/lib/codemirror.css";
@@ -33,4 +34,8 @@ MouseTrap.bind("ctrl+shift+i", () => {
     } else {
         remote.getCurrentWindow().webContents.openDevTools();
     }
+});
+
+MouseTrap.bind("ctrl+r", () => {
+    location.reload();
 });
