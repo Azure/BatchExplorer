@@ -17,6 +17,14 @@
                     <span class="label">{{formula.name}}</span>
                     <i class="fa fa-times" title="Delete" (click)="deleteFormula(formula)"></i>
                 </div>
+                <div class="formula" *ngFor="let formula of savedAutoscaleFormulas" (click)="selectFormula(formula)">
+                        <span class="label">{{formula.name}}</span>
+                        <i class="fa fa-times" title="Delete" (click)="deleteFormula(formula)"></i>
+                    </div>
+                    <div class="formula" *ngFor="let formula of savedAutoscaleFormulas" (click)="selectFormula(formula)">
+                            <span class="label">{{formula.name}}</span>
+                            <i class="fa fa-times" title="Delete" (click)="deleteFormula(formula)"></i>
+                        </div>
                 <div class="no-formula" *ngIf="savedAutoscaleFormulas.size === 0">
                     <div>
                         <i class="fa fa-file-code-o"></i>

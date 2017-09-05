@@ -3,7 +3,7 @@
 .CodeMirror {
     display:block;
     width:100%;
-    border-right: 1px solid $altoGray;
+    border-right: 1px solid $border-color;
 }
 
 .autoscale-formula-picker {
@@ -11,15 +11,16 @@
     width: 100%;
     max-width: 100%;
     overflow: hidden;
+    height: 300px;
+    border-bottom: 1px solid $border-color;
 
     > .editor {
         flex: 1 1 100px;
-        border-bottom: 1px solid $altoGray;
     }
 
     > .formula-managment {
         flex-basis: 200px;
-        border-bottom: 1px solid $altoGray;
+        overflow-y: auto;
     }
 
     .formula-list {
