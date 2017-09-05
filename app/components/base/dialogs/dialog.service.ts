@@ -30,7 +30,7 @@ export class DialogService {
         component.execute = options.yes;
     }
 
-    public prompt(title: string = "Are you sure?", options: PromptOptions): Observable<string> {
+    public prompt(title: string = "Are you sure?", options: PromptOptions) {
         const ref = this.mdDialog.open(PromptDialogComponent);
         const component = ref.componentInstance;
         component.title = title;
