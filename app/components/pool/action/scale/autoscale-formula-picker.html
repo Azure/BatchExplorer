@@ -1,59 +1,43 @@
 <div class="autoscale-formula-picker">
     <div class="editor">
-        <bl-editor  [(ngModel)]="autoscaleFormulaValue"
-                    [label]="'Autoscale Formula'"
-                    [config]="config"
-                    (change)="textEditorOnChange()"
-                    (blur)="textEditorOnBlur()"></bl-editor>
+        <bl-editor [(ngModel)]="autoscaleFormulaValue" [label]="'Autoscale Formula'" [config]="config" (change)="textEditorOnChange()"
+            (blur)="textEditorOnBlur()"></bl-editor>
     </div>
-    <div class="formula-mode">
-        <div class="saved-formulas">
-            <div *ngIf="!showSaveForm" class="saved-formulas-container">
-                <div class="saved-formulas-btns">
-                    <bl-button type="wide" color="primary" class="small add-formula-btn" (click)="addFormula()">
-                        <i class="fa fa-save"></i> Save Autoscale Formula
-                    </bl-button>
+
+    <div class="formula-managment">
+        <div>
+            <div class="basic-header">
+                <div class="name" (do)="handleClickTreeViewHeader()"> Saved formulas </div>
+                <bl-clickable (do)="addFormula()" class="action">
+                    <i class="fa fa-save" title="Save"></i>
+                </bl-clickable>
+            </div>
+            <div class="formula-list">
+                <div class="formula" *ngFor="let formula of savedAutoscaleFormulas" (click)="selectFormula(formula)">
+                    <span class="label">{{formula.name}}</span>
+                    <i class="fa fa-times" title="Delete" (click)="deleteFormula(formula)"></i>
                 </div>
-                <div class="formula-list">
-                    <bl-button type="wide" color="light" class="custom-formulas" mdTooltip="Custom auto scale formula" (click)="showCustom()">
-                        <i class="fa fa-file-code-o" aria-hidden="true"></i> Custom
-                    </bl-button>
-                    <bl-button type="wide" color="light" class="sample-formulas" mdTooltip="Sample auto scale formula" (click)="showSample()">
-                       <i class="fa fa-star" aria-hidden="true"></i> Sample
-                    </bl-button>
-                </div>
-                <div class="saved-formulas-wrapper" *ngIf="customFormulaMode">
-                    <div class="formula" *ngFor="let formula of savedAutoscaleFormulas" (click)="selectFormula(formula)">
-                        <span class="label">{{formula.name}}</span>
-                        <i class="fa fa-times" title="Delete" (click)="deleteFormula(formula)"></i>
+                <div class="no-formula" *ngIf="savedAutoscaleFormulas.size === 0">
+                    <div>
+                        <i class="fa fa-file-code-o"></i>
                     </div>
-                    <div class="no-formula" *ngIf="savedAutoscaleFormulas.size === 0">
-                        <div>
-                            <i class="fa fa-file-code-o"></i>
-                        </div>
-                        No saved autoscale formulas
-                    </div>
-                </div>
-                <div class="saved-formulas-wrapper" *ngIf="!customFormulaMode">
-                    <div class="formula" *ngFor="let formula of predefinedFormula" (click)="selectFormula(formula)">
-                        <span class="label">{{formula.name}}</span>
-                    </div>
-                    <div class="no-formula" *ngIf="predefinedFormula?.size === 0">
-                        <div>
-                            <i class="fa fa-file-code-o"></i>
-                        </div>
-                        No sample formulas
-                    </div>
+                    No saved autoscale formulas
                 </div>
             </div>
-            <div [hidden]="!showSaveForm" class="save-formula-form">
-                <md-input-container>
-                    <input mdInput placeholder="Name" [formControl]="autoscaleFormulaName" #nameInput>
-                </md-input-container>
-
-                <div class="btn-container">
-                    <bl-button type="round" color="primary" class="save-formula-btn" (click)="saveFormula()"><i class="fa fa-check"></i></bl-button>
-                    <bl-button type="round" color="danger" (click)="cancelAddFormula()"><i class="fa fa-times"></i> </bl-button>
+        </div>
+        <div>
+            <div class="basic-header">
+                <div class="name" (do)="handleClickTreeViewHeader()"> Sample formulas </div>
+            </div>
+            <div class="formula-list">
+                <div class="formula" *ngFor="let formula of predefinedFormula" (click)="selectFormula(formula)">
+                    <span class="label">{{formula.name}}</span>
+                </div>
+                <div class="no-formula" *ngIf="predefinedFormula?.size === 0">
+                    <div>
+                        <i class="fa fa-file-code-o"></i>
+                    </div>
+                    No sample formulas
                 </div>
             </div>
         </div>
