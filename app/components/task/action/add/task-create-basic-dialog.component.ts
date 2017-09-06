@@ -49,7 +49,7 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
                 Validators.pattern(validation.regex.id),
             ]],
             displayName: ["", Validators.maxLength(validation.maxLength.displayName)],
-            commandLine: ["", Validators.required],
+            commandLine: ["blabla", Validators.required],
             constraints: this.constraintsGroup,
             userIdentity: [null],
             fileGroups: [[]],
