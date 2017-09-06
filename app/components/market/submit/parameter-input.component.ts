@@ -56,14 +56,14 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
         if (valid) {
             return null;
         } else {
-            let messageText = `unknown error`;
+            let messageText = "unknown error";
             const error = this.parameterValue.errors;
             if (error.minlength) {
                 const minLength = String(error.minlength.requiredLength);
-                messageText = `Should be atleast ${minLength} characters`;
+                messageText = `Should be at least ${minLength} characters`;
             } else if (error.maxlength) {
                 const maxLength = String(error.maxlength.requiredLength);
-                messageText = `Should be atmost ${maxLength} characters`;
+                messageText = `Should be at most ${maxLength} characters`;
             } else if (error.min) {
                 const minValue = String(error.min.min);
                 messageText = `Should be greater than or equal to ${minValue}`;
