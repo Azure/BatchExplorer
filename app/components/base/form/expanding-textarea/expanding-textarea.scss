@@ -13,6 +13,7 @@ bl-expanding-textarea {
             position: relative;
             width: 100%;
             height: $collapsed-height;
+            resize: none;
         }
     }
 
@@ -24,6 +25,7 @@ bl-expanding-textarea {
 
         textarea {
             background-color: #f5f5f5;
+            resize: vertical;
         }
     }
 }

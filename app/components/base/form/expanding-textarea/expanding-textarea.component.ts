@@ -37,7 +37,7 @@ export class ExpandingTextareaComponent implements ControlValueAccessor {
         this.expanded = false;
     }
 
-    public valueChanges(newValue: string) {
+    public valueChange(newValue: string) {
         this.value = newValue;
         if (this._propagateChange) {
             this._propagateChange(newValue);
