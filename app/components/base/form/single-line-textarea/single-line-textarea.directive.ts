@@ -1,4 +1,6 @@
-import { Directive, HostListener } from "@angular/core";
+import { Directive,  HostListener } from "@angular/core";
+
+import "./single-line-textarea.scss";
 
 @Directive({
     selector: "[blSingleLineTextarea]",
