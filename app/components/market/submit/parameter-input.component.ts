@@ -66,10 +66,10 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
                 messageText = `Should be atmost ${maxLength} characters`;
             } else if (error.min) {
                 const minValue = String(error.min.min);
-                messageText = `Should be greater than ${minValue}`;
-            } else if (this.parameterValue.errors.max) {
+                messageText = `Should be greater than or equal to ${minValue}`;
+            } else if (error.max) {
                 const maxValue = String(error.max.max);
-                messageText = `Should be less than ${maxValue}`;
+                messageText = `Should be less than or equal to ${maxValue}`;
             }
             return {
                 validFormInput: {
