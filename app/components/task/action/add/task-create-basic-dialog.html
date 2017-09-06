@@ -20,7 +20,9 @@
             </div>
 
             <div class="form-element">
-                <bl-expanding-textarea formControlName="commandLine" placeholder="Command line" hint="New lines will be replaced with spaces"></bl-expanding-textarea>
+                <md-input-container>
+                    <textarea mdInput mdTextareaAutosize mdAutosizeMinRows="1" blSingleLineTextarea formControlName="commandLine" placeholder="Command line"></textarea>
+                </md-input-container>
                 <bl-error controlName="commandLine" code="required">Command line is a required field</bl-error>
             </div>
 

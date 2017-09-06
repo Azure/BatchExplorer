@@ -16,6 +16,7 @@ import { FormSectionComponent } from "./form-section";
 import { KeyValuePickerComponent } from "./key-value-picker";
 import { ServerErrorComponent } from "./server-error";
 import { SimpleFormComponent } from "./simple-form";
+import { SingleLineTextareaDirective } from "./single-line-textarea";
 
 // components
 // Add submodules there
@@ -38,6 +39,7 @@ const components = [
     KeyValuePickerComponent,
     EditMetadataFormComponent,
     ExpandingTextareaComponent,
+    SingleLineTextareaDirective,
 ];
 
 @NgModule({
