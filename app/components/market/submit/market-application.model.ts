@@ -25,7 +25,7 @@ export class NcjParameterWrapper {
     public defaultValue: any;
     public allowedValues: string[];
 
-    constructor(public id: string, private _param: NcjParameter) {
+    constructor(public id: string, public param: NcjParameter) {
         this._computeName();
         this._computeDefaultValue();
         this._computeDescription();
@@ -37,25 +37,25 @@ export class NcjParameterWrapper {
     }
 
     private _computeDefaultValue() {
-        if (this._param.defaultValue) {
-            this.defaultValue = this._param.defaultValue;
+        if (this.param.defaultValue) {
+            this.defaultValue = this.param.defaultValue;
         }
     }
 
     private _computeDescription() {
-        if (this._param.metadata && this._param.metadata.description) {
-            this.description = this._param.metadata.description;
+        if (this.param.metadata && this.param.metadata.description) {
+            this.description = this.param.metadata.description;
         }
     }
 
     private _computeDependsOn() {
-        if (this._param.metadata && this._param.metadata.dependsOn) {
-            this.dependsOn = this._param.metadata.dependsOn;
+        if (this.param.metadata && this.param.metadata.dependsOn) {
+            this.dependsOn = this.param.metadata.dependsOn;
         }
     }
 
     private _computeAllowedValues() {
-        const param = this._param;
+        const param = this.param;
         if (param.allowedValues) {
             this.allowedValues = param.allowedValues;
         } else {
@@ -66,7 +66,7 @@ export class NcjParameterWrapper {
     private _computeType() {
         this._computeDependsOn();
         this._computeAllowedValues();
-        const param = this._param;
+        const param = this.param;
         if (param.allowedValues) {
             this.type = NcjParameterExtendedType.dropDown;
             return;

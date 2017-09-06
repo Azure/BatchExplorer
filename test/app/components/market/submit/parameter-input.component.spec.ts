@@ -130,6 +130,107 @@ describe("ParameterInputComponent", () => {
             fixture.detectChanges();
             expect(inputEl.nativeElement.value).toBe(updatedInput);
         });
+
+        it("should validate minimum length constraint", () => {
+            const input = "abcde";
+            testComponent.param = new NcjParameterWrapper("jobName", {
+                type: NcjParameterRawType.string,
+                metadata : {
+                    description: "Param Description",
+                },
+                defaultValue: initialInput,
+                minLength: 3,
+            });
+            fixture.detectChanges();
+            testComponent.paramControl.setValue(input);
+            fixture.detectChanges();
+            expect(component.parameterValue.valid).toBe(true);
+        });
+
+        it("should invalidate minimum length constraint", () => {
+            const input = "abcde";
+            testComponent.param = new NcjParameterWrapper("jobName", {
+                type: NcjParameterRawType.string,
+                metadata : {
+                    description: "Param Description",
+                },
+                defaultValue: initialInput,
+                minLength: 10,
+            });
+            fixture.detectChanges();
+            testComponent.paramControl.setValue(input);
+            fixture.detectChanges();
+            expect(component.parameterValue.valid).toBe(false);
+        });
+
+        it("should validate maximum length constraint", () => {
+            const input = "abcde";
+            testComponent.param = new NcjParameterWrapper("jobName", {
+                type: NcjParameterRawType.string,
+                metadata : {
+                    description: "Param Description",
+                },
+                defaultValue: initialInput,
+                maxLength: 7,
+            });
+            fixture.detectChanges();
+            testComponent.paramControl.setValue(input);
+            fixture.detectChanges();
+            expect(component.parameterValue.valid).toBe(true);
+        });
+
+        it("should invalidate maximum length constraint", () => {
+            const input = "abcde";
+            testComponent.param = new NcjParameterWrapper("jobName", {
+                type: NcjParameterRawType.string,
+                metadata : {
+                    description: "Param Description",
+                },
+                defaultValue: initialInput,
+                maxLength: 2,
+            });
+            fixture.detectChanges();
+            testComponent.paramControl.setValue(input);
+            fixture.detectChanges();
+            expect(component.parameterValue.valid).toBe(false);
+        });
+
+    });
+
+    describe("text parameter type validation", () => {
+        beforeEach(() => {
+            testComponent.param = new NcjParameterWrapper("jobName", {
+                type: NcjParameterRawType.string,
+                metadata : {
+                    description: "Param Description",
+                },
+                minLength: 3,
+                maxLength: 6,
+            });
+            fixture.detectChanges();
+        });
+
+        it("should validate minimum/maximum length constraint", () => {
+            testComponent.paramControl.setValue("abcd");
+            fixture.detectChanges();
+            expect(component.parameterValue.valid).toBe(true);
+            expect(component.parameterValue.errors).toBeNull();
+        });
+
+        it("should invalidate minimum length constraint", () => {
+            testComponent.paramControl.setValue("ab");
+            fixture.detectChanges();
+            expect(component.parameterValue.valid).toBe(false);
+            expect(component.parameterValue.errors.minlength).not.toBeUndefined();
+        });
+
+        it("should invalidate maximum length constraint", () => {
+            testComponent.paramControl.setValue("abcdefg");
+            fixture.detectChanges();
+            expect(component.parameterValue.valid).toBe(false);
+            expect(component.parameterValue.errors.maxlength).not.toBeUndefined();
+        });
+
     });
 
     describe("int parameter type", () => {
@@ -173,6 +274,42 @@ describe("ParameterInputComponent", () => {
             updateInput(inputEl, updatedInput);
             fixture.detectChanges();
             expect(inputEl.nativeElement.value).toBe(String(updatedInput));
+        });
+
+    });
+
+    describe("int parameter type validation", () => {
+        beforeEach(() => {
+            testComponent.param = new NcjParameterWrapper("frameEnd", {
+                type: NcjParameterRawType.int,
+                metadata : {
+                    description: "Param Description",
+                },
+                minValue: 3,
+                maxValue: 6,
+            });
+            fixture.detectChanges();
+        });
+
+        it("should validate minimum/maximum value constraint", () => {
+            testComponent.paramControl.setValue(4);
+            fixture.detectChanges();
+            expect(component.parameterValue.valid).toBe(true);
+            expect(component.parameterValue.errors).toBeNull();
+        });
+
+        it("should invalidate minimum value constraint", () => {
+            testComponent.paramControl.setValue(2);
+            fixture.detectChanges();
+            expect(component.parameterValue.valid).toBe(false);
+            expect(component.parameterValue.errors.min).not.toBeUndefined();
+        });
+
+        it("should invalidate maximum value constraint", () => {
+            testComponent.paramControl.setValue(7);
+            fixture.detectChanges();
+            expect(component.parameterValue.valid).toBe(false);
+            expect(component.parameterValue.errors.max).not.toBeUndefined();
         });
 
     });

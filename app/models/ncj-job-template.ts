@@ -7,6 +7,10 @@ export interface NcjParameter {
     type: NcjParameterRawType;
     defaultValue?: any;
     allowedValues?: any[];
+    minValue?: any;
+    maxValue?: any;
+    minLength?: any;
+    maxLength?: any;
     metadata: StringMap<string>;
 }
 

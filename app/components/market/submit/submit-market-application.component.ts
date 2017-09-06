@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { FormBuilder, FormControl, FormGroup } from "@angular/forms";
+import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { ActivatedRoute, Router } from "@angular/router";
 import { NcjJobTemplate, NcjPoolTemplate, ServerError } from "app/models";
 import { NcjTemplateService, PythonRpcService } from "app/services";
@@ -21,7 +21,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
     public form: FormGroup;
     public jobTemplate: NcjJobTemplate;
     public poolTemplate: NcjPoolTemplate;
-    public pickedPool = new FormControl(null);
+    public pickedPool = new FormControl(null, Validators.required);
     public jobParams: FormGroup;
     public poolParams: FormGroup;
     public jobParametersWrapper: NcjParameterWrapper[];
@@ -59,6 +59,19 @@ export class SubmitMarketApplicationComponent implements OnInit {
 
     public pickMode(mode: Modes) {
         this.modeState = mode;
+    }
+
+    public get submitToolTip(): string {
+        if (this.isFormValid()) {
+            return "Click to submit form";
+        }
+        return "Form is not valid";
+    }
+
+    public isFormValid() {
+        return (this.modeState ===  Modes.NewPoolAndJob && this.jobParams.valid && this.poolParams.valid) ||
+            (this.modeState ===  Modes.ExistingPoolAndJob && this.jobParams.valid && this.pickedPool.valid) ||
+            (this.modeState ===  Modes.NewPool && this.poolParams.valid);
     }
 
     @autobind()
@@ -111,36 +124,26 @@ export class SubmitMarketApplicationComponent implements OnInit {
         this.poolParametersWrapper = poolTempWrapper;
     }
 
+    private _getFormGroup(template): FormGroup {
+        let templateParameters = [];
+        if (template && template.parameters) {
+            templateParameters = Object.keys(template.parameters);
+        }
+        const templateFormGroup = {};
+        for (let key of templateParameters) {
+            let defaultValue = null;
+            if (template.parameters[key].defaultValue) {
+                defaultValue = String(template.parameters[key].defaultValue);
+            }
+            templateFormGroup[key] = new FormControl(defaultValue, Validators.required);
+        }
+        return new FormGroup(templateFormGroup);
+    }
+
     private _createForms() {
-        let jobParameters = [];
-        let poolParameters = [];
-        if (this.jobTemplate && this.jobTemplate.parameters) {
-            jobParameters = Object.keys(this.jobTemplate.parameters);
-        }
-        if (this.poolTemplate && this.poolTemplate.parameters) {
-            poolParameters = Object.keys(this.poolTemplate.parameters);
-        }
-        let jobFormGroup = {};
-        for (let key of jobParameters) {
-            if (this.jobTemplate.parameters[key].defaultValue) {
-                const defaultValue = String(this.jobTemplate.parameters[key].defaultValue);
-                jobFormGroup[key] = new FormControl(defaultValue);
-            } else {
-                jobFormGroup[key] = new FormControl();
-            }
-        }
-        this.jobParams = new FormGroup(jobFormGroup);
-        let poolFormGroup = {};
-        for (let key of poolParameters) {
-            if (this.poolTemplate.parameters[key].defaultValue) {
-                const defaultValue = String(this.poolTemplate.parameters[key].defaultValue);
-                poolFormGroup[key] = new FormControl(defaultValue);
-            } else {
-                poolFormGroup[key] = new FormControl();
-            }
-        }
-        this.poolParams = new FormGroup(poolFormGroup);
-        this.form = this.formBuilder.group({ pool: this.poolParams, job: this.jobParams });
+        this.jobParams = this._getFormGroup(this.jobTemplate);
+        this.poolParams = this._getFormGroup(this.poolTemplate);
+        this.form = this.formBuilder.group({ pool: this.poolParams, job: this.jobParams, poolpicker: this.pickedPool });
     }
 
     private _runJobWithPool(expandedPoolTemplate) {
