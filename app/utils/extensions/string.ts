@@ -28,6 +28,11 @@ interface String {
      * Check if a string contains a substring
      */
     contains(substring: string): boolean;
+
+    /**
+     * If the given string is just white space
+     */
+    isBlank(): boolean;
 }
 
 // First, checks if it isn't implemented yet.
@@ -89,5 +94,11 @@ if (!String.prototype.trimEnd) {
 if (!String.prototype.contains) {
     String.prototype.contains = function (this: string, substr: string) {
         return this.indexOf(substr) !== -1;
+    };
+}
+
+if (!String.prototype.isBlank) {
+    String.prototype.isBlank = function (this: string) {
+        return (!this || /^\s*$/.test(this));
     };
 }

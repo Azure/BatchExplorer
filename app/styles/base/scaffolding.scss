@@ -34,3 +34,11 @@ ol ul {
 textarea {
     resize: vertical;
 }
+
+.focus-outline:focus {
+    outline-color: $outline-color;
+    outline-width: 1px;
+    outline-style: solid;
+    outline-offset: -1px;
+    opacity: 1!important;
+}

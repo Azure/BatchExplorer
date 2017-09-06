@@ -1,10 +1,12 @@
 import { Component, ElementRef, OnDestroy, OnInit, ViewChild, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { List } from "immutable";
+import { Observable, Subscription } from "rxjs";
+
+import { DialogService } from "app/components/base/dialogs";
 import { AutoscaleFormula } from "app/models";
 import { AutoscaleFormulaService } from "app/services";
 import { PredefinedFormulaService } from "app/services/predefined-formula.service";
-import { List } from "immutable";
-import { Subscription } from "rxjs";
 import "./autoscale-formula-picker.scss";
 
 @Component({
@@ -20,8 +22,7 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
     public savedAutoscaleFormulas: List<AutoscaleFormula>;
     public predefinedFormula: AutoscaleFormula[];
     public autoscaleFormulaValue: string;
-    public autoscaleFormulaName: FormControl;
-    public showSaveForm: boolean;
+
     @ViewChild("nameInput")
     public nameInput: ElementRef;
     public config = {
@@ -31,19 +32,20 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
         mode: "autoscale",
         autoRefresh: true,
     };
+
     public customFormulaMode = true;
     private _subs: Subscription[];
     private _propagateChange: (value: string) => void;
     private _propagateTouch: () => void;
 
-    constructor(private autoscaleFormulaService: AutoscaleFormulaService,
-                private predefinedFormulaService: PredefinedFormulaService,
-                elRef: ElementRef) { }
+    constructor(
+        private autoscaleFormulaService: AutoscaleFormulaService,
+        private predefinedFormulaService: PredefinedFormulaService,
+        private dialogService: DialogService,
+        elRef: ElementRef) { }
 
     public ngOnInit() {
         this.autoscaleFormulaValue = "";
-        this.autoscaleFormulaName = new FormControl("");
-        this.showSaveForm = false;
         this.savedAutoscaleFormulas = List([]);
         this._subs = [];
         this._propagateChange = null;
@@ -85,25 +87,9 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
     }
 
     public addFormula() {
-        this.showSaveForm = true;
-        setTimeout(() => {
-            this.nameInput.nativeElement.focus();
+        this.dialogService.prompt("Save formula", {
+            prompt: (name) => this._saveFormula(name),
         });
-    }
-
-    public cancelAddFormula() {
-        this.showSaveForm = false;
-        this.autoscaleFormulaName.patchValue("");
-    }
-
-    public saveFormula() {
-        const value = this.autoscaleFormulaValue;
-        const name = this.autoscaleFormulaName.value;
-        this.autoscaleFormulaService.saveFormula(new AutoscaleFormula({
-            name,
-            value,
-        }));
-        this.showSaveForm = false;
     }
 
     public selectFormula(formula: AutoscaleFormula) {
@@ -114,11 +100,12 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
         this.autoscaleFormulaService.deleteFormula(formula);
     }
 
-    public showCustom() {
-        this.customFormulaMode = true;
-    }
-
-    public showSample() {
-        this.customFormulaMode = false;
+    private _saveFormula(name: string) {
+        const value = this.autoscaleFormulaValue;
+        this.autoscaleFormulaService.saveFormula(new AutoscaleFormula({
+            name,
+            value,
+        }));
+        return Observable.of({});
     }
 }

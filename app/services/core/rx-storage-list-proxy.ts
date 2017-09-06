@@ -4,12 +4,13 @@ import { Observable } from "rxjs";
 import { ServerError } from "app/models";
 import { exists } from "app/utils";
 import { StorageClientService } from "../storage-client.service";
+import { ListOptions } from "./list-options";
 import { CachedKeyList } from "./query-cache";
 import { RxListProxy, RxListProxyConfig } from "./rx-list-proxy";
 
-const defaultOptions = {
-    maxResults: 50,
-};
+const defaultOptions = new ListOptions({
+    pageSize: 50,
+});
 
 export interface RxStorageListProxyConfig<TParams, TEntity> extends RxListProxyConfig<TParams, TEntity> {
     getData: (client: any, params: TParams, options: any, token: any) => any;
@@ -69,13 +70,22 @@ export class RxStorageListProxy<TParams, TEntity> extends RxListProxy<TParams, T
         this._continuationToken = queryCache.data;
     }
 
-    private _computeOptions(options: any) {
-        return Object.assign({}, defaultOptions, options);
+    private _computeOptions(options: ListOptions) {
+        const newOptions = options.mergeDefault(defaultOptions);
+        const attributes = newOptions.attributes;
+
+        if (newOptions.maxResults) {
+            attributes.maxResults = newOptions.maxResults;
+        }
+        if (newOptions.filter) {
+            attributes.filter = newOptions.filter;
+        }
+        return attributes;
     }
 
     private _clientProxy() {
         return this.storageClient.get().map((client) => {
-           return this._getData(client, this._params, this._computeOptions(this._options), this._continuationToken);
+            return this._getData(client, this._params, this._computeOptions(this._options), this._continuationToken);
         }).share();
     }
 }

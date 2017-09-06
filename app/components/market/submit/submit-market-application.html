@@ -39,6 +39,7 @@
             </div>
         </bl-form-page>
     </bl-complex-form>
+<<<<<<< HEAD
     <div>
         <div>
             <bl-side-menu [logo] = "icon" [title] = "applicationId" [action] = "actionId"
@@ -53,6 +54,13 @@
                 </bl-button>
             </div>
         </div>
+=======
+    <div class="submit-box" *ngIf="modeState !== Modes.None">
+        <bl-server-error [error]="error"> </bl-server-error>
+        <bl-button [title]="submitToolTip" [disabled]="!isFormValid()" [action]="submit" type="wide" class="submit-job" color="success">
+            <i class="fa fa-play"></i>
+        </bl-button>
+>>>>>>> 39e84b558d589b083f29b19d745291775581bb35
     </div>
 
 </bl-scrollable>

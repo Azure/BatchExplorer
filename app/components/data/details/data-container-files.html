@@ -1,6 +1,1 @@
-<bl-entity-details-list #blobWrapper [showAddButton]="false" [showRefreshButton]="true" [showExpandButton]="false" [enableAdvancedFilter]="false"
-    [refresh]="blobList.refresh" [loadMore]="blobList.loadMore" filterPlaceholder="Filter by file name (case sensitive)">
-
-    <bl-persisted-file-list #blobList [container]="container.id" [filter]="blobWrapper.filter" [quickList]="false" [manualLoading]="true">
-    </bl-persisted-file-list>
-</bl-entity-details-list>
+<bl-blob-files-browser #blobExplorer [container]="container.id" [upload]="handleFileUpload"></bl-blob-files-browser>

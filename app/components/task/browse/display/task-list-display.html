@@ -13,7 +13,7 @@
 
 <bl-table *ngIf="!quickList">
     <bl-thead>
-        <bl-column>Id</bl-column>
+        <bl-column style="width: 200px">Id</bl-column>
         <bl-column>State</bl-column>
         <bl-column>Created</bl-column>
         <bl-column>Started</bl-column>
@@ -22,12 +22,12 @@
     </bl-thead>
 
     <bl-row *ngFor="let task of tasks" [link]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id" [contextmenu]="contextmenu(task)">
-        <bl-cell>{{task.id}}</bl-cell>
-        <bl-cell>{{task.state}}</bl-cell>
-        <bl-cell>{{formatDate(task.creationTime)}}</bl-cell>
-        <bl-cell>{{formatDate(task.executionInfo.startTime)}}</bl-cell>
-        <bl-cell>{{formatDate(task.executionInfo.endTime)}}</bl-cell>
-        <bl-cell>{{task.executionInfo.exitCode}}</bl-cell>
+        <bl-cell [value]="task.id"></bl-cell>
+        <bl-cell [value]="task.state"></bl-cell>
+        <bl-cell [value]="formatDate(task.creationTime)"></bl-cell>
+        <bl-cell [value]="formatDate(task.executionInfo.startTime)"></bl-cell>
+        <bl-cell [value]="formatDate(task.executionInfo.endTime)"></bl-cell>
+        <bl-cell [value]="task.executionInfo.exitCode"></bl-cell>
     </bl-row>
 </bl-table>
 

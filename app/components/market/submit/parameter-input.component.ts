@@ -52,14 +52,32 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
     }
 
     public validate() {
-       const valid = this.parameterValue.valid;
-       if (valid) { return null; }
-       return {
-            validJsonConfig: {
-                valid: false,
-                message: "FormControl is invalid",
-            },
-        };
+        const valid = this.parameterValue.valid;
+        if (valid) {
+            return null;
+        } else {
+            let messageText = "unknown error";
+            const error = this.parameterValue.errors;
+            if (error.minlength) {
+                const minLength = String(error.minlength.requiredLength);
+                messageText = `Should be at least ${minLength} characters`;
+            } else if (error.maxlength) {
+                const maxLength = String(error.maxlength.requiredLength);
+                messageText = `Should be at most ${maxLength} characters`;
+            } else if (error.min) {
+                const minValue = String(error.min.min);
+                messageText = `Should be greater than or equal to ${minValue}`;
+            } else if (error.max) {
+                const maxValue = String(error.max.max);
+                messageText = `Should be less than or equal to ${maxValue}`;
+            }
+            return {
+                validFormInput: {
+                    valid: false,
+                    message: messageText,
+                },
+            };
+        }
     }
 
     public registerOnChange(fn: any): void {

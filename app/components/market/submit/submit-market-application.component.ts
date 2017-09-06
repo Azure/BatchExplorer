@@ -61,7 +61,7 @@ export class SubmitMarketApplicationComponent implements OnInit {
         this.modeState = mode;
     }
 
-    public getToolTip(): string {
+    public get submitToolTip(): string {
         if (this.isFormValid()) {
             return "Click to submit form";
         }
@@ -131,12 +131,11 @@ export class SubmitMarketApplicationComponent implements OnInit {
         }
         const templateFormGroup = {};
         for (let key of templateParameters) {
+            let defaultValue = null;
             if (template.parameters[key].defaultValue) {
-                const defaultValue = String(template.parameters[key].defaultValue);
-                templateFormGroup[key] = new FormControl(defaultValue, Validators.required );
-            } else {
-                templateFormGroup[key] = new FormControl(null, Validators.required);
+                defaultValue = String(template.parameters[key].defaultValue);
             }
+            templateFormGroup[key] = new FormControl(defaultValue, Validators.required);
         }
         return new FormGroup(templateFormGroup);
     }
