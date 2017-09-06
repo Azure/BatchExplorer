@@ -6,7 +6,6 @@ import { Subscription } from "rxjs";
 import { AccountResource, BatchApplication, Job, Pool, ServerError } from "app/models";
 import { AccountParams, AccountService, ApplicationService, JobService, PoolService } from "app/services";
 import { RxEntityProxy, RxListProxy } from "app/services/core";
-import { Constants } from "app/utils";
 
 import "./account-details.scss";
 
