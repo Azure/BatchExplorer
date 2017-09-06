@@ -4,6 +4,7 @@ bl-file-table-view {
     $file-header-height: 40px;
     display: block;
     height: 100%;
+    width: 100%;
 
     .table-wrapper {
         height: calc(100% - #{$file-header-height});
@@ -46,6 +47,9 @@ bl-file-table-view {
         .current-path {
             line-height: $file-header-height;
             vertical-align: middle;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
         }
     }
     .icon {
