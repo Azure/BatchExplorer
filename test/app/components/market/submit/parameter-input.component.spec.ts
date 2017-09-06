@@ -195,8 +195,6 @@ describe("ParameterInputComponent", () => {
             expect(component.parameterValue.valid).toBe(false);
         });
 
-<<<<<<< HEAD
-=======
     });
 
     describe("text parameter type validation", () => {
@@ -233,7 +231,6 @@ describe("ParameterInputComponent", () => {
             expect(component.parameterValue.errors.maxlength).not.toBeUndefined();
         });
 
->>>>>>> 39e84b558d589b083f29b19d745291775581bb35
     });
 
     describe("int parameter type", () => {
