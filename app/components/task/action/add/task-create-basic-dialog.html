@@ -20,9 +20,7 @@
             </div>
 
             <div class="form-element">
-                <md-input-container>
-                    <input mdInput formControlName="commandLine" placeholder="Command line">
-                </md-input-container>
+                <bl-expanding-textarea formControlName="commandLine" placeholder="Command line" hint="New lines will be removed when submitting"></bl-expanding-textarea>
                 <bl-error controlName="commandLine" code="required">Command line is a required field</bl-error>
             </div>
 

@@ -8,6 +8,7 @@ import { ButtonsModule } from "../buttons";
 import { ComplexFormComponent } from "./complex-form";
 import { EditMetadataFormComponent } from "./edit-metadata-form";
 import { EditableTableColumnComponent, EditableTableComponent } from "./editable-table";
+import { ExpandingTextareaComponent } from "./expanding-textarea";
 import { FormErrorComponent } from "./form-error";
 import { FormPageComponent } from "./form-page";
 import { FormMultiPickerComponent, FormPickerComponent, FormPickerItemTemplateDirective } from "./form-picker";
@@ -36,6 +37,7 @@ const components = [
     EditableTableColumnComponent,
     KeyValuePickerComponent,
     EditMetadataFormComponent,
+    ExpandingTextareaComponent,
 ];
 
 @NgModule({
