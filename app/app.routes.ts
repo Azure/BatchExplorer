@@ -3,15 +3,13 @@ import { Routes } from "@angular/router";
 
 import { JobGraphsComponent } from "app/components/job/graphs/job-graphs-home";
 import { ChooseActionComponent } from "app/components/market/application-action";
-import { Constants } from "app/utils";
+import { SettingsComponent } from "app/components/settings";
 import { AccountDefaultComponent, AccountDetailsComponent } from "./components/account/details";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
 import { ApplicationDefaultComponent, ApplicationDetailsComponent } from "./components/application/details";
 import { ApplicationHomeComponent } from "./components/application/home/application-home.component";
 import { DataDefaultComponent, DataDetailsComponent } from "./components/data/details";
 import { DataHomeComponent } from "./components/data/home/data-home.component";
-import { FileDetailsComponent } from "./components/file/details/file-details.component";
-import { FileHomeComponent } from "./components/file/home";
 import { JobDefaultComponent, JobDetailsComponent } from "./components/job/details";
 import { JobHomeComponent } from "./components/job/home/job-home.component";
 import { MarketComponent } from "./components/market/home";
@@ -33,6 +31,10 @@ export const routes: Routes = [
             { path: "", component: AccountDefaultComponent }, // accounts/
             { path: ":id", component: AccountDetailsComponent }, // accounts/{account.id}
         ],
+    },
+    {
+        component: SettingsComponent,
+        path: "settings",
     },
     {
         path: "jobs",
@@ -97,38 +99,6 @@ export const routes: Routes = [
     {
         path: "jobs/:jobId/graphs",
         component: JobGraphsComponent,
-    },
-    {
-        path: "pools/:poolId/nodes/:nodeId/files/:filename",
-        component: FileHomeComponent,
-        data: { type: Constants.FileSourceTypes.Pool },
-        children: [
-            { path: "", component: FileDetailsComponent },
-        ],
-    },
-    {
-        path: "jobs/:jobId/tasks/:taskId/files/:filename",
-        component: FileHomeComponent,
-        data: { type: Constants.FileSourceTypes.Job },
-        children: [
-            { path: "", component: FileDetailsComponent },
-        ],
-    },
-    {
-        path: "jobs/:jobId/tasks/:taskId/:outputKind/blobs/:filename",
-        component: FileHomeComponent,
-        data: { type: Constants.FileSourceTypes.Blob },
-        children: [
-            { path: "", component: FileDetailsComponent },
-        ],
-    },
-    {
-        path: "data/:container/blobs/:filename",
-        component: FileHomeComponent,
-        data: { type: Constants.FileSourceTypes.Blob },
-        children: [
-            { path: "", component: FileDetailsComponent },
-        ],
     },
 ];
 

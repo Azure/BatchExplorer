@@ -19,12 +19,12 @@ import { Record } from "./record";
 export function Prop<T>(...args) {
     return (target, attr, descriptor?: TypedPropertyDescriptor<T>) => {
         const ctr = target.constructor;
+
         const type = Reflect.getMetadata("design:type", target, attr);
         if (!type) {
             throw new Error(`Cannot retrieve the type for RecordAttribute ${target.constructor.name}#${attr}`
                 + ". Check your nested type is defined in another file or above this DtoAttr");
         }
-
         updateTypeMetadata(ctr, attr, { type, list: false });
         if (descriptor) {
             descriptor.writable = false;
@@ -61,26 +61,16 @@ export function Model() {
         if (!(ctr.prototype instanceof Record)) {
             throw new RecordMissingExtendsError(ctr);
         }
-        // save a reference to the original constructor
-        const original = ctr;
 
-        // the new constructor behaviour
-        const f: any = function (this: T, data, ...args) {
-            if (data instanceof ctr) {
-                return data;
+        return (class extends ctr {
+            constructor(...args: any[]) {
+                const [data] = args;
+                if (data instanceof ctr) {
+                    return data;
+                }
+                super(...args);
+                (this as any)._completeInitialization();
             }
-            const obj = original.apply(this, [data, ...args]);
-            obj._completeInitialization();
-            return obj;
-        };
-        // Copy static methods
-        for (let prop of Object.keys(original)) {
-            f[prop] = original[prop];
-        }
-        // copy prototype so intanceof operator still works
-        f.prototype = original.prototype;
-
-        // return new constructor (will override original)
-        return f;
+        });
     };
 }

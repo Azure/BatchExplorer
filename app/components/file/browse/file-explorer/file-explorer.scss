@@ -3,17 +3,16 @@
 bl-file-explorer {
     display: flex;
     width: 100%;
+    height: 100%;
 
     > .tree-explorer-container {
         transition:width 100ms;
         width: $listview-width;
-        height: $contentview-height;
         flex: 0 0 $listview-width;
+        border-right: 1px solid $border-color;
 
-        .header {
-            height: $listview-header-height;
-            padding: 15px 15px 0;
-        }
+        display: flex;
+        flex-direction: column;
 
         .scrollable {
             height: 100%;
@@ -23,6 +22,10 @@ bl-file-explorer {
                 overflow-y: auto;
             }
         }
+
+        > bl-file-tree-view:only-child {
+            flex: 1;
+        }
     }
 
     > .file-content-container {
@@ -30,6 +33,17 @@ bl-file-explorer {
         height: auto;
         background-color: $content-background;
         flex: 1;
+        position: relative;
+        overflow: hidden;
     }
 
+
+    bl-loading {
+        width: 100%;
+    }
+
+    bl-file-details-quickview {
+        width: 100%;
+        display: block;
+    }
 }

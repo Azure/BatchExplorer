@@ -12,6 +12,8 @@ import { FileUtils } from "client/api";
 export interface CommonFolders {
     temp: string;
     downloads: string;
+    appData: string;
+    userData: string;
 }
 
 /**
@@ -27,6 +29,8 @@ export class FileSystemService {
         this.commonFolders = {
             temp: path.join(app.getPath("temp"), "batch-labs"),
             downloads: app.getPath("downloads"),
+            appData: app.getPath("appData"),
+            userData: app.getPath("userData"),
         };
         this._fileUtils = remote.getFileUtils();
     }
