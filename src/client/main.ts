@@ -18,6 +18,10 @@ function startApplication() {
         // Doesn't matter how the protocol is handled; error is fine
         callback();
     });
+
+    // Uncomment to view why windows don't show up.
+    // batchLabsApp.debugCrash();
+
     batchLabsApp.start();
 }
 

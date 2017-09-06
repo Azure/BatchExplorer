@@ -1,3 +1,7 @@
 bl-cloud-file-picker-dialog {
     display: block;
+
+    bl-simple-form .content {
+        padding: 0 !important;
+    }
 }

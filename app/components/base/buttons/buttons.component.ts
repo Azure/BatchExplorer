@@ -5,8 +5,8 @@ import { ButtonAction } from "./button.component";
 import { Job, JobState } from "app/models";
 
 export class BaseButton {
-    @Input()
-    public action: ButtonAction;
+    @Input() public action: ButtonAction;
+    @Input() public tooltipPosition: string = "below";
 }
 
 @Component({
@@ -180,7 +180,8 @@ export class CloneButtonComponent extends BaseButton {
 @Component({
     selector: "bl-download-button",
     template: `
-        <bl-button color="light" [action]="action" [disabled]="!enabled" title="Download" icon="fa fa-download">
+        <bl-button color="light" [action]="action" [disabled]="!enabled" title="Download" icon="fa fa-download"
+            [tooltipPosition]="tooltipPosition">
         </bl-button>
     `,
 })
