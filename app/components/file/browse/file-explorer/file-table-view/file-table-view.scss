@@ -4,6 +4,7 @@ bl-file-table-view {
     $file-header-height: 40px;
     display: block;
     height: 100%;
+    width: 100%;
 
     .table-wrapper {
         height: calc(100% - #{$file-header-height});
