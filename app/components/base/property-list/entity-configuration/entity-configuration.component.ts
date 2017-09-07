@@ -20,7 +20,8 @@ export class EntityConfigurationComponent implements OnChanges {
         mode: "application/json",
         tabSize: 2,
         indentUnit: 2,
-    };
+        autoRefresh: 250,
+    } as any;
 
     constructor(settingsService: SettingsService) {
         const defaultView = settingsService.settings["configuration.default-view"];
@@ -31,7 +32,7 @@ export class EntityConfigurationComponent implements OnChanges {
 
     public ngOnChanges(changes) {
         if (changes.value) {
-            this.jsonValue = JSON.stringify(this.value.toJS(), null, 2);
+            this.jsonValue = JSON.stringify(this.value._original, null, 2);
         }
     }
 
