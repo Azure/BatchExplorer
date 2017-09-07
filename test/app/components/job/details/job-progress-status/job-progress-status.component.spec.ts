@@ -4,8 +4,8 @@ import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
 import { JobProgressStatusComponent } from "app/components/job/details/job-progress-status";
-import { Job, Node, Pool } from "app/models";
-import { NodeService, PoolService, TaskService } from "app/services";
+import { Job, JobTaskCounts, Node, Pool } from "app/models";
+import { JobService, NodeService, PoolService } from "app/services";
 import { PollService } from "app/services/core";
 import { click } from "test/utils/helpers";
 import { RxMockEntityProxy, RxMockListProxy } from "test/utils/mocks";
@@ -29,7 +29,7 @@ describe("JobProgressStatusComponent", () => {
     let de: DebugElement;
     let poolServiceSpy;
     let nodeServiceSpy;
-    let taskServiceSpy;
+    let jobServiceSpy;
     let pollServiceSpy;
 
     beforeEach(() => {
@@ -49,8 +49,14 @@ describe("JobProgressStatusComponent", () => {
             }),
         };
 
-        taskServiceSpy = {
-            countTasks: jasmine.createSpy("countTasks").and.returnValue(Observable.of(4)),
+        jobServiceSpy = {
+            getTaskCounts: jasmine.createSpy("getTaskCounts").and.returnValue(Observable.of(new JobTaskCounts({
+                running: 4,
+                completed: 8,
+                active: 12,
+                failed: 2,
+                succeeded: 6,
+            }))),
         };
 
         pollServiceSpy = {
@@ -63,7 +69,7 @@ describe("JobProgressStatusComponent", () => {
             providers: [
                 { provide: PoolService, useValue: poolServiceSpy },
                 { provide: NodeService, useValue: nodeServiceSpy },
-                { provide: TaskService, useValue: taskServiceSpy },
+                { provide: JobService, useValue: jobServiceSpy },
                 { provide: PollService, useValue: pollServiceSpy },
             ],
         });
@@ -104,5 +110,20 @@ describe("JobProgressStatusComponent", () => {
         click(options[0]);
         fixture.detectChanges();
         expect(gaugeComponent.value).toBe(4, "Should only show job task again");
+    });
+
+    it("should show queued count", () => {
+        const el = de.query(By.css(".queued"));
+        expect(el.nativeElement.textContent).toContain("12");
+    });
+
+    it("should show succeeded count", () => {
+        const el = de.query(By.css(".completed .succeeded"));
+        expect(el.nativeElement.textContent).toContain("6");
+    });
+
+    it("should show failed count", () => {
+        const el = de.query(By.css(".completed .failed"));
+        expect(el.nativeElement.textContent).toContain("2");
     });
 });
