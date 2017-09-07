@@ -65,14 +65,16 @@ export class SideMenuComponent implements OnChanges {
             this.error = null;
             const obs = this.pythonRpcService.callWithAuth("expand-ncj-pool", [this.poolTemplate, this.form.value.pool])
                 .cascade((data) => {
-                    data.vmSize = data.vmSize.toLowerCase();
-                    this.pricingService.computePoolPrice(data as any, { target: true }).subscribe((cost) => {
-                        if (cost) {
-                            this.estimatedCost = `${cost.unit} $${NumberUtils.pretty(cost.total)} / hour`;
-                        } else {
-                            this.estimatedCost = "-";
-                        }
-                    });
+                    if (data.vmSize) {
+                        data.vmSize = data.vmSize.toLowerCase();
+                        this.pricingService.computePoolPrice(data as any, { target: true }).subscribe((cost) => {
+                            if (cost) {
+                                this.estimatedCost = `${cost.unit} $${NumberUtils.pretty(cost.total)} / hour`;
+                            } else {
+                                this.estimatedCost = "-";
+                            }
+                        });
+                    }
             });
             if (obs) {
                 obs.subscribe({
