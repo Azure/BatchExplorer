@@ -41,8 +41,8 @@ describe("GaugeComponent", () => {
         testComponent.size = "medium";
         fixture.detectChanges();
 
-        expect(component.dimensions.outerWidth).toBe(300);
-        expect(component.dimensions.outerHeight).toBe(300);
+        expect(component.dimensions.outerWidth).toBe(200);
+        expect(component.dimensions.outerHeight).toBe(200);
     });
 
     it("should compute the right dimensions when size is a number", () => {
@@ -55,14 +55,14 @@ describe("GaugeComponent", () => {
 
     it("should have created a svg with the right size", () => {
         expect(svg.empty()).toBeFalsy("There should be a svg");
-        expect(svg.attr("width")).toBe("200");
-        expect(svg.attr("height")).toBe("200");
+        expect(svg.attr("width")).toBe("150");
+        expect(svg.attr("height")).toBe("150");
     });
 
     it("svg contains a chart should be centered and a square", () => {
         const chart = svg.select("g");
         expect(chart.empty()).toBe(false);
-        expect(chart.attr("transform")).toBe("translate(100, 100)");
+        expect(chart.attr("transform")).toBe("translate(75, 75)");
     });
 
     describe("Labels", () => {
