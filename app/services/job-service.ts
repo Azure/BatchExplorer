@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable, Subject } from "rxjs";
 
-import { Job } from "app/models";
+import { Job, JobTaskCounts } from "app/models";
 import { JobCreateDto, JobPatchDto } from "app/models/dtos";
 import { Constants, ModelUtils, log } from "app/utils";
 import { List } from "immutable";
@@ -103,9 +103,9 @@ export class JobService extends ServiceBase {
         return this.patch(job.id, attributes);
     }
 
-    public getTaskCounts(jobId: string): Observable<any> {
+    public getTaskCounts(jobId: string): Observable<JobTaskCounts> {
         return this.callBatchClient((client) => client.job.getTaskCounts(jobId), (error) => {
             log.error(`Error getting job task counts: ${jobId}`, error);
-        });
+        }).map(data => new JobTaskCounts(data));
     }
 }
