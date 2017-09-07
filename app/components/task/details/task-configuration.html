@@ -7,7 +7,7 @@
         <bl-text-property label="Previous State" [value]="decorator.previousState"></bl-text-property>
         <bl-text-property label="Creation Time" [value]="decorator.creationTime"></bl-text-property>
         <bl-text-property label="Last modified" [value]="decorator.lastModified"></bl-text-property>
-        <bl-bool-property label="Run elevated" [value]="task.runElevated" yesNo="true"></bl-bool-property>
+        <bl-text-property label="User identity" [value]="decorator.userIdentitySummary"></bl-text-property>
         <bl-text-property label="State transition time" [value]="decorator.stateTransitionTime"></bl-text-property>
         <bl-text-property label="Previous state transition time" [value]="decorator.previousStateTransitionTime"></bl-text-property>
         <bl-text-property label="Exit conditions" *ngIf="!task.exitConditions" value="None"></bl-text-property>

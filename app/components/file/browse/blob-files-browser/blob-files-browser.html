@@ -1,0 +1,3 @@
+<bl-file-explorer [fileNavigator]="fileNavigator" [config]="fileExplorerConfig" (activeFileChange)="activeFileChange.emit($event)"
+    (dropFiles)="handleFileDrop($event)" *ngIf="fileNavigator">
+</bl-file-explorer>

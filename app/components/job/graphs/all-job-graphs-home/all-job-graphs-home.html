@@ -1,0 +1,33 @@
+<div class="graph-header">
+    <div class="summary">
+        <h1>
+            Jobs graphs
+        </h1>
+    </div>
+
+    <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+
+    <div class="filters">
+        <md-select placeholder="Time range" [formControl]="selectedTimeRange">
+            <md-option [value]="TimeRange.hour">Last hour</md-option>
+            <md-option [value]="TimeRange.day">Last 24 hours</md-option>
+            <md-option [value]="TimeRange.week">Last week</md-option>
+        </md-select>
+    </div>
+</div>
+<div *ngIf="jobs" class="graph-content">
+    <div class="job-graph">
+        <bl-jobs-running-time-graph [jobs]="jobs"></bl-jobs-running-time-graph>
+    </div>
+    <div class="job-graph">
+        <bl-jobs-cpu-wait-time-graph [jobs]="jobs"></bl-jobs-cpu-wait-time-graph>
+    </div>
+</div>
+
+<div class="info-overlay" *ngIf="loading">
+    Loading jobs for graphs.
+</div>
+
+<div class="info-overlay" *ngIf="jobs && jobs.size === 0 && !loading">
+    No jobs in the selected time range
+</div>

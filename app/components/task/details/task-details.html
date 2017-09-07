@@ -39,9 +39,7 @@
                 </bl-tab>
                 <bl-tab key="outputs">
                     <bl-tab-label>Task Outputs</bl-tab-label>
-                    <div class="tab-padding">
-                        <bl-task-outputs [jobId]="jobId" [taskId]="taskId"></bl-task-outputs>
-                    </div>
+                    <bl-task-outputs [jobId]="jobId" [taskId]="taskId"></bl-task-outputs>
                 </bl-tab>
                 <bl-tab key="sub-tasks" [disabled]="!hasMultiInstanceSettings">
                     <bl-tab-label>Sub Tasks</bl-tab-label>

@@ -1,7 +1,7 @@
 <div [formGroup]="form">
     <div class="form-element">
         <md-input-container>
-            <input mdInput formControlName="commandLine" placeholder="Command line">
+            <textarea mdInput mdTextareaAutosize mdAutosizeMinRows="1" blSingleLineTextarea formControlName="commandLine" placeholder="Command line"></textarea>
         </md-input-container>
         <bl-error controlName="commandLine" code="required">Command line is a required field</bl-error>
     </div>

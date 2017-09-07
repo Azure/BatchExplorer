@@ -1,0 +1,25 @@
+<section class="tree-explorer-container" *ngIf="config.showTreeView">
+    <bl-file-tree-view *ngFor="let entry of this.fileNavigators"
+        [fileNavigator]="entry.navigator"
+        [name]="entry.name"
+        [autoExpand]="autoExpand"
+        [canDropExternalFiles]="config.canDropExternalFiles"
+        (navigate)="updateCurrentNavigator(entry)"
+        (dropFiles)="handleDrop($event)">
+    </bl-file-tree-view>
+</section>
+<section class="file-content-container">
+    <ng-container *ngIf="currentFileNavigator && currentNode">
+        <bl-file-table-view *ngIf="currentNode.isDirectory"
+            [name]="currentFileNavigatorEntry.name"
+            [treeNode]="currentNode"
+            [canDropExternalFiles]="config.canDropExternalFiles"
+            [loadingStatus]="currentNode.loadingStatus"
+            [error]="currentFileNavigator.error"
+            (select)="nodeSelected($event)"
+            (back)="goBack()"
+            (dropFiles)="handleDrop($event)">
+        </bl-file-table-view>
+        <bl-file-details-view *ngIf="!currentNode.isDirectory" [fileLoader]="currentFileNavigator.currentFileLoader" (back)="goBack()"></bl-file-details-view>
+    </ng-container>
+</section>

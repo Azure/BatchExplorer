@@ -2,7 +2,7 @@ import { SecureUtils, exists } from "app/utils";
 
 export class ContextMenu {
     public args: any[];
-    constructor(public items: ContextMenuItem[]) {
+    constructor(public items: ContextMenuEntry[]) {
     }
 
     /**
@@ -18,17 +18,27 @@ export class ContextMenu {
      *
      */
     public withArgs(...args: any[]) {
-        return new ContextMenu(this.items.map(item => item.withArgs(...args)));
+        return new ContextMenu(this.items.map(item => {
+            if (item instanceof ContextMenuItem) {
+                return item.withArgs(...args);
+            } else {
+                return item;
+            }
+        }));
     }
 }
 
-interface ContextMenuItemConfig {
+export interface ContextMenuItemConfig {
     label: string;
     click: (...args) => void;
     enabled?: boolean;
 }
 
-export class ContextMenuItem {
+export interface ContextMenuEntry {
+
+}
+
+export class ContextMenuItem implements ContextMenuEntry {
     public id: string;
     public label: string;
     public callbackArgs: any[] = [];
@@ -63,4 +73,8 @@ export class ContextMenuItem {
         clone.callbackArgs = args;
         return clone;
     }
+}
+
+export class ContextMenuSeparator implements ContextMenuEntry {
+
 }

@@ -18,6 +18,7 @@ bl-table {
         table-layout: fixed;
     }
 
+
     bl-thead {
         display: table-header-group;
         color: $genericGray;
@@ -27,11 +28,31 @@ bl-table {
         }
     }
 
+    .checkbox-column {
+        width: 30px;
+        padding: 5px;
+
+        .mat-checkbox-frame {
+            border-color: $alto;
+        }
+
+        &:hover {
+            .mat-checkbox-frame {
+                border-color: map-get($primary, 600);
+            }
+        }
+    }
+
+    table.activable {
+        tbody > tr {
+            cursor: pointer;
+        }
+    }
+
     tbody {
         display: table-header-group;
 
         > tr {
-            cursor: default;
             border-top: 1px $athensGrey solid;
             height: $table-row-height;
 
@@ -44,7 +65,12 @@ bl-table {
             }
 
             &.focused {
-                background-color: map-get($primary, 200);
+                outline: 2px dashed map-get($primary, 200);
+                outline-offset: -2px;
+            }
+
+            &.drop-target {
+                background: $altoGray;
             }
 
             &:hover:not(.selected) {
