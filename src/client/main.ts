@@ -2,7 +2,7 @@ import { app, dialog, ipcMain, protocol } from "electron";
 import * as path from "path";
 app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 
-import { batchLabsApp } from "./core";
+import { batchLabsApp, listenToSelectCertifcateEvent } from "./core";
 import { logger } from "./logger";
 import { PythonRpcServerProcess } from "./python-process";
 
@@ -30,37 +30,4 @@ function startApplication() {
 // Some APIs can only be used after this event occurs.
 app.on("ready", startApplication);
 
-interface X509Certificate {
-    issuerName: string;
-    data: string;
-    issuer: any;
-    subject: any;
-}
-
-app.on("select-client-certificate", (
-    event: Event,
-    webcontents: Electron.WebContents,
-    url: string,
-    certificates: Electron.Certificate[],
-    callback: (certificate: Electron.Certificate) => void) => {
-
-    console.log("Show certificates", certificates);
-    if (certificates.length <= 1) {
-        // Default behavior is appropriate
-        return false;
-    }
-    event.preventDefault();
-    const picked = dialog.showMessageBox({
-        message: "Pick certificate",
-        buttons: certificates.map(x => x.issuerName),
-    });
-
-    console.log("picked", picked, certificates[picked]);
-    callback(certificates[picked]);
-
-    let index = -1;
-
-    if (index >= 0) {
-        callback(certificates[index]);
-    }
-});
+listenToSelectCertifcateEvent();
