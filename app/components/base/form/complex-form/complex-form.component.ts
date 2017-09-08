@@ -123,12 +123,12 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
     }
 
     public switchToClassicForm() {
-        this.showJsonEditor = true;
+        this.showJsonEditor = false;
         if (!this.config.jsonEditor) { return; }
         console.log("JSON", this.jsonValue.value);
         const dto = new this.config.jsonEditor.dtoType(JSON.parse(this.jsonValue.value));
         const formValue = this.config.jsonEditor.fromDto(dto);
-        this.formGroup.setValue(formValue);
+        this.formGroup.patchValue(formValue);
     }
 
     public get saveAndCloseText() {

@@ -1,5 +1,6 @@
-import { Component, forwardRef } from "@angular/core";
-import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { Component, OnDestroy, forwardRef } from "@angular/core";
+import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { Subscription } from "rxjs";
 
 import "./form-json-editor.scss";
 
@@ -11,8 +12,8 @@ import "./form-json-editor.scss";
         { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => FormJsonEditorComponent), multi: true },
     ],
 })
-export class FormJsonEditorComponent implements ControlValueAccessor {
-    public value: string = "{\n}\n";
+export class FormJsonEditorComponent implements ControlValueAccessor, OnDestroy {
+    public jsonControl = new FormControl("{\n}\n");
 
     public editorConfig: CodeMirror.EditorConfiguration = {
         lineNumbers: true,
@@ -25,16 +26,26 @@ export class FormJsonEditorComponent implements ControlValueAccessor {
 
     private _propagateChange: any;
     private _propagateTouched: any;
+    private _sub: Subscription;
+
+    constructor() {
+        this._sub = this.jsonControl.valueChanges.subscribe((value) => {
+            this.valueChange(value);
+        });
+    }
+
+    public ngOnDestroy() {
+        this._sub.unsubscribe();
+    }
 
     public valueChange(newValue: string) {
-        this.value = newValue;
         if (this._propagateChange) {
             this._propagateChange(newValue);
         }
     }
 
     public writeValue(value: string): void {
-        this.value = value;
+        this.jsonControl.setValue(value);
     }
     public registerOnChange(fn: any): void {
         this._propagateChange = fn;
