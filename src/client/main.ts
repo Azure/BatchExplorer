@@ -1,8 +1,8 @@
-import { app, ipcMain, protocol } from "electron";
+import { app, dialog, ipcMain, protocol } from "electron";
 import * as path from "path";
 app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 
-import { batchLabsApp } from "./core";
+import { batchLabsApp, listenToSelectCertifcateEvent } from "./core";
 import { logger } from "./logger";
 import { PythonRpcServerProcess } from "./python-process";
 
@@ -29,3 +29,17 @@ function startApplication() {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on("ready", startApplication);
+
+listenToSelectCertifcateEvent();
+
+process.on("exit", () => {
+    pythonServer.stop();
+});
+
+process.on("SIGINT", () => {
+    process.exit(-1);
+});
+
+process.on("SIGINT", () => {
+    process.exit(-2);
+});

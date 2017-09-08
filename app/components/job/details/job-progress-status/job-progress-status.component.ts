@@ -3,11 +3,12 @@ import { List } from "immutable";
 import { Subscription } from "rxjs";
 
 import { GaugeConfig } from "app/components/base/graphs/gauge";
-import { Job, Node, Pool, TaskState } from "app/models";
-import { NodeListParams, NodeService, PoolParams, PoolService, TaskService } from "app/services";
+import { Job, JobTaskCounts, Node, Pool } from "app/models";
+import { JobService, NodeListParams, NodeService, PoolParams, PoolService } from "app/services";
 import { PollObservable, PollService, RxEntityProxy, RxListProxy } from "app/services/core";
 
 const refreshRate = 5000;
+import "./job-progress-status.scss";
 
 @Component({
     selector: "bl-job-progress-status",
@@ -25,20 +26,24 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
 
     public showAllPoolTasks = false;
     public runningTasksCount = 0;
+    public queuedTaskCount: string = "-";
+    public succeededTaskCount: string = "-";
+    public failedTaskCount: string = "-";
     public maxRunningTasks = 0;
     public gaugeOptions: GaugeConfig;
+    public jobTaskCounts: JobTaskCounts = new JobTaskCounts();
+    public progress = null;
 
     private data: RxListProxy<NodeListParams, Node>;
     private poolData: RxEntityProxy<PoolParams, Pool>;
 
     private _polls: PollObservable[] = [];
     private _subs: Subscription[] = [];
-    private _runningTaskCountForJob: number = 0;
 
     constructor(
         poolService: PoolService,
         nodeService: NodeService,
-        private taskService: TaskService,
+        private jobService: JobService,
         pollService: PollService,
     ) {
         this.poolData = poolService.get(null);
@@ -92,8 +97,14 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
         if (this.showAllPoolTasks) {
             const taskCountPerNode = this.nodes.map(x => x.runningTasksCount);
             this.runningTasksCount = taskCountPerNode.reduce((a, b) => a + b, 0);
+            this.queuedTaskCount = "-";
+            this.failedTaskCount = "-";
+            this.succeededTaskCount = "-";
         } else {
-            this.runningTasksCount = this._runningTaskCountForJob;
+            this.runningTasksCount = this.jobTaskCounts.running;
+            this.queuedTaskCount = this.jobTaskCounts.active.toString();
+            this.failedTaskCount = this.jobTaskCounts.failed.toString();
+            this.succeededTaskCount = this.jobTaskCounts.succeeded.toString();
         }
     }
 
@@ -117,12 +128,26 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
     }
 
     private _updateJobRunningTasks() {
-        const obs = this.taskService.countTasks(this.job.id, TaskState.running);
+        const obs = this.jobService.getTaskCounts(this.job.id);
 
         obs.subscribe((x) => {
-            this._runningTaskCountForJob = x;
+            this.jobTaskCounts = x;
             this.countRunningTasks();
+            this._computeProgress();
         });
         return obs;
     }
+
+    private _computeProgress() {
+        if (this.jobTaskCounts.total === 0) {
+            this.progress = null;
+        } else {
+            const total = this.jobTaskCounts.total;
+            this.progress = {
+                completed: (this.jobTaskCounts.completed / total * 100).toFixed(2),
+                buffer: ((this.jobTaskCounts.completed + this.jobTaskCounts.running) / total * 100).toFixed(2),
+            };
+        }
+    }
+
 }
