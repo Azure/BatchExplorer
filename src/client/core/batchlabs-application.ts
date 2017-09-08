@@ -3,7 +3,6 @@ import { app, ipcMain } from "electron";
 import { AuthenticationWindow } from "../authentication";
 import { logger } from "../logger";
 import { MainWindow } from "../main-window";
-import { PythonRpcServerProcess } from "../python-process";
 import { RecoverWindow } from "../recover-window";
 import { SplashScreen } from "../splash-screen";
 
@@ -12,10 +11,8 @@ export class BatchLabsApplication {
     public authenticationWindow = new AuthenticationWindow();
     public recoverWindow = new RecoverWindow();
     public mainWindow = new MainWindow();
-    public pythonServer = new PythonRpcServerProcess();
 
     public init() {
-        this.pythonServer.start();
         this.setupProcessEvents();
     }
 
@@ -74,7 +71,6 @@ export class BatchLabsApplication {
     }
 
     public quit() {
-        this.pythonServer.stop();
         app.quit();
     }
 }

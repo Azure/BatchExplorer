@@ -4,6 +4,10 @@ app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 
 import { batchLabsApp, listenToSelectCertifcateEvent } from "./core";
 import { logger } from "./logger";
+import { PythonRpcServerProcess } from "./python-process";
+
+const pythonServer = new PythonRpcServerProcess();
+pythonServer.start();
 
 batchLabsApp.init();
 
@@ -27,3 +31,15 @@ function startApplication() {
 app.on("ready", startApplication);
 
 listenToSelectCertifcateEvent();
+
+process.on("exit", () => {
+    pythonServer.stop();
+});
+
+process.on("SIGINT", () => {
+    process.exit(-1);
+});
+
+process.on("SIGINT", () => {
+    process.exit(-2);
+});
