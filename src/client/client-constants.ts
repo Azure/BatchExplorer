@@ -1,11 +1,29 @@
 import { app } from "electron";
 import * as mkdirp from "mkdirp";
+import * as net from "net";
 import * as path from "path";
-
 /**
  * Root of BatchLabs(This is relative to where this file is when in the build folder)
  */
 const root = path.join(__dirname, "../..");
+
+const portrange = 45032;
+function getPort(port = portrange): Promise<number> {
+    return new Promise((resolve, reject) => {
+        const server = net.createServer();
+        server.listen(port, (err) => {
+            server.once("close", () => {
+                resolve(port);
+            });
+            server.close();
+        });
+        server.on("error", (err) => {
+            getPort(port + 1).then((x) => {
+                resolve(x);
+            });
+        });
+    });
+}
 
 // tslint:disable-next-line:no-var-requires
 const packageConfig = require(`${root}/package.json`);
@@ -30,11 +48,17 @@ const isAsar = process.mainModule.filename.indexOf("app.asar") !== -1;
 const logsFolder = isAsar ? path.join(app.getPath("userData"), "logs") : path.join(root, "logs");
 mkdirp.sync(logsFolder);
 
+const pythonServerPort = {
+    dev: Promise.resolve(8765),
+    prod: getPort(),
+};
+
 // tslint:disable-next-line:variable-name
 export const Constants = {
     isAsar,
     root,
     urls,
     logsFolder,
+    pythonServerPort,
     version: packageConfig.version,
 };

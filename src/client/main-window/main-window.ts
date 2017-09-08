@@ -39,6 +39,7 @@ export class MainWindow extends UniqueWindow {
         anyWindow.splashScreen = batchLabsApp.splashScreen;
         anyWindow.authenticationWindow = batchLabsApp.authenticationWindow;
         anyWindow.fileUtils = new FileUtils();
+        anyWindow.clientConstants = Constants;
 
         // Open the DevTools.
         if (process.env.NODE_ENV !== "production") {

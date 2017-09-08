@@ -50,17 +50,23 @@ export class PythonRpcServerProcess {
         this.start();
     }
 
-    private _getCommandLine(): Promise<{ cmd: string, args: string[] }> {
-        if (Constants.isAsar) {
-            return Promise.resolve({ cmd: asarPath, args: [] });
-        } else {
-            return getPythonPath().then(pythonPath => {
-                return {
-                    cmd: pythonPath,
-                    args: [localPath],
-                };
-            });
-        }
+    private async _getCommandLine(): Promise<{ cmd: string, args: string[] }> {
+        const portPromise = process.env.HOT ? Constants.pythonServerPort.dev : Constants.pythonServerPort.prod;
+
+        return portPromise.then((port) => {
+            const portStr = port.toString();
+            if (Constants.isAsar) {
+                return { cmd: asarPath, args: [portStr] };
+            } else {
+                return getPythonPath().then(pythonPath => {
+                    return {
+                        cmd: pythonPath,
+                        args: [localPath, portStr],
+                    };
+                });
+            }
+        });
+
     }
 
     private _createLogFileStream(): fs.WriteStream {
