@@ -137,7 +137,6 @@ export class SubmitMarketApplicationComponent implements OnInit {
                 defaultValue = String(template.parameters[key].defaultValue);
                 if (template.parameters[key].defaultValue === "") {
                     validator = null;
-                    console.log(key);
                 }
             }
             templateFormGroup[key] = new FormControl(defaultValue, validator);
