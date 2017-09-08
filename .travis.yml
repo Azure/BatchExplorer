@@ -8,10 +8,9 @@ python:
 
 before_install:
   - pyenv versions
-  - pyenv update
   - pyenv install --list
-  - pyenv install 3.6.2
-  - pyenv global 3.6.2
+  - pyenv install 3.6.0
+  - pyenv global 3.6.0
   - python --version
   - python3 --version
 
