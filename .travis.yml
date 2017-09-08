@@ -1,4 +1,3 @@
-language: node_js
 dist: trusty
 sudo: false
 node_js:
@@ -12,8 +11,8 @@ before_install:
 install:
   - npm install -g yarn
   - yarn install
-  - python3 --version
-  - pip3 install -r python/requirements.txt
+  - python --version
+  - pip install -r python/requirements.txt
 
 before_script:
   - export DISPLAY=:99.0
