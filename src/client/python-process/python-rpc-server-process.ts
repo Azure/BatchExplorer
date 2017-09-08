@@ -4,7 +4,7 @@ import * as net from "net";
 import * as path from "path";
 
 import { Constants } from "../client-constants";
-import { logger } from "../logger";
+import { logger, pythonLogger } from "../logger";
 import { getPythonPath } from "./python-executable";
 
 const asarPath = path.join(Constants.root, "../python-rpc/main");
@@ -22,10 +22,17 @@ export class PythonRpcServerProcess {
         this._askForKill = false;
         return this._getCommandLine().then((data) => {
             logger.info("Python path is", data.cmd, { args: data.args });
-            const logStream = this._createLogFileStream();
             const child = this._spawedProcess = spawn(data.cmd, [...data.args]);
-            child.stdout.pipe(logStream);
-            child.stderr.pipe(logStream);
+            pythonLogger.info("========================= STARTING PYTHON RPC SERVER PROCESS =========================");
+
+            child.stdout.on("data", (data) => {
+                pythonLogger.info(data);
+            });
+
+            child.stderr.on("data", (data) => {
+                pythonLogger.error(data);
+            });
+
             child.on("exit", (code) => {
                 if (this._askForKill) {
                     logger.info("Python rpc server has stopped!");
@@ -67,9 +74,5 @@ export class PythonRpcServerProcess {
             }
         });
 
-    }
-
-    private _createLogFileStream(): fs.WriteStream {
-        return fs.createWriteStream(path.join(logsFolder, "python-server.log"), { flags: "a" });
     }
 }

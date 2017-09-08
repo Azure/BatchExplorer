@@ -25,6 +25,22 @@ export const logger = bunyan.createLogger({
     ],
 });
 
+export const pythonLogger = bunyan.createLogger({
+    name: "BatchLabs Python",
+    level: "debug",
+    streams: [
+        {
+            stream: stream as any,
+        },
+        {
+            type: "rotating-file",
+            path: path.join(logsFolder, "python-server.log"),
+            period: "1d",       // daily rotation
+            count: 3,           // keep 3 back copies
+        },
+    ],
+});
+
 export const renderLogger = bunyan.createLogger({
     name: "BatchLabs Renderer",
     level: "debug",
