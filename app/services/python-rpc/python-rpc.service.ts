@@ -5,8 +5,6 @@ import { AsyncSubject, Observable, Subject } from "rxjs";
 import { AccountService } from "../account.service";
 import { AdalService } from "../adal";
 
-const portConfig = Constants.Client.pythonServerPort;
-
 export interface JsonRpcRequest {
     jsonrpc: string;
     id: string;
@@ -67,6 +65,7 @@ export class PythonRpcService {
      * Call this if the connection got cut to try again.
      */
     public resetConnection(): Observable<any> {
+        const portConfig = Constants.Client.pythonServerPort;
         const portPromise = process.env.HOT ? portConfig.dev : portConfig.prod;
         portPromise.then((port) => {
             this._ready = new AsyncSubject<any>();
