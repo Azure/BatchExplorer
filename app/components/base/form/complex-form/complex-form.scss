@@ -3,6 +3,7 @@
 bl-complex-form {
     display: block;
     // height: $contentview-height;
+    $header-height: 60px;
     $footer-height: 60px;
     overflow: hidden;
 
@@ -21,7 +22,7 @@ bl-complex-form {
     &.sticky-footer {
         height: 100%;
 
-        > .content {
+        > .content .classic-form {
             padding-bottom: 100px;
         }
 
@@ -31,20 +32,30 @@ bl-complex-form {
     }
 
     .header {
-        h1 {
-            padding: 0 8px;
+        display: flex;
+        margin: 10px;
+
+        > .main {
+            flex: 1;
+
+            h1 {
+                padding: 0 8px;
+            }
+
+            p {
+                padding: 0 10px;
+            }
         }
 
-        p {
-            padding: 0 10px;
+        .toggle-mode {
+            margin: 0 10px;
         }
     }
 
     > .content {
-        overflow: auto;
+        overflow-y: auto;
         position: relative;
         height: calc(100% - #{$footer-height});
-        padding: 10px 5px;
 
         > .loading-overlay {
             position: absolute;
@@ -54,6 +65,14 @@ bl-complex-form {
             left: 0;
             bottom: 0;
             right: 0;
+        }
+
+        .classic-form {
+            padding: 10px 5px;
+        }
+
+        .json-editor-container {
+            height: calc(100% - #{$header-height});
         }
 
     }

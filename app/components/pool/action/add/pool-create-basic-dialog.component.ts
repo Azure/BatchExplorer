@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable, Subscription } from "rxjs";
 
+import { ComplexFormConfig } from "app/components/base/form";
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { DynamicForm } from "app/core";
@@ -22,7 +23,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     public NodeFillType = NodeFillType;
 
     public estimatedCost: string = "-";
-
+    public complexFormConfig: ComplexFormConfig;
     private _osControl: FormControl;
     private _licenseControl: FormControl;
     private _renderingSkuSelected: boolean = false;
@@ -38,7 +39,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         private pricingService: PricingService,
         private notificationService: NotificationService) {
         super(PoolCreateDto);
-
+        this._setComplexFormConfig();
         this._osControl = this.formBuilder.control({}, Validators.required);
         this._licenseControl = this.formBuilder.control([]);
 
@@ -141,5 +142,15 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
                 this.estimatedCost = "-";
             }
         });
+    }
+
+    private _setComplexFormConfig() {
+        this.complexFormConfig = {
+            jsonEditor: {
+                dtoType: PoolCreateDto,
+                toDto: (value) => this.formToDto(value),
+                fromDto: (value) => this.dtoToForm(value),
+            },
+        };
     }
 }

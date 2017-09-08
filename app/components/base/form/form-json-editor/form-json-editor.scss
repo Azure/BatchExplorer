@@ -1,0 +1,11 @@
+@import "app/styles/variables";
+
+bl-form-json-editor {
+    display: block;
+    height: 100%;
+    border-top: 1px solid $border-color;
+
+    .CodeMirror {
+        height: 100%;
+    }
+}

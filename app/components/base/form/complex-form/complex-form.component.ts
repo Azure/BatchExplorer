@@ -1,14 +1,32 @@
 import {
-    AfterViewInit, ChangeDetectorRef, Component, ContentChildren, HostBinding, Input, QueryList,
+    AfterViewInit, ChangeDetectorRef, Component, ContentChildren, HostBinding, Input, QueryList, Type,
 } from "@angular/core";
+import { FormControl } from "@angular/forms";
 import { autobind } from "core-decorators";
 
+import { Dto } from "app/core";
 import { log } from "app/utils";
 import { FormBase } from "../form-base";
 import { FormPageComponent } from "../form-page";
 import "./complex-form.scss";
 
 export type FormSize = "small" | "medium" | "large";
+
+export interface ComplexFormConfig {
+    /**
+     * To enable the form to provide a json editor set this.
+     * It will have an option to set entities using json
+     */
+    jsonEditor?: {
+        dtoType: Type<Dto<any>>,
+        toDto: (formValue: any) => Dto<any>;
+        fromDto: (jsonObj: any) => any;
+    } | false;
+}
+
+export const defaultComplexFormConfig: ComplexFormConfig = {
+    jsonEditor: false,
+};
 
 @Component({
     selector: "bl-complex-form",
@@ -20,31 +38,26 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
      * If true the form will have a "Save" AND a "Save and Close" button.
      * If false the form will only have a "Save" button
      */
-    @Input()
-    public multiUse = true;
+    @Input() public multiUse = true;
 
-    @Input()
-    public actionName = "Save";
+    @Input() public actionName = "Save";
 
-    @Input()
-    public actionColor = "primary";
+    @Input() public actionColor = "primary";
 
-    @Input()
-    public cancelText = "Close";
+    @Input() public cancelText = "Close";
 
-    @Input()
-    @HostBinding("class")
-    public size: FormSize = "large";
+    @Input() public config: ComplexFormConfig = defaultComplexFormConfig;
 
-    @Input()
-    @HostBinding("class.sticky-footer")
-    public stickyFooter: boolean = true;
+    @Input() @HostBinding("class") public size: FormSize = "large";
 
-    @ContentChildren(FormPageComponent)
-    public pages: QueryList<FormPageComponent>;
+    @Input() @HostBinding("class.sticky-footer") public stickyFooter: boolean = true;
+
+    @ContentChildren(FormPageComponent) public pages: QueryList<FormPageComponent>;
 
     public mainPage: FormPageComponent;
     public currentPage: FormPageComponent;
+    public showJsonEditor = false;
+    public jsonValue = new FormControl();
 
     private _pageStack: FormPageComponent[] = [];
 
@@ -100,6 +113,22 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
         this.currentPage.cancel.emit();
         this.currentPage.formGroup.reset();
         this.closePage();
+    }
+
+    public switchToJsonEditor() {
+        if (!this.config.jsonEditor) { return; }
+        this.showJsonEditor = true;
+        const obj = this.config.jsonEditor.toDto(this.formGroup.value).toJS();
+        this.jsonValue.setValue(JSON.stringify(obj, null, 2));
+    }
+
+    public switchToClassicForm() {
+        this.showJsonEditor = true;
+        if (!this.config.jsonEditor) { return; }
+        console.log("JSON", this.jsonValue.value);
+        const dto = new this.config.jsonEditor.dtoType(JSON.parse(this.jsonValue.value));
+        const formValue = this.config.jsonEditor.fromDto(dto);
+        this.formGroup.setValue(formValue);
     }
 
     public get saveAndCloseText() {

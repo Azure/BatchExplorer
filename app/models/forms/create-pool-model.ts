@@ -82,7 +82,7 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
         data.applicationLicenses = output.appLicenses;
     }
 
-    return data;
+    return new PoolCreateDto(data);
 }
 
 /**
