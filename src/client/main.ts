@@ -4,10 +4,6 @@ app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 
 import { batchLabsApp, listenToSelectCertifcateEvent } from "./core";
 import { logger } from "./logger";
-import { PythonRpcServerProcess } from "./python-process";
-
-const pythonServer = new PythonRpcServerProcess();
-pythonServer.start();
 
 batchLabsApp.init();
 
