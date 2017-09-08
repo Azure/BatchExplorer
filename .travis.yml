@@ -11,8 +11,8 @@ before_install:
 install:
   - npm install -g yarn
   - yarn install
-  - python --version
-  - pip install -r python/requirements.txt
+  - python3 --version
+  - pip3 install -r python/requirements.txt
 
 before_script:
   - export DISPLAY=:99.0
