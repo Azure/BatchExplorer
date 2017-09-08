@@ -4,6 +4,7 @@ import { Constants } from "../../src/client/client-constants";
 
 const thirdPartyNoticeFile = path.join(Constants.root, "ThirdPartyNotices.txt");
 const outputStream = fs.createWriteStream(thirdPartyNoticeFile, { flags: "w" });
+const gitUrlRegex = /(?:git|ssh|https?|git@[-\w.]+):(\/\/)?(.*?)(\.git)(\/?|\#[-\d\w._]+?)$/;
 
 // tslint:disable:no-console
 const licensesFilenames = [
@@ -27,15 +28,25 @@ function loadDependency(name: string) {
     const contents = fs.readFileSync(`node_modules/${name}/package.json`).toString();
     const dependency = JSON.parse(contents);
 
+    const url = dependency.homepage || getRepoUrl(dependency);
     return {
         name: dependency.name,
         version: dependency.version,
         authors: dependency.author,
-        url: dependency.homepage,
+        url: url,
         licenseType: dependency.license,
     };
 }
 
+function getRepoUrl(dependency) {
+    const repo = dependency.repository;
+    if (typeof repo === "string") {
+        return `https://github.com/${repo}`;
+    }
+    const match = gitUrlRegex.exec(repo.url);
+    if (!match) { return null; }
+    return `https://${match[2]}`;
+}
 function loadLicense(name: string) {
     return null;
 }
