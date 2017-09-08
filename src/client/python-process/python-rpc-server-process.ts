@@ -46,18 +46,21 @@ export class PythonRpcServerProcess {
     }
 
     private async _getCommandLine(): Promise<{ cmd: string, args: string[] }> {
-        const port = process.env.HOT ? Constants.pythonServerPort.dev : Constants.pythonServerPort.prod;
-        const portStr =  (await port).toString();
+        const portPromise = process.env.HOT ? Constants.pythonServerPort.dev : Constants.pythonServerPort.prod;
 
-        if (Constants.isAsar) {
-            return Promise.resolve({ cmd: asarPath, args: [portStr] });
-        } else {
-            return getPythonPath().then(pythonPath => {
-                return {
-                    cmd: pythonPath,
-                    args: [localPath, portStr],
-                };
-            });
-        }
+        return portPromise.then((port) => {
+            const portStr = port.toString();
+            if (Constants.isAsar) {
+                return { cmd: asarPath, args: [portStr] };
+            } else {
+                return getPythonPath().then(pythonPath => {
+                    return {
+                        cmd: pythonPath,
+                        args: [localPath, portStr],
+                    };
+                });
+            }
+        });
+
     }
 }
