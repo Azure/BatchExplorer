@@ -1,11 +1,14 @@
 dist: trusty
 sudo: false
 node_js:
-    - '6.9.4'
+  - '6.9.4'
 python:
   - "3.6"
 
 before_install:
+  - pyenv versions
+  - pyenv global 3.6
+  - python --version
   - python3 --version
 
 install:
