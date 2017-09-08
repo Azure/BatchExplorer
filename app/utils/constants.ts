@@ -1,4 +1,6 @@
 // tslint:disable:variable-name
+import { Constants as ClientConstants } from "client/client-constants";
+import { remote } from "electron";
 
 export const caching = {
     /**
@@ -166,3 +168,5 @@ export const LowPriDiscount = {
     windows: 0.40, // 60%
     linux: 0.20,   // 80%
 };
+
+export const Client: ClientConstants = (remote.getCurrentWindow() as any).clientConstants;

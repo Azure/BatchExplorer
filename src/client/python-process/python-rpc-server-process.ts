@@ -1,4 +1,5 @@
 import { ChildProcess, spawn } from "child_process";
+import * as net from "net";
 import * as path from "path";
 
 import { Constants } from "../client-constants";
@@ -44,14 +45,17 @@ export class PythonRpcServerProcess {
         this.start();
     }
 
-    private _getCommandLine(): Promise<{ cmd: string, args: string[] }> {
+    private async _getCommandLine(): Promise<{ cmd: string, args: string[] }> {
+        const port = process.env.HOT ? Constants.pythonServerPort.dev : Constants.pythonServerPort.prod;
+        const portStr =  (await port).toString();
+
         if (Constants.isAsar) {
-            return Promise.resolve({ cmd: asarPath, args: [] });
+            return Promise.resolve({ cmd: asarPath, args: [portStr] });
         } else {
             return getPythonPath().then(pythonPath => {
                 return {
                     cmd: pythonPath,
-                    args: [localPath],
+                    args: [localPath, portStr],
                 };
             });
         }
