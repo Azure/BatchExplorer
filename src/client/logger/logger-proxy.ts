@@ -1,14 +1,10 @@
 import * as bunyan from "bunyan";
-import { app } from "electron";
-import * as mkdirp from "mkdirp";
 import * as path from "path";
 
 import { Constants } from "../client-constants";
 import { PrettyStream } from "./pretty-stream";
 
-const logsFolder = Constants.isAsar ? path.join(app.getPath("userData"), "logs") : path.join(Constants.root, "logs");
-
-mkdirp.sync(logsFolder);
+const logsFolder = Constants.logsFolder;
 
 const stream = new PrettyStream();
 stream.pipe(process.stderr);

@@ -1,3 +1,5 @@
+import { app } from "electron";
+import * as mkdirp from "mkdirp";
 import * as path from "path";
 
 /**
@@ -25,11 +27,14 @@ const urls = {
 };
 
 const isAsar = process.mainModule.filename.indexOf("app.asar") !== -1;
+const logsFolder = isAsar ? path.join(app.getPath("userData"), "logs") : path.join(root, "logs");
+mkdirp.sync(logsFolder);
 
 // tslint:disable-next-line:variable-name
 export const Constants = {
     isAsar,
     root,
     urls,
+    logsFolder,
     version: packageConfig.version,
 };
