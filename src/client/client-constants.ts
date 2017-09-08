@@ -45,8 +45,7 @@ const urls = {
 const isAsar = process.mainModule.filename.indexOf("app.asar") !== -1;
 
 const pythonServerPort = {
-    // dev: Promise.resolve(8765),
-    dev: getPort(),
+    dev: Promise.resolve(8765),
     prod: getPort(),
 };
 
