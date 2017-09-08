@@ -15,7 +15,7 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then # Only run the CI checks on the linux 
 fi
 
 # Only run prod build if on a branch build or PR for stable
-if [ "${TRAVIS_PULL_REQUEST}" = "false" ] || [ "${TRAVIS_BRANCH}" = "stable" || [ "${TRAVIS_BRANCH}" = "feature/publish"  ]; then
+if [ "${TRAVIS_PULL_REQUEST}" = "false" ] || [ "${TRAVIS_BRANCH}" = "stable" ] || [ "${TRAVIS_BRANCH}" = "feature/publish"  ]; then
 	npm run -s build:prod
     npm run -s build-python
     npm run package -- --publish always --draft # TODO remove this
