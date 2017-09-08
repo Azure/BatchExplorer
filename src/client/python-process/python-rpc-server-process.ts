@@ -64,7 +64,6 @@ export class PythonRpcServerProcess {
     }
 
     private _createLogFileStream(): fs.WriteStream {
-        console.log("Open python server logs", path.join(logsFolder, "python-server.log"));
         return fs.createWriteStream(path.join(logsFolder, "python-server.log"), { flags: "a" });
     }
 }
