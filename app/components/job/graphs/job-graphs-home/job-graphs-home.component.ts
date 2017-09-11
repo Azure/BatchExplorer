@@ -106,9 +106,7 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public downloadCsv() {
-        console.log("Download scg");
         const csv = tasksToCsv(this.tasks);
-        console.log("Csv", csv);
 
         const dest = path.join(this.fs.commonFolders.downloads, `${this.jobId}.csv`);
         return Observable.fromPromise(this.fs.saveFile(dest, csv).then(() => {
