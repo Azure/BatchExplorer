@@ -88,6 +88,9 @@ bl-file-tree-view {
         height: 22px;
         vertical-align: middle;
         user-select: none;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
 
         &:hover {
             background: $whitesmoke-darker;

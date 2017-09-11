@@ -32,6 +32,7 @@ export * from "./job-manager-task";
 export * from "./job-preparation-task";
 export * from "./job-release-task";
 export * from "./job-stats";
+export * from "./job-task-counts";
 export * from "./key-bindings";
 export * from "./list-result";
 export * from "./metadata";

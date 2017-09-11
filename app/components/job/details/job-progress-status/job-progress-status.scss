@@ -1,0 +1,78 @@
+@import "app/styles/variables";
+
+bl-job-progress-status {
+    display: block;
+    padding-top: 5px;
+
+    .running-task-status {
+        display: flex;
+    }
+
+    .running {
+        width: 180px;
+        height: 170px;
+    }
+
+    .queued, .completed {
+        text-align: center;
+        .value {
+            font-size: 20px;
+        }
+
+        .label {
+            color: $alto;
+        }
+    }
+
+    .queued {
+        margin: 82px 10px 0;
+    }
+
+    .completed {
+        margin: 58px 10px 0;
+
+        > .succeeded {
+            color: map-get($success, 500);
+            margin-bottom: 20px;
+        }
+
+        > .failed {
+            color: map-get($danger, 500);
+        }
+    }
+
+    bl-gauge {
+        margin: 0 10px;
+    }
+
+    .toggle-job-pool-tasks {
+        margin: 0 10px;
+        display: flex;
+        font-size: 12px;
+        justify-content: space-between;
+
+        > .option {
+            cursor: pointer;
+
+            &.active {
+                color: map-get($primary, 600);
+                font-weight: bold;
+            }
+        }
+    }
+
+    .progress {
+        margin: 0 10px;
+        display: flex;
+        align-items: center;
+
+        > .progress-bar {
+            flex: 1;
+        }
+
+        > .progress-label {
+            margin-left: 10px;
+            color: $mineshaft-grey;
+        }
+    }
+}

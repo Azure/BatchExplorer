@@ -3,6 +3,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms"
 import { ActivatedRoute, Router } from "@angular/router";
 import { NcjJobTemplate, NcjPoolTemplate, ServerError } from "app/models";
 import { NcjTemplateService, PythonRpcService } from "app/services";
+import { exists } from "app/utils";
 import { autobind } from "core-decorators";
 import { Modes, NcjParameterWrapper } from "./market-application.model";
 import "./submit-market-application.scss";
@@ -132,10 +133,14 @@ export class SubmitMarketApplicationComponent implements OnInit {
         const templateFormGroup = {};
         for (let key of templateParameters) {
             let defaultValue = null;
-            if (template.parameters[key].defaultValue) {
+            let validator = Validators.required;
+            if (exists(template.parameters[key].defaultValue)) {
                 defaultValue = String(template.parameters[key].defaultValue);
+                if (template.parameters[key].defaultValue === "") {
+                    validator = null;
+                }
             }
-            templateFormGroup[key] = new FormControl(defaultValue, Validators.required);
+            templateFormGroup[key] = new FormControl(defaultValue, validator);
         }
         return new FormGroup(templateFormGroup);
     }
