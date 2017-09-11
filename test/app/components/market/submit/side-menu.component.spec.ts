@@ -5,13 +5,10 @@ import { MaterialModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterTestingModule } from "@angular/router/testing";
-import { DialogService } from "app/components/base/dialogs";
 import { Modes, NcjParameterWrapper, SideMenuComponent } from "app/components/market/submit";
 import { BatchApplication, NcjParameterRawType } from "app/models";
 import { PricingService, PythonRpcService } from "app/services";
 import { Subject } from "rxjs";
-import * as Fixtures from "test/fixture";
-import { updateInput } from "test/utils/helpers";
 import { RxMockListProxy } from "test/utils/mocks";
 import { NoItemMockComponent } from "test/utils/mocks/components";
 
@@ -65,7 +62,7 @@ class TestComponent {
 
 }
 
-fdescribe("ParameterInputComponent", () => {
+describe("ParameterInputComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: SideMenuComponent;
@@ -105,10 +102,52 @@ fdescribe("ParameterInputComponent", () => {
         fixture.detectChanges();
     });
 
-    describe("text parameter type", () => {
-        it("should work", () => {
-            expect(true).toBe(true);
-            console.log("hello world", component);
+    describe("Side bar displays the correct headings", () => {
+
+        it("should display headings for Mode None", () => {
+            testComponent.modeState =  Modes.None;
+            fixture.detectChanges();
+            let headings = de.queryAll(By.css("h2"));
+            expect(headings.length).toBe(2);
+            expect(headings[0].nativeElement.textContent).toBe(" Application ");
+            expect(headings[1].nativeElement.textContent).toBe(" Action ");
+        });
+
+        it("should display headings for Mode NewPoolAndJob", () => {
+            testComponent.modeState =  Modes.NewPoolAndJob;
+            fixture.detectChanges();
+            let headings = de.queryAll(By.css("h2"));
+            expect(headings.length).toBe(6);
+            expect(headings[0].nativeElement.textContent).toBe(" Application ");
+            expect(headings[1].nativeElement.textContent).toBe(" Action ");
+            expect(headings[2].nativeElement.textContent).toBe(" Mode ");
+            expect(headings[3].nativeElement.textContent).toBe(" Job ");
+            expect(headings[4].nativeElement.textContent).toBe(" Pool ");
+            expect(headings[5].nativeElement.textContent).toBe(" Cost ");
+        });
+
+        it("should display headings for Mode ExistingPoolAndJob", () => {
+            testComponent.modeState =  Modes.ExistingPoolAndJob;
+            fixture.detectChanges();
+            let headings = de.queryAll(By.css("h2"));
+            expect(headings.length).toBe(5);
+            expect(headings[0].nativeElement.textContent).toBe(" Application ");
+            expect(headings[1].nativeElement.textContent).toBe(" Action ");
+            expect(headings[2].nativeElement.textContent).toBe(" Mode ");
+            expect(headings[3].nativeElement.textContent).toBe(" Job ");
+            expect(headings[4].nativeElement.textContent).toBe(" Pool ");
+        });
+
+        it("should display headings for Mode NewPool", () => {
+            testComponent.modeState =  Modes.NewPool;
+            fixture.detectChanges();
+            let headings = de.queryAll(By.css("h2"));
+            expect(headings.length).toBe(5);
+            expect(headings[0].nativeElement.textContent).toBe(" Application ");
+            expect(headings[1].nativeElement.textContent).toBe(" Action ");
+            expect(headings[2].nativeElement.textContent).toBe(" Mode ");
+            expect(headings[3].nativeElement.textContent).toBe(" Pool ");
+            expect(headings[4].nativeElement.textContent).toBe(" Cost ");
         });
     });
 
