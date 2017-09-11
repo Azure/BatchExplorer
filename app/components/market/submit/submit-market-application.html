@@ -1,5 +1,5 @@
-<bl-scrollable>
-    <bl-complex-form style = "float:left;" [formGroup]="form" [hideFooter]="true">
+<bl-scrollable style = "float:right; width:825px;">
+    <bl-complex-form [formGroup]="form" [hideFooter]="true">
         <bl-form-page main-form-page [title]="title">
             <bl-form-section title="Mode">
                 <div class="modes">
@@ -39,20 +39,19 @@
             </div>
         </bl-form-page>
     </bl-complex-form>
+</bl-scrollable>
+<div>
     <div>
-        <div>
-            <bl-side-menu [logo] = "icon" [title] = "applicationId" [action] = "actionId"
-            [modeState] = "modeState" [form] = "form" [poolParametersWrapper] = "poolParametersWrapper" [jobParametersWrapper] = "jobParametersWrapper"
-            [poolTemplate] = "poolTemplate"> </bl-side-menu>
-        </div>
-        <div>
-            <div [title]="submitToolTip" class="submit-box" *ngIf="modeState !== Modes.None">
-                <bl-server-error [error]="error"> </bl-server-error>
-                <bl-button [disabled]="!isFormValid()" [action]="submit" type="wide" class="submit-job" color="success">
-                    <i class="fa fa-cloud" aria-hidden="true"></i>
-                </bl-button>
-            </div>
+        <bl-side-menu [logo] = "icon" [title] = "applicationId" [action] = "actionId"
+        [modeState] = "modeState" [form] = "form" [poolParametersWrapper] = "poolParametersWrapper" [jobParametersWrapper] = "jobParametersWrapper"
+        [poolTemplate] = "poolTemplate"> </bl-side-menu>
+    </div>
+    <div>
+        <div [title]="submitToolTip" class="submit-box" *ngIf="modeState !== Modes.None">
+            <bl-server-error [error]="error"> </bl-server-error>
+            <bl-button [disabled]="!isFormValid()" [action]="submit" type="wide" class="submit-job" color="success">
+                <i class="fa fa-cloud" aria-hidden="true"></i>
+            </bl-button>
         </div>
     </div>
-
-</bl-scrollable>
+</div>
