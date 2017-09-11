@@ -18,25 +18,25 @@
             {{ modeText[modeState] }}
         </div>
     </div>
-    <div *ngIf="(modeState == Modes.NewPoolAndJob || modeState == Modes.ExistingPoolAndJob)">
+    <div *ngIf="modeState == Modes.NewPoolAndJob || modeState == Modes.ExistingPoolAndJob">
         <h2> Job </h2>
         <div *ngFor="let param of jobParametersWrapper">
             {{ param.name }}: {{ this.form.value.job[param.id]?this.form.value.job[param.id]:"n/a" }}
         </div>
     </div>
-    <div *ngIf="(modeState == Modes.NewPoolAndJob || modeState == Modes.NewPool)">
+    <div *ngIf="modeState == Modes.NewPoolAndJob || modeState == Modes.NewPool">
         <h2> Pool </h2>
         <div *ngFor="let param of poolParametersWrapper">
             {{ param.name }}: {{ this.form.value.pool[param.id]?this.form.value.pool[param.id]:"n/a" }}
         </div>
     </div>
-    <div *ngIf="(modeState == Modes.ExistingPoolAndJob)">
+    <div *ngIf="modeState == Modes.ExistingPoolAndJob">
         <h2> Pool </h2>
         <div>
             Pool picked: {{ this.form.value.poolpicker?this.form.value.poolpicker.poolId:"n/a" }}
         </div>
     </div>
-    <div *ngIf="(modeState == Modes.NewPoolAndJob || modeState == Modes.NewPool)">
+    <div *ngIf="modeState == Modes.NewPoolAndJob || modeState == Modes.NewPool">
         <h2> Cost </h2>
         <div>
             Estimated cost: {{ estimatedCost }}
