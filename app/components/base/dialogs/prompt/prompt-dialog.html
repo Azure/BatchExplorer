@@ -1,0 +1,10 @@
+<bl-simple-form [submit]="submit" [containerRef]="dialogRef" actionColor="warn" actionName="Confirm" [multiUse]="false" size="small"
+    [title]="title" [formGroup]="promptControl">
+    <div class="message" *ngIf="description">
+        <p>{{description}}</p>
+    </div>
+
+    <md-input-container class="form-element">
+        <input mdInput [formControl]="promptControl">
+    </md-input-container>
+</bl-simple-form>

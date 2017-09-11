@@ -1,0 +1,6 @@
+<div class="textarea-container">
+    <md-input-container>
+        <textarea #textarea mdInput [placeholder]="placeholder" (focus)="expand()" (blur)="collapse()" [ngModel]="value" (ngModelChange)="valueChange($event)"></textarea>
+        <md-hint *ngIf="hint" align="end">{{hint}}</md-hint>
+    </md-input-container>
+</div>

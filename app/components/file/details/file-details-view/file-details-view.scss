@@ -46,6 +46,9 @@ bl-file-details-view {
             flex: 1;
             vertical-align: middle;
             line-height: $file-header-height;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
         }
 
         .actions {
