@@ -1,8 +1,9 @@
-import { Component, Input, OnChanges } from "@angular/core";
+import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { NcjPoolTemplate, ServerError } from "app/models";
 import { PricingService, PythonRpcService } from "app/services";
 import { NumberUtils } from "app/utils";
+import { Subscription } from "rxjs/Subscription";
 import { Modes, NcjParameterWrapper } from "./market-application.model";
 import "./side-menu.scss";
 
@@ -10,7 +11,7 @@ import "./side-menu.scss";
     selector: "bl-side-menu",
     templateUrl: "side-menu.html",
 })
-export class SideMenuComponent implements OnChanges {
+export class SideMenuComponent implements OnChanges, OnDestroy {
     public static breadcrumb() {
         return { name: "Sidemenu" };
     }
@@ -27,6 +28,7 @@ export class SideMenuComponent implements OnChanges {
     @Input() public poolParametersWrapper: NcjParameterWrapper[];
     @Input() public jobParametersWrapper: NcjParameterWrapper[];
     @Input() public poolTemplate: NcjPoolTemplate;
+    private _subs: Subscription[] = [];
 
     constructor(private pricingService: PricingService,
                 private pythonRpcService: PythonRpcService) {
@@ -35,10 +37,14 @@ export class SideMenuComponent implements OnChanges {
 
     public ngOnChanges(changes) {
         if (changes.form) {
-            this.form.valueChanges.subscribe((value) => {
+            this._subs.push(this.form.valueChanges.subscribe((value) => {
                 this._updateEstimatedPrice();
-            });
+            }));
         }
+    }
+
+    public ngOnDestroy(): void {
+        this._subs.forEach(x => x.unsubscribe());
     }
 
     public isJobComplete() {
