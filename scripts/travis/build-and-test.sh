@@ -11,6 +11,7 @@ npm run build -s
 
 # Only run prod build if on a branch build or PR for stable
 if [ "${TRAVIS_PULL_REQUEST}" = "false" ] || [ "${TRAVIS_BRANCH}" = "stable" ]; then
+    npm run ts -s scripts/lca/generate-third-party -- --check
 	npm run build:prod
 fi
 

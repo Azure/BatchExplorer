@@ -1,9 +1,18 @@
+import * as commander from "commander";
 import * as fs from "fs";
 import fetch from "node-fetch";
 import * as path from "path";
 import { Writable } from "stream";
 import * as util from "util";
 import { Constants } from "../../src/client/client-constants";
+
+export interface ThirdPartyNoticeOptions {
+    check?: boolean;
+}
+
+const defaultThirdPartyNoticeOptions: ThirdPartyNoticeOptions = {
+    check: false,
+};
 
 const thirdPartyNoticeFile = path.join(Constants.root, "ThirdPartyNotices.txt");
 
@@ -123,7 +132,20 @@ function getLicenseContent(dependency, license) {
     }
 }
 
-function run() {
+function checkNoticeUpToDate(notices: string) {
+    const existingNotices = fs.readFileSync(thirdPartyNoticeFile).toString();
+    if (existingNotices === notices) {
+        console.log("ThirdPartyNotice.txt is up to date.");
+        process.exit(0);
+    } else {
+        console.error("ThirdPartyNotice.txt is not up to date."
+            + " Please run 'npm run ts scripts/lca/generate-third-party'");
+        process.exit(1);
+    }
+}
+
+function run(options: ThirdPartyNoticeOptions = {}) {
+    options = { ...defaultThirdPartyNoticeOptions, ...options };
     output.push(getHeader());
     output.push("");
 
@@ -161,9 +183,18 @@ function run() {
             output.push("");
         }
         const notices = output.join("\n");
-        fs.writeFileSync(thirdPartyNoticeFile, notices);
-        console.log(`Generated third party notice file at ${thirdPartyNoticeFile}`);
+
+        if (options.check) {
+            checkNoticeUpToDate(notices);
+        } else {
+            fs.writeFileSync(thirdPartyNoticeFile, notices);
+            console.log(`Generated third party notice file at ${thirdPartyNoticeFile}`);
+        }
     });
 }
 
-run();
+const options = commander
+    .option("-c, --check", "Check the current third party notice file is valid.")
+    .parse(process.argv);
+
+run(options);
