@@ -111,7 +111,7 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
             virtualMachineConfiguration: pool.virtualMachineConfiguration,
         },
         startTask: pool.startTask,
-        userAccounts: pool.userAccounts,
-        appLicenses: pool.applicationLicenses,
+        userAccounts: pool.userAccounts || [],
+        appLicenses: pool.applicationLicenses || [],
     };
 }

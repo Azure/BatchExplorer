@@ -36,7 +36,7 @@ export class PoolCreateDto extends Dto<PoolCreateDto> {
 
     @DtoAttr() public autoScaleFormula?: string;
 
-    @DtoAttr() public autoScaleEvaluationInterval?: moment.Duration;
+    @DtoAttr(moment.duration) public autoScaleEvaluationInterval?: moment.Duration;
 
     @DtoAttr() public enableAutoScale?: boolean;
 
@@ -54,3 +54,5 @@ export class PoolCreateDto extends Dto<PoolCreateDto> {
 
     @DtoAttr() public applicationLicenses: string[];
 }
+
+console.log("new poo", new PoolCreateDto({ id: "id-1", autoScaleEvaluationInterval: "P0D" } as any));

@@ -46,10 +46,6 @@ bl-complex-form {
                 padding: 0 10px;
             }
         }
-
-        .toggle-mode {
-            margin: 0 10px;
-        }
     }
 
     > .content {
@@ -91,6 +87,10 @@ bl-complex-form {
         padding: 5px;
         display: flex;
         align-items: center;
+
+        .toggle-mode {
+            margin: 0 10px;
+        }
 
         > .toggle-error-btn {
             button {
