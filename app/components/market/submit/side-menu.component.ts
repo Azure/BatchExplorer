@@ -15,7 +15,7 @@ export class SideMenuComponent implements OnChanges {
         return { name: "Sidemenu" };
     }
     public Modes = Modes;
-    public estimatedCost = "-";
+    public estimatedCost = "n/a";
     public modeText: string[] = ["None", "Run job with auto pool",
         "Run job with existing pool", "Create pool for later use"];
     public error: ServerError;
@@ -48,20 +48,15 @@ export class SideMenuComponent implements OnChanges {
     public isPoolComplete() {
         if (this.modeState === Modes.ExistingPoolAndJob) {
             return this.form.controls.poolpicker.valid;
-        } else if (this.modeState === Modes.NewPool || this.modeState === Modes.NewPoolAndJob) {
+        } else if (this.modeState === Modes.NewPoolAndJob || this.modeState === Modes.NewPool) {
             return this.form.controls.pool.valid;
         } else {
             return false;
         }
     }
 
-    // asserts numberNodes and vmSize is present as parameters in the pool form
-    public isCostComplete() {
-        return this.form.value.pool.numberNodes && this.form.value.pool.vmSize;
-    }
-
     private _updateEstimatedPrice() {
-        if (this.isPoolComplete() && this.isCostComplete()) {
+        if (this.isPoolComplete()) {
             this.error = null;
             const obs = this.pythonRpcService.callWithAuth("expand-ncj-pool", [this.poolTemplate, this.form.value.pool])
                 .cascade((data) => {
@@ -71,7 +66,7 @@ export class SideMenuComponent implements OnChanges {
                             if (cost) {
                                 this.estimatedCost = `${cost.unit} $${NumberUtils.pretty(cost.total)} / hour`;
                             } else {
-                                this.estimatedCost = "-";
+                                this.estimatedCost = "n/a";
                             }
                         });
                     }
@@ -81,6 +76,8 @@ export class SideMenuComponent implements OnChanges {
                     error: (err) => this.error = ServerError.fromPython(err),
                 });
             }
+        } else {
+            this.estimatedCost = "n/a";
         }
     }
 }
