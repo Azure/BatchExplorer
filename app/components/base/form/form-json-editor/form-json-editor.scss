@@ -3,8 +3,11 @@
 bl-form-json-editor {
     display: block;
     height: 100%;
-    border-top: 1px solid $border-color;
 
+    > .editor-header {
+        height: 20px;
+        border-bottom: 1px solid $border-color;
+    }
     .CodeMirror {
         height: 100%;
     }
