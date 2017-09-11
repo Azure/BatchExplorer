@@ -22,6 +22,23 @@ const defaultLicenses = {
     "(ofl-1.1 and mit)": fs.readFileSync(path.join(defaultLicenseRoot, "ofl-1.1-and-mit.txt")).toString(),
 };
 
+const additionalDependencies = [
+    {
+        name: "websockets",
+        version: "3.3",
+        url: "https://github.com/aaugustin/websockets",
+        repoUrl: "https://github.com/aaugustin/websockets",
+        licenseType: "BSD-3-Clause",
+    },
+    {
+        name: "azure-batch-cli-extensions",
+        version: "0.2.0",
+        url: "https://github.com/Azure/azure-batch-cli-extensions",
+        repoUrl: "https://github.com/Azure/azure-batch-cli-extensions",
+        licenseType: "MIT",
+    },
+];
+
 function listDependencies(): string[] {
 
     const packageJsonPath = path.join(Constants.root, "package.json");
@@ -45,7 +62,6 @@ function loadDependency(name: string) {
     return {
         name: dependency.name,
         version: dependency.version,
-        authors: dependency.author,
         url: url,
         repoUrl: repoUrl,
         licenseType: dependency.license,
@@ -114,8 +130,9 @@ function run() {
     const depenencyNames = listDependencies();
     const dependencies = depenencyNames.map((dep) => {
         return loadDependency(dep);
-    });
+    }).concat(additionalDependencies);
     console.log("Loading dependencies...");
+
     let toc = dependencies.map((dependency, index) => {
         return `${index}. ${dependency.name}(${dependency.url}) - ${dependency.licenseType}`;
     });
@@ -126,6 +143,7 @@ function run() {
         return loadLicense(dependency.repoUrl);
     });
     console.log("Loading licenses...");
+
     Promise.all(licensePromises).then((licenses) => {
         for (const [i, license] of licenses.entries()) {
             const dependency = dependencies[i];
