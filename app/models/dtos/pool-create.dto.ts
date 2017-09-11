@@ -54,5 +54,3 @@ export class PoolCreateDto extends Dto<PoolCreateDto> {
 
     @DtoAttr() public applicationLicenses: string[];
 }
-
-console.log("new poo", new PoolCreateDto({ id: "id-1", autoScaleEvaluationInterval: "P0D" } as any));
