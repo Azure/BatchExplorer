@@ -65,40 +65,44 @@ export class PythonRpcService {
      * Call this if the connection got cut to try again.
      */
     public resetConnection(): Observable<any> {
-        this._ready = new AsyncSubject<any>();
-        const socket = this._socket = new WebSocket("ws://127.0.0.1:8765/ws");
-        socket.onopen = (event: Event) => {
-            if (this._retryCount > 0) {
-                log.info("Reconnected to websocket successfully.");
-            }
-            this._retryCount = 0;
-            this._zone.run(() => {
-                this._ready.next(true);
-                this._ready.complete();
-            });
-        };
+        const portConfig = Constants.Client.pythonServerPort;
+        const portPromise = process.env.HOT ? portConfig.dev : portConfig.prod;
+        portPromise.then((port) => {
+            this._ready = new AsyncSubject<any>();
+            const socket = this._socket = new WebSocket(`ws://127.0.0.1:${port}/ws`);
+            socket.onopen = (event: Event) => {
+                if (this._retryCount > 0) {
+                    log.info("Reconnected to websocket successfully.");
+                }
+                this._retryCount = 0;
+                this._zone.run(() => {
+                    this._ready.next(true);
+                    this._ready.complete();
+                });
+            };
 
-        socket.onerror = (error: Event) => {
-            this._zone.run(() => {
-                this._ready.error(event);
-            });
-        };
+            socket.onerror = (error: Event) => {
+                this._zone.run(() => {
+                    this._ready.error(event);
+                });
+            };
 
-        socket.onclose = () => {
-            const waitingTime = Math.floor(2 ** this._retryCount);
-            this._retryCount++;
-            log.info(`Websocket connection closed. Retrying to connect in ${waitingTime}s`);
-            setTimeout(() => {
-                this.resetConnection();
-            }, waitingTime * 1000);
-        };
+            socket.onclose = () => {
+                const waitingTime = Math.floor(2 ** this._retryCount);
+                this._retryCount++;
+                log.info(`Websocket connection closed. Retrying to connect in ${waitingTime}s`);
+                setTimeout(() => {
+                    this.resetConnection();
+                }, waitingTime * 1000);
+            };
 
-        socket.onmessage = (event: MessageEvent) => {
-            this._zone.run(() => {
-                const response = JSON.parse(event.data);
-                this._processResponse(response);
-            });
-        };
+            socket.onmessage = (event: MessageEvent) => {
+                this._zone.run(() => {
+                    const response = JSON.parse(event.data);
+                    this._processResponse(response);
+                });
+            };
+        });
 
         return this._ready.asObservable();
     }

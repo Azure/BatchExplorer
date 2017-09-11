@@ -2,9 +2,9 @@ import { GaugeLabel, GaugeLabels } from "./gauge-config";
 
 export const presetSizes = {
     xsmall: 100,
-    small: 200,
-    medium: 300,
-    large: 400,
+    small: 150,
+    medium: 200,
+    large: 300,
 };
 
 export function percToDeg(perc) {
