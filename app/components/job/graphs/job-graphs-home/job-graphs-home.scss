@@ -33,6 +33,11 @@ bl-job-graphs-home {
             font-style: italic;
         }
 
+        .actions {
+            > * {
+                margin: 0 3px;
+            }
+        }
         .buttons {
             display: flex;
 
