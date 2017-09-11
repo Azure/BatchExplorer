@@ -164,6 +164,8 @@
     "@angular/platform-browser-dynamic": "4.3.5",
     "@angular/router": "4.3.5",
     "@angular/tsc-wrapped": "4.3.5",
+    "@types/node-fetch": "~1.6.7",
+    "node-fetch": "~1.7.3",
     "azure-batch": "~2.1.0-preview",
     "azure-storage": "^2.1.0",
     "bunyan": "^1.8.4",
