@@ -46,6 +46,20 @@ const additionalDependencies = [
         repoUrl: "https://github.com/Azure/azure-batch-cli-extensions",
         licenseType: "MIT",
     },
+    {
+        name: "node.js",
+        version: "7.4.0",
+        url: "https://nodejs.org/en/",
+        repoUrl: "https://github.com/nodejs/node",
+        licenseType: "MIT",
+    },
+    {
+        name: "python",
+        version: "3.6.1",
+        url: "https://www.python.org/",
+        repoUrl: "https://github.com/python/cpython",
+        licenseType: "PSF",
+    },
 ];
 
 function listDependencies(): string[] {
