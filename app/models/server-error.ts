@@ -64,7 +64,6 @@ export class ServerError {
     }
 
     public static fromPython(error: JsonRpcError) {
-        console.log("Error is", error);
         const body = {
             code: error.data.code || ServerError._mapPythonErrorCode(error.code),
             message: error.message,
