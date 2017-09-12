@@ -55,7 +55,7 @@ class BatchLabsApp:
                 raise JsonRpcError(e.status_code, str(e), {})
             except batch_error.BatchErrorException as e:
                 # pylint: disable=E1101
-                raise JsonRpcError(e.response.status_code, e.message.value, str(e.response.content))
+                raise JsonRpcError(e.response.status_code, e.message.value, e.response.json())
             except batch_ext_error.MissingParameterValue as e:
                 raise JsonRpcInvalidParamsError(str(e), {
                     'paramName': e.parameter_name,
@@ -68,4 +68,3 @@ class BatchLabsApp:
 
 
 app = BatchLabsApp()
-

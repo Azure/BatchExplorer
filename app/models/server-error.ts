@@ -1,7 +1,7 @@
 import { Response } from "@angular/http";
 
 import { BatchError } from "./batch-error";
-import { PythonPRpcError } from "./python-rpc-error";
+import { JsonRpcError } from "./python-rpc";
 import { StorageError } from "./storage-error";
 
 interface ServerErrorAttributes {
@@ -63,15 +63,15 @@ export class ServerError {
         });
     }
 
-    public static fromPython(error: PythonPRpcError) {
+    public static fromPython(error: JsonRpcError) {
         const body = {
-            code: ServerError._mapPythonErrorCode(error.code),
+            code: error.data.code || ServerError._mapPythonErrorCode(error.code),
             message: error.message,
-            data: error.data,
+            values: error.data.values,
         };
 
         return new ServerError({
-            status: error.data && error.data.status,
+            status: error.data.status,
             body: body,
             original: error,
         });

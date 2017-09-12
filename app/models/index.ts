@@ -47,7 +47,6 @@ export * from "./node-agent-sku";
 export * from "./node-agent-sku-map";
 export * from "./node-recent-task";
 export * from "./pool";
-export * from "./python-rpc-error";
 export * from "./resize-error";
 export * from "./resource-descriptor";
 export * from "./resource-file";
