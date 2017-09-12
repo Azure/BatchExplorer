@@ -14,3 +14,4 @@
 
 # Repo management
 * [Make a new release](new-release.md)
+* [Third party dependencies](third-party-dependencies.md)
