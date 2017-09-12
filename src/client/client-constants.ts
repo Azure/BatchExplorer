@@ -1,3 +1,5 @@
+import { app } from "electron";
+import * as mkdirp from "mkdirp";
 import * as net from "net";
 import * as path from "path";
 /**
@@ -43,6 +45,8 @@ const urls = {
 };
 
 const isAsar = process.mainModule.filename.indexOf("app.asar") !== -1;
+const logsFolder = isAsar ? path.join(app.getPath("userData"), "logs") : path.join(root, "logs");
+mkdirp.sync(logsFolder);
 
 const pythonServerPort = {
     dev: Promise.resolve(8765),
@@ -54,6 +58,7 @@ export const Constants = {
     isAsar,
     root,
     urls,
+    logsFolder,
     pythonServerPort,
     version: packageConfig.version,
 };
