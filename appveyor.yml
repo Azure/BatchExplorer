@@ -2,7 +2,7 @@ branches:
   only:
     - master
     - stable
-    - feature/publish
+
 environment:
   matrix:
     - PYTHON: "C:\\Python36-x64"
@@ -33,7 +33,7 @@ install:
 build_script:
     - npm run -s build:prod
     - npm run -s build-python
-    - IF [%APPVEYOR_REPO_BRANCH%]==[feature/publish] (
+    - IF [%APPVEYOR_REPO_BRANCH%]==[stable] (
         npm run -s package -- --publish always --draft --win
       ) ELSE (
         npm run -s package -- --publish never
