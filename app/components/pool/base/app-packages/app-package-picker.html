@@ -10,14 +10,13 @@
         <tbody>
             <tr *ngFor="let item of items.controls; let i=index; let isLast=last" [formGroupName]="i">
                 <td>
-                    <md-select formControlName="applicationId">
+                    <md-select formControlName="applicationId" (change)="applicationSelected($event, i)">
                         <md-option *ngFor="let application of applications" [value]="application.id">{{ application.id }}</md-option>
                     </md-select>
                 </td>
                 <td>
                     <md-select formControlName="version">
-                        <md-option value="1.0">1.0</md-option>
-                        <md-option value="1.1">1.1</md-option>
+                        <md-option *ngFor="let package of packageMap[i]" [value]="package">{{ package }}</md-option>
                     </md-select>
                 </td>
                 <td class="action-column">

@@ -1,17 +1,22 @@
-import { AfterViewInit, Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
+import { AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
+import { MdSelectChange } from "@angular/material";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
-import { BatchApplication, ServerError } from "app/models";
+import { ApplicationPackage, BatchApplication, ServerError } from "app/models";
 import { ApplicationService } from "app/services";
 import { RxListProxy } from "app/services/core";
-import { ObjectUtils } from "app/utils";
 
 import "app/components/base/form/editable-table/editable-table.scss";
+
+interface PackageReference {
+    applicationId?: string;
+    version?: string;
+}
 
 // tslint:disable:no-forward-ref
 @Component({
@@ -23,15 +28,20 @@ import "app/components/base/form/editable-table/editable-table.scss";
     ],
 })
 export class AppPackagePickerComponent implements ControlValueAccessor, Validator, AfterViewInit, OnDestroy, OnInit {
+    @Output()
+    public hasLinkedStorage: EventEmitter<boolean> = new EventEmitter();
+
     public status: Observable<LoadingStatus>;
-    public applications: List<BatchApplication>;
-    public noLinkedStorage: boolean = false;
+    public applications: List<BatchApplication> = List([]);
+    public packageMap: any[] = [];
     public items: FormArray;
     public form: FormGroup;
 
     private _subscriptions: Subscription[] = [];
     private _data: RxListProxy<{}, BatchApplication>;
+    private _applicationMap: { [key: string]: string[] } = {};
     private _propagateChange: (items: any[]) => void;
+    private _propagateTouched: (value: boolean) => void;
     private _writingValue = false;
 
     constructor(
@@ -43,7 +53,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
 
         this._data = this.applicationService.list({}, (error: ServerError) => {
             if (this.applicationService.isAutoStorageError(error)) {
-                this.noLinkedStorage = true;
+                this.hasLinkedStorage.emit(false);
                 return true;
             }
 
@@ -52,18 +62,18 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
 
         // subscribe to the application data proxy
         this._subscriptions.push(this._data.items.subscribe((applications) => {
-            this.applications = applications;
-            // TODO :: Create app version map
+            this._applicationMap = {};
+            this._mapApplicationPackages(applications);
         }));
 
         // subscribe to the form change events
-        this._subscriptions.push(this.items.valueChanges.subscribe((references) => {
+        this._subscriptions.push(this.items.valueChanges.subscribe((references: PackageReference[]) => {
             if (this._writingValue) {
                 return;
             }
 
-            const isLast = references[references.length - 1];
-            if (isLast && !this._isEmpty(isLast)) {
+            const last = references[references.length - 1];
+            if (last && last.applicationId && last.version) {
                 this.addNewItem();
             }
 
@@ -76,7 +86,6 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
     }
 
     public ngOnInit() {
-        this.noLinkedStorage = false;
         this._data.fetchNext();
     }
 
@@ -91,14 +100,14 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
     }
 
     public writeValue(value: any[]) {
-        // TODO: Test this works with clone pool data.
-        console.log("writeValue: ", value);
         this._writingValue = true;
         this.items.controls = [];
 
         if (value) {
             for (let val of value) {
                 this.items.push(this.formBuilder.group(val));
+                // TODO: this needs to add the package list
+                this.packageMap.push();
             }
         } else {
             this.items.setValue([]);
@@ -114,35 +123,87 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         this._propagateChange = fn;
     }
 
-    public registerOnTouched() {
-        // Do nothing
+    public registerOnTouched(fn) {
+        // need this in order for the bl-error validation control to work
+        this._propagateTouched = fn;
     }
 
+    // TODO: Make this simpler
     public validate(control: FormControl) {
-        // TODO: Validate app package and versions for no duplicates and correct mappings
+        const tempMap: { [key: string]: string[] } = {};
+
+        for (let reference of control.value) {
+            const application = reference.applicationId;
+            if (tempMap[application] === undefined) {
+                tempMap[application] = [reference.version];
+            } else if (tempMap[application].findIndex(item => item === reference.version) === -1) {
+                tempMap[application].push(reference.version);
+                // check version is valid for application
+                if (this._applicationMap[application].filter((version) => version === reference.version).length === 0) {
+                    return {
+                        invalid: true,
+                    };
+                }
+            } else {
+                return {
+                    duplicate: true,
+                };
+            }
+        }
+
         return null;
     }
 
     public addNewItem() {
-        // TODO: change this to TEntity based on the generic type of base class which is still to be implemented.
-        // I can then reuse the majority of this file in a base class for other types of editable tables.
-        const obj = { };
-        obj["applicationId"] = "";
-        obj["version"] = "";
-        this.items.push(this.formBuilder.group(obj));
+        this.items.push(this.formBuilder.group({
+            applicationId: ["", []],
+            version: ["", []],
+        }));
+
+        this.packageMap.push();
     }
 
     public deleteItem(index: number) {
         this.items.removeAt(index);
+        this.packageMap.splice(index, 1);
     }
 
-    private _isEmpty(obj: any) {
-        for (let value of ObjectUtils.values(obj)) {
-            if (value) {
-                return false;
-            }
+    public applicationSelected(event: MdSelectChange, index: number) {
+        // each table row needs it's own package list
+        this.packageMap[index] = List(this._applicationMap[event.value] || []);
+        if (this._propagateTouched) {
+            this._propagateTouched(true);
         }
+    }
 
-        return true;
+    /*
+     * Map application data into [application][packages[]]
+     * _appPackageMap["blender"]["1", "1.34", "2"]
+     * _appPackageMap["image-magic"]["1A", "1B"]
+     * ...
+     */
+    private _mapApplicationPackages(applications: List<BatchApplication>) {
+        this.applications = applications;
+        if (applications && applications.size > 0) {
+            applications.forEach((application) => {
+                const currentAppId = application.id;
+                if (this._applicationMap[currentAppId] === undefined) {
+                    this._applicationMap[currentAppId] = [];
+                }
+
+                // If there is a default version set allow the user to select "use default"
+                if (application.defaultVersion) {
+                    this._applicationMap[currentAppId].push("Use default version");
+                }
+
+                // Add the packages to the application map
+                application.packages.forEach((appPackage: ApplicationPackage) => {
+                    const currentPackageVersion = appPackage.version;
+                    if (this._applicationMap[currentAppId][currentPackageVersion] === undefined) {
+                        this._applicationMap[currentAppId].push(currentPackageVersion);
+                    }
+                });
+            });
+        }
     }
 }
