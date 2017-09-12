@@ -10,26 +10,30 @@
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <script src="index.js"></script>
 </head>
 
 <body>
     <section class="header">
         <h1 class="title">BatchLabs</h1>
         <h2 class="subtitle">A client tool to help create, debug and monitor Azure Batch Applications</h2>
+        <div class="btn" id="batch-labs-version" title="Version">-</div>
         <a href="https://github.com/Azure/BatchLabs" class="btn">View on GitHub</a>
     </section>
     <div class="content">
-        <a href="https://github.com/Azure/BatchLabs/releases"><h2 class="download-title">Downloads</h2></a>
+        <a href="https://github.com/Azure/BatchLabs/releases">
+            <h2 class="download-title">Downloads</h2>
+        </a>
         <div class="downloads">
             <div class="os-download">
                 <div class="type">
                     <i class="fa fa-windows"></i>
                     <div class="label">Windows</div>
                 </div>
-                <div class="option">
+                <div class="option" id="download-windows-installer">
                     Installer
                 </div>
-                <div class="option">
+                <div class="option" id="download-windows-zip">
                     Zip
                 </div>
             </div>
@@ -39,10 +43,10 @@
                     <i class="fa fa-apple"></i>
                     <div class="label">OSX</div>
                 </div>
-                <div class="option">
+                <div class="option" id="download-osx-dmg">
                     Dmg
                 </div>
-                <div class="option">
+                <div class="option" id="download-osx-zip">
                     Zip
                 </div>
             </div>
@@ -52,13 +56,13 @@
                     <i class="fa fa-linux"></i>
                     <div class="label">Linux</div>
                 </div>
-                <div class="option">
+                <div class="option" id="download-linux-deb">
                     Deb
                 </div>
-                <div class="option">
+                <div class="option" id="download-linux-rpm">
                     Rpm
                 </div>
-                <div class="option">
+                <div class="option" id="download-linux-appimage">
                     Appimage
                 </div>
             </div>
