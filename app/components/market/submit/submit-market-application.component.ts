@@ -70,9 +70,9 @@ export class SubmitMarketApplicationComponent implements OnInit {
     }
 
     public isFormValid() {
-        return (this.modeState ===  Modes.NewPoolAndJob && this.jobParams.valid && this.poolParams.valid) ||
-            (this.modeState ===  Modes.ExistingPoolAndJob && this.jobParams.valid && this.pickedPool.valid) ||
-            (this.modeState ===  Modes.NewPool && this.poolParams.valid);
+        return (this.modeState === Modes.NewPoolAndJob && this.jobParams.valid && this.poolParams.valid) ||
+            (this.modeState === Modes.ExistingPoolAndJob && this.jobParams.valid && this.pickedPool.valid) ||
+            (this.modeState === Modes.NewPool && this.poolParams.valid);
     }
 
     @autobind()
@@ -80,29 +80,25 @@ export class SubmitMarketApplicationComponent implements OnInit {
         this.error = null;
         let obs;
         switch (this.modeState) {
-            case Modes.NewPoolAndJob: {
+            case Modes.NewPoolAndJob:
                 obs = this.pythonRpcService.callWithAuth("expand-ncj-pool", [this.poolTemplate, this.poolParams.value])
                     .cascade((data) => this._runJobWithPool(data));
                 break;
-            }
-            case Modes.ExistingPoolAndJob: {
+            case Modes.ExistingPoolAndJob:
                 this.jobTemplate.job.properties.poolInfo = this.pickedPool.value;
                 obs = this.pythonRpcService.callWithAuth("submit-ncj-job", [this.jobTemplate, this.jobParams.value])
                     .cascade((data) => this._redirectToJob(data.properties.id));
                 break;
-            }
-            case Modes.NewPool: {
+            case Modes.NewPool:
                 obs = this.pythonRpcService.callWithAuth("create-ncj-pool", [this.poolTemplate, this.poolParams.value])
                     .cascade((data) => this._redirectToPool(data.id));
                 break;
-            }
-            default: {
+            default:
                 return obs;
-            }
         }
         if (obs) {
             obs.subscribe({
-                error: (err) => this.error = ServerError.fromPython(err),
+                error: (err) => this.error = err,
             });
         }
         return obs;
