@@ -6,9 +6,10 @@
     "url": "https://github.com/Azure/BatchLabs"
   },
   "author": {
-    "name": "Microsoft Corporation"
+    "name": "Microsoft Corporation",
+    "email": "tiguerin@microsoft.com"
   },
-  "version": "0.6.0",
+  "version": "0.7.0",
   "main": "build/client/main.prod.js",
   "scripts": {
     "ts": "ts-node --project tsconfig.node.json",
@@ -24,7 +25,7 @@
     "test-client": "cross-env NODE_ENV=test node test/client/run-jasmine.js",
     "test-client-watch": "npm run -s test-client -- --watch",
     "build-client": "tsc -p tsconfig.node.json",
-    "build-app": "webpack --progress --profile --colors --display-error-details --display-cached",
+    "build-app": "webpack --profile --colors --display-error-details --display-cached",
     "build-python": "npm run -s ts config/build-python.ts",
     "build": "npm run -s clean && npm run -s build-client && npm run -s build-app",
     "build:prod": "cross-env NODE_ENV=production npm run -s build",
@@ -37,63 +38,12 @@
     "tslint": "tslint -c tslint.json \"app/**/*.ts\" \"src/**/*.ts\" \"test/**/*.ts\" \"./*.js\" \"config/**/*.js\"",
     "stylelint": "stylelint --syntax scss \"app/**/*.scss\"",
     "lint": "npm run -s tslint && npm run -s stylelint",
-    "package": "build --dir",
-    "build-and-pack": "npm run -s build:prod && npm run -s build-python && npm run -s package"
+    "package": "build",
+    "build-and-pack": "npm run -s build:prod && npm run -s build-python && npm run -s package --dir"
   },
   "license": "MIT",
   "engines": {
     "node": ">=6.0.0"
-  },
-  "build": {
-    "productName": "BatchLabs",
-    "appId": "microsoft.azure.batchlabs",
-    "files": [
-      "build/",
-      "node_modules/",
-      "package.json"
-    ],
-    "extraResources": [
-      {
-        "from": "python/build/",
-        "to": "python-rpc",
-        "filter": [
-          "**/*"
-        ]
-      }
-    ],
-    "dmg": {
-      "contents": [
-        {
-          "x": 130,
-          "y": 220
-        },
-        {
-          "x": 410,
-          "y": 220,
-          "type": "link",
-          "path": "/Applications"
-        }
-      ]
-    },
-    "mac": {
-      "icon": "app/assets/images/icon.icns"
-    },
-    "win": {
-      "icon": "app/assets/images/icon.ico",
-      "target": [
-        "nsis"
-      ]
-    },
-    "linux": {
-      "target": [
-        "deb",
-        "AppImage"
-      ]
-    },
-    "directories": {
-      "buildResources": "resources",
-      "output": "release"
-    }
   },
   "devDependencies": {
     "@types/bunyan": "~1.8.0",
@@ -119,8 +69,8 @@
     "cross-env": "~5.0.1",
     "css-loader": "~0.28.0",
     "devtron": "^1.4.0",
-    "electron": "1.6.11",
-    "electron-builder": "~19.16.2",
+    "electron": "~1.6.11",
+    "electron-builder": "~19.24.1",
     "file-loader": "~0.11.0",
     "html-webpack-plugin": "^2.28.0",
     "jasmine": "^2.5.2",
