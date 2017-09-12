@@ -1,0 +1,106 @@
+body {
+    background: #f5f5f5;
+    padding: 0;
+    margin: 0;
+    overflow:auto;
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+a {
+    text-decoration: none;
+}
+* {
+    box-sizing: border-box;
+}
+
+.header {
+    width: 100%;
+    /* background: #2e6083; */
+    overflow:auto;
+    color: #f5f5f5;
+    text-align: center;
+    padding: 5rem 6rem;
+    background-color: #159957;
+    background-image: linear-gradient(120deg, #6ba3cb, #264f6c);
+}
+
+.header .title {
+    margin: auto;
+    font-size: 3.25rem;
+}
+
+.header .subtitle {
+    font-size: 1.25rem;
+    margin-bottom: 2rem;
+    font-weight: normal;
+    opacity: 0.7;
+}
+
+.header .btn {
+    display: inline-block;
+    margin-bottom: 1rem;
+    color: rgba(255,255,255,0.7);
+    background-color: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.2);
+    border-style: solid;
+    border-width: 1px;
+    border-radius: 0.3rem;
+    transition: color 0.2s, background-color 0.2s, border-color 0.2s;
+    padding: 0.75rem 1rem;
+}
+
+.header .btn:hover {
+    color: rgba(255,255,255,0.8);
+    text-decoration: none;
+    background-color: rgba(255,255,255,0.2);
+    border-color: rgba(255,255,255,0.3);
+}
+
+.header .btn:active {
+    outline: 0;
+}
+
+.download-title {
+    text-align: center;
+    color: #2e6083;
+}
+
+.downloads {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    margin: 2rem;
+}
+
+.os-download {
+    margin: 0 50px;
+    width: 160px;
+    text-align: center;
+    color: #5b5b5b;
+    background: white;
+}
+
+.os-download .type {
+    padding: 1rem;
+}
+
+.os-download .type .fa {
+    font-size: 6rem;
+}
+
+.os-download .type > .label {
+    margin-top: 1rem;
+    font-size: 2rem;
+}
+
+.os-download .option {
+    border-top: 1px solid #e5e5e5;
+    cursor: pointer;
+    font-size: 1.1rem;
+}
+
+.os-download .option:hover {
+    background: #e5e5e5;
+}
