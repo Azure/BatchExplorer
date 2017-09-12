@@ -46,6 +46,9 @@ const urls = {
 
 const isAsar = process.mainModule.filename.indexOf("app.asar") !== -1;
 const logsFolder = isAsar ? path.join(app.getPath("userData"), "logs") : path.join(root, "logs");
+
+const resourcesFolder = isAsar ? path.normalize(path.join(root, "..")) : root;
+
 mkdirp.sync(logsFolder);
 
 const pythonServerPort = {
@@ -59,6 +62,7 @@ export const Constants = {
     root,
     urls,
     logsFolder,
+    resourcesFolder,
     pythonServerPort,
     version: packageConfig.version,
 };
