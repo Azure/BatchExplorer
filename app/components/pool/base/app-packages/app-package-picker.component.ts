@@ -128,22 +128,18 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         this._propagateTouched = fn;
     }
 
-    // TODO: Make this simpler
     public validate(control: FormControl) {
-        const tempMap: { [key: string]: string[] } = {};
-
+        const tempMap: any = {};
         for (let reference of control.value) {
-            const application = reference.applicationId;
-            if (tempMap[application] === undefined) {
-                tempMap[application] = [reference.version];
-            } else if (tempMap[application].findIndex(item => item === reference.version) === -1) {
-                tempMap[application].push(reference.version);
-                // check version is valid for application
-                if (this._applicationMap[application].filter((version) => version === reference.version).length === 0) {
+            const key = `${reference.applicationId}-${reference.version}`;
+            if (!Boolean(key in tempMap)) {
+                if (!this._isValidReference(reference.applicationId, reference.version)) {
                     return {
                         invalid: true,
                     };
                 }
+
+                tempMap[key] = key;
             } else {
                 return {
                     duplicate: true,
@@ -174,6 +170,11 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         if (this._propagateTouched) {
             this._propagateTouched(true);
         }
+    }
+
+    private _isValidReference(application: string, version: string) {
+        return application in this._applicationMap
+            && this._applicationMap[application].indexOf(version) !== -1;
     }
 
     /*
