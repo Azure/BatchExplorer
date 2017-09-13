@@ -20,19 +20,31 @@ interface ServerErrorAttributes {
     original?: any;
 }
 
-function parseRequestIdFromLine(line: string): string {
+function parseValueFromLine(line: string): string {
     if (!line) { return null; }
-    return line.split(":")[1];
+    const data = line.split(":");
+    data.shift();
+    if (data.length > 1) {
+        return data.join(":");
+    } else {
+        return data[0];
+    }
+}
+
+function parseRequestIdFromLine(line: string): string {
+    return parseValueFromLine(line);
 }
 
 function parseTimestampFromLine(line: string): Date {
-    if (!line) { return null; }
-    const timeStr = line.split(":")[1];
+    const timeStr = parseValueFromLine(line);
     if (!timeStr) { return null; }
     return new Date(timeStr);
 }
 
 function parseMessage(fullMessage: string) {
+    if (!fullMessage) {
+        return { message: null, requestId: null, timestamp: null };
+    }
     const lines = fullMessage.split("\n");
     const message = lines[0];
     const requestId = parseRequestIdFromLine(lines[1]);
@@ -79,6 +91,8 @@ export class ServerError {
         const { error } = response.json();
         let requestId = null;
         let timestamp = null;
+        let code = null;
+        let message = null;
 
         if (response.headers) {
             requestId = response.headers.get("x-ms-request-id");
@@ -86,12 +100,16 @@ export class ServerError {
             timestamp = date && new Date(date);
         }
 
+        if (error) {
+            code = error.code;
+            message = error.message;
+        }
         return new ServerError({
             status: response.status,
-            code: error.code,
+            code: code,
             statusText: response.statusText,
             original: response,
-            message: error.message,
+            message: message,
             requestId,
             timestamp,
         });

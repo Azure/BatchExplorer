@@ -19,7 +19,7 @@ const fakeError = ServerError.fromBatch({
     statusCode: 408,
     code: "FakeErrorCode",
     message: {
-        value: "There was a fake error\nRequestId:abc-def-ghi\nTime:time:2016-12-08T18:23:14",
+        value: "There was a fake error\nRequestId:abc-def-ghi\nTime:2016-12-08T18:23:14",
     },
 });
 
@@ -66,7 +66,8 @@ describe("ServerErrorComponent", () => {
 
         it("should not show the request id and time by default", () => {
             expect(serverErrorElement.nativeElement.textContent).not.toContain("abc-def-ghi");
-            expect(serverErrorElement.nativeElement.textContent).not.toContain("2016-12-08T18:23:14");
+            expect(serverErrorElement.nativeElement.textContent)
+                .not.toContain("Thu Dec 08 2016 10:23:14 GMT-0800 (Pacific Standard Time)");
         });
 
         it("should show the request id and time after clicking on the debug button", () => {
@@ -74,7 +75,8 @@ describe("ServerErrorComponent", () => {
             fixture.detectChanges();
 
             expect(serverErrorElement.nativeElement.textContent).toContain("abc-def-ghi");
-            expect(serverErrorElement.nativeElement.textContent).toContain("2016-12-08T18:23:14");
+            expect(serverErrorElement.nativeElement.textContent)
+                .toContain("Thu Dec 08 2016 10:23:14 GMT-0800 (Pacific Standard Time)");
         });
     });
 });

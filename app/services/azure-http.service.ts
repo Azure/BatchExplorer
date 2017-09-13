@@ -52,7 +52,9 @@ export class AzureHttpService {
                 return this.http.request(this._computeUrl(uri), options)
                     .retryWhen(attempts => this._retryWhen(attempts))
                     .catch((error) => {
-                        return Observable.throw(ServerError.fromARM(error));
+                        const err = ServerError.fromARM(error);
+                        console.log("Error", err);
+                        return Observable.throw(err);
                     });
             }).share();
     }
@@ -98,7 +100,7 @@ export class AzureHttpService {
             return subscriptionOrTenant;
         } else {
             throw new Error(`Invalid param in azure http service for uri "${uri}". `
-            + `Expected Subscription or tenant id but got ${subscriptionOrTenant}`);
+                + `Expected Subscription or tenant id but got ${subscriptionOrTenant}`);
         }
     }
 

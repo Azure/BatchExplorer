@@ -59,7 +59,8 @@ export class FormTestComponent {
         this.submitSpy();
         const sub = new AsyncSubject();
         if (this.form.value.id === "error") {
-            const value = "Id already exists\nRequestId:abc-def\ntime:2016-12-08T18";
+            const value = "Id already exists\nRequestId:abc-def\nTime:2016-12-08T18:55:00.251Z";
+            console.log("ERRRP", ServerError.fromBatch({ statusCode: 408, code: "IdExists", message: { value } }));
             sub.error(ServerError.fromBatch({ statusCode: 408, code: "IdExists", message: { value } }));
         } else {
             sub.next(true);
@@ -187,12 +188,14 @@ describe("ComplexFormComponent", () => {
             expect(error).not.toBe(null);
 
             expect(error.nativeElement.textContent).not.toContain("abc-def");
-            expect(error.nativeElement.textContent).not.toContain("2016-12-08T18");
+            expect(error.nativeElement.textContent)
+                .not.toContain("Thu Dec 08 2016 10:55:00 GMT-0800 (Pacific Standard Time)");
 
             error.query(By.css("i.fa-bug")).nativeElement.click();
             fixture.detectChanges();
             expect(error.nativeElement.textContent).toContain("abc-def");
-            expect(error.nativeElement.textContent).toContain("2016-12-08T18");
+            expect(error.nativeElement.textContent)
+                .toContain("Thu Dec 08 2016 10:55:00 GMT-0800 (Pacific Standard Time)");
             expect(true).toBe(true);
         });
 
