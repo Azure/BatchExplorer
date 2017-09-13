@@ -63,16 +63,15 @@ export class ServerError {
     }
 
     public static fromStorage(error: StorageError) {
-        const body = {
-            code: error.code,
-            message: error.message,
-            requestId: error.requestId,
-            values: null,
-        };
+        const { message, timestamp } = parseMessage(error.message);
+
         return new ServerError({
             status: error.statusCode,
-            body: body,
             original: error,
+            code: error.code,
+            message: message,
+            requestId: error.requestId,
+            timestamp,
         });
     }
 

@@ -29,7 +29,7 @@ export interface CreateJobModel {
 export function createJobFormToJsonData(formData: CreateJobModel): any {
     let maxWallClockTime = null;
     let data: any = {
-        id: formData.id + "?", // TEST ONLY TODO REMOVE.
+        id: formData.id,
         displayName: formData.displayName,
         priority: formData.priority,
         constraints: {
