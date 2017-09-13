@@ -100,6 +100,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
     }
 
     public writeValue(value: any[]) {
+        // console.log("WRITE VALUE");
         this._writingValue = true;
         this.items.controls = [];
 
@@ -129,6 +130,11 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
     }
 
     public validate(control: FormControl) {
+        if (!control.value) {
+            return null;
+        }
+
+        console.log("validate ... GOT STUFF ", control.value);
         const tempMap: any = {};
         for (let reference of control.value) {
             const key = `${reference.applicationId}-${reference.version}`;
@@ -156,6 +162,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
             version: ["", []],
         }));
 
+        // console.log("addNewItem: ", this.items.controls);
         this.packageMap.push();
     }
 
@@ -165,6 +172,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
     }
 
     public applicationSelected(event: MdSelectChange, index: number) {
+        console.log("*** applicationSelected *** ", event);
         // each table row needs it's own package list
         this.packageMap[index] = List(this._applicationMap[event.value] || []);
         if (this._propagateTouched) {
