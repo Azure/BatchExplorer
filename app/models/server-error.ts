@@ -69,7 +69,6 @@ export class ServerError {
             requestId: error.requestId,
             values: null,
         };
-
         return new ServerError({
             status: error.statusCode,
             body: body,
@@ -78,25 +77,37 @@ export class ServerError {
     }
 
     public static fromARM(response: Response): ServerError {
-        const body = response.json();
+        const { error } = response.json();
+        let requestId = null;
+        let timestamp = null;
+
+        if (response.headers) {
+            requestId = response.headers.get("x-ms-request-id");
+            const date = response.headers.get("Date");
+            timestamp = date && new Date(date);
+        }
+
         return new ServerError({
             status: response.status,
+            code: error.code,
             statusText: response.statusText,
-            body: body,
             original: response,
+            message: error.message,
+            requestId,
+            timestamp,
         });
     }
 
     public static fromPython(error: PythonPRpcError) {
-        const body = {
-            code: ServerError._mapPythonErrorCode(error.code),
-            message: error.message,
-            data: error.data,
-        };
+        const { message, requestId, timestamp } = parseMessage(error.message);
 
         return new ServerError({
             status: error.data && error.data.status,
-            body: body,
+            code: ServerError._mapPythonErrorCode(error.code),
+            message,
+            details: error.data,
+            requestId,
+            timestamp,
             original: error,
         });
     }
