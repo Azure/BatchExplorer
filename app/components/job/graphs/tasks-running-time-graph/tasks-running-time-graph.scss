@@ -6,11 +6,11 @@ bl-tasks-running-time-graph {
     width: 100%;
     height: 100%;
 
-    .graph-container {
+    > .graph-container {
         height: calc(100% - #{$graph-option-height});
     }
 
-    .graph-options {
+    > .graph-options {
         padding: 5px 50px;
         height: $graph-option-height;
     }
