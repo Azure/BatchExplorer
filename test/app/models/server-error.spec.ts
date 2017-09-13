@@ -3,7 +3,7 @@ import { ServerError } from "app/models";
 
 const date = new Date(2017, 9, 13, 23, 43, 38);
 
-fdescribe("ServerError.model", () => {
+describe("ServerError.model", () => {
     describe("when creating from a batch error", () => {
         it("assign all attributes", () => {
             const error = ServerError.fromBatch({
