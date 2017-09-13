@@ -85,32 +85,26 @@ export class TaskOutputsComponent implements OnChanges {
         if (error.status === Constants.HttpCode.NotFound) {
             return new ServerError({
                 status: 404,
-                body: {
-                    code: "NodeNotFound",
-                    message: "The node the task ran on doesn't exists anymore or is in an invalid state.",
-                },
+                code: "NodeNotFound",
+                message: "The node the task ran on doesn't exists anymore or is in an invalid state.",
                 original: error.original,
             });
         } else if (error.status === Constants.HttpCode.Conflict) {
             return new ServerError({
                 status: 404,
-                body: {
-                    code: "TaskFilesDeleted",
-                    message: "The task files were cleaned from the node.",
-                },
+                code: "TaskFilesDeleted",
+                message: "The task files were cleaned from the node.",
                 original: error.original,
             });
         }
         return error;
     }
     private _processBlobError(error: ServerError): ServerError {
-        if (error.status === Constants.HttpCode.NotFound && error.body.code === "ContainerNotFound") {
+        if (error.status === Constants.HttpCode.NotFound && error.code === "ContainerNotFound") {
             return new ServerError({
                 status: 404,
-                body: {
-                    code: "NoPersistedOutput",
-                    message: this._fileConventionErrorMessage(),
-                },
+                code: "NoPersistedOutput",
+                message: this._fileConventionErrorMessage(),
                 original: error.original,
             });
         }

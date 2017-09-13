@@ -81,7 +81,7 @@ export class FileDetailsViewComponent implements OnChanges {
             error: (error: ServerError) => {
                 this.notificationService.error(
                     "Download failed",
-                    `${this.filename} failed to download. ${error.body.message}`,
+                    `${this.filename} failed to download. ${error.message}`,
                 );
             },
         });

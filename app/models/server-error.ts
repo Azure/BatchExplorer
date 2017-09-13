@@ -4,36 +4,60 @@ import { BatchError } from "./batch-error";
 import { PythonPRpcError } from "./python-rpc-error";
 import { StorageError } from "./storage-error";
 
+interface ErrorDetail {
+    key?: string;
+    value?: string;
+}
+
 interface ServerErrorAttributes {
     status: number;
     statusText?: string;
-    body: ServerErrorBodyAttributes;
+    code: string;
+    message: string;
+    details?: ErrorDetail[];
+    requestId?: string;
+    timestamp?: Date;
     original?: any;
 }
 
-interface ServerErrorBodyAttributes {
-    code?: string;
-    message?: string;
-    requestId?: string;
-    values?: any[];
-    data?: any;
+function parseRequestIdFromLine(line: string): string {
+    if (!line) { return null; }
+    return line.split(":")[1];
 }
 
+function parseTimestampFromLine(line: string): Date {
+    if (!line) { return null; }
+    const timeStr = line.split(":")[1];
+    if (!timeStr) { return null; }
+    return new Date(timeStr);
+}
+
+function parseMessage(fullMessage: string) {
+    const lines = fullMessage.split("\n");
+    const message = lines[0];
+    const requestId = parseRequestIdFromLine(lines[1]);
+    const timestamp = parseTimestampFromLine(lines[2]);
+    return {
+        message,
+        requestId,
+        timestamp,
+    };
+}
 /**
  * Generic error structure for all api.
  * All their error format needs to be converted to this one so it can then be consumed easily
  */
 export class ServerError {
     public static fromBatch(error: BatchError) {
-        const body = {
-            code: error.code,
-            message: error.message && error.message.value,
-            values: error.body && error.body.values,
-        };
+        const { message, requestId, timestamp } = parseMessage(error.message && error.message.value);
 
         return new ServerError({
             status: error.statusCode,
-            body: body,
+            code: error.code,
+            details: error.body && error.body.values,
+            message,
+            requestId,
+            timestamp,
             original: error,
         });
     }
@@ -90,23 +114,25 @@ export class ServerError {
 
     public status: number;
     public statusText: string;
-    public body: ServerErrorBodyAttributes;
+    public code: string;
     public message: string;
+    public details: ErrorDetail[];
+    public requestId: string;
+    public timestamp: Date;
     public original: any;
 
     constructor(attributes: ServerErrorAttributes) {
-        Object.assign(this, attributes);
-
-        const value = this.body.message;
-        if (value) {
-            // Remove the request id from the the message
-            const lines = value.split("\n");
-
-            this.message = lines.first();
-        }
+        this.status = attributes.status;
+        this.statusText = attributes.statusText;
+        this.code = attributes.code;
+        this.message = attributes.message;
+        this.details = attributes.details || [];
+        this.requestId = attributes.requestId;
+        this.timestamp = attributes.timestamp;
+        this.original = attributes.original;
     }
 
     public toString() {
-        return `${this.status} - ${this.body.message}`;
+        return `${this.status} - ${this.message}`;
     }
 }

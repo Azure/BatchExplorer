@@ -103,7 +103,7 @@ describe("DisableJobDialogComponent ", () => {
                 expect(jobServiceSpy.disable).toHaveBeenCalledTimes(1);
                 expect(jobServiceSpy.disable).toHaveBeenCalledWith("bad-job-id", "requeue", {});
 
-                expect(error.body.message).toBe("Some random test error happened disabling job");
+                expect(error.message).toBe("Some random test error happened disabling job");
 
                 done();
             },

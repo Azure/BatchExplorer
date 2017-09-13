@@ -40,7 +40,7 @@ export class NodeUserService extends ServiceBase {
      */
     public addOrUpdateUser(poolId: string, nodeId: string, user: AddNodeUserAttributes) {
         return this.addUser(poolId, nodeId, user).catch((e: ServerError) => {
-            if (e.status && e.body.code === "NodeUserExists") {
+            if (e.code === "NodeUserExists") {
                 return this.updateUser(poolId, nodeId, user.name, user);
             } else {
                 throw e;

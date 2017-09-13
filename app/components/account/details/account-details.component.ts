@@ -106,10 +106,8 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
      * There is a difference in the error response body between classic and standard storage API's
      * @param error - error JSON object
      */
-    private _isAutoStorageError(error: any): boolean {
+    private _isAutoStorageError(error: ServerError): boolean {
         const badCode = Constants.APIErrorCodes.accountNotEnabledForAutoStorage;
-        return error &&
-            (error.body.code === badCode ||
-                (error.body.error && error.body.error.code === badCode));
+        return error && error.code === badCode;
     }
 }
