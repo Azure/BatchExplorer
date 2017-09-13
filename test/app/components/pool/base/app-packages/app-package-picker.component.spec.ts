@@ -27,7 +27,7 @@ class TestComponent {
     }
 }
 
-describe("AppPackagePickerComponent", () => {
+fdescribe("AppPackagePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: AppPackagePickerComponent;
@@ -68,6 +68,10 @@ describe("AppPackagePickerComponent", () => {
         debugElement = fixture.debugElement.query(By.css("bl-app-package-picker"));
         component = debugElement.componentInstance;
         fixture.detectChanges();
+    });
+
+    it("has linked storage", () => {
+        expect(testComponent.hasLinkedStorage).toBe(true);
     });
 
     it("should have the correct column labels", () => {
