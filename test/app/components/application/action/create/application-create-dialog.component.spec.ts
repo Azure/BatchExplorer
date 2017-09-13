@@ -32,7 +32,7 @@ describe("ApplicationCreateDialogComponent ", () => {
                 if (applicationId === "throw-me") {
                     const options = new ResponseOptions({
                         status: 400,
-                        body: JSON.stringify({ message: "blast, we failed" }),
+                        body: JSON.stringify({ error: { message: "blast, we failed" } }),
                         statusText: "error, error, error",
                     });
 
