@@ -23,7 +23,7 @@
     <bl-server-error [error]="error"></bl-server-error>
 </div>
 <div class="form-footer">
-    <div class="toggle-mode">
+    <div class="toggle-mode" *ngIf="config.jsonEditor">
         <bl-button type="square" [disabled]="!showJsonEditor" (do)="switchToClassicForm()">
             <i class="fa fa-commenting"></i>
         </bl-button>
