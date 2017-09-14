@@ -6,7 +6,7 @@ import { File, ServerError } from "app/models";
 import { RxListProxy } from "app/services/core";
 import { FileLoader } from "app/services/file";
 import { CloudPathUtils, ObjectUtils } from "app/utils";
-import { FileTreeNode, FileTreeStructure } from "./file-tree.model";
+import { FileTreeNode, FileTreeStructure, OpenedFile } from "./file-tree.model";
 
 export interface FileNavigatorConfig {
     /**
@@ -43,12 +43,29 @@ export interface FileNavigatorConfig {
  * This can be extended for a node, task or blob file list
  */
 export class FileNavigator {
+    /**
+     * Path of the file/directory currently being viewed
+     */
     public currentPath: Observable<string>;
+
+    /**
+     * Tree node that is currently being viewed
+     */
     public currentNode: Observable<FileTreeNode>;
     public loadingStatus = LoadingStatus.Ready;
     public basePath: string;
     public tree: Observable<FileTreeStructure>;
+
+    /**
+     * Current file loader to display
+     */
     public currentFileLoader: FileLoader;
+
+    /**
+     * List of files opended for a quick switch
+     */
+    public openedFiles: Observable<OpenedFile[]>;
+    public _openedFiles = new BehaviorSubject([]);
     public error: ServerError;
 
     private _currentPath = new BehaviorSubject("");
@@ -72,6 +89,7 @@ export class FileNavigator {
             return tree.getNode(path).clone();
         }).shareReplay(1);
         this.tree = this._tree.asObservable();
+        this.openedFiles = this._openedFiles.asObservable();
     }
 
     /**
@@ -81,7 +99,11 @@ export class FileNavigator {
         this._loadFileInPath();
     }
 
-    public navigateTo(path: string) {
+    /**
+     * @param path Path of the file/directory to navigate to
+     * @param openInNewTab If its the path to a file it will open the file in a new tab
+     */
+    public navigateTo(path: string, openInNewTab: boolean = true) {
         if (this._currentPath.value === path) { return; }
         this._history.push(this._currentPath.value);
         this._currentPath.next(path);
@@ -91,8 +113,44 @@ export class FileNavigator {
                 this._loadFileInPath(path);
             }
         } else {
-            this.currentFileLoader = this._getFileLoader(node.path);
+            this.openFile(path, openInNewTab);
         }
+    }
+
+    public isFileOpen(path: string): boolean {
+        return Boolean(this._openedFiles.value.find(x => x.path === path));
+    }
+
+    public openFile(path: string, openInNewTab: boolean = true) {
+        const openedFiles = this._openedFiles.value;
+        if (!this.isFileOpen(path)) {
+            if (openInNewTab) {
+                openedFiles.push({
+                    path,
+                    fileLoader: this._getFileLoader(path),
+                });
+            }
+        }
+        this._openedFiles.next(openedFiles);
+    }
+
+    /**
+     * Triggered when a tab select to open a file
+     * @param filename File to open
+     *
+     * If filename is null or undefined it will show the file table viewer at the last position
+     */
+    public openFiles(paths: string[]) {
+        const openedFiles = this._openedFiles.value;
+        for (let path of paths) {
+            if (!this.isFileOpen(path)) {
+                openedFiles.push({
+                    path,
+                    fileLoader: this._getFileLoader(path),
+                });
+            }
+        }
+        this._openedFiles.next(openedFiles);
     }
 
     /**

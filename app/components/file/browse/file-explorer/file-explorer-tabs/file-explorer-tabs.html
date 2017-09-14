@@ -1,8 +1,8 @@
 <div class="tablist">
-    <div class="tab main" [class.active]="activeFile === null" title="File viewer" (click)="activateTab(null)">
+    <div class="tab main" [class.active]="activePath === null" title="File viewer" (click)="activateTab(null)">
         <i class="fa fa-folder"></i>
     </div>
-    <div class="tab" *ngFor="let tab of tabs" [class.active]="activeFile === tab.filename" [title]="tab.filename" (click)="activateTab(tab)">
+    <div class="tab" *ngFor="let tab of tabs" [class.active]="activePath === tab.filename" [title]="tab.filename" (click)="activateTab(tab)">
         {{tab.displayName}}
     </div>
 </div>

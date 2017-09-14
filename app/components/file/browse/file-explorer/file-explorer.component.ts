@@ -3,8 +3,8 @@ import { Subscription } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { FileNavigator, FileTreeNode } from "app/services/file";
-import "./file-explorer.scss";
 import { exists } from "app/utils";
+import "./file-explorer.scss";
 
 export interface FileNavigatorEntry {
     name: string;
@@ -72,9 +72,7 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
     public currentNode: FileTreeNode;
     public currentFileNavigator: FileNavigator;
     public currentFileNavigatorEntry: FileNavigatorEntry;
-    public openedFiles: string[] = ["stdout.txt", "stderr.txt", "wd/example-jobs/python/pi.py"];
 
-    private _lastFolderExplored: string = "";
     private _currentNodeSub: Subscription;
     private _config: FileExplorerConfig = fileExplorerDefaultConfig;
 
@@ -113,21 +111,6 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
         this._updateNavigatorEvents();
     }
 
-    /**
-     * Triggered when a tab select to open a file
-     * @param filename File to open
-     *
-     * If filename is null or undefined it will show the file table viewer at the last position
-     */
-    public openFile(filename?: string) {
-        this.activeFile = filename;
-        if (exists(filename)) {
-            this.navigateTo(filename);
-        } else {
-            this.navigateTo(this._lastFolderExplored);
-        }
-    }
-
     public goBack() {
         this.currentFileNavigator.goBack();
     }
@@ -138,12 +121,8 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
 
     private _updateNavigatorEvents() {
         this._clearCurrentNodeSub();
-        this._lastFolderExplored = "";
         this._currentNodeSub = this.currentFileNavigator.currentNode.subscribe((node) => {
             this.currentNode = node;
-            if (node.isDirectory) {
-                this._lastFolderExplored = node.path;
-            }
         });
     }
 

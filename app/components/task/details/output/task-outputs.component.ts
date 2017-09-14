@@ -59,6 +59,7 @@ export class TaskOutputsComponent implements OnChanges {
             const nodeNavigator = this.fileService.navigateTaskFile(this.jobId, this.taskId, {
                 onError: (error) => this._processTaskFilesError(error),
             });
+            nodeNavigator.openFiles(["stdout.txt", "stderr.txt", "wd/example-jobs/python/pi.py"]);
             nodeNavigator.init();
 
             const taskOutputPrefix = `${this.taskId}/$TaskOutput/`;
