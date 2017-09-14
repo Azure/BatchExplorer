@@ -22,7 +22,7 @@ export class PoolCreateDto extends Dto<PoolCreateDto> {
         subnetId: string;
     };
 
-    @DtoAttr() public resizeTimeout?: moment.Duration;
+    @DtoAttr(moment.duration) public resizeTimeout?: moment.Duration;
 
     @DtoAttr() public targetDedicatedNodes?: number;
 
