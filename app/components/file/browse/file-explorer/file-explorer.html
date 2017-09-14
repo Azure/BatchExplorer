@@ -9,6 +9,7 @@
     </bl-file-tree-view>
 </section>
 <section class="file-content-container">
+    <bl-file-explorer-tabs [openedFiles]="openedFiles" [activeFile]="" (activeFileChange)="openFile($event)"></bl-file-explorer-tabs>
     <ng-container *ngIf="currentFileNavigator && currentNode">
         <bl-file-table-view *ngIf="currentNode.isDirectory"
             [name]="currentFileNavigatorEntry.name"
