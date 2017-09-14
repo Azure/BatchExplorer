@@ -44,6 +44,7 @@ bl-file-explorer-tabs {
             }
         }
 
+        > .tab.active .tab-close > .close-icon,
         > .tab:hover .tab-close > .close-icon {
             opacity: 1;
         }
