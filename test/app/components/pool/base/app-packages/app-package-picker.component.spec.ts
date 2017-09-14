@@ -27,7 +27,7 @@ class TestComponent {
     }
 }
 
-fdescribe("AppPackagePickerComponent", () => {
+describe("AppPackagePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: AppPackagePickerComponent;
