@@ -32,6 +32,17 @@ export class FileExplorerTabsComponent implements OnChanges, OnDestroy {
         this._clearFileNavigatorSub();
     }
 
+    public handleMouseDown(event: MouseEvent, tab) {
+        if (event.which === 2) { // Middle click
+            this.closeTab(event, tab);
+        }
+    }
+
+    public closeTab(event: MouseEvent, tab: Tab) {
+        event.stopPropagation();
+        this.fileNavigator.closeFile(tab.filename);
+    }
+
     public activateTab(tab: Tab) {
         if (tab) {
             this.fileNavigator.navigateTo(tab.filename);

@@ -1,7 +1,7 @@
 @import "app/styles/variables";
 
 bl-file-explorer-tabs {
-    $tab-height: 35px;
+    $tab-height: 28px;
     display: block;
     .tablist {
         height: $tab-height;
@@ -19,15 +19,33 @@ bl-file-explorer-tabs {
             padding-left: 10px;
             color: $dove-grey;
             border-right: 1px solid $border-color;
-            padding: 0 5px;
         }
 
         > .tab.main {
             font-size: 24px;
+            padding: 5px;
         }
 
         > .tab.active {
             background: $whitesmoke;
+        }
+
+        > .tab .tab-close {
+            width: 18px;
+            padding: 0 3px;
+
+            > .close-icon {
+                color: $dove-grey;
+                opacity: 0;
+
+                &:hover {
+                    color: $mineshaft-grey;
+                }
+            }
+        }
+
+        > .tab:hover .tab-close > .close-icon {
+            opacity: 1;
         }
     }
 }

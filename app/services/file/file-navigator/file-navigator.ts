@@ -153,6 +153,11 @@ export class FileNavigator {
         this._openedFiles.next(openedFiles);
     }
 
+    public closeFile(path: string) {
+        const newOpenedFiles = this._openedFiles.value.filter(x => x.path !== path);
+        this._openedFiles.next(newOpenedFiles);
+    }
+
     /**
      * Go back up one level
      */
