@@ -118,7 +118,8 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
     public switchToJsonEditor() {
         if (!this.config.jsonEditor) { return; }
         this.showJsonEditor = true;
-        const obj = this.config.jsonEditor.toDto(this.formGroup.value).toJS();
+        // const obj = this.config.jsonEditor.toDto(this.formGroup.value).toJS();
+        const obj = this.getDto().toJS();
         this.jsonValue.setValue(JSON.stringify(obj, null, 2));
     }
 
@@ -131,6 +132,13 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
         this.formGroup.patchValue(formValue);
     }
 
+    public getDto(): Dto<any> {
+        if (!this.config.jsonEditor) { return; }
+        const base = this._getJsonFormDto();
+        const form = this.config.jsonEditor.toDto(this.formGroup.value);
+        return base.merge(form);
+    }
+
     public get saveAndCloseText() {
         return this.multiUse ? `${this.actionName} and close` : this.actionName;
     }
@@ -140,5 +148,11 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
      */
     public get submitEnabled() {
         return !this.formGroup || this.formGroup.valid;
+    }
+
+    private _getJsonFormDto(): Dto<any> {
+        if (!this.config.jsonEditor) { return; }
+        const data = JSON.parse(this.jsonValue.value);
+        return new this.config.jsonEditor.dtoType(data || {});
     }
 }

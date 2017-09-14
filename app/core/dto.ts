@@ -31,6 +31,11 @@ export class Dto<T> {
         }
     }
 
+    public merge?(other: this): this {
+        const data = { ...(this.toJS() as any), ...(other.toJS() as any) };
+        return new (this.constructor as any)(data);
+    }
+
     public toJS?(): AttrOf<T> {
         let output: any = {};
         const attrs = metadataForDto(this);
