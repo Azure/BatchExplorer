@@ -64,11 +64,13 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         this._subscriptions.push(this._data.items.subscribe((applications) => {
             this._applicationMap = {};
             this._mapApplicationPackages(applications);
+            // todo: add the package map items
         }));
 
         // subscribe to the form change events
         this._subscriptions.push(this.items.valueChanges.subscribe((references: PackageReference[]) => {
             if (this._writingValue) {
+                // todo: add the package map items
                 return;
             }
 
@@ -99,24 +101,18 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         this._subscriptions.forEach(x => x.unsubscribe());
     }
 
-    public writeValue(value: any[]) {
+    public writeValue(references: PackageReference[]) {
         this._writingValue = true;
         this.items.controls = [];
-
-        if (value) {
-            for (let val of value) {
-                this.items.push(this.formBuilder.group(val));
-                // TODO: this needs to add the package list
-                this.packageMap.push();
+        if (references) {
+            for (let reference of references) {
+                this.addNewItem(reference.applicationId, reference.version);
             }
         } else {
             this.items.setValue([]);
         }
 
         this._writingValue = false;
-        if (this.items.length > 0) {
-            this.addNewItem();
-        }
     }
 
     public registerOnChange(fn) {
@@ -154,10 +150,10 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         return null;
     }
 
-    public addNewItem() {
+    public addNewItem(applicationId = "", version = "") {
         this.items.push(this.formBuilder.group({
-            applicationId: ["", []],
-            version: ["", []],
+            applicationId: [applicationId, []],
+            version: [version, []],
         }));
 
         this.packageMap.push();

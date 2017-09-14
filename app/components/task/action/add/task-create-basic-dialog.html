@@ -44,8 +44,16 @@
             <bl-resourcefile-picker formControlName="resourceFiles"></bl-resourcefile-picker>
         </bl-form-section>
 
-        <bl-form-section title="Environment variables" subtitle="A list of environment variable settings for the task.">
+        <bl-form-section title="Environment variables" subtitle="A list of environment variable settings for the task">
             <bl-key-value-picker formControlName="environmentSettings"></bl-key-value-picker>
+        </bl-form-section>
+
+        <bl-form-section *ngIf="hasLinkedStorage" title="Choose one or multiple application packages" subtitle="Select application packages to be downloaded onto the compute node for use with this task">
+            <div class="form-element">
+                <bl-app-package-picker (hasLinkedStorage)="handleHasLinkedStorage($event)" formControlName="appPackages"></bl-app-package-picker>
+                <bl-error controlName="appPackages" code="invalid">Please select valid combinations of application package versions</bl-error>
+                <bl-error controlName="appPackages" code="duplicate">There is a duplicate package version selected</bl-error>
+            </div>
         </bl-form-section>
     </bl-form-page>
 </bl-complex-form>

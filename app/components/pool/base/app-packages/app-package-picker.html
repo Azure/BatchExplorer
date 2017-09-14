@@ -11,7 +11,9 @@
             <tr *ngFor="let item of items.controls; let i=index; let isLast=last" [formGroupName]="i">
                 <td>
                     <md-select formControlName="applicationId" (change)="applicationSelected($event, i)">
-                        <md-option *ngFor="let application of applications" [value]="application.id">{{ application.id }}</md-option>
+                        <!-- TODO: toLowerCase() is for a bug in the API, it should be case preserving, but it's not -->
+                        <!-- TODO: Material seems to do case sensitive matching, which i also think is a bug -->
+                        <md-option *ngFor="let application of applications" [value]="application.id.toLowerCase()">{{ application.id }}</md-option>
                     </md-select>
                 </td>
                 <td>
