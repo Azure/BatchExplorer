@@ -1,5 +1,6 @@
 import { Component, HostListener, Input, OnChanges, OnDestroy } from "@angular/core";
-import { FileNavigator, OpenedFile } from "app/services/file";
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
+import { FileLoader, FileNavigator, OpenedFile } from "app/services/file";
 import { Constants } from "app/utils";
 import * as path from "path";
 import { Subscription } from "rxjs/Rx";
@@ -9,6 +10,7 @@ interface Tab {
     index: number;
     filename: string;
     displayName: string;
+    fileLoader: FileLoader;
 }
 
 @Component({
@@ -23,6 +25,8 @@ export class FileExplorerTabsComponent implements OnChanges, OnDestroy {
 
     private _fileNavigatorSubs: Subscription[] = [];
     private _lastFolderExplored: string = "";
+
+    constructor(private contextMenuService: ContextMenuService) { }
 
     public ngOnChanges(changes) {
         if (changes.fileNavigator) {
@@ -44,16 +48,36 @@ export class FileExplorerTabsComponent implements OnChanges, OnDestroy {
 
     public handleMouseUp(event: MouseEvent, tab) {
         if (event.button === Constants.MouseButton.middle) { // Middle click
-            this.closeTab(event, tab);
+            this.closeTab(tab, event);
+        } else if (event.button === Constants.MouseButton.right) {
+            this.showContextMenu(tab);
         }
     }
 
-    public closeTab(event: MouseEvent, tab: Tab) {
-        event.stopPropagation();
+    public closeTab(tab: Tab, event?: MouseEvent) {
+        if (event) {
+            event.stopPropagation();
+        }
         const newIndex = tab.index - 1;
         const newTab = newIndex === -1 ? null : this.tabs[newIndex];
         this.activateTab(newTab);
         this.fileNavigator.closeFile(tab.filename);
+    }
+
+    public closeOtherTabs(tab: Tab) {
+        this.activateTab(tab);
+        for (const openTab of this.tabs) {
+            if (openTab.filename !== tab.filename) {
+                this.fileNavigator.closeFile(openTab.filename);
+            }
+        }
+    }
+
+    public closeAllTabs() {
+        this.activateTab(null);
+        for (const openTab of this.tabs) {
+            this.fileNavigator.closeFile(openTab.filename);
+        }
     }
 
     public activateTab(tab: Tab) {
@@ -62,6 +86,14 @@ export class FileExplorerTabsComponent implements OnChanges, OnDestroy {
         } else {
             this.fileNavigator.navigateTo(this._lastFolderExplored);
         }
+    }
+
+    public showContextMenu(tab: Tab) {
+        this.contextMenuService.openMenu(new ContextMenu([
+            new ContextMenuItem("Close", () => this.closeTab(tab)),
+            new ContextMenuItem("Close others", () => this.closeOtherTabs(tab)),
+            new ContextMenuItem("Close All", () => this.closeAllTabs()),
+        ]));
     }
 
     public trackByFn(index, tab) {
@@ -94,6 +126,7 @@ export class FileExplorerTabsComponent implements OnChanges, OnDestroy {
                 index,
                 filename: file.path,
                 displayName: path.basename(file.path),
+                fileLoader: file.fileLoader,
             };
         });
     }

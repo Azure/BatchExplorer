@@ -10,6 +10,6 @@
         (mouseup)="handleMouseUp($event, tab)">
 
         <span class="name">{{tab.displayName}}</span>
-        <span class="tab-close" (click)="closeTab($event, tab)"><i class="fa fa-times close-icon"></i></span>
+        <span class="tab-close" (click)="closeTab(tab, $event)"><i class="fa fa-times close-icon"></i></span>
     </div>
 </div>
