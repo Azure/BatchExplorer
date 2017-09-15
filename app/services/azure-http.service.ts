@@ -53,7 +53,6 @@ export class AzureHttpService {
                     .retryWhen(attempts => this._retryWhen(attempts))
                     .catch((error) => {
                         const err = ServerError.fromARM(error);
-                        console.log("Error", err);
                         return Observable.throw(err);
                     });
             }).share();
