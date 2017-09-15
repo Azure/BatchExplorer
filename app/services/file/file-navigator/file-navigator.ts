@@ -109,14 +109,12 @@ export class FileNavigator {
         this._history.push(this._currentPath.value);
         this._currentPath.next(path);
         const node = this._tree.value.getNode(path);
-        if (node.isUnkown) {
+        if (node.isUnknown) {
             this._checkIfDirectory(node).subscribe({
                 next: (isDir) => {
                     this._loadPathContent(path, isDir, openInNewTab);
                 },
-                error: (err) => {
-                    console.log("is direrr", err);
-                },
+                error: (err) => null,
             });
         } else {
             this._loadPathContent(path, node.isDirectory, openInNewTab);
@@ -130,7 +128,6 @@ export class FileNavigator {
     public openFile(path: string, openInNewTab: boolean = true) {
         const openedFiles = this._openedFiles.value;
         if (!this.isFileOpen(path)) {
-            console.log("File is not open....");
             if (openInNewTab) {
                 openedFiles.push({
                     path,
@@ -212,23 +209,19 @@ export class FileNavigator {
             next: (files: List<File>) => {
                 proxy.dispose();
                 if (files.size === 0) { return false; }
-                console.log("got files", this._getFolderToLoad(node.path, false), files.toJS());
                 const file = files.first();
                 subject.next(file.isDirectory);
                 subject.complete();
             },
             error: (e) => (error) => {
                 proxy.dispose();
-                console.log("Got error....", error);
-                subject.next(false);
-                subject.complete();
+                subject.error(error);
             },
         });
         return subject.asObservable();
     }
 
     private _loadPathContent(path: string, isDirectory: boolean, openInNewTab: boolean = true) {
-        console.log("LOad content of", path, isDirectory);
         if (isDirectory) {
             if (!this._tree.value.isPathLoaded(path)) {
                 this._loadFilesInPath(path);
