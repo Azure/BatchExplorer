@@ -19,6 +19,7 @@ bl-file-explorer-tabs {
             padding-left: 10px;
             color: $dove-grey;
             border-right: 1px solid $border-color;
+            user-select: none;
         }
 
         > .tab.main {

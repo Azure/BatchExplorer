@@ -39,11 +39,16 @@ export class FileExplorerTabsComponent implements OnChanges, OnDestroy {
     }
 
     @HostListener("mousedown", ["$event"])
-    public preventMiddleClickScrolling(event) {
-        if (event.button !== Constants.MouseButton.middle) { return; }
+    public disableClickDefaultActions(event) {
+        if (event.button === Constants.MouseButton.left) {
+            event.preventDefault(); // Prevent focus on left click
+        }
+        if (event.button === Constants.MouseButton.middle) {
+            event.preventDefault(); // Prevent scrolling on middle click
+            event.stopPropagation();
+            return;
+        }
 
-        event.preventDefault();
-        event.stopPropagation();
     }
 
     public handleMouseUp(event: MouseEvent, tab) {
