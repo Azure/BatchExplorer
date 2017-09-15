@@ -18,7 +18,7 @@
                 </td>
                 <td>
                     <md-select formControlName="version">
-                        <md-option *ngFor="let package of packageMap[i]" [value]="package">{{ package }}</md-option>
+                        <md-option *ngFor="let package of packageMap[i]" [value]="getPackageValue(package)">{{ package }}</md-option>
                     </md-select>
                 </td>
                 <td class="action-column">

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, OnDestroy, OnInit, Output, forwardRef } from "@angular/core";
+import { AfterViewInit, Component, EventEmitter, OnDestroy, Output, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
@@ -27,7 +27,7 @@ interface PackageReference {
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => AppPackagePickerComponent), multi: true },
     ],
 })
-export class AppPackagePickerComponent implements ControlValueAccessor, Validator, AfterViewInit, OnDestroy, OnInit {
+export class AppPackagePickerComponent implements ControlValueAccessor, Validator, AfterViewInit, OnDestroy {
     @Output()
     public hasLinkedStorage: EventEmitter<boolean> = new EventEmitter();
 
@@ -40,9 +40,14 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
     private _subscriptions: Subscription[] = [];
     private _data: RxListProxy<{}, BatchApplication>;
     private _applicationMap: { [key: string]: string[] } = {};
+    private _applicationCorrectCaseMap: { [key: string]: string } = {};
     private _propagateChange: (items: any[]) => void;
     private _propagateTouched: (value: boolean) => void;
     private _writingValue = false;
+    private _mapped = false;
+
+    private _defaultVersionText = "Use default version";
+    private _defaultVersionValue = "-1";
 
     constructor(
         private applicationService: ApplicationService,
@@ -50,6 +55,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
 
         this.items = formBuilder.array([]);
         this.form = formBuilder.group({ items: this.items });
+        this._mapped = false;
 
         this._data = this.applicationService.list({}, (error: ServerError) => {
             if (this.applicationService.isAutoStorageError(error)) {
@@ -64,13 +70,21 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         this._subscriptions.push(this._data.items.subscribe((applications) => {
             this._applicationMap = {};
             this._mapApplicationPackages(applications);
-            // todo: add the package map items
+
+            // when this is called the packages will all be loaded from writeValue.
+            let index = 0;
+            (this.items.value as PackageReference[] || []).forEach(item => {
+                if (item && item.applicationId) {
+                    this._setPackageMap(item.applicationId, index);
+                }
+
+                index++;
+            });
         }));
 
         // subscribe to the form change events
         this._subscriptions.push(this.items.valueChanges.subscribe((references: PackageReference[]) => {
             if (this._writingValue) {
-                // todo: add the package map items
                 return;
             }
 
@@ -80,15 +94,31 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
             }
 
             if (this._propagateChange) {
-                this._propagateChange(this.items.value.slice(0, -1));
+                const cloned = this.items.value.slice(0, -1).map(item => {
+                    let clone = Object.assign({}, item);
+                    clone.applicationId = this._applicationCorrectCaseMap[item.applicationId];
+                    if (clone.version === this._defaultVersionValue) {
+                        delete clone.version;
+                    }
+
+                    return clone;
+                });
+
+                // clone.version = clone.version !== this._defaultVersionValue ? clone.version : null;
+                // delete clone.version;
+
+                // Object.keys(clone).forEach(function (key) {
+                //     if (clone[key] === "null") {
+                //        delete clone[key];
+                //     }
+                // });
+
+                console.log("sending: ", cloned);
+                this._propagateChange(cloned);
             }
         }));
 
         this.status = this._data.status;
-    }
-
-    public ngOnInit() {
-        this._data.fetchNext();
     }
 
     public ngAfterViewInit() {
@@ -106,12 +136,13 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         this.items.controls = [];
         if (references) {
             for (let reference of references) {
-                this.addNewItem(reference.applicationId, reference.version);
+                this.addNewItem(reference.applicationId, reference.version || this._defaultVersionValue);
             }
         } else {
             this.items.setValue([]);
         }
 
+        this._data.fetchNext();
         this._writingValue = false;
     }
 
@@ -125,15 +156,20 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
     }
 
     public validate(control: FormControl) {
-        if (!control.value) {
+        if (!control.value || this._writingValue || !this._mapped) {
             return null;
         }
 
         const tempMap: any = {};
         for (let reference of control.value) {
+            console.log("validating:", reference);
             const key = `${reference.applicationId}-${reference.version}`;
             if (!Boolean(key in tempMap)) {
-                if (!this._isValidReference(reference.applicationId, reference.version)) {
+                const version = reference.version === this._defaultVersionValue
+                    ? this._defaultVersionText
+                    : reference.version;
+
+                if (!this._isValidReference(reference.applicationId, version)) {
                     return {
                         invalid: true,
                     };
@@ -155,8 +191,6 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
             applicationId: [applicationId, []],
             version: [version, []],
         }));
-
-        this.packageMap.push();
     }
 
     public deleteItem(index: number) {
@@ -165,8 +199,16 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
     }
 
     public applicationSelected(event: MdSelectChange, index: number) {
-        // each table row needs it's own package list
-        this.packageMap[index] = List(this._applicationMap[event.value] || []);
+        this._setPackageMap(event.value, index);
+    }
+
+    public getPackageValue(version: string) {
+        return version.toLowerCase() !== this._defaultVersionText.toLowerCase() ? version : this._defaultVersionValue;
+    }
+
+    private _setPackageMap(applicationId: string, index: number) {
+        // each table row needs it's own package list based on the selected application
+        this.packageMap[index] = List(this._applicationMap[applicationId] || []);
         if (this._propagateTouched) {
             this._propagateTouched(true);
         }
@@ -187,14 +229,16 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         this.applications = applications;
         if (applications && applications.size > 0) {
             applications.forEach((application) => {
-                const currentAppId = application.id;
+                // TODO: remove lower case when API bug fixed.
+                const currentAppId = application.id.toLowerCase();
+                this._applicationCorrectCaseMap[currentAppId] = application.id;
                 if (this._applicationMap[currentAppId] === undefined) {
                     this._applicationMap[currentAppId] = [];
                 }
 
                 // If there is a default version set allow the user to select "use default"
                 if (application.defaultVersion) {
-                    this._applicationMap[currentAppId].push("Use default version");
+                    this._applicationMap[currentAppId].push(this._defaultVersionText);
                 }
 
                 // Add the packages to the application map
@@ -205,6 +249,8 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
                     }
                 });
             });
+
+            this._mapped = true;
         }
     }
 }
