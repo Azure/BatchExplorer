@@ -58,7 +58,7 @@ export class FileExplorerTabsComponent implements OnChanges, OnDestroy {
             this._updateTabs();
         }));
         this._fileNavigatorSubs.push(this.fileNavigator.currentNode.subscribe((node) => {
-            if (node.isDirectory) {
+            if (node.isDirectory && !node.isUnknown) {
                 this.activePath = null;
                 this._lastFolderExplored = node.path;
             } else {
