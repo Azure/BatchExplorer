@@ -42,11 +42,18 @@ bl-file-explorer-tabs {
                     color: $mineshaft-grey;
                 }
             }
+
+
+            &:focus > .close-icon {
+                opacity: 1;
+            }
         }
 
-        > .tab.active .tab-close > .close-icon,
-        > .tab:hover .tab-close > .close-icon {
-            opacity: 1;
+        > .tab.active, > .tab:hover {
+            .tab-close > .close-icon {
+                opacity: 1;
+            }
         }
+
     }
 }

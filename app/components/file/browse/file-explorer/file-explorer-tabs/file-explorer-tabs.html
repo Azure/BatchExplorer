@@ -1,15 +1,15 @@
 <div class="tablist">
-    <div class="tab main" [class.active]="activePath === null" title="File viewer" (click)="activateTab(null)">
+    <bl-clickable  class="tab main" [class.active]="activePath === null" title="File viewer" (do)="activateTab(null)">
         <i class="fa fa-folder"></i>
-    </div>
-    <div *ngFor="let tab of tabs;trackBy: trackByFn"
+    </bl-clickable>
+    <bl-clickable *ngFor="let tab of tabs;trackBy: trackByFn"
         class="tab"
         [class.active]="activePath === tab.filename"
         [title]="tab.filename"
-        (click)="activateTab(tab)"
+        (do)="activateTab(tab)"
         (mouseup)="handleMouseUp($event, tab)">
 
         <span class="name">{{tab.displayName}}</span>
-        <span class="tab-close" (click)="closeTab(tab, $event)"><i class="fa fa-times close-icon"></i></span>
-    </div>
+        <bl-clickable class="tab-close" (do)="closeTab(tab, $event)"><i class="fa fa-times close-icon"></i></bl-clickable>
+    </bl-clickable>
 </div>
