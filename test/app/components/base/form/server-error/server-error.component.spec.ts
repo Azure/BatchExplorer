@@ -67,7 +67,7 @@ describe("ServerErrorComponent", () => {
         });
 
         it("should not show the request id and time by default", () => {
-            expect(serverErrorElement.nativeElement.textContent).not.toContain("abc-def-ghi");
+            expect(serverErrorElement.nativeElement.textContent).not.toContain("abc-def");
             expect(serverErrorElement.nativeElement.textContent)
                 .not.toContain(date.toString());
         });
@@ -76,7 +76,7 @@ describe("ServerErrorComponent", () => {
             troubleshootBtn.nativeElement.click();
             fixture.detectChanges();
 
-            expect(serverErrorElement.nativeElement.textContent).toContain("abc-def-ghi");
+            expect(serverErrorElement.nativeElement.textContent).toContain("abc-def");
             expect(serverErrorElement.nativeElement.textContent)
                 .toContain(date.toString());
         });
