@@ -1,18 +1,48 @@
 language: node_js
 dist: trusty
 sudo: false
+
+addons:
+  apt:
+    packages:
+      - libgnome-keyring-dev
+      - icnsutils
+      - graphicsmagick
+      - xz-utils
+      - rpm
+      - bsdtar
 node_js:
   - '6.9.4'
 python:
   - "3.6"
 
-before_install:
-  - pyenv versions
-  - pyenv install --list
-  - pyenv install 3.6.0
-  - pyenv global 3.6.0
-  - python --version
-  - python3 --version
+matrix:
+  fast_finish: true
+  allow_failures:
+    os: osx # This allows not to wait for the osx build to be scheduled
+
+  include:
+    - language: generic
+      os: osx
+      before_install:
+        - brew update
+        - brew install python3
+        - virtualenv env -p python3
+        - source env/bin/activate
+        - python3 --version
+    - language: node_js
+      os: linux
+      before_install:
+        - pyenv versions
+        - pyenv install --list
+        - pyenv install 3.6.0
+        - pyenv global 3.6.0
+        - python --version
+        - python3 --version
+      before_script:
+        - export DISPLAY=:99.0
+        - sh -e /etc/init.d/xvfb start
+        - sleep 3
 
 install:
   - npm install -g yarn
@@ -20,10 +50,6 @@ install:
   - python3 --version
   - pip3 install -r python/requirements.txt
 
-before_script:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-  - sleep 3
 
 script:
     - ./scripts/travis/build-and-test.sh
@@ -34,3 +60,7 @@ branches:
   - master
   - stable
   - ncj # remove when merging ncj
+
+cache:
+  directories:
+    - node_modules
