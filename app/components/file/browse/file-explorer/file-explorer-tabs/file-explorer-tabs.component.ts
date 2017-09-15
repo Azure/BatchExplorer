@@ -40,6 +40,9 @@ export class FileExplorerTabsComponent implements OnChanges, OnDestroy {
 
     public closeTab(event: MouseEvent, tab: Tab) {
         event.stopPropagation();
+        const newIndex = tab.Index - 1;
+        const newTab = newIndex === -1 ? null : this.tabs[newIndex];
+        this.activateTab(newTab);
         this.fileNavigator.closeFile(tab.filename);
     }
 
@@ -49,6 +52,10 @@ export class FileExplorerTabsComponent implements OnChanges, OnDestroy {
         } else {
             this.fileNavigator.navigateTo(this._lastFolderExplored);
         }
+    }
+
+    public trackByFn(index, tab) {
+        return tab.filename;
     }
 
     private _updateFileNavigatorEvents() {
@@ -72,8 +79,9 @@ export class FileExplorerTabsComponent implements OnChanges, OnDestroy {
     }
 
     private _updateTabs() {
-        this.tabs = this.openedFiles.map((file) => {
+        this.tabs = this.openedFiles.map((file, index) => {
             return {
+                index,
                 filename: file.path,
                 displayName: path.basename(file.path),
             };
