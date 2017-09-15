@@ -1,5 +1,5 @@
 import { List } from "immutable";
-import { BehaviorSubject, Observable } from "rxjs";
+import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { File, ServerError } from "app/models";
@@ -96,7 +96,7 @@ export class FileNavigator {
      * Load the inital data
      */
     public init() {
-        this._loadFileInPath();
+        this._loadFilesInPath();
     }
 
     /**
@@ -104,16 +104,22 @@ export class FileNavigator {
      * @param openInNewTab If its the path to a file it will open the file in a new tab
      */
     public navigateTo(path: string, openInNewTab: boolean = true) {
+        console.log("nav to ", path);
         if (this._currentPath.value === path) { return; }
         this._history.push(this._currentPath.value);
         this._currentPath.next(path);
         const node = this._tree.value.getNode(path);
-        if (node.isDirectory) {
-            if (!this._tree.value.isPathLoaded(path)) {
-                this._loadFileInPath(path);
-            }
+        if (node.isUnkown) {
+            this._checkIfDirectory(node).subscribe({
+                next: (isDir) => {
+                    this._loadPathContent(path, isDir, openInNewTab);
+                },
+                error: (err) => {
+                    console.log("is direrr", err);
+                },
+            });
         } else {
-            this.openFile(path, openInNewTab);
+            this._loadPathContent(path, node.isDirectory, openInNewTab);
         }
     }
 
@@ -124,6 +130,7 @@ export class FileNavigator {
     public openFile(path: string, openInNewTab: boolean = true) {
         const openedFiles = this._openedFiles.value;
         if (!this.isFileOpen(path)) {
+            console.log("File is not open....");
             if (openInNewTab) {
                 openedFiles.push({
                     path,
@@ -172,14 +179,14 @@ export class FileNavigator {
     }
 
     public refresh(path: string = ""): Observable<any> {
-        return this._loadFileInPath(path);
+        return this._loadFilesInPath(path);
     }
 
     public loadPath(path: string = ""): Observable<any> {
         const node = this._tree.value.getNode(path);
         if (node.isDirectory) {
             if (!this._tree.value.isPathLoaded(path)) {
-                return this._loadFileInPath(path);
+                return this._loadFilesInPath(path);
             }
         }
         return Observable.of(null);
@@ -191,7 +198,47 @@ export class FileNavigator {
         }
     }
 
-    private _loadFileInPath(path: string = null): Observable<any> {
+    public isDirectory(path: string): Observable<boolean> {
+        const node = this._tree.value.getNode(path);
+        return this._checkIfDirectory(node);
+    }
+
+    private _checkIfDirectory(node: FileTreeNode): Observable<boolean> {
+        if (!node.isUnknown) { return Observable.of(node.isDirectory); }
+        const proxy = this._loadPath(this._getFolderToLoad(node.path, false));
+        const obs = proxy.refresh().flatMap(() => proxy.items.first()).shareReplay(1);
+        const subject = new AsyncSubject<boolean>();
+        obs.first().subscribe({
+            next: (files: List<File>) => {
+                proxy.dispose();
+                if (files.size === 0) { return false; }
+                console.log("got files", this._getFolderToLoad(node.path, false), files.toJS());
+                const file = files.first();
+                subject.next(file.isDirectory);
+                subject.complete();
+            },
+            error: (e) => (error) => {
+                proxy.dispose();
+                console.log("Got error....", error);
+                subject.next(false);
+                subject.complete();
+            },
+        });
+        return subject.asObservable();
+    }
+
+    private _loadPathContent(path: string, isDirectory: boolean, openInNewTab: boolean = true) {
+        console.log("LOad content of", path, isDirectory);
+        if (isDirectory) {
+            if (!this._tree.value.isPathLoaded(path)) {
+                this._loadFilesInPath(path);
+            }
+        } else {
+            this.openFile(path, openInNewTab);
+        }
+    }
+
+    private _loadFilesInPath(path: string = null): Observable<any> {
         this.loadingStatus = LoadingStatus.Loading;
         if (path === null) { path = this._currentPath.value; }
         if (!this._proxies[path]) {
@@ -223,10 +270,14 @@ export class FileNavigator {
         return obs;
     }
 
-    private _getFolderToLoad(path: string) {
+    private _getFolderToLoad(path: string, asDirectory = true) {
         let fullPath = [this.basePath, path].filter(x => Boolean(x)).join("/");
         if (fullPath) {
-            return CloudPathUtils.asBaseDirectory(fullPath);
+            if (asDirectory) {
+                return CloudPathUtils.asBaseDirectory(fullPath);
+            } else {
+                return fullPath;
+            }
         }
         return null;
     }

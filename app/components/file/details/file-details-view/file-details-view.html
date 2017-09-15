@@ -20,7 +20,10 @@
             </bl-button>
         </div>
     </div>
-    <div class="details">
+    <div class="details" *ngIf="!fileNotFound">
         <bl-file-content [fileLoader]="fileLoader" *ngIf="fileLoader"></bl-file-content>
+    </div>
+    <div *ngIf="fileNotFound" class="info-overlay file-not-found">
+        File <span class="highlight">&nbsp;{{filename}}&nbsp;</span> doesn't exists.
     </div>
 </div>

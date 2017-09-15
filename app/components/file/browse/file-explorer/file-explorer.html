@@ -11,7 +11,7 @@
 <section class="file-content-container">
     <bl-file-explorer-tabs [fileNavigator]="currentFileNavigator"></bl-file-explorer-tabs>
     <ng-container *ngIf="currentFileNavigator && currentNode">
-        <bl-file-table-view *ngIf="currentNode.isDirectory"
+        <bl-file-table-view *ngIf="currentNode.isDirectory && !currentNode.isUnknown"
             [name]="currentFileNavigatorEntry.name"
             [treeNode]="currentNode"
             [canDropExternalFiles]="config.canDropExternalFiles"
