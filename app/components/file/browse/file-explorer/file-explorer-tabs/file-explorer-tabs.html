@@ -2,9 +2,14 @@
     <div class="tab main" [class.active]="activePath === null" title="File viewer" (click)="activateTab(null)">
         <i class="fa fa-folder"></i>
     </div>
-    <div class="tab" *ngFor="let tab of tabs;trackBy: trackByFn" [class.active]="activePath === tab.filename" [title]="tab.filename" (click)="activateTab(tab)"
-        (mouseup)="handleMouseDown($event, tab)">
+    <div *ngFor="let tab of tabs;trackBy: trackByFn"
+        class="tab"
+        [class.active]="activePath === tab.filename"
+        [title]="tab.filename"
+        (click)="activateTab(tab)"
+        (mouseup)="handleMouseUp($event, tab)">
+
         <span class="name">{{tab.displayName}}</span>
-        <span class="tab-close"(click)="closeTab($event, tab)"><i class="fa fa-times close-icon"></i></span>
+        <span class="tab-close" (click)="closeTab($event, tab)"><i class="fa fa-times close-icon"></i></span>
     </div>
 </div>

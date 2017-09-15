@@ -5,6 +5,7 @@ import { Subscription } from "rxjs/Rx";
 import "./file-explorer-tabs.scss";
 
 interface Tab {
+    index: number;
     filename: string;
     displayName: string;
 }
@@ -32,7 +33,7 @@ export class FileExplorerTabsComponent implements OnChanges, OnDestroy {
         this._clearFileNavigatorSub();
     }
 
-    public handleMouseDown(event: MouseEvent, tab) {
+    public handleMouseUp(event: MouseEvent, tab) {
         if (event.which === 2) { // Middle click
             this.closeTab(event, tab);
         }
@@ -40,7 +41,7 @@ export class FileExplorerTabsComponent implements OnChanges, OnDestroy {
 
     public closeTab(event: MouseEvent, tab: Tab) {
         event.stopPropagation();
-        const newIndex = tab.Index - 1;
+        const newIndex = tab.index - 1;
         const newTab = newIndex === -1 ? null : this.tabs[newIndex];
         this.activateTab(newTab);
         this.fileNavigator.closeFile(tab.filename);
