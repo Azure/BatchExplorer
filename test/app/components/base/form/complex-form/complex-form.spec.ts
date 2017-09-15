@@ -13,6 +13,8 @@ import { ServerErrorComponent } from "app/components/base/form/server-error";
 import { ServerError } from "app/models";
 import { click } from "test/utils/helpers";
 
+const date = new Date(2017, 9, 13, 23, 43, 38);
+
 @Component({
     template: `
         <bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef" >
@@ -59,8 +61,7 @@ export class FormTestComponent {
         this.submitSpy();
         const sub = new AsyncSubject();
         if (this.form.value.id === "error") {
-            const value = "Id already exists\nRequestId:abc-def\nTime:2016-12-08T18:55:00.251Z";
-            console.log("ERRRP", ServerError.fromBatch({ statusCode: 408, code: "IdExists", message: { value } }));
+            const value = `Id already exists\nRequestId:abc-def\nTime:${date.toISOString()}`;
             sub.error(ServerError.fromBatch({ statusCode: 408, code: "IdExists", message: { value } }));
         } else {
             sub.next(true);
@@ -189,13 +190,13 @@ describe("ComplexFormComponent", () => {
 
             expect(error.nativeElement.textContent).not.toContain("abc-def");
             expect(error.nativeElement.textContent)
-                .not.toContain("Thu Dec 08 2016 10:55:00 GMT-0800 (Pacific Standard Time)");
+                .not.toContain(date.toString());
 
             error.query(By.css("i.fa-bug")).nativeElement.click();
             fixture.detectChanges();
             expect(error.nativeElement.textContent).toContain("abc-def");
             expect(error.nativeElement.textContent)
-                .toContain("Thu Dec 08 2016 10:55:00 GMT-0800 (Pacific Standard Time)");
+                .toContain(date.toString());
             expect(true).toBe(true);
         });
 
