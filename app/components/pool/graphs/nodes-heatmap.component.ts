@@ -114,7 +114,6 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     private _nodeMap: { [id: string]: Node } = {};
 
     constructor(
-        private elementRef: ElementRef,
         private contextMenuService: ContextMenuService,
         private nodeService: NodeService,
         private sidebarManager: SidebarManager,
@@ -180,7 +179,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     }
 
     public ngOnDestroy() {
-        this._erd.uninstall(this.elementRef.nativeElement);
+        this._erd.uninstall(this.heatmapEl.nativeElement);
     }
 
     public containerSizeChanged() {

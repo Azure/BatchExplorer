@@ -1,9 +1,10 @@
 import {
-    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter,
-    HostListener, Input, OnChanges, OnDestroy, Output, ViewChild, forwardRef,
+    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef,
+    EventEmitter, HostListener, Input, OnChanges, OnDestroy, Output, ViewChild, forwardRef,
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
 import * as CodeMirror from "codemirror";
+import * as elementResizeDetectorMaker from "element-resize-detector";
 import { Observable, Subscription } from "rxjs";
 
 import "codemirror/addon/comment/comment";
@@ -49,6 +50,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     public placeholder: string;
     private _value = "";
     private _sub: Subscription;
+    private _erd: any;
 
     get value() { return this._value; }
 
@@ -58,7 +60,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
         }
     }
 
-    constructor(private changeDetector: ChangeDetectorRef) { }
+    constructor(private changeDetector: ChangeDetectorRef, private elementRef: ElementRef) { }
 
     public ngOnChanges(changes) {
         if (changes.config) {
@@ -66,6 +68,14 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
         }
     }
     public ngAfterViewInit() {
+        this._erd = elementResizeDetectorMaker({
+            strategy: "scroll",
+        });
+
+        this._erd.listenTo(this.elementRef.nativeElement, (element) => {
+            this.instance.refresh();
+        });
+
         this.config = this.config || {};
         if (!this.config.extraKeys) {
             this.config.extraKeys = {};
@@ -76,6 +86,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
 
     public ngOnDestroy() {
         this._sub.unsubscribe();
+        this._erd.uninstall(this.elementRef.nativeElement);
     }
 
     public codemirrorInit(config) {

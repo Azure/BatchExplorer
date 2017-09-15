@@ -3,7 +3,6 @@ import { Subscription } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { FileNavigator, FileTreeNode } from "app/services/file";
-import { exists } from "app/utils";
 import "./file-explorer.scss";
 
 export interface FileNavigatorEntry {

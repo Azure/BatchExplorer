@@ -35,6 +35,13 @@ bl-file-explorer {
         flex: 1;
         position: relative;
         overflow: hidden;
+
+        display: flex;
+        flex-direction: column;
+
+        > bl-file-details-view, bl-file-table-view {
+            flex: 1;
+        }
     }
 
 
