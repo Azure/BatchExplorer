@@ -1,5 +1,6 @@
-import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import { Component, HostListener, Input, OnChanges, OnDestroy } from "@angular/core";
 import { FileNavigator, OpenedFile } from "app/services/file";
+import { Constants } from "app/utils";
 import * as path from "path";
 import { Subscription } from "rxjs/Rx";
 import "./file-explorer-tabs.scss";
@@ -33,8 +34,16 @@ export class FileExplorerTabsComponent implements OnChanges, OnDestroy {
         this._clearFileNavigatorSub();
     }
 
+    @HostListener("mousedown", ["$event"])
+    public preventMiddleClickScrolling(event) {
+        if (event.button !== Constants.MouseButton.middle) { return; }
+
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
     public handleMouseUp(event: MouseEvent, tab) {
-        if (event.which === 2) { // Middle click
+        if (event.button === Constants.MouseButton.middle) { // Middle click
             this.closeTab(event, tab);
         }
     }

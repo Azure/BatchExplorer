@@ -104,7 +104,6 @@ export class FileNavigator {
      * @param openInNewTab If its the path to a file it will open the file in a new tab
      */
     public navigateTo(path: string, openInNewTab: boolean = true) {
-        console.log("nav to ", path);
         if (this._currentPath.value === path) { return; }
         this._history.push(this._currentPath.value);
         this._currentPath.next(path);
