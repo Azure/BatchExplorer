@@ -109,7 +109,7 @@ export class FileService extends ServiceBase {
 
     public navigateTaskFile(jobId: string, taskId: string, options: NaviagateTaskFileOptions) {
         return new FileNavigator({
-            loadPath: (folder) => this.listFromTask(jobId, taskId, false, { folder }),
+            loadPath: (folder) => this.listFromTask(jobId, taskId, true, { folder }),
             getFile: (filename: string) => this.fileFromTask(jobId, taskId, filename),
             onError: options.onError,
         });
