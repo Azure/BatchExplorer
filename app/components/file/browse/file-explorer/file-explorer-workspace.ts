@@ -1,4 +1,5 @@
 import { FileLoader, FileNavigator, FileTreeNode } from "app/services/file";
+import { log } from "app/utils";
 import { BehaviorSubject, Observable } from "rxjs";
 
 export interface FileSource {
@@ -25,12 +26,18 @@ function sourcesFrom(data: FileNavigator | FileSource | FileSource[]): FileSourc
     }
 }
 
-export class FileExporerWorkspace {
+export interface CurrentNode {
+    source: FileSource;
+    path: string;
+    treeNode: FileTreeNode;
+}
+
+export class FileExplorerWorkspace {
     public sources: FileSource[];
     public openedFiles: Observable<OpenedFile[]>;
     // public openedFolder: Observable<any>;
     public currentSource: Observable<FileSource>;
-    public currentNode: Observable<FileTreeNode>;
+    public currentNode: Observable<CurrentNode>;
 
     private _currentSource = new BehaviorSubject<FileSource>(null);
     private _currentPath = new BehaviorSubject("");
@@ -45,28 +52,53 @@ export class FileExporerWorkspace {
         this._currentSource.next(this.sources.first());
 
         this.currentNode = this._currentSource.flatMap((source) => {
-            return Observable.combineLatest(this._currentPath, source.navigator.tree);
-        }).map(([path, tree]) => {
-            return tree.getNode(path).clone();
+            return Observable.combineLatest(this._currentPath, source.navigator.tree).map(([path, tree]) => {
+                const node = tree.getNode(path);
+                return {
+                    source,
+                    path: node.path,
+                    treeNode: node,
+                };
+            });
         }).shareReplay(1);
+
+        this._openInitalFiles();
     }
 
     public navigateTo(path: string, source?: FileSource) {
         source = this._getSource(source);
         if (this._currentPath.value === path && this._currentSource.value === source) { return; }
+
         this._currentPath.next(path);
         this._currentSource.next(source);
-        source.navigator.navigateTo(path);
+        source.navigator.getNode(path).subscribe((node) => {
+            if (!node) { return; }
+            if (node.isDirectory) {
+                source.navigator.loadPath(path);
+            } else {
+                this.openFile(node.path, source);
+            }
+        });
     }
 
-    public isFileOpen(path: string): boolean {
-        return Boolean(this._openedFiles.value.find(x => x.path === path));
+    /**
+     * Go back up one level
+     */
+    public goBack() {
+        const path = this._currentPath.value;
+        if (path === "") { return; }
+        this.navigateTo(path.split("/").slice(0, -1).join("/"), this._currentSource.value);
+    }
+
+    public isFileOpen(path: string, source?: FileSource): boolean {
+        source = this._getSource(source);
+        return Boolean(this._openedFiles.value.find(x => x.path === path && x.source === source));
     }
 
     public openFile(path: string, source?: FileSource) {
         source = this._getSource(source);
         const openedFiles = this._openedFiles.value;
-        if (!this.isFileOpen(path)) {
+        if (!this.isFileOpen(path, source)) {
             openedFiles.push({
                 source: source,
                 path,
@@ -87,7 +119,7 @@ export class FileExporerWorkspace {
 
         const openedFiles = this._openedFiles.value;
         for (let path of paths) {
-            if (!this.isFileOpen(path)) {
+            if (!this.isFileOpen(path, source)) {
                 openedFiles.push({
                     source: source,
                     path,
@@ -105,12 +137,25 @@ export class FileExporerWorkspace {
         this._openedFiles.next(newOpenedFiles);
     }
 
+    public dispose() {
+        this.sources.forEach(x => x.navigator.dispose());
+    }
+
     private _getSource(source?: FileSource) {
         if (source) { return source; }
         if (this.sources.length === 1) {
             return this.sources.first();
         } else {
+            log.error("You must specify a source(FileNavigator) when using multi-source");
             throw Error("You must specify a source(FileNavigator) when using multi-source");
+        }
+    }
+
+    private _openInitalFiles() {
+        for (const source of this.sources) {
+            if (source.openedFiles) {
+                this.openFiles(source.openedFiles, source);
+            }
         }
     }
 }

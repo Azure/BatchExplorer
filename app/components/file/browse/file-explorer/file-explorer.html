@@ -1,29 +1,31 @@
 <section class="tree-explorer-container" *ngIf="config.showTreeView">
-    <bl-file-tree-view *ngFor="let entry of this.fileNavigators"
-        [fileNavigator]="entry.navigator"
-        [name]="entry.name"
+    <bl-file-tree-view *ngFor="let source of this.workspace.sources"
+        [fileNavigator]="source.navigator"
+        [currentPath]="currentNode.path"
+        [active]="source === currentSource"
+        [name]="source.name"
         [autoExpand]="autoExpand"
         [canDropExternalFiles]="config.canDropExternalFiles"
-        (navigate)="updateCurrentNavigator(entry)"
+        (navigate)="navigateTo($event, source)"
         (dropFiles)="handleDrop($event)">
     </bl-file-tree-view>
 </section>
 <section class="file-content-container">
-    <bl-file-explorer-tabs [fileNavigator]="currentFileNavigator"></bl-file-explorer-tabs>
-    <ng-container *ngIf="currentFileNavigator && currentNode">
-        <bl-file-table-view *ngIf="currentNode.isDirectory && !currentNode.isUnknown"
-            [name]="currentFileNavigatorEntry.name"
-            [treeNode]="currentNode"
+    <bl-file-explorer-tabs [workspace]="workspace"></bl-file-explorer-tabs>
+    <ng-container *ngIf="currentNode">
+        <bl-file-table-view *ngIf="currentNode.treeNode.isDirectory && !currentNode.treeNode.isUnknown"
+            [name]="currentSource.name"
+            [treeNode]="currentNode.treeNode"
             [canDropExternalFiles]="config.canDropExternalFiles"
-            [loadingStatus]="currentNode.loadingStatus"
-            [error]="currentFileNavigator.error"
+            [loadingStatus]="currentNode.treeNode.loadingStatus"
+            [error]="currentSource.navigator.error"
             (select)="nodeSelected($event)"
             (back)="goBack()"
             (dropFiles)="handleDrop($event)">
         </bl-file-table-view>
 
-        <bl-file-details-view *ngFor="let file of currentFileNavigator.openedFiles | async"
-            [fileLoader]="file.fileLoader"
+        <bl-file-details-view *ngFor="let file of workspace.openedFiles | async"
+            [fileLoader]="file.loader"
             [hidden]="file.path !== currentNode.path"
             (back)="goBack()">
         </bl-file-details-view>

@@ -3,7 +3,6 @@ import * as path from "path";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
-import { FileLoader } from "app/services/file";
 import { CloudPathUtils } from "app/utils";
 import { fileToTreeNode, generateDir, sortTreeNodes } from "./helper";
 
@@ -153,9 +152,4 @@ export class FileTreeStructure {
             directories[parent].children.set(directory, directories[directory]);
         }
     }
-}
-
-export interface OpenedFile {
-    path: string; // Fullpath
-    fileLoader: FileLoader;
 }

@@ -20,6 +20,8 @@ export interface TreeRow {
 })
 export class FileTreeViewComponent implements OnChanges, OnDestroy {
     @Input() public fileNavigator: FileNavigator;
+    @Input() public currentPath: string;
+    @Input() public active: boolean = true;
     @Input() public name: string;
     @Input() public autoExpand = false;
     @Input() public canDropExternalFiles = false;
@@ -28,7 +30,6 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
 
     @HostBinding("class.expanded") public expanded = true;
 
-    public currentNode: FileTreeNode;
     public expandedDirs: StringMap<boolean> = {};
     public treeRows: TreeRow[] = [];
     public refreshing: boolean;
@@ -46,13 +47,6 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
                 this._tree = tree;
                 this._buildTreeRows(tree);
             }));
-
-            this._navigatorSubs.push(this.fileNavigator.currentNode.subscribe((node) => {
-                if (!this.currentNode || node.path !== this.currentNode.path) {
-                    this.expandPath(node.path);
-                }
-                this.currentNode = node;
-            }));
         }
     }
 
@@ -65,7 +59,6 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
             this.toggleExpanded(treeRow);
         }
         this.navigate.emit(treeRow.path);
-        this.fileNavigator.navigateTo(treeRow.path);
     }
 
     public handleCaretClick(treeRow: TreeRow, event: MouseEvent) {
@@ -109,7 +102,6 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     public handleClickTreeViewHeader() {
         this.expanded = true;
         this.navigate.emit("");
-        this.fileNavigator.navigateTo("");
     }
 
     /**

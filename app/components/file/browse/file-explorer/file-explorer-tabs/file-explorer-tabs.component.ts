@@ -1,6 +1,7 @@
 import { Component, HostListener, Input, OnChanges, OnDestroy } from "@angular/core";
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
-import { FileLoader, FileNavigator, OpenedFile } from "app/services/file";
+import { FileExplorerWorkspace, FileSource, OpenedFile } from "app/components/file/browse/file-explorer";
+import { FileLoader } from "app/services/file";
 import { Constants } from "app/utils";
 import * as path from "path";
 import { Subscription } from "rxjs/Rx";
@@ -11,6 +12,7 @@ interface Tab {
     filename: string;
     displayName: string;
     fileLoader: FileLoader;
+    source: FileSource;
 }
 
 @Component({
@@ -18,19 +20,19 @@ interface Tab {
     templateUrl: "file-explorer-tabs.html",
 })
 export class FileExplorerTabsComponent implements OnChanges, OnDestroy {
-    @Input() public fileNavigator: FileNavigator;
+    @Input() public workspace: FileExplorerWorkspace;
     public openedFiles: OpenedFile[] = [];
     public tabs: Tab[] = [];
     public activePath: string = null;
 
-    private _fileNavigatorSubs: Subscription[] = [];
-    private _lastFolderExplored: string = "";
+    private _workspaceSubs: Subscription[] = [];
+    private _lastFolderExplored: any = null;
 
     constructor(private contextMenuService: ContextMenuService) { }
 
     public ngOnChanges(changes) {
-        if (changes.fileNavigator) {
-            this._updateFileNavigatorEvents();
+        if (changes.workspace) {
+            this._updateWorkspaceEvents();
         }
     }
 
@@ -66,30 +68,31 @@ export class FileExplorerTabsComponent implements OnChanges, OnDestroy {
         const newIndex = tab.index - 1;
         const newTab = newIndex === -1 ? null : this.tabs[newIndex];
         this.activateTab(newTab);
-        this.fileNavigator.closeFile(tab.filename);
+        this.workspace.closeFile(tab.filename, tab.source);
     }
 
     public closeOtherTabs(tab: Tab) {
         this.activateTab(tab);
         for (const openTab of this.tabs) {
             if (openTab.filename !== tab.filename) {
-                this.fileNavigator.closeFile(openTab.filename);
+                this.workspace.closeFile(openTab.filename, tab.source);
             }
         }
     }
 
     public closeAllTabs() {
         this.activateTab(null);
-        for (const openTab of this.tabs) {
-            this.fileNavigator.closeFile(openTab.filename);
+        for (const openedTab of this.tabs) {
+            this.workspace.closeFile(openedTab.filename, openedTab.source);
         }
     }
 
     public activateTab(tab: Tab) {
         if (tab) {
-            this.fileNavigator.navigateTo(tab.filename);
+            this.workspace.navigateTo(tab.filename, tab.source);
         } else {
-            this.fileNavigator.navigateTo(this._lastFolderExplored);
+            // Todo change default
+            this.workspace.navigateTo(this._lastFolderExplored.path, this._lastFolderExplored.source);
         }
     }
 
@@ -105,16 +108,16 @@ export class FileExplorerTabsComponent implements OnChanges, OnDestroy {
         return tab.filename;
     }
 
-    private _updateFileNavigatorEvents() {
+    private _updateWorkspaceEvents() {
         this._lastFolderExplored = "";
-        this._fileNavigatorSubs.push(this.fileNavigator._openedFiles.subscribe((files) => {
+        this._workspaceSubs.push(this.workspace.openedFiles.subscribe((files) => {
             this.openedFiles = files;
             this._updateTabs();
         }));
-        this._fileNavigatorSubs.push(this.fileNavigator.currentNode.subscribe((node) => {
-            if (node.isDirectory && !node.isUnknown) {
+        this._workspaceSubs.push(this.workspace.currentNode.subscribe((node) => {
+            if (node.treeNode.isDirectory && !node.treeNode.isUnknown) {
                 this.activePath = null;
-                this._lastFolderExplored = node.path;
+                this._lastFolderExplored = node;
             } else {
                 this.activePath = node.path;
             }
@@ -122,7 +125,7 @@ export class FileExplorerTabsComponent implements OnChanges, OnDestroy {
     }
 
     private _clearFileNavigatorSub() {
-        this._fileNavigatorSubs.forEach(x => x.unsubscribe());
+        this._workspaceSubs.forEach(x => x.unsubscribe());
     }
 
     private _updateTabs() {
@@ -131,7 +134,8 @@ export class FileExplorerTabsComponent implements OnChanges, OnDestroy {
                 index,
                 filename: file.path,
                 displayName: path.basename(file.path),
-                fileLoader: file.fileLoader,
+                fileLoader: file.loader,
+                source: file.source,
             };
         });
     }

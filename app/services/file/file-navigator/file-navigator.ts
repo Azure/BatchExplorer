@@ -6,7 +6,7 @@ import { File, ServerError } from "app/models";
 import { RxListProxy } from "app/services/core";
 import { FileLoader } from "app/services/file";
 import { CloudPathUtils, ObjectUtils } from "app/utils";
-import { FileTreeNode, FileTreeStructure, OpenedFile } from "./file-tree.model";
+import { FileTreeNode, FileTreeStructure } from "./file-tree.model";
 
 export interface FileNavigatorConfig {
     /**
@@ -43,15 +43,6 @@ export interface FileNavigatorConfig {
  * This can be extended for a node, task or blob file list
  */
 export class FileNavigator {
-    /**
-     * Path of the file/directory currently being viewed
-     */
-    public currentPath: Observable<string>;
-
-    /**
-     * Tree node that is currently being viewed
-     */
-    public currentNode: Observable<FileTreeNode>;
     public loadingStatus = LoadingStatus.Ready;
     public basePath: string;
     public tree: Observable<FileTreeStructure>;
@@ -68,10 +59,7 @@ export class FileNavigator {
     public _openedFiles = new BehaviorSubject([]);
     public error: ServerError;
 
-    private _currentPath = new BehaviorSubject("");
     private _tree = new BehaviorSubject<FileTreeStructure>(null);
-
-    private _history: string[] = [];
     private _loadPath: (folder: string) => RxListProxy<any, File>;
 
     private _proxies: StringMap<RxListProxy<any, File>> = {};
@@ -83,11 +71,7 @@ export class FileNavigator {
         this._loadPath = config.loadPath;
         this._getFileLoader = config.getFile;
         this._onError = config.onError;
-        this.currentPath = this._currentPath.asObservable();
         this._tree.next(new FileTreeStructure(this.basePath));
-        this.currentNode = Observable.combineLatest(this._currentPath, this._tree).map(([path, tree]) => {
-            return tree.getNode(path).clone();
-        }).shareReplay(1);
         this.tree = this._tree.asObservable();
         this.openedFiles = this._openedFiles.asObservable();
     }
@@ -96,27 +80,34 @@ export class FileNavigator {
      * Load the inital data
      */
     public init() {
-        this._loadFilesInPath();
+        this._loadFilesInPath("");
     }
 
     /**
      * @param path Path of the file/directory to navigate to
      * @param openInNewTab If its the path to a file it will open the file in a new tab
      */
-    public navigateTo(path: string, openInNewTab: boolean = true) {
-        if (this._currentPath.value === path) { return; }
-        this._history.push(this._currentPath.value);
-        this._currentPath.next(path);
+    public loadPath(path: string) {
+        return this.getNode(path).flatMap((node) => {
+            return this._loadFilesInPath(path);
+        }).shareReplay(1);
+    }
+
+    /**
+     * Get the node at the path. If the node is not in the tree it will list
+     * @param path Path of the node
+     * @returns the node if it exsits or null if not
+     */
+    public getNode(path: string): Observable<FileTreeNode> {
         const node = this._tree.value.getNode(path);
         if (node.isUnknown) {
-            this._checkIfDirectory(node).subscribe({
-                next: (isDir) => {
-                    this._loadPathContent(path, isDir, openInNewTab);
-                },
-                error: (err) => null,
+            return this._checkIfDirectory(node).map(() => {
+                return this._tree.value.getNode(path);
+            }).catch(() => {
+                return Observable.of(null);
             });
         } else {
-            this._loadPathContent(path, node.isDirectory, openInNewTab);
+            return Observable.of(node);
         }
     }
 
@@ -124,72 +115,18 @@ export class FileNavigator {
         return this._getFileLoader(path);
     }
 
-    public isFileOpen(path: string): boolean {
-        return Boolean(this._openedFiles.value.find(x => x.path === path));
-    }
-
-    public openFile(path: string, openInNewTab: boolean = true) {
-        const openedFiles = this._openedFiles.value;
-        if (!this.isFileOpen(path)) {
-            if (openInNewTab) {
-                openedFiles.push({
-                    path,
-                    fileLoader: this._getFileLoader(path),
-                });
-            }
-        }
-        this._openedFiles.next(openedFiles);
-    }
-
-    /**
-     * Triggered when a tab select to open a file
-     * @param filename File to open
-     *
-     * If filename is null or undefined it will show the file table viewer at the last position
-     */
-    public openFiles(paths: string[]) {
-        const openedFiles = this._openedFiles.value;
-        for (let path of paths) {
-            if (!this.isFileOpen(path)) {
-                openedFiles.push({
-                    path,
-                    fileLoader: this._getFileLoader(path),
-                });
-            }
-        }
-        this._openedFiles.next(openedFiles);
-    }
-
-    public closeFile(path: string) {
-        const newOpenedFiles = this._openedFiles.value.filter(x => x.path !== path);
-        this._openedFiles.next(newOpenedFiles);
-    }
-
-    /**
-     * Go back up one level
-     */
-    public goBack() {
-        const path = this._currentPath.value;
-        if (path === "") { return; }
-        this.navigateTo(path.split("/").slice(0, -1).join("/"));
-    }
-
-    public list(): Observable<List<File>> {
-        return this._proxies[this._currentPath.value].items.first();
-    }
-
     public refresh(path: string = ""): Observable<any> {
         return this._loadFilesInPath(path);
     }
 
-    public loadPath(path: string = ""): Observable<any> {
+    public loadFilesInPath(path: string = ""): Observable<any> {
         const node = this._tree.value.getNode(path);
         if (node.isDirectory) {
             if (!this._tree.value.isPathLoaded(path)) {
                 return this._loadFilesInPath(path);
             }
         }
-        return Observable.of(null);
+        return Observable.of(node);
     }
 
     public dispose() {
@@ -213,6 +150,7 @@ export class FileNavigator {
                 proxy.dispose();
                 if (files.size === 0) { return false; }
                 const file = files.first();
+                this._tree.value.addFiles(files);
                 subject.next(file.isDirectory);
                 subject.complete();
             },
@@ -224,32 +162,24 @@ export class FileNavigator {
         return subject.asObservable();
     }
 
-    private _loadPathContent(path: string, isDirectory: boolean, openInNewTab: boolean = true) {
-        if (isDirectory) {
-            if (!this._tree.value.isPathLoaded(path)) {
-                this._loadFilesInPath(path);
-            }
-        } else {
-            this.openFile(path, openInNewTab);
-        }
-    }
-
-    private _loadFilesInPath(path: string = null): Observable<any> {
+    private _loadFilesInPath(path: string): Observable<FileTreeNode> {
         this.loadingStatus = LoadingStatus.Loading;
-        if (path === null) { path = this._currentPath.value; }
         if (!this._proxies[path]) {
             this._proxies[path] = this._loadPath(this._getFolderToLoad(path));
         }
         const proxy = this._proxies[path];
-        const obs = proxy.refresh().flatMap(() => proxy.items.first()).share();
-        obs.subscribe({
+        const output = new AsyncSubject<FileTreeNode>();
+        proxy.refresh().flatMap(() => proxy.items.first()).subscribe({
             next: (files: List<File>) => {
                 this.loadingStatus = LoadingStatus.Ready;
 
                 const tree = this._tree.value;
                 tree.addFiles(files);
-                tree.getNode(path).markAsLoaded();
+                const node = tree.getNode(path);
+                node.markAsLoaded();
                 this._tree.next(tree);
+                output.next(node);
+                output.complete();
             },
             error: (error) => {
                 if (this._onError) {
@@ -258,12 +188,15 @@ export class FileNavigator {
                 }
                 this.error = error;
                 const tree = this._tree.value;
-                tree.getNode(path).loadingStatus = LoadingStatus.Error;
+                const node = tree.getNode(path);
+                node.loadingStatus = LoadingStatus.Error;
                 this._tree.next(tree);
+                output.next(node);
+                output.complete();
             },
         });
 
-        return obs;
+        return output;
     }
 
     private _getFolderToLoad(path: string, asDirectory = true) {

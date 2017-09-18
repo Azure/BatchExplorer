@@ -29,7 +29,7 @@
             class="tree-row"
             [style.padding-left]="((treeRow.indent + 1) * 12) + 'px'"
             [title]="treeRow.path"
-            [class.active]="treeRow.path === currentNode?.path"
+            [class.active]="active && treeRow.path === currentPath"
             [class.drop-target]="treeRow.path.startsWith(dropTargetPath)"
             (click)="handleClick(treeRow)"
             (dragenter)="dragEnterRow($event, treeRow)"

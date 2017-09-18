@@ -1,5 +1,5 @@
-import { Component, Input, OnChanges } from "@angular/core";
-import { FileNavigatorEntry } from "app/components/file/browse/file-explorer";
+import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import { FileExplorerWorkspace, FileNavigatorEntry } from "app/components/file/browse/file-explorer";
 import { ServerError, Task, TaskState } from "app/models";
 import { FileService, StorageService } from "app/services";
 import { FileLoader } from "app/services/file";
@@ -21,7 +21,7 @@ const outputTabs = [
     selector: "bl-task-outputs",
     templateUrl: "task-outputs.html",
 })
-export class TaskOutputsComponent implements OnChanges {
+export class TaskOutputsComponent implements OnChanges, OnDestroy {
     @Input() public jobId: string;
 
     @Input() public task: Task;
@@ -34,6 +34,7 @@ export class TaskOutputsComponent implements OnChanges {
     public fileNavigators: FileNavigatorEntry[] = [];
     public isTaskQueued = false;
     public stateTooltip: string;
+    public workspace: FileExplorerWorkspace;
 
     private _taskOutputContainer: string;
 
@@ -59,6 +60,10 @@ export class TaskOutputsComponent implements OnChanges {
         }
     }
 
+    public ngOnDestroy() {
+        this.workspace.dispose();
+    }
+
     public selectOutputType(type: OutputType) {
         this.selectedTab = type;
     }
@@ -74,7 +79,6 @@ export class TaskOutputsComponent implements OnChanges {
             const nodeNavigator = this.fileService.navigateTaskFile(this.jobId, this.task.id, {
                 onError: (error) => this._processTaskFilesError(error),
             });
-            nodeNavigator.openFiles(["stdout.txt", "stderr.txt", "wd/example-jobs/python/pi.py"]);
             nodeNavigator.init();
 
             const taskOutputPrefix = `${this.task.id}/$TaskOutput/`;
@@ -89,11 +93,15 @@ export class TaskOutputsComponent implements OnChanges {
             });
             taskLogsNavigator.init();
 
-            this.fileNavigators = [
-                { name: "Node files", navigator: nodeNavigator },
+            this.workspace = new FileExplorerWorkspace([
+                {
+                    name: "Node files",
+                    navigator: nodeNavigator,
+                    openedFiles: ["stdout.txt", "stderr.txt", "wd/example-jobs/python/pi.py"],
+                },
                 { name: "Persisted output", navigator: taskOutputNavigator },
                 { name: "Persisted logs", navigator: taskLogsNavigator },
-            ];
+            ]);
         });
     }
 
