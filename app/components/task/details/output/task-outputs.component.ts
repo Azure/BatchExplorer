@@ -73,13 +73,11 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
     }
 
     private _updateNavigator() {
-        console.log("update nav");
         if (this.isTaskQueued) {
             this.workspace = null;
             return;
         }
         StorageUtils.getSafeContainerName(this.jobId).then((container) => {
-            console.log("Container", container);
             this._taskOutputContainer = container;
             this._clearFileNavigator();
             const nodeNavigator = this.fileService.navigateTaskFile(this.jobId, this.task.id, {
