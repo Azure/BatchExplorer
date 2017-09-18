@@ -138,12 +138,14 @@ export class FileNavigator {
         const obs = proxy.refresh().flatMap(() => proxy.items.first()).share();
         obs.subscribe({
             next: (files: List<File>) => {
+                console.log("Files is", files.toJS());
                 this.loadingStatus = LoadingStatus.Ready;
 
                 const tree = this._tree.value;
                 tree.addFiles(files);
                 tree.getNode(path).markAsLoaded();
                 this._tree.next(tree);
+                console.log("Tree", tree);
             },
             error: (error) => {
                 if (this._onError) {
