@@ -79,7 +79,6 @@ export class FileTreeStructure {
             const node = fileToTreeNode(file, this.basePath);
 
             const folder = CloudPathUtils.dirname(node.path) || ".";
-            console.log("Folder for", node.path, "is", folder);
             this._checkDirInTree(folder);
 
             if (file.isDirectory) {
