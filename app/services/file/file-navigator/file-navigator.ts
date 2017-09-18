@@ -52,11 +52,6 @@ export class FileNavigator {
      */
     public currentFileLoader: FileLoader;
 
-    /**
-     * List of files opended for a quick switch
-     */
-    public openedFiles: Observable<OpenedFile[]>;
-    public _openedFiles = new BehaviorSubject([]);
     public error: ServerError;
 
     private _tree = new BehaviorSubject<FileTreeStructure>(null);
@@ -73,7 +68,6 @@ export class FileNavigator {
         this._onError = config.onError;
         this._tree.next(new FileTreeStructure(this.basePath));
         this.tree = this._tree.asObservable();
-        this.openedFiles = this._openedFiles.asObservable();
     }
 
     /**
@@ -88,7 +82,7 @@ export class FileNavigator {
      * @param openInNewTab If its the path to a file it will open the file in a new tab
      */
     public loadPath(path: string) {
-        return this.getNode(path).flatMap((node) => {
+        return this.getNode(path).cascade((node) => {
             return this._loadFilesInPath(path);
         }).shareReplay(1);
     }
@@ -169,7 +163,7 @@ export class FileNavigator {
         }
         const proxy = this._proxies[path];
         const output = new AsyncSubject<FileTreeNode>();
-        proxy.refresh().flatMap(() => proxy.items.first()).subscribe({
+        proxy.refresh().flatMap(() => proxy.items.first()).share().subscribe({
             next: (files: List<File>) => {
                 this.loadingStatus = LoadingStatus.Ready;
 

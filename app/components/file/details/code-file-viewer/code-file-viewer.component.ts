@@ -1,9 +1,8 @@
 import { Component, Input, OnChanges } from "@angular/core";
 
 import { LoadingStatus } from "app/components/base/loading";
-import { File, ServerError } from "app/models";
+import { File } from "app/models";
 import { FileLoader } from "app/services/file";
-import { Constants } from "app/utils";
 import "./code-file-viewer.scss";
 
 const maxSize = 100000; // 100KB
