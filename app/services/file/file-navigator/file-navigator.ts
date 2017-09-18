@@ -120,6 +120,10 @@ export class FileNavigator {
         }
     }
 
+    public getFile(path: string): FileLoader {
+        return this._getFileLoader(path);
+    }
+
     public isFileOpen(path: string): boolean {
         return Boolean(this._openedFiles.value.find(x => x.path === path));
     }
