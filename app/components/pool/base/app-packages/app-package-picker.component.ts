@@ -69,22 +69,27 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         // subscribe to the application data proxy
         this._subscriptions.push(this._data.items.subscribe((applications) => {
             this._applicationMap = {};
-            this._mapApplicationPackages(applications);
+            if (applications.size > 0) {
+                this._mapApplicationPackages(applications);
 
-            // when this is called the packages will all be loaded from writeValue.
-            let index = 0;
-            (this.items.value as PackageReference[] || []).forEach(item => {
-                if (item && item.applicationId) {
-                    this._setPackageMap(item.applicationId, index);
-                }
+                // this will force items.valueChanges.subscribe to fire again once everything is loaded
+                this.items.updateValueAndValidity();
 
-                index++;
-            });
+                // when this is called the packages will all be loaded from writeValue.
+                let index = 0;
+                (this.items.value as PackageReference[] || []).forEach(item => {
+                    if (item && item.applicationId) {
+                        this._setPackageMap(item.applicationId, index);
+                    }
+
+                    index++;
+                });
+            }
         }));
 
         // subscribe to the form change events
         this._subscriptions.push(this.items.valueChanges.subscribe((references: PackageReference[]) => {
-            if (this._writingValue) {
+            if (this._writingValue || Object.keys(this._applicationCorrectCaseMap).length === 0) {
                 return;
             }
 
@@ -95,23 +100,14 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
 
             if (this._propagateChange) {
                 const cloned = this.items.value.slice(0, -1).map(item => {
-                    let clone = Object.assign({}, item);
-                    clone.applicationId = this._applicationCorrectCaseMap[item.applicationId];
+                    let clone = JSON.parse(JSON.stringify(item));
+                    // clone.applicationId = this._applicationCorrectCaseMap[item.applicationId];
                     if (clone.version === this._defaultVersionValue) {
-                        delete clone.version;
+                        clone.version = null;
                     }
 
                     return clone;
                 });
-
-                // clone.version = clone.version !== this._defaultVersionValue ? clone.version : null;
-                // delete clone.version;
-
-                // Object.keys(clone).forEach(function (key) {
-                //     if (clone[key] === "null") {
-                //        delete clone[key];
-                //     }
-                // });
 
                 console.log("sending: ", cloned);
                 this._propagateChange(cloned);
@@ -162,14 +158,15 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
 
         const tempMap: any = {};
         for (let reference of control.value) {
-            console.log("validating:", reference);
-            const key = `${reference.applicationId}-${reference.version}`;
+            // TODO: remove lowerCase when API is fixed.
+            const application = reference.applicationId.toLowerCase();
+            const key = `${application}-${reference.version}`;
             if (!Boolean(key in tempMap)) {
-                const version = reference.version === this._defaultVersionValue
+                const version = !reference.version // this._defaultVersionValue
                     ? this._defaultVersionText
-                    : reference.version;
+                    : reference.version.toLowerCase();
 
-                if (!this._isValidReference(reference.applicationId, version)) {
+                if (!this._isValidReference(application, version)) {
                     return {
                         invalid: true,
                     };
@@ -215,6 +212,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
     }
 
     private _isValidReference(application: string, version: string) {
+        console.log("validating: ", application, version, this._applicationMap);
         return application in this._applicationMap
             && this._applicationMap[application].indexOf(version) !== -1;
     }
