@@ -40,7 +40,6 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
     private _subscriptions: Subscription[] = [];
     private _data: RxListProxy<{}, BatchApplication>;
     private _applicationMap: { [key: string]: string[] } = {};
-    private _applicationCorrectCaseMap: { [key: string]: string } = {};
     private _propagateChange: (items: any[]) => void;
     private _propagateTouched: (value: boolean) => void;
     private _writingValue = false;
@@ -72,9 +71,6 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
             if (applications.size > 0) {
                 this._mapApplicationPackages(applications);
 
-                // this will force items.valueChanges.subscribe to fire again once everything is loaded
-                this.items.updateValueAndValidity();
-
                 // when this is called the packages will all be loaded from writeValue.
                 let index = 0;
                 (this.items.value as PackageReference[] || []).forEach(item => {
@@ -89,7 +85,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
 
         // subscribe to the form change events
         this._subscriptions.push(this.items.valueChanges.subscribe((references: PackageReference[]) => {
-            if (this._writingValue || Object.keys(this._applicationCorrectCaseMap).length === 0) {
+            if (this._writingValue) {
                 return;
             }
 
@@ -101,7 +97,6 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
             if (this._propagateChange) {
                 const cloned = this.items.value.slice(0, -1).map(item => {
                     let clone = JSON.parse(JSON.stringify(item));
-                    // clone.applicationId = this._applicationCorrectCaseMap[item.applicationId];
                     if (clone.version === this._defaultVersionValue) {
                         clone.version = null;
                     }
@@ -109,7 +104,6 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
                     return clone;
                 });
 
-                console.log("sending: ", cloned);
                 this._propagateChange(cloned);
             }
         }));
@@ -212,7 +206,6 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
     }
 
     private _isValidReference(application: string, version: string) {
-        console.log("validating: ", application, version, this._applicationMap);
         return application in this._applicationMap
             && this._applicationMap[application].indexOf(version) !== -1;
     }
@@ -229,7 +222,6 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
             applications.forEach((application) => {
                 // TODO: remove lower case when API bug fixed.
                 const currentAppId = application.id.toLowerCase();
-                this._applicationCorrectCaseMap[currentAppId] = application.id;
                 if (this._applicationMap[currentAppId] === undefined) {
                     this._applicationMap[currentAppId] = [];
                 }
