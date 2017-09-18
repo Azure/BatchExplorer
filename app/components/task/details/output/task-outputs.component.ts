@@ -73,7 +73,13 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
     }
 
     private _updateNavigator() {
+        console.log("update nav");
+        if (this.isTaskQueued) {
+            this.workspace = null;
+            return;
+        }
         StorageUtils.getSafeContainerName(this.jobId).then((container) => {
+            console.log("Container", container);
             this._taskOutputContainer = container;
             this._clearFileNavigator();
             const nodeNavigator = this.fileService.navigateTaskFile(this.jobId, this.task.id, {
@@ -81,17 +87,11 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
             });
             nodeNavigator.init();
 
-            const taskOutputPrefix = `${this.task.id}/$TaskOutput/`;
+            const taskOutputPrefix = `${this.task.id}/`;
             const taskOutputNavigator = this.storageService.navigateContainerBlobs(container, taskOutputPrefix, {
                 onError: (error) => this._processBlobError(error),
             });
             taskOutputNavigator.init();
-
-            const taskLogsPrefix = `${this.task.id}/$TaskLog/`;
-            const taskLogsNavigator = this.storageService.navigateContainerBlobs(container, taskLogsPrefix, {
-                onError: (error) => this._processBlobError(error),
-            });
-            taskLogsNavigator.init();
 
             this.workspace = new FileExplorerWorkspace([
                 {
@@ -100,7 +100,6 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
                     openedFiles: ["stdout.txt", "stderr.txt", "wd/example-jobs/python/pi.py"],
                 },
                 { name: "Persisted output", navigator: taskOutputNavigator },
-                { name: "Persisted logs", navigator: taskLogsNavigator },
             ]);
         });
     }
