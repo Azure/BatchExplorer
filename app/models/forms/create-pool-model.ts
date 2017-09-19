@@ -31,6 +31,11 @@ export interface PoolScaleModel {
     targetLowPriorityNodes: number;
 }
 
+export interface PackageReferenceModel {
+    applicationId: string;
+    version: string;
+}
+
 export interface CreatePoolModel {
     id: string;
     displayName: string;
@@ -43,6 +48,7 @@ export interface CreatePoolModel {
     userAccounts: UserAccountDto[];
     taskSchedulingPolicy: NodeFillType;
     appLicenses: string[];
+    appPackages: PackageReferenceModel[];
 }
 
 export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
@@ -82,6 +88,10 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
         data.applicationLicenses = output.appLicenses;
     }
 
+    if (output.appPackages && output.appPackages.length > 0) {
+        data.applicationPackageReferences = output.appPackages;
+    }
+
     return data;
 }
 
@@ -113,5 +123,6 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
         startTask: pool.startTask,
         userAccounts: pool.userAccounts,
         appLicenses: pool.applicationLicenses,
+        appPackages: pool.applicationPackageReferences,
     };
 }
