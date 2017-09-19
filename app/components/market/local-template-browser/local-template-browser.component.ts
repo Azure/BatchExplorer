@@ -10,6 +10,10 @@ import "./local-template-browser.scss";
     templateUrl: "local-template-browser.html",
 })
 export class LocalTemplateBrowserComponent {
+    public static breadcrumb() {
+        return { name: "Local templates" };
+    }
+
     public NcjTemplateType = NcjTemplateType;
 
     public pickedTemplateFile: File = null;

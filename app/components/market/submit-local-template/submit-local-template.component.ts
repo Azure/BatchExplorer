@@ -11,6 +11,10 @@ import "./submit-local-template.scss";
     templateUrl: "submit-local-template.html",
 })
 export class SubmitLocalTemplateComponent implements OnInit {
+    public static breadcrumb(_, queryParams) {
+        return { name: path.basename(queryParams.templateFile), label: "Local templates" };
+    }
+
     public templateFile: string;
     public error: string;
     public title: string;

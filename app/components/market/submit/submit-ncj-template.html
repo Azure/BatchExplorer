@@ -1,5 +1,5 @@
 <bl-complex-form [formGroup]="form" [hideFooter]="true">
-    <bl-form-page main-form-page [title]="title">
+    <bl-form-page [title]="title" main-form-page>
         <bl-form-section title="Mode" *ngIf="multipleModes">
             <div class="modes">
                 <bl-button type="wide" [class.selected]="modeState === Modes.NewPoolAndJob" (click)="pickMode(Modes.NewPoolAndJob)">Run job with auto pool</bl-button>
