@@ -3,7 +3,7 @@ import { Observable, Subject } from "rxjs";
 
 import { File } from "app/models";
 import { RxEntityProxy, getOnceProxy } from "app/services/core";
-import { exists, log } from "app/utils";
+import { CloudPathUtils, exists, log } from "app/utils";
 import { FileSystemService } from "../fs.service";
 
 export type PropertiesFunc = () => RxEntityProxy<any, File>;
@@ -47,7 +47,6 @@ export enum FileSource {
 export class FileLoader {
     public readonly filename: string;
     public readonly source: FileSource;
-
     /**
      * Optional name of subfolder to prevent collision with caches
      */
@@ -57,6 +56,11 @@ export class FileLoader {
      * Event that notify when the file is different
      */
     public readonly fileChanged: Observable<File>;
+
+    /**
+     * Base path to show the file as relative to this.
+     */
+    public basePath: string;
 
     private _fs: FileSystemService;
     private _properties: PropertiesFunc;
@@ -153,6 +157,13 @@ export class FileLoader {
         });
     }
 
+    public get displayName() {
+        if (this.basePath) {
+            return CloudPathUtils.normalize(path.relative(this.basePath, this.filename));
+        } else {
+            return this.filename;
+        }
+    }
     /**
      * Dipose of the file loader entities if applicable
      * You MUST call this if you used .listen on a file loader otherwise there will be memory leaks.
@@ -173,6 +184,7 @@ export class FileLoader {
     }
 
     private _updateProperties(file: File) {
+        console.log("Update prop", file.toJS());
         const last = this._cachedProperties;
         this._cachedProperties = file;
         if (last && !last.equals(file)) {
@@ -188,4 +200,5 @@ export class FileLoader {
         const filename = this._hashFilename(file);
         return path.join(this._fs.commonFolders.temp, this.source, this.groupId, filename);
     }
+
 }
