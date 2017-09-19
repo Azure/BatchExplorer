@@ -1,4 +1,5 @@
 import { Dto, DtoAttr } from "app/core";
+import { AppPackageReferenceDto } from "./application-package-reference.dto";
 import { EnvironmentSetting } from "./metadata.dto";
 
 export class TaskCreateDto extends Dto<TaskCreateDto> {
@@ -18,7 +19,7 @@ export class TaskCreateDto extends Dto<TaskCreateDto> {
     public fileGroups?: FileGroupDto[];
 
     @DtoAttr()
-    public applicationPackageReferences?: ApplicationPackageReferenceDto[];
+    public applicationPackageReferences?: AppPackageReferenceDto[];
 
     @DtoAttr()
     public environmentSettings?: EnvironmentSetting[];
@@ -56,11 +57,6 @@ export interface FileGroupDto {
 export interface GroupSourceDto {
     fileGroup: string;
     prefix: string;
-}
-
-export interface ApplicationPackageReferenceDto {
-    applicationId: string;
-    version?: string;
 }
 
 export interface ConstraintDto {
