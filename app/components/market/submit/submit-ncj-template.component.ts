@@ -17,10 +17,10 @@ export class SubmitNcjTemplateComponent implements OnChanges {
     @Input() public jobTemplate: NcjJobTemplate;
     @Input() public poolTemplate: NcjPoolTemplate;
     @Input() public genericTemplate: any;
+    @Input() public title: string;
 
     public Modes = Modes;
     public modeState = Modes.None;
-    public title: string;
     public form: FormGroup;
     public multipleModes = false;
 

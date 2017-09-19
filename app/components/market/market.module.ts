@@ -8,13 +8,16 @@ import {
     ParameterInputComponent, SubmitMarketApplicationComponent, SubmitNcjTemplateComponent,
 } from "app/components/market/submit";
 
+import { LocalTemplateBrowserComponent } from "app/components/market/local-template-browser";
 import { TaskBaseModule } from "app/components/task/base";
+
 const components = [
     ChooseActionComponent,
     MarketComponent,
     SubmitMarketApplicationComponent,
     SubmitNcjTemplateComponent,
     ParameterInputComponent,
+    LocalTemplateBrowserComponent,
 ];
 
 const modules = [

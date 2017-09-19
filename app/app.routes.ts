@@ -3,6 +3,7 @@ import { Routes } from "@angular/router";
 
 import { JobGraphsComponent } from "app/components/job/graphs/job-graphs-home";
 import { ChooseActionComponent } from "app/components/market/application-action";
+import { LocalTemplateBrowserComponent } from "app/components/market/local-template-browser";
 import { SettingsComponent } from "app/components/settings";
 import { AccountDefaultComponent, AccountDetailsComponent } from "./components/account/details";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
@@ -55,6 +56,10 @@ export const routes: Routes = [
     {
         path: "market",
         component: MarketComponent,
+    },
+    {
+        path: "market/local",
+        component: LocalTemplateBrowserComponent,
     },
     {
         path: "market/:applicationId/actions",
