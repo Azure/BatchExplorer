@@ -66,6 +66,15 @@
             </div>
         </bl-form-section>
 
+        <bl-form-section *ngIf="hasLinkedStorage" title="Choose one or multiple application packages" subtitle="Select application packages to be downloaded onto each compute node in the pool">
+            <div class="form-element">
+                <bl-app-package-picker (hasLinkedStorage)="handleHasLinkedStorage($event)" formControlName="appPackages"></bl-app-package-picker>
+                <!-- TODO: change bl-error to display a dynamic custom error message from the control -->
+                <bl-error controlName="appPackages" code="invalid">Please select valid combinations of application package versions</bl-error>
+                <bl-error controlName="appPackages" code="duplicate">There is a duplicate package version selected</bl-error>
+            </div>
+        </bl-form-section>
+
         <bl-form-section title="User accounts" subtitle="Set of user accounts to be created on each node in the pool. By default, pools come with one non-admin user and one admin user. You can add up to 5 specific users for running tasks.">
             <bl-form-multi-picker formControlName="userAccounts" #userAccountsPicker addTitle="Add a user account" [max]="5">
                 <ng-template blFormPickerItem let-value>
