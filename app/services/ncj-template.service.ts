@@ -4,7 +4,7 @@ import { List } from "immutable";
 import * as path from "path";
 import { AsyncSubject, Observable } from "rxjs";
 
-import { Application, ApplicationAction } from "app/models";
+import { Application, ApplicationAction, NcjJobTemplate, NcjPoolTemplate, NcjTemplateType } from "app/models";
 import { DateUtils, log } from "app/utils";
 
 const branch = "ncj";
@@ -88,12 +88,32 @@ export class NcjTemplateService {
         }).share();
     }
 
-    public getJobTemplate(applicationId: string, actionId: string): Observable<any> {
+    public getJobTemplate(applicationId: string, actionId: string): Observable<NcjJobTemplate> {
         return this.get(`${applicationId}/${actionId}/job.template.json`);
     }
 
-    public getPoolTemplate(applicationId: string, actionId: string): Observable<any> {
+    public getPoolTemplate(applicationId: string, actionId: string): Observable<NcjPoolTemplate> {
         return this.get(`${applicationId}/${actionId}/pool.template.json`);
+    }
+
+    public async loadLocalTemplateFile(path: string) {
+        const content = await this.fs.readFile(path);
+        let json;
+        try {
+            json = JSON.parse(content);
+        } catch (error) {
+            return Promise.reject(`File is not valid json: ${error.message}`);
+        }
+        let templateType: NcjTemplateType;
+        if (json.job) {
+            templateType = NcjTemplateType.job;
+        } else if (json.pool) {
+            templateType = NcjTemplateType.pool;
+        } else {
+            templateType = NcjTemplateType.unknown;
+        }
+
+        return { type: templateType, template: json };
     }
 
     private _checkIfDataNeedReload(): Promise<boolean> {

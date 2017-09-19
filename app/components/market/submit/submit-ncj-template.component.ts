@@ -16,7 +16,6 @@ import "./submit-ncj-template.scss";
 export class SubmitNcjTemplateComponent implements OnChanges {
     @Input() public jobTemplate: NcjJobTemplate;
     @Input() public poolTemplate: NcjPoolTemplate;
-    @Input() public genericTemplate: any;
     @Input() public title: string;
 
     public Modes = Modes;
@@ -39,7 +38,7 @@ export class SubmitNcjTemplateComponent implements OnChanges {
     }
 
     public ngOnChanges(changes) {
-        this.multipleModes = Boolean(!this.genericTemplate && this.jobTemplate && this.poolTemplate);
+        this.multipleModes = Boolean(this.jobTemplate && this.poolTemplate);
         if (changes.jobTemplate || changes.poolTemplate) {
             this._processParameters();
             this._createForms();

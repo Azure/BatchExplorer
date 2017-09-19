@@ -10,9 +10,9 @@
                     <span *ngIf="!pickedTemplateFile">Pick a template</span>
             </div>
             <div [ngSwitch]="templateType" *ngIf="templateType" class="subtitle">
-                <div *ngSwitchCase="TemplateType.job">This is a job template</div>
-                <div *ngSwitchCase="TemplateType.pool">This is a pool template</div>
-                <div *ngSwitchCase="TemplateType.unknown">Couldn't determine what is the type of this template(Pool or Job). Make sure your template is valid</div>
+                <div *ngSwitchCase="NcjTemplateType.job">This is a job template</div>
+                <div *ngSwitchCase="NcjTemplateType.pool">This is a pool template</div>
+                <div *ngSwitchCase="NcjTemplateType.unknown">Couldn't determine what is the type of this template(Pool or Job). Make sure your template is valid</div>
             </div>
             <div class="error" *ngIf="error">
                 {{error}}

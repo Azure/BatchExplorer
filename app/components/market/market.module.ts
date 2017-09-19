@@ -9,6 +9,7 @@ import {
 } from "app/components/market/submit";
 
 import { LocalTemplateBrowserComponent } from "app/components/market/local-template-browser";
+import { SubmitLocalTemplateComponent } from "app/components/market/submit-local-template";
 import { TaskBaseModule } from "app/components/task/base";
 
 const components = [
@@ -18,6 +19,7 @@ const components = [
     SubmitNcjTemplateComponent,
     ParameterInputComponent,
     LocalTemplateBrowserComponent,
+    SubmitLocalTemplateComponent,
 ];
 
 const modules = [
