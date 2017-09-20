@@ -130,6 +130,10 @@ export class SubmitNcjTemplateComponent implements OnChanges {
             return;
         }
         if (this.jobTemplate) {
+            // Remove the poolId param as we are writting it manually
+            if (this.jobTemplate.parameters.poolId) {
+                delete this.jobTemplate.parameters.poolId;
+            }
             this.jobParametersWrapper = this._parseParameters(this.jobTemplate.parameters);
         }
         if (this.poolTemplate) {
