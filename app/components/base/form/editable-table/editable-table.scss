@@ -5,6 +5,7 @@ bl-editable-table, .editable-table {
         margin-bottom: 15px;
         border-collapse: collapse;
         width: 100%;
+        table-layout: fixed;
 
         thead {
             text-align: left;
@@ -30,7 +31,7 @@ bl-editable-table, .editable-table {
             line-height: 0;
         }
 
-        td.action-column {
+        td.action-column, th.action-column {
             width: 26px;
         }
 
