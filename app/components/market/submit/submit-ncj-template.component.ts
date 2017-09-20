@@ -2,6 +2,7 @@ import { Component, Input, OnChanges } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { autobind } from "core-decorators";
+import { Observable } from "rxjs";
 
 import { NcjJobTemplate, NcjParameter, NcjPoolTemplate, ServerError } from "app/models";
 import { PythonRpcService } from "app/services";
@@ -39,34 +40,27 @@ export class SubmitNcjTemplateComponent implements OnChanges {
 
     public ngOnChanges(changes) {
         this.multipleModes = Boolean(this.jobTemplate && this.poolTemplate);
+
         if (changes.jobTemplate || changes.poolTemplate) {
+            if (!this.multipleModes) {
+                this.modeState = this.poolTemplate ? Modes.NewPool : Modes.ExistingPoolAndJob;
+            }
+
             this._processParameters();
             this._createForms();
         }
     }
 
     public get showPoolForm(): boolean {
-        if (this.multipleModes) {
-            return this.modeState === Modes.NewPoolAndJob || this.modeState === Modes.NewPool;
-        } else {
-            return Boolean(this.poolTemplate);
-        }
+        return this.modeState === Modes.NewPoolAndJob || this.modeState === Modes.NewPool;
     }
 
     public get showPoolPicker(): boolean {
-        if (this.multipleModes) {
-            return this.modeState === Modes.ExistingPoolAndJob;
-        } else {
-            return false;
-        }
+        return this.modeState === Modes.ExistingPoolAndJob;
     }
 
     public get showJobForm(): boolean {
-        if (this.multipleModes) {
-            return this.modeState === Modes.NewPoolAndJob || this.modeState === Modes.ExistingPoolAndJob;
-        } else {
-            return Boolean(this.jobTemplate);
-        }
+        return this.modeState === Modes.NewPoolAndJob || this.modeState === Modes.ExistingPoolAndJob;
     }
 
     public pickMode(mode: Modes) {
@@ -89,30 +83,44 @@ export class SubmitNcjTemplateComponent implements OnChanges {
     @autobind()
     public submit() {
         this.error = null;
-        let obs;
-        switch (this.modeState) {
-            case Modes.NewPoolAndJob:
-                obs = this.pythonRpcService.callWithAuth("expand-ncj-pool", [this.poolTemplate, this.poolParams.value])
-                    .cascade((data) => this._runJobWithPool(data));
-                break;
-            case Modes.ExistingPoolAndJob:
-                this.jobTemplate.job.properties.poolInfo = this.pickedPool.value;
-                obs = this.pythonRpcService.callWithAuth("submit-ncj-job", [this.jobTemplate, this.jobParams.value])
-                    .cascade((data) => this._redirectToJob(data.properties.id));
-                break;
-            case Modes.NewPool:
-                obs = this.pythonRpcService.callWithAuth("create-ncj-pool", [this.poolTemplate, this.poolParams.value])
-                    .cascade((data) => this._redirectToPool(data.id));
-                break;
-            default:
-                return obs;
-        }
-        if (obs) {
+        let method;
+        const methods = {
+            [Modes.NewPoolAndJob]: this._createJobWithAutoPool,
+            [Modes.ExistingPoolAndJob]: this._createJob,
+            [Modes.NewPool]: this._createPool,
+        };
+        method = methods[this.modeState];
+
+        if (method) {
+            const obs = method();
             obs.subscribe({
                 error: (err) => this.error = err,
             });
+
+            return obs;
+        } else {
+            log.error("Couldn't find how to submit this template.", { modeState: this.modeState });
+            return Observable.of(null);
         }
-        return obs;
+    }
+
+    @autobind()
+    private _createJobWithAutoPool() {
+        return this.pythonRpcService.callWithAuth("expand-ncj-pool", [this.poolTemplate, this.poolParams.value])
+            .cascade((data) => this._runJobWithPool(data));
+    }
+
+    @autobind()
+    private _createJob() {
+        this.jobTemplate.job.properties.poolInfo = this.pickedPool.value;
+        return this.pythonRpcService.callWithAuth("submit-ncj-job", [this.jobTemplate, this.jobParams.value])
+            .cascade((data) => this._redirectToJob(data.properties.id));
+    }
+
+    @autobind()
+    private _createPool() {
+        return this.pythonRpcService.callWithAuth("create-ncj-pool", [this.poolTemplate, this.poolParams.value])
+            .cascade((data) => this._redirectToPool(data.id));
     }
 
     private _processParameters() {
