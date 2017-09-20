@@ -320,7 +320,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
                 return array;
             });
 
-        runningTaskRects.enter().append("rect")
+        runningTaskRects.enter().append("rect").merge(runningTaskRects)
             .attr("transform", (data) => {
                 const index = data.index;
                 const x = z - (index + 1) * (data.taskHeight + 1);
