@@ -184,7 +184,6 @@ export class FileLoader {
     }
 
     private _updateProperties(file: File) {
-        console.log("Update prop", file.toJS());
         const last = this._cachedProperties;
         this._cachedProperties = file;
         if (last && !last.equals(file)) {
