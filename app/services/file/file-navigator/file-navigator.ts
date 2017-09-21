@@ -106,7 +106,10 @@ export class FileNavigator {
     }
 
     public getFile(path: string): FileLoader {
-        return this._getFileLoader(path);
+        const loader = this._getFileLoader(CloudPathUtils.join(this.basePath, path));
+        this.currentFileLoader.basePath = this.basePath;
+
+        return loader;
     }
 
     public refresh(path: string = ""): Observable<any> {

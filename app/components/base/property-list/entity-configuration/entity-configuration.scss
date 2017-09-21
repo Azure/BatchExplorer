@@ -1,0 +1,11 @@
+bl-entity-configuration {
+    position: relative;
+    display: block;
+
+    .toggle-mode {
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        z-index: 10;
+    }
+}

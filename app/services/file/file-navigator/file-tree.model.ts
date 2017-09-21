@@ -81,7 +81,7 @@ export class FileTreeStructure {
         for (let file of files.toArray()) {
             const node = fileToTreeNode(file, this.basePath);
 
-            const folder = CloudPathUtils.normalize(path.dirname(node.path));
+            const folder = CloudPathUtils.dirname(node.path) || ".";
             this._checkDirInTree(folder);
 
             if (file.isDirectory) {

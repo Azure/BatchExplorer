@@ -319,7 +319,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
                 return array;
             });
 
-        runningTaskRects.enter().append("rect")
+        runningTaskRects.enter().append("rect").merge(runningTaskRects)
             .attr("transform", (data) => {
                 const index = data.index;
                 const x = z - (index + 1) * (data.taskHeight + 1);
@@ -479,7 +479,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
                 this.nodeService.getOnce(this.pool.id, node.id);
             },
             error: (error: ServerError) => {
-                this.notificationService.error(error.body.code, error.body.message);
+                this.notificationService.error(error.code, error.message);
             },
         });
         return action;

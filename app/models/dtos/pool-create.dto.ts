@@ -2,6 +2,7 @@ import { Dto, DtoAttr } from "app/core";
 import { NodeFillType } from "app/models";
 import * as moment from "moment";
 
+import { AppPackageReferenceDto } from "./application-package-reference.dto";
 import { CloudServiceConfiguration } from "./cloud-service-configuration.dto";
 import { MetaDataDto } from "./metadata.dto";
 import { UserAccountDto } from "./user-account.dto";
@@ -64,7 +65,7 @@ export class PoolCreateDto extends Dto<PoolCreateDto> {
     public certificateReferences?: any[];
 
     @DtoAttr()
-    public applicationPackageReferences: any[];
+    public applicationPackageReferences: AppPackageReferenceDto[];
 
     @DtoAttr()
     public metadata: MetaDataDto[];

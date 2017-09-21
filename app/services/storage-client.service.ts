@@ -58,10 +58,8 @@ export class StorageClientService {
             if (!settings) {
                 return Observable.throw(new ServerError({
                     status: 404,
-                    body: {
-                        code: "AutostorageNotSetup",
-                        message: "Autostorage not setup for this account",
-                    },
+                    code: "AutostorageNotSetup",
+                    message: "Autostorage not setup for this account",
                 }));
             }
             const cachedItem = this._getCachedItem(settings.storageAccountId);
