@@ -47,11 +47,6 @@ export class FileNavigator {
     public basePath: string;
     public tree: Observable<FileTreeStructure>;
 
-    /**
-     * Current file loader to display
-     */
-    public currentFileLoader: FileLoader;
-
     public error: ServerError;
 
     private _tree = new BehaviorSubject<FileTreeStructure>(null);
@@ -107,8 +102,7 @@ export class FileNavigator {
 
     public getFile(path: string): FileLoader {
         const loader = this._getFileLoader(CloudPathUtils.join(this.basePath, path));
-        this.currentFileLoader.basePath = this.basePath;
-
+        loader.basePath = this.basePath;
         return loader;
     }
 
