@@ -104,12 +104,14 @@ bl-file-tree-view {
             background: $whitesmoke-darker;
         }
 
-        > .file-icon > .fa-folder {
-            color: #f8d979;
-        }
+        > .file-icon {
+            > .fa-folder, > .fa-folder-open {
+                color: #f8d979;
+            }
 
-        > .file-icon > .fa-file {
-            color: $dove-grey;
+            > .fa-file {
+                color: $dove-grey;
+            }
         }
     }
 }
