@@ -108,9 +108,11 @@ a {
 }
 
 .os-download .option {
+    display: block;
     border-top: 1px solid #e5e5e5;
     cursor: pointer;
     font-size: 1.1rem;
+    color: #5b5b5b;
 }
 
 .os-download .option:hover {
