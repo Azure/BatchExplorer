@@ -6,6 +6,8 @@ import { By } from "@angular/platform-browser";
 import { ServerErrorComponent } from "app/components/base/form/server-error";
 import { ServerError } from "app/models";
 
+const date = new Date(2017, 9, 13, 23, 43, 38);
+
 @Component({
     template: `
        <bl-server-error #errorComponent [error]="error"></bl-server-error>
@@ -19,7 +21,7 @@ const fakeError = ServerError.fromBatch({
     statusCode: 408,
     code: "FakeErrorCode",
     message: {
-        value: "There was a fake error\nRequestId:abc-def-ghi\nTime:time:2016-12-08T18:23:14",
+        value: `There was a fake error\nRequestId:abc-def\nTime:${date.toISOString()}`,
     },
 });
 
@@ -65,16 +67,18 @@ describe("ServerErrorComponent", () => {
         });
 
         it("should not show the request id and time by default", () => {
-            expect(serverErrorElement.nativeElement.textContent).not.toContain("abc-def-ghi");
-            expect(serverErrorElement.nativeElement.textContent).not.toContain("2016-12-08T18:23:14");
+            expect(serverErrorElement.nativeElement.textContent).not.toContain("abc-def");
+            expect(serverErrorElement.nativeElement.textContent)
+                .not.toContain(date.toString());
         });
 
         it("should show the request id and time after clicking on the debug button", () => {
             troubleshootBtn.nativeElement.click();
             fixture.detectChanges();
 
-            expect(serverErrorElement.nativeElement.textContent).toContain("abc-def-ghi");
-            expect(serverErrorElement.nativeElement.textContent).toContain("2016-12-08T18:23:14");
+            expect(serverErrorElement.nativeElement.textContent).toContain("abc-def");
+            expect(serverErrorElement.nativeElement.textContent)
+                .toContain(date.toString());
         });
     });
 });
