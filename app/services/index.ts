@@ -19,7 +19,7 @@ export * from "./ncj-template.service";
 export * from "./node-service";
 export * from "./node-user.service";
 export * from "./pricing.service";
-export * from "./settings-service";
+export * from "./settings.service";
 export * from "./ssh-key.service";
 export * from "./storage.service";
 export * from "./subscription.service";

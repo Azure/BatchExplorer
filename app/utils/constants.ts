@@ -1,3 +1,6 @@
+// tslint:disable:variable-name
+import { remote } from "electron";
+
 export const caching = {
     /**
      * Max number of filtered query that it should remember.
@@ -164,3 +167,5 @@ export const LowPriDiscount = {
     windows: 0.40, // 60%
     linux: 0.20,   // 80%
 };
+
+export const Client = (remote.getCurrentWindow() as any).clientConstants;

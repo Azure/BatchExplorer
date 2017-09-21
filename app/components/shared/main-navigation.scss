@@ -1,0 +1,45 @@
+@import "app/styles/variables";
+
+bl-app-nav {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+
+    > ul {
+        margin: 0;
+        user-select: none;
+
+        > li > a {
+            height: $navigationbar-width;
+            display: block;
+            padding: 13px 0;
+            outline: none;
+            color: $navigation-text;
+            -webkit-user-drag: none;
+
+            i.fa {
+                display: block;
+                margin: 0 auto;
+                color: $whitesmoke;
+            }
+
+            .label {
+                margin-top: 5px;
+            }
+
+            &:hover, &:focus {
+                background-color: $navigation-hover;
+                color: $white;
+            }
+
+            &.active {
+                background-color: map-get($primary, 500);
+                color: $white;
+            }
+        }
+    }
+
+    > .spacer {
+        flex: 1;
+    }
+}

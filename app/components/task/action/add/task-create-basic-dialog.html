@@ -1,25 +1,27 @@
 <bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef" [multiUse]="multiUse" [actionName]="actionName">
     <bl-form-page main-form-page [title]="title" [formGroup]="form">
         <bl-form-section title="General info" subtitle="Basic information about the task">
-            <div class="form-element">
-                <md-input-container>
-                    <input mdInput formControlName="id" placeholder="Id">
-                </md-input-container>
-                <bl-error controlName="id" code="required">Id is a required field</bl-error>
-                <bl-error controlName="id" code="maxlength">Id has a maximum length of 64 characters</bl-error>
-                <bl-error controlName="id" code="pattern">Id can contain any combination of alphanumeric characters including hyphens and underscores</bl-error>
+            <div class="grow">
+                <div class="gcol">
+                    <md-input-container class="form-element">
+                        <input mdInput formControlName="id" placeholder="Id">
+                    </md-input-container>
+                    <bl-error controlName="id" code="required">Id is a required field</bl-error>
+                    <bl-error controlName="id" code="maxlength">Id has a maximum length of 64 characters</bl-error>
+                    <bl-error controlName="id" code="pattern">Id can contain any combination of alphanumeric characters including hyphens and underscores</bl-error>
+                </div>
+
+                <div class="gcol">
+                    <md-input-container class="form-element">
+                        <input mdInput formControlName="displayName" placeholder="Display name">
+                    </md-input-container>
+                    <bl-error controlName="displayName" code="maxlength">Display name has a maximum length of 1024 characters</bl-error>
+                </div>
             </div>
 
             <div class="form-element">
                 <md-input-container>
-                    <input mdInput formControlName="displayName" placeholder="Display name">
-                </md-input-container>
-                <bl-error controlName="displayName" code="maxlength">Display name has a maximum length of 1024 characters</bl-error>
-            </div>
-
-            <div class="form-element">
-                <md-input-container>
-                    <input mdInput formControlName="commandLine" placeholder="Command line">
+                    <textarea mdInput mdTextareaAutosize mdAutosizeMinRows="1" blSingleLineTextarea formControlName="commandLine" placeholder="Command line"></textarea>
                 </md-input-container>
                 <bl-error controlName="commandLine" code="required">Command line is a required field</bl-error>
             </div>
@@ -32,14 +34,26 @@
                     <bl-error controlName="maxTaskRetryCount" code="validateRange">Retry count values can range from -1 to 100</bl-error>
                 </div>
             </div>
+            <div class="form-element pad-top">
+                <bl-user-identity-picker formControlName="userIdentity" [userAccounts]="userAccounts">
+                </bl-user-identity-picker>
+            </div>
         </bl-form-section>
 
         <bl-form-section title="Resource files" subtitle="List of files to be used by this task">
             <bl-resourcefile-picker formControlName="resourceFiles"></bl-resourcefile-picker>
         </bl-form-section>
 
-        <bl-form-section title="Environment variables" subtitle="A list of environment variable settings for the task.">
+        <bl-form-section title="Environment variables" subtitle="A list of environment variable settings for the task">
             <bl-key-value-picker formControlName="environmentSettings"></bl-key-value-picker>
+        </bl-form-section>
+
+        <bl-form-section *ngIf="hasLinkedStorage" title="Choose one or multiple application packages" subtitle="Select application packages to be downloaded onto the compute node for use with this task">
+            <div class="form-element">
+                <bl-app-package-picker (hasLinkedStorage)="handleHasLinkedStorage($event)" formControlName="appPackages"></bl-app-package-picker>
+                <bl-error controlName="appPackages" code="invalid">Please select valid combinations of application package versions</bl-error>
+                <bl-error controlName="appPackages" code="duplicate">There is a duplicate package version selected</bl-error>
+            </div>
         </bl-form-section>
     </bl-form-page>
 </bl-complex-form>

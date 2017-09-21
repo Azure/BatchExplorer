@@ -65,40 +65,44 @@ export class PythonRpcService {
      * Call this if the connection got cut to try again.
      */
     public resetConnection(): Observable<any> {
-        this._ready = new AsyncSubject<any>();
-        const socket = this._socket = new WebSocket("ws://127.0.0.1:8765/ws");
-        socket.onopen = (event: Event) => {
-            if (this._retryCount > 0) {
-                log.info("Reconnected to websocket successfully.");
-            }
-            this._retryCount = 0;
-            this._zone.run(() => {
-                this._ready.next(true);
-                this._ready.complete();
-            });
-        };
+        const portConfig = Constants.Client.pythonServerPort;
+        const portPromise = process.env.HOT ? portConfig.dev : portConfig.prod;
+        portPromise.then((port) => {
+            this._ready = new AsyncSubject<any>();
+            const socket = this._socket = new WebSocket(`ws://127.0.0.1:${port}/ws`);
+            socket.onopen = (event: Event) => {
+                if (this._retryCount > 0) {
+                    log.info("Reconnected to websocket successfully.");
+                }
+                this._retryCount = 0;
+                this._zone.run(() => {
+                    this._ready.next(true);
+                    this._ready.complete();
+                });
+            };
 
-        socket.onerror = (error: Event) => {
-            this._zone.run(() => {
-                this._ready.error(event);
-            });
-        };
+            socket.onerror = (error: Event) => {
+                this._zone.run(() => {
+                    this._ready.error(event);
+                });
+            };
 
-        socket.onclose = () => {
-            const waitingTime = Math.floor(2 ** this._retryCount);
-            this._retryCount++;
-            log.info(`Websocket connection closed. Retrying to connect in ${waitingTime}s`);
-            setTimeout(() => {
-                this.resetConnection();
-            }, waitingTime * 1000);
-        };
+            socket.onclose = () => {
+                const waitingTime = Math.floor(2 ** this._retryCount);
+                this._retryCount++;
+                log.info(`Websocket connection closed. Retrying to connect in ${waitingTime}s`);
+                setTimeout(() => {
+                    this.resetConnection();
+                }, waitingTime * 1000);
+            };
 
-        socket.onmessage = (event: MessageEvent) => {
-            this._zone.run(() => {
-                const response = JSON.parse(event.data);
-                this._processResponse(response);
-            });
-        };
+            socket.onmessage = (event: MessageEvent) => {
+                this._zone.run(() => {
+                    const response = JSON.parse(event.data);
+                    this._processResponse(response);
+                });
+            };
+        });
 
         return this._ready.asObservable();
     }
@@ -127,10 +131,10 @@ export class PythonRpcService {
     }
 
     public callWithAuth(method: string, params: any[]): Observable<any> {
-        return this.accountService.currentAccount.flatMap((account: AccountResource) => {
+        return this.accountService.currentAccount.first().flatMap((account: AccountResource) => {
             const batchToken = this.adalService.accessTokenFor(account.subscription.tenantId, ResourceUrl.batch);
             const armToken = this.adalService.accessTokenFor(account.subscription.tenantId, ResourceUrl.arm);
-            return Observable.combineLatest(batchToken, armToken).flatMap(([batchToken, armToken]) => {
+            return Observable.combineLatest(batchToken, armToken).first().flatMap(([batchToken, armToken]) => {
                 const authParam = { batchToken, armToken, account: account.toJS() };
                 return this.call(method, params, {
                     authentication: authParam,
@@ -201,7 +205,9 @@ export class PythonRpcService {
         }
         const request = this._currentRequests[requestId];
         if (!request) {
-            log.error(`Request with id ${requestId} doesn't exists. Maybe it timed out!`, response);
+            if (!response.stream) {
+                log.error(`Request with id ${requestId} doesn't exists. Maybe it timed out!`, response);
+            }
             return null;
         }
         if (!response.result && !response.error) {

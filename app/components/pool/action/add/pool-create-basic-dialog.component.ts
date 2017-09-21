@@ -6,8 +6,7 @@ import { Observable, Subscription } from "rxjs";
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { DynamicForm } from "app/core";
-import { Pool } from "app/models";
-import { NodeFillType } from "app/models";
+import { NodeFillType, Pool } from "app/models";
 import { PoolCreateDto } from "app/models/dtos";
 import { CreatePoolModel, PoolOsSources, createPoolToData, poolToFormModel } from "app/models/forms";
 import { PoolService, PricingService, VmSizeService } from "app/services";
@@ -21,7 +20,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     public osSource: PoolOsSources = PoolOsSources.IaaS;
     public osType: "linux" | "windows" = "linux";
     public NodeFillType = NodeFillType;
-
+    public hasLinkedStorage: boolean = true;
     public estimatedCost: string = "-";
 
     private _osControl: FormControl;
@@ -40,6 +39,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         private notificationService: NotificationService) {
         super(PoolCreateDto);
 
+        this.hasLinkedStorage = true;
         this._osControl = this.formBuilder.control({}, Validators.required);
         this._licenseControl = this.formBuilder.control([]);
 
@@ -60,6 +60,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             startTask: null,
             userAccounts: [[]],
             appLicenses: [[]],
+            appPackages: [[]],
         });
 
         this._sub = this._osControl.valueChanges.subscribe((value) => {
@@ -118,6 +119,10 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
 
     public formToDto(data: any): PoolCreateDto {
         return createPoolToData(data);
+    }
+
+    public handleHasLinkedStorage(hasLinkedStorage) {
+        this.hasLinkedStorage = hasLinkedStorage;
     }
 
     public get startTask() {

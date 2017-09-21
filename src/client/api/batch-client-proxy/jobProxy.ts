@@ -83,6 +83,10 @@ export default class JobProxy {
         return this.client.job.patch(jobId, attributes, wrapOptions(options));
     }
 
+    public getTaskCounts(jobId: string): Promise<any> {
+        return this.client.job.getTaskCounts(jobId, wrapOptions({}));
+    }
+
     /**
      */
     public listHookTasks(jobId: string, options?: models.JobListPreparationAndReleaseTaskStatusNextOptions) {

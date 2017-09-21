@@ -1,0 +1,73 @@
+@import "app/styles/variables";
+
+bl-file-table-view {
+    $file-header-height: 40px;
+    display: block;
+    height: 100%;
+    width: 100%;
+
+    .table-wrapper {
+        height: calc(100% - #{$file-header-height});
+        display: flex;
+        flex-direction: column;
+
+        > .flex-separator {
+            flex: 1;
+        }
+    }
+
+    .file-table-view-header {
+        display: flex;
+        height: $file-header-height;
+        align-items: stretch;
+        color: $mineshaft-grey;
+        border-bottom: 1px solid $border-color;
+
+        > * {
+            padding: 0 10px;
+            &:not(:last-child) {
+                border-right: 1px solid $border-color;
+            }
+        }
+
+        .go-back {
+            font-size: 24px;
+            line-height: $file-header-height;
+            vertical-align: middle;
+
+            &:hover {
+                background: $alto;
+            }
+            .fa {
+                // color: $minshaft-grey;
+                color: map-get($primary, 400);
+            }
+        }
+
+        .current-path {
+            line-height: $file-header-height;
+            vertical-align: middle;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+    }
+    .icon {
+        display: inline-block;
+        width: 16px;
+
+        .fa-folder {
+            color: #f8d979;
+        }
+
+        .fa-file {
+            color: $dove-grey;
+        }
+    }
+
+    .drop-hint {
+        color: $dusty-grey;
+        text-align: center;
+        font-style: italic;
+    }
+}

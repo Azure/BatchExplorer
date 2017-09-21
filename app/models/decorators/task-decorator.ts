@@ -1,4 +1,4 @@
-import { Task, TaskState } from "app/models";
+import { AutoUserScope, Task, TaskState, UserAccountElevationLevel } from "app/models";
 import { DecoratorBase } from "app/utils/decorators";
 import { ComputeNodeInfoDecorator } from "./compute-node-info-decorator";
 import { TaskConstraintsDecorator } from "./task-constraints-decorator";
@@ -16,7 +16,6 @@ export class TaskDecorator extends DecoratorBase<Task> {
     public previousState: string;
     public previousStateTransitionTime: string;
     public commandLine: string;
-    public runElevated: boolean;
     public successExitCodes: string;
 
     public exitConditions: {};
@@ -30,6 +29,7 @@ export class TaskDecorator extends DecoratorBase<Task> {
     public stats: {};
     public dependsOn: {};
     public applicationPackageReferences: any[];
+    public userIdentitySummary: string;
 
     constructor(task: Task) {
         super(task);
@@ -45,7 +45,6 @@ export class TaskDecorator extends DecoratorBase<Task> {
         this.previousState = this.stateField(task.previousState);
         this.previousStateTransitionTime = this.dateField(task.previousStateTransitionTime);
         this.commandLine = this.stringField(task.commandLine);
-        this.runElevated = task.runElevated;
 
         this.exitConditions = task.exitConditions || {};
         this.resourceFiles = task.resourceFiles || {};
@@ -58,6 +57,8 @@ export class TaskDecorator extends DecoratorBase<Task> {
         this.stats = task.stats || {};
         this.dependsOn = task.dependsOn || {};
         this.applicationPackageReferences = task.applicationPackageReferences || [];
+
+        this._initUserIdentity();
     }
 
     private _getStateIcon(state: TaskState): string {
@@ -72,5 +73,26 @@ export class TaskDecorator extends DecoratorBase<Task> {
             default:
                 return "fa-question-circle-o";
         }
+    }
+
+    private _initUserIdentity() {
+        const userIdentity = this.original.userIdentity;
+        let value;
+        if (!userIdentity || (!userIdentity.userName && !userIdentity.autoUser)) {
+            value = "Task user";
+        } else if (userIdentity.autoUser) {
+            const isAdmin = userIdentity.autoUser.elevationLevel === UserAccountElevationLevel.admin;
+            const isPoolScope = userIdentity.autoUser.scope === AutoUserScope.pool;
+            const scope = isPoolScope ? "Pool default user" : "Task default user";
+            if (isAdmin) {
+                value = `${scope} (Admin)`;
+            } else {
+                value = scope;
+            }
+        } else {
+            value = userIdentity.userName;
+        }
+
+        this.userIdentitySummary = value;
     }
 }

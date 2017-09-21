@@ -1,6 +1,6 @@
 import { List, Map } from "immutable";
 
-import { exists, nil } from "app/utils";
+import { exists, nil } from "app/utils/object";
 import { metadataForRecord, primitives } from "./helpers";
 
 /**
@@ -79,11 +79,16 @@ export class Record<TInput> {
             }
 
             const value = (data as any)[key];
-            if (exists(value) && typeMetadata && !primitives.has(typeMetadata.type.name)) {
+            if (exists(value) && typeMetadata) {
+                const isPrimitive = primitives.has(typeMetadata.type.name);
                 if (typeMetadata.list) {
-                    obj[key] = List(value && value.map(x => new typeMetadata.type(x)));
+                    obj[key] = List(value && value.map(x => isPrimitive ? x : new typeMetadata.type(x)));
                 } else {
-                    obj[key] = new typeMetadata.type(value);
+                    if (isPrimitive) {
+                        obj[key] = value;
+                    } else {
+                        obj[key] = new typeMetadata.type(value);
+                    }
                 }
             } else {
                 obj[key] = value;

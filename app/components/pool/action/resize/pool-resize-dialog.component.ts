@@ -73,15 +73,11 @@ export class PoolResizeDialogComponent {
     }
 
     private _enableAutoScale(value: PoolScaleModel) {
-        if (this.pool.enableAutoScale) {
-            return Observable.of({});
-        } else {
-            const dto = new PoolEnableAutoScaleDto({
-                autoScaleFormula: value.autoScaleFormula,
-                autoScaleEvaluationInterval: moment.duration(value.autoScaleEvaluationInterval, "minutes") as any,
-            });
-            return this.poolService.enableAutoScale(this.pool.id, dto);
-        }
+        const dto = new PoolEnableAutoScaleDto({
+            autoScaleFormula: value.autoScaleFormula,
+            autoScaleEvaluationInterval: moment.duration(value.autoScaleEvaluationInterval, "minutes") as any,
+        });
+        return this.poolService.enableAutoScale(this.pool.id, dto);
     }
 
     private _disableAutoScale() {

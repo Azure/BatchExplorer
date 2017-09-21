@@ -2,6 +2,7 @@ import {
     Directive,
     ElementRef,
     EventEmitter,
+    HostListener,
     Input,
     OnChanges,
     OnDestroy,
@@ -10,7 +11,8 @@ import {
     SimpleChanges,
 } from "@angular/core";
 
-import Chart from "chart.js";
+// tslint:disable-next-line
+const Chart = require("chart.js");
 import { getColors } from "./helpers";
 
 @Directive({ selector: "canvas[blChart]" })
@@ -28,6 +30,8 @@ export class ChartDirective implements OnDestroy, OnChanges, OnInit {
      * Emit when clicking on an chart element.
      */
     @Output() public elClick = new EventEmitter();
+    @Output() public elDblClick = new EventEmitter();
+    @Output() public elContextMenu = new EventEmitter();
     @Output() public hover = new EventEmitter();
 
     public ctx: any;
@@ -35,7 +39,29 @@ export class ChartDirective implements OnDestroy, OnChanges, OnInit {
     private cvs: any;
     private initFlag: boolean = false;
 
-    public constructor(private _element: ElementRef) {
+    public constructor(private _element: ElementRef) { }
+
+    @HostListener("click", ["$event"])
+    public handleClick(event: MouseEvent) {
+        const el = this.chart.getElementAtEvent(event)[0];
+        if (el) {
+            this.elClick.emit(el);
+        }
+    }
+
+    @HostListener("dblClick", ["$event"])
+    public handleDblClick(event: MouseEvent) {
+        const el = this.chart.getElementAtEvent(event)[0];
+        if (el) {
+            this.elDblClick.emit(el);
+        }
+    }
+    @HostListener("contextmenu", ["$event"])
+    public handleContextMenu(event: MouseEvent) {
+        const el = this.chart.getElementAtEvent(event)[0];
+        if (el) {
+            this.elContextMenu.emit(el);
+        }
     }
 
     public ngOnInit(): any {

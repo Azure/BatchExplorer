@@ -1,11 +1,4 @@
-import { Record } from "immutable";
-
-const SpecCostRecord = Record({
-    id: null,
-    statusCode: null,
-    amount: null,
-    currencyCode: null,
-});
+import { Model, Prop, Record } from "app/core";
 
 export interface SpecCostAttributes {
     id: string;
@@ -14,11 +7,12 @@ export interface SpecCostAttributes {
     currencyCode: string;
 }
 
-export class SpecCost extends SpecCostRecord {
-    public id: string;
-    public statusCode: number;
-    public amount: number;
-    public currencyCode: string;
+@Model()
+export class SpecCost extends Record<SpecCostAttributes> {
+    @Prop() public id: string;
+    @Prop() public statusCode: number;
+    @Prop() public amount: number;
+    @Prop() public currencyCode: string;
 
     constructor(data: SpecCostAttributes) {
         super(data);

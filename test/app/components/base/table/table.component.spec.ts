@@ -1,4 +1,4 @@
-import { Component, DebugElement } from "@angular/core";
+import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
@@ -59,6 +59,7 @@ describe("TableComponent", () => {
                 { provide: ContextMenuService, useValue: null },
                 { provide: BreadcrumbService, useValue: null },
             ],
+            schemas: [NO_ERRORS_SCHEMA],
         });
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;

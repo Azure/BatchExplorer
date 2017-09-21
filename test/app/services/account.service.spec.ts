@@ -12,13 +12,16 @@ describe("AccountService", () => {
     let account1 = new AccountResource({ id: "account-1" } as any);
     let subscriptionServiceSpy;
     let subs: Subscription[] = [];
+    let storageSpy;
 
     beforeEach(() => {
         subscriptionServiceSpy = {
             cache: new DataCache<any>(),
         };
 
-        accountService = new AccountService({} as any, subscriptionServiceSpy);
+        storageSpy = {};
+
+        accountService = new AccountService(storageSpy, {} as any, subscriptionServiceSpy);
         accountService.getOnce = jasmine.createSpy("getOnce").and.returnValue(Observable.of(account1));
         accountService.getAccountKeys = jasmine.createSpy("getAccountKeys").and.returnValue(Observable.of({}));
         subs.push(accountService.currentAccountId.subscribe(x => currentAccountId = x));

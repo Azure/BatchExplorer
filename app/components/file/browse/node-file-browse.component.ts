@@ -1,16 +1,10 @@
-import { Component, Input, OnChanges } from "@angular/core";
-import { List } from "immutable";
+import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
 
-import { File, Node } from "app/models";
-import { FileService, NodeFileListParams } from "app/services";
-import { RxListProxy } from "app/services/core";
-
-const folderFriendlyName = {
-    workitems: "Job task files",
-    shared: "Shared files",
-    startup: "Start task files",
-    applications: "Application packages files",
-};
+import { FileExplorerConfig } from "app/components/file/browse/file-explorer";
+import { Node } from "app/models";
+import { FileService } from "app/services";
+import { FileLoader, FileNavigator } from "app/services/file";
+import "./node-file-browse.scss";
 
 export interface Folder {
     name: string;
@@ -23,46 +17,50 @@ export interface Folder {
     selector: "bl-node-file-browse",
     templateUrl: "node-file-browse.html",
 })
-export class NodeFileBrowseComponent implements OnChanges {
-    @Input()
-    public poolId: string;
+export class NodeFileBrowseComponent implements OnChanges, OnDestroy {
+    @Input() public poolId: string;
+    @Input() public nodeId: string;
+    @Input() public node: Node;
+    /**
+     * Optional root directory to display
+     */
+    @Input() public folder: string = "";
+    @Input() public fileExplorerConfig: FileExplorerConfig;
 
-    @Input()
-    public node: Node;
+    public fileNavigator: FileNavigator;
+    public pickedFileLoader: FileLoader;
 
-    public data: RxListProxy<NodeFileListParams, File>;
-    public folders: List<Folder>;
-    public currentFolder: string = null;
-
-    constructor(private fileService: FileService) {
-        this.data = this.fileService.listFromComputeNode(null, null, false);
-        this.data.items.subscribe((files) => {
-            this.folders = List<Folder>(files.map(x => {
-                return {
-                    name: x.name,
-                    friendlyName: folderFriendlyName[x.name],
-                };
-            }));
-        });
-    }
+    constructor(private fileService: FileService) { }
 
     public ngOnChanges(inputs) {
-        if (inputs.poolId || inputs.node) {
-            this.currentFolder = null;
-            this.data.updateParams({ poolId: this.poolId, nodeId: this.node.id });
-            this.data.fetchNext(true);
+        if (inputs.poolId || inputs.nodeId || inputs.folder) {
+            this._clearFileNavigator();
+
+            if (this.poolId && this.nodeId) {
+
+                this.fileNavigator = this.fileService.navigateNodeFiles(this.poolId, this.nodeId, {
+                    basePath: this.folder,
+                });
+                this.fileNavigator.init();
+            }
         }
     }
 
-    public selectFolder(folderName: string) {
-        this.currentFolder = folderName;
+    public ngOnDestroy() {
+        this._clearFileNavigator();
+    }
+
+    public updatePickedFile(filename) {
+        this.pickedFileLoader = this.fileService.fileFromNode(this.poolId, this.nodeId, filename);
     }
 
     public get quicksearchPlaceholder() {
-        if (this.currentFolder) {
-            return `Filter by file name under folder "${this.currentFolder}"`;
-        } else {
-            return "Filter by file name";
+        return "Filter by full file path";
+    }
+
+    private _clearFileNavigator() {
+        if (this.fileNavigator) {
+            this.fileNavigator.dispose();
         }
     }
 }

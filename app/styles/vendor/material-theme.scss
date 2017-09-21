@@ -133,8 +133,8 @@ md-dialog-container.mat-dialog-container {
 .mat-select-content, .mat-menu-content {
     padding: 4px 0;
     md-option, .mat-menu-item {
-        height: 30px;
-        line-height: 30px;
+        height: 24px;
+        line-height: 24px;
     }
 }
 
@@ -159,5 +159,17 @@ md-input-container.bl-textarea {
     .mat-option {
         height: 32px;
         line-height: 32px;
+    }
+}
+
+// Smaller select
+md-select.small {
+    .mat-select-trigger {
+        height: 20px;
+    }
+
+    .mat-select-value-text {
+        font-size: 13px;
+        line-height: 20px;
     }
 }

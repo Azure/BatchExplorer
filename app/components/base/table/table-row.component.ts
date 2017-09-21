@@ -12,14 +12,7 @@ import { TableComponent } from "./table.component";
 
 @Component({
     selector: "bl-row",
-    template: `
-        <ng-template>
-            <tr (click)="handleClick($event)" (contextmenu)="openContextMenu($event)"
-                [class.selected]="active || selected" [class.focused]="isFocused | async">
-                <ng-content></ng-content>
-            </tr>
-        </ng-template>
-    `,
+    templateUrl: "table-row.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TableRowComponent extends AbstractListItemBase implements AfterViewInit, OnInit {
@@ -36,11 +29,11 @@ export class TableRowComponent extends AbstractListItemBase implements AfterView
 
     // tslint:disable:no-forward-ref
     constructor(
-        @Inject(forwardRef(() => TableComponent)) list: TableComponent,
+        @Inject(forwardRef(() => TableComponent)) public table: TableComponent,
         router: Router,
         contextmenuService: ContextMenuService,
         breadcrumbService: BreadcrumbService) {
-        super(list, router, contextmenuService, breadcrumbService);
+        super(table, router, contextmenuService, breadcrumbService);
     }
 
     public ngAfterViewInit() {

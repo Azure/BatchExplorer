@@ -1,25 +1,21 @@
-import { List, Record } from "immutable";
+import { List } from "immutable";
 
-const TaskDependenciesRecord = Record({
-    taskIds: List([]),
-    taskIdRanges: List([]),
-});
+import { ListProp, Model, Record } from "app/core";
+
+export interface TaskDependenciesAttributes {
+    taskIds: string[];
+    taskIdRanges: TaskIdRange[];
+}
 
 /**
  * Specifies any dependencies of a task. Any task that is explicitly
  * specified or within a dependency range must complete before the dependant
  * task will be scheduled.
  */
-export class TaskDependencies extends TaskDependenciesRecord {
-    public taskIds: List<string>;
-    public taskIdRanges: List<TaskIdRange>;
-
-    constructor(data) {
-        super(Object.assign({}, data, {
-            taskIds: List(data.taskIds),
-            taskIdRanges: List(data.taskIdRanges),
-        }));
-    }
+@Model()
+export class TaskDependencies extends Record<TaskDependenciesAttributes> {
+    @ListProp(Object) public taskIds: List<string> = List([]);
+    @ListProp(Object) public taskIdRanges: List<TaskIdRange> = List([]);
 }
 
 /**
@@ -27,7 +23,7 @@ export class TaskDependencies extends TaskDependenciesRecord {
  * in the range must complete successfully before the dependent task can be
  * scheduled.
  */
-export class TaskIdRange {
-    public start: number;
-    public end: number;
+export interface TaskIdRange {
+    start: number;
+    end: number;
 }
