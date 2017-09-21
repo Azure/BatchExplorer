@@ -54,7 +54,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
     }
 
     getLatestRelease().then((release) => {
-        console.log("releases", release);
         const suffix = release.prerelease ? " (Beta)" : "";
         versionEl.textContent = release.name + suffix;
 
@@ -67,8 +66,6 @@ document.addEventListener("DOMContentLoaded", (event) => {
             linuxRpm: getAsset(release.assets, ".rpm"),
             linuxAppimage: getAsset(release.assets, ".AppImage"),
         }
-
-        console.log("Download links", downloadLinks)
 
         updateDownloadLinks()
     })
