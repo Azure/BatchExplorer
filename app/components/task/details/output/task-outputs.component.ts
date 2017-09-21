@@ -95,7 +95,7 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
                 {
                     name: "Node files",
                     navigator: nodeNavigator,
-                    openedFiles: ["stdout.txt", "stderr.txt", "wd/example-jobs/python/pi.py"],
+                    openedFiles: ["stdout.txt", "stderr.txt"],
                 },
                 { name: "Persisted output", navigator: taskOutputNavigator },
             ]);

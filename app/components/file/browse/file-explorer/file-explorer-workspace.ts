@@ -1,5 +1,5 @@
 import { FileLoader, FileNavigator, FileTreeNode } from "app/services/file";
-import { log } from "app/utils";
+import { CloudPathUtils, log } from "app/utils";
 import { BehaviorSubject, Observable } from "rxjs";
 
 export interface FileSource {
@@ -35,19 +35,16 @@ export interface CurrentNode {
 export class FileExplorerWorkspace {
     public sources: FileSource[];
     public openedFiles: Observable<OpenedFile[]>;
-    // public openedFolder: Observable<any>;
     public currentSource: Observable<FileSource>;
     public currentNode: Observable<CurrentNode>;
 
     private _currentSource = new BehaviorSubject<FileSource>(null);
     private _currentPath = new BehaviorSubject("");
     private _openedFiles = new BehaviorSubject<OpenedFile[]>([]);
-    // private _openedFolder = new BehaviorSubject<any>(null);
 
     constructor(data: FileNavigator | FileSource | FileSource[]) {
         this.sources = sourcesFrom(data);
         this.openedFiles = this._openedFiles.asObservable();
-        // this.openedFolder = this._openedFolder.asObservable();
         this.currentSource = this._currentSource.asObservable();
         this._currentSource.next(this.sources.first());
 
@@ -87,7 +84,7 @@ export class FileExplorerWorkspace {
     public goBack() {
         const path = this._currentPath.value;
         if (path === "") { return; }
-        this.navigateTo(path.split("/").slice(0, -1).join("/"), this._currentSource.value);
+        this.navigateTo(CloudPathUtils.dirname(path), this._currentSource.value);
     }
 
     public isFileOpen(path: string, source?: FileSource): boolean {
@@ -146,8 +143,9 @@ export class FileExplorerWorkspace {
         if (this.sources.length === 1) {
             return this.sources.first();
         } else {
-            log.error("You must specify a source(FileNavigator) when using multi-source");
-            throw Error("You must specify a source(FileNavigator) when using multi-source");
+            const message = "You must specify a source(FileNavigator) when using multi-source";
+            log.error(message);
+            throw Error(message);
         }
     }
 

@@ -5,8 +5,7 @@ bl-file-explorer-tabs {
     display: block;
     .tablist {
         height: $tab-height;
-        // border-bottom: 1px solid $border-color;
-        background: #e5e5e5;
+        background: $mercury-grey;
         display: flex;
 
         > .tab {

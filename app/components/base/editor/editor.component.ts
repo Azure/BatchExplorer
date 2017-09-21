@@ -50,7 +50,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     public placeholder: string;
     private _value = "";
     private _sub: Subscription;
-    private _erd: any;
+    private _resizeDetector: any;
 
     get value() { return this._value; }
 
@@ -68,11 +68,11 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
         }
     }
     public ngAfterViewInit() {
-        this._erd = elementResizeDetectorMaker({
+        this._resizeDetector = elementResizeDetectorMaker({
             strategy: "scroll",
         });
 
-        this._erd.listenTo(this.elementRef.nativeElement, (element) => {
+        this._resizeDetector.listenTo(this.elementRef.nativeElement, (element) => {
             this.instance.refresh();
         });
 
@@ -86,7 +86,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
 
     public ngOnDestroy() {
         this._sub.unsubscribe();
-        this._erd.uninstall(this.elementRef.nativeElement);
+        this._resizeDetector.uninstall(this.elementRef.nativeElement);
     }
 
     public codemirrorInit(config) {

@@ -106,13 +106,17 @@ bl-file-tree-view {
 
         > .file-icon {
             > .fa-folder, > .fa-folder-open {
-                color: #f8d979;
+                color: $folder-color;
             }
 
             > .fa-file {
                 color: $dove-grey;
             }
         }
+    }
+
+    .tree-view-error {
+        white-space: pre;
     }
 }
 

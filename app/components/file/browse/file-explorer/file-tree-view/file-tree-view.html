@@ -15,9 +15,7 @@
     </bl-clickable>
 </div>
 <div *ngIf="expanded" class="tree-view-content">
-    <div *ngIf="fileNavigator.error">
-        {{fileNavigator.error.message}}
-    </div>
+    <div *ngIf="fileNavigator.error" class="tree-view-error">{{fileNavigator.error.message}}</div>
     <div class="tree-rows-container"
         [class.drop-target]="dropTargetPath === ''"
         (dragenter)="dragEnterRow($event)"
