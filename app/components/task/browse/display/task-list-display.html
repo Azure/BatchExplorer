@@ -21,9 +21,12 @@
         <bl-column>Exit code</bl-column>
     </bl-thead>
 
-    <bl-row *ngFor="let task of tasks" [link]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id" [contextmenu]="contextmenu(task)">
+    <bl-row *ngFor="let task of tasks;trackBy: trackByFn" [link]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id" [contextmenu]="contextmenu(task)">
         <bl-cell [value]="task.id"></bl-cell>
-        <bl-cell [value]="task.state"></bl-cell>
+        <bl-cell [value]="task.state">
+            {{task.state}}
+            <span class="danger" *ngIf="task.preparationTaskFailed">&nbsp;(Prep task failed)</span>
+        </bl-cell>
         <bl-cell [value]="formatDate(task.creationTime)"></bl-cell>
         <bl-cell [value]="formatDate(task.executionInfo.startTime)"></bl-cell>
         <bl-cell [value]="formatDate(task.executionInfo.endTime)"></bl-cell>

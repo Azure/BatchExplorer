@@ -7,7 +7,7 @@
 
     <!-- Preparing (Optional) -->
     <bl-task-timeline-state *ngIf="hasPreparationTask" state="preparing" [currentState]="task.state" [error]="preparingTaskFailed"
-        title="Preparation task for this task failed. Task is being rescheduled on a different node.">
+        title="The preparation task failed on the node this task was scheduled on. The task will be rescheduled">
         --
         <!-- TODO load the prep task info-->
     </bl-task-timeline-state>
