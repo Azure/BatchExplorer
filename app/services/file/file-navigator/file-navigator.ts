@@ -91,7 +91,8 @@ export class FileNavigator {
                 this._loadFileInPath(path);
             }
         } else {
-            this.currentFileLoader = this._getFileLoader(node.path);
+            this.currentFileLoader = this._getFileLoader(CloudPathUtils.join(this.basePath, node.path));
+            this.currentFileLoader.basePath = this.basePath;
         }
     }
 

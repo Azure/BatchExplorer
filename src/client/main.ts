@@ -31,3 +31,15 @@ function startApplication() {
 app.on("ready", startApplication);
 
 listenToSelectCertifcateEvent();
+
+process.on("exit", () => {
+    pythonServer.stop();
+});
+
+process.on("SIGINT", () => {
+    process.exit(-1);
+});
+
+process.on("SIGINT", () => {
+    process.exit(-2);
+});

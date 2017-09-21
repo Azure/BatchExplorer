@@ -3,7 +3,7 @@ import { Observable, Subject } from "rxjs";
 
 import { File } from "app/models";
 import { RxEntityProxy, getOnceProxy } from "app/services/core";
-import { exists, log } from "app/utils";
+import { CloudPathUtils, exists, log } from "app/utils";
 import { FileSystemService } from "../fs.service";
 
 export type PropertiesFunc = () => RxEntityProxy<any, File>;
@@ -47,7 +47,6 @@ export enum FileSource {
 export class FileLoader {
     public readonly filename: string;
     public readonly source: FileSource;
-
     /**
      * Optional name of subfolder to prevent collision with caches
      */
@@ -57,6 +56,11 @@ export class FileLoader {
      * Event that notify when the file is different
      */
     public readonly fileChanged: Observable<File>;
+
+    /**
+     * Base path to show the file as relative to this.
+     */
+    public basePath: string;
 
     private _fs: FileSystemService;
     private _properties: PropertiesFunc;
@@ -129,10 +133,12 @@ export class FileLoader {
             const checkDirObs = Observable.fromPromise(this._fs.ensureDir(path.dirname(dest)));
             return checkDirObs.flatMap(() => this._download(dest)).map(x => dest).share();
         }
+
         const obs = this.content().concatMap((result) => {
             return this._fs.saveFile(dest, result.content);
         }).share();
         obs.subscribe();
+
         return obs;
     }
 
@@ -153,6 +159,13 @@ export class FileLoader {
         });
     }
 
+    public get displayName() {
+        if (this.basePath) {
+            return CloudPathUtils.normalize(path.relative(this.basePath, this.filename));
+        } else {
+            return this.filename;
+        }
+    }
     /**
      * Dipose of the file loader entities if applicable
      * You MUST call this if you used .listen on a file loader otherwise there will be memory leaks.
@@ -166,9 +179,12 @@ export class FileLoader {
 
     private _hashFilename(file: File) {
         const hash = file.properties.lastModified.getTime().toString(36);
-        const segements = file.name.split(/[\\\/]/);
+        // clean any unwanted : characters from the file path
+        const cleaned = file.name.replace(":", "");
+        const segements = cleaned.split(/[\\\/]/);
         const filename = segements.pop();
         segements.push(`${hash}.${filename}`);
+
         return path.join(...segements);
     }
 
@@ -188,4 +204,5 @@ export class FileLoader {
         const filename = this._hashFilename(file);
         return path.join(this._fs.commonFolders.temp, this.source, this.groupId, filename);
     }
+
 }

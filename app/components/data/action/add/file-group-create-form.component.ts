@@ -62,12 +62,14 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     @autobind()
     public submit(): Observable<any> {
         const formData = this.getCurrentValue();
-        this.backgroundTaskService.startTask(`Upload file group ${formData.name}`, (task) => {
+        const name = `Uploading file group: ${this._formGroupName(formData.name)}`;
+        this.backgroundTaskService.startTask(name, (task) => {
             const observable = this.fileGroupService.createFileGroup(formData);
             let lastData;
             observable.subscribe({
                 next: (data) => {
                     lastData = data;
+                    task.name.next(`${name} (${data.uploaded}/${data.total})`);
                     task.progress.next(data.uploaded / data.total * 100);
                 },
                 complete: () => {
@@ -109,6 +111,12 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
 
     public hasValidFolder(): boolean {
         return this.folder && this.folderControl.valid;
+    }
+
+    private _formGroupName(fileGroupName: string) {
+        return fileGroupName && fileGroupName.length > 10
+        ? `${fileGroupName.substring(0, 9)}...`
+        : fileGroupName;
     }
 
     /**

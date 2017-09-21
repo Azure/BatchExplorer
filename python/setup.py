@@ -6,7 +6,8 @@ dir_path = os.path.dirname(os.path.realpath(__file__))
 # Dependencies are automatically detected, but it might need fine tuning.
 build_exe_options = {
     "build_exe": os.path.join(dir_path, "build"),
-    "packages": ["os", "asyncio", "idna", "cryptography", "cffi", "msrestazure", "msrest", "keyring"],
+    "packages": ["os", "asyncio", "idna", "cryptography", "cffi",
+                 "msrestazure", "msrest", "keyring", "typing"],
     "include_files": [(os.path.join(dir_path, "controllers/"), "controllers/")],
     "excludes": ["tkinter"],
 }
