@@ -4,7 +4,7 @@ export class CloudPathUtils {
     }
 
     public static join(...paths: string[]) {
-        return paths.join("/");
+        return paths.filter(x => Boolean(x)).map(x => x.trimEnd("/")).join("/");
     }
 
     public static dirname(path: string): string {
