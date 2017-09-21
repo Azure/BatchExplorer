@@ -78,7 +78,7 @@ describe("TerminateJobDialogComponent ", () => {
             error: (error: ServerError) => {
                 expect(jobServiceSpy.terminate).toHaveBeenCalledTimes(1);
                 expect(jobServiceSpy.terminate).toHaveBeenCalledWith("bad-job-id");
-                expect(error.body.message).toBe("Some random test error happened terminating job");
+                expect(error.message).toBe("Some random test error happened terminating job");
 
                 done();
             },

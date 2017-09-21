@@ -49,7 +49,7 @@ describe("AppPackagePickerComponent", () => {
         applicationServiceSpy = {
             list: () => listProxy,
             isAutoStorageError: (error: ServerError) => {
-                return error && error.body && (error.body.code === "AccountNotEnabledForAutoStorage");
+                return error && (error.code === "AccountNotEnabledForAutoStorage");
             },
         };
 

@@ -3,7 +3,7 @@
         <i class="fa" [class.fa-caret-down]="expanded" [class.fa-caret-right]="!expanded"></i>
     </bl-clickable>
     <bl-clickable class="name" (do)="handleClickTreeViewHeader()">{{name}}</bl-clickable>
-    <span class="error" *ngIf="fileNavigator.error" [title]="fileNavigator.error.body?.code">
+    <span class="error" *ngIf="fileNavigator.error" [title]="fileNavigator.error.code">
         <i class="fa fa-warning"></i>
     </span>
     <bl-clickable (do)="refresh()" [disabled]="refreshing">

@@ -183,7 +183,7 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
         } else if (e.status === Constants.HttpCode.Conflict) {
             this.fileCleanupOperation = true;
             return;
-        } else if (!e.status && e.body.message.startsWith("An incorrect number of bytes")) {
+        } else if (!e.status && e.message.startsWith("An incorrect number of bytes")) {
             // gets an undefined error code for binary files.
             this.fileContentFailure = true;
             return;
