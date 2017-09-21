@@ -1,5 +1,8 @@
 # Dev docs
 
+## Getting started
+* [Setup your dev environment](setup.md)
+
 ## Main
 * [Components](components.md)
 * [Models](models.md)
