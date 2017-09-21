@@ -133,10 +133,12 @@ export class FileLoader {
             const checkDirObs = Observable.fromPromise(this._fs.ensureDir(path.dirname(dest)));
             return checkDirObs.flatMap(() => this._download(dest)).map(x => dest).share();
         }
+
         const obs = this.content().concatMap((result) => {
             return this._fs.saveFile(dest, result.content);
         }).share();
         obs.subscribe();
+
         return obs;
     }
 
@@ -177,9 +179,12 @@ export class FileLoader {
 
     private _hashFilename(file: File) {
         const hash = file.properties.lastModified.getTime().toString(36);
-        const segements = file.name.split(/[\\\/]/);
+        // clean any unwanted : characters from the file path
+        const cleaned = file.name.replace(":", "");
+        const segements = cleaned.split(/[\\\/]/);
         const filename = segements.pop();
         segements.push(`${hash}.${filename}`);
+
         return path.join(...segements);
     }
 
