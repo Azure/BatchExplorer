@@ -40,6 +40,7 @@
 * Graph hover text [\#608](https://github.com/Azure/BatchLabs/issues/608)
 * Grammar in task running time graph [\#607](https://github.com/Azure/BatchLabs/issues/607)
 * Handle forbidden 403 errors [\#577](https://github.com/Azure/BatchLabs/issues/577)
+* Cannot read a blob from a file group with a full path. [\#561](https://github.com/Azure/BatchLabs/issues/561)
 
 ### Other:
 * Update readme to prepare for the release [\#692](https://github.com/Azure/BatchLabs/issues/692)
