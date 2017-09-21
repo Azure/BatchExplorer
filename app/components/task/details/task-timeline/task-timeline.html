@@ -6,7 +6,8 @@
     <div class="state-link" [class.locked]="active"></div>
 
     <!-- Preparing (Optional) -->
-    <bl-task-timeline-state *ngIf="hasPreparationTask" state="preparing" [currentState]="task.state">
+    <bl-task-timeline-state *ngIf="hasPreparationTask" state="preparing" [currentState]="task.state" [error]="preparingTaskFailed"
+        title="Preparation task for this task failed. Task is being rescheduled on a different node.">
         --
         <!-- TODO load the prep task info-->
     </bl-task-timeline-state>

@@ -44,6 +44,10 @@ export class TaskTimelineComponent {
         return this.state === TaskState.completed;
     }
 
+    public get preparingTaskFailed(): boolean {
+        return this.active && this.task.previousState === TaskState.preparing;
+    }
+
     public get creationTime() {
         return DateUtils.prettyDate(this.task.creationTime);
     }
