@@ -1,14 +1,11 @@
-<div *ngIf="!fileLoader">
-    Error this file is neither a node, task or blob file.
-</div>
-<div *ngIf="fileLoader" [ngSwitch]="fileType">
-    <div *ngSwitchCase="FileType.log">
+<ng-container [ngSwitch]="fileType">
+    <div *ngSwitchCase="FileType.log" class="viewer-container log">
         <bl-log-file-viewer [fileLoader]="fileLoader" [tail]="false"></bl-log-file-viewer>
     </div>
-    <div *ngSwitchCase="FileType.image">
+    <div *ngSwitchCase="FileType.image" class="viewer-container image">
         <bl-image-file-viewer [fileLoader]="fileLoader"></bl-image-file-viewer>
     </div>
-    <div *ngSwitchCase="FileType.code">
+    <div *ngSwitchCase="FileType.code" class="viewer-container code">
         <bl-code-file-viewer [fileLoader]="fileLoader"></bl-code-file-viewer>
     </div>
     <md-card *ngSwitchDefault class="unknown-file-type">
@@ -19,4 +16,4 @@
             <button class="image" (click)="openAs(FileType.image)">Image</button>
         </div>
     </md-card>
-</div>
+</ng-container>

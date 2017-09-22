@@ -13,6 +13,7 @@ export interface FileTreeNodeParams {
     loadingStatus?: LoadingStatus;
     contentLength?: number;
     lastModified?: Date;
+    isUnknown?: boolean;
 }
 
 export class FileTreeNode {
@@ -21,6 +22,7 @@ export class FileTreeNode {
     public children: Map<string, FileTreeNode>;
     public loadingStatus: LoadingStatus;
     public name: string;
+    public isUnknown: boolean;
 
     /**
      * Content length if node is a file
@@ -35,6 +37,7 @@ export class FileTreeNode {
         this.loadingStatus = params.loadingStatus || (this.isDirectory ? LoadingStatus.Loading : LoadingStatus.Ready);
         this.contentLength = params.contentLength;
         this.lastModified = params.lastModified;
+        this.isUnknown = params.isUnknown || false;
         this.name = this._computeName();
     }
 
@@ -113,6 +116,7 @@ export class FileTreeStructure {
                 path: nodePath,
                 loadingStatus: LoadingStatus.Loading,
                 isDirectory: true,
+                isUnknown: true,
             });
         }
     }
