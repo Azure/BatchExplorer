@@ -104,13 +104,19 @@ bl-file-tree-view {
             background: $whitesmoke-darker;
         }
 
-        > .file-icon > .fa-folder {
-            color: #f8d979;
-        }
+        > .file-icon {
+            > .fa-folder, > .fa-folder-open {
+                color: $folder-color;
+            }
 
-        > .file-icon > .fa-file {
-            color: $dove-grey;
+            > .fa-file {
+                color: $dove-grey;
+            }
         }
+    }
+
+    .tree-view-error {
+        white-space: pre;
     }
 }
 

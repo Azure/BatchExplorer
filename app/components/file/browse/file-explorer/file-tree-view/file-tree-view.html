@@ -15,9 +15,7 @@
     </bl-clickable>
 </div>
 <div *ngIf="expanded" class="tree-view-content">
-    <div *ngIf="fileNavigator.error">
-        {{fileNavigator.error.message}}
-    </div>
+    <div *ngIf="fileNavigator.error" class="tree-view-error">{{fileNavigator.error.message}}</div>
     <div class="tree-rows-container"
         [class.drop-target]="dropTargetPath === ''"
         (dragenter)="dragEnterRow($event)"
@@ -29,7 +27,7 @@
             class="tree-row"
             [style.padding-left]="((treeRow.indent + 1) * 12) + 'px'"
             [title]="treeRow.path"
-            [class.active]="treeRow.path === currentNode?.path"
+            [class.active]="active && treeRow.path === currentPath"
             [class.drop-target]="treeRow.path.startsWith(dropTargetPath)"
             (click)="handleClick(treeRow)"
             (dragenter)="dragEnterRow($event, treeRow)"
@@ -40,7 +38,10 @@
                 <i class="fa" [class.fa-caret-down]="treeRow.expanded" [class.fa-caret-right]="!treeRow.expanded" *ngIf="treeRow.isDirectory"></i>
             </span>
             <span class="file-icon">
-                <i class="fa" [class.fa-folder]="treeRow.isDirectory" [class.fa-file]="!treeRow.isDirectory"></i>
+                <i class="fa"
+                    [class.fa-folder]="treeRow.isDirectory && !treeRow.expanded"
+                    [class.fa-folder-open]="treeRow.isDirectory &&treeRow.expanded"
+                    [class.fa-file]="!treeRow.isDirectory"></i>
             </span>
             <span class="label">{{treeRow.name}}</span>
         </div>

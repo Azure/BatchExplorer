@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, SimpleChanges } from "@angular/core";
 
 import { SettingsService } from "app/services";
 import { FileLoader } from "app/services/file";
+import { log } from "app/utils";
 import "./file-content.scss";
 
 enum FileType {
@@ -24,6 +25,9 @@ export class FileContentComponent implements OnChanges {
     constructor(private settingsService: SettingsService) { }
     public ngOnChanges(changes: SimpleChanges) {
         if (changes.fileLoader) {
+            if (!this.fileLoader) {
+                log.error("FileContentComponent fileLoader input is required but is", this.fileLoader);
+            }
             this._findFileType();
         }
     }
