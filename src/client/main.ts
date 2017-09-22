@@ -1,7 +1,9 @@
 import { app, dialog, ipcMain, protocol } from "electron";
+import { autoUpdater } from "electron-updater";
 import * as path from "path";
 app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 
+import { Constants } from "./client-constants";
 import { batchLabsApp, listenToSelectCertifcateEvent } from "./core";
 import { logger } from "./logger";
 import { PythonRpcServerProcess } from "./python-process";
@@ -10,6 +12,16 @@ const pythonServer = new PythonRpcServerProcess();
 pythonServer.start();
 
 batchLabsApp.init();
+// TODO only for dev remove
+autoUpdater.updateConfigPath = path.join(Constants.root, "dev-app-update.yml");
+autoUpdater.allowPrerelease = true;
+autoUpdater.autoDownload = true;
+
+autoUpdater.checkForUpdates().then((data) => {
+    console.log("Got data", data);
+}).catch((err) => {
+    console.log("Err", err);
+});
 
 // Create the browser window.
 function startApplication() {
