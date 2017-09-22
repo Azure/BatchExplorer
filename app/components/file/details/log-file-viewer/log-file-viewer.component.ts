@@ -34,6 +34,7 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
     public fileContentFailure = false;
 
     private _refreshInterval;
+    private _fileChangedSub: Subscription;
 
     constructor(
         private scrollableService: ScrollableService,
@@ -56,6 +57,14 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
             this.currentSubscription.unsubscribe();
         }
 
+        if (this._fileChangedSub) {
+            this._fileChangedSub.unsubscribe();
+        }
+        if (changes.fileLoader) {
+            this._fileChangedSub = this.fileLoader.fileChanged.subscribe((file) => {
+                this._processProperties(file);
+            });
+        }
         this.lines = [];
         this.loading = true;
         this.lastContentLength = 0;
@@ -70,6 +79,7 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
     public ngOnDestroy() {
         // clear the refresh when the user navigates away
         clearInterval(this._refreshInterval);
+        this._fileChangedSub.unsubscribe();
     }
 
     public toggleFollowLog() {
