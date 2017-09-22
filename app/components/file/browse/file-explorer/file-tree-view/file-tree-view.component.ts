@@ -48,6 +48,10 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
                 this._buildTreeRows(tree);
             }));
         }
+
+        if (inputs.currentPath) {
+            this.expandPath(this.currentPath);
+        }
     }
 
     public ngOnDestroy() {
