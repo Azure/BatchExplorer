@@ -158,6 +158,7 @@ export class FileNavigator {
         if (!this._proxies[path]) {
             this._proxies[path] = this._loadPath(this._getFolderToLoad(path));
         }
+
         const proxy = this._proxies[path];
         const output = new AsyncSubject<FileTreeNode>();
         proxy.refresh().flatMap(() => proxy.items.first()).share().subscribe({
