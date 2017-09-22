@@ -4,24 +4,18 @@ import * as path from "path";
 app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 
 import { Constants } from "./client-constants";
-import { batchLabsApp, listenToSelectCertifcateEvent } from "./core";
+import { BatchLabsApplication, listenToSelectCertifcateEvent } from "./core";
 import { logger } from "./logger";
 import { PythonRpcServerProcess } from "./python-process";
 
 const pythonServer = new PythonRpcServerProcess();
 pythonServer.start();
 
-batchLabsApp.init();
 // TODO only for dev remove
-autoUpdater.updateConfigPath = path.join(Constants.root, "dev-app-update.yml");
+// autoUpdater.updateConfigPath = path.join(Constants.root, "dev-app-update.yml");
 autoUpdater.allowPrerelease = true;
 autoUpdater.autoDownload = true;
-
-autoUpdater.checkForUpdates().then((data) => {
-    console.log("Got data", data);
-}).catch((err) => {
-    console.log("Err", err);
-});
+autoUpdater.logger = logger;
 
 // Create the browser window.
 function startApplication() {
@@ -33,7 +27,8 @@ function startApplication() {
 
     // Uncomment to view why windows don't show up.
     // batchLabsApp.debugCrash();
-
+    const batchLabsApp = new BatchLabsApplication(autoUpdater);
+    batchLabsApp.init();
     batchLabsApp.start();
 }
 
