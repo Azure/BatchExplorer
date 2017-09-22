@@ -33,7 +33,7 @@ export class FileDetailsViewComponent implements OnChanges {
 
     public ngOnChanges(inputs) {
         if (inputs.fileLoader) {
-            this.filename = this.fileLoader && this.fileLoader.filename;
+            this.filename = this.fileLoader && this.fileLoader.displayName;
             this._updateFileProperties();
         }
     }
@@ -81,7 +81,7 @@ export class FileDetailsViewComponent implements OnChanges {
             error: (error: ServerError) => {
                 this.notificationService.error(
                     "Download failed",
-                    `${this.filename} failed to download. ${error.body.message}`,
+                    `${this.filename} failed to download. ${error.message}`,
                 );
             },
         });

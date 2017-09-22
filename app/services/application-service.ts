@@ -158,4 +158,12 @@ export class ApplicationService extends ServiceBase {
     public deletePackage(applicationId: string, version: string): Observable<any> {
         return this.arm.delete(`${this._currentAccountId}/applications/${applicationId}/versions/${version}`);
     }
+
+    /**
+     * Check if the ServerError is an auto storage error from the application service
+     */
+    public isAutoStorageError(error: ServerError): boolean {
+        const badCode = Constants.APIErrorCodes.accountNotEnabledForAutoStorage;
+        return error && error.code === badCode;
+    }
 }

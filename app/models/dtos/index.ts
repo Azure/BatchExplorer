@@ -3,6 +3,7 @@
  * This folder is used for interfaces used for creating/updating entities
  */
 export * from "./account-patch.dto";
+export * from "./application-package-reference.dto";
 export * from "./file-group-create.dto";
 export * from "./file-group-options.dto";
 export * from "./job-create.dto";

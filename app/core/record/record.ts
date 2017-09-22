@@ -8,12 +8,14 @@ import { metadataForRecord, primitives } from "./helpers";
  * @template TInput Interface of the data returned by the server.
  */
 export class Record<TInput> {
+    public _original: Partial<TInput>;
     private _map: Map<string, any> = Map({});
     private _defaultValues = {};
     private _initialized = false;
     private _keys: Set<string>;
 
     constructor(data: Partial<TInput> = {}) {
+        this._original = data;
         this._init(data);
     }
 
