@@ -32,6 +32,7 @@ const stateTree: StateTree = [
     { state: NodeState.running, color: runningColor },
     { state: NodeState.waitingForStartTask, color: "#be93d9" },
     { state: NodeState.offline, color: "#5b5b5b" },
+    { state: NodeState.preempted, color: "#606060" },
     {
         category: "transition",
         label: "Transition states",
