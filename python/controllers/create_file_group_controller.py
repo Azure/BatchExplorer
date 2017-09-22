@@ -92,6 +92,8 @@ async def upload_files(
             local_path = os.path.join(path, SUBDIR_FILTER)
 
         try:
+            request.push_stream(
+                dict(uploaded=0, total=total_files))
             request.auth.client.file.upload(
                 local_path=local_path,
                 file_group=file_group_name,

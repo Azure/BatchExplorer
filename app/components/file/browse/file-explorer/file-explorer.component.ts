@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from "@a
 import { Subscription } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
+import { CurrentNode, FileExplorerWorkspace, FileSource } from "app/components/file/browse/file-explorer";
 import { FileNavigator, FileTreeNode } from "app/services/file";
 import "./file-explorer.scss";
 
@@ -56,8 +57,14 @@ const fileExplorerDefaultConfig: FileExplorerConfig = {
     templateUrl: "file-explorer.html",
 })
 export class FileExplorerComponent implements OnChanges, OnDestroy {
-    @Input() public fileNavigator: FileNavigator;
-    @Input() public fileNavigators: FileNavigatorEntry[];
+    @Input() public set data(data: FileExplorerWorkspace | FileNavigator) {
+        if (data instanceof FileExplorerWorkspace) {
+            this.workspace = data;
+        } else {
+            this.workspace = new FileExplorerWorkspace(data);
+        }
+        this._updateWorkspaceEvents();
+    }
     @Input() public autoExpand = false;
     @Input() public activeFile: string;
     @Input() public set config(config: FileExplorerConfig) {
@@ -68,27 +75,26 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
     @Output() public dropFiles = new EventEmitter<FileDropEvent>();
 
     public LoadingStatus = LoadingStatus;
-    public currentNode: FileTreeNode;
-    public currentFileNavigator: FileNavigator;
-    public currentFileNavigatorEntry: FileNavigatorEntry;
+    public currentSource: FileSource;
+    public currentNode: CurrentNode;
+    public workspace: FileExplorerWorkspace;
 
-    private _currentNodeSub: Subscription;
-
+    private _workspaceSubs: Subscription[] = [];
     private _config: FileExplorerConfig = fileExplorerDefaultConfig;
 
     public ngOnChanges(inputs) {
-        if (inputs.fileNavigator) {
-            this.fileNavigators = [{ name: "Files", navigator: this.fileNavigator }];
-        }
-        if (inputs.fileNavigator || inputs.fileNavigators) {
-            this.updateCurrentNavigator(this.fileNavigators.first());
-        }
+        // Todo Remove?
     }
 
     public ngOnDestroy() {
-        this._clearCurrentNodeSub();
+        this._clearWorkspaceSubs();
     }
 
+    /**
+     * Triggered when a file/folder is selected in the table view
+     * It will either navigate to the given item or select it depending on the settings.
+     * @param node Tree node that got selected
+     */
     public nodeSelected(node: FileTreeNode) {
         // tslint:disable-next-line:no-bitwise
         if (node.isDirectory && (this.config.selectable & FileExplorerSelectable.folder)) {
@@ -97,38 +103,34 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
         } else if (!node.isDirectory && (this.config.selectable & FileExplorerSelectable.file)) {
             this.activeFileChange.emit(node.path);
         } else {
-            this.navigateTo(node.path);
+            this.navigateTo(node.path, this.currentSource);
         }
     }
 
-    public navigateTo(path: string) {
-        this.currentFileNavigator.navigateTo(path);
-    }
-
-    public updateCurrentNavigator(entry: FileNavigatorEntry) {
-        this.currentFileNavigatorEntry = entry;
-        this.currentFileNavigator = entry.navigator;
-        this._updateNavigatorEvents();
+    public navigateTo(path: string, source: FileSource) {
+        this.workspace.navigateTo(path, source);
     }
 
     public goBack() {
-        this.currentFileNavigator.goBack();
+        this.workspace.goBack();
     }
 
     public handleDrop(event: FileDropEvent) {
         this.dropFiles.emit(event);
     }
 
-    private _updateNavigatorEvents() {
-        this._clearCurrentNodeSub();
-        this._currentNodeSub = this.currentFileNavigator.currentNode.subscribe((node) => {
+    private _updateWorkspaceEvents() {
+        this._clearWorkspaceSubs();
+        this._workspaceSubs.push(this.workspace.currentNode.subscribe((node) => {
             this.currentNode = node;
-        });
+        }));
+        this._workspaceSubs.push(this.workspace.currentSource.subscribe((source) => {
+            this.currentSource = source;
+        }));
     }
 
-    private _clearCurrentNodeSub() {
-        if (this._currentNodeSub) {
-            this._currentNodeSub.unsubscribe();
-        }
+    private _clearWorkspaceSubs() {
+        this._workspaceSubs.forEach(x => x.unsubscribe());
+        this._workspaceSubs = [];
     }
 }

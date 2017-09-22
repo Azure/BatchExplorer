@@ -47,8 +47,10 @@ describe("StorageAccountCardComponent", () => {
                     return Observable.of(storage1);
                 } else {
                     return Observable.throw(new ServerError({
-                        status: 404, statusText: "Not found",
-                        body: { message: "Storage doesn't exists" },
+                        status: 404,
+                        statusText: "Not found",
+                        code: "StorageAccountNotFound",
+                        message: "Storage doesn't exists",
                         original: null,
                     }));
                 }

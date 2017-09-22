@@ -21,11 +21,9 @@
         <bl-task-error-display [jobId]="jobId" [task]="task"></bl-task-error-display>
         <md-card class="details">
             <bl-tab-group>
-                <bl-tab key="logs">
-                    <bl-tab-label>Log Output</bl-tab-label>
-                    <div class="tab-padding">
-                        <bl-task-log [jobId]="jobId" [task]="task"></bl-task-log>
-                    </div>
+                <bl-tab key="outputs">
+                    <bl-tab-label>Task Outputs</bl-tab-label>
+                    <bl-task-outputs [jobId]="jobId" [task]="task"></bl-task-outputs>
                 </bl-tab>
                 <bl-tab key="configuration">
                     <bl-tab-label>Configuration</bl-tab-label>
@@ -37,10 +35,7 @@
                         <bl-task-resource-files [task]="task"></bl-task-resource-files>
                     </div>
                 </bl-tab>
-                <bl-tab key="outputs">
-                    <bl-tab-label>Task Outputs</bl-tab-label>
-                    <bl-task-outputs [jobId]="jobId" [taskId]="taskId"></bl-task-outputs>
-                </bl-tab>
+
                 <bl-tab key="sub-tasks" [disabled]="!hasMultiInstanceSettings">
                     <bl-tab-label>Sub Tasks</bl-tab-label>
                     <div class="tab-padding">

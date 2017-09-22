@@ -1,6 +1,7 @@
 import { NgModule } from "@angular/core";
 
 import { commonModules } from "app/common";
+import { PoolBaseModule } from "app/components/pool/base";
 import { PoolAdvancedFilterComponent } from "app/components/pool/browse/filter";
 import { PoolListComponent } from "app/components/pool/browse/pool-list.component";
 import { PoolDetailsModule } from "app/components/pool/details";
@@ -31,7 +32,8 @@ const components = [
 ];
 
 const modules = [
-    PoolDetailsModule, PoolGraphsModule, StartTaskModule, UserAccountModule, TaskBaseModule, ...commonModules,
+    PoolBaseModule, PoolDetailsModule, PoolGraphsModule, StartTaskModule, UserAccountModule,
+    TaskBaseModule, ...commonModules,
 ];
 
 @NgModule({

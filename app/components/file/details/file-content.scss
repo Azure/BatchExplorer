@@ -1,6 +1,12 @@
 @import "app/styles/variables";
 
 bl-file-content {
+    .viewer-container {
+        height: 100%;
+        > * {
+            height: 100%;
+        }
+    }
     .unknown-file-type {
         display: flex;
         align-items: center;

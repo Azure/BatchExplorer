@@ -10,6 +10,10 @@
 }
 
 bl-background-task-tracker {
+    .account-dropdown [bl-dropdown-btn] {
+        width: 300px;
+    }
+
     .current-task {
         width: 100%;
         display: flex;
