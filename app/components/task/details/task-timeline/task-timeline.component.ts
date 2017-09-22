@@ -1,8 +1,11 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
+import { Router } from "@angular/router";
 import * as moment from "moment";
 
 import { Job, Task, TaskState } from "app/models";
 import { DateUtils } from "app/utils";
+
+import "./task-timeline.scss";
 
 @Component({
     selector: "bl-task-timeline",
@@ -16,6 +19,7 @@ export class TaskTimelineComponent {
     @Input()
     public job: Job;
 
+    constructor(private router: Router) { }
     public get hasPreparationTask() {
         return Boolean(this.job.jobPreparationTask);
     }
@@ -111,5 +115,13 @@ export class TaskTimelineComponent {
         } else {
             return "Task was scheduled to a node";
         }
+    }
+
+    public goToPreparationTask() {
+        this.router.navigate(["/jobs", this.job.id], {
+            queryParams: {
+                tab: "hooktasks",
+            },
+        });
     }
 }
