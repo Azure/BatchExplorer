@@ -61,7 +61,7 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
     }
 
     public ngOnDestroy() {
-        this.workspace.dispose();
+        this._disposeWorkspace();
     }
 
     public selectOutputType(type: OutputType) {
@@ -73,8 +73,8 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
     }
 
     private _updateNavigator() {
+        this._disposeWorkspace();
         if (this.isTaskQueued) {
-            this.workspace = null;
             return;
         }
         StorageUtils.getSafeContainerName(this.jobId).then((container) => {
@@ -155,6 +155,13 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
                 break;
             default:
                 this.stateTooltip = null;
+        }
+    }
+
+    private _disposeWorkspace() {
+        if (this.workspace) {
+            this.workspace.dispose();
+            this.workspace = null;
         }
     }
 }
