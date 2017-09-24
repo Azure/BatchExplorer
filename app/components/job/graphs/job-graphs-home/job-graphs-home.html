@@ -5,8 +5,10 @@
         </h1>
         <span class="description">{{description}}</span>
     </div>
-
-    <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+    <div class="actions">
+        <bl-download-button [action]="downloadCsv"></bl-download-button>
+        <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+    </div>
     <div class="buttons">
         <div class="btn" (click)="updateGraph(AvailableGraph.runningTime)" [class.active]="currentGraph === AvailableGraph.runningTime">
             Tasks running time
