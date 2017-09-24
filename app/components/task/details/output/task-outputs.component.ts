@@ -61,7 +61,9 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
     }
 
     public ngOnDestroy() {
-        this.workspace.dispose();
+        if (this.workspace) {
+            this.workspace.dispose();
+        }
     }
 
     public selectOutputType(type: OutputType) {
