@@ -59,10 +59,17 @@ export class SplitPaneComponent {
     }
 
     public updateSize(dividerPosition: number) {
+        const rect = this.elementRef.nativeElement.getBoundingClientRect();
         if (dividerPosition === -1) {
             this.firstPaneSize = "50%";
             this.secondPaneSize = "50%";
         } else {
+            if (dividerPosition < this.config.firstPaneMinSize) {
+                dividerPosition = this.config.firstPaneMinSize;
+            } else if (dividerPosition > rect.width - this.config.secondPaneMinSize) {
+                dividerPosition = rect.width - this.config.secondPaneMinSize;
+            }
+
             this.firstPaneSize = `${dividerPosition}px`;
             this.secondPaneSize = `calc(100% - ${dividerPosition}px)`;
             console.log("FIrst", this.firstPaneSize, this.secondPaneSize);

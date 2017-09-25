@@ -1,4 +1,4 @@
-<bl-split-pane>
+<bl-split-pane [config]="splitPaneConfig">
     <section blFirstPane class="tree-explorer-container" *ngIf="config.showTreeView">
         <bl-file-tree-view *ngFor="let source of this.workspace.sources"
             [fileNavigator]="source.navigator"

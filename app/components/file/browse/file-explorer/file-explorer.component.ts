@@ -2,6 +2,7 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from "@a
 import { Subscription } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
+import { SplitPaneConfig } from "app/components/base/split-pane";
 import { CurrentNode, FileExplorerWorkspace, FileSource } from "app/components/file/browse/file-explorer";
 import { FileNavigator, FileTreeNode } from "app/services/file";
 import "./file-explorer.scss";
@@ -78,6 +79,12 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
     public currentSource: FileSource;
     public currentNode: CurrentNode;
     public workspace: FileExplorerWorkspace;
+
+    public splitPaneConfig: SplitPaneConfig = {
+        firstPaneMinSize: 200,
+        secondPaneMinSize: 300,
+        initialDividerPosition: 250,
+    };
 
     private _workspaceSubs: Subscription[] = [];
     private _config: FileExplorerConfig = fileExplorerDefaultConfig;

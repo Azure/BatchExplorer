@@ -8,11 +8,12 @@ bl-split-separator {
 
     > .separator-hitbox {
         position: absolute;
-        background: blue;
         width: 5px;
         height: 100%;
+        z-index: 100;
+
         &:hover {
-            background: red;
+            // background: red;
         }
     }
 }
