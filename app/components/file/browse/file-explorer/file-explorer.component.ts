@@ -58,6 +58,7 @@ const fileExplorerDefaultConfig: FileExplorerConfig = {
     templateUrl: "file-explorer.html",
 })
 export class FileExplorerComponent implements OnChanges, OnDestroy {
+
     @Input() public set data(data: FileExplorerWorkspace | FileNavigator) {
         if (data instanceof FileExplorerWorkspace) {
             this.workspace = data;
@@ -80,17 +81,20 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
     public currentNode: CurrentNode;
     public workspace: FileExplorerWorkspace;
 
-    public splitPaneConfig: SplitPaneConfig = {
-        firstPaneMinSize: 200,
-        secondPaneMinSize: 300,
-        initialDividerPosition: 250,
-    };
+    public splitPaneConfig: SplitPaneConfig;
 
     private _workspaceSubs: Subscription[] = [];
     private _config: FileExplorerConfig = fileExplorerDefaultConfig;
 
+    constructor() {
+        this._updateSplitPanelConfig();
+    }
+
     public ngOnChanges(inputs) {
         // Todo Remove?
+        if (inputs.config) {
+            this._updateSplitPanelConfig();
+        }
     }
 
     public ngOnDestroy() {
@@ -139,5 +143,18 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
     private _clearWorkspaceSubs() {
         this._workspaceSubs.forEach(x => x.unsubscribe());
         this._workspaceSubs = [];
+    }
+
+    private _updateSplitPanelConfig() {
+        this.splitPaneConfig = {
+            firstPanel: {
+                minSize: 200,
+                hidden: !this.config.showTreeView,
+            },
+            secondPanel: {
+                minSize: 300,
+            },
+            initialDividerPosition: 250,
+        };
     }
 }

@@ -1,18 +1,29 @@
-import { Component, ElementRef, HostListener, Input } from "@angular/core";
+import { Component, ElementRef, HostListener, Input, OnInit } from "@angular/core";
 
 import "./split-pane.scss";
 
+export interface PanelConfig {
+    minSize?: number;
+    hidden?: boolean;
+}
+
 export interface SplitPaneConfig {
     separatorThickness?: number;
-    firstPaneMinSize?: number;
-    secondPaneMinSize?: number;
+    firstPanel?: PanelConfig;
+    secondPanel?: PanelConfig;
     initialDividerPosition?: number;
 }
 
 const defaultConfig: SplitPaneConfig = {
     separatorThickness: 1,
-    firstPaneMinSize: 10,
-    secondPaneMinSize: 10,
+    firstPanel: {
+        minSize: 10,
+        hidden: false,
+    },
+    secondPanel: {
+        minSize: 10,
+        hidden: false,
+    },
     initialDividerPosition: -1,
 };
 
@@ -20,9 +31,18 @@ const defaultConfig: SplitPaneConfig = {
     selector: "bl-split-pane",
     templateUrl: "split-pane.html",
 })
-export class SplitPaneComponent {
+export class SplitPaneComponent implements OnInit {
     @Input() public set config(config: SplitPaneConfig) {
-        this._config = { ...defaultConfig, ...config };
+        const newConfig = {
+            ...defaultConfig,
+            ...config,
+        };
+
+        if (config) {
+            newConfig.firstPanel = { ...defaultConfig.firstPanel, ...config.firstPanel };
+            newConfig.secondPanel = { ...defaultConfig.secondPanel, ...config.secondPanel };
+        }
+        this._config = newConfig;
     }
     public get config() { return this._config; }
 
@@ -36,14 +56,16 @@ export class SplitPaneComponent {
     constructor(private elementRef: ElementRef) { }
 
     public ngOnInit() {
-        this.updateSize(this.config.initialDividerPosition);
+        this.resetDividerPosition();
     }
 
     public handleStartResize(event: MouseEvent) {
-        console.log("Handle start resiz", event);
         this.isResizing = true;
     }
 
+    public resetDividerPosition() {
+        this.updateSize(this.config.initialDividerPosition);
+    }
     @HostListener("document:mouseup")
     public stopResizing() {
         this.isResizing = false;
@@ -53,7 +75,6 @@ export class SplitPaneComponent {
     public onMousemove(event: MouseEvent) {
         const rect = this.elementRef.nativeElement.getBoundingClientRect();
         if (this.isResizing) {
-            console.log("Event", event.clientX - rect.left);
             this.updateSize(event.clientX - rect.left);
         }
     }
@@ -64,15 +85,15 @@ export class SplitPaneComponent {
             this.firstPaneSize = "50%";
             this.secondPaneSize = "50%";
         } else {
-            if (dividerPosition < this.config.firstPaneMinSize) {
-                dividerPosition = this.config.firstPaneMinSize;
-            } else if (dividerPosition > rect.width - this.config.secondPaneMinSize) {
-                dividerPosition = rect.width - this.config.secondPaneMinSize;
+            const { firstPanel, secondPanel } = this.config;
+            if (dividerPosition < firstPanel.minSize) {
+                dividerPosition = firstPanel.minSize;
+            } else if (dividerPosition > rect.width - secondPanel.minSize) {
+                dividerPosition = rect.width - secondPanel.minSize;
             }
 
             this.firstPaneSize = `${dividerPosition}px`;
             this.secondPaneSize = `calc(100% - ${dividerPosition}px)`;
-            console.log("FIrst", this.firstPaneSize, this.secondPaneSize);
         }
     }
 }

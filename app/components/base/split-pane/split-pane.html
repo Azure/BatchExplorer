@@ -2,7 +2,7 @@
     <ng-content select="[blFirstPane]"></ng-content>
 </div>
 <bl-split-separator #separator [hidden]="firstPaneHidden || secondPaneHidden" [thickness]="config.separatorThickness"
-    (willResize)="handleStartResize($event)">
+    (willResize)="handleStartResize($event)" (reset)="resetDividerPosition()">
 </bl-split-separator>
 <div [hidden]="secondPaneHidden" class="second-pane-container" [style.width]="secondPaneSize">
     <ng-content select="[blSecondPane]"></ng-content>

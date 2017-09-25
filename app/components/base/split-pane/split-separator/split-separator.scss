@@ -10,7 +10,7 @@ bl-split-separator {
         position: absolute;
         width: 5px;
         height: 100%;
-        z-index: 100;
+        z-index: $split-pane-separator;
 
         &:hover {
             // background: red;

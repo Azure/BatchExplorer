@@ -9,6 +9,12 @@ import "./split-separator.scss";
 export class SplitSeparatorComponent {
     @Input() public thickness = 1;
     @Output() public willResize = new EventEmitter();
+    @Output() public reset = new EventEmitter();
+
+    public onDblClick(event) {
+        this.reset.emit(true);
+        return false;
+    }
 
     public onMousedown(event) {
         this.willResize.emit(true);
