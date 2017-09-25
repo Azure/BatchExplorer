@@ -85,7 +85,7 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
             });
             nodeNavigator.init();
 
-            const taskOutputPrefix = `${this.task.id}/`;
+            const taskOutputPrefix = `${this.task.id}`;
             const taskOutputNavigator = this.storageService.navigateContainerBlobs(container, taskOutputPrefix, {
                 onError: (error) => this._processBlobError(error),
             });
@@ -107,7 +107,7 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
             return new ServerError({
                 status: 404,
                 code: "NodeNotFound",
-                message: "The node the task ran on doesn't exists anymore or is in an invalid state.",
+                message: "The node the task ran on doesn't exist anymore or is in an invalid state.",
                 original: error.original,
             });
         } else if (error.status === Constants.HttpCode.Conflict) {
@@ -139,9 +139,9 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
     }
 
     private _fileConventionErrorMessage() {
-        return `There is no uploaded outputs\n`
+        return `There are no uploaded outputs\n`
             + `There is no blob container with the name '${this._taskOutputContainer}'\n`
-            + `Learn more here https://docs.microsoft.com/en-us/azure/batch/batch-task-output-file-conventions`;
+            + `Learn more here: https://docs.microsoft.com/en-us/azure/batch/batch-task-output-file-conventions`;
     }
 
     private _updateStateTooltip() {

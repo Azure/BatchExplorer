@@ -158,6 +158,7 @@ export class FileNavigator {
         if (!this._proxies[path]) {
             this._proxies[path] = this._loadPath(this._getFolderToLoad(path));
         }
+
         const proxy = this._proxies[path];
         const output = new AsyncSubject<FileTreeNode>();
         proxy.refresh().flatMap(() => proxy.items.first()).share().subscribe({
@@ -191,7 +192,7 @@ export class FileNavigator {
     }
 
     private _getFolderToLoad(path: string, asDirectory = true) {
-        let fullPath = [this.basePath, path].filter(x => Boolean(x)).join("/");
+        let fullPath = [this._normalizedBasePath, path].filter(x => Boolean(x)).join("");
         if (fullPath) {
             if (asDirectory) {
                 return CloudPathUtils.asBaseDirectory(fullPath);
@@ -200,5 +201,11 @@ export class FileNavigator {
             }
         }
         return null;
+    }
+
+    private get _normalizedBasePath() {
+        return this.basePath
+            ? CloudPathUtils.asBaseDirectory(this.basePath)
+            : this.basePath;
     }
 }
