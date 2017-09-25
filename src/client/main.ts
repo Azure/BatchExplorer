@@ -20,7 +20,7 @@ function startApplication() {
     });
 
     // Uncomment to view why windows don't show up.
-    // batchLabsApp.debugCrash();
+    batchLabsApp.debugCrash();
 
     batchLabsApp.start();
 }
