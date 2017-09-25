@@ -1,12 +1,11 @@
 import { Injectable } from "@angular/core";
-// import { StorageAccountSharedKeyOptions, StorageClientProxyFactory } from "client/api";
 import { Observable } from "rxjs";
 
 import { AutoStorageAccount, ServerError, StorageKeys, StorageKeysAttributes } from "app/models";
 import { ArmResourceUtils } from "app/utils";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
-import { StorageClientProxyFactory } from "./storage/storage-client-proxy";
+import { StorageAccountSharedKeyOptions, StorageClientProxyFactory } from "./storage";
 
 export interface AutoStorageSettings {
     lastKeySync: Date;
