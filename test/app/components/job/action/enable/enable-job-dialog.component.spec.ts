@@ -78,7 +78,7 @@ describe("EnableJobDialogComponent ", () => {
             error: (error: ServerError) => {
                 expect(jobServiceSpy.enable).toHaveBeenCalledTimes(1);
                 expect(jobServiceSpy.enable).toHaveBeenCalledWith("bad-job-id", {});
-                expect(error.body.message).toBe("Some random test error happened enabling job");
+                expect(error.message).toBe("Some random test error happened enabling job");
 
                 done();
             },

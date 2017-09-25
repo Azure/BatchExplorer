@@ -118,7 +118,7 @@ export class StorageService {
                     startswith: folder,
                 });
             },
-            getFile: (filename: string) => this.getBlobContent(Promise.resolve(container), filename, prefix),
+            getFile: (filename: string) => this.getBlobContent(Promise.resolve(container), filename),
             onError: options.onError,
         });
     }

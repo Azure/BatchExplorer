@@ -30,7 +30,7 @@ describe("ApplicationEditDialogComponent ", () => {
                 if (applicationId === "throw-me") {
                     return Observable.throw(ServerError.fromARM(new Response(new ResponseOptions({
                         status: 400,
-                        body: JSON.stringify({ message: "blast, we failed" }),
+                        body: JSON.stringify({ error: { message: "blast, we failed" } }),
                         statusText: "error, error, error",
                     }))));
                 }

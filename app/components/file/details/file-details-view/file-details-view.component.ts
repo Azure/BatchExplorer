@@ -9,7 +9,7 @@ import { NotificationService } from "app/components/base/notifications";
 import { File, ServerError } from "app/models";
 import { ElectronShell } from "app/services";
 import { FileLoader } from "app/services/file";
-import { DateUtils, prettyBytes } from "app/utils";
+import { Constants, DateUtils, log, prettyBytes } from "app/utils";
 
 @Component({
     selector: "bl-file-details-view",
@@ -21,6 +21,7 @@ export class FileDetailsViewComponent implements OnChanges {
 
     public filename: string;
     public file: File;
+    public fileNotFound = false;
     public contentSize: string = "-";
     public lastModified: string = "-";
     public downloadEnabled: boolean;
@@ -33,7 +34,7 @@ export class FileDetailsViewComponent implements OnChanges {
 
     public ngOnChanges(inputs) {
         if (inputs.fileLoader) {
-            this.filename = this.fileLoader && this.fileLoader.filename;
+            this.filename = this.fileLoader && this.fileLoader.displayName;
             this._updateFileProperties();
         }
     }
@@ -81,7 +82,7 @@ export class FileDetailsViewComponent implements OnChanges {
             error: (error: ServerError) => {
                 this.notificationService.error(
                     "Download failed",
-                    `${this.filename} failed to download. ${error.body.message}`,
+                    `${this.filename} failed to download. ${error.message}`,
                 );
             },
         });
@@ -91,12 +92,23 @@ export class FileDetailsViewComponent implements OnChanges {
     private _updateFileProperties(forceNew = false): Observable<any> {
         this.contentSize = "-";
         this.lastModified = "-";
+        this.fileNotFound = false;
         const obs = this.fileLoader.getProperties(forceNew);
-        obs.subscribe((file: File) => {
-            this.file = file;
-            this.contentSize = prettyBytes(file.properties.contentLength);
-            this.lastModified = DateUtils.prettyDate(file.properties.lastModified);
+        obs.subscribe({
+            next: (file: File) => {
+                this.file = file;
+                this.contentSize = prettyBytes(file.properties.contentLength);
+                this.lastModified = DateUtils.prettyDate(file.properties.lastModified);
+            },
+            error: (error: ServerError) => {
+                if (error.status === Constants.HttpCode.NotFound) {
+                    this.fileNotFound = true;
+                } else {
+                    log.error(`Error loading file ${this.filename}`, error);
+                }
+            },
         });
+
         return obs;
     }
 }

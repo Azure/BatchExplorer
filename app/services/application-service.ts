@@ -162,10 +162,8 @@ export class ApplicationService extends ServiceBase {
     /**
      * Check if the ServerError is an auto storage error from the application service
      */
-    public isAutoStorageError(error: any): boolean {
+    public isAutoStorageError(error: ServerError): boolean {
         const badCode = Constants.APIErrorCodes.accountNotEnabledForAutoStorage;
-        return error &&
-            (error.body.code === badCode ||
-                (error.body.error && error.body.error.code === badCode));
+        return error && error.code === badCode;
     }
 }
