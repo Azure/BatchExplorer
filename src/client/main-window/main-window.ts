@@ -34,7 +34,6 @@ export class MainWindow extends UniqueWindow {
 
         const anyWindow = window as any;
         anyWindow.batchClientFactory = new BatchClientProxyFactory();
-        // anyWindow.storageClientFactory = new StorageClientProxyFactory();
         anyWindow.logger = renderLogger;
         anyWindow.splashScreen = batchLabsApp.splashScreen;
         anyWindow.authenticationWindow = batchLabsApp.authenticationWindow;
