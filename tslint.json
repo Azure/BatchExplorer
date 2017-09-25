@@ -34,7 +34,6 @@
     "ban": [
         true,
         ["batchLabsApp", "debugCrash"], // Show a warning if the main window is being shown on start for debug purposes
-        ["autoUpdater", "updateConfigPath"], // This is used to debug/test auto update should not be left
         {"name": "fdescribe", "message": "Don't keep jasmine fit methods in the code."},
         {"name": "fit", "message": "Don't keep jasmine fit methods in the code."}
     ],

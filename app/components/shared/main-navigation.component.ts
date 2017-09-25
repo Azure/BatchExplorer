@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, NgZone, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
 import { AppUpdater } from "electron-updater";
 import * as path from "path";
@@ -6,6 +6,7 @@ import * as path from "path";
 import {
     ContextMenu, ContextMenuItem, ContextMenuSeparator, ContextMenuService,
 } from "app/components/base/context-menu";
+import { NotificationService } from "app/components/base/notifications";
 import { AccountService, AdalService, ElectronRemote, ElectronShell } from "app/services";
 import { Constants } from "app/utils";
 import "./main-navigation.scss";
@@ -21,6 +22,7 @@ export class MainNavigationComponent implements OnInit {
     public currentUserName: string = "";
     public update: any;
     private _autoUpdater: AppUpdater;
+    private _showNotification = false;
 
     constructor(
         accountService: AccountService,
@@ -28,6 +30,8 @@ export class MainNavigationComponent implements OnInit {
         private shell: ElectronShell,
         private remote: ElectronRemote,
         private contextMenuService: ContextMenuService,
+        private zone: NgZone,
+        private notificationService: NotificationService,
         private router: Router) {
         this._autoUpdater = remote.getBatchLabsApp().autoUpdater;
 
@@ -45,24 +49,23 @@ export class MainNavigationComponent implements OnInit {
                 this.currentUserName = user.name;
             }
         });
-        this._autoUpdater.configOnDisk.value.then((data) => console.log("Config", data));
-        console.log("this.", this._autoUpdater.listenerCount);
+
         this._autoUpdater.on("update-available", (info) => {
-            console.log("update available", info);
+            this.update = info;
+
+            this._notify("Update available", `Update ${info.version} is now available.`, {
+                action: () => this._update(),
+            });
         });
+
         this._autoUpdater.on("update-not-available", (info) => {
-            console.log("update NOT available", info);
-        });
-        this._autoUpdater.on("download-progress", (info) => {
-            console.log("update progress", info);
-        });
-        this._autoUpdater.on("update-downloaded", (info) => {
-            console.log("update downloaded", info);
+            this.update = null;
+            this._notify("There are no updates currently available.", `You currently have the latest version.`);
         });
     }
 
     public ngOnInit() {
-        this._checkForUpdates();
+        this._checkForUpdates(false);
     }
 
     public get hasNewUpdate(): boolean {
@@ -71,7 +74,6 @@ export class MainNavigationComponent implements OnInit {
 
     public openSettingsContextMenu() {
         const items = [
-            new ContextMenuItem({ label: "Check for updates", click: () => this._checkForUpdates() }),
             new ContextMenuSeparator(),
             new ContextMenuItem({ label: "Settings", click: () => this._goToSettings() }),
             new ContextMenuItem({ label: "Third party notices", click: () => this._openThirdPartyNotices() }),
@@ -84,6 +86,8 @@ export class MainNavigationComponent implements OnInit {
                 label: `Update to version ${this.update.version}`,
                 click: () => this._update(),
             }));
+        } else {
+            items.unshift(new ContextMenuItem({ label: "Check for updates", click: () => this._checkForUpdates() }));
         }
         this.contextMenuService.openMenu(new ContextMenu(items));
     }
@@ -100,14 +104,21 @@ export class MainNavigationComponent implements OnInit {
         this.adalService.logout();
     }
 
-    private async _checkForUpdates() {
-        const data = await this.remote.getBatchLabsApp().checkForUpdates();
-        console.log("There is an update with", data);
-        if (!data) { return; }
-        this.update = data.versionInfo;
+    private _checkForUpdates(showNotification = true) {
+        this._showNotification = showNotification;
+        this.remote.getBatchLabsApp().checkForUpdates();
     }
 
     private _update() {
-        console.log("Will update...");
+        this._autoUpdater.quitAndInstall();
+    }
+
+    private _notify(title: string, description: string, options: any = {}) {
+        this.zone.run((() => {
+            if (this._showNotification) {
+                this.notificationService.info(title, description, options);
+            }
+            this._showNotification = false;
+        }));
     }
 }

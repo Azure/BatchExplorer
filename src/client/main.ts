@@ -11,8 +11,6 @@ import { PythonRpcServerProcess } from "./python-process";
 const pythonServer = new PythonRpcServerProcess();
 pythonServer.start();
 
-// TODO only for dev remove
-// autoUpdater.updateConfigPath = path.join(Constants.root, "dev-app-update.yml");
 autoUpdater.allowPrerelease = true;
 autoUpdater.autoDownload = true;
 autoUpdater.logger = logger;
