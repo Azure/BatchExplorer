@@ -122,7 +122,7 @@ export class ServerError {
             status: error.data && error.data.status,
             code: ServerError._mapPythonErrorCode(error.code),
             message: message,
-            details: error.data.values,
+            details: error.data && error.data.values,
             original: error,
             requestId,
             timestamp,
