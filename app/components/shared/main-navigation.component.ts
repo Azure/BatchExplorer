@@ -60,7 +60,7 @@ export class MainNavigationComponent implements OnInit {
 
         this._autoUpdater.on("update-not-available", (info) => {
             this.update = null;
-            this._notify("There are no updates currently available.", `You currently have the latest version.`);
+            this._notify("There are no updates currently available.", `You  have the latest BatchLabs version.`);
         });
     }
 
