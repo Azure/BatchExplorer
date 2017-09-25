@@ -1,0 +1,12 @@
+bl-split-pane {
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    > .first-pane-container {
+        overflow: hidden;
+    }
+
+    > .second-pane-container {
+        overflow: hidden;
+    }
+}
