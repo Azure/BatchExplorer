@@ -1,6 +1,7 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
+import { RouterTestingModule } from "@angular/router/testing";
 import * as moment from "moment";
 
 import { ElapsedTimeComponent } from "app/components/base/elapsed-time";
@@ -48,6 +49,7 @@ describe("TaskTimelineComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
+            imports: [RouterTestingModule],
             declarations: [
                 ElapsedTimeComponent, TaskTimelineComponent, TaskTimelineMockComponent, TaskTimelineStateComponent,
             ],
