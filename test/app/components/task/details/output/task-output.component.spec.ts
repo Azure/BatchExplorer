@@ -90,6 +90,6 @@ describe("TaskLogComponent", () => {
         expect(fileServiceSpy.navigateTaskFile).toHaveBeenCalledOnce();
         expect(fileServiceSpy.navigateTaskFile).toHaveBeenCalledWith("job-1", "task-1", jasmine.anything());
         expect(storageServiceSpy.navigateContainerBlobs).toHaveBeenCalledOnce();
-        expect(storageServiceSpy.navigateContainerBlobs).toHaveBeenCalledWith("job-1", "task-1/", jasmine.anything());
+        expect(storageServiceSpy.navigateContainerBlobs).toHaveBeenCalledWith("job-1", "task-1", jasmine.anything());
     }));
 });
