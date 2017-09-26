@@ -10,6 +10,7 @@ bl-file-explorer {
         height: 100%;
         display: flex;
         flex-direction: column;
+        overflow-x: hidden;
         overflow-y: auto;
 
         > bl-file-tree-view:only-child {

@@ -147,11 +147,11 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
 
     private _updateSplitPanelConfig() {
         this.splitPaneConfig = {
-            firstPanel: {
+            firstPane: {
                 minSize: 200,
                 hidden: !this.config.showTreeView,
             },
-            secondPanel: {
+            secondPane: {
                 minSize: 300,
             },
             initialDividerPosition: 250,
