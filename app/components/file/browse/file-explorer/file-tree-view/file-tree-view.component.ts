@@ -76,7 +76,10 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
         if (treeRow.isDirectory) {
             items.push(new ContextMenuItem("Refresh", () => this.refresh(treeRow.path)));
         }
-        this.contextMenuService.openMenu(new ContextMenu(items));
+
+        if (items.length > 0) {
+            this.contextMenuService.openMenu(new ContextMenu(items));
+        }
     }
 
     public handleCaretClick(treeRow: TreeRow, event: MouseEvent) {
