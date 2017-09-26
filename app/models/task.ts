@@ -87,6 +87,13 @@ export class Task extends Record<TaskAttributes> {
         const runningTime = moment(info.endTime).diff(moment(info.startTime));
         return maxTime - runningTime < 0;
     }
+
+    /**
+     * Return if the task is being rescheduled because the prep task failed
+     */
+    public get preparationTaskFailed() {
+        return this.state === TaskState.active && this.previousState === TaskState.preparing;
+    }
 }
 
 export enum TaskState {
