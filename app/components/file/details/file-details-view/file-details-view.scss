@@ -8,6 +8,7 @@ bl-file-details-view {
 
         > .details {
             height: calc(100% - #{$file-header-height + $separator-height});
+            // overflow: auto;
 
             > bl-file-content {
                 height: 100%;
