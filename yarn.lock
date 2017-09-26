@@ -723,7 +723,7 @@ azure-batch@~2.1.0-preview:
     ms-rest-azure "^2.0.0"
     underscore "^1.8.3"
 
-azure-storage@^2.1.0:
+azure-storage@~2.3.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/azure-storage/-/azure-storage-2.3.0.tgz#f9d44b67e766c85cd2ea9c61d501f25ba6a28f22"
   dependencies:
