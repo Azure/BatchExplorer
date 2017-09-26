@@ -1,12 +1,11 @@
 import { Injectable } from "@angular/core";
-import { StorageAccountSharedKeyOptions, StorageClientProxyFactory } from "client/api";
 import { Observable } from "rxjs";
 
 import { AutoStorageAccount, ServerError, StorageKeys, StorageKeysAttributes } from "app/models";
 import { ArmResourceUtils } from "app/utils";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
-import { ElectronRemote } from "./electron";
+import { StorageAccountSharedKeyOptions, StorageClientProxyFactory } from "./storage";
 
 export interface AutoStorageSettings {
     lastKeySync: Date;
@@ -31,10 +30,9 @@ export class StorageClientService {
 
     constructor(
         private accountService: AccountService,
-        private arm: ArmHttpService,
-        remote: ElectronRemote) {
+        private arm: ArmHttpService) {
 
-        this._storageClientFactory = remote.getStorageClientFactory();
+        this._storageClientFactory = new StorageClientProxyFactory();
 
         this.accountService.currentAccountId.subscribe(x => this._currentAccountId = x);
         this.hasAutoStorage = this.accountService.currentAccount.map((account) => {
