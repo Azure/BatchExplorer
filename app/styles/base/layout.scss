@@ -381,3 +381,16 @@ ul.list-point {
         min-height: 200px;
     }
 }
+
+::-webkit-scrollbar {
+    background-color: transparent;
+    width: 10px;
+
+    &:vertical {
+        border-left: 1px solid $mercury-grey;
+    }
+}
+
+::-webkit-scrollbar-thumb {
+    background:  $dusty-grey;
+}
