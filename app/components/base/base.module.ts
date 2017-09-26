@@ -32,6 +32,7 @@ import { RefreshButtonComponent } from "./refresh-btn";
 import { ScrollableModule } from "./scrollable";
 import { SidebarModule } from "./sidebar";
 import { SimpleDialogComponent } from "./simple-dialog";
+import { SplitPaneModule } from "./split-pane";
 import { TableModule } from "./table";
 import { TabsModule } from "./tabs";
 import { TagsModule } from "./tags";
@@ -59,6 +60,7 @@ const modules = [
     TagsModule,
     FormModule,
     ScrollableModule,
+    SplitPaneModule,
 ];
 
 // Add subcomponnent not in a module here
