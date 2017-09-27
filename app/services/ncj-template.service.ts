@@ -7,7 +7,7 @@ import { AsyncSubject, Observable } from "rxjs";
 import { Application, ApplicationAction } from "app/models";
 import { DateUtils, log } from "app/utils";
 
-const branch = "ncj";
+const branch = "master";
 const repo = "BatchLabs-data";
 const dataUrl = `https://github.com/Azure/${repo}/archive/${branch}.zip`;
 const cacheTime = 1; // In days
