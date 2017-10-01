@@ -117,7 +117,7 @@
     "@angular/tsc-wrapped": "4.3.5",
     "@types/node-fetch": "~1.6.7",
     "azure-batch": "~2.1.0-preview",
-    "azure-storage": "^2.1.0",
+    "azure-storage": "~2.3.0",
     "bunyan": "^1.8.4",
     "chart.js": "~2.6.0",
     "codemirror": "~5.28.0",

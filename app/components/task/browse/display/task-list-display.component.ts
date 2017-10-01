@@ -82,4 +82,8 @@ export class TaskListDisplayComponent extends ListOrTableBase {
             new ContextMenuItem({ label: "Terminate", click: () => this.terminateTask(task), enabled: !isCompleted }),
         ]);
     }
+
+    public trackByFn(task: Task) {
+        return task.id;
+    }
 }
