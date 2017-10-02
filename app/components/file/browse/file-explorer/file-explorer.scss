@@ -4,20 +4,14 @@ bl-file-explorer {
     display: flex;
     width: 100%;
     height: 100%;
+    position: relative;
 
     .tree-explorer-container {
         height: 100%;
         display: flex;
         flex-direction: column;
-
-        .scrollable {
-            height: 100%;
-            overflow-y: hidden;
-
-            &:hover {
-                overflow-y: auto;
-            }
-        }
+        overflow-x: hidden;
+        overflow-y: auto;
 
         > bl-file-tree-view:only-child {
             flex: 1;
@@ -32,11 +26,12 @@ bl-file-explorer {
         position: relative;
         overflow: hidden;
 
-        display: flex;
-        flex-direction: column;
-
+        $tabs-height: 28px;
+        > bl-file-explorer-tabs {
+            height: $tabs-height;
+        }
         > bl-file-details-view, bl-file-table-view {
-            flex: 1;
+            height: calc(100% - #{$tabs-height});
         }
     }
 

@@ -2,12 +2,15 @@
 
 bl-file-details-view {
     $file-header-height: 40px;
-    $separator-height: 5px;
+    $separator-height: 0;
+    &:not([hidden]) {display: block;}
+
     .file-details-container {
         height: 100%;
 
         > .details {
             height: calc(100% - #{$file-header-height + $separator-height});
+            // overflow: auto;
 
             > bl-file-content {
                 height: 100%;
