@@ -18,7 +18,7 @@ interface TestItem {
         <bl-focus-section #focusSection>
             <bl-quick-list>
                 <bl-quick-list-item *ngFor="let item of items" [key]="item.id">
-                    <h4 bl-quick-list-item-title>{{item.name}}</h4>
+                    <div bl-quick-list-item-title>{{item.name}}</h4>
                 </bl-quick-list-item>
             </bl-quick-list>
         </bl-focus-section>

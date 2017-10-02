@@ -1,7 +1,7 @@
 <bl-loading [status]="status">
     <bl-quick-list>
         <bl-quick-list-item *ngFor="let account of displayedAccounts | async" [link]="['/accounts', account.id]" [key]="account.id">
-            <h4 bl-quick-list-item-title>{{account.name}}</h4>
+            <div bl-quick-list-item-title>{{account.name}}</div>
             <p bl-quick-list-item-field>{{account.location}}</p>
             <div bl-quick-list-item-preview>
                 <div class="flex-center">
