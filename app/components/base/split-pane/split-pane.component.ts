@@ -66,6 +66,7 @@ export class SplitPaneComponent implements OnInit {
     public resetDividerPosition() {
         this.updateSize(this.config.initialDividerPosition);
     }
+
     @HostListener("document:mouseup")
     public stopResizing() {
         this.isResizing = false;
@@ -96,12 +97,16 @@ export class SplitPaneComponent implements OnInit {
             this.secondPaneSize = "50%";
         } else {
             const { firstPane, secondPane } = this.config;
-            if (dividerPosition < firstPane.minSize) {
-                dividerPosition = firstPane.minSize;
-            } else if (dividerPosition > rect.width - secondPane.minSize) {
-                dividerPosition = rect.width - secondPane.minSize;
+            if (rect.width === 0) { // Not initialized yet
+                dividerPosition = this.config.initialDividerPosition;
+            } else {
+                if (dividerPosition > rect.width - secondPane.minSize) {
+                    dividerPosition = rect.width - secondPane.minSize;
+                }
+                if (dividerPosition < firstPane.minSize) {
+                    dividerPosition = firstPane.minSize;
+                }
             }
-
             this.firstPaneSize = `${dividerPosition}px`;
             this.secondPaneSize = `calc(100% - ${dividerPosition}px)`;
         }
