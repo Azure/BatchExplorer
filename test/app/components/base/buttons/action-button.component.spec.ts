@@ -1,10 +1,11 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { MdTooltip } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
-import { MaterialModule, MdTooltip } from "@angular/material";
 import { ButtonComponent } from "app/components/base/buttons/button.component";
+import { MaterialModule } from "app/core";
 import { click } from "test/utils/helpers";
 
 @Component({

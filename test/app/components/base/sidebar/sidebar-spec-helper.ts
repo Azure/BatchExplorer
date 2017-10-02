@@ -1,9 +1,10 @@
 import { AfterViewInit, Component, ViewChild } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
-import { MaterialModule, MdSidenav } from "@angular/material";
+import { MdSidenav } from "@angular/material";
 import { BrowserDynamicTestingModule } from "@angular/platform-browser-dynamic/testing";
 
 import { SidebarContentComponent, SidebarManager, SidebarModule } from "app/components/base/sidebar";
+import {MaterialModule} from "app/core";
 
 @Component({
     template: "<h1>{{text}}</h1>",
