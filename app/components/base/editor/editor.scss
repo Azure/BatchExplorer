@@ -11,4 +11,8 @@ bl-editor {
         overflow-y: hidden;
         overflow-x: auto;
     }
+
+    .CodeMirror-hscrollbar {
+        height: 10px;
+    }
 }
