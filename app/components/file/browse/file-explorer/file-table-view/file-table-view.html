@@ -15,7 +15,7 @@
                 <bl-thead>
                     <bl-column>Name</bl-column>
                     <bl-column style="width: 80px">Size</bl-column>
-                    <bl-column style="width: 150px">Last Modified</bl-column>
+                    <bl-column style="width: 155px">Last Modified</bl-column>
                 </bl-thead>
                 <bl-row *ngFor="let treeNode of treeNode.walk()" [key]="treeNode.path">
                     <bl-cell [value]="treeNode.name">
