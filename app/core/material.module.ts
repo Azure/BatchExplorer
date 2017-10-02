@@ -16,6 +16,7 @@ import {
     MdSlideToggleModule,
     MdTabsModule,
     MdTooltipModule,
+    PortalModule,
 } from "@angular/material";
 
 const modules = [
@@ -35,6 +36,7 @@ const modules = [
     MdSidenavModule,
     MdCardModule,
     MdInputModule,
+    PortalModule,
 ];
 
 @NgModule({
