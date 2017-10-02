@@ -95,6 +95,7 @@ describe("SidebarPageComponent", () => {
 
         // Destroy
         firstSidebarRef.destroy();
+        fixture.detectChanges();
         expect(el.textContent).not.toContain("First component text");
         expect(el.textContent).toContain("Second component text");
         expect(sidebarManager.sidebar.opened).toBe(false);
