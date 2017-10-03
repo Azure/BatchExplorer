@@ -25,11 +25,11 @@
     "test-client": "cross-env NODE_ENV=test node test/client/run-jasmine.js",
     "test-client-watch": "npm run -s test-client -- --watch",
     "build-client": "tsc -p tsconfig.node.json",
-    "build-app": "webpack --profile --colors --display-error-details --display-cached",
+    "build-app": "npm run webpack -- --profile --colors --display-error-details --display-cached",
     "build-python": "npm run -s ts config/build-python.ts",
     "build": "npm run -s clean && npm run -s build-client && npm run -s build-app",
     "build:prod": "cross-env NODE_ENV=production npm run -s build",
-    "watch": "webpack --watch --progress --profile --colors --display-error-details --display-cached",
+    "watch": "npm run webpack -- --watch --progress --profile --colors --display-error-details --display-cached",
     "electron": "electron build/client/main.js",
     "electron:prod": "cross-env NODE_ENV=production electron build/client/main.js",
     "dev": "concurrently --kill-others \"npm run -s dev-server\" \"npm run -s dev-electron\"",
@@ -39,7 +39,8 @@
     "stylelint": "stylelint --syntax scss \"app/**/*.scss\"",
     "lint": "npm run -s tslint && npm run -s stylelint",
     "package": "build",
-    "build-and-pack": "npm run -s build:prod && npm run -s build-python && npm run -s package --dir"
+    "build-and-pack": "npm run -s build:prod && npm run -s build-python && npm run -s package --dir",
+    "webpack": "node --max_old_space_size=4096 node_modules/webpack/bin/webpack.js"
   },
   "license": "MIT",
   "engines": {
