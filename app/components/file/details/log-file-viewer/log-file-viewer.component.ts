@@ -166,12 +166,14 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
         }
 
         if (this.lines.length === 0) {
-            this.lines = [first];
+            this.lines = [{ index: 0, text: first }];
         } else {
-            this.lines[this.lines.length - 1] += first;
+            this.lines[this.lines.length - 1].text += first;
         }
-
-        this.lines = this.lines.concat(newLines);
+        const linesCount = this.lines.length;
+        this.lines = this.lines.concat(newLines.map((text, index) => {
+            return { index: linesCount + index, text };
+        }));
         if (this.followingLog) {
             setTimeout(() => {
                 this._scrollToBottom();

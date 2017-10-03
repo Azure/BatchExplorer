@@ -36,6 +36,7 @@ import { SplitPaneModule } from "./split-pane";
 import { TableModule } from "./table";
 import { TabsModule } from "./tabs";
 import { TagsModule } from "./tags";
+import { VirtualScrollModule } from "./virtual-scroll";
 
 // Add submodules there
 const modules = [
@@ -61,6 +62,7 @@ const modules = [
     FormModule,
     ScrollableModule,
     SplitPaneModule,
+    VirtualScrollModule,
 ];
 
 // Add subcomponnent not in a module here

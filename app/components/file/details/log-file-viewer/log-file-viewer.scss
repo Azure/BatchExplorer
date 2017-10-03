@@ -44,11 +44,7 @@
         -webkit-user-select: none;
         user-select: none;
 
-        &:before {
-            content: counter(line-numbering);
-            counter-increment: line-numbering;
-            padding-right: 1em;
-        }
+        padding-right: 1em;
     }
 
     .line-content {
