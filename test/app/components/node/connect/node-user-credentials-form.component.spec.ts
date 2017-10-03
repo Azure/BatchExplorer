@@ -23,7 +23,7 @@ class TestComponent {
     public submit: jasmine.Spy;
 }
 
-fdescribe("NodeUserCredentialsForm", () => {
+describe("NodeUserCredentialsForm", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: NodeUserCredentialsFormComponent;
