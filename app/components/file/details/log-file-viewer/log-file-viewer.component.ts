@@ -18,7 +18,11 @@ const maxSize = 10000000; // 10MB
 export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewInit {
     @Input() public fileLoader: FileLoader;
 
-    @Input() public tail: boolean = false;
+    @Input() public tailable: boolean = false;
+
+    public get tail() {
+        return this.tailable;
+    }
 
     public file: File;
     public fileTooLarge = false;

@@ -1,7 +1,7 @@
 <div class="log-console" *ngIf="!nodeNotFound && !fileContentFailure && !fileCleanupOperation && !fileTooLarge">
     <div class="follow-log-btn" [class.following]="followingLog" (click)="toggleFollowLog()">
         <i class="fa fa-circle"></i>
-        <span>Follow log</span>
+        <span>Follow log [{{tail}}]</span>
     </div>
     <div class="log-container">
         <bl-simple-loading *ngIf="loading"></bl-simple-loading>

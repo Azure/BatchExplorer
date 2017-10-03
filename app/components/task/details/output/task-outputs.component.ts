@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
-import { FileExplorerWorkspace, FileNavigatorEntry } from "app/components/file/browse/file-explorer";
+import { FileExplorerConfig, FileExplorerWorkspace, FileNavigatorEntry } from "app/components/file/browse/file-explorer";
 import { ServerError, Task, TaskState } from "app/models";
 import { FileService, StorageService } from "app/services";
 import { FileLoader } from "app/services/file";
@@ -35,7 +35,7 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
     public isTaskQueued = false;
     public stateTooltip: string;
     public workspace: FileExplorerWorkspace;
-
+    public fileExplorerConfig: FileExplorerConfig = {};
     private _taskOutputContainer: string;
 
     constructor(private fileService: FileService, private storageService: StorageService) { }
@@ -49,6 +49,7 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
             }
             this.isTaskQueued = isTaskQueued;
             this._updateStateTooltip();
+            this._updateFileExplorerConfig();
         }
         if (changes.jobId || ComponentUtils.recordChangedId(changes.task)) {
             if (!this.isTaskQueued) {
@@ -72,6 +73,11 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
         this.pickedFileLoader = this.fileService.fileFromTask(this.jobId, this.task.id, filename);
     }
 
+    private _updateFileExplorerConfig() {
+        this.fileExplorerConfig = {
+            tailable: this.task.state === TaskState.running,
+        };
+    }
     private _updateNavigator() {
         this._disposeWorkspace();
         if (this.isTaskQueued) {
