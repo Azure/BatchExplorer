@@ -9,7 +9,7 @@ import { Constants, log } from "app/utils";
 
 import "./log-file-viewer.scss";
 
-const maxSize = 300000; // 300KB
+const maxSize = 10000000; // 10MB
 
 @Component({
     selector: "bl-log-file-viewer",
