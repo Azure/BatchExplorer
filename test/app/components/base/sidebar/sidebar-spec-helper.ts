@@ -1,9 +1,11 @@
 import { AfterViewInit, Component, ViewChild } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
-import { MaterialModule, MdSidenav } from "@angular/material";
+import { MdSidenav } from "@angular/material";
 import { BrowserDynamicTestingModule } from "@angular/platform-browser-dynamic/testing";
+import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
 import { SidebarContentComponent, SidebarManager, SidebarModule } from "app/components/base/sidebar";
+import { MaterialModule } from "app/core";
 
 @Component({
     template: "<h1>{{text}}</h1>",
@@ -47,7 +49,7 @@ export class AppTestComponent implements AfterViewInit {
 export function setupSidebarTest() {
     TestBed.configureTestingModule({
         declarations: [FakeComponent, AppTestComponent],
-        imports: [SidebarModule.forRoot(), MaterialModule],
+        imports: [SidebarModule.forRoot(), MaterialModule, NoopAnimationsModule],
     });
 
     TestBed.overrideModule(BrowserDynamicTestingModule, {

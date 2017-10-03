@@ -1,7 +1,6 @@
 import { HashLocationStrategy, LocationStrategy } from "@angular/common";
 import { ErrorHandler, NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule } from "@angular/router";
@@ -31,6 +30,7 @@ import { BatchLabsErrorHandler } from "app/error-handler";
 
 // services
 import { HttpModule } from "@angular/http";
+import { MaterialModule } from "app/core";
 import { PollService } from "app/services/core";
 import {
     AccountService,
