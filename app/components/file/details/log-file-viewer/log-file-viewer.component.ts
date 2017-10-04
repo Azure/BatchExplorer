@@ -93,7 +93,6 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
     }
 
     public toggleFollowLog() {
-        console.log("toggle", this.followingLog);
         this.followingLog = !this.followingLog;
         if (this.followingLog) {
             this._scrollToBottom();
@@ -101,9 +100,7 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
     }
 
     public handleScroll(event) {
-        console.log("Scroll to", event.target.scrollTop);
         if (this._lastScroll > event.target.scrollTop) {
-            console.log("Scroll up...");
             this.followingLog = false;
         }
         this._lastScroll = event.target.scrollTop;
@@ -143,7 +140,6 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
      * this._loadUpTo(300); //=> Loads bytes 100-300
      */
     private _loadUpTo(newContentLength: number) {
-        console.log("Load from ", this.lastContentLength, "to", newContentLength);
         this._loadingNext = true;
         const options = {
             rangeStart: this.lastContentLength,
@@ -183,7 +179,6 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
     private _processFileContent(result: any, newContentLength: number) {
         this.lastContentLength = newContentLength;
         const newLines = result.content.toString().split("\n");
-        console.log("Got x lines", newLines.length, newLines[0]);
         let first = "";
         if (newLines.length > 1) {
             first = newLines.shift();
@@ -198,7 +193,6 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
         this.lines = this.lines.concat(newLines.map((text, index) => {
             return { index: linesCount + index + 1, text };
         }));
-        console.log("Now have ", this.lines.length);
         if (this.followingLog) {
             setTimeout(() => {
                 this._scrollToBottom();

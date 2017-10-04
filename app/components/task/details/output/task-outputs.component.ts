@@ -1,5 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
-import { FileExplorerConfig, FileExplorerWorkspace, FileNavigatorEntry } from "app/components/file/browse/file-explorer";
+import {
+    FileExplorerConfig, FileExplorerWorkspace, FileNavigatorEntry,
+} from "app/components/file/browse/file-explorer";
 import { ServerError, Task, TaskState } from "app/models";
 import { FileService, StorageService } from "app/services";
 import { FileLoader } from "app/services/file";
