@@ -144,12 +144,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             if (this.nodes.size > maxNodes) {
                 log.warn(`Only supporting up to ${maxNodes} nodes for now!`);
             }
-            // this._nodes = List<Node>(this.nodes.slice(0, this.limitNode || maxNodes));
-            const nodes = [];
-            for (let i = 0; i < 40; i++) {
-                nodes.push(new Node({ id: `node-${i}`, state: "running", runningTasksCount: 16, isDedicated: true } as any));
-            }
-            this._nodes = List(nodes);
+            this._nodes = List<Node>(this.nodes.slice(0, this.limitNode || maxNodes));
             this._buildNodeMap();
             this._processNewData();
         }
@@ -334,7 +329,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         }
         const { taskHeight, combine, remaining } = this._getTaskHeight(tileSize, node);
         if (combine) {
-            return [{ node, index: 0, taskHeight }];
+            return [{ node, index: 0, taskHeight, position: taskHeight }];
         }
         const count = node.runningTasksCount;
         let extra = remaining;
@@ -359,7 +354,6 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     }
 
     private _getTaskHeight(tileSize: number, node: Node) {
-        // const maxTaskPerNode = this.pool.maxTasksPerNode;
         const maxTaskPerNode = 16;
         const taskHeight = Math.floor(tileSize / maxTaskPerNode);
         const remaining = tileSize % maxTaskPerNode;
