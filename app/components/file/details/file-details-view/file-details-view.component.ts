@@ -17,6 +17,7 @@ import { Constants, DateUtils, log, prettyBytes } from "app/utils";
 })
 export class FileDetailsViewComponent implements OnChanges {
     @Input() public fileLoader: FileLoader;
+    @Input() public tailable: boolean = false;
     @Output() public back = new EventEmitter();
 
     public filename: string;

@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
+import { MaterialModule } from "app/core";
 
 import { PromptDialogComponent } from "app/components/base/dialogs/prompt";
 import { FormModule } from "app/components/base/form";

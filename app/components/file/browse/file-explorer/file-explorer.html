@@ -27,6 +27,7 @@
 
             <bl-file-details-view *ngFor="let file of workspace.openedFiles | async"
                 [fileLoader]="file.loader"
+                [tailable]="config.tailable"
                 [hidden]="file.path !== currentNode.path"
                 (back)="goBack()">
             </bl-file-details-view>

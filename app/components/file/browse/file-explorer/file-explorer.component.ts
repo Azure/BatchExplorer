@@ -42,12 +42,18 @@ export interface FileExplorerConfig {
      * @default false
      */
     canDropExternalFiles?: boolean;
+
+    /**
+     * If log file can be automatically refreshed(Tail)
+     */
+    tailable?: boolean;
 }
 
 const fileExplorerDefaultConfig: FileExplorerConfig = {
     showTreeView: true,
     selectable: FileExplorerSelectable.none,
     canDropExternalFiles: false,
+    tailable: false,
 };
 
 /**
@@ -147,11 +153,11 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
 
     private _updateSplitPanelConfig() {
         this.splitPaneConfig = {
-            firstPanel: {
+            firstPane: {
                 minSize: 200,
                 hidden: !this.config.showTreeView,
             },
-            secondPanel: {
+            secondPane: {
                 minSize: 300,
             },
             initialDividerPosition: 250,

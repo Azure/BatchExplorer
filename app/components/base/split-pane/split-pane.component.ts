@@ -9,18 +9,18 @@ export interface PanelConfig {
 
 export interface SplitPaneConfig {
     separatorThickness?: number;
-    firstPanel?: PanelConfig;
-    secondPanel?: PanelConfig;
+    firstPane?: PanelConfig;
+    secondPane?: PanelConfig;
     initialDividerPosition?: number;
 }
 
 const defaultConfig: SplitPaneConfig = {
     separatorThickness: 1,
-    firstPanel: {
+    firstPane: {
         minSize: 10,
         hidden: false,
     },
-    secondPanel: {
+    secondPane: {
         minSize: 10,
         hidden: false,
     },
@@ -39,8 +39,8 @@ export class SplitPaneComponent implements OnInit {
         };
 
         if (config) {
-            newConfig.firstPanel = { ...defaultConfig.firstPanel, ...config.firstPanel };
-            newConfig.secondPanel = { ...defaultConfig.secondPanel, ...config.secondPanel };
+            newConfig.firstPane = { ...defaultConfig.firstPane, ...config.firstPane };
+            newConfig.secondPane = { ...defaultConfig.secondPane, ...config.secondPane };
         }
         this._config = newConfig;
     }
@@ -66,6 +66,7 @@ export class SplitPaneComponent implements OnInit {
     public resetDividerPosition() {
         this.updateSize(this.config.initialDividerPosition);
     }
+
     @HostListener("document:mouseup")
     public stopResizing() {
         this.isResizing = false;
@@ -80,18 +81,32 @@ export class SplitPaneComponent implements OnInit {
     }
 
     public updateSize(dividerPosition: number) {
+        if (this.config.firstPane.hidden) {
+            this.firstPaneSize = "0px";
+            this.secondPaneSize = "100%";
+            return;
+        } else if (this.config.secondPane.hidden) {
+            this.firstPaneSize = "100%";
+            this.secondPaneSize = "0px";
+            return;
+        }
+
         const rect = this.elementRef.nativeElement.getBoundingClientRect();
         if (dividerPosition === -1) {
             this.firstPaneSize = "50%";
             this.secondPaneSize = "50%";
         } else {
-            const { firstPanel, secondPanel } = this.config;
-            if (dividerPosition < firstPanel.minSize) {
-                dividerPosition = firstPanel.minSize;
-            } else if (dividerPosition > rect.width - secondPanel.minSize) {
-                dividerPosition = rect.width - secondPanel.minSize;
+            const { firstPane, secondPane } = this.config;
+            if (rect.width === 0) { // Not initialized yet
+                dividerPosition = this.config.initialDividerPosition;
+            } else {
+                if (dividerPosition > rect.width - secondPane.minSize) {
+                    dividerPosition = rect.width - secondPane.minSize;
+                }
+                if (dividerPosition < firstPane.minSize) {
+                    dividerPosition = firstPane.minSize;
+                }
             }
-
             this.firstPaneSize = `${dividerPosition}px`;
             this.secondPaneSize = `calc(100% - ${dividerPosition}px)`;
         }
