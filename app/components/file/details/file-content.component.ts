@@ -19,6 +19,7 @@ export class FileContentComponent implements OnChanges {
     public FileType = FileType;
 
     @Input() public fileLoader: FileLoader;
+    @Input() public tailable: boolean = false;
 
     public fileType: FileType;
 

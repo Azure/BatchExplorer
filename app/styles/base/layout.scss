@@ -384,7 +384,18 @@ ul.list-point {
 
 ::-webkit-scrollbar {
     background-color: transparent;
-    width: 10px;
+
+    &:horizontal {
+        height: 10px;
+    }
+
+    &:vertical {
+        width: 10px;
+    }
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent;
 }
 
 ::-webkit-scrollbar-thumb {
