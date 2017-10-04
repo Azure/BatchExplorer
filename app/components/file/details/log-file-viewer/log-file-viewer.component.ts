@@ -44,6 +44,7 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
     private _refreshInterval;
     private _loadingNext = false;
     private _fileChangedSub: Subscription;
+    private _lastScroll: number = 0;
 
     constructor(
         private scrollableService: ScrollableService,
@@ -92,10 +93,20 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
     }
 
     public toggleFollowLog() {
+        console.log("toggle", this.followingLog);
         this.followingLog = !this.followingLog;
         if (this.followingLog) {
             this._scrollToBottom();
         }
+    }
+
+    public handleScroll(event) {
+        console.log("Scroll to", event.target.scrollTop);
+        if (this._lastScroll > event.target.scrollTop) {
+            console.log("Scroll up...");
+            this.followingLog = false;
+        }
+        this._lastScroll = event.target.scrollTop;
     }
 
     /**
