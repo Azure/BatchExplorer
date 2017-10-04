@@ -1,14 +1,16 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MaterialModule, MdOption, MdSelect } from "@angular/material";
+import { MdOption, MdSelect } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterTestingModule } from "@angular/router/testing";
+
 import { DialogService } from "app/components/base/dialogs";
 import { FileGroupPickerComponent } from "app/components/data/shared";
 import { CloudFilePickerComponent } from "app/components/data/shared/cloud-file-picker";
 import { NcjParameterExtendedType, NcjParameterWrapper, ParameterInputComponent } from "app/components/market/submit";
+import {MaterialModule} from "app/core";
 import { BatchApplication, NcjParameterRawType } from "app/models";
 import { StorageService } from "app/services";
 import { Subject } from "rxjs";
