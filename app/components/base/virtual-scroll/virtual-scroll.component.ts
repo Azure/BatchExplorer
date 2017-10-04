@@ -6,13 +6,17 @@ import {
     HostBinding,
     HostListener,
     Input,
+    NgZone,
     OnChanges,
     OnDestroy,
     OnInit,
     Output,
+    Renderer2,
     SimpleChanges,
     ViewChild,
 } from "@angular/core";
+
+import * as tween from "@tweenjs/tween.js";
 
 export interface ChangeEvent {
     start?: number;
@@ -74,9 +78,12 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     public window = window;
 
     private _parentScroll: Element | Window;
-    private _contentWidth = "";
 
-    constructor(private element: ElementRef) { }
+    constructor(
+        private readonly element: ElementRef,
+        private readonly zone: NgZone,
+        private readonly renderer: Renderer2,
+    ) { }
 
     @HostBinding("style.overflow-y")
     public get overflow() {
@@ -116,10 +123,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     public scrollToBottom() {
-        const el = this._getScrollElement();
-        const d = this._calculateDimensions();
-        console.log("Child height: ", d.childHeight, this.bufferAmount);
-        el.scrollTop = 100000000;
+        this.scrollToItemAt((this.items || []).length - 1);
     }
 
     public scrollToItem(item: any) {
@@ -135,7 +139,28 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
         const d = this._calculateDimensions();
         const scrollTop = (Math.floor(index / d.itemsPerRow) * d.childHeight)
             - (d.childHeight * Math.min(index, this.bufferAmount));
-        el.scrollTop = scrollTop;
+        if (this.currentTween) {
+            this.currentTween.stop();
+        }
+        this.currentTween = new tween.Tween({ scrollTop: el.scrollTop })
+            .to({ scrollTop }, 500)
+            .easing(tween.Easing.Quadratic.Out)
+            .onUpdate((data) => {
+                this.renderer.setProperty(el, "scrollTop", data.scrollTop);
+                this.refresh();
+            })
+            .start();
+
+        const animate = (time?) => {
+            this.currentTween.update(time);
+            if (this.currentTween._object.scrollTop !== scrollTop) {
+                this.zone.runOutsideAngular(() => {
+                    requestAnimationFrame(animate);
+                });
+            }
+        };
+
+        animate();
     }
 
     private _getScrollElement(): Element {
