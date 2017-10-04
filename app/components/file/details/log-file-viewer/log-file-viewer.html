@@ -1,12 +1,12 @@
 <div class="log-console" *ngIf="!nodeNotFound && !fileContentFailure && !fileCleanupOperation && !fileTooLarge">
     <div class="follow-log-btn" [class.following]="followingLog" (click)="toggleFollowLog()">
         <i class="fa fa-circle"></i>
-        <span>Follow log [{{tail}}]</span>
+        <span>Follow log</span>
     </div>
     <div class="log-container">
         <bl-simple-loading *ngIf="loading"></bl-simple-loading>
 
-        <bl-virtual-scroll [items]="lines" (update)="viewPortItems = $event" style="height: 100%">
+        <bl-virtual-scroll #virtualScroll [items]="lines" (update)="viewPortItems = $event" style="height: 100%" [childHeight]="16">
             <div class="line" *ngFor="let line of viewPortItems" >
                 <span class="line-nb">{{line.index}}</span>
                 <span class="line-content">{{line.text}}</span>

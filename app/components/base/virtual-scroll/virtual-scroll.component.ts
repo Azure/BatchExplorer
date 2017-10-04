@@ -39,8 +39,6 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
 
     @Input() public bufferAmount: number = 0;
 
-    @Input() public scrollAnimationTime: number = 1500;
-
     @Input() public set parentScroll(element: Element | Window) {
         if (this._parentScroll === element) {
             return;
@@ -76,6 +74,7 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
     public window = window;
 
     private _parentScroll: Element | Window;
+    private _contentWidth = "";
 
     constructor(private element: ElementRef) { }
 
@@ -116,9 +115,21 @@ export class VirtualScrollComponent implements OnInit, OnChanges, OnDestroy {
         requestAnimationFrame(() => this._calculateItems());
     }
 
-    public scrollInto(item: any) {
+    public scrollToBottom() {
         const el = this._getScrollElement();
+        const d = this._calculateDimensions();
+        console.log("Child height: ", d.childHeight, this.bufferAmount);
+        el.scrollTop = 100000000;
+    }
+
+    public scrollToItem(item: any) {
         const index: number = (this.items || []).indexOf(item);
+        if (index < 0 || index >= (this.items || []).length) { return; }
+        this.scrollToItemAt(index);
+    }
+
+    public scrollToItemAt(index: number) {
+        const el = this._getScrollElement();
         if (index < 0 || index >= (this.items || []).length) { return; }
 
         const d = this._calculateDimensions();
