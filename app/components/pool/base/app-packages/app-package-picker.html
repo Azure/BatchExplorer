@@ -4,19 +4,19 @@
             <tr>
                 <th>Application</th>
                 <th>Package Version</th>
-                <th></th>
+                <th class="action-column"></th>
             </tr>
         </thead>
         <tbody>
             <tr *ngFor="let item of items.controls; let i=index; let isLast=last" [formGroupName]="i">
-                <td>
+                <td style="width: 45%">
                     <md-select formControlName="applicationId" (change)="applicationSelected($event, i)">
                         <!-- TODO: toLowerCase() is for a bug in the API, it should be case preserving, but it's not -->
                         <!-- TODO: Material seems to do case sensitive matching, which i also think is a bug -->
                         <md-option *ngFor="let application of applications" [value]="application.id.toLowerCase()">{{ application.id }}</md-option>
                     </md-select>
                 </td>
-                <td>
+                <td style="width: 45%">
                     <md-select formControlName="version">
                         <md-option *ngFor="let package of packageMap[i]" [value]="getPackageValue(package)">{{ package }}</md-option>
                     </md-select>

@@ -1,16 +1,21 @@
 # BatchLabs
 [![Build Status](https://travis-ci.org/Azure/BatchLabs.svg?branch=master)](https://travis-ci.org/Azure/BatchLabs)
 
-**Note: BatchLabs is in beta. We don't provide any installer/packaged binaries as of now. You will need to build this app yourself.**
+**Note: BatchLabs is in preview.**
 
-This is the readme for the 'master' branch which contains the latest changes, 'stable' may differ from this [Stable readme](https://github.com/Azure/BatchLabs/tree/stable)
 
 ## Description
 
 Batch Labs is a tool to manage your Azure Batch accounts. The goal is to implement a great user experience that will help you debug, monitor and manage your pools, jobs and tasks.
 It will also include expermiental features such as `Batch Templates` in the aim to improve your Batch experience. We are open to any feedback, ideas and contributions you might have.
 
-## Getting started
+![](docs/images/job-home.png)
+
+## Downloads
+
+You can download the latest version at https://github.com/Azure/BatchLabs/releases
+
+## Building batchlabs yourself
 #### 1. Prerequisites
 - **Install node.js version `6.9` or greater. [Download](https://nodejs.org/en/download/)**
 - Install python **3.6** (doesn't need to be in the path if that breaks your environment)
@@ -57,72 +62,6 @@ npm run electron
 
 ## Developers
 [Dev docs](docs/readme.md)
-
-For developers, you can set up a development environment as follows:
-**Use `yarn install` instead of `npm install`. This ensures a consistent build environment with the right set of dependencies [Migrating from npm to yarn](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)**
-
-Start the dev server
-```bash
-npm run dev-server
-```
-
-Start electron
-```bash
-# In the command line
-npm run dev-electron
-
-# In VSCode just press F5
-```
-
-The dev-server and dev-electron support hot reload for a better development experience. Simply saving a file will cause the UI to refresh to your updated changes.
-
-*Note:* Changes to any files in the node client directory ('src/client') require restarting the application.
-
-If you're using VSCode (recommended) we suggest you use the following extensions:
-* Debugger for Chrome
-* EditorConfig for VS Code
-* TSLint
-
-Please also take a look at the [coding guidelines](coding-guidelines.md) for this repo for best practices.
-
-## Testing
-
-[Testing doc](docs/testing.md)
-
-## Editor
-
-In vscode install the editorconfig extension
-
-## Detailed commands:
-**Magic command (starts the server and electron in dev mode)**
-```
-npm run dev
-```
-
-Build project
-```
-npm run build
-```
-
-Run app
-```
-npm run electron
-```
-
-Run watch (this will build files on save)
-```
-npm run watch
-```
-
-Run dev server (this will handle the refresh of files and later should have live reload)
-```
-npm run dev-server
-```
-
-Run dev electron (to use the dev server you need to run this)
-```
-npm run dev-electron
-```
 
 ## License
 

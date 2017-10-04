@@ -4,7 +4,6 @@ import { Observable, Subject } from "rxjs";
 import { BlobContainer, File, ServerError } from "app/models";
 import { FileSystemService } from "app/services";
 import { Constants, log } from "app/utils";
-import { ListBlobOptions } from "client/api";
 import {
     DataCache,
     RxEntityProxy,
@@ -15,6 +14,7 @@ import {
     getOnceProxy,
 } from "./core";
 import { FileLoadOptions, FileLoader, FileNavigator, FileSource } from "./file";
+import { ListBlobOptions } from "./storage";
 import { StorageClientService } from "./storage-client.service";
 
 export interface ListBlobParams {
@@ -118,7 +118,7 @@ export class StorageService {
                     startswith: folder,
                 });
             },
-            getFile: (filename: string) => this.getBlobContent(Promise.resolve(container), filename, prefix),
+            getFile: (filename: string) => this.getBlobContent(Promise.resolve(container), filename),
             onError: options.onError,
         });
     }

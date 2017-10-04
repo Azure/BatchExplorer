@@ -1,6 +1,7 @@
 import { Component, EventEmitter, HostBinding, Input, OnChanges, OnDestroy, Output } from "@angular/core";
 import { Subscription } from "rxjs";
 
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
 import { FileNavigator, FileTreeNode, FileTreeStructure } from "app/services/file";
 import { CloudPathUtils, DragUtils } from "app/utils";
 import { FileDropEvent } from "../file-explorer.component";
@@ -20,6 +21,8 @@ export interface TreeRow {
 })
 export class FileTreeViewComponent implements OnChanges, OnDestroy {
     @Input() public fileNavigator: FileNavigator;
+    @Input() public currentPath: string;
+    @Input() public active: boolean = true;
     @Input() public name: string;
     @Input() public autoExpand = false;
     @Input() public canDropExternalFiles = false;
@@ -28,7 +31,6 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
 
     @HostBinding("class.expanded") public expanded = true;
 
-    public currentNode: FileTreeNode;
     public expandedDirs: StringMap<boolean> = {};
     public treeRows: TreeRow[] = [];
     public refreshing: boolean;
@@ -38,6 +40,8 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     private _tree: FileTreeStructure;
     private _navigatorSubs: Subscription[] = [];
 
+    constructor(private contextMenuService: ContextMenuService) { }
+
     public ngOnChanges(inputs) {
         if (inputs.fileNavigator) {
             this._clearNavigatorSubs();
@@ -46,13 +50,10 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
                 this._tree = tree;
                 this._buildTreeRows(tree);
             }));
+        }
 
-            this._navigatorSubs.push(this.fileNavigator.currentNode.subscribe((node) => {
-                if (!this.currentNode || node.path !== this.currentNode.path) {
-                    this.expandPath(node.path);
-                }
-                this.currentNode = node;
-            }));
+        if (inputs.currentPath) {
+            this.expandPath(this.currentPath);
         }
     }
 
@@ -65,7 +66,20 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
             this.toggleExpanded(treeRow);
         }
         this.navigate.emit(treeRow.path);
-        this.fileNavigator.navigateTo(treeRow.path);
+    }
+
+    /**
+     * Show context menu when right click on a folder or a file
+     */
+    public showContextMenu(treeRow: TreeRow) {
+        const items = [];
+        if (treeRow.isDirectory) {
+            items.push(new ContextMenuItem("Refresh", () => this.refresh(treeRow.path)));
+        }
+
+        if (items.length > 0) {
+            this.contextMenuService.openMenu(new ContextMenu(items));
+        }
     }
 
     public handleCaretClick(treeRow: TreeRow, event: MouseEvent) {
@@ -109,7 +123,6 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     public handleClickTreeViewHeader() {
         this.expanded = true;
         this.navigate.emit("");
-        this.fileNavigator.navigateTo("");
     }
 
     /**
@@ -131,12 +144,13 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
         return treeRow.path;
     }
 
-    public refresh() {
+    public refresh(path?: string) {
         this.refreshing = true;
-        this.fileNavigator.refresh().subscribe({
+        this.fileNavigator.refresh(path).subscribe({
             next: () => {
                 this.refreshing = false;
-            }, error: () => {
+            },
+            error: () => {
                 this.refreshing = false;
             },
         });
@@ -222,4 +236,5 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     private _clearNavigatorSubs() {
         this._navigatorSubs.forEach(x => x.unsubscribe());
     }
+
 }

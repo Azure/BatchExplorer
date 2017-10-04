@@ -136,7 +136,7 @@ describe("FileTreeStructure", () => {
             `));
         });
 
-        it("should add nested files correctly when tree as a basePath", () => {
+        it("should add nested files correctly when tree has a basePath", () => {
             tree = new FileTreeStructure("startup/wd");
             const files = List([
                 makeFile("startup/wd/stdout.txt"),

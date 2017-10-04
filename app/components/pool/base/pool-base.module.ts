@@ -1,8 +1,8 @@
 import { NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
+import { MaterialModule } from "app/core";
 
 import { BaseModule } from "app/components/base";
 import { AppPackagePickerComponent } from "./app-packages/app-package-picker.component";

@@ -3,7 +3,7 @@ import {
     Injectable,
     Type,
 } from "@angular/core";
-import { MdSidenav } from "@angular/material";
+import { MdDrawerToggleResult, MdSidenav } from "@angular/material";
 import { BehaviorSubject, Observable } from "rxjs";
 
 import { log } from "app/utils";
@@ -83,14 +83,14 @@ export class SidebarManager {
     /**
      * Event when the sidebar is fully open.
      */
-    public get onOpen(): EventEmitter<void> {
+    public get onOpen(): EventEmitter<MdDrawerToggleResult|void> {
         return this.sidebar.onOpen;
     }
 
     /**
      * Event when the sidebar is closed.
      */
-    public get onClosed(): EventEmitter<void> {
+    public get onClosed(): EventEmitter<MdDrawerToggleResult|void> {
         return  this.sidebar.onClose;
     }
 

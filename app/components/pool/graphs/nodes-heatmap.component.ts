@@ -32,6 +32,7 @@ const stateTree: StateTree = [
     { state: NodeState.running, color: runningColor },
     { state: NodeState.waitingForStartTask, color: "#be93d9" },
     { state: NodeState.offline, color: "#5b5b5b" },
+    { state: NodeState.preempted, color: "#606060" },
     {
         category: "transition",
         label: "Transition states",
@@ -114,7 +115,6 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     private _nodeMap: { [id: string]: Node } = {};
 
     constructor(
-        private elementRef: ElementRef,
         private contextMenuService: ContextMenuService,
         private nodeService: NodeService,
         private sidebarManager: SidebarManager,
@@ -180,7 +180,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     }
 
     public ngOnDestroy() {
-        this._erd.uninstall(this.elementRef.nativeElement);
+        this._erd.uninstall(this.heatmapEl.nativeElement);
     }
 
     public containerSizeChanged() {
@@ -320,7 +320,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
                 return array;
             });
 
-        runningTaskRects.enter().append("rect")
+        runningTaskRects.enter().append("rect").merge(runningTaskRects)
             .attr("transform", (data) => {
                 const index = data.index;
                 const x = z - (index + 1) * (data.taskHeight + 1);
@@ -480,7 +480,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
                 this.nodeService.getOnce(this.pool.id, node.id);
             },
             error: (error: ServerError) => {
-                this.notificationService.error(error.body.code, error.body.message);
+                this.notificationService.error(error.code, error.message);
             },
         });
         return action;

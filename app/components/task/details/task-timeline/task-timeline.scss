@@ -1,3 +1,5 @@
+@import "app/styles/variables";
+
 bl-task-timeline {
     $tile-size: 30px;
     $separator-width: 60px;
@@ -10,6 +12,10 @@ bl-task-timeline {
         bl-task-timeline-state {
             position: relative;
             display: flex;
+
+            &.clickable {
+                cursor: pointer;
+            }
 
             > .tile {
                 font-weight: bold;

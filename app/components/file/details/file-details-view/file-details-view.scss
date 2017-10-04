@@ -2,6 +2,22 @@
 
 bl-file-details-view {
     $file-header-height: 40px;
+    $separator-height: 0;
+    &:not([hidden]) {display: block;}
+
+    .file-details-container {
+        height: 100%;
+
+        > .details {
+            height: calc(100% - #{$file-header-height + $separator-height});
+            // overflow: auto;
+
+            > bl-file-content {
+                height: 100%;
+                display: block;
+            }
+        }
+    }
 
     .file-header {
         display: flex;
@@ -9,7 +25,7 @@ bl-file-details-view {
         align-items: stretch;
         color: $mineshaft-grey;
         border-bottom: 1px solid $border-color;
-        margin-bottom: 5px;
+        margin-bottom: $separator-height;
         > * {
             padding: 0 10px;
             &:not(:last-child) {

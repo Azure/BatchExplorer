@@ -357,3 +357,47 @@ ul.list-point {
         }
     }
 }
+
+
+.fit-details-container {
+    height: $contentview-height;
+    display: flex;
+    flex-direction: column;
+    .mat-tab-group {
+        height: 100%;
+        position: relative;
+    }
+
+    md-tab-group:not(.form-tabs) .mat-tab-body-content {
+        min-height: 0 !important;
+    }
+
+    > .overview {
+        flex: 0 0 auto;
+    }
+
+    > .details {
+        flex: 1;
+        min-height: 200px;
+    }
+}
+
+::-webkit-scrollbar {
+    background-color: transparent;
+
+    &:horizontal {
+        height: 10px;
+    }
+
+    &:vertical {
+        width: 10px;
+    }
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background:  $dusty-grey;
+}

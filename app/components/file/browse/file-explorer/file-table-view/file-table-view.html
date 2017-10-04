@@ -14,8 +14,8 @@
             <bl-table (activeItemChange)="selectNode($event)" [config]="tableConfig" (dropOnRow)="handleDropOnRow($event)">
                 <bl-thead>
                     <bl-column>Name</bl-column>
-                    <bl-column style="width: 200px">Content Length</bl-column>
-                    <bl-column style="width: 200px">Last Modified</bl-column>
+                    <bl-column style="width: 80px">Size</bl-column>
+                    <bl-column style="width: 155px">Last Modified</bl-column>
                 </bl-thead>
                 <bl-row *ngFor="let treeNode of treeNode.walk()" [key]="treeNode.path">
                     <bl-cell [value]="treeNode.name">
@@ -24,14 +24,14 @@
                     </span>
                         <span>{{treeNode.name}}</span>
                     </bl-cell>
-                    <bl-cell [value]="!treeNode.isDirectory && prettyFileSize(treeNode.contentLength)"></bl-cell>
+                    <bl-cell [value]="treeNode.contentLength">{{treeNode.isDirectory ? "" : prettyFileSize(treeNode.contentLength)}}</bl-cell>
                     <bl-cell [value]="prettyDate(treeNode.lastModified)"></bl-cell>
                 </bl-row>
             </bl-table>
 
             <bl-no-item [itemCount]="treeNode.children.size">
                 <i icon class="fa fa-file small"></i>
-                <span no-filter>There is no files in this directory</span>
+                <span no-filter>There are no files in this directory</span>
             </bl-no-item>
         </div>
     </bl-loading>
