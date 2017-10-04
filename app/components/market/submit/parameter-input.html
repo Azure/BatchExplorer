@@ -15,7 +15,7 @@
         </bl-cloud-file-picker>
     </div>
     <div *ngSwitchCase="NcjParameterExtendedType.dropDown">
-        <md-select [formControl]="parameterValue" [placeholder]="parameter.name">
+        <md-select [style.width]="'100%'" [formControl]="parameterValue" [placeholder]="parameter.name">
             <md-hint align="end"> {{ parameter.description }} </md-hint>
             <md-option *ngFor="let opt of parameter.allowedValues" [value]="opt"> {{ opt }} </md-option>
         </md-select>

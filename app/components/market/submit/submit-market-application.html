@@ -1,4 +1,4 @@
-<bl-scrollable>
+<bl-scrollable style = "float:right; width:825px;">
     <bl-complex-form [formGroup]="form" [hideFooter]="true">
         <bl-form-page main-form-page [title]="title">
             <bl-form-section title="Mode">
@@ -9,25 +9,25 @@
                 </div>
             </bl-form-section>
             <div *ngIf="modeState === Modes.NewPoolAndJob">
+                <bl-form-section title="Job" formGroupName="job">
+                    <div *ngFor="let param of jobParametersWrapper">
+                        <bl-parameter-input [formControlName]="param.id" [parameter]="param" [parameterValues]="jobParams.value"> </bl-parameter-input>
+                    </div>
+                </bl-form-section>
                 <bl-form-section title="Pool" formGroupName="pool">
                     <div *ngFor="let param of poolParametersWrapper">
                         <bl-parameter-input [formControlName]="param.id" [parameter]="param" [parameterValues]="poolParams.value"> </bl-parameter-input>
                     </div>
                 </bl-form-section>
-                <bl-form-section title="Job" formGroupName="job">
-                    <div *ngFor="let param of jobParametersWrapper">
-                        <bl-parameter-input [formControlName]="param.id" [parameter]="param" [parameterValues]="jobParams.value"> </bl-parameter-input>
-                    </div>
-                </bl-form-section>
             </div>
             <div *ngIf="modeState === Modes.ExistingPoolAndJob">
-                <bl-form-section title="Pool">
-                    <bl-pool-picker [formControl]="pickedPool"></bl-pool-picker>
-                </bl-form-section>
                 <bl-form-section title="Job" formGroupName="job">
                     <div *ngFor="let param of jobParametersWrapper">
                         <bl-parameter-input [formControlName]="param.id" [parameter]="param" [parameterValues]="jobParams.value"> </bl-parameter-input>
                     </div>
+                </bl-form-section>
+                <bl-form-section title="Pool">
+                    <bl-pool-picker [formControl]="pickedPool"></bl-pool-picker>
                 </bl-form-section>
             </div>
             <div *ngIf="modeState === Modes.NewPool">
@@ -39,10 +39,19 @@
             </div>
         </bl-form-page>
     </bl-complex-form>
-    <div class="submit-box" *ngIf="modeState !== Modes.None">
-        <bl-server-error [error]="error"> </bl-server-error>
-        <bl-button [title]="submitToolTip" [disabled]="!isFormValid()" [action]="submit" type="wide" class="submit-job" color="success">
-            <i class="fa fa-play"></i>
-        </bl-button>
-    </div>
 </bl-scrollable>
+<div>
+    <div>
+        <bl-side-menu [logo] = "icon" [title] = "applicationId" [action] = "actionId"
+        [modeState] = "modeState" [form] = "form" [poolParametersWrapper] = "poolParametersWrapper" [jobParametersWrapper] = "jobParametersWrapper"
+        [poolTemplate] = "poolTemplate"> </bl-side-menu>
+    </div>
+    <div>
+        <div [title]="submitToolTip" class="submit-box" *ngIf="modeState !== Modes.None">
+            <bl-server-error [error]="error"> </bl-server-error>
+            <bl-button [disabled]="!isFormValid()" [action]="submit" type="wide" class="submit-job" color="success">
+                <i class="fa fa-cloud" aria-hidden="true"></i>
+            </bl-button>
+        </div>
+    </div>
+</div>
