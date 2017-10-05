@@ -8,7 +8,10 @@
             </div>
             <div class="content">
                 <md-card-title>{{account.name}}</md-card-title>
-                <md-card-subtitle>{{account.properties.accountEndpoint}}</md-card-subtitle>
+                <md-card-subtitle>
+                    <div>{{account.properties.accountEndpoint}}</div>
+                    <div>{{account.subscription?.displayName}}</div>
+                </md-card-subtitle>
             </div>
             <div class="tile">
                 <bl-account-quotas-card [account]="account"></bl-account-quotas-card>
