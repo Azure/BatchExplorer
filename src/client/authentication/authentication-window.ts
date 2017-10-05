@@ -13,7 +13,7 @@ export class AuthenticationWindow extends UniqueWindow {
         });
 
         // Uncomment to debug auth errors
-        // this._window.webContents.openDevTools();
+        window.webContents.openDevTools();
         window.setMenu(null);
         return window;
     }
