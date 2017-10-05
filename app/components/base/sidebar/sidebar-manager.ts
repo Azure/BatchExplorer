@@ -12,14 +12,11 @@ import { SidebarRef } from "./sidebar-ref";
 
 @Injectable()
 export class SidebarManager {
-
     public sidebar: MdSidenav = null;
     public sidebarContent: SidebarContentComponent = null;
-
     public references: Observable<Array<SidebarRef<any>>>;
 
     private referenceMap: { [key: string]: SidebarRef<any> } = {};
-
     private referencesSubject: BehaviorSubject<Array<SidebarRef<any>>> = new BehaviorSubject([]);
 
     constructor() {
@@ -42,6 +39,7 @@ export class SidebarManager {
             sidebarRef = new SidebarRef<T>(this, id);
             this.referenceMap[id] = sidebarRef;
         }
+
         // If the component was already init before and we don't want to create a new one
         if (openNew) {
             this.sidebarContent.open(componentType, sidebarRef);
@@ -51,6 +49,7 @@ export class SidebarManager {
 
         this.sidebar.open();
         this.updateReferenceSubject();
+
         return sidebarRef;
     }
 
