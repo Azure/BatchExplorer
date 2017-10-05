@@ -144,7 +144,7 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
             folder: null,
         }));
 
-        sidebarRef.afterCompletition.subscribe(() => {
+        sidebarRef.afterCompletion.subscribe(() => {
             this.storageService.onFileGroupUpdated.next();
         });
     }
