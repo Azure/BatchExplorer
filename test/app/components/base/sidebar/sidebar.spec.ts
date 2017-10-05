@@ -101,11 +101,11 @@ describe("SidebarPageComponent", () => {
         expect(sidebarManager.sidebar.opened).toBe(false);
     });
 
-    it("Should notifiy afterCompletition when the sidebar is destroyed", () => {
+    it("Should notifiy afterCompletion when the sidebar is destroyed", () => {
         const firstSidebarRef = sidebarManager.open("fake-1", FakeComponent);
-        const spy = jasmine.createSpy("afterCompletition");
+        const spy = jasmine.createSpy("afterCompletion");
 
-        firstSidebarRef.afterCompletition.subscribe(spy);
+        firstSidebarRef.afterCompletion.subscribe(spy);
         firstSidebarRef.destroy("some result");
 
         expect(spy).toHaveBeenCalledTimes(1);
