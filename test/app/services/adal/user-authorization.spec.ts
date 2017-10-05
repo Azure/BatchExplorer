@@ -1,7 +1,7 @@
 import { Observable } from "rxjs";
 
 import {
-    AuthorizeError, AuthorizeResult, UserAuthorization,
+    AuthorizeError, AuthorizeResult, AuthorizeType, UserAuthorization,
 } from "app/services/adal/user-authorization";
 import { MockAuthenticationWindow, MockElectronRemote } from "test/utils/mocks";
 
@@ -112,7 +112,7 @@ describe("UserAuthorization", () => {
 
     describe("Authorize silently", () => {
         beforeEach(() => {
-            userAuthorization.authorize("tenant-1", true);
+            userAuthorization.authorize("tenant-1", AuthorizeType.silent);
         });
 
         it("should set the prompt=none params", () => {

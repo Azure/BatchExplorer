@@ -1,6 +1,6 @@
 import { AsyncSubject, Observable } from "rxjs";
 
-import { SecureUtils } from "app/utils";
+import { SecureUtils, log } from "app/utils";
 import { ElectronRemote } from "../electron";
 import { AdalConfig } from "./adal-config";
 import * as AdalConstants from "./adal-constants";
@@ -11,6 +11,11 @@ enum AuthorizePromptType {
     consent = "consent",
 }
 
+export enum AuthorizeType {
+    silent,
+    prompt,
+    silentThenPrompt,
+}
 export interface AuthorizeResult {
     code: string;
     id_token: string;
@@ -25,7 +30,7 @@ export interface AuthorizeError {
 
 interface AuthorizeQueueItem {
     tenantId: string;
-    silent: boolean;
+    authorizeType: AuthorizeType;
     subject: AsyncSubject<any>;
 }
 
@@ -47,12 +52,13 @@ export class UserAuthorization {
      * @returns Observable with the successfull AuthorizeResult.
      *      If silent is true and the access fail the observable will return and error of type AuthorizeError
      */
-    public authorize(tenantId: string, silent = false): Observable<AuthorizeResult> {
+    public authorize(tenantId: string, authorizeType = AuthorizeType.silentThenPrompt): Observable<AuthorizeResult> {
         if (this._isAuthorizingTenant(tenantId)) {
             return this._getTenantSubject(tenantId).asObservable();
         }
+        console.log("Auth silent?", tenantId, authorizeType);
         const subject = new AsyncSubject<AuthorizeResult>();
-        this._authorizeQueue.push({ tenantId, silent, subject });
+        this._authorizeQueue.push({ tenantId, authorizeType, subject });
         this._authorizeNext();
         return subject.asObservable();
     }
@@ -61,9 +67,7 @@ export class UserAuthorization {
      * This will try to do authorize silently first and if it fails show the login window to the user
      */
     public authorizeTrySilentFirst(tenantId: string): Observable<AuthorizeResult> {
-        return this.authorize(tenantId, true).catch((error, source) => {
-            return this.authorize(tenantId, false);
-        });
+        return this.authorize(tenantId, AuthorizeType.silentThenPrompt);
     }
 
     /**
@@ -87,11 +91,16 @@ export class UserAuthorization {
             return;
         }
         this._waitingForAuth = true;
-        const { tenantId, silent } = this._currentAuthorization = this._authorizeQueue.shift();
+        const { tenantId, authorizeType } = this._currentAuthorization = this._authorizeQueue.shift();
+        const silent = authorizeType === AuthorizeType.silent || authorizeType === AuthorizeType.silentThenPrompt;
+        this._loadAuthorize(tenantId, silent);
+    }
+
+    private _loadAuthorize(tenantId: string, silent: boolean) {
         const authWindow = this.remoteService.getAuthenticationWindow();
         authWindow.create();
-        authWindow.loadURL(this._buildUrl(tenantId, silent));
         this._setupEvents();
+        authWindow.loadURL(this._buildUrl(tenantId, silent));
         if (!silent) {
             authWindow.show();
             this.remoteService.getSplashScreen().hide();
@@ -150,11 +159,18 @@ export class UserAuthorization {
         const params = this._getRedirectUrlParams(url);
         this._waitingForAuth = false;
         const auth = this._currentAuthorization;
-        this._currentAuthorization = null;
 
         if ((params as any).error) {
-            auth.subject.error(params as AuthorizeError);
+            if (auth.authorizeType === AuthorizeType.silentThenPrompt) {
+                auth.authorizeType = AuthorizeType.prompt;
+                this._loadAuthorize(auth.tenantId, false);
+            } else {
+                log.error("Authorization failed", params);
+                this._currentAuthorization = null;
+                auth.subject.error(params as AuthorizeError);
+            }
         } else {
+            this._currentAuthorization = null;
             auth.subject.next(params as AuthorizeResult);
             auth.subject.complete();
         }

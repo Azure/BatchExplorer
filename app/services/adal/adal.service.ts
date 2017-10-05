@@ -10,7 +10,7 @@ import { AccessToken } from "./access-token";
 import { AccessTokenError, AccessTokenErrorResult, AccessTokenService } from "./access-token.service";
 import { AdalConfig } from "./adal-config";
 import { TokenCache } from "./token-cache";
-import { AuthorizeResult, UserAuthorization } from "./user-authorization";
+import { AuthorizeResult, AuthorizeType, UserAuthorization } from "./user-authorization";
 import { UserDecoder } from "./user-decoder";
 
 export interface AuthorizationResult {
@@ -202,7 +202,7 @@ export class AdalService {
 
     private _authorizeUser(tenantId, forceReLogin) {
         if (forceReLogin) {
-            return this._userAuthorization.authorize(tenantId, false);
+            return this._userAuthorization.authorize(tenantId, AuthorizeType.prompt);
         } else {
             return this._userAuthorization.authorizeTrySilentFirst(tenantId);
         }
