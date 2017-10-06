@@ -201,10 +201,12 @@ export class AdalService {
     }
 
     private _authorizeUser(tenantId, forceReLogin) {
+        const currentUser = this._currentUser.value;
+        const loginHint = currentUser && currentUser.unique_name;
         if (forceReLogin) {
-            return this._userAuthorization.authorize(tenantId, AuthorizeType.prompt);
+            return this._userAuthorization.authorize(tenantId, AuthorizeType.prompt, loginHint);
         } else {
-            return this._userAuthorization.authorizeTrySilentFirst(tenantId);
+            return this._userAuthorization.authorizeTrySilentFirst(tenantId, loginHint);
         }
     }
 

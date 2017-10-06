@@ -18,6 +18,18 @@ export class AuthenticationWindow extends UniqueWindow {
         return window;
     }
 
+    /**
+     * Clear cookies at the origin
+     * @param origin
+     */
+    public clearCookies(): Promise<any> {
+        return new Promise((resolve) => {
+            this._window.webContents.session.clearStorageData({ storages: ["cookies"] } as any, (data) => {
+                resolve(data);
+            });
+        });
+    }
+
     public loadURL(url: string) {
         if (!this._window) {
             throw new Error("AuthenticationWindow not created. Cannot call loadURL");

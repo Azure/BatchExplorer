@@ -31,6 +31,7 @@ export interface AuthorizeError {
 interface AuthorizeQueueItem {
     tenantId: string;
     authorizeType: AuthorizeType;
+    loginHint?: string;
     subject: AsyncSubject<any>;
 }
 
@@ -52,13 +53,17 @@ export class UserAuthorization {
      * @returns Observable with the successfull AuthorizeResult.
      *      If silent is true and the access fail the observable will return and error of type AuthorizeError
      */
-    public authorize(tenantId: string, authorizeType = AuthorizeType.silentThenPrompt): Observable<AuthorizeResult> {
+    public authorize(
+        tenantId: string,
+        authorizeType = AuthorizeType.silentThenPrompt,
+        loginHint: string = null): Observable<AuthorizeResult> {
+
         if (this._isAuthorizingTenant(tenantId)) {
             return this._getTenantSubject(tenantId).asObservable();
         }
         console.log("Auth silent?", tenantId, authorizeType);
         const subject = new AsyncSubject<AuthorizeResult>();
-        this._authorizeQueue.push({ tenantId, authorizeType, subject });
+        this._authorizeQueue.push({ tenantId, authorizeType, subject, loginHint });
         this._authorizeNext();
         return subject.asObservable();
     }
@@ -66,8 +71,8 @@ export class UserAuthorization {
     /**
      * This will try to do authorize silently first and if it fails show the login window to the user
      */
-    public authorizeTrySilentFirst(tenantId: string): Observable<AuthorizeResult> {
-        return this.authorize(tenantId, AuthorizeType.silentThenPrompt);
+    public authorizeTrySilentFirst(tenantId: string, loginHint: string = null): Observable<AuthorizeResult> {
+        return this.authorize(tenantId, AuthorizeType.silentThenPrompt, loginHint);
     }
 
     /**
@@ -91,17 +96,22 @@ export class UserAuthorization {
             return;
         }
         this._waitingForAuth = true;
-        const { tenantId, authorizeType } = this._currentAuthorization = this._authorizeQueue.shift();
+        const { tenantId, authorizeType, loginHint } = this._currentAuthorization = this._authorizeQueue.shift();
         const silent = authorizeType === AuthorizeType.silent || authorizeType === AuthorizeType.silentThenPrompt;
-        this._loadAuthorize(tenantId, silent);
+        console.log("Login hint", tenantId, loginHint);
+
+        this._openAuthorizeWindow(tenantId, silent, loginHint);
     }
 
-    private _loadAuthorize(tenantId: string, silent: boolean) {
+    private _openAuthorizeWindow(tenantId: string, silent: boolean, loginHint?: string) {
         const authWindow = this.remoteService.getAuthenticationWindow();
         authWindow.create();
         this._setupEvents();
-        authWindow.loadURL(this._buildUrl(tenantId, silent));
-        if (!silent) {
+        const url = this._buildUrl(tenantId, silent, loginHint);
+        if (silent) {
+            authWindow.loadURL(url);
+        } else {
+            authWindow.loadURL(url);
             authWindow.show();
             this.remoteService.getSplashScreen().hide();
         }
@@ -111,7 +121,7 @@ export class UserAuthorization {
      * Return the url used to authorize
      * @param silent @see #authorize
      */
-    private _buildUrl(tenantId, silent: boolean): string {
+    private _buildUrl(tenantId, silent: boolean, loginHint?: string): string {
         const params: AdalConstants.AuthorizeUrlParams = {
             response_type: "id_token+code",
             redirect_uri: encodeURIComponent(this.config.redirectUri),
@@ -122,9 +132,14 @@ export class UserAuthorization {
             resource: "https://management.core.windows.net/",
         };
 
+        if (loginHint) {
+            console.log("Login hin~!", loginHint, loginHint === "tiguerin@microsoft.com");
+            params.login_hint = loginHint;
+        }
         if (silent) {
             params.prompt = AuthorizePromptType.none;
         }
+        console.log("POArams", params);
         return AdalConstants.authorizeUrl(tenantId, params);
     }
 
@@ -163,7 +178,7 @@ export class UserAuthorization {
         if ((params as any).error) {
             if (auth.authorizeType === AuthorizeType.silentThenPrompt) {
                 auth.authorizeType = AuthorizeType.prompt;
-                this._loadAuthorize(auth.tenantId, false);
+                this._openAuthorizeWindow(auth.tenantId, false, auth.loginHint);
             } else {
                 log.error("Authorization failed", params);
                 this._currentAuthorization = null;

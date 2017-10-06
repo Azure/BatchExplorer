@@ -10,6 +10,7 @@ export interface AuthorizeUrlParams {
     state?: string;
     resource?: string;
     prompt?: string;
+    login_hint?: string;
 }
 
 export interface TokenUrlParams {
