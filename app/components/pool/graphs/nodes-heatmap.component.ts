@@ -328,7 +328,6 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             return [];
         }
         const { taskHeight, combine, remaining } = this._getTaskHeight(tileSize, node);
-        console.log("Task heigth", taskHeight, combine, remaining);
         if (combine) {
             return [{ node, index: 0, taskHeight, position: taskHeight }];
         }
