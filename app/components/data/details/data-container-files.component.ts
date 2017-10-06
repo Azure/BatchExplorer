@@ -1,12 +1,12 @@
 import { Component, Input, OnDestroy, ViewChild } from "@angular/core";
 import { autobind } from "core-decorators";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
 import { NotificationService } from "app/components/base/notifications";
 import { BlobFilesBrowserComponent } from "app/components/file/browse";
 import { FileDropEvent } from "app/components/file/browse/file-explorer";
-import { BlobContainer } from "app/models";
+import { BlobContainer, File } from "app/models";
 import { NcjFileGroupService, StorageService } from "app/services";
 import { log } from "app/utils";
 
@@ -41,7 +41,6 @@ export class DataContainerFilesComponent implements OnDestroy {
     @autobind()
     public handleFileUpload(event: FileDropEvent) {
         const paths = event.files.map(x => x.path);
-
         return this.backgroundTaskService.startTask(`Upload files group ${this.container.name}`, (task) => {
             const observable = this.fileGroupService.addFilesToFileGroup(this.container.name, paths, event.path);
             let lastData;
@@ -58,6 +57,41 @@ export class DataContainerFilesComponent implements OnDestroy {
                 },
                 error: (error) => {
                     log.error("Failed to create form group", error);
+                },
+            });
+
+            return observable;
+        });
+    }
+
+    @autobind()
+    public handleFileDelete(files: File[]) {
+        const fileCount = files.length;
+        const taskTitle = `Delete ${fileCount} files from ${this.container.name}`;
+        console.log(`handleFileDelete with ${fileCount} files`);
+
+        // NOTE: Just pretending to delete the files at the moment as i need to check with the
+        // storage team as to the best way to batch delete a heap of files as there could be lots
+        // of them in a container.
+
+        return this.backgroundTaskService.startTask(taskTitle, (task) => {
+            let deleted = 0;
+            let observable = Observable.interval(250).take(fileCount);
+            observable.subscribe({
+                next: (i) => {
+                    deleted++;
+                    console.log("deleting: ", this.container.id, files[i].name);
+                    task.name.next(`${taskTitle} (${deleted}/${fileCount})`);
+                    task.progress.next(deleted / fileCount * 100);
+                },
+                complete: () => {
+                    task.progress.next(100);
+                    // tslint:disable-next-line:max-line-length
+                    const message = `${deleted} files were successfully removed from the file group: ${this.container.name}`;
+                    this.notificationService.success("Removed files from group", message, { persist: true });
+                },
+                error: (error) => {
+                    log.error("Failed to delete blobs", error);
                 },
             });
 

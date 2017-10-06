@@ -2,9 +2,11 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from "@a
 import { Observable } from "rxjs";
 
 import { DialogService } from "app/components/base/dialogs";
-import { FileDropEvent, FileExplorerConfig } from "app/components/file/browse/file-explorer";
+import { FileDeleteEvent, FileDropEvent, FileExplorerConfig } from "app/components/file/browse/file-explorer";
+import { File } from "app/models";
 import { StorageService } from "app/services";
 import { FileNavigator } from "app/services/file";
+import { FileUrlUtils } from "app/utils";
 
 @Component({
     selector: "bl-blob-files-browser",
@@ -15,6 +17,8 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
     @Input() public fileExplorerConfig: FileExplorerConfig = {};
     @Input() public activeFile: string;
     @Input() public upload: (event: FileDropEvent) => Observable<any>;
+    @Input() public delete: (files: File[]) => Observable<any>;
+
     @Output() public activeFileChange = new EventEmitter<string>();
 
     public fileNavigator: FileNavigator;
@@ -36,6 +40,7 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
         if (inputs.upload) {
             this.fileExplorerConfig = {
                 canDropExternalFiles: Boolean(this.upload),
+                canDeleteFiles: true,
             };
         }
     }
@@ -52,7 +57,36 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
                 this.upload(event).subscribe(() => {
                     this.fileNavigator.refresh(path);
                 });
+
                 return Observable.of(null);
+            },
+        });
+    }
+
+    public handleDeleteEvent(event: FileDeleteEvent) {
+        const { path } = event;
+        console.log("BlobFilesBrowserComponent.handleDeleteEvent: ", event);
+
+        // TODO: Check with Tim as to whether i can chain 2 background tasks to run one after another.
+        // In which case most of this can be moved into DataContainerFilesComponent.
+        // task 1: get files to delete
+        // task 2: delete files
+
+        this.dialogService.confirm(`Delete files`, {
+            description: event.isDirectory
+                ? `All files will be deleted from the folder: ${path}`
+                : `The file '${FileUrlUtils.getFileName(path)}' will be deleted.`,
+            yes: () => {
+                const listParams = { recursive: true, startswith: path };
+                const data = this.storageService.listBlobs(Promise.resolve(this.container), listParams);
+                return data.fetchAll().flatMap(() => data.items.take(1)).map((items) => {
+                    data.dispose();
+                    this.delete(items.toArray()).subscribe(() => {
+                        this.fileNavigator.refresh(event.path);
+                    });
+
+                    return Observable.of(null);
+                });
             },
         });
     }
