@@ -61,7 +61,6 @@ export class UserAuthorization {
         if (this._isAuthorizingTenant(tenantId)) {
             return this._getTenantSubject(tenantId).asObservable();
         }
-        console.log("Auth silent?", tenantId, authorizeType);
         const subject = new AsyncSubject<AuthorizeResult>();
         this._authorizeQueue.push({ tenantId, authorizeType, subject, loginHint });
         this._authorizeNext();
@@ -98,8 +97,6 @@ export class UserAuthorization {
         this._waitingForAuth = true;
         const { tenantId, authorizeType, loginHint } = this._currentAuthorization = this._authorizeQueue.shift();
         const silent = authorizeType === AuthorizeType.silent || authorizeType === AuthorizeType.silentThenPrompt;
-        console.log("Login hint", tenantId, loginHint);
-
         this._openAuthorizeWindow(tenantId, silent, loginHint);
     }
 
@@ -133,13 +130,11 @@ export class UserAuthorization {
         };
 
         if (loginHint) {
-            console.log("Login hin~!", loginHint, loginHint === "tiguerin@microsoft.com");
             params.login_hint = loginHint;
         }
         if (silent) {
             params.prompt = AuthorizePromptType.none;
         }
-        console.log("POArams", params);
         return AdalConstants.authorizeUrl(tenantId, params);
     }
 
