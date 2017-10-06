@@ -22,13 +22,13 @@ export class JobStatsPreviewComponent {
         };
     }
 
-    public get completitionPercent() {
+    public get completionPercent() {
         return Math.floor((this.stats.completed / this.stats.total * 100));
     }
 
     public get tooltipMessages() {
         return {
-            taskCompleted: `Job has completed ${this.completitionPercent}% of its tasks.`,
+            taskCompleted: `Job has completed ${this.completionPercent}% of its tasks.`,
             taskFailed: `Job has ${this.stats.failed} tasks that failed.`,
         };
     }
