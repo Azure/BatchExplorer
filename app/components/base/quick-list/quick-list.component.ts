@@ -7,6 +7,8 @@ import { AbstractListBase } from "../abstract-list";
 import { FocusSectionComponent } from "../focus-section";
 import { QuickListItemComponent } from "./quick-list-item.component";
 
+import "./quick-list.scss";
+
 @Component({
     selector: "bl-quick-list",
     template: `
