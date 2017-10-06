@@ -4,6 +4,10 @@
     align-items: center;
     justify-content: center;
 
+    md-select {
+        padding-top: 0;
+    }
+
     input {
         flex: 1 0 auto;
         padding: 5px;

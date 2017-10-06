@@ -6,13 +6,12 @@ import { SidebarPageComponent } from "./sidebar-page";
 export class SidebarRef<T> {
     public component: T;
     public page: SidebarPageComponent;
+    public afterCompletion: Observable<any>;
 
-    public afterCompletition: Observable<any>;
-
-    private _afterCompletition: Subject<any> = new Subject();
+    private _afterCompletion: Subject<any> = new Subject();
 
     constructor(private sidebarManager: SidebarManager, public id: string) {
-        this.afterCompletition = this._afterCompletition.asObservable();
+        this.afterCompletion = this._afterCompletion.asObservable();
     }
 
     public reopen() {
@@ -24,7 +23,7 @@ export class SidebarRef<T> {
      */
     public destroy(result?: any) {
         this.sidebarManager.destroy(this);
-        this._afterCompletition.next(result);
-        this._afterCompletition.complete();
+        this._afterCompletion.next(result);
+        this._afterCompletion.complete();
     }
 }
