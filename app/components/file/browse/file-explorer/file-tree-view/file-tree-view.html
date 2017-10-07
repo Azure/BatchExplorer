@@ -30,6 +30,7 @@
             [class.active]="active && treeRow.path === currentPath"
             [class.drop-target]="treeRow.path.startsWith(dropTargetPath)"
             (click)="handleClick(treeRow)"
+            (contextmenu)="showContextMenu(treeRow)"
             (dragenter)="dragEnterRow($event, treeRow)"
             (dragleave)="dragLeaveRow($event, treeRow)"
             (drop)="handleDropOnRow($event, treeRow)">

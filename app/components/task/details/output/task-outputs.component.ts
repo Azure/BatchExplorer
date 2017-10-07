@@ -1,5 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
-import { FileExplorerWorkspace, FileNavigatorEntry } from "app/components/file/browse/file-explorer";
+import {
+    FileExplorerConfig, FileExplorerWorkspace, FileNavigatorEntry,
+} from "app/components/file/browse/file-explorer";
 import { ServerError, Task, TaskState } from "app/models";
 import { FileService, StorageService } from "app/services";
 import { FileLoader } from "app/services/file";
@@ -35,7 +37,7 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
     public isTaskQueued = false;
     public stateTooltip: string;
     public workspace: FileExplorerWorkspace;
-
+    public fileExplorerConfig: FileExplorerConfig = {};
     private _taskOutputContainer: string;
 
     constructor(private fileService: FileService, private storageService: StorageService) { }
@@ -49,6 +51,7 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
             }
             this.isTaskQueued = isTaskQueued;
             this._updateStateTooltip();
+            this._updateFileExplorerConfig();
         }
         if (changes.jobId || ComponentUtils.recordChangedId(changes.task)) {
             if (!this.isTaskQueued) {
@@ -61,7 +64,7 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
     }
 
     public ngOnDestroy() {
-        this.workspace.dispose();
+        this._disposeWorkspace();
     }
 
     public selectOutputType(type: OutputType) {
@@ -72,9 +75,14 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
         this.pickedFileLoader = this.fileService.fileFromTask(this.jobId, this.task.id, filename);
     }
 
+    private _updateFileExplorerConfig() {
+        this.fileExplorerConfig = {
+            tailable: this.task.state === TaskState.running,
+        };
+    }
     private _updateNavigator() {
+        this._disposeWorkspace();
         if (this.isTaskQueued) {
-            this.workspace = null;
             return;
         }
         StorageUtils.getSafeContainerName(this.jobId).then((container) => {
@@ -85,7 +93,7 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
             });
             nodeNavigator.init();
 
-            const taskOutputPrefix = `${this.task.id}/`;
+            const taskOutputPrefix = `${this.task.id}`;
             const taskOutputNavigator = this.storageService.navigateContainerBlobs(container, taskOutputPrefix, {
                 onError: (error) => this._processBlobError(error),
             });
@@ -107,7 +115,7 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
             return new ServerError({
                 status: 404,
                 code: "NodeNotFound",
-                message: "The node the task ran on doesn't exists anymore or is in an invalid state.",
+                message: "The node the task ran on doesn't exist anymore or is in an invalid state.",
                 original: error.original,
             });
         } else if (error.status === Constants.HttpCode.Conflict) {
@@ -139,9 +147,9 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
     }
 
     private _fileConventionErrorMessage() {
-        return `There is no uploaded outputs\n`
+        return `There are no uploaded outputs\n`
             + `There is no blob container with the name '${this._taskOutputContainer}'\n`
-            + `Learn more here https://docs.microsoft.com/en-us/azure/batch/batch-task-output-file-conventions`;
+            + `Learn more here: https://docs.microsoft.com/en-us/azure/batch/batch-task-output-file-conventions`;
     }
 
     private _updateStateTooltip() {
@@ -155,6 +163,13 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
                 break;
             default:
                 this.stateTooltip = null;
+        }
+    }
+
+    private _disposeWorkspace() {
+        if (this.workspace) {
+            this.workspace.dispose();
+            this.workspace = null;
         }
     }
 }

@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
+import { MaterialModule } from "app/core";
 import { TagsComponent } from "./tags.component";
 
 const components = [TagsComponent];

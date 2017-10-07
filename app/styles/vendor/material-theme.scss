@@ -51,6 +51,10 @@ md-tab-group:not(.form-tabs) {
         }
     }
 
+    .mat-tab-body-wrapper {
+        flex: 1;
+    }
+
     .mat-tab-body-content {
         // set to same height as a tab with the .no-item-message
         min-height: 443px;
@@ -87,7 +91,7 @@ md-card {
 
     md-card-subtitle {
         div {
-            display: inline;
+            line-height: 1.5em;
         }
     }
 
@@ -136,6 +140,10 @@ md-dialog-container.mat-dialog-container {
         height: 24px;
         line-height: 24px;
     }
+}
+
+.mat-form-field-underline {
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
 md-input-container.bl-textarea {

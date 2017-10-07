@@ -14,10 +14,14 @@ if [[ $TRAVIS_OS_NAME == 'linux' ]]; then # Only run the CI checks on the linux 
     npm run lint -s
 fi
 
-# Only run prod build if on a branch build or PR for stable
+# Only run on a PR against stable or on stable branch
+if [ "${TRAVIS_BRANCH}" = "stable" ]; then
+  # Check third party notices is up to date
+  npm run ts -s scripts/lca/generate-third-party -- --check
+fi
+
 if [ "${TRAVIS_PULL_REQUEST}" = "false" ] || [ "${TRAVIS_BRANCH}" = "stable" ]; then
-    # Check third party notices is up to date
-    npm run ts -s scripts/lca/generate-third-party -- --check
+
     # Build for production
 	npm run -s build:prod
     npm run -s build-python

@@ -1,4 +1,4 @@
-import { app, dialog, ipcMain, protocol } from "electron";
+import { Menu, app, dialog, ipcMain, protocol } from "electron";
 import { autoUpdater } from "electron-updater";
 import * as path from "path";
 app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
@@ -31,6 +31,31 @@ function startApplication() {
     const batchLabsApp = new BatchLabsApplication(autoUpdater);
     batchLabsApp.init();
     batchLabsApp.start();
+
+    if (process.platform === "darwin") {
+        // Create our menu entries so that we can use MAC shortcuts
+        Menu.setApplicationMenu(Menu.buildFromTemplate([
+            {
+                label: "Application",
+                submenu: [
+                    { label: "Quit", accelerator: "Command+Q", click: () => app.quit() },
+                ],
+            },
+            {
+                label: "Edit",
+                submenu: [
+                    { role: "undo" },
+                    { role: "redo" },
+                    { type: "separator" },
+                    { role: "cut" },
+                    { role: "copy" },
+                    { role: "paste" },
+                    { role: "delete" },
+                    { role: "selectall" },
+                ],
+            },
+        ]));
+    }
 }
 
 // This method will be called when Electron has finished

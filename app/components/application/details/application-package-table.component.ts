@@ -93,7 +93,7 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
     public addPackage(event: any) {
         const sidebarRef = this.sidebarManager.open("add-package", ApplicationCreateDialogComponent);
         sidebarRef.component.setValue(this.application);
-        sidebarRef.afterCompletition.subscribe(() => {
+        sidebarRef.afterCompletion.subscribe(() => {
             this.refresh();
         });
     }
@@ -132,7 +132,7 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
     public updatePackageVersion() {
         const sidebarRef = this.sidebarManager.open("update-package", ApplicationCreateDialogComponent);
         sidebarRef.component.setValue(this.application, this.activatedItem);
-        sidebarRef.afterCompletition.subscribe(() => {
+        sidebarRef.afterCompletion.subscribe(() => {
             this.refresh();
         });
     }

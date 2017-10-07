@@ -110,6 +110,7 @@ export class MainNavigationComponent implements OnInit {
     }
 
     private _update() {
+        console.log("Update available", this.update);
         this._autoUpdater.quitAndInstall();
     }
 

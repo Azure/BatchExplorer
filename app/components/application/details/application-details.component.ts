@@ -72,7 +72,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     public addPackage() {
         const sidebarRef = this.sidebarManager.open("add-package", ApplicationCreateDialogComponent);
         sidebarRef.component.setValue(this.application);
-        sidebarRef.afterCompletition.subscribe(() => {
+        sidebarRef.afterCompletion.subscribe(() => {
             this.refresh();
         });
     }
@@ -81,7 +81,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     public editApplication() {
         const sidebarRef = this.sidebarManager.open("edit-application", ApplicationEditDialogComponent);
         sidebarRef.component.setValue(this.application);
-        sidebarRef.afterCompletition.subscribe(() => {
+        sidebarRef.afterCompletion.subscribe(() => {
             this.refresh();
         });
     }

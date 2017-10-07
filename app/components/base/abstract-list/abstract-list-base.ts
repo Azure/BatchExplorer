@@ -133,7 +133,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         if (this.items.length > 0) {
             this._processInitialItems(this.items);
         } else {
-            this.items.changes.first().subscribe((newItems: QueryList<AbstractListItemBase>) => {
+            this.items.changes.take(1).subscribe((newItems: QueryList<AbstractListItemBase>) => {
                 this._processInitialItems(newItems);
             });
         }

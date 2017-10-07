@@ -1,10 +1,11 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
-import { MaterialModule, MdCheckboxChange, MdDialog } from "@angular/material";
+import { MdCheckboxChange, MdDialog } from "@angular/material";
 import { By } from "@angular/platform-browser";
 
 import { AppLicensePickerComponent } from "app/components/pool/action/add";
+import { MaterialModule } from "app/core";
 
 @Component({
     template: `<bl-app-license-picker [(ngModel)]="appLicenses"></bl-app-license-picker>`,

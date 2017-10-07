@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, OnDestroy, ViewChild } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { ScrollableComponent, ScrollableService } from "app/components/base/scrollable";
@@ -7,9 +7,10 @@ import { TaskService } from "app/services";
 import { FileLoader } from "app/services/file";
 import { Constants, log } from "app/utils";
 
+import { VirtualScrollComponent } from "app/components/base/virtual-scroll";
 import "./log-file-viewer.scss";
 
-const maxSize = 300000; // 300KB
+const maxSize = 10000000; // 10MB
 
 @Component({
     selector: "bl-log-file-viewer",
@@ -18,7 +19,14 @@ const maxSize = 300000; // 300KB
 export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewInit {
     @Input() public fileLoader: FileLoader;
 
-    @Input() public tail: boolean = false;
+    @Input() public tailable: boolean = false;
+
+    public get tail() {
+        return this.tailable;
+    }
+
+    @ViewChild("virtualScroll")
+    public virtualScroll: VirtualScrollComponent;
 
     public file: File;
     public fileTooLarge = false;
@@ -34,7 +42,9 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
     public fileContentFailure = false;
 
     private _refreshInterval;
+    private _loadingNext = false;
     private _fileChangedSub: Subscription;
+    private _lastScroll: number = 0;
 
     constructor(
         private scrollableService: ScrollableService,
@@ -61,16 +71,16 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
             this._fileChangedSub.unsubscribe();
         }
         if (changes.fileLoader) {
+            this.nodeNotFound = false;
+            this.fileCleanupOperation = false;
+            this.fileContentFailure = false;
+            this.loading = true;
+            this.lines = [];
+            this.lastContentLength = 0;
             this._fileChangedSub = this.fileLoader.fileChanged.subscribe((file) => {
                 this._processProperties(file);
             });
         }
-        this.lines = [];
-        this.loading = true;
-        this.lastContentLength = 0;
-        this.nodeNotFound = false;
-        this.fileCleanupOperation = false;
-        this.fileContentFailure = false;
 
         this._updateFileContent();
         this._setRefreshInterval();
@@ -87,6 +97,13 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
         if (this.followingLog) {
             this._scrollToBottom();
         }
+    }
+
+    public handleScroll(event) {
+        if (this._lastScroll > event.target.scrollTop) {
+            this.followingLog = false;
+        }
+        this._lastScroll = event.target.scrollTop;
     }
 
     /**
@@ -106,7 +123,6 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
         this.fileTooLarge = false;
         this.currentSubscription = this.fileLoader.getProperties(true).subscribe({
             next: (file: File) => {
-                this.file = file;
                 this._processProperties(file);
             },
             error: (e) => {
@@ -124,6 +140,7 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
      * this._loadUpTo(300); //=> Loads bytes 100-300
      */
     private _loadUpTo(newContentLength: number) {
+        this._loadingNext = true;
         const options = {
             rangeStart: this.lastContentLength,
             rangeEnd: newContentLength,
@@ -143,6 +160,8 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
         if (!(file && file.properties)) {
             return;
         }
+        this.file = file;
+
         const contentLength = file.properties.contentLength;
         if (contentLength > maxSize) {
             this.loading = false;
@@ -152,7 +171,7 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
 
         if (contentLength === 0) {
             this.loading = false;
-        } else if (contentLength !== this.lastContentLength) {
+        } else if (contentLength !== this.lastContentLength && !this._loadingNext) {
             this._loadUpTo(contentLength);
         }
     }
@@ -166,12 +185,14 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
         }
 
         if (this.lines.length === 0) {
-            this.lines = [first];
+            this.lines = [{ index: 1, text: first }];
         } else {
-            this.lines[this.lines.length - 1] += first;
+            this.lines[this.lines.length - 1].text += first;
         }
-
-        this.lines = this.lines.concat(newLines);
+        const linesCount = this.lines.length;
+        this.lines = this.lines.concat(newLines.map((text, index) => {
+            return { index: linesCount + index + 1, text };
+        }));
         if (this.followingLog) {
             setTimeout(() => {
                 this._scrollToBottom();
@@ -179,6 +200,7 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
         }
 
         this.loading = false;
+        this._loadingNext = false;
         this.currentSubscription = null;
     }
 
@@ -203,9 +225,8 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
     }
 
     private _scrollToBottom() {
-        if (this.scrollable) {
-            // TODO: make a scrollToBottom
-            this.scrollable.scrollToBottom();
+        if (this.virtualScroll) {
+            this.virtualScroll.scrollToBottom();
         }
     }
 }
