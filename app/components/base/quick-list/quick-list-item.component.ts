@@ -8,6 +8,8 @@ import { ContextMenuService } from "app/components/base/context-menu";
 import { AbstractListItemBase } from "../abstract-list";
 import { QuickListComponent } from "./quick-list.component";
 
+import "./quick-list-item.scss";
+
 @Component({
     selector: "bl-quick-list-item",
     templateUrl: "quick-list-item.html",

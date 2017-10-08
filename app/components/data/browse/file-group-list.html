@@ -1,10 +1,10 @@
 <bl-quick-list *ngIf="quickList">
-    <bl-quick-list-item *ngFor="let container of data.items | async" [link]="['/data/', container.id]" 
+    <bl-quick-list-item *ngFor="let container of data.items | async" [link]="['/data/', container.id]"
         [key]="container.id" [contextmenu]="contextmenu(container)">
         <bl-quick-list-item-status [status]="containerStatus(container)">
         </bl-quick-list-item-status>
 
-        <h4 bl-quick-list-item-title>{{container.name}}</h4>
+        <div bl-quick-list-item-title>{{container.name}}</div>
         <div bl-quick-list-item-field>{{container.lease?.state}}</div>
         <div bl-quick-list-item-preview>
             <bl-file-group-preview></bl-file-group-preview>
@@ -19,7 +19,7 @@
         <bl-column>Lease status</bl-column>
         <bl-column>Last modified</bl-column>
     </bl-thead>
-    <bl-row *ngFor="let container of data.items | async" [link]="['/data/', container.id]" [key]="container.id" 
+    <bl-row *ngFor="let container of data.items | async" [link]="['/data/', container.id]" [key]="container.id"
         [contextmenu]="contextmenu(container)">
         <bl-cell>{{container.name}}</bl-cell>
         <bl-cell>{{container.lease?.state}}</bl-cell>
