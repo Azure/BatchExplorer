@@ -77,8 +77,7 @@ export class StorageService {
     /**
      * List blobs in the linked storage account container that match the supplied prefix and filter
      * @param container - Promise to return the name of the blob container
-     * @param blobPrefix - Optional prefix usesd for filtering blobs
-     * @param onError - Callback for interrogating the server error to see if we want to handle it.
+     * @param options - Options for filtering blobs
      */
     public listBlobs(
         container: Promise<string>,
@@ -197,6 +196,17 @@ export class StorageService {
         return this._callStorageClient((client) => {
             return client.getBlobToLocalFile(container, blobName, fileName, options);
         });
+    }
+
+    /**
+     * Marks the specified blob for deletion if it exists. The blob is later
+     * deleted during garbage collection.
+     * @param container - Name of the container
+     * @param blobName - Fully prefixed blob path: "1001/$TaskOutput/myblob.txt"
+     * @param options - Optional parameters
+     */
+    public deleteBlobIfExists(container: string, blob: string, options: any = {}): Observable<any> {
+        return this._callStorageClient((client) => client.deleteBlobIfExists(container, blob, options));
     }
 
     /**

@@ -40,7 +40,7 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
         if (inputs.upload) {
             this.fileExplorerConfig = {
                 canDropExternalFiles: Boolean(this.upload),
-                canDeleteFiles: true,
+                canDeleteFiles: Boolean(this.delete),
             };
         }
     }
@@ -65,13 +65,6 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
 
     public handleDeleteEvent(event: FileDeleteEvent) {
         const { path } = event;
-        console.log("BlobFilesBrowserComponent.handleDeleteEvent: ", event);
-
-        // TODO: Check with Tim as to whether i can chain 2 background tasks to run one after another.
-        // In which case most of this can be moved into DataContainerFilesComponent.
-        // task 1: get files to delete
-        // task 2: delete files
-
         this.dialogService.confirm(`Delete files`, {
             description: event.isDirectory
                 ? `All files will be deleted from the folder: ${path}`
@@ -81,9 +74,10 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
                 const data = this.storageService.listBlobs(Promise.resolve(this.container), listParams);
                 const obs = data.fetchAll().flatMap(() => data.items.take(1));
                 obs.subscribe((items) => {
-                    console.log("GOT ITEMS: ", items);
                     data.dispose();
                     this.delete(items.toArray()).subscribe(() => {
+                        // TODO: remove console.log
+                        console.log("after delete, refreshing: ", event.path);
                         this.fileNavigator.refresh(event.path);
                     });
                 });

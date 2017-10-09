@@ -68,19 +68,29 @@ export class DataContainerFilesComponent implements OnDestroy {
     public handleFileDelete(files: File[]) {
         const fileCount = files.length;
         const taskTitle = `Delete ${fileCount} files from ${this.container.name}`;
+        // TODO: Delete console.log
         console.log(`handleFileDelete with ${fileCount} files`);
-
-        // NOTE: Just pretending to delete the files at the moment as i need to check with the
-        // storage team as to the best way to batch delete a heap of files as there could be lots
-        // of them in a container.
 
         return this.backgroundTaskService.startTask(taskTitle, (task) => {
             let deleted = 0;
-            let observable = Observable.interval(250).take(fileCount);
+            // NOTE: slight pause in-between deletes to ease load on storage account
+            // may or may not be a great idea.
+            const observable = Observable.interval(100).take(fileCount);
             observable.subscribe({
                 next: (i) => {
                     deleted++;
                     console.log("deleting: ", this.container.id, files[i].name);
+                    this.storageService.deleteBlobIfExists(this.container.id, files[i].name).subscribe({
+                        next: (response) => {
+                            if (response) {
+                                // Get cache and remove file from it. Need Tim to check cache working
+                            }
+                        },
+                        error: (error) => {
+                            // TODO: might want to store this somewhere and try again.
+                            log.error("Failed to delete blob", error);
+                        },
+                    });
                     task.name.next(`${taskTitle} (${deleted}/${fileCount})`);
                     task.progress.next(deleted / fileCount * 100);
                 },
@@ -89,9 +99,6 @@ export class DataContainerFilesComponent implements OnDestroy {
                     // tslint:disable-next-line:max-line-length
                     const message = `${deleted} files were successfully removed from the file group: ${this.container.name}`;
                     this.notificationService.success("Removed files from group", message, { persist: true });
-                },
-                error: (error) => {
-                    log.error("Failed to delete blobs", error);
                 },
             });
 
