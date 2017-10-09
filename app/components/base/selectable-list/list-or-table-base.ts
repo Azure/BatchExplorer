@@ -7,8 +7,9 @@ import { SelectableList } from "./selectable-list";
 export class ListOrTableBase extends SelectableList implements OnDestroy {
     @ViewChild(TableComponent)
     public set table(table: TableComponent) {
-        this._table = table;
         if (table && this._table !== table) {
+            this._table = table;
+            this._clearTableSubs();
             this._tableSubs.push(table.selectedItemsChange.subscribe((items) => {
                 this.selectedItemsChange.emit(items);
                 this.selectedItems = items;

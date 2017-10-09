@@ -39,7 +39,7 @@ const applicationMap: Map<string, BatchApplication> = new Map()
         ],
     }));
 
-describe("ApplicationPackageTableComponent", () => {
+fdescribe("ApplicationPackageTableComponent", () => {
     let fixture: ComponentFixture<ApplicationPackageTableComponent>;
     let component: ApplicationPackageTableComponent;
     let applicationServiceSpy: any;
