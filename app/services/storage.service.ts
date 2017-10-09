@@ -18,8 +18,7 @@ import { ListBlobOptions } from "./storage";
 import { StorageClientService } from "./storage-client.service";
 
 export interface ListBlobParams {
-    container?: Promise<string>;
-    blobPrefix?: string;
+    container?: string;
 }
 
 export interface GetContainerParams {
@@ -31,6 +30,7 @@ export interface ListContainerParams {
 }
 
 export interface BlobFileParams extends ListBlobParams {
+    blobPrefix?: string;
     blobName?: string;
 }
 
@@ -65,7 +65,7 @@ export class StorageService {
 
     private _containerCache = new DataCache<BlobContainer>();
     private _blobListCache = new TargetedDataCache<ListBlobParams, File>({
-        key: ({ container, blobPrefix }) => container + "/" + blobPrefix,
+        key: ({ container }) => container,
     }, "url");
 
     constructor(private storageClient: StorageClientService, private fs: FileSystemService) { }
@@ -80,7 +80,7 @@ export class StorageService {
      * @param options - Options for filtering blobs
      */
     public listBlobs(
-        container: Promise<string>,
+        container: string,
         options: ListBlobOptions = {})
         : RxListProxy<ListBlobParams, File> {
 
@@ -88,13 +88,11 @@ export class StorageService {
         return new RxStorageListProxy<ListBlobParams, File>(File, this.storageClient, {
             cache: (params) => this.getBlobFileCache(params),
             getData: (client, params, options, continuationToken) => {
-                return params.container.then((containerName) => {
-                    return client.listBlobs(
-                        containerName,
-                        options,
-                        continuationToken,
-                    );
-                });
+                return client.listBlobs(
+                    params.container,
+                    options,
+                    continuationToken,
+                );
             },
             initialParams: { container: container },
             initialOptions,
@@ -112,12 +110,12 @@ export class StorageService {
         return new FileNavigator({
             basePath: prefix,
             loadPath: (folder) => {
-                return this.listBlobs(Promise.resolve(container), {
+                return this.listBlobs(container, {
                     recursive: false,
                     startswith: folder,
                 });
             },
-            getFile: (filename: string) => this.getBlobContent(Promise.resolve(container), filename),
+            getFile: (filename: string) => this.getBlobContent(container, filename),
             onError: options.onError,
         });
     }
@@ -125,20 +123,18 @@ export class StorageService {
     /**
      * Returns all user-defined metadata, standard HTTP properties, and system
      * properties for the blob.
-     * @param container - Promise to return the name of the blob container
+     * @param container - Id of the blob container
      * @param blobName - Name of the blob, not including prefix
      * @param blobPrefix - Optional prefix of the blob, i.e. {container}/{blobPrefix}+{blobName}
      */
-    public getBlobProperties(container: Promise<string>, blobName: string, blobPrefix?: string)
+    public getBlobProperties(container: string, blobName: string, blobPrefix?: string)
         : RxEntityProxy<BlobFileParams, File> {
 
         const initialOptions: any = {};
         return new RxStorageEntityProxy<BlobFileParams, File>(File, this.storageClient, {
             cache: (params) => this.getBlobFileCache(params),
             getFn: (client, params) => {
-                return params.container.then((containerName) => {
-                    return client.getBlobProperties(containerName, params.blobName, params.blobPrefix, initialOptions);
-                });
+                return client.getBlobProperties(params.container, params.blobName, params.blobPrefix, initialOptions);
             },
             initialParams: {
                 container: container,
@@ -151,11 +147,11 @@ export class StorageService {
 
     /**
      * Downloads a blob into a text string.
-     * @param container - Promise to return the name of the blob container
+     * @param container - Id of the blob container
      * @param blobName - Name of the blob, not including prefix
      * @param blobPrefix - Optional prefix of the blob, i.e. {container}/{blobPrefix}+{blobName}
      */
-    public getBlobContent(container: Promise<string>, blobName: string, blobPrefix?: string): FileLoader {
+    public getBlobContent(container: string, blobName: string, blobPrefix?: string): FileLoader {
         return new FileLoader({
             filename: blobName,
             source: FileSource.blob,
@@ -167,17 +163,13 @@ export class StorageService {
             content: (options: FileLoadOptions) => {
                 return this._callStorageClient((client) => {
                     const pathToBlob = `${blobPrefix || ""}${blobName}`;
-                    return container.then((containerName) => {
-                        return client.getBlobContent(containerName, pathToBlob, options);
-                    });
+                    return client.getBlobContent(container, pathToBlob, options);
                 });
             },
             download: (dest: string) => {
                 return this._callStorageClient((client) => {
-                    return container.then((containerName) => {
-                        const pathToBlob = `${blobPrefix || ""}${blobName}`;
-                        return client.getBlobToLocalFile(containerName, pathToBlob, dest);
-                    });
+                    const pathToBlob = `${blobPrefix || ""}${blobName}`;
+                    return client.getBlobToLocalFile(container, pathToBlob, dest);
                 });
             },
         });

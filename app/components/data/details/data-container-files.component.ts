@@ -75,7 +75,7 @@ export class DataContainerFilesComponent implements OnDestroy {
             let deleted = 0;
             // NOTE: slight pause in-between deletes to ease load on storage account
             // may or may not be a great idea.
-            const observable = Observable.interval(100).take(fileCount);
+            let observable = Observable.interval(100).take(fileCount);
             observable.subscribe({
                 next: (i) => {
                     deleted++;
@@ -84,10 +84,16 @@ export class DataContainerFilesComponent implements OnDestroy {
                         next: (response) => {
                             if (response) {
                                 // Get cache and remove file from it. Need Tim to check cache working
+                                let cache = this.storageService.getBlobFileCache({
+                                    container: this.container.id,
+                                });
+
+                                console.log("got cache: ", cache);
+                                console.log("removing: ", files[i]);
+                                cache.deleteItem(files[i]);
                             }
                         },
                         error: (error) => {
-                            // TODO: might want to store this somewhere and try again.
                             log.error("Failed to delete blob", error);
                         },
                     });
