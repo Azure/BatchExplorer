@@ -1,31 +1,34 @@
-import { EventEmitter, ViewChild } from "@angular/core";
+import { EventEmitter, OnDestroy, ViewChild } from "@angular/core";
 import { MdDialog, MdDialogConfig } from "@angular/material";
 import { autobind } from "core-decorators";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
 import { DeleteSelectedItemsDialogComponent } from "app/components/base/list-and-show-layout";
 import { QuickListComponent } from "app/components/base/quick-list";
 import { log } from "app/utils";
 
-export class SelectableList {
+export class SelectableList implements OnDestroy {
     // NEED TO REDEFINE this in the child https://github.com/angular/angular/issues/5415
     @ViewChild(QuickListComponent)
     public set list(list: QuickListComponent | SelectableList) {
         this._list = list;
-        if (list) {
-            list.selectedItemsChange.subscribe((items) => {
+        this._clearListSubs();
+        if (list && this._list !== list) {
+            console.log("THis change??");
+            this._listSubs.push(list.selectedItemsChange.subscribe((items) => {
                 this.selectedItemsChange.emit(items);
                 this.selectedItems = items;
-            });
+            }));
 
-            list.activatedItemChange.subscribe((event) => {
+            this._listSubs.push(list.activatedItemChange.subscribe((event) => {
                 if (!(event.initialValue && this.activatedItem)) {
                     this.activatedItemChange.emit(event);
                     this.activatedItem = event.key;
                 }
-            });
+            }));
         }
     }
+
     public get list() { return this._list; }
 
     /**
@@ -45,8 +48,13 @@ export class SelectableList {
     public activatedItemChange = new EventEmitter<string>();
 
     private _list: QuickListComponent | SelectableList;
+    private _listSubs: Subscription[] = [];
 
     constructor(protected dialog?: MdDialog) {
+    }
+
+    public ngOnDestroy() {
+        this._clearListSubs();
     }
 
     /**
@@ -82,5 +90,9 @@ export class SelectableList {
                 this.clearSelection();
             }
         });
+    }
+
+    private _clearListSubs() {
+        this._listSubs.forEach(x => x.unsubscribe());
     }
 }
