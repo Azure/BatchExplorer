@@ -14,7 +14,6 @@ export class SelectableList implements OnDestroy {
         this._list = list;
         this._clearListSubs();
         if (list && this._list !== list) {
-            console.log("THis change??");
             this._listSubs.push(list.selectedItemsChange.subscribe((items) => {
                 this.selectedItemsChange.emit(items);
                 this.selectedItems = items;
