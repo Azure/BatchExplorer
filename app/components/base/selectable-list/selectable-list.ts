@@ -11,9 +11,9 @@ export class SelectableList implements OnDestroy {
     // NEED TO REDEFINE this in the child https://github.com/angular/angular/issues/5415
     @ViewChild(QuickListComponent)
     public set list(list: QuickListComponent | SelectableList) {
-        this._list = list;
-        this._clearListSubs();
         if (list && this._list !== list) {
+            this._clearListSubs();
+            this._list = list;
             this._listSubs.push(list.selectedItemsChange.subscribe((items) => {
                 this.selectedItemsChange.emit(items);
                 this.selectedItems = items;
@@ -93,5 +93,6 @@ export class SelectableList implements OnDestroy {
 
     private _clearListSubs() {
         this._listSubs.forEach(x => x.unsubscribe());
+        this._listSubs = [];
     }
 }

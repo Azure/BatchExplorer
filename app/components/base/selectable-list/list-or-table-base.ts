@@ -34,5 +34,6 @@ export class ListOrTableBase extends SelectableList implements OnDestroy {
 
     private _clearTableSubs() {
         this._tableSubs.forEach(x => x.unsubscribe());
+        this._tableSubs = [];
     }
 }
