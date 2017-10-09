@@ -186,4 +186,8 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
             }),
         ]);
     }
+
+    public trackByFn(job: Job, index: number) {
+        return job.id;
+    }
 }

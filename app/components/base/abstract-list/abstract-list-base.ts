@@ -103,6 +103,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
 
         this._subs.push(this._activeItemKey.subscribe(x => {
             this.selectedItems = x ? [x.key] : [];
+
             this.activatedItemChange.emit(x);
             if (!x || x.key !== this._activeItemInput) {
                 this.activeItemChange.emit(x && x.key);
