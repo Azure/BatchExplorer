@@ -1,9 +1,9 @@
 import { Location } from "@angular/common";
 import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { MdIconRegistry, MdSidenav } from "@angular/material";
+import { DomSanitizer } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
-import { DomSanitizer } from "@angular/platform-browser";
 import { registerIcons } from "app/config";
 import {
     AccountService, AdalService, AutoscaleFormulaService, CommandService, NcjTemplateService,
