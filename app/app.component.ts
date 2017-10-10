@@ -1,9 +1,10 @@
 import { Location } from "@angular/common";
 import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { MdIconRegistry, MdSidenav } from "@angular/material";
+import { DomSanitizer } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
-import { DomSanitizer } from "@angular/platform-browser";
+import { NotificationService } from "app/components/base/notifications";
 import { registerIcons } from "app/config";
 import {
     AccountService, AdalService, AutoscaleFormulaService, CommandService, NcjTemplateService,
@@ -50,6 +51,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         private vmSizeService: VmSizeService,
         private pricingService: PricingService,
         private ncjTemplateService: NcjTemplateService,
+        private notificationService: NotificationService,
         private predefinedFormulaService: PredefinedFormulaService,
     ) {
         this.autoscaleFormulaService.init();
@@ -77,6 +79,24 @@ export class AppComponent implements AfterViewInit, OnInit {
         });
 
         registerIcons(mdIconRegistry, sanitizer);
+
+        setTimeout(() => {
+            this.notificationService.info("Hey", "Something happenned", {
+                action: () => console.log("DO something"),
+                actions: [
+                    { name: "Option 1", do: () => console.log("Do option 1") },
+                    { name: "Option 2", do: () => console.log("Do option 2") },
+                ],
+            });
+
+            this.notificationService.success("Hey", "Something great", {
+                action: () => console.log("DO something sucessfull"),
+            });
+
+            this.notificationService.error("Hey", "Something bad", {
+                action: () => console.log("DO something bad"),
+            });
+        });
     }
 
     public ngAfterViewInit() {
