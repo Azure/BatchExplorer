@@ -9,12 +9,12 @@ import { DropdownModule } from "../dropdown";
 import { NotificationContainerComponent } from "./notification-container.component";
 import { NotificationService } from "./notification-service";
 import { NotificationComponent } from "./notification.component";
-import { PersistentNotificationDropdownComponent } from "./persistent-dropdown";
+import { PersistedNotificationDropdownComponent } from "./persisted-dropdown";
 
 const components = [
     NotificationComponent,
     NotificationContainerComponent,
-    PersistentNotificationDropdownComponent,
+    PersistedNotificationDropdownComponent,
 ];
 
 @NgModule({

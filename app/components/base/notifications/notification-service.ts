@@ -30,8 +30,7 @@ export class NotificationService {
 
         const notification = new Notification(level, title, message, config);
         this._notifications.next(this._notifications.getValue().push(notification));
-        // TODO revert back
-        // this._registerForDismiss(notification);
+        this._registerForDismiss(notification);
         return notification;
     }
 

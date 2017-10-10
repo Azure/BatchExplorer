@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input, HostListener } from "@angular/core";
+import { Component, HostBinding, HostListener, Input } from "@angular/core";
 
 import { Notification, NotificationAction } from "./notification";
 import { NotificationService } from "./notification-service";
@@ -22,7 +22,7 @@ export class NotificationComponent {
     }
 
     @HostListener("click")
-    public performMainAction(){
+    public performMainAction() {
         if (this.notification.config.action) {
             this.notification.config.action();
             this.dismiss();
