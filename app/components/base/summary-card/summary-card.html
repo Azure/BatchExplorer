@@ -1,0 +1,22 @@
+<div class="content">
+    <div class="title">
+        <ng-content select="[summaryTitle]"></ng-content>
+    </div>
+    <div class="subtitle">
+        <ng-content select="[summarySubtitle]"></ng-content>
+    </div>
+    <div class="details">
+        <ng-content select="[summaryContent]"></ng-content>
+    </div>
+    <div class="flex-separator "></div>
+    <div class="summary-footer">
+        <div class="actions">
+            <ng-content select="[summaryActions]"></ng-content>
+        </div>
+        <div class="flex-separator "></div>
+        <div class="tags">
+            <ng-content select="[summaryTags]"></ng-content>
+        </div>
+    </div>
+</div>
+<ng-content select="[summaryTile]"></ng-content>
