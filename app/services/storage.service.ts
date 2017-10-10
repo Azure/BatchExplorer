@@ -66,7 +66,7 @@ export class StorageService {
     private _containerCache = new DataCache<BlobContainer>();
     private _blobListCache = new TargetedDataCache<ListBlobParams, File>({
         key: ({ container }) => container,
-    }, "url");
+    }, "name");
 
     constructor(private storageClient: StorageClientService, private fs: FileSystemService) { }
 
@@ -108,6 +108,7 @@ export class StorageService {
      */
     public navigateContainerBlobs(container: string, prefix?: string, options: NavigateBlobsOptions = {}) {
         return new FileNavigator({
+            cache: this.getBlobFileCache({ container: container }),
             basePath: prefix,
             loadPath: (folder) => {
                 return this.listBlobs(container, {

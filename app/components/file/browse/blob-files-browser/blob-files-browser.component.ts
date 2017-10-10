@@ -75,12 +75,10 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
                 const obs = data.fetchAll().flatMap(() => data.items.take(1));
                 obs.subscribe((items) => {
                     data.dispose();
-                    this.delete(items.toArray()).subscribe({
-                        complete: () => {
-                            // TODO: remove console.log
-                            console.log("after delete, refreshing: ", event.path);
-                            this.fileNavigator.refresh(event.path);
-                        },
+                    this.delete(items.toArray()).subscribe(() => {
+                        // TODO: remove console.log
+                        console.log("after delete, refreshing: ", event.path);
+                        this.fileNavigator.refresh(event.path);
                     });
                 });
 

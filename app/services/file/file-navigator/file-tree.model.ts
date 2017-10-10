@@ -112,12 +112,38 @@ export class FileTreeStructure {
                     return matchingChild;
                 }
             }
+
             return new FileTreeNode({
                 path: nodePath,
                 loadingStatus: LoadingStatus.Loading,
                 isDirectory: true,
                 isUnknown: true,
             });
+        }
+    }
+
+    public deleteNode(nodePath: string): boolean {
+        nodePath = CloudPathUtils.normalize(nodePath);
+        if (nodePath === "") { nodePath = "."; }
+        if (nodePath in this.directories) {
+            console.log("its a directory: ", nodePath);
+            // return this.directories[nodePath];
+            return true;
+        } else {
+            const parent = path.dirname(nodePath);
+            console.log("delete node parent: ", parent, this.directories);
+            if (parent in this.directories) {
+                console.log("delete parent in dirs: ", this.directories[parent]);
+                this.directories[parent].children.delete(nodePath);
+                // console.log("deleted node: ", this.directories[parent].children.size);
+                if (this.directories[parent].children.size === 0) {
+                    console.log("no more children in: ", parent);
+                }
+
+                return true;
+            }
+
+            return false;
         }
     }
 

@@ -1,14 +1,20 @@
 import { List } from "immutable";
-import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
+import { AsyncSubject, BehaviorSubject, Observable, Subscription } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { File, ServerError } from "app/models";
-import { RxListProxy } from "app/services/core";
+import { DataCache, RxListProxy } from "app/services/core";
 import { FileLoader } from "app/services/file";
 import { CloudPathUtils, ObjectUtils } from "app/utils";
 import { FileTreeNode, FileTreeStructure } from "./file-tree.model";
 
 export interface FileNavigatorConfig {
+    /**
+     *  Method that return the cache given the params.
+     * This allow the use of targeted data cache which depends on some params.
+     */
+    cache?: DataCache<File>;
+
     /**
      * Base path for the navigation. If you need to only show a sub folder.
      * If given it will act as if the root is that base path
@@ -51,6 +57,8 @@ export class FileNavigator {
 
     private _tree = new BehaviorSubject<FileTreeStructure>(null);
     private _loadPath: (folder: string) => RxListProxy<any, File>;
+    private _cache: DataCache<File>;
+    private _fileDeleted: Subscription;
 
     private _proxies: StringMap<RxListProxy<any, File>> = {};
     private _getFileLoader: (filename: string) => FileLoader;
@@ -63,6 +71,7 @@ export class FileNavigator {
         this._onError = config.onError;
         this._tree.next(new FileTreeStructure(this.basePath));
         this.tree = this._tree.asObservable();
+        this._cache = config.cache;
     }
 
     /**
@@ -70,6 +79,11 @@ export class FileNavigator {
      */
     public init() {
         this._loadFilesInPath("");
+        if (this._cache) {
+            this._fileDeleted = this._cache.deleted.subscribe((key: string) => {
+                this._removeFile(key);
+            });
+        }
     }
 
     /**
@@ -121,6 +135,9 @@ export class FileNavigator {
     }
 
     public dispose() {
+        if (this._fileDeleted) {
+            this._fileDeleted.unsubscribe();
+        }
         for (let proxy of ObjectUtils.values(this._proxies)) {
             proxy.dispose();
         }
@@ -129,6 +146,14 @@ export class FileNavigator {
     public isDirectory(path: string): Observable<boolean> {
         const node = this._tree.value.getNode(path);
         return this._checkIfDirectory(node);
+    }
+
+    private _removeFile(key: string) {
+        console.log("_removeFile: ", key, this._tree.value);
+        const deleted = this._tree.value.deleteNode(key);
+        // const node = this._tree.value.getNode(key);
+        console.log("deleted: ", deleted);
+        this.refresh(key);
     }
 
     private _checkIfDirectory(node: FileTreeNode): Observable<boolean> {
