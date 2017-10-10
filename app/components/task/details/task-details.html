@@ -2,7 +2,6 @@
     <div *ngIf="task && job" class="fit-details-container">
         <bl-summary-card>
             <div summaryTitle>{{task.id}} <span *ngIf="!!task.displayName"> - {{task.displayName}}</span> </div>
-            <div summarySubtitle><i class="fa" [ngClass]="decorator.stateIcon"></i> {{task.state}}</div>
             <div summaryDetails>Job: {{jobId}}</div>
             <bl-button-group summaryActions>
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
@@ -10,7 +9,7 @@
                 <bl-delete-button [entity]="task" [action]="deleteTask"></bl-delete-button>
                 <bl-clone-button [action]="cloneTask"></bl-clone-button>
             </bl-button-group>
-            <div summaryTile>
+            <div summaryRightContent>
                 <bl-task-timeline [job]="job" [task]="task"></bl-task-timeline>
             </div>
         </bl-summary-card>
