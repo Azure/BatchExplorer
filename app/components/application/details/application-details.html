@@ -1,14 +1,6 @@
 <bl-loading [status]="data.newDataStatus | async">
     <div *ngIf="application">
         <md-card class="overview">
-            <div class="actions">
-                <bl-button-group>
-                    <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                    <bl-add-button title="Add package" [action]="addPackage"></bl-add-button>
-                    <bl-edit-button [action]="editApplication"></bl-edit-button>
-                    <bl-delete-button [entity]="application" [action]="deleteApplication"></bl-delete-button>
-                </bl-button-group>
-            </div>
             <div class="content">
                 <md-card-title>{{decorator.id}}</md-card-title>
                 <md-card-subtitle>
@@ -16,6 +8,14 @@
                     <span *ngIf="application.allowUpdates"> <b>(unlocked)</b></span>
                     <span *ngIf="!application.allowUpdates"> <b>(locked)</b></span>
                 </md-card-subtitle>
+                <div class="actions">
+                    <bl-button-group>
+                        <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+                        <bl-add-button title="Add package" [action]="addPackage"></bl-add-button>
+                        <bl-edit-button [action]="editApplication"></bl-edit-button>
+                        <bl-delete-button [entity]="application" [action]="deleteApplication"></bl-delete-button>
+                    </bl-button-group>
+                </div>
             </div>
         </md-card>
         <bl-application-error-display [application]="application"></bl-application-error-display>

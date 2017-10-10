@@ -8,7 +8,7 @@
             <div class="option" [class.active]="!showAllPoolTasks" (click)="updateShowAllPoolTasks(false)">Only Job</div>
             <div class="option" [class.active]="showAllPoolTasks" (click)="updateShowAllPoolTasks(true)">Pool</div>
         </div>
-        <bl-gauge [value]="runningTasksCount" [options]="gaugeOptions" [size]="170"></bl-gauge>
+        <bl-gauge [value]="runningTasksCount" [options]="gaugeOptions" [size]="140"></bl-gauge>
     </div>
     <div class="completed">
         <div class="succeeded">

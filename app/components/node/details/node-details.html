@@ -1,17 +1,17 @@
 <bl-loading [status]="data.newDataStatus | async">
     <div *ngIf="pool && node" class="fit-details-container">
         <md-card class="overview">
-            <div class="actions">
-                <bl-button-group>
-                    <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                    <bl-button color="light" [action]="connect" icon="fa fa-plug"></bl-button>
-                    <bl-delete-button [entity]="node" [action]="delete"></bl-delete-button>
-                </bl-button-group>
-            </div>
             <div class="content">
                 <md-card-title>{{node.id}}</md-card-title>
                 <md-card-subtitle> {{node.state}}</md-card-subtitle>
                 <p>Pool: {{poolId}}</p>
+                <div class="actions">
+                    <bl-button-group>
+                        <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+                        <bl-button color="light" [action]="connect" icon="fa fa-plug"></bl-button>
+                        <bl-delete-button [entity]="node" [action]="delete"></bl-delete-button>
+                    </bl-button-group>
+                </div>
             </div>
         </md-card>
         <bl-start-task-error-display [startTaskInfo]="node?.startTaskInfo"></bl-start-task-error-display>

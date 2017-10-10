@@ -1,7 +1,6 @@
 <bl-loading [status]="data.newDataStatus | async" [error]="data.error | async">
     <div *ngIf="pool && poolDecorator">
         <md-card class="overview">
-
             <div class="content">
                 <md-card-title>{{pool.id}}</md-card-title>
                 <md-card-subtitle>{{pool.vmSize}}, {{pool.allocationState}}</md-card-subtitle>

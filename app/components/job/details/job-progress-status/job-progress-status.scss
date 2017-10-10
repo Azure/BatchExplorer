@@ -9,14 +9,14 @@ bl-job-progress-status {
     }
 
     .running {
-        width: 180px;
-        height: 170px;
+        // width: 180px;
+        height: 140px;
     }
 
     .queued, .completed {
         text-align: center;
         .value {
-            font-size: 20px;
+            font-size: 16px;
         }
 
         .label {
@@ -25,11 +25,11 @@ bl-job-progress-status {
     }
 
     .queued {
-        margin: 82px 10px 0;
+        margin: 66px 10px 0;
     }
 
     .completed {
-        margin: 58px 10px 0;
+        margin: 32px 10px 0;
 
         > .succeeded {
             color: map-get($success, 500);
