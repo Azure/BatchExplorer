@@ -42,12 +42,18 @@ export interface FileExplorerConfig {
      * @default false
      */
     canDropExternalFiles?: boolean;
+
+    /**
+     * If log file can be automatically refreshed(Tail)
+     */
+    tailable?: boolean;
 }
 
 const fileExplorerDefaultConfig: FileExplorerConfig = {
     showTreeView: true,
     selectable: FileExplorerSelectable.none,
     canDropExternalFiles: false,
+    tailable: false,
 };
 
 /**

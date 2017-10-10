@@ -1,6 +1,6 @@
 <ng-container [ngSwitch]="fileType">
     <div *ngSwitchCase="FileType.log" class="viewer-container log">
-        <bl-log-file-viewer [fileLoader]="fileLoader" [tail]="false"></bl-log-file-viewer>
+        <bl-log-file-viewer [fileLoader]="fileLoader" [tailable]="tailable"></bl-log-file-viewer>
     </div>
     <div *ngSwitchCase="FileType.image" class="viewer-container image">
         <bl-image-file-viewer [fileLoader]="fileLoader"></bl-image-file-viewer>

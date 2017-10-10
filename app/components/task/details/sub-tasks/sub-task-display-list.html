@@ -3,7 +3,7 @@
         <bl-quick-list-item-status [status]="taskStatus(task)" [tooltip]="taskStatusText(task)">
         </bl-quick-list-item-status>
 
-        <h4 bl-quick-list-item-title>{{task.id}}</h4>
+        <div bl-quick-list-item-title>{{task.id}}</div>
         <p bl-quick-list-item-field>{{task.state}}</p>
         <div bl-quick-list-item-preview>
             <bl-task-preview [task]="task"></bl-task-preview>

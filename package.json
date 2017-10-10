@@ -117,6 +117,7 @@
     "@angular/platform-browser-dynamic": "4.4.4",
     "@angular/router": "4.4.4",
     "@angular/tsc-wrapped": "4.4.4",
+    "@tweenjs/tween.js": "~17.1.1",
     "@types/node-fetch": "~1.6.7",
     "azure-batch": "~2.2.0",
     "azure-storage": "~2.5.0",

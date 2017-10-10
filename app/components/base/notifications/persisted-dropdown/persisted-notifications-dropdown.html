@@ -15,6 +15,11 @@
                 <div class="title">{{notification.title}}</div>
                 <div class="message">{{notification.message}}</div>
             </div>
+            <div class="actions">
+                <bl-clickable *ngFor="let action of notification.config.actions" (click)="performAction($event, notification, action)" class="action">
+                    {{action.name}}
+                </bl-clickable>
+            </div>
             <i class="dismiss fa fa-times" (click)="dismiss($event, notification)"></i>
         </div>
         <div class="dropdown-item clear-all" *ngIf="notifications.size > 0" (click)="dismissAll()">

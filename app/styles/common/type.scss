@@ -7,13 +7,13 @@
 
 body {
     font-family: $main-font;
-    font-size: $baseFontSize;
+    font-size: $font-size-base;
     line-height: $baseLineHeight;
     color: $textColor;
 }
 
 p {
-    font-size: $baseFontSize;
+    font-size: $font-size-base;
     margin: 0 0 $baseLineHeight / 2;
     color: $genericGray;
 }

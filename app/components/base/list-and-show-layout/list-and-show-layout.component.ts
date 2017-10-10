@@ -170,9 +170,11 @@ export class ListAndShowLayoutComponent implements AfterViewInit, OnChanges, OnD
     private _clearListSubs() {
         if (this._activatedItemSub) {
             this._activatedItemSub.unsubscribe();
+            this._activatedItemSub = null;
         }
         if (this._selectedItemsSub) {
             this._selectedItemsSub.unsubscribe();
+            this._selectedItemsSub = null;
         }
     }
 }

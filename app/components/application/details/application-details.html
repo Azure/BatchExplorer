@@ -13,8 +13,8 @@
                 <md-card-title>{{decorator.id}}</md-card-title>
                 <md-card-subtitle>
                     <i class="fa" [ngClass]="application.allowUpdates ? 'fa-unlock-alt' : 'fa-lock'"></i> {{decorator.displayName}}
-                    <div *ngIf="application.allowUpdates"> <b>(unlocked)</b></div>
-                    <div *ngIf="!application.allowUpdates"> <b>(locked)</b></div>
+                    <span *ngIf="application.allowUpdates"> <b>(unlocked)</b></span>
+                    <span *ngIf="!application.allowUpdates"> <b>(locked)</b></span>
                 </md-card-subtitle>
             </div>
         </md-card>
