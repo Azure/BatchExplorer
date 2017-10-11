@@ -4,10 +4,10 @@
             <div summaryTitle>{{pool.id}}</div>
             <div summarySubtitle>{{pool.vmSize}}, {{pool.allocationState}}</div>
             <div summaryDetails>
-                <p>Last resized {{poolDecorator.lastResized}}</p>
-                <p>
+                <div>Last resized {{poolDecorator.lastResized}}</div>
+                <div>
                     <i class="fa fa-{{poolDecorator.poolOsIcon}}" aria-hidden="true"></i> {{poolDecorator.poolOs}}
-                </p>
+                </div>
             </div>
             <bl-tags summaryTags [tags]="pool.tags" [editable]="true" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
             <bl-button-group summaryActions>

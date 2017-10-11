@@ -24,7 +24,11 @@ bl-summary-card {
                 }
 
                 > .subtitle {
+                    color: $generic-grey;
+                }
 
+                > .details {
+                    color: $generic-grey;
                 }
             }
         }
@@ -32,6 +36,7 @@ bl-summary-card {
         > .summary-footer {
             display: flex;
             align-items: center;
+            margin-top: 10px;
         }
     }
 
