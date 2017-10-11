@@ -35,7 +35,7 @@ bl-editable-table, .editable-table {
             width: 26px;
         }
 
-        input, md-select {
+        input, mat-select {
             width: 100%;
             border: none;
             outline: none;
@@ -54,7 +54,7 @@ bl-editable-table, .editable-table {
             font-size: 12px;
         }
 
-        md-select {
+        mat-select {
             // "input" controls are Arial.
             font-family: Arial;
             padding-top: 0;

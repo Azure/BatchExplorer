@@ -52,7 +52,7 @@ describe("PoolUtils", () => {
                         sku: "2012-R2-Datacenter",
                         version: "latest",
                     },
-                    nodeAgentSKUId: "batch.node.windows amd64",
+                    nodeAgentSKUId: "batch.node.windows amat64",
                 },
             });
 
@@ -115,7 +115,7 @@ describe("PoolUtils", () => {
                         sku: "2012-R2-Datacenter",
                         version: "latest",
                     },
-                    nodeAgentSKUId: "batch.node.windows amd64",
+                    nodeAgentSKUId: "batch.node.windows amat64",
                 },
             });
 
@@ -127,7 +127,7 @@ describe("PoolUtils", () => {
                         sku: "rendering",
                         version: "latest",
                     },
-                    nodeAgentSKUId: "batch.node.windows amd64",
+                    nodeAgentSKUId: "batch.node.windows amat64",
                 },
             });
 

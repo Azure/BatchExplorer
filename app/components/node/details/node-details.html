@@ -12,7 +12,7 @@
             </bl-button-group>
         </bl-summary-card>
         <bl-start-task-error-display [pool]="pool" [nodeId]="nodeId" [startTaskInfo]="node?.startTaskInfo"></bl-start-task-error-display>
-        <md-card class="details">
+        <mat-card class="details">
             <bl-tab-group>
                 <bl-tab key="configuration">
                     <bl-tab-label>Configuration</bl-tab-label>
@@ -23,6 +23,6 @@
                     <bl-node-file-browse [poolId]="poolId" [node]="node" [nodeId]="nodeId"></bl-node-file-browse>
                 </bl-tab>
             </bl-tab-group>
-        </md-card>
+        </mat-card>
     </div>
 </bl-loading>

@@ -46,8 +46,8 @@ fieldset {
             padding: 4px 0;;
         }
 
-        md-radio-group {
-            md-radio-button {
+        mat-radio-group {
+            mat-radio-button {
                 font-size: 11pt;
             }
         }
@@ -126,11 +126,11 @@ fieldset {
             margin-bottom: 5px;
         }
 
-        md-input-container {
+        mat-form-field {
             width: 100%;
         }
 
-        md-input-container.ng-invalid.ng-touched {
+        mat-form-field.ng-invalid.ng-touched {
             label {
                 color: $validation-error-color;
 
@@ -148,7 +148,7 @@ fieldset {
                 }
             }
 
-            md-hint {
+            mat-hint {
                 color: $validation-error-color;
             }
         }
@@ -172,12 +172,12 @@ fieldset {
     }
 }
 
-.form-element md-checkbox {
+.form-element mat-checkbox {
     display: block;
     margin: 10px 0;
 }
 
-md-tab-group.form-tabs {
+mat-tab-group.form-tabs {
     .mat-tab-label {
         min-width: auto;
         line-height: 32px;

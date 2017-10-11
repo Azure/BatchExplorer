@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
-import { MdDialog, MdDialogConfig } from "@angular/material";
+import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs/Subscription";
@@ -36,7 +36,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     constructor(
         private activatedRoute: ActivatedRoute,
         private applicationService: ApplicationService,
-        private dialog: MdDialog,
+        private dialog: MatDialog,
         private router: Router,
         private sidebarManager: SidebarManager,
         private viewContainerRef: ViewContainerRef) {
@@ -88,7 +88,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public deleteApplication() {
-        let config = new MdDialogConfig();
+        let config = new MatDialogConfig();
         config.viewContainerRef = this.viewContainerRef;
         const dialogRef = this.dialog.open(DeleteApplicationDialogComponent, config);
         dialogRef.componentInstance.applicationId = this.application.id;

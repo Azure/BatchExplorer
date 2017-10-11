@@ -10,19 +10,25 @@
         <tbody>
             <tr *ngFor="let item of items.controls; let i=index; let isLast=last" [formGroupName]="i">
                 <td style="width: 45%">
-                    <md-select formControlName="applicationId" (change)="applicationSelected($event, i)">
-                        <!-- TODO: toLowerCase() is for a bug in the API, it should be case preserving, but it's not -->
-                        <!-- TODO: Material seems to do case sensitive matching, which i also think is a bug -->
-                        <md-option *ngFor="let application of applications" [value]="application.id.toLowerCase()">{{ application.id }}</md-option>
-                    </md-select>
+                    <md-form-field>
+                        <mat-select formControlName="applicationId" (change)="applicationSelected($event, i)">
+                            <!-- TODO: toLowerCase() is for a bug in the API, it should be case preserving, but it's not -->
+                            <!-- TODO: Material seems to do case sensitive matching, which i also think is a bug -->
+                            <mat-option *ngFor="let application of applications" [value]="application.id.toLowerCase()">{{ application.id }}</mat-option>
+                        </mat-select>
+                    </md-form-field>
                 </td>
                 <td style="width: 45%">
-                    <md-select formControlName="version">
-                        <md-option *ngFor="let package of packageMap[i]" [value]="getPackageValue(package)">{{ package }}</md-option>
-                    </md-select>
+                    <md-form-field>
+                        <mat-select formControlName="version">
+                            <mat-option *ngFor="let package of packageMap[i]" [value]="getPackageValue(package)">{{ package }}</mat-option>
+                        </mat-select>
+                    </md-form-field>
                 </td>
                 <td class="action-column">
-                    <button *ngIf="!isLast" class="delete-item-btn" (click)="deleteItem(i)"><i class="fa fa-times" ></i></button>
+                    <button *ngIf="!isLast" class="delete-item-btn" (click)="deleteItem(i)">
+                        <i class="fa fa-times"></i>
+                    </button>
                 </td>
             </tr>
         </tbody>

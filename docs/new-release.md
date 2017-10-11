@@ -7,7 +7,7 @@ Every release should have a millestone with the list of issues fixed in that new
 
 Create a new issue in the millestone with the title `Prepare version x.y.z` and the following description:
 
-```md
+```mat
 - [ ] Update version in package.json
 - [ ] Update changelog
 - [ ] Double check the prod build is working
@@ -36,7 +36,7 @@ This should be targeted at user and not developper which means there is no need 
 Describe what functionality changed in the app with a link to the issue.
 
 Example:
-```md
+```mat
 * Added this awesome thing in the pool details [\#123](https://github.com/Azure/BatchLabs/issues/123)
 ```
 

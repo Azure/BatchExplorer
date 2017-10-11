@@ -7,25 +7,29 @@
     <div class="preview" (click)="focusGraph(AvailableGraph.Heatmap)" [class.focused]="focusedGraph === AvailableGraph.Heatmap">
         <div class="label">Heatmap</div>
         <div class="small-preview">
-            <bl-nodes-heatmap [pool]="pool" [nodes]="nodes" [showRunningTasks]="false"[showLegend]="false" [interactive]="false" [limitNode]="10"></bl-nodes-heatmap>
+            <bl-nodes-heatmap [pool]="pool" [nodes]="nodes" [showRunningTasks]="false" [showLegend]="false" [interactive]="false" [limitNode]="10"></bl-nodes-heatmap>
         </div>
     </div>
     <div class="preview" (click)="focusGraph(AvailableGraph.AvailableNodes)" [class.focused]="focusedGraph === AvailableGraph.AvailableNodes">
         <div class="label">Available nodes</div>
-        <bl-history-graph [max]="pool.targetNodes" class="small-preview" [history]="runningNodesHistory.history" [interactive]="false" [historySize]="selectedHistoryLength.value">
+        <bl-history-graph [max]="pool.targetNodes" class="small-preview" [history]="runningNodesHistory.history" [interactive]="false"
+            [historySize]="selectedHistoryLength.value">
         </bl-history-graph>
     </div>
     <div class="preview" (click)="focusGraph(AvailableGraph.RunningTasks)" [class.focused]="focusedGraph === AvailableGraph.RunningTasks">
         <div class="label">Running tasks</div>
-        <bl-history-graph [max]="maxRunningTasks" class="small-preview" [history]="runningTaskHistory.history" [interactive]="false" [historySize]="selectedHistoryLength.value">
+        <bl-history-graph [max]="maxRunningTasks" class="small-preview" [history]="runningTaskHistory.history" [interactive]="false"
+            [historySize]="selectedHistoryLength.value">
         </bl-history-graph>
     </div>
     <div class="config">
-        <md-select [formControl]="selectedHistoryLength" placeholder="History">
-            <md-option [value]="historyLength.OneMinute">1 Minute</md-option>
-            <md-option [value]="historyLength.TenMinute">10 Minutes</md-option>
-            <md-option [value]="historyLength.OneHour">1 Hour</md-option>
-        </md-select>
+        <md-form-field>
+            <mat-select [formControl]="selectedHistoryLength" placeholder="History">
+                <mat-option [value]="historyLength.OneMinute">1 Minute</mat-option>
+                <mat-option [value]="historyLength.TenMinute">10 Minutes</mat-option>
+                <mat-option [value]="historyLength.OneHour">1 Hour</mat-option>
+            </mat-select>
+        </md-form-field>
     </div>
 </div>
 

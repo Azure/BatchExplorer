@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { MdDialog } from "@angular/material";
+import { MatDialog } from "@angular/material";
 import { Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Observable, Subscription } from "rxjs";
@@ -66,7 +66,7 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
 
     constructor(
         router: Router,
-        dialog: MdDialog,
+        dialog: MatDialog,
         private jobService: JobService,
         private taskManager: BackgroundTaskService) {
         super(dialog);

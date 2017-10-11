@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
-import { MdDialog, MdDialogConfig } from "@angular/material";
+import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs";
@@ -44,7 +44,7 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
     private _paramsSubscribers: Subscription[] = [];
 
     constructor(
-        private dialog: MdDialog,
+        private dialog: MatDialog,
         private route: ActivatedRoute,
         private viewContainerRef: ViewContainerRef,
         private sidebarManager: SidebarManager,
@@ -93,7 +93,7 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public terminateTask() {
-        let config = new MdDialogConfig();
+        let config = new MatDialogConfig();
         config.viewContainerRef = this.viewContainerRef;
 
         const dialogRef = this.dialog.open(TerminateTaskDialogComponent, config);
@@ -106,7 +106,7 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public deleteTask() {
-        let config = new MdDialogConfig();
+        let config = new MatDialogConfig();
         config.viewContainerRef = this.viewContainerRef;
 
         const dialogRef = this.dialog.open(DeleteTaskDialogComponent, config);

@@ -21,8 +21,8 @@ export class PythonRpcServerProcess {
     public start(): Promise<void> {
         this._askForKill = false;
         return this._getCommandLine().then((data) => {
-            logger.info("Python path is", data.cmd, { args: data.args });
-            const child = this._spawedProcess = spawn(data.cmd, [...data.args]);
+            logger.info("Python path is", data.cmat, { args: data.args });
+            const child = this._spawedProcess = spawn(data.cmat, [...data.args]);
             pythonLogger.info("========================= STARTING PYTHON RPC SERVER PROCESS =========================");
 
             child.stdout.on("data", (data) => {
@@ -57,17 +57,17 @@ export class PythonRpcServerProcess {
         this.start();
     }
 
-    private async _getCommandLine(): Promise<{ cmd: string, args: string[] }> {
+    private async _getCommandLine(): Promise<{ cmat: string, args: string[] }> {
         const portPromise = process.env.HOT ? Constants.pythonServerPort.dev : Constants.pythonServerPort.prod;
 
         return portPromise.then((port) => {
             const portStr = port.toString();
             if (Constants.isAsar) {
-                return { cmd: asarPath, args: [portStr] };
+                return { cmat: asarPath, args: [portStr] };
             } else {
                 return getPythonPath().then(pythonPath => {
                     return {
-                        cmd: pythonPath,
+                        cmat: pythonPath,
                         args: [localPath, portStr],
                     };
                 });

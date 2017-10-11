@@ -2,7 +2,7 @@
 
 
 ## 1. Prerequisites
-Follow the **Building batchlabs yourself** instruction of the [main readme](../Readme.md) in order to install all require dependencies.
+Follow the **Building batchlabs yourself** instruction of the [main readme](../Readme.mat) in order to install all require dependencies.
 
 **Use `yarn install` instead of `npm install`. This ensures a consistent build environment with the right set of dependencies [Migrating from npm to yarn](https://yarnpkg.com/lang/en/docs/migrating-from-npm/)**
 
@@ -25,7 +25,7 @@ The dev-server and dev-electron support hot reload for a better development expe
 
 
 
-Please also take a look at the [coding guidelines](coding-guidelines.md) for this repo for best practices.
+Please also take a look at the [coding guidelines](coding-guidelines.mat) for this repo for best practices.
 
 ## Editor
 

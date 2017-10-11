@@ -23,8 +23,8 @@
 </div>
 <div class="progress-container">
     <div class="progress" *ngIf="progress" title="Job completion progress">
-        <md-progress-bar class="progress-bar" color="primary" mode="buffer" [value]="progress.completed" [bufferValue]="progress.buffer">
-        </md-progress-bar>
+        <mat-progress-bar class="progress-bar" color="primary" mode="buffer" [value]="progress.completed" [bufferValue]="progress.buffer">
+        </mat-progress-bar>
         <span class="progress-label">{{progress.completed}}%</span>
     </div>
 </div>

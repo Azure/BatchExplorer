@@ -42,7 +42,7 @@ bl-node-user-credentials-form {
         display: flex;
         align-items: center;
 
-        md-input-container {
+        mat-form-field {
             flex: 1;
             margin-right: 20px;
         }
@@ -52,7 +52,7 @@ bl-node-user-credentials-form {
 bl-ssh-key-picker > .ssh-key-picker {
     display: flex;
 
-    > md-input-container {
+    > mat-form-field {
         flex: 1;
 
         textarea {

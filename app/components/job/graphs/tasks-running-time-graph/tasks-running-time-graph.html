@@ -5,11 +5,13 @@
 <div class="graph-options">
     <div class="sort-by">
         Sort/group by
-        <md-select class="small" [formControl]="sortControl">
-            <md-option [value]="SortOption.default">Default</md-option>
-            <md-option [value]="SortOption.startTime">Start time</md-option>
-            <md-option [value]="SortOption.endTime">End time</md-option>
-            <md-option [value]="SortOption.node">Node</md-option>
-        </md-select>
+        <md-form-field>
+            <mat-select class="small" [formControl]="sortControl">
+                <mat-option [value]="SortOption.default">Default</mat-option>
+                <mat-option [value]="SortOption.startTime">Start time</mat-option>
+                <mat-option [value]="SortOption.endTime">End time</mat-option>
+                <mat-option [value]="SortOption.node">Node</mat-option>
+            </mat-select>
+        </md-form-field>
     </div>
 </div>

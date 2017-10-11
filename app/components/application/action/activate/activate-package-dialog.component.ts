@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { MdDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material";
 import { autobind } from "core-decorators";
 
 import { ApplicationService } from "app/services";
@@ -13,7 +13,7 @@ export class ActivatePackageDialogComponent {
     public packageVersion: string;
 
     constructor(
-        public dialogRef: MdDialogRef<ActivatePackageDialogComponent>,
+        public dialogRef: MatDialogRef<ActivatePackageDialogComponent>,
         private applicationService: ApplicationService) {
     }
 

@@ -1,6 +1,6 @@
 import { AfterViewInit, Component, ViewChild } from "@angular/core";
 import { TestBed } from "@angular/core/testing";
-import { MdSidenav } from "@angular/material";
+import { MatSidenav } from "@angular/material";
 import { BrowserDynamicTestingModule } from "@angular/platform-browser-dynamic/testing";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
@@ -19,17 +19,17 @@ export class FakeComponent {
  */
 @Component({
     template: `
-        <md-sidenav-container>
-                <md-sidenav #rightSidebar align="end">
+        <mat-sidenav-container>
+                <mat-sidenav #rightSidebar align="end">
                     <bl-sidebar-content #sidebarContent [sidebar]="rightSidebar"></bl-sidebar-content>
-                </md-sidenav>
+                </mat-sidenav>
                 <div>Content</div>
-        </md-sidenav-container>
+        </mat-sidenav-container>
     `,
 })
 export class AppTestComponent implements AfterViewInit {
     @ViewChild("rightSidebar")
-    public sidebar: MdSidenav;
+    public sidebar: MatSidenav;
     @ViewChild("sidebarContent")
     public sidebarContent: SidebarContentComponent;
 

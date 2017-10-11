@@ -1,6 +1,6 @@
 import { Component, Input, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MdDialog } from "@angular/material";
+import { MatDialog } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
@@ -64,7 +64,7 @@ describe("ApplicationDetailsComponent", () => {
     let applicationServiceSpy: any;
     let activatedRouteSpy: any;
     let accountServiceSpy: any;
-    let mdDialogSpy: any;
+    let matDialogSpy: any;
 
     beforeEach(() => {
         entityProxy = new RxMockEntityProxy(BatchApplication, {
@@ -87,7 +87,7 @@ describe("ApplicationDetailsComponent", () => {
             params: Observable.of({ id: "app-1" }),
         });
 
-        mdDialogSpy = {
+        matDialogSpy = {
             open: jasmine.createSpy("open-dialog").and.callFake((...args) => {
                 return {
                     componentInstance: { applicationId: "" },
@@ -102,7 +102,7 @@ describe("ApplicationDetailsComponent", () => {
                 ApplicationErrorDisplayMockComponent, LoadingMockComponent,
             ],
             providers: [
-                { provide: MdDialog, useValue: mdDialogSpy },
+                { provide: MatDialog, useValue: matDialogSpy },
                 { provide: ActivatedRoute, useValue: activatedRouteSpy },
                 { provide: SidebarManager, useValue: null },
                 { provide: ApplicationService, useValue: applicationServiceSpy },
@@ -162,7 +162,7 @@ describe("ApplicationDetailsComponent", () => {
         describe("Delete command is shown and wired up", () => {
             it("calling delete opens dialog", () => {
                 component.deleteApplication();
-                expect(mdDialogSpy.open).toHaveBeenCalledTimes(1);
+                expect(matDialogSpy.open).toHaveBeenCalledTimes(1);
             });
         });
     });

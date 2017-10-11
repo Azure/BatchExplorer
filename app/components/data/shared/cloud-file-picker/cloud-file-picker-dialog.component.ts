@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { MdDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material";
 import { autobind } from "core-decorators";
 import { AsyncSubject, Observable } from "rxjs";
 
@@ -35,7 +35,7 @@ export class CloudFilePickerDialogComponent {
 
     private _containerId: string;
 
-    constructor(private storageService: StorageService, public dialogRef: MdDialogRef<CloudFilePickerDialogComponent>) {
+    constructor(private storageService: StorageService, public dialogRef: MatDialogRef<CloudFilePickerDialogComponent>) {
         this.data = this.storageService.getContainerProperties(null);
         this.data.item.subscribe((container) => {
             this.container = container;
