@@ -61,18 +61,22 @@ bl-job-progress-status {
         }
     }
 
-    .progress {
-        margin: 0 10px;
-        display: flex;
-        align-items: center;
+    .progress-container {
+        height: 18px;
 
-        > .progress-bar {
-            flex: 1;
-        }
+        > .progress {
+            margin: 0 10px;
+            display: flex;
+            align-items: center;
 
-        > .progress-label {
-            margin-left: 10px;
-            color: $mineshaft-grey;
+            > .progress-bar {
+                flex: 1;
+            }
+
+            > .progress-label {
+                margin-left: 10px;
+                color: $mineshaft-grey;
+            }
         }
     }
 }
