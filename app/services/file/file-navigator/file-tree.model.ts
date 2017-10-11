@@ -129,6 +129,7 @@ export class FileTreeStructure {
         if (node.isDirectory) {
             delete this.directories[node.path];
         }
+
         const parentPath = CloudPathUtils.dirname(nodePath);
         const parent = this.directories[parentPath];
         if (parent && parent.children.has(nodePath)) {
@@ -152,33 +153,6 @@ export class FileTreeStructure {
     public getParent(node: FileTreeNode) {
         const parentPath = CloudPathUtils.dirname(node.path);
         return this.directories[parentPath];
-    }
-
-    /**
-     * Takes a node path and returns an aggregation of it's parts.
-     * nodePath => "D:/NCJ/small/task2", results in the following.
-     * "D:/NCJ/small/task2"
-     * "D:/NCJ/small"
-     * "D:/NCJ"
-     * "D:"
-     * "."
-     * Every one of these parts will exist in the tree and contain the initial node path as
-     * one of its children which needs to be deleted.
-     */
-    public _splitIntoParts(nodePath: string) {
-        let aggregated: string[] = [];
-        const parts = nodePath.split("/");
-        for (let i = parts.length - 1; i >= 0; i--) {
-            let partPath = null;
-            for (let j = 0; j <= i; j++) {
-                partPath = partPath ? `${partPath}/${parts[j]}` : parts[j];
-            }
-
-            aggregated.push(partPath);
-        }
-
-        aggregated.push(".");
-        return aggregated;
     }
 
     private _normalizeNodePath(nodePath: string) {

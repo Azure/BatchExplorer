@@ -68,8 +68,6 @@ export class DataContainerFilesComponent implements OnDestroy {
     public handleFileDelete(files: File[]) {
         const fileCount = files.length;
         const taskTitle = `Delete ${fileCount} files from ${this.container.name}`;
-        // TODO: remove console.log
-        console.log(`handleFileDelete with ${fileCount} files`);
 
         return this.backgroundTaskService.startTask(taskTitle, (task) => {
             let deleted = 0;
@@ -79,22 +77,19 @@ export class DataContainerFilesComponent implements OnDestroy {
 
             // NOTE: slight pause in-between deletes to ease load on storage account
             // may or may not be a great idea.
-            const observable = Observable.interval(250).take(fileCount);
+            const observable = Observable.interval(100).take(fileCount);
             observable.subscribe({
                 next: (i) => {
                     deleted++;
-                    // TODO: remove console.log
-                    // blobCache.deleteItem(files[i]);
-                    // console.log("deleting: ", this.container.id, files[i].name);
+//                    blobCache.deleteItem(files[i]);
+                    console.log("deleting: ", this.container.id, files[i].name);
                     return this.storageService.deleteBlobIfExists(this.container.id, files[i].name).subscribe({
                         next: (response) => {
                             task.name.next(`${taskTitle} (${deleted}/${fileCount})`);
                             task.progress.next(deleted / fileCount * 100);
 
                             if (response && blobCache) {
-                                const result = blobCache.deleteItem(files[i]);
-                                // TODO: remove console.log
-                                console.log("removed from cache: ", files[i], result);
+                                blobCache.deleteItem(files[i]);
                             }
                         },
                         error: (error) => {

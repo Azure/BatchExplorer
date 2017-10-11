@@ -157,7 +157,6 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     }
 
     public refresh(path?: string) {
-        console.log("asked to refresh: ", path);
         this.refreshing = true;
         this.fileNavigator.refresh(path).subscribe({
             next: () => {
