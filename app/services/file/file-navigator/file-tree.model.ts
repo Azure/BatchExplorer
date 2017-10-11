@@ -1,5 +1,4 @@
 import { List } from "immutable";
-import * as path from "path";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
@@ -104,7 +103,7 @@ export class FileTreeStructure {
         if (nodePath in this.directories) {
             return this.directories[nodePath];
         } else {
-            const parent = path.dirname(nodePath);
+            const parent = CloudPathUtils.dirname(nodePath);
             if (parent in this.directories) {
                 const matchingChild = this.directories[parent].children.get(nodePath);
                 if (matchingChild) {
@@ -151,7 +150,7 @@ export class FileTreeStructure {
     }
 
     public getParent(node: FileTreeNode) {
-        const parentPath = path.dirname(node.path);
+        const parentPath = CloudPathUtils.dirname(node.path);
         return this.directories[parentPath];
     }
 
