@@ -180,7 +180,8 @@ footer {
 
 // Cancel the padding of tabs for 1 content(Used for lists and tables)
 .tab-padding {
-    padding: 18px;
+    padding: 10px;
+    padding-bottom: 4px;
 
     .quicksearch {
         padding: 0 0 15px;
@@ -380,6 +381,10 @@ ul.list-point {
         flex: 1;
         min-height: 200px;
     }
+}
+
+.flex-separator {
+    flex: 1;
 }
 
 ::-webkit-scrollbar {

@@ -132,17 +132,17 @@ describe("ApplicationDetailsComponent", () => {
 
         describe("UI shows correct information", () => {
             it("title is correct", () => {
-                const container = fixture.debugElement.query(By.css("md-card-title"));
+                const container = fixture.debugElement.query(By.css("[summaryTitle]"));
                 expect(container.nativeElement.textContent).toContain("app-1");
             });
 
             it("subtitle is correct", () => {
-                const container = fixture.debugElement.query(By.css("md-card-subtitle"));
+                const container = fixture.debugElement.query(By.css("[summarySubtitle]"));
                 expect(container.nativeElement.textContent).toContain("bobs display name");
             });
 
             it("subtitle contains unlocked text for this application", () => {
-                const container = fixture.debugElement.query(By.css("md-card-subtitle"));
+                const container = fixture.debugElement.query(By.css("[summarySubtitle]"));
                 expect(container.nativeElement.textContent).toContain("(unlocked)");
             });
         });
@@ -154,7 +154,7 @@ describe("ApplicationDetailsComponent", () => {
             });
 
             it("subtitle contains locked text", () => {
-                const container = fixture.debugElement.query(By.css("md-card-subtitle"));
+                const container = fixture.debugElement.query(By.css("[summarySubtitle]"));
                 expect(container.nativeElement.textContent).toContain("(locked)");
             });
         });
