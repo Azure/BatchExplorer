@@ -1,23 +1,18 @@
 <bl-loading [status]="data.newDataStatus | async">
     <div *ngIf="task && job" class="fit-details-container">
-        <md-card class="overview">
-            <div class="actions">
-                <bl-button-group>
-                    <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                    <bl-terminate-button [entity]="task" [action]="terminateTask"></bl-terminate-button>
-                    <bl-delete-button [entity]="task" [action]="deleteTask"></bl-delete-button>
-                    <bl-clone-button [action]="cloneTask"></bl-clone-button>
-                </bl-button-group>
-            </div>
-            <div class="content">
-                <md-card-title>{{task.id}} <span *ngIf="!!task.displayName"> - {{task.displayName}}</span> </md-card-title>
-                <md-card-subtitle><i class="fa" [ngClass]="decorator.stateIcon"></i> {{task.state}}</md-card-subtitle>
-                <p>Job: {{jobId}}</p>
-            </div>
-            <div style="padding: 10px">
+        <bl-summary-card>
+            <div summaryTitle>{{task.id}} <span *ngIf="!!task.displayName"> - {{task.displayName}}</span> </div>
+            <div summaryDetails>Job: {{jobId}}</div>
+            <bl-button-group summaryActions>
+                <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+                <bl-terminate-button [entity]="task" [action]="terminateTask"></bl-terminate-button>
+                <bl-delete-button [entity]="task" [action]="deleteTask"></bl-delete-button>
+                <bl-clone-button [action]="cloneTask"></bl-clone-button>
+            </bl-button-group>
+            <div summaryRightContent>
                 <bl-task-timeline [job]="job" [task]="task"></bl-task-timeline>
             </div>
-        </md-card>
+        </bl-summary-card>
         <bl-task-error-display [jobId]="jobId" [task]="task"></bl-task-error-display>
         <md-card class="details">
             <bl-tab-group>
