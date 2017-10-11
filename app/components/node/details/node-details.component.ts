@@ -110,5 +110,6 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
     public editStartTask() {
         const ref = this.sidebarManager.open(`edit-start-task-${this.pool.id}`, StartTaskEditFormComponent);
         ref.component.pool = this.pool;
+        ref.component.fromNode = this.nodeId;
     }
 }

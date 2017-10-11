@@ -85,15 +85,21 @@ export class StartTaskEditFormComponent {
         });
     }
 
+    public reboot() {
+        this.nodeService.reboot(this.pool.id, this.fromNode).subscribe(() => {
+            this.notificationService.success("Rebooting", `Node is now rebooting`);
+        });
+    }
+
     private _notifySuccess() {
         const actions = [
-            { name: "Reboot all", do: () => this.nodeService.rebootAll() },
+            { name: "Reboot all", do: () => this.nodeService.rebootAll(this.pool.id) },
         ];
 
         if (this.fromNode) {
             actions.push(
-                { name: "Reboot node", do: () => this.nodeService.reboot(this.pool.id, this.fromNode) },
-            ), ;
+                { name: "Reboot node", do: () => this.reboot() },
+            );
         }
         this.notificationService.success("Updated", `Pool ${this.pool.id} start task was updated`, {
             persist: true,
