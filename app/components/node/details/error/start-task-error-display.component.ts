@@ -1,7 +1,12 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from "@angular/core";
+import { autobind } from "core-decorators";
 
-import { FailureInfo, StartTaskInfo } from "app/models";
+import { NotificationService } from "app/components/base/notifications";
+import { SidebarManager } from "app/components/base/sidebar";
+import { StartTaskEditFormComponent } from "app/components/pool/start-task";
+import { FailureInfo, Pool, StartTaskInfo } from "app/models";
 import { FailureInfoDecorator } from "app/models/decorators";
+import { NodeService } from "app/services";
 
 @Component({
     selector: "bl-start-task-error-display",
@@ -9,21 +14,43 @@ import { FailureInfoDecorator } from "app/models/decorators";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class StartTaskErrorDisplayComponent implements OnChanges {
-    @Input()
-    public startTaskInfo: StartTaskInfo;
+    @Input() public pool: Pool;
+    @Input() public nodeId: string;
+    @Input() public startTaskInfo: StartTaskInfo;
 
     public failureInfo: FailureInfo;
     public errorMessage: string;
     public errorCode: string;
 
+    constructor(
+        private nodeService: NodeService,
+        private sidebarManager: SidebarManager,
+        private notificationService: NotificationService) { }
+
     public ngOnChanges(changes: SimpleChanges) {
         if (changes.startTaskInfo) {
-            this.failureInfo = this.startTaskInfo && this.startTaskInfo.failureInfo;
-            this._computeErrorMessage();
-        } else {
-            this.errorMessage = this.errorCode = "";
-            this.failureInfo = null;
+            if (this.startTaskInfo) {
+                this.failureInfo = this.startTaskInfo.failureInfo;
+                this._computeErrorMessage();
+            } else {
+                this.errorMessage = this.errorCode = "";
+                this.failureInfo = null;
+            }
         }
+    }
+
+    @autobind()
+    public editStartTask() {
+        const ref = this.sidebarManager.open(`edit-start-task-${this.pool.id}`, StartTaskEditFormComponent);
+        ref.component.pool = this.pool;
+        ref.component.fromNode = this.nodeId;
+    }
+
+    @autobind()
+    public rebootNode() {
+        return this.nodeService.reboot(this.pool.id, this.nodeId).subscribe(() => {
+            this.notificationService.success("Rebooting", `Node is now rebooting`);
+        });
     }
 
     private _computeErrorMessage() {

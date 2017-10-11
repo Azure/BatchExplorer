@@ -8,9 +8,10 @@
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
                 <bl-button color="light" [action]="connect" icon="fa fa-plug"></bl-button>
                 <bl-delete-button [entity]="node" [action]="delete"></bl-delete-button>
+                <bl-edit-button [action]="editStartTask" title="Edit start task"></bl-edit-button>
             </bl-button-group>
         </bl-summary-card>
-        <bl-start-task-error-display [startTaskInfo]="node?.startTaskInfo"></bl-start-task-error-display>
+        <bl-start-task-error-display [pool]="pool" [nodeId]="nodeId" [startTaskInfo]="node?.startTaskInfo"></bl-start-task-error-display>
         <md-card class="details">
             <bl-tab-group>
                 <bl-tab key="configuration">
