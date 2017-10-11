@@ -149,11 +149,9 @@ export class FileNavigator {
     }
 
     private _removeFile(key: string) {
-        console.log("_removeFile: ", key, this._tree.value);
-        const deleted = this._tree.value.deleteNode(key);
-        // const node = this._tree.value.getNode(key);
-        console.log("deleted: ", deleted);
-        this.refresh(key);
+        const tree = this._tree.value;
+        tree.deleteNode(key);
+        this._tree.next(tree);
     }
 
     private _checkIfDirectory(node: FileTreeNode): Observable<boolean> {

@@ -100,8 +100,7 @@ export class FileTreeStructure {
     }
 
     public getNode(nodePath: string) {
-        nodePath = CloudPathUtils.normalize(nodePath);
-        if (nodePath === "") { nodePath = "."; }
+        nodePath = this._normalizeNodePath(nodePath);
         if (nodePath in this.directories) {
             return this.directories[nodePath];
         } else {
@@ -122,28 +121,74 @@ export class FileTreeStructure {
         }
     }
 
-    public deleteNode(nodePath: string): boolean {
-        nodePath = CloudPathUtils.normalize(nodePath);
-        if (nodePath === "") { nodePath = "."; }
-        if (nodePath in this.directories) {
-            console.log("its a directory: ", nodePath);
-            // return this.directories[nodePath];
-            return true;
-        } else {
+    /**
+     * Delete a node from the tree and it's corresponding folder should that folder be empty
+     * after the file was deleted.
+     */
+    public deleteNode(nodePath: string) {
+        const node = this.getNode(nodePath);
+        if (!node.isDirectory) {
+            // it's a file
             const parent = path.dirname(nodePath);
-            console.log("delete node parent: ", parent, this.directories);
-            if (parent in this.directories) {
-                console.log("delete parent in dirs: ", this.directories[parent]);
+            if (parent in this.directories && this.directories[parent].children.has(nodePath)) {
+                // delete the file from the parent directory and then process the parent folder.
                 this.directories[parent].children.delete(nodePath);
-                // console.log("deleted node: ", this.directories[parent].children.size);
-                if (this.directories[parent].children.size === 0) {
-                    console.log("no more children in: ", parent);
-                }
-
-                return true;
+                return this.deleteNode(parent);
+            }
+        } else {
+            // it's a directory
+            if (node.children.size > 0) {
+                return;
             }
 
-            return false;
+            const pathParts = this._splitIntoParts(node.path);
+            /**
+             * foreach path part, check that the preceeding parts exist until we find
+             * the folder that we want to delete.
+             *
+             * Given these FileTreeNode paths in this.directories:
+             * "D:/NCJ/small/task2"
+             * "D:/NCJ/small"
+             * "D:/NCJ"
+             * "D:"
+             * "."
+             *
+             * After deleting the only file from the folder: "D:/NCJ/small/task2", we then need to
+             * delete the "D:/NCJ/small/task2" entry from this.directories. Then we need to check
+             * "D:/NCJ/small", "D:/NCJ", "D:", "."
+             * If we are checking: "D:/NCJ", then we need to check it's children for "D:/NCJ/small"
+             * and then it's children for "D:/NCJ/small/task2", when we find this one we can remove it
+             * if it has no remaining children.
+             */
+            // TODO: attempt to clean this up and little
+            for (let i = 0; i < pathParts.length; i++) {
+                if (pathParts[i] in this.directories) {
+                    const directory = this.directories[pathParts[i]];
+                    if (directory.children.size === 0) {
+                        delete this.directories[pathParts[i]];
+                    } else {
+                        // hold onto the last parent in order to delete the child from it
+                        let parentNode = this.directories[pathParts[i]];
+                        let lastParent = parentNode;
+
+                        for (let j = i - 1; j >= 0; j--) {
+                            parentNode = parentNode.children.get(pathParts[j]);
+                            if (parentNode) {
+                                if (parentNode.children.size === 0) {
+                                    // found the folder and its empty so delete it.
+                                    lastParent.children.delete(pathParts[j]);
+                                } else if (parentNode.children.has(pathParts[j])) {
+                                    // it's not empty so make this the last parent
+                                    lastParent = parentNode.children.get(pathParts[j]);
+                                }
+                            } else {
+                                // break out of the loop as we have no more children
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -159,6 +204,40 @@ export class FileTreeStructure {
     public getParent(node: FileTreeNode) {
         const parentPath = path.dirname(node.path);
         return this.directories[parentPath];
+    }
+
+    /**
+     * Takes a node path and returns an aggregation of it's parts.
+     * nodePath => "D:/NCJ/small/task2", results in the following.
+     * "D:/NCJ/small/task2"
+     * "D:/NCJ/small"
+     * "D:/NCJ"
+     * "D:"
+     * "."
+     * Every one of these parts will exist in the tree and contain the initial node path as
+     * one of its children which needs to be deleted.
+     */
+    public _splitIntoParts(nodePath: string) {
+        let aggregated: string[] = [];
+        const parts = nodePath.split("/");
+        for (let i = parts.length - 1; i >= 0; i--) {
+            let partPath = null;
+            for (let j = 0; j <= i; j++) {
+                partPath = partPath ? `${partPath}/${parts[j]}` : parts[j];
+            }
+
+            aggregated.push(partPath);
+        }
+
+        aggregated.push(".");
+        return aggregated;
+    }
+
+    private _normalizeNodePath(nodePath: string) {
+        nodePath = CloudPathUtils.normalize(nodePath);
+        if (nodePath === "") { nodePath = "."; }
+
+        return nodePath;
     }
 
     private _checkDirInTree(directory: string) {

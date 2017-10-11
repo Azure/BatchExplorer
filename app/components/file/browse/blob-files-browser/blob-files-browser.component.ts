@@ -77,7 +77,7 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
                     data.dispose();
                     this.delete(items.toArray()).subscribe(() => {
                         // TODO: remove console.log
-                        console.log("after delete, refreshing: ", event.path);
+                        // console.log("after delete, refreshing: ", event.path);
                         this.fileNavigator.refresh(event.path);
                     });
                 });

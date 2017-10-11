@@ -84,22 +84,23 @@ export class DataContainerFilesComponent implements OnDestroy {
                 next: (i) => {
                     deleted++;
                     // TODO: remove console.log
-                    console.log("deleting: ", this.container.id, files[i].name);
-                    return this.storageService.deleteBlobIfExists(this.container.id, files[i].name).subscribe({
-                        next: (response) => {
-                            task.name.next(`${taskTitle} (${deleted}/${fileCount})`);
-                            task.progress.next(deleted / fileCount * 100);
+                    blobCache.deleteItem(files[i]);
+                    // console.log("deleting: ", this.container.id, files[i].name);
+                    // return this.storageService.deleteBlobIfExists(this.container.id, files[i].name).subscribe({
+                    //     next: (response) => {
+                    //         task.name.next(`${taskTitle} (${deleted}/${fileCount})`);
+                    //         task.progress.next(deleted / fileCount * 100);
 
-                            if (response && blobCache) {
-                                const result = blobCache.deleteItem(files[i]);
-                                // TODO: remove console.log
-                                console.log("removed from cache: ", files[i], result);
-                            }
-                        },
-                        error: (error) => {
-                            log.error("Failed to delete blob", error);
-                        },
-                    });
+                    //         if (response && blobCache) {
+                    //             const result = blobCache.deleteItem(files[i]);
+                    //             // TODO: remove console.log
+                    //             console.log("removed from cache: ", files[i], result);
+                    //         }
+                    //     },
+                    //     error: (error) => {
+                    //         log.error("Failed to delete blob", error);
+                    //     },
+                    // });
                 },
                 complete: () => {
                     task.progress.next(100);
