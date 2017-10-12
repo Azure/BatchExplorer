@@ -5,6 +5,9 @@ export class ProxyUtil {
         if (pool.autoScaleEvaluationInterval && pool.autoScaleEvaluationInterval._data) {
             pool.autoScaleEvaluationInterval = moment.duration(pool.autoScaleEvaluationInterval._data);
         }
+        if (pool.resizeTimeout && pool.resizeTimeout._data) {
+            pool.resizeTimeout = moment.duration(pool.resizeTimeout._data);
+        }
         return pool;
     }
 }
