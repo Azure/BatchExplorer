@@ -121,7 +121,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges {
     private _createJobWithAutoPool() {
         this._saveTemplateAsRecent();
         return this.ncjSubmitService.expandPoolTemplate(this.poolTemplate, this.poolParams.value)
-            .cascade((data) => this._runJobWithPool(data));
+            .cascade(data => this._runJobWithPool(data));
     }
 
     @autobind()
@@ -195,15 +195,16 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges {
 
     private _runJobWithPool(expandedPoolTemplate) {
         delete expandedPoolTemplate.id;
-        this.jobTemplate.job.properties.poolInfo = {
+        const jobTemplate = {...this.jobTemplate};
+        jobTemplate.job.properties.poolInfo = {
             autoPoolSpecification: {
                 autoPoolIdPrefix: "autopool",
                 poolLifetimeOption: "job",
                 keepAlive: false,
-                pool: expandedPoolTemplate,
+                pool: expandedPoolTemplate.properties,
             },
         };
-        return this.ncjSubmitService.submitJob(this.jobTemplate, this.jobParams.value)
+        return this.ncjSubmitService.submitJob(jobTemplate, this.jobParams.value)
             .cascade((data) => this._redirectToJob(data.properties.id));
     }
 

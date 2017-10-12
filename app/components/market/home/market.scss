@@ -36,7 +36,6 @@ bl-market {
 
         .submission {
             color: map-get($primary, 400);
-            display: block;
 
             &:hover {
                 color: map-get($primary, 600);

@@ -13,7 +13,7 @@ export class NcjSubmitService {
     }
 
     public createPool(template: NcjPoolTemplate, params: StringMap<any>) {
-        return this.pythonRpcService.callWithAuth("create-pool", [template, params]);
+        return this.pythonRpcService.callWithAuth("create-ncj-pool", [template, params]);
     }
 
     public expandPoolTemplate(template: NcjPoolTemplate, params: StringMap<any>): Observable<any> {

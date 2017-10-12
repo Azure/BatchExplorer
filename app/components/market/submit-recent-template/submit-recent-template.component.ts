@@ -26,7 +26,7 @@ export class SubmitRecentTemplateComponent implements OnInit {
     }
 
     public ngOnInit() {
-        this.route.queryParams.subscribe((params) => {
+        this.route.params.subscribe((params) => {
             this.recentTemplateId = params["id"];
             this._updateTemplate();
         });
