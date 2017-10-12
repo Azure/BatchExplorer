@@ -149,7 +149,6 @@ export class NcjTemplateService {
     }
 
     public getRecentSubmission(id: string): Observable<RecentSubmission> {
-        console.log("Get recent", id);
         return this._ready.map(() => {
             return this._recentSubmission.value.filter(x => x.id === id).first();
         }).shareReplay(1);
