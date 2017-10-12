@@ -12,7 +12,7 @@ const repo = "BatchLabs-data";
 const dataUrl = `https://github.com/Azure/${repo}/archive/${branch}.zip`;
 const cacheTime = 1; // In days
 const recentSubmitKey = "ncj-recent-submit";
-const maxRecentSubmissions = 100;
+const maxRecentSubmissions = 10;
 
 interface SyncFile {
     lastSync: Date;

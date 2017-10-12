@@ -37,6 +37,7 @@ export class SubmitRecentTemplateComponent implements OnInit {
             if (!submission) {
                 this.error = "Cannot find a recent template submitted with this id";
             }
+            console.log("Sub", submission);
             this.recentSubmission = submission;
             this.loaded = true;
         });
