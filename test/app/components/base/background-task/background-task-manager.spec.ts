@@ -9,7 +9,7 @@ import { BehaviorSubject, Subject } from "rxjs";
 import { BackgroundTask, BackgroundTaskService } from "app/components/base/background-task";
 import { NotificationServiceMock } from "test/utils/mocks";
 
-describe("BackgroundTaskService ", () => {
+fdescribe("BackgroundTaskService ", () => {
     let taskManager: BackgroundTaskService;
     let runningTasks: List<BackgroundTask>;
     let notificationServiceSpy: NotificationServiceMock;
@@ -30,7 +30,7 @@ describe("BackgroundTaskService ", () => {
         expect(runningTasks.size).toBe(1);
         const task = runningTasks.first();
         let name;
-        let done;
+        let done = false;
         task.name.subscribe(x => name = x);
         task.done.subscribe(x => done = x);
 
@@ -80,11 +80,10 @@ describe("BackgroundTaskService ", () => {
 
         expect(spies.task1).toHaveBeenCalledTimes(1);
         expect(spies.task2).not.toHaveBeenCalled();
-
         expect(runningTasks.size).toBe(1);
         const task = runningTasks.first();
         let name;
-        let done;
+        let done = false;
         task.name.subscribe(x => name = x);
         task.done.subscribe(x => done = x);
         expect(name).toEqual("Job: Task1 (1/2)");
