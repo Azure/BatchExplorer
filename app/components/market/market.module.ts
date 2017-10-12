@@ -9,6 +9,7 @@ import {
 } from "app/components/market/submit";
 
 import { TaskBaseModule } from "app/components/task/base";
+import { RecentTemplateListComponent } from "./home/recent-template-list";
 import { LocalTemplateBrowserComponent } from "./local-template-browser";
 import { SubmitLocalTemplateComponent } from "./submit-local-template";
 import { SubmitRecentTemplateComponent } from "./submit-recent-template";
@@ -22,6 +23,7 @@ const components = [
     ParameterInputComponent,
     LocalTemplateBrowserComponent,
     SubmitLocalTemplateComponent,
+    RecentTemplateListComponent,
 ];
 
 const modules = [

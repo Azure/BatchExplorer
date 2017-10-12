@@ -4,7 +4,7 @@ import { List } from "immutable";
 import { Subscription } from "rxjs";
 
 import { Application } from "app/models";
-import { NcjTemplateService, RecentSubmission } from "app/services";
+import { NcjTemplateService } from "app/services";
 import { autobind } from "core-decorators";
 import "./market.scss";
 
@@ -21,7 +21,6 @@ export class MarketComponent implements OnInit, OnDestroy {
     public applications: List<Application>;
     public displayedApplications: List<Application>;
     public quicksearch = new FormControl("");
-    public recentSubmissions: RecentSubmission[];
 
     private _subs: Subscription[] = [];
 
@@ -29,10 +28,6 @@ export class MarketComponent implements OnInit, OnDestroy {
         this._subs.push(this.quicksearch.valueChanges.subscribe((query) => {
             this.query = query;
             this._filterApplications();
-        }));
-
-        this._subs.push(this.templateService.recentSubmission.subscribe((value) => {
-            this.recentSubmissions = value;
         }));
     }
 

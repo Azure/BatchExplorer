@@ -8,14 +8,7 @@
             </div>
         </div>
     </div>
-    <div *ngIf="recentSubmissions.length > 0" class="recent-submission">
-        <div class="title">Recent</div>
-        <div *ngFor="let recent of recentSubmissions">
-            <bl-clickable [routerLink]="['/market', 'recent', recent.id]" class="submission">
-                {{recent.name}} {{recent.mode}}
-            </bl-clickable>
-        </div>
-    </div>
+    <bl-recent-template-list></bl-recent-template-list>
     <div class="applications">
         <mat-card class="application local-templates" title="All your local templates" routerLink="/market/local">
             <i class="fa fa-desktop logo"></i>

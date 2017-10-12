@@ -1,0 +1,9 @@
+<div *ngIf="recentSubmissions.length > 0" class="recent-submission">
+    <div class="title">Recent</div>
+    <div *ngFor="let recent of recentSubmissions">
+        <bl-clickable [routerLink]="['/market', 'recent', recent.id]" class="submission">
+            <span class="label">{{recent.name}}</span>
+            <span class="mode">({{formatMode(recent.mode)}})</span>
+        </bl-clickable>
+    </div>
+</div>
