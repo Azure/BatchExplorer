@@ -14,4 +14,10 @@ bl-tasks-running-time-graph {
         padding: 5px 50px;
         height: $graph-option-height;
     }
+
+    .sort-by {
+        .mat-form-field {
+            width: 150px;
+        }
+    }
 }

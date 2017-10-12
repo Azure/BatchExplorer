@@ -10,20 +10,20 @@
         <tbody>
             <tr *ngFor="let item of items.controls; let i=index; let isLast=last" [formGroupName]="i">
                 <td style="width: 45%">
-                    <md-form-field>
+                    <mat-form-field>
                         <mat-select formControlName="applicationId" (change)="applicationSelected($event, i)">
                             <!-- TODO: toLowerCase() is for a bug in the API, it should be case preserving, but it's not -->
                             <!-- TODO: Material seems to do case sensitive matching, which i also think is a bug -->
                             <mat-option *ngFor="let application of applications" [value]="application.id.toLowerCase()">{{ application.id }}</mat-option>
                         </mat-select>
-                    </md-form-field>
+                    </mat-form-field>
                 </td>
                 <td style="width: 45%">
-                    <md-form-field>
+                    <mat-form-field>
                         <mat-select formControlName="version">
                             <mat-option *ngFor="let package of packageMap[i]" [value]="getPackageValue(package)">{{ package }}</mat-option>
                         </mat-select>
-                    </md-form-field>
+                    </mat-form-field>
                 </td>
                 <td class="action-column">
                     <button *ngIf="!isLast" class="delete-item-btn" (click)="deleteItem(i)">

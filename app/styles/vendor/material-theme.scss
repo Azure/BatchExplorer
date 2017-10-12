@@ -120,6 +120,10 @@ mat-radio-button {
     }
 }
 
+.mat-form-field {
+    width: auto;
+}
+
 mat-checkbox[small] {
     .mat-checkbox-inner-container {
         width: 14px;
