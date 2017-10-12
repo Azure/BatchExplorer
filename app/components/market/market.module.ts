@@ -8,14 +8,16 @@ import {
     ParameterInputComponent, SubmitMarketApplicationComponent, SubmitNcjTemplateComponent,
 } from "app/components/market/submit";
 
-import { LocalTemplateBrowserComponent } from "app/components/market/local-template-browser";
-import { SubmitLocalTemplateComponent } from "app/components/market/submit-local-template";
 import { TaskBaseModule } from "app/components/task/base";
+import { LocalTemplateBrowserComponent } from "./local-template-browser";
+import { SubmitLocalTemplateComponent } from "./submit-local-template";
+import { SubmitRecentTemplateComponent } from "./submit-recent-template";
 
 const components = [
     ChooseActionComponent,
     MarketComponent,
     SubmitMarketApplicationComponent,
+    SubmitRecentTemplateComponent,
     SubmitNcjTemplateComponent,
     ParameterInputComponent,
     LocalTemplateBrowserComponent,

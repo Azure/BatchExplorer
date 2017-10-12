@@ -8,6 +8,10 @@
             </div>
         </div>
     </div>
+    <div>
+        <div>Recent</div>
+        <div *ngFor="let recent of recentSubmissions" [routerLink]="['/market', 'recent', recent.id]">{{recent.name}} {{recent.mode}}</div>
+    </div>
     <div class="applications">
         <mat-card class="application local-templates" title="All your local templates" routerLink="/market/local">
             <i class="fa fa-desktop logo"></i>

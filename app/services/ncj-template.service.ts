@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
-import { FileSystemService } from "app/services";
+import { FileSystemService, LocalFileStorage } from "app/services";
 import { List } from "immutable";
 import * as path from "path";
-import { AsyncSubject, Observable } from "rxjs";
+import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { Application, ApplicationAction, NcjJobTemplate, NcjPoolTemplate, NcjTemplateType } from "app/models";
-import { DateUtils, log } from "app/utils";
+import { DateUtils, SecureUtils, log } from "app/utils";
 
 const branch = "master";
 const repo = "BatchLabs-data";
@@ -16,13 +16,35 @@ interface SyncFile {
     lastSync: Date;
 }
 
+const recentSubmitKey = "ncj-recent-submit";
+
+export interface RecentSubmissionParams {
+    name: string;
+    jobTemplate?: NcjJobTemplate;
+    poolTemplate?: NcjPoolTemplate;
+    mode: any;
+    jobParams?: StringMap<any>;
+    poolParams?: StringMap<any>;
+    pickedPool?: string;
+}
+
+export interface RecentSubmission extends RecentSubmissionParams {
+    id: string;
+}
+
 @Injectable()
 export class NcjTemplateService {
-    private _ready = new AsyncSubject();
+    public recentSubmission: Observable<RecentSubmission[]>;
 
-    constructor(private fs: FileSystemService) { }
+    private _ready = new AsyncSubject();
+    private _recentSubmission = new BehaviorSubject<RecentSubmission[]>([]);
+
+    constructor(private fs: FileSystemService, private localFileStorage: LocalFileStorage) {
+        this.recentSubmission = this._recentSubmission.asObservable();
+    }
 
     public init() {
+        this._loadRecentSubmission();
         this._checkIfDataNeedReload().then((needReload) => {
             if (!needReload) {
                 return null;
@@ -116,6 +138,21 @@ export class NcjTemplateService {
         return { type: templateType, template: json };
     }
 
+    public addRecentSubmission(submission: RecentSubmissionParams) {
+        const data: RecentSubmission = {
+            ...submission,
+            id: SecureUtils.uuid(),
+        };
+        this._recentSubmission.next(this._recentSubmission.value.concat([data]));
+        this._saveRecentSubmission();
+    }
+
+    public getRecentSubmission(id: string): Observable<RecentSubmission> {
+        return this._ready.map(() => {
+            return this._recentSubmission.value.filter(x => x.id === id).first();
+        }).shareReplay(1);
+    }
+
     private _checkIfDataNeedReload(): Promise<boolean> {
         const syncFile = this._syncFile;
         return this.fs.exists(syncFile).then((exists) => {
@@ -144,6 +181,7 @@ export class NcjTemplateService {
             return this._saveSyncData();
         });
     }
+
     private _saveSyncData(): Promise<string> {
         const syncFile = this._syncFile;
         const data: SyncFile = {
@@ -151,6 +189,19 @@ export class NcjTemplateService {
         };
         const content = JSON.stringify(data);
         return this.fs.saveFile(syncFile, content);
+    }
+
+    private _saveRecentSubmission() {
+        return this.localFileStorage.set(recentSubmitKey, this._recentSubmission.value);
+    }
+
+    private _loadRecentSubmission() {
+        this.localFileStorage.get(recentSubmitKey).subscribe((data: RecentSubmission[]) => {
+            if (!Array.isArray(data)) {
+                data = [];
+            }
+            this._recentSubmission.next(data);
+        });
     }
 
     private get _repoDownloadRoot() {
