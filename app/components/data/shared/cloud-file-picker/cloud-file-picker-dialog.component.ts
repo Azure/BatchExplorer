@@ -35,7 +35,10 @@ export class CloudFilePickerDialogComponent {
 
     private _containerId: string;
 
-    constructor(private storageService: StorageService, public dialogRef: MatDialogRef<CloudFilePickerDialogComponent>) {
+    constructor(
+        private storageService: StorageService,
+        public dialogRef: MatDialogRef<CloudFilePickerDialogComponent>) {
+
         this.data = this.storageService.getContainerProperties(null);
         this.data.item.subscribe((container) => {
             this.container = container;
