@@ -1,10 +1,10 @@
-import { MdIconRegistry } from "@angular/material";
+import { MatIconRegistry } from "@angular/material";
 import { DomSanitizer } from "@angular/platform-browser";
 
 /**
  * This is used to register all the needed icons to material icon registry.
  */
-export function registerIcons(registry: MdIconRegistry, sanitizer: DomSanitizer) {
+export function registerIcons(registry: MatIconRegistry, sanitizer: DomSanitizer) {
     // Make font awesome default
     registry.setDefaultFontSetClass("fa");
 

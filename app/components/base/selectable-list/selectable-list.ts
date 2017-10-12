@@ -1,5 +1,5 @@
 import { EventEmitter, OnDestroy, ViewChild } from "@angular/core";
-import { MdDialog, MdDialogConfig } from "@angular/material";
+import { MatDialog, MatDialogConfig } from "@angular/material";
 import { autobind } from "core-decorators";
 import { Observable, Subscription } from "rxjs";
 
@@ -49,7 +49,7 @@ export class SelectableList implements OnDestroy {
     private _list: QuickListComponent | SelectableList;
     private _listSubs: Subscription[] = [];
 
-    constructor(protected dialog?: MdDialog) {
+    constructor(protected dialog?: MatDialog) {
     }
 
     public ngOnDestroy() {
@@ -78,7 +78,7 @@ export class SelectableList implements OnDestroy {
             return;
         }
 
-        let config = new MdDialogConfig();
+        let config = new MatDialogConfig();
         const dialogRef = this.dialog.open(DeleteSelectedItemsDialogComponent, config);
         dialogRef.componentInstance.items = this.selectedItems;
         dialogRef.componentInstance.entityName = this.entityName;

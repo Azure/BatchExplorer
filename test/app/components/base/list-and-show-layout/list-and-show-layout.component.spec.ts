@@ -1,7 +1,7 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MdDialog } from "@angular/material";
+import { MatDialog } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { ActivatedRoute } from "@angular/router";
@@ -55,7 +55,7 @@ describe("ListAndShowLayout", () => {
                 BreadcrumbService,
                 { provide: BreadcrumbService, useValue: breadcrumbServiceSpy },
                 { provide: ActivatedRoute, useValue: activatedRouteSpy },
-                { provide: MdDialog, useValue: {} },
+                { provide: MatDialog, useValue: {} },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });

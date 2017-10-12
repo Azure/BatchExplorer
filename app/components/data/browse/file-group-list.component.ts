@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
-import { MdDialog } from "@angular/material";
+import { MatDialog } from "@angular/material";
 import { Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Observable, Subscription } from "rxjs";
@@ -42,7 +42,7 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
 
     constructor(
         router: Router,
-        dialog: MdDialog,
+        dialog: MatDialog,
         private sidebarManager: SidebarManager,
         private taskManager: BackgroundTaskService,
         private storageService: StorageService) {

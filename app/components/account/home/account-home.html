@@ -2,11 +2,13 @@
     <div bl-list-buttons>
     </div>
     <div pre-quicksearch>
-        <md-select multiple placeholder="Subscriptions" [formControl]="subscriptionIds">
-            <md-option *ngFor="let subscription of subscriptionService.subscriptions | async" [value]="subscription.subscriptionId">
-                {{subscription.displayName}}
-            </md-option>
-        </md-select>
+        <mat-form-field>
+            <mat-select multiple placeholder="Subscriptions" [formControl]="subscriptionIds">
+                <mat-option *ngFor="let subscription of subscriptionService.subscriptions | async" [value]="subscription.subscriptionId">
+                    {{subscription.displayName}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
     </div>
     <div bl-list-content>
         <bl-account-list #list [filter]="layout.filter"></bl-account-list>

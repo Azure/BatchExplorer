@@ -48,7 +48,7 @@ export enum QuickListItemStatus {
 @Component({
     selector: "bl-quick-list-item-status",
     template: `
-        <div class="status-badge" [ngClass]="status" *ngIf="tooltip" [md-tooltip]="tooltip"></div>
+        <div class="status-badge" [ngClass]="status" *ngIf="tooltip" [matTooltip]="tooltip"></div>
         <div class="status-badge" [ngClass]="status" *ngIf="!tooltip"></div>
     `,
 })

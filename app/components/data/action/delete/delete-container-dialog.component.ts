@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { MdDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material";
 import { autobind } from "core-decorators";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
@@ -15,7 +15,7 @@ export class DeleteContainerDialogComponent {
     public name: string;
 
     constructor(
-        public dialogRef: MdDialogRef<DeleteContainerDialogComponent>,
+        public dialogRef: MatDialogRef<DeleteContainerDialogComponent>,
         private storageService: StorageService,
         private taskManager: BackgroundTaskService) {
     }

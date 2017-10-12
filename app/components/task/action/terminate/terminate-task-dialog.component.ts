@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { MdDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material";
 import { autobind } from "core-decorators";
 
 import { TaskService } from "app/services";
@@ -13,7 +13,7 @@ export class TerminateTaskDialogComponent {
     public taskId: string;
 
     constructor(
-        public dialogRef: MdDialogRef<TerminateTaskDialogComponent>,
+        public dialogRef: MatDialogRef<TerminateTaskDialogComponent>,
         private taskService: TaskService) {
     }
 

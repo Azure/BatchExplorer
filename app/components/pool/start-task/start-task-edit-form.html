@@ -1,9 +1,9 @@
 <bl-simple-form [formGroup]="form" [containerRef]="sidebarRef" [submit]="submit" saveText="Update" [multiUse]="false" title="Edit start task for pool: {{pool.id}}">
     <form novalidate [formGroup]="form">
         <div class="form-element">
-            <md-slide-toggle formControlName="enableStartTask" color="primary">
+            <mat-slide-toggle formControlName="enableStartTask" color="primary">
                 Enable start task
-            </md-slide-toggle>
+            </mat-slide-toggle>
         </div>
         <div *ngIf="enableStartTask">
             <bl-start-task-picker formControlName="startTask" [userAccounts]="pool.userAccounts"></bl-start-task-picker>

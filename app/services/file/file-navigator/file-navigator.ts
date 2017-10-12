@@ -184,7 +184,7 @@ export class FileNavigator {
 
         const proxy = this._proxies[path];
         const output = new AsyncSubject<FileTreeNode>();
-        proxy.refresh().flatMap(() => proxy.items.first()).share().subscribe({
+        proxy.refreshAll().flatMap(() => proxy.items.first()).share().subscribe({
             next: (files: List<File>) => {
                 this.loadingStatus = LoadingStatus.Ready;
 

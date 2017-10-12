@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { MdDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material";
 import { autobind } from "core-decorators";
 import {  Observable } from "rxjs";
 
@@ -12,7 +12,7 @@ export class DeleteSelectedItemsDialogComponent {
     public entityName: string;
     public items: string[];
 
-    constructor(public dialogRef: MdDialogRef<DeleteSelectedItemsDialogComponent>) {
+    constructor(public dialogRef: MatDialogRef<DeleteSelectedItemsDialogComponent>) {
     }
 
     @autobind()

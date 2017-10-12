@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
-import { MdDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material";
 import { autobind } from "core-decorators";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
@@ -21,7 +21,7 @@ export class DeleteJobDialogComponent {
     private _jobId: string;
 
     constructor(
-        public dialogRef: MdDialogRef<DeleteJobDialogComponent>,
+        public dialogRef: MatDialogRef<DeleteJobDialogComponent>,
         private jobService: JobService,
         private taskManager: BackgroundTaskService,
         private changeDetector: ChangeDetectorRef) {
