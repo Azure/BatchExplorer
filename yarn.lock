@@ -28,9 +28,9 @@
   dependencies:
     tslib "^1.7.1"
 
-"@angular/cdk@2.0.0-beta.12":
-  version "2.0.0-beta.12"
-  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-2.0.0-beta.12.tgz#3a243cb62b93f4e039120ba70f900dc9e235622e"
+"@angular/cdk@2.0.0-beta.11":
+  version "2.0.0-beta.11"
+  resolved "https://registry.yarnpkg.com/@angular/cdk/-/cdk-2.0.0-beta.11.tgz#b9e799574786272c63b6334c837c5ee2445bc933"
   dependencies:
     tslib "^1.7.1"
 
@@ -72,9 +72,9 @@
   dependencies:
     tslib "^1.7.1"
 
-"@angular/material@2.0.0-beta.12":
-  version "2.0.0-beta.12"
-  resolved "https://registry.yarnpkg.com/@angular/material/-/material-2.0.0-beta.12.tgz#71b6d0b7b021891e5d0e3688c1d4bd78c7457f58"
+"@angular/material@2.0.0-beta.11":
+  version "2.0.0-beta.11"
+  resolved "https://registry.yarnpkg.com/@angular/material/-/material-2.0.0-beta.11.tgz#9124a1f50f3eb7dc28640317ee1e875f71da753a"
   dependencies:
     tslib "^1.7.1"
 
@@ -467,9 +467,9 @@ alphanum-sort@^1.0.1, alphanum-sort@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/alphanum-sort/-/alphanum-sort-1.0.2.tgz#97a1119649b211ad33691d9f9f486a8ec9fbe0a3"
 
-amatefine@>=0.0.4:
+amdefine@>=0.0.4:
   version "1.0.1"
-  resolved "https://registry.yarnpkg.com/amatefine/-/amatefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
+  resolved "https://registry.yarnpkg.com/amdefine/-/amdefine-1.0.1.tgz#4a5282ac164729e93619bcfd3ad151f817ce91f5"
 
 angular2-template-loader@~0.6.2:
   version "0.6.2"
@@ -735,7 +735,7 @@ azure-storage@~2.5.0:
     browserify-mime "~1.2.9"
     extend "~1.2.1"
     json-edm-parser "0.1.2"
-    mat5.js "1.3.4"
+    md5.js "1.3.4"
     readable-stream "~2.0.0"
     request "~2.81.0"
     underscore "~1.8.3"
@@ -1627,7 +1627,7 @@ create-hash@^1.1.0, create-hash@^1.1.2:
   dependencies:
     cipher-base "^1.0.1"
     inherits "^2.0.1"
-    ripemat160 "^2.0.0"
+    ripemd160 "^2.0.0"
     sha.js "^2.4.0"
 
 create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
@@ -1637,7 +1637,7 @@ create-hmac@^1.1.0, create-hmac@^1.1.2, create-hmac@^1.1.4:
     cipher-base "^1.0.3"
     create-hash "^1.1.0"
     inherits "^2.0.1"
-    ripemat160 "^2.0.0"
+    ripemd160 "^2.0.0"
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
@@ -2770,7 +2770,7 @@ evp_bytestokey@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/evp_bytestokey/-/evp_bytestokey-1.0.2.tgz#f66bb88ecd57f71a766821e20283ea38c68bf80a"
   dependencies:
-    mat5.js "^1.3.4"
+    md5.js "^1.3.4"
     safe-buffer "^5.1.1"
 
 execa@^0.7.0:
@@ -4458,9 +4458,9 @@ mathml-tag-names@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/mathml-tag-names/-/mathml-tag-names-2.0.1.tgz#8d41268168bf86d1102b98109e28e531e7a34578"
 
-mat5.js@1.3.4, mat5.js@^1.3.4:
+md5.js@1.3.4, md5.js@^1.3.4:
   version "1.3.4"
-  resolved "https://registry.yarnpkg.com/mat5.js/-/mat5.js-1.3.4.tgz#e9bdbde94a20a5ac18b04340fc5764d5b09d901d"
+  resolved "https://registry.yarnpkg.com/md5.js/-/md5.js-1.3.4.tgz#e9bdbde94a20a5ac18b04340fc5764d5b09d901d"
   dependencies:
     hash-base "^3.0.0"
     inherits "^2.0.1"
@@ -5259,7 +5259,7 @@ pbkdf2@^3.0.3:
   dependencies:
     create-hash "^1.1.2"
     create-hmac "^1.1.4"
-    ripemat160 "^2.0.1"
+    ripemd160 "^2.0.1"
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
 
@@ -6027,9 +6027,9 @@ rimraf@~2.6.2:
   dependencies:
     glob "^7.0.5"
 
-ripemat160@^2.0.0, ripemat160@^2.0.1:
+ripemd160@^2.0.0, ripemd160@^2.0.1:
   version "2.0.1"
-  resolved "https://registry.yarnpkg.com/ripemat160/-/ripemat160-2.0.1.tgz#0f4584295c53a3628af7e6d79aca21ce57d1c6e7"
+  resolved "https://registry.yarnpkg.com/ripemd160/-/ripemd160-2.0.1.tgz#0f4584295c53a3628af7e6d79aca21ce57d1c6e7"
   dependencies:
     hash-base "^2.0.0"
     inherits "^2.0.1"
@@ -6397,13 +6397,13 @@ source-map@^0.1.41:
   version "0.1.43"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.1.43.tgz#c24bc146ca517c1471f5dacbe2571b2b7f9e3346"
   dependencies:
-    amatefine ">=0.0.4"
+    amdefine ">=0.0.4"
 
 source-map@^0.4.2:
   version "0.4.4"
   resolved "https://registry.yarnpkg.com/source-map/-/source-map-0.4.4.tgz#eba4f5da9c0dc999de68032d8b4f76173652036b"
   dependencies:
-    amatefine ">=0.0.4"
+    amdefine ">=0.0.4"
 
 spawn-command@^0.0.2-1:
   version "0.0.2"
