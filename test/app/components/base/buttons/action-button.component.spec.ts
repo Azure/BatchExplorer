@@ -1,6 +1,6 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MdTooltip } from "@angular/material";
+import { MatTooltip } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 
@@ -51,7 +51,7 @@ describe("ActionButton", () => {
 
     it("Should have the tooltip specified with title", () => {
         const el = de.query(By.css(".action-btn"));
-        const tooltip = el.injector.get(MdTooltip);
+        const tooltip = el.injector.get(MatTooltip);
         expect(tooltip.message).toBe("Stop");
     });
 

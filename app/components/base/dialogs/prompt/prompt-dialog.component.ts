@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { MdDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material";
 import { autobind } from "core-decorators";
 import { AsyncSubject, Observable } from "rxjs";
 
@@ -16,7 +16,7 @@ export class PromptDialogComponent {
 
     public response = new AsyncSubject<string>();
 
-    constructor(public dialogRef: MdDialogRef<PromptDialogComponent>) {
+    constructor(public dialogRef: MatDialogRef<PromptDialogComponent>) {
         this.response.next(null);
     }
 

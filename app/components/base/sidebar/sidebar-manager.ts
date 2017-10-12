@@ -3,7 +3,7 @@ import {
     Injectable,
     Type,
 } from "@angular/core";
-import { MdDrawerToggleResult, MdSidenav } from "@angular/material";
+import { MatDrawerToggleResult, MatSidenav } from "@angular/material";
 import { BehaviorSubject, Observable } from "rxjs";
 
 import { log } from "app/utils";
@@ -12,14 +12,11 @@ import { SidebarRef } from "./sidebar-ref";
 
 @Injectable()
 export class SidebarManager {
-
-    public sidebar: MdSidenav = null;
+    public sidebar: MatSidenav = null;
     public sidebarContent: SidebarContentComponent = null;
-
     public references: Observable<Array<SidebarRef<any>>>;
 
     private referenceMap: { [key: string]: SidebarRef<any> } = {};
-
     private referencesSubject: BehaviorSubject<Array<SidebarRef<any>>> = new BehaviorSubject([]);
 
     constructor() {
@@ -42,6 +39,7 @@ export class SidebarManager {
             sidebarRef = new SidebarRef<T>(this, id);
             this.referenceMap[id] = sidebarRef;
         }
+
         // If the component was already init before and we don't want to create a new one
         if (openNew) {
             this.sidebarContent.open(componentType, sidebarRef);
@@ -51,6 +49,7 @@ export class SidebarManager {
 
         this.sidebar.open();
         this.updateReferenceSubject();
+
         return sidebarRef;
     }
 
@@ -83,14 +82,14 @@ export class SidebarManager {
     /**
      * Event when the sidebar is fully open.
      */
-    public get onOpen(): EventEmitter<MdDrawerToggleResult|void> {
+    public get onOpen(): EventEmitter<MatDrawerToggleResult|void> {
         return this.sidebar.onOpen;
     }
 
     /**
      * Event when the sidebar is closed.
      */
-    public get onClosed(): EventEmitter<MdDrawerToggleResult|void> {
+    public get onClosed(): EventEmitter<MatDrawerToggleResult|void> {
         return  this.sidebar.onClose;
     }
 

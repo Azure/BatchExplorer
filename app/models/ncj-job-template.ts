@@ -29,3 +29,9 @@ export interface NcjPoolTemplate {
     pool: NcjJobConfiguration;
     variables: NcjJobConfiguration;
 }
+
+export enum NcjTemplateType {
+    pool = 1,
+    job = 2,
+    unknown = 3,
+}

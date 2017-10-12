@@ -29,7 +29,8 @@ $altoGray           :  #dfdfdf;
 $alto               :  #d5d5d5;
 $silver-grey        :  #cccccc;
 $dusty-grey         :  #9e9e9e;
-$genericGray        :  #757575;
+$generic-grey       :  #757575;
+$genericGray        :  $generic-grey;
 $dove-grey          :  #666666;
 $scorpion           :  #5b5b5b;
 $emperor-grey       :  #535353;
@@ -53,11 +54,12 @@ $validation-error-color     : map-get($danger, 500);
 $label-text                 : $dusty-grey;
 
 $folder-color: #f8d979;
+$outline-color: #528bff;
 
-$baseFontSize       : 13px;
+$font-size-base     : 13px;
+$font-size-large    : 15px;
 $baseLineHeight     : 1.4em;
 
-$outline-color: #528bff;
 
 $headingsFontWeight : semilight;
 $headingWeightBold  : semibold;
@@ -65,20 +67,12 @@ $headingsLineHeight : $baseLineHeight;
 $textColor          : $mineShaftGray;
 $main-font          : "Roboto", Helvetica, Arial, sans-serif;
 
-$h1FontSize         : $baseFontSize * 1.8;
-$h2FontSize         : $baseFontSize * 1.6;
-$h3FontSize         : $baseFontSize * 1.4;
-$h4FontSize         : $baseFontSize * 1.2;
-$h5FontSize         : $baseFontSize * 1.1;
-$h6FontSize         : $baseFontSize;
-
-
-// Z-index master list
-//---------------------------------------------
-// Used for a bird"s eye view of components dependent on the z-axis
-$zIndexTooltip          : 1001;
-$zIndexModal            : 1002;
-$zIndexModalMax         : 1003;
+$h1FontSize         : $font-size-base * 1.8;
+$h2FontSize         : $font-size-base * 1.6;
+$h3FontSize         : $font-size-base * 1.4;
+$h4FontSize         : $font-size-base * 1.2;
+$h5FontSize         : $font-size-base * 1.1;
+$h6FontSize         : $font-size-base;
 
 // Theme
 $body-background: $whiteSmoke-darker;

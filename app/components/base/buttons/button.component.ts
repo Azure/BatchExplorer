@@ -39,7 +39,7 @@ export class ButtonComponent extends ClickableComponent implements OnChanges {
     @Input() public action: ButtonAction;
     @Input() public icon: string;
     @Input() public title: string;
-    @Input() public tooltipPosition: string = "right";
+    @Input() public tooltipPosition: string = "above";
 
     /**
      * If set to true the check mark animation will not be shown

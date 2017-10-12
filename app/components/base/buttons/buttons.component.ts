@@ -26,7 +26,7 @@ export class LoadingButtonComponent extends BaseButton {
 @Component({
     selector: "bl-clear-list-selection",
     template: `
-        <bl-button color="accent" [action]="onClick" md-tooltip="Clear selection">
+        <bl-button color="accent" [action]="onClick" matTooltip="Clear selection">
             <i class="fa fa-check-square-o"></i>
         </bl-button>
     `,

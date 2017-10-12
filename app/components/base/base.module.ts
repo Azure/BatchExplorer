@@ -33,6 +33,7 @@ import { ScrollableModule } from "./scrollable";
 import { SidebarModule } from "./sidebar";
 import { SimpleDialogComponent } from "./simple-dialog";
 import { SplitPaneModule } from "./split-pane";
+import { SummaryCardModule } from "./summary-card";
 import { TableModule } from "./table";
 import { TabsModule } from "./tabs";
 import { TagsModule } from "./tags";
@@ -62,6 +63,7 @@ const modules = [
     FormModule,
     ScrollableModule,
     SplitPaneModule,
+    SummaryCardModule,
     VirtualScrollModule,
 ];
 

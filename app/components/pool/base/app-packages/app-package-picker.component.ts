@@ -2,7 +2,7 @@ import { AfterViewInit, Component, EventEmitter, OnDestroy, Output, forwardRef }
 import {
     ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
-import { MdSelectChange } from "@angular/material";
+import { MatSelectChange } from "@angular/material";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
@@ -189,7 +189,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         this.packageMap.splice(index, 1);
     }
 
-    public applicationSelected(event: MdSelectChange, index: number) {
+    public applicationSelected(event: MatSelectChange, index: number) {
         this._setPackageMap(event.value, index);
     }
 

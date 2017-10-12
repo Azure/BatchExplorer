@@ -305,25 +305,15 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             return;
         }
 
-        const runningTaskRects = taskGroup.selectAll("rect")
-            .data((d) => {
-                const node: Node = d.node;
-                if (node.state !== NodeState.running) {
-                    return [];
-                }
-                const { taskHeight, combine } = this._getTaskHeight(z, node);
-                if (combine) {
-                    return [{ node, index: 0, taskHeight }];
-                }
-                const count = node.runningTasksCount;
-                const array = new Array(count).fill(0).map((task, index) => ({ node, index, taskHeight }));
-                return array;
-            });
+        const runningTaskRects = taskGroup.selectAll("rect").data((d) => {
+            const node: Node = d.node;
+            return this._computeRunningTaskTilesDimensions(node, z);
+        });
 
         runningTaskRects.enter().append("rect").merge(runningTaskRects)
             .attr("transform", (data) => {
-                const index = data.index;
-                const x = z - (index + 1) * (data.taskHeight + 1);
+                // const index = data.index;
+                const x = z - data.position;
                 return `translate(0,${x})`;
             })
             .attr("width", z)
@@ -331,6 +321,29 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             .style("fill", runningColor);
 
         runningTaskRects.exit().remove();
+    }
+
+    private _computeRunningTaskTilesDimensions(node: Node, tileSize: number) {
+        if (node.state !== NodeState.running) {
+            return [];
+        }
+        const { taskHeight, combine, remaining } = this._getTaskHeight(tileSize, node);
+        if (combine) {
+            return [{ node, index: 0, taskHeight, position: taskHeight }];
+        }
+        const count = node.runningTasksCount;
+        let extra = remaining;
+        let position = 0;
+        const array = new Array(count).fill(0).map((task, index) => {
+            let height = taskHeight;
+            if (extra > 0) {
+                extra--;
+                height++;
+            }
+            position += height + 1;
+            return { node, index, taskHeight: height, position };
+        });
+        return array;
     }
 
     private _displayTileTooltip(titleNode) {
@@ -343,6 +356,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     private _getTaskHeight(tileSize: number, node: Node) {
         const maxTaskPerNode = this.pool.maxTasksPerNode;
         const taskHeight = Math.floor(tileSize / maxTaskPerNode);
+        const remaining = tileSize % maxTaskPerNode;
         let height;
         const combine = taskHeight < 2;
         if (combine) {
@@ -350,7 +364,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
         } else {
             height = taskHeight - 1;
         }
-        return { taskHeight: Math.max(1, height), combine };
+        return { taskHeight: Math.max(1, height), combine, remaining };
     }
     /**
      * Compute the dimension of the heatmap.

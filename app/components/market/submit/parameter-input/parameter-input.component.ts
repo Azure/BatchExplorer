@@ -1,8 +1,9 @@
 import { Component, Input, OnChanges, OnDestroy, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators } from "@angular/forms";
-import { NcjParameterRawType } from "app/models";
 import { Subscription } from "rxjs";
-import { NcjParameterExtendedType, NcjParameterWrapper } from "./market-application.model";
+
+import { NcjParameterRawType } from "app/models";
+import { NcjParameterExtendedType, NcjParameterWrapper } from "../market-application.model";
 import "./parameter-input.scss";
 
 // tslint:disable:no-forward-ref

@@ -3,7 +3,7 @@
         <bl-quick-list-item-status [status]="appStatus(application)">
         </bl-quick-list-item-status>
 
-        <h4 bl-quick-list-item-title>{{application.id}}</h4>
+        <div bl-quick-list-item-title>{{application.id}}</div>
         <p bl-quick-list-item-field>{{application.packages?.size}} packages</p>
         <div bl-quick-list-item-preview>
             <bl-application-preview [application]="application"></bl-application-preview>

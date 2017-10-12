@@ -1,9 +1,9 @@
 import { Location } from "@angular/common";
 import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
-import { MdIconRegistry, MdSidenav } from "@angular/material";
+import { MatIconRegistry, MatSidenav } from "@angular/material";
+import { DomSanitizer } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
-import { DomSanitizer } from "@angular/platform-browser";
 import { registerIcons } from "app/config";
 import {
     AccountService, AdalService, AutoscaleFormulaService, CommandService, NcjTemplateService,
@@ -28,14 +28,14 @@ export class AppComponent implements AfterViewInit, OnInit {
     public isAppReady = false;
 
     @ViewChild("rightSidebar")
-    private sidebar: MdSidenav;
+    private sidebar: MatSidenav;
 
     @ViewChild("sidebarContent")
     private sidebarContent: SidebarContentComponent;
 
     constructor(
         private location: Location,
-        mdIconRegistry: MdIconRegistry,
+        matIconRegistry: MatIconRegistry,
         sanitizer: DomSanitizer,
         private sidebarManager: SidebarManager,
         private autoscaleFormulaService: AutoscaleFormulaService,
@@ -76,7 +76,7 @@ export class AppComponent implements AfterViewInit, OnInit {
             this._preloadData();
         });
 
-        registerIcons(mdIconRegistry, sanitizer);
+        registerIcons(matIconRegistry, sanitizer);
     }
 
     public ngAfterViewInit() {
