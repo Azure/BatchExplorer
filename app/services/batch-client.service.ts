@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
-import { BatchServiceClient } from "azure-batch-ts";
-import { TokenCredentials } from "ms-rest-ts";
+import { BatchServiceClient } from "azure-batch-js";
+import { TokenCredentials } from "ms-rest-js";
 import { Observable } from "rxjs";
 
 import { Constants } from "app/utils";

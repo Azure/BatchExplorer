@@ -1,4 +1,4 @@
-import * as msRest from "ms-rest-ts";
+import * as msRest from "ms-rest-js";
 
 import { BatchClientProxy } from "./batch-client-proxy";
 

@@ -40,6 +40,7 @@ export class RxBatchListProxy<TParams, TEntity> extends RxListProxy<TParams, TEn
     protected fetchNextItems(): Observable<any> {
         return this._clientProxy().flatMap((client) => {
             return Observable.fromPromise(client.fetchNext()).do((data) => {
+                console.log("Got data", data);
                 this._nextLink = client.nextLink;
             }).catch((error) => {
                 return Observable.throw(ServerError.fromBatch(error));

@@ -1,6 +1,6 @@
 import { BrowserWindow } from "electron";
 
-import { BatchClientProxyFactory, FileUtils } from "../api";
+import { FileUtils } from "../api";
 import { Constants } from "../client-constants";
 import { UniqueWindow, batchLabsApp } from "../core";
 import { logger, renderLogger } from "../logger";
@@ -33,7 +33,6 @@ export class MainWindow extends UniqueWindow {
         window.loadURL(url);
 
         const anyWindow = window as any;
-        // anyWindow.batchClientFactory = new BatchClientProxyFactory();
         anyWindow.logger = renderLogger;
         anyWindow.splashScreen = batchLabsApp.splashScreen;
         anyWindow.authenticationWindow = batchLabsApp.authenticationWindow;

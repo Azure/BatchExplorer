@@ -121,6 +121,7 @@
     "@types/node-fetch": "~1.6.7",
     "azure-batch": "~2.2.0",
     "azure-batch-js": "git://github.com/amarzavery/azure-batch-ts",
+    "ms-rest-js": "~0.2.1",
     "azure-storage": "~2.5.0",
     "bunyan": "^1.8.4",
     "chart.js": "~2.7.0",

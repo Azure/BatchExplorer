@@ -1,4 +1,4 @@
-import * as batch from "azure-batch-ts";
+import * as batch from "azure-batch-js";
 
 import AccountProxy from "./accountProxy";
 import FileProxy from "./fileProxy";

@@ -1,4 +1,4 @@
-import { BatchServiceClient } from "azure-batch-ts";
+import { BatchServiceClient } from "azure-batch-js";
 
 import * as models from "./batch-models";
 import { ListProxy, mapGet, wrapOptions } from "./shared";
@@ -14,6 +14,10 @@ export default class JobProxy {
      * @param options: Optional Parameters.
      */
     public list(options?: models.JobListOptions) {
+        this.client.pool.list().then((data) => {
+            console.log("Poool?", data);
+        });
+
         return new ListProxy(this.client.job, null, wrapOptions({ jobListOptions: options }));
     }
 

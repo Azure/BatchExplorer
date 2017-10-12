@@ -2992,7 +2992,7 @@ fetch-cookie@^0.6.0, fetch-cookie@~0.6.0:
     es6-denodeify "^0.1.1"
     tough-cookie "^2.3.1"
 
-"fetch-ponyfill@github:amarzavery/fetch-ponyfill#master":
+fetch-ponyfill@amarzavery/fetch-ponyfill#master:
   version "4.1.0"
   resolved "https://codeload.github.com/amarzavery/fetch-ponyfill/tar.gz/aaaea85a0c3d4b64dab3d2ad205e443ffd07506b"
   dependencies:
@@ -4704,7 +4704,7 @@ ms-rest-azure@^2.3.3:
     ms-rest "^2.2.2"
     uuid "^3.1.0"
 
-ms-rest-js@^0.2.1:
+ms-rest-js@^0.2.1, ms-rest-js@~0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/ms-rest-js/-/ms-rest-js-0.2.1.tgz#58a547b61b84b10a82c8adde279e32cd6c38f667"
   dependencies:
