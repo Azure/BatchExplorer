@@ -9,7 +9,7 @@ import { BehaviorSubject, Subject } from "rxjs";
 import { BackgroundTask, BackgroundTaskService } from "app/components/base/background-task";
 import { NotificationServiceMock } from "test/utils/mocks";
 
-fdescribe("BackgroundTaskService ", () => {
+describe("BackgroundTaskService ", () => {
     let taskManager: BackgroundTaskService;
     let runningTasks: List<BackgroundTask>;
     let notificationServiceSpy: NotificationServiceMock;
