@@ -194,14 +194,15 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges {
     }
 
     private _runJobWithPool(expandedPoolTemplate) {
-        delete expandedPoolTemplate.id;
-        const jobTemplate = {...this.jobTemplate};
+        const pool = exists(expandedPoolTemplate.properties) ? expandedPoolTemplate.properties : expandedPoolTemplate;
+        delete pool.id;
+        const jobTemplate = { ...this.jobTemplate };
         jobTemplate.job.properties.poolInfo = {
             autoPoolSpecification: {
                 autoPoolIdPrefix: "autopool",
                 poolLifetimeOption: "job",
                 keepAlive: false,
-                pool: expandedPoolTemplate.properties,
+                pool: pool,
             },
         };
         return this.ncjSubmitService.submitJob(jobTemplate, this.jobParams.value)
