@@ -1,3 +1,4 @@
+import { ComponentPortal, PortalHostDirective } from "@angular/cdk/portal";
 import {
     Component,
     ComponentRef,
@@ -5,7 +6,7 @@ import {
     Type,
     ViewChild,
 } from "@angular/core";
-import { ComponentPortal, MdSidenav, PortalHostDirective } from "@angular/material";
+import { MatSidenav } from "@angular/material";
 
 import { log } from "app/utils";
 import { SidebarPageComponent } from "./sidebar-page";
@@ -20,7 +21,7 @@ export class SidebarContentComponent {
     private portalHost: PortalHostDirective;
 
     @Input("sidebar")
-    private sidebar: MdSidenav;
+    private sidebar: MatSidenav;
 
     // @ViewChild("contentAnchor", { read: ViewContainerRef })
     // private contentAnchor: ViewContainerRef;

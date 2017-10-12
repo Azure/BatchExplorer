@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { MdDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material";
 import { autobind } from "core-decorators";
 
 import { JobService } from "app/services";
@@ -21,7 +21,7 @@ export class DisableJobDialogComponent {
     private _taskAction: string = "requeue";
 
     constructor(
-        public dialogRef: MdDialogRef<DisableJobDialogComponent>,
+        public dialogRef: MatDialogRef<DisableJobDialogComponent>,
         private jobService: JobService) {
 
         this.onChange(this.taskAction);

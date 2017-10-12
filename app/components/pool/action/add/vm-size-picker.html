@@ -1,5 +1,5 @@
-<md-tab-group class="form-tabs">
-    <md-tab *ngFor="let category of categoryNames" [label]="categoryLabelName(category)">
+<mat-tab-group class="form-tabs">
+    <mat-tab *ngFor="let category of categoryNames" [label]="categoryLabelName(category)">
         <bl-focus-section>
             <bl-table [activeItem]="pickedSize" (activeItemChange)="pickSize($event)">
                 <bl-thead>
@@ -20,6 +20,6 @@
                 </bl-row>
             </bl-table>
         </bl-focus-section>
-    </md-tab>
-</md-tab-group>
+    </mat-tab>
+</mat-tab-group>
 <p>Note: Per-month pricing for listed VM's is an approximation only and based on estimated usage.</p>

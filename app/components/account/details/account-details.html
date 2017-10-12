@@ -18,13 +18,13 @@
             </div>
         </bl-summary-card>
         <div class="account-cards">
-            <md-card class="account-card">
-                <md-card-header>
-                    <md-card-title>
+            <mat-card class="account-card">
+                <mat-card-header>
+                    <mat-card-title>
                         <h2>Job status</h2>
-                    </md-card-title>
-                </md-card-header>
-                <md-card-content class="account-card-content">
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="account-card-content">
                     <div>
                         <bl-loading [status]="jobData.status | async">
                             <bl-no-item [itemCount]="(jobData.items | async).size" [status]="jobData.status | async">
@@ -41,19 +41,19 @@
                             </bl-table>
                         </bl-loading>
                     </div>
-                </md-card-content>
-                <md-card-actions>
-                    <button routerLink="/jobs" (click)="selectAccount(account.id)" md-button>View all jobs</button>
-                </md-card-actions>
-            </md-card>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button routerLink="/jobs" (click)="selectAccount(account.id)" mat-button>View all jobs</button>
+                </mat-card-actions>
+            </mat-card>
 
-            <md-card class="account-card" routerLink="/pools" (click)="selectAccount(account.id)">
-                <md-card-header>
-                    <md-card-title>
+            <mat-card class="account-card" routerLink="/pools" (click)="selectAccount(account.id)">
+                <mat-card-header>
+                    <mat-card-title>
                         <h2>Pool status</h2>
-                    </md-card-title>
-                </md-card-header>
-                <md-card-content class="account-card-content">
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="account-card-content">
                     <div>
                         <bl-loading [status]="poolData.status | async">
                             <bl-no-item [itemCount]="(poolData.items | async).size" [status]="poolData.status | async">
@@ -75,19 +75,19 @@
                             </bl-table>
                         </bl-loading>
                     </div>
-                </md-card-content>
-                <md-card-actions>
-                    <button md-button>View all pools</button>
-                </md-card-actions>
-            </md-card>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button mat-button>View all pools</button>
+                </mat-card-actions>
+            </mat-card>
 
-            <md-card class="account-card" routerLink="/applications" (click)="selectAccount(account.id)">
-                <md-card-header>
-                    <md-card-title>
+            <mat-card class="account-card" routerLink="/applications" (click)="selectAccount(account.id)">
+                <mat-card-header>
+                    <mat-card-title>
                         <h2>App packages</h2>
-                    </md-card-title>
-                </md-card-header>
-                <md-card-content class="account-card-content">
+                    </mat-card-title>
+                </mat-card-header>
+                <mat-card-content class="account-card-content">
                     <bl-banner *ngIf="noLinkedStorage" height="expand" type="notice">
                         <div message>No linked storage account configured for this Batch account.</div>
                     </bl-banner>
@@ -106,11 +106,11 @@
                             </bl-table>
                         </bl-loading>
                     </div>
-                </md-card-content>
-                <md-card-actions>
-                    <button md-button>View all packages</button>
-                </md-card-actions>
-            </md-card>
+                </mat-card-content>
+                <mat-card-actions>
+                    <button mat-button>View all packages</button>
+                </mat-card-actions>
+            </mat-card>
             <span style="width:100%;display:inline-block"></span>
         </div>
     </div>

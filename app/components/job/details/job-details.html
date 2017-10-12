@@ -28,7 +28,7 @@
             </div>
         </bl-summary-card>
         <bl-job-error-display [job]="job"></bl-job-error-display>
-        <md-card class="details">
+        <mat-card class="details">
             <bl-tab-group>
                 <bl-tab key="tasks">
                     <bl-tab-label>Tasks</bl-tab-label>
@@ -48,6 +48,6 @@
                     <bl-job-hook-task-browser [job]="job" *ngIf="hasHookTask"></bl-job-hook-task-browser>
                 </bl-tab>
             </bl-tab-group>
-        </md-card>
+        </mat-card>
     </div>
 </bl-loading>

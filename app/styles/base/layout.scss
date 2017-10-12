@@ -313,7 +313,7 @@ ul.list-point {
     align-items: center;
     justify-content: center;
 
-    > md-card {
+    > mat-card {
         width: 300px;
         height: 250px;
         font-size: 2em;
@@ -369,7 +369,7 @@ ul.list-point {
         position: relative;
     }
 
-    md-tab-group:not(.form-tabs) .mat-tab-body-content {
+    mat-tab-group:not(.form-tabs) .mat-tab-body-content {
         min-height: 0 !important;
     }
 

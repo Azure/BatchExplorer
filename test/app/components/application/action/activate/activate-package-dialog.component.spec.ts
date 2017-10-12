@@ -1,6 +1,6 @@
 import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MdDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
@@ -34,7 +34,7 @@ describe("ActivatePackageDialogComponent ", () => {
             imports: [],
             declarations: [SimpleFormMockComponent, ActivatePackageDialogComponent, ServerErrorMockComponent],
             providers: [
-                { provide: MdDialogRef, useValue: null },
+                { provide: MatDialogRef, useValue: null },
                 { provide: ApplicationService, useValue: appServiceSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],

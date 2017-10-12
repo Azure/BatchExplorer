@@ -1,6 +1,6 @@
 import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MdDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
@@ -40,7 +40,7 @@ describe("DisableJobDialogComponent ", () => {
                 SimpleFormMockComponent, DisableJobDialogComponent, InfoBoxMockComponent, ServerErrorMockComponent,
             ],
             providers: [
-                { provide: MdDialogRef, useValue: dialogRefSpy },
+                { provide: MatDialogRef, useValue: dialogRefSpy },
                 { provide: JobService, useValue: jobServiceSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],
@@ -62,7 +62,7 @@ describe("DisableJobDialogComponent ", () => {
         expect(component.taskAction).toEqual("requeue", "requeue by default");
 
         // TODO: this bit doesn't work after removeing the module
-        // const radioGroup = debugElement.query(By.css("md-radio-group")).nativeElement as MdRadioGroup;
+        // const radioGroup = debugElement.query(By.css("mat-radio-group")).nativeElement as MatRadioGroup;
         // radioGroup.value = "terminate";
         // fixture.detectChanges();
 

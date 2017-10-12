@@ -25,14 +25,14 @@
     <section id="content">
         <div id="content-inner">
             <bl-notification-container class="tr"></bl-notification-container>
-            <md-sidenav-container>
-                <md-sidenav #rightSidebar align="end">
+            <mat-sidenav-container>
+                <mat-sidenav #rightSidebar align="end">
                     <bl-sidebar-content #sidebarContent [sidebar]="rightSidebar"></bl-sidebar-content>
-                </md-sidenav>
+                </mat-sidenav>
                 <div *ngIf="isAppReady">
                     <router-outlet></router-outlet>
                 </div>
-            </md-sidenav-container>
+            </mat-sidenav-container>
         </div>
     </section>
     <footer>

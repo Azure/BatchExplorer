@@ -31,9 +31,9 @@ export class StatePickerControl extends AdvancedFilterControlBase {
             <fieldset formGroupName="{{control.name}}" >
                 <h3>{{control.label}}</h3>
                 <span *ngFor="let state of control.states" class="state-checkbox">
-                    <md-checkbox color="primary" formControlName="{{state}}" name="{{state}}">
+                    <mat-checkbox color="primary" formControlName="{{state}}" name="{{state}}">
                         {{state}}
-                    </md-checkbox>
+                    </mat-checkbox>
                 </span>
             </fieldset>
         </div>
