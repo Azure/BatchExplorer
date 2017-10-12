@@ -63,19 +63,16 @@ export class FileExplorerWorkspace {
     }
 
     public navigateTo(path: string, source?: FileSource) {
-        console.log("NAvi to", path, source);
         source = this._getSource(source);
         if (this._currentPath.value === path && this._currentSource.value === source) { return; }
 
         this._currentPath.next(path);
         this._currentSource.next(source);
         source.navigator.getNode(path).subscribe((node) => {
-            console.log("Got node", node);
             if (!node) { return; }
             if (node.isDirectory) {
                 source.navigator.loadPath(path);
             } else {
-                console.log("is file", source);
                 this.openFile(node.path, source);
             }
         });
