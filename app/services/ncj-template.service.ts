@@ -11,12 +11,12 @@ const branch = "master";
 const repo = "BatchLabs-data";
 const dataUrl = `https://github.com/Azure/${repo}/archive/${branch}.zip`;
 const cacheTime = 1; // In days
+const recentSubmitKey = "ncj-recent-submit";
+const maxRecentSubmissions = 100;
 
 interface SyncFile {
     lastSync: Date;
 }
-
-const recentSubmitKey = "ncj-recent-submit";
 
 export interface RecentSubmissionParams {
     name: string;
@@ -143,7 +143,8 @@ export class NcjTemplateService {
             ...submission,
             id: SecureUtils.uuid(),
         };
-        this._recentSubmission.next(this._recentSubmission.value.concat([data]));
+        const newSubmissions = [data].concat(this._recentSubmission.value);
+        this._recentSubmission.next(newSubmissions.slice(0, maxRecentSubmissions));
         this._saveRecentSubmission();
     }
 

@@ -27,6 +27,22 @@ bl-market {
         }
     }
 
+    .recent-submission {
+        padding: 0 20px;
+
+        .title {
+            font-size: 16px;
+        }
+
+        .submission {
+            color: map-get($primary, 400);
+            display: block;
+
+            &:hover {
+                color: map-get($primary, 600);
+            }
+        }
+    }
 
     .applications {
         padding: 0 10px;
