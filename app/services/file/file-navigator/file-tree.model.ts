@@ -72,7 +72,7 @@ export class FileTreeStructure {
             path: "",
             isDirectory: true,
         });
-        this.directories["."] = this.root;
+        this.directories[""] = this.root;
     }
 
     public addFiles(files: List<File>) {
@@ -80,7 +80,7 @@ export class FileTreeStructure {
         for (let file of files.toArray()) {
             const node = fileToTreeNode(file, this.basePath);
 
-            const folder = CloudPathUtils.dirname(node.path) || ".";
+            const folder = CloudPathUtils.dirname(node.path);
             this._checkDirInTree(folder);
 
             if (file.isDirectory) {
@@ -99,7 +99,7 @@ export class FileTreeStructure {
     }
 
     public getNode(nodePath: string) {
-        nodePath = this._normalizeNodePath(nodePath);
+        nodePath = CloudPathUtils.normalize(nodePath);
         if (nodePath in this.directories) {
             return this.directories[nodePath];
         } else {
@@ -130,8 +130,7 @@ export class FileTreeStructure {
             delete this.directories[node.path];
         }
 
-        // root directory in this.directories is "."
-        const parentPath = CloudPathUtils.dirname(nodePath) || ".";
+        const parentPath = CloudPathUtils.dirname(nodePath);
         const parent = this.directories[parentPath];
         if (parent && parent.children.has(nodePath)) {
             // delete the file from the parent directory and then process the parent folder.
@@ -156,13 +155,6 @@ export class FileTreeStructure {
         return this.directories[parentPath];
     }
 
-    private _normalizeNodePath(nodePath: string) {
-        nodePath = CloudPathUtils.normalize(nodePath);
-        if (nodePath === "") { nodePath = "."; }
-
-        return nodePath;
-    }
-
     private _checkDirInTree(directory: string) {
         const directories = this.directories;
         if (this.directories[directory]) {
@@ -171,9 +163,7 @@ export class FileTreeStructure {
         }
         directories[directory] = generateDir(directory);
 
-        const segments = directory.split("/");
-        let parent = segments.slice(0, -1).join("/");
-        if (parent === "") { parent = "."; }
+        const parent = CloudPathUtils.dirname(directory);
 
         if (directory !== parent) {
             this._checkDirInTree(parent);
