@@ -126,7 +126,7 @@ function install-python-dependencies() {
     }
 
     Write-Host "$python $root/scripts/install/install-python-dep.py"
-    cmat /c "$python $root/scripts/install/install-python-dep.py"
+    cmd /c "$python $root/scripts/install/install-python-dep.py"
 
     if($lastExitCode -eq 0) {
         add-success "Installed python dependencies correctly" -foreground "green";

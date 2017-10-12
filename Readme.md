@@ -61,7 +61,7 @@ npm run electron
 ```
 
 ## Developers
-[Dev docs](docs/readme.mat)
+[Dev docs](docs/readme.md)
 
 ## License
 

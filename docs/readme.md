@@ -1,20 +1,20 @@
 # Dev docs
 
 ## Getting started
-* [Setup your dev environment](setup.mat)
+* [Setup your dev environment](setup.md)
 
 ## Main
-* [Components](components.mat)
-* [Models](models.mat)
-* [Testing](testing.mat)
-* [Controls](core/Readme.mat)
+* [Components](components.md)
+* [Models](models.md)
+* [Testing](testing.md)
+* [Controls](core/Readme.md)
 
 ## How to
-* [Context Menu](context-menu.mat)
-* [Open a dialog](dialog.mat)
-* [Store user data/Cache data](store-user-data.mat)
+* [Context Menu](context-menu.md)
+* [Open a dialog](dialog.md)
+* [Store user data/Cache data](store-user-data.md)
 
 
 # Repo management
-* [Make a new release](new-release.mat)
-* [Third party dependencies](third-party-dependencies.mat)
+* [Make a new release](new-release.md)
+* [Third party dependencies](third-party-dependencies.md)
