@@ -113,6 +113,7 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
             enableAutoScale: pool.enableAutoScale,
             autoScaleFormula: pool.autoScaleFormula,
             autoScaleEvaluationInterval: autoScaleInterval && autoScaleInterval.asMinutes(),
+            resizeTimeout: pool.resizeTimeout && pool.resizeTimeout.asMinutes(),
         },
         maxTasksPerNode: pool.maxTasksPerNode.toString(),
         enableInterNodeCommunication: pool.enableInterNodeCommunication,
