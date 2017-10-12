@@ -81,8 +81,6 @@ export class DataContainerFilesComponent implements OnDestroy {
             observable.subscribe({
                 next: (i) => {
                     deleted++;
-//                    blobCache.deleteItem(files[i]);
-                    console.log("deleting: ", this.container.id, files[i].name);
                     return this.storageService.deleteBlobIfExists(this.container.id, files[i].name).subscribe({
                         next: (response) => {
                             task.name.next(`${taskTitle} (${deleted}/${fileCount})`);

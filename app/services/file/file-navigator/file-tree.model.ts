@@ -130,7 +130,8 @@ export class FileTreeStructure {
             delete this.directories[node.path];
         }
 
-        const parentPath = CloudPathUtils.dirname(nodePath);
+        // root directory in this.directories is "."
+        const parentPath = CloudPathUtils.dirname(nodePath) || ".";
         const parent = this.directories[parentPath];
         if (parent && parent.children.has(nodePath)) {
             // delete the file from the parent directory and then process the parent folder.
