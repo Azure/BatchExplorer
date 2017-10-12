@@ -19,10 +19,15 @@ interface String {
      */
     padStart(maxLength: number, padString?: string);
 
-   /**
-    * Trims all occurrences of the given set of strings off the end of the input.
-    */
+    /**
+     * Trims all occurrences of the given set of strings off the end of the input.
+     */
     trimEnd(...values: string[]);
+
+    /**
+     * If the given string is just white space
+     */
+    isBlank(): boolean;
 }
 
 // First, checks if it isn't implemented yet.
@@ -78,5 +83,11 @@ if (!String.prototype.trimEnd) {
         }
 
         return input;
+    };
+}
+
+if (!String.prototype.isBlank) {
+    String.prototype.isBlank = function (this: string) {
+        return (!this || /^\s*$/.test(this));
     };
 }

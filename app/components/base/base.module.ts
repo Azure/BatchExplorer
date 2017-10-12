@@ -1,11 +1,10 @@
 import { ModuleWithProviders, NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
+import { MaterialModule } from "app/core";
 
 // components
-import { TreeModule } from "angular-tree-component";
 import { IconComponent } from "app/components/base/icon";
 import { AdvancedFilterModule } from "./advanced-filter";
 import { BackgroundTaskModule } from "./background-task";
@@ -33,9 +32,12 @@ import { RefreshButtonComponent } from "./refresh-btn";
 import { ScrollableModule } from "./scrollable";
 import { SidebarModule } from "./sidebar";
 import { SimpleDialogComponent } from "./simple-dialog";
+import { SplitPaneModule } from "./split-pane";
+import { SummaryCardModule } from "./summary-card";
 import { TableModule } from "./table";
 import { TabsModule } from "./tabs";
 import { TagsModule } from "./tags";
+import { VirtualScrollModule } from "./virtual-scroll";
 
 // Add submodules there
 const modules = [
@@ -60,7 +62,9 @@ const modules = [
     TagsModule,
     FormModule,
     ScrollableModule,
-    TreeModule,
+    SplitPaneModule,
+    SummaryCardModule,
+    VirtualScrollModule,
 ];
 
 // Add subcomponnent not in a module here

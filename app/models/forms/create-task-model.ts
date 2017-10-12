@@ -1,4 +1,5 @@
 import { TaskCreateDto } from "app/models/dtos";
+import { PackageReferenceModel } from "./create-pool-model";
 
 export interface TaskConstraintsModel {
     maxWallClockTime: string;
@@ -15,9 +16,9 @@ export interface CreateTaskModel {
     environmentSettings: any[];
     affinityInfo: any;
     constraints: TaskConstraintsModel;
-    runElevated: boolean;
+    userIdentity: any;
     multiInstanceSettings: any;
-    applicationPackageReferences: any[];
+    appPackages: PackageReferenceModel[];
 }
 
 export function createTaskFormToJsonData(formData: CreateTaskModel): any {
@@ -36,10 +37,14 @@ export function createTaskFormToJsonData(formData: CreateTaskModel): any {
             maxTaskRetryCount: formData.constraints.maxTaskRetryCount,
             retentionTime: retentionTime,
         },
-        runElevated: formData.runElevated,
+        userIdentity: formData.userIdentity,
         multiInstanceSettings: null,
         applicationPackageReferences: null,
     };
+
+    if (formData.appPackages && formData.appPackages.length > 0) {
+        data.applicationPackageReferences = formData.appPackages;
+    }
 
     return data;
 }
@@ -53,10 +58,9 @@ export function taskToFormModel(task: TaskCreateDto): CreateTaskModel {
         resourceFiles: task.resourceFiles,
         environmentSettings: task.environmentSettings,
         affinityInfo: task.affinityInfo,
-
-        runElevated: task.runElevated,
+        userIdentity: task.userIdentity,
         multiInstanceSettings: task.multiInstanceSettings,
-        applicationPackageReferences: task.applicationPackageReferences,
+        appPackages: task.applicationPackageReferences,
     };
 
     if (task.constraints) {
@@ -66,6 +70,7 @@ export function taskToFormModel(task: TaskCreateDto): CreateTaskModel {
             retentionTime: durationToString(task.constraints.retentionTime),
         };
     }
+
     return out;
 }
 

@@ -11,7 +11,7 @@ bl-job-graphs-home {
     padding: $padding;
     height: $contentview-height;
 
-    .graph-header {
+    > .graph-header {
         height: $graph-header-height;
         display: flex;
         align-items: center;
@@ -33,6 +33,11 @@ bl-job-graphs-home {
             font-style: italic;
         }
 
+        .actions {
+            > * {
+                margin: 0 3px;
+            }
+        }
         .buttons {
             display: flex;
 
@@ -49,7 +54,7 @@ bl-job-graphs-home {
         }
     }
 
-    .graph-container {
+    > .graph-container {
         height: $graph-height;
     }
 

@@ -1,9 +1,8 @@
-    <div *ngIf="task">
-    <bl-property-group>
-        <bl-link-property label="Pool" [value]="task.poolId" [link]="['/pools', task.poolId]"></bl-link-property>
-        <bl-link-property label="Node" [value]="task.nodeId" [link]="['/pools', task.poolId, 'nodes', task.nodeId]"></bl-link-property>
-
-        <bl-node-file-list #list [poolId]="task.poolId" [nodeId]="task.nodeId" [folder]="currentFolder" *ngIf="currentFolder">
-        </bl-node-file-list>
-    </bl-property-group>
+<div *ngIf="task">
+    <div class="info">
+        <span>Node: <a [routerLink]="['/pools', task.poolId, 'nodes', task.nodeId]">{{task.nodeId}}</a></span>
+    </div>
+    <bl-node-file-browse [poolId]="task.poolId" [nodeId]="task.nodeId" [fileExplorerConfig]="fileExplorerConfig" [folder]="currentFolder"
+        *ngIf="currentFolder">
+    </bl-node-file-browse>
 </div>

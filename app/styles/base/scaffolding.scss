@@ -5,6 +5,10 @@ html, body, button {
     height: 100%;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 .text-left           { text-align: left; }
 .text-right          { text-align: right; }
 .text-center         { text-align: center; }
@@ -33,4 +37,12 @@ ol ul {
 
 textarea {
     resize: vertical;
+}
+
+.focus-outline:focus {
+    outline-color: $outline-color;
+    outline-width: 1px;
+    outline-style: solid;
+    outline-offset: -1px;
+    opacity: 1!important;
 }

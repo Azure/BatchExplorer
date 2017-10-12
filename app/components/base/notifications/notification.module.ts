@@ -1,19 +1,20 @@
 import { ModuleWithProviders, NgModule } from "@angular/core";
 import { FormsModule } from "@angular/forms";
-import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
+import { MaterialModule } from "app/core";
 
+import { ButtonsModule } from "app/components/base/buttons";
 import { DropdownModule } from "../dropdown";
 import { NotificationContainerComponent } from "./notification-container.component";
 import { NotificationService } from "./notification-service";
 import { NotificationComponent } from "./notification.component";
-import { PersistentNotificationDropdownComponent } from "./persistent-dropdown";
+import { PersistedNotificationDropdownComponent } from "./persisted-dropdown";
 
 const components = [
     NotificationComponent,
     NotificationContainerComponent,
-    PersistentNotificationDropdownComponent,
+    PersistedNotificationDropdownComponent,
 ];
 
 @NgModule({
@@ -25,6 +26,7 @@ const components = [
         RouterModule,
         MaterialModule,
         DropdownModule,
+        ButtonsModule,
     ],
     providers: [
         NotificationService,

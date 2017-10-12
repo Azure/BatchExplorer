@@ -5,6 +5,7 @@ import { Subscription } from "rxjs";
 
 import { DialogService } from "app/components/base/dialogs";
 import { SidebarManager } from "app/components/base/sidebar";
+import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { Node, Pool } from "app/models";
 import { FileService, NodeParams, NodeService, PoolService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
@@ -103,5 +104,12 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
                     .cascade(() => this.nodeService.getOnce(this.pool.id, this.node.id));
             },
         });
+    }
+
+    @autobind()
+    public editStartTask() {
+        const ref = this.sidebarManager.open(`edit-start-task-${this.pool.id}`, StartTaskEditFormComponent);
+        ref.component.pool = this.pool;
+        ref.component.fromNode = this.nodeId;
     }
 }

@@ -1,7 +1,7 @@
 import { ModuleWithProviders, NgModule } from "@angular/core";
-import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
+import { MaterialModule } from "app/core";
 
 import { ButtonComponent, ButtonGroupComponent } from "./button.component";
 import {
@@ -18,6 +18,7 @@ import {
     ResizeButtonComponent,
     TerminateButtonComponent,
 } from "./buttons.component";
+import { ClickableComponent } from "./clickable";
 import { DirectoryPickerComponent } from "./directory-picker.component";
 
 const components = [
@@ -36,6 +37,7 @@ const components = [
     LoadingButtonComponent,
     ResizeButtonComponent,
     TerminateButtonComponent,
+    ClickableComponent,
 ];
 
 @NgModule({

@@ -1,0 +1,176 @@
+@import "app/styles/variables";
+
+.node-content-wrapper, .tree-children {
+    color: $black;
+    font-size: 14px;
+}
+
+bl-file-tree-view {
+    $tree-view-header-height: 24px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+
+    .tree-view-header {
+        background: $mercury-grey;
+        display: flex;
+        align-items: stretch;
+        height: $tree-view-header-height;
+        cursor: pointer;
+
+        > * {
+            vertical-align: middle;
+            line-height: $tree-view-header-height;
+        }
+
+        .caret {
+            padding: 0 5px;
+            width: 20px;
+        }
+
+        .name {
+            display: inline-block;
+            flex: 1;
+            font-size: 11px;
+            color: $mineshaft-grey;
+            font-weight: 700;
+            user-select: none;
+            text-transform: uppercase;
+        }
+
+        .error {
+            color: map-get($danger, 500);
+            padding: 0 5px;
+        }
+
+        .action {
+            padding: 4px 5px;
+            cursor: pointer;
+            color: $mineshaft-grey;
+            font-size: 16px;
+
+            &:hover {
+                color: $alto;
+            }
+        }
+    }
+
+
+    .caret, .file-icon {
+        width: 16px;
+        font-size: 16px;
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .caret {
+        color: $dove-grey;
+
+        &:hover {
+            color: $dusty-grey;
+        }
+    }
+
+    .tree-view-content {
+        position: relative;
+        height: calc(100% - #{$tree-view-header-height});
+    }
+
+    .tree-rows-container {
+        // height: 100%;
+        &.drop-target {
+            background: $whitesmoke-darker;
+        }
+    }
+
+    .tree-row {
+        cursor: pointer;
+        height: 22px;
+        vertical-align: middle;
+        user-select: none;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+
+        &:hover {
+            background: $whitesmoke-darker;
+        }
+
+        &.active {
+            background: $whitesmoke-darker;
+        }
+
+        &.drop-target {
+            background: $whitesmoke-darker;
+        }
+
+        > .file-icon {
+            > .fa-folder, > .fa-folder-open {
+                color: $folder-color;
+            }
+
+            > .fa-file {
+                color: $dove-grey;
+            }
+        }
+    }
+
+    .tree-view-error {
+        white-space: pre;
+    }
+}
+
+.toggle-children-wrapper {
+    padding: 0!important;
+}
+
+.node-wrapper.tree-node-spin .toggle-children-placeholde, .node-wrapper.tree-node-spin .toggle-children {
+    position: relative;
+    -webkit-animation: fa-spin 2s infinite linear;
+    animation: fa-spin 2s infinite linear;
+    height: 15px;
+    width: 15px;
+}
+
+.node-wrapper.tree-node-spin .toggle-children-placeholder:before, .node-wrapper.tree-node-spin .toggle-children:before {
+    content: "\f110"; // fa-spinner icon
+    position: absolute;
+    font-family: FontAwesome;
+    cursor: default;
+    color: $black;
+}
+
+.node-wrapper.tree-node-file .toggle-children-placeholder:before {
+    content: "\f15b"; // fa-file icon
+    position: absolute;
+    font-family: FontAwesome;
+    cursor: default;
+    color: $dove-grey;
+}
+
+.toggle-children, .toggle-children-placeholder {
+    z-index: 1;
+    font-size: 14px;
+    background: none!important;
+    transform: none!important;
+    height: 15px!important;
+    width: 15px!important;
+    margin-top: 1px;
+    margin-left: 20px;
+}
+
+.toggle-children-wrapper-collapsed .toggle-children:before, .node-wrapper.tree-node-collapsed .toggle-children-placeholder:before {
+    content: "\f07b"; // fa-folder icon
+    position: absolute;
+    font-family: FontAwesome;
+    cursor: default;
+    color: #f8d979;
+}
+
+.toggle-children-wrapper-expanded .toggle-children:before, .node-wrapper.tree-node-expanded .toggle-children-placeholder:before {
+    content: "\f07c"; // fa-folder-open icon
+    position: absolute;
+    font-family: FontAwesome;
+    cursor: default;
+    color: #f8d979;
+}

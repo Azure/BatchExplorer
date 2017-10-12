@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { MdDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material";
 import { List } from "immutable";
 import * as path from "path";
 import { AsyncSubject, Observable } from "rxjs";
@@ -28,7 +28,7 @@ export class DownloadFileGroupDialogComponent {
     private _containerId: string;
 
     constructor(
-        public dialogRef: MdDialogRef<DownloadFileGroupDialogComponent>,
+        public dialogRef: MatDialogRef<DownloadFileGroupDialogComponent>,
         private storageService: StorageService,
         private backgroundTaskService: BackgroundTaskService,
         private fs: FileSystemService,

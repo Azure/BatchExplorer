@@ -13,6 +13,7 @@ import { TaskDependencies } from "./task-dependencies";
 import { TaskExecutionInformation } from "./task-execution-information";
 import { TaskExitConditions } from "./task-exit-conditions";
 import { TaskOutputFile } from "./task-output-file";
+import { UserIdentity } from "./user-identity";
 
 export interface TaskAttributes {
     id: string;
@@ -55,7 +56,7 @@ export class Task extends Record<TaskAttributes> {
     @Prop() public previousState: TaskState;
     @Prop() public previousStateTransitionTime: Date;
     @Prop() public commandLine: string;
-    @Prop() public runElevated: boolean;
+    @Prop() public userIdentity: UserIdentity;
     @Prop() public exitConditions: TaskExitConditions = new TaskExitConditions();
     @ListProp(ResourceFile) public resourceFiles: List<ResourceFile> = List([]);
     @ListProp(TaskOutputFile) public outputFiles: List<TaskOutputFile> = List([]);
@@ -85,6 +86,13 @@ export class Task extends Record<TaskAttributes> {
         const maxTime = constraints.maxWallClockTime.asMilliseconds();
         const runningTime = moment(info.endTime).diff(moment(info.startTime));
         return maxTime - runningTime < 0;
+    }
+
+    /**
+     * Return if the task is being rescheduled because the prep task failed
+     */
+    public get preparationTaskFailed() {
+        return this.state === TaskState.active && this.previousState === TaskState.preparing;
     }
 }
 

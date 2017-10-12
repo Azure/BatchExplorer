@@ -1,5 +1,13 @@
 bl-code-file-viewer {
     display: block;
-    min-height: 100px;
+    // min-height: 100px;
     position: relative;
+
+    bl-loading {
+        height: 100%;
+
+        .loading-content {
+            height: 100%;
+        }
+    }
 }

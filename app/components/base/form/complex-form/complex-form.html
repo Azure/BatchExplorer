@@ -3,8 +3,8 @@
         <div *ngIf="_pageStack.length > 0">
             <bl-button type="wide" color="primary" [action]="closePage">Back</bl-button>
         </div>
-        <h1>{{currentPage.title}}</h1>
-        <p>{{currentPage.subtitle}}</p>
+        <h1 *ngIf="currentPage.title">{{currentPage.title}}</h1>
+        <p *ngIf="currentPage.subtitle">{{currentPage.subtitle}}</p>
     </div>
     <form novalidate>
         <ng-template [ngTemplateOutlet]="currentPage.content"></ng-template>
@@ -16,11 +16,13 @@
 </div>
 <div class="form-footer">
     <div class="toggle-error-btn" *ngIf="error">
-        <button md-icon-button color="warn" (click)="toggleShowError()" mdTooltip="There was an error submitting this form" mdTooltipPosition="above">
-            <md-icon fontIcon="fa-exclamation-triangle"></md-icon>
+        <button mat-icon-button color="warn" (click)="toggleShowError()" matTooltip="There was an error submitting this form" matTooltipPosition="above">
+            <mat-icon fontIcon="fa-exclamation-triangle"></mat-icon>
         </button>
     </div>
-    <div class="summary"><ng-content select="[blFormSummary]"></ng-content></div>
+    <div class="summary">
+        <ng-content select="[blFormSummary]"></ng-content>
+    </div>
     <div class="form-buttons">
         <div *ngIf="isMainWindow">
             <bl-button type="wide" *ngIf="multiUse" [action]="save" [disabled]="!submitEnabled" class="add">{{actionName}}</bl-button>

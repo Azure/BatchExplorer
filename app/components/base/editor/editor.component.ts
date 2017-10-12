@@ -1,14 +1,25 @@
 import {
-    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter,
-    HostListener, Input, OnChanges, Output, ViewChild, forwardRef,
+    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef,
+    EventEmitter, HostListener, Input, OnChanges, OnDestroy, Output, ViewChild, forwardRef,
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import "app/utils/autoscale";
 import * as CodeMirror from "codemirror";
+import * as elementResizeDetectorMaker from "element-resize-detector";
+import { Observable, Subscription } from "rxjs";
+
+import "codemirror/addon/comment/comment";
 import "codemirror/addon/display/autorefresh";
 import "codemirror/addon/display/placeholder";
 import "codemirror/addon/hint/show-hint";
+
+// Modes
+import "app/utils/autoscale";
+import "codemirror/mode/javascript/javascript";
+
 import "./editor.scss";
+
+(CodeMirror as any).keyMap.default["Shift-Tab"] = "indentLess";
+(CodeMirror as any).keyMap.default["Ctrl-/"] = "toggleComment";
 
 @Component({
     selector: "bl-editor",
@@ -23,7 +34,7 @@ import "./editor.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 
-export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnChanges {
+export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy {
     @Input() public config: CodeMirror.EditorConfiguration;
     @Input() public label: string;
 
@@ -38,6 +49,8 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     public isFocused = false;
     public placeholder: string;
     private _value = "";
+    private _sub: Subscription;
+    private _resizeDetector: any;
 
     get value() { return this._value; }
 
@@ -47,7 +60,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
         }
     }
 
-    constructor(private changeDetector: ChangeDetectorRef) { }
+    constructor(private changeDetector: ChangeDetectorRef, private elementRef: ElementRef) { }
 
     public ngOnChanges(changes) {
         if (changes.config) {
@@ -55,19 +68,38 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
         }
     }
     public ngAfterViewInit() {
+        this._resizeDetector = elementResizeDetectorMaker({
+            strategy: "scroll",
+        });
+
+        this._resizeDetector.listenTo(this.elementRef.nativeElement, (element) => {
+            this.instance.refresh();
+        });
+
         this.config = this.config || {};
+        if (!this.config.extraKeys) {
+            this.config.extraKeys = {};
+        }
+
         this.codemirrorInit(this.config);
+    }
+
+    public ngOnDestroy() {
+        this._sub.unsubscribe();
+        this._resizeDetector.uninstall(this.elementRef.nativeElement);
     }
 
     public codemirrorInit(config) {
         this.instance = CodeMirror.fromTextArea(this.host.nativeElement, config);
         this.instance.setValue(this._value);
-
         this.instance.on("change", (editor, change) => {
             this.updateValue(this.instance.getValue());
 
             if (change.origin !== "complete" && change.origin !== "setValue") {
-                (this.instance as any).showHint({ hint: (CodeMirror as any).hint.autoscale, completeSingle: false });
+                const hint = (CodeMirror as any).hint[this.instance.getDoc().getMode().name];
+                if (hint) {
+                    (this.instance as any).showHint({ hint: hint, completeSingle: false });
+                }
             }
         });
 
@@ -82,6 +114,10 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
             this.isFocused = false;
             this.blur.emit();
             this.changeDetector.markForCheck();
+        });
+
+        this._sub = Observable.timer(200).subscribe(() => {
+            this.instance.refresh();
         });
     }
 

@@ -33,16 +33,12 @@
 //Task styles
 @import "./task/base";
 @import "./task/output";
-@import "./task/timeline";
-
-// File styles
-@import "./file/browse";
 
 // Partial styles
 @import "./partials/grid";
+@import "./partials/heading";
 @import "./partials/header";
 @import "./partials/loading-indicators";
-@import "./partials/navigation";
 @import "./partials/refresh-btn";
 @import "./partials/icons";
 

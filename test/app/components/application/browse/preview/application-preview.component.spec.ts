@@ -29,7 +29,7 @@ describe("ApplicationPreviewComponent", () => {
         it("unlock icon displayed", () => {
             const element = fixture.debugElement.query(By.css(".success")).nativeElement;
             expect(element).toBeDefined();
-            expect(element.attributes["md-tooltip"].value).toBe("Application allows updates");
+            expect(element.attributes["matTooltip"].value).toBe("Application allows updates");
         });
 
         it("lock icon not displayed", () => {
@@ -52,7 +52,7 @@ describe("ApplicationPreviewComponent", () => {
         it("lock icon displayed", () => {
             const element = fixture.debugElement.query(By.css(".failure")).nativeElement;
             expect(element).toBeDefined();
-            expect(element.attributes["md-tooltip"].value).toBe("Application is locked");
+            expect(element.attributes["matTooltip"].value).toBe("Application is locked");
         });
     });
 });

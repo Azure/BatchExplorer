@@ -1,0 +1,42 @@
+<div class="file-table-view-header">
+    <bl-clickable (do)="goBack()" title="Go back" class="go-back">
+        <i class="fa fa-arrow-circle-left"></i>
+    </bl-clickable>
+
+    <div class="current-path">
+        <span *ngIf="name" class="file-navigator-name">{{name}}:</span>
+        <span>/{{treeNode.path}}</span>
+    </div>
+</div>
+<div class="table-wrapper" (drop)="handleDrop($event)" (dragover)="handleDragHover($event)">
+    <bl-loading [status]="loadingStatus" [error]="error">
+        <div *ngIf="loadingStatus === LoadingStatus.Ready">
+            <bl-table (activeItemChange)="selectNode($event)" [config]="tableConfig" (dropOnRow)="handleDropOnRow($event)">
+                <bl-thead>
+                    <bl-column>Name</bl-column>
+                    <bl-column style="width: 80px">Size</bl-column>
+                    <bl-column style="width: 155px">Last Modified</bl-column>
+                </bl-thead>
+                <bl-row *ngFor="let treeNode of treeNode.walk()" [key]="treeNode.path">
+                    <bl-cell [value]="treeNode.name">
+                        <span class="icon">
+                        <i class="fa" [class.fa-folder]="treeNode.isDirectory" [class.fa-file]="!treeNode.isDirectory"></i>
+                    </span>
+                        <span>{{treeNode.name}}</span>
+                    </bl-cell>
+                    <bl-cell [value]="treeNode.contentLength">{{treeNode.isDirectory ? "" : prettyFileSize(treeNode.contentLength)}}</bl-cell>
+                    <bl-cell [value]="prettyDate(treeNode.lastModified)"></bl-cell>
+                </bl-row>
+            </bl-table>
+
+            <bl-no-item [itemCount]="treeNode.children.size">
+                <i icon class="fa fa-file small"></i>
+                <span no-filter>There are no files in this directory</span>
+            </bl-no-item>
+        </div>
+    </bl-loading>
+    <div class="flex-separator"></div>
+    <div class="drop-hint" *ngIf="canDropExternalFiles">
+        <i class="fa fa-cloud-upload"></i> Drag and drop local files here to upload.
+    </div>
+</div>

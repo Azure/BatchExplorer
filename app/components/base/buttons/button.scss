@@ -1,13 +1,7 @@
 @import "app/styles/variables";
 
 bl-button-group {
-    text-align: center;
     display: block;
-    padding-top: 3px;
-    padding-left: 3px;
-    bl-button {
-        margin-bottom: 3px;
-    }
 }
 
 bl-button {
@@ -60,6 +54,11 @@ bl-button {
 
     &[type="round"] {
         border-radius: 99%;
+
+        &:focus {
+            box-shadow: inset 0 0 0 1px $outline-color;
+            outline: none;
+        }
     }
 
     &[type="wide"] {

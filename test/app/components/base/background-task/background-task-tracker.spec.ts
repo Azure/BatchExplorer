@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, fakeAsync, inject, tick } from "@angular/core/testing";
-import { MaterialModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
+import { MaterialModule } from "app/core";
 import { Subject } from "rxjs";
 
 import {

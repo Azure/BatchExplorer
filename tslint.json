@@ -33,7 +33,7 @@
     "arrow-return-shorthand": [true],
     "ban": [
         true,
-        ["main", "debugCrash"], // Show a warning if the main window is being shown on start for debug purposes
+        ["batchLabsApp", "debugCrash"], // Show a warning if the main window is being shown on start for debug purposes
         {"name": "fdescribe", "message": "Don't keep jasmine fit methods in the code."},
         {"name": "fit", "message": "Don't keep jasmine fit methods in the code."}
     ],

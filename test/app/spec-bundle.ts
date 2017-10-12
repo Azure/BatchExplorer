@@ -1,5 +1,6 @@
 // tslint:disable-next-line
 /// <reference path="../utils/matchers/index.d.ts"/>
+jasmine.MAX_PRETTY_PRINT_DEPTH = 2;
 
 import "reflect-metadata";
 

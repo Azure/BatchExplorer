@@ -1,10 +1,12 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { List } from "immutable";
+import * as path from "path";
 import { Observable } from "rxjs";
 
+import { tasksToCsv } from "app/components/job/graphs/job-graphs-home/helpers";
 import { Job, Task, TaskState } from "app/models";
-import { CacheDataService, JobParams, JobService, TaskService } from "app/services";
+import { CacheDataService, ElectronShell, FileSystemService, JobParams, JobService, TaskService } from "app/services";
 import { RxEntityProxy } from "app/services/core";
 import { log } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
@@ -39,6 +41,8 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
         private taskService: TaskService,
         private jobService: JobService,
         private cacheDataService: CacheDataService,
+        private shell: ElectronShell,
+        private fs: FileSystemService,
     ) {
 
         this._data = this.jobService.get(null, {});
@@ -66,7 +70,7 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
                 return Observable.of(null);
             }
             const obs = this.taskService.listAll(this.jobId, {
-                select: "id,executionInfo",
+                select: "id,executionInfo,nodeInfo",
                 filter: FilterBuilder.prop("state").eq(TaskState.completed).toOData(),
                 pageSize: 1000,
             });
@@ -98,6 +102,16 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
     @autobind()
     public refresh() {
         return this.updateTasks(true);
+    }
+
+    @autobind()
+    public downloadCsv() {
+        const csv = tasksToCsv(this.tasks);
+
+        const dest = path.join(this.fs.commonFolders.downloads, `${this.jobId}.csv`);
+        return Observable.fromPromise(this.fs.saveFile(dest, csv).then(() => {
+            this.shell.showItemInFolder(dest);
+        }));
     }
 
     private _updateDescription() {

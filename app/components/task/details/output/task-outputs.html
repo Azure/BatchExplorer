@@ -1,32 +1,6 @@
-<div class="file-tabs pad-bottom">
-    <div class="file-tab" *ngFor="let tab of outputTabs" [class.active]="tab.key === selectedTab" (click)="selectedTab = tab.key">
-        {{tab.label}}
-    </div>
+<bl-file-explorer [data]="workspace" [config]="fileExplorerConfig" *ngIf="!isTaskQueued && workspace">
+</bl-file-explorer>
+<div *ngIf="isTaskQueued" class="info-overlay task-queued">
+    Task is currently <span class="highlight" [matTooltip]="stateTooltip">&nbsp;{{task.state}}&nbsp;</span> there is no output
+    to view yet.
 </div>
-
-<!-- list any task outputs on the node -->
-<bl-entity-details-list *ngIf="selectedTab === 'node'" #nodeWrapper [refresh]="nodeList.refresh" [filterPlaceholder]="nodeList.quicksearchPlaceholder"
-    [showAddButton]="false" [enableAdvancedFilter]="false" [showExpandButton]="false" quickSearchField="name">
-    <div class="layout-container" [class.filtering]="showAdvancedFilter | async">
-        <bl-file-explorer [fileLoader]="pickedFileLoader">
-            <bl-task-file-list tree-view #nodeList [jobId]="jobId" [taskId]="taskId" [filter]="nodeWrapper.filter" (fileNameUpdate)="updatePickedFile($event)">
-            </bl-task-file-list>
-        </bl-file-explorer>
-    </div>
-</bl-entity-details-list>
-
-<!-- list any persisted task outputs -->
-<bl-entity-details-list *ngIf="selectedTab === 'outputs'" #outputWrapper [refresh]="outputList.refresh" [filterPlaceholder]="outputList.filterPlaceholder"
-    [showAddButton]="false" [loadMore]="outputList.loadMore">
-    <bl-persisted-file-list #outputList [jobId]="jobId" [taskId]="taskId" outputKind="$TaskOutput" [filter]="outputWrapper.filter"
-        [quickList]="false" [manualLoading]="true">
-    </bl-persisted-file-list>
-</bl-entity-details-list>
-
-<!-- list any persisted task logs -->
-<bl-entity-details-list *ngIf="selectedTab === 'logs'" #logWrapper [refresh]="logList.refresh" [filterPlaceholder]="logList.filterPlaceholder"
-    [showAddButton]="false" [loadMore]="logList.loadMore">
-    <bl-persisted-file-list #logList [jobId]="jobId" [taskId]="taskId" outputKind="$TaskLog" [filter]="logWrapper.filter" [quickList]="false"
-        [manualLoading]="true">
-    </bl-persisted-file-list>
-</bl-entity-details-list>

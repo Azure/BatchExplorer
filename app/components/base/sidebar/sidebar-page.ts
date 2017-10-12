@@ -1,3 +1,4 @@
+import { ComponentPortal, PortalHostDirective } from "@angular/cdk/portal";
 import {
     Component,
     ComponentFactoryResolver,
@@ -9,7 +10,6 @@ import {
     ViewChild,
     ViewEncapsulation,
 } from "@angular/core";
-import { ComponentPortal, PortalHostDirective } from "@angular/material";
 
 import { log } from "app/utils";
 import { SidebarInjector } from "./sidebar-injector";

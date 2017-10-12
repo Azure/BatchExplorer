@@ -1,10 +1,10 @@
-<bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef">
+<bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef" actionName="Upload">
     <bl-form-page main-form-page [title]="title" [subtitle]="description" [formGroup]="form">
         <bl-form-section title="General info" subtitle="Basic information about the file group">
             <div class="form-element">
-                <md-input-container>
-                    <input mdInput formControlName="name" placeholder="File group name">
-                </md-input-container>
+                <mat-form-field>
+                    <input matInput formControlName="name" placeholder="File group name">
+                </mat-form-field>
                 <bl-error controlName="name" code="required">The file group name is a required field</bl-error>
                 <bl-error controlName="name" code="maxlength">The file group name has a maximum length of 64 characters</bl-error>
                 <bl-error controlName="name" code="pattern">The file group name can contain any combination of lowercase alphanumeric characters including single hyphens</bl-error>
@@ -23,7 +23,7 @@
                 </div>
             </div>
             <div class="form-element">
-                <md-checkbox formControlName="includeSubDirectories" color="primary">Include sub directories</md-checkbox>
+                <mat-checkbox formControlName="includeSubDirectories" color="primary">Include sub directories</mat-checkbox>
             </div>
         </bl-form-section>
 

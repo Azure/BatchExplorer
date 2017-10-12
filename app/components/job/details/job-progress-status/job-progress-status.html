@@ -1,17 +1,30 @@
 <div class="running-task-status">
-    <!--<div class="queued">
-        <div class="value">309</div>
+    <div class="queued">
+        <div class="value">{{queuedTaskCount}}</div>
         <div class="label">Queued</div>
-    </div>-->
+    </div>
     <div class="running">
         <div class="toggle-job-pool-tasks">
             <div class="option" [class.active]="!showAllPoolTasks" (click)="updateShowAllPoolTasks(false)">Only Job</div>
             <div class="option" [class.active]="showAllPoolTasks" (click)="updateShowAllPoolTasks(true)">Pool</div>
         </div>
-        <bl-gauge [value]="runningTasksCount" [options]="gaugeOptions"></bl-gauge>
+        <bl-gauge [value]="runningTasksCount" [options]="gaugeOptions" [size]="140"></bl-gauge>
     </div>
-    <!--<div class="completed">
-        <div class="value">124</div>
-        <div  class="label">Completed</div>
-    </div>-->
+    <div class="completed">
+        <div class="succeeded">
+            <div class="value">{{succeededTaskCount}}</div>
+            <div class="label">Succeeded</div>
+        </div>
+        <div class="failed">
+            <div class="value">{{failedTaskCount}}</div>
+            <div class="label">Failed</div>
+        </div>
+    </div>
+</div>
+<div class="progress-container">
+    <div class="progress" *ngIf="progress" title="Job completion progress">
+        <mat-progress-bar class="progress-bar" color="primary" mode="buffer" [value]="progress.completed" [bufferValue]="progress.buffer">
+        </mat-progress-bar>
+        <span class="progress-label">{{progress.completed}}%</span>
+    </div>
 </div>

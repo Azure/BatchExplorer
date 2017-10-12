@@ -1,7 +1,6 @@
 import { HashLocationStrategy, LocationStrategy } from "@angular/common";
 import { ErrorHandler, NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule } from "@angular/router";
@@ -23,6 +22,7 @@ import { FileModule } from "app/components/file/file.module";
 import { JobModule } from "app/components/job/job.module";
 import { NodeModule } from "app/components/node/node.module";
 import { PoolModule } from "app/components/pool/pool.module";
+import { SettingsModule } from "app/components/settings";
 import { TaskModule } from "app/components/task/task.module";
 
 // unhandled application error handler
@@ -30,6 +30,7 @@ import { BatchLabsErrorHandler } from "app/error-handler";
 
 // services
 import { HttpModule } from "@angular/http";
+import { MaterialModule } from "app/core";
 import { PollService } from "app/services/core";
 import {
     AccountService,
@@ -71,7 +72,9 @@ import {
 } from "./services";
 
 const modules = [
-    AccountModule, ApplicationModule, DataModule, FileModule, JobModule, NodeModule, PoolModule, TaskModule,
+    AccountModule, ApplicationModule, DataModule,
+    FileModule, JobModule, NodeModule, PoolModule,
+    SettingsModule, TaskModule,
 ];
 
 @NgModule({

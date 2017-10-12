@@ -1,10 +1,15 @@
 <bl-simple-form [submit]="submit" (done)="close()" [containerRef]="dialogRef" [multiUse]="false">
     <div *ngIf="container">
-        <bl-entity-details-list #blobWrapper [showAddButton]="false" [showRefreshButton]="true" [showExpandButton]="false" [enableAdvancedFilter]="false"
-            [refresh]="blobList.refresh" [loadMore]="blobList.loadMore" filterPlaceholder="Filter by file name (case sensitive)">
-            <bl-persisted-file-list #blobList [container]="container.id" [filter]="blobWrapper.filter" [quickList]="false" [manualLoading]="true"
-                [disableRouting]="true" [activeItem]="pickedFile" (activeItemChange)="updatePickedFile($event)">
-            </bl-persisted-file-list>
-        </bl-entity-details-list>
+        <bl-blob-files-browser #blobList [container]="container.id" [fileExplorerConfig]="fileExplorerConfig" [activeFile]="pickedFile"
+            (activeFileChange)="updatePickedFile($event)">
+        </bl-blob-files-browser>
+    </div>
+
+    <div *ngIf="containerError" class="container-error">
+        Error loading container '{{containerId}}' make sure it exists.
+    </div>
+    <div blFormSummary>
+        <div *ngIf="pickedFile">Picked file: {{pickedFile}}</div>
+        <div *ngIf="!pickedFile">No file picked</div>
     </div>
 </bl-simple-form>

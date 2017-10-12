@@ -5,7 +5,7 @@ import * as CommandMap from "app/commands";
 import { CommandBase } from "app/commands/core";
 import { KeyBindings } from "app/models";
 import { ObjectUtils } from "app/utils";
-import { SettingsService } from "./settings-service";
+import { SettingsService } from "./settings.service";
 
 export const commands: any[] = ObjectUtils.values(CommandMap as any).filter((x: any) => x.id !== undefined);
 

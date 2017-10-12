@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
-import { MdDialog, MdDialogConfig } from "@angular/material";
+import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { List } from "immutable";
@@ -45,7 +45,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
     constructor(
         private router: Router,
         private activatedRoute: ActivatedRoute,
-        private dialog: MdDialog,
+        private dialog: MatDialog,
         private sidebarManager: SidebarManager,
         private pricingService: PricingService,
         private viewContainerRef: ViewContainerRef,
@@ -95,7 +95,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public deletePool() {
-        let config = new MdDialogConfig();
+        let config = new MatDialogConfig();
         config.viewContainerRef = this.viewContainerRef;
 
         const dialogRef = this.dialog.open(DeletePoolDialogComponent, config);
@@ -110,7 +110,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public resizePool() {
-        const sidebarRef = this.sidebarManager.open("resize-pool", PoolResizeDialogComponent);
+        const sidebarRef = this.sidebarManager.open(`resize-pool-${this.pool.id}`, PoolResizeDialogComponent);
         sidebarRef.component.pool = this.pool;
         this.sidebarManager.onClosed.subscribe(() => {
             this.refreshPool();

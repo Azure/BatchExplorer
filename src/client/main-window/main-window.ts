@@ -1,8 +1,8 @@
 import { BrowserWindow } from "electron";
 
-import { BatchClientProxyFactory, FileUtils, StorageClientProxyFactory } from "../api";
+import { BatchClientProxyFactory, FileUtils } from "../api";
 import { Constants } from "../client-constants";
-import { UniqueWindow, windows } from "../core";
+import { UniqueWindow, batchLabsApp } from "../core";
 import { logger, renderLogger } from "../logger";
 
 // Webpack dev server url when using HOT=1
@@ -34,11 +34,11 @@ export class MainWindow extends UniqueWindow {
 
         const anyWindow = window as any;
         // anyWindow.batchClientFactory = new BatchClientProxyFactory();
-        anyWindow.storageClientFactory = new StorageClientProxyFactory();
         anyWindow.logger = renderLogger;
-        anyWindow.splashScreen = windows.splashScreen;
-        anyWindow.authenticationWindow = windows.authentication;
+        anyWindow.splashScreen = batchLabsApp.splashScreen;
+        anyWindow.authenticationWindow = batchLabsApp.authenticationWindow;
         anyWindow.fileUtils = new FileUtils();
+        anyWindow.clientConstants = Constants;
 
         // Open the DevTools.
         if (process.env.NODE_ENV !== "production") {
@@ -61,20 +61,21 @@ export class MainWindow extends UniqueWindow {
     }
 
     private _setupEvents(window: Electron.BrowserWindow) {
+        this.setupCommonEvents(window);
         window.webContents.on("crashed", (event: Electron.Event, killed: boolean) => {
             logger.error("There was a crash", event, killed);
-            windows.recover.createWithError(event.returnValue);
+            batchLabsApp.recoverWindow.createWithError(event.returnValue);
         });
 
         window.webContents.on("did-fail-load", (error) => {
-            windows.splashScreen.updateMessage(
+            batchLabsApp.splashScreen.updateMessage(
                 "Fail to load! Make sure you built the app or are running the dev-server.");
             logger.error("Fail to load", error);
         });
 
         window.on("unresponsive", (error: Error) => {
             logger.error("There was a crash", error);
-            windows.recover.createWithError(error.message);
+            batchLabsApp.recoverWindow.createWithError(error.message);
         });
     }
 }

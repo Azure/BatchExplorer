@@ -1,13 +1,5 @@
 <div *ngIf="!nodeNotFound && !fileCleanupOperation && !nodeInInvalidState">
     <bl-server-error class="error-in-list" [error]="error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
-    <bl-tree-view-display
-            #treeDisplay
-            [status]="status | async"
-            [baseUrl]="baseUrl"
-            [filter]="filter"
-            [hasMoreMap]="moreFileMap"
-            [loadPath]="loadPath"
-            (treeNodeClicked)="treeNodeClicked($event)"></bl-tree-view-display>
     <bl-loading [status]="status | async"></bl-loading>
 </div>
 

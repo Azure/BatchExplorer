@@ -5,7 +5,7 @@ bl-banner {
     margin-top: 10px;
 }
 
-bl-banner > md-card {
+bl-banner > mat-card {
     padding: 0;
     display: block;
 
@@ -135,17 +135,17 @@ bl-banner > md-card {
     }
 }
 
-bl-banner > md-card.error {
+bl-banner > mat-card.error {
     @include banner-scheme(map-get($danger, 500), map-get($danger, 800));
     color: $whiteSmoke-darker;
 }
 
-bl-banner > md-card.warning {
+bl-banner > mat-card.warning {
     @include banner-scheme(map-get($warn, 500), map-get($warn, 800));
     color: $whiteSmoke-darker;
 }
 
-bl-banner > md-card.notice {
+bl-banner > mat-card.notice {
     @include banner-scheme($concreteGray, $dusty-grey );
     color: $genericGray;
 }
