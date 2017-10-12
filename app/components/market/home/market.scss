@@ -27,8 +27,9 @@ bl-market {
         }
     }
 
-    bl-recent-template-list {
+    .market-first-section {
         margin: 0 20px 10px;
+        display: flex;
     }
 
     .applications {
