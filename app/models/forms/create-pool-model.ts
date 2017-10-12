@@ -29,6 +29,7 @@ export interface PoolScaleModel {
     autoScaleEvaluationInterval: number;
     targetDedicatedNodes: number;
     targetLowPriorityNodes: number;
+    resizeTimeout: number;
 }
 
 export interface PackageReferenceModel {
@@ -73,6 +74,7 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
     } else {
         data.targetDedicatedNodes = outputScale.targetDedicatedNodes;
         data.targetLowPriorityNodes = outputScale.targetLowPriorityNodes;
+        data.resizeTimeout = moment.duration({ minutes: outputScale.resizeTimeout });
     }
 
     if (output.os.source === PoolOsSources.PaaS) {
