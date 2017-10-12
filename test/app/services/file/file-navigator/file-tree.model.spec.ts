@@ -49,7 +49,7 @@ function cleanupRepr(repr: string): string {
     return "\n" + lines.map(x => x.trim()).join("\n") + "\n";
 }
 
-describe("FileTreeStructure", () => {
+fdescribe("FileTreeStructure", () => {
     let tree: FileTreeStructure;
 
     describe("#addFiles()", () => {
@@ -198,5 +198,54 @@ describe("FileTreeStructure", () => {
             expect(sub.isDirectory).toBe(true);
             expect(sub.loadingStatus).toEqual(LoadingStatus.Loading);
         });
+    });
+
+    describe("#deleteNode()", () => {
+        beforeEach(() => {
+            tree = new FileTreeStructure();
+            const files = List([
+                makeFile("root.txt"),
+                makeFile("folder/file1.txt"),
+                makeFile("folder/subfolder/file2.txt"),
+                makeFile("folder/subfolder/file3.txt"),
+                makeFile("folder/subfolder/subsubfolder/file4.txt"),
+                makeFile("other/file1.txt"),
+                makeFile("other/file2.txt"),
+            ]);
+
+            tree.addFiles(files);
+        });
+
+        it("check tree layout as expected", () => {
+            expect(reprTree(tree)).toEqual(cleanupRepr(`
+            | + folder
+            |   + subfolder
+            |     + subsubfolder
+            |       - file4.txt
+            |     - file2.txt
+            |     - file3.txt
+            |   - file1.txt
+            | + other
+            |   - file1.txt
+            |   - file2.txt
+            | - root.txt
+            `));
+        });
+
+        // it("should return folder node if it exists", () => {
+        //     const sub = tree.getNode("wd/sub");
+        //     expect(sub.name).toEqual("sub");
+        //     expect(sub.path).toEqual("wd/sub");
+        //     expect(sub.isDirectory).toBe(true);
+        //     expect(sub.loadingStatus).toEqual(LoadingStatus.Ready);
+        // });
+
+        // it("should a folder if doesn't exists", () => {
+        //     const sub = tree.getNode("wd/unknown");
+        //     expect(sub.name).toEqual("unknown");
+        //     expect(sub.path).toEqual("wd/unknown");
+        //     expect(sub.isDirectory).toBe(true);
+        //     expect(sub.loadingStatus).toEqual(LoadingStatus.Loading);
+        // });
     });
 });
