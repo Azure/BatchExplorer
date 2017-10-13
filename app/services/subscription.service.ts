@@ -15,12 +15,26 @@ export class SubscriptionService {
     private _subscriptions = new BehaviorSubject<List<Subscription>>(List([]));
     private _accountSubscriptionFilter = new BehaviorSubject<Set<string>>(Set([]));
     private _subscriptionsLoaded = new AsyncSubject();
+    private _ignoredSubscriptionPatterns = new BehaviorSubject<string[]>([]);
 
     constructor(private azure: AzureHttpService, private adal: AdalService, private settingsService: SettingsService) {
-        this.subscriptions = this._subscriptionsLoaded.flatMap(() => this._subscriptions.asObservable());
+        this.subscriptions = this._subscriptionsLoaded
+            .flatMap(() => Observable.combineLatest(this._subscriptions, this._ignoredSubscriptionPatterns))
+            .map(([subscriptions, ignoredPatterns]) => {
+                return this._ignoreSubscriptions(subscriptions, ignoredPatterns);
+            }).shareReplay(1);
+
         this.accountSubscriptionFilter = this._accountSubscriptionFilter.asObservable();
         this._loadCachedSubscriptions();
         this._loadAccountSubscriptionFilter();
+
+        this.settingsService.settingsObs.subscribe((newSettings) => {
+            const ignoredPatterns = newSettings["subscription.ignore"];
+            if (this._ignoredSubscriptionPatterns.value !== ignoredPatterns) {
+                this._ignoredSubscriptionPatterns.next(ignoredPatterns);
+                this.load();
+            }
+        });
     }
 
     public load(): Observable<any> {
@@ -30,8 +44,8 @@ export class SubscriptionService {
         obs.subscribe({
             next: (tenantSubscriptions) => {
                 const subscriptions = tenantSubscriptions.flatten();
-
-                this._subscriptions.next(List(this._filterIgnoredSubscriptions(subscriptions)));
+                console.log("Load banana", subscriptions.length);
+                this._subscriptions.next(List(subscriptions));
                 this._cacheSubscriptions();
                 this._markSubscriptionsAsLoaded();
             },
@@ -84,7 +98,7 @@ export class SubscriptionService {
             if (Object.keys(subscriptions).length === 0) {
                 localStorage.removeItem(Constants.localStorageKey.subscriptions);
             } else {
-                this._subscriptions.next(List<Subscription>(this._filterIgnoredSubscriptions(subscriptions)));
+                this._subscriptions.next(List<Subscription>(subscriptions));
                 this._markSubscriptionsAsLoaded();
             }
         } catch (e) {
@@ -116,20 +130,17 @@ export class SubscriptionService {
         this._subscriptionsLoaded.complete();
     }
 
-    private _filterIgnoredSubscriptions(subscriptions: Subscription[]) {
-        const ignored = this.settingsService.settings["subscription.ignore"];
-        if (ignored.length === 0) {
+    private _ignoreSubscriptions(subscriptions: List<Subscription>, ignoredPatterns: string[]): List<Subscription> {
+        if (ignoredPatterns.length === 0) {
             return subscriptions;
         }
-        console.log("Ignired", ignored);
-        return subscriptions.filter((subscription) => {
-            console.log("Filter", subscription.displayName);
-            for (let ignoredPattern of ignored) {
+        return List(subscriptions.filter((subscription) => {
+            for (let ignoredPattern of ignoredPatterns) {
                 if (StringUtils.matchWildcard(subscription.displayName, ignoredPattern)) {
                     return false;
                 }
             }
             return true;
-        });
+        }));
     }
 }

@@ -27,8 +27,8 @@ export class SettingsService {
     private _keybindingsFilename = "keybindings";
 
     constructor(private zone: NgZone, private storage: LocalFileStorage) {
-        this.settingsObs = this._settingsSubject.asObservable();
-        this.keybindings = this._keybindings.asObservable();
+        this.settingsObs = this._settingsSubject.filter(x => Boolean(x));
+        this.keybindings = this._keybindings.filter(x => Boolean(x));
         this.hasSettingsLoaded = this._hasSettingsLoaded.asObservable();
     }
 
