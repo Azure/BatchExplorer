@@ -58,7 +58,7 @@ export class FileNavigator {
     private _tree = new BehaviorSubject<FileTreeStructure>(null);
     private _loadPath: (folder: string) => RxListProxy<any, File>;
     private _cache: DataCache<File>;
-    private _fileDeleted: Subscription;
+    private _fileDeletedSub: Subscription;
 
     private _proxies: StringMap<RxListProxy<any, File>> = {};
     private _getFileLoader: (filename: string) => FileLoader;
@@ -80,7 +80,7 @@ export class FileNavigator {
     public init() {
         this._loadFilesInPath("");
         if (this._cache) {
-            this._fileDeleted = this._cache.deleted.subscribe((key: string) => {
+            this._fileDeletedSub = this._cache.deleted.subscribe((key: string) => {
                 this._removeFile(key);
             });
         }
@@ -135,8 +135,8 @@ export class FileNavigator {
     }
 
     public dispose() {
-        if (this._fileDeleted) {
-            this._fileDeleted.unsubscribe();
+        if (this._fileDeletedSub) {
+            this._fileDeletedSub.unsubscribe();
         }
         for (let proxy of ObjectUtils.values(this._proxies)) {
             proxy.dispose();
