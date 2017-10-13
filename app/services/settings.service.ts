@@ -4,8 +4,8 @@ import { BehaviorSubject, Observable } from "rxjs";
 const stripJsonComments = require("strip-json-comments");
 
 import { KeyBindings, Settings, defaultKeybindings } from "app/models";
-import { LocalFileStorage } from "app/services";
 import { log } from "app/utils";
+import { LocalFileStorage } from "./local-file-storage.service";
 
 // tslint:disable-next-line:no-var-requires
 const defaultSettings = JSON.parse(stripJsonComments(require("app/components/settings/default-settings.json")));

@@ -13,4 +13,5 @@ export enum EntityConfigurationView {
 export interface Settings {
     fileTypes: StringMap<string[]>;
     "configuration.default-view": EntityConfigurationView;
+    "subscription.ignore": string[];
 }

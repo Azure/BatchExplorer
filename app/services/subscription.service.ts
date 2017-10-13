@@ -3,9 +3,10 @@ import { List, Set } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { Subscription } from "app/models";
-import { Constants, log } from "app/utils";
+import { Constants, StringUtils, log } from "app/utils";
 import { AdalService } from "./adal";
 import { AzureHttpService } from "./azure-http.service";
+import { SettingsService } from "./settings.service";
 
 @Injectable()
 export class SubscriptionService {
@@ -15,7 +16,7 @@ export class SubscriptionService {
     private _accountSubscriptionFilter = new BehaviorSubject<Set<string>>(Set([]));
     private _subscriptionsLoaded = new AsyncSubject();
 
-    constructor(private azure: AzureHttpService, private adal: AdalService) {
+    constructor(private azure: AzureHttpService, private adal: AdalService, private settingsService: SettingsService) {
         this.subscriptions = this._subscriptionsLoaded.flatMap(() => this._subscriptions.asObservable());
         this.accountSubscriptionFilter = this._accountSubscriptionFilter.asObservable();
         this._loadCachedSubscriptions();
@@ -29,7 +30,8 @@ export class SubscriptionService {
         obs.subscribe({
             next: (tenantSubscriptions) => {
                 const subscriptions = tenantSubscriptions.flatten();
-                this._subscriptions.next(List(subscriptions));
+
+                this._subscriptions.next(List(this._filterIgnoredSubscriptions(subscriptions)));
                 this._cacheSubscriptions();
                 this._markSubscriptionsAsLoaded();
             },
@@ -82,7 +84,7 @@ export class SubscriptionService {
             if (Object.keys(subscriptions).length === 0) {
                 localStorage.removeItem(Constants.localStorageKey.subscriptions);
             } else {
-                this._subscriptions.next(List<Subscription>(subscriptions));
+                this._subscriptions.next(List<Subscription>(this._filterIgnoredSubscriptions(subscriptions)));
                 this._markSubscriptionsAsLoaded();
             }
         } catch (e) {
@@ -112,5 +114,22 @@ export class SubscriptionService {
     private _markSubscriptionsAsLoaded() {
         this._subscriptionsLoaded.next(true);
         this._subscriptionsLoaded.complete();
+    }
+
+    private _filterIgnoredSubscriptions(subscriptions: Subscription[]) {
+        const ignored = this.settingsService.settings["subscription.ignore"];
+        if (ignored.length === 0) {
+            return subscriptions;
+        }
+        console.log("Ignired", ignored);
+        return subscriptions.filter((subscription) => {
+            console.log("Filter", subscription.displayName);
+            for (let ignoredPattern of ignored) {
+                if (StringUtils.matchWildcard(subscription.displayName, ignoredPattern)) {
+                    return false;
+                }
+            }
+            return true;
+        });
     }
 }
