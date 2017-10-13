@@ -49,7 +49,7 @@ function cleanupRepr(repr: string): string {
     return "\n" + lines.map(x => x.trim()).join("\n") + "\n";
 }
 
-fdescribe("FileTreeStructure", () => {
+describe("FileTreeStructure", () => {
     let tree: FileTreeStructure;
 
     describe("#addFiles()", () => {
@@ -232,20 +232,35 @@ fdescribe("FileTreeStructure", () => {
             `));
         });
 
-        // it("should return folder node if it exists", () => {
-        //     const sub = tree.getNode("wd/sub");
-        //     expect(sub.name).toEqual("sub");
-        //     expect(sub.path).toEqual("wd/sub");
-        //     expect(sub.isDirectory).toBe(true);
-        //     expect(sub.loadingStatus).toEqual(LoadingStatus.Ready);
-        // });
+        it("delete file from root removes file", () => {
+            tree.deleteNode("root.txt");
+            const hasNode = tree.directories[""].children.has("root.txt");
+            expect(hasNode).toEqual(false);
+        });
 
-        // it("should a folder if doesn't exists", () => {
-        //     const sub = tree.getNode("wd/unknown");
-        //     expect(sub.name).toEqual("unknown");
-        //     expect(sub.path).toEqual("wd/unknown");
-        //     expect(sub.isDirectory).toBe(true);
-        //     expect(sub.loadingStatus).toEqual(LoadingStatus.Loading);
-        // });
+        it("removing the only file from a folder removes folder as well", () => {
+            const folderPath = "folder/subfolder/subsubfolder";
+            expect(tree.directories[folderPath].children.has(folderPath + "/file4.txt")).toEqual(true);
+
+            tree.deleteNode(folderPath + "/file4.txt");
+            expect(tree.directories[folderPath]).toBeUndefined();
+
+            // removes the folder from the parents children as well
+            const parent = "folder/subfolder";
+            expect(tree.directories[parent].children.has(parent + "/subsubfolder")).toEqual(false);
+
+            // tree is as expected
+            expect(reprTree(tree)).toEqual(cleanupRepr(`
+            | + folder
+            |   + subfolder
+            |     - file2.txt
+            |     - file3.txt
+            |   - file1.txt
+            | + other
+            |   - file1.txt
+            |   - file2.txt
+            | - root.txt
+            `));
+        });
     });
 });
