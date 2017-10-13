@@ -32,7 +32,6 @@ export class SubscriptionService {
             const ignoredPatterns = newSettings["subscription.ignore"];
             if (this._ignoredSubscriptionPatterns.value !== ignoredPatterns) {
                 this._ignoredSubscriptionPatterns.next(ignoredPatterns);
-                this.load();
             }
         });
     }
@@ -44,7 +43,6 @@ export class SubscriptionService {
         obs.subscribe({
             next: (tenantSubscriptions) => {
                 const subscriptions = tenantSubscriptions.flatten();
-                console.log("Load banana", subscriptions.length);
                 this._subscriptions.next(List(subscriptions));
                 this._cacheSubscriptions();
                 this._markSubscriptionsAsLoaded();
@@ -136,7 +134,7 @@ export class SubscriptionService {
         }
         return List(subscriptions.filter((subscription) => {
             for (let ignoredPattern of ignoredPatterns) {
-                if (StringUtils.matchWildcard(subscription.displayName, ignoredPattern)) {
+                if (StringUtils.matchWildcard(subscription.displayName, ignoredPattern, false)) {
                     return false;
                 }
             }
