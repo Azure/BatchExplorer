@@ -66,18 +66,11 @@ export class DataContainerFilesComponent implements OnDestroy {
 
     @autobind()
     public handleFileDelete(files: File[]) {
-        // TODO: would like to get the deleted count from this call.
         this.storageService.deleteFilesFromContainer(this.container, files).subscribe({
             complete: () => {
                 // tslint:disable-next-line:max-line-length
                 const message = `The files were successfully removed from the file group: ${this.container.name}`;
                 this.notificationService.success("Removed files from group", message);
-            },
-            error: (error) => {
-                // tslint:disable-next-line:max-line-length
-                const message = `Not all files were able to be removed from the file group: ${this.container.name}`;
-                this.notificationService.error("Error while deleting files", message, { persist: true });
-                log.error("Failed to delete all requested files", error);
             },
         });
     }
