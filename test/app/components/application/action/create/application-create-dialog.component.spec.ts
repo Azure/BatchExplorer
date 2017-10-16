@@ -9,7 +9,7 @@ import { ApplicationCreateDialogComponent } from "app/components/application/act
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { ServerError } from "app/models";
-import { ApplicationService, HttpUploadService } from "app/services";
+import { ApplicationService, StorageService } from "app/services";
 import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";
 import { validateControl } from "test/utils/helpers";
@@ -21,7 +21,7 @@ describe("ApplicationCreateDialogComponent ", () => {
     let component: ApplicationCreateDialogComponent;
     let debugElement: DebugElement;
     let appServiceSpy: any;
-    let uploadServiceSpy: any;
+    let storageService: any;
     let notificationServiceSpy: any;
 
     const validators = TestConstants.validators;
@@ -59,14 +59,8 @@ describe("ApplicationCreateDialogComponent ", () => {
             onApplicationAdded: new Subject(),
         };
 
-        uploadServiceSpy = {
-            putBlock: jasmine.createSpy("putBlock").and.callFake((sasUrl, options) => {
-                return Observable.of({});
-            }),
-
-            commitBlockList: jasmine.createSpy("commitBlockList").and.callFake((sasUrl, options) => {
-                return Observable.of({});
-            }),
+        storageService = {
+            uploadToSasUrl: jasmine.createSpy("uploadToSasUrl").and.returnValue(Observable.of({})),
         };
 
         notificationServiceSpy = {
@@ -81,7 +75,7 @@ describe("ApplicationCreateDialogComponent ", () => {
                 { provide: FormBuilder, useValue: new FormBuilder() },
                 { provide: SidebarRef, useValue: null },
                 { provide: ApplicationService, useValue: appServiceSpy },
-                { provide: HttpUploadService, useValue: uploadServiceSpy },
+                { provide: StorageService, useValue: storageService },
                 { provide: NotificationService, useValue: notificationServiceSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],
@@ -224,8 +218,7 @@ describe("ApplicationCreateDialogComponent ", () => {
                 expect(appServiceSpy.put).toHaveBeenCalledTimes(1);
                 expect(appServiceSpy.put).toHaveBeenCalledWith("app-5", "1.0");
 
-                expect(uploadServiceSpy.putBlock).toHaveBeenCalledTimes(1);
-                expect(uploadServiceSpy.commitBlockList).toHaveBeenCalledTimes(1);
+                expect(storageService.uploadToSasUrl).toHaveBeenCalledOnce();
 
                 expect(appServiceSpy.activatePackage).toHaveBeenCalledTimes(1);
                 expect(appServiceSpy.activatePackage).toHaveBeenCalledWith("app-5", "1.0");
@@ -263,8 +256,7 @@ describe("ApplicationCreateDialogComponent ", () => {
                     expect(appServiceSpy.put).toHaveBeenCalledTimes(1);
                     expect(appServiceSpy.put).toHaveBeenCalledWith("throw-me", "1.0");
 
-                    expect(uploadServiceSpy.putBlock).toHaveBeenCalledTimes(0);
-                    expect(uploadServiceSpy.commitBlockList).toHaveBeenCalledTimes(0);
+                    expect(storageService.uploadToSasUrl).not.toHaveBeenCalled();
                     expect(appServiceSpy.activatePackage).toHaveBeenCalledTimes(0);
                     expect(notificationServiceSpy.success).toHaveBeenCalledTimes(0);
 
@@ -287,8 +279,7 @@ describe("ApplicationCreateDialogComponent ", () => {
                 next: () => {
                     expect(appServiceSpy.put).toHaveBeenCalledTimes(1);
                     expect(appServiceSpy.put).toHaveBeenCalledWith("activate-fail", "1.0");
-                    expect(uploadServiceSpy.putBlock).toHaveBeenCalledTimes(1);
-                    expect(uploadServiceSpy.commitBlockList).toHaveBeenCalledTimes(1);
+                    expect(storageService.uploadToSasUrl).toHaveBeenCalledOnce();
                     expect(appServiceSpy.activatePackage).toHaveBeenCalledTimes(1);
                     expect(notificationServiceSpy.success).toHaveBeenCalledTimes(0);
                     expect(notificationServiceSpy.error).toHaveBeenCalledTimes(1);
