@@ -1,11 +1,11 @@
-import { Component, Input, OnChanges } from "@angular/core";
+import { Component, Input, OnChanges, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
 import { NcjJobTemplate, NcjParameter, NcjPoolTemplate, ServerError } from "app/models";
-import { PythonRpcService } from "app/services";
+import { NcjSubmitService, NcjTemplateService } from "app/services";
 import { exists, log } from "app/utils";
 import { Modes, NcjParameterWrapper } from "./market-application.model";
 import "./submit-ncj-template.scss";
@@ -14,10 +14,18 @@ import "./submit-ncj-template.scss";
     selector: "bl-submit-ncj-template",
     templateUrl: "submit-ncj-template.html",
 })
-export class SubmitNcjTemplateComponent implements OnChanges {
+export class SubmitNcjTemplateComponent implements OnInit, OnChanges {
     @Input() public jobTemplate: NcjJobTemplate;
     @Input() public poolTemplate: NcjPoolTemplate;
     @Input() public title: string;
+
+    /**
+     * initial data
+     */
+    @Input() public initialJobParams: StringMap<any>;
+    @Input() public initialPoolParams: StringMap<any>;
+    @Input() public initialPickedPool: string;
+    @Input() public initialModeState: Modes;
 
     public Modes = Modes;
     public modeState = Modes.None;
@@ -34,8 +42,13 @@ export class SubmitNcjTemplateComponent implements OnChanges {
     constructor(
         private formBuilder: FormBuilder,
         private router: Router,
-        private pythonRpcService: PythonRpcService) {
+        private templateService: NcjTemplateService,
+        private ncjSubmitService: NcjSubmitService) {
         this.form = new FormGroup({});
+    }
+
+    public ngOnInit() {
+        this._applyinitialData();
     }
 
     public ngOnChanges(changes) {
@@ -106,20 +119,24 @@ export class SubmitNcjTemplateComponent implements OnChanges {
 
     @autobind()
     private _createJobWithAutoPool() {
-        return this.pythonRpcService.callWithAuth("expand-ncj-pool", [this.poolTemplate, this.poolParams.value])
-            .cascade((data) => this._runJobWithPool(data));
+        this._saveTemplateAsRecent();
+        return this.ncjSubmitService.expandPoolTemplate(this.poolTemplate, this.poolParams.value)
+            .cascade(data => this._runJobWithPool(data));
     }
 
     @autobind()
     private _createJob() {
-        this.jobTemplate.job.properties.poolInfo = this.pickedPool.value;
-        return this.pythonRpcService.callWithAuth("submit-ncj-job", [this.jobTemplate, this.jobParams.value])
+        const jobTemplate = { ...this.jobTemplate };
+        jobTemplate.job.properties.poolInfo = this.pickedPool.value;
+        this._saveTemplateAsRecent();
+        return this.ncjSubmitService.submitJob(jobTemplate, this.jobParams.value)
             .cascade((data) => this._redirectToJob(data.properties.id));
     }
 
     @autobind()
     private _createPool() {
-        return this.pythonRpcService.callWithAuth("create-ncj-pool", [this.poolTemplate, this.poolParams.value])
+        this._saveTemplateAsRecent();
+        return this.ncjSubmitService.createPool(this.poolTemplate, this.poolParams.value)
             .cascade((data) => this._redirectToPool(data.id));
     }
 
@@ -177,19 +194,49 @@ export class SubmitNcjTemplateComponent implements OnChanges {
     }
 
     private _runJobWithPool(expandedPoolTemplate) {
-        delete expandedPoolTemplate.id;
-        this.jobTemplate.job.properties.poolInfo = {
+        const pool = exists(expandedPoolTemplate.properties) ? expandedPoolTemplate.properties : expandedPoolTemplate;
+        delete pool.id;
+        const jobTemplate = { ...this.jobTemplate };
+        jobTemplate.job.properties.poolInfo = {
             autoPoolSpecification: {
                 autoPoolIdPrefix: "autopool",
                 poolLifetimeOption: "job",
                 keepAlive: false,
-                pool: expandedPoolTemplate,
+                pool: pool,
             },
         };
-        return this.pythonRpcService.callWithAuth("submit-ncj-job", [this.jobTemplate, this.jobParams.value])
+        return this.ncjSubmitService.submitJob(jobTemplate, this.jobParams.value)
             .cascade((data) => this._redirectToJob(data.properties.id));
     }
 
+    private _saveTemplateAsRecent() {
+        this.templateService.addRecentSubmission({
+            name: this.title,
+            jobTemplate: this.jobTemplate,
+            poolTemplate: this.poolTemplate,
+            mode: this.modeState,
+            jobParams: this.jobParams.value,
+            poolParams: this.poolParams.value,
+            pickedPool: this.pickedPool.value,
+        });
+    }
+
+    private _applyinitialData() {
+        if (this.initialJobParams) {
+            this.jobParams.patchValue(this.initialJobParams);
+        }
+        if (this.initialPoolParams) {
+            this.poolParams.patchValue(this.initialPoolParams);
+        }
+
+        if (this.initialPickedPool) {
+            this.pickedPool.setValue(this.initialPickedPool);
+        }
+
+        if (this.initialModeState) {
+            this.modeState = this.initialModeState;
+        }
+    }
     private _redirectToJob(id) {
         if (id) {
             this.router.navigate(["/jobs", id]);

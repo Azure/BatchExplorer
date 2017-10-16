@@ -22,13 +22,13 @@ export class MarketComponent implements OnInit, OnDestroy {
     public displayedApplications: List<Application>;
     public quicksearch = new FormControl("");
 
-    private _sub: Subscription;
+    private _subs: Subscription[] = [];
 
     constructor(private templateService: NcjTemplateService) {
-        this._sub = this.quicksearch.valueChanges.subscribe((query) => {
+        this._subs.push(this.quicksearch.valueChanges.subscribe((query) => {
             this.query = query;
             this._filterApplications();
-        });
+        }));
     }
 
     public ngOnInit() {
@@ -39,7 +39,8 @@ export class MarketComponent implements OnInit, OnDestroy {
     }
 
     public ngOnDestroy() {
-        this._sub.unsubscribe();
+        this._subs.forEach(x => x.unsubscribe());
+        this._subs = [];
     }
 
     @autobind()
