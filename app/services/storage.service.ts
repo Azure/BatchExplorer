@@ -266,15 +266,12 @@ export class StorageService {
     }
 
     public uploadToSasUrl(sasUrl: string, filePath: string): Observable<any> {
-        console.log("Sas url", sasUrl, filePath);
         const subject = new AsyncSubject<storage.BlobService.BlobResult>();
 
         const { accountUrl, sasToken, container, blob } = this._parseSasUrl(sasUrl);
-        console.log("Match?", { accountUrl, sasToken, container, blob });
         const service = storage.createBlobServiceWithSas(accountUrl, sasToken);
         service.createBlockBlobFromLocalFile(container, blob, filePath,
             (error: any, result: storage.BlobService.BlobResult) => {
-                console.log("got result...", result);
                 this.zone.run(() => {
 
                     if (error) {
