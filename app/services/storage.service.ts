@@ -1,5 +1,6 @@
-import { Injectable } from "@angular/core";
-import { Observable, Subject } from "rxjs";
+import { Injectable, NgZone } from "@angular/core";
+import * as storage from "azure-storage";
+import { AsyncSubject, Observable, Subject } from "rxjs";
 
 import { BlobContainer, File, ServerError } from "app/models";
 import { FileSystemService } from "app/services";
@@ -51,6 +52,9 @@ const storageIgnoredErrors = [
     Constants.HttpCode.Conflict,
 ];
 
+// Regex to extract the host, container and blob from a sasUrl
+const storageBlobUrlRegex = /^(https:\/\/[a-z\.]+)\/([a-z0-9\-]+)\/([a-z0-9\-]+)\?(.*)$/i;
+
 @Injectable()
 export class StorageService {
     /**
@@ -68,7 +72,7 @@ export class StorageService {
         key: ({ container, blobPrefix }) => container + "/" + blobPrefix,
     }, "url");
 
-    constructor(private storageClient: StorageClientService, private fs: FileSystemService) { }
+    constructor(private storageClient: StorageClientService, private fs: FileSystemService, private zone: NgZone) { }
 
     public getBlobFileCache(params: ListBlobParams): DataCache<File> {
         return this._blobListCache.getCache(params);
@@ -261,6 +265,27 @@ export class StorageService {
         return observable;
     }
 
+    public uploadToSasUrl(sasUrl: string, filePath: string): Observable<any> {
+        const subject = new AsyncSubject<storage.BlobService.BlobResult>();
+
+        const { accountUrl, sasToken, container, blob } = this._parseSasUrl(sasUrl);
+        const service = storage.createBlobServiceWithSas(accountUrl, sasToken);
+        service.createBlockBlobFromLocalFile(container, blob, filePath,
+            (error: any, result: storage.BlobService.BlobResult) => {
+                this.zone.run(() => {
+
+                    if (error) {
+                        subject.error(ServerError.fromStorage(error));
+                        subject.complete();
+                    }
+                    subject.next(result);
+                    subject.complete();
+                });
+            });
+
+        return subject.asObservable();
+    }
+
     /**
      * Allow access to the hasAutoStorage observable in the base client
      */
@@ -303,5 +328,20 @@ export class StorageService {
                 return Observable.throw(serverError);
             });
         });
+    }
+
+    private _parseSasUrl(sasUrl: string) {
+        const match = storageBlobUrlRegex.exec(sasUrl);
+
+        if (match.length < 5) {
+            throw new Error(`Invalid sas url "${sasUrl}"`);
+        }
+
+        return {
+            accountUrl: match[1],
+            container: match[2],
+            blob: match[3],
+            sasToken: match[4],
+        };
     }
 }
