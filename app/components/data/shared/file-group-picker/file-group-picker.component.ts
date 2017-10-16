@@ -2,9 +2,12 @@ import { Component, Input, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
+import { autobind } from "core-decorators";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
+import { SidebarManager } from "app/components/base/sidebar";
+import { FileGroupCreateFormComponent } from "app/components/data/action";
 import { BlobContainer } from "app/models";
 import { ListContainerParams, StorageService } from "app/services";
 import { RxListProxy } from "app/services/core";
@@ -33,12 +36,17 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
     private _subscriptions: Subscription[] = [];
     private _loading: boolean = true;
 
-    constructor(private storageService: StorageService) {
+    constructor(private storageService: StorageService, private sidebarManager: SidebarManager) {
 
         this.fileGroupsData = this.storageService.listContainers(storageService.ncjFileGroupPrefix);
         this.fileGroupsData.items.subscribe((fileGroups) => {
             this.fileGroups = fileGroups;
         });
+
+        // listen to file group add events
+        this._subscriptions.push(this.storageService.onFileGroupAdded.subscribe((fileGroupId: string) => {
+            this.fileGroupsData.loadNewItem(storageService.getContainerOnce(fileGroupId));
+        }));
 
         this._subscriptions.push(this.value.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((value) => {
             this._checkValid(value);
@@ -74,6 +82,11 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
 
     public validate(c: FormControl) {
         return null;
+    }
+
+    @autobind()
+    public openCreateFileGroupDialog() {
+        this.sidebarManager.open("Add a new file group", FileGroupCreateFormComponent);
     }
 
     private _checkValid(value: string) {

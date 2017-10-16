@@ -97,5 +97,4 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnInit, O
         const valid = !value || this.fileGroups.map(x => x.name).includes(value);
         this.warning = !valid;
     }
-
 }
