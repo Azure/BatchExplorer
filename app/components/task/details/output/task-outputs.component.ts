@@ -149,7 +149,8 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
     private _fileConventionErrorMessage() {
         return `There are no file conventions library outputs for this job. Learn more here: `
             + `https://go.microsoft.com/fwlink/?linkid=860744\n\n`
-            + `If the job was created from a job template, outputs can be viewed by going to the 'Data' menu and selecting the output file group.`;
+            + `If the job was created from a job template, outputs can be viewed by going to the 'Data' menu `
+            + `and selecting the output file group.`;
     }
 
     private _updateStateTooltip() {
