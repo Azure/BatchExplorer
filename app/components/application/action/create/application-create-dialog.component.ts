@@ -3,14 +3,14 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { Response } from "@angular/http";
 import * as storage from "azure-storage";
 import { autobind } from "core-decorators";
-import { AsyncSubject, Observable } from "rxjs";
+import { Observable } from "rxjs";
 
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { BatchApplication } from "app/models";
 import { applicationToCreateFormModel } from "app/models/forms";
-import { ApplicationService, CommitBlockListOptions, HttpUploadService, UploadBlockOptions, StorageService } from "app/services";
-import { Constants, UrlUtils, log, prettyBytes } from "app/utils";
+import { ApplicationService, StorageService } from "app/services";
+import { Constants, log, prettyBytes } from "app/utils";
 
 @Component({
     selector: "bl-application-create-dialog",
@@ -85,16 +85,7 @@ export class ApplicationCreateDialogComponent {
     @autobind()
     public submit(): Observable<any> {
         const formData = this.form.value;
-        // this._parseSasUrl("https://batchapppackage.blob.core.windows.net/app-a-86f7e437faa5a7fce15d1ddcb9eaeaea377667b8/a-3-042dff99-f742-41f5-8d7b-df749738c3d2?sv=2015-04-05&sr=b&sig=ewcfIuEr660ghDtAVh0yTXxvKUTlTNh0rZ%2FST4awrsE%3D&st=2017-10-16T19%3A59%3A57Z&se=2017-10-17T00%3A04%3A57Z&sp=rw");
-        // return;
-        /**
-         * Todo:
-         * - create upload file handler action
-         * - create activate package action
-         * - pass both of these actions to the long running task mananger
-         * handle errors
-         *  - max applications, or packages reached
-         */
+
         return this.applicationService.put(formData.id, formData.version)
             .cascade((packageVersion) => this._uploadAppPackage(this.file, packageVersion.storageUrl))
             .cascade(() => {
@@ -129,6 +120,9 @@ export class ApplicationCreateDialogComponent {
     }
 
     private _uploadAppPackage(file: File, sasUrl: string): Observable<storage.BlobService.BlobResult> {
+        if (!this.hasValidFile()) {
+            return Observable.throw("Valid file not selected");
+        }
         return this.storageService.uploadToSasUrl(sasUrl, file.path);
     }
 }
