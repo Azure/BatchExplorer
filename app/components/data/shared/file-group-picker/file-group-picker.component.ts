@@ -3,7 +3,6 @@ import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { MatOptionSelectionChange } from "@angular/material";
-import { autobind } from "core-decorators";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
@@ -46,7 +45,11 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
 
         // listen to file group add events
         this._subscriptions.push(this.storageService.onFileGroupAdded.subscribe((fileGroupId: string) => {
-            this.fileGroupsData.loadNewItem(storageService.getContainerOnce(fileGroupId));
+            const container = storageService.getContainerOnce(fileGroupId);
+            this.fileGroupsData.loadNewItem(container);
+            container.subscribe((blobContainer) => {
+                this._checkValid(blobContainer.name);
+            });
         }));
 
         this._subscriptions.push(this.value.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((value) => {
@@ -85,15 +88,13 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
         return null;
     }
 
-    @autobind()
-    public openCreateFileGroupDialog() {
-        this.sidebarManager.open("Add a new file group", FileGroupCreateFormComponent);
-    }
-
     public createFileGroup(event: MatOptionSelectionChange) {
         // isUserInput true when selected, false when not
         if (!event.source.value && event.isUserInput) {
-            this.openCreateFileGroupDialog();
+            const sidebar = this.sidebarManager.open("Add a new file group", FileGroupCreateFormComponent);
+            sidebar.afterCompletion.subscribe(() => {
+                this.value.setValue(sidebar.component.form.controls.name.value);
+            });
         }
     }
 
