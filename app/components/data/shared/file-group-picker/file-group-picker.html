@@ -10,7 +10,9 @@
 <bl-button type="round" [action]="openCreateFileGroupDialog" title="Create a new file group"><i class="fa fa-plus"></i></bl-button>
 
 <mat-autocomplete #auto="matAutocomplete">
-    <mat-option value="" (onSelectionChange)="createFileGroup($event)">+ Create a new file group</mat-option>
+    <mat-option value="" (onSelectionChange)="createFileGroup($event)" class="new-file-group">
+       + Create a new file group
+    </mat-option>
     <mat-option *ngFor="let fileGroup of fileGroups" [value]="fileGroup.name">
         {{ fileGroup.name }}
     </mat-option>
