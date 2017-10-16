@@ -2,12 +2,8 @@ import { Component, Input, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-<<<<<<< Updated upstream
+import { MatOptionSelectionChange } from "@angular/material";
 import { autobind } from "core-decorators";
-||||||| merged common ancestors
-=======
-import { MatOption } from "@angular/material";
->>>>>>> Stashed changes
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
@@ -89,19 +85,18 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
         return null;
     }
 
-<<<<<<< Updated upstream
     @autobind()
     public openCreateFileGroupDialog() {
         this.sidebarManager.open("Add a new file group", FileGroupCreateFormComponent);
     }
 
-||||||| merged common ancestors
-=======
-    public picked(source: MatOption, isUserInput: boolean) {
-        console.log("picked: ", !source.value && isUserInput);
+    public createFileGroup(event: MatOptionSelectionChange) {
+        // isUserInput true when selected, false when not
+        if (!event.source.value && event.isUserInput) {
+            this.openCreateFileGroupDialog();
+        }
     }
 
->>>>>>> Stashed changes
     private _checkValid(value: string) {
         const valid = this._loading || !value || this.fileGroups.map(x => x.name).includes(value);
         this.warning = !valid;
