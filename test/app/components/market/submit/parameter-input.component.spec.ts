@@ -47,7 +47,7 @@ class TestComponent {
     };
 }
 
-fdescribe("ParameterInputComponent", () => {
+describe("ParameterInputComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: ParameterInputComponent;
