@@ -96,7 +96,7 @@ export class DownloadFileGroupDialogComponent {
 
     private _getListOfFilesToDownload(): Observable<List<File>> {
         const patterns = this._getPatterns();
-        const data = this.storageService.listBlobs(this.containerId);
+        const data = this.storageService.listBlobs(this.containerId, { recursive: true });
         return data.fetchAll().flatMap(() => data.items.take(1)).map((items) => {
             data.dispose();
             const files = items.filter((file) => {
