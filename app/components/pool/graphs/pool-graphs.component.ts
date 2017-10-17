@@ -1,10 +1,11 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
+import { SidebarManager } from "app/components/base/sidebar";
+import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { Job, JobState, Node, NodeState, Pool, Task } from "app/models";
 import { JobService, NodeListParams, NodeService } from "app/services";
 import { PollObservable, RxListProxy } from "app/services/core";
@@ -65,7 +66,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     constructor(
         private nodeService: NodeService,
         jobService: JobService,
-        private router: Router,
+        private sidebarManager: SidebarManager,
     ) {
         this.data = nodeService.list(null, {
             pageSize: 1000,
@@ -126,9 +127,8 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
 
     @autobind()
     public openEditStartTask() {
-        this.router.navigate([], {
-            queryParams: { tab: "startTask" },
-        });
+        const ref = this.sidebarManager.open(`edit-start-task-${this.pool.id}`, StartTaskEditFormComponent);
+        ref.component.pool = this.pool;
     }
 
     @autobind()
