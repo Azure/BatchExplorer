@@ -88,9 +88,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public deleteApplication() {
-        let config = new MatDialogConfig();
-        config.viewContainerRef = this.viewContainerRef;
-        const dialogRef = this.dialog.open(DeleteApplicationDialogComponent, config);
+        const dialogRef = this.dialog.open(DeleteApplicationDialogComponent);
         dialogRef.componentInstance.applicationId = this.application.id;
     }
 
