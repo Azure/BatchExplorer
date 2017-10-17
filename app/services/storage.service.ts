@@ -54,7 +54,7 @@ const storageIgnoredErrors = [
 ];
 
 // Regex to extract the host, container and blob from a sasUrl
-const storageBlobUrlRegex = /^(https:\/\/[a-z\.]+)\/([a-z0-9\-]+)\/([a-z0-9\-]+)\?(.*)$/i;
+const storageBlobUrlRegex = /^(https:\/\/[\w\._\-]+)\/([\w\-_]+)\/([\w\-_.]+)\?(.*)$/i;
 
 @Injectable()
 export class StorageService {
