@@ -7,8 +7,10 @@
             [name]="source.name"
             [autoExpand]="autoExpand"
             [canDropExternalFiles]="config.canDropExternalFiles"
+            [canDeleteFiles]="config.canDeleteFiles"
             (navigate)="navigateTo($event, source)"
-            (dropFiles)="handleDrop($event)">
+            (dropFiles)="handleDrop($event)"
+            (deleteFiles)="handleDelete($event)">
         </bl-file-tree-view>
     </section>
     <section blSecondPane class="file-content-container">

@@ -2,9 +2,11 @@ import { Component, EventEmitter, Input, OnChanges, OnDestroy, Output } from "@a
 import { Observable } from "rxjs";
 
 import { DialogService } from "app/components/base/dialogs";
-import { FileDropEvent, FileExplorerConfig } from "app/components/file/browse/file-explorer";
+import { FileDeleteEvent, FileDropEvent, FileExplorerConfig } from "app/components/file/browse/file-explorer";
+import { File } from "app/models";
 import { StorageService } from "app/services";
 import { FileNavigator } from "app/services/file";
+import { FileUrlUtils } from "app/utils";
 
 @Component({
     selector: "bl-blob-files-browser",
@@ -15,6 +17,8 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
     @Input() public fileExplorerConfig: FileExplorerConfig = {};
     @Input() public activeFile: string;
     @Input() public upload: (event: FileDropEvent) => Observable<any>;
+    @Input() public delete: (files: File[]) => Observable<any>;
+
     @Output() public activeFileChange = new EventEmitter<string>();
 
     public fileNavigator: FileNavigator;
@@ -36,6 +40,7 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
         if (inputs.upload) {
             this.fileExplorerConfig = {
                 canDropExternalFiles: Boolean(this.upload),
+                canDeleteFiles: Boolean(this.delete),
             };
         }
     }
@@ -52,7 +57,34 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
                 this.upload(event).subscribe(() => {
                     this.fileNavigator.refresh(path);
                 });
+
                 return Observable.of(null);
+            },
+        });
+    }
+
+    public handleDeleteEvent(event: FileDeleteEvent) {
+        const { path } = event;
+        const description = event.isDirectory
+            ? `All files will be deleted from the folder: ${path}`
+            : `The file '${FileUrlUtils.getFileName(path)}' will be deleted.`;
+
+        this.dialogService.confirm(`Delete files`, {
+            description: description,
+            yes: () => {
+                const listParams = { recursive: true, startswith: path };
+                const data = this.storageService.listBlobs(this.container, listParams);
+                const obs = data.fetchAll().flatMap(() => data.items.take(1)).shareReplay(1);
+                obs.subscribe((items) => {
+                    data.dispose();
+                    this.delete(items.toArray()).subscribe({
+                        complete: () => {
+                            this.fileNavigator.refresh(event.path);
+                        },
+                    });
+                });
+
+                return obs;
             },
         });
     }

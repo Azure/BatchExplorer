@@ -1,4 +1,4 @@
-<mat-tab-group class="form-tabs">
+<mat-tab-group class="form-tabs" [@.disabled]="true">
     <mat-tab label="Distributions" title="selectedSource === PoolOsSources.IaaS" class="banana">
         <bl-os-offer-tile *ngFor="let offer of vmOffers" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickOffer(offer)" (pickSku)="pickSku(offer, $event)"
             [active]="offer.name === selectedOffer" [selectedSku]="selectedSku">

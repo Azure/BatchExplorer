@@ -199,4 +199,68 @@ describe("FileTreeStructure", () => {
             expect(sub.loadingStatus).toEqual(LoadingStatus.Loading);
         });
     });
+
+    describe("#deleteNode()", () => {
+        beforeEach(() => {
+            tree = new FileTreeStructure();
+            const files = List([
+                makeFile("root.txt"),
+                makeFile("folder/file1.txt"),
+                makeFile("folder/subfolder/file2.txt"),
+                makeFile("folder/subfolder/file3.txt"),
+                makeFile("folder/subfolder/subsubfolder/file4.txt"),
+                makeFile("other/file1.txt"),
+                makeFile("other/file2.txt"),
+            ]);
+
+            tree.addFiles(files);
+        });
+
+        it("check tree layout as expected", () => {
+            expect(reprTree(tree)).toEqual(cleanupRepr(`
+            | + folder
+            |   + subfolder
+            |     + subsubfolder
+            |       - file4.txt
+            |     - file2.txt
+            |     - file3.txt
+            |   - file1.txt
+            | + other
+            |   - file1.txt
+            |   - file2.txt
+            | - root.txt
+            `));
+        });
+
+        it("delete file from root removes file", () => {
+            tree.deleteNode("root.txt");
+            const hasNode = tree.directories[""].children.has("root.txt");
+            expect(hasNode).toEqual(false);
+        });
+
+        it("removing the only file from a folder removes folder as well", () => {
+            const folderPath = "folder/subfolder/subsubfolder";
+            expect(tree.directories[folderPath].children.has(folderPath + "/file4.txt")).toEqual(true);
+
+            tree.deleteNode(folderPath + "/file4.txt");
+            expect(tree.directories[folderPath]).toBeUndefined();
+
+            // removes the folder from the parents children as well
+            const parent = "folder/subfolder";
+            expect(tree.directories[parent].children.has(parent + "/subsubfolder")).toEqual(false);
+
+            // tree is as expected
+            expect(reprTree(tree)).toEqual(cleanupRepr(`
+            | + folder
+            |   + subfolder
+            |     - file2.txt
+            |     - file3.txt
+            |   - file1.txt
+            | + other
+            |   - file1.txt
+            |   - file2.txt
+            | - root.txt
+            `));
+        });
+    });
 });

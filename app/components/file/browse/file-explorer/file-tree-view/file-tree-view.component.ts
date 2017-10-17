@@ -4,7 +4,7 @@ import { Subscription } from "rxjs";
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
 import { FileNavigator, FileTreeNode, FileTreeStructure } from "app/services/file";
 import { CloudPathUtils, DragUtils } from "app/utils";
-import { FileDropEvent } from "../file-explorer.component";
+import { FileDeleteEvent, FileDropEvent } from "../file-explorer.component";
 import "./file-tree-view.scss";
 
 export interface TreeRow {
@@ -26,8 +26,10 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     @Input() public name: string;
     @Input() public autoExpand = false;
     @Input() public canDropExternalFiles = false;
+    @Input() public canDeleteFiles = false;
     @Output() public navigate = new EventEmitter<string>();
     @Output() public dropFiles = new EventEmitter<FileDropEvent>();
+    @Output() public deleteFiles = new EventEmitter<FileDeleteEvent>();
 
     @HostBinding("class.expanded") public expanded = true;
 
@@ -65,6 +67,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
         if (treeRow.isDirectory && !treeRow.expanded) {
             this.toggleExpanded(treeRow);
         }
+
         this.navigate.emit(treeRow.path);
     }
 
@@ -75,6 +78,13 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
         const items = [];
         if (treeRow.isDirectory) {
             items.push(new ContextMenuItem("Refresh", () => this.refresh(treeRow.path)));
+        }
+
+        if (this.canDeleteFiles) {
+            items.push(new ContextMenuItem("Delete", () => this.deleteFiles.emit({
+                path: treeRow.path,
+                isDirectory: treeRow.isDirectory,
+            })));
         }
 
         if (items.length > 0) {
@@ -101,6 +111,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
             this.expandedDirs[treeRow.path] = true;
         }
         this._buildTreeRows(this._tree);
+
         return !isExpanded;
     }
 
@@ -115,6 +126,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
             const pathToExpand = segments.slice(0, segments.length - i).join("/");
             this.expandedDirs[pathToExpand] = true;
         }
+
         if (this._tree) {
             this._buildTreeRows(this._tree);
         }
@@ -216,6 +228,7 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
                 }
             }
         }
+
         return rows;
     }
 
@@ -236,5 +249,4 @@ export class FileTreeViewComponent implements OnChanges, OnDestroy {
     private _clearNavigatorSubs() {
         this._navigatorSubs.forEach(x => x.unsubscribe());
     }
-
 }
