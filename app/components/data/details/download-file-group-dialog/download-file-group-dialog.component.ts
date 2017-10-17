@@ -87,7 +87,7 @@ export class DownloadFileGroupDialogComponent {
     private _downloadFiles(task: BackgroundTask, folder: string, files: List<File>): Array<Observable<any>> {
         const progressStep = 90 / files.size;
         return files.map((file) => {
-            const fileLoader = this.storageService.getBlobContent(Promise.resolve(this.containerId), file.name);
+            const fileLoader = this.storageService.getBlobContent(this.containerId, file.name);
             return fileLoader.download(path.join(folder, file.name)).do(() => {
                 task.progress.next(task.progress.value + progressStep);
             });
@@ -96,8 +96,7 @@ export class DownloadFileGroupDialogComponent {
 
     private _getListOfFilesToDownload(): Observable<List<File>> {
         const patterns = this._getPatterns();
-        // TODO get rid of this promise.
-        const data = this.storageService.listBlobs(Promise.resolve(this.containerId));
+        const data = this.storageService.listBlobs(this.containerId);
         return data.fetchAll().flatMap(() => data.items.take(1)).map((items) => {
             data.dispose();
             const files = items.filter((file) => {
