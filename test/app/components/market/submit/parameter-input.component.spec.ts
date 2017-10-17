@@ -7,6 +7,7 @@ import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterTestingModule } from "@angular/router/testing";
 
 import { DialogService } from "app/components/base/dialogs";
+import { SidebarManager } from "app/components/base/sidebar";
 import { FileGroupPickerComponent } from "app/components/data/shared";
 import { CloudFilePickerComponent } from "app/components/data/shared/cloud-file-picker";
 import { NcjParameterExtendedType, NcjParameterWrapper, ParameterInputComponent } from "app/components/market/submit";
@@ -46,13 +47,14 @@ class TestComponent {
     };
 }
 
-describe("ParameterInputComponent", () => {
+fdescribe("ParameterInputComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: ParameterInputComponent;
     let de: DebugElement;
     let storageServiceSpy: any;
     let dialogServiceSpy: any;
+    let sidebarSpy: any;
     let listProxy: RxMockListProxy<any, BatchApplication>;
 
     beforeEach(() => {
@@ -64,15 +66,17 @@ describe("ParameterInputComponent", () => {
         });
 
         dialogServiceSpy = {
-            list: () => listProxy,
-            onApplicationAdded: new Subject(),
-            listContainers: () => listProxy,
+            open: jasmine.createSpy("open"),
         };
 
         storageServiceSpy = {
             list: () => listProxy,
-            onApplicationAdded: new Subject(),
+            onFileGroupAdded: new Subject(),
             listContainers: () => listProxy,
+        };
+
+        sidebarSpy = {
+            open: jasmine.createSpy("open"),
         };
 
         TestBed.configureTestingModule({
@@ -82,6 +86,7 @@ describe("ParameterInputComponent", () => {
             providers: [
                 { provide: StorageService, useValue: storageServiceSpy },
                 { provide: DialogService, useValue: dialogServiceSpy },
+                { provide: SidebarManager, useValue: sidebarSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
@@ -367,6 +372,7 @@ describe("ParameterInputComponent", () => {
                     advancedType: NcjParameterExtendedType.fileGroup,
                 },
             });
+
             testComponent.paramControl.setValue(initialInput);
             fixture.detectChanges();
             fileGroupEl = de.query(By.css("bl-file-group-picker"));
