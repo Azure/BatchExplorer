@@ -1,7 +1,7 @@
 <mat-form-field>
     <input type="text" matInput [matAutocomplete]="auto" [formControl]="value" [placeholder]="label">
     <mat-hint class="warning" *ngIf="warning">
-        This file group doesn't seem to exist.
+        This file group doesn't seem to exist. If you just created it, it will validate when the file group has finished uploading.
     </mat-hint>
     <mat-hint *ngIf="hint" align="end">
         {{hint}}
@@ -9,6 +9,9 @@
 </mat-form-field>
 
 <mat-autocomplete #auto="matAutocomplete">
+    <mat-option value="" (onSelectionChange)="createFileGroup($event)" class="new-file-group">
+       + Create a new file group
+    </mat-option>
     <mat-option *ngFor="let fileGroup of fileGroups" [value]="fileGroup.name">
         {{ fileGroup.name }}
     </mat-option>

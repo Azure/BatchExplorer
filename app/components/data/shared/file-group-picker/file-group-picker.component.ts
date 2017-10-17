@@ -2,9 +2,12 @@ import { Component, Input, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
+import { MatOptionSelectionChange } from "@angular/material";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
+import { SidebarManager } from "app/components/base/sidebar";
+import { FileGroupCreateFormComponent } from "app/components/data/action";
 import { BlobContainer } from "app/models";
 import { ListContainerParams, StorageService } from "app/services";
 import { RxListProxy } from "app/services/core";
@@ -33,12 +36,21 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
     private _subscriptions: Subscription[] = [];
     private _loading: boolean = true;
 
-    constructor(private storageService: StorageService) {
+    constructor(private storageService: StorageService, private sidebarManager: SidebarManager) {
 
         this.fileGroupsData = this.storageService.listContainers(storageService.ncjFileGroupPrefix);
         this.fileGroupsData.items.subscribe((fileGroups) => {
             this.fileGroups = fileGroups;
         });
+
+        // listen to file group add events
+        this._subscriptions.push(this.storageService.onFileGroupAdded.subscribe((fileGroupId: string) => {
+            const container = storageService.getContainerOnce(fileGroupId);
+            this.fileGroupsData.loadNewItem(container);
+            container.subscribe((blobContainer) => {
+                this._checkValid(blobContainer.name);
+            });
+        }));
 
         this._subscriptions.push(this.value.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((value) => {
             this._checkValid(value);
@@ -74,6 +86,16 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
 
     public validate(c: FormControl) {
         return null;
+    }
+
+    public createFileGroup(event: MatOptionSelectionChange) {
+        // isUserInput true when selected, false when not
+        if (!event.source.value && event.isUserInput) {
+            const sidebar = this.sidebarManager.open("Add a new file group", FileGroupCreateFormComponent);
+            sidebar.afterCompletion.subscribe(() => {
+                this.value.setValue(sidebar.component.getCurrentValue().name);
+            });
+        }
     }
 
     private _checkValid(value: string) {
