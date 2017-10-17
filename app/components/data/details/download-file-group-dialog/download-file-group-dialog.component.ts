@@ -54,6 +54,8 @@ export class DownloadFileGroupDialogComponent {
             task.progress.next(1);
             this._getListOfFilesToDownload().subscribe((files) => {
                 task.progress.next(10);
+                console.log("Fiels", files.toJS());
+                return;
                 const downloadObs = this._downloadFiles(task, folder, files);
                 Observable.combineLatest(downloadObs).subscribe(() => {
                     this.shell.showItemInFolder(folder);
@@ -96,7 +98,7 @@ export class DownloadFileGroupDialogComponent {
 
     private _getListOfFilesToDownload(): Observable<List<File>> {
         const patterns = this._getPatterns();
-        const data = this.storageService.listBlobs(this.containerId);
+        const data = this.storageService.listBlobs(this.containerId, { recursive: true });
         return data.fetchAll().flatMap(() => data.items.take(1)).map((items) => {
             data.dispose();
             const files = items.filter((file) => {
