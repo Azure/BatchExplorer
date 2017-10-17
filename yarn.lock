@@ -304,7 +304,7 @@
   version "1.6.2"
   resolved "https://registry.yarnpkg.com/@types/extract-zip/-/extract-zip-1.6.2.tgz#5c7eb441c41136167a42b88b64051e6260c29e86"
 
-"@types/form-data@*", "@types/form-data@^2.2.0":
+"@types/form-data@^2.2.0":
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/@types/form-data/-/form-data-2.2.0.tgz#a98aac91dc99857b6af24caef7ca6df302f31565"
   dependencies:
@@ -356,30 +356,19 @@
   version "7.0.43"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-7.0.43.tgz#a187e08495a075f200ca946079c914e1a5fe962c"
 
-"@types/node@^8.0.25", "@types/node@~8.0.2":
-  version "8.0.31"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.31.tgz#d9af61093cf4bfc9f066ca34de0175012cfb0ce9"
-
 "@types/node@^8.0.28":
   version "8.0.34"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.34.tgz#55f801fa2ddb2a40dd6dfc15ecfe1dde9c129fe9"
 
-"@types/request@^2.0.3":
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/@types/request/-/request-2.0.3.tgz#bdf0fba9488c822f77e97de3dd8fe357b2fb8c06"
-  dependencies:
-    "@types/form-data" "*"
-    "@types/node" "*"
+"@types/node@~8.0.2":
+  version "8.0.31"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-8.0.31.tgz#d9af61093cf4bfc9f066ca34de0175012cfb0ce9"
 
 "@types/strip-json-comments@~0.0.28":
   version "0.0.30"
   resolved "https://registry.yarnpkg.com/@types/strip-json-comments/-/strip-json-comments-0.0.30.tgz#9aa30c04db212a9a0649d6ae6fd50accc40748a1"
 
-"@types/underscore@^1.8.0":
-  version "1.8.2"
-  resolved "https://registry.yarnpkg.com/@types/underscore/-/underscore-1.8.2.tgz#42a313784a8611cf425038cf0e33f4e8d79c9fca"
-
-"@types/uuid@^3.4.1", "@types/uuid@^3.4.2":
+"@types/uuid@^3.4.2":
   version "3.4.2"
   resolved "https://registry.yarnpkg.com/@types/uuid/-/uuid-3.4.2.tgz#b8cde3c32c273d3fc658b96f810e8ff091e1b723"
   dependencies:
@@ -417,19 +406,6 @@ acorn@^4.0.3:
 acorn@^5.0.0:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/acorn/-/acorn-5.1.1.tgz#53fe161111f912ab999ee887a90a0bc52822fd75"
-
-adal-node@^0.1.17:
-  version "0.1.22"
-  resolved "https://registry.yarnpkg.com/adal-node/-/adal-node-0.1.22.tgz#be77bd2ea8a8a0a03184b426118fd16f79f63725"
-  dependencies:
-    async ">=0.6.0"
-    date-utils "*"
-    jws "3.x.x"
-    node-uuid "1.4.7"
-    request ">= 2.52.0"
-    underscore ">= 1.3.1"
-    xmldom ">= 0.1.x"
-    xpath.js "~1.0.5"
 
 add-asset-html-webpack-plugin@^1.0.2:
   version "1.0.2"
@@ -663,15 +639,15 @@ async-foreach@^0.1.3:
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/async-foreach/-/async-foreach-0.1.3.tgz#36121f845c0578172de419a97dbeb1d16ec34542"
 
-async@2.5.0, async@>=0.6.0, async@^2.1.2, async@^2.1.5, async@^2.4.1:
+async@^1.5.2:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/async/-/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
+
+async@^2.1.2, async@^2.1.5, async@^2.4.1:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/async/-/async-2.5.0.tgz#843190fd6b7357a0b9e1c956edddd5ec8462b54d"
   dependencies:
     lodash "^4.14.0"
-
-async@^1.5.2:
-  version "1.5.2"
-  resolved "https://registry.yarnpkg.com/async/-/async-1.5.2.tgz#ec6a61ae56480c0c3cb241c95618e20892f9672a"
 
 async@~0.9.0:
   version "0.9.2"
@@ -734,16 +710,6 @@ aws4@^1.2.1:
   dependencies:
     ms-rest-azure-js "^0.2.0"
 
-azure-batch@~2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/azure-batch/-/azure-batch-2.2.0.tgz#5ed48030f469c2f6d16a62c135fae68b4099ae4c"
-  dependencies:
-    "@types/underscore" "^1.8.0"
-    moment "^2.18.1"
-    ms-rest "^2.2.2"
-    ms-rest-azure "^2.3.3"
-    underscore "^1.8.3"
-
 azure-storage@~2.5.0:
   version "2.5.0"
   resolved "https://registry.yarnpkg.com/azure-storage/-/azure-storage-2.5.0.tgz#3dafca47cf928470726462a20046a9be10793e31"
@@ -795,10 +761,6 @@ base64-js@1.2.0, base64-js@^1.0.2:
 base64id@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/base64id/-/base64id-1.0.0.tgz#47688cb99bb6804f0e06d3e763b1c32e57d8e6b6"
-
-base64url@2.0.0, base64url@^2.0.0:
-  version "2.0.0"
-  resolved "https://registry.yarnpkg.com/base64url/-/base64url-2.0.0.tgz#eac16e03ea1438eff9423d69baa36262ed1f70bb"
 
 base@^0.11.1:
   version "0.11.1"
@@ -1037,10 +999,6 @@ browserslist@^2.1.5:
 buffer-crc32@~0.2.3:
   version "0.2.13"
   resolved "https://registry.yarnpkg.com/buffer-crc32/-/buffer-crc32-0.2.13.tgz#0d333e3f00eac50aa1454abd30ef8c2a5d9a7242"
-
-buffer-equal-constant-time@1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/buffer-equal-constant-time/-/buffer-equal-constant-time-1.0.1.tgz#f8e71132f7ffe6e01a5c9697a4c6f3e48d5cc819"
 
 buffer-indexof@^1.0.0:
   version "1.1.1"
@@ -2058,10 +2016,6 @@ date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
 
-date-utils@*:
-  version "1.2.21"
-  resolved "https://registry.yarnpkg.com/date-utils/-/date-utils-1.2.21.tgz#61fb16cdc1274b3c9acaaffe9fc69df8720a2b64"
-
 debug@2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/debug/-/debug-2.2.0.tgz#f87057e995b1a1f6ae6a4960664137bc56f039da"
@@ -2365,22 +2319,11 @@ duplexer3@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/duplexer3/-/duplexer3-0.1.4.tgz#ee01dd1cac0ed3cbc7fdbea37dc0a8f1ce002ce2"
 
-duplexer@~0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/duplexer/-/duplexer-0.1.1.tgz#ace6ff808c1ce66b57d1ebf97977acb02334cfc1"
-
 ecc-jsbn@~0.1.1:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/ecc-jsbn/-/ecc-jsbn-0.1.1.tgz#0fc73a9ed5f0d53c38193398523ef7e543777505"
   dependencies:
     jsbn "~0.1.0"
-
-ecdsa-sig-formatter@1.0.9:
-  version "1.0.9"
-  resolved "https://registry.yarnpkg.com/ecdsa-sig-formatter/-/ecdsa-sig-formatter-1.0.9.tgz#4bc926274ec3b5abb5016e7e1d60921ac262b2a1"
-  dependencies:
-    base64url "^2.0.0"
-    safe-buffer "^5.0.1"
 
 ee-first@1.1.1:
   version "1.1.1"
@@ -4167,23 +4110,6 @@ jsprim@^1.2.2:
     json-schema "0.2.3"
     verror "1.10.0"
 
-jwa@^1.1.4:
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/jwa/-/jwa-1.1.5.tgz#a0552ce0220742cd52e153774a32905c30e756e5"
-  dependencies:
-    base64url "2.0.0"
-    buffer-equal-constant-time "1.0.1"
-    ecdsa-sig-formatter "1.0.9"
-    safe-buffer "^5.0.1"
-
-jws@3.x.x:
-  version "3.1.4"
-  resolved "https://registry.yarnpkg.com/jws/-/jws-3.1.4.tgz#f9e8b9338e8a847277d6444b1464f61880e050a2"
-  dependencies:
-    base64url "^2.0.0"
-    jwa "^1.1.4"
-    safe-buffer "^5.0.1"
-
 karma-chrome-launcher@^2.0.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/karma-chrome-launcher/-/karma-chrome-launcher-2.2.0.tgz#cf1b9d07136cc18fe239327d24654c3dbc368acf"
@@ -4692,7 +4618,7 @@ moment-duration-format@^1.3.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/moment-duration-format/-/moment-duration-format-1.3.0.tgz#541771b5f87a049cc65540475d3ad966737d6908"
 
-moment@*, moment@2.18.1, moment@^2.10.6, moment@^2.14.1, moment@^2.15.2, moment@^2.18.1, moment@~2.18.0:
+moment@*, moment@2.18.1, moment@^2.10.6, moment@^2.15.2, moment@~2.18.0, moment@~2.18.1:
   version "2.18.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.18.1.tgz#c36193dd3ce1c2eed2adb7c802dbbc77a81b1c0f"
 
@@ -4706,19 +4632,7 @@ ms-rest-azure-js@^0.2.0:
   dependencies:
     ms-rest-js "^0.2.1"
 
-ms-rest-azure@^2.3.3:
-  version "2.3.5"
-  resolved "https://registry.yarnpkg.com/ms-rest-azure/-/ms-rest-azure-2.3.5.tgz#46969bc046fecca8d9834cae225ddbd9b5caac8b"
-  dependencies:
-    "@types/node" "^8.0.25"
-    "@types/uuid" "^3.4.2"
-    adal-node "^0.1.17"
-    async "2.5.0"
-    moment "^2.18.1"
-    ms-rest "^2.2.2"
-    uuid "^3.1.0"
-
-ms-rest-js@^0.2.1, ms-rest-js@~0.2.1:
+ms-rest-js@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/ms-rest-js/-/ms-rest-js-0.2.1.tgz#58a547b61b84b10a82c8adde279e32cd6c38f667"
   dependencies:
@@ -4737,21 +4651,24 @@ ms-rest-js@^0.2.1, ms-rest-js@~0.2.1:
     url-parse "^1.1.9"
     uuid "^3.1.0"
 
-ms-rest@^2.2.2:
-  version "2.2.2"
-  resolved "https://registry.yarnpkg.com/ms-rest/-/ms-rest-2.2.2.tgz#be191c4fbdff2e208bda440933436af80e7425b9"
+ms-rest-js@~0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/ms-rest-js/-/ms-rest-js-0.2.2.tgz#da0894fb1309c0c08ba9d6b9c16da5222c2b6a2e"
   dependencies:
-    "@types/node" "^8.0.25"
-    "@types/request" "^2.0.3"
-    "@types/uuid" "^3.4.1"
-    duplexer "~0.1.1"
+    "@types/form-data" "^2.2.0"
+    "@types/is-stream" "^1.1.0"
+    "@types/node" "^8.0.28"
+    "@types/node-fetch" "^1.6.7"
+    "@types/uuid" "^3.4.2"
+    detect-node "^2.0.3"
+    fetch-cookie "^0.6.0"
+    fetch-ponyfill amarzavery/fetch-ponyfill#master
+    form-data "^2.3.1"
     is-buffer "^1.1.5"
     is-stream "^1.1.0"
-    moment "^2.14.1"
-    request "^2.74.0"
-    through "~2.3.4"
-    tunnel "~0.0.2"
-    uuid "^3.0.1"
+    moment "~2.18.1"
+    url-parse "^1.1.9"
+    uuid "^3.1.0"
 
 ms@0.7.1:
   version "0.7.1"
@@ -4930,10 +4847,6 @@ node-sass@~4.5.0:
     request "^2.79.0"
     sass-graph "^2.1.1"
     stdout-stream "^1.4.0"
-
-node-uuid@1.4.7:
-  version "1.4.7"
-  resolved "https://registry.yarnpkg.com/node-uuid/-/node-uuid-1.4.7.tgz#6da5a17668c4b3dd59623bda11cf7fa4c1f60a6f"
 
 "nopt@2 || 3":
   version "3.0.6"
@@ -6027,7 +5940,7 @@ repeating@^2.0.0:
   dependencies:
     is-finite "^1.0.0"
 
-request@2, "request@>= 2.52.0", request@^2.45.0, request@^2.74.0, request@^2.79.0, request@^2.81.0, request@~2.81.0:
+request@2, request@^2.45.0, request@^2.79.0, request@^2.81.0, request@~2.81.0:
   version "2.81.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.81.0.tgz#c6928946a0e06c5f8d6f8a9333469ffda46298a0"
   dependencies:
@@ -6876,7 +6789,7 @@ through2@~0.2.3:
     readable-stream "~1.1.9"
     xtend "~2.1.1"
 
-through@X.X.X, through@^2.3.6, through@~2.3.4:
+through@X.X.X, through@^2.3.6:
   version "2.3.8"
   resolved "https://registry.yarnpkg.com/through/-/through-2.3.8.tgz#0dd4c9ffaabc357960b1b724115d7e0e86a2e1f5"
 
@@ -7043,10 +6956,6 @@ tunnel-agent@^0.6.0:
   dependencies:
     safe-buffer "^5.0.1"
 
-tunnel@~0.0.2:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/tunnel/-/tunnel-0.0.5.tgz#d1532254749ed36620fcd1010865495a1fa9d0ae"
-
 tweetnacl@^0.14.3, tweetnacl@~0.14.0:
   version "0.14.5"
   resolved "https://registry.yarnpkg.com/tweetnacl/-/tweetnacl-0.14.5.tgz#5ae68177f192d4456269d108afa93ff8743f4f64"
@@ -7109,7 +7018,7 @@ unbzip2-stream@^1.0.9:
     buffer "^3.0.1"
     through "^2.3.6"
 
-"underscore@>= 1.3.1", underscore@^1.8.3, underscore@~1.8.3:
+underscore@~1.8.3:
   version "1.8.3"
   resolved "https://registry.yarnpkg.com/underscore/-/underscore-1.8.3.tgz#4f3fb53b106e6097fcf9cb4109f2a5e9bdfa5022"
 
@@ -7276,7 +7185,7 @@ uuid@^2.0.2:
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-2.0.3.tgz#67e2e863797215530dff318e5bf9dcebfd47b21a"
 
-uuid@^3.0.0, uuid@^3.0.1, uuid@^3.1.0:
+uuid@^3.0.0, uuid@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.1.0.tgz#3dd3d3e790abc24d7b0d3a034ffababe28ebbc04"
 
@@ -7548,7 +7457,7 @@ xmlbuilder@8.2.2:
   version "8.2.2"
   resolved "https://registry.yarnpkg.com/xmlbuilder/-/xmlbuilder-8.2.2.tgz#69248673410b4ba42e1a6136551d2922335aa773"
 
-xmldom@0.1.x, "xmldom@>= 0.1.x":
+xmldom@0.1.x:
   version "0.1.27"
   resolved "https://registry.yarnpkg.com/xmldom/-/xmldom-0.1.27.tgz#d501f97b3bdb403af8ef9ecc20573187aadac0e9"
 
@@ -7559,10 +7468,6 @@ xmlhttprequest-ssl@1.5.3:
 xmlhttprequest@1:
   version "1.8.0"
   resolved "https://registry.yarnpkg.com/xmlhttprequest/-/xmlhttprequest-1.8.0.tgz#67fe075c5c24fef39f9d65f5f7b7fe75171968fc"
-
-xpath.js@~1.0.5:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/xpath.js/-/xpath.js-1.0.7.tgz#7e94627f541276cbc6a6b02b5d35e9418565b3e4"
 
 xtend@^4.0.0, xtend@~4.0.1:
   version "4.0.1"

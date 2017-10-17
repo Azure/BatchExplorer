@@ -63,9 +63,7 @@ export class ListProxy {
 
     private _list(): Promise<BatchResult> {
         return new Promise((resolve, reject) => {
-            console.log("About to list", this.options, this.params);
             this.entity.list(...this.params, this.options, (error, result) => {
-                console.log("List jobs", error, result);
                 this._processResult(result, error, resolve, reject);
             });
         });

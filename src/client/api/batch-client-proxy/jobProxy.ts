@@ -1,6 +1,5 @@
-import { BatchServiceClient } from "azure-batch-js";
+import { BatchServiceClient, BatchServiceModels } from "azure-batch-js";
 
-import * as models from "./batch-models";
 import { ListProxy, mapGet, wrapOptions } from "./shared";
 
 export default class JobProxy {
@@ -13,7 +12,7 @@ export default class JobProxy {
      * http://azure.github.io/azure-sdk-for-node/azure-batch/latest/Job.html#list
      * @param options: Optional Parameters.
      */
-    public list(options?: models.JobListOptions) {
+    public list(options?: BatchServiceModels.JobListOptions) {
         this.client.pool.list().then((data) => {
             console.log("Poool?", data);
         });
@@ -27,7 +26,7 @@ export default class JobProxy {
      * @param jobId: The id of the job.
      * @param options: Optional Parameters.
      */
-    public get(jobId: string, options?: models.JobGetOptions): Promise<any> {
+    public get(jobId: string, options?: BatchServiceModels.JobGetOptions): Promise<any> {
         console.log("Getting job", jobId);
         return mapGet(this.client.job.get(jobId, wrapOptions({ jobGetOptions: options })));
     }
@@ -94,7 +93,10 @@ export default class JobProxy {
 
     /**
      */
-    public listHookTasks(jobId: string, options?: models.JobListPreparationAndReleaseTaskStatusNextOptions) {
+    public listHookTasks(
+        jobId: string,
+        options?: BatchServiceModels.JobListPreparationAndReleaseTaskStatusNextOptions) {
+
         const entity = {
             list: this.client.job.listPreparationAndReleaseTaskStatus.bind(this.client.job),
             listNext: this.client.job.listPreparationAndReleaseTaskStatusNext.bind(this.client.job),

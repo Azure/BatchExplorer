@@ -1,9 +1,8 @@
-import { ServiceClient } from "azure-batch";
+import { BatchServiceClient } from "azure-batch-js";
 import { ListProxy, wrapOptions } from "./shared";
 
 export default class FileProxy {
-
-    constructor(private client: ServiceClient) {
+    constructor(private client: BatchServiceClient) {
     }
 
     public getComputeNodeFile(poolId: string, nodeId: string, filename: string, options?: any): Promise<any> {
@@ -36,6 +35,7 @@ export default class FileProxy {
         return new Promise((resolve, reject) => {
             this.client.file.getPropertiesFromComputeNode(poolId, nodeId, filename, wrapOptions(options),
                 (error, result, request, response) => {
+                    console.log("GOt file...", filename, response.headers);
                     if (error) { return reject(error); }
                     const out = this._parseHeadersToFile(response.headers, filename);
 

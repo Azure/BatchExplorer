@@ -1,19 +1,18 @@
-import { ServiceClient } from "azure-batch";
+import { BatchServiceClient, BatchServiceModels } from "azure-batch-js";
 
-import * as models from "./batch-models";
 import { BatchResult } from "./models";
 import { ListProxy, ProxyUtil, mapGet, wrapOptions } from "./shared";
 
 export default class PoolProxy {
 
-    constructor(private client: ServiceClient) { }
+    constructor(private client: BatchServiceClient) { }
 
     /**
      * Lists all of the pools in the specified account.
      * http://azure.github.io/azure-sdk-for-node/azure-batch/latest/Pool.html#list
      * @param options: Optional Parameters.
      */
-    public list(options?: models.PoolListOptions) {
+    public list(options?: BatchServiceModels.PoolListOptions) {
         return new ListProxy(this.client.pool, null, wrapOptions({ poolListOptions: options }));
     }
 
@@ -23,7 +22,7 @@ export default class PoolProxy {
      * @param poolId: The id of the pool.
      * @param options: Optional Parameters.
      */
-    public get(poolId: string, options?: models.PoolGetOptions): Promise<BatchResult> {
+    public get(poolId: string, options?: BatchServiceModels.PoolGetOptions): Promise<BatchResult> {
         return mapGet(this.client.pool.get(poolId, wrapOptions({ poolGetOptions: options })));
     }
 
@@ -73,7 +72,7 @@ export default class PoolProxy {
 
     public enableAutoScale(
         poolId: string,
-        attributes: models.PoolEnableAutoScaleParameter,
+        attributes: BatchServiceModels.PoolEnableAutoScaleParameter,
         options?: any): Promise<any> {
         attributes = ProxyUtil.decoratePool(attributes);
 

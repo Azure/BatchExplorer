@@ -1,12 +1,11 @@
-import { ServiceClient } from "azure-batch";
+import { BatchServiceClient, BatchServiceModels } from "azure-batch-js";
 
-import * as models from "./batch-models";
 import { BatchResult } from "./models";
 import { ListProxy, mapGet, wrapOptions } from "./shared";
 
 export default class TaskProxy {
 
-    constructor(private client: ServiceClient) {
+    constructor(private client: BatchServiceClient) {
     }
 
     /**
@@ -15,7 +14,7 @@ export default class TaskProxy {
      * @param jobId: The id of the job.
      * @param options: Optional Parameters.
      */
-    public list(jobId: string, options?: models.TaskListOptions) {
+    public list(jobId: string, options?: BatchServiceModels.TaskListOptions) {
         return new ListProxy(this.client.task, [jobId], wrapOptions({ taskListOptions: options }));
     }
 
@@ -26,7 +25,7 @@ export default class TaskProxy {
      * @param taskId: The id of the task.
      * @param options: Optional Parameters.
      */
-    public get(jobId: string, taskId: string, options?: models.TaskGetOptions): Promise<BatchResult> {
+    public get(jobId: string, taskId: string, options?: BatchServiceModels.TaskGetOptions): Promise<BatchResult> {
         return mapGet(this.client.task.get(jobId, taskId, wrapOptions({ taskGetOptions: options })));
     }
 
@@ -37,7 +36,7 @@ export default class TaskProxy {
      * @param taskId: The id of the task.
      * @param options: Optional Parameters.
      */
-    public listSubtasks(jobId: string, taskId: string, options?: models.TaskListSubtasksOptions) {
+    public listSubtasks(jobId: string, taskId: string, options?: BatchServiceModels.TaskListSubtasksOptions) {
         const entity = {
             list: this.client.task.listSubtasks.bind(this.client.task),
         };
