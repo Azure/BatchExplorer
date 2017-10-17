@@ -20,6 +20,7 @@ export * from "./secure";
 export * from "./shared-key-utils";
 export * from "./storage-utils";
 export * from "./string-utils";
+export * from "./url-utils";
 
 import * as icons from "./icons";
 export const Icons = icons;
