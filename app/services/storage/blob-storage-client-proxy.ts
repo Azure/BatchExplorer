@@ -173,6 +173,30 @@ export class BlobStorageClientProxy {
     }
 
     /**
+     * Marks the specified blob or snapshot for deletion if it exists. The blob is later deleted during
+     * garbage collection. If a blob has snapshots, you must delete them when deleting the blob by setting
+     * the deleteSnapshots option.
+     * http://azure.github.io/azure-storage-node/BlobService.html#deleteBlobIfExists__anchor
+     *
+     * @param {string} container - ID of the storage container
+     * @param {string} blob - Fully prefixed blob path: "1001/$TaskOutput/myblob.txt"
+     * @param {StorageRequestOptions} options - Optional request parameters
+     */
+    public deleteBlobIfExists(container: string, blob: string, options?: StorageRequestOptions)
+    : Promise<boolean> {
+
+        return new Promise((resolve, reject) => {
+            this._blobService.deleteBlobIfExists(container, blob, options, (error, response) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve(response);
+                }
+            });
+        });
+    }
+
+    /**
      * Lists a segment containing a collection of container items whose names begin with the specified
      * prefix under the specified account. By default the prefix will generally be "grp-" as this is the
      * NCJ prefix for file group containers, but can aso be anything we like in order to get any

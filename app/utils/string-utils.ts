@@ -6,8 +6,9 @@ export class StringUtils {
      * @param wildcard Wild to test against
      * @returns Boolean if the string match the wildcard
      */
-    public static matchWildcard(str: string, wildcard: string) {
-        return new RegExp(`^${wildcard.replace("*", ".*")}$`).test(str);
+    public static matchWildcard(str: string, wildcard: string, caseSensitive = true) {
+        const flags = caseSensitive ? undefined : "i";
+        return new RegExp(`^${wildcard.replace("*", ".*")}$`, flags).test(str);
     }
 
     /**

@@ -3,9 +3,10 @@ import { List, Set } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { Subscription } from "app/models";
-import { Constants, log } from "app/utils";
+import { Constants, StringUtils, log } from "app/utils";
 import { AdalService } from "./adal";
 import { AzureHttpService } from "./azure-http.service";
+import { SettingsService } from "./settings.service";
 
 @Injectable()
 export class SubscriptionService {
@@ -14,12 +15,25 @@ export class SubscriptionService {
     private _subscriptions = new BehaviorSubject<List<Subscription>>(List([]));
     private _accountSubscriptionFilter = new BehaviorSubject<Set<string>>(Set([]));
     private _subscriptionsLoaded = new AsyncSubject();
+    private _ignoredSubscriptionPatterns = new BehaviorSubject<string[]>([]);
 
-    constructor(private azure: AzureHttpService, private adal: AdalService) {
-        this.subscriptions = this._subscriptionsLoaded.flatMap(() => this._subscriptions.asObservable());
+    constructor(private azure: AzureHttpService, private adal: AdalService, private settingsService: SettingsService) {
+        this.subscriptions = this._subscriptionsLoaded
+            .flatMap(() => Observable.combineLatest(this._subscriptions, this._ignoredSubscriptionPatterns))
+            .map(([subscriptions, ignoredPatterns]) => {
+                return this._ignoreSubscriptions(subscriptions, ignoredPatterns);
+            }).shareReplay(1);
+
         this.accountSubscriptionFilter = this._accountSubscriptionFilter.asObservable();
         this._loadCachedSubscriptions();
         this._loadAccountSubscriptionFilter();
+
+        this.settingsService.settingsObs.subscribe((newSettings) => {
+            const ignoredPatterns = newSettings["subscription.ignore"];
+            if (this._ignoredSubscriptionPatterns.value !== ignoredPatterns) {
+                this._ignoredSubscriptionPatterns.next(ignoredPatterns);
+            }
+        });
     }
 
     public load(): Observable<any> {
@@ -112,5 +126,19 @@ export class SubscriptionService {
     private _markSubscriptionsAsLoaded() {
         this._subscriptionsLoaded.next(true);
         this._subscriptionsLoaded.complete();
+    }
+
+    private _ignoreSubscriptions(subscriptions: List<Subscription>, ignoredPatterns: string[]): List<Subscription> {
+        if (ignoredPatterns.length === 0) {
+            return subscriptions;
+        }
+        return List(subscriptions.filter((subscription) => {
+            for (let ignoredPattern of ignoredPatterns) {
+                if (StringUtils.matchWildcard(subscription.displayName, ignoredPattern, false)) {
+                    return false;
+                }
+            }
+            return true;
+        }));
     }
 }
