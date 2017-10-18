@@ -17,13 +17,12 @@ import {
     DataDetailsComponent,
     DownloadFileGroupDialogComponent,
 } from "./details";
-import { StorageErrorDisplayComponent } from "./details/errors";
 import { DataHomeComponent } from "./home";
 
 const components = [
     DataContainerConfigurationComponent, DataContainerFilesComponent, DataHomeComponent,
     DataDefaultComponent, DataDetailsComponent, FileGroupCreateFormComponent, DeleteContainerDialogComponent,
-    FileGroupListComponent, FileGroupOptionsPickerComponent, FileGroupPreviewComponent, StorageErrorDisplayComponent,
+    FileGroupListComponent, FileGroupOptionsPickerComponent, FileGroupPreviewComponent,
     DownloadFileGroupDialogComponent,
 ];
 

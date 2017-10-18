@@ -4,7 +4,7 @@ import { List } from "immutable";
 import { Subscription } from "rxjs";
 
 import { Application } from "app/models";
-import { NcjTemplateService } from "app/services";
+import { NcjTemplateService, StorageService } from "app/services";
 import { autobind } from "core-decorators";
 import "./market.scss";
 
@@ -24,7 +24,7 @@ export class MarketComponent implements OnInit, OnDestroy {
 
     private _subs: Subscription[] = [];
 
-    constructor(private templateService: NcjTemplateService) {
+    constructor(public storageService: StorageService, private templateService: NcjTemplateService) {
         this._subs.push(this.quicksearch.valueChanges.subscribe((query) => {
             this.query = query;
             this._filterApplications();
