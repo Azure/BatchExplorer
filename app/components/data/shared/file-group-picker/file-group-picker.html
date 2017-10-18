@@ -9,6 +9,9 @@
 </mat-form-field>
 
 <mat-autocomplete #auto="matAutocomplete">
+    <mat-option value="" (onSelectionChange)="createFileGroup($event)" class="new-file-group">
+        + Create a new file group
+    </mat-option>
     <mat-option *ngFor="let fileGroup of fileGroups" [value]="fileGroup.name">
         {{ fileGroup.name }}
     </mat-option>
