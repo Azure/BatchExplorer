@@ -15,6 +15,7 @@ export * from "./job-hook-task.service";
 export * from "./local-file-storage.service";
 export * from "./pool-service";
 export * from "./ncj-file-group.service";
+export * from "./ncj-submit.service";
 export * from "./ncj-template.service";
 export * from "./node-service";
 export * from "./node-user.service";
