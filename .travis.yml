@@ -59,7 +59,6 @@ branches:
   only:
   - master
   - stable
-  - ncj # remove when merging ncj
 
 cache:
   directories:

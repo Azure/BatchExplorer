@@ -34,6 +34,6 @@ else
 fi
 
 # Only package if on stable branch
-if [ "${TRAVIS_PULL_REQUEST}" = "false" ] && ([ "${TRAVIS_BRANCH}" = "stable" ] || [ "${TRAVIS_BRANCH}" = "ncj" ]); then
+if [ "${TRAVIS_PULL_REQUEST}" = "false" ] && [ "${TRAVIS_BRANCH}" = "stable" ]; then
     npm run package -- --publish always --draft
 fi
