@@ -35,10 +35,9 @@ export default class FileProxy {
         return new Promise((resolve, reject) => {
             this.client.file.getPropertiesFromComputeNode(poolId, nodeId, filename, wrapOptions(options),
                 (error, result, request, response) => {
-                    console.log("GOt file...", filename, response.headers);
                     if (error) { return reject(error); }
                     const out = this._parseHeadersToFile(response.headers, filename);
-
+                    console.log("Out is", out, response.headers);
                     resolve({
                         data: out,
                     });
@@ -120,16 +119,18 @@ export default class FileProxy {
             wrapOptions({ recursive, fileListFromComputeNodeOptions: options }));
     }
 
-    private _parseHeadersToFile(headers, filename: string) {
+    private _parseHeadersToFile(headers: Headers, filename: string) {
+        console.log("Banan", headers.keys());
+        const contentLength = parseInt(headers.get("content-length"), 10);
         return {
             name: filename,
-            isDirectory: headers["ocp-batch-file-isdirectory"],
-            url: headers["ocp-batch-file-url"],
+            isDirectory: headers.get("ocp-batch-file-isdirectory"),
+            url: headers.get("ocp-batch-file-url"),
             properties: {
-                contentLength: parseInt(headers["content-length"] as string, 10),
-                contentType: headers["content-type"],
-                creationTime: headers["ocp-creation-time"],
-                lastModified: headers["last-modified"],
+                contentLength: isNaN(contentLength) ? 0 : contentLength,
+                contentType: headers.get("content-type"),
+                creationTime: headers.get("ocp-creation-time"),
+                lastModified: headers.get("last-modified"),
             },
         };
     }
