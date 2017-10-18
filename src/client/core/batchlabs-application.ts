@@ -1,4 +1,4 @@
-import { app, ipcMain } from "electron";
+import { app, ipcMain , session } from "electron";
 
 import { AuthenticationWindow } from "../authentication";
 import { logger } from "../logger";
@@ -20,6 +20,12 @@ export class BatchLabsApplication {
      * Start the app by showing the splash screen
      */
     public start() {
+        const requestFilter = { urls: [] }; // TODO: filter seems to be ignored, add one when working
+        session.defaultSession.webRequest.onBeforeSendHeaders(requestFilter, (details, callback) => {
+            details.requestHeaders["Origin"] = "http://localhost";
+            callback({ cancel: false, requestHeaders: details.requestHeaders });
+        });
+
         this.splashScreen.create();
         this.splashScreen.updateMessage("Loading app");
 

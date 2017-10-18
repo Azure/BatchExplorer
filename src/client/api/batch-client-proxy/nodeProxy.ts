@@ -81,7 +81,7 @@ export default class NodeProxy {
         return new Promise((resolve, reject) => {
             this.client.computeNode.getRemoteDesktop(
                 poolId, nodeId, wrapOptions({ computeNodeGetRemoteDesktopOptions: options }),
-                (error, result, request, response) => {
+                (error, result: any, request, response) => {
                     if (error) { return reject(error); }
                     if (result) {
                         const chunks = [];
