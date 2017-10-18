@@ -9,7 +9,7 @@ import "./button.scss";
 import { ClickableComponent } from "./clickable";
 
 export type ButtonType = "square" | "round" | "wide";
-export type ButtonColor = "primary" | "light" | "danger" | "warn";
+export type ButtonColor = "primary" | "light" | "danger" | "warn" | "success";
 export type ButtonAction = (event?: Event) => Observable<any> | void;
 
 export enum SubmitStatus {

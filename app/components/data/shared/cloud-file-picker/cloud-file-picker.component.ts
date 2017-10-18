@@ -24,6 +24,7 @@ import "./cloud-file-picker.scss";
 })
 export class CloudFilePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
     @Input() public label: string;
+    @Input() public hint: string;
 
     /**
      * Name of the file group from which to pick a file.
@@ -96,5 +97,4 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnInit, O
         const valid = !value || this.fileGroups.map(x => x.name).includes(value);
         this.warning = !valid;
     }
-
 }
