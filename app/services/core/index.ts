@@ -1,3 +1,4 @@
+export * from "./data";
 export * from "./data-cache";
 export * from "./rx-arm-entity-proxy";
 export * from "./rx-arm-list-proxy";

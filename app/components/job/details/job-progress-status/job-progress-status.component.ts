@@ -5,7 +5,8 @@ import { Subscription } from "rxjs";
 import { GaugeConfig } from "app/components/base/graphs/gauge";
 import { Job, JobTaskCounts, Node, Pool } from "app/models";
 import { JobService, NodeListParams, NodeService, PoolParams, PoolService } from "app/services";
-import { PollObservable, PollService, RxEntityProxy, RxListProxy } from "app/services/core";
+import { PollObservable, PollService, RxListProxy } from "app/services/core";
+import { EntityView } from "app/services/core";
 
 const refreshRate = 5000;
 import "./job-progress-status.scss";
@@ -35,7 +36,7 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
     public progress = null;
 
     private data: RxListProxy<NodeListParams, Node>;
-    private poolData: RxEntityProxy<PoolParams, Pool>;
+    private poolData: EntityView<Pool, PoolParams>;
 
     private _polls: PollObservable[] = [];
     private _subs: Subscription[] = [];
@@ -46,7 +47,7 @@ export class JobProgressStatusComponent implements OnChanges, OnDestroy {
         private jobService: JobService,
         pollService: PollService,
     ) {
-        this.poolData = poolService.get(null);
+        this.poolData = poolService.view();
         this.data = nodeService.list(null, {
             pageSize: 1000,
             select: "id,state,runningTasksCount",
