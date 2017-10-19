@@ -1,11 +1,11 @@
 import * as batch from "azure-batch-js";
 
 import AccountProxy from "./accountProxy";
-import FileProxy from "./fileProxy";
-import JobProxy from "./jobProxy";
-import NodeProxy from "./nodeProxy";
-import PoolProxy from "./poolProxy";
-import TaskProxy from "./taskProxy";
+import { FileProxy } from "./fileProxy";
+import { JobProxy } from "./jobProxy";
+import { NodeProxy } from "./nodeProxy";
+import { PoolProxy } from "./poolProxy";
+import { TaskProxy } from "./taskProxy";
 
 export interface Options {
     account: string;

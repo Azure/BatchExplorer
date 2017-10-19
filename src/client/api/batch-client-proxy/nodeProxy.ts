@@ -3,7 +3,7 @@ import { BatchServiceClient, BatchServiceModels } from "azure-batch-js";
 import { BatchResult } from "./models";
 import { ListProxy, mapGet, wrapOptions } from "./shared";
 
-export default class NodeProxy {
+export  class NodeProxy {
 
     constructor(private client: BatchServiceClient) {
     }

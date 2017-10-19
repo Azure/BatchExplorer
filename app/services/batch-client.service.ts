@@ -4,6 +4,7 @@ import { TokenCredentials } from "ms-rest-js";
 import { Observable } from "rxjs";
 
 import { Constants } from "app/utils";
+import { BatchClientProxy } from "client/api/batch-client-proxy/batch-client-proxy";
 import { BatchClientProxyFactory } from "client/api/batch-client-proxy/batch-client-proxy-factory";
 import { AccountService } from "./account.service";
 import { AdalService } from "./adal";
@@ -45,16 +46,16 @@ export class BatchClientService {
         return this.currentAccount.flatMap((account) => {
             return this.adal.accessTokenFor(account.subscription.tenantId, resource).map((token) => {
                 const url = `https://${account.properties.accountEndpoint}`;
-                return this.getForAADTokenTS(url, token);
+                return this.getForAADToken(url, token);
             });
         }).share();
     }
 
-    public getForAADToken(accountUrl: string, token: string) {
+    public getForAADToken(accountUrl: string, token: string): BatchClientProxy {
         return factory.getForAADToken(accountUrl, token);
     }
 
-    public getForAADTokenTS(accountUrl: string, token: string): BatchServiceClient {
+    public getForAADTokenTS(accountUrl: string, token: string): BatchClientProxy {
         return new BatchServiceClient(new TokenCredentials(token, "Bearer"), accountUrl);
     }
 

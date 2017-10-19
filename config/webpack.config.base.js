@@ -78,6 +78,7 @@ const baseConfig = {
         }),
         // Workaround for WARNING Critical dependency: the request of a dependency is an expression
         new webpack.ContextReplacementPlugin(/angular(\\|\/)core(\\|\/)(esm(\\|\/)src|src)(\\|\/)linker/, __dirname),
+        new webpack.ContextReplacementPlugin(/.*$/, /NEVER_MATCH^/),
         new webpack.LoaderOptionsPlugin({
             debug: true,
         }),

@@ -1,33 +1,18 @@
 import { BatchServiceClient } from "azure-batch-js";
 import { ListProxy, wrapOptions } from "./shared";
 
-export default class FileProxy {
+export class FileProxy {
     constructor(private client: BatchServiceClient) {
     }
 
-    public getComputeNodeFile(poolId: string, nodeId: string, filename: string, options?: any): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.client.file.getFromComputeNode(
-                poolId, nodeId, filename, wrapOptions(options), (error, result: any, request, response) => {
-                    if (error) { return reject(error); }
-                    if (result) {
-                        const chunks = [];
-                        result.on("data", (chunk) => {
-                            chunks.push(chunk);
-                        });
-
-                        result.on("end", () => {
-                            resolve({
-                                result,
-                                content: Buffer.concat(chunks),
-                                request,
-                                response,
-                            });
-                        });
-
-                    }
-                });
-        });
+    public async getComputeNodeFile(poolId: string, nodeId: string, filename: string, options?: any): Promise<any> {
+        const result = await this.client.file.getFromComputeNode(poolId, nodeId, filename, wrapOptions(options));
+        if (result) {
+            const content = await this._readContent(result);
+            return {content };
+        } else {
+            return { content: "" };
+        }
     }
 
     public getComputeNodeFileProperties(
@@ -37,7 +22,6 @@ export default class FileProxy {
                 (error, result: any, request, response) => {
                     if (error) { return reject(error); }
                     const out = this._parseHeadersToFile(response.headers, filename);
-                    console.log("Out is", out, response.headers);
                     resolve({
                         data: out,
                     });
@@ -45,29 +29,14 @@ export default class FileProxy {
         });
     }
 
-    public getTaskFile(jobId: string, taskId: string, filename: string, options?: any): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.client.file.getFromTask(jobId, taskId, filename, wrapOptions(options),
-                (error, result: any, request, response) => {
-                    if (error) { return reject(error); }
-                    if (result) {
-                        const chunks = [];
-                        result.on("data", (chunk) => {
-                            chunks.push(chunk);
-                        });
-
-                        result.on("end", () => {
-                            resolve({
-                                result,
-                                content: Buffer.concat(chunks),
-                                request,
-                                response,
-                            });
-                        });
-
-                    }
-                });
-        });
+    public async getTaskFile(jobId: string, taskId: string, filename: string, options?: any): Promise<any> {
+        const result = await this.client.file.getFromTask(jobId, taskId, filename, wrapOptions(options));
+        if (result) {
+            const content = await this._readContent(result);
+            return {content };
+        } else {
+            return { content: "" };
+        }
     }
 
     public getTaskFileProperties(jobId: string, taskId: string, filename: string, options?: any): Promise<any> {
@@ -120,7 +89,6 @@ export default class FileProxy {
     }
 
     private _parseHeadersToFile(headers: Headers, filename: string) {
-        console.log("Banan", headers.keys());
         const contentLength = parseInt(headers.get("content-length"), 10);
         return {
             name: filename,
@@ -133,5 +101,22 @@ export default class FileProxy {
                 lastModified: headers.get("last-modified"),
             },
         };
+    }
+
+    private async _readContent(stream: ReadableStream): Promise<string> {
+        const reader = stream.getReader();
+
+        let text = "";
+        let result;
+        while (true) {
+            result = await reader.read();
+            if (result.value) {
+                text += new TextDecoder("utf-8").decode(result.value);
+            }
+
+            if (result.done) {
+                return text;
+            }
+        }
     }
 }

@@ -11,11 +11,6 @@ export function wrapOptions<T>(options?: T): T {
         newOptions.customHeaders = {};
     }
     newOptions.customHeaders["User-Agent"] = `BatchLabs/${Constants.version}`;
-    newOptions.customHeaders["Origin"] = `https://localhost`;
-    newOptions.customHeaders["Host"] = `management.azure.com`;
-    newOptions.customHeaders["Access-Control-Request-Headers"] = "Content-Length";
-    newOptions.customHeaders["x-ms-client-request-id"] = "faf40371-2c5a-4998-bbf2-51d3d80d7010";
-    newOptions.customHeaders["x-ms-client-session-id"] = "9014548e0a114486961125dc0b8d8a9f";
     return newOptions;
 }
 

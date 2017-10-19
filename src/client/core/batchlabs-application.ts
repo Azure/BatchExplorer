@@ -1,4 +1,4 @@
-import { app, ipcMain , session } from "electron";
+import { app, ipcMain, session } from "electron";
 
 import { AuthenticationWindow } from "../authentication";
 import { logger } from "../logger";
@@ -20,9 +20,14 @@ export class BatchLabsApplication {
      * Start the app by showing the splash screen
      */
     public start() {
-        const requestFilter = { urls: [] }; // TODO: filter seems to be ignored, add one when working
+        const requestFilter = { urls: ["https://*.batch.azure.com/*"] };
         session.defaultSession.webRequest.onBeforeSendHeaders(requestFilter, (details, callback) => {
-            details.requestHeaders["Origin"] = "http://localhost";
+            // Filter above doesn't seem to work
+            if (details.url.indexOf("batch.azure.com") !== -1) {
+                details.requestHeaders["Origin"] = "http://localhost:3178";
+                details.requestHeaders["Cache-Control"] = "no-cache";
+            }
+
             callback({ cancel: false, requestHeaders: details.requestHeaders });
         });
 
