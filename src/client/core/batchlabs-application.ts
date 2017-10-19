@@ -24,7 +24,7 @@ export class BatchLabsApplication {
         session.defaultSession.webRequest.onBeforeSendHeaders(requestFilter, (details, callback) => {
             // Filter above doesn't seem to work
             if (details.url.indexOf("batch.azure.com") !== -1) {
-                details.requestHeaders["Origin"] = "http://localhost:3178";
+                details.requestHeaders["Origin"] = "http://localhost";
                 details.requestHeaders["Cache-Control"] = "no-cache";
             }
 

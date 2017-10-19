@@ -31,7 +31,7 @@ export class ServiceBase {
             throw new Error("batchService not set in ServiceBase");
         }
 
-        return this.batchService.getTS().flatMap((client) => {
+        return this.batchService.get().flatMap((client) => {
             return Observable.fromPromise<T>(promise(client)).catch((err) => {
                 const serverError = ServerError.fromBatch(err);
                 if (errorCallback) {
