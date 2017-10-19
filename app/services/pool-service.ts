@@ -26,7 +26,7 @@ export class PoolService extends ServiceBase {
     private _basicProperties: string = "id,displayName,state,allocationState";
     private _cache = new DataCache<Pool>();
 
-    private _getter: BatchEntityGetter<Pool, {}>;
+    private _getter: BatchEntityGetter<Pool, PoolParams>;
 
     constructor(batchService: BatchClientService) {
         super(batchService);
@@ -64,8 +64,8 @@ export class PoolService extends ServiceBase {
         });
     }
 
-    public getOnce(poolId: string, options: any = {}): Observable<Pool> {
-        return this._getter.fetch({ poolId });
+    public getOnce(id: string, options: any = {}): Observable<Pool> {
+        return this._getter.fetch({ id });
     }
 
     /**
