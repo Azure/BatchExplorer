@@ -9,47 +9,38 @@ export class FileProxy {
         const result = await this.client.file.getFromComputeNode(poolId, nodeId, filename, wrapOptions(options));
         if (result) {
             const content = await this._readContent(result);
-            return {content };
+            return { content };
         } else {
             return { content: "" };
         }
     }
 
-    public getComputeNodeFileProperties(
+    public async getComputeNodeFileProperties(
         poolId: string, nodeId: string, filename: string, options?: any): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.client.file.getPropertiesFromComputeNode(poolId, nodeId, filename, wrapOptions(options),
-                (error, result: any, request, response) => {
-                    if (error) { return reject(error); }
-                    const out = this._parseHeadersToFile(response.headers, filename);
-                    resolve({
-                        data: out,
-                    });
-                });
-        });
+        const { response } = await this.client.file.getPropertiesFromComputeNodeWithHttpOperationResponse(
+            poolId, nodeId,
+            filename, wrapOptions(options));
+        return {
+            data: this._parseHeadersToFile(response.headers, filename),
+        };
     }
 
     public async getTaskFile(jobId: string, taskId: string, filename: string, options?: any): Promise<any> {
         const result = await this.client.file.getFromTask(jobId, taskId, filename, wrapOptions(options));
         if (result) {
             const content = await this._readContent(result);
-            return {content };
+            return { content };
         } else {
             return { content: "" };
         }
     }
 
-    public getTaskFileProperties(jobId: string, taskId: string, filename: string, options?: any): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.client.file.getPropertiesFromTask(jobId, taskId, filename, wrapOptions(options),
-                (error, result, request, response) => {
-                    if (error) { return reject(error); }
-                    const out = this._parseHeadersToFile(response.headers, filename);
-                    resolve({
-                        data: out,
-                    });
-                });
-        });
+    public async getTaskFileProperties(jobId: string, taskId: string, filename: string, options?: any): Promise<any> {
+        const { response } = await this.client.file.getPropertiesFromTaskWithHttpOperationResponse(jobId, taskId,
+            filename, wrapOptions(options));
+        return {
+            data: this._parseHeadersToFile(response.headers, filename),
+        };
     }
 
     /**

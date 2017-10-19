@@ -104,8 +104,6 @@ export class FileDetailsViewComponent implements OnChanges {
             error: (error: ServerError) => {
                 if (error.status === Constants.HttpCode.NotFound) {
                     this.fileNotFound = true;
-                } else {
-                    log.error(`Error loading file ${this.filename}`, error);
                 }
             },
         });

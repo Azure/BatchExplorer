@@ -9,7 +9,6 @@ export function wrapOptions<T>(options?: T): T {
     if (!newOptions.customHeaders) {
         newOptions.customHeaders = {};
     }
-    newOptions.customHeaders["User-Agent"] = `BatchLabs/${Constants.version}`;
     return newOptions;
 }
 
