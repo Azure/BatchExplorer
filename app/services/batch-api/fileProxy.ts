@@ -1,4 +1,4 @@
-import { BatchServiceClient } from "azure-batch-js";
+import { BatchServiceClient } from "azure-batch";
 import { ListProxy, wrapOptions } from "./shared";
 
 export class FileProxy {

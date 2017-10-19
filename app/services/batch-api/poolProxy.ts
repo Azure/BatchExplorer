@@ -1,4 +1,4 @@
-import { BatchServiceClient, BatchServiceModels } from "azure-batch-js";
+import { BatchServiceClient, BatchServiceModels } from "azure-batch";
 
 import { BatchResult } from "./models";
 import { ListProxy, ProxyUtil, mapGet, wrapOptions } from "./shared";

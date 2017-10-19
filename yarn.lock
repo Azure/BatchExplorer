@@ -704,7 +704,7 @@ aws4@^1.2.1:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/aws4/-/aws4-1.6.0.tgz#83ef5ca860b2b32e4a0deedee8c771b9db57471e"
 
-"azure-batch-js@git://github.com/amarzavery/azure-batch-ts":
+"azure-batch@git://github.com/amarzavery/azure-batch-ts":
   version "0.1.0"
   resolved "git://github.com/amarzavery/azure-batch-ts#d6cb1962459b4f5dacbb8380538087400f654cf1"
   dependencies:
