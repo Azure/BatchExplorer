@@ -26,8 +26,7 @@ function getPort(port = portrange): Promise<number> {
 }
 
 // tslint:disable-next-line:no-var-requires
-// const packageConfig = require(`${root}/package.json`);
-const packageConfig = {version: "X.Y.Z"};
+const packageConfig = require(`${root}/package.json`);
 
 const urls = {
     main: {
