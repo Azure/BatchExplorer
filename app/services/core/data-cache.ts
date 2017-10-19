@@ -111,8 +111,16 @@ export class DataCache<T> {
      * Return true if the cache contains the item for the given key
      * @param key Unique key of the item
      */
-    public has(key: string) {
+    public has(key: string): boolean {
         return this._items.getValue().has(key);
+    }
+
+    /**
+     * Return the item in the data cache at the time of access
+     * @param key Unique key of the item
+     */
+    public get(key: string): T {
+        return this._items.value.get(key);
     }
 
     /**

@@ -3,10 +3,12 @@ import { Observable, Subject } from "rxjs";
 
 import { Pool } from "app/models";
 import { PoolCreateDto, PoolEnableAutoScaleDto, PoolPatchDto, PoolResizeDto } from "app/models/dtos";
+// TODO-TIM use index.ts
+import { BatchEntityGetter } from "app/services/core/data/batch-entity-getter";
 import { Constants, ModelUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";
-import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
+import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy } from "./core";
 import { ServiceBase } from "./service-base";
 
 export interface PoolParams {
@@ -24,8 +26,15 @@ export class PoolService extends ServiceBase {
     private _basicProperties: string = "id,displayName,state,allocationState";
     private _cache = new DataCache<Pool>();
 
+    private _getter: BatchEntityGetter<Pool, {}>;
+
     constructor(batchService: BatchClientService) {
         super(batchService);
+
+        this._getter = new BatchEntityGetter(Pool, this.batchService, {
+            cache: () => this._cache,
+            getFn: (client, params: PoolParams) => client.pool.get(params.id),
+        });
     }
 
     public get basicProperties(): string {
@@ -56,7 +65,7 @@ export class PoolService extends ServiceBase {
     }
 
     public getOnce(poolId: string, options: any = {}): Observable<Pool> {
-        return getOnceProxy(this.get(poolId, options));
+        return this._getter.fetch({ poolId });
     }
 
     /**
