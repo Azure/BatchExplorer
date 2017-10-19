@@ -101,6 +101,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     public submit(): Observable<any> {
         const id = this.form.value.id;
         const data = this.getCurrentValue();
+        console.log("Data is", data);
         const obs = this.poolService.add(data);
         obs.subscribe({
             next: () => {
