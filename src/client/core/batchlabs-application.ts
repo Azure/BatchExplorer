@@ -1,6 +1,7 @@
 import { app, ipcMain, session } from "electron";
 
 import { AuthenticationWindow } from "../authentication";
+import { Constants } from "../client-constants";
 import { logger } from "../logger";
 import { MainWindow } from "../main-window";
 import { RecoverWindow } from "../recover-window";
@@ -27,6 +28,7 @@ export class BatchLabsApplication {
                 details.requestHeaders["Origin"] = "http://localhost";
                 details.requestHeaders["Cache-Control"] = "no-cache";
             }
+            details.requestHeaders["User-Agent"] = `BatchLabs/${Constants.version}`;
 
             callback({ cancel: false, requestHeaders: details.requestHeaders });
         });

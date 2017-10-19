@@ -2,10 +2,9 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { Constants } from "app/utils";
-import { BatchClientProxy } from "client/api/batch-client-proxy/batch-client-proxy";
-import { BatchClientProxyFactory } from "client/api/batch-client-proxy/batch-client-proxy-factory";
 import { AccountService } from "./account.service";
 import { AdalService } from "./adal";
+import { BatchClientProxy, BatchClientProxyFactory } from "./batch-api";
 import { ElectronRemote } from "./electron";
 
 const factory = new BatchClientProxyFactory();
