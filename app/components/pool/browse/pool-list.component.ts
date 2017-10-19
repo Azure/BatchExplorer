@@ -84,14 +84,6 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         this._subs.push(this.data.items.subscribe((pools) => {
             this.pools = List<PoolDecorator>(pools.map(x => new PoolDecorator(x)));
         }));
-        poolService.getOnce("a").subscribe({
-            next: (pool) => {
-                console.log("Got pool", pool.toJS());
-            },
-            error: (error) => {
-                console.log("Got error", error);
-            },
-        });
     }
 
     public ngOnInit() {

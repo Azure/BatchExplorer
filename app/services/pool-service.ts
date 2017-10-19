@@ -3,6 +3,7 @@ import { Observable, Subject } from "rxjs";
 
 import { Pool } from "app/models";
 import { PoolCreateDto, PoolEnableAutoScaleDto, PoolPatchDto, PoolResizeDto } from "app/models/dtos";
+import { EntityView } from "app/services/core/data";
 // TODO-TIM use index.ts
 import { BatchEntityGetter } from "app/services/core/data/batch-entity-getter";
 import { Constants, ModelUtils, log } from "app/utils";
@@ -60,6 +61,14 @@ export class PoolService extends ServiceBase {
             cache: () => this._cache,
             getFn: (client, params: PoolParams) => client.pool.get(params.id, options),
             initialParams: { id: poolId },
+            poll: Constants.PollRate.entity,
+        });
+    }
+
+    public view(): EntityView<Pool, PoolParams> {
+        return new EntityView({
+            cache: () => this._cache,
+            getter: this._getter,
             poll: Constants.PollRate.entity,
         });
     }
