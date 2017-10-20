@@ -56,7 +56,7 @@ export class JobService extends ServiceBase {
         return getAllProxy(this.list(options));
     }
 
-    public getOnce(jobId: string, options: any = {}): Observable<Job> {
+    public get(jobId: string, options: any = {}): Observable<Job> {
         return this._getter.fetch({ id: jobId });
     }
 

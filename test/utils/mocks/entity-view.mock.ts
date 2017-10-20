@@ -1,4 +1,5 @@
 import { Type } from "@angular/core";
+import { Observable } from "rxjs";
 
 import { BasicEntityGetter, DataCache, EntityView } from "app/services/core";
 
@@ -19,7 +20,7 @@ export class MockEntityView<TEntity, TParams> extends EntityView<TEntity, TParam
             cache: () => cache,
             getter: new BasicEntityGetter(type, {
                 cache: () => cache,
-                supplyData: () => this._item,
+                supplyData: () => Observable.of(this._item),
             }),
         });
 

@@ -101,7 +101,7 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
         this.dialog.confirm("Are you sure you want to delete this node?", {
             yes: () => {
                 return this.nodeService.delete(this.pool.id, this.nodeId)
-                    .cascade(() => this.nodeService.getOnce(this.pool.id, this.node.id));
+                    .cascade(() => this.nodeService.get(this.pool.id, this.node.id));
             },
         });
     }

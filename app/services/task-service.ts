@@ -104,7 +104,7 @@ export class TaskService extends ServiceBase {
         });
     }
 
-    public getOnce(jobId: string, taskId: string, options: any = {}): Observable<Task> {
+    public get(jobId: string, taskId: string, options: any = {}): Observable<Task> {
         return this._getter.fetch({jobId, id: taskId});
     }
 

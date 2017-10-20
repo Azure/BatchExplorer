@@ -491,7 +491,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     private _nodeAction(node: Node, action: Observable<any>): Observable<any> {
         action.subscribe({
             next: () => {
-                this.nodeService.getOnce(this.pool.id, node.id);
+                this.nodeService.get(this.pool.id, node.id);
             },
             error: (error: ServerError) => {
                 this.notificationService.error(error.code, error.message);

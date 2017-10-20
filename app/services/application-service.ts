@@ -76,7 +76,7 @@ export class ApplicationService extends ServiceBase {
         });
     }
 
-    public getOnce(applicationId: string, options: any = {}): Observable<BatchApplication> {
+    public get(applicationId: string, options: any = {}): Observable<BatchApplication> {
         return this._getter.fetch({ id: applicationId });
     }
 

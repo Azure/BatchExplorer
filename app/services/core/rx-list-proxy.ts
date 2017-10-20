@@ -124,8 +124,8 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
      * It should not add the new item if already present.
      * The cache system will handle updating it already.
      */
-    public loadNewItem(getOnceObs: Observable<TEntity>): Observable<any> {
-        getOnceObs.subscribe({
+    public loadNewItem(getObs: Observable<TEntity>): Observable<any> {
+        getObs.subscribe({
             next: (newItem) => {
                 this._addItemToList(newItem);
             }, error: (error) => {
@@ -133,7 +133,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
                     { error, params: this._params, options: this._options });
             },
         });
-        return getOnceObs;
+        return getObs;
     }
 
     /**

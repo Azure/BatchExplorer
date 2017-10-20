@@ -119,7 +119,7 @@ export class AccountService {
         const accountId = this._currentAccountId.value;
         this._currentAccountValid.next(AccountStatus.Loading);
 
-        const obs = this.getOnce(accountId);
+        const obs = this.get(accountId);
         DataCacheTracker.clearAllCaches(this._cache);
         obs.subscribe({
             next: (account) => {
@@ -186,7 +186,7 @@ export class AccountService {
         });
     }
 
-    public getOnce(accountId: string): Observable<AccountResource> {
+    public get(accountId: string): Observable<AccountResource> {
         return this._getter.fetch({ id: accountId });
     }
 
@@ -215,7 +215,7 @@ export class AccountService {
         }
 
         const subject = new AsyncSubject();
-        this.getOnce(accountId).subscribe({
+        this.get(accountId).subscribe({
             next: (account) => {
                 this._accountFavorites.next(this._accountFavorites.getValue().push(account));
                 this._saveAccountFavorites();

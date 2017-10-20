@@ -112,7 +112,7 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
     }
 
     public refresh(): Observable<any> {
-        return this.applicationService.getOnce(this.application.id);
+        return this.applicationService.get(this.application.id);
     }
 
     @autobind()

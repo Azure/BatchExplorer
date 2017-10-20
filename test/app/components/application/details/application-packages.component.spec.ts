@@ -13,7 +13,7 @@ describe("ApplicationPackagesComponent", () => {
 
     beforeEach(() => {
         applicationServiceSpy = {
-            getOnce: jasmine.createSpy("get-once"),
+            get: jasmine.createSpy("get-once"),
         };
 
         TestBed.configureTestingModule({
