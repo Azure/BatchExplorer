@@ -1,4 +1,4 @@
-import { Prop, Model, Record } from "app/core";
+import { Model, Prop, Record } from "app/core";
 
 export interface FakeModelAttributes {
     id: string;
@@ -12,7 +12,6 @@ export class FakeModel extends Record<FakeModelAttributes> {
     @Prop() public state: string;
     @Prop() public name: string;
 }
-
 
 export interface FakeParams {
     id: string;

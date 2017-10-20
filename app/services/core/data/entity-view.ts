@@ -50,7 +50,6 @@ export class EntityView<TEntity, TParams> extends GenericView<TEntity, TParams, 
         const obs = this.fetchData(() => this._getter.fetch(this.params));
         obs.subscribe({
             next: (entity: TEntity) => {
-                console.log("GOt next item key", entity, entity[this.cache.uniqueField]);
                 this._itemKey.next(entity[this.cache.uniqueField]);
             },
             error: (error: ServerError) => {

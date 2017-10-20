@@ -5,8 +5,7 @@ import { Subscription } from "rxjs";
 import { GaugeConfig } from "app/components/base/graphs/gauge";
 import { Job, JobTaskCounts, Node, Pool } from "app/models";
 import { JobService, NodeListParams, NodeService, PoolParams, PoolService } from "app/services";
-import { PollObservable, PollService, RxListProxy } from "app/services/core";
-import { EntityView } from "app/services/core";
+import { EntityView, PollObservable, PollService, RxListProxy } from "app/services/core";
 
 const refreshRate = 5000;
 import "./job-progress-status.scss";

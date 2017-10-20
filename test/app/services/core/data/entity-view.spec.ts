@@ -12,7 +12,7 @@ const data = [
     { id: "1", state: "complated", name: "Fake1" },
 ];
 
-fdescribe("EntityView", () => {
+describe("EntityView", () => {
     let cache: DataCache<FakeModel>;
     let dataSpy: jasmine.Spy;
     let getter: EntityGetter<FakeModel, FakeParams>;
@@ -42,7 +42,6 @@ fdescribe("EntityView", () => {
 
     it("It retrieve the item", fakeAsync(() => {
         view.item.subscribe((x) => {
-            console.log("Got item", x);
             item = x;
         });
         view.fetch();
