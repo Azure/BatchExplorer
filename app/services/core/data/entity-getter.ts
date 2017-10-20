@@ -35,6 +35,7 @@ export abstract class EntityGetter<TEntity, TParams> extends GenericGetter<TEnti
         }
 
         return this.getData(params).map((data) => {
+            console.log("Got dis item", data);
             return this._processItem(cache, data);
         }).catch((error) => {
             this._processError(cache, params, error);
@@ -65,7 +66,9 @@ export abstract class EntityGetter<TEntity, TParams> extends GenericGetter<TEnti
     }
 
     private _processError(cache: DataCache<TEntity>, params: TParams, error: ServerError) {
+        console.log("Got eerrr.?", error);
         if (error.status === HttpCode.NotFound) {
+            console.log("Abc 404 not found", params);
             const queryKey = params[cache.uniqueField];
             if (queryKey) {
                 cache.deleteItemByKey(queryKey);

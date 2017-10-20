@@ -6,9 +6,9 @@ import { List, OrderedSet } from "immutable";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { BatchError, ServerError } from "app/models";
-import { DataCache, RxBatchEntityProxy, RxBatchListProxy, getOnceProxy } from "app/services/core";
+import { DataCache, RxBatchListProxy } from "app/services/core";
 import { BatchClientServiceMock } from "test/utils/mocks";
-import { FakeModel } from "./fake-model";
+import { FakeModel } from "./data/fake-model";
 
 const data = [
     [

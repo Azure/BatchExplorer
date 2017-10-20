@@ -1,10 +1,10 @@
+import { LoadingStatus } from "app/components/base/loading";
 import { ServerError } from "app/models";
 import { PollObservable } from "app/services/core";
 import { HttpCode } from "app/utils/constants";
 import { BehaviorSubject, Observable } from "rxjs";
 import { EntityGetter } from "./entity-getter";
 import { GenericView, GenericViewConfig } from "./generic-view";
-
 export interface EntityViewConfig<TEntity, TParams> extends GenericViewConfig<TEntity, TParams> {
     /**
      * If you want to have the entity proxy poll automatically for you every given milliseconds.
@@ -45,9 +45,12 @@ export class EntityView<TEntity, TParams> extends GenericView<TEntity, TParams, 
      * Fetch the current item.
      */
     public fetch(): Observable<any> {
+        this._tryToLoadFromCache();
+
         const obs = this.fetchData(() => this._getter.fetch(this.params));
         obs.subscribe({
             next: (entity: TEntity) => {
+                console.log("GOt next item key", entity, entity[this.cache.uniqueField]);
                 this._itemKey.next(entity[this.cache.uniqueField]);
             },
             error: (error: ServerError) => {
@@ -86,5 +89,16 @@ export class EntityView<TEntity, TParams> extends GenericView<TEntity, TParams, 
      */
     protected pollRefresh() {
         return this.refresh();
+    }
+
+    /**
+     * Try to see if the entity is already in the cache if so load it immediatelly.
+     */
+    private _tryToLoadFromCache() {
+        const key = this.params[this.cache.uniqueField];
+        if (this.cache.has(key)) {
+            this._itemKey.next(key);
+            this._status.next(LoadingStatus.Ready);
+        }
     }
 }
