@@ -5,7 +5,9 @@ import { ApplicationPackage, BatchApplication, ServerError } from "app/models";
 import { Constants } from "app/utils";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
-import { DataCache, RxArmEntityProxy, RxArmListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
+import {
+    ArmEntityGetter, DataCache, EntityView, RxArmListProxy, RxListProxy,
+} from "./core";
 import { ServiceBase } from "./service-base";
 
 export interface ApplicationListParams {
@@ -37,6 +39,7 @@ export class ApplicationService extends ServiceBase {
     private _currentAccountId: string;
     private _basicProperties: string = "id,displayName,allowUpdates,defaultVersion";
     private _cache = new DataCache<BatchApplication>();
+    private _getter: ArmEntityGetter<BatchApplication, ApplicationParams>;
 
     constructor(
         private arm: ArmHttpService,
@@ -45,6 +48,11 @@ export class ApplicationService extends ServiceBase {
         super();
         accountService.currentAccountId.subscribe((accountId) => {
             this._currentAccountId = accountId;
+        });
+
+        this._getter = new ArmEntityGetter(BatchApplication, this.arm, {
+            cache: () => this._cache,
+            uri: ({ id }) => `${this._currentAccountId}/applications/${id}`,
         });
     }
 
@@ -68,23 +76,19 @@ export class ApplicationService extends ServiceBase {
         });
     }
 
-    /**
-     * Gets information about the specified application, including
-     * a list of it's packages.
-     * @param applicationId: id of the application
-     */
-    public get(applicationId: string): RxEntityProxy<ApplicationParams, BatchApplication> {
-        return new RxArmEntityProxy<ApplicationParams, BatchApplication>(BatchApplication, this.arm, {
-            cache: () => this._cache,
-            uri: ({ id }) => `${this._currentAccountId}/applications/${id}`,
-            initialParams: {
-                id: applicationId,
-            },
-        });
+    public getOnce(applicationId: string, options: any = {}): Observable<BatchApplication> {
+        return this._getter.fetch({ id: applicationId });
     }
 
-    public getOnce(applicationId: string, options: any = {}): Observable<BatchApplication> {
-        return getOnceProxy(this.get(applicationId));
+    /**
+     * Create an entity view for a pool
+     */
+    public view(): EntityView<BatchApplication, ApplicationParams> {
+        return new EntityView({
+            cache: () => this._cache,
+            getter: this._getter,
+            poll: Constants.PollRate.entity,
+        });
     }
 
     /**
