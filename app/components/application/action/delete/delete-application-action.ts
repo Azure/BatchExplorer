@@ -21,7 +21,7 @@ export class DeleteApplicationAction extends LongRunningDeleteAction {
     protected waitForDelete(id: string, taskManager?: BackgroundTaskService) {
         this.applicationService.getOnce(id).subscribe({
             next: (application: BatchApplication) => {
-                const task = new WaitForDeletePoller(this.applicationService.get(id));
+                const task = new WaitForDeletePoller(() => this.applicationService.getOnce(id));
                 if (taskManager) {
                     const message = `Deleting application: ${id}`;
                     taskManager.startTask(message, (bTask) => {
