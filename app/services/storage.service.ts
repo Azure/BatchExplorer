@@ -8,12 +8,11 @@ import { FileSystemService } from "app/services";
 import { Constants, log } from "app/utils";
 import {
     DataCache,
-    RxEntityProxy,
+    EntityView,
     RxListProxy,
-    RxStorageEntityProxy,
     RxStorageListProxy,
+    StorageEntityGetter,
     TargetedDataCache,
-    getOnceProxy,
 } from "./core";
 import { FileLoadOptions, FileLoader, FileNavigator, FileSource } from "./file";
 import { ListBlobOptions } from "./storage";
@@ -73,11 +72,25 @@ export class StorageService {
         key: ({ container }) => container,
     }, "name");
 
+    private _containerGetter: StorageEntityGetter<BlobContainer, GetContainerParams>;
+    private _blobGetter: StorageEntityGetter<File, BlobFileParams>;
+
     constructor(
         private storageClient: StorageClientService,
         private backgroundTaskService: BackgroundTaskService,
         private fs: FileSystemService,
-        private zone: NgZone) { }
+        private zone: NgZone) {
+
+        this._containerGetter = new StorageEntityGetter(BlobContainer, this.storageClient, {
+            cache: () => this._containerCache,
+            getFn: (client, params: GetContainerParams) => client.pool.get(params.id),
+        });
+        this._blobGetter = new StorageEntityGetter(File, this.storageClient, {
+            cache: (params) => this.getBlobFileCache(params),
+            getFn: (client, params: BlobFileParams) =>
+                client.getBlobProperties(params.container, params.blobName, params.blobPrefix),
+        });
+    }
 
     public getBlobFileCache(params: ListBlobParams): DataCache<File> {
         return this._blobListCache.getCache(params);
@@ -137,21 +150,15 @@ export class StorageService {
      * @param blobName - Name of the blob, not including prefix
      * @param blobPrefix - Optional prefix of the blob, i.e. {container}/{blobPrefix}+{blobName}
      */
-    public getBlobProperties(container: string, blobName: string, blobPrefix?: string)
-        : RxEntityProxy<BlobFileParams, File> {
+    public getBlobPropertiesOnce(container: string, blobName: string, blobPrefix?: string) {
+        this._blobGetter.fetch({ container, blobName, blobPrefix });
+    }
 
-        const initialOptions: any = {};
-        return new RxStorageEntityProxy<BlobFileParams, File>(File, this.storageClient, {
+    public blobView(): EntityView<File, BlobFileParams> {
+        return new EntityView({
             cache: (params) => this.getBlobFileCache(params),
-            getFn: (client, params) => {
-                return client.getBlobProperties(params.container, params.blobName, params.blobPrefix, initialOptions);
-            },
-            initialParams: {
-                container: container,
-                blobPrefix: blobPrefix,
-                blobName: blobName,
-            },
-            logIgnoreError: storageIgnoredErrors,
+            getter: this._blobGetter,
+            poll: Constants.PollRate.entity,
         });
     }
 
@@ -283,21 +290,19 @@ export class StorageService {
      * @param container - Name of the blob container
      * @param options - Optional parameters for the request
      */
-    public getContainerProperties(container: string, options: any = {})
-        : RxEntityProxy<GetContainerParams, BlobContainer> {
-
-        return new RxStorageEntityProxy<GetContainerParams, BlobContainer>(BlobContainer, this.storageClient, {
-            cache: () => this._containerCache,
-            getFn: (client, params) => {
-                return client.getContainerProperties(params.id, this.ncjFileGroupPrefix, options);
-            },
-            initialParams: { id: container },
-            logIgnoreError: storageIgnoredErrors,
-        });
+    public getContainerOnce(container: string, options: any = {}): Observable<BlobContainer> {
+        return this._containerGetter.fetch({ id: container });
     }
 
-    public getContainerOnce(container: string, options: any = {}): Observable<BlobContainer> {
-        return getOnceProxy(this.getContainerProperties(container, options));
+    /**
+     * Create an entity view for a container
+     */
+    public containerView(): EntityView<BlobContainer, GetContainerParams> {
+        return new EntityView({
+            cache: () => this._containerCache,
+            getter: this._containerGetter,
+            poll: Constants.PollRate.entity,
+        });
     }
 
     /**
