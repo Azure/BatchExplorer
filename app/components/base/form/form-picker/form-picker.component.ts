@@ -42,9 +42,11 @@ export class FormPickerComponent implements ControlValueAccessor, Validator {
     private _page: FormPageComponent;
 
     private _propagateChange: (value: any) => void;
+    private _lastPickedValue: any;
 
     public openPicker() {
         const page = this._getPage();
+        this.nestedValue.setValue(this._lastPickedValue);
         page.activate(this);
         this.open.emit();
     }
@@ -61,9 +63,11 @@ export class FormPickerComponent implements ControlValueAccessor, Validator {
     }
 
     public nestedFormSubmit() {
-        this.hasValue = Boolean(this.nestedValue.value);
+        const value = this.nestedValue.value;
+        this.hasValue = Boolean(value);
+        this._lastPickedValue = value;
         if (this._propagateChange) {
-            this._propagateChange(this.nestedValue.value);
+            this._propagateChange(value);
         }
         this.pick.emit();
     }
