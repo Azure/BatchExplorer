@@ -38,7 +38,7 @@ describe("DeleteApplicationDialogComponent ", () => {
                 return Observable.of({});
             }),
 
-            get: () => Observable.of(Fixtures.application.create({ id: "app-1"})),
+            get: () => Observable.of(Fixtures.application.create({ id: "app-1" })),
             view: () => entityView,
         };
 
