@@ -8,8 +8,8 @@ import { ArrayUtils, Constants, ObservableUtils, log } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 import { BatchClientService } from "./batch-client.service";
 import {
-    DataCache, ListOptionsAttributes, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy,
-    TargetedDataCache, getOnceProxy,
+    BatchEntityGetter, DataCache, EntityView, ListOptionsAttributes, RxBatchListProxy,
+     RxListProxy, TargetedDataCache,
 } from "./core";
 import { FileContentResult } from "./file-service";
 import { ServiceBase } from "./service-base";
@@ -34,9 +34,15 @@ export class NodeService extends ServiceBase {
     });
 
     private _nodeAgentSkusCache = new DataCache<any>();
+    private _getter: BatchEntityGetter<Node, NodeParams>;
 
     constructor(private taskManager: BackgroundTaskService, batchService: BatchClientService) {
         super(batchService);
+
+        this._getter = new BatchEntityGetter(Node, this.batchService, {
+            cache: ({ poolId }) => this.getCache(poolId),
+            getFn: (client, params: NodeParams) => client.node.get(params.poolId, params.id),
+        });
     }
 
     public get basicProperties(): string {
@@ -72,23 +78,23 @@ export class NodeService extends ServiceBase {
         return subject.asObservable();
     }
 
-    public get(initialPoolId: string, initialNodeId: string, options: any): RxEntityProxy<NodeParams, Node> {
-        return new RxBatchEntityProxy<NodeParams, Node>(Node, this.batchService, {
-            cache: ({ poolId }) => this.getCache(poolId),
-            getFn: (client, params: NodeParams) => {
-                return client.node.get(params.poolId, params.id, options);
-            },
-            initialParams: { poolId: initialPoolId, id: initialNodeId },
-            poll: Constants.PollRate.entity,
-        });
-    }
-
     /**
      * Get a node once and forget.
      * You don't need to cleanup the subscription.
      */
     public getOnce(poolId: string, nodeId: string, options: any = {}): Observable<Node> {
-        return getOnceProxy(this.get(poolId, nodeId, options));
+        return this._getter.fetch({poolId, id: nodeId});
+    }
+
+    /**
+     * Create an entity view for a node
+     */
+    public view(): EntityView<Node, NodeParams> {
+        return new EntityView({
+            cache: ({ poolId }) => this.getCache(poolId),
+            getter: this._getter,
+            poll: Constants.PollRate.entity,
+        });
     }
 
     public reboot(poolId: string, nodeId: string): Observable<any> {

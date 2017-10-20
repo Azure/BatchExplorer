@@ -8,15 +8,14 @@ import { Constants, log } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 import { BatchClientService } from "./batch-client.service";
 import {
+    BatchEntityGetter,
     DataCache,
+    EntityView,
     ListOptionsAttributes,
-    RxBatchEntityProxy,
     RxBatchListProxy,
-    RxEntityProxy,
     RxListProxy,
     TargetedDataCache,
     getAllProxy,
-    getOnceProxy,
 } from "./core";
 import { ServiceBase } from "./service-base";
 
@@ -47,6 +46,7 @@ export class TaskService extends ServiceBase {
     private _cache = new TargetedDataCache<TaskListParams, Task>({
         key: ({ jobId }) => jobId,
     });
+    private _getter: BatchEntityGetter<Task, TaskParams>;
 
     private _subTaskCache = new TargetedDataCache<SubtaskListParams, SubtaskInformation>({
         key: ({ jobId, taskId }) => `${jobId}/${taskId}`,
@@ -58,6 +58,11 @@ export class TaskService extends ServiceBase {
 
     constructor(batchService: BatchClientService) {
         super(batchService);
+
+        this._getter = new BatchEntityGetter(Task, this.batchService, {
+            cache: ({ jobId }) => this.getCache(jobId),
+            getFn: (client, params: TaskParams) => client.pool.get(params.id),
+        });
     }
 
     public getCache(jobId: string): DataCache<Task> {
@@ -99,19 +104,19 @@ export class TaskService extends ServiceBase {
         });
     }
 
-    public get(initialJobId: string, taskId: string, options: any = {}): RxEntityProxy<TaskParams, Task> {
-        return new RxBatchEntityProxy(Task, this.batchService, {
-            cache: ({ jobId }) => this.getCache(jobId),
-            getFn: (client, params: TaskParams) => {
-                return client.task.get(params.jobId, params.id, options);
-            },
-            initialParams: { id: taskId, jobId: initialJobId },
-            poll: Constants.PollRate.entity,
-        });
+    public getOnce(jobId: string, taskId: string, options: any = {}): Observable<Task> {
+        return this._getter.fetch({jobId, id: taskId});
     }
 
-    public getOnce(jobId: string, taskId: string, options: any = {}): Observable<Task> {
-        return getOnceProxy(this.get(jobId, taskId, options));
+    /**
+     * Create an entity view for a node
+     */
+    public view(): EntityView<Task, TaskParams> {
+        return new EntityView({
+            cache: ({ jobId }) => this.getCache(jobId),
+            getter: this._getter,
+            poll: Constants.PollRate.entity,
+        });
     }
 
     /**

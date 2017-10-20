@@ -8,7 +8,7 @@ import { SidebarManager } from "app/components/base/sidebar";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { Node, Pool } from "app/models";
 import { FileService, NodeParams, NodeService, PoolParams, PoolService } from "app/services";
-import { EntityView, RxEntityProxy } from "app/services/core";
+import { EntityView } from "app/services/core";
 import { NodeConnectComponent } from "../connect";
 
 @Component({
@@ -26,7 +26,7 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
 
     public nodeId: string;
     public poolId: string;
-    public data: RxEntityProxy<NodeParams, Node>;
+    public data: EntityView<Node, NodeParams>;
     public poolData: EntityView<Pool, PoolParams>;
     public node: Node;
     public pool: Pool;
@@ -41,7 +41,7 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
         fileService: FileService,
         private sidebarManager: SidebarManager) {
 
-        this.data = nodeService.get(null, null, {});
+        this.data = nodeService.view();
         this.data.item.subscribe((node) => {
             if (node) {
                 // this.decorator = new NodeDecorator(node);

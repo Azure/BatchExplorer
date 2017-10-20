@@ -7,7 +7,7 @@ import { Observable } from "rxjs";
 import { tasksToCsv } from "app/components/job/graphs/job-graphs-home/helpers";
 import { Job, Task, TaskState } from "app/models";
 import { CacheDataService, ElectronShell, FileSystemService, JobParams, JobService, TaskService } from "app/services";
-import { RxEntityProxy } from "app/services/core";
+import { EntityView } from "app/services/core";
 import { log } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 import { autobind } from "core-decorators";
@@ -34,7 +34,7 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
     public currentGraph = AvailableGraph.runningTime;
     public description: string;
 
-    private _data: RxEntityProxy<JobParams, Job>;
+    private _data: EntityView<Job, JobParams>;
 
     constructor(
         private route: ActivatedRoute,
@@ -45,7 +45,7 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
         private fs: FileSystemService,
     ) {
 
-        this._data = this.jobService.get(null, {});
+        this._data = this.jobService.view();
         this._data.item.subscribe((job) => {
             this.job = job;
         });

@@ -7,7 +7,7 @@ import { Subscription } from "rxjs";
 import { Job, Task } from "app/models";
 import { TaskDecorator } from "app/models/decorators";
 import { JobParams, JobService, TaskParams, TaskService } from "app/services";
-import { RxEntityProxy } from "app/services/core";
+import { EntityView } from "app/services/core";
 import { SidebarManager } from "../../base/sidebar";
 import { DeleteTaskDialogComponent, TaskCreateBasicDialogComponent, TerminateTaskDialogComponent } from "../action";
 
@@ -26,8 +26,8 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
 
     public taskId: string;
     public jobId: string;
-    public data: RxEntityProxy<TaskParams, Task>;
-    public jobData: RxEntityProxy<JobParams, Job>;
+    public data: EntityView<Task, TaskParams>;
+    public jobData: EntityView<Job, JobParams>;
 
     public task: Task;
     public decorator: TaskDecorator;
@@ -52,8 +52,8 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
         jobService: JobService,
         private router: Router) {
 
-        this.data = taskService.get(null, null, {});
-        this.jobData = jobService.get(null, {});
+        this.data = taskService.view();
+        this.jobData = jobService.view();
         this.data.item.subscribe((task) => {
             this.task = task;
             this.decorator = task && new TaskDecorator(task);
