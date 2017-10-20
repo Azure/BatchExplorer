@@ -36,7 +36,7 @@ export class JobService extends ServiceBase {
 
         this._getter = new BatchEntityGetter(Job, this.batchService, {
             cache: () => this.cache,
-            getFn: (client, params: JobParams) => client.pool.get(params.id),
+            getFn: (client, params: JobParams) => client.job.get(params.id),
         });
     }
 

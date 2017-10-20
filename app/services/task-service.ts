@@ -61,7 +61,7 @@ export class TaskService extends ServiceBase {
 
         this._getter = new BatchEntityGetter(Task, this.batchService, {
             cache: ({ jobId }) => this.getCache(jobId),
-            getFn: (client, params: TaskParams) => client.pool.get(params.id),
+            getFn: (client, params: TaskParams) => client.task.get(params.jobId, params.id),
         });
     }
 
