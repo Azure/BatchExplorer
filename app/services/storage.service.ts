@@ -83,8 +83,10 @@ export class StorageService {
 
         this._containerGetter = new StorageEntityGetter(BlobContainer, this.storageClient, {
             cache: () => this._containerCache,
-            getFn: (client, params: GetContainerParams) => client.pool.get(params.id),
+            getFn: (client, params: GetContainerParams) =>
+                client.getContainerProperties(params.id, this.ncjFileGroupPrefix),
         });
+
         this._blobGetter = new StorageEntityGetter(File, this.storageClient, {
             cache: (params) => this.getBlobFileCache(params),
             getFn: (client, params: BlobFileParams) =>
@@ -150,8 +152,8 @@ export class StorageService {
      * @param blobName - Name of the blob, not including prefix
      * @param blobPrefix - Optional prefix of the blob, i.e. {container}/{blobPrefix}+{blobName}
      */
-    public getBlobPropertiesOnce(container: string, blobName: string, blobPrefix?: string) {
-        this._blobGetter.fetch({ container, blobName, blobPrefix });
+    public getBlobPropertiesOnce(container: string, blobName: string, blobPrefix?: string): Observable<File> {
+        return this._blobGetter.fetch({ container, blobName, blobPrefix });
     }
 
     public blobView(): EntityView<File, BlobFileParams> {
@@ -175,7 +177,7 @@ export class StorageService {
             groupId: blobPrefix,
             fs: this.fs,
             properties: () => {
-                return this.getBlobProperties(container, blobName, blobPrefix);
+                return this.getBlobPropertiesOnce(container, blobName, blobPrefix);
             },
             content: (options: FileLoadOptions) => {
                 return this._callStorageClient((client) => {
