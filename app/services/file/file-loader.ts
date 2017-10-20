@@ -2,7 +2,6 @@ import * as path from "path";
 import { Observable, Subject } from "rxjs";
 
 import { File } from "app/models";
-import { RxEntityProxy } from "app/services/core";
 import { CloudPathUtils, exists, log } from "app/utils";
 import { FileSystemService } from "../fs.service";
 
@@ -67,7 +66,6 @@ export class FileLoader {
     private _content: ContentFunc;
     private _download: DownloadFunc;
     private _cachedProperties: File;
-    private _proxy: RxEntityProxy<any, File>;
     private _fileChanged = new Subject<File>();
     private _logIgnoreError: number[];
 
@@ -148,16 +146,6 @@ export class FileLoader {
             return CloudPathUtils.normalize(path.relative(this.basePath, this.filename));
         } else {
             return this.filename;
-        }
-    }
-    /**
-     * Dipose of the file loader entities if applicable
-     * You MUST call this if you used .listen on a file loader otherwise there will be memory leaks.
-     */
-    public dispose() {
-        if (this._proxy) {
-            this._proxy.dispose();
-            this._proxy = null;
         }
     }
 
