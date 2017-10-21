@@ -8,7 +8,7 @@ import {
 } from "app/components/base/context-menu";
 import { NotificationService } from "app/components/base/notifications";
 import { AccountService, AdalService, ElectronRemote, ElectronShell } from "app/services";
-import { Constants } from "app/utils";
+import { Constants, OS } from "app/utils";
 import "./main-navigation.scss";
 
 @Component({
@@ -110,8 +110,11 @@ export class MainNavigationComponent implements OnInit {
     }
 
     private _update() {
-        console.log("Update available", this.update);
-        this._autoUpdater.quitAndInstall();
+        if (OS.isWindows()) {
+            this._autoUpdater.quitAndInstall();
+        } else {
+            this.shell.openExternal("https://azure.github.io/BatchLabs/");
+        }
     }
 
     private _notify(title: string, description: string, options: any = {}) {
