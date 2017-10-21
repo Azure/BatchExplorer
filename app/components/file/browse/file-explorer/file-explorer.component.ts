@@ -19,6 +19,11 @@ export enum FileExplorerSelectable {
     all = 6,
 }
 
+export interface FileDeleteEvent {
+    path: string;
+    isDirectory: boolean;
+}
+
 export interface FileDropEvent {
     path: string;
     files: File[];
@@ -44,6 +49,12 @@ export interface FileExplorerConfig {
     canDropExternalFiles?: boolean;
 
     /**
+     * If the explorer allows deleting external files
+     * @default false
+     */
+    canDeleteFiles?: boolean;
+
+    /**
      * If log file can be automatically refreshed(Tail)
      */
     tailable?: boolean;
@@ -53,6 +64,7 @@ const fileExplorerDefaultConfig: FileExplorerConfig = {
     showTreeView: true,
     selectable: FileExplorerSelectable.none,
     canDropExternalFiles: false,
+    canDeleteFiles: false,
     tailable: false,
 };
 
@@ -64,7 +76,6 @@ const fileExplorerDefaultConfig: FileExplorerConfig = {
     templateUrl: "file-explorer.html",
 })
 export class FileExplorerComponent implements OnChanges, OnDestroy {
-
     @Input() public set data(data: FileExplorerWorkspace | FileNavigator) {
         if (data instanceof FileExplorerWorkspace) {
             this.workspace = data;
@@ -81,6 +92,7 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
     public get config() { return this._config; }
     @Output() public activeFileChange = new EventEmitter<string>();
     @Output() public dropFiles = new EventEmitter<FileDropEvent>();
+    @Output() public deleteFiles = new EventEmitter<FileDeleteEvent>();
 
     public LoadingStatus = LoadingStatus;
     public currentSource: FileSource;
@@ -134,6 +146,10 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
 
     public handleDrop(event: FileDropEvent) {
         this.dropFiles.emit(event);
+    }
+
+    public handleDelete(event: FileDeleteEvent) {
+        this.deleteFiles.emit(event);
     }
 
     private _updateWorkspaceEvents() {

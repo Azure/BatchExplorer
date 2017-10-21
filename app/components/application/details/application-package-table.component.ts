@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges, ViewContainerRef } from "@angular/core";
-import { MdDialog, MdDialogConfig } from "@angular/material";
+import { MatDialog, MatDialogConfig } from "@angular/material";
 import { autobind } from "core-decorators";
 import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -50,7 +50,7 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
     private _stateMap: Map<string, PackageState>;
 
     constructor(
-        protected dialog: MdDialog,
+        protected dialog: MatDialog,
         private applicationService: ApplicationService,
         private sidebarManager: SidebarManager,
         private taskManager: BackgroundTaskService,
@@ -117,7 +117,7 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
 
     @autobind()
     public activateActiveItem() {
-        let config = new MdDialogConfig();
+        let config = new MatDialogConfig();
         config.viewContainerRef = this.viewContainerRef;
 
         const dialogRef = this.dialog.open(ActivatePackageDialogComponent, config);

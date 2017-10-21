@@ -97,7 +97,7 @@ export class MainNavigationComponent implements OnInit {
     }
 
     private _openThirdPartyNotices() {
-        this.shell.openExternal(path.join(Constants.Client.resourcesFolder, "ThirdPartyNotices.txt"));
+        this.shell.openItem(path.join(Constants.Client.resourcesFolder, "ThirdPartyNotices.txt"));
     }
 
     private _logout() {

@@ -1,23 +1,19 @@
 <bl-loading [status]="data.newDataStatus | async">
     <div *ngIf="container" class="fit-details-container">
-        <md-card class="overview">
-            <div class="actions">
-                <bl-button-group>
-                    <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                    <bl-edit-button title="Add more files to the file group" [action]="manageFileGroup"></bl-edit-button>
-                    <bl-delete-button title="Delete this file group" [entity]="container" [action]="deleteFileGroup"></bl-delete-button>
-                    <bl-download-button title="Download this file group" [action]="download"></bl-download-button>
-                </bl-button-group>
+        <bl-summary-card>
+            <div summaryTitle>{{container?.name}}</div>
+            <div summarySubtitle>
+                {{container.lease?.state}}
             </div>
-            <div class="content">
-                <md-card-title>{{container?.name}}</md-card-title>
-                <md-card-subtitle>
-                    {{container.lease?.state}}
-                </md-card-subtitle>
-            </div>
-        </md-card>
+            <bl-button-group summaryActions>
+                <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+                <bl-edit-button title="Add more files to the file group" [action]="manageFileGroup"></bl-edit-button>
+                <bl-delete-button title="Delete this file group" [entity]="container" [action]="deleteFileGroup"></bl-delete-button>
+                <bl-download-button title="Download this file group" [action]="download"></bl-download-button>
+            </bl-button-group>
+        </bl-summary-card>
         <bl-storage-error-display></bl-storage-error-display>
-        <md-card class="details">
+        <mat-card class="details">
             <bl-tab-group>
                 <bl-tab key="files">
                     <bl-tab-label>Files</bl-tab-label>
@@ -28,6 +24,6 @@
                     <bl-data-container-configuration [container]="container"></bl-data-container-configuration>
                 </bl-tab>
             </bl-tab-group>
-        </md-card>
+        </mat-card>
     </div>
 </bl-loading>

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output, TemplateRef, ViewChild } from "@angular/core";
-import { MdDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material";
 import { autobind } from "core-decorators";
 
 import "./simple-dialog.scss";
@@ -28,7 +28,7 @@ export class SimpleDialogComponent {
     public closeText: string = "Close";
 
     @Input()
-    public dialogRef: MdDialogRef<any>;
+    public dialogRef: MatDialogRef<any>;
 
     @autobind()
     public close() {

@@ -28,13 +28,27 @@ export class TokenCache {
         this._saveToStorage();
     }
 
+    public removeToken(tenantId: string, resource: string) {
+        const tenantTokens = this._tokens[tenantId];
+        if (tenantTokens) {
+            delete tenantTokens[resource];
+        }
+    }
+
     public clear() {
         this._tokens = {};
         localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
     }
 
     private _saveToStorage() {
-        localStorage.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(this._tokens));
+        const tokens = {};
+        for (const tenantId of Object.keys(this._tokens)) {
+            tokens[tenantId] = {};
+            for (const resource of Object.keys(this._tokens[tenantId])) {
+                tokens[tenantId][resource] = this._tokens[tenantId][resource].toJS();
+            }
+        }
+        localStorage.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(tokens));
     }
 
     private _loadFromStorage() {

@@ -1,7 +1,7 @@
 <div class="status-icon">
     <div *ngIf="!(task.done | async)">
-        <md-progress-spinner mode="indeterminate" color="primary" *ngIf="(task.progress | async) === -1"></md-progress-spinner>
-        <md-progress-spinner mode="determinate" [value]="task.progress | async" *ngIf="(task.progress | async) !== -1"></md-progress-spinner>
+        <mat-progress-spinner [diameter]="24" [strokeWidth]="3" mode="indeterminate" color="primary" *ngIf="(task.progress | async) === -1"></mat-progress-spinner>
+        <mat-progress-spinner [diameter]="24" [strokeWidth]="3" mode="determinate" [value]="task.progress | async" *ngIf="(task.progress | async) !== -1"></mat-progress-spinner>
     </div>
     <i class="fa fa-check" *ngIf="task.done | async"></i>
 </div>

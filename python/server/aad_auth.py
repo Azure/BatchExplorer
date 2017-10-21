@@ -22,7 +22,7 @@ class BatchAccount:
 class AADAuth:
     def __init__(self, batchToken: str, armToken: str, account: BatchAccount):
         self.batchCreds = AdalAuthentication(
-            lambda: {'accessToken': batchToken})
+            lambda: {'accessToken': batchToken, 'tokenType': 'Bearer'})
         self.armCreds = AdalAuthentication(
             lambda: {'accessToken': armToken, 'tokenType': 'Bearer'})
         self.account = account

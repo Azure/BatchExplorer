@@ -1,7 +1,7 @@
 import {
     ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild,
 } from "@angular/core";
-import { MdDialog } from "@angular/material";
+import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { List } from "immutable";
@@ -71,7 +71,7 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         private poolService: PoolService,
         activatedRoute: ActivatedRoute,
         router: Router,
-        dialog: MdDialog,
+        dialog: MatDialog,
         private sidebarManager: SidebarManager,
         private taskManager: BackgroundTaskService) {
 

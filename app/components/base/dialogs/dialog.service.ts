@@ -1,5 +1,6 @@
+import { ComponentType } from "@angular/cdk/portal";
 import { Injectable } from "@angular/core";
-import { ComponentType, MdDialog, MdDialogConfig, MdDialogRef } from "@angular/material";
+import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material";
 import { PromptDialogComponent } from "app/components/base/dialogs";
 import { Observable } from "rxjs";
 import { ConfirmationDialogComponent } from "./confirmation-dialog.component";
@@ -16,14 +17,14 @@ export interface PromptOptions {
 
 /**
  * Dialog service is a service to help open commonly used dialog such as a confirmation dialog.
- * It can also open a dialog the same way material does so you only need to inject this service and not the MdDialog
+ * It can also open a dialog the same way material does so you only need to inject this service and not the MatDialog
  */
 @Injectable()
 export class DialogService {
-    constructor(private mdDialog: MdDialog) { }
+    constructor(private matDialog: MatDialog) { }
 
     public confirm(title: string = "Are you sure?", options: ConfirmOptions) {
-        const ref = this.mdDialog.open(ConfirmationDialogComponent);
+        const ref = this.matDialog.open(ConfirmationDialogComponent);
         const component = ref.componentInstance;
         component.title = title;
         component.description = options.description;
@@ -31,14 +32,14 @@ export class DialogService {
     }
 
     public prompt(title: string = "Are you sure?", options: PromptOptions) {
-        const ref = this.mdDialog.open(PromptDialogComponent);
+        const ref = this.matDialog.open(PromptDialogComponent);
         const component = ref.componentInstance;
         component.title = title;
         component.description = options.description;
         component.execute = options.prompt;
     }
 
-    public open<T>(type: ComponentType<T>, config?: MdDialogConfig): MdDialogRef<T> {
-        return this.mdDialog.open(type, config);
+    public open<T>(type: ComponentType<T>, config?: MatDialogConfig): MatDialogRef<T> {
+        return this.matDialog.open(type, config);
     }
 }

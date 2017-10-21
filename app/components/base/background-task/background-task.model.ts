@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable } from "rxjs";
+import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { BackgroundTaskService } from "./background-task.service";
 
@@ -24,7 +24,7 @@ export abstract class BackgroundTask {
     public name = new BehaviorSubject<string>("");
     public done: Observable<boolean>;
 
-    protected _done = new BehaviorSubject<boolean>(false);
+    protected _done = new AsyncSubject<boolean>();
 
     constructor(protected taskManager: BackgroundTaskService) {
         this.done = this._done.asObservable();
@@ -36,10 +36,12 @@ export abstract class BackgroundTask {
     protected errored(error) {
         this.taskManager.taskFailed(this, error);
         this._done.error(error);
+        this._done.complete();
     }
 
     protected end() {
         this._done.next(true);
+        this._done.complete();
         setTimeout(() => {
             this.taskManager.completeTask(this.id);
         }, BackgroundTask.completeDelay);

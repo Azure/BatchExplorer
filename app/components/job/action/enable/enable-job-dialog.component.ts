@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { MdDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material";
 import { autobind } from "core-decorators";
 
 import { JobService } from "app/services";
@@ -12,7 +12,7 @@ export class EnableJobDialogComponent {
     public jobId: string;
 
     constructor(
-        public dialogRef: MdDialogRef<EnableJobDialogComponent>,
+        public dialogRef: MatDialogRef<EnableJobDialogComponent>,
         private jobService: JobService) {
     }
 

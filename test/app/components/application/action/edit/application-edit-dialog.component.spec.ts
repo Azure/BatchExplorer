@@ -89,7 +89,7 @@ describe("ApplicationEditDialogComponent ", () => {
 
     describe("default version", () => {
         it("control is initialized", () => {
-            const input = debugElement.query(By.css("md-select[formControlName=defaultVersion]")).nativeElement;
+            const input = debugElement.query(By.css("mat-select[formControlName=defaultVersion]")).nativeElement;
             expect(input).toBeDefined();
         });
 
@@ -102,7 +102,7 @@ describe("ApplicationEditDialogComponent ", () => {
 
     describe("Package File", () => {
         it("control is initialized", () => {
-            const input = debugElement.query(By.css("md-radio-group[formControlName=allowUpdates]")).nativeElement;
+            const input = debugElement.query(By.css("mat-radio-group[formControlName=allowUpdates]")).nativeElement;
             expect(input).toBeDefined();
         });
 

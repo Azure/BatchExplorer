@@ -4,7 +4,7 @@ import {
     animate, state, style, transition, trigger,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { MdDialog, MdDialogConfig } from "@angular/material";
+import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute } from "@angular/router";
 import { autobind } from "core-decorators";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
@@ -77,7 +77,7 @@ export class ListAndShowLayoutComponent implements AfterViewInit, OnChanges, OnD
     private _activatedItemSub: Subscription;
     private _selectedItemsSub: Subscription;
 
-    constructor(private activatedRoute: ActivatedRoute, private dialog: MdDialog) {
+    constructor(private activatedRoute: ActivatedRoute, private dialog: MatDialog) {
         this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
             if (query === "") {
                 this.quickFilter = FilterBuilder.none();
@@ -145,7 +145,7 @@ export class ListAndShowLayoutComponent implements AfterViewInit, OnChanges, OnD
 
     @autobind()
     public deleteSelectedItems() {
-        let config = new MdDialogConfig();
+        let config = new MatDialogConfig();
 
         const dialogRef = this.dialog.open(DeleteSelectedItemsDialogComponent, config);
         dialogRef.componentInstance.items = this.list.selectedItems;
@@ -170,9 +170,11 @@ export class ListAndShowLayoutComponent implements AfterViewInit, OnChanges, OnD
     private _clearListSubs() {
         if (this._activatedItemSub) {
             this._activatedItemSub.unsubscribe();
+            this._activatedItemSub = null;
         }
         if (this._selectedItemsSub) {
             this._selectedItemsSub.unsubscribe();
+            this._selectedItemsSub = null;
         }
     }
 }

@@ -28,6 +28,7 @@ export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor
             targetDedicatedNodes: [0, this._invalidTargetNodes()],
             targetLowPriorityNodes: [0, this._invalidTargetNodes()],
             autoScaleEvaluationInterval: [15],
+            resizeTimeout: [15],
         });
 
         this._sub = this.form.valueChanges.distinctUntilChanged().subscribe((value) => {
@@ -51,6 +52,9 @@ export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor
 
     public registerOnChange(fn) {
         this._propagateChange = fn;
+        if (fn) {
+            fn(this.form.value);
+        }
     }
 
     public registerOnTouched(fn) {

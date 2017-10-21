@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { MdDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material";
 import { autobind } from "core-decorators";
 import { AsyncSubject, Observable } from "rxjs";
 
@@ -16,7 +16,7 @@ export class ConfirmationDialogComponent {
 
     public response = new AsyncSubject<boolean>();
 
-    constructor(public dialogRef: MdDialogRef<ConfirmationDialogComponent>) {
+    constructor(public dialogRef: MatDialogRef<ConfirmationDialogComponent>) {
         this.response.next(false);
     }
 

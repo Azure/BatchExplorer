@@ -44,7 +44,7 @@ You can also open any component as a dialog. For that you'll need to first add t
 })
 ```
 
-then just call open(Note that this is just a proxy function to material MdDialog open)
+then just call open(Note that this is just a proxy function to material MatDialog open)
 
 ```ts
 const ref = this.dialog.open(MyDialogComponent);

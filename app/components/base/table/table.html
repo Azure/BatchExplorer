@@ -11,7 +11,7 @@
         >
 
             <td class="checkbox-column" (click)="item.handleClick($event, false)" *ngIf="config.showCheckbox">
-                <md-checkbox color="primary" (click)="$event.stopPropagation()" (change)="item.handleClick(null, false)" [checked]="item.selected"></md-checkbox>
+                <mat-checkbox color="primary" (click)="$event.stopPropagation()" (change)="item.handleClick(null, false)" [checked]="item.selected"></mat-checkbox>
             </td>
             <ng-template [ngTemplateOutlet]="item.content"></ng-template>
         </tr>

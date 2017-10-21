@@ -64,7 +64,7 @@ describe("NodeUserCredentialsForm", () => {
             usernameInput = de.query(By.css("input[formControlName=username]"));
             passwordInput = de.query(By.css("input[formControlName=password]"));
             sshKeyInput = de.query(By.css("bl-ssh-key-picker"));
-            isAdminInput = de.query(By.css("md-slide-toggle[formControlName=isAdmin]"));
+            isAdminInput = de.query(By.css("mat-slide-toggle[formControlName=isAdmin]"));
         });
 
         it("Should show the username,  password and isAdmin input", () => {
@@ -123,7 +123,7 @@ describe("NodeUserCredentialsForm", () => {
             usernameInput = de.query(By.css("input[formControlName=username]"));
             passwordInput = de.query(By.css("input[formControlName=password]"));
             sshKeyInput = de.query(By.css("bl-ssh-key-picker"));
-            isAdminInput = de.query(By.css("md-slide-toggle[formControlName=isAdmin]"));
+            isAdminInput = de.query(By.css("mat-slide-toggle[formControlName=isAdmin]"));
 
             expect(sshKeyInput).not.toBeFalsy();
             sshKeyPicker = sshKeyInput.componentInstance;
