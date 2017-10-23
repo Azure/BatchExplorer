@@ -501,11 +501,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     }
 
     private _gotoNode(node: Node) {
-        this.router.navigate(["/pools", this.pool.id, "nodes", node.id], {
-            queryParams: {
-                tab: "files",
-            },
-        });
+        this.router.navigate(["/pools", this.pool.id, "nodes", node.id]);
     }
 
     private _connectTo(node: Node) {
