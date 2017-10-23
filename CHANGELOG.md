@@ -112,9 +112,6 @@ PS D:\dev\js\BatchLabs> gh-changelog-gen 9 --repo Azure/BatchLabs --formatter ma
 * Misleading message "The files for the specified task have been cleaned from the node." [\#689](https://github.com/Azure/BatchLabs/issues/689)
 
 ### other:
-
-* Security guidance for Electron use [\#759](https://github.com/Azure/BatchLabs/issues/759)
-* Disable eval [\#756](https://github.com/Azure/BatchLabs/issues/756)
 * Organize summary card for all entities [\#754](https://github.com/Azure/BatchLabs/issues/754)
 * Disable tab animations [\#747](https://github.com/Azure/BatchLabs/issues/747)
 * show subscription name in the account details subtitle [\#740](https://github.com/Azure/BatchLabs/issues/740)
