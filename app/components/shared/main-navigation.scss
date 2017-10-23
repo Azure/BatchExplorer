@@ -10,6 +10,7 @@ bl-app-nav {
         user-select: none;
 
         > li > a {
+            position: relative;
             height: $navigationbar-width;
             display: block;
             padding: 13px 0;
@@ -41,5 +42,18 @@ bl-app-nav {
 
     > .spacer {
         flex: 1;
+    }
+
+    .notification-overlay {
+        position: absolute;
+        top: 5px;
+        right: 10px;
+        background: map-get($danger, 400);
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+        text-align: center;
+        vertical-align: middle;
     }
 }

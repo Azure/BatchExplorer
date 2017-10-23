@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { BatchClientProxyFactory, FileUtils } from "client/api";
 import { AuthenticationWindow } from "client/authentication";
+import { BatchLabsApplication } from "client/core";
 import { SplashScreen } from "client/splash-screen";
 import { remote } from "electron";
 
@@ -13,6 +14,13 @@ export class ElectronRemote {
 
     public get dialog(): Electron.Dialog {
         return remote.dialog;
+    }
+
+    /**
+     * @returns The BrowserWindow object which this web page belongs to.
+     */
+    public getBatchLabsApp(): BatchLabsApplication {
+        return this._currentWindow().batchLabsApp;
     }
 
     /**
