@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { MdDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material";
 
 import { ApplicationLicense } from "app/models";
 import { ElectronShell } from "app/services";
@@ -12,7 +12,7 @@ export class LicenseEulaDialogComponent {
     public license: ApplicationLicense;
 
     constructor(
-        public dialogRef: MdDialogRef<LicenseEulaDialogComponent>,
+        public dialogRef: MatDialogRef<LicenseEulaDialogComponent>,
         private electronShell: ElectronShell) {
     }
 

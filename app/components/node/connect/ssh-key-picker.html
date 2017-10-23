@@ -1,7 +1,7 @@
 <div class="form-element ssh-key-picker">
-    <md-input-container class="bl-textarea">
-        <textarea mdInput placeholder="SSH public key" [formControl]="sshKeyValue"></textarea>
-    </md-input-container>
+    <mat-form-field class="bl-textarea">
+        <textarea matInput placeholder="SSH public key" [formControl]="sshKeyValue"></textarea>
+    </mat-form-field>
     <div class="saved-keys">
         <div *ngIf="!showSaveForm">
             <div class="saved-keys-btns">
@@ -23,9 +23,9 @@
         </div>
         <div [hidden]="!showSaveForm" class="save-key-form">
             is hidden {{!showSaveForm}}
-            <md-input-container>
-                <input mdInput placeholder="Name" [formControl]="sshKeyName" #nameInput>
-            </md-input-container>
+            <mat-form-field>
+                <input matInput placeholder="Name" [formControl]="sshKeyName" #nameInput>
+            </mat-form-field>
 
             <div class="btn-container">
                 <bl-button type="round" color="primary" class="save-key-btn" [action]="saveKey"><i class="fa fa-check"></i> </bl-button>

@@ -1,4 +1,7 @@
-<md-input-container>
-    <input type="text" mdInput [formControl]="value" [placeholder]="label">
-</md-input-container>
+<mat-form-field>
+    <input type="text" matInput [formControl]="value" [placeholder]="label">
+    <mat-hint *ngIf="hint" align="end">
+        {{hint}}
+    </mat-hint>
+</mat-form-field>
 <bl-button type="round" [action]="openFilePickerDialog"><i class="fa fa-file"></i></bl-button>

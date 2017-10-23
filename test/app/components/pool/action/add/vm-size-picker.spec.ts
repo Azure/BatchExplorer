@@ -77,7 +77,7 @@ describe("VmSizePickerComponent", () => {
     });
 
     it("Should show 3 categories(Including other)", () => {
-        const tabLabels = de.queryAll(By.css("md-tab"));
+        const tabLabels = de.queryAll(By.css("mat-tab"));
         expect(tabLabels.length).toBe(3);
         expect(tabLabels[0].properties.label).toContain("General purpose (3)");
         expect(tabLabels[1].properties.label).toContain("Compute optimized (2)");
@@ -85,7 +85,7 @@ describe("VmSizePickerComponent", () => {
     });
 
     it("Should show vm sizes by category", () => {
-        const tabs = de.queryAll(By.css("md-tab"));
+        const tabs = de.queryAll(By.css("mat-tab"));
         expect(tabs.length).toBe(3);
 
         const tab1Sizes = tabs[0].queryAll(By.css("bl-table bl-row"));

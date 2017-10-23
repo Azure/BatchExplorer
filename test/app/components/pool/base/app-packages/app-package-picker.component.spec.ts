@@ -1,9 +1,9 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormBuilder, FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MaterialModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { MaterialModule } from "app/core";
 import { List } from "immutable";
 
 import { AppPackagePickerComponent } from "app/components/pool/base";
@@ -49,7 +49,7 @@ describe("AppPackagePickerComponent", () => {
         applicationServiceSpy = {
             list: () => listProxy,
             isAutoStorageError: (error: ServerError) => {
-                return error && error.body && (error.body.code === "AccountNotEnabledForAutoStorage");
+                return error && (error.code === "AccountNotEnabledForAutoStorage");
             },
         };
 
@@ -127,8 +127,8 @@ describe("AppPackagePickerComponent", () => {
             component.addNewItem();
             fixture.detectChanges();
 
-            applcationInput = debugElement.query(By.css("md-select[formControlName=applicationId]"));
-            versionInput = debugElement.query(By.css("md-select[formControlName=version]"));
+            applcationInput = debugElement.query(By.css("mat-select[formControlName=applicationId]"));
+            versionInput = debugElement.query(By.css("mat-select[formControlName=version]"));
         });
 
         it("application and version inputs are visible", () => {

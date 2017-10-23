@@ -128,7 +128,7 @@ export class FileService extends ServiceBase {
                 if (exists(options.rangeStart) && exists(options.rangeEnd)) {
                     ocpRange = `bytes=${options.rangeStart}-${options.rangeEnd}`;
                 }
-                const batchOptions = { fileGetFromTaskOptions: { ocpRange } };
+                const batchOptions = { fileGetFromComputeNodeOptions: { ocpRange } };
                 return this.callBatchClient((client) => {
                     return client.file.getComputeNodeFile(poolId, nodeId, filename, batchOptions);
                 });
@@ -187,7 +187,7 @@ export class FileService extends ServiceBase {
                 if (exists(options.rangeStart) && exists(options.rangeEnd)) {
                     ocpRange = `bytes=${options.rangeStart}-${options.rangeEnd}`;
                 }
-                const batchOptions = { fileGetFromComputeNodeOptions: { ocpRange } };
+                const batchOptions = { fileGetFromTaskOptions: { ocpRange } };
                 return this.callBatchClient((client) => {
                     return client.file.getTaskFile(jobId, taskId, filename, batchOptions);
                 });

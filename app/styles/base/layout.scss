@@ -180,7 +180,8 @@ footer {
 
 // Cancel the padding of tabs for 1 content(Used for lists and tables)
 .tab-padding {
-    padding: 18px;
+    padding: 10px;
+    padding-bottom: 4px;
 
     .quicksearch {
         padding: 0 0 15px;
@@ -312,7 +313,7 @@ ul.list-point {
     align-items: center;
     justify-content: center;
 
-    > md-card {
+    > mat-card {
         width: 300px;
         height: 250px;
         font-size: 2em;
@@ -356,4 +357,52 @@ ul.list-point {
             margin: 0 5px;
         }
     }
+}
+
+
+.fit-details-container {
+    height: $contentview-height;
+    display: flex;
+    flex-direction: column;
+    .mat-tab-group {
+        height: 100%;
+        position: relative;
+    }
+
+    mat-tab-group:not(.form-tabs) .mat-tab-body-content {
+        min-height: 0 !important;
+    }
+
+    > .overview {
+        flex: 0 0 auto;
+    }
+
+    > .details {
+        flex: 1;
+        min-height: 200px;
+    }
+}
+
+.flex-separator {
+    flex: 1;
+}
+
+::-webkit-scrollbar {
+    background-color: transparent;
+
+    &:horizontal {
+        height: 10px;
+    }
+
+    &:vertical {
+        width: 10px;
+    }
+}
+
+::-webkit-scrollbar-corner {
+    background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+    background:  $dusty-grey;
 }

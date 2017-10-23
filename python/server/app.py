@@ -1,6 +1,8 @@
 import inspect
-from jsonrpc.error import JsonRpcMethodNotFoundError, JsonRpcInvalidParamsError
-
+from jsonrpc.error import JsonRpcMethodNotFoundError, JsonRpcInvalidParamsError, JsonRpcError
+import azure.batch_extensions.errors as batch_ext_error
+import azure.batch.models.batch_error as batch_error
+import azure.common
 
 class BatchLabsApp:
     """
@@ -48,12 +50,21 @@ class BatchLabsApp:
                     return await action(request, *params)
                 else:
                     return action(request, *params)
-
+            except azure.common.AzureMissingResourceHttpError as e:
+                # pylint: disable=E1101
+                raise JsonRpcError(e.status_code, str(e), {})
+            except batch_error.BatchErrorException as e:
+                # pylint: disable=E1101
+                raise JsonRpcError(e.response.status_code, e.message.value, e.response.json())
+            except batch_ext_error.MissingParameterValue as e:
+                raise JsonRpcInvalidParamsError(str(e), {
+                    'paramName': e.parameter_name,
+                    'paramDescription': e.parameter_description,
+                })
             except TypeError as e:
-                raise JsonRpcInvalidParamsError(e.args)
+                raise JsonRpcInvalidParamsError(str(e), e.args)
         else:
             raise JsonRpcMethodNotFoundError(name)
 
 
 app = BatchLabsApp()
-

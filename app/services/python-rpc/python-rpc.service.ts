@@ -1,47 +1,10 @@
 import { Injectable, NgZone } from "@angular/core";
-import { AccountResource } from "app/models";
+import { AccountResource, ServerError } from "app/models";
+import { JsonRpcRequest, JsonRpcResponse, RequestContainer, RequestOptions } from "app/models/python-rpc";
 import { Constants, SecureUtils, log } from "app/utils";
 import { AsyncSubject, Observable, Subject } from "rxjs";
 import { AccountService } from "../account.service";
 import { AdalService } from "../adal";
-
-export interface JsonRpcRequest {
-    jsonrpc: string;
-    id: string;
-    method: string;
-    params: any[];
-    options: RequestOptions;
-}
-
-export interface JsonRpcError {
-    code: string;
-    message: string;
-    data: string;
-}
-
-export interface JsonRpcResponse {
-    jsonrpc: string;
-    id: string;
-    result: any;
-    stream: boolean;
-    error: JsonRpcError;
-}
-
-interface RequestContainer {
-    request: JsonRpcRequest;
-    subject: Subject<any>;
-
-    /**
-     * setTimeout id to clear the request if it timeout
-     */
-    timeout: any;
-}
-
-interface RequestOptions {
-    authentication?: any;
-}
-// TODO: comment out unused for now.
-// const requestTimeout = 10000;
 
 const ResourceUrl = Constants.ResourceUrl;
 
@@ -183,7 +146,7 @@ export class PythonRpcService {
             return;
         }
         if (response.error) {
-            request.subject.error(response.error);
+            request.subject.error(ServerError.fromPython(response.error));
         } else {
             request.subject.next(response.result);
         }

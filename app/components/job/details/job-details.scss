@@ -1,23 +1,5 @@
 @import "app/styles/variables";
 
-md-card.overview {
-    padding: 0 !important;
-    display: flex;
-
-    > .actions {
-        width: $action-btn-size + 1;
-    }
-
-    > .content {
-        padding: 18px;
-        flex: 1;
-    }
-
-    > .tile {
-        border-left: 1px solid $border-color;
-    }
-}
-
 bl-job-details {
     .job-graphs-link {
         border-bottom: 1px solid $border-color;

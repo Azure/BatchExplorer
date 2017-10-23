@@ -14,10 +14,10 @@
 <div class="form-server-error" *ngIf="showError">
     <bl-server-error [error]="error"></bl-server-error>
 </div>
-<div class="form-footer">
+<div class="form-footer" *ngIf="!hideFooter">
     <div class="toggle-error-btn" *ngIf="error">
-        <button md-icon-button color="warn" (click)="toggleShowError()" mdTooltip="There was an error submitting this form" mdTooltipPosition="above">
-            <md-icon fontIcon="fa-exclamation-triangle"></md-icon>
+        <button mat-icon-button color="warn" (click)="toggleShowError()" matTooltip="There was an error submitting this form" matTooltipPosition="above">
+            <mat-icon fontIcon="fa-exclamation-triangle"></mat-icon>
         </button>
     </div>
     <div class="summary">

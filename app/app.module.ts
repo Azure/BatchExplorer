@@ -1,7 +1,6 @@
 import { HashLocationStrategy, LocationStrategy } from "@angular/common";
 import { ErrorHandler, NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
-import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterModule } from "@angular/router";
@@ -21,6 +20,7 @@ import { BaseModule } from "app/components/base";
 import { DataModule } from "app/components/data/data.module";
 import { FileModule } from "app/components/file/file.module";
 import { JobModule } from "app/components/job/job.module";
+import { MarketModule } from "app/components/market/market.module";
 import { NodeModule } from "app/components/node/node.module";
 import { PoolModule } from "app/components/pool/pool.module";
 import { SettingsModule } from "app/components/settings";
@@ -31,6 +31,7 @@ import { BatchLabsErrorHandler } from "app/error-handler";
 
 // services
 import { HttpModule } from "@angular/http";
+import { MaterialModule } from "app/core";
 import { PollService } from "app/services/core";
 import {
     AccountService,
@@ -53,6 +54,7 @@ import {
     JobService,
     LocalFileStorage,
     NcjFileGroupService,
+    NcjSubmitService,
     NcjTemplateService,
     NodeService,
     NodeUserService,
@@ -74,7 +76,7 @@ import {
 const modules = [
     AccountModule, ApplicationModule, DataModule,
     FileModule, JobModule, NodeModule, PoolModule,
-    SettingsModule, TaskModule,
+    SettingsModule, TaskModule, MarketModule,
 ];
 
 @NgModule({
@@ -122,6 +124,7 @@ const modules = [
         JobService,
         LocalFileStorage,
         NcjFileGroupService,
+        NcjSubmitService,
         NcjTemplateService,
         NodeService,
         NodeUserService,

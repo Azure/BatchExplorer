@@ -1,31 +1,29 @@
 <bl-loading [status]="data.newDataStatus | async">
-    <div *ngIf="pool && node">
-        <md-card class="overview">
-            <div class="actions">
-                <bl-button-group>
-                    <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                    <bl-button color="light" [action]="connect" icon="fa fa-plug"></bl-button>
-                    <bl-delete-button [entity]="node" [action]="delete"></bl-delete-button>
-                </bl-button-group>
-            </div>
-            <div class="content">
-                <md-card-title>{{node.id}}</md-card-title>
-                <md-card-subtitle> {{node.state}}</md-card-subtitle>
-                <p>Pool: {{poolId}}</p>
-            </div>
-        </md-card>
-        <bl-start-task-error-display [startTaskInfo]="node?.startTaskInfo"></bl-start-task-error-display>
-        <md-card class="details">
+    <div *ngIf="pool && node" class="fit-details-container">
+        <bl-summary-card>
+            <div summaryTitle>{{node.id}}</div>
+            <div summarySubtitle>{{node.state}}</div>
+            <div summaryDetails>Pool: {{poolId}}</div>
+            <bl-button-group summaryActions>
+                <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+                <bl-button color="light" [action]="connect" icon="fa fa-plug"></bl-button>
+                <bl-delete-button [entity]="node" [action]="delete"></bl-delete-button>
+                <bl-button color="light" [action]="reboot" title="Reboot"><i class="fa fa-power-off"></i></bl-button>
+                <bl-edit-button [action]="editStartTask" title="Edit start task"></bl-edit-button>
+            </bl-button-group>
+        </bl-summary-card>
+        <bl-start-task-error-display [pool]="pool" [nodeId]="nodeId" [startTaskInfo]="node?.startTaskInfo"></bl-start-task-error-display>
+        <mat-card class="details">
             <bl-tab-group>
-                <bl-tab key="configuration">
-                    <bl-tab-label>Configuration</bl-tab-label>
-                    <bl-node-configuration [pool]="pool" [node]="node"></bl-node-configuration>
-                </bl-tab>
                 <bl-tab key="files">
                     <bl-tab-label>Files</bl-tab-label>
                     <bl-node-file-browse [poolId]="poolId" [node]="node" [nodeId]="nodeId"></bl-node-file-browse>
                 </bl-tab>
+                <bl-tab key="configuration">
+                    <bl-tab-label>Configuration</bl-tab-label>
+                    <bl-node-configuration [pool]="pool" [node]="node"></bl-node-configuration>
+                </bl-tab>
             </bl-tab-group>
-        </md-card>
+        </mat-card>
     </div>
 </bl-loading>

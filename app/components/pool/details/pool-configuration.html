@@ -1,4 +1,4 @@
-<div *ngIf="decorator">
+<bl-entity-configuration *ngIf="decorator" [value]="pool">
     <bl-property-list>
         <bl-property-group label="General" class="wide">
             <bl-text-property label="Id" [value]="decorator.id"></bl-text-property>
@@ -12,7 +12,7 @@
             <bl-text-property label="Allocation state" [value]="decorator.allocationState"></bl-text-property>
             <bl-text-property label="Allocation state transition time" [value]="decorator.allocationStateTransitionTime"></bl-text-property>
             <bl-text-property label="Creation time" [value]="decorator.creationTime"></bl-text-property>
-            <bl-text-property label="Dispaly name" [value]="decorator.displayName"></bl-text-property>
+            <bl-text-property label="Display name" [value]="decorator.displayName"></bl-text-property>
             <bl-text-property label="Enable autoscale" [value]="decorator.enableAutoScale"></bl-text-property>
             <bl-text-property label="Autoscale evaluation interval" [value]="decorator.autoScaleEvaluationInterval"></bl-text-property>
             <bl-text-property label="Autoscale formula" [value]="decorator.autoScaleFormula"></bl-text-property>
@@ -132,4 +132,4 @@
             </bl-no-item>
         </bl-property-group>
     </bl-property-list>
-</div>
+</bl-entity-configuration>

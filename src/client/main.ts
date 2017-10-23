@@ -1,15 +1,22 @@
-import { app, dialog, ipcMain, protocol } from "electron";
+import { Menu, app, dialog, ipcMain, protocol } from "electron";
+import { autoUpdater } from "electron-updater";
 import * as path from "path";
 app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 
-import { batchLabsApp, listenToSelectCertifcateEvent } from "./core";
+import { Constants } from "./client-constants";
+import { BatchLabsApplication, listenToSelectCertifcateEvent } from "./core";
 import { logger } from "./logger";
 import { PythonRpcServerProcess } from "./python-process";
 
 const pythonServer = new PythonRpcServerProcess();
 pythonServer.start();
 
-batchLabsApp.init();
+if (Constants.isDev) {
+    autoUpdater.updateConfigPath = path.join(Constants.root, "dev-app-update.yml");
+}
+autoUpdater.allowPrerelease = true;
+autoUpdater.autoDownload = true;
+autoUpdater.logger = logger;
 
 // Create the browser window.
 function startApplication() {
@@ -21,8 +28,34 @@ function startApplication() {
 
     // Uncomment to view why windows don't show up.
     // batchLabsApp.debugCrash();
-
+    const batchLabsApp = new BatchLabsApplication(autoUpdater);
+    batchLabsApp.init();
     batchLabsApp.start();
+
+    if (process.platform === "darwin") {
+        // Create our menu entries so that we can use MAC shortcuts
+        Menu.setApplicationMenu(Menu.buildFromTemplate([
+            {
+                label: "Application",
+                submenu: [
+                    { label: "Quit", accelerator: "Command+Q", click: () => app.quit() },
+                ],
+            },
+            {
+                label: "Edit",
+                submenu: [
+                    { role: "undo" },
+                    { role: "redo" },
+                    { type: "separator" },
+                    { role: "cut" },
+                    { role: "copy" },
+                    { role: "paste" },
+                    { role: "delete" },
+                    { role: "selectall" },
+                ],
+            },
+        ]));
+    }
 }
 
 // This method will be called when Electron has finished

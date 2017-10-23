@@ -209,7 +209,7 @@ describe("JobCreateBasicDialogComponent ", () => {
                 done();
             },
             error: (error: ServerError) => {
-                expect(error.body.message).toBe("error, error, error");
+                expect(error.message).toBe("error, error, error");
                 expect(error.toString()).toBe("408 - error, error, error");
 
                 done();

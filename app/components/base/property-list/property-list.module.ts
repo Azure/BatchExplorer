@@ -1,7 +1,7 @@
 import { ModuleWithProviders, NgModule } from "@angular/core";
-import { MaterialModule } from "@angular/material";
 import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
+import { MaterialModule } from "app/core";
 
 import {
     BoolPropertyComponent,
@@ -14,7 +14,9 @@ import {
     PropertyGroupComponent,
 } from "./property-group.component";
 
+import { EditorModule } from "app/components/base/editor";
 import { ButtonsModule } from "../buttons";
+import { EntityConfigurationComponent } from "./entity-configuration";
 import {
     TablePropertyCellComponent, TablePropertyComponent, TablePropertyHeaderComponent, TablePropertyRowComponent,
 } from "./table-property.component";
@@ -31,13 +33,14 @@ const components = [
     TablePropertyComponent,
     TablePropertyHeaderComponent,
     TablePropertyRowComponent,
+    EntityConfigurationComponent,
 ];
 
 @NgModule({
     declarations: components,
     entryComponents: [],
     exports: [...components],
-    imports: [ButtonsModule, BrowserModule, MaterialModule, RouterModule],
+    imports: [ButtonsModule, BrowserModule, MaterialModule, RouterModule, EditorModule],
     providers: [],
 })
 

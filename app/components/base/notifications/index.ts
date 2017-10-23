@@ -3,4 +3,4 @@ export * from "./notification-service";
 export * from "./notification.component";
 export * from "./notification.module";
 export * from "./notification-container.component";
-export * from "./persistent-dropdown";
+export * from "./persisted-dropdown";

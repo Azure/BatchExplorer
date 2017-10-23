@@ -1,13 +1,7 @@
 @import "app/styles/variables";
 
 bl-button-group {
-    text-align: center;
     display: block;
-    padding-top: 3px;
-    padding-left: 3px;
-    bl-button {
-        margin-bottom: 3px;
-    }
 }
 
 bl-button {
@@ -26,6 +20,9 @@ bl-button {
 
     .overlay {
         position: absolute;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         top:0;
         left: 0;
         width: 100%;
@@ -38,7 +35,7 @@ bl-button {
     }
 
     .success-container {
-        width: 13px;
+        width: 50%;
         text-align: left;
         display: inline-block;
     }
@@ -114,6 +111,15 @@ bl-button {
 
         &:hover, &:focus {
             background: map-get($warn, 800);
+        }
+    }
+
+    &[color="success"] {
+        background: map-get($success, 500);
+        color: $whitesmoke;
+
+        &:hover, &:focus {
+            background: map-get($success, 800);
         }
     }
 }

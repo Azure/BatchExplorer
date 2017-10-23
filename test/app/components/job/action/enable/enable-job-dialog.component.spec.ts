@@ -1,6 +1,6 @@
 import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MdDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material";
 import { Observable } from "rxjs";
 
 import { EnableJobDialogComponent } from "app/components/job/action";
@@ -39,7 +39,7 @@ describe("EnableJobDialogComponent ", () => {
                 SimpleFormMockComponent, EnableJobDialogComponent, ServerErrorMockComponent,
             ],
             providers: [
-                { provide: MdDialogRef, useValue: dialogRefSpy },
+                { provide: MatDialogRef, useValue: dialogRefSpy },
                 { provide: JobService, useValue: jobServiceSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],
@@ -78,7 +78,7 @@ describe("EnableJobDialogComponent ", () => {
             error: (error: ServerError) => {
                 expect(jobServiceSpy.enable).toHaveBeenCalledTimes(1);
                 expect(jobServiceSpy.enable).toHaveBeenCalledWith("bad-job-id", {});
-                expect(error.body.message).toBe("Some random test error happened enabling job");
+                expect(error.message).toBe("Some random test error happened enabling job");
 
                 done();
             },

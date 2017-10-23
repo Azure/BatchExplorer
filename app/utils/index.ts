@@ -2,6 +2,7 @@
 export * from "./array";
 export * from "./color";
 export * from "./cloud-path-utils";
+export * from "./component-utils";
 export * from "./date-utils";
 export * from "./drag-utils";
 export * from "./file-url-utils";
@@ -19,6 +20,7 @@ export * from "./secure";
 export * from "./shared-key-utils";
 export * from "./storage-utils";
 export * from "./string-utils";
+export * from "./url-utils";
 
 import * as icons from "./icons";
 export const Icons = icons;

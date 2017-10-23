@@ -46,10 +46,7 @@ bl-background-task-tracker {
             width: 24px;
             height: 24px;
             margin: 0 10px;
-            md-progress-spinner {
-                width: 24px !important;
-                height: 24px !important;
-
+            .mat-progress-spinner {
                 path {
                     stroke: $whiteSmoke;
                 }

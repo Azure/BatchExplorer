@@ -126,7 +126,6 @@ export class AdalService {
 
         return this._retrieveNewAccessToken(tenantId, resource);
     }
-
     /**
      * Look into the localStorage to see if there is a user to be loaded
      */
@@ -149,7 +148,6 @@ export class AdalService {
      * @return Observable with access token object
      */
     private _retrieveNewAccessToken(tenantId: string, resource: string): Observable<AccessToken> {
-
         const token = this._tokenCache.getToken(tenantId, resource);
         if (token && token.refresh_token) {
             return this._useRefreshToken(tenantId, resource, token.refresh_token);
@@ -208,14 +206,24 @@ export class AdalService {
         }
     }
 
+    /**
+     * Use the refresh token to get a new access token
+     * @param tenantId TenantId to access
+     * @param resource Resource to access
+     * @param refreshToken Refresh token
+     */
     private _useRefreshToken(tenantId: string, resource: string, refreshToken: string) {
-        const obs = this._accessTokenService.refresh(resource, tenantId, refreshToken);
+        const obs = this._accessTokenService.refresh(resource, tenantId, refreshToken).catch((error) => {
+            log.warn("Refresh token is not valid", error);
+            this._tokenCache.removeToken(tenantId, resource);
+            return this._retrieveNewAccessToken(tenantId, resource);
+        });
         obs.subscribe({
             next: (token) => {
                 this._processAccessToken(tenantId, resource, token);
             },
             error: (error) => {
-                log.error("Error refreshing token");
+                log.error("Error refreshing token", error);
             },
         });
         return obs;

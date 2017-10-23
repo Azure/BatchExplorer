@@ -1,13 +1,26 @@
 @import "app/styles/variables";
 
 bl-file-group-picker {
-    display: inline-block;
+    display: flex;
+    align-items: center;
 
-    md-input-container {
+    mat-form-field {
         width: 100%;
+        flex: 1;
 
         .warning {
             color: map-get($warn, 500);
         }
+    }
+
+    bl-button {
+        margin-left: 5px;
+    }
+}
+.mat-autocomplete-panel {
+    .mat-option.new-file-group {
+        font-style: italic;
+        color: $generic-grey !important;
+        border-bottom: 1px solid $border-color;
     }
 }

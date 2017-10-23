@@ -1,0 +1,9 @@
+<div *ngIf="!config.firstPane.hidden" class="first-pane-container" [style.width]="firstPaneSize">
+    <ng-content select="[blFirstPane]"></ng-content>
+</div>
+<bl-split-separator #separator *ngIf="!config.firstPane.hidden && !config.secondPane.hidden" [thickness]="config.separatorThickness"
+    (willResize)="handleStartResize($event)" (reset)="resetDividerPosition()">
+</bl-split-separator>
+<div *ngIf="!config.secondPane.hidden" class="second-pane-container" [style.width]="secondPaneSize">
+    <ng-content select="[blSecondPane]"></ng-content>
+</div>

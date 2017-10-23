@@ -1,6 +1,6 @@
 import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MdDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material";
 import { Observable } from "rxjs";
 
 import { TerminateJobDialogComponent } from "app/components/job/action";
@@ -39,7 +39,7 @@ describe("TerminateJobDialogComponent ", () => {
                 SimpleFormMockComponent, TerminateJobDialogComponent, ServerErrorMockComponent,
             ],
             providers: [
-                { provide: MdDialogRef, useValue: dialogRefSpy },
+                { provide: MatDialogRef, useValue: dialogRefSpy },
                 { provide: JobService, useValue: jobServiceSpy },
 
             ],
@@ -78,7 +78,7 @@ describe("TerminateJobDialogComponent ", () => {
             error: (error: ServerError) => {
                 expect(jobServiceSpy.terminate).toHaveBeenCalledTimes(1);
                 expect(jobServiceSpy.terminate).toHaveBeenCalledWith("bad-job-id");
-                expect(error.body.message).toBe("Some random test error happened terminating job");
+                expect(error.message).toBe("Some random test error happened terminating job");
 
                 done();
             },

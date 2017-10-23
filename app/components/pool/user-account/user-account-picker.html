@@ -1,19 +1,19 @@
 <div [formGroup]="form">
     <div class="form-element">
-        <md-input-container>
-            <input mdInput formControlName="name" placeholder="Username">
-        </md-input-container>
-        <bl-error controlName="name" code="required">Username a required field</bl-error>
+        <mat-form-field>
+            <input matInput formControlName="name" placeholder="Username">
+        </mat-form-field>
+        <bl-error controlName="name" code="required">Username is a required field</bl-error>
     </div>
     <div class="form-element">
-        <md-input-container>
-            <input mdInput type="password" formControlName="password" placeholder="Password">
-        </md-input-container>
-        <bl-error controlName="password" code="required">Password a required field</bl-error>
+        <mat-form-field>
+            <input matInput type="password" formControlName="password" placeholder="Password">
+        </mat-form-field>
+        <bl-error controlName="password" code="required">Password is a required field</bl-error>
     </div>
     <div class="form-element">
-        <md-slide-toggle formControlName="runElevated" color="primary">
+        <mat-slide-toggle formControlName="runElevated" color="primary">
             Run as admin
-        </md-slide-toggle>
+        </mat-slide-toggle>
     </div>
 </div>
