@@ -1,3 +1,128 @@
+============================================================
+                           0.8.0
+============================================================
+
+feature:
+
+  - Ncj app gallery (#786)
+  - Task output messages confusing for customers (#769)
+  - Allow specifying resize timeout on pool create (#764)
+  - Notification actions (#750)
+  - Enable edit start task from the node and reboot (#749)
+  - Allow delete folder/file from the file group context menu. (#733)
+  - Ability to resize the tree view in the file explorer(Movable splitter) (#724)
+  - Find a way to surface prep and release task failures (#708)
+
+bug:
+
+  - Form picker(Start task) reset to empty from when clicking cancel (#801)
+  - Typo in pool configuration (#798)
+  - Creating a pool without changing the resizeTimeout gives an error (#796)
+  - Pool start task failed quickfix not doing anything (#788)
+  - AAD refresh token expired/revoke doesn't refresh the app. (#783)
+  - File group download only downloading files at the root (#780)
+  - After deleting application, overlay is not removed (#777)
+  - File groups not listing all the files (#751)
+  - Memory leak in app (#745)
+  - Fix spelling of completition (#742)
+  - Copy and paste doesn't work on osx prod build (#727)
+  - Misleading message "The files for the specified task have been cleaned from the node." (#689)
+
+other:
+
+  - Security guidance for Electron use (#759)
+  - Disable eval (#756)
+  - Organize summary card for all entities (#754)
+  - Disable tab animations (#747)
+  - show subscription name in the account details subtitle (#740)
+  - Make quick list more compact (#735)
+  - Make the details take the full height and scrolling happens in tabs content (#730)
+  - Refactor server error to work better with all different inputs (#694)
+  - Remove storage node proxy (#685)
+PS D:\dev\js\BatchLabs> gh-changelog-gen 9 --repo Azure/BatchLabs --format markdown
+============================================================
+                           0.8.0
+============================================================
+
+feature:
+
+  - Ncj app gallery (#786)
+  - Task output messages confusing for customers (#769)
+  - Allow specifying resize timeout on pool create (#764)
+  - Notification actions (#750)
+  - Enable edit start task from the node and reboot (#749)
+  - Allow delete folder/file from the file group context menu. (#733)
+  - Ability to resize the tree view in the file explorer(Movable splitter) (#724)
+  - Find a way to surface prep and release task failures (#708)
+
+bug:
+
+  - Form picker(Start task) reset to empty from when clicking cancel (#801)
+  - Typo in pool configuration (#798)
+  - Creating a pool without changing the resizeTimeout gives an error (#796)
+  - Pool start task failed quickfix not doing anything (#788)
+  - AAD refresh token expired/revoke doesn't refresh the app. (#783)
+  - File group download only downloading files at the root (#780)
+  - After deleting application, overlay is not removed (#777)
+  - File groups not listing all the files (#751)
+  - Memory leak in app (#745)
+  - Fix spelling of completition (#742)
+  - Copy and paste doesn't work on osx prod build (#727)
+  - Misleading message "The files for the specified task have been cleaned from the node." (#689)
+
+other:
+
+  - Security guidance for Electron use (#759)
+  - Disable eval (#756)
+  - Organize summary card for all entities (#754)
+  - Disable tab animations (#747)
+  - show subscription name in the account details subtitle (#740)
+  - Make quick list more compact (#735)
+  - Make the details take the full height and scrolling happens in tabs content (#730)
+  - Refactor server error to work better with all different inputs (#694)
+  - Remove storage node proxy (#685)
+PS D:\dev\js\BatchLabs> gh-changelog-gen 9 --repo Azure/BatchLabs --formatter markdown
+# 0.8.0
+[All items](https://github.com/Azure/BatchLabs/milestone/9?closed=1)
+
+### feature:
+
+* Ncj app gallery [\#786](https://github.com/Azure/BatchLabs/issues/786)
+* Task output messages confusing for customers [\#769](https://github.com/Azure/BatchLabs/issues/769)
+* Allow specifying resize timeout on pool create [\#764](https://github.com/Azure/BatchLabs/issues/764)
+* Notification actions [\#750](https://github.com/Azure/BatchLabs/issues/750)
+* Enable edit start task from the node and reboot [\#749](https://github.com/Azure/BatchLabs/issues/749)
+* Allow delete folder/file from the file group context menu. [\#733](https://github.com/Azure/BatchLabs/issues/733)
+* Ability to resize the tree view in the file explorer(Movable splitter) [\#724](https://github.com/Azure/BatchLabs/issues/724)
+* Find a way to surface prep and release task failures [\#708](https://github.com/Azure/BatchLabs/issues/708)
+
+### bug:
+
+* Form picker(Start task) reset to empty from when clicking cancel [\#801](https://github.com/Azure/BatchLabs/issues/801)
+* Typo in pool configuration [\#798](https://github.com/Azure/BatchLabs/issues/798)
+* Creating a pool without changing the resizeTimeout gives an error [\#796](https://github.com/Azure/BatchLabs/issues/796)
+* Pool start task failed quickfix not doing anything [\#788](https://github.com/Azure/BatchLabs/issues/788)
+* AAD refresh token expired/revoke doesn't refresh the app. [\#783](https://github.com/Azure/BatchLabs/issues/783)
+* File group download only downloading files at the root [\#780](https://github.com/Azure/BatchLabs/issues/780)
+* After deleting application, overlay is not removed [\#777](https://github.com/Azure/BatchLabs/issues/777)
+* File groups not listing all the files [\#751](https://github.com/Azure/BatchLabs/issues/751)
+* Memory leak in app [\#745](https://github.com/Azure/BatchLabs/issues/745)
+* Fix spelling of completition [\#742](https://github.com/Azure/BatchLabs/issues/742)
+* Copy and paste doesn't work on osx prod build [\#727](https://github.com/Azure/BatchLabs/issues/727)
+* Misleading message "The files for the specified task have been cleaned from the node." [\#689](https://github.com/Azure/BatchLabs/issues/689)
+
+### other:
+
+* Security guidance for Electron use [\#759](https://github.com/Azure/BatchLabs/issues/759)
+* Disable eval [\#756](https://github.com/Azure/BatchLabs/issues/756)
+* Organize summary card for all entities [\#754](https://github.com/Azure/BatchLabs/issues/754)
+* Disable tab animations [\#747](https://github.com/Azure/BatchLabs/issues/747)
+* show subscription name in the account details subtitle [\#740](https://github.com/Azure/BatchLabs/issues/740)
+* Make quick list more compact [\#735](https://github.com/Azure/BatchLabs/issues/735)
+* Make the details take the full height and scrolling happens in tabs content [\#730](https://github.com/Azure/BatchLabs/issues/730)
+* Refactor server error to work better with all different inputs [\#694](https://github.com/Azure/BatchLabs/issues/694)
+* Remove storage node proxy [\#685](https://github.com/Azure/BatchLabs/issues/685)
+
 # 0.7.0
 [All items](https://github.com/Azure/BatchLabs/milestone/8?closed=1)
 
