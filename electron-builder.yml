@@ -55,4 +55,4 @@ directories:
 
 publish:
   provider: "github"
-  releaseType: draft
+  # releaseType: draft
