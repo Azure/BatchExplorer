@@ -59,6 +59,7 @@ branches:
   only:
   - master
   - stable
+  - fix/publish
 
 cache:
   directories:
