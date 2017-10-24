@@ -43,6 +43,7 @@ nsis:
 
 # Linux configuration
 linux:
+  category: Development
   target:
     - "AppImage"
     - "deb"
@@ -54,3 +55,4 @@ directories:
 
 publish:
   provider: "github"
+  releaseType: draft

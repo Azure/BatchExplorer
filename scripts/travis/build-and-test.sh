@@ -35,5 +35,5 @@ fi
 
 # Only package if on stable branch
 if [ "${TRAVIS_PULL_REQUEST}" = "false" ] && [ "${TRAVIS_BRANCH}" = "fix/publish" ]; then
-    npm run package -- --publish always --draft
+    npm run package -- --publish always
 fi
