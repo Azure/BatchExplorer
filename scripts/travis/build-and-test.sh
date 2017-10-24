@@ -19,13 +19,20 @@ if [ "${TRAVIS_BRANCH}" = "stable" ]; then
   # Check third party notices is up to date
   npm run ts -s scripts/lca/generate-third-party -- --check
 fi
-
+# TODO revert fix/publish to stable
 if [ "${TRAVIS_PULL_REQUEST}" = "false" ] || [ "${TRAVIS_BRANCH}" = "stable" ]; then
 
     # Build for production
 	npm run -s build:prod
     npm run -s build-python
-    npm run package -- --publish never # TODO replace with this
+
+    # Only package if on stable branch
+    if [ "${TRAVIS_PULL_REQUEST}" = "false" ] && [ "${TRAVIS_BRANCH}" = "stable" ]; then
+        npm run package -- --publish always --draft
+    else
+        npm run package -- --publish never # TODO replace with this
+    fi
+    ls release
 else
     if [[ $TRAVIS_OS_NAME == 'linux' ]]; then # Only run the CI checks on the linux build
         # Normal build
@@ -33,7 +40,3 @@ else
     fi
 fi
 
-# Only package if on stable branch
-if [ "${TRAVIS_PULL_REQUEST}" = "false" ] && [ "${TRAVIS_BRANCH}" = "stable" ]; then
-    npm run package -- --publish always --draft
-fi

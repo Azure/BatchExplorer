@@ -56,6 +56,11 @@ export class FormPickerComponent implements ControlValueAccessor, Validator {
         this.nestedValue.setValue(null);
         const page = this._getPage();
         this.hasValue = false;
+
+        if (this._propagateChange) {
+            this._propagateChange(null);
+        }
+
         if (page) {
             page.formGroup.reset();
         }
