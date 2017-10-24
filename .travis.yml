@@ -12,7 +12,7 @@ addons:
       - rpm
       - bsdtar
 node_js:
-  - '6.9.4'
+  - '6.11.4'
 python:
   - "3.6"
 
