@@ -15,7 +15,9 @@ node_js:
   - '6.11.4'
 python:
   - "3.6"
-
+env:
+  global:
+    - DEBUG=electron-builder,electron-builder:*
 matrix:
   fast_finish: true
   allow_failures:
