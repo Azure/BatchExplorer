@@ -32,6 +32,9 @@ matrix:
         - virtualenv env -p python3
         - source env/bin/activate
         - python3 --version
+        - nvm install 6.11.4
+        - nvm use 6.11.4
+        
     - language: node_js
       os: linux
       before_install:
