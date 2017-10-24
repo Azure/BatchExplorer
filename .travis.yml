@@ -8,9 +8,11 @@ addons:
       - libgnome-keyring-dev
       - icnsutils
       - graphicsmagick
+      - libreadline6
       - xz-utils
       - rpm
       - bsdtar
+      
 node_js:
   - '6.11.4'
 python:
@@ -34,7 +36,7 @@ matrix:
         - python3 --version
         - nvm install 6.11.4
         - nvm use 6.11.4
-        
+
     - language: node_js
       os: linux
       before_install:
