@@ -26,6 +26,7 @@ if [ "${TRAVIS_PULL_REQUEST}" = "false" ] || [ "${TRAVIS_BRANCH}" = "fix/publish
 	npm run -s build:prod
     npm run -s build-python
     npm run package -- --publish never # TODO replace with this
+    ls release
 else
     if [[ $TRAVIS_OS_NAME == 'linux' ]]; then # Only run the CI checks on the linux build
         # Normal build
@@ -36,4 +37,5 @@ fi
 # Only package if on stable branch
 if [ "${TRAVIS_PULL_REQUEST}" = "false" ] && [ "${TRAVIS_BRANCH}" = "fix/publish" ]; then
     npm run package -- --publish always
+    ls release
 fi
