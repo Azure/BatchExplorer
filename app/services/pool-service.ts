@@ -3,9 +3,8 @@ import { Observable, Subject } from "rxjs";
 
 import { Pool } from "app/models";
 import { PoolCreateDto, PoolEnableAutoScaleDto, PoolPatchDto, PoolResizeDto } from "app/models/dtos";
+import { BatchEntityGetter } from "app/services/core";
 import { EntityView } from "app/services/core/data";
-// TODO-TIM use index.ts
-import { BatchEntityGetter } from "app/services/core/data/batch-entity-getter";
 import { Constants, ModelUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";

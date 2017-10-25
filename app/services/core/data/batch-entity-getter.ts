@@ -26,10 +26,10 @@ export class BatchEntityGetter<TEntity, TParams> extends EntityGetter<TEntity, T
 
     protected getData(params: TParams): Observable<any> {
         return this.batchClient.get().flatMap((client) => {
-            // TODO-TIM flatten this
-            return Observable.fromPromise(this._getMethod(client, params)).map(x => x.data).catch((error) => {
+            return Observable.fromPromise(this._getMethod(client, params));
+        }).map(x => x.data)
+            .catch((error) => {
                 return Observable.throw(ServerError.fromBatch(error));
-            });
-        }).share();
+            }).share();
     }
 }

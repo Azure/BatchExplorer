@@ -25,10 +25,10 @@ export class StorageEntityGetter<TEntity, TParams> extends EntityGetter<TEntity,
 
     protected getData(params: TParams): Observable<any> {
         return this.storageClient.get().flatMap((client) => {
-            // TODO-TIM flatten
-            return Observable.fromPromise(this._getMethod(client, params)).map(x => x.data).catch((error) => {
+            return Observable.fromPromise(this._getMethod(client, params));
+        }).map(x => x.data)
+            .catch((error) => {
                 return Observable.throw(ServerError.fromStorage(error));
-            });
-        }).share();
+            }).share();
     }
 }

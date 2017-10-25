@@ -4,7 +4,6 @@ import { DataCache } from "app/services/core";
 import { ObjectUtils } from "app/utils";
 import { AsyncSubject, BehaviorSubject, Observable, Subject, Subscription } from "rxjs";
 import { PollObservable } from "../poll-service";
-// TODO-TIM rename to something else
 import { ProxyOptions } from "../proxy-options";
 
 export interface GenericViewConfig<TEntity, TParams> {
