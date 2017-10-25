@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { BatchClientProxyFactory, FileUtils } from "client/api";
+import { FileUtils } from "client/api";
 import { AuthenticationWindow } from "client/authentication";
 import { BatchLabsApplication } from "client/core";
 import { SplashScreen } from "client/splash-screen";
@@ -36,10 +36,6 @@ export class ElectronRemote {
 
     public getAuthenticationWindow(): AuthenticationWindow {
         return this._currentWindow().authenticationWindow;
-    }
-
-    public getBatchClientFactory(): BatchClientProxyFactory {
-        return this._currentWindow().batchClientFactory;
     }
 
     public getFileUtils(): FileUtils {

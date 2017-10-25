@@ -2,14 +2,13 @@
  * Wrap options for all batch calls to add custom headers.
  * @param options Options
  */
-import { Constants } from "../../../client-constants";
 import { BatchResult } from "../models";
 
 export function wrapOptions<T>(options?: T): T {
     const newOptions: any = options || {};
-    newOptions.customHeaders = {
-        "User-Agent": `BatchLabs/${Constants.version}`,
-    };
+    if (!newOptions.customHeaders) {
+        newOptions.customHeaders = {};
+    }
     return newOptions;
 }
 

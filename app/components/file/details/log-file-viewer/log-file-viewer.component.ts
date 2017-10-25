@@ -178,7 +178,7 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
 
     private _processFileContent(result: any, newContentLength: number) {
         this.lastContentLength = newContentLength;
-        const newLines = result.content.toString().split("\n");
+        const newLines = result.content.split("\n");
         let first = "";
         if (newLines.length > 1) {
             first = newLines.shift();
@@ -215,7 +215,7 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
         } else if (e.status === Constants.HttpCode.Conflict) {
             this.fileCleanupOperation = true;
             return;
-        } else if (!e.status && e.message.startsWith("An incorrect number of bytes")) {
+        } else if (!e.status && e.message && e.message.startsWith("An incorrect number of bytes")) {
             // gets an undefined error code for binary files.
             this.fileContentFailure = true;
             return;

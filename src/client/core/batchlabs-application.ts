@@ -1,7 +1,8 @@
-import { app, ipcMain } from "electron";
+import { app, ipcMain, session } from "electron";
 import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 
 import { AuthenticationWindow } from "../authentication";
+import { Constants } from "../client-constants";
 import { logger } from "../logger";
 import { MainWindow } from "../main-window";
 import { RecoverWindow } from "../recover-window";
@@ -23,6 +24,18 @@ export class BatchLabsApplication {
      * Start the app by showing the splash screen
      */
     public start() {
+        const requestFilter = { urls: ["https://*.batch.azure.com/*"] };
+        session.defaultSession.webRequest.onBeforeSendHeaders(requestFilter, (details, callback) => {
+            // Filter above doesn't seem to work
+            if (details.url.indexOf("batch.azure.com") !== -1) {
+                details.requestHeaders["Origin"] = "http://localhost";
+                details.requestHeaders["Cache-Control"] = "no-cache";
+            }
+            details.requestHeaders["User-Agent"] = `BatchLabs/${Constants.version}`;
+
+            callback({ cancel: false, requestHeaders: details.requestHeaders });
+        });
+
         this.splashScreen.create();
         this.splashScreen.updateMessage("Loading app");
 
