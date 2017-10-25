@@ -9,7 +9,7 @@
     "name": "Microsoft Corporation",
     "email": "tiguerin@microsoft.com"
   },
-  "version": "0.7.0",
+  "version": "0.8.0",
   "main": "build/client/main.prod.js",
   "scripts": {
     "ts": "ts-node --project tsconfig.node.json",
@@ -39,7 +39,7 @@
     "stylelint": "stylelint --syntax scss \"app/**/*.scss\"",
     "lint": "npm run -s tslint && npm run -s stylelint",
     "package": "build",
-    "build-and-pack": "npm run -s build:prod && npm run -s build-python && npm run -s package --dir",
+    "build-and-pack": "npm run -s build:prod && npm run -s build-python && npm run -s package",
     "webpack": "node --max_old_space_size=4096 node_modules/webpack/bin/webpack.js"
   },
   "license": "MIT",
@@ -119,7 +119,7 @@
     "@angular/tsc-wrapped": "4.4.4",
     "@tweenjs/tween.js": "~17.1.1",
     "@types/node-fetch": "~1.6.7",
-    "azure-batch": "~2.2.0",
+    "azure-batch": "git://github.com/amarzavery/azure-batch-ts",
     "azure-storage": "~2.5.0",
     "bunyan": "^1.8.4",
     "chart.js": "~2.7.0",
@@ -127,6 +127,7 @@
     "core-decorators": "~0.20.0",
     "d3": "~4.10.2",
     "download": "~6.2.5",
+    "electron-updater": "~2.15.0",
     "element-resize-detector": "^1.1.9",
     "extract-zip": "~1.6.5",
     "font-awesome": "^4.7.0",
@@ -137,6 +138,7 @@
     "moment": "^2.15.2",
     "moment-duration-format": "^1.3.0",
     "mousetrap": "^1.6.0",
+    "ms-rest-js": "~0.2.2",
     "node-fetch": "~1.7.3",
     "reflect-metadata": "^0.1.9",
     "roboto-fontface": "^0.7.0",

@@ -52,6 +52,9 @@ export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor
 
     public registerOnChange(fn) {
         this._propagateChange = fn;
+        if (fn) {
+            fn(this.form.value);
+        }
     }
 
     public registerOnTouched(fn) {
