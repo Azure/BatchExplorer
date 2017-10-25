@@ -99,7 +99,7 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
     @autobind()
     public reboot() {
         return this.nodeService.reboot(this.pool.id, this.nodeId)
-            .cascade(() => this.nodeService.getOnce(this.pool.id, this.node.id));
+            .cascade(() => this.nodeService.get(this.pool.id, this.node.id));
     }
 
     @autobind()
