@@ -10,6 +10,7 @@ Create a new issue in the millestone with the title `Prepare version x.y.z` and 
 ```md
 - [ ] Update version in package.json
 - [ ] Update changelog
+- [ ] Update third party notices if needed `npm run ts scripts/lca/generate-third-party`
 - [ ] Double check the prod build is working
 ```
 

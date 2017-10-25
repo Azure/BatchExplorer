@@ -35,6 +35,7 @@
     <li>
         <a (click)="openSettingsContextMenu()" [title]="currentUserName" class="profile">
             <i class="fa fa-user fa-lg"></i><div class="label">Profile</div>
+            <div class="notification-overlay" *ngIf="hasNewUpdate">1</div>
         </a>
     </li>
 </ul>
