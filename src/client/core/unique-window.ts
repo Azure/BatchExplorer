@@ -1,4 +1,4 @@
-import { batchLabsApp } from ".";
+import { BatchLabsApplication } from ".";
 import { logger } from "../logger";
 
 /**
@@ -6,7 +6,7 @@ import { logger } from "../logger";
  */
 export abstract class UniqueWindow {
     protected _window: Electron.BrowserWindow;
-
+    constructor(protected batchLabsApp: BatchLabsApplication) { }
     public create() {
         this.destroy();
         this._window = this.createWindow();
@@ -55,7 +55,7 @@ export abstract class UniqueWindow {
     public setupCommonEvents(window: Electron.BrowserWindow) {
         window.on("closed", () => {
             logger.info(`Window ${this.constructor.name} closed. Quiting the app.`);
-            batchLabsApp.quit();
+            this.batchLabsApp.quit();
         });
     }
     protected abstract createWindow(): Electron.BrowserWindow;

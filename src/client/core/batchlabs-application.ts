@@ -1,4 +1,5 @@
 import { app, ipcMain, session } from "electron";
+import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 
 import { AuthenticationWindow } from "../authentication";
 import { Constants } from "../client-constants";
@@ -8,10 +9,12 @@ import { RecoverWindow } from "../recover-window";
 import { SplashScreen } from "../splash-screen";
 
 export class BatchLabsApplication {
-    public splashScreen = new SplashScreen();
-    public authenticationWindow = new AuthenticationWindow();
-    public recoverWindow = new RecoverWindow();
-    public mainWindow = new MainWindow();
+    public splashScreen = new SplashScreen(this);
+    public authenticationWindow = new AuthenticationWindow(this);
+    public recoverWindow = new RecoverWindow(this);
+    public mainWindow = new MainWindow(this);
+
+    constructor(public autoUpdater: AppUpdater) { }
 
     public init() {
         this.setupProcessEvents();
@@ -85,5 +88,9 @@ export class BatchLabsApplication {
 
     public quit() {
         app.quit();
+    }
+
+    public checkForUpdates(): Promise<UpdateCheckResult> {
+        return autoUpdater.checkForUpdates();
     }
 }
