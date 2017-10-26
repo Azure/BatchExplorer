@@ -19,7 +19,7 @@ export const performanceGraphs = {
         unit: "%",
     },
     [BatchUsageMetrics.memory]: {
-        metrics: [AppInsightsPerformanceMetrics.memoryAvailable],
+        metrics: [AppInsightsPerformanceMetrics.memoryUsed],
         unit: "B",
     },
     [BatchUsageMetrics.disk]: {
@@ -48,7 +48,7 @@ export class PerformanceGraphComponent implements OnChanges {
     public history: StringMap<HistoryItem[]> = {};
     private _metricSubs: Subscription[] = [];
     private _metrics: AppInsightsPerformanceMetrics[] = [];
-    private _memoryUsed = 0;
+    private _memoryAvailable = 0;
 
     constructor() {
         this._metrics = performanceGraphs[this.metric].metrics;
@@ -71,10 +71,10 @@ export class PerformanceGraphComponent implements OnChanges {
             }
 
             if (this.metric === BatchUsageMetrics.memory) {
-                this._metricSubs.push(this.data.observeMetric(AppInsightsPerformanceMetrics.memoryUsed)
+                this._metricSubs.push(this.data.observeMetric(AppInsightsPerformanceMetrics.memoryAvailable)
                     .subscribe((history) => {
                         if (history.length > 0) {
-                            this._memoryUsed = history.last().y;
+                            this._memoryAvailable = history.last().y;
                             this._updateMax();
                         }
                     }));
@@ -159,9 +159,9 @@ export class PerformanceGraphComponent implements OnChanges {
     }
 
     private _computeTotalMemory() {
-        const data = this.history[AppInsightsPerformanceMetrics.memoryAvailable];
+        const data = this.history[AppInsightsPerformanceMetrics.memoryUsed];
         if (data && data.length > 0) {
-            return this._memoryUsed + data.last().y;
+            return this._memoryAvailable + data.last().y;
         } else {
             return undefined;
         }
