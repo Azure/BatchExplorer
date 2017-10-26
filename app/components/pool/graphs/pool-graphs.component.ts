@@ -109,12 +109,15 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
 
     public ngOnChanges(changes: SimpleChanges) {
         if (changes.pool) {
+            this.performanceData.pool = this.pool;
             const prev = changes.pool.previousValue;
             const cur = changes.pool.currentValue;
             this.maxRunningTasks = this.pool ? this.pool.targetNodes * this.pool.maxTasksPerNode : 0;
             if (prev && cur && prev.id === cur.id) {
                 return;
             }
+
+            this.performanceData.update();
             this.data.updateParams({ poolId: this.pool.id });
             this.data.refreshAll(false);
 

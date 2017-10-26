@@ -5,6 +5,11 @@ import { Pool } from "app/models";
 import { AppInsightsTable } from "app/models/app-insights/query-result";
 import { AppInsightsQueryService } from "app/services";
 
+export enum AvailableMetrics {
+    cpuUsage = "Cpu usage",
+    memoryAvailable = "Memory available",
+    memoryUsed = "Memory used",
+}
 export class PerformanceData {
     public pool: Pool;
 
@@ -24,13 +29,14 @@ export class PerformanceData {
     }
 
     public observeMetric(name: string): Observable<HistoryItem[]> {
-        return this._metrics.map(metrics => metrics.get(name));
+        return this._metrics.map((metrics) => {
+            return metrics.get(name) || [];
+        });
     }
 
     private _extractMetric() {
         const rows = this._table.rows;
         if (!rows) {
-            console.log("No rows...");
             return;
         }
         const metrics = new Map<string, HistoryItem[]>();
