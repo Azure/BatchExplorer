@@ -1,10 +1,11 @@
 import { Location } from "@angular/common";
 import { Injectable } from "@angular/core";
-import { Headers, Http, RequestMethod, RequestOptions, RequestOptionsArgs } from "@angular/http";
+import { Headers, Http, RequestMethod, RequestOptions, RequestOptionsArgs, Response } from "@angular/http";
 import { Observable } from "rxjs";
 
 import { ServerError } from "app/models";
-import { AccessToken, AccountService, AdalService } from "app/services";
+import { AccountService } from "app/services/account.service";
+import { AccessToken, AdalService } from "app/services/adal";
 import { Constants } from "app/utils";
 
 function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?: any): RequestOptionsArgs {

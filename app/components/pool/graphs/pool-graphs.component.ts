@@ -5,10 +5,11 @@ import { List } from "immutable";
 import { Subscription } from "rxjs";
 
 import { SidebarManager } from "app/components/base/sidebar";
+import { PerformanceData } from "app/components/pool/graphs/performance-graph";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { Job, JobState, Node, NodeState, Pool, Task } from "app/models";
-import { JobService, NodeListParams, NodeService } from "app/services";
-import { PollObservable, RxListProxy } from "app/services/core";
+import { AppInsightsQueryService, JobService, NodeListParams, NodeService } from "app/services";
+import { PollObservable, PollService, RxListProxy } from "app/services/core";
 import { FilterBuilder } from "app/utils/filter-builder";
 import { NodesStateHistoryData, RunningTasksHistoryData } from "./history-data";
 import "./pool-graphs.scss";
@@ -56,18 +57,22 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
 
     public focusedGraph = AvailableGraph.Heatmap;
     public selectedHistoryLength = new FormControl(historyLength.TenMinute);
+    public performanceData: PerformanceData;
 
     private _jobData: RxListProxy<{}, Job>;
     private _stateCounter = new StateCounter();
 
-    private _poll: PollObservable;
+    private _polls: PollObservable[] = [];
     private _nodesSub: Subscription;
 
     constructor(
+        appInsightsQueryService: AppInsightsQueryService,
+        pollService: PollService,
         private nodeService: NodeService,
         jobService: JobService,
         private sidebarManager: SidebarManager,
     ) {
+        this.performanceData = new PerformanceData(appInsightsQueryService);
         this.data = nodeService.list(null, {
             pageSize: 1000,
             select: "id,state,runningTasksCount,isDedicated",
@@ -95,7 +100,11 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
             this.runningNodesHistory.setHistorySize(value);
             this.runningTaskHistory.setHistorySize(value);
         });
-        this._poll = this.data.startPoll(refreshRate, true);
+        this._polls.push(this.data.startPoll(refreshRate, true));
+
+        this._polls.push(pollService.startPoll("pool-app-insights", refreshRate, () => {
+            return this.performanceData.update();
+        }));
     }
 
     public ngOnChanges(changes: SimpleChanges) {
@@ -119,7 +128,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     }
 
     public ngOnDestroy() {
-        this._poll.destroy();
+        this._polls.forEach(x => x.destroy());
         this._nodesSub.unsubscribe();
         this.data.dispose();
         this._jobData.dispose();

@@ -56,8 +56,8 @@ export class HistoryGraphComponent implements OnChanges {
             scales: {
                 yAxes: [{
                     type: "linear",
+                    display: this.interactive,
                     ticks: {
-                        display: this.interactive,
                         max: this.max * 1.01, // Need to have max slightly more otherwise the line get's cut.
                         min: 0,
                         autoSkip: true,
@@ -67,8 +67,8 @@ export class HistoryGraphComponent implements OnChanges {
                 xAxes: [{
                     type: "linear",
                     position: "bottom",
+                    display: this.interactive,
                     ticks: {
-                        display: this.interactive,
                         max: 0,
                         min: -100,
                         stepSize: 100,

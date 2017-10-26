@@ -54,6 +54,7 @@ bl-pool-graphs {
         position: relative;
         width: 120px;
         height: 60px;
+        border: 1px solid map-get($primary, 100);
     }
 
     .full-display {

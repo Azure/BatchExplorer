@@ -35,7 +35,8 @@
 
 <div class="focused-graph" [ngSwitch]="focusedGraph">
     <div *ngSwitchCase="AvailableGraph.Heatmap" class="full-display-heatmap">
-        <bl-nodes-heatmap [pool]="pool" [nodes]="nodes" [jobs]="jobs"></bl-nodes-heatmap>
+        <!-- <bl-nodes-heatmap [pool]="pool" [nodes]="nodes" [jobs]="jobs"></bl-nodes-heatmap> -->
+        <bl-performance-graph [data]="performanceData"></bl-performance-graph>
     </div>
     <div *ngSwitchCase="AvailableGraph.AvailableNodes" class="full-display">
         <bl-history-graph [max]="pool.targetNodes" class="full-display" [history]="runningNodesHistory.history" [historySize]="selectedHistoryLength.value">

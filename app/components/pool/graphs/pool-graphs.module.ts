@@ -8,10 +8,13 @@ import { BaseModule } from "app/components/base";
 import { HistoryGraphComponent } from "./history-graph";
 import { NodesHeatmapLegendComponent } from "./nodes-heatmap-legend.component";
 import { NodesHeatmapComponent } from "./nodes-heatmap.component";
+import { PerformanceGraphComponent } from "./performance-graph";
 import { PoolGraphsComponent } from "./pool-graphs.component";
 
 const components = [NodesHeatmapComponent,
-    NodesHeatmapLegendComponent, PoolGraphsComponent, HistoryGraphComponent];
+    NodesHeatmapLegendComponent, PoolGraphsComponent, HistoryGraphComponent,
+    PerformanceGraphComponent,
+];
 
 @NgModule({
     declarations: components,

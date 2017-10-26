@@ -1,1 +1,2 @@
-export * from "./app-insights.service";
+export * from "./app-insights-api.service";
+export * from "./app-insights-query.service";
