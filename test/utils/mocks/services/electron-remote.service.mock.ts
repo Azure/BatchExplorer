@@ -1,7 +1,6 @@
 import { Subject } from "rxjs";
 
 import { ElectronRemote } from "app/services";
-import { BatchClientProxyFactory } from "client/api";
 import { AuthenticationWindow } from "client/authentication";
 import { SplashScreen } from "client/splash-screen";
 
@@ -27,10 +26,6 @@ export class MockElectronRemote extends ElectronRemote {
 
     public getSplashScreen(): SplashScreen {
         return this.splashScreen as any;
-    }
-
-    public getBatchClientFactory(): BatchClientProxyFactory {
-        return null;
     }
 }
 

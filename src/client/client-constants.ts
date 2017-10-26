@@ -59,6 +59,7 @@ const pythonServerPort = {
 // tslint:disable-next-line:variable-name
 export const Constants = {
     isAsar,
+    isDev: !isAsar,
     root,
     urls,
     logsFolder,

@@ -6,7 +6,6 @@ export default class AccountProxy {
 
     /**
      * Lists all node agent SKUs supported by the Azure Batch service.
-     * http://azure.github.io/azure-sdk-for-node/azure-batch/latest/Account.html#listNodeAgentSkus
      * @param options: Optional Parameters.
      */
     public listNodeAgentSkus(options?: any) {

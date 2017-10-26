@@ -9,7 +9,7 @@ import { NotificationService } from "app/components/base/notifications";
 import { File, ServerError } from "app/models";
 import { ElectronShell } from "app/services";
 import { FileLoader } from "app/services/file";
-import { Constants, DateUtils, log, prettyBytes } from "app/utils";
+import { Constants, DateUtils, prettyBytes } from "app/utils";
 
 @Component({
     selector: "bl-file-details-view",
@@ -104,8 +104,6 @@ export class FileDetailsViewComponent implements OnChanges {
             error: (error: ServerError) => {
                 if (error.status === Constants.HttpCode.NotFound) {
                     this.fileNotFound = true;
-                } else {
-                    log.error(`Error loading file ${this.filename}`, error);
                 }
             },
         });

@@ -29,7 +29,7 @@ export class ListProxy {
         return !this.loadedFirst || !!(this.nextLink);
     }
 
-    public fetchNext(id: string): Promise<BatchResult> {
+    public fetchNext(): Promise<BatchResult> {
         if (this.currentPromise) {
             return this.currentPromise;
         } else if (!this.hasMoreItems()) {
@@ -44,8 +44,7 @@ export class ListProxy {
             }
             this.currentPromise.then(() => {
                 this.currentPromise = null;
-            });
-            this.currentPromise.catch(() => {
+            }).catch(() => {
                 this.currentPromise = null;
             });
             return this.currentPromise;
@@ -61,40 +60,28 @@ export class ListProxy {
         return clone;
     }
 
-    private _list(): Promise<BatchResult> {
-        return new Promise((resolve, reject) => {
-            this.entity.list(...this.params, this.options, (error, result) => {
-                this._processResult(result, error, resolve, reject);
-            });
-        });
+    private async _list(): Promise<BatchResult> {
+        const result = await this.entity.list(...this.params, this.options);
+        return this._processResult(result);
     }
 
-    private _listNext(): Promise<BatchResult> {
-        return new Promise((resolve, reject) => {
-            this.entity.listNext(this.nextLink, (error, result) => {
-                this._processResult(result, error, resolve, reject);
-            });
-        });
+    private async _listNext(): Promise<BatchResult> {
+        const result = this.entity.listNext(this.nextLink);
+        return this._processResult(result);
     }
 
-    private _processResult(result, error, resolve, reject) {
-        if (error) {
-            reject(error);
-        }
+    private _processResult(result) {
+        this.loadedFirst = true;
 
-        if (result) {
-            this.loadedFirst = true;
+        this.nextLink = result.odatanextLink;
 
-            this.nextLink = result.odatanextLink;
+        this.items.concat(result);
 
-            this.items.concat(result);
-
-            /**
-             * Check for result.value as MPI subtasks return { value: [] }
-             */
-            resolve({
-                data: Array.isArray(result) ? result : result.value,
-            });
-        }
+        /**
+         * Check for result.value as MPI subtasks return { value: [] }
+         */
+        return {
+            data: Array.isArray(result) ? result : result.value,
+        };
     }
 }

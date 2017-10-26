@@ -20,36 +20,37 @@ Microsoft reserves all other rights not expressly granted under this agreement, 
 10. @angular/platform-browser-dynamic(https://github.com/angular/angular) - MIT
 11. @angular/router(https://github.com/angular/angular/tree/master/packages/router) - MIT
 12. @angular/tsc-wrapped(https://github.com/angular/angular/blob/master/tools/@angular/tsc-wrapped) - MIT
-13. @types/node-fetch(https://github.com/DefinitelyTyped/DefinitelyTyped) - MIT
-14. azure-batch(http://github.com/Azure/azure-sdk-for-node) - MIT
-15. azure-storage(http://github.com/Azure/azure-storage-node) - Apache-2.0
-16. bunyan(https://github.com/trentm/node-bunyan) - MIT
-17. chart.js(http://www.chartjs.org) - MIT
-18. codemirror(http://codemirror.net) - MIT
-19. core-decorators(https://github.com/jayphelps/core-decorators.js) - MIT
-20. d3(https://d3js.org) - BSD-3-Clause
-21. download(https://github.com/kevva/download) - MIT
-22. element-resize-detector(https://github.com/wnr/element-resize-detector) - MIT
-23. extract-text-webpack-plugin(http://github.com/webpack-contrib/extract-text-webpack-plugin) - MIT
-24. extract-zip(https://github.com/maxogden/extract-zip) - BSD-2-Clause
-25. font-awesome(http://fontawesome.io/) - (OFL-1.1 AND MIT)
-26. hammerjs(http://hammerjs.github.io/) - MIT
-27. immutable(https://facebook.github.com/immutable-js) - BSD-3-Clause
-28. inflection(https://github.com/dreamerslab/node.inflection) - MIT
-29. mkdirp(https://github.com/substack/node-mkdirp) - MIT
-30. moment(http://momentjs.com) - MIT
-31. moment-duration-format(https://github.com/jsmreese/moment-duration-format) - MIT
-32. mousetrap(https://github.com/ccampbell/mousetrap) - Apache-2.0
-33. node-fetch(https://github.com/bitinn/node-fetch) - MIT
-34. reflect-metadata(http://rbuckton.github.io/reflect-metadata) - Apache-2.0
-35. roboto-fontface(https://github.com/choffmeister/roboto-fontface-bower) - Apache-2.0
-36. rxjs(https://github.com/ReactiveX/RxJS) - Apache-2.0
-37. strip-json-comments(https://github.com/sindresorhus/strip-json-comments) - MIT
-38. zone.js(https://github.com/angular/zone.js) - MIT
-39. websockets(https://github.com/aaugustin/websockets) - BSD-3-Clause
-40. azure-batch-cli-extensions(https://github.com/Azure/azure-batch-cli-extensions) - MIT
-41. node.js(https://nodejs.org/en/) - MIT
-42. python(https://www.python.org/) - PSF
+13. @tweenjs/tween.js(https://github.com/tweenjs/tween.js) - MIT
+14. @types/node-fetch(https://github.com/DefinitelyTyped/DefinitelyTyped) - MIT
+15. azure-batch(http://github.com/Azure/azure-sdk-for-node) - MIT
+16. azure-storage(http://github.com/Azure/azure-storage-node) - Apache-2.0
+17. bunyan(https://github.com/trentm/node-bunyan) - MIT
+18. chart.js(http://www.chartjs.org) - MIT
+19. codemirror(http://codemirror.net) - MIT
+20. core-decorators(https://github.com/jayphelps/core-decorators.js) - MIT
+21. d3(https://d3js.org) - BSD-3-Clause
+22. download(https://github.com/kevva/download) - MIT
+23. electron-updater(https://github.com/electron-userland/electron-builder) - MIT
+24. element-resize-detector(https://github.com/wnr/element-resize-detector) - MIT
+25. extract-zip(https://github.com/maxogden/extract-zip) - BSD-2-Clause
+26. font-awesome(http://fontawesome.io/) - (OFL-1.1 AND MIT)
+27. hammerjs(http://hammerjs.github.io/) - MIT
+28. immutable(https://facebook.github.com/immutable-js) - BSD-3-Clause
+29. inflection(https://github.com/dreamerslab/node.inflection) - MIT
+30. mkdirp(https://github.com/substack/node-mkdirp) - MIT
+31. moment(http://momentjs.com) - MIT
+32. moment-duration-format(https://github.com/jsmreese/moment-duration-format) - MIT
+33. mousetrap(https://github.com/ccampbell/mousetrap) - Apache-2.0
+34. node-fetch(https://github.com/bitinn/node-fetch) - MIT
+35. reflect-metadata(http://rbuckton.github.io/reflect-metadata) - Apache-2.0
+36. roboto-fontface(https://github.com/choffmeister/roboto-fontface-bower) - Apache-2.0
+37. rxjs(https://github.com/ReactiveX/RxJS) - Apache-2.0
+38. strip-json-comments(https://github.com/sindresorhus/strip-json-comments) - MIT
+39. zone.js(https://github.com/angular/zone.js) - MIT
+40. websockets(https://github.com/aaugustin/websockets) - BSD-3-Clause
+41. azure-batch-cli-extensions(https://github.com/Azure/azure-batch-cli-extensions) - MIT
+42. node.js(https://nodejs.org/en/) - MIT
+43. python(https://www.python.org/) - PSF
 
 ============================================================
     Start license for @angular/animations
@@ -85,7 +86,7 @@ THE SOFTWARE.
 ------------------------------------------------------------
 The MIT License
 
-Copyright (c) 2017 Google, Inc.
+Copyright (c) 2017 Google LLC.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -288,7 +289,7 @@ THE SOFTWARE.
 ------------------------------------------------------------
 The MIT License
 
-Copyright (c) 2017 Google, Inc.
+Copyright (c) 2017 Google LLC.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -426,6 +427,37 @@ THE SOFTWARE.
 
 ------------------------------------------------------------
     End license for @angular/tsc-wrapped
+============================================================
+
+============================================================
+    Start license for @tweenjs/tween.js
+------------------------------------------------------------
+The MIT License
+
+Copyright (c) 2010-2012 Tween.js authors.
+
+Easing equations Copyright (c) 2001 Robert Penner http://robertpenner.com/easing/
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+THE SOFTWARE.
+
+------------------------------------------------------------
+    End license for @tweenjs/tween.js
 ============================================================
 
 ============================================================
@@ -791,6 +823,36 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 ============================================================
 
 ============================================================
+    Start license for electron-updater
+------------------------------------------------------------
+The MIT License (MIT)
+
+Copyright (c) 2015 Loopline Systems
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+------------------------------------------------------------
+    End license for electron-updater
+============================================================
+
+============================================================
     Start license for element-resize-detector
 ------------------------------------------------------------
 The MIT License (MIT)
@@ -817,34 +879,6 @@ SOFTWARE.
 
 ------------------------------------------------------------
     End license for element-resize-detector
-============================================================
-
-============================================================
-    Start license for extract-text-webpack-plugin
-------------------------------------------------------------
-Copyright JS Foundation and other contributors
-
-Permission is hereby granted, free of charge, to any person obtaining
-a copy of this software and associated documentation files (the
-'Software'), to deal in the Software without restriction, including
-without limitation the rights to use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and to
-permit persons to whom the Software is furnished to do so, subject to
-the following conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
-MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
-IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
-CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
-TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
-SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-------------------------------------------------------------
-    End license for extract-text-webpack-plugin
 ============================================================
 
 ============================================================
@@ -955,36 +989,27 @@ THE SOFTWARE.
 ============================================================
     Start license for immutable
 ------------------------------------------------------------
-BSD License
+MIT License
 
-For Immutable JS software
+Copyright (c) 2014-present, Facebook, Inc.
 
-Copyright (c) 2014-2015, Facebook, Inc. All rights reserved.
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
 
-Redistribution and use in source and binary forms, with or without modification,
-are permitted provided that the following conditions are met:
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
 
- * Redistributions of source code must retain the above copyright notice, this
-   list of conditions and the following disclaimer.
-
- * Redistributions in binary form must reproduce the above copyright notice,
-   this list of conditions and the following disclaimer in the documentation
-   and/or other materials provided with the distribution.
-
- * Neither the name Facebook nor the names of its contributors may be used to
-   endorse or promote products derived from this software without specific
-   prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
-ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR
-ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
 
 ------------------------------------------------------------
     End license for immutable
@@ -1823,7 +1848,7 @@ THE SOFTWARE.
 ============================================================
     Start license for websockets
 ------------------------------------------------------------
-Copyright (c) 2013-2015 Aymeric Augustin and contributors.
+Copyright (c) 2013-2017 Aymeric Augustin and contributors.
 All rights reserved.
 
 Redistribution and use in source and binary forms, with or without
@@ -1932,20 +1957,19 @@ The externally maintained libraries used by Node.js are:
 
 - c-ares, located at deps/cares, is licensed as follows:
   """
-    Copyright 1998 by the Massachusetts Institute of Technology.
-    Copyright (C) 2007-2013 by Daniel Stenberg
+    Copyright (c) 2007 - 2016, Daniel Stenberg with many contributors, see AUTHORS
+    file.
 
-    Permission to use, copy, modify, and distribute this
-    software and its documentation for any purpose and without
-    fee is hereby granted, provided that the above copyright
-    notice appear in all copies and that both that copyright
-    notice and this permission notice appear in supporting
-    documentation, and that the name of M.I.T. not be used in
-    advertising or publicity pertaining to distribution of the
-    software without specific, written prior permission.
-    M.I.T. makes no representations about the suitability of
-    this software for any purpose.  It is provided "as is"
-    without express or implied warranty.
+    Copyright 1998 by the Massachusetts Institute of Technology.
+
+    Permission to use, copy, modify, and distribute this software and its
+    documentation for any purpose and without fee is hereby granted, provided that
+    the above copyright notice appear in all copies and that both that copyright
+    notice and this permission notice appear in supporting documentation, and that
+    the name of M.I.T. not be used in advertising or publicity pertaining to
+    distribution of the software without specific, written prior permission.
+    M.I.T. makes no representations about the suitability of this software for any
+    purpose.  It is provided "as is" without express or implied warranty.
   """
 
 - HTTP Parser, located at deps/http_parser, is licensed as follows:
@@ -2430,8 +2454,8 @@ The externally maintained libraries used by Node.js are:
       - stdint-msvc2008.h (from msinttypes), copyright Alexander Chemeris. Three
         clause BSD license.
 
-      - pthread-fixes.h, pthread-fixes.c, copyright Google Inc. and Sony Mobile
-        Communications AB. Three clause BSD license.
+      - pthread-fixes.c, copyright Google Inc. and Sony Mobile Communications AB.
+        Three clause BSD license.
 
       - android-ifaddrs.h, android-ifaddrs.c, copyright Berkeley Software Design
         Inc, Kenneth MacKay and Emergya (Cloud4all, FP7/2007-2013, grant agreement
