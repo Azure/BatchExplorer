@@ -22,6 +22,22 @@
             [historySize]="selectedHistoryLength.value">
         </bl-history-graph>
     </div>
+    <div class="preview" (click)="focusGraph(AvailableGraph.Cpu)" [class.focused]="focusedGraph === AvailableGraph.Cpu">
+        <div class="label">Cpu</div>
+        <bl-performance-graph metric="cpu" [data]="performanceData" [interactive]="false" class="small-preview"></bl-performance-graph>
+    </div>
+    <div class="preview" (click)="focusGraph(AvailableGraph.Memory)" [class.focused]="focusedGraph === AvailableGraph.Memory">
+        <div class="label">Memory</div>
+        <bl-performance-graph metric="memory" [data]="performanceData" [interactive]="false" class="small-preview"></bl-performance-graph>
+    </div>
+    <div class="preview" (click)="focusGraph(AvailableGraph.Disk)" [class.focused]="focusedGraph === AvailableGraph.Disk">
+        <div class="label">Disk</div>
+        <bl-performance-graph metric="disk" [data]="performanceData" [interactive]="false" class="small-preview"></bl-performance-graph>
+    </div>
+    <div class="preview" (click)="focusGraph(AvailableGraph.Network)" [class.focused]="focusedGraph === AvailableGraph.Network">
+        <div class="label">Network</div>
+        <bl-performance-graph metric="network" [data]="performanceData" [interactive]="false" class="small-preview"></bl-performance-graph>
+    </div>
     <div class="config">
         <mat-form-field>
             <mat-select [formControl]="selectedHistoryLength" placeholder="History">
@@ -35,8 +51,7 @@
 
 <div class="focused-graph" [ngSwitch]="focusedGraph">
     <div *ngSwitchCase="AvailableGraph.Heatmap" class="full-display-heatmap">
-        <!-- <bl-nodes-heatmap [pool]="pool" [nodes]="nodes" [jobs]="jobs"></bl-nodes-heatmap> -->
-        <bl-performance-graph [data]="performanceData"></bl-performance-graph>
+        <bl-nodes-heatmap [pool]="pool" [nodes]="nodes" [jobs]="jobs"></bl-nodes-heatmap>
     </div>
     <div *ngSwitchCase="AvailableGraph.AvailableNodes" class="full-display">
         <bl-history-graph [max]="pool.targetNodes" class="full-display" [history]="runningNodesHistory.history" [historySize]="selectedHistoryLength.value">
@@ -45,5 +60,17 @@
     <div *ngSwitchCase="AvailableGraph.RunningTasks" class="full-display">
         <bl-history-graph [max]="maxRunningTasks" class="full-display" [history]="runningTaskHistory.history" [historySize]="selectedHistoryLength.value">
         </bl-history-graph>
+    </div>
+    <div *ngSwitchCase="AvailableGraph.Cpu" class="full-display">
+        <bl-performance-graph metric="cpu" [data]="performanceData" class="full-display"></bl-performance-graph>
+    </div>
+    <div *ngSwitchCase="AvailableGraph.Memory" class="full-display">
+        <bl-performance-graph metric="memory" [data]="performanceData" class="full-display"></bl-performance-graph>
+    </div>
+    <div *ngSwitchCase="AvailableGraph.Disk" class="full-display">
+        <bl-performance-graph metric="disk" [data]="performanceData" class="full-display"></bl-performance-graph>
+    </div>
+    <div *ngSwitchCase="AvailableGraph.Network" class="full-display">
+        <bl-performance-graph metric="network" [data]="performanceData" class="full-display"></bl-performance-graph>
     </div>
 </div>

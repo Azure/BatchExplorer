@@ -5,7 +5,7 @@ import { List } from "immutable";
 import { Subscription } from "rxjs";
 
 import { SidebarManager } from "app/components/base/sidebar";
-import { PerformanceData } from "app/components/pool/graphs/performance-graph";
+import { PerformanceData, performanceGraphs } from "app/components/pool/graphs/performance-graph";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { Job, JobState, Node, NodeState, Pool, Task } from "app/models";
 import { AppInsightsQueryService, JobService, NodeListParams, NodeService } from "app/services";
@@ -19,6 +19,10 @@ enum AvailableGraph {
     Heatmap,
     AvailableNodes,
     RunningTasks,
+    Cpu,
+    Memory,
+    Network,
+    Disk,
 }
 
 const historyLength = {
@@ -102,9 +106,9 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
         });
         this._polls.push(this.data.startPoll(refreshRate, true));
 
-        this._polls.push(pollService.startPoll("pool-app-insights", refreshRate, () => {
-            return this.performanceData.update();
-        }));
+        // this._polls.push(pollService.startPoll("pool-app-insights", refreshRate, () => {
+        //     return this.performanceData.update();
+        // }));
     }
 
     public ngOnChanges(changes: SimpleChanges) {

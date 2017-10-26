@@ -5,11 +5,16 @@ import { Pool } from "app/models";
 import { AppInsightsTable } from "app/models/app-insights/query-result";
 import { AppInsightsQueryService } from "app/services";
 
-export enum AvailableMetrics {
+export enum AppInsightsPerformanceMetrics {
     cpuUsage = "Cpu usage",
     memoryAvailable = "Memory available",
     memoryUsed = "Memory used",
+    diskRead = "Disk read",
+    diskWrite = "Disk write",
+    networkRead = "Network read",
+    networkWrite = "Network write",
 }
+
 export class PerformanceData {
     public pool: Pool;
 
@@ -28,7 +33,7 @@ export class PerformanceData {
         });
     }
 
-    public observeMetric(name: string): Observable<HistoryItem[]> {
+    public observeMetric(name: AppInsightsPerformanceMetrics): Observable<HistoryItem[]> {
         return this._metrics.map((metrics) => {
             return metrics.get(name) || [];
         });

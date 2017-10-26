@@ -1,3 +1,5 @@
+const UNITS = ["", "k", "M", "G", "T", "P", "E", "Z", "Y"];
+
 export class NumberUtils {
     public static pretty(value: number, decimals = 2): string {
         const [intPart, decPart] = value.toFixed(decimals).split(".");
@@ -26,6 +28,30 @@ export class NumberUtils {
         }
         return "th";
     }
+
+    public static prettyMagnitude(value: number, suffix: string = ""): string {
+        const decimals = 2;
+        if (!Number.isFinite(value)) {
+            throw new TypeError(`Expected a finite number, got ${typeof value}: ${value}`);
+        }
+
+        const neg = value < 0;
+
+        if (neg) {
+            value = -value;
+        }
+
+        if (value < 1) {
+            return (neg ? "-" : "") + value + suffix;
+        }
+
+        const exponent = Math.min(Math.floor(Math.log(value) / Math.log(1000)), UNITS.length - 1);
+        const numStr = Number((value / Math.pow(1000, exponent)).toPrecision(decimals + 1));
+        const unit = UNITS[exponent];
+
+        return (neg ? "-" : "") + numStr + " " + unit;
+    }
+
     /**
      * Return the number with the ordinal suffix
      * @param value
