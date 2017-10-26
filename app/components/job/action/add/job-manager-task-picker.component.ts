@@ -1,12 +1,24 @@
 import { Component, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor,
     FormBuilder,
-    FormControl,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { JobTaskBaseComponent } from "./job-task-base.component";
+
+const DEFAULT_JOBMANAGER = {
+    id: "",
+    displayName: null,
+    commandLine: "",
+    killJobOnCompletion: true,
+    runExclusive: true,
+};
+const INVALID_RESPONSE = {
+    jobManagerTaskPicker: {
+        valid: false,
+        missingSelection: true,
+    },
+};
 
 @Component({
     selector: "bl-job-manager-task-picker",
@@ -17,9 +29,9 @@ import { JobTaskBaseComponent } from "./job-task-base.component";
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => JobManagerTaskPickerComponent), multi: true },
     ],
 })
-export class JobManagerTaskPickerComponent extends JobTaskBaseComponent implements ControlValueAccessor {
+export class JobManagerTaskPickerComponent extends JobTaskBaseComponent {
     constructor(formBuilder: FormBuilder) {
-        super(formBuilder);
+        super(formBuilder, DEFAULT_JOBMANAGER, INVALID_RESPONSE);
         this._baseFormControls["displayName"] = [null];
         this._baseFormControls["killJobOnCompletion"] = [true];
         this._baseFormControls["runExclusive"] = [true];
@@ -29,44 +41,5 @@ export class JobManagerTaskPickerComponent extends JobTaskBaseComponent implemen
                 this._propagateChange(val);
             }
         });
-    }
-
-    public writeValue(value: any) {
-        if (value) {
-            this.form.patchValue(value);
-        } else {
-            this.reset();
-        }
-    }
-
-    public reset() {
-        this.form.reset({
-            id: "",
-            displayName: null,
-            commandLine: "",
-            killJobOnCompletion: true,
-            runExclusive: true,
-        });
-    }
-
-    public registerOnChange(fn) {
-        this._propagateChange = fn;
-    }
-
-    public registerOnTouched() {
-        // Do nothing
-    }
-
-    public validate(c: FormControl) {
-        const valid = this.form.valid;
-        if (!valid) {
-            return {
-                jobManagerTaskPicker: {
-                    valid: false,
-                    missingSelection: true,
-                },
-            };
-        }
-        return null;
     }
 }

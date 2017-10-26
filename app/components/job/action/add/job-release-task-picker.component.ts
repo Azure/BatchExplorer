@@ -1,8 +1,6 @@
 import { Component, forwardRef } from "@angular/core";
 import {
-    ControlValueAccessor,
     FormBuilder,
-    FormControl,
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
     Validators,
@@ -10,6 +8,16 @@ import {
 import { JobTaskBaseComponent } from "./job-task-base.component";
 
 const DEFAULT_JOBRELEASE_ID = "jobrelease";
+const DEFAULT_JOBRELEASE = {
+    id: DEFAULT_JOBRELEASE_ID,
+    commandLine: "",
+};
+const INVALID_RESPONSE = {
+    jobReleaseTaskPicker: {
+        valid: false,
+        missingSelection: true,
+    },
+};
 
 @Component({
     selector: "bl-job-release-task-picker",
@@ -20,9 +28,9 @@ const DEFAULT_JOBRELEASE_ID = "jobrelease";
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => JobReleaseTaskPickerComponent), multi: true },
     ],
 })
-export class JobReleaseTaskPickerComponent extends JobTaskBaseComponent implements ControlValueAccessor {
+export class JobReleaseTaskPickerComponent extends JobTaskBaseComponent {
     constructor(formBuilder: FormBuilder) {
-        super(formBuilder);
+        super(formBuilder, DEFAULT_JOBRELEASE, INVALID_RESPONSE);
         this._baseFormControls["id"] = [DEFAULT_JOBRELEASE_ID, Validators.required];
         this.form = formBuilder.group(this._baseFormControls);
         this.form.valueChanges.subscribe((val: any) => {
@@ -30,41 +38,5 @@ export class JobReleaseTaskPickerComponent extends JobTaskBaseComponent implemen
                 this._propagateChange(val);
             }
         });
-    }
-
-    public writeValue(value: any) {
-        if (value) {
-            this.form.patchValue(value);
-        } else {
-            this.reset();
-        }
-    }
-
-    public reset() {
-        this.form.reset({
-            id: DEFAULT_JOBRELEASE_ID,
-            commandLine: "",
-        });
-    }
-
-    public registerOnChange(fn) {
-        this._propagateChange = fn;
-    }
-
-    public registerOnTouched() {
-        // Do nothing
-    }
-
-    public validate(c: FormControl) {
-        const valid = this.form.valid;
-        if (!valid) {
-            return {
-                jobReleaseTaskPicker: {
-                    valid: false,
-                    missingSelection: true,
-                },
-            };
-        }
-        return null;
     }
 }
