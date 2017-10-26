@@ -3,10 +3,12 @@ import { Observable, Subject } from "rxjs";
 
 import { Pool } from "app/models";
 import { PoolCreateDto, PoolEnableAutoScaleDto, PoolPatchDto, PoolResizeDto } from "app/models/dtos";
+import { BatchEntityGetter } from "app/services/core";
+import { EntityView } from "app/services/core/data";
 import { Constants, ModelUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";
-import { DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, getOnceProxy } from "./core";
+import { DataCache, RxBatchListProxy, RxListProxy } from "./core";
 import { ServiceBase } from "./service-base";
 
 export interface PoolParams {
@@ -24,8 +26,15 @@ export class PoolService extends ServiceBase {
     private _basicProperties: string = "id,displayName,state,allocationState";
     private _cache = new DataCache<Pool>();
 
+    private _getter: BatchEntityGetter<Pool, PoolParams>;
+
     constructor(batchService: BatchClientService) {
         super(batchService);
+
+        this._getter = new BatchEntityGetter(Pool, this.batchService, {
+            cache: () => this._cache,
+            getFn: (client, params: PoolParams) => client.pool.get(params.id),
+        });
     }
 
     public get basicProperties(): string {
@@ -46,17 +55,24 @@ export class PoolService extends ServiceBase {
         });
     }
 
-    public get(poolId: string, options: any = {}): RxEntityProxy<PoolParams, Pool> {
-        return new RxBatchEntityProxy<PoolParams, Pool>(Pool, this.batchService, {
-            cache: () => this._cache,
-            getFn: (client, params: PoolParams) => client.pool.get(params.id, options),
-            initialParams: { id: poolId },
-            poll: Constants.PollRate.entity,
-        });
+    /**
+     * Retrieve a pool
+     * @param id Id of the pool
+     * @param options Options
+     */
+    public get(id: string, options: any = {}): Observable<Pool> {
+        return this._getter.fetch({ id });
     }
 
-    public getOnce(poolId: string, options: any = {}): Observable<Pool> {
-        return getOnceProxy(this.get(poolId, options));
+    /**
+     * Create an entity view for a pool
+     */
+    public view(): EntityView<Pool, PoolParams> {
+        return new EntityView({
+            cache: () => this._cache,
+            getter: this._getter,
+            poll: Constants.PollRate.entity,
+        });
     }
 
     /**

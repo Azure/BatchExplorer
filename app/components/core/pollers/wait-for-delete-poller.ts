@@ -2,14 +2,14 @@ import { autobind } from "core-decorators";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 export class WaitForDeletePoller {
-    constructor(private getFunction: any) {
+    constructor(private getFunction: () => Observable<any>) {
     }
 
     @autobind()
     public start(progress: BehaviorSubject<any>): Observable<any> {
         const obs = new AsyncSubject();
         let interval = setInterval(() => {
-            this.getFunction.fetch().subscribe({
+            this.getFunction().subscribe({
                 error: (e) => {
                     progress.next(100);
                     clearInterval(interval);
