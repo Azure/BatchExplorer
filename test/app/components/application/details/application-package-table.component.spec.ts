@@ -46,8 +46,8 @@ describe("ApplicationPackageTableComponent", () => {
 
     beforeEach(() => {
         applicationServiceSpy = {
-            getOnce: jasmine
-                .createSpy("getOnce").and
+            get: jasmine
+                .createSpy("get").and
                 .callFake((applicationId: string) => {
 
                     return Observable.of(

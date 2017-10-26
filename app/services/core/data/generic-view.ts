@@ -1,46 +1,20 @@
-import { Type } from "@angular/core";
-import { AsyncSubject, BehaviorSubject, Observable, Subject, Subscription } from "rxjs";
-
 import { LoadingStatus } from "app/components/base/loading";
 import { ServerError } from "app/models";
-import { Constants, ObjectUtils, exists, log } from "app/utils";
-import { DataCache } from "./data-cache";
-import { PollObservable } from "./poll-service";
-import { ProxyOptions } from "./proxy-options";
+import { DataCache } from "app/services/core";
+import { ObjectUtils } from "app/utils";
+import { AsyncSubject, BehaviorSubject, Observable, Subject, Subscription } from "rxjs";
+import { PollObservable } from "../poll-service";
+import { ProxyOptions } from "../proxy-options";
 
-export interface FetchDataOptions {
-    getData: () => Observable<any>;
-    next: (response: any) => void;
-    error?: (error: any) => void;
-}
-
-export interface RxProxyBaseConfig<TParams, TEntity> {
+export interface GenericViewConfig<TEntity, TParams> {
     /**
      *  Method that return the cache given the params.
      * This allow the use of targeted data cache which depends on some params.
      */
     cache: (params: TParams) => DataCache<TEntity>;
-
-    initialParams?: TParams;
-
-    /**
-     * List of error code not to log in the console.
-     * @default [404]
-     */
-    logIgnoreError?: number[];
-
-    /**
-     * Optional callback for handling any expected errors we may encounter so they
-     * don't result in a debug bl-server-error component. This way we can show a custom
-     * error message to the user.
-     */
-    onError?: (error: ServerError) => boolean;
 }
 
-/**
- * Base proxy for List and Entity proxies
- */
-export abstract class RxProxyBase<TParams, TOptions extends ProxyOptions, TEntity> {
+export abstract class GenericView<TEntity, TParams, TOptions extends ProxyOptions> {
     /**
      * Status that keep track of any loading
      */
@@ -67,31 +41,30 @@ export abstract class RxProxyBase<TParams, TOptions extends ProxyOptions, TEntit
      */
     public isDisposed: AsyncSubject<boolean>;
 
+    protected getCache: (params: TParams) => DataCache<TEntity>;
+
     protected _status = new BehaviorSubject<LoadingStatus>(LoadingStatus.Loading);
     protected _newDataStatus = new BehaviorSubject<LoadingStatus>(LoadingStatus.Loading);
     protected _error = new BehaviorSubject<ServerError>(null);
-
-    protected getCache: (params: TParams) => DataCache<TEntity>;
-    protected _params: TParams;
-    protected _cache: DataCache<TEntity>;
-    protected _options: TOptions;
     protected _cacheCleared = new Subject<void>();
 
-    private _currentQuerySub: Subscription = null;
-    private _currentObservable: Observable<any>;
-    private _deletedSub: Subscription;
-    private _cacheClearedSub: Subscription;
-    private _deleted = new Subject<string>();
-    private _logIgnoreError: number[];
+    private _params: TParams;
+    private _options: ProxyOptions;
     private _pollObservable: PollObservable;
+    private _currentQuerySub: Subscription = null;
+    private _currentObservable: Observable<TEntity>;
+    private _deletedSub: Subscription;
+    private _deleted = new Subject<string>();
+    private _cacheClearedSub: Subscription;
+    private _cache: DataCache<TEntity>;
 
-    constructor(protected type: Type<TEntity>, protected config: RxProxyBaseConfig<TParams, TEntity>) {
+    constructor(config: GenericViewConfig<TEntity, TParams>) {
         this.getCache = config.cache;
-        this._logIgnoreError = exists(config.logIgnoreError) ? config.logIgnoreError : [Constants.HttpCode.NotFound];
         this.status = this._status.asObservable();
         this.newDataStatus = this._newDataStatus.asObservable();
         this.error = this._error.asObservable();
         this.isDisposed = new AsyncSubject();
+        this.params = {} as any;
 
         this.status.subscribe((status) => {
             if (status === LoadingStatus.Loading) {
@@ -141,13 +114,6 @@ export abstract class RxProxyBase<TParams, TOptions extends ProxyOptions, TEntit
     }
 
     /**
-     * @returns the current options.
-     */
-    public get options() {
-        return this._options;
-    }
-
-    /**
      * Start refreshing the data of this RxProxy every given interval
      * You can only have ONE poll per entity.
      * @param interval {number} Interval in milliseconds.
@@ -172,6 +138,7 @@ export abstract class RxProxyBase<TParams, TOptions extends ProxyOptions, TEntit
         this.isDisposed.next(true);
         this.isDisposed.complete();
         this._clearDeleteSub();
+        this._clearCachedClearedSub();
         this._deleted.complete();
         this._status.complete();
         this._error.complete();
@@ -180,6 +147,7 @@ export abstract class RxProxyBase<TParams, TOptions extends ProxyOptions, TEntit
     protected set cache(cache: DataCache<TEntity>) {
         this._cache = cache;
         this._clearDeleteSub();
+        this._clearCachedClearedSub();
         this._deletedSub = cache.deleted.subscribe((x) => {
             this._deleted.next(x);
         });
@@ -194,51 +162,32 @@ export abstract class RxProxyBase<TParams, TOptions extends ProxyOptions, TEntit
     }
 
     /**
-     * Create a new item of type TEntity and adds it to the cache
+     * @returns the current options.
      */
-    protected newItem(data: any): string {
-        const item = new this.type(data);
-        return this.cache.addItem(item, this._options && this._options.select);
+    public get options() {
+        return this._options;
     }
 
-    /**
-     * Create a new item of type TEntity and adds it to the cache
-     */
-    protected newItems(data: any[]): string[] {
-        const items = data.map(x => new this.type(x));
-        return this.cache.addItems(items, this._options && this._options.select);
-    }
-
-    protected fetchData(options: FetchDataOptions): Observable<any> {
+    protected fetchData(getData: () => Observable<any>): Observable<any> {
         if (this._currentQuerySub) {
             return this._currentObservable;
         }
         this._status.next(LoadingStatus.Loading);
-        const obs = this._currentObservable = options.getData();
-        this._currentQuerySub = obs.subscribe((response) => {
-            this.abortFetch();
-            this._status.next(LoadingStatus.Ready);
-            options.next(response);
-        }, (error: ServerError) => {
-            this.abortFetch();
-
-            // We need to clone the error otherwise it only logs the stacktrace
-            // and not the actual error returned by the server which is not helpful
-            if (error && error.status && !this._logIgnoreError.includes(error.status)) {
-                log.error("Error in RxProxy", Object.assign({}, error));
-            }
-
-            // if we dont have a callback, or the rethrow response is true, then handle error os normal
-            if (!this.config.onError || this.config.onError(error)) {
-                this._status.next(LoadingStatus.Error);
-                this._error.next(error);
-                if (options.error) {
-                    options.error(error);
-                }
-            } else {
-                // error callback returned false so act like the error never happened
+        const obs = this._currentObservable = getData();
+        this._currentQuerySub = obs.subscribe({
+            next: (response) => {
+                this.abortFetch();
                 this._status.next(LoadingStatus.Ready);
-            }
+            }, error: (error: ServerError) => {
+                this.abortFetch();
+                if (error) {
+                    this._status.next(LoadingStatus.Error);
+                    this._error.next(error);
+                } else {
+                    // error callback returned false so act like the error never happened
+                    this._status.next(LoadingStatus.Ready);
+                }
+            },
         });
 
         return obs;
@@ -265,13 +214,19 @@ export abstract class RxProxyBase<TParams, TOptions extends ProxyOptions, TEntit
         this._newDataStatus.next(LoadingStatus.Loading);
     }
 
+    protected abstract pollRefresh(): Observable<any>;
+
     protected _clearDeleteSub() {
         if (this._deletedSub) {
             this._deletedSub.unsubscribe();
         }
     }
 
-    protected abstract pollRefresh(): Observable<any>;
+    protected _clearCachedClearedSub() {
+        if (this._cacheClearedSub) {
+            this._cacheClearedSub.unsubscribe();
+        }
+    }
 
     private _key() {
         const paramsKey = ObjectUtils.serialize(this._params);

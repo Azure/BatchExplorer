@@ -18,7 +18,7 @@ export class UploadPackageTask extends LongRunningUploadAction {
     }
 
     protected waitForUpload(filename: string, taskManager?: BackgroundTaskService) {
-        // this.poolService.getOnce(id).subscribe({
+        // this.poolService.get(id).subscribe({
         //     next: (pool: Pool) => {
         //         const task = new WaitForDeletePoolPollTask(this.poolService, id, pool.currentDedicated);
         //         if (taskManager) {

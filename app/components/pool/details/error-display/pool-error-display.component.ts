@@ -47,6 +47,6 @@ export class PoolErrorDisplayComponent {
     }
 
     public refreshPool() {
-        return this.poolService.getOnce(this.pool.id);
+        return this.poolService.get(this.pool.id);
     }
 }

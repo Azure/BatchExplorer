@@ -53,7 +53,7 @@ export class TaskErrorDisplayComponent implements OnChanges {
     public rerun() {
         return ObservableUtils.queue(
             () => this.taskService.reactivate(this.jobId, this.task.id),
-            () => this.taskService.getOnce(this.jobId, this.task.id),
+            () => this.taskService.get(this.jobId, this.task.id),
         );
     }
 

@@ -8,7 +8,7 @@ import { Subscription } from "rxjs";
 import { Job } from "app/models";
 import { JobDecorator } from "app/models/decorators";
 import { JobParams, JobService } from "app/services";
-import { RxEntityProxy } from "app/services/core";
+import { EntityView } from "app/services/core";
 import { SidebarManager } from "../../base/sidebar";
 import { TaskCreateBasicDialogComponent } from "../../task/action";
 import {
@@ -36,7 +36,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     public jobId: string;
     public job: Job;
     public decorator: JobDecorator;
-    public data: RxEntityProxy<JobParams, Job>;
+    public data: EntityView<Job, JobParams>;
 
     public hasHookTask = false;
 
@@ -50,7 +50,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
         private jobService: JobService,
         private router: Router) {
 
-        this.data = this.jobService.get(null, {});
+        this.data = this.jobService.view();
         this.data.item.subscribe((job) => {
             this.job = job;
             this.hasHookTask = Boolean(job && job.jobPreparationTask);

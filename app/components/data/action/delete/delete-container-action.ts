@@ -21,7 +21,7 @@ export class DeleteContainerAction extends LongRunningDeleteAction {
     protected waitForDelete(id: string, taskManager?: BackgroundTaskService) {
         this.storageService.getContainerOnce(id).subscribe({
             next: (container: BlobContainer) => {
-                const task = new WaitForDeletePoller(this.storageService.getContainerProperties(id));
+                const task = new WaitForDeletePoller(() => this.storageService.getContainerOnce(id));
                 if (taskManager) {
                     const message = `Deleting container: ${id}`;
                     taskManager.startTask(message, (bTask) => {

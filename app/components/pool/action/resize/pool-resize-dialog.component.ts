@@ -61,7 +61,7 @@ export class PoolResizeDialogComponent {
                 })));
         }
 
-        const finalObs = obs.flatMap(() => this.poolService.getOnce(this.pool.id)).share();
+        const finalObs = obs.flatMap(() => this.poolService.get(this.pool.id)).share();
         finalObs.subscribe({
             next: (pool) => {
                 this.notificationService.success("Pool resize started!",
