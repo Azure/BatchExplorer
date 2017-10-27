@@ -9,7 +9,7 @@ import { BatchUsageMetrics, PerformanceGraphComponent } from "../performance-gra
 })
 export class MemoryUsageGraphComponent extends PerformanceGraphComponent implements OnChanges {
     public max = 100;
-    public unit = "%";
+    public unit = "B";
     public metric = BatchUsageMetrics.cpu;
 
     public memUsages: PerformanceMetric[] = [];
@@ -24,9 +24,10 @@ export class MemoryUsageGraphComponent extends PerformanceGraphComponent impleme
         super.ngOnChanges(changes);
 
         if (changes.data) {
+            this._clearMetricSubs();
+
             this._metricSubs.push(this.data.observeMetric(AppInsightsPerformanceMetrics.memoryUsed)
                 .subscribe((data) => {
-                    console.log("Got data?", data);
                     this.memUsages = data;
                     this._updateStatus();
                     this.updateData();
@@ -61,7 +62,6 @@ export class MemoryUsageGraphComponent extends PerformanceGraphComponent impleme
     }
 
     public changeShowOverallUsage(newValue) {
-        console.log("Change show oevrral", newValue);
         this.showOverallUsage = newValue;
         this.updateData();
     }
@@ -70,7 +70,6 @@ export class MemoryUsageGraphComponent extends PerformanceGraphComponent impleme
         const max = this._computeTotalMemory();
         if (max !== this.max) {
             this.max = max;
-            console.log("new max is", max);
             this.updateOptions();
         }
     }

@@ -32,11 +32,12 @@
         <div class="status">{{memUsage.status | async}}</div>
         <bl-memory-usage-graph #memUsage [data]="performanceData" [interactive]="false" class="small-preview"></bl-memory-usage-graph>
     </div>
-    <!--<div class="preview" (click)="focusGraph(AvailableGraph.Disk)" [class.focused]="focusedGraph === AvailableGraph.Disk">
+    <div class="preview" (click)="focusGraph(AvailableGraph.Disk)" [class.focused]="focusedGraph === AvailableGraph.Disk">
         <div class="label">Disk</div>
-        <bl-performance-graph metric="disk" [data]="performanceData" [interactive]="false" class="small-preview"></bl-performance-graph>
+        <div class="status">{{diskUsage.status | async}}</div>
+        <bl-disk-usage-graph #diskUsage [data]="performanceData" [interactive]="false" class="small-preview"></bl-disk-usage-graph>
     </div>
-    <div class="preview" (click)="focusGraph(AvailableGraph.Network)" [class.focused]="focusedGraph === AvailableGraph.Network">
+    <!--<div class="preview" (click)="focusGraph(AvailableGraph.Network)" [class.focused]="focusedGraph === AvailableGraph.Network">
         <div class="label">Network</div>
         <bl-performance-graph metric="network" [data]="performanceData" [interactive]="false" class="small-preview"></bl-performance-graph>
     </div> -->
@@ -70,7 +71,7 @@
         <bl-memory-usage-graph [data]="performanceData" class="full-display"></bl-memory-usage-graph>
     </div>
     <div *ngSwitchCase="AvailableGraph.Disk" class="full-display">
-        <bl-performance-graph metric="disk" [data]="performanceData" class="full-display"></bl-performance-graph>
+        <bl-disk-usage-graph [data]="performanceData" class="full-display"></bl-disk-usage-graph>
     </div>
     <div *ngSwitchCase="AvailableGraph.Network" class="full-display">
         <bl-performance-graph metric="network" [data]="performanceData" class="full-display"></bl-performance-graph>

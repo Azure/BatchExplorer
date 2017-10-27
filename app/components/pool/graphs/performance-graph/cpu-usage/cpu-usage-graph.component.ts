@@ -32,6 +32,7 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
         super.ngOnChanges(changes);
 
         if (changes.data) {
+            this._clearMetricSubs();
             this._metricSubs.push(this.data.observeMetric(AppInsightsPerformanceMetrics.cpuUsage).subscribe((data) => {
                 this.cpuUsages = data.map((usage) => {
                     const details = JSON.parse(usage.details);
