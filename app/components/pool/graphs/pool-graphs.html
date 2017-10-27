@@ -37,10 +37,11 @@
         <div class="status">{{diskUsage.status | async}}</div>
         <bl-disk-usage-graph #diskUsage [data]="performanceData" [interactive]="false" class="small-preview"></bl-disk-usage-graph>
     </div>
-    <!--<div class="preview" (click)="focusGraph(AvailableGraph.Network)" [class.focused]="focusedGraph === AvailableGraph.Network">
+    <div class="preview" (click)="focusGraph(AvailableGraph.Network)" [class.focused]="focusedGraph === AvailableGraph.Network">
         <div class="label">Network</div>
-        <bl-performance-graph metric="network" [data]="performanceData" [interactive]="false" class="small-preview"></bl-performance-graph>
-    </div> -->
+        <div class="status">{{netUsage.status | async}}</div>
+        <bl-network-usage-graph #netUsage[data]="performanceData" [interactive]="false" class="small-preview"></bl-network-usage-graph>
+    </div>
     <div class="config">
         <mat-form-field>
             <mat-select [formControl]="selectedHistoryLength" placeholder="History">
@@ -74,6 +75,6 @@
         <bl-disk-usage-graph [data]="performanceData" class="full-display"></bl-disk-usage-graph>
     </div>
     <div *ngSwitchCase="AvailableGraph.Network" class="full-display">
-        <bl-performance-graph metric="network" [data]="performanceData" class="full-display"></bl-performance-graph>
+        <bl-network-usage-graph metric="network" [data]="performanceData" class="full-display"></bl-network-usage-graph>
     </div>
 </div>

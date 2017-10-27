@@ -63,33 +63,6 @@ export class PerformanceGraphComponent implements OnChanges {
         if (changes.data) {
             this.updateOptions();
         }
-
-        // if (changes.metric) {
-        //     this._metrics = performanceGraphs[this.metric].metrics;
-        //     this._updateMax();
-        // }
-        // if (changes.data || changes.metric) {
-        //     this._clearMetricSubs();
-        //     this.updateOptions();
-        //     for (const metricName of this._metrics) {
-        //         this._metricSubs.push(this.data.observeMetric(metricName).subscribe((history) => {
-        //             this.history[metricName] = history;
-        //             // this._updateMax();
-        //             this.onNewMetrics();
-        //             // this.updateData();
-        //         }));
-        //     }
-
-        //     if (this.metric === BatchUsageMetrics.memory) {
-        //         this._metricSubs.push(this.data.observeMetric(AppInsightsPerformanceMetrics.memoryAvailable)
-        //             .subscribe((history) => {
-        //                 if (history.length > 0) {
-        //                     this._memoryAvailable = history.last().value;
-        //                     this._updateMax();
-        //                 }
-        //             }));
-        //     }
-        // }
     }
 
     public updateOptions() {
@@ -129,29 +102,8 @@ export class PerformanceGraphComponent implements OnChanges {
         };
     }
 
-    /**
-     * Transform the input data into datasets for the chart.
-     */
-    public updateData() {
-        this.datasets = this._metrics.filter(x => Boolean(this.history[x])).map((metric) => {
-            return {
-                data: [
-                    ...this.history[metric].map(x => {
-                        return {
-                            x: x.time,
-                            y: x.value,
-                        };
-                    }),
-                ],
-                fill: false,
-                borderWidth: 1,
-            };
-        });
-    }
-
     protected _clearMetricSubs() {
         this._metricSubs.forEach(x => x.unsubscribe());
         this._metricSubs = [];
     }
-
 }
