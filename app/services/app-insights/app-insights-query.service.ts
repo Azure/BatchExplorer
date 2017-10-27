@@ -50,8 +50,8 @@ export class AppInsightsQueryService {
         });
     }
 
-    private _buildQuery(poolId: string, lastNMinutes: number) {
-        const timespan = `PT${lastNMinutes}M`;
+    private _buildQuery(poolId: string, timespanInMinutes: number) {
+        const timespan = `PT${timespanInMinutes}M`;
 
         return Object.keys(metrics).map((id) => {
             const metric = metrics[id];
@@ -60,8 +60,8 @@ export class AppInsightsQueryService {
                 parameters: {
                     aggregation: "avg",
                     metricId: metric.metricId,
-                    // filter: FilterBuilder.prop("customMetrics/cloud_RoleName").eq(poolId),
-                    interval: `PT1M`,
+                    filter: this._buildFilter(poolId).toOData(),
+                    interval: this._computeInterval(timespanInMinutes),
                     timespan,
                     segment: metric.segment,
                 },
@@ -69,6 +69,25 @@ export class AppInsightsQueryService {
         });
     }
 
+    private _computeInterval(timespan: number) {
+        const numberOfPoints = 1000;
+        const intervalInSeconds = Math.ceil(timespan / numberOfPoints * 60);
+        if (intervalInSeconds < 5) {
+            return `PT5S`;
+        } else {
+            return `PT${intervalInSeconds}S`;
+        }
+    }
+
+    private _buildFilter(poolId: string, nodeId?: string) {
+        const poolFilter = FilterBuilder.prop("cloud/roleName").eq(poolId);
+        if (nodeId) {
+            const nodeFilter = FilterBuilder.prop("cloud/roleInstance").eq(nodeId);
+            return FilterBuilder.and(poolFilter, nodeFilter);
+        } else {
+            return poolFilter;
+        }
+    }
     private _processMetrics(data: AppInsightsMetricsResult): BatchPerformanceMetrics {
         console.log("Got data??", data);
         const performances = {};
