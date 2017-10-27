@@ -26,10 +26,10 @@ enum AvailableGraph {
 }
 
 const historyLength = {
-    OneMinute: 1,
     TenMinute: 10,
     OneHour: 60,
     OnDay: 60 * 24,
+    OnWeek: 60 * 24 * 7,
 };
 
 const refreshRate = 5000;

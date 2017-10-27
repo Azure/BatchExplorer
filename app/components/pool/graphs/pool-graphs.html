@@ -45,10 +45,10 @@
     <div class="config">
         <mat-form-field>
             <mat-select [formControl]="selectedHistoryLength" placeholder="History">
-                <mat-option [value]="historyLength.OneMinute">1 Minute</mat-option>
                 <mat-option [value]="historyLength.TenMinute">10 Minutes</mat-option>
                 <mat-option [value]="historyLength.OneHour">1 Hour</mat-option>
                 <mat-option [value]="historyLength.OnDay">24 Hour</mat-option>
+                <mat-option [value]="historyLength.OnDay">7 days</mat-option>
             </mat-select>
         </mat-form-field>
     </div>
