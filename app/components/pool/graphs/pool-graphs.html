@@ -24,9 +24,9 @@
     </div>
     <div class="preview" (click)="focusGraph(AvailableGraph.Cpu)" [class.focused]="focusedGraph === AvailableGraph.Cpu">
         <div class="label">Cpu</div>
-        <bl-performance-graph metric="cpu" [data]="performanceData" [interactive]="false" class="small-preview"></bl-performance-graph>
+        <bl-cpu-usage-graph [data]="performanceData" [interactive]="false" class="small-preview"></bl-cpu-usage-graph>
     </div>
-    <div class="preview" (click)="focusGraph(AvailableGraph.Memory)" [class.focused]="focusedGraph === AvailableGraph.Memory">
+    <!-- <div class="preview" (click)="focusGraph(AvailableGraph.Memory)" [class.focused]="focusedGraph === AvailableGraph.Memory">
         <div class="label">Memory</div>
         <bl-performance-graph metric="memory" [data]="performanceData" [interactive]="false" class="small-preview"></bl-performance-graph>
     </div>
@@ -37,7 +37,7 @@
     <div class="preview" (click)="focusGraph(AvailableGraph.Network)" [class.focused]="focusedGraph === AvailableGraph.Network">
         <div class="label">Network</div>
         <bl-performance-graph metric="network" [data]="performanceData" [interactive]="false" class="small-preview"></bl-performance-graph>
-    </div>
+    </div> -->
     <div class="config">
         <mat-form-field>
             <mat-select [formControl]="selectedHistoryLength" placeholder="History">
@@ -62,7 +62,7 @@
         </bl-history-graph>
     </div>
     <div *ngSwitchCase="AvailableGraph.Cpu" class="full-display">
-        <bl-performance-graph metric="cpu" [data]="performanceData" class="full-display"></bl-performance-graph>
+        <bl-cpu-usage-graph [data]="performanceData" class="full-display"></bl-cpu-usage-graph>
     </div>
     <div *ngSwitchCase="AvailableGraph.Memory" class="full-display">
         <bl-performance-graph metric="memory" [data]="performanceData" class="full-display"></bl-performance-graph>

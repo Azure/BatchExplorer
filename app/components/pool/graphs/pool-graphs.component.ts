@@ -5,7 +5,7 @@ import { List } from "immutable";
 import { Subscription } from "rxjs";
 
 import { SidebarManager } from "app/components/base/sidebar";
-import { PerformanceData, performanceGraphs } from "app/components/pool/graphs/performance-graph";
+import { PerformanceData } from "app/components/pool/graphs/performance-graph";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { Job, JobState, Node, NodeState, Pool, Task } from "app/models";
 import { AppInsightsQueryService, JobService, NodeListParams, NodeService } from "app/services";

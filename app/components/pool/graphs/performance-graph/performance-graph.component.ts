@@ -1,9 +1,8 @@
 import { Component, Input, OnChanges } from "@angular/core";
 import { Subscription } from "rxjs";
 
-import { HistoryItem } from "app/components/pool/graphs/history-data/history-data-base";
 import { NumberUtils } from "app/utils";
-import { AppInsightsPerformanceMetrics, PerformanceData } from "./performance-data";
+import { AppInsightsPerformanceMetrics, PerformanceData, PerformanceMetric } from "./performance-data";
 import "./performance-graph.scss";
 
 export enum BatchUsageMetrics {
@@ -43,43 +42,53 @@ export class PerformanceGraphComponent implements OnChanges {
     public type = "line";
     public datasets: Chart.ChartDataSets[] = [];
     public options = {};
-    public max = 100;
+    /**
+     * Set the max of this graph.
+     * Override in child(undefined calculate the max automatically)
+     */
+    public max = undefined;
 
-    public history: StringMap<HistoryItem[]> = {};
-    private _metricSubs: Subscription[] = [];
+    public history: StringMap<PerformanceMetric[]> = {};
+    protected _metricSubs: Subscription[] = [];
     private _metrics: AppInsightsPerformanceMetrics[] = [];
     private _memoryAvailable = 0;
 
     constructor() {
         this._metrics = performanceGraphs[this.metric].metrics;
+        this.updateOptions();
     }
 
     public ngOnChanges(changes) {
-        if (changes.metric) {
-            this._metrics = performanceGraphs[this.metric].metrics;
-            this._updateMax();
-        }
-        if (changes.data || changes.metric) {
-            this._clearMetricSubs();
+        if (changes.data) {
             this.updateOptions();
-            for (const metricName of this._metrics) {
-                this._metricSubs.push(this.data.observeMetric(metricName).subscribe((history) => {
-                    this.history[metricName] = history;
-                    this._updateMax();
-                    this.updateData();
-                }));
-            }
-
-            if (this.metric === BatchUsageMetrics.memory) {
-                this._metricSubs.push(this.data.observeMetric(AppInsightsPerformanceMetrics.memoryAvailable)
-                    .subscribe((history) => {
-                        if (history.length > 0) {
-                            this._memoryAvailable = history.last().y;
-                            this._updateMax();
-                        }
-                    }));
-            }
         }
+
+        // if (changes.metric) {
+        //     this._metrics = performanceGraphs[this.metric].metrics;
+        //     this._updateMax();
+        // }
+        // if (changes.data || changes.metric) {
+        //     this._clearMetricSubs();
+        //     this.updateOptions();
+        //     for (const metricName of this._metrics) {
+        //         this._metricSubs.push(this.data.observeMetric(metricName).subscribe((history) => {
+        //             this.history[metricName] = history;
+        //             // this._updateMax();
+        //             this.onNewMetrics();
+        //             // this.updateData();
+        //         }));
+        //     }
+
+        //     if (this.metric === BatchUsageMetrics.memory) {
+        //         this._metricSubs.push(this.data.observeMetric(AppInsightsPerformanceMetrics.memoryAvailable)
+        //             .subscribe((history) => {
+        //                 if (history.length > 0) {
+        //                     this._memoryAvailable = history.last().value;
+        //                     this._updateMax();
+        //                 }
+        //             }));
+        //     }
+        // }
     }
 
     public updateOptions() {
@@ -128,8 +137,8 @@ export class PerformanceGraphComponent implements OnChanges {
                 data: [
                     ...this.history[metric].map(x => {
                         return {
-                            x: new Date(x.time),
-                            y: x.y,
+                            x: x.time,
+                            y: x.value,
                         };
                     }),
                 ],
@@ -137,6 +146,11 @@ export class PerformanceGraphComponent implements OnChanges {
                 borderWidth: 1,
             };
         });
+    }
+
+    protected _clearMetricSubs() {
+        this._metricSubs.forEach(x => x.unsubscribe());
+        this._metricSubs = [];
     }
 
     private _updateMax() {
@@ -161,14 +175,10 @@ export class PerformanceGraphComponent implements OnChanges {
     private _computeTotalMemory() {
         const data = this.history[AppInsightsPerformanceMetrics.memoryUsed];
         if (data && data.length > 0) {
-            return this._memoryAvailable + data.last().y;
+            return this._memoryAvailable + data.last().value;
         } else {
             return undefined;
         }
     }
 
-    private _clearMetricSubs() {
-        this._metricSubs.forEach(x => x.unsubscribe());
-        this._metricSubs = [];
-    }
 }

@@ -22,7 +22,7 @@ export class AppInsightsQueryService {
             customMetrics
             | where timestamp >= ago(${lastNMinutes}m)
             | where cloud_RoleName == "${poolId}"
-            | project name, value, timestamp
+            | project name, value, timestamp, customDimensions
             | sort by timestamp asc
         `;
         return this.query(appId, query).map((response) => {

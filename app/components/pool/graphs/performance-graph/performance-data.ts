@@ -1,6 +1,5 @@
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { HistoryItem } from "app/components/pool/graphs/history-data/history-data-base";
 import { Pool } from "app/models";
 import { AppInsightsTable } from "app/models/app-insights/query-result";
 import { AppInsightsQueryService } from "app/services";
@@ -15,10 +14,16 @@ export enum AppInsightsPerformanceMetrics {
     networkWrite = "Network write",
 }
 
+export interface PerformanceMetric {
+    time: Date;
+    value: number;
+    details: string;
+}
+
 export class PerformanceData {
     public pool: Pool;
 
-    private _metrics = new BehaviorSubject(new Map<string, HistoryItem[]>());
+    private _metrics = new BehaviorSubject(new Map<string, PerformanceMetric[]>());
     private _table: AppInsightsTable;
 
     constructor(private appInsightsQueryService: AppInsightsQueryService) {
@@ -33,7 +38,7 @@ export class PerformanceData {
         });
     }
 
-    public observeMetric(name: AppInsightsPerformanceMetrics): Observable<HistoryItem[]> {
+    public observeMetric(name: AppInsightsPerformanceMetrics): Observable<PerformanceMetric[]> {
         return this._metrics.map((metrics) => {
             return metrics.get(name) || [];
         });
@@ -44,17 +49,18 @@ export class PerformanceData {
         if (!rows) {
             return;
         }
-        const metrics = new Map<string, HistoryItem[]>();
+        const metrics = new Map<string, PerformanceMetric[]>();
 
         for (let row of rows) {
-            const [name, value, timestamp] = row;
+            const [name, value, time, details] = row;
             if (!metrics.has(name)) {
                 metrics.set(name, []);
             }
             const array = metrics.get(name);
             array.push({
-                time: timestamp,
-                y: value,
+                time: new Date(time),
+                value,
+                details,
             });
         }
 
