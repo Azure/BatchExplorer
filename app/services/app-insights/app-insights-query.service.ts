@@ -3,6 +3,7 @@ import {
     AppInsightsMetricSegment, AppInsightsMetricsResult, BatchPerformanceMetrics,
 } from "app/models/app-insights/metrics-result";
 import { FilterBuilder } from "app/utils/filter-builder";
+import * as moment from "moment";
 import { Observable } from "rxjs";
 import { AppInsightsApiService } from "./app-insights-api.service";
 
@@ -52,7 +53,8 @@ export class AppInsightsQueryService {
 
     private _buildQuery(poolId: string, timespanInMinutes: number) {
         const timespan = `PT${timespanInMinutes}M`;
-
+        const interval = this._computeInterval(timespanInMinutes);
+        console.log("Interval", interval, moment.duration(5, "ms").toISOString());
         return Object.keys(metrics).map((id) => {
             const metric = metrics[id];
             return {
@@ -61,7 +63,7 @@ export class AppInsightsQueryService {
                     aggregation: "avg",
                     metricId: metric.metricId,
                     filter: this._buildFilter(poolId).toOData(),
-                    interval: this._computeInterval(timespanInMinutes),
+                    interval,
                     timespan,
                     segment: metric.segment,
                 },
@@ -71,12 +73,8 @@ export class AppInsightsQueryService {
 
     private _computeInterval(timespan: number) {
         const numberOfPoints = 1000;
-        const intervalInSeconds = Math.ceil(timespan / numberOfPoints * 60);
-        if (intervalInSeconds < 5) {
-            return `PT5S`;
-        } else {
-            return `PT${intervalInSeconds}S`;
-        }
+        const intervalInSeconds = Math.ceil(timespan / numberOfPoints * 60 / 10) * 10;
+        return `PT${intervalInSeconds}S`;
     }
 
     private _buildFilter(poolId: string, nodeId?: string) {
@@ -89,7 +87,6 @@ export class AppInsightsQueryService {
         }
     }
     private _processMetrics(data: AppInsightsMetricsResult): BatchPerformanceMetrics {
-        console.log("Got data??", data);
         const performances = {};
         for (const metricResult of data) {
             const id = metricResult.id;
@@ -100,7 +97,6 @@ export class AppInsightsQueryService {
                 performances[id] = this._processSimpleMetric(id, segments);
             }
         }
-        console.log("PErformances", performances);
         return performances as BatchPerformanceMetrics;
     }
 
