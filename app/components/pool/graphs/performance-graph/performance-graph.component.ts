@@ -1,5 +1,5 @@
 import { Component, Input, OnChanges } from "@angular/core";
-import { Subscription } from "rxjs";
+import { BehaviorSubject, Subscription } from "rxjs";
 
 import { NumberUtils } from "app/utils";
 import { AppInsightsPerformanceMetrics, PerformanceData, PerformanceMetric } from "./performance-data";
@@ -42,6 +42,8 @@ export class PerformanceGraphComponent implements OnChanges {
     public type = "line";
     public datasets: Chart.ChartDataSets[] = [];
     public options = {};
+    public status = new BehaviorSubject("");
+
     /**
      * Set the max of this graph.
      * Override in child(undefined calculate the max automatically)

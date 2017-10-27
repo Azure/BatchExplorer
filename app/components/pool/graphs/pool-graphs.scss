@@ -19,10 +19,18 @@ bl-pool-graphs {
                 font-size: 11px;
                 line-height: 11px;
                 margin-bottom: 3px;
+                display: inline-block;
+            }
+
+            .status {
+                text-align: right;
+                color: $generic-grey;
+                display: inline-block;
             }
 
             &.focused {
                 display:  flex;
+                flex-direction: column;
                 align-items: center;
                 justify-content: center;
                 border-bottom: none;
@@ -30,6 +38,10 @@ bl-pool-graphs {
                 .label {
                     font-size: 16px;
                     color: map-get($primary, 600);
+                }
+
+                .status {
+                    margin-top: 5px;
                 }
 
                 .small-preview {

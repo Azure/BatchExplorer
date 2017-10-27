@@ -49,6 +49,7 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
                     };
                 });
                 this.lastCpuUsage = this.cpuUsages.last();
+                this._updateStatus();
                 this.updateData();
             }));
         }
@@ -112,5 +113,13 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
         });
         this.changeDetector.markForCheck();
         this.changeDetector.detectChanges();
+    }
+
+    private _updateStatus() {
+        if (this.lastCpuUsage) {
+            this.status.next(`${this.lastCpuUsage.value}%`);
+        } else {
+            this.status.next("- %");
+        }
     }
 }

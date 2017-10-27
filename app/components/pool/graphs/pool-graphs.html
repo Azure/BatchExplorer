@@ -24,7 +24,8 @@
     </div>
     <div class="preview" (click)="focusGraph(AvailableGraph.Cpu)" [class.focused]="focusedGraph === AvailableGraph.Cpu">
         <div class="label">Cpu</div>
-        <bl-cpu-usage-graph [data]="performanceData" [interactive]="false" class="small-preview"></bl-cpu-usage-graph>
+        <div class="status">{{cpuUsage.status | async}}</div>
+        <bl-cpu-usage-graph #cpuUsage [data]="performanceData" [interactive]="false" class="small-preview"></bl-cpu-usage-graph>
     </div>
     <!-- <div class="preview" (click)="focusGraph(AvailableGraph.Memory)" [class.focused]="focusedGraph === AvailableGraph.Memory">
         <div class="label">Memory</div>

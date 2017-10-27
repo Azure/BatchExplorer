@@ -85,10 +85,10 @@ export class ChartDirective implements OnDestroy, OnChanges, OnInit {
                 this.chart.update();
             } else {
                 const { previousValue, currentValue } = changes.datasets;
-                this.updateChartData(this.datasets);
                 if (previousValue && currentValue && previousValue.length !== currentValue.length) {
                     this._refresh();
                 } else {
+                    this.updateChartData(this.datasets);
                     this.chart.update();
                 }
             }
