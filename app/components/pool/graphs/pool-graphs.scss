@@ -3,18 +3,25 @@
 bl-pool-graphs {
     display: block;
     overflow: hidden;
+    display: flex;
 
     .charts-previews {
-        margin-bottom: 15px;
-        display: flex;
         user-select: none;
+        flex: 0 0 200px;
 
         > .preview {
             cursor: pointer;
             padding: 10px;
+            display: flex;
+            height: 70px;
             border-right: 1px solid $border-color;
             border-bottom: 1px solid $border-color;
             flex: 1;
+
+            .info {
+                margin-left: 5px;
+            }
+
             .label {
                 font-size: 11px;
                 line-height: 11px;
@@ -27,11 +34,9 @@ bl-pool-graphs {
             }
 
             &.focused {
-                display:  flex;
-                flex-direction: column;
                 align-items: center;
                 justify-content: center;
-                border-bottom: none;
+                border-right: none;
 
                 .label {
                     font-size: 16px;
@@ -54,8 +59,7 @@ bl-pool-graphs {
 
         > .config {
             padding: 20px 10px;
-            border-bottom: 1px solid $border-color;
-            width: 150px;
+            border-right: 1px solid $border-color;
         }
     }
 

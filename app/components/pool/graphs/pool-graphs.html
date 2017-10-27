@@ -5,42 +5,56 @@
 </bl-banner>
 <div class="charts-previews">
     <div class="preview" (click)="focusGraph(AvailableGraph.Heatmap)" [class.focused]="focusedGraph === AvailableGraph.Heatmap">
-        <div class="label">Heatmap</div>
         <div class="small-preview">
             <bl-nodes-heatmap [pool]="pool" [nodes]="nodes" [showRunningTasks]="false" [showLegend]="false" [interactive]="false" [limitNode]="10"></bl-nodes-heatmap>
         </div>
+        <div class="info">
+            <div class="label">Heatmap</div>
+        </div>
     </div>
     <div class="preview" (click)="focusGraph(AvailableGraph.AvailableNodes)" [class.focused]="focusedGraph === AvailableGraph.AvailableNodes">
-        <div class="label">Available nodes</div>
         <bl-history-graph [max]="pool.targetNodes" class="small-preview" [history]="runningNodesHistory.history" [interactive]="false"
             [historySize]="selectedHistoryLength.value">
         </bl-history-graph>
+        <div class="info">
+            <div class="label">Available nodes</div>
+        </div>
     </div>
     <div class="preview" (click)="focusGraph(AvailableGraph.RunningTasks)" [class.focused]="focusedGraph === AvailableGraph.RunningTasks">
-        <div class="label">Running tasks</div>
         <bl-history-graph [max]="maxRunningTasks" class="small-preview" [history]="runningTaskHistory.history" [interactive]="false"
             [historySize]="selectedHistoryLength.value">
         </bl-history-graph>
+        <div class="info">
+            <div class="label">Running tasks</div>
+        </div>
     </div>
     <div class="preview" (click)="focusGraph(AvailableGraph.Cpu)" [class.focused]="focusedGraph === AvailableGraph.Cpu">
-        <div class="label">Cpu</div>
-        <div class="status">{{cpuUsage.status | async}}</div>
         <bl-cpu-usage-graph #cpuUsage [data]="performanceData" [interactive]="false" class="small-preview"></bl-cpu-usage-graph>
+        <div class="info">
+            <div class="label">Cpu</div>
+            <div class="status">{{cpuUsage.status | async}}</div>
+        </div>
     </div>
     <div class="preview" (click)="focusGraph(AvailableGraph.Memory)" [class.focused]="focusedGraph === AvailableGraph.Memory">
-        <div class="label">Memory</div>
-        <div class="status">{{memUsage.status | async}}</div>
         <bl-memory-usage-graph #memUsage [data]="performanceData" [interactive]="false" class="small-preview"></bl-memory-usage-graph>
+        <div class="info">
+            <div class="label">Memory</div>
+            <div class="status">{{memUsage.status | async}}</div>
+        </div>
     </div>
     <div class="preview" (click)="focusGraph(AvailableGraph.Disk)" [class.focused]="focusedGraph === AvailableGraph.Disk">
-        <div class="label">Disk</div>
-        <div class="status">{{diskUsage.status | async}}</div>
         <bl-disk-usage-graph #diskUsage [data]="performanceData" [interactive]="false" class="small-preview"></bl-disk-usage-graph>
+        <div class="info">
+            <div class="label">Disk</div>
+            <div class="status">{{diskUsage.status | async}}</div>
+        </div>
     </div>
     <div class="preview" (click)="focusGraph(AvailableGraph.Network)" [class.focused]="focusedGraph === AvailableGraph.Network">
-        <div class="label">Network</div>
-        <div class="status">{{netUsage.status | async}}</div>
         <bl-network-usage-graph #netUsage [data]="performanceData" [interactive]="false" class="small-preview"></bl-network-usage-graph>
+        <div class="info">
+            <div class="label">Network</div>
+            <div class="status">{{netUsage.status | async}}</div>
+        </div>
     </div>
     <div class="config">
         <mat-form-field>
