@@ -83,7 +83,7 @@ export class MemoryUsageGraphComponent extends PerformanceGraphComponent impleme
             const prettyTotal = NumberUtils.prettyMagnitude(this.max);
             const prettyUsed = (used / Math.pow(1000, exponent)).toPrecision(3);
 
-            this.status.next(`${prettyUsed} / ${prettyTotal}B (${percent}%)`);
+            this.status.next(`${prettyUsed}/${prettyTotal}B (${percent}%)`);
         } else {
             this.status.next("- B");
         }
