@@ -38,22 +38,6 @@ bl-pool-graphs {
 
             &.focused {
                 background: $mercury-grey;
-                // align-items: center;
-                // justify-content: center;
-                // border-right: none;
-
-                // .label {
-                //     font-size: 16px;
-                //     color: map-get($primary, 600);
-                // }
-
-                // .status {
-                //     margin-top: 5px;
-                // }
-
-                // .small-preview {
-                //     display: none;
-                // }
             }
 
             &:hover {
@@ -88,6 +72,7 @@ bl-pool-graphs {
 
     .focused-graph {
         width: 100%;
+        min-width: 100px;
         position: relative;
     }
 }

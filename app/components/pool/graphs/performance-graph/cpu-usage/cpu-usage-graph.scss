@@ -30,5 +30,10 @@ bl-cpu-usage-graph {
                 }
             }
         }
+
+        [blChart] {
+            min-width: 50px;
+            width: 100%;
+        }
     }
 }
