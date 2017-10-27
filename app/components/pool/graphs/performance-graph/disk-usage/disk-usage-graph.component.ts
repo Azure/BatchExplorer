@@ -66,7 +66,6 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
                 borderWidth: 1,
             },
         ];
-        console.log("Datasets", this.datasets);
     }
 
     public changeShowOverallUsage(newValue) {

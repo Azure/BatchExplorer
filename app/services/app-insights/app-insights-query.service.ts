@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import {
-    AppInsightsMetricSegment, AppInsightsMetricsResult, BatchPerformanceMetrics,
+    AppInsightsMetricSegment, AppInsightsMetricsResult, BatchPerformanceMetricType, BatchPerformanceMetrics,
 } from "app/models/app-insights/metrics-result";
 import { FilterBuilder } from "app/utils/filter-builder";
 import * as moment from "moment";
@@ -15,8 +15,8 @@ interface Metric {
 const metrics: StringMap<Metric> = {
     cpuUsage: { metricId: "customMetrics/Cpu usage" },
     individualCpuUsage: { metricId: "customMetrics/Cpu usage", segment: "customDimensions/[Cpu #]" },
-    memoryAvailable: { metricId: "customMetrics/Memory available" },
-    memoryUsed: { metricId: "customMetrics/Memory used" },
+    memoryAvailable: { metricId: "customMetrics/Memory available", segment: "cloud/roleInstance" },
+    memoryUsed: { metricId: "customMetrics/Memory used", segment: "cloud/roleInstance" },
     diskRead: { metricId: "customMetrics/Disk read" },
     diskWrite: { metricId: "customMetrics/Disk write" },
     networkRead: { metricId: "customMetrics/Network read" },
@@ -54,7 +54,6 @@ export class AppInsightsQueryService {
     private _buildQuery(poolId: string, timespanInMinutes: number) {
         const timespan = `PT${timespanInMinutes}M`;
         const interval = this._computeInterval(timespanInMinutes);
-        console.log("Interval", interval, moment.duration(5, "ms").toISOString());
         return Object.keys(metrics).map((id) => {
             const metric = metrics[id];
             return {
@@ -91,10 +90,16 @@ export class AppInsightsQueryService {
         for (const metricResult of data) {
             const id = metricResult.id;
             const segments = metricResult.body.value.segments;
-            if (id === "individualCpuUsage") {
-                performances[id] = this._processIndividualCpuUsage(segments);
-            } else {
-                performances[id] = this._processSimpleMetric(id, segments);
+            switch (id) {
+                case BatchPerformanceMetricType.individualCpuUsage:
+                    performances[id] = this._processIndividualCpuUsage(segments);
+                    break;
+                case BatchPerformanceMetricType.memoryAvailable:
+                case BatchPerformanceMetricType.memoryUsed:
+                    performances[id] = this._processMetricToSum(id, segments);
+                    break;
+                default:
+                    performances[id] = this._processSimpleMetric(id, segments);
             }
         }
         return performances as BatchPerformanceMetrics;
@@ -128,6 +133,28 @@ export class AppInsightsQueryService {
                 });
             }
         }
+        return usages;
+    }
+
+    private _processMetricToSum(metricId: string, segments: AppInsightsMetricSegment[]) {
+        console.log("Metric result", metricId, segments);
+
+        const usages = [];
+        for (const segment of segments) {
+            const time = this._getDateAvg(new Date(segment.start), new Date(segment.end));
+            const individualSegments = segment.segments;
+            let sum = 0;
+            for (const individualSegment of individualSegments) {
+                const value = individualSegment[this._getMetricId(metricId)].avg;
+                sum += value;
+            }
+
+            usages.push({
+                time,
+                value: sum,
+            });
+        }
+        console.log("Mem usages", usages);
         return usages;
     }
 
