@@ -49,6 +49,7 @@ export class PerformanceGraphComponent implements OnChanges {
         const hitRadius = this.interactive ? 10 : 0;
         this.options = {
             responsive: true,
+            maintainAspectRatio: false,
             elements: {
                 point: { radius: 0, hitRadius: hitRadius, hoverRadius: hitRadius },
                 line: {

@@ -4,18 +4,21 @@ bl-pool-graphs {
     display: block;
     overflow: hidden;
     display: flex;
+    height: 100%;
 
     .charts-previews {
         user-select: none;
         flex: 0 0 200px;
+        overflow-y: auto;
+        height: 100%;
+        border-right: 1px solid $border-color;
 
         > .preview {
             cursor: pointer;
             padding: 10px;
             display: flex;
             height: 70px;
-            border-right: 1px solid $border-color;
-            border-bottom: 1px solid $border-color;
+            // border-bottom: 1px solid $border-color;
             flex: 1;
 
             .info {
@@ -34,40 +37,40 @@ bl-pool-graphs {
             }
 
             &.focused {
-                align-items: center;
-                justify-content: center;
-                border-right: none;
+                background: $mercury-grey;
+                // align-items: center;
+                // justify-content: center;
+                // border-right: none;
 
-                .label {
-                    font-size: 16px;
-                    color: map-get($primary, 600);
-                }
+                // .label {
+                //     font-size: 16px;
+                //     color: map-get($primary, 600);
+                // }
 
-                .status {
-                    margin-top: 5px;
-                }
+                // .status {
+                //     margin-top: 5px;
+                // }
 
-                .small-preview {
-                    display: none;
-                }
+                // .small-preview {
+                //     display: none;
+                // }
             }
 
             &:hover {
-                background: $whitesmoke;
+                background: $athens-grey;
             }
         }
 
         > .config {
             padding: 20px 10px;
-            border-right: 1px solid $border-color;
         }
     }
 
     .small-preview {
         display: block;
         position: relative;
-        width: 100px;
-        height: 50px;
+        width: 60px;
+        height: 40px;
         border: 1px solid map-get($primary, 100);
     }
 
