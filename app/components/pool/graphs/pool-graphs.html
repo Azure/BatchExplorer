@@ -40,7 +40,7 @@
     <div class="preview" (click)="focusGraph(AvailableGraph.Network)" [class.focused]="focusedGraph === AvailableGraph.Network">
         <div class="label">Network</div>
         <div class="status">{{netUsage.status | async}}</div>
-        <bl-network-usage-graph #netUsage[data]="performanceData" [interactive]="false" class="small-preview"></bl-network-usage-graph>
+        <bl-network-usage-graph #netUsage [data]="performanceData" [interactive]="false" class="small-preview"></bl-network-usage-graph>
     </div>
     <div class="config">
         <mat-form-field>
