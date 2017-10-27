@@ -3,7 +3,6 @@ import {
     AppInsightsMetricSegment, AppInsightsMetricsResult, BatchPerformanceMetricType, BatchPerformanceMetrics,
 } from "app/models/app-insights/metrics-result";
 import { FilterBuilder } from "app/utils/filter-builder";
-import * as moment from "moment";
 import { Observable } from "rxjs";
 import { AppInsightsApiService } from "./app-insights-api.service";
 
@@ -137,8 +136,6 @@ export class AppInsightsQueryService {
     }
 
     private _processMetricToSum(metricId: string, segments: AppInsightsMetricSegment[]) {
-        console.log("Metric result", metricId, segments);
-
         const usages = [];
         for (const segment of segments) {
             const time = this._getDateAvg(new Date(segment.start), new Date(segment.end));
@@ -154,7 +151,6 @@ export class AppInsightsQueryService {
                 value: sum,
             });
         }
-        console.log("Mem usages", usages);
         return usages;
     }
 
