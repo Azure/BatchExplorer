@@ -30,10 +30,8 @@ export class NumberUtils {
     }
 
     public static prettyMagnitude(value: number, suffix: string = ""): string {
+        const exponent = NumberUtils.magnitudeExponent(value);
         const decimals = 2;
-        if (!Number.isFinite(value)) {
-            throw new TypeError(`Expected a finite number, got ${typeof value}: ${value}`);
-        }
 
         const neg = value < 0;
 
@@ -45,13 +43,19 @@ export class NumberUtils {
             return (neg ? "-" : "") + value + suffix;
         }
 
-        const exponent = Math.min(Math.floor(Math.log(value) / Math.log(1000)), UNITS.length - 1);
         const numStr = Number((value / Math.pow(1000, exponent)).toPrecision(decimals + 1));
         const unit = UNITS[exponent];
 
         return (neg ? "-" : "") + numStr + " " + unit;
     }
 
+    public static magnitudeExponent(value: number) {
+        if (!Number.isFinite(value)) {
+            throw new TypeError(`Expected a finite number, got ${typeof value}: ${value}`);
+        }
+
+        return Math.min(Math.floor(Math.log(Math.abs(value)) / Math.log(1000)), UNITS.length - 1);
+    }
     /**
      * Return the number with the ordinal suffix
      * @param value

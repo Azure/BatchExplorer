@@ -1,11 +1,6 @@
-import { ChangeDetectorRef, Component, OnChanges } from "@angular/core";
+import { Component, OnChanges } from "@angular/core";
 import { AppInsightsPerformanceMetrics } from "../performance-data";
 import { BatchUsageMetrics, PerformanceGraphComponent } from "../performance-graph.component";
-
-export class BasePerformanceData {
-    public max = undefined;
-    public unit = "";
-}
 
 import "./cpu-usage-graph.scss";
 
@@ -29,7 +24,7 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
     public showOverallUsage = true;
     public lastCpuUsage: CpuUsage;
 
-    constructor(private changeDetector: ChangeDetectorRef) {
+    constructor() {
         super();
     }
 
@@ -38,7 +33,6 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
 
         if (changes.data) {
             this._metricSubs.push(this.data.observeMetric(AppInsightsPerformanceMetrics.cpuUsage).subscribe((data) => {
-                console.log("Got data?", data);
                 this.cpuUsages = data.map((usage) => {
                     const details = JSON.parse(usage.details);
                     return {
@@ -64,7 +58,6 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
     }
 
     public changeShowOverallUsage(newValue) {
-        console.log("Change show oevrral", newValue);
         this.showOverallUsage = newValue;
         this.updateData();
     }
@@ -73,7 +66,6 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
         return value.split(",").map(x => Number(x));
     }
     private _showOverallCpuUsage() {
-        console.log("Show oeveral cpu");
         this.datasets = [
             {
                 data: [
@@ -88,7 +80,6 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
                 borderWidth: 1,
             },
         ];
-        this.changeDetector.detectChanges();
     }
 
     private _showIndiviualCpuUsage() {
@@ -111,8 +102,6 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
                 borderWidth: 1,
             };
         });
-        this.changeDetector.markForCheck();
-        this.changeDetector.detectChanges();
     }
 
     private _updateStatus() {

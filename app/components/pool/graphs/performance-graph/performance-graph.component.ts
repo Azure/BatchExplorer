@@ -53,7 +53,6 @@ export class PerformanceGraphComponent implements OnChanges {
     public history: StringMap<PerformanceMetric[]> = {};
     protected _metricSubs: Subscription[] = [];
     private _metrics: AppInsightsPerformanceMetrics[] = [];
-    private _memoryAvailable = 0;
 
     constructor() {
         this._metrics = performanceGraphs[this.metric].metrics;
@@ -153,34 +152,6 @@ export class PerformanceGraphComponent implements OnChanges {
     protected _clearMetricSubs() {
         this._metricSubs.forEach(x => x.unsubscribe());
         this._metricSubs = [];
-    }
-
-    private _updateMax() {
-        let max;
-        switch (this.metric) {
-            case BatchUsageMetrics.cpu:
-                max = 100;
-                break;
-            case BatchUsageMetrics.memory:
-                max = this._computeTotalMemory();
-                break;
-            default:
-                max = undefined;
-        }
-
-        if (this.max !== max) {
-            this.max = max;
-            this.updateOptions();
-        }
-    }
-
-    private _computeTotalMemory() {
-        const data = this.history[AppInsightsPerformanceMetrics.memoryUsed];
-        if (data && data.length > 0) {
-            return this._memoryAvailable + data.last().value;
-        } else {
-            return undefined;
-        }
     }
 
 }

@@ -27,11 +27,12 @@
         <div class="status">{{cpuUsage.status | async}}</div>
         <bl-cpu-usage-graph #cpuUsage [data]="performanceData" [interactive]="false" class="small-preview"></bl-cpu-usage-graph>
     </div>
-    <!-- <div class="preview" (click)="focusGraph(AvailableGraph.Memory)" [class.focused]="focusedGraph === AvailableGraph.Memory">
+     <div class="preview" (click)="focusGraph(AvailableGraph.Memory)" [class.focused]="focusedGraph === AvailableGraph.Memory">
         <div class="label">Memory</div>
-        <bl-performance-graph metric="memory" [data]="performanceData" [interactive]="false" class="small-preview"></bl-performance-graph>
+        <div class="status">{{memUsage.status | async}}</div>
+        <bl-memory-usage-graph #memUsage [data]="performanceData" [interactive]="false" class="small-preview"></bl-memory-usage-graph>
     </div>
-    <div class="preview" (click)="focusGraph(AvailableGraph.Disk)" [class.focused]="focusedGraph === AvailableGraph.Disk">
+    <!--<div class="preview" (click)="focusGraph(AvailableGraph.Disk)" [class.focused]="focusedGraph === AvailableGraph.Disk">
         <div class="label">Disk</div>
         <bl-performance-graph metric="disk" [data]="performanceData" [interactive]="false" class="small-preview"></bl-performance-graph>
     </div>
@@ -66,7 +67,7 @@
         <bl-cpu-usage-graph [data]="performanceData" class="full-display"></bl-cpu-usage-graph>
     </div>
     <div *ngSwitchCase="AvailableGraph.Memory" class="full-display">
-        <bl-performance-graph metric="memory" [data]="performanceData" class="full-display"></bl-performance-graph>
+        <bl-memory-usage-graph [data]="performanceData" class="full-display"></bl-memory-usage-graph>
     </div>
     <div *ngSwitchCase="AvailableGraph.Disk" class="full-display">
         <bl-performance-graph metric="disk" [data]="performanceData" class="full-display"></bl-performance-graph>

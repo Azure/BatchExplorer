@@ -8,12 +8,12 @@ import { BaseModule } from "app/components/base";
 import { HistoryGraphComponent } from "./history-graph";
 import { NodesHeatmapLegendComponent } from "./nodes-heatmap-legend.component";
 import { NodesHeatmapComponent } from "./nodes-heatmap.component";
-import { CpuUsageGraphComponent, PerformanceGraphComponent } from "./performance-graph";
+import { CpuUsageGraphComponent, MemoryUsageGraphComponent, PerformanceGraphComponent } from "./performance-graph";
 import { PoolGraphsComponent } from "./pool-graphs.component";
 
 const components = [NodesHeatmapComponent,
     NodesHeatmapLegendComponent, PoolGraphsComponent, HistoryGraphComponent,
-    PerformanceGraphComponent, CpuUsageGraphComponent,
+    PerformanceGraphComponent, CpuUsageGraphComponent, MemoryUsageGraphComponent,
 ];
 
 @NgModule({
