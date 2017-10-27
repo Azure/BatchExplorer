@@ -1,8 +1,26 @@
 import { Injectable } from "@angular/core";
-import { AppInsightsTable } from "app/models/app-insights/query-result";
+import {
+    AppInsightsMetricSegment, AppInsightsMetricsResult, BatchPerformanceMetrics,
+} from "app/models/app-insights/metrics-result";
+import { FilterBuilder } from "app/utils/filter-builder";
 import { Observable } from "rxjs";
 import { AppInsightsApiService } from "./app-insights-api.service";
 
+interface Metric {
+    metricId: string;
+    segment?: string;
+}
+
+const metrics: StringMap<Metric> = {
+    cpuUsage: { metricId: "customMetrics/Cpu usage" },
+    individualCpuUsage: { metricId: "customMetrics/Cpu usage", segment: "customDimensions/[Cpu #]" },
+    memoryAvailable: { metricId: "customMetrics/Memory available" },
+    memoryUsed: { metricId: "customMetrics/Memory used" },
+    diskRead: { metricId: "customMetrics/Disk read" },
+    diskWrite: { metricId: "customMetrics/Disk write" },
+    networkRead: { metricId: "customMetrics/Network read" },
+    networkWrite: { metricId: "customMetrics/Network write" },
+};
 @Injectable()
 export class AppInsightsQueryService {
     constructor(private appInsightsApi: AppInsightsApiService) { }
@@ -13,20 +31,96 @@ export class AppInsightsQueryService {
      */
     public query(appId: string, query: string) {
         return this.appInsightsApi.get(`apps/${appId}/query`, {
-            params: {query},
+            params: { query },
         });
     }
 
-    public getPoolPerformance(appId: string, poolId: string, lastNMinutes: number): Observable<AppInsightsTable> {
-        const query = `
-            customMetrics
-            | where timestamp >= ago(${lastNMinutes}m)
-            | where cloud_RoleName == "${poolId}"
-            | project name, value, timestamp, customDimensions
-            | sort by timestamp asc
-        `;
-        return this.query(appId, query).map((response) => {
-            return response.json().tables[0];
-        }).share();
+    /**
+     * Run the given metrics query and return the result
+     * @param query
+     */
+    public metrics(appId: string, query: any) {
+        return this.appInsightsApi.post(`apps/${appId}/metrics`, query);
+    }
+
+    public getPoolPerformance(appId: string, poolId: string, lastNMinutes: number):
+        Observable<BatchPerformanceMetrics> {
+        return this.metrics(appId, this._buildQuery(poolId, lastNMinutes)).map((data) => {
+            return this._processMetrics(data.json());
+        });
+    }
+
+    private _buildQuery(poolId: string, lastNMinutes: number) {
+        const timespan = `PT${lastNMinutes}M`;
+
+        return Object.keys(metrics).map((id) => {
+            const metric = metrics[id];
+            return {
+                id: id,
+                parameters: {
+                    aggregation: "avg",
+                    metricId: metric.metricId,
+                    // filter: FilterBuilder.prop("customMetrics/cloud_RoleName").eq(poolId),
+                    interval: `PT1M`,
+                    timespan,
+                    segment: metric.segment,
+                },
+            };
+        });
+    }
+
+    private _processMetrics(data: AppInsightsMetricsResult): BatchPerformanceMetrics {
+        console.log("Got data??", data);
+        const performances = {};
+        for (const metricResult of data) {
+            const id = metricResult.id;
+            const segments = metricResult.body.value.segments;
+            if (id === "individualCpuUsage") {
+                performances[id] = this._processIndividualCpuUsage(segments);
+            } else {
+                performances[id] = this._processSimpleMetric(id, segments);
+            }
+        }
+        console.log("PErformances", performances);
+        return performances as BatchPerformanceMetrics;
+    }
+
+    private _processSimpleMetric(metricId: string, segments: AppInsightsMetricSegment[]) {
+        return segments.map((segment) => {
+            const time = this._getDateAvg(new Date(segment.start), new Date(segment.end));
+            const value = segment[this._getMetricId(metricId)].avg;
+            return {
+                time,
+                value,
+            };
+        });
+    }
+
+    private _processIndividualCpuUsage(segments) {
+        let usages: any[] = null;
+        for (const segment of segments) {
+            const time = this._getDateAvg(new Date(segment.start), new Date(segment.end));
+            const individualSegments = segment.segments;
+            if (usages === null) {
+                usages = individualSegments.map(() => []);
+            }
+            for (let i = 0; i < individualSegments.length; i++) {
+                const individualSegment = individualSegments[i];
+                const value = individualSegment[this._getMetricId("individualCpuUsage")].avg;
+                usages[i].push({
+                    time,
+                    value,
+                });
+            }
+        }
+        return usages;
+    }
+
+    private _getDateAvg(start: Date, end: Date): Date {
+        return new Date((end.getTime() + start.getTime()) / 2);
+    }
+
+    private _getMetricId(id: string) {
+        return metrics[id].metricId;
     }
 }

@@ -1,6 +1,6 @@
 import { Component, OnChanges } from "@angular/core";
+import { BatchPerformanceMetricType, PerformanceMetric } from "app/models/app-insights/metrics-result";
 import { NumberUtils } from "app/utils";
-import { AppInsightsPerformanceMetrics, PerformanceMetric } from "../performance-data";
 import { BatchUsageMetrics, PerformanceGraphComponent } from "../performance-graph.component";
 
 @Component({
@@ -26,13 +26,13 @@ export class MemoryUsageGraphComponent extends PerformanceGraphComponent impleme
         if (changes.data) {
             this._clearMetricSubs();
 
-            this._metricSubs.push(this.data.observeMetric(AppInsightsPerformanceMetrics.memoryUsed)
+            this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.memoryUsed)
                 .subscribe((data) => {
                     this.memUsages = data;
                     this._updateStatus();
                     this.updateData();
                 }));
-            this._metricSubs.push(this.data.observeMetric(AppInsightsPerformanceMetrics.memoryAvailable)
+            this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.memoryAvailable)
                 .subscribe((data) => {
                     const last = data.last();
                     if (last) {

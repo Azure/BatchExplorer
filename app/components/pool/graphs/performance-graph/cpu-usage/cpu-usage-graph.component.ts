@@ -1,15 +1,8 @@
 import { Component, OnChanges } from "@angular/core";
-import { AppInsightsPerformanceMetrics } from "../performance-data";
 import { BatchUsageMetrics, PerformanceGraphComponent } from "../performance-graph.component";
 
+import { BatchPerformanceMetricType, PerformanceMetric } from "app/models/app-insights/metrics-result";
 import "./cpu-usage-graph.scss";
-
-interface CpuUsage {
-    time: Date;
-    value: number;
-    cpuCount: number;
-    usages: number[];
-}
 
 @Component({
     selector: "bl-cpu-usage-graph",
@@ -20,9 +13,12 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
     public unit = "%";
     public metric = BatchUsageMetrics.cpu;
 
-    public cpuUsages: CpuUsage[] = [];
+    public cpuUsages: PerformanceMetric[] = [];
+    public individualCpuUsages: PerformanceMetric[][] = [];
+    public cpuCount = 1;
     public showOverallUsage = true;
-    public lastCpuUsage: CpuUsage;
+    public lastCpuUsage: PerformanceMetric;
+    public lastIndividualCpuUsage: PerformanceMetric[];
 
     constructor() {
         super();
@@ -33,20 +29,22 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
 
         if (changes.data) {
             this._clearMetricSubs();
-            this._metricSubs.push(this.data.observeMetric(AppInsightsPerformanceMetrics.cpuUsage).subscribe((data) => {
-                this.cpuUsages = data.map((usage) => {
-                    const details = JSON.parse(usage.details);
-                    return {
-                        time: usage.time,
-                        value: usage.value,
-                        cpuCount: Number(details["cpu_count"]),
-                        usages: this._parseIndividualCpuUsage(details["usages"]),
-                    };
-                });
-                this.lastCpuUsage = this.cpuUsages.last();
+            this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.cpuUsage).subscribe((data) => {
+                this.cpuUsages = data;
                 this._updateStatus();
                 this.updateData();
+                this.lastCpuUsage = this.cpuUsages.last();
             }));
+            this._metricSubs.push(this.data.observeMetric(BatchPerformanceMetricType.individualCpuUsage)
+                .subscribe((data) => {
+                    this.individualCpuUsages = data as any;
+                    if (data) {
+                        this.cpuCount = this.individualCpuUsages.length;
+                    }
+                    this.lastIndividualCpuUsage = this.individualCpuUsages.map(x => x.last());
+                    this._updateStatus();
+                    this.updateData();
+                }));
         }
     }
 
@@ -63,9 +61,6 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
         this.updateData();
     }
 
-    private _parseIndividualCpuUsage(value: string) {
-        return value.split(",").map(x => Number(x));
-    }
     private _showOverallCpuUsage() {
         this.datasets = [
             {
@@ -89,14 +84,12 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
             return;
         }
 
-        const cpuCount = this.cpuUsages.first().cpuCount;
-
-        this.datasets = new Array(cpuCount).fill(0).map((_, cpuN) => {
+        this.datasets = this.individualCpuUsages.map((usages, cpuN) => {
             return {
-                data: this.cpuUsages.map(x => {
+                data: usages.map(x => {
                     return {
                         x: x.time,
-                        y: x.usages[cpuN],
+                        y: x.value,
                     };
                 }),
                 fill: false,

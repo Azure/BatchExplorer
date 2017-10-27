@@ -27,7 +27,7 @@
         <div class="status">{{cpuUsage.status | async}}</div>
         <bl-cpu-usage-graph #cpuUsage [data]="performanceData" [interactive]="false" class="small-preview"></bl-cpu-usage-graph>
     </div>
-     <div class="preview" (click)="focusGraph(AvailableGraph.Memory)" [class.focused]="focusedGraph === AvailableGraph.Memory">
+    <div class="preview" (click)="focusGraph(AvailableGraph.Memory)" [class.focused]="focusedGraph === AvailableGraph.Memory">
         <div class="label">Memory</div>
         <div class="status">{{memUsage.status | async}}</div>
         <bl-memory-usage-graph #memUsage [data]="performanceData" [interactive]="false" class="small-preview"></bl-memory-usage-graph>
@@ -48,6 +48,7 @@
                 <mat-option [value]="historyLength.OneMinute">1 Minute</mat-option>
                 <mat-option [value]="historyLength.TenMinute">10 Minutes</mat-option>
                 <mat-option [value]="historyLength.OneHour">1 Hour</mat-option>
+                <mat-option [value]="historyLength.OnDay">24 Hour</mat-option>
             </mat-select>
         </mat-form-field>
     </div>

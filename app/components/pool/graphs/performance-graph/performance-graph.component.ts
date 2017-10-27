@@ -2,7 +2,7 @@ import { Component, Input, OnChanges } from "@angular/core";
 import { BehaviorSubject, Subscription } from "rxjs";
 
 import { NumberUtils } from "app/utils";
-import { AppInsightsPerformanceMetrics, PerformanceData, PerformanceMetric } from "./performance-data";
+import { PerformanceData } from "./performance-data";
 import "./performance-graph.scss";
 
 export enum BatchUsageMetrics {
@@ -12,24 +12,6 @@ export enum BatchUsageMetrics {
     network = "network",
 }
 
-export const performanceGraphs = {
-    [BatchUsageMetrics.cpu]: {
-        metrics: [AppInsightsPerformanceMetrics.cpuUsage],
-        unit: "%",
-    },
-    [BatchUsageMetrics.memory]: {
-        metrics: [AppInsightsPerformanceMetrics.memoryUsed],
-        unit: "B",
-    },
-    [BatchUsageMetrics.disk]: {
-        metrics: [AppInsightsPerformanceMetrics.diskRead, AppInsightsPerformanceMetrics.diskWrite],
-        unit: "Bps",
-    },
-    [BatchUsageMetrics.network]: {
-        metrics: [AppInsightsPerformanceMetrics.networkRead, AppInsightsPerformanceMetrics.networkWrite],
-        unit: "Bps",
-    },
-};
 @Component({
     selector: "bl-performance-graph",
     templateUrl: "performance-graph.html",
@@ -40,6 +22,7 @@ export class PerformanceGraphComponent implements OnChanges {
     @Input() public metric: BatchUsageMetrics = BatchUsageMetrics.disk;
 
     public type = "line";
+    public unit = "";
     public datasets: Chart.ChartDataSets[] = [];
     public options = {};
     public status = new BehaviorSubject("");
@@ -50,12 +33,9 @@ export class PerformanceGraphComponent implements OnChanges {
      */
     public max = undefined;
 
-    public history: StringMap<PerformanceMetric[]> = {};
     protected _metricSubs: Subscription[] = [];
-    private _metrics: AppInsightsPerformanceMetrics[] = [];
 
     constructor() {
-        this._metrics = performanceGraphs[this.metric].metrics;
         this.updateOptions();
     }
 
@@ -88,7 +68,7 @@ export class PerformanceGraphComponent implements OnChanges {
                         autoSkip: true,
                         callback: (value) => {
                             if (value % 1 === 0) {
-                                return NumberUtils.prettyMagnitude(value, performanceGraphs[this.metric].unit);
+                                return NumberUtils.prettyMagnitude(value, this.unit);
                             }
                         },
                     },

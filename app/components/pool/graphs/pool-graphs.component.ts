@@ -29,6 +29,7 @@ const historyLength = {
     OneMinute: 1,
     TenMinute: 10,
     OneHour: 60,
+    OnDay: 60 * 24,
 };
 
 const refreshRate = 5000;
@@ -103,6 +104,8 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
         this.selectedHistoryLength.valueChanges.subscribe((value) => {
             this.runningNodesHistory.setHistorySize(value);
             this.runningTaskHistory.setHistorySize(value);
+            this.performanceData.historySize = value;
+            this.performanceData.update();
         });
         this._polls.push(this.data.startPoll(refreshRate, true));
 
