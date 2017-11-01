@@ -113,7 +113,7 @@
                     <div tp-column>Value</div>
                 </bl-table-property-header>
                 <bl-table-property-row *ngFor="let setting of prepTask.environmentSettings">
-                    <bl-tp-cell [value]="setting.key"></bl-tp-cell>
+                    <bl-tp-cell [value]="setting.name"></bl-tp-cell>
                     <bl-tp-cell [value]="setting.value"></bl-tp-cell>
                 </bl-table-property-row>
             </bl-table-property>
@@ -142,7 +142,7 @@
                     <div tp-column>Value</div>
                 </bl-table-property-header>
                 <bl-table-property-row *ngFor="let setting of releaseTask.environmentSettings">
-                    <bl-tp-cell [value]="setting.key"></bl-tp-cell>
+                    <bl-tp-cell [value]="setting.name"></bl-tp-cell>
                     <bl-tp-cell [value]="setting.value"></bl-tp-cell>
                 </bl-table-property-row>
             </bl-table-property>

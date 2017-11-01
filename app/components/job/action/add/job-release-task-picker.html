@@ -1,0 +1,34 @@
+<div [formGroup]="form">
+    <div class="form-element">
+        <mat-form-field>
+            <input matInput formControlName="id" placeholder="id">
+        </mat-form-field>
+        <bl-error controlName="id" code="required">Id is a required field</bl-error>
+    </div>
+    <div class="form-element">
+        <mat-form-field>
+            <textarea matInput matTextareaAutosize matAutosizeMinRows="1" blSingleLineTextarea formControlName="commandLine" placeholder="Command line"></textarea>
+        </mat-form-field>
+        <bl-error controlName="commandLine" code="required">Command line is a required field</bl-error>
+    </div>
+    <div formGroupName="constraints">
+        <div class="form-element">
+            <mat-form-field>
+                <input matInput formControlName="maxTaskRetryCount" placeholder="Max retry count" type="number">
+            </mat-form-field>
+            <bl-error controlName="maxTaskRetryCount" code="validateRange">Retry count values can range from -1 to 100</bl-error>
+        </div>
+    </div>
+    <div class="form-element pad-top">
+        <bl-user-identity-picker formControlName="userIdentity" [userAccounts]="userAccounts">
+        </bl-user-identity-picker>
+    </div>
+    <div class="form-element pad-top">
+        <h4>Resource files</h4>
+        <bl-resourcefile-picker formControlName="resourceFiles"></bl-resourcefile-picker>
+    </div>
+    <div class="form-element pad-top">
+        <h4>Environment variables</h4>
+        <bl-key-value-picker formControlName="environmentSettings"></bl-key-value-picker>
+    </div>
+</div>
