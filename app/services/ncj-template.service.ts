@@ -4,7 +4,13 @@ import { List } from "immutable";
 import * as path from "path";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import { Application, ApplicationAction, NcjJobTemplate, NcjPoolTemplate, NcjTemplateType } from "app/models";
+import {
+    Application,
+    ApplicationAction,
+    NcjJobTemplate, NcjPoolTemplate,
+    NcjTemplateMode,
+    NcjTemplateType,
+} from "app/models";
 import { DateUtils, SecureUtils, log } from "app/utils";
 
 const branch = "master";
@@ -22,7 +28,7 @@ export interface RecentSubmissionParams {
     name: string;
     jobTemplate?: NcjJobTemplate;
     poolTemplate?: NcjPoolTemplate;
-    mode: any;
+    mode: NcjTemplateMode;
     jobParams?: StringMap<any>;
     poolParams?: StringMap<any>;
     pickedPool?: string;
@@ -152,6 +158,22 @@ export class NcjTemplateService {
         return this._ready.map(() => {
             return this._recentSubmission.value.filter(x => x.id === id).first();
         }).shareReplay(1);
+    }
+
+    public createParameterFileFromSubmission(path: string, submission: RecentSubmission) {
+        const content = JSON.stringify(this._parameterData(submission));
+        return this.fs.saveFile(path, content);
+    }
+
+    public _parameterData(submission: RecentSubmission) {
+        switch (submission.mode) {
+            case NcjTemplateMode.NewPool:
+                return submission.poolParams;
+            case NcjTemplateMode.ExistingPoolAndJob:
+                return Object.assign({}, submission.jobParams, submission.pickedPool);
+            case NcjTemplateMode.NewPoolAndJob:
+                return Object.assign({}, submission.jobParams, submission.poolParams);
+        }
     }
 
     private _checkIfDataNeedReload(): Promise<boolean> {
