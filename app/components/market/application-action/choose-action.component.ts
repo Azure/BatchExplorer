@@ -47,7 +47,6 @@ export class ChooseActionComponent implements OnInit, OnDestroy {
     private _updateActions() {
         this.templateService.getApplication(this.applicationId).subscribe((application) => {
             this.application = application;
-            console.log("application: ", application);
         });
         this.templateService.listActions(this.applicationId).subscribe((actions) => {
             this.actions = actions;
