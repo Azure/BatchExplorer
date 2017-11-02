@@ -10,6 +10,7 @@ import { DateUtils, SecureUtils, log } from "app/utils";
 const branch = "master";
 const repo = "BatchLabs-data";
 const dataUrl = `https://github.com/Azure/${repo}/archive/${branch}.zip`;
+const remoteFileUrl = `https://github.com/Azure/${repo}/blob/${branch}/ncj`;
 const cacheTime = 1; // In days
 const recentSubmitKey = "ncj-recent-submit";
 const maxRecentSubmissions = 10;
@@ -84,7 +85,11 @@ export class NcjTemplateService {
     public listApplications(): Observable<List<Application>> {
         return this.get("index.json").map((apps) => {
             return List<Application>(apps.map(data => {
-                return new Application({ ...data, icon: this.getApplicationIcon(data.id) });
+                return new Application({
+                    ...data,
+                    icon: this.getApplicationIcon(data.id),
+                    readme: this.getApplicationReadme(data.id),
+                });
             }));
         }).share();
     }
@@ -92,7 +97,11 @@ export class NcjTemplateService {
     public getApplication(applicationId: string): Observable<Application> {
         return this.get("index.json").map((apps) => {
             const data = apps.filter(app => app.id === applicationId).first();
-            return data && new Application({ ...data, icon: this.getApplicationIcon(data.id) });
+            return data && new Application({
+                ...data,
+                icon: this.getApplicationIcon(data.id),
+                readme: this.getApplicationReadme(data.id),
+            });
         }).share();
     }
 
@@ -102,6 +111,14 @@ export class NcjTemplateService {
      */
     public getApplicationIcon(applicationId: string): string {
         return "file:" + this.getFullPath(`${applicationId}/icon.svg`);
+    }
+
+    /**
+     * Return the application icon path
+     * @param applicationId Id of the application
+     */
+    public getApplicationReadme(applicationId: string): string {
+        return `${remoteFileUrl}/${applicationId}/readme.md`;
     }
 
     public listActions(applicationId: string): Observable<List<ApplicationAction>> {
