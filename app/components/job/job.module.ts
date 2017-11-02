@@ -7,6 +7,7 @@ import { JobAdvancedFilterComponent } from "app/components/job/browse/filter/job
 import { JobListComponent } from "app/components/job/browse/job-list.component";
 import { JobDetailsModule } from "app/components/job/details";
 import { JobHomeComponent } from "app/components/job/home/job-home.component";
+import { TaskBaseModule } from "app/components/task/base";
 import { JobGraphsModule } from "./graphs";
 import { JobHookTaskModule } from "./job-hook-task";
 
@@ -15,7 +16,7 @@ const components = [
 ];
 
 const modules = [
-    JobActionModule, JobDetailsModule, JobHookTaskModule, JobGraphsModule, ...commonModules,
+    JobActionModule, JobDetailsModule, JobHookTaskModule, JobGraphsModule, TaskBaseModule, ...commonModules,
 ];
 
 @NgModule({
