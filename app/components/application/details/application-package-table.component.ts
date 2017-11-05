@@ -1,5 +1,5 @@
-import { Component, Input, OnChanges, ViewContainerRef } from "@angular/core";
-import { MatDialog, MatDialogConfig } from "@angular/material";
+import { Component, Input, OnChanges } from "@angular/core";
+import { MatDialog } from "@angular/material";
 import { autobind } from "core-decorators";
 import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -53,8 +53,7 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
         protected dialog: MatDialog,
         private applicationService: ApplicationService,
         private sidebarManager: SidebarManager,
-        private taskManager: BackgroundTaskService,
-        private viewContainerRef: ViewContainerRef) {
+        private taskManager: BackgroundTaskService) {
 
         super(dialog);
         this._stateMap = new Map();
@@ -117,10 +116,7 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
 
     @autobind()
     public activateActiveItem() {
-        let config = new MatDialogConfig();
-        config.viewContainerRef = this.viewContainerRef;
-
-        const dialogRef = this.dialog.open(ActivatePackageDialogComponent, config);
+        const dialogRef = this.dialog.open(ActivatePackageDialogComponent);
         dialogRef.componentInstance.applicationId = this.application.id;
         dialogRef.componentInstance.packageVersion = this.activatedItem;
         dialogRef.afterClosed().subscribe((obj) => {
