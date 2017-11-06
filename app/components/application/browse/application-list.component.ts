@@ -43,7 +43,7 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
 
     constructor(
         router: Router,
-        private dialog: MatDialog,
+        protected dialog: MatDialog,
         private applicationService: ApplicationService,
         private taskManager: BackgroundTaskService,
         private sidebarManager: SidebarManager) {
