@@ -24,15 +24,13 @@ export class BatchLabsApplication {
      * Start the app by showing the splash screen
      */
     public start() {
-        const requestFilter = { urls: ["https://*.batch.azure.com/*"] };
+        const requestFilter = { urls: ["https://*"] };
         session.defaultSession.webRequest.onBeforeSendHeaders(requestFilter, (details, callback) => {
-            // Filter above doesn't seem to work
             if (details.url.indexOf("batch.azure.com") !== -1) {
                 details.requestHeaders["Origin"] = "http://localhost";
                 details.requestHeaders["Cache-Control"] = "no-cache";
             }
             details.requestHeaders["User-Agent"] = `BatchLabs/${Constants.version}`;
-
             callback({ cancel: false, requestHeaders: details.requestHeaders });
         });
 
