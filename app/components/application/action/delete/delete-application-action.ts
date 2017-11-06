@@ -15,6 +15,7 @@ export class DeleteApplicationAction extends LongRunningDeleteAction {
     }
 
     public deleteAction(id: string) {
+        // return obs that deletes versions and then the main app.
         return this.applicationService.delete(id);
     }
 

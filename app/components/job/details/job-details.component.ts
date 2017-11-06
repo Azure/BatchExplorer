@@ -5,7 +5,7 @@ import { autobind } from "core-decorators";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
-import { Job } from "app/models";
+import { Job, JobState } from "app/models";
 import { JobDecorator } from "app/models/decorators";
 import { JobParams, JobService } from "app/services";
 import { EntityView } from "app/services/core";
@@ -37,7 +37,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     public job: Job;
     public decorator: JobDecorator;
     public data: EntityView<Job, JobParams>;
-
+    public JobState = JobState;
     public hasHookTask = false;
 
     private _paramsSubscriber: Subscription;
