@@ -33,7 +33,6 @@ export class StorageErrorDisplayComponent implements OnInit, OnDestroy {
     public ngOnInit() {
         this._currentAccountSub = this.accountService.currentAccount.subscribe((account) => {
             this._batchAccount = account;
-            console.log("Account???", account.hasArmAutoStorage(), account.autoStorage);
             this.hasAutoStorage = Boolean(this.noClassic ? account.hasArmAutoStorage() : account.autoStorage);
             this.isClassic = !account.hasArmAutoStorage();
 
