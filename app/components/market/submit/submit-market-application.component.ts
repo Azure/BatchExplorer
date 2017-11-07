@@ -2,10 +2,9 @@ import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Observable } from "rxjs";
 
-import { NcjJobTemplate, NcjPoolTemplate } from "app/models";
+import { NcjJobTemplate, NcjPoolTemplate, NcjTemplateMode } from "app/models";
 import { NcjTemplateService } from "app/services";
 import { log } from "app/utils";
-import { Modes } from "./market-application.model";
 import "./submit-market-application.scss";
 
 @Component({
@@ -16,8 +15,8 @@ export class SubmitMarketApplicationComponent implements OnInit {
     public static breadcrumb() {
         return { name: "Submit" };
     }
-    public Modes = Modes;
-    public modeState = Modes.None;
+    public NcjTemplateMode = NcjTemplateMode;
+    public modeState = NcjTemplateMode.None;
     public title: string;
     public jobTemplate: NcjJobTemplate;
     public poolTemplate: NcjPoolTemplate;
