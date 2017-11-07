@@ -4,10 +4,10 @@ import { Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
-import { NcjJobTemplate, NcjParameter, NcjPoolTemplate, ServerError } from "app/models";
+import { NcjJobTemplate, NcjParameter, NcjPoolTemplate, NcjTemplateMode, ServerError } from "app/models";
 import { NcjSubmitService, NcjTemplateService } from "app/services";
 import { exists, log } from "app/utils";
-import { Modes, NcjParameterWrapper } from "./market-application.model";
+import { NcjParameterWrapper } from "./market-application.model";
 import "./submit-ncj-template.scss";
 
 @Component({
@@ -25,10 +25,10 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges {
     @Input() public initialJobParams: StringMap<any>;
     @Input() public initialPoolParams: StringMap<any>;
     @Input() public initialPickedPool: string;
-    @Input() public initialModeState: Modes;
+    @Input() public initialModeState: NcjTemplateMode;
 
-    public Modes = Modes;
-    public modeState = Modes.None;
+    public NcjTemplateMode = NcjTemplateMode;
+    public modeState = NcjTemplateMode.None;
     public form: FormGroup;
     public multipleModes = false;
 
@@ -56,7 +56,7 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges {
 
         if (changes.jobTemplate || changes.poolTemplate) {
             if (!this.multipleModes) {
-                this.modeState = this.poolTemplate ? Modes.NewPool : Modes.ExistingPoolAndJob;
+                this.modeState = this.poolTemplate ? NcjTemplateMode.NewPool : NcjTemplateMode.ExistingPoolAndJob;
             }
 
             this._processParameters();
@@ -65,18 +65,19 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges {
     }
 
     public get showPoolForm(): boolean {
-        return this.modeState === Modes.NewPoolAndJob || this.modeState === Modes.NewPool;
+        return this.modeState === NcjTemplateMode.NewPoolAndJob || this.modeState === NcjTemplateMode.NewPool;
     }
 
     public get showPoolPicker(): boolean {
-        return this.modeState === Modes.ExistingPoolAndJob;
+        return this.modeState === NcjTemplateMode.ExistingPoolAndJob;
     }
 
     public get showJobForm(): boolean {
-        return this.modeState === Modes.NewPoolAndJob || this.modeState === Modes.ExistingPoolAndJob;
+        return this.modeState === NcjTemplateMode.NewPoolAndJob
+            || this.modeState === NcjTemplateMode.ExistingPoolAndJob;
     }
 
-    public pickMode(mode: Modes) {
+    public pickMode(mode: NcjTemplateMode) {
         this.modeState = mode;
     }
 
@@ -88,9 +89,9 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges {
     }
 
     public isFormValid() {
-        return (this.modeState === Modes.NewPoolAndJob && this.jobParams.valid && this.poolParams.valid) ||
-            (this.modeState === Modes.ExistingPoolAndJob && this.jobParams.valid && this.pickedPool.valid) ||
-            (this.modeState === Modes.NewPool && this.poolParams.valid);
+        return (this.modeState === NcjTemplateMode.NewPoolAndJob && this.jobParams.valid && this.poolParams.valid) ||
+            (this.modeState === NcjTemplateMode.ExistingPoolAndJob && this.jobParams.valid && this.pickedPool.valid) ||
+            (this.modeState === NcjTemplateMode.NewPool && this.poolParams.valid);
     }
 
     @autobind()
@@ -98,9 +99,9 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges {
         this.error = null;
         let method;
         const methods = {
-            [Modes.NewPoolAndJob]: this._createJobWithAutoPool,
-            [Modes.ExistingPoolAndJob]: this._createJob,
-            [Modes.NewPool]: this._createPool,
+            [NcjTemplateMode.NewPoolAndJob]: this._createJobWithAutoPool,
+            [NcjTemplateMode.ExistingPoolAndJob]: this._createJob,
+            [NcjTemplateMode.NewPool]: this._createPool,
         };
         method = methods[this.modeState];
 

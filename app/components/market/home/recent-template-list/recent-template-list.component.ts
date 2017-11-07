@@ -1,7 +1,8 @@
 import { Component, OnDestroy } from "@angular/core";
+import { remote } from "electron";
 import { Subscription } from "rxjs";
 
-import { Modes } from "app/components/market/submit";
+import { NcjTemplateMode } from "app/models";
 import { NcjTemplateService, RecentSubmission } from "app/services";
 import "./recent-template-list.scss";
 
@@ -25,14 +26,36 @@ export class RecentTemplateListComponent implements OnDestroy {
         this._subs = [];
     }
 
-    public formatMode(mode: Modes) {
+    public createParameterFile(recent: RecentSubmission) {
+        const dialog = remote.dialog;
+        const localPath = dialog.showSaveDialog({
+            buttonLabel: "Save",
+            defaultPath: this._getParameterFileName(recent.mode),
+        });
+
+        if (localPath) {
+            this.templateService.createParameterFileFromSubmission(localPath, recent);
+        }
+    }
+
+    public formatMode(mode: NcjTemplateMode) {
         switch (mode) {
-            case Modes.NewPool:
-                return "Pool";
-            case Modes.ExistingPoolAndJob:
-                return "Job";
-            case Modes.NewPoolAndJob:
-                return "Job with auto pool";
+            case NcjTemplateMode.NewPool:
+                return "Pool for later use";
+            case NcjTemplateMode.ExistingPoolAndJob:
+                return "Job with existing pool";
+            case NcjTemplateMode.NewPoolAndJob:
+                return "Job with auto-pool";
+        }
+    }
+
+    private _getParameterFileName(mode: NcjTemplateMode) {
+        switch (mode) {
+            case NcjTemplateMode.NewPool:
+                return "pool.parameters.json";
+            case NcjTemplateMode.ExistingPoolAndJob:
+            case NcjTemplateMode.NewPoolAndJob:
+                return "job.parameters.json";
         }
     }
 }
