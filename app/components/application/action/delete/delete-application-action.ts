@@ -1,4 +1,4 @@
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
 import { WaitForDeletePoller } from "app/components/core/pollers";
@@ -14,9 +14,21 @@ export class DeleteApplicationAction extends LongRunningDeleteAction {
         super("Application", applicationIds);
     }
 
+    /**
+     * Delete the package versions first and then remove the parent
+     * application container.
+     */
     public deleteAction(id: string) {
-        // return obs that deletes versions and then the main app.
-        return this.applicationService.delete(id);
+        return this.applicationService.get(id)
+            .flatMap((app) => {
+                const packageArray = app.packages.toArray();
+                const observable = Observable.interval(100).take(packageArray.length);
+                return observable.flatMap((i) => {
+                    return this.applicationService.deletePackage(id, packageArray[i].version);
+                });
+            }).last().flatMap(() => {
+                return this.applicationService.delete(id);
+            }).share();
     }
 
     protected waitForDelete(id: string, taskManager?: BackgroundTaskService) {
