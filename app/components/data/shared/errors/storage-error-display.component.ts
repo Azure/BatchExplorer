@@ -5,7 +5,7 @@ import { Subscription } from "rxjs";
 import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";
 import { SidebarManager } from "app/components/base/sidebar";
 import { AccountResource } from "app/models";
-import { AccountService, StorageService } from "app/services";
+import { AccountService } from "app/services";
 
 @Component({
     selector: "bl-storage-error-display",

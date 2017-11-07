@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { AutoStorageAccount, ServerError, StorageKeys, StorageKeysAttributes } from "app/models";
-import { ArmResourceUtils, StorageUtils } from "app/utils";
+import { ArmResourceUtils } from "app/utils";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
 import { StorageAccountSharedKeyOptions, StorageClientProxyFactory } from "./storage";
