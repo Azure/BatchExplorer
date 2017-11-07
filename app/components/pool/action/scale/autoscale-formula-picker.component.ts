@@ -42,7 +42,7 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
         secondPane: {
             minSize: 205,
         },
-        initialDividerPosition: 600,
+        initialDividerPosition: -205,
     };
 
     public customFormulaMode = true;
