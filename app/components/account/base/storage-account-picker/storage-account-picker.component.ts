@@ -80,6 +80,7 @@ export class StorageAccountPickerComponent implements OnInit, ControlValueAccess
     private _processStorageAccounts(storageAccounts: List<StorageAccount>) {
         const prefered = [];
         const others = [];
+        console.log("Accounts", storageAccounts.toJS());
         storageAccounts.forEach((account) => {
             if (account.location.toLowerCase() === this.account.location.toLowerCase()) {
                 prefered.push(account);
