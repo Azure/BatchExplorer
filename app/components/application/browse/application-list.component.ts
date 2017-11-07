@@ -91,15 +91,6 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
         this.data.fetchNext();
     }
 
-    public deleteSelected() {
-        this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeleteApplicationAction(this.applicationService, this.selectedItems);
-            task.start(backgroundTask);
-
-            return task.waitingDone;
-        });
-    }
-
     public contextmenu(application: BatchApplication) {
         return new ContextMenu([
             new ContextMenuItem({
