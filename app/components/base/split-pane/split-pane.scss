@@ -4,10 +4,12 @@ bl-split-pane {
     position: relative;
     overflow: hidden;
     > .first-pane-container {
-        overflow: hidden;
+        overflow-x: hidden;
+        overflow-y: auto;
     }
 
     > .second-pane-container {
-        overflow: hidden;
+        overflow-x: hidden;
+        overflow-y: auto;
     }
 }
