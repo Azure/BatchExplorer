@@ -8,6 +8,7 @@ import { DialogService } from "app/components/base/dialogs";
 import { AutoscaleFormula, Pool } from "app/models";
 import { AutoscaleFormulaService, PoolService } from "app/services";
 import { PredefinedFormulaService } from "app/services/predefined-formula.service";
+import { log } from "app/utils";
 import "./autoscale-formula-picker.scss";
 
 @Component({
@@ -110,13 +111,12 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
     }
 
     public evaluateFormula() {
-        if (!this.canEvaluateFormula) {
+        if (!this.canEvaluateFormula || !this.autoscaleFormulaValue) {
             return;
         }
 
         this.poolService.evaluateAutoScale(this.pool.id, this.autoscaleFormulaValue).subscribe({
             next: (value: any) => {
-                console.log("Got value...", value);
                 if (value.results) {
                     this.evaluationResults = value.results.split(";");
                 } else {
@@ -125,7 +125,7 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
                 this.evaluationError = value.error;
             },
             error: (error) => {
-                console.log("Error?", error);
+                log.error("Error while evaluating autoscale formula", error.original);
             },
         });
     }
