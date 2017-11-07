@@ -3,7 +3,7 @@ import { BatchServiceClient, BatchServiceModels } from "azure-batch";
 import { BatchResult } from "./models";
 import { ListProxy, ProxyUtil, mapGet, wrapOptions } from "./shared";
 
-export  class PoolProxy {
+export class PoolProxy {
 
     constructor(private client: BatchServiceClient) { }
 
@@ -81,5 +81,9 @@ export  class PoolProxy {
 
     public disableAutoScale(poolId: string, options?: any): Promise<any> {
         return this.client.pool.disableAutoScale(poolId, wrapOptions(options));
+    }
+
+    public evaluateAutoScale(poolId: string, formula: string, options?: any): Promise<any> {
+        return this.client.pool.evaluateAutoScale(poolId, formula, wrapOptions(options));
     }
 }

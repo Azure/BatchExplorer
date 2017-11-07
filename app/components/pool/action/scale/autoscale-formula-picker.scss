@@ -3,11 +3,9 @@
 .CodeMirror {
     display:block;
     width:100%;
-    border-right: 1px solid $border-color;
 }
 
 .autoscale-formula-picker {
-    display: flex;
     width: 100%;
     max-width: 100%;
     overflow: hidden;
@@ -20,7 +18,7 @@
     }
 
     > .formula-managment {
-        flex-basis: 200px;
+        overflow-x: hidden;
         overflow-y: auto;
     }
 
@@ -74,7 +72,7 @@
 
 
 bl-autoscale-formula-picker {
-    display: flex;
+
     .CodeMirror {
         font-size: 12px;
         height: 300px !important;
@@ -101,5 +99,18 @@ bl-autoscale-formula-picker {
 
     .cm-builtin {
         color: map-get($primary, 800);
+    }
+
+    .evaluation-error {
+        border-bottom: 1px solid $border-color;
+        border-right: 1px solid $border-color;
+        border-left: 1px solid $border-color;
+        color: map-get($danger, 500);
+        padding: 5px;
+    }
+
+    .evaluate-formula-results {
+        overflow-y: hidden;
+        word-wrap: break-word;
     }
 }
