@@ -13,6 +13,7 @@
             </bl-button-group>
         </bl-summary-card>
         <bl-start-task-error-display [pool]="pool" [nodeId]="nodeId" [startTaskInfo]="node?.startTaskInfo"></bl-start-task-error-display>
+        <bl-node-error-display [node]="node"></bl-node-error-display>
         <mat-card class="details">
             <bl-tab-group>
                 <bl-tab key="files">

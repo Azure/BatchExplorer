@@ -137,11 +137,14 @@ bl-property-group {
             font-size: $value-font-size;
             padding: 3px 8px;
             width: $value-width;
-            height: $property-height;
+            min-height: $property-height;
             margin: 0;
             text-overflow: ellipsis;
-            white-space: nowrap;
             overflow: hidden;
+
+            &:not(.wrap) {
+                white-space: nowrap;
+            }
 
             .fa {
                 font-size: 16px !important;

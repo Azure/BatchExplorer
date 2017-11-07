@@ -351,6 +351,13 @@ export class StorageService {
     }
 
     /**
+     * Allow access to the hasArmAutoStorage observable in the base client
+     */
+    public get hasArmAutoStorage(): Observable<boolean> {
+        return this.storageClient.hasArmAutoStorage;
+    }
+
+    /**
      * Allow a component to refresh the access keys
      */
     public clearCurrentStorageKeys(): void {

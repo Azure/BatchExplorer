@@ -37,7 +37,11 @@
                 <bl-row *ngFor="let account of otherAccounts" [key]="account.id.toLowerCase()">
                     <bl-cell [value]="account.name"></bl-cell>
                     <bl-cell [value]="account.location"></bl-cell>
-                    <bl-cell [value]="account.isClassic">{{account.isClassic ? "Classic" : ""}}</bl-cell>
+                    <bl-cell [value]="account.isClassic">
+                        <span class="classic-warning" matTooltip="Classic storage accounts are not compatible with data and gallery" *ngIf="account.isClassic">
+                            <span class="fa fa-warning"></span> Classic
+                        </span>
+                    </bl-cell>
                 </bl-row>
             </bl-table>
         </div>

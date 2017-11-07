@@ -4,6 +4,7 @@
         <h1>
             <img class="logo" [src]="application.icon" height="30" width="30" alt="logo" *ngIf="application?.icon">
             <span>Action selection for <span [title]="application.description">{{application?.name}}</span></span>
+            <span>(<a (click)="openLink(application?.readme)" href="javascript:void(0)">view readme</a>)</span>
         </h1>
         <div class="actions">
             <mat-card *ngFor="let action of actions" class="action" [routerLink]="['/market', applicationId, 'actions', action.id, 'submit']">
