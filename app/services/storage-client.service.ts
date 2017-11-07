@@ -22,6 +22,7 @@ export interface StorageKeyCachedItem {
 @Injectable()
 export class StorageClientService {
     public hasAutoStorage: Observable<boolean>;
+    public hasArmAutoStorage: Observable<boolean>;
 
     private _currentAccountId: string;
     private _currentStorageAccountId: string;
@@ -36,7 +37,11 @@ export class StorageClientService {
 
         this.accountService.currentAccountId.subscribe(x => this._currentAccountId = x);
         this.hasAutoStorage = this.accountService.currentAccount.map((account) => {
-            return Boolean(account.properties && account.properties.autoStorage);
+            return Boolean(account.autoStorage);
+        });
+
+        this.hasArmAutoStorage = this.accountService.currentAccount.map((account) => {
+            return account.hasArmAutoStorage();
         });
 
         this.accountService.currentAccount.subscribe((account) => {
