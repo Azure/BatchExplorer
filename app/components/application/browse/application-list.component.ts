@@ -5,7 +5,6 @@ import { autobind } from "core-decorators";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { BackgroundTaskService } from "app/components/base/background-task";
 import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListItemStatus } from "app/components/base/quick-list";
@@ -15,7 +14,7 @@ import { ApplicationService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
-import { ApplicationEditDialogComponent, DeleteApplicationAction, DeleteApplicationDialogComponent } from "../action";
+import { ApplicationEditDialogComponent, DeleteApplicationDialogComponent } from "../action";
 
 @Component({
     selector: "bl-application-list",
@@ -45,7 +44,6 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
         router: Router,
         protected dialog: MatDialog,
         private applicationService: ApplicationService,
-        private taskManager: BackgroundTaskService,
         private sidebarManager: SidebarManager) {
 
         super();
