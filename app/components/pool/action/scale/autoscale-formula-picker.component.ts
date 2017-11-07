@@ -40,6 +40,9 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
     };
 
     public splitPaneConfig = {
+        firstPane: {
+            minSize: 200,
+        },
         secondPane: {
             minSize: 205,
         },
