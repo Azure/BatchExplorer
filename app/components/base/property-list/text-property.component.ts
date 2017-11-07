@@ -6,7 +6,7 @@ import { clipboard } from "electron";
     template: `
         <section class="one-line" (mouseenter)="showClipboard = true" (mouseleave)="showClipboard = false">
             <label>{{label}}</label>
-            <span class="value">{{value}}</span>
+            <span class="value" [title]="value">{{value}}</span>
             <span [hidden]="!showClipboard" class="clipboard" *ngIf="copyable">
                 <i class="fa fa-clipboard" (click)="copyToClipBoard()"></i>
             </span>
