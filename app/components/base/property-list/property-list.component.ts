@@ -14,7 +14,7 @@ export class PropertyListComponent {
     template: `
         <section class="one-line">
             <label>{{label}}</label>
-            <a class="value link" [routerLink]="link">{{value}}</a>
+            <a class="value link" [routerLink]="link" [title]="value">{{value}}</a>
         </section>
     `,
 })
@@ -35,7 +35,7 @@ export class LinkPropertyComponent {
     template: `
         <section class="one-line">
             <label>{{label}}</label>
-            <a class="value link" href="javascript:void(0);">{{value}}</a>
+            <a class="value link" href="javascript:void(0);" [title]="value">{{value}}</a>
         </section>
     `,
 })
