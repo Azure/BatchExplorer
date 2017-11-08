@@ -107,19 +107,17 @@ export class TerminateButtonComponent extends BaseButton {
 })
 export class DeleteButtonComponent extends BaseButton {
     @Input()
-    public entity: any;
+    public set enabled(enabled: boolean) {
+        this._enabled = enabled;
+    }
 
     @Input()
     public title: string = "Delete";
 
+    private _enabled: boolean = true;
+
     public get enabled() {
-        if (this.entity instanceof Job) {
-            return this.entity
-                && this.entity.state !== JobState.deleting
-                && this.entity.state !== JobState.terminating;
-        } else {
-            return true;
-        }
+        return this._enabled;
     }
 }
 
