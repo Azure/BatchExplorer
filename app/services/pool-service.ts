@@ -128,6 +128,12 @@ export class PoolService extends ServiceBase {
         });
     }
 
+    public evaluateAutoScale(poolId: string, options: any = {}) {
+        return this.callBatchClient((client) => client.pool.evaluateAutoScale(poolId, options), (error) => {
+            log.error("Error resizing pool: " + poolId, Object.assign({}, error));
+        });
+    }
+
     public disableAutoScale(poolId: string) {
         return this.callBatchClient((client) => client.pool.disableAutoScale(poolId), (error) => {
             log.error("Error disabling autoscale for pool: " + poolId, error);
