@@ -2,18 +2,18 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { Constants } from "app/utils";
-import { BatchClientProxyFactory, SharedKeyOptions } from "client/api";
 import { AccountService } from "./account.service";
 import { AdalService } from "./adal";
+import { BatchClientProxy, BatchClientProxyFactory } from "./batch-api";
 import { ElectronRemote } from "./electron";
+
+const factory = new BatchClientProxyFactory();
 
 @Injectable()
 export class BatchClientService {
     private _currentAccountId: string;
-    private _batchClientFactory: BatchClientProxyFactory;
 
     constructor(private adal: AdalService, private accountService: AccountService, remote: ElectronRemote) {
-        this._batchClientFactory = remote.getBatchClientFactory();
         accountService.currentAccountId.subscribe((id) => {
             this._currentAccountId = id;
         });
@@ -33,12 +33,12 @@ export class BatchClientService {
         }).share();
     }
 
-    public getForAADToken(accountUrl: string, token: string) {
-        return this._batchClientFactory.getForAADToken(accountUrl, token);
+    public getForAADToken(accountUrl: string, token: string): BatchClientProxy {
+        return factory.getForAADToken(accountUrl, token);
     }
 
-    public getForSharedKey(options: SharedKeyOptions) {
-        return this._batchClientFactory.getForSharedKey(options);
+    public getForSharedKey(options: any) {
+        return factory.getForSharedKey(options);
     }
 
     private get currentAccount() {

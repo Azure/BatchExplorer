@@ -6,7 +6,7 @@ import { BackgroundTaskService } from "app/components/base/background-task";
 import { NotificationService } from "app/components/base/notifications";
 import { BlobFilesBrowserComponent } from "app/components/file/browse";
 import { FileDropEvent } from "app/components/file/browse/file-explorer";
-import { BlobContainer } from "app/models";
+import { BlobContainer, File } from "app/models";
 import { NcjFileGroupService, StorageService } from "app/services";
 import { log } from "app/utils";
 
@@ -41,7 +41,6 @@ export class DataContainerFilesComponent implements OnDestroy {
     @autobind()
     public handleFileUpload(event: FileDropEvent) {
         const paths = event.files.map(x => x.path);
-
         return this.backgroundTaskService.startTask(`Upload files group ${this.container.name}`, (task) => {
             const observable = this.fileGroupService.addFilesToFileGroup(this.container.name, paths, event.path);
             let lastData;
@@ -54,7 +53,7 @@ export class DataContainerFilesComponent implements OnDestroy {
                     task.progress.next(100);
                     const message = `${lastData.uploaded} files were successfully uploaded to the file group`;
                     this.storageService.onFileGroupAdded.next(this.container.id);
-                    this.notificationService.success("Added files to group", message, { persist: true });
+                    this.notificationService.success("Added files to group", message);
                 },
                 error: (error) => {
                     log.error("Failed to create form group", error);
@@ -62,6 +61,17 @@ export class DataContainerFilesComponent implements OnDestroy {
             });
 
             return observable;
+        });
+    }
+
+    @autobind()
+    public handleFileDelete(files: File[]) {
+        this.storageService.deleteFilesFromContainer(this.container, files).subscribe({
+            complete: () => {
+                // tslint:disable-next-line:max-line-length
+                const message = `The files were successfully removed from the file group: ${this.container.name}`;
+                this.notificationService.success("Removed files from group", message);
+            },
         });
     }
 }

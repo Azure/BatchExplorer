@@ -24,12 +24,18 @@
             <i class="fa fa-cloud-upload fa-lg"></i><div class="label">Data</div>
         </a>
     </li>
+    <li>
+        <a href="#" routerLink="market" routerLinkActive="active" title="Gallery">
+            <i class="fa fa-cubes" aria-hidden="true"></i><div class="label">Gallery</div>
+        </a>
+    </li>
 </ul>
 <div class="spacer"></div>
 <ul class="bottom">
     <li>
         <a (click)="openSettingsContextMenu()" [title]="currentUserName" class="profile">
             <i class="fa fa-user fa-lg"></i><div class="label">Profile</div>
+            <div class="notification-overlay" *ngIf="hasNewUpdate">1</div>
         </a>
     </li>
 </ul>

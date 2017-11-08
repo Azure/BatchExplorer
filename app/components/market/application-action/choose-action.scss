@@ -1,0 +1,54 @@
+@import "app/styles/variables";
+
+bl-choose-action {
+    display: flex;
+    width: 100%;
+    height: $contentview-height;
+    background: $whitesmoke-darker;
+
+    h1 {
+        margin: 10px;
+
+        a {
+            &:hover {
+                color: $link-alt-color;
+                text-decoration: underline;
+            }
+        }
+    }
+
+    .actions {
+        width: 600px;
+    }
+
+    .action {
+        padding: 0;
+        margin: 10px;
+        display: flex;
+        cursor: pointer;
+
+        &:hover {
+            background: $whitesmoke-darker;
+        }
+
+        > .name {
+            border-right: 1px solid $border-color;
+            padding: 10px;
+            width: 200px;
+        }
+
+        > .description {
+            flex: 1;
+            padding: 10px;
+        }
+    }
+
+    .no-actions {
+        padding: 15px;
+        font-size: 16px;
+        margin: 50px auto;
+        color: $mineshaft-grey;
+        background: map-get($warn, 100);
+        width: 340px;
+    }
+}

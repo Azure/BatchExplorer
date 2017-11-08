@@ -29,6 +29,12 @@ export interface PoolScaleModel {
     autoScaleEvaluationInterval: number;
     targetDedicatedNodes: number;
     targetLowPriorityNodes: number;
+    resizeTimeout: number;
+}
+
+export interface PackageReferenceModel {
+    applicationId: string;
+    version: string;
 }
 
 export interface CreatePoolModel {
@@ -43,6 +49,7 @@ export interface CreatePoolModel {
     userAccounts: UserAccountDto[];
     taskSchedulingPolicy: NodeFillType;
     appLicenses: string[];
+    appPackages: PackageReferenceModel[];
 }
 
 export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
@@ -67,6 +74,7 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
     } else {
         data.targetDedicatedNodes = outputScale.targetDedicatedNodes;
         data.targetLowPriorityNodes = outputScale.targetLowPriorityNodes;
+        data.resizeTimeout = moment.duration({ minutes: outputScale.resizeTimeout });
     }
 
     if (output.os.source === PoolOsSources.PaaS) {
@@ -82,6 +90,9 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
         data.applicationLicenses = output.appLicenses;
     }
 
+    if (output.appPackages && output.appPackages.length > 0) {
+        data.applicationPackageReferences = output.appPackages;
+    }
     return new PoolCreateDto(data);
 }
 
@@ -101,6 +112,7 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
             enableAutoScale: pool.enableAutoScale,
             autoScaleFormula: pool.autoScaleFormula,
             autoScaleEvaluationInterval: autoScaleInterval && autoScaleInterval.asMinutes(),
+            resizeTimeout: pool.resizeTimeout && pool.resizeTimeout.asMinutes(),
         },
         maxTasksPerNode: pool.maxTasksPerNode.toString(),
         enableInterNodeCommunication: pool.enableInterNodeCommunication,
@@ -113,5 +125,6 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
         startTask: pool.startTask,
         userAccounts: pool.userAccounts || [],
         appLicenses: pool.applicationLicenses || [],
+        appPackages: pool.applicationPackageReferences,
     };
 }

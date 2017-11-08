@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
-import { MdDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material";
 import { autobind } from "core-decorators";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
@@ -26,7 +26,7 @@ export class DeletePoolDialogComponent {
     private _poolId: string;
 
     constructor(
-        public dialogRef: MdDialogRef<DeletePoolDialogComponent>,
+        public dialogRef: MatDialogRef<DeletePoolDialogComponent>,
         private poolService: PoolService,
         private jobService: JobService,
         private taskManager: BackgroundTaskService,
@@ -44,7 +44,7 @@ export class DeletePoolDialogComponent {
     }
 
     private _checkForJob() {
-        this.jobService.getOnce(this.poolId).subscribe({
+        this.jobService.get(this.poolId).subscribe({
             next: (job: Job) => {
                 this.hasJobWithSameName = job.poolId === this.poolId;
                 this.changeDetector.detectChanges();

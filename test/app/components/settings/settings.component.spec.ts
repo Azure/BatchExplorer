@@ -1,9 +1,9 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed, discardPeriodicTasks, fakeAsync, tick } from "@angular/core/testing";
 import { ReactiveFormsModule } from "@angular/forms";
-import { MaterialModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { MaterialModule } from "app/core";
 import { Observable } from "rxjs";
 
 import { ButtonComponent } from "app/components/base/buttons";

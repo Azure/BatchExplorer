@@ -1,10 +1,11 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
+import { MatDialog } from "@angular/material";
 import { Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { BackgroundTaskService } from "app/components/base/background-task";
+import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListItemStatus } from "app/components/base/quick-list";
 import { ListOrTableBase } from "app/components/base/selectable-list";
@@ -12,7 +13,8 @@ import { BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
-import { DeleteApplicationAction } from "../action";
+import { SidebarManager } from "../../base/sidebar";
+import { ApplicationEditDialogComponent, DeleteApplicationDialogComponent } from "../action";
 
 @Component({
     selector: "bl-application-list",
@@ -40,8 +42,9 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
 
     constructor(
         router: Router,
+        protected dialog: MatDialog,
         private applicationService: ApplicationService,
-        private taskManager: BackgroundTaskService) {
+        private sidebarManager: SidebarManager) {
 
         super();
 
@@ -53,7 +56,7 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
 
         this.status = this.data.status;
         this._subs.push(applicationService.onApplicationAdded.subscribe((applicationId) => {
-            this.data.loadNewItem(applicationService.getOnce(applicationId));
+            this.data.loadNewItem(applicationService.get(applicationId));
         }));
     }
 
@@ -86,13 +89,18 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
         this.data.fetchNext();
     }
 
-    public deleteSelected() {
-        this.taskManager.startTask("", (backgroundTask) => {
-            const task = new DeleteApplicationAction(this.applicationService, this.selectedItems);
-            task.start(backgroundTask);
-
-            return task.waitingDone;
-        });
+    public contextmenu(application: BatchApplication) {
+        return new ContextMenu([
+            new ContextMenuItem({
+                label: "Delete",
+                click: () => this._deleteApplication(application),
+                enabled: application.allowUpdates,
+            }),
+            new ContextMenuItem({
+                label: "Edit",
+                click: () => this._editApplication(application),
+            }),
+        ]);
     }
 
     private _filterApplications() {
@@ -105,5 +113,18 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
         this.displayedApplications = List<BatchApplication>(this.applications.filter((app) => {
             return !text || app.id.toLowerCase().indexOf(text) !== -1;
         }));
+    }
+
+    private _editApplication(application: BatchApplication) {
+        const sidebarRef = this.sidebarManager.open("edit-application", ApplicationEditDialogComponent);
+        sidebarRef.component.setValue(application);
+        sidebarRef.afterCompletion.subscribe(() => {
+            this.refresh();
+        });
+    }
+
+    private _deleteApplication(application: BatchApplication) {
+        const dialogRef = this.dialog.open(DeleteApplicationDialogComponent);
+        dialogRef.componentInstance.applicationId = application.id;
     }
 }

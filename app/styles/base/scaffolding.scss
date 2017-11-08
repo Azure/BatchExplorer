@@ -5,6 +5,10 @@ html, body, button {
     height: 100%;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 .text-left           { text-align: left; }
 .text-right          { text-align: right; }
 .text-center         { text-align: center; }

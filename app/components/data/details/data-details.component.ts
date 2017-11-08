@@ -10,7 +10,7 @@ import { BlobContainer } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";
 import { FileGroupCreateDto } from "app/models/dtos";
 import { GetContainerParams, StorageService } from "app/services";
-import { RxEntityProxy } from "app/services/core";
+import { EntityView } from "app/services/core";
 import { DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "../action";
 
 @Component({
@@ -29,7 +29,7 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
     public container: BlobContainer;
     public containerId: string;
     public decorator: ApplicationDecorator;
-    public data: RxEntityProxy<GetContainerParams, BlobContainer>;
+    public data: EntityView<BlobContainer, GetContainerParams>;
 
     private _paramsSubscriber: Subscription;
 
@@ -40,7 +40,7 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
         private sidebarManager: SidebarManager,
         private storageService: StorageService) {
 
-        this.data = this.storageService.getContainerProperties(null);
+        this.data = this.storageService.containerView();
         this.data.item.subscribe((container) => {
             this.container = container;
         });
@@ -73,7 +73,7 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
             folder: null,
         }));
 
-        sidebarRef.afterCompletition.subscribe(() => {
+        sidebarRef.afterCompletion.subscribe(() => {
             this.storageService.onFileGroupUpdated.next();
         });
     }

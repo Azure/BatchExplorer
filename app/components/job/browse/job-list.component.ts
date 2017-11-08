@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { MdDialog } from "@angular/material";
+import { MatDialog } from "@angular/material";
 import { Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Observable, Subscription } from "rxjs";
@@ -66,14 +66,14 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
 
     constructor(
         router: Router,
-        dialog: MdDialog,
+        dialog: MatDialog,
         private jobService: JobService,
         private taskManager: BackgroundTaskService) {
         super(dialog);
         this.data = this.jobService.list(this._baseOptions);
         this.status = this.data.status;
         this._onJobAddedSub = jobService.onJobAdded.subscribe((jobId) => {
-            this.data.loadNewItem(jobService.getOnce(jobId));
+            this.data.loadNewItem(jobService.get(jobId));
         });
     }
 
@@ -140,7 +140,7 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
         const dialogRef = this.dialog.open(DeleteJobDialogComponent);
         dialogRef.componentInstance.jobId = job.id;
         dialogRef.afterClosed().subscribe((obj) => {
-            this.jobService.getOnce(job.id);
+            this.jobService.get(job.id);
         });
     }
 
@@ -148,7 +148,7 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
         const dialogRef = this.dialog.open(TerminateJobDialogComponent);
         dialogRef.componentInstance.jobId = job.id;
         dialogRef.afterClosed().subscribe((obj) => {
-            this.jobService.getOnce(job.id);
+            this.jobService.get(job.id);
         });
     }
 
@@ -156,7 +156,7 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
         const dialogRef = this.dialog.open(DisableJobDialogComponent);
         dialogRef.componentInstance.jobId = job.id;
         dialogRef.afterClosed().subscribe((obj) => {
-            this.jobService.getOnce(job.id);
+            this.jobService.get(job.id);
         });
     }
 
@@ -164,7 +164,7 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
         const dialogRef = this.dialog.open(EnableJobDialogComponent);
         dialogRef.componentInstance.jobId = job.id;
         dialogRef.afterClosed().subscribe((obj) => {
-            this.jobService.getOnce(job.id);
+            this.jobService.get(job.id);
         });
     }
 
@@ -185,5 +185,9 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
                 enabled: !isCompleted && !isDisabled,
             }),
         ]);
+    }
+
+    public trackByFn(index: number, job: Job) {
+        return job.id;
     }
 }

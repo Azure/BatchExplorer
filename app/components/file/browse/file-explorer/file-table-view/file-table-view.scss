@@ -2,14 +2,17 @@
 
 bl-file-table-view {
     $file-header-height: 40px;
-    display: block;
+
     height: 100%;
     width: 100%;
+
+    &:not([hidden]) {display: block;}
 
     .table-wrapper {
         height: calc(100% - #{$file-header-height});
         display: flex;
         flex-direction: column;
+        overflow: auto;
 
         > .flex-separator {
             flex: 1;

@@ -8,30 +8,30 @@
 // Define the palettes for your theme using the Material Design palettes available in palette.scss
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue.
-$md-primary: mat-palette($primary-theme-classic);
-$md-accent:  mat-palette($mat-grey, A200, A100, A400);
+$mat-primary: mat-palette($primary-theme-classic);
+$mat-accent:  mat-palette($mat-grey, A200, A100, A400);
 
 // The warn palette is optional (defaults to red).
-$md-warn:    mat-palette($mat-red);
+$mat-warn:    mat-palette($mat-red);
 
 // Create the theme object (a Sass map containing all of the palettes).
-$md-theme: mat-light-theme($md-primary, $md-accent, $md-warn);
+$mat-theme: mat-light-theme($mat-primary, $mat-accent, $mat-warn);
 
 // Include theme styles for core and each component used in your app.
 // Alternatively, you can import and @include the theme mixins for each component
 // that you are using.
-@include angular-material-theme($md-theme);
+@include angular-material-theme($mat-theme);
 
 // TODO: can we pull in the material scss classes into the project?
 // really want to be able to override the styles more easily.
 
-[md-list-avatar] {
+[mat-list-avatar] {
     width: auto !important;
     height: auto !important;
     margin-top: -25px;
 }
 
-md-tab-group:not(.form-tabs) {
+mat-tab-group:not(.form-tabs) {
     .mat-tab-label {
         opacity: 0.8 !important;
         border-right: 1px solid #ddd;
@@ -49,6 +49,10 @@ md-tab-group:not(.form-tabs) {
         &:focus {
             opacity: 0.8 !important;
         }
+    }
+
+    .mat-tab-body-wrapper {
+        flex: 1;
     }
 
     .mat-tab-body-content {
@@ -81,13 +85,13 @@ md-tab-group:not(.form-tabs) {
     }
 }
 
-md-card {
+mat-card {
     transition: none !important;
     box-shadow: 1px 1px 5px 0 #d5d5d5 !important;
 
-    md-card-subtitle {
+    mat-card-subtitle {
         div {
-            display: inline;
+            line-height: 1.5em;
         }
     }
 
@@ -97,12 +101,12 @@ md-card {
     }
 }
 
-md-icon.mat-icon {
+mat-icon.mat-icon {
     width: auto;
     height: auto;
 }
 
-md-radio-button {
+mat-radio-button {
     margin-right: 15px;
 
     &.mat-radio-checked {
@@ -116,14 +120,18 @@ md-radio-button {
     }
 }
 
-md-checkbox[small] {
+.mat-form-field {
+    width: auto;
+}
+
+mat-checkbox[small] {
     .mat-checkbox-inner-container {
         width: 14px;
         height: 14px;
     }
 }
 
-md-dialog-container.mat-dialog-container {
+mat-dialog-container.mat-dialog-container {
     padding: 0;
     width: auto !important;
     height: auto !important;
@@ -131,14 +139,17 @@ md-dialog-container.mat-dialog-container {
 }
 
 .mat-select-content, .mat-menu-content {
-    padding: 4px 0;
-    md-option, .mat-menu-item {
-        height: 24px;
-        line-height: 24px;
+    > .mat-option, > .mat-menu-item {
+        height: 24px !important;
+        line-height: 24px !important;
     }
 }
 
-md-input-container.bl-textarea {
+.mat-form-field-underline {
+    background-color: rgba(0, 0, 0, 0.2);
+}
+
+mat-form-field.bl-textarea {
     .mat-input-wrapper {
         background: #f5f5f5;
     }
@@ -163,7 +174,7 @@ md-input-container.bl-textarea {
 }
 
 // Smaller select
-md-select.small {
+mat-select.small {
     .mat-select-trigger {
         height: 20px;
     }

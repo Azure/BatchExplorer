@@ -1,6 +1,6 @@
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MdDialog } from "@angular/material";
+import { MatDialog } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Observable } from "rxjs";
@@ -46,8 +46,8 @@ describe("ApplicationPackageTableComponent", () => {
 
     beforeEach(() => {
         applicationServiceSpy = {
-            getOnce: jasmine
-                .createSpy("getOnce").and
+            get: jasmine
+                .createSpy("get").and
                 .callFake((applicationId: string) => {
 
                     return Observable.of(
@@ -63,7 +63,7 @@ describe("ApplicationPackageTableComponent", () => {
                 TableColumnComponent, TableHeadComponent,
             ],
             providers: [
-                { provide: MdDialog, useValue: null },
+                { provide: MatDialog, useValue: null },
                 { provide: ApplicationService, useValue: applicationServiceSpy },
                 { provide: BackgroundTaskService, useValue: null },
                 { provide: SidebarManager, useValue: null },

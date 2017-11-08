@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
-import { MdDialog, MdDialogConfig } from "@angular/material";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs";
@@ -7,7 +7,7 @@ import { Subscription } from "rxjs";
 import { Job, Task } from "app/models";
 import { TaskDecorator } from "app/models/decorators";
 import { JobParams, JobService, TaskParams, TaskService } from "app/services";
-import { RxEntityProxy } from "app/services/core";
+import { EntityView } from "app/services/core";
 import { SidebarManager } from "../../base/sidebar";
 import { DeleteTaskDialogComponent, TaskCreateBasicDialogComponent, TerminateTaskDialogComponent } from "../action";
 
@@ -26,8 +26,8 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
 
     public taskId: string;
     public jobId: string;
-    public data: RxEntityProxy<TaskParams, Task>;
-    public jobData: RxEntityProxy<JobParams, Job>;
+    public data: EntityView<Task, TaskParams>;
+    public jobData: EntityView<Job, JobParams>;
 
     public task: Task;
     public decorator: TaskDecorator;
@@ -44,16 +44,15 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
     private _paramsSubscribers: Subscription[] = [];
 
     constructor(
-        private dialog: MdDialog,
+        private dialog: MatDialog,
         private route: ActivatedRoute,
-        private viewContainerRef: ViewContainerRef,
         private sidebarManager: SidebarManager,
         taskService: TaskService,
         jobService: JobService,
         private router: Router) {
 
-        this.data = taskService.get(null, null, {});
-        this.jobData = jobService.get(null, {});
+        this.data = taskService.view();
+        this.jobData = jobService.view();
         this.data.item.subscribe((task) => {
             this.task = task;
             this.decorator = task && new TaskDecorator(task);
@@ -93,9 +92,7 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public terminateTask() {
-        let config = new MdDialogConfig();
-        config.viewContainerRef = this.viewContainerRef;
-
+        let config = new MatDialogConfig();
         const dialogRef = this.dialog.open(TerminateTaskDialogComponent, config);
         dialogRef.componentInstance.jobId = this.job.id;
         dialogRef.componentInstance.taskId = this.taskId;
@@ -106,9 +103,7 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public deleteTask() {
-        let config = new MdDialogConfig();
-        config.viewContainerRef = this.viewContainerRef;
-
+        let config = new MatDialogConfig();
         const dialogRef = this.dialog.open(DeleteTaskDialogComponent, config);
         dialogRef.componentInstance.jobId = this.job.id;
         dialogRef.componentInstance.taskId = this.taskId;

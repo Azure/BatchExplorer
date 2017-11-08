@@ -49,6 +49,10 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
     @Input() public cancelText = "Close";
 
     @Input() public config: ComplexFormConfig = defaultComplexFormConfig;
+    /**
+     * If you don't want to have the footer to use a custom one
+     */
+    @Input() public hideFooter = false;
 
     /**
      * Submit method.

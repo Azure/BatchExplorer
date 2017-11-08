@@ -1,6 +1,6 @@
 import { Component, Input, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MdDialog } from "@angular/material";
+import { MatDialog } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { ActivatedRoute } from "@angular/router";
 import { RouterTestingModule } from "@angular/router/testing";
@@ -11,7 +11,7 @@ import { SidebarManager } from "app/components/base/sidebar";
 import { BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";
-import { ActivatedRouteMock, RxMockEntityProxy } from "test/utils/mocks";
+import { ActivatedRouteMock, MockEntityView } from "test/utils/mocks";
 import { LoadingMockComponent } from "test/utils/mocks/components";
 
 // mock application properties component
@@ -60,14 +60,14 @@ describe("ApplicationDetailsComponent.breadcrumb()", () => {
 describe("ApplicationDetailsComponent", () => {
     let fixture: ComponentFixture<ApplicationDetailsComponent>;
     let component: ApplicationDetailsComponent;
-    let entityProxy: RxMockEntityProxy<any, BatchApplication>;
+    let entityView: MockEntityView<BatchApplication, any>;
     let applicationServiceSpy: any;
     let activatedRouteSpy: any;
     let accountServiceSpy: any;
-    let mdDialogSpy: any;
+    let matDialogSpy: any;
 
     beforeEach(() => {
-        entityProxy = new RxMockEntityProxy(BatchApplication, {
+        entityView = new MockEntityView(BatchApplication, {
             item: Fixtures.application.create({
                 id: "app-1",
                 displayName: "bobs display name",
@@ -76,7 +76,7 @@ describe("ApplicationDetailsComponent", () => {
         });
 
         applicationServiceSpy = {
-            get: () => entityProxy,
+            view: () => entityView,
         };
 
         accountServiceSpy = {
@@ -87,7 +87,7 @@ describe("ApplicationDetailsComponent", () => {
             params: Observable.of({ id: "app-1" }),
         });
 
-        mdDialogSpy = {
+        matDialogSpy = {
             open: jasmine.createSpy("open-dialog").and.callFake((...args) => {
                 return {
                     componentInstance: { applicationId: "" },
@@ -102,7 +102,7 @@ describe("ApplicationDetailsComponent", () => {
                 ApplicationErrorDisplayMockComponent, LoadingMockComponent,
             ],
             providers: [
-                { provide: MdDialog, useValue: mdDialogSpy },
+                { provide: MatDialog, useValue: matDialogSpy },
                 { provide: ActivatedRoute, useValue: activatedRouteSpy },
                 { provide: SidebarManager, useValue: null },
                 { provide: ApplicationService, useValue: applicationServiceSpy },
@@ -117,7 +117,7 @@ describe("ApplicationDetailsComponent", () => {
 
     describe("loads application based on initial parameter", () => {
         it("proxy params are set to correct id", () => {
-            expect(entityProxy.params).toEqual({ id: "app-1" });
+            expect(entityView.params).toEqual({ id: "app-1" });
         });
 
         it("application was fetched", () => {
@@ -132,17 +132,17 @@ describe("ApplicationDetailsComponent", () => {
 
         describe("UI shows correct information", () => {
             it("title is correct", () => {
-                const container = fixture.debugElement.query(By.css("md-card-title"));
+                const container = fixture.debugElement.query(By.css("[summaryTitle]"));
                 expect(container.nativeElement.textContent).toContain("app-1");
             });
 
             it("subtitle is correct", () => {
-                const container = fixture.debugElement.query(By.css("md-card-subtitle"));
+                const container = fixture.debugElement.query(By.css("[summarySubtitle]"));
                 expect(container.nativeElement.textContent).toContain("bobs display name");
             });
 
             it("subtitle contains unlocked text for this application", () => {
-                const container = fixture.debugElement.query(By.css("md-card-subtitle"));
+                const container = fixture.debugElement.query(By.css("[summarySubtitle]"));
                 expect(container.nativeElement.textContent).toContain("(unlocked)");
             });
         });
@@ -154,7 +154,7 @@ describe("ApplicationDetailsComponent", () => {
             });
 
             it("subtitle contains locked text", () => {
-                const container = fixture.debugElement.query(By.css("md-card-subtitle"));
+                const container = fixture.debugElement.query(By.css("[summarySubtitle]"));
                 expect(container.nativeElement.textContent).toContain("(locked)");
             });
         });
@@ -162,7 +162,7 @@ describe("ApplicationDetailsComponent", () => {
         describe("Delete command is shown and wired up", () => {
             it("calling delete opens dialog", () => {
                 component.deleteApplication();
-                expect(mdDialogSpy.open).toHaveBeenCalledTimes(1);
+                expect(matDialogSpy.open).toHaveBeenCalledTimes(1);
             });
         });
     });

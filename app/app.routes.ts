@@ -2,6 +2,10 @@
 import { Routes } from "@angular/router";
 
 import { JobGraphsComponent } from "app/components/job/graphs/job-graphs-home";
+import { ChooseActionComponent } from "app/components/market/application-action";
+import { LocalTemplateBrowserComponent } from "app/components/market/local-template-browser";
+import { SubmitLocalTemplateComponent } from "app/components/market/submit-local-template";
+import { SubmitRecentTemplateComponent } from "app/components/market/submit-recent-template";
 import { SettingsComponent } from "app/components/settings";
 import { AccountDefaultComponent, AccountDetailsComponent } from "./components/account/details";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
@@ -11,6 +15,8 @@ import { DataDefaultComponent, DataDetailsComponent } from "./components/data/de
 import { DataHomeComponent } from "./components/data/home/data-home.component";
 import { JobDefaultComponent, JobDetailsComponent } from "./components/job/details";
 import { JobHomeComponent } from "./components/job/home/job-home.component";
+import { MarketComponent } from "./components/market/home";
+import { SubmitMarketApplicationComponent } from "./components/market/submit";
 import { NodeDefaultComponent, NodeDetailsComponent } from "./components/node/details";
 import { NodeHomeComponent } from "./components/node/home";
 import { PoolDefaultComponent, PoolDetailsComponent } from "./components/pool/details";
@@ -48,6 +54,30 @@ export const routes: Routes = [
             { path: "", component: PoolDefaultComponent }, // pools/
             { path: ":id", component: PoolDetailsComponent }, // pools/{pool.id}
         ],
+    },
+    {
+        path: "market",
+        component: MarketComponent,
+    },
+    {
+        path: "market/local",
+        component: LocalTemplateBrowserComponent,
+    },
+    {
+        path: "market/local/submit",
+        component: SubmitLocalTemplateComponent,
+    },
+    {
+        path: "market/recent/:id",
+        component: SubmitRecentTemplateComponent,
+    },
+    {
+        path: "market/:applicationId/actions",
+        component: ChooseActionComponent,
+    },
+    {
+        path: "market/:applicationId/actions/:actionId/submit",
+        component: SubmitMarketApplicationComponent,
     },
     {
         path: "applications",

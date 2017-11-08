@@ -1,6 +1,6 @@
 @import "app/styles/variables";
 
-$padding-first-and-last: 15px;
+$padding-first-and-last: 10px;
 $table-heading-height: 40px;
 $table-row-height: 30px;
 
@@ -88,6 +88,8 @@ bl-table {
         vertical-align: middle;
         text-align: left;
         padding: 0 5px;
+        overflow: hidden;
+        text-overflow: ellipsis;
 
         &:first-child {
             padding: 0 0 0 $padding-first-and-last;

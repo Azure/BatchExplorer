@@ -8,11 +8,11 @@ bl-job-hook-task-browser {
     .content {
         display: flex;
         border-top: 1px solid #d5d5d5;
-
+        height: 100%;
         > .details {
-            padding-top: 10px;
             border-left: 1px solid $border-color;
             width: 600px;
+            flex: 1 0 600px;
         }
     }
 

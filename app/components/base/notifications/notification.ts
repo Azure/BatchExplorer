@@ -7,6 +7,11 @@ export enum NotificationLevel {
     warn = "warn",
 }
 
+export interface NotificationAction {
+    name: string;
+    do: () => void;
+}
+
 export interface NotificationConfig {
     /**
      * Time(in milliseconds) it take for the notification to disapear automatically.
@@ -21,15 +26,18 @@ export interface NotificationConfig {
     persist?: boolean;
 
     /**
-     * Optional action
+     * Optional action to do when clicking on the notification
      */
     action?: () => void;
+
+    actions?: NotificationAction[];
 }
 
 const defaultConfig: NotificationConfig = {
     autoDismiss: 2500,
     persist: false,
     action: null,
+    actions: [],
 };
 
 /**

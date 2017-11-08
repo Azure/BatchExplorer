@@ -1,5 +1,5 @@
-<md-tab-group class="form-tabs">
-    <md-tab label="Distributions" title="selectedSource === PoolOsSources.IaaS" class="banana">
+<mat-tab-group class="form-tabs" [@.disabled]="true">
+    <mat-tab label="Distributions" title="selectedSource === PoolOsSources.IaaS" class="banana">
         <bl-os-offer-tile *ngFor="let offer of vmOffers" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickOffer(offer)" (pickSku)="pickSku(offer, $event)"
             [active]="offer.name === selectedOffer" [selectedSku]="selectedSku">
             {{offer.name}}
@@ -9,18 +9,18 @@
             <div>Windows Server</div>
             <div>(Cloud Service)</div>
         </bl-os-offer-tile>
-    </md-tab>
-    <md-tab label="Data science VM">
+    </mat-tab>
+    <mat-tab label="Data science VM">
         <bl-os-offer-tile *ngFor="let offer of dataScienceOffers" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickOffer(offer)" (pickSku)="pickSku(offer, $event)"
             [active]="offer.name === selectedOffer" [selectedSku]="selectedSku">
             {{offer.name}}
         </bl-os-offer-tile>
-    </md-tab>
-    <md-tab label="Graphics and rendering">
+    </mat-tab>
+    <mat-tab label="Graphics and rendering">
         <bl-os-offer-tile *ngFor="let offer of renderingOffers" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickOffer(offer)" (pickSku)="pickSku(offer, $event)"
             [active]="offer.name === selectedOffer" [selectedSku]="selectedSku">
             {{offer.name}}
         </bl-os-offer-tile>
-    </md-tab>
-</md-tab-group>
+    </mat-tab>
+</mat-tab-group>
 <p *ngIf="selectedSku" style="padding-top: 10px;">Based on your selection, node agent <b>'{{selectedNodeAgentId}}'</b> will be used</p>

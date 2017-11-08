@@ -1,3 +1,94 @@
+# 0.8.0
+[All items](https://github.com/Azure/BatchLabs/milestone/9?closed=1)
+
+### feature:
+
+* Ncj app gallery [\#786](https://github.com/Azure/BatchLabs/issues/786)
+* Task output messages confusing for customers [\#769](https://github.com/Azure/BatchLabs/issues/769)
+* Allow specifying resize timeout on pool create [\#764](https://github.com/Azure/BatchLabs/issues/764)
+* Notification actions [\#750](https://github.com/Azure/BatchLabs/issues/750)
+* Enable edit start task from the node and reboot [\#749](https://github.com/Azure/BatchLabs/issues/749)
+* Allow delete folder/file from the file group context menu. [\#733](https://github.com/Azure/BatchLabs/issues/733)
+* Ability to resize the tree view in the file explorer(Movable splitter) [\#724](https://github.com/Azure/BatchLabs/issues/724)
+* Find a way to surface prep and release task failures [\#708](https://github.com/Azure/BatchLabs/issues/708)
+
+### bug:
+
+* Form picker(Start task) reset to empty from when clicking cancel [\#801](https://github.com/Azure/BatchLabs/issues/801)
+* Typo in pool configuration [\#798](https://github.com/Azure/BatchLabs/issues/798)
+* Creating a pool without changing the resizeTimeout gives an error [\#796](https://github.com/Azure/BatchLabs/issues/796)
+* Pool start task failed quickfix not doing anything [\#788](https://github.com/Azure/BatchLabs/issues/788)
+* AAD refresh token expired/revoke doesn't refresh the app. [\#783](https://github.com/Azure/BatchLabs/issues/783)
+* File group download only downloading files at the root [\#780](https://github.com/Azure/BatchLabs/issues/780)
+* After deleting application, overlay is not removed [\#777](https://github.com/Azure/BatchLabs/issues/777)
+* File groups not listing all the files [\#751](https://github.com/Azure/BatchLabs/issues/751)
+* Memory leak in app [\#745](https://github.com/Azure/BatchLabs/issues/745)
+* Fix spelling of completition [\#742](https://github.com/Azure/BatchLabs/issues/742)
+* Copy and paste doesn't work on osx prod build [\#727](https://github.com/Azure/BatchLabs/issues/727)
+* Misleading message "The files for the specified task have been cleaned from the node." [\#689](https://github.com/Azure/BatchLabs/issues/689)
+
+### other:
+* Organize summary card for all entities [\#754](https://github.com/Azure/BatchLabs/issues/754)
+* Disable tab animations [\#747](https://github.com/Azure/BatchLabs/issues/747)
+* show subscription name in the account details subtitle [\#740](https://github.com/Azure/BatchLabs/issues/740)
+* Make quick list more compact [\#735](https://github.com/Azure/BatchLabs/issues/735)
+* Make the details take the full height and scrolling happens in tabs content [\#730](https://github.com/Azure/BatchLabs/issues/730)
+* Refactor server error to work better with all different inputs [\#694](https://github.com/Azure/BatchLabs/issues/694)
+* Remove storage node proxy [\#685](https://github.com/Azure/BatchLabs/issues/685)
+
+# 0.7.0
+[All items](https://github.com/Azure/BatchLabs/milestone/8?closed=1)
+
+### Features:
+* Ability to view third party notice from UI [\#690](https://github.com/Azure/BatchLabs/issues/690)
+* Command line input for task improvement [\#670](https://github.com/Azure/BatchLabs/issues/670)
+* Add files to a file group with drag and drop [\#651](https://github.com/Azure/BatchLabs/issues/651)
+* Add refresh shortcut to work in prod build [\#647](https://github.com/Azure/BatchLabs/issues/647)
+* User identity for task  [\#639](https://github.com/Azure/BatchLabs/issues/639)
+* Clean up excessive console errors when task logs are not available on node [\#631](https://github.com/Azure/BatchLabs/issues/631)
+* Add 3ds max to the application license picker [\#627](https://github.com/Azure/BatchLabs/issues/627)
+* Job tasks running time graph sorting/grouping of x axis [\#624](https://github.com/Azure/BatchLabs/issues/624)
+* Add charts on the job home page(when no jobs selected) [\#621](https://github.com/Azure/BatchLabs/issues/621)
+* Feature: File explorer [\#614](https://github.com/Azure/BatchLabs/issues/614)
+* Make an install command to help people getting started(windows) [\#610](https://github.com/Azure/BatchLabs/issues/610)
+* Add more charts for a job [\#473](https://github.com/Azure/BatchLabs/issues/473)
+* Settings page [\#472](https://github.com/Azure/BatchLabs/issues/472)
+* Tree view for files [\#466](https://github.com/Azure/BatchLabs/issues/466)
+* Provide built app for download [\#405](https://github.com/Azure/BatchLabs/issues/405)
+* Smart card support for windows  [\#271](https://github.com/Azure/BatchLabs/issues/271)
+
+### Bugs:
+* Heatmap display bug when resizing window or pool resize [\#715](https://github.com/Azure/BatchLabs/issues/715)
+* Exit code is not showing in the task table list [\#712](https://github.com/Azure/BatchLabs/issues/712)
+* Job preparation and release task having styling issues [\#709](https://github.com/Azure/BatchLabs/issues/709)
+* Progress getting lost if file group name is too large [\#704](https://github.com/Azure/BatchLabs/issues/704)
+* File explorer not reading files from storage account. [\#702](https://github.com/Azure/BatchLabs/issues/702)
+* Job graph is overflowing vertically when in running prod [\#697](https://github.com/Azure/BatchLabs/issues/697)
+* File explorer long file/folder name wrapping bug [\#668](https://github.com/Azure/BatchLabs/issues/668)
+* Autoscale formula not updating [\#665](https://github.com/Azure/BatchLabs/issues/665)
+* Profile settings throws an error for user settings [\#661](https://github.com/Azure/BatchLabs/issues/661)
+* Profile menu item forces navigation to dashboard and reload when closed. [\#660](https://github.com/Azure/BatchLabs/issues/660)
+* File explorer improve errors on task outputs [\#654](https://github.com/Azure/BatchLabs/issues/654)
+* UI gets into a bad state if you navigate to a start task which has an environment variable with no value [\#646](https://github.com/Azure/BatchLabs/issues/646)
+* Task id needs to be truncated in the table [\#645](https://github.com/Azure/BatchLabs/issues/645)
+* run elevated not set when running tasks with autoUser in admin mode [\#638](https://github.com/Azure/BatchLabs/issues/638)
+* Batchlabs ghost process after closing prod app [\#633](https://github.com/Azure/BatchLabs/issues/633)
+* Detailed information should be shown if an error occurs during allocation [\#618](https://github.com/Azure/BatchLabs/issues/618)
+* Splash screen not showing in packaged distributable [\#616](https://github.com/Azure/BatchLabs/issues/616)
+* Graph hover text [\#608](https://github.com/Azure/BatchLabs/issues/608)
+* Grammar in task running time graph [\#607](https://github.com/Azure/BatchLabs/issues/607)
+* Handle forbidden 403 errors [\#577](https://github.com/Azure/BatchLabs/issues/577)
+* Cannot read a blob from a file group with a full path. [\#561](https://github.com/Azure/BatchLabs/issues/561)
+
+### Other:
+* Update readme to prepare for the release [\#692](https://github.com/Azure/BatchLabs/issues/692)
+* ThirdPartyNotice generator [\#682](https://github.com/Azure/BatchLabs/issues/682)
+* Log python stdout and stderr to file [\#678](https://github.com/Azure/BatchLabs/issues/678)
+* Find an open port for the python server to connect to [\#676](https://github.com/Azure/BatchLabs/issues/676)
+* Switch to es6 [\#641](https://github.com/Azure/BatchLabs/issues/641)
+* Table selection/activation improvement [\#626](https://github.com/Azure/BatchLabs/issues/626)
+* Upload file group as a background task [\#615](https://github.com/Azure/BatchLabs/issues/615)
+
 # Version 0.6.0(Beta)
 [All items](https://github.com/Azure/BatchLabs/milestone/6?closed=1)
 

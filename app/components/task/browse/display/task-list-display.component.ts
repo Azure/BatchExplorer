@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, ViewChild } from "@angular/core";
-import { MdDialog } from "@angular/material";
+import { MatDialog } from "@angular/material";
 import { List } from "immutable";
 
 import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
@@ -37,7 +37,7 @@ export class TaskListDisplayComponent extends ListOrTableBase {
     @ViewChild(TableComponent)
     public table: TableComponent;
 
-    constructor(private taskService: TaskService, dialog: MdDialog) { super(dialog); }
+    constructor(private taskService: TaskService, dialog: MatDialog) { super(dialog); }
 
     public taskStatus(task: Task): QuickListItemStatus {
         if (task.state === TaskState.completed && task.executionInfo.exitCode !== 0) {
@@ -62,7 +62,7 @@ export class TaskListDisplayComponent extends ListOrTableBase {
         dialogRef.componentInstance.jobId = this.jobId;
         dialogRef.componentInstance.taskId = task.id;
         dialogRef.afterClosed().subscribe((obj) => {
-            this.taskService.getOnce(this.jobId, task.id);
+            this.taskService.get(this.jobId, task.id);
         });
     }
 
@@ -71,7 +71,7 @@ export class TaskListDisplayComponent extends ListOrTableBase {
         dialogRef.componentInstance.jobId = this.jobId;
         dialogRef.componentInstance.taskId = task.id;
         dialogRef.afterClosed().subscribe((obj) => {
-            this.taskService.getOnce(this.jobId, task.id);
+            this.taskService.get(this.jobId, task.id);
         });
     }
 
@@ -81,5 +81,9 @@ export class TaskListDisplayComponent extends ListOrTableBase {
             new ContextMenuItem({ label: "Delete", click: () => this.deleteTask(task) }),
             new ContextMenuItem({ label: "Terminate", click: () => this.terminateTask(task), enabled: !isCompleted }),
         ]);
+    }
+
+    public trackByFn(index, task: Task) {
+        return task.id;
     }
 }

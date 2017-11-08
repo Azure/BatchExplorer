@@ -1,12 +1,11 @@
 import { Injectable } from "@angular/core";
-import { StorageAccountSharedKeyOptions, StorageClientProxyFactory } from "client/api";
 import { Observable } from "rxjs";
 
 import { AutoStorageAccount, ServerError, StorageKeys, StorageKeysAttributes } from "app/models";
 import { ArmResourceUtils } from "app/utils";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
-import { ElectronRemote } from "./electron";
+import { StorageAccountSharedKeyOptions, StorageClientProxyFactory } from "./storage";
 
 export interface AutoStorageSettings {
     lastKeySync: Date;
@@ -23,6 +22,7 @@ export interface StorageKeyCachedItem {
 @Injectable()
 export class StorageClientService {
     public hasAutoStorage: Observable<boolean>;
+    public hasArmAutoStorage: Observable<boolean>;
 
     private _currentAccountId: string;
     private _currentStorageAccountId: string;
@@ -31,14 +31,17 @@ export class StorageClientService {
 
     constructor(
         private accountService: AccountService,
-        private arm: ArmHttpService,
-        remote: ElectronRemote) {
+        private arm: ArmHttpService) {
 
-        this._storageClientFactory = remote.getStorageClientFactory();
+        this._storageClientFactory = new StorageClientProxyFactory();
 
         this.accountService.currentAccountId.subscribe(x => this._currentAccountId = x);
         this.hasAutoStorage = this.accountService.currentAccount.map((account) => {
-            return Boolean(account.properties && account.properties.autoStorage);
+            return Boolean(account.autoStorage);
+        });
+
+        this.hasArmAutoStorage = this.accountService.currentAccount.map((account) => {
+            return account.hasArmAutoStorage();
         });
 
         this.accountService.currentAccount.subscribe((account) => {
@@ -58,10 +61,8 @@ export class StorageClientService {
             if (!settings) {
                 return Observable.throw(new ServerError({
                     status: 404,
-                    body: {
-                        code: "AutostorageNotSetup",
-                        message: "Autostorage not setup for this account",
-                    },
+                    code: "AutostorageNotSetup",
+                    message: "Autostorage not setup for this account",
                 }));
             }
             const cachedItem = this._getCachedItem(settings.storageAccountId);

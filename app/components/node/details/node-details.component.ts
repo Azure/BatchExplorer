@@ -5,9 +5,10 @@ import { Subscription } from "rxjs";
 
 import { DialogService } from "app/components/base/dialogs";
 import { SidebarManager } from "app/components/base/sidebar";
+import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { Node, Pool } from "app/models";
-import { FileService, NodeParams, NodeService, PoolService } from "app/services";
-import { RxEntityProxy } from "app/services/core";
+import { FileService, NodeParams, NodeService, PoolParams, PoolService } from "app/services";
+import { EntityView } from "app/services/core";
 import { NodeConnectComponent } from "../connect";
 
 @Component({
@@ -25,8 +26,8 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
 
     public nodeId: string;
     public poolId: string;
-    public data: RxEntityProxy<NodeParams, Node>;
-    public poolData: RxEntityProxy<NodeParams, Pool>;
+    public data: EntityView<Node, NodeParams>;
+    public poolData: EntityView<Pool, PoolParams>;
     public node: Node;
     public pool: Pool;
 
@@ -40,7 +41,7 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
         fileService: FileService,
         private sidebarManager: SidebarManager) {
 
-        this.data = nodeService.get(null, null, {});
+        this.data = nodeService.view();
         this.data.item.subscribe((node) => {
             if (node) {
                 // this.decorator = new NodeDecorator(node);
@@ -48,7 +49,7 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.poolData = this.poolService.get(null, {});
+        this.poolData = this.poolService.view();
         this.poolData.item.subscribe((pool) => {
             if (pool) {
                 this.pool = pool;
@@ -96,12 +97,25 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
     }
 
     @autobind()
+    public reboot() {
+        return this.nodeService.reboot(this.pool.id, this.nodeId)
+            .cascade(() => this.nodeService.get(this.pool.id, this.node.id));
+    }
+
+    @autobind()
     public delete() {
         this.dialog.confirm("Are you sure you want to delete this node?", {
             yes: () => {
                 return this.nodeService.delete(this.pool.id, this.nodeId)
-                    .cascade(() => this.nodeService.getOnce(this.pool.id, this.node.id));
+                    .cascade(() => this.nodeService.get(this.pool.id, this.node.id));
             },
         });
+    }
+
+    @autobind()
+    public editStartTask() {
+        const ref = this.sidebarManager.open(`edit-start-task-${this.pool.id}`, StartTaskEditFormComponent);
+        ref.component.pool = this.pool;
+        ref.component.fromNode = this.nodeId;
     }
 }

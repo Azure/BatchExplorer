@@ -1,6 +1,6 @@
 import { DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
-import { MdDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
@@ -9,19 +9,19 @@ import { BackgroundTaskService } from "app/components/base/background-task";
 import { BatchApplication, ServerError } from "app/models";
 import { ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";
-import { RxMockEntityProxy } from "test/utils/mocks";
+import { MockEntityView } from "test/utils/mocks";
 import { ServerErrorMockComponent, SimpleFormMockComponent } from "test/utils/mocks/components";
 
 // TODO: 2 tests excluded below. Needs long running action refactor for testing
 describe("DeleteApplicationDialogComponent ", () => {
     let fixture: ComponentFixture<DeleteApplicationDialogComponent>;
     let component: DeleteApplicationDialogComponent;
-    let entityProxy: RxMockEntityProxy<any, BatchApplication>;
+    let entityView: MockEntityView<BatchApplication, any>;
     let debugElement: DebugElement;
     let appServiceSpy: any;
 
     beforeEach(() => {
-        entityProxy = new RxMockEntityProxy(BatchApplication, {
+        entityView = new MockEntityView(BatchApplication, {
             item: Fixtures.application.create({ id: "app-1" }),
         });
 
@@ -38,15 +38,14 @@ describe("DeleteApplicationDialogComponent ", () => {
                 return Observable.of({});
             }),
 
-            getOnce: () => Observable.of(Fixtures.application.create({ id: "app-1"})),
-
-            get: () => entityProxy,
+            get: () => Observable.of(Fixtures.application.create({ id: "app-1" })),
+            view: () => entityView,
         };
 
         TestBed.configureTestingModule({
             declarations: [SimpleFormMockComponent, DeleteApplicationDialogComponent, ServerErrorMockComponent],
             providers: [
-                { provide: MdDialogRef, useValue: null },
+                { provide: MatDialogRef, useValue: null },
                 { provide: ApplicationService, useValue: appServiceSpy },
                 { provide: BackgroundTaskService, useValue: null },
             ],

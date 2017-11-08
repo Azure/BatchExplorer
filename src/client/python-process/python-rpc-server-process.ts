@@ -26,11 +26,11 @@ export class PythonRpcServerProcess {
             pythonLogger.info("========================= STARTING PYTHON RPC SERVER PROCESS =========================");
 
             child.stdout.on("data", (data) => {
-                pythonLogger.info(data);
+                pythonLogger.info(data.toString());
             });
 
             child.stderr.on("data", (data) => {
-                pythonLogger.error(data);
+                pythonLogger.error(data.toString());
             });
 
             child.on("exit", (code) => {

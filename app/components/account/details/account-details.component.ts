@@ -5,8 +5,7 @@ import { Subscription } from "rxjs";
 
 import { AccountResource, BatchApplication, Job, Pool, ServerError } from "app/models";
 import { AccountParams, AccountService, ApplicationService, JobService, PoolService } from "app/services";
-import { RxEntityProxy, RxListProxy } from "app/services/core";
-import { Constants } from "app/utils";
+import { EntityView, RxListProxy } from "app/services/core";
 
 import "./account-details.scss";
 
@@ -29,7 +28,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     public loadingError: any;
     public noLinkedStorage: boolean = false;
 
-    public data: RxEntityProxy<AccountParams, AccountResource>;
+    public data: EntityView<AccountResource, AccountParams>;
 
     public applicationData: RxListProxy<{}, BatchApplication>;
     public jobData: RxListProxy<{}, Job>;
@@ -47,7 +46,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         private poolService: PoolService,
         zone: NgZone,
         viewContainerRef: ViewContainerRef) {
-        this.data = this.accountService.get(null);
+        this.data = this.accountService.view();
         this.data.item.subscribe((account) => {
             this.account = account;
             if (account) {
@@ -86,7 +85,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     private _loadQuickAccessLists() {
         this.applicationData = this.applicationService.list(this.initialOptions, (error: ServerError) => {
             let handled = false;
-            if (this._isAutoStorageError(error)) {
+            if (this.applicationService.isAutoStorageError(error)) {
                 this.noLinkedStorage = true;
                 handled = true;
             }
@@ -100,16 +99,5 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
         this.poolData = this.poolService.list(this.initialOptions);
         this.poolData.fetchNext();
-    }
-
-    /**
-     * There is a difference in the error response body between classic and standard storage API's
-     * @param error - error JSON object
-     */
-    private _isAutoStorageError(error: any): boolean {
-        const badCode = Constants.APIErrorCodes.accountNotEnabledForAutoStorage;
-        return error &&
-            (error.body.code === badCode ||
-                (error.body.error && error.body.error.code === badCode));
     }
 }

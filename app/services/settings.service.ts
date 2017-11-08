@@ -4,8 +4,8 @@ import { BehaviorSubject, Observable } from "rxjs";
 const stripJsonComments = require("strip-json-comments");
 
 import { KeyBindings, Settings, defaultKeybindings } from "app/models";
-import { LocalFileStorage } from "app/services";
 import { log } from "app/utils";
+import { LocalFileStorage } from "./local-file-storage.service";
 
 // tslint:disable-next-line:no-var-requires
 const defaultSettings = JSON.parse(stripJsonComments(require("app/components/settings/default-settings.json")));
@@ -27,8 +27,8 @@ export class SettingsService {
     private _keybindingsFilename = "keybindings";
 
     constructor(private zone: NgZone, private storage: LocalFileStorage) {
-        this.settingsObs = this._settingsSubject.asObservable();
-        this.keybindings = this._keybindings.asObservable();
+        this.settingsObs = this._settingsSubject.filter(x => Boolean(x));
+        this.keybindings = this._keybindings.filter(x => Boolean(x));
         this.hasSettingsLoaded = this._hasSettingsLoaded.asObservable();
     }
 

@@ -9,7 +9,7 @@ import "./button.scss";
 import { ClickableComponent } from "./clickable";
 
 export type ButtonType = "square" | "round" | "wide";
-export type ButtonColor = "primary" | "light" | "danger" | "warn";
+export type ButtonColor = "primary" | "light" | "danger" | "warn" | "success";
 export type ButtonAction = (event?: Event) => Observable<any> | void;
 
 export enum SubmitStatus {
@@ -39,7 +39,7 @@ export class ButtonComponent extends ClickableComponent implements OnChanges {
     @Input() public action: ButtonAction;
     @Input() public icon: string;
     @Input() public title: string;
-    @Input() public tooltipPosition: string = "right";
+    @Input() public tooltipPosition: string = "above";
 
     /**
      * If set to true the check mark animation will not be shown

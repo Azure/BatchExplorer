@@ -21,7 +21,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     public osSource: PoolOsSources = PoolOsSources.IaaS;
     public osType: "linux" | "windows" = "linux";
     public NodeFillType = NodeFillType;
-
+    public hasLinkedStorage: boolean = true;
     public estimatedCost: string = "-";
     public complexFormConfig: ComplexFormConfig;
     private _osControl: FormControl;
@@ -40,6 +40,8 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         private notificationService: NotificationService) {
         super(PoolCreateDto);
         this._setComplexFormConfig();
+
+        this.hasLinkedStorage = true;
         this._osControl = this.formBuilder.control({}, Validators.required);
         this._licenseControl = this.formBuilder.control([]);
 
@@ -60,6 +62,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             startTask: null,
             userAccounts: [[]],
             appLicenses: [[]],
+            appPackages: [[]],
         });
 
         this._sub = this._osControl.valueChanges.subscribe((value) => {
@@ -117,6 +120,10 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
 
     public formToDto(data: any): PoolCreateDto {
         return createPoolToData(data);
+    }
+
+    public handleHasLinkedStorage(hasLinkedStorage) {
+        this.hasLinkedStorage = hasLinkedStorage;
     }
 
     public get startTask() {

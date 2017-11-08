@@ -1,12 +1,14 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild, forwardRef } from "@angular/core";
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
+import { AutoScaleRunError } from "azure-batch/typings/lib/models";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
 import { DialogService } from "app/components/base/dialogs";
-import { AutoscaleFormula } from "app/models";
-import { AutoscaleFormulaService } from "app/services";
+import { AutoscaleFormula, Pool } from "app/models";
+import { AutoscaleFormulaService, PoolService } from "app/services";
 import { PredefinedFormulaService } from "app/services/predefined-formula.service";
+import { log } from "app/utils";
 import "./autoscale-formula-picker.scss";
 
 @Component({
@@ -19,9 +21,13 @@ import "./autoscale-formula-picker.scss";
     ],
 })
 export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, ControlValueAccessor {
+    @Input() public pool: Pool;
+
     public savedAutoscaleFormulas: List<AutoscaleFormula>;
     public predefinedFormula: AutoscaleFormula[];
     public autoscaleFormulaValue: string;
+    public evaluationResults: string[] = [];
+    public evaluationError: AutoScaleRunError;
 
     @ViewChild("nameInput")
     public nameInput: ElementRef;
@@ -33,12 +39,23 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
         autoRefresh: true,
     };
 
+    public splitPaneConfig = {
+        firstPane: {
+            minSize: 200,
+        },
+        secondPane: {
+            minSize: 205,
+        },
+        initialDividerPosition: -205,
+    };
+
     public customFormulaMode = true;
     private _subs: Subscription[];
     private _propagateChange: (value: string) => void;
     private _propagateTouch: () => void;
 
     constructor(
+        private poolService: PoolService,
         private autoscaleFormulaService: AutoscaleFormulaService,
         private predefinedFormulaService: PredefinedFormulaService,
         private dialogService: DialogService,
@@ -86,9 +103,33 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
         this._propagateTouch();
     }
 
+    public get canEvaluateFormula() {
+        return this.pool && this.pool.enableAutoScale;
+    }
+
     public addFormula() {
         this.dialogService.prompt("Save formula", {
             prompt: (name) => this._saveFormula(name),
+        });
+    }
+
+    public evaluateFormula() {
+        if (!this.canEvaluateFormula || !this.autoscaleFormulaValue) {
+            return;
+        }
+
+        this.poolService.evaluateAutoScale(this.pool.id, this.autoscaleFormulaValue).subscribe({
+            next: (value: any) => {
+                if (value.results) {
+                    this.evaluationResults = value.results.split(";");
+                } else {
+                    this.evaluationResults = [];
+                }
+                this.evaluationError = value.error;
+            },
+            error: (error) => {
+                log.error("Error while evaluating autoscale formula", error.original);
+            },
         });
     }
 

@@ -1,10 +1,11 @@
 import { Component, DebugElement, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { FormsModule } from "@angular/forms";
-import { MaterialModule, MdCheckboxChange, MdDialog } from "@angular/material";
+import { MatCheckboxChange, MatDialog } from "@angular/material";
 import { By } from "@angular/platform-browser";
 
 import { AppLicensePickerComponent } from "app/components/pool/action/add";
+import { MaterialModule } from "app/core";
 
 @Component({
     template: `<bl-app-license-picker [(ngModel)]="appLicenses"></bl-app-license-picker>`,
@@ -18,10 +19,10 @@ describe("AppLicensePickerComponent", () => {
     let testComponent: TestComponent;
     let component: AppLicensePickerComponent;
     let debugElement: DebugElement;
-    let mdDialogSpy: any;
+    let matDialogSpy: any;
 
     beforeEach(() => {
-        mdDialogSpy = {
+        matDialogSpy = {
             open: jasmine.createSpy("open").and.callFake((...args) => {
                 return {
                     componentInstance: { license: null },
@@ -33,7 +34,7 @@ describe("AppLicensePickerComponent", () => {
             imports: [FormsModule, MaterialModule],
             declarations: [AppLicensePickerComponent, TestComponent],
             providers: [
-                { provide: MdDialog, useValue: mdDialogSpy },
+                { provide: MatDialog, useValue: matDialogSpy },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
@@ -91,7 +92,7 @@ describe("AppLicensePickerComponent", () => {
     describe("EULA", () => {
         it("Calling viewEula opens dialog", () => {
             component.viewEula({ id: "vray", description: "license name" } as any);
-            expect(mdDialogSpy.open).toHaveBeenCalledTimes(1);
+            expect(matDialogSpy.open).toHaveBeenCalledTimes(1);
         });
     });
 
@@ -110,7 +111,7 @@ describe("AppLicensePickerComponent", () => {
         it("Validation passes if license selected and checkbox checked", fakeAsync(() => {
             component.updateSelection(["maya"]);
             tick();
-            component.eulaCheck({ checked: true } as MdCheckboxChange);
+            component.eulaCheck({ checked: true } as MatCheckboxChange);
             tick();
             fixture.detectChanges();
             expect(component.validate(null)).toBeNull();

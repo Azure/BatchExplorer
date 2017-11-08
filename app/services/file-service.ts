@@ -3,9 +3,10 @@ import * as path from "path";
 
 import { File, ServerError } from "app/models";
 import { Constants, exists } from "app/utils";
+import { Observable } from "rxjs";
 import { BatchClientService } from "./batch-client.service";
 import {
-    DataCache, RxBatchEntityProxy, RxBatchListProxy, RxEntityProxy, RxListProxy, TargetedDataCache,
+    BatchEntityGetter, DataCache, RxBatchListProxy, RxListProxy, TargetedDataCache,
 } from "./core";
 import { FileLoader, FileNavigator, FileSource } from "./file";
 import { FileSystemService } from "./fs.service";
@@ -61,8 +62,23 @@ export class FileService extends ServiceBase {
         key: ({ jobId, taskId }) => jobId + "/" + taskId,
     }, "url");
 
+    private _taskFileGetter: BatchEntityGetter<File, TaskFileParams>;
+    private _nodeFileGetter: BatchEntityGetter<File, NodeFileParams>;
+
     constructor(batchService: BatchClientService, private fs: FileSystemService) {
         super(batchService);
+
+        this._taskFileGetter = new BatchEntityGetter(File, this.batchService, {
+            cache: (params) => this.getTaskFileCache(params),
+            getFn: (client, { jobId, taskId, filename }) =>
+                client.file.getTaskFileProperties(jobId, taskId, filename),
+        });
+
+        this._nodeFileGetter = new BatchEntityGetter(File, this.batchService, {
+            cache: (params) => this.getNodeFileCache(params),
+            getFn: (client, { poolId, nodeId, filename }) =>
+                client.file.getComputeNodeFileProperties(poolId, nodeId, filename),
+        });
     }
 
     public get basicProperties(): string {
@@ -128,7 +144,7 @@ export class FileService extends ServiceBase {
                 if (exists(options.rangeStart) && exists(options.rangeEnd)) {
                     ocpRange = `bytes=${options.rangeStart}-${options.rangeEnd}`;
                 }
-                const batchOptions = { fileGetFromTaskOptions: { ocpRange } };
+                const batchOptions = { fileGetFromComputeNodeOptions: { ocpRange } };
                 return this.callBatchClient((client) => {
                     return client.file.getComputeNodeFile(poolId, nodeId, filename, batchOptions);
                 });
@@ -140,15 +156,8 @@ export class FileService extends ServiceBase {
         poolId: string,
         nodeId: string,
         filename: string,
-        options: any = {}): RxEntityProxy<NodeFileParams, File> {
-        return new RxBatchEntityProxy<NodeFileParams, File>(File, this.batchService, {
-            cache: (params) => this.getNodeFileCache(params),
-            getFn: (client, params) => {
-                return client.file.getComputeNodeFileProperties(poolId, nodeId, filename, options);
-            },
-            initialParams: { poolId: poolId, nodeId: nodeId, filename: filename },
-            logIgnoreError: fileIgnoredErrors,
-        });
+        options: any = {}): Observable<File> {
+        return this._nodeFileGetter.fetch({ poolId, nodeId, filename });
     }
 
     public listFromTask(
@@ -187,7 +196,7 @@ export class FileService extends ServiceBase {
                 if (exists(options.rangeStart) && exists(options.rangeEnd)) {
                     ocpRange = `bytes=${options.rangeStart}-${options.rangeEnd}`;
                 }
-                const batchOptions = { fileGetFromComputeNodeOptions: { ocpRange } };
+                const batchOptions = { fileGetFromTaskOptions: { ocpRange } };
                 return this.callBatchClient((client) => {
                     return client.file.getTaskFile(jobId, taskId, filename, batchOptions);
                 });
@@ -200,14 +209,7 @@ export class FileService extends ServiceBase {
         jobId: string,
         taskId: string,
         filename: string,
-        options: any = {}): RxEntityProxy<TaskFileParams, File> {
-        return new RxBatchEntityProxy<TaskFileParams, File>(File, this.batchService, {
-            cache: (params) => this.getTaskFileCache(params),
-            getFn: (client, params) => {
-                return client.file.getTaskFileProperties(jobId, taskId, filename, options);
-            },
-            initialParams: { jobId: jobId, taskId: taskId, filename: filename },
-            logIgnoreError: fileIgnoredErrors,
-        });
+        options: any = {}): Observable<File> {
+        return this._taskFileGetter.fetch({ jobId, taskId, filename });
     }
 }

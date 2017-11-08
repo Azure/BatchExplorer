@@ -4,5 +4,11 @@
     "log": ["txt", "log"],
     "image":  ["png", "jpg", "gif"],
     "code": ["json", "ts2", "js", "java", "cs", "cpp", "h", "hpp", "py", "xml", "sh", "cmd", "bat"]
-  }
+  },
+
+  // Default view for the configuration tab of pool, job, task, etc. Can be [pretty,json]
+  "configuration.default-view": "pretty",
+
+  // List of subscription pattern to ignore(e.g. ["other-subscription*"])
+  "subscription.ignore": []
 }

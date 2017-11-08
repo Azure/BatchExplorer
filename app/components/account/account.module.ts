@@ -3,7 +3,7 @@ import { NgModule } from "@angular/core";
 import { commonModules } from "app/common";
 import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";
 import { StorageAccountPickerComponent } from "app/components/account/base/storage-account-picker";
-import { PoolDetailsModule } from "app/components/pool/details";
+import { PoolBaseModule } from "app/components/pool/base";
 import { AccountCreateDialogComponent } from "./action/add/account-create-dialog.component";
 import { DeleteAccountDialogComponent } from "./action/delete/delete-account-dialog.component";
 import { AccountBrowseModule } from "./browse";
@@ -19,7 +19,7 @@ const components = [
 ];
 
 const modules = [
-    AccountBrowseModule, PoolDetailsModule, ...commonModules,
+    AccountBrowseModule, PoolBaseModule, ...commonModules,
 ];
 
 @NgModule({

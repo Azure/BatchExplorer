@@ -1,5 +1,5 @@
-import { Component, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
-import { MdDialog, MdDialogConfig } from "@angular/material";
+import { Component, OnDestroy, OnInit } from "@angular/core";
+import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs/Subscription";
@@ -7,9 +7,10 @@ import { Subscription } from "rxjs/Subscription";
 import { BatchApplication } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";
 import { ApplicationParams, ApplicationService } from "app/services";
-import { RxEntityProxy } from "app/services/core";
+import { EntityView } from "app/services/core";
 import { SidebarManager } from "../../base/sidebar";
-import { ApplicationCreateDialogComponent, ApplicationEditDialogComponent,
+import {
+    ApplicationCreateDialogComponent, ApplicationEditDialogComponent,
     DeleteApplicationDialogComponent,
 } from "../action";
 
@@ -18,7 +19,7 @@ import { ApplicationCreateDialogComponent, ApplicationEditDialogComponent,
     templateUrl: "application-details.html",
 })
 export class ApplicationDetailsComponent implements OnInit, OnDestroy {
-    public static breadcrumb({id}, {tab}) {
+    public static breadcrumb({ id }, { tab }) {
         let label = tab ? `Application - ${tab}` : "Application";
         return {
             name: id,
@@ -29,19 +30,18 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     public application: BatchApplication;
     public applicationId: string;
     public decorator: ApplicationDecorator;
-    public data: RxEntityProxy<ApplicationParams, BatchApplication>;
+    public data: EntityView<BatchApplication, ApplicationParams>;
 
     private _paramsSubscriber: Subscription;
 
     constructor(
         private activatedRoute: ActivatedRoute,
         private applicationService: ApplicationService,
-        private dialog: MdDialog,
+        private dialog: MatDialog,
         private router: Router,
-        private sidebarManager: SidebarManager,
-        private viewContainerRef: ViewContainerRef) {
+        private sidebarManager: SidebarManager) {
 
-        this.data = this.applicationService.get(null);
+        this.data = this.applicationService.view();
         this.data.item.subscribe((application) => {
             this.application = application;
             if (application) {
@@ -72,7 +72,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     public addPackage() {
         const sidebarRef = this.sidebarManager.open("add-package", ApplicationCreateDialogComponent);
         sidebarRef.component.setValue(this.application);
-        sidebarRef.afterCompletition.subscribe(() => {
+        sidebarRef.afterCompletion.subscribe(() => {
             this.refresh();
         });
     }
@@ -81,16 +81,14 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     public editApplication() {
         const sidebarRef = this.sidebarManager.open("edit-application", ApplicationEditDialogComponent);
         sidebarRef.component.setValue(this.application);
-        sidebarRef.afterCompletition.subscribe(() => {
+        sidebarRef.afterCompletion.subscribe(() => {
             this.refresh();
         });
     }
 
     @autobind()
     public deleteApplication() {
-        let config = new MdDialogConfig();
-        config.viewContainerRef = this.viewContainerRef;
-        const dialogRef = this.dialog.open(DeleteApplicationDialogComponent, config);
+        const dialogRef = this.dialog.open(DeleteApplicationDialogComponent);
         dialogRef.componentInstance.applicationId = this.application.id;
     }
 

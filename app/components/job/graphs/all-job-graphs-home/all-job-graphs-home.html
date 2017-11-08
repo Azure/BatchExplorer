@@ -8,11 +8,13 @@
     <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
 
     <div class="filters">
-        <md-select placeholder="Time range" [formControl]="selectedTimeRange">
-            <md-option [value]="TimeRange.hour">Last hour</md-option>
-            <md-option [value]="TimeRange.day">Last 24 hours</md-option>
-            <md-option [value]="TimeRange.week">Last week</md-option>
-        </md-select>
+        <mat-form-field>
+            <mat-select placeholder="Time range" [formControl]="selectedTimeRange">
+                <mat-option [value]="TimeRange.hour">Last hour</mat-option>
+                <mat-option [value]="TimeRange.day">Last 24 hours</mat-option>
+                <mat-option [value]="TimeRange.week">Last week</mat-option>
+            </mat-select>
+        </mat-form-field>
     </div>
 </div>
 <div *ngIf="jobs" class="graph-content">
@@ -29,5 +31,5 @@
 </div>
 
 <div class="info-overlay" *ngIf="jobs && jobs.size === 0 && !loading">
-    No jobs in the selected time range
+    No completed jobs in the selected time range
 </div>

@@ -1,0 +1,27 @@
+<bl-breadcrumb-group> </bl-breadcrumb-group>
+
+<div class="header">
+    <h1>Local templates</h1>
+</div>
+<div class="content">
+    {{pickedTemplate}}
+    <div class="template-picker" [class.picked]="pickedTemplateFile" [class.error]="pickedTemplateFile && !valid">
+        <label for="templateInput">
+            <div class="main">
+                    <span *ngIf="pickedTemplateFile">{{pickedTemplateFile.name}}</span>
+                    <span *ngIf="!pickedTemplateFile">Pick a template</span>
+            </div>
+            <div [ngSwitch]="templateType" *ngIf="templateType" class="subtitle">
+                <div *ngSwitchCase="NcjTemplateType.job">This is a Job template</div>
+                <div *ngSwitchCase="NcjTemplateType.pool">This is a Pool template</div>
+                <div *ngSwitchCase="NcjTemplateType.unknown">Couldn't determine the type of template (Pool or Job). Make sure your template is valid.</div>
+            </div>
+            <div class="error" *ngIf="error">
+                {{error}}
+            </div>
+        </label>
+        <input id="templateInput" name="templateInput" type="file" accept=".json" (change)="pickTemplateFile($event)">
+    </div>
+
+    <bl-button type="wide" color="primary" *ngIf="valid" (do)="runThisTemplate()">Use this template</bl-button>
+</div>

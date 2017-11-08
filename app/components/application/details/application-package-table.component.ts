@@ -1,5 +1,5 @@
-import { Component, Input, OnChanges, ViewContainerRef } from "@angular/core";
-import { MdDialog, MdDialogConfig } from "@angular/material";
+import { Component, Input, OnChanges } from "@angular/core";
+import { MatDialog } from "@angular/material";
 import { autobind } from "core-decorators";
 import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
@@ -50,11 +50,10 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
     private _stateMap: Map<string, PackageState>;
 
     constructor(
-        protected dialog: MdDialog,
+        protected dialog: MatDialog,
         private applicationService: ApplicationService,
         private sidebarManager: SidebarManager,
-        private taskManager: BackgroundTaskService,
-        private viewContainerRef: ViewContainerRef) {
+        private taskManager: BackgroundTaskService) {
 
         super(dialog);
         this._stateMap = new Map();
@@ -93,7 +92,7 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
     public addPackage(event: any) {
         const sidebarRef = this.sidebarManager.open("add-package", ApplicationCreateDialogComponent);
         sidebarRef.component.setValue(this.application);
-        sidebarRef.afterCompletition.subscribe(() => {
+        sidebarRef.afterCompletion.subscribe(() => {
             this.refresh();
         });
     }
@@ -112,15 +111,12 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
     }
 
     public refresh(): Observable<any> {
-        return this.applicationService.getOnce(this.application.id);
+        return this.applicationService.get(this.application.id);
     }
 
     @autobind()
     public activateActiveItem() {
-        let config = new MdDialogConfig();
-        config.viewContainerRef = this.viewContainerRef;
-
-        const dialogRef = this.dialog.open(ActivatePackageDialogComponent, config);
+        const dialogRef = this.dialog.open(ActivatePackageDialogComponent);
         dialogRef.componentInstance.applicationId = this.application.id;
         dialogRef.componentInstance.packageVersion = this.activatedItem;
         dialogRef.afterClosed().subscribe((obj) => {
@@ -132,7 +128,7 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
     public updatePackageVersion() {
         const sidebarRef = this.sidebarManager.open("update-package", ApplicationCreateDialogComponent);
         sidebarRef.component.setValue(this.application, this.activatedItem);
-        sidebarRef.afterCompletition.subscribe(() => {
+        sidebarRef.afterCompletion.subscribe(() => {
             this.refresh();
         });
     }

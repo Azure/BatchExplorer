@@ -103,6 +103,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
 
         this._subs.push(this._activeItemKey.subscribe(x => {
             this.selectedItems = x ? [x.key] : [];
+
             this.activatedItemChange.emit(x);
             if (!x || x.key !== this._activeItemInput) {
                 this.activeItemChange.emit(x && x.key);
@@ -133,7 +134,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         if (this.items.length > 0) {
             this._processInitialItems(this.items);
         } else {
-            this.items.changes.first().subscribe((newItems: QueryList<AbstractListItemBase>) => {
+            this.items.changes.take(1).subscribe((newItems: QueryList<AbstractListItemBase>) => {
                 this._processInitialItems(newItems);
             });
         }

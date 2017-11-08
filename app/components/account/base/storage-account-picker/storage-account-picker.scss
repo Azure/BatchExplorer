@@ -1,0 +1,11 @@
+@import "app/styles/variables";
+
+bl-storage-account-picker {
+    .classic-warning {
+        color: map-get($warn, 500);
+
+        .fa-warning {
+            color: map-get($warn, 500);
+        }
+    }
+}

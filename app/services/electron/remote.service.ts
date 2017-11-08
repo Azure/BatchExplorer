@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
-import { BatchClientProxyFactory, FileUtils, StorageClientProxyFactory } from "client/api";
+import { FileUtils } from "client/api";
 import { AuthenticationWindow } from "client/authentication";
+import { BatchLabsApplication } from "client/core";
 import { SplashScreen } from "client/splash-screen";
 import { remote } from "electron";
 
@@ -18,6 +19,13 @@ export class ElectronRemote {
     /**
      * @returns The BrowserWindow object which this web page belongs to.
      */
+    public getBatchLabsApp(): BatchLabsApplication {
+        return this._currentWindow().batchLabsApp;
+    }
+
+    /**
+     * @returns The BrowserWindow object which this web page belongs to.
+     */
     public getCurrentWindow(): Electron.BrowserWindow {
         return remote.getCurrentWindow();
     }
@@ -28,14 +36,6 @@ export class ElectronRemote {
 
     public getAuthenticationWindow(): AuthenticationWindow {
         return this._currentWindow().authenticationWindow;
-    }
-
-    public getBatchClientFactory(): BatchClientProxyFactory {
-        return this._currentWindow().batchClientFactory;
-    }
-
-    public getStorageClientFactory(): StorageClientProxyFactory {
-        return this._currentWindow().storageClientFactory;
     }
 
     public getFileUtils(): FileUtils {

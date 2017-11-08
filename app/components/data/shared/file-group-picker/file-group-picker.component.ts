@@ -2,9 +2,12 @@ import { Component, Input, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
+import { MatOptionSelectionChange } from "@angular/material";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
+import { SidebarManager } from "app/components/base/sidebar";
+import { FileGroupCreateFormComponent } from "app/components/data/action";
 import { BlobContainer } from "app/models";
 import { ListContainerParams, StorageService } from "app/services";
 import { RxListProxy } from "app/services/core";
@@ -22,6 +25,7 @@ import "./file-group-picker.scss";
 })
 export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
     @Input() public label: string;
+    @Input() public hint: string;
 
     public fileGroups: List<BlobContainer>;
     public value = new FormControl();
@@ -30,13 +34,23 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
 
     private _propagateChange: (value: any[]) => void = null;
     private _subscriptions: Subscription[] = [];
+    private _loading: boolean = true;
 
-    constructor(private storageService: StorageService) {
+    constructor(private storageService: StorageService, private sidebarManager: SidebarManager) {
 
         this.fileGroupsData = this.storageService.listContainers(storageService.ncjFileGroupPrefix);
         this.fileGroupsData.items.subscribe((fileGroups) => {
             this.fileGroups = fileGroups;
         });
+
+        // listen to file group add events
+        this._subscriptions.push(this.storageService.onFileGroupAdded.subscribe((fileGroupId: string) => {
+            const container = storageService.getContainerOnce(fileGroupId);
+            this.fileGroupsData.loadNewItem(container);
+            container.subscribe((blobContainer) => {
+                this._checkValid(blobContainer.name);
+            });
+        }));
 
         this._subscriptions.push(this.value.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((value) => {
             this._checkValid(value);
@@ -47,7 +61,10 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
     }
 
     public ngOnInit() {
-        this.fileGroupsData.fetchNext();
+        this.fileGroupsData.fetchAll().subscribe(() => {
+            this._loading = false;
+            this._checkValid(this.value.value);
+        });
     }
 
     public ngOnDestroy() {
@@ -71,9 +88,18 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
         return null;
     }
 
-    private _checkValid(value: string) {
-        const valid = !value || this.fileGroups.map(x => x.name).includes(value);
-        this.warning = !valid;
+    public createFileGroup(event: MatOptionSelectionChange) {
+        // isUserInput true when selected, false when not
+        if (!event.source.value && event.isUserInput) {
+            const sidebar = this.sidebarManager.open("Add a new file group", FileGroupCreateFormComponent);
+            sidebar.afterCompletion.subscribe(() => {
+                this.value.setValue(sidebar.component.getCurrentValue().name);
+            });
+        }
     }
 
+    private _checkValid(value: string) {
+        const valid = this._loading || !value || this.fileGroups.map(x => x.name).includes(value);
+        this.warning = !valid;
+    }
 }

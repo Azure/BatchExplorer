@@ -2,11 +2,10 @@ import * as path from "path";
 import { Observable, Subject } from "rxjs";
 
 import { File } from "app/models";
-import { RxEntityProxy, getOnceProxy } from "app/services/core";
-import { exists, log } from "app/utils";
+import { CloudPathUtils, exists, log } from "app/utils";
 import { FileSystemService } from "../fs.service";
 
-export type PropertiesFunc = () => RxEntityProxy<any, File>;
+export type PropertiesFunc = () =>  Observable<File>;
 export type ContentFunc = (options: FileLoadOptions) => Observable<FileLoadResult>;
 export type DownloadFunc = (destination: string) => Observable<boolean>;
 
@@ -47,7 +46,6 @@ export enum FileSource {
 export class FileLoader {
     public readonly filename: string;
     public readonly source: FileSource;
-
     /**
      * Optional name of subfolder to prevent collision with caches
      */
@@ -58,12 +56,16 @@ export class FileLoader {
      */
     public readonly fileChanged: Observable<File>;
 
+    /**
+     * Base path to show the file as relative to this.
+     */
+    public basePath: string;
+
     private _fs: FileSystemService;
     private _properties: PropertiesFunc;
     private _content: ContentFunc;
     private _download: DownloadFunc;
     private _cachedProperties: File;
-    private _proxy: RxEntityProxy<any, File>;
     private _fileChanged = new Subject<File>();
     private _logIgnoreError: number[];
 
@@ -81,22 +83,6 @@ export class FileLoader {
     }
 
     /**
-     * This will return a rx entity proxy.
-     * This means you need to dispose the file loader when done using it.
-     * If listen is never called you don't need to call dispose.
-     */
-    public listen(): RxEntityProxy<any, File> {
-        if (!this._proxy) {
-            this._proxy = this._properties();
-            this._proxy.item.subscribe((file) => {
-                this._updateProperties(file);
-            });
-            this._proxy.fetch();
-        }
-        return this._proxy;
-    }
-
-    /**
      * Returns the properties once. This doesn't need any cleanup(i.e. no need to call dispose)
      * @param forceNew If set to false it will use the last value loaded
      */
@@ -105,7 +91,7 @@ export class FileLoader {
             return Observable.of(this._cachedProperties);
         }
 
-        const obs = getOnceProxy(this._properties());
+        const obs = this._properties();
         obs.subscribe({
             next: (file) => {
                 this._updateProperties(file);
@@ -129,10 +115,12 @@ export class FileLoader {
             const checkDirObs = Observable.fromPromise(this._fs.ensureDir(path.dirname(dest)));
             return checkDirObs.flatMap(() => this._download(dest)).map(x => dest).share();
         }
+
         const obs = this.content().concatMap((result) => {
             return this._fs.saveFile(dest, result.content);
         }).share();
         obs.subscribe();
+
         return obs;
     }
 
@@ -153,22 +141,22 @@ export class FileLoader {
         });
     }
 
-    /**
-     * Dipose of the file loader entities if applicable
-     * You MUST call this if you used .listen on a file loader otherwise there will be memory leaks.
-     */
-    public dispose() {
-        if (this._proxy) {
-            this._proxy.dispose();
-            this._proxy = null;
+    public get displayName() {
+        if (this.basePath) {
+            return CloudPathUtils.normalize(path.relative(this.basePath, this.filename));
+        } else {
+            return this.filename;
         }
     }
 
     private _hashFilename(file: File) {
         const hash = file.properties.lastModified.getTime().toString(36);
-        const segements = file.name.split(/[\\\/]/);
+        // clean any unwanted : characters from the file path
+        const cleaned = file.name.replace(":", "");
+        const segements = cleaned.split(/[\\\/]/);
         const filename = segements.pop();
         segements.push(`${hash}.${filename}`);
+
         return path.join(...segements);
     }
 
@@ -188,4 +176,5 @@ export class FileLoader {
         const filename = this._hashFilename(file);
         return path.join(this._fs.commonFolders.temp, this.source, this.groupId, filename);
     }
+
 }

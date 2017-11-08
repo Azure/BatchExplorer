@@ -31,7 +31,7 @@ export class RefreshButtonComponent {
     public type: string = "square";
 
     @Input()
-    public tooltipPosition: string = "right";
+    public tooltipPosition: string = "above";
 
     public status = RefreshStatus.Idle;
 

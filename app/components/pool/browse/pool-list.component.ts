@@ -1,7 +1,7 @@
 import {
     ChangeDetectionStrategy, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild,
 } from "@angular/core";
-import { MdDialog } from "@angular/material";
+import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { List } from "immutable";
@@ -71,7 +71,7 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         private poolService: PoolService,
         activatedRoute: ActivatedRoute,
         router: Router,
-        dialog: MdDialog,
+        dialog: MatDialog,
         private sidebarManager: SidebarManager,
         private taskManager: BackgroundTaskService) {
 
@@ -79,7 +79,7 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         this.data = this.poolService.list();
         this.status = this.data.status;
         this._subs.push(poolService.onPoolAdded.subscribe((poolId) => {
-            this.data.loadNewItem(poolService.getOnce(poolId));
+            this.data.loadNewItem(poolService.get(poolId));
         }));
         this._subs.push(this.data.items.subscribe((pools) => {
             this.pools = List<PoolDecorator>(pools.map(x => new PoolDecorator(x)));
@@ -132,7 +132,7 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         const sidebarRef = this.sidebarManager.open("resize-pool", PoolResizeDialogComponent);
         sidebarRef.component.pool = pool;
         this.sidebarManager.onClosed.subscribe(() => {
-            this.poolService.getOnce(pool.id);
+            this.poolService.get(pool.id);
         });
     }
 

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild, ViewContainerRef, forwardRef } from "@ang
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
-import { MdCheckboxChange, MdDialog, MdDialogConfig } from "@angular/material";
+import { MatCheckboxChange, MatDialog, MatDialogConfig } from "@angular/material";
 import { List, Map } from "immutable";
 
 import { TableComponent, TableConfig } from "app/components/base/table";
@@ -39,7 +39,7 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
 
     constructor(
         private viewContainerRef: ViewContainerRef,
-        private dialog: MdDialog) {
+        private dialog: MatDialog) {
     }
 
     public ngOnInit() {
@@ -103,13 +103,13 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
     }
 
     public viewEula(license: ApplicationLicense) {
-        let config = new MdDialogConfig();
+        let config = new MatDialogConfig();
         config.viewContainerRef = this.viewContainerRef;
         const dialogRef = this.dialog.open(LicenseEulaDialogComponent, config);
         dialogRef.componentInstance.license = license;
     }
 
-    public eulaCheck(event: MdCheckboxChange) {
+    public eulaCheck(event: MatCheckboxChange) {
         this._eulaRead = event.checked;
         this._fireChangeEvent();
     }

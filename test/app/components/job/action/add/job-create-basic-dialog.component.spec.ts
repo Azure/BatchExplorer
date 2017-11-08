@@ -147,6 +147,12 @@ describe("JobCreateBasicDialogComponent ", () => {
         validateControl(constraintsForm, controlName).passes(validators.range).with(1);
     });
 
+    it("onAllTasksComplete and onTaskFailure are initialized", () => {
+        const control = baseForm.controls;
+        expect(control.onAllTasksComplete).not.toBeNull();
+        expect(control.onTaskFailure).not.toBeNull();
+    });
+
     it("Pool is initialized", () => {
         const control = baseForm.controls.poolInfo;
         expect(control).not.toBeNull();
@@ -209,7 +215,7 @@ describe("JobCreateBasicDialogComponent ", () => {
                 done();
             },
             error: (error: ServerError) => {
-                expect(error.body.message).toBe("error, error, error");
+                expect(error.message).toBe("error, error, error");
                 expect(error.toString()).toBe("408 - error, error, error");
 
                 done();

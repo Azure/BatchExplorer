@@ -1,12 +1,12 @@
 import { EventEmitter, Input, Output } from "@angular/core";
 import { FormGroup } from "@angular/forms";
-import { MdDialogRef } from "@angular/material";
+import { MatDialogRef } from "@angular/material";
 import { autobind } from "core-decorators";
 
 import { ServerError } from "app/models";
 import { SidebarRef } from "../sidebar";
 
-export type ContainerRef = MdDialogRef<any> | SidebarRef<any> | GenericContainer;
+export type ContainerRef = MatDialogRef<any> | SidebarRef<any> | GenericContainer;
 export interface GenericContainer {
     /**
      * Method to destroy the container
@@ -43,7 +43,7 @@ export class FormBase {
         if (!container) {
             return;
         }
-        if (container instanceof MdDialogRef) {
+        if (container instanceof MatDialogRef) {
             container.close();
         } else if (container instanceof SidebarRef) {
             container.destroy();

@@ -21,7 +21,7 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
     public jobId: string;
     public constraintsGroup: FormGroup;
     public resourceFiles: FormArray;
-
+    public hasLinkedStorage: boolean = true;
     public title = "Add task";
     public subtitle = "Adds a task to the selected job";
     public multiUse = true;
@@ -34,6 +34,7 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
         private notificationService: NotificationService) {
         super(TaskCreateDto);
 
+        this.hasLinkedStorage = true;
         const validation = Constants.forms.validation;
         this.constraintsGroup = this.formBuilder.group({
             maxTaskRetryCount: [
@@ -55,6 +56,7 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
             fileGroups: [[]],
             resourceFiles: [[]],
             environmentSettings: [[]],
+            appPackages: [[]],
         });
     }
 
@@ -81,5 +83,9 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
         });
 
         return observable;
+    }
+
+    public handleHasLinkedStorage(hasLinkedStorage) {
+        this.hasLinkedStorage = hasLinkedStorage;
     }
 }

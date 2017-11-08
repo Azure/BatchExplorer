@@ -6,13 +6,18 @@ import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { Pool, StartTask } from "app/models";
 import { PoolPatchDto } from "app/models/dtos";
-import { PoolService } from "app/services";
+import { NodeService, PoolService } from "app/services";
 
 @Component({
     selector: "bl-start-task-edit-form",
     templateUrl: "start-task-edit-form.html",
 })
 export class StartTaskEditFormComponent {
+    /**
+     * If editing start task from the node give the node id.
+     */
+    public fromNode: string;
+
     @Output()
     public close = new EventEmitter();
 
@@ -37,8 +42,9 @@ export class StartTaskEditFormComponent {
     constructor(
         formBuilder: FormBuilder,
         private poolService: PoolService,
+        private nodeService: NodeService,
         public sidebarRef: SidebarRef<any>,
-        notificationService: NotificationService) {
+        private notificationService: NotificationService) {
         this.form = formBuilder.group({
             enableStartTask: [false],
             startTask: [null],
@@ -63,7 +69,7 @@ export class StartTaskEditFormComponent {
                 startTask: startTask,
             }));
         } else {
-            obs = this.poolService.getOnce(this.pool.id).cascade((pool) => {
+            obs = this.poolService.get(this.pool.id).cascade((pool) => {
                 const poolData = pool.toJS();
                 return this.poolService.replaceProperties(id, new PoolPatchDto({
                     applicationPackageReferences: poolData.applicationPackageReferences || [],
@@ -73,7 +79,31 @@ export class StartTaskEditFormComponent {
             });
         }
         return obs.cascade(() => {
-            return this.poolService.getOnce(id); // Refresh the pool
+            this._notifySuccess();
+            return this.poolService.get(id); // Refresh the pool
+
+        });
+    }
+
+    public reboot() {
+        this.nodeService.reboot(this.pool.id, this.fromNode).subscribe(() => {
+            this.notificationService.success("Rebooting", `Node is now rebooting`);
+        });
+    }
+
+    private _notifySuccess() {
+        const actions = [
+            { name: "Reboot all", do: () => this.nodeService.rebootAll(this.pool.id) },
+        ];
+
+        if (this.fromNode) {
+            actions.push(
+                { name: "Reboot node", do: () => this.reboot() },
+            );
+        }
+        this.notificationService.success("Updated", `Pool ${this.pool.id} start task was updated`, {
+            persist: true,
+            actions: actions,
         });
     }
 }

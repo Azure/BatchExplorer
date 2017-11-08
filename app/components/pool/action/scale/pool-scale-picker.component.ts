@@ -1,8 +1,10 @@
-import { Component, OnDestroy, forwardRef } from "@angular/core";
+import { Component, Input, OnDestroy, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { Subscription } from "rxjs";
+
+import { Pool } from "app/models";
 
 @Component({
     selector: "bl-pool-scale-picker",
@@ -14,6 +16,8 @@ import { Subscription } from "rxjs";
     ],
 })
 export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor {
+    @Input() public pool: Pool;
+
     public form: FormGroup;
 
     public selectedModeTab = 0;
@@ -28,6 +32,7 @@ export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor
             targetDedicatedNodes: [0, this._invalidTargetNodes()],
             targetLowPriorityNodes: [0, this._invalidTargetNodes()],
             autoScaleEvaluationInterval: [15],
+            resizeTimeout: [15],
         });
 
         this._sub = this.form.valueChanges.distinctUntilChanged().subscribe((value) => {
@@ -51,6 +56,9 @@ export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor
 
     public registerOnChange(fn) {
         this._propagateChange = fn;
+        if (fn) {
+            fn(this.form.value);
+        }
     }
 
     public registerOnTouched(fn) {

@@ -2,15 +2,27 @@ bl-image-file-viewer {
     display: block;
     min-height: 100px;
     position: relative;
+    height: 100%;
+
+    bl-loading {
+        height: 100%;
+
+        .loading-content {
+            height: 100%;
+        }
+    }
 
     .img-container {
-        display: flex;
-        align-items: center;
         width: 100%;
-        justify-content: center;
+        height: 100%;
     }
 
     img {
-        max-width: calc(100% - 5px);
+        display: block;
+        margin: 5px auto;
+        height: auto;
+        width: auto;
+        max-width: calc(100% - 10px);
+        max-height: calc(100% - 10px);
     }
 }
