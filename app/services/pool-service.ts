@@ -8,8 +8,10 @@ import { EntityView } from "app/services/core/data";
 import { Constants, ModelUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";
-import { DataCache, RxBatchListProxy, RxListProxy } from "./core";
+import { DataCache, RxBatchListProxy, RxListProxy, BatchListGetter } from "./core";
 import { ServiceBase } from "./service-base";
+
+export interface PoolListParams { }
 
 export interface PoolParams {
     id?: string;
@@ -27,6 +29,7 @@ export class PoolService extends ServiceBase {
     private _cache = new DataCache<Pool>();
 
     private _getter: BatchEntityGetter<Pool, PoolParams>;
+    private _listGetter: BatchListGetter<Pool, PoolListParams>;
 
     constructor(batchService: BatchClientService) {
         super(batchService);
@@ -34,6 +37,19 @@ export class PoolService extends ServiceBase {
         this._getter = new BatchEntityGetter(Pool, this.batchService, {
             cache: () => this._cache,
             getFn: (client, params: PoolParams) => client.pool.get(params.id),
+        });
+
+        this._listGetter = new BatchListGetter(Pool, this.batchService, {
+            cache: () => this._cache,
+            list: (client, params: PoolListParams, options) => client.pool.list(options),
+            listNext: (client, nextLink: string) => client.pool.listNext(nextLink),
+        });
+
+        this._listGetter.fetch({}).subscribe({
+            next: (pools) => {
+                console.log("Got pools??", pools);
+            },
+            error: (err) => console.log("erro", err),
         });
     }
 
@@ -53,6 +69,12 @@ export class PoolService extends ServiceBase {
             proxyConstructor: (client, params, options) => client.pool.list(options),
             initialOptions,
         });
+    }
+
+    public listOnce(options?: any, forceNew?: boolean);
+    public listOnce(nextLink: string);
+    public listOnce() {
+        return this._listGetter.fetch(args);
     }
 
     /**
