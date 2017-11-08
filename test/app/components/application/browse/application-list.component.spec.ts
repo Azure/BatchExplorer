@@ -1,11 +1,13 @@
 import { NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { MatDialog } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 import { Subject } from "rxjs";
 
 import { ApplicationListComponent } from "app/components/application/browse";
 import { BackgroundTaskService } from "app/components/base/background-task";
+import { SidebarManager } from "app/components/base/sidebar";
 import { BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
 import { FilterBuilder } from "app/utils/filter-builder";
@@ -38,8 +40,10 @@ describe("ApplicationListComponent", () => {
             imports: [RouterTestingModule],
             declarations: [ApplicationListComponent, NoItemMockComponent],
             providers: [
+                { provide: MatDialog, useValue: null },
                 { provide: ApplicationService, useValue: applicationServiceSpy },
                 { provide: BackgroundTaskService, useValue: null },
+                { provide: SidebarManager, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
