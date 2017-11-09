@@ -42,6 +42,9 @@
     "no-irregular-whitespace": true,
     "no-invalid-template-strings": true,
     "no-sparse-arrays": true,
+    "no-duplicate-switch-case": true,
+    "no-return-await": true,
+    "ban-comma-operator": true,
 
     // Codelyzer rules(Angular2)
     "directive-selector": [true, "attribute", "bl", "camelCase"],
