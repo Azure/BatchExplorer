@@ -8,7 +8,7 @@ import { AccountPatchDto } from "app/models/dtos";
 import { ArmResourceUtils, Constants, log } from "app/utils";
 import { AzureHttpService } from "./azure-http.service";
 import {
-    DataCache, DataCacheTracker, RxBasicEntityProxy, RxEntityProxy, getOnceProxy,
+    BasicEntityGetter, DataCache, DataCacheTracker, EntityView,
 } from "./core";
 import { LocalFileStorage } from "./local-file-storage.service";
 import { SubscriptionService } from "./subscription.service";
@@ -55,11 +55,11 @@ export class AccountService {
     private _currentAccount: BehaviorSubject<SelectedAccount> = new BehaviorSubject(null);
     private _currentAccountValid: BehaviorSubject<AccountStatus> = new BehaviorSubject(AccountStatus.Invalid);
     private _accountLoaded = new BehaviorSubject<boolean>(false);
-    private _accountCache = new DataCache<AccountResource>();
     private _currentAccountId = new BehaviorSubject<string>(null);
     private _accounts = new BehaviorSubject<List<AccountResource>>(List([]));
     private _accountsLoaded = new BehaviorSubject<boolean>(false);
     private _cache = new DataCache<AccountResource>();
+    private _getter: BasicEntityGetter<AccountResource, AccountParams>;
 
     constructor(
         private storage: LocalFileStorage,
@@ -70,6 +70,12 @@ export class AccountService {
         this.accountsLoaded = this._accountsLoaded.asObservable();
         this._accountLoaded.next(true);
         this.accounts = this._accounts.asObservable();
+
+        this._getter = new BasicEntityGetter(AccountResource, {
+            cache: () => this._cache,
+            supplyData: ({ id }) => this._getAccount(id),
+        });
+
         this._currentAccount.subscribe((selection) => {
             if (selection) {
                 const { account } = selection;
@@ -113,8 +119,8 @@ export class AccountService {
         const accountId = this._currentAccountId.value;
         this._currentAccountValid.next(AccountStatus.Loading);
 
-        const obs = this.getOnce(accountId);
-        DataCacheTracker.clearAllCaches(this._accountCache);
+        const obs = this.get(accountId);
+        DataCacheTracker.clearAllCaches(this._cache);
         obs.subscribe({
             next: (account) => {
                 this._currentAccount.next({ account });
@@ -173,18 +179,15 @@ export class AccountService {
             .share();
     }
 
-    public get(accountId: string): RxEntityProxy<AccountParams, AccountResource> {
-        return new RxBasicEntityProxy<AccountParams, AccountResource>(AccountResource, {
+    public view(): EntityView<AccountResource, AccountParams> {
+        return new EntityView({
             cache: () => this._cache,
-            initialParams: {
-                id: accountId,
-            },
-            supplyData: ({ id }) => this._getAccount(id),
+            getter: this._getter,
         });
     }
 
-    public getOnce(accountId: string): Observable<AccountResource> {
-        return getOnceProxy(this.get(accountId));
+    public get(accountId: string): Observable<AccountResource> {
+        return this._getter.fetch({ id: accountId });
     }
 
     public getNameFromAccountId(accountId: string): string {
@@ -212,7 +215,7 @@ export class AccountService {
         }
 
         const subject = new AsyncSubject();
-        this.getOnce(accountId).subscribe({
+        this.get(accountId).subscribe({
             next: (account) => {
                 this._accountFavorites.next(this._accountFavorites.getValue().push(account));
                 this._saveAccountFavorites();

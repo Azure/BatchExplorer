@@ -11,7 +11,7 @@ import { SidebarManager } from "app/components/base/sidebar";
 import { BatchApplication } from "app/models";
 import { ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";
-import { ActivatedRouteMock, RxMockEntityProxy } from "test/utils/mocks";
+import { ActivatedRouteMock, MockEntityView } from "test/utils/mocks";
 import { LoadingMockComponent } from "test/utils/mocks/components";
 
 // mock application properties component
@@ -60,14 +60,14 @@ describe("ApplicationDetailsComponent.breadcrumb()", () => {
 describe("ApplicationDetailsComponent", () => {
     let fixture: ComponentFixture<ApplicationDetailsComponent>;
     let component: ApplicationDetailsComponent;
-    let entityProxy: RxMockEntityProxy<any, BatchApplication>;
+    let entityView: MockEntityView<BatchApplication, any>;
     let applicationServiceSpy: any;
     let activatedRouteSpy: any;
     let accountServiceSpy: any;
     let matDialogSpy: any;
 
     beforeEach(() => {
-        entityProxy = new RxMockEntityProxy(BatchApplication, {
+        entityView = new MockEntityView(BatchApplication, {
             item: Fixtures.application.create({
                 id: "app-1",
                 displayName: "bobs display name",
@@ -76,7 +76,7 @@ describe("ApplicationDetailsComponent", () => {
         });
 
         applicationServiceSpy = {
-            get: () => entityProxy,
+            view: () => entityView,
         };
 
         accountServiceSpy = {
@@ -117,7 +117,7 @@ describe("ApplicationDetailsComponent", () => {
 
     describe("loads application based on initial parameter", () => {
         it("proxy params are set to correct id", () => {
-            expect(entityProxy.params).toEqual({ id: "app-1" });
+            expect(entityView.params).toEqual({ id: "app-1" });
         });
 
         it("application was fetched", () => {

@@ -8,6 +8,8 @@ import { Filter, FilterBuilder } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
 import { FileGroupCreateFormComponent } from "../action";
 
+import "./data-home.scss";
+
 @Component({
     selector: "bl-data-home",
     templateUrl: "data-home.html",

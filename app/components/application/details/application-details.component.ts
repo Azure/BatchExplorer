@@ -7,9 +7,10 @@ import { Subscription } from "rxjs/Subscription";
 import { BatchApplication } from "app/models";
 import { ApplicationDecorator } from "app/models/decorators";
 import { ApplicationParams, ApplicationService } from "app/services";
-import { RxEntityProxy } from "app/services/core";
+import { EntityView } from "app/services/core";
 import { SidebarManager } from "../../base/sidebar";
-import { ApplicationCreateDialogComponent, ApplicationEditDialogComponent,
+import {
+    ApplicationCreateDialogComponent, ApplicationEditDialogComponent,
     DeleteApplicationDialogComponent,
 } from "../action";
 
@@ -18,7 +19,7 @@ import { ApplicationCreateDialogComponent, ApplicationEditDialogComponent,
     templateUrl: "application-details.html",
 })
 export class ApplicationDetailsComponent implements OnInit, OnDestroy {
-    public static breadcrumb({id}, {tab}) {
+    public static breadcrumb({ id }, { tab }) {
         let label = tab ? `Application - ${tab}` : "Application";
         return {
             name: id,
@@ -29,7 +30,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
     public application: BatchApplication;
     public applicationId: string;
     public decorator: ApplicationDecorator;
-    public data: RxEntityProxy<ApplicationParams, BatchApplication>;
+    public data: EntityView<BatchApplication, ApplicationParams>;
 
     private _paramsSubscriber: Subscription;
 
@@ -40,7 +41,7 @@ export class ApplicationDetailsComponent implements OnInit, OnDestroy {
         private router: Router,
         private sidebarManager: SidebarManager) {
 
-        this.data = this.applicationService.get(null);
+        this.data = this.applicationService.view();
         this.data.item.subscribe((application) => {
             this.application = application;
             if (application) {

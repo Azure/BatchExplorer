@@ -2,7 +2,7 @@
     <!-- This content will be dynamic when the API is in place -->
     <div *ngIf="isAutodesk" class="eula">
         <p class="title">Autodesk Products</p>
-        <p>Customer's use of the Autodesk products, which may include associated materials or documentation (individually and collectively, "Autodesk Products"), provided by Microsoft in conjunction with the Azure platform is subject to the Online Terms of Service and other terms provided by Microsoft at <a class="ext-eula-link" href="https://azure.microsoft.com/en-us/support/legal" target="_blank">https://azure.microsoft.com/en-us/support/legal</a> (the "Agreement") and the following additional terms and conditions.</p>
+        <p>Customer's use of the Autodesk products, which may include associated materials or documentation (individually and collectively, "Autodesk Products"), provided by Microsoft in conjunction with the Azure platform is subject to the Online Terms of Service and other terms provided by Microsoft at <a class="ext-eula-link" (click)="openLink('https://azure.microsoft.com/en-us/support/legal')" href="javascript:void(0)">https://azure.microsoft.com/en-us/support/legal</a> (the "Agreement") and the following additional terms and conditions.</p>
         <p></p>
         <ol type="a">
             <li><span>Additional Terms:</span>Customer's right to use the Autodesk Products or functionality of the Autodesk Products is subject to the terms of the Agreement, and to Customer's understanding of, compliance with, and consent to the following terms and conditions (“Additional Terms”), which Microsoft does not have authority to vary, alter, or amend. By accessing or using the Autodesk Products, Customer (i) agrees to be bound by these Additional Terms, and (ii) is solely responsible for any content and data that Customer inputs in connection with Customer’s access to or use of the Autodesk Products. To the extent of any conflict between these Additional Terms and (a) the Agreement, or (b) any Autodesk software license agreement that may accompany the Autodesk Products provided by Microsoft, these Additional Terms shall control.</li>
@@ -19,7 +19,7 @@
     <div *ngIf="isVray" class="eula">
         <p class="title">Chaos Group Products</p>
         <p>Standard V-Ray EULA applies:
-            <a (click)="openLink('https://docs.chaosgroup.com/display/VRAY3MAYA/License+Agreements+and+Copyrights')" href="javascript:void(0)">
+            <a class="ext-eula-link" (click)="openLink('https://docs.chaosgroup.com/display/VRAY3MAYA/License+Agreements+and+Copyrights')" href="javascript:void(0)">
                 https://docs.chaosgroup.com/display/VRAY3MAYA/License+Agreements+and+Copyrights
             </a>
         </p>

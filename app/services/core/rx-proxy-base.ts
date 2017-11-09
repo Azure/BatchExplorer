@@ -192,6 +192,7 @@ export abstract class RxProxyBase<TParams, TOptions extends ProxyOptions, TEntit
     protected get cache() {
         return this._cache;
     }
+
     /**
      * Create a new item of type TEntity and adds it to the cache
      */

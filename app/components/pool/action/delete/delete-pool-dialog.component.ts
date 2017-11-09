@@ -44,7 +44,7 @@ export class DeletePoolDialogComponent {
     }
 
     private _checkForJob() {
-        this.jobService.getOnce(this.poolId).subscribe({
+        this.jobService.get(this.poolId).subscribe({
             next: (job: Job) => {
                 this.hasJobWithSameName = job.poolId === this.poolId;
                 this.changeDetector.detectChanges();

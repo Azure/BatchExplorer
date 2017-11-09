@@ -6,7 +6,7 @@ import { AsyncSubject, Observable } from "rxjs";
 import { FileExplorerConfig, FileExplorerSelectable } from "app/components/file/browse/file-explorer";
 import { BlobContainer, ServerError } from "app/models";
 import { GetContainerParams, StorageService } from "app/services";
-import { RxEntityProxy } from "app/services/core";
+import { EntityView } from "app/services/core";
 import "./cloud-file-picker-dialog.scss";
 
 @Component({
@@ -15,7 +15,7 @@ import "./cloud-file-picker-dialog.scss";
 })
 export class CloudFilePickerDialogComponent {
     public container: BlobContainer;
-    public data: RxEntityProxy<GetContainerParams, BlobContainer>;
+    public data: EntityView<BlobContainer, GetContainerParams>;
     public done = new AsyncSubject();
     public pickedFile: string = null;
     public containerError: ServerError;
@@ -39,7 +39,7 @@ export class CloudFilePickerDialogComponent {
         private storageService: StorageService,
         public dialogRef: MatDialogRef<CloudFilePickerDialogComponent>) {
 
-        this.data = this.storageService.getContainerProperties(null);
+        this.data = this.storageService.containerView();
         this.data.item.subscribe((container) => {
             this.container = container;
         });

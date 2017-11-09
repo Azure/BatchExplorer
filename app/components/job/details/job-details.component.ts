@@ -1,14 +1,14 @@
-import { Component, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
-import { Job } from "app/models";
+import { Job, JobState } from "app/models";
 import { JobDecorator } from "app/models/decorators";
 import { JobParams, JobService } from "app/services";
-import { RxEntityProxy } from "app/services/core";
+import { EntityView } from "app/services/core";
 import { SidebarManager } from "../../base/sidebar";
 import { TaskCreateBasicDialogComponent } from "../../task/action";
 import {
@@ -36,8 +36,8 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     public jobId: string;
     public job: Job;
     public decorator: JobDecorator;
-    public data: RxEntityProxy<JobParams, Job>;
-
+    public data: EntityView<Job, JobParams>;
+    public JobState = JobState;
     public hasHookTask = false;
 
     private _paramsSubscriber: Subscription;
@@ -45,12 +45,11 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     constructor(
         private dialog: MatDialog,
         private activatedRoute: ActivatedRoute,
-        private viewContainerRef: ViewContainerRef,
         private sidebarManager: SidebarManager,
         private jobService: JobService,
         private router: Router) {
 
-        this.data = this.jobService.get(null, {});
+        this.data = this.jobService.view();
         this.data.item.subscribe((job) => {
             this.job = job;
             this.hasHookTask = Boolean(job && job.jobPreparationTask);
@@ -97,8 +96,6 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     @autobind()
     public terminateJob() {
         let config = new MatDialogConfig();
-        config.viewContainerRef = this.viewContainerRef;
-
         const dialogRef = this.dialog.open(TerminateJobDialogComponent, config);
         dialogRef.componentInstance.jobId = this.job.id;
         dialogRef.afterClosed().subscribe((obj) => {
@@ -109,7 +106,6 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     @autobind()
     public deleteJob() {
         let config = new MatDialogConfig();
-        config.viewContainerRef = this.viewContainerRef;
         const dialogRef = this.dialog.open(DeleteJobDialogComponent, config);
         dialogRef.componentInstance.jobId = this.job.id;
     }
@@ -117,8 +113,6 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     @autobind()
     public disableJob() {
         let config = new MatDialogConfig();
-        config.viewContainerRef = this.viewContainerRef;
-
         const dialogRef = this.dialog.open(DisableJobDialogComponent, config);
         dialogRef.componentInstance.jobId = this.job.id;
         dialogRef.afterClosed().subscribe((obj) => {
@@ -135,8 +129,6 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     @autobind()
     public enableJob() {
         let config = new MatDialogConfig();
-        config.viewContainerRef = this.viewContainerRef;
-
         const dialogRef = this.dialog.open(EnableJobDialogComponent, config);
         dialogRef.componentInstance.jobId = this.job.id;
         dialogRef.afterClosed().subscribe((obj) => {

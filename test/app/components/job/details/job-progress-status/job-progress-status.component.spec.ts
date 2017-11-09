@@ -8,7 +8,7 @@ import { Job, JobTaskCounts, Node, Pool } from "app/models";
 import { JobService, NodeService, PoolService } from "app/services";
 import { PollService } from "app/services/core";
 import { click } from "test/utils/helpers";
-import { RxMockEntityProxy, RxMockListProxy } from "test/utils/mocks";
+import { MockEntityView, RxMockListProxy } from "test/utils/mocks";
 import { GaugeMockComponent } from "test/utils/mocks/components";
 
 @Component({
@@ -34,7 +34,7 @@ describe("JobProgressStatusComponent", () => {
 
     beforeEach(() => {
         poolServiceSpy = {
-            get: () => new RxMockEntityProxy<any, Pool>(Pool, {
+            view: () => new MockEntityView<any, Pool>(Pool, {
                 item: new Pool({ id: "pool-1", maxTasksPerNode: 8, targetDedicatedNodes: 3 }),
             }),
         };

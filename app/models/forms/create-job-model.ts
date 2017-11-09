@@ -39,8 +39,12 @@ export function createJobFormToJsonData(formData: CreateJobModel): any {
         poolInfo: {
             poolId: formData.poolInfo.poolId,
         },
+        jobManagerTask: formData.jobManagerTask,
+        jobPreparationTask: formData.jobPreparationTask,
+        jobReleaseTask: formData.jobReleaseTask,
+        onAllTasksComplete: formData.onAllTasksComplete,
+        onTaskFailure: formData.onTaskFailure,
     };
-
     return data;
 }
 

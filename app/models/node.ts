@@ -4,6 +4,7 @@ import { ListProp, Model, Prop, Record } from "app/core";
 import { CertificateReference } from "app/models/certificate-reference";
 import { NodeRecentTask } from "app/models/node-recent-task";
 import { StartTaskInfo } from "app/models/start-task-info";
+import { ComputeNodeError, ComputeNodeErrorAttributes } from "./compute-node-error";
 
 export interface NodeAttributes {
     id: string;
@@ -23,6 +24,7 @@ export interface NodeAttributes {
     recentTasks: Array<Partial<NodeRecentTask>>;
     certificateReferences: Array<Partial<CertificateReference>>;
     startTaskInfo: Partial<StartTaskInfo>;
+    errors: ComputeNodeErrorAttributes[];
 }
 
 /**
@@ -48,6 +50,7 @@ export class Node extends Record<NodeAttributes> {
 
     @ListProp(NodeRecentTask) public recentTasks: List<NodeRecentTask> = List([]);
     @ListProp(CertificateReference) public certificateReferences: List<CertificateReference> = List([]);
+    @ListProp(ComputeNodeError) public errors: List<ComputeNodeError> = List([]);
 }
 
 export enum NodeState {

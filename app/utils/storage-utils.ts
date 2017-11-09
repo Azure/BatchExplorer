@@ -29,6 +29,10 @@ export class StorageUtils {
             .then(containerName => this._jobPrefix + containerName);
     }
 
+    public static isClassic(storageAccountId: string): boolean {
+        return storageAccountId.contains("Microsoft.ClassicStorage/storageAccounts");
+    }
+
     private static _jobPrefix = "job-";
     private static _singleDashChar = "-";
     private static _maxUsableJobIdLength = 63 - StorageUtils._jobPrefix.length;

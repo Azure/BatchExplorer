@@ -8,7 +8,6 @@ bl-recent-template-list {
     }
 
     .submission {
-
         .label {
             color: map-get($primary, 400);
         }
@@ -21,6 +20,16 @@ bl-recent-template-list {
             .label, .mode {
                 color: map-get($primary, 200);
             }
+        }
+    }
+
+    .download {
+        margin-left: 5px;
+
+        color: $generic-grey;
+
+        &:hover {
+            color: map-get($primary, 200);
         }
     }
 
