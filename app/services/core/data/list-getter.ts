@@ -13,6 +13,17 @@ export interface ListGetterOptions {
     filter?: string;
 }
 
+export interface ContinuationToken {
+    params: any;
+    options: ListGetterOptions;
+    nextLink: string;
+}
+
+export interface ListResponse<TEntity> {
+    items: List<TEntity>;
+    nextLink: ContinuationToken;
+}
+
 export interface ListGetterConfig<TEntity, TParams> extends GenericGetterConfig<TEntity, TParams> {
 }
 
@@ -23,38 +34,49 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
     }
 
     public fetch(params: TParams, options?: ListGetterOptions, forceNew?: boolean);
-    public fetch(nextLink: string);
-    public fetch(paramsOrNextLink: string | TParams, options: ListGetterOptions = {}, forceNew = false) {
-        if (typeof paramsOrNextLink === "string") {
-            this._fetchNext(paramsOrNextLink);
+    public fetch(nextLink: ContinuationToken);
+    public fetch(paramsOrNextLink: any, options: ListGetterOptions = {}, forceNew = false): Observable<ListResponse<TEntity>> {
+        if (paramsOrNextLink.nextLink) {
+            return this._fetchNext(paramsOrNextLink);
         } else {
-            this._fetch(paramsOrNextLink, options, forceNew);
+            return this._fetch(paramsOrNextLink, options, forceNew);
         }
     }
 
     protected abstract list(params: TParams, options: ListGetterOptions): Observable<TEntity[]>;
     protected abstract listNext(nextLink): Observable<TEntity[]>;
 
-    private _fetch(params: TParams, options: ListGetterOptions, forceNew = false): Observable<List<TEntity>> {
+    private _fetch(params: TParams, options: ListGetterOptions, forceNew = false): Observable<ListResponse<TEntity>> {
         const cache = this.getCache(params);
         const items = this._tryLoadFromCache(cache, options, forceNew);
         if (items !== null) {
-            return Observable.of(items);
+            // TODO-TIM return real stuff
+            return Observable.of(null);
         }
 
-        return this.list(params, options).map(x => this._processItems(cache, x));
+        return this.list(params, options).map(x => this._processItems(cache, x, params, options));
     }
 
-    private _fetchNext(nextLink: string): Observable<List<TEntity>> {
-        const cache = this.getCache(params);
+    private _fetchNext(token: ContinuationToken): Observable<ListResponse<TEntity>> {
+        const cache = this.getCache(token.params);
 
-        return this.listNext(nextLink).map(x => this._processItems(x));
+        return this.listNext(token.nextLink).map(x => this._processItems(cache, x, token.params, token.options));
     }
 
-    private _processItems(cache: DataCache<TEntity>, data: any[], select?: string): List<TEntity> {
+    private _processItems(
+        cache: DataCache<TEntity>, response: any,
+        params: TParams, options: ListGetterOptions): ListResponse<TEntity> {
+        const { data, nextLink } = response;
         const items = data.map(x => new this.type(x));
-        cache.addItems(items, select);
-        return List(items);
+        cache.addItems(items, options.select);
+        return {
+            items: List(items),
+            nextLink: nextLink && {
+                nextLink,
+                params,
+                options,
+            },
+        };
     }
 
     /**

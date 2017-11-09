@@ -25,19 +25,27 @@ export class BatchListGetter<TEntity, TParams> extends ListGetter<TEntity, TPara
         this._listNext = config.listNext;
     }
 
-    protected list(params: TParams, options: any): Observable<TEntity[]> {
+    protected list(params: TParams, options: any): Observable<any> {
         return this.batchClient.get().flatMap((proxy) => {
             return Observable.fromPromise(this._list(proxy.client, params, options));
-        }).catch((error) => {
+        }).map(x => this._processBatchResponse(x)).catch((error) => {
             return Observable.throw(ServerError.fromBatch(error));
         }).share();
     }
 
-    protected listNext(nextLink: string): Observable<TEntity[]> {
+    protected listNext(nextLink: string): Observable<any> {
         return this.batchClient.get().flatMap((proxy) => {
             return Observable.fromPromise(this._listNext(proxy.client, nextLink));
-        }).catch((error) => {
+        }).map(x => this._processBatchResponse(x)).catch((error) => {
             return Observable.throw(ServerError.fromBatch(error));
         }).share();
+    }
+
+    private _processBatchResponse(data) {
+        console.log("Data", data, data.odatanextLink);
+        return {
+            data,
+            nextLink: data.odatanextLink,
+        };
     }
 }

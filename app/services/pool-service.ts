@@ -8,7 +8,7 @@ import { EntityView } from "app/services/core/data";
 import { Constants, ModelUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";
-import { DataCache, RxBatchListProxy, RxListProxy, BatchListGetter } from "./core";
+import { BatchListGetter, DataCache, RxBatchListProxy, RxListProxy } from "./core";
 import { ServiceBase } from "./service-base";
 
 export interface PoolListParams { }
@@ -41,11 +41,11 @@ export class PoolService extends ServiceBase {
 
         this._listGetter = new BatchListGetter(Pool, this.batchService, {
             cache: () => this._cache,
-            list: (client, params: PoolListParams, options) => client.pool.list(options),
+            list: (client, params: PoolListParams, options) => client.pool.list({ poolListOptions: options }),
             listNext: (client, nextLink: string) => client.pool.listNext(nextLink),
         });
 
-        this._listGetter.fetch({}).subscribe({
+        this._listGetter.fetch({}, { maxResults: 2 }).subscribe({
             next: (pools) => {
                 console.log("Got pools??", pools);
             },
