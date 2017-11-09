@@ -62,12 +62,12 @@
     "@types/strip-json-comments": "~0.0.28",
     "add-asset-html-webpack-plugin": "^1.0.2",
     "angular2-template-loader": "~0.6.2",
-    "awesome-typescript-loader": "^3.2.1",
+    "awesome-typescript-loader": "^3.3.0",
     "codelyzer": "~3.2.0",
     "commander": "~2.11.0",
     "concurrently": "^3.0.0",
     "copy-webpack-plugin": "^4.1.1",
-    "cross-env": "~5.0.1",
+    "cross-env": "~5.1.1",
     "css-loader": "~0.28.0",
     "devtron": "^1.4.0",
     "electron": "~1.6.15",
@@ -101,7 +101,7 @@
     "webpack": "~3.8.1",
     "webpack-dev-server": "^2.9.4",
     "webpack-dll-bundles-plugin": "^1.0.0-beta.5",
-    "webpack-merge": "~4.1.0"
+    "webpack-merge": "~4.1.1"
   },
   "dependencies": {
     "@angular/animations": "4.4.4",
