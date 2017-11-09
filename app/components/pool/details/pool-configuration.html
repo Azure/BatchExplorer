@@ -52,9 +52,9 @@
         </bl-property-group>
 
         <bl-property-group label="Start task settings" [collapsed]="true" class="wide" [edit]="editStartTask">
-            <bl-text-property label="Command line" [value]="startTask.commandLine"></bl-text-property>
+            <bl-text-property label="Command line" [value]="startTask.commandLine" [wrap]="true"></bl-text-property>
             <bl-text-property label="Max retry count" [value]="startTask.maxTaskRetryCount"></bl-text-property>
-            <bl-text-property label="User identity" [value]="decorator.userIdentitySummary"></bl-text-property>
+            <bl-text-property label="User identity" [value]="decorator.startTask.userIdentitySummary"></bl-text-property>
             <bl-bool-property label="Wait for success" [value]="startTask.waitForSuccess" yesNo="true"></bl-bool-property>
 
             <bl-table-property label="Resource files" *ngIf="startTask.resourceFiles?.size > 0">
