@@ -83,7 +83,7 @@ export class TaskListDisplayComponent extends ListOrTableBase {
         ]);
     }
 
-    public trackByFn(task: Task) {
+    public trackByFn(index, task: Task) {
         return task.id;
     }
 }
