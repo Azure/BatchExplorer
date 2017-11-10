@@ -3,7 +3,7 @@ import { AsyncSubject, BehaviorSubject, Observable, Subscription } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { File, ServerError } from "app/models";
-import { DataCache, RxListProxy } from "app/services/core";
+import { DataCache, RxListProxy, ListView } from "app/services/core";
 import { FileLoader } from "app/services/file";
 import { CloudPathUtils, ObjectUtils } from "app/utils";
 import { FileTreeNode, FileTreeStructure } from "./file-tree.model";
@@ -27,7 +27,7 @@ export interface FileNavigatorConfig {
      * @param folder: Folder that needs to be loaded. If root. will be null.
      * @returns  a new RxListProxy
      */
-    loadPath: (folder: string) => RxListProxy<any, File>;
+    loadPath: (folder: string) => ListView<File, any>;
 
     /**
      * Callback called when navigating to a file.
@@ -56,11 +56,11 @@ export class FileNavigator {
     public error: ServerError;
 
     private _tree = new BehaviorSubject<FileTreeStructure>(null);
-    private _loadPath: (folder: string) => RxListProxy<any, File>;
+    private _loadPath: (folder: string) => ListView<File, any>;
     private _cache: DataCache<File>;
     private _fileDeletedSub: Subscription;
 
-    private _proxies: StringMap<RxListProxy<any, File>> = {};
+    private _proxies: StringMap<ListView<File, any>> = {};
     private _getFileLoader: (filename: string) => FileLoader;
     private _onError: (error: ServerError) => ServerError;
 
