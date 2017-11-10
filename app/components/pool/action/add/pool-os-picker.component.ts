@@ -6,7 +6,7 @@ import {
 import { NodeAgentSku, NodeAgentSkuMap, Offer, Sku } from "app/models";
 import { PoolOSPickerModel, PoolOsSources } from "app/models/forms";
 import { NodeService } from "app/services";
-import { RxListProxy, ListView } from "app/services/core";
+import { ListView } from "app/services/core";
 
 const cloudServiceOsFamilies = [{
     id: "2",

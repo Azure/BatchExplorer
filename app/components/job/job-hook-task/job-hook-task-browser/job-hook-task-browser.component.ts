@@ -5,7 +5,7 @@ import { Subscription } from "rxjs";
 
 import { Job, JobHookTask, JobHookTaskResult, JobHookTaskState } from "app/models";
 import { JobHookTaskListParams, JobHookTaskService } from "app/services";
-import { RxListProxy, ListView } from "app/services/core";
+import { ListView } from "app/services/core";
 import { DateUtils } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 

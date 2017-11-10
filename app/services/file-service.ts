@@ -6,7 +6,7 @@ import { Constants, exists } from "app/utils";
 import { Observable } from "rxjs";
 import { BatchClientService } from "./batch-client.service";
 import {
-    BatchEntityGetter, DataCache, RxBatchListProxy, RxListProxy, TargetedDataCache, BatchListGetter, ListOptionsAttributes, ListView,
+    BatchEntityGetter, BatchListGetter, DataCache, ListOptionsAttributes, ListView, TargetedDataCache,
 } from "./core";
 import { FileLoader, FileNavigator, FileSource } from "./file";
 import { FileSystemService } from "./fs.service";
@@ -210,28 +210,6 @@ export class FileService extends ServiceBase {
         filename: string,
         options: any = {}): Observable<File> {
         return this._nodeFileGetter.fetch({ poolId, nodeId, filename });
-    }
-
-    public listFromTask(
-        initialJobId: string,
-        initialTaskId: string,
-        recursive = true,
-        initialOptions: any = {},
-        onError?: (error: ServerError) => boolean): RxListProxy<TaskFileListParams, File> {
-        return new RxBatchListProxy<TaskFileListParams, File>(File, this.batchService, {
-            cache: (params) => this.getTaskFileCache(params),
-            proxyConstructor: (client, params, options) => {
-                const batchOptions = { ...options };
-                if (options.folder) {
-                    batchOptions.filter = `startswith(name, '${options.folder}')`;
-                }
-                return client.file.listFromTask(params.jobId, params.taskId, recursive, batchOptions);
-            },
-            initialParams: { jobId: initialJobId, taskId: initialTaskId },
-            initialOptions,
-            logIgnoreError: fileIgnoredErrors,
-            onError: onError,
-        });
     }
 
     public fileFromTask(jobId: string, taskId: string, filename: string): FileLoader {
