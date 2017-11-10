@@ -9,16 +9,15 @@ import { FilterBuilder } from "app/utils/filter-builder";
 import { BatchClientService } from "./batch-client.service";
 import {
     BatchEntityGetter,
+    BatchListGetter,
+    ContinuationToken,
     DataCache,
     EntityView,
     ListOptionsAttributes,
+    ListView,
     RxBatchListProxy,
     RxListProxy,
     TargetedDataCache,
-    getAllProxy,
-    ContinuationToken,
-    BatchListGetter,
-    ListView,
 } from "./core";
 import { ServiceBase } from "./service-base";
 
@@ -79,21 +78,6 @@ export class TaskService extends ServiceBase {
         return this._cache.getCache({ jobId });
     }
 
-    public list(initialJobId: string, initialOptions: TaskListOptions = {}): RxListProxy<TaskListParams, Task> {
-        return new RxBatchListProxy<TaskListParams, Task>(Task, this.batchService, {
-            cache: ({ jobId }) => this.getCache(jobId),
-            proxyConstructor: (client, { jobId }, options) => {
-                return client.task.list(jobId, options);
-            },
-            initialParams: { jobId: initialJobId },
-            initialOptions,
-        });
-    }
-
-    public listAll(jobId: string, options: TaskListOptions = {}): Observable<List<Task>> {
-        return getAllProxy(this.list(jobId, options));
-    }
-
     public countTasks(jobId: string, state: TaskState): Observable<number> {
         const filter = FilterBuilder.prop("state").eq(state).toOData();
         return this.listAll(jobId, { filter, select: "id,state" }).map(tasks => tasks.size).share();
@@ -131,6 +115,9 @@ export class TaskService extends ServiceBase {
         });
     }
 
+    public listAll(jobId: string, options: TaskListOptions = {}): Observable<List<Task>> {
+        return this._listGetter.fetchAll({ jobId }, options);
+    }
 
     public get(jobId: string, taskId: string, options: any = {}): Observable<Task> {
         return this._getter.fetch({ jobId, id: taskId });

@@ -1,10 +1,11 @@
 import { Type } from "@angular/core";
 import { BatchServiceClient } from "azure-batch";
+import { Observable } from "rxjs";
 
 import { ServerError } from "app/models";
 import { BatchClientService } from "app/services";
-import { ListGetter, ListGetterConfig, ListGetterOptions } from "app/services/core/data/list-getter";
-import { Observable } from "rxjs";
+import { ListGetter, ListGetterConfig } from "app/services/core/data/list-getter";
+import { ListOptions } from "./list-options";
 
 export interface BatchListConfig<TEntity, TParams> extends ListGetterConfig<TEntity, TParams> {
     list: (client: BatchServiceClient, params: TParams, options: any) => Promise<any[]>;
@@ -12,7 +13,7 @@ export interface BatchListConfig<TEntity, TParams> extends ListGetterConfig<TEnt
 }
 
 export class BatchListGetter<TEntity, TParams> extends ListGetter<TEntity, TParams> {
-    private _list: (client: BatchServiceClient, params: TParams, options: ListGetterOptions) => Promise<any[]>;
+    private _list: (client: BatchServiceClient, params: TParams, options: ListOptions) => Promise<any[]>;
     private _listNext: (client: BatchServiceClient, nextLink: string) => Promise<any[]>;
 
     constructor(

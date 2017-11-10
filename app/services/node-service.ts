@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 import { List } from "immutable";
-import { AsyncSubject, Observable } from "rxjs";
+import { Observable } from "rxjs";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
 import { Node, NodeAgentSku, NodeConnectionSettings, NodeState } from "app/models";
@@ -9,7 +9,7 @@ import { FilterBuilder } from "app/utils/filter-builder";
 import { BatchClientService } from "./batch-client.service";
 import {
     BatchEntityGetter, DataCache, EntityView, ListOptionsAttributes, RxBatchListProxy,
-     RxListProxy, TargetedDataCache,
+    RxListProxy, TargetedDataCache, BatchListGetter, ContinuationToken, ListView,
 } from "./core";
 import { FileContentResult } from "./file-service";
 import { ServiceBase } from "./service-base";
@@ -35,6 +35,7 @@ export class NodeService extends ServiceBase {
 
     private _nodeAgentSkusCache = new DataCache<any>();
     private _getter: BatchEntityGetter<Node, NodeParams>;
+    private _listGetter: BatchListGetter<Node, NodeListParams>;
 
     constructor(private taskManager: BackgroundTaskService, batchService: BatchClientService) {
         super(batchService);
@@ -42,6 +43,12 @@ export class NodeService extends ServiceBase {
         this._getter = new BatchEntityGetter(Node, this.batchService, {
             cache: ({ poolId }) => this.getCache(poolId),
             getFn: (client, params: NodeParams) => client.node.get(params.poolId, params.id),
+        });
+
+        this._listGetter = new BatchListGetter(Node, this.batchService, {
+            cache: ({ poolId }) => this.getCache(poolId),
+            list: (client, params, options) => client.computeNode.list(params.poolId, { computeNodeListOptions: options }),
+            listNext: (client, nextLink: string) => client.computeNode.listNext(nextLink),
         });
     }
 
@@ -53,29 +60,26 @@ export class NodeService extends ServiceBase {
         return this._cache.getCache({ poolId });
     }
 
-    public list(initialPoolId: string, initialOptions: PoolListOptions = {}): RxListProxy<NodeListParams, Node> {
-        return new RxBatchListProxy<NodeListParams, Node>(Node, this.batchService, {
+    public listOnce(poolId: string, options?: any, forceNew?: boolean);
+    public listOnce(nextLink: ContinuationToken);
+    public listOnce(poolIdOrNextLink: any, options = {}, forceNew = false) {
+        if (poolIdOrNextLink.nextLink) {
+            return this._listGetter.fetch(poolIdOrNextLink);
+        } else {
+            return this._listGetter.fetch({ poolId: poolIdOrNextLink }, options, forceNew);
+        }
+    }
+
+    public listView(options: ListOptionsAttributes = {}): ListView<Node, NodeListParams> {
+        return new ListView({
             cache: ({ poolId }) => this.getCache(poolId),
-            proxyConstructor: (client, { poolId }, options) => {
-                return client.node.list(poolId, options);
-            },
-            initialParams: { poolId: initialPoolId },
-            initialOptions,
+            getter: this._listGetter,
+            initialOptions: options,
         });
     }
 
     public listAll(poolId: string, options: PoolListOptions = {}): Observable<List<Node>> {
-        const subject = new AsyncSubject<List<Node>>();
-        options.pageSize = 1000;
-        const data = this.list(poolId, options);
-        const sub = data.items.subscribe((x) => subject.next(x));
-        data.fetchAll().subscribe(() => {
-
-            subject.complete();
-            sub.unsubscribe();
-        });
-
-        return subject.asObservable();
+        return this._listGetter.fetchAll({ poolId }, options);
     }
 
     /**
@@ -83,7 +87,7 @@ export class NodeService extends ServiceBase {
      * You don't need to cleanup the subscription.
      */
     public get(poolId: string, nodeId: string, options: any = {}): Observable<Node> {
-        return this._getter.fetch({poolId, id: nodeId});
+        return this._getter.fetch({ poolId, id: nodeId });
     }
 
     /**

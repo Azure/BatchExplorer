@@ -7,7 +7,7 @@ import { BatchEntityGetter, ListView, EntityView } from "app/services/core";
 import { Constants, ModelUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";
-import { BatchListGetter, DataCache, RxBatchListProxy, RxListProxy, ContinuationToken } from "./core";
+import { BatchListGetter, DataCache, RxBatchListProxy, RxListProxy, ContinuationToken, ListOptionsAttributes } from "./core";
 import { ServiceBase } from "./service-base";
 
 export interface PoolListParams { }
@@ -55,15 +55,7 @@ export class PoolService extends ServiceBase {
         });
     }
 
-    public list(initialOptions: any = {}): RxListProxy<{}, Pool> {
-        return new RxBatchListProxy<{}, Pool>(Pool, this.batchService, {
-            cache: () => this._cache,
-            proxyConstructor: (client, params, options) => client.pool.list(options),
-            initialOptions,
-        });
-    }
-
-    public listOnce(options?: any, forceNew?: boolean);
+    public listOnce(options?: ListOptionsAttributes, forceNew?: boolean);
     public listOnce(nextLink: ContinuationToken);
     public listOnce(nextLinkOrOptions: any, options = {}, forceNew = false) {
         if (nextLinkOrOptions.nextLink) {
@@ -73,10 +65,11 @@ export class PoolService extends ServiceBase {
         }
     }
 
-    public listView(): ListView<Pool, PoolListParams> {
+    public listView(options: ListOptionsAttributes = {}): ListView<Pool, PoolListParams> {
         return new ListView({
             cache: () => this._cache,
             getter: this._listGetter,
+            initialOptions: options,
         });
     }
 

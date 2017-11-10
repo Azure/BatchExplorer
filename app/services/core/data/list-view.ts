@@ -1,9 +1,7 @@
 import { LoadingStatus } from "app/components/base/loading";
-import { ServerError } from "app/models";
 import { List, OrderedSet } from "immutable";
-import { BehaviorSubject, Observable, AsyncSubject } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 
-import { HttpCode } from "app/utils/constants";
 import { GenericView, GenericViewConfig } from "./generic-view";
 import { ListGetter, ListResponse } from "./list-getter";
 import { ListOptions, ListOptionsAttributes, ContinuationToken } from "./list-options";
@@ -11,6 +9,7 @@ import { log } from "app/utils";
 
 export interface ListViewConfig<TEntity, TParams> extends GenericViewConfig<TEntity, TParams> {
     getter: ListGetter<TEntity, TParams>;
+    initialOptions: ListOptions | ListOptionsAttributes;
 }
 
 export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, ListOptions> {
@@ -32,7 +31,7 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
     constructor(config: ListViewConfig<TEntity, TParams>) {
         super(config);
         this._getter = config.getter;
-        this._options = new ListOptions();
+        this._options = new ListOptions(config.initialOptions);
 
         this.items = this._itemKeys.distinctUntilChanged().map((itemKeys) => {
             return this.cache.items.map((items) => {

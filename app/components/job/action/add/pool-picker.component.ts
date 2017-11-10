@@ -4,8 +4,8 @@ import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
 import { Pool } from "app/models";
-import { PoolService, VmSizeService } from "app/services";
-import { ListOptionsAttributes, RxListProxy } from "app/services/core";
+import { PoolService, VmSizeService, PoolListParams } from "app/services";
+import { ListOptionsAttributes, ListView } from "app/services/core";
 import { PoolUtils } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 
@@ -20,7 +20,7 @@ import { FilterBuilder } from "app/utils/filter-builder";
 })
 export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
     public pickedPool: string;
-    public poolsData: RxListProxy<{}, Pool>;
+    public poolsData: ListView<Pool, PoolListParams>;
     public pools: List<Pool> = List([]);
     public poolCores: StringMap<number> = {};
 
@@ -30,7 +30,7 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
     private _subs: Subscription[] = [];
 
     constructor(private poolService: PoolService, private vmSizeService: VmSizeService) {
-        this.poolsData = this.poolService.list(this._computeOptions());
+        this.poolsData = this.poolService.listView(this._computeOptions());
 
         this._subs.push(this.searchInput.valueChanges.debounceTime(400).distinctUntilChanged()
             .subscribe((query: string) => {

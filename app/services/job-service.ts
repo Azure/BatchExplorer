@@ -8,9 +8,12 @@ import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";
 import {
     BatchEntityGetter, DataCache, EntityView,
-    ListOptionsAttributes, RxBatchListProxy, RxListProxy, getAllProxy,
+    ListOptionsAttributes, BatchListGetter, ContinuationToken, ListView,
 } from "./core";
 import { ServiceBase } from "./service-base";
+
+export interface JobListParams {
+}
 
 export interface JobParams {
     id?: string;
@@ -30,6 +33,7 @@ export class JobService extends ServiceBase {
 
     private _basicProperties: string = "id,displayName,state,creationTime,poolInfo";
     private _getter: BatchEntityGetter<Job, JobParams>;
+    private _listGetter: BatchListGetter<Job, JobListParams>;
 
     constructor(batchService: BatchClientService) {
         super(batchService);
@@ -38,22 +42,38 @@ export class JobService extends ServiceBase {
             cache: () => this.cache,
             getFn: (client, params: JobParams) => client.job.get(params.id),
         });
+
+        this._listGetter = new BatchListGetter(Job, this.batchService, {
+            cache: () => this.cache,
+            list: (client, params: JobListParams, options) => client.job.list({ jobListOptions: options }),
+            listNext: (client, nextLink: string) => client.job.listNext(nextLink),
+        });
     }
 
     public get basicProperties(): string {
         return this._basicProperties;
     }
 
-    public list(initialOptions: JobListOptions = {}): RxListProxy<{}, Job> {
-        return new RxBatchListProxy<{}, Job>(Job, this.batchService, {
+    public listOnce(options?: any, forceNew?: boolean);
+    public listOnce(nextLink: ContinuationToken);
+    public listOnce(nextLinkOrOptions: any, options = {}, forceNew = false) {
+        if (nextLinkOrOptions.nextLink) {
+            return this._listGetter.fetch(nextLinkOrOptions);
+        } else {
+            return this._listGetter.fetch({}, options, forceNew);
+        }
+    }
+
+    public listView(options: ListOptionsAttributes = {}): ListView<Job, JobListParams> {
+        return new ListView({
             cache: () => this.cache,
-            proxyConstructor: (client, params, options) => client.job.list(options),
-            initialOptions,
+            getter: this._listGetter,
+            initialOptions: options,
         });
     }
 
     public listAll(options: JobListOptions = {}): Observable<List<Job>> {
-        return getAllProxy(this.list(options));
+        return this._listGetter.fetchAll({}, options);
     }
 
     public get(jobId: string, options: any = {}): Observable<Job> {

@@ -3,9 +3,11 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs";
 
-import { AccountResource, BatchApplication, Job, Pool, ServerError } from "app/models";
-import { AccountParams, AccountService, ApplicationService, JobService, PoolService } from "app/services";
-import { EntityView, RxListProxy } from "app/services/core";
+import { AccountResource, BatchApplication, Job, Pool } from "app/models";
+import {
+    AccountParams, AccountService, ApplicationService, JobService, PoolService, JobListParams, PoolListParams,
+ } from "app/services";
+import { EntityView, RxListProxy, ListView } from "app/services/core";
 
 import "./account-details.scss";
 
@@ -31,8 +33,8 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     public data: EntityView<AccountResource, AccountParams>;
 
     public applicationData: RxListProxy<{}, BatchApplication>;
-    public jobData: RxListProxy<{}, Job>;
-    public poolData: RxListProxy<{}, Pool>;
+    public jobData: ListView<Job, JobListParams>;
+    public poolData: ListView< Pool, PoolListParams>;
 
     private _paramsSubscriber: Subscription;
     private initialOptions = { maxItems: 10 };
@@ -83,21 +85,27 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     }
 
     private _loadQuickAccessLists() {
-        this.applicationData = this.applicationService.list(this.initialOptions, (error: ServerError) => {
-            let handled = false;
-            if (this.applicationService.isAutoStorageError(error)) {
-                this.noLinkedStorage = true;
-                handled = true;
-            }
-
-            return !handled;
-        });
+        this.applicationData = this.applicationService.list();
+        this.poolData.setOptions(this.initialOptions);
         this.applicationData.fetchNext();
 
-        this.jobData = this.jobService.list(this.initialOptions);
+        // (error: ServerError) => {
+        //     let handled = false;
+        //     if (this.applicationService.isAutoStorageError(error)) {
+        //         this.noLinkedStorage = true;
+        //         handled = true;
+        //     }
+
+        //     return !handled;
+        // }
+
+        this.jobData = this.jobService.listView();
+        this.jobData.setOptions(this.initialOptions);
         this.jobData.fetchNext();
 
-        this.poolData = this.poolService.list(this.initialOptions);
+        this.poolData = this.poolService.listView();
+        this.poolData.setOptions(this.initialOptions);
+
         this.poolData.fetchNext();
     }
 }

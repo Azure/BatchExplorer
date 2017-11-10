@@ -7,8 +7,8 @@ import { Subscription } from "rxjs";
 import { SidebarManager } from "app/components/base/sidebar";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { Job, JobState, Node, NodeState, Pool, Task } from "app/models";
-import { JobService, NodeListParams, NodeService } from "app/services";
-import { PollObservable, RxListProxy } from "app/services/core";
+import { JobService, NodeListParams, NodeService, JobListParams } from "app/services";
+import { PollObservable, ListView } from "app/services/core";
 import { FilterBuilder } from "app/utils/filter-builder";
 import { NodesStateHistoryData, RunningTasksHistoryData } from "./history-data";
 import "./pool-graphs.scss";
@@ -39,7 +39,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     @Input()
     public pool: Pool;
 
-    public data: RxListProxy<NodeListParams, Node>;
+    public data: ListView<Node, NodeListParams>;
 
     public nodes: List<Node> = List([]);
     /**
@@ -57,7 +57,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     public focusedGraph = AvailableGraph.Heatmap;
     public selectedHistoryLength = new FormControl(historyLength.TenMinute);
 
-    private _jobData: RxListProxy<{}, Job>;
+    private _jobData: ListView<Job, JobListParams>;
     private _stateCounter = new StateCounter();
 
     private _poll: PollObservable;
@@ -68,7 +68,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
         jobService: JobService,
         private sidebarManager: SidebarManager,
     ) {
-        this.data = nodeService.list(null, {
+        this.data = nodeService.listView({
             pageSize: 1000,
             select: "id,state,runningTasksCount,isDedicated",
         });
@@ -83,7 +83,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
             }
             this._scanForProblems();
         });
-        this._jobData = jobService.list({
+        this._jobData = jobService.listView({
             select: "id",
         });
 
