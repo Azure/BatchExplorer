@@ -64,7 +64,12 @@ export class SplitPaneComponent implements OnInit {
     }
 
     public resetDividerPosition() {
-        this.updateSize(this.config.initialDividerPosition);
+        const value = this.config.initialDividerPosition;
+        if (value === -1) {
+            this.updateSize(-1);
+        } else {
+            this.updateSize(Math.abs(value), value < 0);
+        }
     }
 
     @HostListener("document:mouseup")
@@ -80,7 +85,7 @@ export class SplitPaneComponent implements OnInit {
         }
     }
 
-    public updateSize(dividerPosition: number) {
+    public updateSize(dividerPosition: number, fromEnd = false) {
         if (this.config.firstPane.hidden) {
             this.firstPaneSize = "0px";
             this.secondPaneSize = "100%";
@@ -96,10 +101,11 @@ export class SplitPaneComponent implements OnInit {
             this.firstPaneSize = "50%";
             this.secondPaneSize = "50%";
         } else {
-            const { firstPane, secondPane } = this.config;
-            if (rect.width === 0) { // Not initialized yet
-                dividerPosition = this.config.initialDividerPosition;
-            } else {
+            let { firstPane, secondPane } = this.config;
+            if (rect.width !== 0) { // When initialized
+                if (fromEnd) {
+                    [firstPane, secondPane] = [secondPane, firstPane];
+                }
                 if (dividerPosition > rect.width - secondPane.minSize) {
                     dividerPosition = rect.width - secondPane.minSize;
                 }
@@ -107,8 +113,14 @@ export class SplitPaneComponent implements OnInit {
                     dividerPosition = firstPane.minSize;
                 }
             }
-            this.firstPaneSize = `${dividerPosition}px`;
-            this.secondPaneSize = `calc(100% - ${dividerPosition}px)`;
+            if (fromEnd) {
+                this.firstPaneSize = `calc(100% - ${dividerPosition}px)`;
+                this.secondPaneSize = `${dividerPosition}px`;
+            } else {
+                this.firstPaneSize = `${dividerPosition}px`;
+                this.secondPaneSize = `calc(100% - ${dividerPosition}px)`;
+
+            }
         }
     }
 }

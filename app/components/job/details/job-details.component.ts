@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
@@ -45,7 +45,6 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     constructor(
         private dialog: MatDialog,
         private activatedRoute: ActivatedRoute,
-        private viewContainerRef: ViewContainerRef,
         private sidebarManager: SidebarManager,
         private jobService: JobService,
         private router: Router) {
@@ -97,8 +96,6 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     @autobind()
     public terminateJob() {
         let config = new MatDialogConfig();
-        config.viewContainerRef = this.viewContainerRef;
-
         const dialogRef = this.dialog.open(TerminateJobDialogComponent, config);
         dialogRef.componentInstance.jobId = this.job.id;
         dialogRef.afterClosed().subscribe((obj) => {
@@ -109,7 +106,6 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     @autobind()
     public deleteJob() {
         let config = new MatDialogConfig();
-        config.viewContainerRef = this.viewContainerRef;
         const dialogRef = this.dialog.open(DeleteJobDialogComponent, config);
         dialogRef.componentInstance.jobId = this.job.id;
     }
@@ -117,8 +113,6 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     @autobind()
     public disableJob() {
         let config = new MatDialogConfig();
-        config.viewContainerRef = this.viewContainerRef;
-
         const dialogRef = this.dialog.open(DisableJobDialogComponent, config);
         dialogRef.componentInstance.jobId = this.job.id;
         dialogRef.afterClosed().subscribe((obj) => {
@@ -135,8 +129,6 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
     @autobind()
     public enableJob() {
         let config = new MatDialogConfig();
-        config.viewContainerRef = this.viewContainerRef;
-
         const dialogRef = this.dialog.open(EnableJobDialogComponent, config);
         dialogRef.componentInstance.jobId = this.job.id;
         dialogRef.afterClosed().subscribe((obj) => {

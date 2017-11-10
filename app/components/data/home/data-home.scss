@@ -1,8 +1,7 @@
 @import "app/styles/variables";
 
-bl-submit-recent-template {
-    display: flex;
+bl-data-home {
+    display: block;
     width: 100%;
     height: $contentview-height;
-    background: $whitesmoke-darker;
 }

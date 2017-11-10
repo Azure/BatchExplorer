@@ -1,4 +1,5 @@
 import { ArmRecord, Model, Prop, Record } from "app/core";
+import { StorageUtils } from "app/utils";
 import { Subscription } from "./subscription";
 
 export enum PoolAllocationMode {
@@ -65,5 +66,14 @@ export class AccountResource extends ArmRecord<BatchAccountAttributes> {
 
     public get isBatchManaged() {
         return this.properties && this.properties.poolAllocationMode === PoolAllocationMode.BatchService;
+    }
+
+    public get autoStorage() {
+        return this.properties && this.properties.autoStorage;
+    }
+
+    public hasArmAutoStorage(): boolean {
+        return Boolean(this.autoStorage
+            && !StorageUtils.isClassic(this.autoStorage.storageAccountId));
     }
 }

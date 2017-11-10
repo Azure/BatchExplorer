@@ -35,3 +35,10 @@ export enum NcjTemplateType {
     job = 2,
     unknown = 3,
 }
+
+export enum NcjTemplateMode {
+    None,
+    NewPoolAndJob,
+    ExistingPoolAndJob,
+    NewPool,
+}

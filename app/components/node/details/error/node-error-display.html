@@ -1,0 +1,9 @@
+<bl-banner *ngFor="let error of node.errors">
+    <div code>{{error.code}}</div>
+    <div message>{{error.message}}</div>
+    <div details *ngIf="error.errorDetails.size !== 0">
+        <div *ngFor="let entry of error.errorDetails">
+            <div>{{entry.name}}: {{entry.value}}</div>
+        </div>
+    </div>
+</bl-banner>

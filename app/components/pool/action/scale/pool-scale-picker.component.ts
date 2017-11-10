@@ -1,8 +1,10 @@
-import { Component, OnDestroy, forwardRef } from "@angular/core";
+import { Component, Input, OnDestroy, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { Subscription } from "rxjs";
+
+import { Pool } from "app/models";
 
 @Component({
     selector: "bl-pool-scale-picker",
@@ -14,6 +16,8 @@ import { Subscription } from "rxjs";
     ],
 })
 export class PoolScalePickerComponent implements OnDestroy, ControlValueAccessor {
+    @Input() public pool: Pool;
+
     public form: FormGroup;
 
     public selectedModeTab = 0;

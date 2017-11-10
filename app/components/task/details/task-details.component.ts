@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
@@ -46,7 +46,6 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
     constructor(
         private dialog: MatDialog,
         private route: ActivatedRoute,
-        private viewContainerRef: ViewContainerRef,
         private sidebarManager: SidebarManager,
         taskService: TaskService,
         jobService: JobService,
@@ -94,8 +93,6 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
     @autobind()
     public terminateTask() {
         let config = new MatDialogConfig();
-        config.viewContainerRef = this.viewContainerRef;
-
         const dialogRef = this.dialog.open(TerminateTaskDialogComponent, config);
         dialogRef.componentInstance.jobId = this.job.id;
         dialogRef.componentInstance.taskId = this.taskId;
@@ -107,8 +104,6 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
     @autobind()
     public deleteTask() {
         let config = new MatDialogConfig();
-        config.viewContainerRef = this.viewContainerRef;
-
         const dialogRef = this.dialog.open(DeleteTaskDialogComponent, config);
         dialogRef.componentInstance.jobId = this.job.id;
         dialogRef.componentInstance.taskId = this.taskId;

@@ -1,4 +1,6 @@
-<bl-list-and-show-layout #layout (listScrolledToBottom)="fileGroupList.onScrollToBottom()" [list]="fileGroupList">
+<bl-storage-error-display [noClassic]="true"></bl-storage-error-display>
+
+<bl-list-and-show-layout #layout (listScrolledToBottom)="fileGroupList.onScrollToBottom()" [list]="fileGroupList" *ngIf="storageService.hasArmAutoStorage | async">
     <div bl-list-buttons>
         <bl-button type="round" icon="fa fa-plus spin-hover" color="light" title="Add a file group" [action]="addFileGroup"
             [disabled]="!hasAutoStorage">
