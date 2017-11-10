@@ -10,7 +10,7 @@ import { AppPackagePickerComponent } from "app/components/pool/base";
 import { BatchApplication, ServerError } from "app/models";
 import { ApplicationService } from "app/services";
 import * as Fixtures from "test/fixture";
-import { RxMockListProxy } from "test/utils/mocks";
+import { MockListView } from "test/utils/mocks";
 
 @Component({
     template: `
@@ -33,16 +33,16 @@ describe("AppPackagePickerComponent", () => {
     let component: AppPackagePickerComponent;
     let debugElement: DebugElement;
 
-    let listProxy: RxMockListProxy<any, BatchApplication>;
+    let listProxy: MockListView<BatchApplication, any>;
     let applicationServiceSpy;
 
     beforeEach(() => {
-        listProxy = new RxMockListProxy(BatchApplication, {
+        listProxy = new MockListView(BatchApplication, {
             cacheKey: "id",
             items: [
-                Fixtures.application.create({ id: "apple", packages: List([{version: "a1"}]) }),
-                Fixtures.application.create({ id: "banana", packages: List([{version: "b1"}, {version: "b2"}]) }),
-                Fixtures.application.create({ id: "orange", packages: List([{version: "o1"}, {version: "o2"}]) }),
+                Fixtures.application.create({ id: "apple", packages: List([{ version: "a1" }]) }),
+                Fixtures.application.create({ id: "banana", packages: List([{ version: "b1" }, { version: "b2" }]) }),
+                Fixtures.application.create({ id: "orange", packages: List([{ version: "o1" }, { version: "o2" }]) }),
             ],
         });
 
@@ -109,7 +109,7 @@ describe("AppPackagePickerComponent", () => {
         });
 
         it("picking application sets package version map", () => {
-            component.applicationSelected({ value: "banana", source: null }, 0 );
+            component.applicationSelected({ value: "banana", source: null }, 0);
             expect(component.packageMap.length).toEqual(1);
             expect(component.packageMap[0].size).toEqual(2);
 
@@ -144,31 +144,37 @@ describe("AppPackagePickerComponent", () => {
 
     describe("validation", () => {
         it("validates ok with correct values", () => {
-            const values = { value: [
-                { applicationId: "orange", version: "o1" },
-                { applicationId: "banana", version: "b1" },
-            ]} as any;
+            const values = {
+                value: [
+                    { applicationId: "orange", version: "o1" },
+                    { applicationId: "banana", version: "b1" },
+                ]
+            } as any;
 
             const result = component.validate(values);
             expect(result).toBeNull();
         });
 
         it("validation fails with duplicates", () => {
-            const values = { value: [
-                { applicationId: "orange", version: "o1" },
-                { applicationId: "banana", version: "b1" },
-                { applicationId: "orange", version: "o1" },
-            ]} as any;
+            const values = {
+                value: [
+                    { applicationId: "orange", version: "o1" },
+                    { applicationId: "banana", version: "b1" },
+                    { applicationId: "orange", version: "o1" },
+                ]
+            } as any;
 
             const result = component.validate(values) as any;
             expect(result.duplicate).toBe(true);
         });
 
         it("validation fails with invalid selection", () => {
-            const values = { value: [
-                { applicationId: "orange", version: "o1" },
-                { applicationId: "banana", version: "invalid" },
-            ]} as any;
+            const values = {
+                value: [
+                    { applicationId: "orange", version: "o1" },
+                    { applicationId: "banana", version: "invalid" },
+                ]
+            } as any;
 
             const result = component.validate(values) as any;
             expect(result.invalid).toBe(true);

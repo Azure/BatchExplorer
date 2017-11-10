@@ -9,7 +9,7 @@ import { PoolPickerComponent } from "app/components/job/action/add";
 import { Pool } from "app/models";
 import { PoolService, VmSizeService } from "app/services";
 import { click } from "test/utils/helpers";
-import { RxMockListProxy } from "test/utils/mocks";
+import { MockListView } from "test/utils/mocks";
 
 @Component({
     template: `<bl-pool-picker [(ngModel)]="poolInfo"></bl-pool-picker>`,
@@ -36,7 +36,7 @@ describe("PoolPickerComponent", () => {
 
     beforeEach(() => {
         poolServiceSpy = {
-            list: () => new RxMockListProxy(Pool, {
+            list: () => new MockListView(Pool, {
                 items: [pool1, pool2, pool3],
             }),
         };

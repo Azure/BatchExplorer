@@ -17,7 +17,7 @@ import { StorageService } from "app/services";
 import { Subject } from "rxjs";
 import * as Fixtures from "test/fixture";
 import { updateInput } from "test/utils/helpers";
-import { RxMockListProxy } from "test/utils/mocks";
+import { MockListView } from "test/utils/mocks";
 import { NoItemMockComponent } from "test/utils/mocks/components";
 
 @Component({
@@ -55,10 +55,10 @@ describe("ParameterInputComponent", () => {
     let storageServiceSpy: any;
     let dialogServiceSpy: any;
     let sidebarSpy: any;
-    let listProxy: RxMockListProxy<any, BatchApplication>;
+    let listProxy: MockListView<BatchApplication, any>;
 
     beforeEach(() => {
-        listProxy = new RxMockListProxy(BatchApplication, {
+        listProxy = new MockListView(BatchApplication, {
             cacheKey: "id",
             items: [
                 Fixtures.application.create({ id: "app-1" }),

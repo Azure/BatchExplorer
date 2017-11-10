@@ -11,14 +11,14 @@ import { JobService, PoolService } from "app/services";
 import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";
 import { validateControl } from "test/utils/helpers";
-import { RxMockListProxy } from "test/utils/mocks";
+import { MockListView } from "test/utils/mocks";
 import { ServerErrorMockComponent, complexFormMockComponents } from "test/utils/mocks/components";
 
 describe("JobCreateBasicDialogComponent ", () => {
     let fixture: ComponentFixture<JobCreateBasicDialogComponent>;
     let component: JobCreateBasicDialogComponent;
     let debugElement: DebugElement;
-    let poolListProxy: RxMockListProxy<any, Pool>;
+    let poolListProxy: MockListView<Pool, {}>;
     let sidebarRefSpy: any;
     let jobServiceSpy: any;
     let poolServiceSpy: any;
@@ -29,7 +29,7 @@ describe("JobCreateBasicDialogComponent ", () => {
     const validators = TestConstants.validators;
 
     beforeEach(() => {
-        poolListProxy = new RxMockListProxy(Pool, {
+        poolListProxy = new MockListView(Pool, {
             cacheKey: "url",
             items: [
                 Fixtures.pool.create({ id: "pool-001" }),
