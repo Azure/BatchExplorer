@@ -178,8 +178,8 @@ export abstract class GenericView<TEntity, TParams, TOptions extends ProxyOption
         this._currentQuerySub = obs.subscribe({
             next: (response) => {
                 this.abortFetch();
-                this._status.next(LoadingStatus.Ready);
                 config.next(response);
+                this._status.next(LoadingStatus.Ready);
             }, error: (error: ServerError) => {
                 this.abortFetch();
                 if (error) {

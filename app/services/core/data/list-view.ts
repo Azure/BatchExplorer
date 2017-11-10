@@ -36,7 +36,6 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
         this.items = this._itemKeys.distinctUntilChanged().map((itemKeys) => {
             return this.cache.items.map((items) => {
                 let keys: any = itemKeys;
-                console.log("new keys", keys.toJS(), items.toJS());
                 if (this._options.maxItems) {
                     keys = itemKeys.slice(0, this._options.maxItems);
                 }
@@ -93,7 +92,7 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
                 this._updateNewKeys(this._retrieveKeys(response.items));
                 this._nextLink = response.nextLink;
                 this._hasMore.next(Boolean(response.nextLink)); // This NEEDS to be called after processResponse
-                console.log("Items", response, this._hasMore.value);
+                console.log("Items", response.items.toJS(), this._hasMore.value);
             },
             error: (error) => {
                 console.log("Error..", error);

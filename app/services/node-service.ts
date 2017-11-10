@@ -8,8 +8,8 @@ import { ArrayUtils, Constants, ObservableUtils, log } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 import { BatchClientService } from "./batch-client.service";
 import {
-    BatchEntityGetter, DataCache, EntityView, ListOptionsAttributes, RxBatchListProxy,
-    RxListProxy, TargetedDataCache, BatchListGetter, ContinuationToken, ListView,
+    BatchEntityGetter, BatchListGetter, ContinuationToken, DataCache,
+    EntityView, ListOptionsAttributes, ListView, TargetedDataCache,
 } from "./core";
 import { FileContentResult } from "./file-service";
 import { ServiceBase } from "./service-base";
@@ -36,6 +36,7 @@ export class NodeService extends ServiceBase {
     private _nodeAgentSkusCache = new DataCache<any>();
     private _getter: BatchEntityGetter<Node, NodeParams>;
     private _listGetter: BatchListGetter<Node, NodeListParams>;
+    private _nodeAgentSkuListGetter: BatchListGetter<NodeAgentSku, {}>;
 
     constructor(private taskManager: BackgroundTaskService, batchService: BatchClientService) {
         super(batchService);
@@ -47,8 +48,18 @@ export class NodeService extends ServiceBase {
 
         this._listGetter = new BatchListGetter(Node, this.batchService, {
             cache: ({ poolId }) => this.getCache(poolId),
-            list: (client, params, options) => client.computeNode.list(params.poolId, { computeNodeListOptions: options }),
+            list: (client, params, options) => {
+                return client.computeNode.list(params.poolId, { computeNodeListOptions: options })
+            },
             listNext: (client, nextLink: string) => client.computeNode.listNext(nextLink),
+        });
+
+        this._nodeAgentSkuListGetter = new BatchListGetter(NodeAgentSku, this.batchService, {
+            cache: () => this._nodeAgentSkusCache,
+            list: (client, params, options) => {
+                return client.account.listNodeAgentSkus({ accountListNodeAgentSkusOptions: options });
+            },
+            listNext: (client, nextLink: string) => client.account.listNodeAgentSkusNext(nextLink),
         });
     }
 
@@ -192,11 +203,11 @@ export class NodeService extends ServiceBase {
         });
     }
 
-    public listNodeAgentSkus(initialOptions: any = { pageSize: 1000 }): RxListProxy<{}, NodeAgentSku> {
-        return new RxBatchListProxy<{}, NodeAgentSku>(NodeAgentSku, this.batchService, {
+    public listNodeAgentSkus(options: ListOptionsAttributes = { pageSize: 1000 }): ListView<NodeAgentSku, {}> {
+        return new ListView({
             cache: (params) => this._nodeAgentSkusCache,
-            proxyConstructor: (client, params, options) => client.account.listNodeAgentSkus(options),
-            initialOptions,
+            getter: this._nodeAgentSkuListGetter,
+            initialOptions: options,
         });
     }
 
