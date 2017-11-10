@@ -11,7 +11,7 @@ import { UserAccount } from "app/models";
 import { Constants } from "app/utils";
 import { List } from "immutable";
 
-export class JobTaskBaseComponent  implements ControlValueAccessor {
+export class JobTaskBaseComponent implements ControlValueAccessor {
     @Input() public userAccounts: List<UserAccount> | UserAccount[];
 
     public form: FormGroup;
