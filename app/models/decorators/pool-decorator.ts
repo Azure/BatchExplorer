@@ -4,12 +4,12 @@ import * as moment from "moment";
 import {
     ApplicationPackageReference, CertificateReference, Pool, UserAccount, UserAccountElevationLevel,
 } from "app/models";
+import { StartTaskDecorator } from "app/models/decorators";
 import { PoolUtils } from "app/utils";
 import { DecoratorBase } from "app/utils/decorators";
 import { CloudServiceConfigurationDecorator } from "./cloud-service-configuration-decorator";
 import { TaskSchedulingPolicyDecorator } from "./task-scheduling-policy-decorator";
 import { VirtualMachineConfigurationDecorator } from "./virtual-machine-configuration-decorator";
-import { StartTaskDecorator } from "app/models/decorators";
 
 export class PoolDecorator extends DecoratorBase<Pool> {
     public allocationState: string;
