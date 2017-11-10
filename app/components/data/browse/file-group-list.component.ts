@@ -13,7 +13,7 @@ import { SidebarManager } from "app/components/base/sidebar";
 import { BlobContainer, LeaseStatus } from "app/models";
 import { FileGroupCreateDto } from "app/models/dtos";
 import { ListContainerParams, StorageService } from "app/services";
-import { RxListProxy } from "app/services/core";
+import { ListView } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
 import { DeleteContainerAction, DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "../action";
 
@@ -23,7 +23,7 @@ import { DeleteContainerAction, DeleteContainerDialogComponent, FileGroupCreateF
 })
 export class FileGroupListComponent extends ListOrTableBase implements OnInit, OnDestroy {
     public status: Observable<LoadingStatus>;
-    public data: RxListProxy<ListContainerParams, BlobContainer>;
+    public data: ListView<BlobContainer, ListContainerParams>;
     public hasAutoStorage: boolean;
 
     @Input()
@@ -48,7 +48,7 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
         private storageService: StorageService) {
 
         super(dialog);
-        this.data = this.storageService.listContainers(storageService.ncjFileGroupPrefix);
+        this.data = this.storageService.containerListView(storageService.ncjFileGroupPrefix);
 
         this.hasAutoStorage = false;
         this._autoStorageSub = storageService.hasAutoStorage.subscribe((hasAutoStorage) => {

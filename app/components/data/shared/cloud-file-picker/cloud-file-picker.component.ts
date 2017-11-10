@@ -9,7 +9,7 @@ import { Subscription } from "rxjs";
 import { DialogService } from "app/components/base/dialogs";
 import { BlobContainer } from "app/models";
 import { ListContainerParams, StorageService } from "app/services";
-import { RxListProxy } from "app/services/core";
+import { ListView } from "app/services/core";
 import { CloudFilePickerDialogComponent } from "./cloud-file-picker-dialog.component";
 import "./cloud-file-picker.scss";
 
@@ -33,7 +33,7 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnInit, O
 
     public fileGroups: List<BlobContainer>;
     public value = new FormControl();
-    public fileGroupsData: RxListProxy<ListContainerParams, BlobContainer>;
+    public fileGroupsData: ListView<BlobContainer, ListContainerParams>;
     public warning = false;
 
     private _propagateChange: (value: any[]) => void = null;
@@ -41,7 +41,7 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnInit, O
 
     constructor(private storageService: StorageService, private dialog: DialogService) {
 
-        this.fileGroupsData = this.storageService.listContainers(storageService.ncjFileGroupPrefix);
+        this.fileGroupsData = this.storageService.containerListView(storageService.ncjFileGroupPrefix);
         this.fileGroupsData.items.subscribe((fileGroups) => {
             this.fileGroups = fileGroups;
         });
