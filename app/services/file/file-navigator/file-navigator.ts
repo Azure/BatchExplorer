@@ -3,7 +3,7 @@ import { AsyncSubject, BehaviorSubject, Observable, Subscription } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { File, ServerError } from "app/models";
-import { DataCache, RxListProxy, ListView } from "app/services/core";
+import { DataCache, ListView } from "app/services/core";
 import { FileLoader } from "app/services/file";
 import { CloudPathUtils, ObjectUtils } from "app/utils";
 import { FileTreeNode, FileTreeStructure } from "./file-tree.model";
