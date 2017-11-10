@@ -86,11 +86,12 @@ export class FileService extends ServiceBase {
             cache: (params) => this.getTaskFileCache(params),
             list: (client, { jobId, taskId }, options) => {
                 const batchOptions = { ...options };
-                if (options.folder) {
-                    batchOptions.filter = `startswith(name, '${options.folder}')`;
+                console.log("Options", options);
+                if (options.original.folder) {
+                    batchOptions.filter = `startswith(name, '${options.original.folder}')`;
                 }
                 return client.file.listFromTask(jobId, taskId,
-                    { recursive: options.recursive, fileListFromComputeNodeOptions: batchOptions });
+                    { recursive: options.original.recursive, fileListFromTaskOptions: batchOptions });
             },
             listNext: (client, nextLink: string) => client.file.listFromTaskNext(nextLink),
             logIgnoreError: fileIgnoredErrors,
@@ -101,11 +102,11 @@ export class FileService extends ServiceBase {
             cache: (params) => this.getNodeFileCache(params),
             list: (client, { poolId, nodeId }, options) => {
                 const batchOptions = { ...options };
-                if (options.folder) {
-                    batchOptions.filter = `startswith(name, '${options.folder}')`;
+                if (options.original.folder) {
+                    batchOptions.filter = `startswith(name, '${options.original.folder}')`;
                 }
                 return client.file.listFromComputeNode(poolId, nodeId,
-                    { recursive: options.recursive, fileListFromComputeNodeOptions: batchOptions });
+                    { recursive: options.original.recursive, fileListFromComputeNodeOptions: batchOptions });
             },
             listNext: (client, nextLink: string) => client.file.listFromComputeNodeNext(nextLink),
             logIgnoreError: fileIgnoredErrors,

@@ -61,7 +61,6 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
         if (clearItems) {
             this._itemKeys.next(OrderedSet([]));
         }
-
         this._hasMore.next(true);
     }
 
@@ -216,5 +215,6 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
 
     private _handleChanges() {
         // TODO-TIM reset nextLink....
+        this._nextLink = null;
     }
 }
