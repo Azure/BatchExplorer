@@ -1,8 +1,8 @@
 import { Injectable } from "@angular/core";
 
-import {  JobHookTask } from "app/models";
+import { JobHookTask } from "app/models";
 import { BatchClientService } from "./batch-client.service";
-import { RxBatchListProxy, RxListProxy, TargetedDataCache } from "./core";
+import { BatchListGetter, ListOptionsAttributes, ListView, TargetedDataCache } from "./core";
 import { ServiceBase } from "./service-base";
 
 export interface JobHookTaskListParams {
@@ -15,16 +15,28 @@ export class JobHookTaskService extends ServiceBase {
         key: ({ jobId }) => jobId,
     }, "nodeUrl");
 
+    private _listGetter: BatchListGetter<JobHookTask, JobHookTaskListParams>;
+
     constructor(batchService: BatchClientService) {
         super(batchService);
+
+
+        this._listGetter = new BatchListGetter(JobHookTask, this.batchService, {
+            cache: ({ jobId }) => this._cache.getCache({ jobId }),
+            list: (client, { jobId }, options) => {
+                return client.job.listPreparationAndReleaseTaskStatus(jobId, { taskListSubtasksOptions: options });
+            },
+            listNext: (client, nextLink: string) => {
+                return client.job.listPreparationAndReleaseTaskStatusNext(nextLink);
+            },
+        });
     }
 
-    public list(initialOptions: any = {}): RxListProxy<JobHookTaskListParams, JobHookTask> {
-        return new RxBatchListProxy<JobHookTaskListParams, JobHookTask>(JobHookTask, this.batchService, {
+    public list(options: ListOptionsAttributes = {}): ListView<JobHookTask, JobHookTaskListParams> {
+        return new ListView({
             cache: ({ jobId }) => this._cache.getCache({ jobId }),
-            proxyConstructor: (client, params, options) => client.job.listHookTasks(params.jobId, options),
-            initialOptions,
-            initialParams: {jobId: null},
+            getter: this._listGetter,
+            initialOptions: options,
         });
     }
 }
