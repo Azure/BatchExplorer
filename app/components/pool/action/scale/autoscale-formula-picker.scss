@@ -72,7 +72,10 @@
 
 
 bl-autoscale-formula-picker {
-
+    .editor {
+        height: 100%;
+        overflow-y: hidden;
+    }
     .CodeMirror {
         font-size: 12px;
         height: 300px !important;
