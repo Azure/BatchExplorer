@@ -4,6 +4,7 @@ import {
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
+
 import * as moment from "moment";
 import "./duration-picker.scss";
 
@@ -55,26 +56,22 @@ export class DurationPickerComponent implements ControlValueAccessor {
 
     public onToggle(event) {
         this.unlimited = event.checked;
-        if (this.unlimited) {
-            this.value = null;
-            this.unit = ConstraintsUnit.minutes;
-            this._duration = null;
-            if ( this._propagateChange) {
-                this._propagateChange(this._duration);
-            }
+        this._duration = this.unlimited ? null : this._getDuration();
+        if ( this._propagateChange) {
+            this._propagateChange(this._duration);
         }
     }
 
     public onTimeChange(event) {
         this._duration = this._getDuration();
-        if ( this._propagateChange) {
+        if (this._propagateChange) {
             this._propagateChange(this._duration);
         }
     }
 
     public onUnitChange(event) {
         this._duration = this._getDuration();
-        if ( this._propagateChange) {
+        if (this._propagateChange) {
             this._propagateChange(this._duration);
         }
     }
