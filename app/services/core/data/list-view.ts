@@ -43,6 +43,7 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
                 return List<TEntity>(keys.map((x) => items.get(x)));
             });
         }).switch().distinctUntilChanged((a, b) => a.equals(b)).takeUntil(this.isDisposed);
+        this.hasMore = this._hasMore.asObservable();
     }
 
     public startPoll(interval: number, fetchAll: boolean = false) {
@@ -89,11 +90,13 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
         return this.fetchData({
             getData: fetchObs,
             next: (response: ListResponse<TEntity>) => {
-                console.log("Items", response);
                 this._updateNewKeys(this._retrieveKeys(response.items));
                 this._nextLink = response.nextLink;
+                this._hasMore.next(Boolean(response.nextLink)); // This NEEDS to be called after processResponse
+                console.log("Items", response, this._hasMore.value);
             },
             error: (error) => {
+                console.log("Error..", error);
                 this._hasMore.next(false);
             },
         });
@@ -203,7 +206,7 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
         if (!response) { return false; }
         this._itemKeys.next(this._retrieveKeys(response.items));
         this._lastRequest = { params: this._params, options: this._options };
-        // this._hasMore.next(this.hasMoreItems());
+        this._hasMore.next(Boolean(response.nextLink));
         this._status.next(LoadingStatus.Ready);
         return true;
     }

@@ -16,7 +16,7 @@ import { SidebarManager } from "app/components/base/sidebar";
 import { TableComponent, TableConfig } from "app/components/base/table";
 import { Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
-import { PoolService, PoolListParams } from "app/services";
+import { PoolListParams, PoolService } from "app/services";
 import { ListView } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
 import { DeletePoolDialogComponent, PoolResizeDialogComponent } from "../action";

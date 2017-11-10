@@ -49,7 +49,7 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
         this._filter = filter;
 
         if (filter.isEmpty()) {
-            this.data.setOptions({ pageSize: 2, select: "id"});
+            this.data.setOptions({});
         } else {
             this.data.setOptions({ filter: filter.toOData() });
         }

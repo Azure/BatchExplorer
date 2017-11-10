@@ -16,6 +16,9 @@ import {
     RxListProxy,
     TargetedDataCache,
     getAllProxy,
+    ContinuationToken,
+    BatchListGetter,
+    ListView,
 } from "./core";
 import { ServiceBase } from "./service-base";
 
@@ -47,6 +50,7 @@ export class TaskService extends ServiceBase {
         key: ({ jobId }) => jobId,
     });
     private _getter: BatchEntityGetter<Task, TaskParams>;
+    private _listGetter: BatchListGetter<Task, TaskParams>;
 
     private _subTaskCache = new TargetedDataCache<SubtaskListParams, SubtaskInformation>({
         key: ({ jobId, taskId }) => `${jobId}/${taskId}`,
@@ -62,6 +66,12 @@ export class TaskService extends ServiceBase {
         this._getter = new BatchEntityGetter(Task, this.batchService, {
             cache: ({ jobId }) => this.getCache(jobId),
             getFn: (client, params: TaskParams) => client.task.get(params.jobId, params.id),
+        });
+
+        this._listGetter = new BatchListGetter(Task, this.batchService, {
+            cache: ({ jobId }) => this.getCache(jobId),
+            list: (client, params, options) => client.task.list(params.jobId, { taskListOptions: options }),
+            listNext: (client, nextLink: string) => client.task.listNext(nextLink),
         });
     }
 
@@ -104,8 +114,26 @@ export class TaskService extends ServiceBase {
         });
     }
 
+    public listOnce(jobId: string, options?: any, forceNew?: boolean);
+    public listOnce(nextLink: ContinuationToken);
+    public listOnce(jobIdOrNextLink: any, options = {}, forceNew = false) {
+        if (jobIdOrNextLink.nextLink) {
+            return this._listGetter.fetch(jobIdOrNextLink);
+        } else {
+            return this._listGetter.fetch({ jobId: jobIdOrNextLink }, options, forceNew);
+        }
+    }
+
+    public listView(): ListView<Task, TaskListParams> {
+        return new ListView({
+            cache: ({ jobId }) => this.getCache(jobId),
+            getter: this._listGetter,
+        });
+    }
+
+
     public get(jobId: string, taskId: string, options: any = {}): Observable<Task> {
-        return this._getter.fetch({jobId, id: taskId});
+        return this._getter.fetch({ jobId, id: taskId });
     }
 
     /**
