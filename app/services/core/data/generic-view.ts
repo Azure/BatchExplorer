@@ -4,7 +4,8 @@ import { DataCache } from "app/services/core";
 import { ObjectUtils } from "app/utils";
 import { AsyncSubject, BehaviorSubject, Observable, Subject, Subscription } from "rxjs";
 import { PollObservable } from "../poll-service";
-import { ProxyOptions } from "../proxy-options";
+import { ProxyOptions } from "./proxy-options";
+import { FetchDataOptions } from "app/services/core/rx-proxy-base";
 
 export interface GenericViewConfig<TEntity, TParams> {
     /**
@@ -47,9 +48,9 @@ export abstract class GenericView<TEntity, TParams, TOptions extends ProxyOption
     protected _newDataStatus = new BehaviorSubject<LoadingStatus>(LoadingStatus.Loading);
     protected _error = new BehaviorSubject<ServerError>(null);
     protected _cacheCleared = new Subject<void>();
+    protected _params: TParams;
+    protected _options: TOptions;
 
-    private _params: TParams;
-    private _options: ProxyOptions;
     private _pollObservable: PollObservable;
     private _currentQuerySub: Subscription = null;
     private _currentObservable: Observable<TEntity>;
@@ -168,25 +169,30 @@ export abstract class GenericView<TEntity, TParams, TOptions extends ProxyOption
         return this._options;
     }
 
-    protected fetchData(getData: () => Observable<any>): Observable<any> {
+    protected fetchData(config: FetchDataOptions): Observable<any> {
         if (this._currentQuerySub) {
             return this._currentObservable;
         }
         this._status.next(LoadingStatus.Loading);
-        const obs = this._currentObservable = getData();
+        const obs = this._currentObservable = config.getData();
         this._currentQuerySub = obs.subscribe({
             next: (response) => {
                 this.abortFetch();
                 this._status.next(LoadingStatus.Ready);
+                config.next(response);
             }, error: (error: ServerError) => {
                 this.abortFetch();
                 if (error) {
                     this._status.next(LoadingStatus.Error);
                     this._error.next(error);
+                    if (config.error) {
+                        config.error(error);
+                    }
                 } else {
                     // error callback returned false so act like the error never happened
                     this._status.next(LoadingStatus.Ready);
                 }
+
             },
         });
 

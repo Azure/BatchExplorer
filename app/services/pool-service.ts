@@ -3,12 +3,11 @@ import { Observable, Subject } from "rxjs";
 
 import { Pool } from "app/models";
 import { PoolCreateDto, PoolEnableAutoScaleDto, PoolPatchDto, PoolResizeDto } from "app/models/dtos";
-import { BatchEntityGetter } from "app/services/core";
-import { EntityView } from "app/services/core/data";
+import { BatchEntityGetter, ListView, EntityView } from "app/services/core";
 import { Constants, ModelUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";
-import { BatchListGetter, DataCache, RxBatchListProxy, RxListProxy } from "./core";
+import { BatchListGetter, DataCache, RxBatchListProxy, RxListProxy, ContinuationToken } from "./core";
 import { ServiceBase } from "./service-base";
 
 export interface PoolListParams { }
@@ -44,13 +43,6 @@ export class PoolService extends ServiceBase {
             list: (client, params: PoolListParams, options) => client.pool.list({ poolListOptions: options }),
             listNext: (client, nextLink: string) => client.pool.listNext(nextLink),
         });
-
-        this._listGetter.fetch({}, { maxResults: 2 }).subscribe({
-            next: (pools) => {
-                console.log("Got pools??", pools);
-            },
-            error: (err) => console.log("erro", err),
-        });
     }
 
     public get basicProperties(): string {
@@ -72,9 +64,20 @@ export class PoolService extends ServiceBase {
     }
 
     public listOnce(options?: any, forceNew?: boolean);
-    public listOnce(nextLink: string);
-    public listOnce() {
-        return this._listGetter.fetch(args);
+    public listOnce(nextLink: ContinuationToken);
+    public listOnce(nextLinkOrOptions: any, options = {}, forceNew = false) {
+        if (nextLinkOrOptions.nextLink) {
+            return this._listGetter.fetch(nextLinkOrOptions);
+        } else {
+            return this._listGetter.fetch({}, options, forceNew);
+        }
+    }
+
+    public listView(): ListView<Pool, PoolListParams> {
+        return new ListView({
+            cache: () => this._cache,
+            getter: this._listGetter,
+        });
     }
 
     /**

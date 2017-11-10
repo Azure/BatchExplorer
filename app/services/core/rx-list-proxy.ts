@@ -4,7 +4,7 @@ import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { log } from "app/utils";
-import { ListOptions, ListOptionsAttributes } from "./list-options";
+import { ListOptions, ListOptionsAttributes } from "./data/list-options";
 import { RxProxyBase, RxProxyBaseConfig } from "./rx-proxy-base";
 
 export interface RxListProxyConfig<TParams, TEntity> extends RxProxyBaseConfig<TParams, TEntity> {
@@ -90,7 +90,7 @@ export abstract class RxListProxy<TParams, TEntity> extends RxProxyBase<TParams,
             next: (keys: OrderedSet<string>) => {
                 const currentKeys = this._itemKeys.value;
                 if (currentKeys.size === 0) {
-                    this.cache.queryCache.cacheQuery(this._options.filter, keys, null);
+                    // this.cache.queryCache.cacheQuery(this._options.filter, keys, null);
                 }
                 this._updateNewKeys(keys);
                 subject.next(true);

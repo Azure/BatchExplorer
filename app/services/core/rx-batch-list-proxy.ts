@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { ServerError } from "app/models";
 import { exists } from "app/utils";
 import { BatchClientService } from "../batch-client.service";
-import { ListOptions } from "./list-options";
+import { ListOptions } from "./data/list-options";
 import { RxListProxy, RxListProxyConfig } from "./rx-list-proxy";
 
 const defaultOptions = new ListOptions({

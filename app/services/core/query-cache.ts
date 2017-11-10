@@ -2,12 +2,13 @@ import { OrderedSet } from "immutable";
 import * as moment from "moment";
 
 import { Constants, ObjectUtils } from "app/utils";
+import { ContinuationToken } from "./data/list-options";
 
 const noQueryKey = "no-query";
 
 export class CachedKeyList {
     public createdAt: Date;
-    constructor(public keys: OrderedSet<string>, public data: any) {
+    constructor(public keys: OrderedSet<string>, public token: ContinuationToken) {
         this.createdAt = new Date();
     }
 }
@@ -18,11 +19,9 @@ export class CachedKeyList {
 export class QueryCache {
     private _cache: { [key: string]: CachedKeyList } = {};
 
-    public cacheQuery(filter: string, keys: OrderedSet<string>, data: any) {
-        if (!filter) {
-            filter = noQueryKey;
-        }
-        this._cache[filter] = new CachedKeyList(keys, data);
+    public cacheQuery(keys: OrderedSet<string>, token: ContinuationToken) {
+        const key = `${token.options.filter}|${token.options.select}`;
+        this._cache[key] = new CachedKeyList(keys, token);
         this.cleanCache();
     }
 

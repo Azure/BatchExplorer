@@ -5,8 +5,8 @@ import { LoadingStatus } from "app/components/base/loading";
 import { ServerError } from "app/models";
 import { Constants, ObjectUtils, exists, log } from "app/utils";
 import { DataCache } from "./data-cache";
+import { ProxyOptions } from "./data/proxy-options";
 import { PollObservable } from "./poll-service";
-import { ProxyOptions } from "./proxy-options";
 
 export interface FetchDataOptions {
     getData: () => Observable<any>;

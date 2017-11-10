@@ -42,7 +42,6 @@ export class BatchListGetter<TEntity, TParams> extends ListGetter<TEntity, TPara
     }
 
     private _processBatchResponse(data) {
-        console.log("Data", data, data.odatanextLink);
         return {
             data,
             nextLink: data.odatanextLink,

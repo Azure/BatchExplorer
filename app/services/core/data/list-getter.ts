@@ -1,23 +1,10 @@
 import { Type } from "@angular/core";
-import { List } from "immutable";
+import { List, OrderedSet, Iterable } from "immutable";
 import { Observable } from "rxjs";
 
-import { ServerError } from "app/models";
 import { DataCache } from "app/services/core";
-import { log } from "app/utils";
-import { HttpCode } from "app/utils/constants";
 import { GenericGetter, GenericGetterConfig } from "./generic-getter";
-
-export interface ListGetterOptions {
-    select?: string;
-    filter?: string;
-}
-
-export interface ContinuationToken {
-    params: any;
-    options: ListGetterOptions;
-    nextLink: string;
-}
+import { ListOptions, ListOptionsAttributes, ContinuationToken } from "./list-options";
 
 export interface ListResponse<TEntity> {
     items: List<TEntity>;
@@ -33,25 +20,36 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
         super(type, config);
     }
 
-    public fetch(params: TParams, options?: ListGetterOptions, forceNew?: boolean);
+    public fetch(params: TParams, options?: ListOptionsAttributes | ListOptions, forceNew?: boolean);
     public fetch(nextLink: ContinuationToken);
-    public fetch(paramsOrNextLink: any, options: ListGetterOptions = {}, forceNew = false): Observable<ListResponse<TEntity>> {
+    public fetch(paramsOrNextLink: any, options: any = {}, forceNew = false): Observable<ListResponse<TEntity>> {
         if (paramsOrNextLink.nextLink) {
             return this._fetchNext(paramsOrNextLink);
         } else {
-            return this._fetch(paramsOrNextLink, options, forceNew);
+            return this._fetch(paramsOrNextLink, new ListOptions(options), forceNew);
         }
     }
 
-    protected abstract list(params: TParams, options: ListGetterOptions): Observable<TEntity[]>;
+    public fetchAll(params: TParams, options?: ListOptionsAttributes | ListOptions): Observable<List<TEntity>> {
+        return this._fetch(params, new ListOptions(options), true).flatMap(({ items, nextLink }) => {
+            return this._fetchRemaining(nextLink).map(remainingItems => List<TEntity>(items.concat(remainingItems)));
+        }).share();
+    }
+
+    public fetchFromCache(params: TParams, options?: ListOptionsAttributes | ListOptions): ListResponse<TEntity> {
+        const cache = this.getCache(params);
+        return this._tryLoadFromCache(cache, new ListOptions(options), false);
+    }
+
+    protected abstract list(params: TParams, options: ListOptionsAttributes): Observable<TEntity[]>;
     protected abstract listNext(nextLink): Observable<TEntity[]>;
 
-    private _fetch(params: TParams, options: ListGetterOptions, forceNew = false): Observable<ListResponse<TEntity>> {
+    private _fetch(params: TParams, options: ListOptions, forceNew = false): Observable<ListResponse<TEntity>> {
         const cache = this.getCache(params);
-        const items = this._tryLoadFromCache(cache, options, forceNew);
-        if (items !== null) {
+        const cachedResponse = this._tryLoadFromCache(cache, options, forceNew);
+        if (cachedResponse !== null) {
             // TODO-TIM return real stuff
-            return Observable.of(null);
+            return Observable.of(cachedResponse);
         }
 
         return this.list(params, options).map(x => this._processItems(cache, x, params, options));
@@ -63,19 +61,37 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
         return this.listNext(token.nextLink).map(x => this._processItems(cache, x, token.params, token.options));
     }
 
+    private _fetchRemaining(nextLink: ContinuationToken): Observable<Iterable<any, TEntity>> {
+        if (!nextLink) {
+            return Observable.of(List([]));
+        }
+        return this._fetchNext(nextLink).flatMap((response) => {
+            return this._fetchRemaining(response.nextLink).map(remainingItems => response.items.concat(remainingItems));
+        }).share();
+    }
+
     private _processItems(
-        cache: DataCache<TEntity>, response: any,
-        params: TParams, options: ListGetterOptions): ListResponse<TEntity> {
+        cache: DataCache<TEntity>,
+        response: any,
+        params: TParams,
+        options: ListOptions): ListResponse<TEntity> {
+
         const { data, nextLink } = response;
         const items = data.map(x => new this.type(x));
-        cache.addItems(items, options.select);
+        const keys = OrderedSet(cache.addItems(items, options.select));
+        const token = nextLink && {
+            nextLink,
+            params,
+            options,
+        };
+
+        if (items.size === 0) {
+            cache.queryCache.cacheQuery(keys, token);
+        }
+
         return {
             items: List(items),
-            nextLink: nextLink && {
-                nextLink,
-                params,
-                options,
-            },
+            nextLink: token,
         };
     }
 
@@ -83,7 +99,11 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
      * This will try to load keys from the query cache
      * This succeed only if there is no item currently loaded, we don't want new data and there is cached data.
      */
-    private _tryLoadFromCache(cache: DataCache<TEntity>, options: ListGetterOptions, forceNew: boolean): List<TEntity> {
+    private _tryLoadFromCache(
+        cache: DataCache<TEntity>,
+        options: ListOptions,
+        forceNew: boolean): ListResponse<TEntity> {
+
         if (forceNew) {
             return null;
         }
@@ -93,6 +113,10 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
             return null;
         }
 
-        return List(cachedList.keys.map(key => cache.get(key)));
+        const items = List<TEntity>(cachedList.keys.map(key => cache.get(key)));
+        return {
+            items,
+            nextLink: cachedList.token,
+        };
     }
 }
