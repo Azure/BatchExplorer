@@ -3,11 +3,11 @@ import { Observable, Subject } from "rxjs";
 
 import { Pool } from "app/models";
 import { PoolCreateDto, PoolEnableAutoScaleDto, PoolPatchDto, PoolResizeDto } from "app/models/dtos";
-import { BatchEntityGetter, ListView, EntityView } from "app/services/core";
+import { BatchEntityGetter, EntityView, ListView } from "app/services/core";
 import { Constants, ModelUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";
-import { BatchListGetter, DataCache, RxBatchListProxy, RxListProxy, ContinuationToken, ListOptionsAttributes } from "./core";
+import { BatchListGetter, ContinuationToken, DataCache, ListOptionsAttributes } from "./core";
 import { ServiceBase } from "./service-base";
 
 export interface PoolListParams { }

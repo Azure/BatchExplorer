@@ -2,10 +2,10 @@ import { LoadingStatus } from "app/components/base/loading";
 import { List, OrderedSet } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
+import { log } from "app/utils";
 import { GenericView, GenericViewConfig } from "./generic-view";
 import { ListGetter, ListResponse } from "./list-getter";
-import { ListOptions, ListOptionsAttributes, ContinuationToken } from "./list-options";
-import { log } from "app/utils";
+import { ContinuationToken, ListOptions, ListOptionsAttributes } from "./list-options";
 
 export interface ListViewConfig<TEntity, TParams> extends GenericViewConfig<TEntity, TParams> {
     getter: ListGetter<TEntity, TParams>;
@@ -36,6 +36,7 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
         this.items = this._itemKeys.distinctUntilChanged().map((itemKeys) => {
             return this.cache.items.map((items) => {
                 let keys: any = itemKeys;
+                console.log("new keys", keys.toJS(), items.toJS());
                 if (this._options.maxItems) {
                     keys = itemKeys.slice(0, this._options.maxItems);
                 }
@@ -211,7 +212,7 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
     }
 
     private _retrieveKeys(items: List<TEntity>): OrderedSet<string> {
-        return OrderedSet(items.map((x => x[this.cache.uniqueField])));
+        return OrderedSet(items.map((x => x[this.cache.uniqueField].toString())));
     }
 
     private _handleChanges() {

@@ -15,8 +15,6 @@ import {
     EntityView,
     ListOptionsAttributes,
     ListView,
-    RxBatchListProxy,
-    RxListProxy,
     TargetedDataCache,
 } from "./core";
 import { ServiceBase } from "./service-base";
@@ -50,6 +48,7 @@ export class TaskService extends ServiceBase {
     });
     private _getter: BatchEntityGetter<Task, TaskParams>;
     private _listGetter: BatchListGetter<Task, TaskParams>;
+    private _subTaskListGetter: BatchListGetter<SubtaskInformation, SubtaskListParams>;
 
     private _subTaskCache = new TargetedDataCache<SubtaskListParams, SubtaskInformation>({
         key: ({ jobId, taskId }) => `${jobId}/${taskId}`,
@@ -72,6 +71,14 @@ export class TaskService extends ServiceBase {
             list: (client, params, options) => client.task.list(params.jobId, { taskListOptions: options }),
             listNext: (client, nextLink: string) => client.task.listNext(nextLink),
         });
+
+        this._subTaskListGetter = new BatchListGetter(SubtaskInformation, this.batchService, {
+            cache: ({ jobId, taskId }) => this._subTaskCache.getCache({ jobId, taskId }),
+            list: (client, { jobId, taskId }, options) => {
+                return client.task.listSubtasks(jobId, taskId, { taskListSubtasksOptions: options }).then(x => x.value)
+            },
+            listNext: (client, nextLink: string) => null as any,
+        });
     }
 
     public getCache(jobId: string): DataCache<Task> {
@@ -81,21 +88,6 @@ export class TaskService extends ServiceBase {
     public countTasks(jobId: string, state: TaskState): Observable<number> {
         const filter = FilterBuilder.prop("state").eq(state).toOData();
         return this.listAll(jobId, { filter, select: "id,state" }).map(tasks => tasks.size).share();
-    }
-
-    public listSubTasks(
-        initialJobId: string,
-        initialTaskId: string,
-        initialOptions: any = {}): RxListProxy<SubtaskListParams, SubtaskInformation> {
-
-        return new RxBatchListProxy<SubtaskListParams, SubtaskInformation>(SubtaskInformation, this.batchService, {
-            cache: ({ jobId, taskId }) => this._subTaskCache.getCache({ jobId, taskId }),
-            proxyConstructor: (client, { jobId, taskId }, options) => {
-                return client.task.listSubtasks(jobId, taskId, options);
-            },
-            initialParams: { jobId: initialJobId, taskId: initialTaskId },
-            initialOptions,
-        });
     }
 
     public listOnce(jobId: string, options?: any, forceNew?: boolean);
@@ -108,10 +100,19 @@ export class TaskService extends ServiceBase {
         }
     }
 
-    public listView(): ListView<Task, TaskListParams> {
+    public listView(options: ListOptionsAttributes = {}): ListView<Task, TaskListParams> {
         return new ListView({
             cache: ({ jobId }) => this.getCache(jobId),
             getter: this._listGetter,
+            initialOptions: options,
+        });
+    }
+
+    public listSubTasksView(options: ListOptionsAttributes = {}): ListView<SubtaskInformation, SubtaskListParams> {
+        return new ListView({
+            cache: ({ jobId, taskId }) => this._subTaskCache.getCache({ jobId, taskId }),
+            getter: this._subTaskListGetter,
+            initialOptions: options,
         });
     }
 
@@ -150,10 +151,7 @@ export class TaskService extends ServiceBase {
             options.select = properties;
         }
 
-        const data = this.list(jobId, options);
-        return data.fetchAll().cascade(() => {
-            return data.items.first();
-        });
+        return this.listAll(jobId, options);
     }
 
     public terminate(jobId: string, taskId: string, options: any): Observable<{}> {
