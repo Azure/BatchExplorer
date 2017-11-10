@@ -5,9 +5,9 @@ import { Subscription } from "rxjs";
 
 import { AccountResource, BatchApplication, Job, Pool } from "app/models";
 import {
-    AccountParams, AccountService, ApplicationService, JobService, PoolService, JobListParams, PoolListParams,
- } from "app/services";
-import { EntityView, RxListProxy, ListView } from "app/services/core";
+    AccountParams, AccountService, ApplicationService, JobService, PoolService, JobListParams, PoolListParams, ApplicationListParams,
+} from "app/services";
+import { EntityView, ListView } from "app/services/core";
 
 import "./account-details.scss";
 
@@ -32,9 +32,9 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
     public data: EntityView<AccountResource, AccountParams>;
 
-    public applicationData: RxListProxy<{}, BatchApplication>;
+    public applicationData: ListView<BatchApplication, ApplicationListParams>;
     public jobData: ListView<Job, JobListParams>;
-    public poolData: ListView< Pool, PoolListParams>;
+    public poolData: ListView<Pool, PoolListParams>;
 
     private _paramsSubscriber: Subscription;
     private initialOptions = { maxItems: 10 };
@@ -85,10 +85,10 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     }
 
     private _loadQuickAccessLists() {
-        this.applicationData = this.applicationService.list();
-        this.poolData.setOptions(this.initialOptions);
+        this.applicationData = this.applicationService.listView();
+        this.applicationData.setOptions(this.initialOptions);
         this.applicationData.fetchNext();
-
+        // TODO-tim find this
         // (error: ServerError) => {
         //     let handled = false;
         //     if (this.applicationService.isAutoStorageError(error)) {

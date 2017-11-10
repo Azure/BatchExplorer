@@ -1,6 +1,5 @@
 export * from "./data";
 export * from "./data-cache";
-export * from "./rx-arm-list-proxy";
 export * from "./rx-batch-list-proxy";
 export * from "./rx-list-proxy";
 export * from "./rx-storage-list-proxy";
