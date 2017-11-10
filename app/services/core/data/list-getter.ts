@@ -52,13 +52,12 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
             return Observable.of(cachedResponse);
         }
 
-        return this.list(params, options).map(x => this._processItems(cache, x, params, options));
+        return this.list(params, options).map(x => this._processItems(cache, x, params, options, true));
     }
 
     private _fetchNext(token: ContinuationToken): Observable<ListResponse<TEntity>> {
         const cache = this.getCache(token.params);
-
-        return this.listNext(token.nextLink).map(x => this._processItems(cache, x, token.params, token.options));
+        return this.listNext(token.nextLink).map(x => this._processItems(cache, x, token.params, token.options, false));
     }
 
     private _fetchRemaining(nextLink: ContinuationToken): Observable<Iterable<any, TEntity>> {
@@ -74,24 +73,26 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
         cache: DataCache<TEntity>,
         response: any,
         params: TParams,
-        options: ListOptions): ListResponse<TEntity> {
+        options: ListOptions,
+        isFirstPage: boolean): ListResponse<TEntity> {
 
         const { data, nextLink } = response;
+        console.log("response is", data, isFirstPage);
         const items = data.map(x => new this.type(x));
         const keys = OrderedSet(cache.addItems(items, options.select));
-        const token = nextLink && {
+        const token = {
             nextLink,
             params,
             options,
         };
 
-        if (items.size === 0) {
+        if (items.size !== 0 && isFirstPage) {
             cache.queryCache.cacheQuery(keys, token);
         }
 
         return {
             items: List(items),
-            nextLink: token,
+            nextLink: nextLink && token,
         };
     }
 
@@ -103,12 +104,14 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
         cache: DataCache<TEntity>,
         options: ListOptions,
         forceNew: boolean): ListResponse<TEntity> {
-
+        console.log("Try load from cache??");
         if (forceNew) {
             return null;
         }
 
-        const cachedList = cache.queryCache.getKeys(options.filter);
+        const cachedList = cache.queryCache.getKeys(options.filter, options.select);
+        console.log("Cahcce list", cachedList);
+
         if (!cachedList) {
             return null;
         }

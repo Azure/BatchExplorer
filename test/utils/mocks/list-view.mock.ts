@@ -26,7 +26,9 @@ export class MockListView<TEntity, TParams> extends ListView<TEntity, TParams> {
             cache: () => cache,
             getter: new BasicListGetter(type, {
                 cache: () => cache,
-                supplyData: (params) => Observable.of(this._items(params)),
+                supplyData: (params) => Observable.of({
+                    data: this._items(params),
+                }),
             }),
         });
         if (config.items instanceof Function) {
