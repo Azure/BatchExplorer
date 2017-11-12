@@ -2,7 +2,7 @@ import { Component, EventEmitter, Inject, Input, Output } from "@angular/core";
 import { List } from "immutable";
 
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
-import { Node } from "app/models";
+import { Node, Pool } from "app/models";
 import { NodeService } from "app/services";
 import { StateCounter } from "./state-counter";
 import { CategoryNode, StateNode, StateTree } from "./state-tree";
@@ -15,7 +15,7 @@ import "./nodes-heatmap-legend.scss";
 })
 export class NodesHeatmapLegendComponent {
     @Input()
-    public poolId: string;
+    public pool: Pool;
 
     @Input()
     public set nodes(nodes: List<Node>) {
@@ -52,25 +52,29 @@ export class NodesHeatmapLegendComponent {
         const name = state ? `${state} states` : (item as CategoryNode).label;
         this.contextMenuService.openMenu(new ContextMenu([
             new ContextMenuItem(`Reboot all ${name}`, () => this.rebootAll(item)),
-            new ContextMenuItem(`Reimage all ${name}`, () => this.reimageAll(item)),
+            new ContextMenuItem({
+                label: `Reimage all ${name}`,
+                click: () => this.reimageAll(item),
+                enabled: Boolean(this.pool.cloudServiceConfiguration),
+            }),
         ]));
     }
 
     public rebootAll(item: StateNode | CategoryNode) {
         if ((item as StateNode).state) {
-            this.nodeService.rebootAll(this.poolId, [(item as StateNode).state]);
+            this.nodeService.rebootAll(this.pool.id, [(item as StateNode).state]);
         } else {
             const category = item as CategoryNode;
-            this.nodeService.rebootAll(this.poolId, category.states.map(x => x.state));
+            this.nodeService.rebootAll(this.pool.id, category.states.map(x => x.state));
         }
     }
 
     public reimageAll(item: StateNode | CategoryNode) {
         if ((item as StateNode).state) {
-            this.nodeService.reimageAll(this.poolId, [(item as StateNode).state]);
+            this.nodeService.reimageAll(this.pool.id, [(item as StateNode).state]);
         } else {
             const category = item as CategoryNode;
-            this.nodeService.reimageAll(this.poolId, category.states.map(x => x.state));
+            this.nodeService.reimageAll(this.pool.id, category.states.map(x => x.state));
         }
     }
 }

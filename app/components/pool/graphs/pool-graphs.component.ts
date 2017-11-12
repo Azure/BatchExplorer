@@ -49,6 +49,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     public tasks: List<Task> = List([]);
 
     public startTaskFailedError: any;
+    public isPaasPool: boolean = false;
 
     public runningTaskHistory = new RunningTasksHistoryData();
     public runningNodesHistory = new NodesStateHistoryData([NodeState.running, NodeState.idle]);
@@ -103,9 +104,11 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
             const prev = changes.pool.previousValue;
             const cur = changes.pool.currentValue;
             this.maxRunningTasks = this.pool ? this.pool.targetNodes * this.pool.maxTasksPerNode : 0;
+            this.isPaasPool = Boolean(this.pool.cloudServiceConfiguration);
             if (prev && cur && prev.id === cur.id) {
                 return;
             }
+
             this.data.updateParams({ poolId: this.pool.id });
             this.data.refreshAll(false);
 
