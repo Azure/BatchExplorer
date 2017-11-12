@@ -460,7 +460,11 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             new ContextMenuItem({ label: "Go to", click: () => this._gotoNode(node) }),
             new ContextMenuItem({ label: "Connect", click: () => this._connectTo(node) }),
             new ContextMenuItem({ label: "Reboot", click: () => this._reboot(node) }),
-            new ContextMenuItem({ label: "Reimage", click: () => this._reimage(node) }),
+            new ContextMenuItem({
+                label: "Reimage",
+                click: () => this._reimage(node),
+                enabled: Boolean(this.pool.cloudServiceConfiguration),
+            }),
             new ContextMenuItem({ label: "Delete", click: () => this._delete(node) }),
         ];
 
