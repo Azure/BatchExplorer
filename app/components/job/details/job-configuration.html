@@ -48,7 +48,7 @@
             <div collapsed-preview></div>
             <bl-link-property label="Id" [value]="managerTask.id" [link]="['/jobs', job.id, 'tasks', managerTask.id]"></bl-link-property>
             <bl-text-property label="Display name" [value]="managerTask.displayName" *ngIf="managerTask.displayName"></bl-text-property>
-            <bl-text-property label="Command line" [value]="managerTask.commandLine"></bl-text-property>
+            <bl-text-property label="Command line" [value]="managerTask.commandLine" [wrap]="true"></bl-text-property>
             <bl-text-property label="Max task retry count" [value]="managerTask.constraints.maxTaskRetryCount"></bl-text-property>
             <bl-text-property label="Max wall-clock time" [value]="managerTask.constraints.maxWallClockTime"></bl-text-property>
             <bl-text-property label="Retention time" [value]="managerTask.constraints.retentionTime"></bl-text-property>
@@ -90,7 +90,7 @@
         <bl-property-group *ngIf="job.jobPreparationTask" label="Job preparation task" class="wide" [collapsed]="true">
             <div collapsed-preview></div>
             <bl-text-property label="Id" [value]="prepTask.id"></bl-text-property>
-            <bl-text-property label="Command line" [value]="prepTask.commandLine"></bl-text-property>
+            <bl-text-property label="Command line" [value]="prepTask.commandLine" [wrap]="true"></bl-text-property>
             <bl-text-property label="Max task retry count" [value]="prepTask.constraints.maxTaskRetryCount"></bl-text-property>
             <bl-text-property label="Max wall-clock time" [value]="prepTask.constraints.maxWallClockTime"></bl-text-property>
             <bl-text-property label="Retention time" [value]="prepTask.constraints.retentionTime"></bl-text-property>
@@ -122,7 +122,7 @@
         <bl-property-group *ngIf="job.jobReleaseTask" label="Job release task" class="wide" [collapsed]="true">
             <div collapsed-preview></div>
             <bl-text-property label="Id" [value]="releaseTask.id"></bl-text-property>
-            <bl-text-property label="Command line" [value]="releaseTask.commandLine"></bl-text-property>
+            <bl-text-property label="Command line" [value]="releaseTask.commandLine" [wrap]="true"></bl-text-property>
             <bl-text-property label="Max wall-clock time" [value]="releaseTask.maxWallClockTime"></bl-text-property>
             <bl-text-property label="Retention time" [value]="releaseTask.retentionTime"></bl-text-property>
             <bl-bool-property label="Run elevated" [value]="releaseTask.runElevated" yesNo="true"></bl-bool-property>
