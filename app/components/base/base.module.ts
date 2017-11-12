@@ -15,6 +15,7 @@ import { ChartsModule } from "./charts";
 import { ContextMenuModule } from "./context-menu";
 import { DialogsModule } from "./dialogs";
 import { DropdownModule } from "./dropdown";
+import { DurationPickerComponent } from "./duration-picker";
 import { EditorModule } from "./editor";
 import { ElapsedTimeComponent } from "./elapsed-time";
 import { FocusSectionModule } from "./focus-section";
@@ -73,6 +74,7 @@ const components = [
     BannerOtherFixDirective,
     ElapsedTimeComponent,
     EntityDetailsListComponent,
+    DurationPickerComponent,
     IconComponent,
     ListAndShowLayoutComponent,
     SimpleLoadingComponent,
