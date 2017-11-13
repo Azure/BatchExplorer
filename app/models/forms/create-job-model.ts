@@ -1,5 +1,6 @@
 
 import { JobCreateDto } from "app/models/dtos";
+import * as moment from "moment";
 
 export interface JobConstraintsModel {
     maxWallClockTime: string;
@@ -26,7 +27,7 @@ export interface CreateJobModel {
     usesTaskDependencies: boolean;
 }
 
-export function createJobFormToJsonData(formData: CreateJobModel): any {
+export function createJobFormToJsonData(formData: CreateJobModel): JobCreateDto {
     let data: any = {
         id: formData.id,
         displayName: formData.displayName,
@@ -36,7 +37,7 @@ export function createJobFormToJsonData(formData: CreateJobModel): any {
             maxTaskRetryCount: formData.constraints.maxTaskRetryCount,
         },
         poolInfo: {
-            poolId: formData.poolInfo.poolId,
+            poolId: formData.poolInfo && formData.poolInfo.poolId,
         },
         jobManagerTask: formData.jobManagerTask,
         jobPreparationTask: formData.jobPreparationTask,
@@ -44,18 +45,14 @@ export function createJobFormToJsonData(formData: CreateJobModel): any {
         onAllTasksComplete: formData.onAllTasksComplete,
         onTaskFailure: formData.onTaskFailure,
     };
-    return data;
+    return new JobCreateDto(data);
 }
 
 export function jobToFormModel(job: JobCreateDto): CreateJobModel {
-    return {
+    const out: any = {
         id: job.id,
         displayName: job.displayName,
         priority: job.priority,
-        constraints: {
-            maxWallClockTime: job.constraints.maxWallClockTime.toISOString(),
-            maxTaskRetryCount: job.constraints.maxTaskRetryCount,
-        },
         jobManagerTask: job.jobManagerTask,
         jobPreparationTask: job.jobPreparationTask,
         jobReleaseTask: job.jobReleaseTask,
@@ -66,4 +63,20 @@ export function jobToFormModel(job: JobCreateDto): CreateJobModel {
         metadata: job.metadata,
         usesTaskDependencies: job.usesTaskDependencies,
     };
+
+    if (job.constraints) {
+        let maxWallClockTime = null;
+        // if value is patched from json editor, maxwallclock needs to be converted to duration
+        if (typeof job.constraints.maxWallClockTime === "string") {
+            maxWallClockTime = moment.duration(job.constraints.maxWallClockTime);
+        } else {
+            maxWallClockTime = job.constraints.maxWallClockTime;
+        }
+
+        out.constraints = {
+            maxWallClockTime: maxWallClockTime && maxWallClockTime.toISOString(),
+            maxTaskRetryCount: job.constraints.maxTaskRetryCount,
+        };
+    }
+    return out;
 }

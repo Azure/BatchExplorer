@@ -7,6 +7,7 @@ import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { Pool, ServerError } from "app/models";
+// import { JobCreateDto } from "app/models/dtos";
 import { JobService, PoolService } from "app/services";
 import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";
@@ -186,7 +187,7 @@ describe("JobCreateBasicDialogComponent ", () => {
     it("Clicking add creates job and doesnt close form", (done) => {
         const job = Fixtures.job.create({ id: "job-001", poolInfo: { poolId: "pool-002" } });
         component.setValueFromEntity(job);
-        component.submit().subscribe(() => {
+        component.submit(component.getCurrentValue()).subscribe(() => {
             expect(jobServiceSpy.add).toHaveBeenCalledTimes(1);
             expect(notificationServiceSpy.success).toHaveBeenCalledTimes(1);
             expect(sidebarRefSpy.close).toHaveBeenCalledTimes(0);
@@ -209,7 +210,7 @@ describe("JobCreateBasicDialogComponent ", () => {
     it("If create job throws we handle the error", (done) => {
         const job = Fixtures.job.create({ id: "bad-job-id", poolInfo: { poolId: "pool-002" } });
         component.setValueFromEntity(job);
-        component.submit().subscribe({
+        component.submit(component.getCurrentValue()).subscribe({
             next: () => {
                 fail("call should have failed");
                 done();

@@ -44,13 +44,13 @@ export class DurationPickerComponent implements ControlValueAccessor {
     @Input() public allowUnlimited: boolean = true;
 
     protected _propagateChange: (value: any) => void = null;
-    protected _duration: string;
+    protected _duration: any;
 
     public get duration() {
         return this._duration;
     }
 
-    public set duration(value: string) {
+    public set duration(value: any) {
         this._duration = value;
     }
 
@@ -80,6 +80,7 @@ export class DurationPickerComponent implements ControlValueAccessor {
         if (value !== undefined) {
             this._duration = value;
         }
+        this._setValueAndUnit();
     }
 
     public registerOnChange(fn) {
@@ -96,5 +97,39 @@ export class DurationPickerComponent implements ControlValueAccessor {
 
     private _getDuration(): any {
         return moment.duration(this.value, this.unit);
+    }
+
+    /**
+     * _setValueAndUnit helps setting constraint duration picker value once constraint form vlaue is patched.
+     * Unit is checked from days to second, and decimal part is ignored.
+     */
+    private _setValueAndUnit() {
+        if (this.duration) {
+            const duration = moment.duration(this.duration);
+            const days = Math.floor(duration.asDays());
+            const hours = Math.floor(duration.asHours());
+            const minutes = Math.floor(duration.asMinutes());
+            const seconds = Math.floor(duration.asSeconds());
+
+            if (days > 0) {
+                this.value = days;
+                this.unit = ConstraintsUnit.days;
+            } else if (hours > 0) {
+                this.value = hours;
+                this.unit = ConstraintsUnit.hours;
+            } else if (minutes > 0) {
+                this.value = minutes;
+                this.unit = ConstraintsUnit.minutes;
+            } else if (seconds > 0) {
+                this.value = seconds;
+                this.unit = ConstraintsUnit.seconds;
+            } else {
+                this.value = null;
+                this.unit = ConstraintsUnit.minutes;
+            }
+            this.unlimited = false;
+        } else {
+            this.unlimited = true;
+        }
     }
 }
