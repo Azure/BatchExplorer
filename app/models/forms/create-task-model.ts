@@ -1,4 +1,5 @@
 import { TaskCreateDto } from "app/models/dtos";
+import * as moment from "moment";
 import { PackageReferenceModel } from "./create-pool-model";
 
 export interface TaskConstraintsModel {
@@ -21,9 +22,7 @@ export interface CreateTaskModel {
     appPackages: PackageReferenceModel[];
 }
 
-export function createTaskFormToJsonData(formData: CreateTaskModel): any {
-    let retentionTime = null;
-    let maxWallClockTime = null;
+export function createTaskFormToJsonData(formData: CreateTaskModel): TaskCreateDto {
     let data: any = {
         id: formData.id,
         displayName: formData.displayName,
@@ -33,9 +32,9 @@ export function createTaskFormToJsonData(formData: CreateTaskModel): any {
         environmentSettings: formData.environmentSettings,
         affinityInfo: null,
         constraints: {
-            maxWallClockTime: maxWallClockTime,
-            maxTaskRetryCount: formData.constraints.maxTaskRetryCount,
-            retentionTime: retentionTime,
+            maxWallClockTime: formData.constraints && formData.constraints.maxWallClockTime,
+            maxTaskRetryCount: formData.constraints && formData.constraints.maxTaskRetryCount,
+            retentionTime: formData.constraints && formData.constraints.retentionTime,
         },
         userIdentity: formData.userIdentity,
         multiInstanceSettings: null,
@@ -46,7 +45,7 @@ export function createTaskFormToJsonData(formData: CreateTaskModel): any {
         data.applicationPackageReferences = formData.appPackages;
     }
 
-    return data;
+    return new TaskCreateDto(data);
 }
 
 export function taskToFormModel(task: TaskCreateDto): CreateTaskModel {
@@ -55,8 +54,8 @@ export function taskToFormModel(task: TaskCreateDto): CreateTaskModel {
         displayName: task.displayName,
         commandLine: task.commandLine,
         exitConditions: task.exitConditions,
-        resourceFiles: task.resourceFiles,
-        environmentSettings: task.environmentSettings,
+        resourceFiles: task.resourceFiles || [],
+        environmentSettings: task.environmentSettings || [],
         affinityInfo: task.affinityInfo,
         userIdentity: task.userIdentity,
         multiInstanceSettings: task.multiInstanceSettings,
@@ -65,19 +64,25 @@ export function taskToFormModel(task: TaskCreateDto): CreateTaskModel {
 
     if (task.constraints) {
         out.constraints = {
-            maxWallClockTime: durationToString(task.constraints.maxWallClockTime),
+            maxWallClockTime: toDuration(task.constraints.maxWallClockTime),
             maxTaskRetryCount: task.constraints.maxTaskRetryCount,
-            retentionTime: durationToString(task.constraints.retentionTime),
+            retentionTime: toDuration(task.constraints.retentionTime),
         };
     }
 
     return out;
 }
 
-function durationToString(duration: moment.Duration) {
-    if (duration) {
-        return (duration as any).toISOString();
+/**
+ * When duration is patched from json editor, ensure value gets converted back to duration object from string
+ * @param duration
+ */
+function toDuration(duration: any) {
+    let result = null;
+    if (typeof duration === "string") {
+        result = moment.duration(duration);
     } else {
-        return null;
+        result = duration;
     }
+    return result;
 }

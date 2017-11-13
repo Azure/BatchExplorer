@@ -27,7 +27,7 @@ interface PackageReference {
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => AppPackagePickerComponent), multi: true },
     ],
 })
-export class AppPackagePickerComponent implements ControlValueAccessor, Validator, AfterViewInit, OnDestroy {
+export class AppPackagePickerComponent implements ControlValueAccessor, Validator, OnDestroy {
     @Output()
     public hasLinkedStorage: EventEmitter<boolean> = new EventEmitter();
 
@@ -111,12 +111,6 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         this.status = this._data.status;
     }
 
-    public ngAfterViewInit() {
-        setTimeout(() => {
-            this.addNewItem();
-        });
-    }
-
     public ngOnDestroy() {
         this._subscriptions.forEach(x => x.unsubscribe());
     }
@@ -134,6 +128,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
 
         this._data.fetchNext();
         this._writingValue = false;
+        this.addNewItem();
     }
 
     public registerOnChange(fn) {

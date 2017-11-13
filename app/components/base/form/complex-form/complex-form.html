@@ -24,7 +24,7 @@
 </div>
 <div class="form-footer" *ngIf="!hideFooter">
     <div class="toggle-mode" *ngIf="config.jsonEditor">
-        <bl-button type="square" [disabled]="!showJsonEditor" (do)="switchToClassicForm()">
+        <bl-button type="square" [disabled]="classicFormDisabled" (do)="switchToClassicForm()">
             <i class="fa fa-commenting"></i>
         </bl-button>
         <bl-button type="square" [disabled]="showJsonEditor" (do)="switchToJsonEditor()">

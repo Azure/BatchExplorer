@@ -7,6 +7,7 @@ import { autobind } from "core-decorators";
 import { Dto } from "app/core";
 import { ServerError } from "app/models";
 import { log } from "app/utils";
+import { validJsonConfig } from "app/utils/validators";
 import { Observable } from "rxjs";
 import { FormBase } from "../form-base";
 import { FormPageComponent } from "../form-page";
@@ -70,7 +71,7 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
     public mainPage: FormPageComponent;
     public currentPage: FormPageComponent;
     public showJsonEditor = false;
-    public jsonValue = new FormControl();
+    public jsonValue = new FormControl(null, null, validJsonConfig);
 
     private _pageStack: FormPageComponent[] = [];
 
@@ -200,6 +201,15 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
         } else {
             return !this.formGroup || this.formGroup.valid;
         }
+    }
+
+    /**
+     * There are two cases that classic form selector in footer should be disabled
+     * 1. showJsonEditor variable is false which means current form is already classic form
+     * 2. Current json edit JSON value is in a wrong format
+     */
+    public get classicFormDisabled() {
+        return !this.showJsonEditor || !this.jsonValue.valid;
     }
 
     private _getJsonFormDto(): Dto<any> {
