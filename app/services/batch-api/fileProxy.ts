@@ -1,4 +1,5 @@
 import { BatchServiceClient } from "azure-batch";
+import * as fs from "fs";
 import { ListProxy, wrapOptions } from "./shared";
 
 export class FileProxy {
@@ -12,6 +13,15 @@ export class FileProxy {
             return { content };
         } else {
             return { content: "" };
+        }
+    }
+
+    public async downloadFromNode(poolId: string, nodeId: string, filename: string, destination: string): Promise<any> {
+        const result = await this.client.file.getFromComputeNode(poolId, nodeId, filename);
+        if (result) {
+            return this._downloadContent(result, destination);
+        } else {
+            return false;
         }
     }
 
@@ -32,6 +42,15 @@ export class FileProxy {
             return { content };
         } else {
             return { content: "" };
+        }
+    }
+
+    public async downloadFromTask(jobId: string, taskId: string, filename: string, destination: string): Promise<any> {
+        const result = await this.client.file.getFromTask(jobId, taskId, filename);
+        if (result) {
+            return this._downloadContent(result, destination);
+        } else {
+            return false;
         }
     }
 
@@ -101,13 +120,29 @@ export class FileProxy {
         let result;
         while (true) {
             result = await reader.read();
-            if (result.value) {
-                text += new TextDecoder("utf-8").decode(result.value);
-            }
-
             if (result.done) {
                 return text;
             }
+            text += new TextDecoder("utf-8").decode(result.value);
+        }
+    }
+
+    private async _downloadContent(stream: ReadableStream, destination: string): Promise<boolean> {
+        const reader = stream.getReader();
+
+        let result;
+        const output = fs.createWriteStream(destination);
+        while (true) {
+            result = await reader.read();
+
+            if (result.done) {
+                output.close();
+                return true;
+            }
+
+            console.log("Resultis", result.value);
+            output.write(new Buffer(result.value.buffer));
+
         }
     }
 }
