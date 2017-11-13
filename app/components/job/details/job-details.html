@@ -15,6 +15,7 @@
                 <bl-disable-button [job]="job" [action]="disableJob"></bl-disable-button>
                 <bl-enable-button [job]="job" [action]="enableJob"></bl-enable-button>
                 <bl-clone-button [action]="cloneJob"></bl-clone-button>
+                <bl-button [action]="exportAsJSON" color="light" title="Export as JSON"><i class="fa fa-code"></i></bl-button>
             </bl-button-group>
             <div summaryTile>
                 <div class="job-graphs-link" [routerLink]="['/jobs', job.id, 'graphs']">

@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { remote } from "electron";
 import { List } from "immutable";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { Pool } from "app/models";
@@ -15,7 +15,6 @@ import { NumberUtils } from "app/utils";
 import { SidebarManager } from "../../base/sidebar";
 import { DeletePoolDialogComponent, PoolCreateBasicDialogComponent, PoolResizeDialogComponent } from "../action";
 
-import { Observable } from "rxjs/Observable";
 import "./pool-details.scss";
 
 @Component({
