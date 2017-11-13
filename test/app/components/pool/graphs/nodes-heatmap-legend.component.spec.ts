@@ -4,6 +4,7 @@ import { By } from "@angular/platform-browser";
 import { NodesHeatmapLegendComponent } from "app/components/pool/graphs";
 import { HeatmapColor } from "app/components/pool/graphs/heatmap-color";
 import { NodeService } from "app/services";
+import * as Fixtures from "test/fixture";
 import {  click, rightClick } from "test/utils/helpers";
 import { ContextMenuServiceMock } from "test/utils/mocks";
 
@@ -44,6 +45,7 @@ describe("NodesHeatmapLegendComponent", () => {
 
         fixture = TestBed.createComponent(NodesHeatmapLegendComponent);
         component = fixture.componentInstance;
+        component.pool = Fixtures.pool.create();
         colors = new HeatmapColor(stateTree as any);
         component.colors = colors;
 

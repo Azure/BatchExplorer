@@ -32,9 +32,9 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
         poolService: PoolService,
         private notificationService: NotificationService) {
         super(JobCreateDto);
-
         const validation = Constants.forms.validation;
         this.constraintsGroup = this.formBuilder.group({
+            maxWallClockTime: null,
             maxTaskRetryCount: [
                 0,
                 new RangeValidatorDirective(validation.range.retry.min, validation.range.retry.max).validator,
