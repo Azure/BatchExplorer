@@ -75,7 +75,7 @@ export class TaskService extends ServiceBase {
         this._subTaskListGetter = new BatchListGetter(SubtaskInformation, this.batchService, {
             cache: ({ jobId, taskId }) => this._subTaskCache.getCache({ jobId, taskId }),
             list: (client, { jobId, taskId }, options) => {
-                return client.task.listSubtasks(jobId, taskId, { taskListSubtasksOptions: options }).then(x => x.value)
+                return client.task.listSubtasks(jobId, taskId, { taskListSubtasksOptions: options }).then(x => x.value);
             },
             listNext: (client, nextLink: string) => null as any,
         });
@@ -90,9 +90,9 @@ export class TaskService extends ServiceBase {
         return this.listAll(jobId, { filter, select: "id,state" }).map(tasks => tasks.size).share();
     }
 
-    public listOnce(jobId: string, options?: any, forceNew?: boolean);
-    public listOnce(nextLink: ContinuationToken);
-    public listOnce(jobIdOrNextLink: any, options = {}, forceNew = false) {
+    public list(jobId: string, options?: any, forceNew?: boolean);
+    public list(nextLink: ContinuationToken);
+    public list(jobIdOrNextLink: any, options = {}, forceNew = false) {
         if (jobIdOrNextLink.nextLink) {
             return this._listGetter.fetch(jobIdOrNextLink);
         } else {

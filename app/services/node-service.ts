@@ -49,7 +49,7 @@ export class NodeService extends ServiceBase {
         this._listGetter = new BatchListGetter(Node, this.batchService, {
             cache: ({ poolId }) => this.getCache(poolId),
             list: (client, params, options) => {
-                return client.computeNode.list(params.poolId, { computeNodeListOptions: options })
+                return client.computeNode.list(params.poolId, { computeNodeListOptions: options });
             },
             listNext: (client, nextLink: string) => client.computeNode.listNext(nextLink),
         });
@@ -71,9 +71,9 @@ export class NodeService extends ServiceBase {
         return this._cache.getCache({ poolId });
     }
 
-    public listOnce(poolId: string, options?: any, forceNew?: boolean);
-    public listOnce(nextLink: ContinuationToken);
-    public listOnce(poolIdOrNextLink: any, options = {}, forceNew = false) {
+    public list(poolId: string, options?: any, forceNew?: boolean);
+    public list(nextLink: ContinuationToken);
+    public list(poolIdOrNextLink: any, options = {}, forceNew = false) {
         if (poolIdOrNextLink.nextLink) {
             return this._listGetter.fetch(poolIdOrNextLink);
         } else {

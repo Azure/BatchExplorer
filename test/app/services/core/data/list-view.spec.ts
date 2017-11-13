@@ -40,7 +40,7 @@ function getData(params, options, nextLink) {
     }
 }
 
-fdescribe("EntityGetter", () => {
+describe("EntityGetter", () => {
     let getter: BasicListGetter<FakeModel, {}>;
     let cache: DataCache<FakeModel>;
     let dataSpy: jasmine.Spy;

@@ -55,9 +55,9 @@ export class PoolService extends ServiceBase {
         });
     }
 
-    public listOnce(options?: ListOptionsAttributes, forceNew?: boolean);
-    public listOnce(nextLink: ContinuationToken);
-    public listOnce(nextLinkOrOptions: any, options = {}, forceNew = false) {
+    public list(options?: ListOptionsAttributes, forceNew?: boolean);
+    public list(nextLink: ContinuationToken);
+    public list(nextLinkOrOptions: any, options = {}, forceNew = false) {
         if (nextLinkOrOptions.nextLink) {
             return this._listGetter.fetch(nextLinkOrOptions);
         } else {

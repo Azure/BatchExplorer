@@ -7,8 +7,8 @@ import { Constants, ModelUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";
 import {
-    BatchEntityGetter, DataCache, EntityView,
-    ListOptionsAttributes, BatchListGetter, ContinuationToken, ListView,
+    BatchEntityGetter, BatchListGetter, ContinuationToken,
+    DataCache, EntityView, ListOptionsAttributes, ListView,
 } from "./core";
 import { ServiceBase } from "./service-base";
 
@@ -54,9 +54,9 @@ export class JobService extends ServiceBase {
         return this._basicProperties;
     }
 
-    public listOnce(options?: any, forceNew?: boolean);
-    public listOnce(nextLink: ContinuationToken);
-    public listOnce(nextLinkOrOptions: any, options = {}, forceNew = false) {
+    public list(options?: any, forceNew?: boolean);
+    public list(nextLink: ContinuationToken);
+    public list(nextLinkOrOptions: any, options = {}, forceNew = false) {
         if (nextLinkOrOptions.nextLink) {
             return this._listGetter.fetch(nextLinkOrOptions);
         } else {
