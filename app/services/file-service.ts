@@ -208,7 +208,7 @@ export class FileService extends ServiceBase {
             },
             download: (dest: string) => {
                 return this.callBatchClient((client) => {
-                    return client.file.downloadFromNode(jobId, taskId, filename, dest);
+                    return client.file.downloadFromTask(jobId, taskId, filename, dest);
                 });
             },
             logIgnoreError: fileIgnoredErrors,
