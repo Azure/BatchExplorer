@@ -1,8 +1,8 @@
 import { Component, OnDestroy, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { autobind } from "core-decorators";
-import { Observable, Subscription } from "rxjs";
+import { Subscription } from "rxjs";
 
+import { validJsonConfig } from "app/utils/validators";
 import "./form-json-editor.scss";
 
 const emptyJson = "{\n\n}";
@@ -16,7 +16,7 @@ const emptyJson = "{\n\n}";
     ],
 })
 export class FormJsonEditorComponent implements ControlValueAccessor, OnDestroy {
-    public jsonControl = new FormControl(emptyJson, null, this._validJsonConfig);
+    public jsonControl = new FormControl(emptyJson, null, validJsonConfig);
 
     public editorConfig: CodeMirror.EditorConfiguration = {
         lineNumbers: true,
@@ -56,22 +56,5 @@ export class FormJsonEditorComponent implements ControlValueAccessor, OnDestroy 
 
     public registerOnTouched(fn: any): void {
         this._propagateTouched = fn;
-    }
-
-    @autobind()
-    private _validJsonConfig(c: FormControl): Observable<any> {
-        return Observable.of(null).debounceTime(1000).map(() => {
-            try {
-                JSON.parse(c.value);
-                return null;
-            } catch (e) {
-                return {
-                    validJson: {
-                        valid: false,
-                        message: e.message,
-                    },
-                };
-            }
-        });
     }
 }
