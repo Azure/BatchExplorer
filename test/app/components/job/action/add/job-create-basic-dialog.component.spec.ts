@@ -59,7 +59,7 @@ describe("JobCreateBasicDialogComponent ", () => {
         };
 
         poolServiceSpy = {
-            list: () => poolListProxy,
+            listView: () => poolListProxy,
         };
 
         notificationServiceSpy = {

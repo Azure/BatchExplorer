@@ -70,9 +70,9 @@ describe("ParameterInputComponent", () => {
         };
 
         storageServiceSpy = {
-            list: () => listProxy,
+            listView: () => listProxy,
             onFileGroupAdded: new Subject(),
-            listContainers: () => listProxy,
+            containerListView: () => listProxy,
         };
 
         sidebarSpy = {

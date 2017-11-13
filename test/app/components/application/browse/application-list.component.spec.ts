@@ -32,7 +32,7 @@ describe("ApplicationListComponent", () => {
         });
 
         applicationServiceSpy = {
-            list: () => listProxy,
+            listView: () => listProxy,
             onApplicationAdded: new Subject(),
         };
 

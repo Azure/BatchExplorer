@@ -47,7 +47,7 @@ describe("AppPackagePickerComponent", () => {
         });
 
         applicationServiceSpy = {
-            list: () => listProxy,
+            listView: () => listProxy,
             isAutoStorageError: (error: ServerError) => {
                 return error && (error.code === "AccountNotEnabledForAutoStorage");
             },
@@ -148,7 +148,7 @@ describe("AppPackagePickerComponent", () => {
                 value: [
                     { applicationId: "orange", version: "o1" },
                     { applicationId: "banana", version: "b1" },
-                ]
+                ],
             } as any;
 
             const result = component.validate(values);
@@ -161,7 +161,7 @@ describe("AppPackagePickerComponent", () => {
                     { applicationId: "orange", version: "o1" },
                     { applicationId: "banana", version: "b1" },
                     { applicationId: "orange", version: "o1" },
-                ]
+                ],
             } as any;
 
             const result = component.validate(values) as any;
@@ -173,7 +173,7 @@ describe("AppPackagePickerComponent", () => {
                 value: [
                     { applicationId: "orange", version: "o1" },
                     { applicationId: "banana", version: "invalid" },
-                ]
+                ],
             } as any;
 
             const result = component.validate(values) as any;

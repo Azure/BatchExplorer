@@ -40,7 +40,7 @@ describe("JobProgressStatusComponent", () => {
         };
 
         nodeServiceSpy = {
-            list: () => new MockListView<Node, any>(Node, {
+            listView: () => new MockListView<Node, any>(Node, {
                 items: [
                     new Node({ id: "node-1", runningTasksCount: 2 }),
                     new Node({ id: "node-2", runningTasksCount: 2 }),

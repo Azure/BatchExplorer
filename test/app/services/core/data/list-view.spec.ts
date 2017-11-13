@@ -40,7 +40,7 @@ function getData(params, options, nextLink) {
     }
 }
 
-describe("EntityGetter", () => {
+describe("ListView", () => {
     let getter: BasicListGetter<FakeModel, {}>;
     let cache: DataCache<FakeModel>;
     let dataSpy: jasmine.Spy;

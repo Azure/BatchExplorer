@@ -36,7 +36,7 @@ describe("PoolPickerComponent", () => {
 
     beforeEach(() => {
         poolServiceSpy = {
-            list: () => new MockListView(Pool, {
+            listView: () => new MockListView(Pool, {
                 items: [pool1, pool2, pool3],
             }),
         };

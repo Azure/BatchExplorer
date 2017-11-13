@@ -23,7 +23,7 @@ const data = [
     },
 ];
 
-describe("EntityGetter", () => {
+describe("ListGetter", () => {
     let getter: BasicListGetter<FakeModel, {}>;
     let cache: DataCache<FakeModel>;
     let dataSpy: jasmine.Spy;
@@ -86,11 +86,11 @@ describe("EntityGetter", () => {
             expect(items.toJS()).toEqual(firstPage);
             expect(dataSpy).toHaveBeenCalledTimes(1);
             expect(nextLink).toBeTruthy();
-            expect(dataSpy).toHaveBeenCalledWith({}); // Should have been called again
+            expect(dataSpy).toHaveBeenCalledWith({}, jasmine.anything()); // Should have been called again
 
             getter.fetch({}, {}, true).subscribe((newResponse) => {
                 expect(dataSpy).toHaveBeenCalledTimes(2); // Should have been called again
-                expect(dataSpy).toHaveBeenCalledWith({}); // Should have been called again
+                expect(dataSpy).toHaveBeenCalledWith({}, jasmine.anything()); // Should have been called again
                 done();
             });
         });
