@@ -23,13 +23,7 @@ const data = [
     },
 ];
 
-// const updatedData = [[
-//     { id: "1", state: "running", name: "Fake1" },
-//     { id: "2", state: "running", name: "Fake2" },
-//     { id: "3", state: "completed", name: "Fake3" },
-// ]];
-
-fdescribe("EntityGetter", () => {
+describe("EntityGetter", () => {
     let getter: BasicListGetter<FakeModel, {}>;
     let cache: DataCache<FakeModel>;
     let dataSpy: jasmine.Spy;

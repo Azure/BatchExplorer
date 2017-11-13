@@ -1,10 +1,10 @@
 import { Type } from "@angular/core";
-import { List, OrderedSet, Iterable } from "immutable";
+import { Iterable, List, OrderedSet } from "immutable";
 import { Observable } from "rxjs";
 
 import { DataCache } from "app/services/core";
 import { GenericGetter, GenericGetterConfig } from "./generic-getter";
-import { ListOptions, ListOptionsAttributes, ContinuationToken } from "./list-options";
+import { ContinuationToken, ListOptions, ListOptionsAttributes } from "./list-options";
 
 export interface ListResponse<TEntity> {
     items: List<TEntity>;
@@ -77,7 +77,6 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
         isFirstPage: boolean): ListResponse<TEntity> {
 
         const { data, nextLink } = response;
-        console.log("response is", data, isFirstPage);
         const items = data.map(x => new this.type(x));
         const keys = OrderedSet(cache.addItems(items, options.select));
         const token = {
@@ -104,13 +103,11 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
         cache: DataCache<TEntity>,
         options: ListOptions,
         forceNew: boolean): ListResponse<TEntity> {
-        console.log("Try load from cache??");
         if (forceNew) {
             return null;
         }
 
         const cachedList = cache.queryCache.getKeys(options.filter, options.select);
-        console.log("Cahcce list", cachedList);
 
         if (!cachedList) {
             return null;

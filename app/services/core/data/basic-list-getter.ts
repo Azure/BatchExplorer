@@ -2,13 +2,16 @@ import { Type } from "@angular/core";
 import { Observable } from "rxjs";
 
 import { ListGetter, ListGetterConfig } from "./list-getter";
+import { ListOptions } from "./list-options";
 
 export interface BasicListGetterConfig<TEntity, TParams> extends ListGetterConfig<TEntity, TParams> {
-    supplyData: (params: TParams, nextLink?: string) => Observable<{ data: any[], nextLink?: string }>;
+    supplyData: (params: TParams, options: ListOptions, nextLink?: string)
+        => Observable<{ data: any[], nextLink?: string }>;
 }
 
 export class BasicListGetter<TEntity, TParams> extends ListGetter<TEntity, TParams> {
-    private _supplyData: (params: TParams, nextLink?: string) => Observable<{ data: any[], nextLink?: string }>;
+    private _supplyData: (params: TParams, options: ListOptions, nextLink?: string)
+        => Observable<{ data: any[], nextLink?: string }>;
 
     constructor(
         type: Type<TEntity>,
@@ -18,11 +21,11 @@ export class BasicListGetter<TEntity, TParams> extends ListGetter<TEntity, TPara
         this._supplyData = config.supplyData;
     }
 
-    protected list(params: TParams): Observable<any> {
-        return this._supplyData(params);
+    protected list(params: TParams, options: ListOptions): Observable<any> {
+        return this._supplyData(params, options);
     }
 
     protected listNext(nextLink: string): Observable<any> {
-        return this._supplyData(null, nextLink);
+        return this._supplyData(null, null, nextLink);
     }
 }

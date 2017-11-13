@@ -43,6 +43,14 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
             });
         }).switch().distinctUntilChanged((a, b) => a.equals(b)).takeUntil(this.isDisposed);
         this.hasMore = this._hasMore.asObservable();
+
+        this.deleted.subscribe((deletedKey) => {
+            this._itemKeys.next(OrderedSet<string>(this._itemKeys.value.filter((key) => key !== deletedKey)));
+        });
+
+        this._cacheCleared.subscribe((deletedKey) => {
+            this._itemKeys.next(OrderedSet<string>([]));
+        });
     }
 
     public startPoll(interval: number, fetchAll: boolean = false) {
@@ -84,17 +92,14 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
         } else {
             fetchObs = () => this._getter.fetch(this._nextLink);
         }
-        console.log("Fetch next...");
         return this.fetchData({
             getData: fetchObs,
             next: (response: ListResponse<TEntity>) => {
                 this._updateNewKeys(this._retrieveKeys(response.items));
                 this._nextLink = response.nextLink;
                 this._hasMore.next(Boolean(response.nextLink)); // This NEEDS to be called after processResponse
-                console.log("Items", response.items.toJS(), this._hasMore.value);
             },
             error: (error) => {
-                console.log("Error..", error);
                 this._hasMore.next(false);
             },
         });
@@ -191,7 +196,6 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
         this._lastRequest = { params: this._params, options: this._options };
     }
 
-
     /**
      * Try to see if the entity is already in the cache if so load it immediatelly.
      * @returns boolean if it loaded items from the cache
@@ -200,7 +204,7 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
         if (forceNew) {
             return false;
         }
-        const response = this._getter.fetchFromCache(this._params, this._options)
+        const response = this._getter.fetchFromCache(this._params, this._options);
         if (!response) { return false; }
         this._itemKeys.next(this._retrieveKeys(response.items));
         this._lastRequest = { params: this._params, options: this._options };

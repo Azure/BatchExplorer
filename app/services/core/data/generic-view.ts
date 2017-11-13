@@ -1,11 +1,11 @@
 import { LoadingStatus } from "app/components/base/loading";
 import { ServerError } from "app/models";
 import { DataCache } from "app/services/core";
+import { FetchDataOptions } from "app/services/core/rx-proxy-base";
 import { ObjectUtils } from "app/utils";
 import { AsyncSubject, BehaviorSubject, Observable, Subject, Subscription } from "rxjs";
 import { PollObservable } from "../poll-service";
 import { ProxyOptions } from "./proxy-options";
-import { FetchDataOptions } from "app/services/core/rx-proxy-base";
 
 export interface GenericViewConfig<TEntity, TParams> {
     /**
@@ -174,6 +174,7 @@ export abstract class GenericView<TEntity, TParams, TOptions extends ProxyOption
             return this._currentObservable;
         }
         this._status.next(LoadingStatus.Loading);
+
         const obs = this._currentObservable = config.getData();
         this._currentQuerySub = obs.subscribe({
             next: (response) => {

@@ -38,7 +38,6 @@ export class QueryCache {
 
     public getKeys(filter: string, select?: string): CachedKeyList {
         const key = this._cacheKey(filter, select);
-        console.log("Get key...", key, Object.keys(this._cache));
         return this._cache[key];
     }
 
