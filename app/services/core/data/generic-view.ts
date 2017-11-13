@@ -1,11 +1,16 @@
 import { LoadingStatus } from "app/components/base/loading";
 import { ServerError } from "app/models";
 import { DataCache } from "app/services/core";
-import { FetchDataOptions } from "app/services/core/rx-proxy-base";
 import { ObjectUtils } from "app/utils";
 import { AsyncSubject, BehaviorSubject, Observable, Subject, Subscription } from "rxjs";
 import { PollObservable } from "../poll-service";
 import { ProxyOptions } from "./proxy-options";
+
+export interface FetchDataOptions {
+    getData: () => Observable<any>;
+    next: (response: any) => void;
+    error?: (error: any) => void;
+}
 
 export interface GenericViewConfig<TEntity, TParams> {
     /**
