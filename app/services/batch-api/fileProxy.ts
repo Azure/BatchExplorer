@@ -140,9 +140,7 @@ export class FileProxy {
                 return true;
             }
 
-            console.log("Resultis", result.value);
             output.write(new Buffer(result.value.buffer));
-
         }
     }
 }
