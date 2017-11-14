@@ -22,7 +22,7 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
     constructor(private router: Router, private pinnedEntityService: PinnedEntityService) {
         this.favorites = this.pinnedEntityService.favorites;
         this._subscriptions.push(this.favorites.subscribe((items) => {
-            this.title = items.size > 0 ? `${items.size} pinned favorites` : "No favorites pinned";
+            this.title = items.size > 0 ? `${items.size} favorite items pinned` : "No favorite items pinned";
         }));
     }
 
