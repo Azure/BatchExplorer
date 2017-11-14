@@ -3,6 +3,7 @@ import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { PinnableEntity, PinnedEntity } from "app/models";
+import { AccountService } from "./account.service";
 import { LocalFileStorage } from "./local-file-storage.service";
 
 @Injectable()
@@ -13,9 +14,18 @@ export class PinnedEntityService {
     private _pinnedFavouritesJsonFileName: string = "pinned-favorites";
     private _favorites: BehaviorSubject<List<PinnedEntity>> = new BehaviorSubject(List([]));
     private _loaded = new BehaviorSubject<boolean>(false);
+    private _currentAccountUrl: string = "";
 
-    constructor(private localFileStorage: LocalFileStorage) {
+    constructor(
+        private localFileStorage: LocalFileStorage,
+        private accountService: AccountService) {
+
         this.loaded = this._loaded.asObservable();
+        this.accountService.currentAccount.subscribe((account) => {
+            this._currentAccountUrl = account.properties.accountEndpoint;
+            this._favorites.next(List<PinnedEntity>());
+            this._loadInitialData();
+        });
     }
 
     public get favorites(): Observable<List<PinnedEntity>> {
@@ -53,9 +63,9 @@ export class PinnedEntityService {
             return;
         }
 
-        // todo: job and pool can have the same id, use URL ...
-        const newAccounts = this._favorites.getValue().filter(pinned => pinned.id.toLowerCase() !== id);
-        this._favorites.next(List<PinnedEntity>(newAccounts));
+        // todo-andrew: job and pool can have the same id, use URL ...
+        const newFavorites = this._favorites.getValue().filter(pinned => pinned.id.toLowerCase() !== id);
+        this._favorites.next(List<PinnedEntity>(newFavorites));
         this._saveAccountFavorites();
     }
 
@@ -67,15 +77,17 @@ export class PinnedEntityService {
         return Boolean(account);
     }
 
-    public loadInitialData() {
-        this._loadFavoriteAccounts().subscribe((accounts) => {
-            this._favorites.next(accounts);
+    private _loadInitialData() {
+        this._loaded.next(false);
+        this._loadFavorites().subscribe((favorites) => {
+            this._favorites.next(favorites);
             this._loaded.next(true);
         });
     }
 
-    private _loadFavoriteAccounts(): Observable<List<PinnedEntity>> {
-        return this.localFileStorage.get(this._pinnedFavouritesJsonFileName).map((data) => {
+    private _loadFavorites(): Observable<List<PinnedEntity>> {
+        console.log("loading favorites");
+        return this.localFileStorage.get(this._jsonFilename).map((data) => {
             if (Array.isArray(data)) {
                 return List(data.map(x => new PinnedEntity(x)));
             } else {
@@ -85,7 +97,13 @@ export class PinnedEntityService {
     }
 
     private _saveAccountFavorites(favourites: List<PinnedEntity> = null): Observable<any> {
+        console.log("saving favorites");
         favourites = favourites === null ? this._favorites.getValue() : favourites;
-        return this.localFileStorage.set(this._pinnedFavouritesJsonFileName, favourites.toJS());
+        return this.localFileStorage.set(this._jsonFilename, favourites.toJS());
+    }
+
+    private get _jsonFilename(): string {
+        console.log("filename: ", `${this._currentAccountUrl}.${this._pinnedFavouritesJsonFileName}`);
+        return `${this._currentAccountUrl}.${this._pinnedFavouritesJsonFileName}`;
     }
 }
