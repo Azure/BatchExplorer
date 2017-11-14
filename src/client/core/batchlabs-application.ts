@@ -24,7 +24,7 @@ export class BatchLabsApplication {
      * Start the app by showing the splash screen
      */
     public start() {
-        const requestFilter = { urls: ["https://*"] };
+        const requestFilter = { urls: ["https://*", "http://*"] };
         session.defaultSession.webRequest.onBeforeSendHeaders(requestFilter, (details, callback) => {
             if (details.url.indexOf("batch.azure.com") !== -1) {
                 details.requestHeaders["Origin"] = "http://localhost";
