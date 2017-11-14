@@ -104,7 +104,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
         const myDiv: HTMLDivElement = this.editorContent.nativeElement;
         let options: any = this.config;
         options.value = this._value;
-        options.language = "javascript";
+        options.language = "json";
 
         this._editor = monaco.editor.create(myDiv, options);
 
