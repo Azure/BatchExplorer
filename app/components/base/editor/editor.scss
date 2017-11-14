@@ -2,7 +2,7 @@ bl-editor {
     display: block;
     height: 100%;
     // overflow: auto;
-    .CodeMirror {
+    .monaco-editor {
         height: 100%;
         overflow: hidden;
     }

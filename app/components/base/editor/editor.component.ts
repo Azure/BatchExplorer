@@ -16,6 +16,7 @@ import "codemirror/addon/hint/show-hint";
 import "app/utils/autoscale";
 import "codemirror/mode/javascript/javascript";
 
+import { MonacoLoader } from "app/services";
 import "./editor.scss";
 
 declare const monaco: any;
@@ -64,7 +65,10 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
         }
     }
 
-    constructor(private changeDetector: ChangeDetectorRef, private elementRef: ElementRef) { }
+    constructor(
+        private changeDetector: ChangeDetectorRef,
+        private elementRef: ElementRef,
+        private monacoLoader: MonacoLoader) { }
 
     public ngOnChanges(changes) {
         if (changes.config) {
@@ -80,40 +84,14 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
             // this.instance.refresh();
         });
 
-        const onGotAmdLoader = () => {
-            // (window as any).amdRequire.config({ paths: { vs: "build/vendor/vs" } });
-            (window as any).amdRequire.config({ baseUrl: "D:/dev/js/BatchLabs/build/vendor/", });
-            // workaround monaco-css not understanding the environment
-            self.module = undefined;
-            // workaround monaco-typescript not understanding the environment
-            self.process.browser = true;
-            (window as any).amdRequire(["vs/editor/editor.main"], () => {
-                console.log("Got monaco...", monaco);
-                this.initMonaco();
-            });
-        };
-
-        // Load AMD loader if necessary
-        if (!(window as any).amdRequire) {
-            const nodeRequire = (window as any).require;
-            let loaderScript = document.createElement("script");
-            loaderScript.type = "text/javascript";
-            loaderScript.src = "vendor/vs/loader.js";
-            loaderScript.addEventListener("load", () => {
-                (window as any).amdRequire = (window as any).require;
-                (window as any).require = nodeRequire;
-                onGotAmdLoader();
-            });
-            document.body.appendChild(loaderScript);
-        } else {
-            onGotAmdLoader();
-        }
-
+        this.monacoLoader.get().then((monaco) => {
+            console.log("Loaded monaco", monaco);
+            this.initMonaco();
+        });
         this.config = this.config || {};
         if (!this.config.extraKeys) {
             this.config.extraKeys = {};
         }
-
         // this.codemirrorInit(this.config);
     }
 
