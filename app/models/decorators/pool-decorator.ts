@@ -4,6 +4,7 @@ import * as moment from "moment";
 import {
     ApplicationPackageReference, CertificateReference, Pool, UserAccount, UserAccountElevationLevel,
 } from "app/models";
+import { StartTaskDecorator } from "app/models/decorators";
 import { PoolUtils } from "app/utils";
 import { DecoratorBase } from "app/utils/decorators";
 import { CloudServiceConfigurationDecorator } from "./cloud-service-configuration-decorator";
@@ -43,11 +44,11 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     public dedicatedNodes: string;
     public lowPriorityNodes: string;
     public networkSubnetId: string;
+    public startTask: StartTaskDecorator;
     public applicationLicenses: string;
 
     constructor(private pool: Pool) {
         super(pool);
-
         this.displayName = this.stringField(pool.displayName);
         this.allocationState = this.stateField(pool.allocationState);
         this.allocationStateTransitionTime = this.dateField(pool.allocationStateTransitionTime);
@@ -71,8 +72,9 @@ export class PoolDecorator extends DecoratorBase<Pool> {
         this.lastResized = moment(this.pool.allocationStateTransitionTime).fromNow();
         this.userAccounts = pool.userAccounts.map(x => this._decorateUserAccount(x)).join(", ");
         this.dedicatedNodes = PoolUtils.poolNodesStatus(pool, pool.currentDedicatedNodes, pool.targetDedicatedNodes);
+        this.startTask = pool.startTask && new StartTaskDecorator(pool.startTask);
         this.lowPriorityNodes = PoolUtils.poolNodesStatus(pool,
-             pool.currentLowPriorityNodes, pool.targetLowPriorityNodes);
+            pool.currentLowPriorityNodes, pool.targetLowPriorityNodes);
 
         this.poolOs = this._computePoolOs();
         this.poolOsIcon = this._computePoolOsIcon(this.poolOs);
