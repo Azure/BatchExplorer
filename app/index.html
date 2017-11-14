@@ -4,6 +4,40 @@
 <head>
     <meta charset="UTF-8">
     <title>Batch Labs</title>
+    <script>
+		// Monaco uses a custom amd loader that over-rides node's require.
+		// Keep a reference to node's require so we can restore it after executing the amd loader file.
+        const nodeRequire = window.require;
+        const path = require("path");
+	</script>
+	<script src="vendor/vs/loader.js"></script>
+	<script>
+		// Save Monaco's amd require and restore Node's require
+        window.amdRequire = window.require;
+        global.require = nodeRequire;
+        // function uriFromPath(_path) {
+		// 	var pathName = path.resolve(_path).replace(/\\/g, '/');
+		// 	if (pathName.length > 0 && pathName.charAt(0) !== '/') {
+		// 		pathName = '/' + pathName;
+		// 	}
+		// 	return encodeURI('file://' + pathName);
+		// }
+        // console.log("DIrname", process.cwd());
+		// amdRequire.config({
+		// 	// baseUrl: uriFromPath(path.join(__dirname, 'build/vendor/'))
+		// 	baseUrl: 'D:/dev/js/BatchLabs/build/vendor/',
+		// });
+
+		// // workaround monaco-css not understanding the environment
+		// self.module = undefined;
+
+		// // workaround monaco-typescript not understanding the environment
+		// self.process.browser = true;
+
+		// amdRequire(['vs/editor/editor.main'], function() {
+
+		// });
+    </script>
 
     <% if (htmlWebpackPlugin.options.metadata.isDevServer) { %>
         <base href="<%= htmlWebpackPlugin.options.metadata.baseUrl %>">

@@ -81,10 +81,14 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
         });
 
         const onGotAmdLoader = () => {
-            console.log("window", (window as any).amdRequire);
-
-            (window as any).amdRequire.config({ paths: { vs: "vendor/vs" } });
+            // (window as any).amdRequire.config({ paths: { vs: "build/vendor/vs" } });
+            (window as any).amdRequire.config({ baseUrl: "D:/dev/js/BatchLabs/build/vendor/", });
+            // workaround monaco-css not understanding the environment
+            self.module = undefined;
+            // workaround monaco-typescript not understanding the environment
+            self.process.browser = true;
             (window as any).amdRequire(["vs/editor/editor.main"], () => {
+                console.log("Got monaco...", monaco);
                 this.initMonaco();
             });
         };
