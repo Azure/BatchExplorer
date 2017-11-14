@@ -101,26 +101,27 @@ export class DurationPickerComponent implements ControlValueAccessor {
 
     /**
      * _setValueAndUnit helps setting constraint duration picker value once constraint form vlaue is patched.
-     * Unit is checked from days to second, and decimal part is ignored.
+     * Unit is checked from 'days' to 'seconds'. Value will be taken when current unit has an integer value,
+     * otherwise next smaller unit will be checked until last unit.
      */
     private _setValueAndUnit() {
         if (this.duration) {
             const duration = moment.duration(this.duration);
-            const days = Math.floor(duration.asDays());
-            const hours = Math.floor(duration.asHours());
-            const minutes = Math.floor(duration.asMinutes());
-            const seconds = Math.floor(duration.asSeconds());
-
-            if (days > 0) {
+            const days = duration.asDays();
+            const hours = duration.asHours();
+            const minutes = duration.asMinutes();
+            const seconds = duration.asSeconds();
+            if (days > 0 && this._isInteger(days)) {
                 this.value = days;
                 this.unit = ConstraintsUnit.days;
-            } else if (hours > 0) {
+            } else if (hours > 0 && this._isInteger(hours)) {
                 this.value = hours;
                 this.unit = ConstraintsUnit.hours;
-            } else if (minutes > 0) {
+            } else if (minutes > 0 && this._isInteger(minutes)) {
                 this.value = minutes;
                 this.unit = ConstraintsUnit.minutes;
             } else if (seconds > 0) {
+                // don't check whether second is integer or not, just display whatever this value is
                 this.value = seconds;
                 this.unit = ConstraintsUnit.seconds;
             } else {
@@ -131,5 +132,9 @@ export class DurationPickerComponent implements ControlValueAccessor {
         } else {
             this.unlimited = true;
         }
+    }
+
+    private _isInteger(value: number) {
+        return Number(value) === value && value % 1 === 0;
     }
 }
