@@ -11,7 +11,7 @@ import { LoadingStatus } from "app/components/base/loading";
 import { QuickListComponent, QuickListItemStatus } from "app/components/base/quick-list";
 import { ListOrTableBase } from "app/components/base/selectable-list";
 import { TableComponent } from "app/components/base/table";
-import { Job, JobState, PinnedEntityType } from "app/models";
+import { Job, JobState } from "app/models";
 import { FailureInfoDecorator } from "app/models/decorators";
 import { JobService, PinnedEntityService } from "app/services";
 import { RxListProxy } from "app/services/core";
@@ -170,7 +170,7 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
     }
 
     public pinJob(job: Job) {
-        this.pinnedEntityService.pinFavorite(job.id, PinnedEntityType.Job);
+        this.pinnedEntityService.pinFavorite(job);
     }
 
     public contextmenu(job: Job) {

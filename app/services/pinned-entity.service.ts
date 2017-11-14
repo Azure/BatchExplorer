@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import { PinnedEntity, PinnedEntityType } from "app/models";
+import { PinnableEntity, PinnedEntity } from "app/models";
 import { LocalFileStorage } from "./local-file-storage.service";
 
 @Injectable()
@@ -22,16 +22,17 @@ export class PinnedEntityService {
         return this._favorites.asObservable();
     }
 
-    public pinFavorite(id: string, type: PinnedEntityType): Observable<any> {
-        if (this.isFavorite(id)) {
+    public pinFavorite(entity: PinnableEntity): Observable<any> {
+        if (this.isFavorite(entity.id)) {
             return Observable.of(true);
         }
 
         const subject = new AsyncSubject();
         const favourite = new PinnedEntity({
-            id: id,
-            routerLink: null,
-            type: type,
+            id: entity.id,
+            routerLink: entity.routerLink,
+            pinnableType: entity.pinnableType,
+            url: entity.url,
         });
 
         this._favorites.next(this._favorites.getValue().push(favourite));

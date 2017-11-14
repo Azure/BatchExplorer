@@ -7,17 +7,19 @@ export enum PinnedEntityType {
     Task,
 }
 
-export interface PinnedEntityAttributes {
+export interface PinnableEntity {
     id: string;
     routerLink: string[];
-    type: PinnedEntityType;
+    pinnableType: PinnedEntityType;
+    url: string;
 }
 
 @Model()
-export class PinnedEntity extends Record<PinnedEntityAttributes> {
+export class PinnedEntity extends Record<PinnableEntity> {
     @Prop() public id: string;
     @Prop() public routerLink: string[];
-    @Prop() public type: PinnedEntityType;
+    @Prop() public pinnableType: PinnedEntityType;
+    @Prop() public url: string;
 
     // todo-andrew: routerLink.toString()
     // public get isBatchManaged() {

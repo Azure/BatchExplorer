@@ -15,31 +15,39 @@ import "./pinned-dropdown.scss";
 export class PinnedDropDownComponent implements OnInit, OnDestroy {
     public selectedId: string;
     public favorites: Observable<List<PinnedEntity>>;
+    public title: string = "";
 
-    private _subscriber: Subscription;
+    private _subscriptions: Subscription[] = [];
 
     constructor(
         private router: Router,
         public pinnedEntityService: PinnedEntityService) {
         this.favorites = pinnedEntityService.favorites;
+        this._subscriptions.push(this.favorites.subscribe((items) => {
+            this.title = items.size > 0 ? `${items.size} pinned favorites` : "No favorites pinned";
+        }));
     }
 
     public ngOnInit() {
-        this._subscriber = this.router.events
+        this._subscriptions.push(this.router.events
             .filter(event => event instanceof NavigationEnd)
             .subscribe((event: NavigationEnd) => {
 
             // todo-andrew: use to select currently selected item
             console.log("Current URL: ", event.url);
-        });
+        }));
     }
 
     public ngOnDestroy() {
-        this._subscriber.unsubscribe();
+        this._subscriptions.forEach(x => x.unsubscribe());
     }
 
+    // public get title(): string {
+    //     // return this.favorites.si;
+    // }
+
     public entityType(favorite: PinnedEntity) {
-        switch (favorite.type) {
+        switch (favorite.pinnableType) {
             case PinnedEntityType.Job:
                 return "Batch job";
             case PinnedEntityType.Task:
@@ -54,7 +62,7 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
     }
 
     public entityIcon(favorite: PinnedEntity) {
-        switch (favorite.type) {
+        switch (favorite.pinnableType) {
             case PinnedEntityType.Job:
             case PinnedEntityType.Task:
                 return "fa-tasks";

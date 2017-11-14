@@ -14,7 +14,7 @@ import { QuickListComponent, QuickListItemStatus } from "app/components/base/qui
 import { ListOrTableBase } from "app/components/base/selectable-list";
 import { SidebarManager } from "app/components/base/sidebar";
 import { TableComponent, TableConfig } from "app/components/base/table";
-import { PinnedEntityType, Pool } from "app/models";
+import { Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
 import { PinnedEntityService, PoolService } from "app/services";
 import { RxListProxy } from "app/services/core";
@@ -124,24 +124,24 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         });
     }
 
-    public deletePool(pool: Pool) {
+    public deletePool(poolDecorator: PoolDecorator) {
         const dialogRef = this.dialog.open(DeletePoolDialogComponent);
-        dialogRef.componentInstance.poolId = pool.id;
+        dialogRef.componentInstance.poolId = poolDecorator.id;
     }
 
-    public resizePool(pool: Pool) {
+    public resizePool(poolDecorator: PoolDecorator) {
         const sidebarRef = this.sidebarManager.open("resize-pool", PoolResizeDialogComponent);
-        sidebarRef.component.pool = pool;
+        sidebarRef.component.pool = poolDecorator.pool;
         this.sidebarManager.onClosed.subscribe(() => {
-            this.poolService.get(pool.id);
+            this.poolService.get(poolDecorator.id);
         });
     }
 
-    public pinPool(pool: Pool) {
-        this.pinnedEntityService.pinFavorite(pool.id, PinnedEntityType.Pool);
+    public pinPool(poolDecorator: PoolDecorator) {
+        this.pinnedEntityService.pinFavorite(poolDecorator.pool);
     }
 
-    public contextmenu(pool) {
+    public contextmenu(pool: PoolDecorator) {
         return new ContextMenu([
             new ContextMenuItem({ label: "Delete", click: () => this.deletePool(pool) }),
             new ContextMenuItem({ label: "Resize", click: () => this.resizePool(pool) }),
