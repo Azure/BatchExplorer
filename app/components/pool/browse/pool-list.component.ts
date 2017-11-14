@@ -14,9 +14,9 @@ import { QuickListComponent, QuickListItemStatus } from "app/components/base/qui
 import { ListOrTableBase } from "app/components/base/selectable-list";
 import { SidebarManager } from "app/components/base/sidebar";
 import { TableComponent, TableConfig } from "app/components/base/table";
-import { Pool } from "app/models";
+import { PinnedEntityType, Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
-import { PoolService } from "app/services";
+import { PinnedEntityService, PoolService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
 import { DeletePoolDialogComponent, PoolResizeDialogComponent } from "../action";
@@ -73,6 +73,7 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         router: Router,
         dialog: MatDialog,
         private sidebarManager: SidebarManager,
+        private pinnedEntityService: PinnedEntityService,
         private taskManager: BackgroundTaskService) {
 
         super(dialog);
@@ -136,10 +137,19 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         });
     }
 
+    public pinPool(pool: Pool) {
+        this.pinnedEntityService.pinFavorite(pool.id, PinnedEntityType.Pool);
+    }
+
     public contextmenu(pool) {
         return new ContextMenu([
             new ContextMenuItem({ label: "Delete", click: () => this.deletePool(pool) }),
             new ContextMenuItem({ label: "Resize", click: () => this.resizePool(pool) }),
+            new ContextMenuItem({
+                label: "Pin to favourites",
+                click: () => this.pinPool(pool),
+                enabled: true,
+            }),
         ]);
     }
 

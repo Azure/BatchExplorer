@@ -1,0 +1,24 @@
+<bl-dropdown class="account-dropdown">
+    <div bl-dropdown-btn>
+        <!-- TODO-andrew: No pinned items -->
+        4 pinned items
+    </div>
+    <div bl-dropdown-content>
+        <div *ngFor="let favourite of pinnedEntityService.favorites | async" class="dropdown-item" [routerLink]="['/jobs', favourite.id]"
+            [class.selected]="favourite.id === selectedId" [title]="favourite.id">
+            <i class="fa" [ngClass]="entityIcon(favourite)"></i>
+            <div class="main">
+                <div class="alias">{{favourite.id}}</div>
+                <div class="url">{{entityType(favourite)}}</div>
+            </div>
+            <div *ngIf="favourite.id === selectedId" class="extra">
+                <i class="fa fa-check"></i>
+            </div>
+        </div>
+
+        <!--
+            Handle ....
+            [routerLink]="['/pools', 'blender-pool', 'nodes', 'tvm-892191217_7-20171113t213009z']"
+         -->
+    </div>
+</bl-dropdown>

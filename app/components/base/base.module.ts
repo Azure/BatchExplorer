@@ -27,6 +27,7 @@ import {
 } from "./list-and-show-layout";
 import { LoadingComponent, SimpleLoadingComponent } from "./loading";
 import { NotificationModule } from "./notifications";
+import { PinnedDropDownComponent } from "./pinned-entity-dropdown";
 import { PropertyListModule } from "./property-list";
 import { QuickListModule } from "./quick-list";
 import { RefreshButtonComponent } from "./refresh-btn";
@@ -77,6 +78,7 @@ const components = [
     DurationPickerComponent,
     IconComponent,
     ListAndShowLayoutComponent,
+    PinnedDropDownComponent,
     SimpleLoadingComponent,
     SimpleDialogComponent,
     LoadingComponent,

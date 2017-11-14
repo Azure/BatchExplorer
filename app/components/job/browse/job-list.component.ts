@@ -11,9 +11,9 @@ import { LoadingStatus } from "app/components/base/loading";
 import { QuickListComponent, QuickListItemStatus } from "app/components/base/quick-list";
 import { ListOrTableBase } from "app/components/base/selectable-list";
 import { TableComponent } from "app/components/base/table";
-import { Job, JobState } from "app/models";
+import { Job, JobState, PinnedEntityType } from "app/models";
 import { FailureInfoDecorator } from "app/models/decorators";
-import { JobService } from "app/services";
+import { JobService, PinnedEntityService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
 import {
@@ -68,6 +68,7 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
         router: Router,
         dialog: MatDialog,
         private jobService: JobService,
+        private pinnedEntityService: PinnedEntityService,
         private taskManager: BackgroundTaskService) {
         super(dialog);
         this.data = this.jobService.list(this._baseOptions);
@@ -168,6 +169,10 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
         });
     }
 
+    public pinJob(job: Job) {
+        this.pinnedEntityService.pinFavorite(job.id, PinnedEntityType.Job);
+    }
+
     public contextmenu(job: Job) {
         const isCompleted = job.state === JobState.completed;
         const isDisabled = job.state === JobState.disabled;
@@ -183,6 +188,11 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
                 label: "Disable",
                 click: () => this.disableJob(job),
                 enabled: !isCompleted && !isDisabled,
+            }),
+            new ContextMenuItem({
+                label: "Pin to favourites",
+                click: () => this.pinJob(job),
+                enabled: true,
             }),
         ]);
     }

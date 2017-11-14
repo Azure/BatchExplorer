@@ -1,0 +1,27 @@
+
+@import "app/styles/variables";
+
+bl-pinned-dropdown {
+    .account-dropdown [bl-dropdown-btn], .account-dropdown [bl-dropdown-content] {
+        width: 280px;
+    }
+
+    .fa {
+        font-size: 1.2em;
+
+        &.fa-tasks, &.fa-database {
+            color: map-get($primary, 300);
+            padding-right: 5px;
+        }
+    }
+
+    .main {
+        .alias {
+            text-overflow: ellipsis;
+        }
+
+        .url {
+            font-size: 0.8em !important;
+        }
+    }
+}
