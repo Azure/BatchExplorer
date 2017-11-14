@@ -18,6 +18,7 @@ import "codemirror/mode/javascript/javascript";
 
 import "./editor.scss";
 
+declare const monaco: any;
 (CodeMirror as any).keyMap.default["Shift-Tab"] = "indentLess";
 (CodeMirror as any).keyMap.default["Ctrl-/"] = "toggleComment";
 
@@ -42,6 +43,8 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     @Output() public focus = new EventEmitter();
     @Output() public blur = new EventEmitter();
 
+    @ViewChild("editor") public editorContent: ElementRef;
+
     @ViewChild("host")
     public host;
 
@@ -51,6 +54,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     private _value = "";
     private _sub: Subscription;
     private _resizeDetector: any;
+    private _editor: any;
 
     get value() { return this._value; }
 
@@ -73,20 +77,58 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
         });
 
         this._resizeDetector.listenTo(this.elementRef.nativeElement, (element) => {
-            this.instance.refresh();
+            // this.instance.refresh();
         });
+
+        const onGotAmdLoader = () => {
+            console.log("window", (window as any).amdRequire);
+
+            (window as any).amdRequire.config({ paths: { vs: "vendor/vs" } });
+            (window as any).amdRequire(["vs/editor/editor.main"], () => {
+                this.initMonaco();
+            });
+        };
+
+        // Load AMD loader if necessary
+        if (!(window as any).amdRequire) {
+            const nodeRequire = (window as any).require;
+            let loaderScript = document.createElement("script");
+            loaderScript.type = "text/javascript";
+            loaderScript.src = "vendor/vs/loader.js";
+            loaderScript.addEventListener("load", () => {
+                (window as any).amdRequire = (window as any).require;
+                (window as any).require = nodeRequire;
+                onGotAmdLoader();
+            });
+            document.body.appendChild(loaderScript);
+        } else {
+            onGotAmdLoader();
+        }
 
         this.config = this.config || {};
         if (!this.config.extraKeys) {
             this.config.extraKeys = {};
         }
 
-        this.codemirrorInit(this.config);
+        // this.codemirrorInit(this.config);
     }
 
     public ngOnDestroy() {
         this._sub.unsubscribe();
         this._resizeDetector.uninstall(this.elementRef.nativeElement);
+    }
+
+    public initMonaco() {
+        const myDiv: HTMLDivElement = this.editorContent.nativeElement;
+        let options: any = this.config;
+        options.value = this._value;
+        options.language = "javascript";
+
+        this._editor = monaco.editor.create(myDiv, options);
+
+        this._editor.getModel().onDidChangeContent((e) => {
+            this.updateValue(this._editor.getModel().getValue());
+        });
     }
 
     public codemirrorInit(config) {
