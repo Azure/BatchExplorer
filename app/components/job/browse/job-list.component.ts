@@ -190,7 +190,7 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
                 enabled: !isCompleted && !isDisabled,
             }),
             new ContextMenuItem({
-                label: "Pin to favourites",
+                label: "Pin to favorites",
                 click: () => this.pinJob(job),
                 enabled: true,
             }),

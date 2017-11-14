@@ -146,7 +146,7 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
             new ContextMenuItem({ label: "Delete", click: () => this.deletePool(pool) }),
             new ContextMenuItem({ label: "Resize", click: () => this.resizePool(pool) }),
             new ContextMenuItem({
-                label: "Pin to favourites",
+                label: "Pin to favorites",
                 click: () => this.pinPool(pool),
                 enabled: true,
             }),

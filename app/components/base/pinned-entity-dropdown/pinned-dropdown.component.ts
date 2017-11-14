@@ -38,8 +38,8 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
         this._subscriber.unsubscribe();
     }
 
-    public entityType(favourite: PinnedEntity) {
-        switch (favourite.type) {
+    public entityType(favorite: PinnedEntity) {
+        switch (favorite.type) {
             case PinnedEntityType.Job:
                 return "Batch job";
             case PinnedEntityType.Task:
@@ -53,8 +53,8 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
         }
     }
 
-    public entityIcon(favourite: PinnedEntity) {
-        switch (favourite.type) {
+    public entityIcon(favorite: PinnedEntity) {
+        switch (favorite.type) {
             case PinnedEntityType.Job:
             case PinnedEntityType.Task:
                 return "fa-tasks";
