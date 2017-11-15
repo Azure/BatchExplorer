@@ -12,8 +12,6 @@ export interface EditorKeyBinding {
     action: any;
 }
 
-declare const monaco: any;
-// (CodeMirror as any).keyMap.default["Ctrl-/"] = "toggleComment";
 export interface EditorConfig extends monaco.editor.IEditorConstructionOptions {
     language?: string;
     readOnly?: boolean;
@@ -120,25 +118,6 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
         this._editor.getModel().onDidChangeContent((e) => {
             this.updateValue(this._editor.getModel().getValue());
         });
-    }
-
-    public codemirrorInit(config) {
-        this._editor.onDidFocusEditor(() => {
-            this.isFocused = true;
-            this.focus.emit();
-            this.onTouched();
-            // this.changeDetector.markForCheck();
-        });
-
-        this._editor.onDidBlurEditor(() => {
-            this.isFocused = false;
-            this.blur.emit();
-            // this.changeDetector.markForCheck();
-        });
-
-        // this._sub = Observable.timer(200).subscribe(() => {
-        //     this.instance.refresh();
-        // });
     }
 
     public updateValue(value) {
