@@ -67,6 +67,8 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.predefinedFormulaService.init();
         this.hasAccount = accountService.currentAccount.map((x) => Boolean(x));
 
+        monacoLoader.get();
+
         Observable
             .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)
             .subscribe((loadedArray) => {
