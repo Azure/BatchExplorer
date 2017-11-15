@@ -8,6 +8,7 @@ const stripJsonComments = require("strip-json-comments");
 
 import { EditorConfig, KeyCode, KeyMod } from "app/components/base/editor";
 import { SettingsService } from "app/services";
+
 import "./settings.scss";
 
 // tslint:disable-next-line:no-var-requires

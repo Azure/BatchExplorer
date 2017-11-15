@@ -6,6 +6,7 @@ const anyWindow: any = window;
 @Injectable()
 export class MonacoLoader {
     private _promise: Promise<any>;
+
     constructor() {
         this._promise = this.load().then(() => {
             AutoscaleLanguage.define();

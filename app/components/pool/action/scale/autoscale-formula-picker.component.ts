@@ -34,8 +34,6 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
     public nameInput: ElementRef;
     public config: EditorConfig = {
         language: "batch-autoscale",
-        // gutter: true,
-        // lineWrapping: true,
         minimap: {
             enabled: false,
         },
