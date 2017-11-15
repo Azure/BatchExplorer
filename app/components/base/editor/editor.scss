@@ -1,18 +1,9 @@
 bl-editor {
     display: block;
     height: 100%;
-    // overflow: auto;
+
     .monaco-editor {
         height: 100%;
         overflow: hidden;
-    }
-
-    .CodeMirror-scroll {
-        overflow-y: hidden;
-        overflow-x: auto;
-    }
-
-    .CodeMirror-hscrollbar {
-        height: 10px;
     }
 }

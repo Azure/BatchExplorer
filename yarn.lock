@@ -116,10 +116,6 @@
   version "2.6.6"
   resolved "https://registry.yarnpkg.com/@types/chart.js/-/chart.js-2.6.6.tgz#c5f390236a3023c49b9696a5fdd4063682333985"
 
-"@types/codemirror@~0.0.40":
-  version "0.0.47"
-  resolved "https://registry.yarnpkg.com/@types/codemirror/-/codemirror-0.0.47.tgz#7fba9190c52bc0cdc6f7cad522581ac4a274fe98"
-
 "@types/core-decorators@^0.10.30":
   version "0.10.32"
   resolved "https://registry.yarnpkg.com/@types/core-decorators/-/core-decorators-0.10.32.tgz#3cb635da99980176832ec420875f7efce1822b5e"
@@ -1355,10 +1351,6 @@ codelyzer@~3.2.0:
     semver-dsl "^1.0.1"
     source-map "^0.5.6"
     sprintf-js "^1.0.3"
-
-codemirror@~5.30.0:
-  version "5.30.0"
-  resolved "https://registry.yarnpkg.com/codemirror/-/codemirror-5.30.0.tgz#86e57dd5ea5535acbcf9c720797b4cefe05b5a70"
 
 collection-visit@^0.2.1:
   version "0.2.3"
