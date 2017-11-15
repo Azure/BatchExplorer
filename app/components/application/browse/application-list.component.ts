@@ -10,7 +10,7 @@ import { LoadingStatus } from "app/components/base/loading";
 import { QuickListItemStatus } from "app/components/base/quick-list";
 import { ListOrTableBase } from "app/components/base/selectable-list";
 import { BatchApplication } from "app/models";
-import { ApplicationService } from "app/services";
+import { ApplicationService, PinnedEntityService } from "app/services";
 import { RxListProxy } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
@@ -44,6 +44,7 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
         router: Router,
         protected dialog: MatDialog,
         private applicationService: ApplicationService,
+        private pinnedEntityService: PinnedEntityService,
         private sidebarManager: SidebarManager) {
 
         super();
@@ -100,6 +101,10 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
                 label: "Edit",
                 click: () => this._editApplication(application),
             }),
+            new ContextMenuItem({
+                label: "Pin to favorites",
+                click: () => this._pinApplication(application),
+            }),
         ]);
     }
 
@@ -126,5 +131,9 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
     private _deleteApplication(application: BatchApplication) {
         const dialogRef = this.dialog.open(DeleteApplicationDialogComponent);
         dialogRef.componentInstance.applicationId = application.id;
+    }
+
+    private _pinApplication(application: BatchApplication) {
+        this.pinnedEntityService.pinFavorite(application);
     }
 }

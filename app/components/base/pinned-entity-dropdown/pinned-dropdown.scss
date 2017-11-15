@@ -2,23 +2,24 @@
 @import "app/styles/variables";
 
 bl-pinned-dropdown {
+    $ddl-width: 280px;
+
     .account-dropdown [bl-dropdown-btn], .account-dropdown [bl-dropdown-content] {
-        width: 280px;
+        width: $ddl-width;
     }
 
     .fa {
         font-size: 1.2em;
 
-        &.fa-tasks, &.fa-database {
+        &.fa-tasks, &.fa-database, &.fa-file-archive-o, &.fa-question {
             color: map-get($primary, 300);
             padding-right: 5px;
         }
     }
 
     .main {
-        .alias {
-            text-overflow: ellipsis;
-        }
+        width: calc(#{$ddl-width} - 65px);
+        padding-right: 4px;
 
         .url {
             font-size: 0.8em !important;

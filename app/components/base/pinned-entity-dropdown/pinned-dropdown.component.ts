@@ -4,7 +4,7 @@ import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
 import { PinnedEntity, PinnedEntityType } from "app/models";
-import { PinnedEntityService } from "app/services";
+import { AccountService, PinnedEntityService } from "app/services";
 
 import "./pinned-dropdown.scss";
 
@@ -13,16 +13,25 @@ import "./pinned-dropdown.scss";
     templateUrl: "pinned-dropdown.html",
 })
 export class PinnedDropDownComponent implements OnInit, OnDestroy {
-    public selectedId: string;
+    public currentUrl: string;
     public favorites: Observable<List<PinnedEntity>>;
     public title: string = "";
 
     private _subscriptions: Subscription[] = [];
+    private _accountEndpoint: string = "";
 
-    constructor(private router: Router, private pinnedEntityService: PinnedEntityService) {
+    constructor(
+        private router: Router,
+        private pinnedEntityService: PinnedEntityService,
+        private accountService: AccountService) {
+
         this.favorites = this.pinnedEntityService.favorites;
         this._subscriptions.push(this.favorites.subscribe((items) => {
             this.title = items.size > 0 ? `${items.size} favorite items pinned` : "No favorite items pinned";
+        }));
+
+        this._subscriptions.push(this.accountService.currentAccount.subscribe((account) => {
+            this._accountEndpoint = account.properties.accountEndpoint;
         }));
     }
 
@@ -30,9 +39,8 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
         this._subscriptions.push(this.router.events
             .filter(event => event instanceof NavigationEnd)
             .subscribe((event: NavigationEnd) => {
-
-            // todo-andrew: use to select currently selected item
-            console.log("Current URL: ", event.url);
+            // application URL scheme maps the Batch API URL for the entity
+            this.currentUrl = `https://${this._accountEndpoint}${event.url}`;
         }));
     }
 
@@ -40,12 +48,10 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
         this._subscriptions.forEach(x => x.unsubscribe());
     }
 
-    // public get title(): string {
-    //     // return this.favorites.si;
-    // }
-
     public entityType(favorite: PinnedEntity) {
         switch (favorite.pinnableType) {
+            case PinnedEntityType.BatchApplication:
+                return "Batch application";
             case PinnedEntityType.Job:
                 return "Batch job";
             case PinnedEntityType.Task:
@@ -61,6 +67,8 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
 
     public entityIcon(favorite: PinnedEntity) {
         switch (favorite.pinnableType) {
+            case PinnedEntityType.BatchApplication:
+                return "fa-file-archive-o";
             case PinnedEntityType.Job:
             case PinnedEntityType.Task:
                 return "fa-tasks";

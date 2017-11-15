@@ -169,10 +169,6 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
         });
     }
 
-    public pinJob(job: Job) {
-        this.pinnedEntityService.pinFavorite(job);
-    }
-
     public contextmenu(job: Job) {
         const isCompleted = job.state === JobState.completed;
         const isDisabled = job.state === JobState.disabled;
@@ -191,13 +187,16 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
             }),
             new ContextMenuItem({
                 label: "Pin to favorites",
-                click: () => this.pinJob(job),
-                enabled: true,
+                click: () => this._pinJob(job),
             }),
         ]);
     }
 
     public trackByFn(index: number, job: Job) {
         return job.id;
+    }
+
+    private _pinJob(job: Job) {
+        this.pinnedEntityService.pinFavorite(job);
     }
 }
