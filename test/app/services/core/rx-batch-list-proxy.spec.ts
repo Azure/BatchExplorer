@@ -3,12 +3,13 @@ import {
     tick,
 } from "@angular/core/testing";
 import { List, OrderedSet } from "immutable";
+import { Observable } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { BatchError, ServerError } from "app/models";
-import { DataCache, RxBatchEntityProxy, RxBatchListProxy, getOnceProxy } from "app/services/core";
+import { BasicEntityGetter, DataCache, RxBatchListProxy } from "app/services/core";
 import { BatchClientServiceMock } from "test/utils/mocks";
-import { FakeModel } from "./fake-model";
+import { FakeModel } from "./data/fake-model";
 
 const data = [
     [
@@ -216,9 +217,9 @@ describe("RxBatchListProxy", () => {
         });
 
         it("should NOT add the item if already present and update exiting one", (done) => {
-            const entityProxy = new RxBatchEntityProxy<any, FakeModel>(FakeModel, batchClientServiceSpy, {
+            const getter = new BasicEntityGetter(FakeModel, {
                 cache: () => cache,
-                getFn: () => Promise.resolve({ data: { id: "2", state: "running", name: "Fake2" } }),
+                supplyData: () => Observable.of(new FakeModel({ id: "2", state: "running", name: "Fake2" })),
             });
             const expected = [
                 { id: "1", state: "active", name: "Fake1" },
@@ -226,24 +227,23 @@ describe("RxBatchListProxy", () => {
                 { id: "3", state: "running", name: "Fake3" },
             ];
 
-            proxy.loadNewItem(getOnceProxy(entityProxy)).subscribe(() => {
-                expect(items).toEqualImmutable(List(expected.map((x) => new FakeModel(x))));
+            proxy.loadNewItem(getter.fetch({id: "2"})).subscribe(() => {
+                expect(items.toJS()).toEqual(expected);
                 done();
             });
         });
 
         it("should add the item if NOT already present", (done) => {
-            const entityProxy = new RxBatchEntityProxy<any, FakeModel>(FakeModel, batchClientServiceSpy, {
+            const getter = new BasicEntityGetter(FakeModel, {
                 cache: () => cache,
-                getFn: () => Promise.resolve({ data: { id: "4", state: "running", name: "Fake4" } }),
+                supplyData: () => Observable.of(new FakeModel({ id: "4", state: "running", name: "Fake4" })),
             });
-
             const expected = [
                 { id: "4", state: "running", name: "Fake4" },
             ].concat(data[0]);
 
-            proxy.loadNewItem(getOnceProxy(entityProxy)).subscribe(() => {
-                expect(items).toEqualImmutable(List(expected.map((x) => new FakeModel(x))));
+            proxy.loadNewItem(getter.fetch({id: "2"})).subscribe(() => {
+                expect(items.toJS()).toEqual(expected);
                 done();
             });
         });

@@ -3,12 +3,10 @@ import { List } from "immutable";
 import * as moment from "moment";
 import { Observable } from "rxjs";
 
-import { Headers, RequestOptions } from "@angular/http";
 import { Pool, SpecCost } from "app/models";
-import { PoolPrice, PoolPriceOptions, PoolUtils, SecureUtils, log } from "app/utils";
+import { PoolPrice, PoolPriceOptions, PoolUtils, log } from "app/utils";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { AccountService } from "./account.service";
-import { ArmHttpService } from "./arm-http.service";
 import { GithubDataService } from "./github-data.service";
 import { LocalFileStorage } from "./local-file-storage.service";
 
@@ -38,7 +36,7 @@ interface ResourceSpec {
     thirdParty: Array<{ resourceId: string, quantity: number }>;
 }
 
-const specCostUrl = "https://s2.billing.ext.azure.com/api/Billing/Subscription/GetSpecsCosts";
+// const specCostUrl = "https://s2.billing.ext.azure.com/api/Billing/Subscription/GetSpecsCosts";
 
 export type OsType = "linux" | "windows";
 
@@ -50,7 +48,7 @@ export class PricingService {
     private _prices: StringMap<List<SpecCost>> = {};
 
     constructor(
-        private arm: ArmHttpService,
+        // private arm: ArmHttpService,
         private githubData: GithubDataService,
         private localFileStorage: LocalFileStorage,
         private accountService: AccountService) {
@@ -75,28 +73,29 @@ export class PricingService {
                 return Observable.of(this._prices[key]);
             }
             return this._getResourceFor(account.location, os).flatMap((specs) => {
-                const subId = account.subscription.subscriptionId;
+                // const subId = account.subscription.subscriptionId;
 
-                const options = new RequestOptions();
-                options.headers = new Headers();
-                options.headers.append("x-ms-client-request-id", SecureUtils.uuid());
-                options.headers.append("x-ms-client-session-id", SecureUtils.uuid());
-                options.headers.append("Content-type", "application/json");
-                const data = {
-                    subscriptionId: subId,
-                    specResourceSets: specs,
-                    specsToAllowZeroCost: [],
-                    specType: "VM",
-                };
-                return this.arm.post(specCostUrl, JSON.stringify(data), options).map((response) => {
-                    const costs = response.json().costs;
-                    if (!costs) {
-                        log.error("Unexpected format returned from GetSpecsCosts", response.json());
-                        return [];
-                    }
-                    const prices = this._prices[key] = List<SpecCost>(costs.map(x => new SpecCost(x)));
-                    return prices as any;
-                });
+                // const options = new RequestOptions();
+                // options.headers = new Headers();
+                // options.headers.append("x-ms-client-request-id", SecureUtils.uuid());
+                // options.headers.append("x-ms-client-session-id", SecureUtils.uuid());
+                // options.headers.append("Content-type", "application/json");
+                // const data = {
+                //     subscriptionId: subId,
+                //     specResourceSets: specs,
+                //     specsToAllowZeroCost: [],
+                //     specType: "VM",
+                // };
+                // return this.arm.post(specCostUrl, JSON.stringify(data), options).map((response) => {
+                //     const costs = response.json().costs;
+                //     if (!costs) {
+                //         log.error("Unexpected format returned from GetSpecsCosts", response.json());
+                //         return [];
+                //     }
+                //     const prices = this._prices[key] = List<SpecCost>(costs.map(x => new SpecCost(x)));
+                //     return prices as any;
+                // });
+                return Observable.of(List([]));
             });
         });
     }

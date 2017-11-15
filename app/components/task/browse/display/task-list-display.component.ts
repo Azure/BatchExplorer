@@ -62,7 +62,7 @@ export class TaskListDisplayComponent extends ListOrTableBase {
         dialogRef.componentInstance.jobId = this.jobId;
         dialogRef.componentInstance.taskId = task.id;
         dialogRef.afterClosed().subscribe((obj) => {
-            this.taskService.getOnce(this.jobId, task.id);
+            this.taskService.get(this.jobId, task.id);
         });
     }
 
@@ -71,7 +71,7 @@ export class TaskListDisplayComponent extends ListOrTableBase {
         dialogRef.componentInstance.jobId = this.jobId;
         dialogRef.componentInstance.taskId = task.id;
         dialogRef.afterClosed().subscribe((obj) => {
-            this.taskService.getOnce(this.jobId, task.id);
+            this.taskService.get(this.jobId, task.id);
         });
     }
 
@@ -83,7 +83,7 @@ export class TaskListDisplayComponent extends ListOrTableBase {
         ]);
     }
 
-    public trackByFn(task: Task) {
+    public trackByFn(index, task: Task) {
         return task.id;
     }
 }

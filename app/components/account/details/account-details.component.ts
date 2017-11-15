@@ -5,7 +5,7 @@ import { Subscription } from "rxjs";
 
 import { AccountResource, BatchApplication, Job, Pool, ServerError } from "app/models";
 import { AccountParams, AccountService, ApplicationService, JobService, PoolService } from "app/services";
-import { RxEntityProxy, RxListProxy } from "app/services/core";
+import { EntityView, RxListProxy } from "app/services/core";
 
 import "./account-details.scss";
 
@@ -28,7 +28,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     public loadingError: any;
     public noLinkedStorage: boolean = false;
 
-    public data: RxEntityProxy<AccountParams, AccountResource>;
+    public data: EntityView<AccountResource, AccountParams>;
 
     public applicationData: RxListProxy<{}, BatchApplication>;
     public jobData: RxListProxy<{}, Job>;
@@ -46,7 +46,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         private poolService: PoolService,
         zone: NgZone,
         viewContainerRef: ViewContainerRef) {
-        this.data = this.accountService.get(null);
+        this.data = this.accountService.view();
         this.data.item.subscribe((account) => {
             this.account = account;
             if (account) {

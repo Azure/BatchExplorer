@@ -147,6 +147,12 @@ describe("JobCreateBasicDialogComponent ", () => {
         validateControl(constraintsForm, controlName).passes(validators.range).with(1);
     });
 
+    it("onAllTasksComplete and onTaskFailure are initialized", () => {
+        const control = baseForm.controls;
+        expect(control.onAllTasksComplete).not.toBeNull();
+        expect(control.onTaskFailure).not.toBeNull();
+    });
+
     it("Pool is initialized", () => {
         const control = baseForm.controls.poolInfo;
         expect(control).not.toBeNull();

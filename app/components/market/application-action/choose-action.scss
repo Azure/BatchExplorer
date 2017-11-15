@@ -8,8 +8,14 @@ bl-choose-action {
 
     h1 {
         margin: 10px;
-    }
 
+        a {
+            &:hover {
+                color: $link-alt-color;
+                text-decoration: underline;
+            }
+        }
+    }
 
     .actions {
         width: 600px;

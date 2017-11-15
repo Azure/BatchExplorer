@@ -5,6 +5,7 @@ export interface ApplicationAttributes {
     name: string;
     description: string;
     icon: string;
+    readme: string;
 }
 
 /**
@@ -20,4 +21,9 @@ export class Application extends Record<ApplicationAttributes> {
      * Path to the icon svg
      */
     @Prop() public icon: string;
+
+    /**
+     * Path to the readme file.
+     */
+    @Prop() public readme: string;
 }

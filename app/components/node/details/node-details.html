@@ -2,17 +2,18 @@
     <div *ngIf="pool && node" class="fit-details-container">
         <bl-summary-card>
             <div summaryTitle>{{node.id}}</div>
-            <div summarySubtitle>{{node.state}}</div>
+            <div summarySubtitle>State: {{node.state}}</div>
             <div summaryDetails>Pool: {{poolId}}</div>
             <bl-button-group summaryActions>
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                <bl-button color="light" [action]="connect" icon="fa fa-plug"></bl-button>
-                <bl-delete-button [entity]="node" [action]="delete"></bl-delete-button>
-                <bl-button color="light" [action]="reboot" title="Reboot"><i class="fa fa-power-off"></i></bl-button>
+                <bl-button color="light" [action]="connect" title="Connect to node" icon="fa fa-plug"></bl-button>
+                <bl-delete-button [action]="delete"></bl-delete-button>
+                <bl-button color="light" [action]="reboot" title="Reboot node" icon="fa fa-power-off"></bl-button>
                 <bl-edit-button [action]="editStartTask" title="Edit start task"></bl-edit-button>
             </bl-button-group>
         </bl-summary-card>
         <bl-start-task-error-display [pool]="pool" [nodeId]="nodeId" [startTaskInfo]="node?.startTaskInfo"></bl-start-task-error-display>
+        <bl-node-error-display [node]="node"></bl-node-error-display>
         <mat-card class="details">
             <bl-tab-group>
                 <bl-tab key="files">

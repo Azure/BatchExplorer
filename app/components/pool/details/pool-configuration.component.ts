@@ -41,7 +41,7 @@ export class PoolConfigurationComponent {
         ref.component.metadata = this.pool.metadata;
         ref.component.save = (metadata) => {
             const data = new PoolPatchDto({ metadata });
-            return this.poolService.patch(id, data).cascade(() => this.poolService.getOnce(id));
+            return this.poolService.patch(id, data).cascade(() => this.poolService.get(id));
         };
     }
 

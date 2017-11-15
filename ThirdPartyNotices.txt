@@ -22,7 +22,7 @@ Microsoft reserves all other rights not expressly granted under this agreement, 
 12. @angular/tsc-wrapped(https://github.com/angular/angular/blob/master/tools/@angular/tsc-wrapped) - MIT
 13. @tweenjs/tween.js(https://github.com/tweenjs/tween.js) - MIT
 14. @types/node-fetch(https://github.com/DefinitelyTyped/DefinitelyTyped) - MIT
-15. azure-batch(http://github.com/Azure/azure-sdk-for-node) - MIT
+15. azure-batch-js(http://github.com/azure/azure-sdk-for-javascript) - MIT
 16. azure-storage(http://github.com/Azure/azure-storage-node) - Apache-2.0
 17. bunyan(https://github.com/trentm/node-bunyan) - MIT
 18. chart.js(http://www.chartjs.org) - MIT
@@ -41,16 +41,17 @@ Microsoft reserves all other rights not expressly granted under this agreement, 
 31. moment(http://momentjs.com) - MIT
 32. moment-duration-format(https://github.com/jsmreese/moment-duration-format) - MIT
 33. mousetrap(https://github.com/ccampbell/mousetrap) - Apache-2.0
-34. node-fetch(https://github.com/bitinn/node-fetch) - MIT
-35. reflect-metadata(http://rbuckton.github.io/reflect-metadata) - Apache-2.0
-36. roboto-fontface(https://github.com/choffmeister/roboto-fontface-bower) - Apache-2.0
-37. rxjs(https://github.com/ReactiveX/RxJS) - Apache-2.0
-38. strip-json-comments(https://github.com/sindresorhus/strip-json-comments) - MIT
-39. zone.js(https://github.com/angular/zone.js) - MIT
-40. websockets(https://github.com/aaugustin/websockets) - BSD-3-Clause
-41. azure-batch-cli-extensions(https://github.com/Azure/azure-batch-cli-extensions) - MIT
-42. node.js(https://nodejs.org/en/) - MIT
-43. python(https://www.python.org/) - PSF
+34. ms-rest-js(https://github.com/Azure/ms-rest-js) - MIT
+35. node-fetch(https://github.com/bitinn/node-fetch) - MIT
+36. reflect-metadata(http://rbuckton.github.io/reflect-metadata) - Apache-2.0
+37. roboto-fontface(https://github.com/choffmeister/roboto-fontface-bower) - Apache-2.0
+38. rxjs(https://github.com/ReactiveX/RxJS) - Apache-2.0
+39. strip-json-comments(https://github.com/sindresorhus/strip-json-comments) - MIT
+40. zone.js(https://github.com/angular/zone.js) - MIT
+41. websockets(https://github.com/aaugustin/websockets) - BSD-3-Clause
+42. azure-batch-cli-extensions(https://github.com/Azure/azure-batch-cli-extensions) - MIT
+43. node.js(https://nodejs.org/en/) - MIT
+44. python(https://www.python.org/) - PSF
 
 ============================================================
     Start license for @angular/animations
@@ -477,7 +478,7 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 ============================================================
 
 ============================================================
-    Start license for azure-batch
+    Start license for azure-batch-js
 ------------------------------------------------------------
 ============================================================
     Start license for azure-storage
@@ -884,14 +885,29 @@ SOFTWARE.
 ============================================================
     Start license for extract-zip
 ------------------------------------------------------------
-Copyright (c) <year> <owner> All rights reserved.
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
+Copyright (c) 2014 Max Ogden and other contributors
+All rights reserved.
 
-1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following disclaimer.
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
 
-2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the following disclaimer in the documentation and/or other materials provided with the distribution.
+* Redistributions of source code must retain the above copyright notice, this
+  list of conditions and the following disclaimer.
 
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+* Redistributions in binary form must reproduce the above copyright notice,
+  this list of conditions and the following disclaimer in the documentation
+  and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 ------------------------------------------------------------
     End license for extract-zip
@@ -1286,6 +1302,35 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
    END OF TERMS AND CONDITIONS
 ------------------------------------------------------------
     End license for mousetrap
+============================================================
+
+============================================================
+    Start license for ms-rest-js
+------------------------------------------------------------
+    MIT License
+
+    Copyright (c) Microsoft Corporation. All rights reserved.
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE
+
+------------------------------------------------------------
+    End license for ms-rest-js
 ============================================================
 
 ============================================================
@@ -2134,7 +2179,7 @@ The externally maintained libraries used by Node.js are:
      #  ---------COPYING.libtabe ---- BEGIN--------------------
      #
      #  /*
-     #   * Copyrighy (c) 1999 TaBE Project.
+     #   * Copyright (c) 1999 TaBE Project.
      #   * Copyright (c) 1999 Pai-Hsiang Hsiao.
      #   * All rights reserved.
      #   *
@@ -3022,6 +3067,55 @@ The externally maintained libraries used by Node.js are:
     LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
     OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
     WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+  """
+
+- remark-cli, located at tools/remark-cli, is licensed as follows:
+  """
+    (The MIT License)
+
+    Copyright (c) 2014-2016 Titus Wormer <tituswormer@gmail.com>
+    Copyright (c) 2011-2014, Christopher Jeffrey (https://github.com/chjj/)
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+    THE SOFTWARE.
+  """
+
+- node-inspect, located at deps/node-inspect, is licensed as follows:
+  """
+    Copyright Node.js contributors. All rights reserved.
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to
+    deal in the Software without restriction, including without limitation the
+    rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
+    sell copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in
+    all copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+    FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
+    IN THE SOFTWARE.
   """
 
 ------------------------------------------------------------

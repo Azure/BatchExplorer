@@ -16,9 +16,9 @@ export class DeleteTaskAction extends LongRunningDeleteAction {
     }
 
     public waitForDelete(id: string, taskManager?: BackgroundTaskService) {
-        this.taskService.getOnce(this.jobId, id).subscribe({
+        this.taskService.get(this.jobId, id).subscribe({
             next: (task: Task) => {
-                const poller = new WaitForDeletePoller(this.taskService.getOnce(this.jobId, id));
+                const poller = new WaitForDeletePoller(() => this.taskService.get(this.jobId, id));
                 if (taskManager) {
                     taskManager.startTask(`Deleting task '${id}' for job '${this.jobId}'`, (bTask) => {
                         return poller.start(bTask.progress);

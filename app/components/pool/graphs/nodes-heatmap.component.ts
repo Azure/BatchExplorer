@@ -460,7 +460,11 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
             new ContextMenuItem({ label: "Go to", click: () => this._gotoNode(node) }),
             new ContextMenuItem({ label: "Connect", click: () => this._connectTo(node) }),
             new ContextMenuItem({ label: "Reboot", click: () => this._reboot(node) }),
-            new ContextMenuItem({ label: "Reimage", click: () => this._reimage(node) }),
+            new ContextMenuItem({
+                label: "Reimage",
+                click: () => this._reimage(node),
+                enabled: Boolean(this.pool.cloudServiceConfiguration),
+            }),
             new ContextMenuItem({ label: "Delete", click: () => this._delete(node) }),
         ];
 
@@ -491,7 +495,7 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     private _nodeAction(node: Node, action: Observable<any>): Observable<any> {
         action.subscribe({
             next: () => {
-                this.nodeService.getOnce(this.pool.id, node.id);
+                this.nodeService.get(this.pool.id, node.id);
             },
             error: (error: ServerError) => {
                 this.notificationService.error(error.code, error.message);

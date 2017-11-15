@@ -11,7 +11,7 @@
                 <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
                 <bl-add-task-button title="Add task" [job]="job" [action]="addTask"></bl-add-task-button>
                 <bl-terminate-button [entity]="job" [action]="terminateJob"></bl-terminate-button>
-                <bl-delete-button [entity]="job" [action]="deleteJob"></bl-delete-button>
+                <bl-delete-button [action]="deleteJob" [enabled]="job.state !== JobState.deleting && job.state !== JobState.terminating"></bl-delete-button>
                 <bl-disable-button [job]="job" [action]="disableJob"></bl-disable-button>
                 <bl-enable-button [job]="job" [action]="enableJob"></bl-enable-button>
                 <bl-clone-button [action]="cloneJob"></bl-clone-button>

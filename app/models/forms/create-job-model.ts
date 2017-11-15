@@ -27,20 +27,23 @@ export interface CreateJobModel {
 }
 
 export function createJobFormToJsonData(formData: CreateJobModel): any {
-    let maxWallClockTime = null;
     let data: any = {
         id: formData.id,
         displayName: formData.displayName,
         priority: formData.priority,
         constraints: {
-            maxWallClockTime: maxWallClockTime,
+            maxWallClockTime: formData.constraints.maxWallClockTime,
             maxTaskRetryCount: formData.constraints.maxTaskRetryCount,
         },
         poolInfo: {
             poolId: formData.poolInfo.poolId,
         },
+        jobManagerTask: formData.jobManagerTask,
+        jobPreparationTask: formData.jobPreparationTask,
+        jobReleaseTask: formData.jobReleaseTask,
+        onAllTasksComplete: formData.onAllTasksComplete,
+        onTaskFailure: formData.onTaskFailure,
     };
-
     return data;
 }
 

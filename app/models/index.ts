@@ -14,6 +14,7 @@ export * from "./batch-error";
 export * from "./blob-container";
 export * from "./certificate-reference";
 export * from "./cloud-service-configuration";
+export * from "./compute-node-error";
 export * from "./compute-node-information";
 export * from "./constraints";
 export * from "./container-lease";

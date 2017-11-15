@@ -2,11 +2,10 @@ import * as path from "path";
 import { Observable, Subject } from "rxjs";
 
 import { File } from "app/models";
-import { RxEntityProxy, getOnceProxy } from "app/services/core";
 import { CloudPathUtils, exists, log } from "app/utils";
 import { FileSystemService } from "../fs.service";
 
-export type PropertiesFunc = () => RxEntityProxy<any, File>;
+export type PropertiesFunc = () =>  Observable<File>;
 export type ContentFunc = (options: FileLoadOptions) => Observable<FileLoadResult>;
 export type DownloadFunc = (destination: string) => Observable<boolean>;
 
@@ -67,7 +66,6 @@ export class FileLoader {
     private _content: ContentFunc;
     private _download: DownloadFunc;
     private _cachedProperties: File;
-    private _proxy: RxEntityProxy<any, File>;
     private _fileChanged = new Subject<File>();
     private _logIgnoreError: number[];
 
@@ -85,22 +83,6 @@ export class FileLoader {
     }
 
     /**
-     * This will return a rx entity proxy.
-     * This means you need to dispose the file loader when done using it.
-     * If listen is never called you don't need to call dispose.
-     */
-    public listen(): RxEntityProxy<any, File> {
-        if (!this._proxy) {
-            this._proxy = this._properties();
-            this._proxy.item.subscribe((file) => {
-                this._updateProperties(file);
-            });
-            this._proxy.fetch();
-        }
-        return this._proxy;
-    }
-
-    /**
      * Returns the properties once. This doesn't need any cleanup(i.e. no need to call dispose)
      * @param forceNew If set to false it will use the last value loaded
      */
@@ -109,7 +91,7 @@ export class FileLoader {
             return Observable.of(this._cachedProperties);
         }
 
-        const obs = getOnceProxy(this._properties());
+        const obs = this._properties();
         obs.subscribe({
             next: (file) => {
                 this._updateProperties(file);
@@ -164,16 +146,6 @@ export class FileLoader {
             return CloudPathUtils.normalize(path.relative(this.basePath, this.filename));
         } else {
             return this.filename;
-        }
-    }
-    /**
-     * Dipose of the file loader entities if applicable
-     * You MUST call this if you used .listen on a file loader otherwise there will be memory leaks.
-     */
-    public dispose() {
-        if (this._proxy) {
-            this._proxy.dispose();
-            this._proxy = null;
         }
     }
 

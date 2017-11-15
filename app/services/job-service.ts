@@ -7,8 +7,8 @@ import { Constants, ModelUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";
 import {
-    DataCache, ListOptionsAttributes, RxBatchEntityProxy, RxBatchListProxy,
-    RxEntityProxy, RxListProxy, getAllProxy, getOnceProxy,
+    BatchEntityGetter, DataCache, EntityView,
+    ListOptionsAttributes, RxBatchListProxy, RxListProxy, getAllProxy,
 } from "./core";
 import { ServiceBase } from "./service-base";
 
@@ -29,9 +29,15 @@ export class JobService extends ServiceBase {
     public cache = new DataCache<Job>();
 
     private _basicProperties: string = "id,displayName,state,creationTime,poolInfo";
+    private _getter: BatchEntityGetter<Job, JobParams>;
 
     constructor(batchService: BatchClientService) {
         super(batchService);
+
+        this._getter = new BatchEntityGetter(Job, this.batchService, {
+            cache: () => this.cache,
+            getFn: (client, params: JobParams) => client.job.get(params.id),
+        });
     }
 
     public get basicProperties(): string {
@@ -50,19 +56,19 @@ export class JobService extends ServiceBase {
         return getAllProxy(this.list(options));
     }
 
-    public get(jobId: string, options: any = {}): RxEntityProxy<JobParams, Job> {
-        return new RxBatchEntityProxy(Job, this.batchService, {
-            cache: () => this.cache,
-            getFn: (client, params: JobParams) => {
-                return client.job.get(params.id, options);
-            },
-            initialParams: { id: jobId },
-            poll: Constants.PollRate.entity,
-        });
+    public get(jobId: string, options: any = {}): Observable<Job> {
+        return this._getter.fetch({ id: jobId });
     }
 
-    public getOnce(jobId: string, options: any = {}): Observable<Job> {
-        return getOnceProxy(this.get(jobId, options));
+    /**
+     * Create an entity view for a job
+     */
+    public view(): EntityView<Job, JobParams> {
+        return new EntityView({
+            cache: () => this.cache,
+            getter: this._getter,
+            poll: Constants.PollRate.entity,
+        });
     }
 
     /**
