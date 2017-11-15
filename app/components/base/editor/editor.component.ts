@@ -59,13 +59,12 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     private _config: EditorConfig;
     private _editor: monaco.editor.IStandaloneCodeEditor;
 
-    get value() { return this._value; }
-
-    @Input() set value(v) {
+    @Input() public set value(v) {
         if (v !== this._value) {
             this.writeValue(v);
         }
     }
+    public get value() { return this._value; }
 
     constructor(
         private elementRef: ElementRef,

@@ -11,6 +11,7 @@ import { EditorComponent } from "app/components/base/editor";
 import { SettingsComponent } from "app/components/settings";
 import { SettingsService } from "app/services";
 import { click } from "test/utils/helpers";
+import { MockEditorComponent } from "test/utils/mocks/components";
 
 // tslint:disable-next-line:no-var-requires
 const defaultSettingsStr = require("app/components/settings/default-settings.json");
@@ -49,7 +50,7 @@ describe("SettingsComponent", () => {
         };
         TestBed.configureTestingModule({
             imports: [ReactiveFormsModule, MaterialModule, NoopAnimationsModule],
-            declarations: [SettingsComponent, TestComponent, ButtonComponent, EditorComponent],
+            declarations: [SettingsComponent, TestComponent, ButtonComponent, MockEditorComponent],
             providers: [
                 { provide: SettingsService, useValue: settingsServiceSpy },
             ],
