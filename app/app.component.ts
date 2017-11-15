@@ -6,8 +6,9 @@ import { Observable } from "rxjs";
 
 import { registerIcons } from "app/config";
 import {
-    AccountService, AdalService, AutoscaleFormulaService, CommandService, NcjTemplateService,
-    NodeService, PredefinedFormulaService, PricingService, PythonRpcService, SSHKeyService, SettingsService,
+    AccountService, AdalService, AutoscaleFormulaService, CommandService, MonacoLoader,
+    NcjTemplateService, NodeService, PredefinedFormulaService, PricingService, PythonRpcService, SSHKeyService,
+    SettingsService,
     SubscriptionService,
     VmSizeService,
 } from "app/services";
@@ -48,6 +49,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         private sshKeyService: SSHKeyService,
         pythonRpcService: PythonRpcService,
         private vmSizeService: VmSizeService,
+        monacoLoader: MonacoLoader,
         private pricingService: PricingService,
         private ncjTemplateService: NcjTemplateService,
         private predefinedFormulaService: PredefinedFormulaService,
@@ -65,10 +67,11 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.predefinedFormulaService.init();
         this.hasAccount = accountService.currentAccount.map((x) => Boolean(x));
 
+        const monacoLoaded = Observable.fromPromise(monacoLoader.get());
         Observable
-            .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)
+            .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded, monacoLoaded)
             .subscribe((loadedArray) => {
-                this.isAppReady = loadedArray[0] && loadedArray[1];
+                this.isAppReady = loadedArray[0] && loadedArray[1] && loadedArray[2];
             });
 
         // Wait for the first account to be loaded.

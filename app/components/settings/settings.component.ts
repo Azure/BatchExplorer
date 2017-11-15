@@ -6,6 +6,7 @@ import { Observable, Subscription } from "rxjs";
 // tslint:disable-next-line:no-var-requires
 const stripJsonComments = require("strip-json-comments");
 
+import { EditorConfig, KeyCode, KeyMod } from "app/components/base/editor";
 import { SettingsService } from "app/services";
 import "./settings.scss";
 
@@ -23,24 +24,21 @@ export class SettingsComponent implements OnDestroy {
         return { name: "Settings" };
     }
 
-    public defaultSettingsEditorConfig: CodeMirror.EditorConfiguration = {
+    public defaultSettingsEditorConfig: EditorConfig = {
         readOnly: true,
-        lineNumbers: true,
-        mode: "application/javascript",
+        language: "json",
+        minimap: {
+            enabled: false,
+        },
         tabSize: 2,
-        indentUnit: 2,
     };
 
-    public userSettingsEditorConfig: CodeMirror.EditorConfiguration = {
-        lineNumbers: true,
-        mode: "application/javascript",
+    public userSettingsEditorConfig: EditorConfig = {
+        language: "json",
         tabSize: 2,
-        indentUnit: 2,
-        gutters: ["CodeMirror-lint-markers"],
-        lint: true,
-        extraKeys: {
-            "Ctrl-S": this.save,
-        },
+        keybindings: [
+            { key: KeyMod.CtrlCmd | KeyCode.KEY_S, action: this.save },
+        ],
     };
 
     public defaultSettings = defaultSettings;
@@ -61,6 +59,9 @@ export class SettingsComponent implements OnDestroy {
 
     @autobind()
     public save(): Observable<any> {
+        if (!this._isValid()) {
+            return;
+        }
         return this.settingsService.saveUserSettings(this.userSettings.value);
     }
 
@@ -96,5 +97,14 @@ export class SettingsComponent implements OnDestroy {
                 };
             }
         });
+    }
+
+    private _isValid() {
+        try {
+            JSON.parse(stripJsonComments(this.userSettings.value, { whitespace: true }));
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
 }

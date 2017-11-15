@@ -10,6 +10,7 @@
     "no-duplicate-imports": true,
     "encoding": true,
     "indent": [true, "spaces", 4],
+    "no-bitwise": false,
     "object-literal-shorthand": false,
     "adjacent-overload-signatures": false,
     "max-classes-per-file": [false],

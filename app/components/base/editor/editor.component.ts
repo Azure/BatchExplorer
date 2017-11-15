@@ -1,27 +1,28 @@
 import {
-    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ElementRef,
+    AfterViewInit, ChangeDetectionStrategy, Component, ElementRef,
     EventEmitter, HostListener, Input, OnChanges, OnDestroy, Output, ViewChild, forwardRef,
 } from "@angular/core";
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from "@angular/forms";
-import * as CodeMirror from "codemirror";
-import * as elementResizeDetectorMaker from "element-resize-detector";
-import { Observable, Subscription } from "rxjs";
-
-import "codemirror/addon/comment/comment";
-import "codemirror/addon/display/autorefresh";
-import "codemirror/addon/display/placeholder";
-import "codemirror/addon/hint/show-hint";
-
-// Modes
-import "app/utils/autoscale";
-import "codemirror/mode/javascript/javascript";
-
 import { MonacoLoader } from "app/services";
+import * as elementResizeDetectorMaker from "element-resize-detector";
 import "./editor.scss";
 
+export interface EditorKeyBinding {
+    key: any;
+    action: any;
+}
+
 declare const monaco: any;
-(CodeMirror as any).keyMap.default["Shift-Tab"] = "indentLess";
-(CodeMirror as any).keyMap.default["Ctrl-/"] = "toggleComment";
+// (CodeMirror as any).keyMap.default["Ctrl-/"] = "toggleComment";
+export interface EditorConfig extends monaco.editor.IEditorConstructionOptions {
+    language?: string;
+    readOnly?: boolean;
+    tabSize?: number;
+    keybindings?: EditorKeyBinding[];
+}
+
+const defaultConfig = {
+};
 
 @Component({
     selector: "bl-editor",
@@ -37,7 +38,11 @@ declare const monaco: any;
 })
 
 export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnChanges, OnDestroy {
-    @Input() public config: CodeMirror.EditorConfiguration;
+    @Input() public set config(config: EditorConfig) {
+        this._config = { ...defaultConfig, ...config };
+    }
+    public get config(): EditorConfig { return this._config; }
+
     @Input() public label: string;
 
     @Output() public change = new EventEmitter();
@@ -49,13 +54,12 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     @ViewChild("host")
     public host;
 
-    public instance: CodeMirror.EditorFromTextArea = null;
     public isFocused = false;
     public placeholder: string;
     private _value = "";
-    private _sub: Subscription;
     private _resizeDetector: any;
-    private _editor: any;
+    private _config: EditorConfig;
+    private _editor: monaco.editor.IStandaloneCodeEditor;
 
     get value() { return this._value; }
 
@@ -66,7 +70,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     }
 
     constructor(
-        private changeDetector: ChangeDetectorRef,
+        // private changeDetector: ChangeDetectorRef,
         private elementRef: ElementRef,
         private monacoLoader: MonacoLoader) { }
 
@@ -81,68 +85,60 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
         });
 
         this._resizeDetector.listenTo(this.elementRef.nativeElement, (element) => {
-            // this.instance.refresh();
+            if (this._editor) {
+                this._editor.layout();
+            }
         });
 
         this.monacoLoader.get().then((monaco) => {
-            console.log("Loaded monaco", monaco);
             this.initMonaco();
         });
+
         this.config = this.config || {};
-        if (!this.config.extraKeys) {
-            this.config.extraKeys = {};
-        }
-        // this.codemirrorInit(this.config);
     }
 
     public ngOnDestroy() {
-        this._sub.unsubscribe();
         this._resizeDetector.uninstall(this.elementRef.nativeElement);
     }
 
     public initMonaco() {
         const myDiv: HTMLDivElement = this.editorContent.nativeElement;
-        let options: any = this.config;
+        const options: monaco.editor.IEditorConstructionOptions = this.config;
+
         options.value = this._value;
-        options.language = "json";
 
         this._editor = monaco.editor.create(myDiv, options);
+        if (this.config.tabSize) {
+            this._editor.getModel().updateOptions({ tabSize: this.config.tabSize });
+        }
 
+        if (this.config.keybindings) {
+            for (const binding of this.config.keybindings) {
+                this._editor.addCommand(binding.key, binding.action, "");
+            }
+        }
         this._editor.getModel().onDidChangeContent((e) => {
             this.updateValue(this._editor.getModel().getValue());
         });
     }
 
     public codemirrorInit(config) {
-        this.instance = CodeMirror.fromTextArea(this.host.nativeElement, config);
-        this.instance.setValue(this._value);
-        this.instance.on("change", (editor, change) => {
-            this.updateValue(this.instance.getValue());
-
-            if (change.origin !== "complete" && change.origin !== "setValue") {
-                const hint = (CodeMirror as any).hint[this.instance.getDoc().getMode().name];
-                if (hint) {
-                    (this.instance as any).showHint({ hint: hint, completeSingle: false });
-                }
-            }
-        });
-
-        this.instance.on("focus", () => {
+        this._editor.onDidFocusEditor(() => {
             this.isFocused = true;
             this.focus.emit();
             this.onTouched();
-            this.changeDetector.markForCheck();
+            // this.changeDetector.markForCheck();
         });
 
-        this.instance.on("blur", () => {
+        this._editor.onDidBlurEditor(() => {
             this.isFocused = false;
             this.blur.emit();
-            this.changeDetector.markForCheck();
+            // this.changeDetector.markForCheck();
         });
 
-        this._sub = Observable.timer(200).subscribe(() => {
-            this.instance.refresh();
-        });
+        // this._sub = Observable.timer(200).subscribe(() => {
+        //     this.instance.refresh();
+        // });
     }
 
     public updateValue(value) {
@@ -153,8 +149,8 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
 
     public writeValue(value) {
         this._value = value || "";
-        if (this.instance) {
-            this.instance.setValue(this._value);
+        if (this._editor) {
+            this._editor.getModel().setValue(this._value);
         }
     }
 
