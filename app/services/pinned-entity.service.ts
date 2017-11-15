@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import { PinnableEntity, PinnedEntity, PinnedEntityType } from "app/models";
+import { PinnableEntity, PinnedEntity } from "app/models";
 import { AccountService } from "./account.service";
 import { LocalFileStorage } from "./local-file-storage.service";
 
