@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { AutoscaleLanguage } from "app/utils/autoscale";
 
 const anyWindow: any = window;
 
@@ -6,7 +7,9 @@ const anyWindow: any = window;
 export class MonacoLoader {
     private _promise: Promise<any>;
     constructor() {
-        this._promise = this.load();
+        this._promise = this.load().then(() => {
+            AutoscaleLanguage.define();
+        });
     }
 
     public get(): Promise<any> {

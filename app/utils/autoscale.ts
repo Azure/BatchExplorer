@@ -49,6 +49,15 @@ const operatorRegex = /[-+\/*=<>!]+/;
 const commentRegex = /^\/\/(.*)/;
 const quoteRegex = /"(.*)"/;
 
+export class AutoscaleLanguage {
+    public static define() {
+        // monaco.languages.setMonarchTokensProvider("batch-autoscale", {
+        //     tokenizer: {
+
+        //     },
+        // });
+    }
+}
 CodeMirror.defineMode("autoscale", () => {
     return {
         token: (stream, state) => {
