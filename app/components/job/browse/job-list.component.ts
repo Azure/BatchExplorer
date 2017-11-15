@@ -186,7 +186,7 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
                 enabled: !isCompleted && !isDisabled,
             }),
             new ContextMenuItem({
-                label: "Pin to favorites",
+                label: this.pinnedEntityService.isFavorite(job) ? "Unpin favorite" : "Pin to favorites",
                 click: () => this._pinJob(job),
             }),
         ]);
@@ -197,6 +197,10 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
     }
 
     private _pinJob(job: Job) {
-        this.pinnedEntityService.pinFavorite(job);
+        this.pinnedEntityService.pinFavorite(job).subscribe((result) => {
+            if (result) {
+                this.pinnedEntityService.unPinFavorite(job);
+            }
+        });
     }
 }

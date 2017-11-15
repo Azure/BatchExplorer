@@ -33,7 +33,7 @@ export class PinnedEntityService {
     }
 
     public pinFavorite(entity: PinnableEntity): Observable<any> {
-        if (this.isFavorite(entity.id)) {
+        if (this.isFavorite(entity)) {
             return Observable.of(true);
         }
 
@@ -47,7 +47,7 @@ export class PinnedEntityService {
 
         this._favorites.next(this._favorites.getValue().push(favourite));
         this._saveAccountFavorites().subscribe({
-            next: (account) => {
+            next: (favourite) => {
                 subject.complete();
             }, error: (e) => {
                 subject.error(e);
@@ -57,22 +57,23 @@ export class PinnedEntityService {
         return subject.asObservable();
     }
 
-    public unPinFavorite(id: string) {
-        id = id.toLowerCase();
-        if (!this.isFavorite(id)) {
+    public unPinFavorite(entity: PinnableEntity) {
+        if (!this.isFavorite(entity)) {
             return;
         }
 
-        // todo-andrew: job and pool can have the same id, use URL, or ID and Type ...
-        const newFavorites = this._favorites.getValue().filter(pinned => pinned.id.toLowerCase() !== id);
+        const url = this._fudgeArmUrl(entity);
+        const newFavorites = this._favorites.getValue().filter(pinned => pinned.url !== url);
         this._favorites.next(List<PinnedEntity>(newFavorites));
         this._saveAccountFavorites();
     }
 
-    public isFavorite(id: string): boolean {
-        id = id.toLowerCase();
+    public isFavorite(entity: PinnableEntity): boolean {
+        const id = entity.id.toLowerCase();
         const favorites = this._favorites.getValue();
-        const found = favorites.filter(pinned => pinned.id.toLowerCase() === id).first();
+        const found = favorites.filter((pinned) => {
+            return pinned.id.toLowerCase() === id && pinned.pinnableType === entity.pinnableType;
+        }).first();
 
         return Boolean(found);
     }
@@ -96,7 +97,6 @@ export class PinnedEntityService {
     }
 
     private _saveAccountFavorites(favourites: List<PinnedEntity> = null): Observable<any> {
-        console.log("saving favorites");
         favourites = favourites === null ? this._favorites.getValue() : favourites;
         return this.localFileStorage.set(this._jsonFilename, favourites.toJS());
     }

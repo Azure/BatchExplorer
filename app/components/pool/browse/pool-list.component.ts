@@ -137,17 +137,13 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         });
     }
 
-    public pinPool(poolDecorator: PoolDecorator) {
-        this.pinnedEntityService.pinFavorite(poolDecorator.pool);
-    }
-
-    public contextmenu(pool: PoolDecorator) {
+    public contextmenu(decorator: PoolDecorator) {
         return new ContextMenu([
-            new ContextMenuItem({ label: "Delete", click: () => this.deletePool(pool) }),
-            new ContextMenuItem({ label: "Resize", click: () => this.resizePool(pool) }),
+            new ContextMenuItem({ label: "Delete", click: () => this.deletePool(decorator) }),
+            new ContextMenuItem({ label: "Resize", click: () => this.resizePool(decorator) }),
             new ContextMenuItem({
-                label: "Pin to favorites",
-                click: () => this.pinPool(pool),
+                label: this.pinnedEntityService.isFavorite(decorator.pool) ? "Unpin favorite" : "Pin to favorites",
+                click: () => this._pinPool(decorator),
                 enabled: true,
             }),
         ]);
@@ -155,5 +151,13 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
 
     public trackById(index, pool) {
         return pool.id;
+    }
+
+    public _pinPool(decorator: PoolDecorator) {
+        this.pinnedEntityService.pinFavorite(decorator.pool).subscribe((result) => {
+            if (result) {
+                this.pinnedEntityService.unPinFavorite(decorator.pool);
+            }
+        });
     }
 }

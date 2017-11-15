@@ -102,7 +102,7 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
                 click: () => this._editApplication(application),
             }),
             new ContextMenuItem({
-                label: "Pin to favorites",
+                label: this.pinnedEntityService.isFavorite(application) ? "Unpin favorite" : "Pin to favorites",
                 click: () => this._pinApplication(application),
             }),
         ]);
@@ -134,6 +134,10 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
     }
 
     private _pinApplication(application: BatchApplication) {
-        this.pinnedEntityService.pinFavorite(application);
+        this.pinnedEntityService.pinFavorite(application).subscribe((result) => {
+            if (result) {
+                this.pinnedEntityService.unPinFavorite(application);
+            }
+        });
     }
 }
