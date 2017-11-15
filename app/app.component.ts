@@ -65,9 +65,8 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.ncjTemplateService.init();
         pythonRpcService.init();
         this.predefinedFormulaService.init();
-        this.hasAccount = accountService.currentAccount.map((x) => Boolean(x));
-
         monacoLoader.get();
+        this.hasAccount = accountService.currentAccount.map((x) => Boolean(x));
 
         Observable
             .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)
