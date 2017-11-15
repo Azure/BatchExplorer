@@ -10,10 +10,10 @@ bl-pinned-dropdown {
 
     .fa {
         font-size: 1.2em;
+        padding-right: 5px;
 
-        &.fa-tasks, &.fa-database, &.fa-file-archive-o, &.fa-question {
+        &.fa-tasks, &.fa-database, &.fa-file-archive-o, &.fa-question, &.fa-cloud-upload {
             color: map-get($primary, 300);
-            padding-right: 5px;
         }
     }
 

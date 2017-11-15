@@ -1,15 +1,15 @@
 import { Model, Prop, Record } from "app/core";
 
 export enum PinnedEntityType {
-    BatchApplication,
+    Application,
     Job,
-    Node,
     Pool,
-    Task,
+    FileGroup,
 }
 
 export interface PinnableEntity {
     id: string;
+    name?: string;
     routerLink: string[];
     pinnableType: PinnedEntityType;
     url: string;
@@ -18,6 +18,7 @@ export interface PinnableEntity {
 @Model()
 export class PinnedEntity extends Record<PinnableEntity> {
     @Prop() public id: string;
+    @Prop() public name: string;
     @Prop() public routerLink: string[];
     @Prop() public pinnableType: PinnedEntityType;
     @Prop() public url: string;

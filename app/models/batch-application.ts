@@ -30,6 +30,6 @@ export class BatchApplication extends Record<BatchApplicationAttributes> impleme
     }
 
     public get pinnableType(): PinnedEntityType {
-        return PinnedEntityType.BatchApplication;
+        return PinnedEntityType.Application;
     }
 }

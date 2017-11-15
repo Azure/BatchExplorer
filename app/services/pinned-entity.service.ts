@@ -11,7 +11,7 @@ export class PinnedEntityService {
     public loaded: Observable<boolean>;
     public favourites: Observable<List<PinnedEntity>>;
 
-    private _pinnedFavouritesJsonFileName: string = "pinned-favorites";
+    private _pinnedFavouritesJsonFileName: string = "pinned";
     private _favorites: BehaviorSubject<List<PinnedEntity>> = new BehaviorSubject(List([]));
     private _loaded = new BehaviorSubject<boolean>(false);
     private _currentAccountEndpoint: string = "";
@@ -40,6 +40,7 @@ export class PinnedEntityService {
         const subject = new AsyncSubject();
         const favourite = new PinnedEntity({
             id: entity.id,
+            name: entity.name,
             routerLink: entity.routerLink,
             pinnableType: entity.pinnableType,
             url:  this._fudgeArmUrl(entity),
@@ -107,11 +108,9 @@ export class PinnedEntityService {
      * the drop down.
      */
     private _fudgeArmUrl(favorite: PinnableEntity) {
-        if (!favorite.url || favorite.pinnableType === PinnedEntityType.BatchApplication) {
-            return `https://${this._currentAccountEndpoint}/applications/${favorite.id}`;
-        }
-
-        return favorite.url;
+        return !favorite.url
+            ? `https://${this._currentAccountEndpoint}${favorite.routerLink.join("/")}`
+            : favorite.url;
     }
 
     private get _jsonFilename(): string {

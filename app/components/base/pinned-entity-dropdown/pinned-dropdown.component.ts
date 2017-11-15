@@ -50,16 +50,14 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
 
     public entityType(favorite: PinnedEntity) {
         switch (favorite.pinnableType) {
-            case PinnedEntityType.BatchApplication:
+            case PinnedEntityType.Application:
                 return "Batch application";
             case PinnedEntityType.Job:
                 return "Batch job";
-            case PinnedEntityType.Task:
-                return "Batch task";
             case PinnedEntityType.Pool:
                 return "Batch pool";
-            case PinnedEntityType.Node:
-                return "Compute node";
+            case PinnedEntityType.FileGroup:
+                return "File group";
             default:
                 return "unknown";
         }
@@ -67,14 +65,14 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
 
     public entityIcon(favorite: PinnedEntity) {
         switch (favorite.pinnableType) {
-            case PinnedEntityType.BatchApplication:
+            case PinnedEntityType.Application:
                 return "fa-file-archive-o";
             case PinnedEntityType.Job:
-            case PinnedEntityType.Task:
                 return "fa-tasks";
             case PinnedEntityType.Pool:
-            case PinnedEntityType.Node:
                 return "fa-database";
+            case PinnedEntityType.FileGroup:
+                return "fa-cloud-upload";
             default:
                 return "fa-question";
         }

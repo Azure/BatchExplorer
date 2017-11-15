@@ -7,7 +7,7 @@
             [class.selected]="favorite.url === currentUrl" [title]="favorite.id">
             <i class="fa" [ngClass]="entityIcon(favorite)"></i>
             <div class="main">
-                <div class="alias">{{favorite.id}}</div>
+                <div class="alias">{{favorite.name || favorite.id}}</div>
                 <div class="url">{{entityType(favorite)}}</div>
             </div>
             <div *ngIf="favorite.url === currentUrl" class="extra">

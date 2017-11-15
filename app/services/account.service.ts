@@ -104,7 +104,6 @@ export class AccountService {
     }
 
     public selectAccount(accountId: string) {
-        console.log("AccountService.selectAccount: ", accountId);
         const current = this._currentAccountId.value;
         if (current === accountId) {
             return;
