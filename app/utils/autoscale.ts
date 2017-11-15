@@ -29,6 +29,17 @@ const timeInterval = [
 export class AutoscaleLanguage {
     public static define() {
         monaco.languages.register({ id: "batch-autoscale" });
+        monaco.languages.setLanguageConfiguration("batch-autoscale", {
+            wordPattern: /(-?\d*\.\d\w*)|([^\`\~\!\@\#\%\^\&\*\(\)\-\=\+\[\{\]\}\\\|\;\:\'\"\,\.\<\>\/\?\s]+)/g,
+            comments: {
+                lineComment: "//",
+            },
+            autoClosingPairs: [
+                { open: "(", close: ")", notIn: ["string"] },
+                { open: '"', close: '"', notIn: ["string"] },
+            ],
+        });
+
         monaco.languages.setMonarchTokensProvider("batch-autoscale", {
             brackets: [
                 { open: "[", close: "]", token: "delimiter.square" },
@@ -69,7 +80,7 @@ export class AutoscaleLanguage {
                             "@default": "identifier",
                         },
                     }],
-                    [/[$a-zA-Z_]\w*/, {
+                    [/[\$a-zA-Z_]\w*/, {
                         cases: {
                             "@builtinVariables": "predefined",
                             "@default": "identifier",
