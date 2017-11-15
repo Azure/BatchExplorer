@@ -4,7 +4,6 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CheckerPlugin = require("awesome-typescript-loader").CheckerPlugin;
 const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 const CopyWebpackPlugin = require("copy-webpack-plugin");
-const WriteFilePlugin = require("write-file-webpack-plugin");
 
 const isDevServer = helpers.isWebpackDevServer();
 const METADATA = {
@@ -58,9 +57,6 @@ const baseConfig = {
             { context: "app/assets", from: "**/*", to: "assets" },
             { from: "node_modules/monaco-editor/min/vs", to: "vendor/vs",  },
         ]),
-        new WriteFilePlugin({
-            test: /vendor\/vs.*/
-        }),
         new CommonsChunkPlugin({
             name: "polyfills",
             chunks: ["polyfills"],

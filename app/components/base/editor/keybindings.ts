@@ -1,7 +1,7 @@
 /**
- * Virtual Key Codes, the value does not hold any inherent meaning.
- * Inspired somewhat from https://msdn.microsoft.com/en-us/library/windows/desktop/dd375731(v=vs.85).aspx
- * But these are "more general", as they should work across browsers & OS`s.
+ * This file contains a copy of all the key codes defined in monaco editor.
+ * Because monaco might not be loaded by the time you want to define shortcuts
+ * we need to have all those code ready to use.
  */
 export enum KeyCode {
     /**

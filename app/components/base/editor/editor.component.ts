@@ -68,7 +68,6 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     }
 
     constructor(
-        // private changeDetector: ChangeDetectorRef,
         private elementRef: ElementRef,
         private monacoLoader: MonacoLoader) { }
 
