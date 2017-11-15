@@ -1,7 +1,42 @@
+# 0.9.0
+[All items](https://github.com/Azure/BatchLabs/milestone/10?closed=1)
+
+### Feature:
+
+* Make start task command line textbox wrap [\#847](https://github.com/Azure/BatchLabs/issues/847)
+* Command line properties is often too long to be displayed in properties. [\#837](https://github.com/Azure/BatchLabs/issues/837)
+* Show a link to the logs folder to help debug [\#836](https://github.com/Azure/BatchLabs/issues/836)
+* Auto delete package versions when deleting an application package [\#831](https://github.com/Azure/BatchLabs/issues/831)
+* Display the application version [\#820](https://github.com/Azure/BatchLabs/issues/820)
+* Add evaluate autoscale formula  [\#817](https://github.com/Azure/BatchLabs/issues/817)
+* Add compute node errors banner [\#816](https://github.com/Azure/BatchLabs/issues/816)
+* Job create experience more details [\#794](https://github.com/Azure/BatchLabs/issues/794)
+* Upgrade to the new azure-batch sdk that work in the browser env [\#792](https://github.com/Azure/BatchLabs/issues/792)
+* Add context menu to app packages quick-list [\#776](https://github.com/Azure/BatchLabs/issues/776)
+* Allow file group creation from NCJ job submission page [\#761](https://github.com/Azure/BatchLabs/issues/761)
+
+### Bug:
+
+* Can't add a task when job is disabled [\#864](https://github.com/Azure/BatchLabs/issues/864)
+* Can't preview image on Windows or Linux nodes [\#853](https://github.com/Azure/BatchLabs/issues/853)
+* Disable "reimage node" option for nodes in IaaS pool [\#852](https://github.com/Azure/BatchLabs/issues/852)
+* User Identity not showing up in start task [\#849](https://github.com/Azure/BatchLabs/issues/849)
+* Adding a new task seems to produce blank list in the table [\#841](https://github.com/Azure/BatchLabs/issues/841)
+* When deleting job from the details card the css overlay is not removed. [\#828](https://github.com/Azure/BatchLabs/issues/828)
+* Failed to upload file groups for classic storage accounts [\#819](https://github.com/Azure/BatchLabs/issues/819)
+
+### Other:
+
+* Getting ready for version 0.9.0 [\#866](https://github.com/Azure/BatchLabs/issues/866)
+* Set user agent to BatchLabs for all request [\#861](https://github.com/Azure/BatchLabs/issues/861)
+* Add suport for maxWallClockTime in the create job experience [\#839](https://github.com/Azure/BatchLabs/issues/839)
+* Refactor rx-entity-proxy to a new system [\#795](https://github.com/Azure/BatchLabs/issues/795)
+* Make an about page [\#279](https://github.com/Azure/BatchLabs/issues/279)
+
 # 0.8.0
 [All items](https://github.com/Azure/BatchLabs/milestone/9?closed=1)
 
-### feature:
+### Feature:
 
 * Ncj app gallery [\#786](https://github.com/Azure/BatchLabs/issues/786)
 * Task output messages confusing for customers [\#769](https://github.com/Azure/BatchLabs/issues/769)
@@ -12,7 +47,7 @@
 * Ability to resize the tree view in the file explorer(Movable splitter) [\#724](https://github.com/Azure/BatchLabs/issues/724)
 * Find a way to surface prep and release task failures [\#708](https://github.com/Azure/BatchLabs/issues/708)
 
-### bug:
+### Bug:
 
 * Form picker(Start task) reset to empty from when clicking cancel [\#801](https://github.com/Azure/BatchLabs/issues/801)
 * Typo in pool configuration [\#798](https://github.com/Azure/BatchLabs/issues/798)
@@ -27,7 +62,7 @@
 * Copy and paste doesn't work on osx prod build [\#727](https://github.com/Azure/BatchLabs/issues/727)
 * Misleading message "The files for the specified task have been cleaned from the node." [\#689](https://github.com/Azure/BatchLabs/issues/689)
 
-### other:
+### Other:
 * Organize summary card for all entities [\#754](https://github.com/Azure/BatchLabs/issues/754)
 * Disable tab animations [\#747](https://github.com/Azure/BatchLabs/issues/747)
 * show subscription name in the account details subtitle [\#740](https://github.com/Azure/BatchLabs/issues/740)
