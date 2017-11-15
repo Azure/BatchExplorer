@@ -1,4 +1,5 @@
 import { Component, Input, OnChanges } from "@angular/core";
+import { EditorConfig } from "app/components/base/editor";
 import { Record } from "app/core";
 import { EntityConfigurationView } from "app/models";
 import { SettingsService } from "app/services";
@@ -14,13 +15,10 @@ export class EntityConfigurationComponent implements OnChanges {
 
     public showJson = false;
     public jsonValue = "{}";
-    public editorConfig: CodeMirror.EditorConfiguration = {
+    public editorConfig: EditorConfig = {
+        language: "json",
         readOnly: true,
-        lineNumbers: true,
-        mode: "application/json",
         tabSize: 2,
-        indentUnit: 2,
-        autoRefresh: 250,
     } as any;
 
     constructor(settingsService: SettingsService) {
