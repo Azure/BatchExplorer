@@ -75,28 +75,29 @@ export class PricingService {
                 return Observable.of(this._prices[key]);
             }
             return this._getResourceFor(account.location, os).flatMap((specs) => {
-                const subId = account.subscription.subscriptionId;
+                // const subId = account.subscription.subscriptionId;
 
-                const options = new RequestOptions();
-                options.headers = new Headers();
-                options.headers.append("x-ms-client-request-id", SecureUtils.uuid());
-                options.headers.append("x-ms-client-session-id", SecureUtils.uuid());
-                options.headers.append("Content-type", "application/json");
-                const data = {
-                    subscriptionId: subId,
-                    specResourceSets: specs,
-                    specsToAllowZeroCost: [],
-                    specType: "VM",
-                };
-                return this.arm.post(specCostUrl, JSON.stringify(data), options).map((response) => {
-                    const costs = response.json().costs;
-                    if (!costs) {
-                        log.error("Unexpected format returned from GetSpecsCosts", response.json());
-                        return [];
-                    }
-                    const prices = this._prices[key] = List<SpecCost>(costs.map(x => new SpecCost(x)));
-                    return prices as any;
-                });
+                // const options = new RequestOptions();
+                // options.headers = new Headers();
+                // options.headers.append("x-ms-client-request-id", SecureUtils.uuid());
+                // options.headers.append("x-ms-client-session-id", SecureUtils.uuid());
+                // options.headers.append("Content-type", "application/json");
+                // const data = {
+                //     subscriptionId: subId,
+                //     specResourceSets: specs,
+                //     specsToAllowZeroCost: [],
+                //     specType: "VM",
+                // };
+                // return this.arm.post(specCostUrl, JSON.stringify(data), options).map((response) => {
+                //     const costs = response.json().costs;
+                //     if (!costs) {
+                //         log.error("Unexpected format returned from GetSpecsCosts", response.json());
+                //         return [];
+                //     }
+                //     const prices = this._prices[key] = List<SpecCost>(costs.map(x => new SpecCost(x)));
+                //     return prices as any;
+                // });
+                return Observable.of(List([]));
             });
         });
     }
