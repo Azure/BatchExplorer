@@ -25,6 +25,7 @@ export class PerformanceData {
     public update() {
         if (!this.appId) {
             log.error("App id cannot be null!");
+            return;
         }
         this.appInsightsQueryService.getPoolPerformance(this.appId, this.pool.id, this.historySize)
             .subscribe((metrics) => {

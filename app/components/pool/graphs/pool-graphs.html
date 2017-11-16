@@ -3,93 +3,111 @@
     <div [other-fix]="rebootFailedNodes" fixMessage="Reboot failed nodes"></div>
     <div *ngIf="isPaasPool" [other-fix]="reimageFailedNodes" fixMessage="Reimage failed nodes"></div>
 </bl-banner>
-<div class="charts-previews">
-    <div class="preview" (click)="focusGraph(AvailableGraph.Heatmap)" [class.focused]="focusedGraph === AvailableGraph.Heatmap">
-        <div class="small-preview">
-            <bl-nodes-heatmap [pool]="pool" [nodes]="nodes" [showRunningTasks]="false" [showLegend]="false" [interactive]="false" [limitNode]="10"></bl-nodes-heatmap>
-        </div>
-        <div class="info">
-            <div class="label">Heatmap</div>
-        </div>
-    </div>
-    <div class="preview" (click)="focusGraph(AvailableGraph.AvailableNodes)" [class.focused]="focusedGraph === AvailableGraph.AvailableNodes">
-        <bl-history-graph [max]="pool.targetNodes" class="small-preview" [history]="runningNodesHistory.history" [interactive]="false"
-            [historySize]="selectedHistoryLength.value">
-        </bl-history-graph>
-        <div class="info">
-            <div class="label">Available nodes</div>
-        </div>
-    </div>
-    <div class="preview" (click)="focusGraph(AvailableGraph.RunningTasks)" [class.focused]="focusedGraph === AvailableGraph.RunningTasks">
-        <bl-history-graph [max]="maxRunningTasks" class="small-preview" [history]="runningTaskHistory.history" [interactive]="false"
-            [historySize]="selectedHistoryLength.value">
-        </bl-history-graph>
-        <div class="info">
-            <div class="label">Running tasks</div>
-        </div>
-    </div>
-    <div class="preview" (click)="focusGraph(AvailableGraph.Cpu)" [class.focused]="focusedGraph === AvailableGraph.Cpu">
-        <bl-cpu-usage-graph #cpuUsage [data]="performanceData" [interactive]="false" class="small-preview"></bl-cpu-usage-graph>
-        <div class="info">
-            <div class="label">Cpu</div>
-            <div class="status">{{cpuUsage.status | async}}</div>
-        </div>
-    </div>
-    <div class="preview" (click)="focusGraph(AvailableGraph.Memory)" [class.focused]="focusedGraph === AvailableGraph.Memory">
-        <bl-memory-usage-graph #memUsage [data]="performanceData" [interactive]="false" class="small-preview"></bl-memory-usage-graph>
-        <div class="info">
-            <div class="label">Memory</div>
-            <div class="status">{{memUsage.status | async}}</div>
-        </div>
-    </div>
-    <div class="preview" (click)="focusGraph(AvailableGraph.Disk)" [class.focused]="focusedGraph === AvailableGraph.Disk">
-        <bl-disk-usage-graph #diskUsage [data]="performanceData" [interactive]="false" class="small-preview"></bl-disk-usage-graph>
-        <div class="info">
-            <div class="label">Disk</div>
-            <div class="status">{{diskUsage.status | async}}</div>
-        </div>
-    </div>
-    <div class="preview" (click)="focusGraph(AvailableGraph.Network)" [class.focused]="focusedGraph === AvailableGraph.Network">
-        <bl-network-usage-graph #netUsage [data]="performanceData" [interactive]="false" class="small-preview"></bl-network-usage-graph>
-        <div class="info">
-            <div class="label">Network</div>
-            <div class="status">{{netUsage.status | async}}</div>
-        </div>
-    </div>
-    <div class="config">
-        <mat-form-field>
-            <mat-select [formControl]="selectedHistoryLength" placeholder="History">
-                <mat-option [value]="historyLength.TenMinute">10 Minutes</mat-option>
-                <mat-option [value]="historyLength.OneHour">1 Hour</mat-option>
-                <mat-option [value]="historyLength.OnDay">24 Hour</mat-option>
-                <mat-option [value]="historyLength.OnDay">7 days</mat-option>
-            </mat-select>
-        </mat-form-field>
-    </div>
-</div>
 
-<div class="focused-graph" [ngSwitch]="focusedGraph">
-    <div *ngSwitchCase="AvailableGraph.Heatmap" class="full-display-heatmap">
-        <bl-nodes-heatmap [pool]="pool" [nodes]="nodes" [jobs]="jobs"></bl-nodes-heatmap>
+<div class="graphs-container">
+    <div class="charts-previews">
+        <div class="preview" (click)="focusGraph(AvailableGraph.Heatmap)" [class.focused]="focusedGraph === AvailableGraph.Heatmap">
+            <div class="small-preview">
+                <bl-nodes-heatmap [pool]="pool" [nodes]="nodes" [showRunningTasks]="false" [showLegend]="false" [interactive]="false" [limitNode]="10"></bl-nodes-heatmap>
+            </div>
+            <div class="info">
+                <div class="label">Heatmap</div>
+            </div>
+        </div>
+        <div class="preview" (click)="focusGraph(AvailableGraph.AvailableNodes)" [class.focused]="focusedGraph === AvailableGraph.AvailableNodes">
+            <bl-history-graph [max]="pool.targetNodes" class="small-preview" [history]="runningNodesHistory.history" [interactive]="false"
+                [historySize]="selectedHistoryLength.value">
+            </bl-history-graph>
+            <div class="info">
+                <div class="label">Available nodes</div>
+            </div>
+        </div>
+        <ng-container *ngIf="appInsightsEnabled">
+            <div class="preview" (click)="focusGraph(AvailableGraph.RunningTasks)" [class.focused]="focusedGraph === AvailableGraph.RunningTasks">
+                <bl-history-graph [max]="maxRunningTasks" class="small-preview" [history]="runningTaskHistory.history" [interactive]="false"
+                    [historySize]="selectedHistoryLength.value">
+                </bl-history-graph>
+                <div class="info">
+                    <div class="label">Running tasks</div>
+                </div>
+            </div>
+            <div class="preview" (click)="focusGraph(AvailableGraph.Cpu)" [class.focused]="focusedGraph === AvailableGraph.Cpu">
+                <bl-cpu-usage-graph #cpuUsage [data]="performanceData" [interactive]="false" class="small-preview"></bl-cpu-usage-graph>
+                <div class="info">
+                    <div class="label">Cpu</div>
+                    <div class="status">{{cpuUsage.status | async}}</div>
+                </div>
+            </div>
+            <div class="preview" (click)="focusGraph(AvailableGraph.Memory)" [class.focused]="focusedGraph === AvailableGraph.Memory">
+                <bl-memory-usage-graph #memUsage [data]="performanceData" [interactive]="false" class="small-preview"></bl-memory-usage-graph>
+                <div class="info">
+                    <div class="label">Memory</div>
+                    <div class="status">{{memUsage.status | async}}</div>
+                </div>
+            </div>
+            <div class="preview" (click)="focusGraph(AvailableGraph.Disk)" [class.focused]="focusedGraph === AvailableGraph.Disk">
+                <bl-disk-usage-graph #diskUsage [data]="performanceData" [interactive]="false" class="small-preview"></bl-disk-usage-graph>
+                <div class="info">
+                    <div class="label">Disk</div>
+                    <div class="status">{{diskUsage.status | async}}</div>
+                </div>
+            </div>
+            <div class="preview" (click)="focusGraph(AvailableGraph.Network)" [class.focused]="focusedGraph === AvailableGraph.Network">
+                <bl-network-usage-graph #netUsage [data]="performanceData" [interactive]="false" class="small-preview"></bl-network-usage-graph>
+                <div class="info">
+                    <div class="label">Network</div>
+                    <div class="status">{{netUsage.status | async}}</div>
+                </div>
+            </div>
+
+        </ng-container>
+        <ng-container *ngIf="!appInsightsEnabled">
+            <div class="preview" (click)="focusGraph(AvailableGraph.EnableAppInsights)" [class.focused]="focusedGraph === AvailableGraph.EnableAppInsights">
+                <bl-cpu-usage-graph [data]="performanceData" [interactive]="false" class="small-preview"></bl-cpu-usage-graph>
+                <div class="info">
+                    <div class="label">App insights</div>
+                    <div class="status">Cpu, memory, disk, etc.</div>
+                </div>
+            </div>
+        </ng-container>
+        <div class="config">
+            <mat-form-field>
+                <mat-select [formControl]="selectedHistoryLength" placeholder="History">
+                    <mat-option [value]="historyLength.TenMinute">10 Minutes</mat-option>
+                    <mat-option [value]="historyLength.OneHour">1 Hour</mat-option>
+                    <mat-option [value]="historyLength.OnDay">24 Hour</mat-option>
+                    <mat-option [value]="historyLength.OnDay">7 days</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
     </div>
-    <div *ngSwitchCase="AvailableGraph.AvailableNodes" class="full-display">
-        <bl-history-graph [max]="pool.targetNodes" class="full-display" [history]="runningNodesHistory.history" [historySize]="selectedHistoryLength.value">
-        </bl-history-graph>
-    </div>
-    <div *ngSwitchCase="AvailableGraph.RunningTasks" class="full-display">
-        <bl-history-graph [max]="maxRunningTasks" class="full-display" [history]="runningTaskHistory.history" [historySize]="selectedHistoryLength.value">
-        </bl-history-graph>
-    </div>
-    <div *ngSwitchCase="AvailableGraph.Cpu" class="full-display">
-        <bl-cpu-usage-graph [data]="performanceData" class="full-display"></bl-cpu-usage-graph>
-    </div>
-    <div *ngSwitchCase="AvailableGraph.Memory" class="full-display">
-        <bl-memory-usage-graph [data]="performanceData" class="full-display"></bl-memory-usage-graph>
-    </div>
-    <div *ngSwitchCase="AvailableGraph.Disk" class="full-display">
-        <bl-disk-usage-graph [data]="performanceData" class="full-display"></bl-disk-usage-graph>
-    </div>
-    <div *ngSwitchCase="AvailableGraph.Network" class="full-display">
-        <bl-network-usage-graph metric="network" [data]="performanceData" class="full-display"></bl-network-usage-graph>
+
+    <div class="focused-graph" [ngSwitch]="focusedGraph">
+        <div *ngSwitchCase="AvailableGraph.Heatmap" class="full-display-heatmap">
+            <bl-nodes-heatmap [pool]="pool" [nodes]="nodes" [jobs]="jobs"></bl-nodes-heatmap>
+        </div>
+        <div *ngSwitchCase="AvailableGraph.AvailableNodes" class="full-display">
+            <bl-history-graph [max]="pool.targetNodes" class="full-display" [history]="runningNodesHistory.history" [historySize]="selectedHistoryLength.value">
+            </bl-history-graph>
+        </div>
+        <div *ngSwitchCase="AvailableGraph.RunningTasks" class="full-display">
+            <bl-history-graph [max]="maxRunningTasks" class="full-display" [history]="runningTaskHistory.history" [historySize]="selectedHistoryLength.value">
+            </bl-history-graph>
+        </div>
+        <div *ngSwitchCase="AvailableGraph.Cpu" class="full-display">
+            <bl-cpu-usage-graph [data]="performanceData" class="full-display"></bl-cpu-usage-graph>
+        </div>
+        <div *ngSwitchCase="AvailableGraph.Memory" class="full-display">
+            <bl-memory-usage-graph [data]="performanceData" class="full-display"></bl-memory-usage-graph>
+        </div>
+        <div *ngSwitchCase="AvailableGraph.Disk" class="full-display">
+            <bl-disk-usage-graph [data]="performanceData" class="full-display"></bl-disk-usage-graph>
+        </div>
+        <div *ngSwitchCase="AvailableGraph.Network" class="full-display">
+            <bl-network-usage-graph metric="network" [data]="performanceData" class="full-display"></bl-network-usage-graph>
+        </div>
+        <div *ngSwitchCase="AvailableGraph.EnableAppInsights" class="full-display">
+            <bl-enable-app-insights-doc></bl-enable-app-insights-doc>
+        </div>
     </div>
 </div>

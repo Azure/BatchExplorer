@@ -4,7 +4,13 @@ bl-pool-graphs {
     display: block;
     overflow: hidden;
     display: flex;
+    flex-direction: column;
     height: 100%;
+
+    .graphs-container {
+        display: flex;
+        height: 100%;
+    }
 
     .charts-previews {
         user-select: none;

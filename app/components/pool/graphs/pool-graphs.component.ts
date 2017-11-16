@@ -23,6 +23,7 @@ enum AvailableGraph {
     Memory,
     Network,
     Disk,
+    EnableAppInsights,
 }
 
 const historyLength = {
@@ -126,6 +127,8 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
                 return;
             }
 
+            this._checkTabIsValid();
+
             this.performanceData.update();
             this.data.updateParams({ poolId: this.pool.id });
             this.data.refreshAll(false);
@@ -166,6 +169,9 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
         this.focusedGraph = graph;
     }
 
+    public get appInsightsEnabled() {
+        return Boolean(this.performanceData.appId);
+    }
     private _scanForProblems() {
         const failedNodes = this._stateCounter.get(NodeState.startTaskFailed).getValue();
         const nodeCount = this.nodes.size;
@@ -183,5 +189,18 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
             FilterBuilder.prop("state").eq(JobState.active),
             FilterBuilder.prop("executionInfo/poolId").eq(this.pool.id),
         ).toOData();
+    }
+
+
+    private _checkTabIsValid() {
+        if (this.appInsightsEnabled && this.focusedGraph === AvailableGraph.EnableAppInsights) {
+            this.focusGraph(AvailableGraph.Heatmap);
+        } else if (this.appInsightsEnabled
+            && !(this.focusedGraph === AvailableGraph.EnableAppInsights
+                || this.focusedGraph === AvailableGraph.Heatmap
+                || this.focusedGraph === AvailableGraph.AvailableNodes
+                || this.focusedGraph === AvailableGraph.RunningTasks)) {
+            this.focusGraph(AvailableGraph.Heatmap);
+        }
     }
 }
