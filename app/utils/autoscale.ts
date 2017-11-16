@@ -1,5 +1,3 @@
-import * as CodeMirror from "codemirror";
-
 const variables = [
     "$ActiveTasks", "$CPUPercent", "$CurrentDedicated", "$DiskBytes",
     "$DiskReadBytes", "$DiskReadOps", "$DiskWriteBytes", "$DiskWriteOps",
@@ -28,79 +26,117 @@ const timeInterval = [
     "TimeInterval_Hour", "TimeInterval_Day", "TimeInterval_Week", "TimeInterval_Year",
 ];
 
-const mappedKeywords = variables.map((keyword) => `\\$\\b${keyword.substring(1)}\\b`);
-const keywordRegex = new RegExp(mappedKeywords.join("|"));
+export class AutoscaleLanguage {
+    public static define() {
+        monaco.languages.register({ id: "batch-autoscale" });
+        monaco.languages.setLanguageConfiguration("batch-autoscale", {
+            wordPattern: /(-?\d*\.\d\w*)|([^\`\~\!\@\#\%\^\&\*\(\)\-\=\+\[\{\]\}\\\|\;\:\'\"\,\.\<\>\/\?\s]+)/g,
+            comments: {
+                lineComment: "//",
+            },
+            autoClosingPairs: [
+                { open: "(", close: ")", notIn: ["string"] },
+                { open: '"', close: '"', notIn: ["string"] },
+            ],
+        });
 
-const mappedMath = mathFunc.map((math) => `\\b${math}\\b`);
-const mathRegex = new RegExp(mappedMath.join("|"));
+        monaco.languages.setMonarchTokensProvider("batch-autoscale", {
+            brackets: [
+                { open: "[", close: "]", token: "delimiter.square" },
+                { open: "(", close: ")", token: "delimiter.parenthesis" },
+            ],
+            keywords: [...timeInterval, ...types, "true", "false", "null"],
+            operators: [
+                "-", "+", "*", "=", ">", "<", "!",
+            ],
 
-const mappedSystemFunc = systemFunc.map((sf) => `\\b${sf}\\b`);
-const obtainRegex = new RegExp(mappedSystemFunc.join("|"));
+            // we include these common regular expressions
+            symbols: /[=><!~?:&|+\-*\/\^%]+/,
+            builtinFunctions: [...mathFunc, ...systemFunc],
+            builtinVariables: variables,
 
-const mappedTypes = types.map((type) => `\\b${type}\\b`);
-const typesRegex = new RegExp(mappedTypes.join("|"));
+            tokenizer: {
+                root: [
+                    // whitespace
+                    { include: "@whitespace" },
+                    { include: "@numbers" },
+                    { include: "@strings" },
 
-const mappedInterval = timeInterval.map((interval) => `\\b${interval}\\b`);
-const intervalRegex = new RegExp(mappedInterval.join("|"));
+                    [/@symbols/, {
+                        cases: {
+                            "@operators": "delimiter",
+                            "@default": "",
+                        },
+                    }],
 
-const atomRegex = /\b(true|false|null)\b/;
-const numberRegex = /0x[a-f\d]+|[-+]?(?:\.\d+|\d+\.?\d*)(?:e[-+]?\d+)?/i;
-const operatorRegex = /[-+\/*=<>!]+/;
-const commentRegex = /^\/\/(.*)/;
-const quoteRegex = /"(.*)"/;
+                    // numbers
+                    [/[;,.]/, "delimiter"],
+                    [/[()]/, "@brackets"],
+                    [/[\w@#]+/, {
+                        cases: {
+                            "@keywords": "keyword",
+                            "@operators": "operator",
+                            "@builtinFunctions": "predefined",
+                            "@default": "identifier",
+                        },
+                    }],
+                    [/[\$a-zA-Z_]\w*/, {
+                        cases: {
+                            "@builtinVariables": "predefined",
+                            "@default": "identifier",
+                        },
+                    }],
+                ],
+                whitespace: [
+                    [/[ \t\r\n]+/, ""],
+                    [/\/\*/, "comment", "@comment"],
+                    [/\/\/.*$/, "comment"],
+                ],
+                comment: [
+                    [/[^\/*]+/, "comment"],
+                    [/[\/*]/, "comment"],
+                ],
+                numbers: [
+                    [/0[xX][0-9a-fA-F]*/, "number"],
+                    [/0x[a-f\d]+|[-+]?(?:\.\d+|\d+\.?\d*)(?:e[-+]?\d+)?/i, "number"],
+                ],
+                strings: [
+                    [/N"/, { token: "string", next: "@string" }],
+                    [/"/, { token: "string", next: "@string" }],
+                ],
+                string: [
+                    [/[^']+/, "string"],
+                    [/""/, "string"],
+                    [/"/, { token: "string", next: "@pop" }],
+                ],
+            },
+        } as any);
 
-CodeMirror.defineMode("autoscale", () => {
-    return {
-        token: (stream, state) => {
-            if (stream.match(commentRegex)) {
-                return "comment";
-            } else if (stream.match(quoteRegex)) {
-                return "string";
-            } else if (stream.match(keywordRegex) || stream.match(intervalRegex)) {
-                return "variables";
-            } else if (stream.match(mathRegex)) {
-                return "functions";
-            } else if (stream.match(obtainRegex)) {
-                return "math";
-            } else if (stream.match(typesRegex)) {
-                return "builtin";
-            } else if (stream.match(atomRegex)) {
-                return "atom";
-            } else if (stream.match(numberRegex)) {
-                return "number";
-            } else if (stream.match(operatorRegex)) {
-                return "operator";
-            } else {
-                stream.next();
-                return null;
-            }
-        },
-    };
-});
+        // Register a completion item provider for the new language
+        monaco.languages.registerCompletionItemProvider("batch-autoscale", {
+            provideCompletionItems: (editor, position) => {
+                return [
+                    ...[...variables, ...timeInterval].map((x) => {
+                        return {
+                            label: x,
+                            kind: monaco.languages.CompletionItemKind.Variable,
+                        };
+                    }),
+                    ...[...mathFunc, ...systemFunc].map((x) => {
+                        return {
+                            label: x,
+                            kind: monaco.languages.CompletionItemKind.Function,
+                        };
+                    }),
+                    ...types.map((x) => {
+                        return {
+                            label: x,
+                            kind: monaco.languages.CompletionItemKind.Keyword,
+                        };
+                    }),
+                ];
+            },
+        });
 
-CodeMirror.registerHelper("hint", "autoscale", (editor) => {
-    let cur = editor.getCursor();
-    let curLine = editor.getLine(cur.line);
-    let start = cur.ch;
-    let end = start;
-    while (end < curLine.length && /[\w$]+/.test(curLine.charAt(end))) { ++end; }
-    while (start && /[\w$]+/.test(curLine.charAt(start - 1))) { --start; }
-    let curWord = start !== end && curLine.slice(start, end).replace("$", "\\$");
-    let regex = new RegExp("^" + curWord, "i");
-    const results = variables.filter((item) => {
-        return item.match(regex);
-    }).concat(mathFunc.filter((item) => {
-        return item.match(regex);
-    })).concat(systemFunc.filter((item) => {
-        return item.match(regex);
-    })).concat(types.filter((item) => {
-        return item.match(regex);
-    })).concat(timeInterval.filter((item) => {
-        return item.match(regex);
-    }));
-    return {
-        list: (!curWord ? [] : results).sort(),
-        from: CodeMirror.Pos(cur.line, start),
-        to: CodeMirror.Pos(cur.line, end),
-    };
-});
+    }
+}

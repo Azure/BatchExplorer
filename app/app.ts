@@ -12,8 +12,6 @@ import { handleCoreError } from "./error-handler";
 import "chart.js";
 import "hammerjs";
 
-import "codemirror/addon/hint/show-hint.css";
-import "codemirror/lib/codemirror.css";
 import "font-awesome/css/font-awesome.min.css";
 import "roboto-fontface/css/roboto/roboto-fontface.css";
 import "./environment";
