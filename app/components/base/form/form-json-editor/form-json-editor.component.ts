@@ -2,6 +2,7 @@ import { Component, OnDestroy, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { Subscription } from "rxjs";
 
+import { EditorConfig } from "app/components/base/editor";
 import { validJsonConfig } from "app/utils/validators";
 import "./form-json-editor.scss";
 
@@ -18,13 +19,12 @@ const emptyJson = "{\n\n}";
 export class FormJsonEditorComponent implements ControlValueAccessor, OnDestroy {
     public jsonControl = new FormControl(emptyJson, null, validJsonConfig);
 
-    public editorConfig: CodeMirror.EditorConfiguration = {
-        lineNumbers: true,
-        mode: "application/json",
+    public editorConfig: EditorConfig = {
+        language: "json",
         tabSize: 2,
-        indentUnit: 2,
-        gutters: ["CodeMirror-lint-markers"],
-        lint: true,
+        minimap: {
+            enabled: false,
+        },
     };
 
     private _propagateChange: any;
