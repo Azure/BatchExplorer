@@ -1,4 +1,4 @@
-import { QueryCache, ContinuationToken, ListOptions } from "app/services/core";
+import { ContinuationToken, ListOptions, QueryCache } from "app/services/core";
 import { OrderedSet } from "immutable";
 
 class FakeClientProxy {

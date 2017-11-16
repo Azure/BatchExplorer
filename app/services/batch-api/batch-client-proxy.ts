@@ -1,4 +1,4 @@
-import {BatchServiceClient} from "azure-batch";
+import { BatchServiceClient } from "azure-batch";
 
 import AccountProxy from "./accountProxy";
 import { FileProxy } from "./fileProxy";

@@ -20,7 +20,6 @@ export class JobHookTaskService extends ServiceBase {
     constructor(batchService: BatchClientService) {
         super(batchService);
 
-
         this._listGetter = new BatchListGetter(JobHookTask, this.batchService, {
             cache: ({ jobId }) => this._cache.getCache({ jobId }),
             list: (client, { jobId }, options) => {

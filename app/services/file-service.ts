@@ -86,7 +86,6 @@ export class FileService extends ServiceBase {
             cache: (params) => this.getTaskFileCache(params),
             list: (client, { jobId, taskId }, options) => {
                 const batchOptions = { ...options };
-                console.log("Options", options);
                 if (options.original.folder) {
                     batchOptions.filter = `startswith(name, '${options.original.folder}')`;
                 }

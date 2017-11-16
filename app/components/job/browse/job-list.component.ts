@@ -13,7 +13,7 @@ import { ListOrTableBase } from "app/components/base/selectable-list";
 import { TableComponent } from "app/components/base/table";
 import { Job, JobState } from "app/models";
 import { FailureInfoDecorator } from "app/models/decorators";
-import { JobService, JobListParams } from "app/services";
+import { JobListParams, JobService } from "app/services";
 import { ListView } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
 import {

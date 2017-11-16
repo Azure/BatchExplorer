@@ -5,7 +5,8 @@ import { Subscription } from "rxjs";
 
 import { AccountResource, BatchApplication, Job, Pool, ServerError } from "app/models";
 import {
-    AccountParams, AccountService, ApplicationListParams, ApplicationService, JobListParams, JobService, PoolListParams, PoolService,
+    AccountParams, AccountService, ApplicationListParams, ApplicationService,
+    JobListParams, JobService, PoolListParams, PoolService,
 } from "app/services";
 import { EntityView, ListView } from "app/services/core";
 

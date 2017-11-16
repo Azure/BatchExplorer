@@ -4,7 +4,7 @@ import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
 import { Pool } from "app/models";
-import { PoolService, VmSizeService, PoolListParams } from "app/services";
+import { PoolListParams, PoolService, VmSizeService } from "app/services";
 import { ListOptionsAttributes, ListView } from "app/services/core";
 import { PoolUtils } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
