@@ -1,46 +1,34 @@
 import { Dto, DtoAttr } from "app/core";
 import { AppPackageReferenceDto } from "./application-package-reference.dto";
 import { EnvironmentSetting } from "./metadata.dto";
+import { TaskConstraintsDto } from "./task-constraints.dto";
 
 export class TaskCreateDto extends Dto<TaskCreateDto> {
-    @DtoAttr()
-    public id: string;
+    @DtoAttr() public id: string;
 
-    @DtoAttr()
-    public displayName?: string;
+    @DtoAttr() public displayName?: string;
 
-    @DtoAttr()
-    public commandLine: string;
+    @DtoAttr() public commandLine: string;
 
-    @DtoAttr()
-    public resourceFiles?: ResourceFileDto[];
+    @DtoAttr() public resourceFiles?: ResourceFileDto[];
 
-    @DtoAttr()
-    public fileGroups?: FileGroupDto[];
+    @DtoAttr() public fileGroups?: FileGroupDto[];
 
-    @DtoAttr()
-    public applicationPackageReferences?: AppPackageReferenceDto[];
+    @DtoAttr() public applicationPackageReferences?: AppPackageReferenceDto[];
 
-    @DtoAttr()
-    public environmentSettings?: EnvironmentSetting[];
+    @DtoAttr() public environmentSettings?: EnvironmentSetting[];
 
-    @DtoAttr()
-    public affinityInfo?: any;
+    @DtoAttr() public affinityInfo?: any;
 
-    @DtoAttr()
-    public constraints?: ConstraintDto;
+    @DtoAttr() public constraints?: TaskConstraintsDto;
 
-    @DtoAttr()
-    public userIdentity?: any;
+    @DtoAttr() public userIdentity?: any;
 
-    @DtoAttr()
-    public multiInstanceSettings?: any;
+    @DtoAttr() public multiInstanceSettings?: any;
 
-    @DtoAttr()
-    public dependsOn?: any;
+    @DtoAttr() public dependsOn?: any;
 
-    @DtoAttr()
-    public exitConditions?: any;
+    @DtoAttr() public exitConditions?: any;
 }
 
 export interface ResourceFileDto {
@@ -57,10 +45,4 @@ export interface FileGroupDto {
 export interface GroupSourceDto {
     fileGroup: string;
     prefix: string;
-}
-
-export interface ConstraintDto {
-    maxWallClockTime?: moment.Duration;
-    maxTaskRetryCount?: number;
-    retentionTime?: moment.Duration;
 }
