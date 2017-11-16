@@ -108,9 +108,9 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
         const options: monaco.editor.IEditorConstructionOptions = this.config;
 
         options.value = this._value;
-        this._model = monaco.editor.createModel(this._value, this.config.language, this.config.uri as any);
-        this._editor = monaco.editor.create(myDiv, { ...this.config as any });
-        this._editor.setModel(this._model);
+        this._model = monaco.editor.createModel(this._value || "", this.config.language, this.config.uri as any);
+        this._editor = monaco.editor.create(myDiv, { ...this.config as any, model: this._model });
+
         if (this.config.tabSize) {
             this._model.updateOptions({ tabSize: this.config.tabSize });
         }
