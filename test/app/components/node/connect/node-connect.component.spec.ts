@@ -10,7 +10,7 @@ import { NodeConnectComponent } from "app/components/node/connect";
 import { NodeAgentSku } from "app/models";
 import { ElectronShell, FileSystemService, NodeService, NodeUserService } from "app/services";
 import * as Fixtures from "test/fixture";
-import { RxMockListProxy } from "test/utils/mocks";
+import { MockListView } from "test/utils/mocks";
 
 @Component({
     template: `<bl-node-connect></bl-node-connect>`,
@@ -31,7 +31,7 @@ describe("NodeConnectComponent", () => {
 
         nodeServiceSpy = {
             getRemoteDesktop: jasmine.createSpy("").and.returnValue(Observable.of({ content: "banana" })),
-            listNodeAgentSkus: jasmine.createSpy("").and.returnValue(new RxMockListProxy(NodeAgentSku, {
+            listNodeAgentSkus: jasmine.createSpy("").and.returnValue(new MockListView(NodeAgentSku, {
                 items: [],
             })),
         };

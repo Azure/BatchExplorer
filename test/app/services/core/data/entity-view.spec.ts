@@ -41,9 +41,8 @@ describe("EntityView", () => {
     });
 
     it("It retrieve the item", fakeAsync(() => {
-        view.item.subscribe((x) => {
-            item = x;
-        });
+        view.item.subscribe(x => item = x);
+
         view.fetch();
         tick();
         expect(dataSpy).toHaveBeenCalledTimes(1);

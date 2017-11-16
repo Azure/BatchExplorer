@@ -13,8 +13,8 @@ import { ListOrTableBase } from "app/components/base/selectable-list";
 import { TableComponent } from "app/components/base/table";
 import { Job, JobState } from "app/models";
 import { FailureInfoDecorator } from "app/models/decorators";
-import { JobService } from "app/services";
-import { RxListProxy } from "app/services/core";
+import { JobListParams, JobService } from "app/services";
+import { ListView } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
 import {
     DeleteJobAction,
@@ -32,7 +32,7 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
     public LoadingStatus = LoadingStatus;
 
     public status: Observable<LoadingStatus>;
-    public data: RxListProxy<{}, Job>;
+    public data: ListView<Job, JobListParams>;
     public searchQuery = new FormControl();
 
     @ViewChild(QuickListComponent)
@@ -49,9 +49,9 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
         this._filter = filter;
 
         if (filter.isEmpty()) {
-            this.data.setOptions({});
+            this.data.setOptions({ ...this._baseOptions });
         } else {
-            this.data.setOptions({ filter: filter.toOData() });
+            this.data.setOptions({ ...this._baseOptions, filter: filter.toOData() });
         }
 
         this.data.fetchNext();
@@ -70,7 +70,7 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
         private jobService: JobService,
         private taskManager: BackgroundTaskService) {
         super(dialog);
-        this.data = this.jobService.list(this._baseOptions);
+        this.data = this.jobService.listView();
         this.status = this.data.status;
         this._onJobAddedSub = jobService.onJobAdded.subscribe((jobId) => {
             this.data.loadNewItem(jobService.get(jobId));

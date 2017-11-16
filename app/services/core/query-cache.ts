@@ -2,12 +2,13 @@ import { OrderedSet } from "immutable";
 import * as moment from "moment";
 
 import { Constants, ObjectUtils } from "app/utils";
+import { ContinuationToken } from "./data/list-options";
 
 const noQueryKey = "no-query";
 
 export class CachedKeyList {
     public createdAt: Date;
-    constructor(public keys: OrderedSet<string>, public data: any) {
+    constructor(public keys: OrderedSet<string>, public token: ContinuationToken) {
         this.createdAt = new Date();
     }
 }
@@ -18,11 +19,9 @@ export class CachedKeyList {
 export class QueryCache {
     private _cache: { [key: string]: CachedKeyList } = {};
 
-    public cacheQuery(filter: string, keys: OrderedSet<string>, data: any) {
-        if (!filter) {
-            filter = noQueryKey;
-        }
-        this._cache[filter] = new CachedKeyList(keys, data);
+    public cacheQuery(keys: OrderedSet<string>, token: ContinuationToken) {
+        const key = this._cacheKey(token.options.filter, token.options.select);
+        this._cache[key] = new CachedKeyList(keys, token);
         this.cleanCache();
     }
 
@@ -37,18 +36,16 @@ export class QueryCache {
         query.keys = query.keys.add(key);
     }
 
-    public getKeys(filter: string): CachedKeyList {
-        if (!filter) {
-            filter = noQueryKey;
-        }
-        return this._cache[filter];
+    public getKeys(filter: string, select?: string): CachedKeyList {
+        const key = this._cacheKey(filter, select);
+        return this._cache[key];
     }
 
     public cleanCache() {
         const keys = Object.keys(this._cache);
 
         // Sort the key from oldest to youngest
-        const sortedKeys = keys.filter(x => x !== noQueryKey).sort((a, b) => {
+        const sortedKeys = keys.filter(x => x !== this._cacheKey(null, null)).sort((a, b) => {
             return moment.utc(this._cache[a].createdAt).diff(moment.utc(this._cache[b].createdAt));
         });
 
@@ -65,8 +62,12 @@ export class QueryCache {
      * Called by the cache when an item was deleted
      */
     public deleteItemKey(key: string) {
-        for (let cachedList of ObjectUtils.values(this._cache)) {
+        for (const cachedList of ObjectUtils.values(this._cache)) {
             cachedList.keys = OrderedSet<string>(cachedList.keys.filter(x => x !== key));
         }
+    }
+
+    private _cacheKey(filter: string, select: string) {
+        return `${filter || null}|${select || null}`;
     }
 }
