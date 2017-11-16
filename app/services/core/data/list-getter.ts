@@ -48,7 +48,6 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
         const cache = this.getCache(params);
         const cachedResponse = this._tryLoadFromCache(cache, options, forceNew);
         if (cachedResponse !== null) {
-            // TODO-TIM return real stuff
             return Observable.of(cachedResponse);
         }
 

@@ -218,7 +218,6 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
     }
 
     private _handleChanges() {
-        // TODO-TIM reset nextLink....
         this._nextLink = null;
     }
 }

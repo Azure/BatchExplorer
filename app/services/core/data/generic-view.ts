@@ -47,6 +47,12 @@ export abstract class GenericView<TEntity, TParams, TOptions extends ProxyOption
      */
     public isDisposed: AsyncSubject<boolean>;
 
+    /**
+     * Callback called when there is an error you can use that to ignore error
+     * It should return a boolean set to false if you want to ignore the error
+     */
+    public onError: (error: ServerError) => boolean;
+
     protected getCache: (params: TParams) => DataCache<TEntity>;
 
     protected _status = new BehaviorSubject<LoadingStatus>(LoadingStatus.Loading);
@@ -188,7 +194,7 @@ export abstract class GenericView<TEntity, TParams, TOptions extends ProxyOption
                 this._status.next(LoadingStatus.Ready);
             }, error: (error: ServerError) => {
                 this.abortFetch();
-                if (error) {
+                if (!this.onError || this.onError(error)) {
                     this._status.next(LoadingStatus.Error);
                     this._error.next(error);
                     if (config.error) {

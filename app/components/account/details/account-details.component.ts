@@ -3,9 +3,9 @@ import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs";
 
-import { AccountResource, BatchApplication, Job, Pool } from "app/models";
+import { AccountResource, BatchApplication, Job, Pool, ServerError } from "app/models";
 import {
-    AccountParams, AccountService, ApplicationService, JobService, PoolService, JobListParams, PoolListParams, ApplicationListParams,
+    AccountParams, AccountService, ApplicationListParams, ApplicationService, JobListParams, JobService, PoolListParams, PoolService,
 } from "app/services";
 import { EntityView, ListView } from "app/services/core";
 
@@ -88,16 +88,15 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         this.applicationData = this.applicationService.listView();
         this.applicationData.setOptions(this.initialOptions);
         this.applicationData.fetchNext();
-        // TODO-tim find this
-        // (error: ServerError) => {
-        //     let handled = false;
-        //     if (this.applicationService.isAutoStorageError(error)) {
-        //         this.noLinkedStorage = true;
-        //         handled = true;
-        //     }
+        this.applicationData.onError = (error: ServerError) => {
+            let handled = false;
+            if (this.applicationService.isAutoStorageError(error)) {
+                this.noLinkedStorage = true;
+                handled = true;
+            }
 
-        //     return !handled;
-        // }
+            return !handled;
+        };
 
         this.jobData = this.jobService.listView();
         this.jobData.setOptions(this.initialOptions);

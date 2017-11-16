@@ -7,7 +7,7 @@ import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
-import { ApplicationPackage, BatchApplication } from "app/models";
+import { ApplicationPackage, BatchApplication, ServerError } from "app/models";
 import { ApplicationListParams, ApplicationService } from "app/services";
 
 import "app/components/base/form/editable-table/editable-table.scss";
@@ -59,15 +59,14 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         this._data = this.applicationService.listView();
 
         // TODO-TIM handle error.
-        // (error: ServerError) => {
-        //     if (this.applicationService.isAutoStorageError(error)) {
-        //         this.hasLinkedStorage.emit(false);
-        //         return true;
-        //     }
+        this._data.onError = (error: ServerError) => {
+            if (this.applicationService.isAutoStorageError(error)) {
+                this.hasLinkedStorage.emit(false);
+                return true;
+            }
 
-        //     return false;
-        // }
-
+            return false;
+        };
 
         // subscribe to the application data proxy
         this._subscriptions.push(this._data.items.subscribe((applications) => {
