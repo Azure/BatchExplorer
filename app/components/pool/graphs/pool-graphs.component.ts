@@ -8,8 +8,8 @@ import { SidebarManager } from "app/components/base/sidebar";
 import { PerformanceData } from "app/components/pool/graphs/performance-graph";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { Job, JobState, Node, NodeState, Pool, Task } from "app/models";
-import { AppInsightsQueryService, JobService, NodeListParams, NodeService } from "app/services";
-import { PollObservable, PollService, RxListProxy } from "app/services/core";
+import { AppInsightsQueryService, JobListParams, JobService, NodeListParams, NodeService } from "app/services";
+import { ListView, PollObservable, PollService } from "app/services/core";
 import { FilterBuilder } from "app/utils/filter-builder";
 import { NodesStateHistoryData, RunningTasksHistoryData } from "./history-data";
 import "./pool-graphs.scss";
@@ -45,7 +45,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     @Input()
     public pool: Pool;
 
-    public data: RxListProxy<NodeListParams, Node>;
+    public data: ListView<Node, NodeListParams>;
 
     public nodes: List<Node> = List([]);
     /**
@@ -65,7 +65,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     public selectedHistoryLength = new FormControl(historyLength.TenMinute);
     public performanceData: PerformanceData;
 
-    private _jobData: RxListProxy<{}, Job>;
+    private _jobData: ListView<Job, JobListParams>;
     private _stateCounter = new StateCounter();
 
     private _polls: PollObservable[] = [];
@@ -79,7 +79,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
         private sidebarManager: SidebarManager,
     ) {
         this.performanceData = new PerformanceData(appInsightsQueryService);
-        this.data = nodeService.list(null, {
+        this.data = nodeService.listView({
             pageSize: 1000,
             select: "id,state,runningTasksCount,isDedicated",
         });
@@ -94,7 +94,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
             }
             this._scanForProblems();
         });
-        this._jobData = jobService.list({
+        this._jobData = jobService.listView({
             select: "id",
         });
 

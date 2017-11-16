@@ -6,7 +6,7 @@ import { LoadingStatus } from "app/components/base/loading";
 import { SelectableList } from "app/components/base/selectable-list";
 import { Node } from "app/models";
 import { NodeListParams, NodeService } from "app/services";
-import { RxListProxy } from "app/services/core";
+import { ListView } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
 import { NodeListDisplayComponent } from "./display";
 
@@ -51,13 +51,14 @@ export class NodeListComponent extends SelectableList implements OnInit {
     public list: NodeListDisplayComponent;
 
     public status: Observable<LoadingStatus>;
-    public data: RxListProxy<NodeListParams, Node>;
+    public data: ListView<Node, NodeListParams>;
 
     private _filter: Filter;
     private _poolId: string;
 
     constructor(private nodeService: NodeService) {
         super();
+        this.data = this.nodeService.listView();
     }
 
     public ngOnInit() {
@@ -66,7 +67,7 @@ export class NodeListComponent extends SelectableList implements OnInit {
 
     @autobind()
     public refresh(): Observable<any> {
-        this.data = this.nodeService.list(this.poolId);
+        this.data.params = { poolId: this.poolId };
         this.status = this.data.status;
         this.data.setOptions({}); // This clears the previous list objects
 

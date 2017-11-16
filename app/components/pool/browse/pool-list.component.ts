@@ -16,8 +16,8 @@ import { SidebarManager } from "app/components/base/sidebar";
 import { TableComponent, TableConfig } from "app/components/base/table";
 import { Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
-import { PoolService } from "app/services";
-import { RxListProxy } from "app/services/core";
+import { PoolListParams, PoolService } from "app/services";
+import { ListView } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
 import { DeletePoolDialogComponent, PoolResizeDialogComponent } from "../action";
 import { DeletePoolTask } from "../action/delete";
@@ -30,7 +30,7 @@ import { DeletePoolTask } from "../action/delete";
 export class PoolListComponent extends ListOrTableBase implements OnInit, OnDestroy {
     public LoadingStatus = LoadingStatus;
     public status: Observable<LoadingStatus>;
-    public data: RxListProxy<{}, Pool>;
+    public data: ListView<Pool, PoolListParams>;
 
     // Inheritance bugs https://github.com/angular/angular/issues/5415
     @Output()
@@ -76,7 +76,7 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         private taskManager: BackgroundTaskService) {
 
         super(dialog);
-        this.data = this.poolService.list();
+        this.data = this.poolService.listView();
         this.status = this.data.status;
         this._subs.push(poolService.onPoolAdded.subscribe((poolId) => {
             this.data.loadNewItem(poolService.get(poolId));

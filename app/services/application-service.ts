@@ -6,7 +6,7 @@ import { Constants } from "app/utils";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
 import {
-    ArmEntityGetter, DataCache, EntityView, RxArmListProxy, RxListProxy,
+    ArmEntityGetter, ArmListGetter, DataCache, EntityView, ListOptionsAttributes, ListView,
 } from "./core";
 import { ServiceBase } from "./service-base";
 
@@ -40,6 +40,7 @@ export class ApplicationService extends ServiceBase {
     private _basicProperties: string = "id,displayName,allowUpdates,defaultVersion";
     private _cache = new DataCache<BatchApplication>();
     private _getter: ArmEntityGetter<BatchApplication, ApplicationParams>;
+    private _listGetter: ArmListGetter<BatchApplication, ApplicationListParams>;
 
     constructor(
         private arm: ArmHttpService,
@@ -54,25 +55,23 @@ export class ApplicationService extends ServiceBase {
             cache: () => this._cache,
             uri: ({ id }) => `${this._currentAccountId}/applications/${id}`,
         });
+
+        this._listGetter = new ArmListGetter(BatchApplication, this.arm, {
+            cache: () => this._cache,
+            uri: () => `${this._currentAccountId}/applications`,
+            logIgnoreError: applicationIgnoredErrors,
+        });
     }
 
     public get basicProperties(): string {
         return this._basicProperties;
     }
 
-    /**
-     * Lists all of the applications in the specified account.
-     * @param initialOptions: options for the list query
-     */
-    public list(initialOptions: any = {}, onError?: (error: ServerError) => boolean):
-        RxListProxy<ApplicationListParams, BatchApplication> {
-
-        return new RxArmListProxy<ApplicationListParams, BatchApplication>(BatchApplication, this.arm, {
-            cache: (params) => this._cache,
-            uri: () => `${this._currentAccountId}/applications`,
-            initialOptions: initialOptions,
-            logIgnoreError: applicationIgnoredErrors,
-            onError: onError,
+    public listView(options: ListOptionsAttributes = {}): ListView<BatchApplication, ApplicationListParams> {
+        return new ListView({
+            cache: () => this._cache,
+            getter: this._listGetter,
+            initialOptions: options,
         });
     }
 

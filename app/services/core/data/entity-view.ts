@@ -5,6 +5,7 @@ import { HttpCode } from "app/utils/constants";
 import { BehaviorSubject, Observable } from "rxjs";
 import { EntityGetter } from "./entity-getter";
 import { GenericView, GenericViewConfig } from "./generic-view";
+
 export interface EntityViewConfig<TEntity, TParams> extends GenericViewConfig<TEntity, TParams> {
     /**
      * If you want to have the entity proxy poll automatically for you every given milliseconds.
@@ -47,8 +48,8 @@ export class EntityView<TEntity, TParams> extends GenericView<TEntity, TParams, 
     public fetch(): Observable<any> {
         this._tryToLoadFromCache();
 
-        const obs = this.fetchData(() => this._getter.fetch(this.params));
-        obs.subscribe({
+        return this.fetchData({
+            getData: () => this._getter.fetch(this.params),
             next: (entity: TEntity) => {
                 this._itemKey.next(entity[this.cache.uniqueField]);
             },
@@ -58,7 +59,6 @@ export class EntityView<TEntity, TParams> extends GenericView<TEntity, TParams, 
                 }
             },
         });
-        return obs;
     }
 
     /**
