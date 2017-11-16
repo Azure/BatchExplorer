@@ -1,0 +1,688 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "pool",
+  "description": "An Azure Batch pool",
+  "type": "object",
+  "$ref": "#/definitions/PoolAddParameter",
+  "definitions": {
+    "PoolAddParameter": {
+      "properties": {
+        "id": {
+          "type": "string",
+          "title": "A string that uniquely identifies the pool within the account.",
+          "description": "A string that uniquely identifies the pool within the account."
+        },
+        "displayName": {
+          "type": "string",
+          "title": "The display name for the pool.",
+          "description": "The display name for the pool."
+        },
+        "vmSize": {
+          "type": "string",
+          "title": "The size of virtual machines in the pool. All virtual machines in a pool are the same size.",
+          "description": "The size of virtual machines in the pool. All virtual machines in a pool are the same size."
+        },
+        "cloudServiceConfiguration": {
+          "$ref": "#/definitions/CloudServiceConfiguration",
+          "title": "The cloud service configuration for the pool.",
+          "description": "The cloud service configuration for the pool."
+        },
+        "virtualMachineConfiguration": {
+          "$ref": "#/definitions/VirtualMachineConfiguration",
+          "title": "The virtual machine configuration for the pool.",
+          "description": "The virtual machine configuration for the pool."
+        },
+        "resizeTimeout": {
+          "type": "string",
+          "format": "duration",
+          "title": "The timeout for allocation of compute nodes to the pool.",
+          "description": "The timeout for allocation of compute nodes to the pool."
+        },
+        "targetDedicatedNodes": {
+          "type": "integer",
+          "format": "int32",
+          "title": "The desired number of dedicated compute nodes in the pool.",
+          "description": "The desired number of dedicated compute nodes in the pool."
+        },
+        "targetLowPriorityNodes": {
+          "type": "integer",
+          "format": "int32",
+          "title": "The desired number of low-priority compute nodes in the pool.",
+          "description": "The desired number of low-priority compute nodes in the pool."
+        },
+        "enableAutoScale": {
+          "type": "boolean",
+          "title": "Whether the pool size should automatically adjust over time.",
+          "description": "Whether the pool size should automatically adjust over time."
+        },
+        "autoScaleFormula": {
+          "type": "string",
+          "title": "A formula for the desired number of compute nodes in the pool.",
+          "description": "A formula for the desired number of compute nodes in the pool."
+        },
+        "autoScaleEvaluationInterval": {
+          "type": "string",
+          "format": "duration",
+          "title": "The time interval at which to automatically adjust the pool size according to the autoscale formula.",
+          "description": "The time interval at which to automatically adjust the pool size according to the autoscale formula."
+        },
+        "enableInterNodeCommunication": {
+          "type": "boolean",
+          "title": "Whether the pool permits direct communication between nodes.",
+          "description": "Whether the pool permits direct communication between nodes."
+        },
+        "networkConfiguration": {
+          "$ref": "#/definitions/NetworkConfiguration",
+          "title": "The network configuration for the pool.",
+          "description": "The network configuration for the pool."
+        },
+        "startTask": {
+          "$ref": "#/definitions/StartTask",
+          "title": "A task specified to run on each compute node as it joins the pool.",
+          "description": "A task specified to run on each compute node as it joins the pool."
+        },
+        "certificateReferences": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/CertificateReference"
+          },
+          "title": "The list of certificates to be installed on each compute node in the pool.",
+          "description": "The list of certificates to be installed on each compute node in the pool."
+        },
+        "applicationPackageReferences": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ApplicationPackageReference"
+          },
+          "title": "The list of application packages to be installed on each compute node in the pool.",
+          "description": "The list of application packages to be installed on each compute node in the pool."
+        },
+        "applicationLicenses": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "The list of application licenses the Batch service will make available on each compute node in the pool.",
+          "description": "The list of application licenses the Batch service will make available on each compute node in the pool."
+        },
+        "maxTasksPerNode": {
+          "type": "integer",
+          "format": "int32",
+          "title": "The maximum number of tasks that can run concurrently on a single compute node in the pool.",
+          "description": "The maximum number of tasks that can run concurrently on a single compute node in the pool."
+        },
+        "taskSchedulingPolicy": {
+          "$ref": "#/definitions/TaskSchedulingPolicy",
+          "title": "How the Batch service distributes tasks between compute nodes in the pool.",
+          "description": "How the Batch service distributes tasks between compute nodes in the pool."
+        },
+        "userAccounts": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/UserAccount"
+          },
+          "title": "The list of user accounts to be created on each node in the pool.",
+          "description": "The list of user accounts to be created on each node in the pool."
+        },
+        "metadata": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/MetadataItem"
+          },
+          "title": "A list of name-value pairs associated with the pool as metadata.",
+          "description": "A list of name-value pairs associated with the pool as metadata."
+        },
+        "packageReferences": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/PackageReference"
+          },
+          "title": "A collection of packages to be added from external package managers to each node in the pool.",
+          "description": "A collection of packages to be added from external package managers to each node in the pool."
+        }
+      },
+      "required": [
+        "id",
+        "vmSize"
+      ],
+      "title": "A pool in the Azure Batch service to add.",
+      "oneOf": [
+        {
+          "required": [
+            "cloudServiceConfiguration"
+          ]
+        },
+        {
+          "required": [
+            "virtualMachineConfiguration"
+          ]
+        }
+      ],
+      "dependencies": {
+        "autoScaleFormula": [
+          "enableAutoScale"
+        ],
+        "autoScaleEvaluationInterval": [
+          "enableAutoScale"
+        ]
+      }
+    },
+    "CloudServiceConfiguration": {
+      "properties": {
+        "osFamily": {
+          "type": "string",
+          "title": "The Azure Guest OS family to be installed on the virtual machines in the pool.",
+          "description": "The Azure Guest OS family to be installed on the virtual machines in the pool."
+        },
+        "targetOSVersion": {
+          "type": "string",
+          "title": "The Azure Guest OS version to be installed on the virtual machines in the pool.",
+          "description": "The Azure Guest OS version to be installed on the virtual machines in the pool."
+        },
+        "currentOSVersion": {
+          "type": "string",
+          "title": "The Azure Guest OS Version currently installed on the virtual machines in the pool.",
+          "description": "The Azure Guest OS Version currently installed on the virtual machines in the pool."
+        }
+      },
+      "required": [
+        "osFamily"
+      ],
+      "title": "The configuration for nodes in a pool based on the Azure Cloud Services platform."
+    },
+    "VirtualMachineConfiguration": {
+      "properties": {
+        "imageReference": {
+          "$ref": "#/definitions/ImageReference",
+          "title": "A reference to the Azure Virtual Machines Marketplace image to use.",
+          "description": "A reference to the Azure Virtual Machines Marketplace image to use."
+        },
+        "osDisk": {
+          "$ref": "#/definitions/OSDisk",
+          "title": "A reference to the OS disk image to use.",
+          "description": "A reference to the OS disk image to use."
+        },
+        "nodeAgentSKUId": {
+          "type": "string",
+          "title": "The SKU of the Batch node agent to be provisioned on compute nodes in the pool.",
+          "description": "The SKU of the Batch node agent to be provisioned on compute nodes in the pool."
+        },
+        "windowsConfiguration": {
+          "$ref": "#/definitions/WindowsConfiguration",
+          "title": "Windows operating system settings on the virtual machine.",
+          "description": "Windows operating system settings on the virtual machine."
+        }
+      },
+      "required": [
+        "nodeAgentSKUId"
+      ],
+      "title": "The configuration for compute nodes in a pool based on the Azure Virtual Machines infrastructure.",
+      "oneOf": [
+        {
+          "required": [
+            "imageReference"
+          ]
+        },
+        {
+          "required": [
+            "osDisk"
+          ]
+        }
+      ]
+    },
+    "ImageReference": {
+      "properties": {
+        "publisher": {
+          "type": "string",
+          "title": "The publisher of the Azure Virtual Machines Marketplace image.",
+          "description": "The publisher of the Azure Virtual Machines Marketplace image."
+        },
+        "offer": {
+          "type": "string",
+          "title": "The offer type of the Azure Virtual Machines Marketplace image.",
+          "description": "The offer type of the Azure Virtual Machines Marketplace image."
+        },
+        "sku": {
+          "type": "string",
+          "title": "The SKU of the Azure Virtual Machines Marketplace image.",
+          "description": "The SKU of the Azure Virtual Machines Marketplace image."
+        },
+        "version": {
+          "type": "string",
+          "title": "The version of the Azure Virtual Machines Marketplace image.",
+          "description": "The version of the Azure Virtual Machines Marketplace image."
+        }
+      },
+      "required": [
+        "publisher",
+        "offer",
+        "sku"
+      ],
+      "title": "A reference to an Azure Virtual Machines Marketplace image. To get the list of all imageReferences verified by Azure Batch, see the 'List supported node agent SKUs' operation."
+    },
+    "OSDisk": {
+      "properties": {
+        "imageUris": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "title": "The collection of Virtual Hard Disk (VHD) URIs.",
+          "description": "The collection of Virtual Hard Disk (VHD) URIs."
+        },
+        "caching": {
+          "type": "string",
+          "title": "The type of caching to enable for the OS disk.",
+          "description": "The type of caching to enable for the OS disk.",
+          "enum": [
+            "none",
+            "readOnly",
+            "readWrite"
+          ],
+          "x-ms-enum": {
+            "name": "CachingType",
+            "modelAsString": false
+          }
+        }
+      },
+      "required": [
+        "imageUris"
+      ],
+      "title": "A reference to an OS disk image."
+    },
+    "WindowsConfiguration": {
+      "properties": {
+        "enableAutomaticUpdates": {
+          "type": "boolean",
+          "title": "Whether automatic updates are enabled on the virtual machine.",
+          "description": "Whether automatic updates are enabled on the virtual machine."
+        }
+      },
+      "title": "Windows operating system settings to apply to the virtual machine."
+    },
+    "NetworkConfiguration": {
+      "properties": {
+        "subnetId": {
+          "type": "string",
+          "title": "The ARM resource identifier of the virtual network subnet which the compute nodes of the pool will join. This is of the form /subscriptions/{subscription}/resourceGroups/{group}/providers/{provider}/virtualNetworks/{network}/subnets/{subnet}.",
+          "description": "The ARM resource identifier of the virtual network subnet which the compute nodes of the pool will join. This is of the form /subscriptions/{subscription}/resourceGroups/{group}/providers/{provider}/virtualNetworks/{network}/subnets/{subnet}.",
+          "externalDocs": {
+            "url": "https://azure.microsoft.com/en-us/documentation/articles/role-based-access-built-in-roles/#classic-virtual-machine-contributor",
+            "description": "Setting up RBAC for Azure Batch VNETs"
+          }
+        }
+      },
+      "description": "The network configuration for a pool."
+    },
+    "StartTask": {
+      "properties": {
+        "commandLine": {
+          "type": "string",
+          "title": "The command line of the start task.",
+          "description": "The command line of the start task."
+        },
+        "resourceFiles": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/ResourceFile"
+          },
+          "title": "A list of files that the Batch service will download to the compute node before running the command line.",
+          "description": "A list of files that the Batch service will download to the compute node before running the command line."
+        },
+        "environmentSettings": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/EnvironmentSetting"
+          },
+          "title": "A list of environment variable settings for the start task.",
+          "description": "A list of environment variable settings for the start task."
+        },
+        "userIdentity": {
+          "$ref": "#/definitions/UserIdentity",
+          "title": "The user identity under which the start task runs.",
+          "description": "The user identity under which the start task runs."
+        },
+        "maxTaskRetryCount": {
+          "type": "integer",
+          "format": "int32",
+          "title": "The maximum number of times the task may be retried.",
+          "description": "The maximum number of times the task may be retried."
+        },
+        "waitForSuccess": {
+          "type": "boolean",
+          "title": "Whether the Batch service should wait for the start task to complete successfully (that is, to exit with exit code 0) before scheduling any tasks on the compute node.",
+          "description": "Whether the Batch service should wait for the start task to complete successfully (that is, to exit with exit code 0) before scheduling any tasks on the compute node."
+        }
+      },
+      "required": [
+        "commandLine"
+      ],
+      "title": "A task which is run when a compute node joins a pool in the Azure Batch service, or when the compute node is rebooted or reimaged."
+    },
+    "ResourceFile": {
+      "properties": {
+        "blobSource": {
+          "type": "string",
+          "title": "The URL of the file within Azure Blob Storage.",
+          "description": "The URL of the file within Azure Blob Storage."
+        },
+        "filePath": {
+          "type": "string",
+          "title": "The location on the compute node to which to download the file, relative to the task's working directory.",
+          "description": "The location on the compute node to which to download the file, relative to the task's working directory."
+        },
+        "fileMode": {
+          "type": "string",
+          "title": "The file permission mode attribute in octal format.",
+          "description": "The file permission mode attribute in octal format."
+        },
+        "source": {
+          "type": "object",
+          "$ref": "#/definitions/ResourceFileSource",
+          "title": "A source for files to be downloaded before running the task command line.",
+          "description": "A source for files to be downloaded before running the task command line."
+        }
+      },
+      "required": [],
+      "title": "A file to be downloaded from Azure blob storage to a compute node.",
+      "oneOf": [
+        {
+          "required": [
+            "source"
+          ]
+        },
+        {
+          "required": [
+            "blobSource"
+          ]
+        }
+      ]
+    },
+    "ResourceFileSource": {
+      "properties": {
+        "fileGroup": {
+          "type": "string",
+          "title": "The file group in the linked storage account from which to download files.",
+          "description": "The file group in the linked storage account from which to download files."
+        },
+        "prefix": {
+          "type": "string",
+          "title": "A prefix with which to filter the files to download.",
+          "description": "A prefix with which to filter the files to download."
+        }
+      },
+      "required": [
+        "fileGroup"
+      ]
+    },
+    "EnvironmentSetting": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "The name of the environment variable.",
+          "description": "The name of the environment variable."
+        },
+        "value": {
+          "type": "string",
+          "title": "The value of the environment variable.",
+          "description": "The value of the environment variable."
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "title": "An environment variable to be set on a task process."
+    },
+    "UserIdentity": {
+      "properties": {
+        "username": {
+          "type": "string",
+          "x-ms-client-name": "userName",
+          "title": "The name of the user identity under which the task is run.",
+          "description": "The name of the user identity under which the task is run."
+        },
+        "autoUser": {
+          "$ref": "#/definitions/AutoUserSpecification",
+          "title": "The auto user under which the task is run.",
+          "description": "The auto user under which the task is run."
+        }
+      },
+      "title": "The definition of the user identity under which the task is run.",
+      "description": "Specify either the userName or autoUser property, but not both."
+    },
+    "AutoUserSpecification": {
+      "properties": {
+        "scope": {
+          "type": "string",
+          "title": "The scope for the auto user",
+          "description": "The scope for the auto user",
+          "enum": [
+            "task",
+            "pool"
+          ],
+          "x-ms-enum": {
+            "name": "AutoUserScope",
+            "modelAsString": false
+          }
+        },
+        "elevationLevel": {
+          "title": "The elevation level of the auto user.",
+          "description": "The elevation level of the auto user.",
+          "$ref": "#/definitions/ElevationLevel"
+        }
+      },
+      "title": "Specifies the parameters for the auto user that runs a task on the Batch service."
+    },
+    "ElevationLevel": {
+      "type": "string",
+      "title": "The elevation level of the user.",
+      "description": "nonAdmin - The user is a standard user without elevated access. admin - The user is a user with elevated access and operates with full Administrator permissions.",
+      "enum": [
+        "nonAdmin",
+        "admin"
+      ],
+      "x-ms-enum": {
+        "name": "ElevationLevel",
+        "modelAsString": false
+      }
+    },
+    "CertificateReference": {
+      "properties": {
+        "thumbprint": {
+          "type": "string",
+          "title": "The thumbprint of the certificate.",
+          "description": "The thumbprint of the certificate."
+        },
+        "thumbprintAlgorithm": {
+          "type": "string",
+          "title": "The algorithm with which the thumbprint is associated. This must be sha1.",
+          "description": "The algorithm with which the thumbprint is associated. This must be sha1."
+        },
+        "storeLocation": {
+          "type": "string",
+          "title": "The location of the certificate store on the compute node into which to install the certificate.",
+          "description": "The location of the certificate store on the compute node into which to install the certificate.",
+          "enum": [
+            "currentUser",
+            "localMachine"
+          ],
+          "x-ms-enum": {
+            "name": "CertificateStoreLocation",
+            "modelAsString": false
+          }
+        },
+        "storeName": {
+          "type": "string",
+          "title": "The name of the certificate store on the compute node into which to install the certificate.",
+          "description": "The name of the certificate store on the compute node into which to install the certificate."
+        },
+        "visibility": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "x-nullable": false,
+            "enum": [
+              "startTask",
+              "task",
+              "remoteUser"
+            ],
+            "x-ms-enum": {
+              "name": "CertificateVisibility",
+              "modelAsString": false
+            }
+          },
+          "title": "Which user accounts on the compute node should have access to the private data of the certificate.",
+          "description": "Which user accounts on the compute node should have access to the private data of the certificate."
+        }
+      },
+      "required": [
+        "thumbprint",
+        "thumbprintAlgorithm"
+      ],
+      "title": "A reference to a certificate to be installed on compute nodes in a pool."
+    },
+    "ApplicationPackageReference": {
+      "properties": {
+        "applicationId": {
+          "type": "string",
+          "title": "The ID of the application to deploy.",
+          "description": "The ID of the application to deploy."
+        },
+        "version": {
+          "type": "string",
+          "title": "The version of the application to deploy. If omitted, the default version is deployed.",
+          "description": "The version of the application to deploy. If omitted, the default version is deployed."
+        }
+      },
+      "required": [
+        "applicationId"
+      ],
+      "title": "A reference to an application package to be deployed to compute nodes."
+    },
+    "TaskSchedulingPolicy": {
+      "properties": {
+        "nodeFillType": {
+          "type": "string",
+          "title": "How tasks should be distributed across compute nodes.",
+          "enum": [
+            "spread",
+            "pack"
+          ],
+          "x-ms-enum": {
+            "name": "ComputeNodeFillType",
+            "modelAsString": false
+          },
+          "description": "How tasks should be distributed across compute nodes."
+        }
+      },
+      "required": [
+        "nodeFillType"
+      ],
+      "title": "Specifies how tasks should be distributed across compute nodes."
+    },
+    "UserAccount": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "The name of the user account.",
+          "description": "The name of the user account."
+        },
+        "password": {
+          "type": "string",
+          "title": "The password for the user account.",
+          "description": "The password for the user account."
+        },
+        "elevationLevel": {
+          "title": "The elevation level of the user account.",
+          "description": "The elevation level of the user account.",
+          "$ref": "#/definitions/ElevationLevel"
+        },
+        "linuxUserConfiguration": {
+          "title": "The Linux-specific user configuration for the user account.",
+          "description": "The Linux-specific user configuration for the user account.",
+          "$ref": "#/definitions/LinuxUserConfiguration"
+        }
+      },
+      "required": [
+        "name",
+        "password"
+      ],
+      "title": "Properties used to create a user used to execute tasks on an Azure Batch node."
+    },
+    "LinuxUserConfiguration": {
+      "properties": {
+        "uid": {
+          "type": "integer",
+          "format": "int32",
+          "title": "The user ID of the user account.",
+          "description": "The user ID of the user account."
+        },
+        "gid": {
+          "type": "integer",
+          "format": "int32",
+          "title": "The group ID for the user account.",
+          "description": "The group ID for the user account."
+        },
+        "sshPrivateKey": {
+          "type": "string",
+          "title": "The SSH private key for the user account.",
+          "description": "The SSH private key for the user account."
+        }
+      },
+      "title": "Properties used to create a user account on a Linux node."
+    },
+    "MetadataItem": {
+      "properties": {
+        "name": {
+          "type": "string",
+          "title": "The name of the metadata item.",
+          "description": "The name of the metadata item."
+        },
+        "value": {
+          "type": "string",
+          "title": "The value of the metadata item.",
+          "description": "The value of the metadata item."
+        }
+      },
+      "required": [
+        "name",
+        "value"
+      ],
+      "title": "A name-value pair associated with a Batch service resource.",
+      "description": "The Batch service does not assign any meaning to this metadata; it is solely for the use of user code."
+    },
+    "PackageReference": {
+      "properties": {
+        "type": {
+          "type": "string",
+          "title": "The type of package - aptPackage, chocolateyPackage, or yumPackage",
+          "description": "The type of package - aptPackage, chocolateyPackage, or yumPackage"
+        },
+        "id": {
+          "type": "string",
+          "title": "The name or ID of the package to be installed as identified according to the package repository.",
+          "description": "The name or ID of the package to be installed as identified according to the package repository."
+        },
+        "version": {
+          "type": "string",
+          "title": "The version of the package to be installed.",
+          "description": "The version of the package to be installed."
+        },
+        "allowEmptyChecksums": {
+          "type": "boolean",
+          "title": "Whether Chocolatey will install packages without a checksum for validation.",
+          "description": "Whether Chocolatey will install packages without a checksum for validation."
+        },
+        "disableExcludes": {
+          "type": "string",
+          "title": "Packages that might otherwise be excluded by VM configuration (e.g. kernel packages).",
+          "description": "Packages that might otherwise be excluded by VM configuration (e.g. kernel packages)."
+        }
+      },
+      "required": [
+        "type",
+        "id"
+      ]
+    }
+  }
+}

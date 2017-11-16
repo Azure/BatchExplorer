@@ -55,6 +55,8 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
      */
     @Input() public hideFooter = false;
 
+    @Input() public monacoUri: string = null;
+
     /**
      * Submit method.
      * Will pass the built dto if using json forms
