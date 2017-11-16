@@ -1,8 +1,9 @@
+import * as moment from "moment";
 
 import { JobCreateDto } from "app/models/dtos";
 
 export interface JobConstraintsModel {
-    maxWallClockTime: string;
+    maxWallClockTime: moment.Duration;
     maxTaskRetryCount: number;
 }
 
@@ -26,22 +27,25 @@ export interface CreateJobModel {
     usesTaskDependencies: boolean;
 }
 
-export function createJobFormToJsonData(formData: CreateJobModel): any {
-    let maxWallClockTime = null;
+export function createJobFormToJsonData(formData: CreateJobModel): JobCreateDto {
     let data: any = {
         id: formData.id,
         displayName: formData.displayName,
         priority: formData.priority,
         constraints: {
-            maxWallClockTime: maxWallClockTime,
-            maxTaskRetryCount: formData.constraints.maxTaskRetryCount,
+            maxWallClockTime: formData.constraints && formData.constraints.maxWallClockTime,
+            maxTaskRetryCount: formData.constraints && formData.constraints.maxTaskRetryCount,
         },
         poolInfo: {
-            poolId: formData.poolInfo.poolId,
+            poolId: formData.poolInfo && formData.poolInfo.poolId,
         },
+        jobManagerTask: formData.jobManagerTask,
+        jobPreparationTask: formData.jobPreparationTask,
+        jobReleaseTask: formData.jobReleaseTask,
+        onAllTasksComplete: formData.onAllTasksComplete,
+        onTaskFailure: formData.onTaskFailure,
     };
-
-    return data;
+    return new JobCreateDto(data);
 }
 
 export function jobToFormModel(job: JobCreateDto): CreateJobModel {
@@ -49,10 +53,6 @@ export function jobToFormModel(job: JobCreateDto): CreateJobModel {
         id: job.id,
         displayName: job.displayName,
         priority: job.priority,
-        constraints: {
-            maxWallClockTime: job.constraints.maxWallClockTime.toISOString(),
-            maxTaskRetryCount: job.constraints.maxTaskRetryCount,
-        },
         jobManagerTask: job.jobManagerTask,
         jobPreparationTask: job.jobPreparationTask,
         jobReleaseTask: job.jobReleaseTask,
@@ -62,5 +62,9 @@ export function jobToFormModel(job: JobCreateDto): CreateJobModel {
         onTaskFailure: job.onTaskFailure,
         metadata: job.metadata,
         usesTaskDependencies: job.usesTaskDependencies,
+        constraints: {
+            maxWallClockTime: job.constraints.maxWallClockTime,
+            maxTaskRetryCount: job.constraints.maxTaskRetryCount,
+        },
     };
 }

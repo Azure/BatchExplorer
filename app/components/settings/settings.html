@@ -20,7 +20,7 @@
     <div class="user-settings">
         <div class="editor-header">
             <div class="label">User settings</div>
-            <div class="error" *ngIf="!userSettings.valid">{{userSettings.errors?.validJsonConfig?.message}}</div>
+            <div class="error" *ngIf="!userSettings.valid">{{userSettings.errors?.validJson?.message}}</div>
         </div>
 
         <bl-editor [formControl]="userSettings" [config]="userSettingsEditorConfig"></bl-editor>

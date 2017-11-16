@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
+import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
@@ -48,7 +48,6 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         private dialog: MatDialog,
         private sidebarManager: SidebarManager,
         private pricingService: PricingService,
-        private viewContainerRef: ViewContainerRef,
         private poolService: PoolService) {
 
         this.data = this.poolService.view();
@@ -70,7 +69,6 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
             this.data.params = { id: this.poolId };
             this.data.fetch();
         });
-
     }
 
     public ngOnDestroy() {
@@ -96,8 +94,6 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
     @autobind()
     public deletePool() {
         let config = new MatDialogConfig();
-        config.viewContainerRef = this.viewContainerRef;
-
         const dialogRef = this.dialog.open(DeletePoolDialogComponent, config);
         dialogRef.componentInstance.poolId = this.poolId;
     }

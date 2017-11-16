@@ -1,7 +1,7 @@
 <bl-banner *ngIf="startTaskFailedError" fixMessage="Edit the start task" [fix]="openEditStartTask">
     <div message>It seems like the start task is failing on many nodes. ({{startTaskFailedError.failedNodes}}/{{startTaskFailedError.nodeCount}})</div>
     <div [other-fix]="rebootFailedNodes" fixMessage="Reboot failed nodes"></div>
-    <div [other-fix]="rebootFailedNodes" fixMessage="Reimage failed nodes"></div>
+    <div *ngIf="isPaasPool" [other-fix]="reimageFailedNodes" fixMessage="Reimage failed nodes"></div>
 </bl-banner>
 <div class="charts-previews">
     <div class="preview" (click)="focusGraph(AvailableGraph.Heatmap)" [class.focused]="focusedGraph === AvailableGraph.Heatmap">

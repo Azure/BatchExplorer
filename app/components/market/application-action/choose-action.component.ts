@@ -1,10 +1,11 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
+import { autobind } from "core-decorators";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
 import { Application, ApplicationAction } from "app/models";
-import { NcjTemplateService } from "app/services";
+import { ElectronShell, NcjTemplateService } from "app/services";
 import "./choose-action.scss";
 
 @Component({
@@ -22,7 +23,10 @@ export class ChooseActionComponent implements OnInit, OnDestroy {
 
     private _paramsSubscriber: Subscription;
 
-    constructor(private templateService: NcjTemplateService, private route: ActivatedRoute) { }
+    constructor(
+        private electronShell: ElectronShell,
+        private templateService: NcjTemplateService,
+        private route: ActivatedRoute) { }
 
     public ngOnInit() {
         this._paramsSubscriber = this.route.params.subscribe((params) => {
@@ -33,6 +37,11 @@ export class ChooseActionComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._paramsSubscriber.unsubscribe();
+    }
+
+    @autobind()
+    public openLink(link: string) {
+        this.electronShell.openExternal(link, {activate: true});
     }
 
     private _updateActions() {

@@ -62,7 +62,7 @@ bl-settings {
                 color: map-get($danger, 500);
             }
 
-            bl-editor .CodeMirror {
+            bl-editor {
                 height: $settings-editor-height !important;
             }
         }

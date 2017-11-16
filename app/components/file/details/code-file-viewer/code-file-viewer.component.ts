@@ -1,5 +1,6 @@
 import { Component, Input, OnChanges } from "@angular/core";
 
+import { EditorConfig } from "app/components/base/editor";
 import { LoadingStatus } from "app/components/base/loading";
 import { File } from "app/models";
 import { FileLoader } from "app/services/file";
@@ -20,9 +21,11 @@ export class CodeFileViewerComponent implements OnChanges {
     public fileTooLarge: boolean;
     public fileNotFound = false;
 
-    public config: CodeMirror.EditorConfiguration = {
+    public config: EditorConfig = {
         readOnly: true,
-        lineNumbers: true,
+        minimap: {
+            enabled: false,
+        },
     };
 
     public ngOnChanges(changes) {

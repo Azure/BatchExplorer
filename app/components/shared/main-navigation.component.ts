@@ -7,7 +7,7 @@ import {
     ContextMenu, ContextMenuItem, ContextMenuSeparator, ContextMenuService,
 } from "app/components/base/context-menu";
 import { NotificationService } from "app/components/base/notifications";
-import { AccountService, AdalService, ElectronRemote, ElectronShell } from "app/services";
+import { AccountService, AdalService, ElectronRemote, ElectronShell, FileSystemService } from "app/services";
 import { Constants, OS } from "app/utils";
 import "./main-navigation.scss";
 
@@ -32,6 +32,7 @@ export class MainNavigationComponent implements OnInit {
         private contextMenuService: ContextMenuService,
         private zone: NgZone,
         private notificationService: NotificationService,
+        private fs: FileSystemService,
         private router: Router) {
         this._autoUpdater = remote.getBatchLabsApp().autoUpdater;
 
@@ -77,6 +78,9 @@ export class MainNavigationComponent implements OnInit {
             new ContextMenuSeparator(),
             new ContextMenuItem({ label: "Settings", click: () => this._goToSettings() }),
             new ContextMenuItem({ label: "Third party notices", click: () => this._openThirdPartyNotices() }),
+            new ContextMenuItem({ label: "View logs", click: () => this._openLogFolder() }),
+            new ContextMenuItem({ label: "Report a bug or feature request", click: () => this._openGithubIssues() }),
+            new ContextMenuItem({ label: "About", click: () => this._showAboutPage() }),
             new ContextMenuSeparator(),
             new ContextMenuItem({ label: "Logout", click: () => this._logout() }),
         ];
@@ -98,6 +102,26 @@ export class MainNavigationComponent implements OnInit {
 
     private _openThirdPartyNotices() {
         this.shell.openItem(path.join(Constants.Client.resourcesFolder, "ThirdPartyNotices.txt"));
+    }
+
+    private _openLogFolder() {
+        this.shell.openItem(path.join(this.fs.commonFolders.userData, "logs"));
+    }
+
+    private _openGithubIssues() {
+        this.shell.openExternal("https://github.com/Azure/BatchLabs/issues");
+    }
+
+    private _showAboutPage() {
+        this.remote.dialog.showMessageBox({
+            type: "info",
+            title: "BatchLabs",
+            message: [
+                `Version: ${Constants.Client.version}`,
+                `Batch labs is licensed under MIT`,
+                `Some icons are under Creative Commons Attribution-ShareAlike 3.0 Unported`,
+            ].join("\n"),
+        });
     }
 
     private _logout() {

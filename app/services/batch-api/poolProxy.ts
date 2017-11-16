@@ -1,9 +1,9 @@
 import { BatchServiceClient, BatchServiceModels } from "azure-batch";
 
 import { BatchResult } from "./models";
-import { ListProxy, ProxyUtil, mapGet, wrapOptions } from "./shared";
+import { ListProxy, mapGet, wrapOptions } from "./shared";
 
-export  class PoolProxy {
+export class PoolProxy {
 
     constructor(private client: BatchServiceClient) { }
 
@@ -66,7 +66,6 @@ export  class PoolProxy {
      * @param options: Optional Parameters.
      */
     public add(pool: any, options?: any): Promise<any> {
-        pool = ProxyUtil.decoratePool(pool);
         return this.client.pool.add(pool, wrapOptions(options));
     }
 
@@ -74,12 +73,15 @@ export  class PoolProxy {
         poolId: string,
         attributes: BatchServiceModels.PoolEnableAutoScaleParameter,
         options?: any): Promise<any> {
-        attributes = ProxyUtil.decoratePool(attributes);
 
         return this.client.pool.enableAutoScale(poolId, attributes, wrapOptions(options));
     }
 
     public disableAutoScale(poolId: string, options?: any): Promise<any> {
         return this.client.pool.disableAutoScale(poolId, wrapOptions(options));
+    }
+
+    public evaluateAutoScale(poolId: string, formula: string, options?: any): Promise<any> {
+        return this.client.pool.evaluateAutoScale(poolId, formula, wrapOptions(options));
     }
 }

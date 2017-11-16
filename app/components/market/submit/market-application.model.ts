@@ -2,13 +2,6 @@ import { NcjParameter } from "app/models";
 import { ObjectUtils, log } from "app/utils";
 import * as inflection from "inflection";
 
-export enum Modes {
-    None,
-    NewPoolAndJob,
-    ExistingPoolAndJob,
-    NewPool,
-}
-
 export enum NcjParameterExtendedType {
     string = "string",
     int = "int",

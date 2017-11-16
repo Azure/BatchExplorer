@@ -4,12 +4,19 @@ import { List } from "immutable";
 import * as path from "path";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import { Application, ApplicationAction, NcjJobTemplate, NcjPoolTemplate, NcjTemplateType } from "app/models";
+import {
+    Application,
+    ApplicationAction,
+    NcjJobTemplate, NcjPoolTemplate,
+    NcjTemplateMode,
+    NcjTemplateType,
+} from "app/models";
 import { DateUtils, SecureUtils, log } from "app/utils";
 
 const branch = "master";
 const repo = "BatchLabs-data";
 const dataUrl = `https://github.com/Azure/${repo}/archive/${branch}.zip`;
+const remoteFileUrl = `https://github.com/Azure/${repo}/blob/${branch}/ncj`;
 const cacheTime = 1; // In days
 const recentSubmitKey = "ncj-recent-submit";
 const maxRecentSubmissions = 10;
@@ -22,7 +29,7 @@ export interface RecentSubmissionParams {
     name: string;
     jobTemplate?: NcjJobTemplate;
     poolTemplate?: NcjPoolTemplate;
-    mode: any;
+    mode: NcjTemplateMode;
     jobParams?: StringMap<any>;
     poolParams?: StringMap<any>;
     pickedPool?: string;
@@ -84,7 +91,11 @@ export class NcjTemplateService {
     public listApplications(): Observable<List<Application>> {
         return this.get("index.json").map((apps) => {
             return List<Application>(apps.map(data => {
-                return new Application({ ...data, icon: this.getApplicationIcon(data.id) });
+                return new Application({
+                    ...data,
+                    icon: this.getApplicationIcon(data.id),
+                    readme: this.getApplicationReadme(data.id),
+                });
             }));
         }).share();
     }
@@ -92,7 +103,11 @@ export class NcjTemplateService {
     public getApplication(applicationId: string): Observable<Application> {
         return this.get("index.json").map((apps) => {
             const data = apps.filter(app => app.id === applicationId).first();
-            return data && new Application({ ...data, icon: this.getApplicationIcon(data.id) });
+            return data && new Application({
+                ...data,
+                icon: this.getApplicationIcon(data.id),
+                readme: this.getApplicationReadme(data.id),
+            });
         }).share();
     }
 
@@ -102,6 +117,14 @@ export class NcjTemplateService {
      */
     public getApplicationIcon(applicationId: string): string {
         return "file:" + this.getFullPath(`${applicationId}/icon.svg`);
+    }
+
+    /**
+     * Return the application icon path
+     * @param applicationId Id of the application
+     */
+    public getApplicationReadme(applicationId: string): string {
+        return `${remoteFileUrl}/${applicationId}/readme.md`;
     }
 
     public listActions(applicationId: string): Observable<List<ApplicationAction>> {
@@ -152,6 +175,22 @@ export class NcjTemplateService {
         return this._ready.map(() => {
             return this._recentSubmission.value.filter(x => x.id === id).first();
         }).shareReplay(1);
+    }
+
+    public createParameterFileFromSubmission(path: string, submission: RecentSubmission) {
+        const content = JSON.stringify(this._parameterData(submission));
+        return this.fs.saveFile(path, content);
+    }
+
+    public _parameterData(submission: RecentSubmission) {
+        switch (submission.mode) {
+            case NcjTemplateMode.NewPool:
+                return submission.poolParams;
+            case NcjTemplateMode.ExistingPoolAndJob:
+                return Object.assign({}, submission.jobParams, submission.pickedPool);
+            case NcjTemplateMode.NewPoolAndJob:
+                return Object.assign({}, submission.jobParams, submission.poolParams);
+        }
     }
 
     private _checkIfDataNeedReload(): Promise<boolean> {
