@@ -23,7 +23,6 @@ export class MonacoLoader {
         return new Promise((resolve) => {
 
             const onGotAmdLoader = () => {
-                // anyWindow.amdRequire.config({ paths: { vs: "build/vendor/vs" } });
                 anyWindow.amdRequire.config({ baseUrl: path.join(Constants.Client.root, "build/vendor/") });
                 // workaround monaco-css not understanding the environment
                 (self as any).module = undefined;
