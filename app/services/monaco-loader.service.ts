@@ -1,5 +1,7 @@
 import { Injectable } from "@angular/core";
+import { Constants } from "app/utils";
 import { AutoscaleLanguage } from "app/utils/autoscale";
+import * as path from "path";
 
 const anyWindow: any = window;
 
@@ -22,7 +24,7 @@ export class MonacoLoader {
 
             const onGotAmdLoader = () => {
                 // anyWindow.amdRequire.config({ paths: { vs: "build/vendor/vs" } });
-                anyWindow.amdRequire.config({ baseUrl: "D:/dev/js/BatchLabs/build/vendor/" });
+                anyWindow.amdRequire.config({ baseUrl: path.join(Constants.Client.root, "build/vendor/") });
                 // workaround monaco-css not understanding the environment
                 (self as any).module = undefined;
                 // workaround monaco-typescript not understanding the environment
