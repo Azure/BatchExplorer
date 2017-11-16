@@ -13,6 +13,10 @@ export interface EditorKeyBinding {
 }
 
 export interface EditorConfig extends monaco.editor.IEditorConstructionOptions {
+    /**
+     * Optional filename used for language specific schemas
+     */
+    uri?: string;
     language?: string;
     readOnly?: boolean;
     tabSize?: number;
@@ -58,6 +62,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     private _resizeDetector: any;
     private _config: EditorConfig;
     private _editor: monaco.editor.IStandaloneCodeEditor;
+    private _model: monaco.editor.IModel;
 
     @Input() public set value(v) {
         if (v !== this._value) {
@@ -94,6 +99,7 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     }
 
     public ngOnDestroy() {
+        this._editor.dispose();
         this._resizeDetector.uninstall(this.elementRef.nativeElement);
     }
 
@@ -102,10 +108,11 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
         const options: monaco.editor.IEditorConstructionOptions = this.config;
 
         options.value = this._value;
-
-        this._editor = monaco.editor.create(myDiv, options);
+        this._model = monaco.editor.createModel(this._value, this.config.language, this.config.uri as any);
+        this._editor = monaco.editor.create(myDiv, { ...this.config as any });
+        this._editor.setModel(this._model);
         if (this.config.tabSize) {
-            this._editor.getModel().updateOptions({ tabSize: this.config.tabSize });
+            this._model.updateOptions({ tabSize: this.config.tabSize });
         }
 
         if (this.config.keybindings) {
@@ -113,8 +120,8 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
                 this._editor.addCommand(binding.key, binding.action, "");
             }
         }
-        this._editor.getModel().onDidChangeContent((e) => {
-            this.updateValue(this._editor.getModel().getValue());
+        this._model.onDidChangeContent((e) => {
+            this.updateValue(this._model.getValue());
         });
     }
 
@@ -126,8 +133,8 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
 
     public writeValue(value) {
         this._value = value || "";
-        if (this._editor) {
-            this._editor.getModel().setValue(this._value);
+        if (this._model) {
+            this._model.setValue(this._value);
         }
     }
 
