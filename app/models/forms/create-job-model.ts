@@ -1,9 +1,9 @@
-
-import { JobCreateDto } from "app/models/dtos";
 import * as moment from "moment";
 
+import { JobCreateDto } from "app/models/dtos";
+
 export interface JobConstraintsModel {
-    maxWallClockTime: string;
+    maxWallClockTime: moment.Duration;
     maxTaskRetryCount: number;
 }
 
@@ -33,8 +33,8 @@ export function createJobFormToJsonData(formData: CreateJobModel): JobCreateDto 
         displayName: formData.displayName,
         priority: formData.priority,
         constraints: {
-            maxWallClockTime: formData.constraints.maxWallClockTime,
-            maxTaskRetryCount: formData.constraints.maxTaskRetryCount,
+            maxWallClockTime: formData.constraints && formData.constraints.maxWallClockTime,
+            maxTaskRetryCount: formData.constraints && formData.constraints.maxTaskRetryCount,
         },
         poolInfo: {
             poolId: formData.poolInfo && formData.poolInfo.poolId,
@@ -49,7 +49,7 @@ export function createJobFormToJsonData(formData: CreateJobModel): JobCreateDto 
 }
 
 export function jobToFormModel(job: JobCreateDto): CreateJobModel {
-    const out: any = {
+    return {
         id: job.id,
         displayName: job.displayName,
         priority: job.priority,
@@ -62,21 +62,9 @@ export function jobToFormModel(job: JobCreateDto): CreateJobModel {
         onTaskFailure: job.onTaskFailure,
         metadata: job.metadata,
         usesTaskDependencies: job.usesTaskDependencies,
-    };
-
-    if (job.constraints) {
-        let maxWallClockTime = null;
-        // if value is patched from json editor, maxwallclock needs to be converted to duration
-        if (typeof job.constraints.maxWallClockTime === "string") {
-            maxWallClockTime = moment.duration(job.constraints.maxWallClockTime);
-        } else {
-            maxWallClockTime = job.constraints.maxWallClockTime;
-        }
-
-        out.constraints = {
-            maxWallClockTime: maxWallClockTime && maxWallClockTime.toISOString(),
+        constraints: {
+            maxWallClockTime: job.constraints.maxWallClockTime,
             maxTaskRetryCount: job.constraints.maxTaskRetryCount,
-        };
-    }
-    return out;
+        },
+    };
 }

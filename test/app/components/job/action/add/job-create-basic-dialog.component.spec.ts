@@ -7,7 +7,6 @@ import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { Pool, ServerError } from "app/models";
-// import { JobCreateDto } from "app/models/dtos";
 import { JobService, PoolService } from "app/services";
 import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";

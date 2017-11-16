@@ -1,6 +1,7 @@
 import { Dto, DtoAttr } from "app/core";
 import { AppPackageReferenceDto } from "./application-package-reference.dto";
 import { EnvironmentSetting } from "./metadata.dto";
+import { TaskConstraintsDto } from "./task-constraints.dto";
 
 export class TaskCreateDto extends Dto<TaskCreateDto> {
     @DtoAttr() public id: string;
@@ -19,7 +20,7 @@ export class TaskCreateDto extends Dto<TaskCreateDto> {
 
     @DtoAttr() public affinityInfo?: any;
 
-    @DtoAttr() public constraints?: ConstraintDto;
+    @DtoAttr() public constraints?: TaskConstraintsDto;
 
     @DtoAttr() public userIdentity?: any;
 
@@ -44,10 +45,4 @@ export interface FileGroupDto {
 export interface GroupSourceDto {
     fileGroup: string;
     prefix: string;
-}
-
-export interface ConstraintDto {
-    maxWallClockTime?: moment.Duration;
-    maxTaskRetryCount?: number;
-    retentionTime?: moment.Duration;
 }

@@ -1,4 +1,6 @@
 import { Dto, DtoAttr } from "app/core";
+
+import { JobConstraintDto } from "./job-constraints.dto";
 import { EnvironmentSetting, MetaDataDto } from "./metadata.dto";
 import { PoolCreateDto } from "./pool-create.dto";
 
@@ -9,7 +11,7 @@ export class JobCreateDto extends Dto<JobCreateDto> {
 
     @DtoAttr() public priority?: number;
 
-    @DtoAttr() public constraints?: any;
+    @DtoAttr() public constraints?: JobConstraintDto;
 
     @DtoAttr() public jobManagerTask?: any;
 

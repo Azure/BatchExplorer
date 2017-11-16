@@ -1,11 +1,12 @@
-import { TaskCreateDto } from "app/models/dtos";
 import * as moment from "moment";
+
+import { TaskCreateDto } from "app/models/dtos";
 import { PackageReferenceModel } from "./create-pool-model";
 
 export interface TaskConstraintsModel {
-    maxWallClockTime: string;
+    maxWallClockTime: moment.Duration;
     maxTaskRetryCount: number;
-    retentionTime: string;
+    retentionTime: moment.Duration;
 }
 
 export interface CreateTaskModel {
@@ -64,25 +65,11 @@ export function taskToFormModel(task: TaskCreateDto): CreateTaskModel {
 
     if (task.constraints) {
         out.constraints = {
-            maxWallClockTime: toDuration(task.constraints.maxWallClockTime),
+            maxWallClockTime: task.constraints.maxWallClockTime,
             maxTaskRetryCount: task.constraints.maxTaskRetryCount,
-            retentionTime: toDuration(task.constraints.retentionTime),
+            retentionTime: task.constraints.retentionTime,
         };
     }
 
     return out;
-}
-
-/**
- * When duration is patched from json editor, ensure value gets converted back to duration object from string
- * @param duration
- */
-function toDuration(duration: any) {
-    let result = null;
-    if (typeof duration === "string") {
-        result = moment.duration(duration);
-    } else {
-        result = duration;
-    }
-    return result;
 }
