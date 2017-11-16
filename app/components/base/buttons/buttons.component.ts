@@ -73,8 +73,6 @@ export class AddTaskButtonComponent extends BaseButton {
         return this.job
             && this.job.state !== JobState.completed
             && this.job.state !== JobState.deleting
-            && this.job.state !== JobState.disabled
-            && this.job.state !== JobState.disabling
             && this.job.state !== JobState.terminating;
     }
 }

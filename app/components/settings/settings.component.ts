@@ -3,10 +3,8 @@ import { FormControl } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable, Subscription } from "rxjs";
 
-// tslint:disable-next-line:no-var-requires
-const stripJsonComments = require("strip-json-comments");
-
 import { SettingsService } from "app/services";
+import { validJsonConfig } from "app/utils/validators";
 import "./settings.scss";
 
 // tslint:disable-next-line:no-var-requires
@@ -44,7 +42,7 @@ export class SettingsComponent implements OnDestroy {
     };
 
     public defaultSettings = defaultSettings;
-    public userSettings = new FormControl(emptyConfig, null, this._validJsonConfig);
+    public userSettings = new FormControl(emptyConfig, null, validJsonConfig);
 
     private _originalUserSettings: string;
     private _subs: Subscription[] = [];
@@ -79,22 +77,5 @@ export class SettingsComponent implements OnDestroy {
         if (this.userSettings.untouched) {
             this.userSettings.setValue(str);
         }
-    }
-
-    @autobind()
-    private _validJsonConfig(c: FormControl): Observable<any> {
-        return Observable.of(null).debounceTime(400).map(() => {
-            try {
-                JSON.parse(stripJsonComments(c.value, { whitespace: true }));
-                return null;
-            } catch (e) {
-                return {
-                    validJsonConfig: {
-                        valid: false,
-                        message: e.message,
-                    },
-                };
-            }
-        });
     }
 }
