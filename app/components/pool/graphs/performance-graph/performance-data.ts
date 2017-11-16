@@ -5,7 +5,6 @@ import {
     BatchPerformanceMetricType, BatchPerformanceMetrics, PerformanceMetric,
 } from "app/models/app-insights/metrics-result";
 import { AppInsightsQueryService } from "app/services";
-import { log } from "app/utils";
 
 export class PerformanceData {
     public set pool(pool: Pool) {

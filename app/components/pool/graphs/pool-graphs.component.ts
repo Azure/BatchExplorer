@@ -191,7 +191,6 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
         ).toOData();
     }
 
-
     private _checkTabIsValid() {
         if (this.appInsightsEnabled && this.focusedGraph === AvailableGraph.EnableAppInsights) {
             this.focusGraph(AvailableGraph.Heatmap);
