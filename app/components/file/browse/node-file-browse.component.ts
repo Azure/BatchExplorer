@@ -6,10 +6,10 @@ import { FileService } from "app/services";
 import { FileLoader, FileNavigator } from "app/services/file";
 import "./node-file-browse.scss";
 
-export interface Folder {
-    name: string;
-    friendlyName: string;
-}
+const availableStates = new Set([
+    NodeState.idle, NodeState.running, NodeState.waitingForStartTask,
+]);
+
 /**
  * Component for browsing node files.
  */
@@ -36,9 +36,7 @@ export class NodeFileBrowseComponent implements OnChanges, OnDestroy {
     public ngOnChanges(inputs) {
         if (inputs.poolId || inputs.nodeId || inputs.folder) {
             this._clearFileNavigator();
-            this.isNodeAvailable = [
-                NodeState.idle, NodeState.running, NodeState.waitingForStartTask,
-            ].includes(this.node.state);
+            this.isNodeAvailable = availableStates.has(this.node.state);
 
             if (this.poolId && this.nodeId) {
                 this.fileNavigator = this.fileService.navigateNodeFiles(this.poolId, this.nodeId, {
