@@ -11,7 +11,7 @@
 
         <span *ngIf="taskCount !== tasks.size">
             (Only {{tasks.size}} are loaded.
-            <bl-clickable do="refresh()">Refresh</bl-clickable>)</span>
+            <bl-clickable (do)="refresh()">Refresh</bl-clickable>)</span>
     </div>
     <div class="actions">
         <bl-download-button [action]="downloadCsv"></bl-download-button>
@@ -32,5 +32,10 @@
 
 </div>
 <div class="info-overlay" *ngIf="loading">
-    Loading tasks. This can take a long time. ({{taskLoadedProgress}}/{{taskCount}})
+    <ng-container *ngIf="loadingFromCache">
+        Loading tasks from local cache.
+    </ng-container>
+    <ng-container *ngIf="!loadingFromCache">
+        Loading tasks. This can take a long time. ({{taskLoadedProgress}}/{{taskCount}})
+    </ng-container>
 </div>

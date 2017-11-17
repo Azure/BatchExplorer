@@ -31,6 +31,7 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
     public jobId: string;
     public tasks: List<Task> = List([]);
     public loading = false;
+    public loadingFromCache = false;
     public currentGraph = AvailableGraph.runningTime;
     public description: string;
     public taskLoadedProgress = 0;
@@ -67,7 +68,7 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
     public updateTasks(force = false): Observable<any> {
         this.loading = true;
 
-        return Observable.fromPromise(this._tryLoadTasksFromCache(force)).flatMap((success) => {
+        const obs =  Observable.fromPromise(this._tryLoadTasksFromCache(force)).flatMap((success) => {
             if (success) {
                 this.loading = false;
                 return Observable.of(null);
@@ -78,7 +79,9 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
                 select: "id,executionInfo,nodeInfo",
                 filter: FilterBuilder.prop("state").eq(TaskState.completed).toOData(),
                 pageSize: 1000,
-            }, (x) => this.taskLoadedProgress = x);
+            }, (x) => {
+                this.taskLoadedProgress = x;
+            });
 
             obs.subscribe({
                 next: (tasks) => {
@@ -93,6 +96,8 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
             return obs;
 
         }).share();
+        obs.subscribe();
+        return obs;
     }
 
     public ngOnDestroy() {
@@ -147,11 +152,14 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
         if (force) {
             return false;
         }
+        this.loadingFromCache = true;
         const data = await this.cacheDataService.read(this._cacheKey);
         if (data) {
             this.tasks = List(data.map(x => new Task(x)));
+            this.loadingFromCache = false;
             return true;
         }
+        this.loadingFromCache = false;
         return false;
     }
 }
