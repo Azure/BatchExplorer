@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, OnDestroy, Output, forwardRef } from "@angular/core";
+import { Component, EventEmitter, OnDestroy, Output, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormArray, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
@@ -8,10 +8,10 @@ import { Observable, Subscription } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { ApplicationPackage, BatchApplication, ServerError } from "app/models";
-import { ApplicationService } from "app/services";
-import { RxListProxy } from "app/services/core";
+import { ApplicationListParams, ApplicationService } from "app/services";
 
 import "app/components/base/form/editable-table/editable-table.scss";
+import { ListView } from "app/services/core";
 
 interface PackageReference {
     applicationId?: string;
@@ -27,7 +27,7 @@ interface PackageReference {
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => AppPackagePickerComponent), multi: true },
     ],
 })
-export class AppPackagePickerComponent implements ControlValueAccessor, Validator, AfterViewInit, OnDestroy {
+export class AppPackagePickerComponent implements ControlValueAccessor, Validator, OnDestroy {
     @Output()
     public hasLinkedStorage: EventEmitter<boolean> = new EventEmitter();
 
@@ -38,7 +38,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
     public form: FormGroup;
 
     private _subscriptions: Subscription[] = [];
-    private _data: RxListProxy<{}, BatchApplication>;
+    private _data: ListView<BatchApplication, ApplicationListParams>;
     private _applicationMap: { [key: string]: string[] } = {};
     private _propagateChange: (items: any[]) => void;
     private _propagateTouched: (value: boolean) => void;
@@ -56,14 +56,17 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         this.form = formBuilder.group({ items: this.items });
         this._mapped = false;
 
-        this._data = this.applicationService.list({}, (error: ServerError) => {
+        this._data = this.applicationService.listView();
+
+        // TODO-TIM handle error.
+        this._data.onError = (error: ServerError) => {
             if (this.applicationService.isAutoStorageError(error)) {
                 this.hasLinkedStorage.emit(false);
                 return true;
             }
 
             return false;
-        });
+        };
 
         // subscribe to the application data proxy
         this._subscriptions.push(this._data.items.subscribe((applications) => {
@@ -111,12 +114,6 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         this.status = this._data.status;
     }
 
-    public ngAfterViewInit() {
-        setTimeout(() => {
-            this.addNewItem();
-        });
-    }
-
     public ngOnDestroy() {
         this._subscriptions.forEach(x => x.unsubscribe());
     }
@@ -134,6 +131,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
 
         this._data.fetchNext();
         this._writingValue = false;
+        this.addNewItem();
     }
 
     public registerOnChange(fn) {

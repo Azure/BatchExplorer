@@ -10,7 +10,7 @@ import { SidebarManager } from "app/components/base/sidebar";
 import { FileGroupCreateFormComponent } from "app/components/data/action";
 import { BlobContainer } from "app/models";
 import { ListContainerParams, StorageService } from "app/services";
-import { RxListProxy } from "app/services/core";
+import { ListView } from "app/services/core";
 
 import "./file-group-picker.scss";
 
@@ -29,7 +29,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
 
     public fileGroups: List<BlobContainer>;
     public value = new FormControl();
-    public fileGroupsData: RxListProxy<ListContainerParams, BlobContainer>;
+    public fileGroupsData: ListView<BlobContainer, ListContainerParams>;
     public warning = false;
 
     private _propagateChange: (value: any[]) => void = null;
@@ -38,7 +38,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
 
     constructor(private storageService: StorageService, private sidebarManager: SidebarManager) {
 
-        this.fileGroupsData = this.storageService.listContainers(storageService.ncjFileGroupPrefix);
+        this.fileGroupsData = this.storageService.containerListView(storageService.ncjFileGroupPrefix);
         this.fileGroupsData.items.subscribe((fileGroups) => {
             this.fileGroups = fileGroups;
         });

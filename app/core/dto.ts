@@ -23,13 +23,17 @@ export class Dto<T> {
             if (nil(value)) {
                 continue;
             }
-
             if (type && !primitives.has(type.name)) {
                 this[key] = new type(value);
             } else {
                 this[key] = value;
             }
         }
+    }
+
+    public merge?(other: this): this {
+        const data = { ...(this.toJS() as any), ...(other.toJS() as any) };
+        return new (this.constructor as any)(data);
     }
 
     public toJS?(): AttrOf<T> {
@@ -53,13 +57,15 @@ export class Dto<T> {
     }
 }
 
-export function DtoAttr<T>() {
+export function DtoAttr<T>(type?: any) {
     return (target, attr, descriptor?: TypedPropertyDescriptor<T>) => {
         const ctr = target.constructor;
-        const type = Reflect.getMetadata("design:type", target, attr);
+        if (!type) {
+            type = Reflect.getMetadata("design:type", target, attr);
+        }
         if (!type) {
             throw new Error(`Cannot retrieve the type for DtoAttr ${target.constructor.name}#${attr}`
-            + "Check your nested type is defined in another file or above this DtoAttr");
+                + "Check your nested type is defined in another file or above this DtoAttr");
         }
         const metadata = Reflect.getMetadata(attrMetadataKey, ctr) || {};
         metadata[attr] = type;

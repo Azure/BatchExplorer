@@ -7,7 +7,7 @@ import { Observable, Subscription } from "rxjs";
 
 import { BlobContainer } from "app/models";
 import { ListContainerParams, StorageService } from "app/services";
-import { RxListProxy } from "app/services/core";
+import { ListView } from "app/services/core";
 
 // tslint:disable:no-forward-ref
 @Component({
@@ -20,7 +20,7 @@ import { RxListProxy } from "app/services/core";
 })
 export class FileGroupsPickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
     public fileGroups: FormControl;
-    public data: RxListProxy<ListContainerParams, BlobContainer>;
+    public data: ListView<BlobContainer, ListContainerParams>;
     public groups: List<string>;
     public filteredOptions: Observable<string[]>;
 
@@ -33,7 +33,7 @@ export class FileGroupsPickerComponent implements ControlValueAccessor, OnInit, 
         private formBuilder: FormBuilder,
         private storageService: StorageService) {
 
-        this.data = this.storageService.listContainers(storageService.ncjFileGroupPrefix);
+        this.data = this.storageService.containerListView(storageService.ncjFileGroupPrefix);
         this._subscriptions.push(this.data.items.subscribe((fileGroupContainers) => {
             this.groups = List(fileGroupContainers.map((container) => container.name));
         }));

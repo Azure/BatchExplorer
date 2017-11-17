@@ -6,7 +6,7 @@
         <i class="fa fa-code"></i>
     </bl-button>
 </div>
-<div *ngIf="showJson">
+<div *ngIf="showJson" class="editor-container">
     <bl-editor [value]="jsonValue" [config]="editorConfig"></bl-editor>
 </div>
 <div *ngIf="!showJson">

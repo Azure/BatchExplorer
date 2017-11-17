@@ -6,7 +6,7 @@ import {
 import { NodeAgentSku, NodeAgentSkuMap, Offer, Sku } from "app/models";
 import { PoolOSPickerModel, PoolOsSources } from "app/models/forms";
 import { NodeService } from "app/services";
-import { RxListProxy } from "app/services/core";
+import { ListView } from "app/services/core";
 
 const cloudServiceOsFamilies = [{
     id: "2",
@@ -33,7 +33,7 @@ const cloudServiceOsFamilies = [{
 })
 export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
     public value: PoolOSPickerModel;
-    public accountData: RxListProxy<{}, NodeAgentSku>;
+    public accountData: ListView<NodeAgentSku, {}>;
 
     // Shared to the view
     public PoolOsSources = PoolOsSources;

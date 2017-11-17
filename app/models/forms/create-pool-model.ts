@@ -93,8 +93,7 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
     if (output.appPackages && output.appPackages.length > 0) {
         data.applicationPackageReferences = output.appPackages;
     }
-
-    return data;
+    return new PoolCreateDto(data);
 }
 
 /**
@@ -124,8 +123,8 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
             virtualMachineConfiguration: pool.virtualMachineConfiguration,
         },
         startTask: pool.startTask,
-        userAccounts: pool.userAccounts,
-        appLicenses: pool.applicationLicenses,
+        userAccounts: pool.userAccounts || [],
+        appLicenses: pool.applicationLicenses || [],
         appPackages: pool.applicationPackageReferences,
     };
 }

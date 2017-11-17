@@ -6,7 +6,7 @@ import { Constants, exists } from "app/utils";
 import { Observable } from "rxjs";
 import { BatchClientService } from "./batch-client.service";
 import {
-    BatchEntityGetter, DataCache, RxBatchListProxy, RxListProxy, TargetedDataCache,
+    BatchEntityGetter, BatchListGetter, DataCache, ListOptionsAttributes, ListView, TargetedDataCache,
 } from "./core";
 import { FileLoader, FileNavigator, FileSource } from "./file";
 import { FileSystemService } from "./fs.service";
@@ -64,6 +64,8 @@ export class FileService extends ServiceBase {
 
     private _taskFileGetter: BatchEntityGetter<File, TaskFileParams>;
     private _nodeFileGetter: BatchEntityGetter<File, NodeFileParams>;
+    private _taskFileListGetter: BatchListGetter<File, TaskFileListParams>;
+    private _nodeFileListGetter: BatchListGetter<File, NodeFileListParams>;
 
     constructor(batchService: BatchClientService, private fs: FileSystemService) {
         super(batchService);
@@ -79,6 +81,35 @@ export class FileService extends ServiceBase {
             getFn: (client, { poolId, nodeId, filename }) =>
                 client.file.getComputeNodeFileProperties(poolId, nodeId, filename),
         });
+
+        this._taskFileListGetter = new BatchListGetter(File, this.batchService, {
+            cache: (params) => this.getTaskFileCache(params),
+            list: (client, { jobId, taskId }, options) => {
+                const batchOptions = { ...options };
+                if (options.original.folder) {
+                    batchOptions.filter = `startswith(name, '${options.original.folder}')`;
+                }
+                return client.file.listFromTask(jobId, taskId,
+                    { recursive: options.original.recursive, fileListFromTaskOptions: batchOptions });
+            },
+            listNext: (client, nextLink: string) => client.file.listFromTaskNext(nextLink),
+            logIgnoreError: fileIgnoredErrors,
+
+        });
+
+        this._nodeFileListGetter = new BatchListGetter(File, this.batchService, {
+            cache: (params) => this.getNodeFileCache(params),
+            list: (client, { poolId, nodeId }, options) => {
+                const batchOptions = { ...options };
+                if (options.original.folder) {
+                    batchOptions.filter = `startswith(name, '${options.original.folder}')`;
+                }
+                return client.file.listFromComputeNode(poolId, nodeId,
+                    { recursive: options.original.recursive, fileListFromComputeNodeOptions: batchOptions });
+            },
+            listNext: (client, nextLink: string) => client.file.listFromComputeNodeNext(nextLink),
+            logIgnoreError: fileIgnoredErrors,
+        });
     }
 
     public get basicProperties(): string {
@@ -93,39 +124,59 @@ export class FileService extends ServiceBase {
         return this._taskFileCache.getCache(params);
     }
 
-    public listFromComputeNode(
-        initialPoolId: string,
-        initialNodeId: string,
-        recursive = true,
-        initialOptions: any = {},
-        onError?: (error: ServerError) => boolean): RxListProxy<NodeFileListParams, File> {
-        return new RxBatchListProxy<NodeFileListParams, File>(File, this.batchService, {
+    // public listFromComputeNode(
+    //     initialPoolId: string,
+    //     initialNodeId: string,
+    //     recursive = true,
+    //     initialOptions: any = {},
+    //     onError?: (error: ServerError) => boolean): RxListProxy<NodeFileListParams, File> {
+    //     return new RxBatchListProxy<NodeFileListParams, File>(File, this.batchService, {
+    //         cache: (params) => this.getNodeFileCache(params),
+    //         proxyConstructor: (client, params, options) => {
+    //             const batchOptions = { ...options };
+    //             if (options.folder) {
+    //                 batchOptions.filter = `startswith(name, '${options.folder}')`;
+    //             }
+    //             return client.file.listFromComputeNode(params.poolId, params.nodeId, recursive, batchOptions);
+    //         },
+    //         initialParams: { poolId: initialPoolId, nodeId: initialNodeId },
+    //         initialOptions,
+    //         logIgnoreError: fileIgnoredErrors,
+    //         onError: onError,
+    //     });
+    // }
+
+    public listFromNodeView(poolId: string, nodeId: string, options: ListOptionsAttributes = {}) {
+        const view = new ListView({
             cache: (params) => this.getNodeFileCache(params),
-            proxyConstructor: (client, params, options) => {
-                const batchOptions = { ...options };
-                if (options.folder) {
-                    batchOptions.filter = `startswith(name, '${options.folder}')`;
-                }
-                return client.file.listFromComputeNode(params.poolId, params.nodeId, recursive, batchOptions);
-            },
-            initialParams: { poolId: initialPoolId, nodeId: initialNodeId },
-            initialOptions,
-            logIgnoreError: fileIgnoredErrors,
-            onError: onError,
+            getter: this._nodeFileListGetter,
+            initialOptions: options,
         });
+        view.params = { poolId, nodeId };
+        return view;
+    }
+
+    public listFromTaskView(jobId: string, taskId: string, options: ListOptionsAttributes = {}) {
+        const view = new ListView({
+            cache: (params) => this.getTaskFileCache(params),
+            getter: this._taskFileListGetter,
+            initialOptions: options,
+        });
+        view.params = { jobId, taskId };
+        return view;
     }
 
     public navigateNodeFiles(poolId: string, nodeId: string, config: NaviagateNodeFileConfig = {}) {
         return new FileNavigator({
             basePath: config.basePath,
-            loadPath: (folder) => this.listFromComputeNode(poolId, nodeId, false, { folder }),
+            loadPath: (folder) => this.listFromNodeView(poolId, nodeId, { recursive: false, folder }),
             getFile: (filename: string) => this.fileFromNode(poolId, nodeId, filename),
         });
     }
 
     public navigateTaskFile(jobId: string, taskId: string, options: NaviagateTaskFileOptions) {
         return new FileNavigator({
-            loadPath: (folder) => this.listFromTask(jobId, taskId, true, { folder }),
+            loadPath: (folder) => this.listFromTaskView(jobId, taskId, { recursive: false, folder }),
             getFile: (filename: string) => this.fileFromTask(jobId, taskId, filename),
             onError: options.onError,
         });
@@ -149,6 +200,11 @@ export class FileService extends ServiceBase {
                     return client.file.getComputeNodeFile(poolId, nodeId, filename, batchOptions);
                 });
             },
+            download: (dest: string) => {
+                return this.callBatchClient((client) => {
+                    return client.file.downloadFromNode(poolId, nodeId, filename, dest);
+                });
+            },
         });
     }
 
@@ -158,28 +214,6 @@ export class FileService extends ServiceBase {
         filename: string,
         options: any = {}): Observable<File> {
         return this._nodeFileGetter.fetch({ poolId, nodeId, filename });
-    }
-
-    public listFromTask(
-        initialJobId: string,
-        initialTaskId: string,
-        recursive = true,
-        initialOptions: any = {},
-        onError?: (error: ServerError) => boolean): RxListProxy<TaskFileListParams, File> {
-        return new RxBatchListProxy<TaskFileListParams, File>(File, this.batchService, {
-            cache: (params) => this.getTaskFileCache(params),
-            proxyConstructor: (client, params, options) => {
-                const batchOptions = { ...options };
-                if (options.folder) {
-                    batchOptions.filter = `startswith(name, '${options.folder}')`;
-                }
-                return client.file.listFromTask(params.jobId, params.taskId, recursive, batchOptions);
-            },
-            initialParams: { jobId: initialJobId, taskId: initialTaskId },
-            initialOptions,
-            logIgnoreError: fileIgnoredErrors,
-            onError: onError,
-        });
     }
 
     public fileFromTask(jobId: string, taskId: string, filename: string): FileLoader {
@@ -199,6 +233,11 @@ export class FileService extends ServiceBase {
                 const batchOptions = { fileGetFromTaskOptions: { ocpRange } };
                 return this.callBatchClient((client) => {
                     return client.file.getTaskFile(jobId, taskId, filename, batchOptions);
+                });
+            },
+            download: (dest: string) => {
+                return this.callBatchClient((client) => {
+                    return client.file.downloadFromTask(jobId, taskId, filename, dest);
                 });
             },
             logIgnoreError: fileIgnoredErrors,
