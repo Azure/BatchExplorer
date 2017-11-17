@@ -13,6 +13,7 @@ import {
     ContinuationToken,
     DataCache,
     EntityView,
+    FetchAllProgressCallback,
     ListOptionsAttributes,
     ListView,
     TargetedDataCache,
@@ -116,8 +117,11 @@ export class TaskService extends ServiceBase {
         });
     }
 
-    public listAll(jobId: string, options: TaskListOptions = {}): Observable<List<Task>> {
-        return this._listGetter.fetchAll({ jobId }, options);
+    public listAll(
+        jobId: string,
+        options: TaskListOptions = {},
+        progress?: FetchAllProgressCallback): Observable<List<Task>> {
+        return this._listGetter.fetchAll({ jobId }, options, progress);
     }
 
     public get(jobId: string, taskId: string, options: any = {}): Observable<Task> {

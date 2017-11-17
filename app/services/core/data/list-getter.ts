@@ -6,6 +6,8 @@ import { DataCache } from "app/services/core";
 import { GenericGetter, GenericGetterConfig } from "./generic-getter";
 import { ContinuationToken, ListOptions, ListOptionsAttributes } from "./list-options";
 
+export type FetchAllProgressCallback = (count: number) => void;
+
 export interface ListResponse<TEntity> {
     items: List<TEntity>;
     nextLink: ContinuationToken;
@@ -30,9 +32,14 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
         }
     }
 
-    public fetchAll(params: TParams, options?: ListOptionsAttributes | ListOptions): Observable<List<TEntity>> {
+    public fetchAll(
+        params: TParams,
+        options?: ListOptionsAttributes | ListOptions,
+        progress?: FetchAllProgressCallback): Observable<List<TEntity>> {
+
         return this._fetch(params, new ListOptions(options), true).flatMap(({ items, nextLink }) => {
-            return this._fetchRemaining(nextLink).map(remainingItems => List<TEntity>(items.concat(remainingItems)));
+            return this._fetchRemaining(nextLink, items.size, progress)
+                .map(remainingItems => List<TEntity>(items.concat(remainingItems)));
         }).share();
     }
 
@@ -59,12 +66,20 @@ export abstract class ListGetter<TEntity, TParams> extends GenericGetter<TEntity
         return this.listNext(token.nextLink).map(x => this._processItems(cache, x, token.params, token.options, false));
     }
 
-    private _fetchRemaining(nextLink: ContinuationToken): Observable<Iterable<any, TEntity>> {
+    private _fetchRemaining(
+        nextLink: ContinuationToken,
+        currentCount: number,
+        progress?: FetchAllProgressCallback): Observable<Iterable<any, TEntity>> {
+        if (progress) {
+            progress(currentCount);
+        }
         if (!nextLink) {
             return Observable.of(List([]));
         }
         return this._fetchNext(nextLink).flatMap((response) => {
-            return this._fetchRemaining(response.nextLink).map(remainingItems => response.items.concat(remainingItems));
+            const newCount = currentCount + response.items.size;
+            return this._fetchRemaining(response.nextLink, newCount, progress)
+                .map(remainingItems => response.items.concat(remainingItems));
         }).share();
     }
 

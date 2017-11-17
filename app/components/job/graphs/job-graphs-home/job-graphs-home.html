@@ -1,9 +1,17 @@
 <div class="graph-header">
     <div class="summary">
         <h1>
-            Job <a [routerLink]="['/jobs', jobId]">{{jobId}}</a> graphs
+            Job
+            <a [routerLink]="['/jobs', jobId]">{{jobId}}</a> graphs
         </h1>
         <span class="description">{{description}}</span>
+    </div>
+    <div class="task-count" *ngIf="!loading">
+        {{taskCount}} tasks completed
+
+        <span *ngIf="taskCount !== tasks.size">
+            (Only {{tasks.size}} are loaded.
+            <bl-clickable do="refresh()">Refresh</bl-clickable>)</span>
     </div>
     <div class="actions">
         <bl-download-button [action]="downloadCsv"></bl-download-button>
@@ -24,5 +32,5 @@
 
 </div>
 <div class="loading-overlay" *ngIf="loading">
-    Loading tasks. This can take a long time.
+    Loading tasks. This can take a long time. ({{taskLoadedProgress}}/{{taskCount}})
 </div>

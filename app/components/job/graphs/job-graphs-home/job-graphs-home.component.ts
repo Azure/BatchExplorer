@@ -5,7 +5,7 @@ import * as path from "path";
 import { Observable } from "rxjs";
 
 import { tasksToCsv } from "app/components/job/graphs/job-graphs-home/helpers";
-import { Job, Task, TaskState } from "app/models";
+import { Job, JobTaskCounts, Task, TaskState } from "app/models";
 import { CacheDataService, ElectronShell, FileSystemService, JobParams, JobService, TaskService } from "app/services";
 import { EntityView } from "app/services/core";
 import { log } from "app/utils";
@@ -33,6 +33,8 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
     public loading = false;
     public currentGraph = AvailableGraph.runningTime;
     public description: string;
+    public taskLoadedProgress = 0;
+    public taskCount: number;
 
     private _data: EntityView<Job, JobParams>;
 
@@ -59,6 +61,7 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
             this._data.fetch();
             this.updateTasks().subscribe();
         });
+        this._updateTaskCount();
     }
 
     public updateTasks(force = false): Observable<any> {
@@ -69,11 +72,13 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
                 this.loading = false;
                 return Observable.of(null);
             }
+            this.taskLoadedProgress = 0;
+            this._updateTaskCount();
             const obs = this.taskService.listAll(this.jobId, {
                 select: "id,executionInfo,nodeInfo",
                 filter: FilterBuilder.prop("state").eq(TaskState.completed).toOData(),
                 pageSize: 1000,
-            });
+            }, (x) => this.taskLoadedProgress = x);
 
             obs.subscribe({
                 next: (tasks) => {
@@ -112,6 +117,12 @@ export class JobGraphsComponent implements OnInit, OnDestroy {
         return Observable.fromPromise(this.fs.saveFile(dest, csv).then(() => {
             this.shell.showItemInFolder(dest);
         }));
+    }
+
+    private _updateTaskCount() {
+        this.jobService.getTaskCounts(this.jobId).subscribe((taskCount) => {
+            this.taskCount = taskCount.completed;
+        });
     }
 
     private _updateDescription() {

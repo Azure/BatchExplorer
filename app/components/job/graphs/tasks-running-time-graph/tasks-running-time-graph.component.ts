@@ -178,7 +178,7 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges, OnDest
 
     private _getTaskRunningTime(task: Task) {
         const { startTime, endTime } = task.executionInfo;
-        return Math.round(moment(endTime).diff(moment(startTime)) / 1000);
+        return moment(endTime).diff(moment(startTime)) / 1000;
     }
 
     private _tasksToDataPoints(tasks: TaskPoint[]) {
