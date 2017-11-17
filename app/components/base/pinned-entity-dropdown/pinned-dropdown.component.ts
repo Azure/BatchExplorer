@@ -22,7 +22,7 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
 
     constructor(
         private router: Router,
-        private pinnedEntityService: PinnedEntityService,
+        public pinnedEntityService: PinnedEntityService,
         private accountService: AccountService) {
 
         this.favorites = this.pinnedEntityService.favorites;
