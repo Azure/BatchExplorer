@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
 
 import { FileExplorerConfig } from "app/components/file/browse/file-explorer";
-import { Node } from "app/models";
+import { Node, NodeState } from "app/models";
 import { FileService } from "app/services";
 import { FileLoader, FileNavigator } from "app/services/file";
 import "./node-file-browse.scss";
@@ -27,6 +27,7 @@ export class NodeFileBrowseComponent implements OnChanges, OnDestroy {
     @Input() public folder: string = "";
     @Input() public fileExplorerConfig: FileExplorerConfig;
 
+    public isNodeAvailable: boolean = false;
     public fileNavigator: FileNavigator;
     public pickedFileLoader: FileLoader;
 
@@ -35,9 +36,11 @@ export class NodeFileBrowseComponent implements OnChanges, OnDestroy {
     public ngOnChanges(inputs) {
         if (inputs.poolId || inputs.nodeId || inputs.folder) {
             this._clearFileNavigator();
+            this.isNodeAvailable = [
+                NodeState.idle, NodeState.running, NodeState.waitingForStartTask,
+            ].includes(this.node.state);
 
             if (this.poolId && this.nodeId) {
-
                 this.fileNavigator = this.fileService.navigateNodeFiles(this.poolId, this.nodeId, {
                     basePath: this.folder,
                 });
