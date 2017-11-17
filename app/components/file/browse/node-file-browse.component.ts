@@ -34,9 +34,12 @@ export class NodeFileBrowseComponent implements OnChanges, OnDestroy {
     constructor(private fileService: FileService) { }
 
     public ngOnChanges(inputs) {
+        if (inputs.node) {
+            this.isNodeAvailable = availableStates.has(this.node.state);
+        }
+
         if (inputs.poolId || inputs.nodeId || inputs.folder) {
             this._clearFileNavigator();
-            this.isNodeAvailable = availableStates.has(this.node.state);
 
             if (this.poolId && this.nodeId) {
                 this.fileNavigator = this.fileService.navigateNodeFiles(this.poolId, this.nodeId, {
