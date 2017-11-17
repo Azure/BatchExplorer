@@ -5,7 +5,7 @@ import * as path from "path";
 import { Observable } from "rxjs";
 
 import { tasksToCsv } from "app/components/job/graphs/job-graphs-home/helpers";
-import { Job, JobTaskCounts, Task, TaskState } from "app/models";
+import { Job, Task, TaskState } from "app/models";
 import { CacheDataService, ElectronShell, FileSystemService, JobParams, JobService, TaskService } from "app/services";
 import { EntityView } from "app/services/core";
 import { log } from "app/utils";
