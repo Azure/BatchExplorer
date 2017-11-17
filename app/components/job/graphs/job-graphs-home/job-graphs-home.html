@@ -31,6 +31,6 @@
     <bl-job-progress-graph *ngSwitchCase="AvailableGraph.progress" [job]="job" [tasks]="tasks"></bl-job-progress-graph>
 
 </div>
-<div class="loading-overlay" *ngIf="loading">
+<div class="info-overlay" *ngIf="loading">
     Loading tasks. This can take a long time. ({{taskLoadedProgress}}/{{taskCount}})
 </div>
