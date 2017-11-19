@@ -64,6 +64,11 @@ describe("PinnedEntityService", () => {
             }));
         });
 
+        beforeAll(() => {
+            jsonDataFromFileService = null;
+            favourites.clear();
+        });
+
         it("saves to local storage", () => {
             expect(localFileStorageSpy.set).toHaveBeenCalledTimes(1);
             expect(jsonFilename).toEqual("myaccount.westus.batch.com.pinned");
@@ -108,6 +113,11 @@ describe("PinnedEntityService", () => {
             pinService.pinFavorite(favorite);
         });
 
+        beforeAll(() => {
+            jsonDataFromFileService = null;
+            favourites.clear();
+        });
+
         it("returns true if already saved", () => {
             expect(pinService.isFavorite(favorite)).toEqual(true);
         });
@@ -120,30 +130,37 @@ describe("PinnedEntityService", () => {
         });
     });
 
-    // describe("unPinFavorite", () => {
-    //     let favorite: PinnedEntity;
-    //     beforeEach(() => {
-    //         pinService.pinFavorite(Fixtures.pinnable.create({
-    //             id: "pin-2",
-    //             pinnableType: PinnedEntityType.Job,
-    //         });
-    //     });
+    describe("unPinFavorite", () => {
+        let favorite: PinnedEntity;
+        beforeEach(() => {
+            favorite = Fixtures.pinnable.create({
+                id: "pin-2",
+                pinnableType: PinnedEntityType.Job,
+            });
 
-    //     it("removes and saves if exists in list", () => {
-    //         pinService.pinFavorite(favorite).subscribe(() => {
-    //             console.log("COUNT: ", favourites.size);
-    //             expect(favourites.size).toEqual(1);
-    //             pinService.unPinFavorite(favorite);
-    //             expect(localFileStorageSpy.set).toHaveBeenCalledTimes(1);
-    //             expect(favourites.size).toEqual(0);
-    //         });
-    //     });
+            pinService.pinFavorite(favorite);
+        });
 
-    //     it("does nothing if not favorite", () => {
-    //         const clone = Object.assign({ id: "pin-3", pinnableType: PinnedEntityType.Pool }, favorite);
-    //         expect(clone.id).toEqual("my-pin");
-    //         expect(clone.pinnableType).toEqual(PinnedEntityType.Pool);
-    //         expect(pinService.isFavorite(clone)).toEqual(false);
-    //     });
-    // });
+        beforeAll(() => {
+            jsonDataFromFileService = null;
+            favourites.clear();
+        });
+
+        it("removes and saves if exists in list", () => {
+            expect(favourites.size).toEqual(1);
+            expect(localFileStorageSpy.set).toHaveBeenCalledTimes(1);
+
+            pinService.unPinFavorite(favorite);
+            expect(localFileStorageSpy.set).toHaveBeenCalledTimes(2);
+            expect(favourites.size).toEqual(0);
+        });
+
+        it("does nothing if not favorite", () => {
+            expect(localFileStorageSpy.set).toHaveBeenCalledTimes(1);
+            const clone = Object.assign({ id: "pin-3", pinnableType: PinnedEntityType.Pool }, favorite);
+            pinService.unPinFavorite(clone);
+
+            expect(localFileStorageSpy.set).toHaveBeenCalledTimes(1);
+        });
+    });
 });

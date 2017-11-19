@@ -34,7 +34,6 @@ export class PinnedEntityService {
 
     public pinFavorite(entity: PinnableEntity): Observable<any> {
         if (this.isFavorite(entity)) {
-            console.log("IS FAV: ", entity.id);
             return Observable.of(true);
         }
 
