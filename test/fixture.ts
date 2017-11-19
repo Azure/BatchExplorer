@@ -2,7 +2,7 @@ import { Type } from "@angular/core";
 import * as moment from "moment";
 
 import { AccountResource, ApplicationPackage, BatchApplication, File, Job, Node, PackageState,
-    PinnedEntityType, PinnedEntity, Pool, Subscription, SubtaskInformation, Task,
+    PinnedEntity, PinnedEntityType, Pool, Subscription, SubtaskInformation, Task,
 } from "app/models";
 
 export class FixtureFactory<TEntity> {
