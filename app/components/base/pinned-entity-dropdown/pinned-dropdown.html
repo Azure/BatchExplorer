@@ -1,6 +1,6 @@
 <bl-dropdown class="account-dropdown">
     <div bl-dropdown-btn>
-        {{title}}
+        <i class="fa fa-star"></i> {{title}}
     </div>
     <div bl-dropdown-content>
         <div *ngFor="let favorite of favorites | async" class="dropdown-item" [routerLink]="favorite.routerLink"
