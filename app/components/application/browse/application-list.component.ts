@@ -10,8 +10,8 @@ import { LoadingStatus } from "app/components/base/loading";
 import { QuickListItemStatus } from "app/components/base/quick-list";
 import { ListOrTableBase } from "app/components/base/selectable-list";
 import { BatchApplication } from "app/models";
-import { ApplicationService, PinnedEntityService } from "app/services";
-import { RxListProxy } from "app/services/core";
+import { ApplicationListParams, ApplicationService, PinnedEntityService } from "app/services";
+import { ListView } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
 import { ApplicationEditDialogComponent, DeleteApplicationDialogComponent } from "../action";
@@ -22,7 +22,7 @@ import { ApplicationEditDialogComponent, DeleteApplicationDialogComponent } from
 })
 export class ApplicationListComponent extends ListOrTableBase implements OnInit, OnDestroy {
     public status: Observable<LoadingStatus>;
-    public data: RxListProxy<{}, BatchApplication>;
+    public data: ListView<BatchApplication, ApplicationListParams>;
     public applications: List<BatchApplication>;
     public displayedApplications: List<BatchApplication>;
 
@@ -49,7 +49,7 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
 
         super();
 
-        this.data = this.applicationService.list(this._baseOptions);
+        this.data = this.applicationService.listView(this._baseOptions);
         this._subs.push(this.data.items.subscribe((applications) => {
             this.applications = applications;
             this._filterApplications();

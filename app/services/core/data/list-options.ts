@@ -1,5 +1,11 @@
 import { OptionsBase, ProxyOptions } from "./proxy-options";
 
+export interface ContinuationToken {
+    params: any;
+    options: ListOptions;
+    nextLink: string;
+}
+
 export interface ListOptionsAttributes extends OptionsBase {
     /**
      * Maximum number of items to fetch at the same time
@@ -30,7 +36,7 @@ export class ListOptions extends ProxyOptions {
 
     public original: ListOptionsAttributes;
 
-    constructor(attributes: ListOptionsAttributes | ListOptions) {
+    constructor(attributes: ListOptionsAttributes | ListOptions = {}) {
         super(attributes);
         this.pageSize = this.original.pageSize;
         this.maxItems = this.original.maxItems;

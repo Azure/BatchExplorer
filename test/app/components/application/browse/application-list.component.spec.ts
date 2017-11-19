@@ -12,18 +12,18 @@ import { BatchApplication } from "app/models";
 import { ApplicationService, PinnedEntityService } from "app/services";
 import { FilterBuilder } from "app/utils/filter-builder";
 import * as Fixtures from "test/fixture";
-import { RxMockListProxy } from "test/utils/mocks";
+import { MockListView } from "test/utils/mocks";
 import { NoItemMockComponent } from "test/utils/mocks/components";
 
 describe("ApplicationListComponent", () => {
     let fixture: ComponentFixture<ApplicationListComponent>;
     let component: ApplicationListComponent;
-    let listProxy: RxMockListProxy<any, BatchApplication>;
+    let listProxy: MockListView<BatchApplication, {}>;
     let applicationServiceSpy: any;
     let pinServiceSpy;
 
     beforeEach(() => {
-        listProxy = new RxMockListProxy(BatchApplication, {
+        listProxy = new MockListView(BatchApplication, {
             cacheKey: "id",
             items: [
                 Fixtures.application.create({ id: "app-1" }),
@@ -33,7 +33,7 @@ describe("ApplicationListComponent", () => {
         });
 
         applicationServiceSpy = {
-            list: () => listProxy,
+            listView: () => listProxy,
             onApplicationAdded: new Subject(),
         };
 

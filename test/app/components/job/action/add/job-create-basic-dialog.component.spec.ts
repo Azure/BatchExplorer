@@ -11,14 +11,14 @@ import { JobService, PoolService } from "app/services";
 import * as Fixtures from "test/fixture";
 import * as TestConstants from "test/test-constants";
 import { validateControl } from "test/utils/helpers";
-import { RxMockListProxy } from "test/utils/mocks";
+import { MockListView } from "test/utils/mocks";
 import { ServerErrorMockComponent, complexFormMockComponents } from "test/utils/mocks/components";
 
 describe("JobCreateBasicDialogComponent ", () => {
     let fixture: ComponentFixture<JobCreateBasicDialogComponent>;
     let component: JobCreateBasicDialogComponent;
     let debugElement: DebugElement;
-    let poolListProxy: RxMockListProxy<any, Pool>;
+    let poolListProxy: MockListView<Pool, {}>;
     let sidebarRefSpy: any;
     let jobServiceSpy: any;
     let poolServiceSpy: any;
@@ -29,7 +29,7 @@ describe("JobCreateBasicDialogComponent ", () => {
     const validators = TestConstants.validators;
 
     beforeEach(() => {
-        poolListProxy = new RxMockListProxy(Pool, {
+        poolListProxy = new MockListView(Pool, {
             cacheKey: "url",
             items: [
                 Fixtures.pool.create({ id: "pool-001" }),
@@ -59,7 +59,7 @@ describe("JobCreateBasicDialogComponent ", () => {
         };
 
         poolServiceSpy = {
-            list: () => poolListProxy,
+            listView: () => poolListProxy,
         };
 
         notificationServiceSpy = {
@@ -186,7 +186,7 @@ describe("JobCreateBasicDialogComponent ", () => {
     it("Clicking add creates job and doesnt close form", (done) => {
         const job = Fixtures.job.create({ id: "job-001", poolInfo: { poolId: "pool-002" } });
         component.setValueFromEntity(job);
-        component.submit().subscribe(() => {
+        component.submit(component.getCurrentValue()).subscribe(() => {
             expect(jobServiceSpy.add).toHaveBeenCalledTimes(1);
             expect(notificationServiceSpy.success).toHaveBeenCalledTimes(1);
             expect(sidebarRefSpy.close).toHaveBeenCalledTimes(0);
@@ -209,7 +209,7 @@ describe("JobCreateBasicDialogComponent ", () => {
     it("If create job throws we handle the error", (done) => {
         const job = Fixtures.job.create({ id: "bad-job-id", poolInfo: { poolId: "pool-002" } });
         component.setValueFromEntity(job);
-        component.submit().subscribe({
+        component.submit(component.getCurrentValue()).subscribe({
             next: () => {
                 fail("call should have failed");
                 done();

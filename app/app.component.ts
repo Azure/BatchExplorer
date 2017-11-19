@@ -6,8 +6,8 @@ import { Observable } from "rxjs";
 
 import { registerIcons } from "app/config";
 import {
-    AccountService, AdalService, AutoscaleFormulaService, CommandService, NcjTemplateService,
-    NodeService, PredefinedFormulaService, PricingService, PythonRpcService,
+    AccountService, AdalService, AutoscaleFormulaService, CommandService, MonacoLoader,
+    NcjTemplateService, NodeService, PredefinedFormulaService, PricingService, PythonRpcService,
     SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
 } from "app/services";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
@@ -47,6 +47,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         private sshKeyService: SSHKeyService,
         pythonRpcService: PythonRpcService,
         private vmSizeService: VmSizeService,
+        monacoLoader: MonacoLoader,
         private pricingService: PricingService,
         private ncjTemplateService: NcjTemplateService,
         private predefinedFormulaService: PredefinedFormulaService,
@@ -62,6 +63,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.ncjTemplateService.init();
         pythonRpcService.init();
         this.predefinedFormulaService.init();
+        monacoLoader.get();
         this.hasAccount = accountService.currentAccount.map((x) => Boolean(x));
 
         Observable
