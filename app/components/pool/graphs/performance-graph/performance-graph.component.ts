@@ -61,7 +61,7 @@ export class PerformanceGraphComponent implements OnChanges {
             },
             tooltips: {
                 enabled: this.interactive,
-                mode: "index",
+                mode: "nearest",
                 callbacks: {
                     label: (tooltipItems, data) => {
                         return this._getToolTip(tooltipItems);
