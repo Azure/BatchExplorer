@@ -1,5 +1,5 @@
 import { Component, DebugElement } from "@angular/core";
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 import { List } from "immutable";
 
@@ -10,6 +10,7 @@ import {
     NotificationModule,
     NotificationService,
 } from "app/components/base/notifications";
+import { mouseenter, mouseleave } from "test/utils/helpers";
 
 @Component({
     template: `<bl-notification-container></bl-notification-container>`,
@@ -76,15 +77,14 @@ describe("Notification", () => {
             expect(messageEl.nativeElement.textContent).toContain("Something happend!");
         });
 
-        it("should dismiss automatically after 1s", (done) => {
+        it("should dismiss automatically after 1s", fakeAsync((done) => {
             expect(currentNotifications.size).not.toBe(0);
-            setTimeout(() => {
-                fixture.detectChanges();
-                expect(currentNotifications.size).toBe(0);
-                expect(de.query(By.css("bl-notification"))).toBeNull();
-                done();
-            }, 1000);
-        });
+            tick(1000);
+            fixture.detectChanges();
+            expect(currentNotifications.size).toBe(0);
+            expect(de.query(By.css("bl-notification"))).toBeNull();
+            done();
+        }));
 
         it("clicking dimiss should dismiss", () => {
             const notificationBtn = de.query(By.css("bl-notification .dismiss-btn"));
@@ -93,6 +93,19 @@ describe("Notification", () => {
             expect(currentNotifications.size).toBe(0);
             expect(de.query(By.css("bl-notification"))).toBeNull();
         });
+
+        it("should pause the timer when hovering", fakeAsync(() => {
+            tick(500);
+            const notificationEl = de.query(By.css("bl-notification"));
+            mouseenter(notificationEl);
+            tick(1000);
+            fixture.detectChanges();
+            expect(currentNotifications.size).toBe(1, "Should not have dismissed the notification");
+            mouseleave(notificationEl);
+            tick(1000);
+            fixture.detectChanges();
+            expect(currentNotifications.size).toBe(0, "Notification should now have been dismissed");
+        }));
     });
 
     describe("when a persistent notification is sent", () => {

@@ -43,6 +43,7 @@ export class NotificationComponent {
 
     @HostListener("mouseleave", ["$event"])
     public resumeNotificationAutoDismiss(event: MouseEvent) {
+        console.log("Mouse leave...");
         this.notificationService.resumeAutoDimiss(this.notification);
     }
 
