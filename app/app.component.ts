@@ -7,10 +7,8 @@ import { Observable } from "rxjs";
 import { registerIcons } from "app/config";
 import {
     AccountService, AdalService, AutoscaleFormulaService, CommandService, MonacoLoader,
-    NcjTemplateService, NodeService, PredefinedFormulaService, PricingService, PythonRpcService, SSHKeyService,
-    SettingsService,
-    SubscriptionService,
-    VmSizeService,
+    NcjTemplateService, NodeService, PredefinedFormulaService, PricingService, PythonRpcService,
+    SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
 } from "app/services";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 

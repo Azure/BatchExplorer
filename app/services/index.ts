@@ -14,6 +14,7 @@ export * from "./job-service";
 export * from "./job-hook-task.service";
 export * from "./local-file-storage.service";
 export * from "./monaco-loader.service";
+export * from "./pinned-entity.service";
 export * from "./pool-service";
 export * from "./ncj-file-group.service";
 export * from "./ncj-submit.service";
