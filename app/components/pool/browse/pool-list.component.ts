@@ -16,7 +16,7 @@ import { SidebarManager } from "app/components/base/sidebar";
 import { TableComponent, TableConfig } from "app/components/base/table";
 import { Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
-import { PoolListParams, PoolService } from "app/services";
+import { PinnedEntityService, PoolListParams, PoolService } from "app/services";
 import { ListView } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
 import { DeletePoolDialogComponent, PoolResizeDialogComponent } from "../action";
@@ -73,6 +73,7 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         router: Router,
         dialog: MatDialog,
         private sidebarManager: SidebarManager,
+        private pinnedEntityService: PinnedEntityService,
         private taskManager: BackgroundTaskService) {
 
         super(dialog);
@@ -123,27 +124,40 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         });
     }
 
-    public deletePool(pool: Pool) {
+    public deletePool(poolDecorator: PoolDecorator) {
         const dialogRef = this.dialog.open(DeletePoolDialogComponent);
-        dialogRef.componentInstance.poolId = pool.id;
+        dialogRef.componentInstance.poolId = poolDecorator.id;
     }
 
-    public resizePool(pool: Pool) {
+    public resizePool(poolDecorator: PoolDecorator) {
         const sidebarRef = this.sidebarManager.open("resize-pool", PoolResizeDialogComponent);
-        sidebarRef.component.pool = pool;
+        sidebarRef.component.pool = poolDecorator.pool;
         this.sidebarManager.onClosed.subscribe(() => {
-            this.poolService.get(pool.id);
+            this.poolService.get(poolDecorator.id);
         });
     }
 
-    public contextmenu(pool) {
+    public contextmenu(decorator: PoolDecorator) {
         return new ContextMenu([
-            new ContextMenuItem({ label: "Delete", click: () => this.deletePool(pool) }),
-            new ContextMenuItem({ label: "Resize", click: () => this.resizePool(pool) }),
+            new ContextMenuItem({ label: "Delete", click: () => this.deletePool(decorator) }),
+            new ContextMenuItem({ label: "Resize", click: () => this.resizePool(decorator) }),
+            new ContextMenuItem({
+                label: this.pinnedEntityService.isFavorite(decorator.pool) ? "Unpin favorite" : "Pin to favorites",
+                click: () => this._pinPool(decorator),
+                enabled: true,
+            }),
         ]);
     }
 
     public trackById(index, pool) {
         return pool.id;
+    }
+
+    public _pinPool(decorator: PoolDecorator) {
+        this.pinnedEntityService.pinFavorite(decorator.pool).subscribe((result) => {
+            if (result) {
+                this.pinnedEntityService.unPinFavorite(decorator.pool);
+            }
+        });
     }
 }
