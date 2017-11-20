@@ -1,6 +1,7 @@
 import { Component, Input } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { autobind } from "core-decorators";
+import * as moment from "moment";
 
 import { AddNodeUserAttributes } from "app/services";
 
@@ -41,6 +42,7 @@ export class NodeUserCredentialsFormComponent {
             password: [""],
             sshPublicKey: [""],
             isAdmin: [true],
+            expireIn: [moment.duration({ days: 1 })],
         });
     }
 
@@ -56,6 +58,7 @@ export class NodeUserCredentialsFormComponent {
         } else {
             credentials.password = value.password;
         }
+        credentials.expiryTime = moment().add(value.expireIn).toDate();
         return this.submit(credentials);
     }
 

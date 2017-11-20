@@ -1,4 +1,14 @@
 bl-duration-picker {
+    > .grow {
+        align-items: center;
+    }
+
+    .label {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
     .gcol {
         height: 40px;
         mat-form-field {
@@ -7,7 +17,7 @@ bl-duration-picker {
     }
 
     mat-slide-toggle {
-        margin-top: 12px;
+        margin-top: 4px;
         margin-left: 5px;
     }
 
