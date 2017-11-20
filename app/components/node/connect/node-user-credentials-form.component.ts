@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
 import { autobind } from "core-decorators";
 import * as moment from "moment";
@@ -28,8 +28,8 @@ export class NodeUserCredentialsFormComponent {
     }
     public get isLinuxNode() { return this._isLinuxNode; }
 
-    @Input()
-    public submit: (credentials) => any;
+    @Input() public submit: (credentials) => any;
+    @Output() public close = new EventEmitter();
 
     public form: FormGroup;
 
