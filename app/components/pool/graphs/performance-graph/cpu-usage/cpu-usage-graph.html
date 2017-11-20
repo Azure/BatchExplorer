@@ -10,4 +10,5 @@
     </div>
     <canvas blChart [datasets]="datasets" [options]="options" [chartType]="type">
     </canvas>
+    <div class="info-overlay" *ngIf="(data.loading | async) && interactive">Loading...</div>
 </div>

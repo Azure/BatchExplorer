@@ -1,4 +1,4 @@
-import { BehaviorSubject, Observable } from "rxjs";
+import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { Pool } from "app/models";
 import {
@@ -15,10 +15,14 @@ export class PerformanceData {
 
     public historySize: number = 10;
     public appId: string = null;
+    public loading: Observable<any>;
     private _metrics = new BehaviorSubject<BatchPerformanceMetrics>({} as any);
+    private _loading = new AsyncSubject();
     private _pool: Pool;
+    private _firstLoad = false;
 
     constructor(private appInsightsQueryService: AppInsightsQueryService) {
+        this.loading = this._loading.asObservable();
     }
 
     public update() {
@@ -28,6 +32,11 @@ export class PerformanceData {
         this.appInsightsQueryService.getPoolPerformance(this.appId, this.pool.id, this.historySize)
             .subscribe((metrics) => {
                 this._metrics.next(metrics);
+                if (this._firstLoad) {
+                    this._firstLoad = false;
+                    this._loading.next(true);
+                    this._loading.complete();
+                }
             });
     }
 

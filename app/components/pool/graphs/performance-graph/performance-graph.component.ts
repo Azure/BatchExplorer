@@ -98,7 +98,6 @@ export class PerformanceGraphComponent implements OnChanges {
     }
 
     protected _getToolTip(tooltipItem: Chart.ChartTooltipItem) {
-        console.log("TOlltip item: ", tooltipItem);
         return [
             NumberUtils.prettyMagnitude(tooltipItem.yLabel as any, this.unit),
         ];
