@@ -19,7 +19,7 @@ class TestComponent {
     public sshValue: string;
 }
 
-fdescribe("SSHKeyPickerComponent", () => {
+describe("SSHKeyPickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
     let component: SSHKeyPickerComponent;
