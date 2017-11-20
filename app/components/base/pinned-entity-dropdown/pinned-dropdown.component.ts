@@ -39,7 +39,7 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
         this._subscriptions.push(this.router.events
             .filter(event => event instanceof NavigationEnd)
             .subscribe((event: NavigationEnd) => {
-            // application URL scheme maps the Batch API URL for the entity
+            // Application URL scheme maps the Batch API URL for the entity
             this.currentUrl = `https://${this._accountEndpoint}${event.url}`;
         }));
     }
