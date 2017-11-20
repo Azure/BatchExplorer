@@ -12,6 +12,6 @@ export class EnableAppInsightsDocComponent {
     constructor(private shell: ElectronShell) { }
 
     public openDoc(suffix = "") {
-        this.shell.openExternal(`https://github.com/timotheeguerin/batch-insights${suffix}`);
+        this.shell.openExternal(`https://github.com/Azure/batch-insights${suffix}`);
     }
 }
