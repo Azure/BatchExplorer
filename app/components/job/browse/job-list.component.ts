@@ -13,7 +13,7 @@ import { ListOrTableBase } from "app/components/base/selectable-list";
 import { TableComponent } from "app/components/base/table";
 import { Job, JobState } from "app/models";
 import { FailureInfoDecorator } from "app/models/decorators";
-import { JobListParams, JobService } from "app/services";
+import { JobListParams, JobService, PinnedEntityService } from "app/services";
 import { ListView } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
 import {
@@ -68,6 +68,7 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
         router: Router,
         dialog: MatDialog,
         private jobService: JobService,
+        private pinnedEntityService: PinnedEntityService,
         private taskManager: BackgroundTaskService) {
         super(dialog);
         this.data = this.jobService.listView();
@@ -184,10 +185,22 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
                 click: () => this.disableJob(job),
                 enabled: !isCompleted && !isDisabled,
             }),
+            new ContextMenuItem({
+                label: this.pinnedEntityService.isFavorite(job) ? "Unpin favorite" : "Pin to favorites",
+                click: () => this._pinJob(job),
+            }),
         ]);
     }
 
     public trackByFn(index: number, job: Job) {
         return job.id;
+    }
+
+    private _pinJob(job: Job) {
+        this.pinnedEntityService.pinFavorite(job).subscribe((result) => {
+            if (result) {
+                this.pinnedEntityService.unPinFavorite(job);
+            }
+        });
     }
 }
