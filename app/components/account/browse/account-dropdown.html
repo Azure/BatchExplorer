@@ -13,7 +13,7 @@
                 <div class="alias">{{account.name}}</div>
                 <div class="url">{{account.properties.accountEndpoint}}</div>
             </div>
-            <div *ngIf="account === selectedId" class="extra">
+            <div *ngIf="account.id === selectedId" class="extra">
                 <i class="fa fa-check"></i>
             </div>
         </div>

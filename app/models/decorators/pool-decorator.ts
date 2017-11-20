@@ -47,7 +47,7 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     public startTask: StartTaskDecorator;
     public applicationLicenses: string;
 
-    constructor(private pool: Pool) {
+    constructor(public pool: Pool) {
         super(pool);
         this.displayName = this.stringField(pool.displayName);
         this.allocationState = this.stateField(pool.allocationState);

@@ -48,6 +48,7 @@ export * from "./node-user";
 export * from "./node-agent-sku";
 export * from "./node-agent-sku-map";
 export * from "./node-recent-task";
+export * from "./pinned-entity";
 export * from "./pool";
 export * from "./resize-error";
 export * from "./resource-descriptor";

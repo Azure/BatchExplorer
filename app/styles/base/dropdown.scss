@@ -30,7 +30,7 @@
     top: $header-height;
     background-color: $navigation-background;
     color: $whiteSmoke;
-    overflow: auto;
+    overflow: hidden;
     max-height: 80vh;
 
     .no-items {
@@ -44,8 +44,6 @@
         padding: 5px 10px;
         display: flex;
         align-items: center;
-        // justify-content: center;
-
         border-top: 1px solid $navigation-hover;
 
         &:hover, &.active {
@@ -54,6 +52,12 @@
 
         .main {
             flex: 1 0 auto;
+
+            .alias, .url {
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
         }
 
         .extra {
