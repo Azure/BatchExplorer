@@ -9,7 +9,7 @@ import { NumberUtils } from "app/utils";
     templateUrl: "network-usage-graph.html",
 })
 export class NetworkUsageGraphComponent extends PerformanceGraphComponent implements OnChanges {
-    public unit = "B";
+    public unit = "Bps";
     public metric = BatchUsageMetrics.cpu;
 
     public netReadUsages: PerformanceMetric[] = [];
@@ -54,6 +54,7 @@ export class NetworkUsageGraphComponent extends PerformanceGraphComponent implem
                 ],
                 fill: false,
                 borderWidth: 1,
+                label: "Network download speed",
             },
             {
                 data: [
@@ -66,6 +67,7 @@ export class NetworkUsageGraphComponent extends PerformanceGraphComponent implem
                 ],
                 fill: false,
                 borderWidth: 1,
+                label: "Network upload speed",
             },
         ];
     }

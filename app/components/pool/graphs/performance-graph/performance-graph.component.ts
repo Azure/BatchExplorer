@@ -51,13 +51,22 @@ export class PerformanceGraphComponent implements OnChanges {
             responsive: true,
             maintainAspectRatio: false,
             elements: {
-                point: { radius: 0, hitRadius: hitRadius, hoverRadius: hitRadius },
+                point: { radius: 0, hitRadius: hitRadius, hoverRadius: 0 },
                 line: {
                     tension: 0.05, // disables bezier curves
                 },
             },
             legend: {
                 display: false,
+            },
+            tooltips: {
+                enabled: this.interactive,
+                mode: "index",
+                callbacks: {
+                    label: (tooltipItems, data) => {
+                        return this._getToolTip(tooltipItems);
+                    },
+                },
             },
             scales: {
                 yAxes: [{
@@ -86,5 +95,12 @@ export class PerformanceGraphComponent implements OnChanges {
     protected _clearMetricSubs() {
         this._metricSubs.forEach(x => x.unsubscribe());
         this._metricSubs = [];
+    }
+
+    protected _getToolTip(tooltipItem: Chart.ChartTooltipItem) {
+        console.log("TOlltip item: ", tooltipItem);
+        return [
+            NumberUtils.prettyMagnitude(tooltipItem.yLabel as any, this.unit),
+        ];
     }
 }

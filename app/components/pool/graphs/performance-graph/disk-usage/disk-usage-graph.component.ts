@@ -9,7 +9,7 @@ import { NumberUtils } from "app/utils";
     templateUrl: "disk-usage-graph.html",
 })
 export class DiskUsageGraphComponent extends PerformanceGraphComponent implements OnChanges {
-    public unit = "B";
+    public unit = "Bps";
     public metric = BatchUsageMetrics.cpu;
 
     public diskReadUsages: PerformanceMetric[] = [];
@@ -52,6 +52,7 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
                 ],
                 fill: false,
                 borderWidth: 1,
+                label: "Disk read speed",
             },
             {
                 data: [
@@ -64,6 +65,7 @@ export class DiskUsageGraphComponent extends PerformanceGraphComponent implement
                 ],
                 fill: false,
                 borderWidth: 1,
+                label: "Disk write speed",
             },
         ];
     }
