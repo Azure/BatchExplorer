@@ -1,36 +1,26 @@
-<div class="form-element ssh-key-picker">
-    <mat-form-field class="bl-textarea">
-        <textarea matInput placeholder="SSH public key" [formControl]="sshKeyValue"></textarea>
-    </mat-form-field>
-    <div class="saved-keys">
-        <div *ngIf="!showSaveForm">
-            <div class="saved-keys-btns">
-                <bl-button color="primary" type="wide" class="add-key-btn" (click)="addKey()"><i class="fa fa-save"></i> Save this key</bl-button>
-            </div>
-            <div class="saved-keys-wrapper">
-                <div class="key" *ngFor="let key of savedSSHKeys" (click)="selectKey(key)">
-                    <span class="label">{{key.name}}</span>
-                    <i class="fa fa-times" title="Delete" (click)="deleteKey(key)"></i>
-                </div>
-
-                <div class="no-key" *ngIf="savedSSHKeys.size === 0">
-                    <div>
-                        <i class="fa fa-key"></i>
-                    </div>
-                    No saved public keys
-                </div>
-            </div>
+<bl-split-pane [config]="splitPaneConfig" class="ssh-key-picker">
+    <div blFirstPane class="editor">
+        <textarea placeholder="SSH public key" [formControl]="sshKeyValue"></textarea>
+    </div>
+    <div blSecondPane class="saved-keys">
+        <div class="basic-header">
+            <div class="name" (do)="handleClickTreeViewHeader()"> Saved public keys </div>
+            <bl-clickable (do)="addKey()" class="action">
+                <i class="fa fa-save" title="Save"></i>
+            </bl-clickable>
         </div>
-        <div [hidden]="!showSaveForm" class="save-key-form">
-            is hidden {{!showSaveForm}}
-            <mat-form-field>
-                <input matInput placeholder="Name" [formControl]="sshKeyName" #nameInput>
-            </mat-form-field>
+        <div class="saved-key-list">
+            <div class="saved-key" *ngFor="let key of savedSSHKeys" (click)="selectKey(key)">
+                <span class="label">{{key.name}}</span>
+                <i class="fa fa-times" title="Delete" (click)="deleteKey(key)"></i>
+            </div>
 
-            <div class="btn-container">
-                <bl-button type="round" color="primary" class="save-key-btn" [action]="saveKey"><i class="fa fa-check"></i> </bl-button>
-                <bl-button type="round" color="danger" [action]="cancelAddKey"><i class="fa fa-times"></i> </bl-button>
+            <div class="no-saved-key" *ngIf="savedSSHKeys.size === 0">
+                <div>
+                    <i class="fa fa-key"></i>
+                </div>
+                No saved public keys
             </div>
         </div>
     </div>
-</div>
+</bl-split-pane>
