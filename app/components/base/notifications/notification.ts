@@ -16,7 +16,7 @@ export interface NotificationConfig {
     /**
      * Time(in milliseconds) it take for the notification to disapear automatically.
      * This is independent from the persist setting.
-     * @default 2500ms
+     * @default 3500ms
      */
     autoDismiss?: number;
     /**
@@ -34,11 +34,37 @@ export interface NotificationConfig {
 }
 
 const defaultConfig: NotificationConfig = {
-    autoDismiss: 2500,
+    autoDismiss: 3000,
     persist: false,
     action: null,
     actions: [],
 };
+
+export class NotificationTimer {
+    private _timerId: any;
+    private _remaining: number;
+    private _start: number;
+
+    constructor(private callback: () => void, delay: number) {
+        this._remaining = delay;
+        this.resume();
+    }
+
+    public pause() {
+        window.clearTimeout(this._timerId);
+        this._remaining -= (new Date().getTime() - this._start);
+    }
+
+    public resume() {
+        this._start = new Date().getTime();
+        window.clearTimeout(this._timerId);
+        this._timerId = window.setTimeout(this.callback, this._remaining);
+    }
+
+    public clear() {
+        window.clearTimeout(this._timerId);
+    }
+}
 
 /**
  * Notification model
