@@ -34,6 +34,7 @@ const historyLength = {
 };
 
 const refreshRate = 5000;
+const appInsightsRefreshRate = 60 * 1000; // Every minute(Aggregation is minimum 1 min)
 
 @Component({
     selector: "bl-pool-graphs",
@@ -111,9 +112,9 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
         });
         this._polls.push(this.data.startPoll(refreshRate, true));
 
-        // this._polls.push(pollService.startPoll("pool-app-insights", refreshRate, () => {
-        //     return this.performanceData.update();
-        // }));
+        this._polls.push(pollService.startPoll("pool-app-insights", appInsightsRefreshRate, () => {
+            return this.performanceData.update();
+        }));
     }
 
     public ngOnChanges(changes: SimpleChanges) {
