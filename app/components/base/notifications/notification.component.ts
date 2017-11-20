@@ -36,6 +36,16 @@ export class NotificationComponent {
         }
     }
 
+    @HostListener("mouseenter", ["$event"])
+    public pauseNotificationAutoDismiss(event: MouseEvent) {
+        this.notificationService.pauseAutoDimiss(this.notification);
+    }
+
+    @HostListener("mouseleave", ["$event"])
+    public resumeNotificationAutoDismiss(event: MouseEvent) {
+        this.notificationService.resumeAutoDimiss(this.notification);
+    }
+
     public dismiss() {
         this.notificationService.dismiss(this.notification);
     }

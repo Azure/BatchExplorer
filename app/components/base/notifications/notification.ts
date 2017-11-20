@@ -40,6 +40,32 @@ const defaultConfig: NotificationConfig = {
     actions: [],
 };
 
+export class NotificationTimer {
+    private _timerId: any;
+    private _remaining: number;
+    private _start: number;
+
+    constructor(private callback: () => void, delay: number) {
+        this._remaining = delay;
+        this.resume();
+    }
+
+    public pause() {
+        window.clearTimeout(this._timerId);
+        this._remaining -= (new Date().getTime() - this._start);
+    }
+
+    public resume() {
+        this._start = new Date().getTime();
+        window.clearTimeout(this._timerId);
+        this._timerId = window.setTimeout(this.callback, this._remaining);
+    }
+
+    public clear() {
+        window.clearTimeout(this._timerId);
+    }
+}
+
 /**
  * Notification model
  */
