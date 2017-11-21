@@ -3,11 +3,9 @@
  * All schema templates are defined in same directory and they are used in create resource json editor.
  */
 
-// tslint:disable-next-line:no-var-requires
+// tslint:disable:no-var-requires
 const poolTemplate = JSON.parse(require("app/utils/monaco-languages/json/pool.template.json"));
-// tslint:disable-next-line:no-var-requires
 const jobTemplate = JSON.parse(require("app/utils/monaco-languages/json/job.template.json"));
-// tslint:disable-next-line:no-var-requires
 const taskTemplate = JSON.parse(require("app/utils/monaco-languages/json/task.template.json"));
 
 export class JsonLanguage {

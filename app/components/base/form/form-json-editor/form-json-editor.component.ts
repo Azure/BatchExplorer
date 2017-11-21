@@ -28,10 +28,8 @@ export class FormJsonEditorComponent implements ControlValueAccessor, OnDestroy 
     };
 
     @Input()
-    public set monacoUri(uri: string) {
-        if (uri) {
-            this.editorConfig.uri = uri;
-        }
+    public set fileUri(uri: string) {
+        this.editorConfig.uri = uri;
     }
 
     private _propagateChange: any;

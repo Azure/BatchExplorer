@@ -26,7 +26,7 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
     public complexFormConfig: ComplexFormConfig;
     public constraintsGroup: FormGroup;
     public showJobReleaseTask: boolean;
-    public monacoUri = "create.job.batch.json";
+    public fileUri = "create.job.batch.json";
 
     constructor(
         private formBuilder: FormBuilder,

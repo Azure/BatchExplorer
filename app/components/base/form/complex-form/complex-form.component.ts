@@ -55,7 +55,7 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
      */
     @Input() public hideFooter = false;
 
-    @Input() public monacoUri: string = null;
+    @Input() public fileUri: string = null;
 
     /**
      * Submit method.
