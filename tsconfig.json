@@ -20,7 +20,6 @@
     "moduleResolution": "node",
     "listEmittedFiles": true, // debug option
     "listFiles": true, // debug option
-    // "isolatedModules": true,
     "outDir": "build/client",
     // Base Url only applies to typescript compilation so tsc knows where the modules are.
     // This means absolute path only works in the browser environment you need to use relative import for the code in side the client folder
@@ -56,7 +55,7 @@
   ],
   "awesomeTypescriptLoaderOptions": {
     "forkChecker": true,
+    "useCache": true,
     "useWebpackText": true
-    // "useCache": true
   }
 }
