@@ -28,6 +28,7 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
     public subtitle = "Adds a task to the selected job";
     public multiUse = true;
     public actionName = "Add";
+    public monacoUri = "create.task.batch.json";
 
     constructor(
         private formBuilder: FormBuilder,

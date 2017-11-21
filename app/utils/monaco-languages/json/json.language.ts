@@ -7,6 +7,8 @@
 const poolTemplate = JSON.parse(require("app/utils/monaco-languages/json/pool.template.json"));
 // tslint:disable-next-line:no-var-requires
 const jobTemplate = JSON.parse(require("app/utils/monaco-languages/json/job.template.json"));
+// tslint:disable-next-line:no-var-requires
+const taskTemplate = JSON.parse(require("app/utils/monaco-languages/json/task.template.json"));
 
 export class JsonLanguage {
     public static define() {
@@ -20,6 +22,11 @@ export class JsonLanguage {
                 uri: "//internal/job.template.json",
                 fileMatch: [ "*.job.batch.json" ],
                 schema: jobTemplate,
+            },
+            {
+                uri: "//internal/task.template.json",
+                fileMatch: [ "*.task.batch.json" ],
+                schema: taskTemplate,
             }],
         });
     }
