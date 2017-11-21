@@ -31,7 +31,7 @@ export class NoItemComponent {
         this.withFilter = Boolean(filter && !filter.isEmpty());
     }
 
-    @Input() public  slimeline = false;
+    @Input() public slimline = false;
 
     public withFilter = false;
     public loadingStatuses = LoadingStatus;
