@@ -9,7 +9,7 @@ import { LoadingStatus } from "app/components/base/loading";
 import { SelectableList } from "app/components/base/selectable-list";
 import { Task } from "app/models";
 import { TaskListParams, TaskParams, TaskService } from "app/services";
-import { RxListProxy } from "app/services/core";
+import { ListView } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
 import { DeleteTaskAction } from "../action";
 
@@ -41,9 +41,9 @@ export class TaskListComponent extends SelectableList implements OnInit {
         this._filter = filter;
 
         if (filter.isEmpty()) {
-            this.data.setOptions({});
+            this.data.setOptions({ ...this._baseOptions });
         } else {
-            this.data.setOptions({ filter: filter.toOData() });
+            this.data.setOptions({ ...this._baseOptions, filter: filter.toOData() });
         }
 
         this.data.fetchNext();
@@ -53,7 +53,7 @@ export class TaskListComponent extends SelectableList implements OnInit {
     @ViewChild(TaskListDisplayComponent)
     public list: TaskListDisplayComponent;
 
-    public data: RxListProxy<TaskListParams, Task>;
+    public data: ListView<Task, TaskListParams>;
     public status: Observable<LoadingStatus>;
 
     private _filter: Filter;
@@ -66,6 +66,7 @@ export class TaskListComponent extends SelectableList implements OnInit {
         private changeDetectorRef: ChangeDetectorRef,
         private taskManager: BackgroundTaskService) {
         super();
+        this.data = this.taskService.listView();
 
         this._onTaskAddedSub = taskService.onTaskAdded.subscribe((item: TaskParams) => {
             this.data.loadNewItem(taskService.get(item.jobId, item.id));
@@ -78,7 +79,7 @@ export class TaskListComponent extends SelectableList implements OnInit {
 
     @autobind()
     public refresh(): Observable<any> {
-        this.data = this.taskService.list(this._jobId, this._baseOptions);
+        this.data.params = { jobId: this.jobId };
         this.data.setOptions(Object.assign({}, this._baseOptions));
         this.status = this.data.status;
         this.changeDetectorRef.detectChanges();

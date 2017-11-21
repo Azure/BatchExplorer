@@ -8,7 +8,7 @@ import { LoadingStatus } from "app/components/base/loading";
 import { SelectableList } from "app/components/base/selectable-list";
 import { SubtaskInformation } from "app/models";
 import { SubtaskListParams, TaskService } from "app/services";
-import { RxListProxy } from "app/services/core";
+import { ListView } from "app/services/core";
 
 @Component({
     selector: "bl-task-sub-tasks-tab",
@@ -36,7 +36,7 @@ export class TaskSubTasksTabComponent extends SelectableList {
     @ViewChild(SubTaskDisplayListComponent)
     public list: SubTaskDisplayListComponent;
 
-    public data: RxListProxy<SubtaskListParams, SubtaskInformation>;
+    public data: ListView<SubtaskInformation, SubtaskListParams>;
     public status: Observable<LoadingStatus>;
 
     private _jobId: string;
@@ -46,6 +46,7 @@ export class TaskSubTasksTabComponent extends SelectableList {
     constructor(private taskService: TaskService, private changeDetectorRef: ChangeDetectorRef) {
         super();
 
+        this.data = this.taskService.listSubTasksView({});
         this.activatedItemChange.subscribe((item) => {
             this.data.items.subscribe((subTasks) => {
                 this._selectedTask = subTasks.find((subTask) => {
@@ -57,8 +58,8 @@ export class TaskSubTasksTabComponent extends SelectableList {
 
     @autobind()
     public refresh(): Observable<any> {
+        this.data.params = { jobId: this._jobId, taskId: this._taskId };
         this._selectedTask = null;
-        this.data = this.taskService.listSubTasks(this._jobId, this._taskId, {});
         this.status = this.data.status;
         this.changeDetectorRef.detectChanges();
 

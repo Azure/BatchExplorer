@@ -9,20 +9,21 @@ import { ApplicationListComponent } from "app/components/application/browse";
 import { BackgroundTaskService } from "app/components/base/background-task";
 import { SidebarManager } from "app/components/base/sidebar";
 import { BatchApplication } from "app/models";
-import { ApplicationService } from "app/services";
+import { ApplicationService, PinnedEntityService } from "app/services";
 import { FilterBuilder } from "app/utils/filter-builder";
 import * as Fixtures from "test/fixture";
-import { RxMockListProxy } from "test/utils/mocks";
+import { MockListView } from "test/utils/mocks";
 import { NoItemMockComponent } from "test/utils/mocks/components";
 
 describe("ApplicationListComponent", () => {
     let fixture: ComponentFixture<ApplicationListComponent>;
     let component: ApplicationListComponent;
-    let listProxy: RxMockListProxy<any, BatchApplication>;
+    let listProxy: MockListView<BatchApplication, {}>;
     let applicationServiceSpy: any;
+    let pinServiceSpy;
 
     beforeEach(() => {
-        listProxy = new RxMockListProxy(BatchApplication, {
+        listProxy = new MockListView(BatchApplication, {
             cacheKey: "id",
             items: [
                 Fixtures.application.create({ id: "app-1" }),
@@ -32,8 +33,12 @@ describe("ApplicationListComponent", () => {
         });
 
         applicationServiceSpy = {
-            list: () => listProxy,
+            listView: () => listProxy,
             onApplicationAdded: new Subject(),
+        };
+
+        pinServiceSpy = {
+            isFavorite: jasmine.createSpy("isFavorite"),
         };
 
         TestBed.configureTestingModule({
@@ -42,6 +47,7 @@ describe("ApplicationListComponent", () => {
             providers: [
                 { provide: MatDialog, useValue: null },
                 { provide: ApplicationService, useValue: applicationServiceSpy },
+                { provide: PinnedEntityService, useValue: pinServiceSpy },
                 { provide: BackgroundTaskService, useValue: null },
                 { provide: SidebarManager, useValue: null },
             ],

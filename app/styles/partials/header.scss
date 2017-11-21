@@ -28,6 +28,7 @@
 
 .account-dropdown {
     $account-dropdown-width: 240px;
+
     [bl-dropdown-btn] {
         width: $account-dropdown-width;
         border-left: 1px solid $navigation-background;

@@ -7,7 +7,7 @@ import { TaskService } from "app/services";
 import { FileLoader } from "app/services/file";
 import { Constants, log } from "app/utils";
 
-import { VirtualScrollComponent } from "app/components/base/virtual-scroll";
+import { EditorComponent, EditorConfig } from "app/components/base/editor";
 import "./log-file-viewer.scss";
 
 const maxSize = 10000000; // 10MB
@@ -25,14 +25,14 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
         return this.tailable;
     }
 
-    @ViewChild("virtualScroll")
-    public virtualScroll: VirtualScrollComponent;
+    @ViewChild("editor")
+    public editor: EditorComponent;
 
     public file: File;
     public fileTooLarge = false;
     public followingLog = false;
     public lastContentLength = 0;
-    public lines = [];
+    public content = "";
     public loading = true;
     public scrollable: ScrollableComponent;
     public currentSubscription: Subscription;
@@ -40,6 +40,14 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
     public nodeNotFound = false;
     public fileCleanupOperation = false;
     public fileContentFailure = false;
+
+    public editorConfig: EditorConfig = {
+        readOnly: true,
+        minimap: {
+            enabled: false,
+        },
+        scrollBeyondLastLine: false,
+    };
 
     private _refreshInterval;
     private _loadingNext = false;
@@ -75,7 +83,7 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
             this.fileCleanupOperation = false;
             this.fileContentFailure = false;
             this.loading = true;
-            this.lines = [];
+            this.content = "";
             this.lastContentLength = 0;
             this._fileChangedSub = this.fileLoader.fileChanged.subscribe((file) => {
                 this._processProperties(file);
@@ -143,7 +151,7 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
         this._loadingNext = true;
         const options = {
             rangeStart: this.lastContentLength,
-            rangeEnd: newContentLength,
+            rangeEnd: newContentLength - 1,
         };
 
         this.currentSubscription = this.fileLoader.content(options).subscribe((result) => {
@@ -178,21 +186,8 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
 
     private _processFileContent(result: any, newContentLength: number) {
         this.lastContentLength = newContentLength;
-        const newLines = result.content.split("\n");
-        let first = "";
-        if (newLines.length > 1) {
-            first = newLines.shift();
-        }
+        this.content += result.content;
 
-        if (this.lines.length === 0) {
-            this.lines = [{ index: 1, text: first }];
-        } else {
-            this.lines[this.lines.length - 1].text += first;
-        }
-        const linesCount = this.lines.length;
-        this.lines = this.lines.concat(newLines.map((text, index) => {
-            return { index: linesCount + index + 1, text };
-        }));
         if (this.followingLog) {
             setTimeout(() => {
                 this._scrollToBottom();
@@ -225,8 +220,8 @@ export class LogFileViewerComponent implements OnChanges, OnDestroy, AfterViewIn
     }
 
     private _scrollToBottom() {
-        if (this.virtualScroll) {
-            this.virtualScroll.scrollToBottom();
+        if (this.editor) {
+            this.editor.scrollToEnd();
         }
     }
 }

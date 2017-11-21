@@ -1,5 +1,5 @@
 <bl-quick-list>
-    <bl-quick-list-item *ngFor="let task of subTasks" [key]="task.id">
+    <bl-quick-list-item *ngFor="let task of subTasks;trackBy: trackByFn" [key]="task.id">
         <bl-quick-list-item-status [status]="taskStatus(task)" [tooltip]="taskStatusText(task)">
         </bl-quick-list-item-status>
 
