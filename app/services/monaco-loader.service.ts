@@ -1,6 +1,8 @@
 import { Injectable } from "@angular/core";
 import { Constants } from "app/utils";
-import { AutoscaleLanguage } from "app/utils/autoscale";
+import { AutoscaleLanguage } from "app/utils/monaco-languages/autoscale.language";
+import { JsonLanguage } from "app/utils/monaco-languages/json/json.language";
+
 import * as path from "path";
 
 const anyWindow: any = window;
@@ -12,6 +14,7 @@ export class MonacoLoader {
     constructor() {
         this._promise = this.load().then(() => {
             AutoscaleLanguage.define();
+            JsonLanguage.define();
         });
     }
 
