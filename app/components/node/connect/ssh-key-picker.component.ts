@@ -2,10 +2,13 @@ import { Component, ElementRef, OnDestroy, ViewChild, forwardRef } from "@angula
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { List } from "immutable";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
+import { DialogService } from "app/components/base/dialogs";
 import { SSHPublicKey } from "app/models";
 import { SSHKeyService } from "app/services";
+
+import "./ssh-key-picker.scss";
 
 @Component({
     selector: "bl-ssh-key-picker",
@@ -19,16 +22,24 @@ import { SSHKeyService } from "app/services";
 export class SSHKeyPickerComponent implements OnDestroy, ControlValueAccessor {
     public savedSSHKeys: List<SSHPublicKey> = List([]);
     public sshKeyValue = new FormControl("");
-    public sshKeyName = new FormControl("");
-    public showSaveForm = false;
 
     @ViewChild("nameInput")
     public nameInput: ElementRef;
 
+    public splitPaneConfig = {
+        firstPane: {
+            minSize: 200,
+        },
+        secondPane: {
+            minSize: 205,
+        },
+        initialDividerPosition: -205,
+    };
+
     private _subs: Subscription[] = [];
     private _propagateChange: (value: string) => void = null;
 
-    constructor(private sshKeyService: SSHKeyService) {
+    constructor(private sshKeyService: SSHKeyService, private dialogService: DialogService) {
         this._subs.push(sshKeyService.keys.subscribe((keys) => {
             this.savedSSHKeys = keys;
         }));
@@ -72,28 +83,9 @@ export class SSHKeyPickerComponent implements OnDestroy, ControlValueAccessor {
 
     @autobind()
     public addKey() {
-        this.showSaveForm = true;
-        setTimeout(() => {
-            this.nameInput.nativeElement.focus();
+        this.dialogService.prompt("Save ssh public key", {
+            prompt: (name) => this._saveKey(name),
         });
-    }
-
-    @autobind()
-    public cancelAddKey() {
-        this.showSaveForm = false;
-        this.sshKeyName.patchValue("");
-    }
-
-    @autobind()
-    public saveKey() {
-        const value = this.sshKeyValue.value;
-        const name = this.sshKeyName.value;
-
-        this.sshKeyService.saveKey(new SSHPublicKey({
-            name,
-            value,
-        }));
-        this.showSaveForm = false;
     }
 
     public selectKey(key: SSHPublicKey) {
@@ -102,5 +94,15 @@ export class SSHKeyPickerComponent implements OnDestroy, ControlValueAccessor {
 
     public deleteKey(key: SSHPublicKey) {
         this.sshKeyService.deleteKey(key);
+    }
+
+    private _saveKey(name: string) {
+        const value = this.sshKeyValue.value;
+
+        this.sshKeyService.saveKey(new SSHPublicKey({
+            name,
+            value,
+        }));
+        return Observable.of({});
     }
 }
