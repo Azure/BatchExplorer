@@ -3,9 +3,12 @@ import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { By } from "@angular/platform-browser";
 import { MaterialModule } from "app/core";
+import * as moment from "moment";
 import { Observable } from "rxjs";
 
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
+import { DialogService } from "app/components/base/dialogs";
+import { DurationPickerComponent } from "app/components/base/duration-picker";
 import { NodeUserCredentialsFormComponent, SSHKeyPickerComponent } from "app/components/node/connect";
 import { SSHKeyService } from "app/services";
 import { updateInput } from "test/utils/helpers";
@@ -34,6 +37,7 @@ describe("NodeUserCredentialsForm", () => {
     let passwordInput: DebugElement;
     let sshKeyInput: DebugElement;
     let isAdminInput: DebugElement;
+
     beforeEach(() => {
         sshKeyService = {
             keys: Observable.of([]),
@@ -42,9 +46,12 @@ describe("NodeUserCredentialsForm", () => {
             imports: [FormsModule, ReactiveFormsModule, MaterialModule, NoopAnimationsModule],
             declarations: [
                 NodeUserCredentialsFormComponent, TestComponent, SimpleFormMockComponent,
-                SSHKeyPickerComponent,
+                SSHKeyPickerComponent, DurationPickerComponent,
             ],
-            providers: [{ provide: SSHKeyService, useValue: sshKeyService }],
+            providers: [
+                { provide: SSHKeyService, useValue: sshKeyService },
+                { provide: DialogService, useValue: {} },
+            ],
             schemas: [NO_ERRORS_SCHEMA],
         });
 
@@ -67,7 +74,7 @@ describe("NodeUserCredentialsForm", () => {
             isAdminInput = de.query(By.css("mat-slide-toggle[formControlName=isAdmin]"));
         });
 
-        it("Should show the username,  password and isAdmin input", () => {
+        it("Should show the username, password and isAdmin input", () => {
             expect(usernameInput).not.toBeFalsy();
             expect(passwordInput).not.toBeFalsy();
             expect(sshKeyInput).toBeFalsy();
@@ -94,6 +101,7 @@ describe("NodeUserCredentialsForm", () => {
                 username: "myusername",
                 password: "mypassword123",
                 isAdmin: false,
+                expireIn: moment.duration({ days: 1 }),
             });
         });
 
@@ -109,6 +117,7 @@ describe("NodeUserCredentialsForm", () => {
                 name: "myusername",
                 password: "mypassword123",
                 isAdmin: true,
+                expiryTime: jasmine.anything(),
             });
         });
     });
@@ -129,7 +138,7 @@ describe("NodeUserCredentialsForm", () => {
             sshKeyPicker = sshKeyInput.componentInstance;
         });
 
-        it("Should show the username,  password and isAdmin input", () => {
+        it("Should show the username, password and isAdmin input", () => {
             expect(usernameInput).not.toBeFalsy();
             expect(passwordInput).toBeFalsy();
             expect(isAdminInput).not.toBeFalsy();
