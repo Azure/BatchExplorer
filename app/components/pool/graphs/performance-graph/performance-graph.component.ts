@@ -51,7 +51,7 @@ export class PerformanceGraphComponent implements OnChanges {
             responsive: true,
             maintainAspectRatio: false,
             elements: {
-                point: { radius: 0, hitRadius: hitRadius, hoverRadius: 0 },
+                point: { radius: 0, hitRadius: hitRadius, hoverRadius: 3 },
                 line: {
                     tension: 0.05, // disables bezier curves
                 },
