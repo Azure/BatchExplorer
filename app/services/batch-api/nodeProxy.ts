@@ -81,7 +81,6 @@ export class NodeProxy {
         const stream = await this.client.computeNode.getRemoteDesktop(poolId, nodeId,
             wrapOptions({ computeNodeGetRemoteDesktopOptions: options }));
         const content = await this._readContent(stream);
-        console.log("Content", content);
         return { content };
     }
 
