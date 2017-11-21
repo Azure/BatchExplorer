@@ -107,9 +107,9 @@
   dependencies:
     "@types/node" "*"
 
-"@types/chart.js@^2.4.0":
-  version "2.6.6"
-  resolved "https://registry.yarnpkg.com/@types/chart.js/-/chart.js-2.6.6.tgz#c5f390236a3023c49b9696a5fdd4063682333985"
+"@types/chart.js@^2.7.0":
+  version "2.7.0"
+  resolved "https://registry.yarnpkg.com/@types/chart.js/-/chart.js-2.7.0.tgz#3769b4d0cbac50147f535580ef809ff859bd13c7"
 
 "@types/core-decorators@^0.10.30":
   version "0.10.32"

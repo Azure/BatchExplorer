@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "@types/bunyan": "~1.8.0",
-    "@types/chart.js": "^2.4.0",
+    "@types/chart.js": "^2.7.0",
     "@types/core-decorators": "^0.10.30",
     "@types/d3": "^4.4.0",
     "@types/extract-zip": "~1.6.2",
