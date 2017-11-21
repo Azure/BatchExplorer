@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild, OnDestroy } from "@angular/core";
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { autobind } from "core-decorators";
 import { Observable, Subscription } from "rxjs";
 
