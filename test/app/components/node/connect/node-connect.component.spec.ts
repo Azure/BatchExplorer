@@ -20,7 +20,6 @@ class TestComponent {
 
 describe("NodeConnectComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
-    let testComponent: TestComponent;
     let component: NodeConnectComponent;
     let de: DebugElement;
 
@@ -56,7 +55,6 @@ describe("NodeConnectComponent", () => {
             schemas: [NO_ERRORS_SCHEMA],
         });
         fixture = TestBed.createComponent(TestComponent);
-        testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-node-connect"));
         component = de.componentInstance;
         component.pool = Fixtures.pool.create();

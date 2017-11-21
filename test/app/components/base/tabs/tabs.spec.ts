@@ -27,7 +27,6 @@ export class TabTestComponent {
 }
 
 describe("Tabs", () => {
-    let component: TabTestComponent;
     let fixture: ComponentFixture<TabTestComponent>;
     let routerSpy: any;
     let activeRouteSpy: any;
@@ -50,7 +49,6 @@ describe("Tabs", () => {
         });
 
         fixture = TestBed.createComponent(TabTestComponent);
-        component = fixture.componentInstance;
         fixture.detectChanges();
     });
 

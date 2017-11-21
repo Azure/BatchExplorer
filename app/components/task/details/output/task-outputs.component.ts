@@ -38,7 +38,6 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
     public stateTooltip: string;
     public workspace: FileExplorerWorkspace;
     public fileExplorerConfig: FileExplorerConfig = {};
-    private _taskOutputContainer: string;
 
     constructor(private fileService: FileService, private storageService: StorageService) { }
 
@@ -86,7 +85,6 @@ export class TaskOutputsComponent implements OnChanges, OnDestroy {
             return;
         }
         StorageUtils.getSafeContainerName(this.jobId).then((container) => {
-            this._taskOutputContainer = container;
             this._clearFileNavigator();
             const nodeNavigator = this.fileService.navigateTaskFile(this.jobId, this.task.id, {
                 onError: (error) => this._processTaskFilesError(error),

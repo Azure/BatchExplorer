@@ -29,7 +29,6 @@ const pool3 = new Pool({ id: "pool-3", targetDedicatedNodes: 19, virtualMachineC
 describe("PoolPickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
-    let component: PoolPickerComponent;
     let de: DebugElement;
     let poolServiceSpy;
     let vmSizeServiceSpy;
@@ -55,7 +54,6 @@ describe("PoolPickerComponent", () => {
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-pool-picker"));
-        component = de.componentInstance;
         fixture.detectChanges();
     });
 

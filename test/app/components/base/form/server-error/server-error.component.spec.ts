@@ -28,7 +28,6 @@ const fakeError = ServerError.fromBatch({
 describe("ServerErrorComponent", () => {
     let fixture: ComponentFixture<ServerErrorTestComponent>;
     let serverErrorElement: DebugElement;
-    let serverErrorComponent: ServerErrorComponent;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -43,7 +42,6 @@ describe("ServerErrorComponent", () => {
         fixture = TestBed.createComponent(ServerErrorTestComponent);
         fixture.detectChanges();
         serverErrorElement = fixture.debugElement.query(By.css("bl-server-error"));
-        serverErrorComponent = serverErrorElement.componentInstance;
     });
 
     it("should not show anything if there is no error", () => {

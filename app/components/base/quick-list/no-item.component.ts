@@ -8,7 +8,7 @@ import { Filter } from "app/utils/filter-builder";
     template: `
         <div
             class="no-item-message"
-            [ngClass]="{'slim': _slimline }"
+            [class.slim]="slimline"
             *ngIf="status !== loadingStatuses.Loading && itemCount === 0">
 
             <ng-content select="[icon]"></ng-content>
@@ -31,13 +31,8 @@ export class NoItemComponent {
         this.withFilter = Boolean(filter && !filter.isEmpty());
     }
 
-    @Input()
-    public set slimline(slimline: boolean) {
-        this._slimline = slimline;
-    }
+    @Input() public  slimeline = false;
 
     public withFilter = false;
     public loadingStatuses = LoadingStatus;
-
-    private _slimline = false;
 }

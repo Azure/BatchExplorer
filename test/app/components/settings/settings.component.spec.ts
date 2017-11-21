@@ -28,7 +28,6 @@ class TestComponent {
 
 describe("SettingsComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
-    let testComponent: TestComponent;
     let component: SettingsComponent;
     let de: DebugElement;
 
@@ -56,7 +55,6 @@ describe("SettingsComponent", () => {
             ],
         });
         fixture = TestBed.createComponent(TestComponent);
-        testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-settings"));
         component = de.componentInstance;
         fixture.detectChanges();
