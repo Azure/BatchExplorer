@@ -1,50 +1,13 @@
 @import "app/styles/variables";
 
 .log-console {
-    $file-content-bg: #222;
-
     position: relative;
     background: $mineshaft-grey;
     color: $whiteSmoke;
     height: 100%;
 
     .log-container {
-        clear: left;
-        min-height: 42px;
-        color: #f1f1f1;
-        font-size: 12px;
-        line-height: 19px;
-        font-family: Monaco, monospace;
-        word-wrap: break-word;
-        background-color: $file-content-bg;
-        counter-reset: line-numbering;
-        margin-top: 0;
-        overflow: auto;
         height: 100%;
-        white-space: nowrap;
-        > bl-simple-loading {
-            padding-left: 10px;
-        }
-    }
-
-    .line {
-        padding: 0 15px 0 55px;
-        margin: 0;
-        min-height: 16px;
-    }
-
-    .line-nb {
-        display: inline-block;
-        text-align: right;
-        min-width: 40px;
-        margin-left: -33px;
-        cursor: pointer;
-        text-decoration: none;
-        color: $dove-grey;
-        -webkit-user-select: none;
-        user-select: none;
-
-        padding-right: 1em;
     }
 
     .follow-log-btn {
