@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from "@angular/core";
+import { Component, OnDestroy, ViewChild } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs";
@@ -8,6 +8,8 @@ import { Filter, FilterBuilder } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
 import { FileGroupCreateFormComponent } from "../action";
 
+import { MatMenuTrigger } from "@angular/material";
+import { DialogService } from "app/components/base/dialogs";
 import "./data-home.scss";
 
 @Component({
@@ -15,6 +17,8 @@ import "./data-home.scss";
     templateUrl: "data-home.html",
 })
 export class DataHomeComponent implements OnDestroy {
+    @ViewChild(MatMenuTrigger) public trigger: MatMenuTrigger;
+
     public quickSearchQuery = new FormControl();
     public filter: Filter = FilterBuilder.none();
     public quickFilter: Filter = FilterBuilder.none();
@@ -24,6 +28,7 @@ export class DataHomeComponent implements OnDestroy {
 
     constructor(
         private sidebarManager: SidebarManager,
+        private dialogService: DialogService,
         private storageService: StorageService) {
 
         this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
@@ -47,6 +52,16 @@ export class DataHomeComponent implements OnDestroy {
 
     @autobind()
     public addFileGroup() {
+        this.trigger.openMenu();
+    }
+
+    public openEmptyFileGroupForm() {
+        this.dialogService.prompt("Add a new file group", {
+            prompt: (name) => this._createEmptyFileGroup(name),
+        });
+    }
+
+    public openFileGroupForm() {
         this.sidebarManager.open("Add a new file group", FileGroupCreateFormComponent);
     }
 
@@ -56,5 +71,9 @@ export class DataHomeComponent implements OnDestroy {
 
     private _updateFilter() {
         this.filter = this.quickFilter;
+    }
+
+    private _createEmptyFileGroup(name: string) {
+        return this.storageService.createContainer(name);
     }
 }

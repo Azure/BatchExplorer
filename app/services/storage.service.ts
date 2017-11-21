@@ -322,6 +322,12 @@ export class StorageService {
         return observable;
     }
 
+    public createContainer(containerName: string): Observable<any> {
+        return this._callStorageClient((client) => client.createContainer(containerName), (error) => {
+            log.error(`Error creating container: ${containerName}`, { ...error });
+        });
+    }
+
     public uploadToSasUrl(sasUrl: string, filePath: string): Observable<any> {
         const subject = new AsyncSubject<storage.BlobService.BlobResult>();
 

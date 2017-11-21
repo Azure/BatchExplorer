@@ -26,10 +26,10 @@ export interface ListBlobResponse {
 }
 
 export class BlobStorageClientProxy {
-    private _blobService: storage.BlobService;
+    public client: storage.BlobService;
 
     constructor(blobService: storage.BlobService) {
-        this._blobService = blobService;
+        this.client = blobService;
     }
 
     /**
@@ -56,7 +56,7 @@ export class BlobStorageClientProxy {
             delimiter: options.recursive ? null : "/",
         };
         return new Promise((resolve, reject) => {
-            this._blobService.listBlobsSegmentedWithPrefix(container, prefix, continuationToken, storageOptions,
+            this.client.listBlobsSegmentedWithPrefix(container, prefix, continuationToken, storageOptions,
                 (error, result, response: any) => {
                     if (error) { return reject(error); }
 
@@ -106,7 +106,7 @@ export class BlobStorageClientProxy {
 
         const blobPath = `${blobPrefix || ""}${blobName}`;
         return new Promise((resolve, reject) => {
-            this._blobService.getBlobProperties(container, blobPath, options, (error, result, response) => {
+            this.client.getBlobProperties(container, blobPath, options, (error, result, response) => {
                 if (error) {
                     reject(error);
                 } else {
@@ -137,7 +137,7 @@ export class BlobStorageClientProxy {
      */
     public getBlobContent(container: string, blob: string, options?: StorageRequestOptions) {
         return new Promise((resolve, reject) => {
-            this._blobService.getBlobToText(container, blob, options, (error, text, blockBlob, response) => {
+            this.client.getBlobToText(container, blob, options, (error, text, blockBlob, response) => {
                 if (error) {
                     reject(error);
                 } else {
@@ -161,7 +161,7 @@ export class BlobStorageClientProxy {
      */
     public getBlobToLocalFile(container: string, blob: string, localFileName: string, options?: StorageRequestOptions) {
         return new Promise((resolve, reject) => {
-            this._blobService.getBlobToLocalFile(container, blob, localFileName, options, (error, result, response) => {
+            this.client.getBlobToLocalFile(container, blob, localFileName, options, (error, result, response) => {
                 if (error) {
                     reject(error);
                 } else {
@@ -183,10 +183,10 @@ export class BlobStorageClientProxy {
      * @param {StorageRequestOptions} options - Optional request parameters
      */
     public deleteBlobIfExists(container: string, blob: string, options?: StorageRequestOptions)
-    : Promise<boolean> {
+        : Promise<boolean> {
 
         return new Promise((resolve, reject) => {
-            this._blobService.deleteBlobIfExists(container, blob, options, (error, response) => {
+            this.client.deleteBlobIfExists(container, blob, options, (error, response) => {
                 if (error) {
                     reject(error);
                 } else {
@@ -216,7 +216,7 @@ export class BlobStorageClientProxy {
 
         const prefixAndFilter = filter ? prefix + filter : prefix;
         return new Promise((resolve, reject) => {
-            this._blobService.listContainersSegmentedWithPrefix(prefixAndFilter, continuationToken, options,
+            this.client.listContainersSegmentedWithPrefix(prefixAndFilter, continuationToken, options,
                 (error, result, response) => {
                     if (error) {
                         reject(error);
@@ -248,7 +248,7 @@ export class BlobStorageClientProxy {
         : Promise<BlobStorageResult> {
 
         return new Promise((resolve, reject) => {
-            this._blobService.getContainerProperties(container, options, (error, result, response) => {
+            this.client.getContainerProperties(container, options, (error, result, response) => {
                 if (error) {
                     reject(error);
                 } else {
@@ -275,7 +275,29 @@ export class BlobStorageClientProxy {
         : Promise<BlobStorageResult> {
 
         return new Promise((resolve, reject) => {
-            this._blobService.deleteContainer(container, options, (error, response) => {
+            this.client.deleteContainer(container, options, (error, response) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve();
+                }
+            });
+        });
+    }
+
+    /**
+     * Marks the specified container for deletion. The container and any blobs contained within
+     * it are later deleted during garbage collection.
+     * http://azure.github.io/azure-storage-node/BlobService.html#deleteContainer__anchor
+     *
+     * @param {string} container - Name of the storage container
+     * @param {StorageRequestOptions} options - Optional request parameters
+     */
+    public createContainer(containerName: string)
+        : Promise<BlobStorageResult> {
+
+        return new Promise((resolve, reject) => {
+            this.client.createContainer(containerName, (error, response) => {
                 if (error) {
                     reject(error);
                 } else {
