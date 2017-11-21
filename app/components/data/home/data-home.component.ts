@@ -3,7 +3,7 @@ import { FormControl } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs";
 
-import { StorageService } from "app/services";
+import { NcjFileGroupService, StorageService } from "app/services";
 import { Filter, FilterBuilder } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
 import { FileGroupCreateFormComponent } from "../action";
@@ -29,6 +29,7 @@ export class DataHomeComponent implements OnDestroy {
     constructor(
         private sidebarManager: SidebarManager,
         private dialogService: DialogService,
+        private filegroupService: NcjFileGroupService,
         private storageService: StorageService) {
 
         this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
@@ -74,6 +75,13 @@ export class DataHomeComponent implements OnDestroy {
     }
 
     private _createEmptyFileGroup(name: string) {
-        return this.storageService.createContainer(name);
+        const obs = this.filegroupService.createEmptyFileGroup(name);
+        obs.subscribe({
+            next: () => {
+                this.storageService.onFileGroupAdded.next(this.storageService.fileGroupContainer(name));
+            },
+            error: () => null,
+        });
+        return obs;
     }
 }

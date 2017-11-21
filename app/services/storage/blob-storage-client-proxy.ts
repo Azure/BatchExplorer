@@ -286,12 +286,11 @@ export class BlobStorageClientProxy {
     }
 
     /**
-     * Marks the specified container for deletion. The container and any blobs contained within
-     * it are later deleted during garbage collection.
-     * http://azure.github.io/azure-storage-node/BlobService.html#deleteContainer__anchor
+     * Creates a new container under the specified account.
+     * If a container with the same name already exists, the operation fails.
+     * http://azure.github.io/azure-storage-node/BlobService.html#createContainer__anchor
      *
      * @param {string} container - Name of the storage container
-     * @param {StorageRequestOptions} options - Optional request parameters
      */
     public createContainer(containerName: string)
         : Promise<BlobStorageResult> {
