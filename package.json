@@ -115,7 +115,6 @@
     "@angular/platform-browser": "5.0.2",
     "@angular/platform-browser-dynamic": "5.0.2",
     "@angular/router": "5.0.2",
-    "@angular/tsc-wrapped": "5.0.2",
     "@tweenjs/tween.js": "~17.1.1",
     "@types/node-fetch": "~1.6.7",
     "azure-batch": "git://github.com/amarzavery/azure-batch-ts",
