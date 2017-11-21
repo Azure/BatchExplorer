@@ -6,12 +6,7 @@
     <div class="log-container">
         <bl-simple-loading *ngIf="loading"></bl-simple-loading>
 
-        <bl-virtual-scroll #virtualScroll [items]="lines" (update)="viewPortItems = $event" (scroll)="handleScroll($event)" style="height: 100%" [childHeight]="16">
-            <div class="line" *ngFor="let line of viewPortItems" >
-                <span class="line-nb">{{line.index}}</span>
-                <span class="line-content">{{line.text}}</span>
-            </div>
-        </bl-virtual-scroll>
+        <bl-editor #editor [ngModel]="content" [config]="editorConfig"> </bl-editor>
     </div>
 </div>
 
