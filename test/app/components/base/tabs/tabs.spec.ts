@@ -62,21 +62,22 @@ describe("Tabs", () => {
         expect(fixture.nativeElement.textContent).not.toContain("Content 2");
     });
 
-    it("changing the route should update the tab", () => {
+    it("changing the route should update the tab", async(() => {
         activeRouteSpy.queryParams.next({ tab: "second" });
         fixture.detectChanges();
-
-        expect(fixture.nativeElement.textContent).toContain("Content 2");
-        expect(routerSpy.navigate).not.toHaveBeenCalled();
-    });
+        fixture.whenStable().then(() => {
+            expect(fixture.nativeElement.textContent).toContain("Content 2");
+            expect(routerSpy.navigate).not.toHaveBeenCalled();
+        });
+    }));
 
     it("clicking on a tab label should update the route", async(() => {
         const labels = fixture.debugElement.queryAll(By.css(".mat-tab-label"));
         expect(labels.length).toBe(2);
         labels[1].nativeElement.click();
         fixture.detectChanges();
-        expect(fixture.nativeElement.textContent).toContain("Content 2");
         fixture.whenStable().then(() => {
+            expect(fixture.nativeElement.textContent).toContain("Content 2");
             expect(routerSpy.navigate).toHaveBeenCalledOnce();
             expect(routerSpy.navigate).toHaveBeenCalledWith([], {
                 relativeTo: activeRouteSpy,
