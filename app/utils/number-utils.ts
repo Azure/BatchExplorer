@@ -44,9 +44,9 @@ export class NumberUtils {
         }
 
         const numStr = Number((value / Math.pow(1000, exponent)).toPrecision(decimals + 1));
-        const unit = UNITS[exponent];
-
-        return (neg ? "-" : "") + numStr + " " + unit + suffix;
+        const end = UNITS[exponent] + suffix;
+        const start = (neg ? "-" : "") + numStr;
+        return end ? `${start} ${end}` : start;
     }
 
     public static magnitudeExponent(value: number) {
