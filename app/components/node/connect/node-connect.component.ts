@@ -99,6 +99,11 @@ export class NodeConnectComponent implements OnInit {
     }
 
     @autobind()
+    public goToHome() {
+        this.credentialSource = null;
+    }
+
+    @autobind()
     public close() {
         this.sidebarRef.destroy();
     }

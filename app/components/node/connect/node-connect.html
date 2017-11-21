@@ -9,7 +9,7 @@
             </div>
         </div>
         <div *ngIf="credentialSource === CredentialSource.Specified && !credentials">
-            <bl-node-user-credentials-form [submit]="addOrUpdateUser" [isLinuxNode]="linux"></bl-node-user-credentials-form>
+            <bl-node-user-credentials-form [submit]="addOrUpdateUser" [isLinuxNode]="linux" (close)="goToHome()"></bl-node-user-credentials-form>
         </div>
         <div>
             <bl-property-group *ngIf="credentials" class="normal">
