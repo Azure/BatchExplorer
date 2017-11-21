@@ -138,6 +138,10 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
         }
     }
 
+    public scrollToEnd() {
+        this._editor.setScrollTop(this._editor.getScrollHeight());
+    }
+
     @HostListener("keyup.enter", ["$event"])
     public onEnter(event: KeyboardEvent) {
         // Prevent forms from being submitted when focussed in editor and pressing enter.
