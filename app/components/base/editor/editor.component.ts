@@ -139,7 +139,6 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     }
 
     public scrollToEnd() {
-        console.log("this.edi", this._editor.getScrollHeight());
         this._editor.setScrollTop(this._editor.getScrollHeight());
     }
 
