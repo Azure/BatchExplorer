@@ -1,10 +1,10 @@
-<bl-dropdown class="account-dropdown">
+<bl-dropdown [footer]="true" align="left">
     <div bl-dropdown-btn>
         <i class="fa fa-star"></i> {{title}}
     </div>
     <div bl-dropdown-content>
-        <div *ngFor="let favorite of favorites | async" class="dropdown-item" [routerLink]="favorite.routerLink"
-            [class.selected]="favorite.url === currentUrl" [title]="favorite.id">
+        <div *ngFor="let favorite of favorites | async" class="dropdown-item" [routerLink]="favorite.routerLink" [class.selected]="favorite.url === currentUrl"
+            [title]="favorite.id">
             <i class="fa" [ngClass]="entityIcon(favorite)"></i>
             <div class="main">
                 <div class="alias">{{favorite.name || favorite.id}}</div>

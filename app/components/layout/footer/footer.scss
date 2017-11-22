@@ -10,7 +10,7 @@ bl-footer {
     font-size: 12px;
     line-height: $footer-height;
 
-    > * {
+    > .menu-item {
         margin: 0 5px;
     }
 }

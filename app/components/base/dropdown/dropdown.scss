@@ -65,7 +65,7 @@ bl-dropdown {
             align-items: center;
 
             &:not(:first-child) {
-                border-top: 1px solid $dropdown-content-hover-color;
+                border-top: 1px solid $border-color;
             }
 
             &:hover, &.active {
