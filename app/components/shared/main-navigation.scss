@@ -37,6 +37,12 @@ bl-app-nav {
                 background-color: map-get($primary, 500);
                 color: $white;
             }
+
+            &.disabled {
+                color: gray;
+                cursor: not-allowed;
+                text-decoration: underline;
+            }
         }
     }
 
