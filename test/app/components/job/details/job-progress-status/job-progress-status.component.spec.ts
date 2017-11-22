@@ -22,7 +22,6 @@ class TestComponent {
 
 describe("JobProgressStatusComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
-    let component: JobProgressStatusComponent;
     let gaugeComponent: GaugeMockComponent;
     let testComponent: TestComponent;
 
@@ -76,7 +75,6 @@ describe("JobProgressStatusComponent", () => {
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-job-progress-status"));
-        component = de.componentInstance;
         testComponent.poolId = "pool-1";
         testComponent.job = new Job({ id: "job-1" });
         fixture.detectChanges();

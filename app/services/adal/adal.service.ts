@@ -39,7 +39,6 @@ export class AdalService {
 
     public tenantsIds: Observable<string[]>;
 
-    private _config: AdalConfig;
     private _userAuthorization: UserAuthorization;
     private _accessTokenService: AccessTokenService;
     private _userDecoder: UserDecoder;
@@ -57,7 +56,6 @@ export class AdalService {
     }
 
     public init(config: AdalConfig) {
-        this._config = config;
         this._userAuthorization = new UserAuthorization(config, this.remote);
         this._accessTokenService = new AccessTokenService(config, this.http);
         this._retrieveUserFromLocalStorage();

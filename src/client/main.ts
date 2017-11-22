@@ -26,9 +26,9 @@ function startApplication() {
         callback();
     });
 
+    const batchLabsApp = new BatchLabsApplication(autoUpdater);
     // Uncomment to view why windows don't show up.
     // batchLabsApp.debugCrash();
-    const batchLabsApp = new BatchLabsApplication(autoUpdater);
     batchLabsApp.init();
     batchLabsApp.start();
 

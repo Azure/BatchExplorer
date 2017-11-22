@@ -1,4 +1,5 @@
 import { HashLocationStrategy, LocationStrategy } from "@angular/common";
+import { HttpClientModule } from "@angular/common/http";
 import { ErrorHandler, NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
@@ -102,6 +103,7 @@ const modules = [
         HttpModule,
         RouterModule.forRoot(routes, { useHash: true }),
         BaseModule,
+        HttpClientModule,
         ...modules,
     ],
     providers: [

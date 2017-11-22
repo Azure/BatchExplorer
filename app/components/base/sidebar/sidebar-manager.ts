@@ -1,9 +1,8 @@
 import {
-    EventEmitter,
     Injectable,
     Type,
 } from "@angular/core";
-import { MatDrawerToggleResult, MatSidenav } from "@angular/material";
+import { MatSidenav } from "@angular/material";
 import { BehaviorSubject, Observable } from "rxjs";
 
 import { log } from "app/utils";
@@ -82,14 +81,14 @@ export class SidebarManager {
     /**
      * Event when the sidebar is fully open.
      */
-    public get onOpen(): EventEmitter<MatDrawerToggleResult|void> {
+    public get onOpen(): Observable<void> {
         return this.sidebar.onOpen;
     }
 
     /**
      * Event when the sidebar is closed.
      */
-    public get onClosed(): EventEmitter<MatDrawerToggleResult|void> {
+    public get onClosed(): Observable<void> {
         return  this.sidebar.onClose;
     }
 
