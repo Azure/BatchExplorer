@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { autobind } from "core-decorators";
-import { Observable } from "rxjs";
+import { AsyncSubject, Observable } from "rxjs";
 
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
@@ -13,6 +13,7 @@ import { NcjFileGroupService, StorageService } from "app/services";
 import { Constants, log } from "app/utils";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
+import { setInterval } from "timers";
 import "./file-group-create-form.scss";
 
 @Component({
@@ -26,7 +27,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     public editing: boolean;
     public title: string = "Create file group";
     public description: string = "Upload files into a managed storage container that you can use " +
-    "for resource files in your jobs and tasks";
+        "for resource files in your jobs and tasks";
 
     constructor(
         public sidebarRef: SidebarRef<FileGroupCreateFormComponent>,
@@ -115,8 +116,8 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
 
     private _formGroupName(fileGroupName: string) {
         return fileGroupName && fileGroupName.length > 10
-        ? `${fileGroupName.substring(0, 9)}...`
-        : fileGroupName;
+            ? `${fileGroupName.substring(0, 9)}...`
+            : fileGroupName;
     }
 
     /**
