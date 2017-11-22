@@ -1,0 +1,90 @@
+@import "app/styles/variables";
+
+bl-dropdown {
+    $dropdown-content-color: $whitesmoke-darker;
+    $dropdown-content-hover-color: map-get($primary, 200);
+    .dropdown {
+        position: relative;
+    }
+
+    .dropdown-btn-container {
+        position: relative;
+        padding: 0 5px;
+        color: white;
+        display: flex;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .dropdown-btn-container {
+        cursor: pointer;
+
+        &:hover, &.active {
+            color: $mineshaft-grey;
+            background-color: $dropdown-content-color;
+        }
+    }
+
+    .dropdown-content {
+        position: absolute;
+        z-index: $zindex-dropdown;
+        background-color: $dropdown-content-color;
+        color: $mineshaft-grey;
+        overflow: hidden;
+        max-height: 80vh;
+
+        &.below {
+            top: $header-height;
+            box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        &.above {
+            bottom: $footer-height;
+            box-shadow: 1px -1px 5px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        &[align=left] {
+            left: 0;
+        }
+
+        &[align=right] {
+            right: 0;
+        }
+
+        .no-items {
+            padding: 10px 5px;
+        }
+
+        .dropdown-item {
+            position: relative;
+            min-width: 100px;
+            cursor: pointer;
+            padding: 5px 10px;
+            display: flex;
+            align-items: center;
+
+            &:not(:first-child) {
+                border-top: 1px solid $dropdown-content-hover-color;
+            }
+
+            &:hover, &.active {
+                background-color: $dropdown-content-hover-color;
+            }
+
+            .main {
+                flex: 1 0 auto;
+
+                .alias, .url {
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                }
+            }
+
+            .extra {
+                flex: 0 0 auto;
+            }
+        }
+    }
+}
