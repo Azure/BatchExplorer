@@ -26,7 +26,6 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
     public complexFormConfig: ComplexFormConfig;
     public fileUri = "create.pool.batch.json";
     private _osControl: FormControl;
-    private _licenseControl: FormControl;
     private _renderingSkuSelected: boolean = false;
     private _sub: Subscription;
 
@@ -44,7 +43,6 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
 
         this.hasLinkedStorage = true;
         this._osControl = this.formBuilder.control({}, Validators.required);
-        this._licenseControl = this.formBuilder.control([]);
 
         this.form = formBuilder.group({
             id: ["", [

@@ -20,7 +20,6 @@ class TestComponent {
 
 describe("TableCellComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
-    let testComponent: TestComponent;
     let cells: DebugElement[];
 
     beforeEach(() => {
@@ -29,7 +28,6 @@ describe("TableCellComponent", () => {
             declarations: [TableCellComponent, TestComponent],
         });
         fixture = TestBed.createComponent(TestComponent);
-        testComponent = fixture.componentInstance;
         cells = fixture.debugElement.queryAll(By.css("bl-cell"));
         fixture.detectChanges();
     });

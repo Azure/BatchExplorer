@@ -40,7 +40,6 @@ class TestComponent {
 describe("TableComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
-    let component: TableComponent;
     let de: DebugElement;
 
     function getRows(): HTMLElement[] {
@@ -64,7 +63,6 @@ describe("TableComponent", () => {
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-table"));
-        component = de.componentInstance;
         testComponent.sizes = [sizeA, sizeB, sizeC, sizeD];
         fixture.detectChanges();
 

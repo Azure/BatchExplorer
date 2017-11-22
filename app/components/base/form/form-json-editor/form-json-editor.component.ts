@@ -33,7 +33,6 @@ export class FormJsonEditorComponent implements ControlValueAccessor, OnDestroy 
     }
 
     private _propagateChange: any;
-    private _propagateTouched: any;
     private _sub: Subscription;
 
     constructor() {
@@ -60,6 +59,6 @@ export class FormJsonEditorComponent implements ControlValueAccessor, OnDestroy 
     }
 
     public registerOnTouched(fn: any): void {
-        this._propagateTouched = fn;
+        // Nothing
     }
 }

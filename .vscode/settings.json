@@ -14,7 +14,8 @@
     "dll/**": true
   },
   "files.exclude": {
-    "**/__pycache__/**/*": true
+    "**/__pycache__/**/*": true,
+    ".awcache/**": true
   },
   "python.autoComplete.extraPaths": [
     "${workspaceRoot}/python"

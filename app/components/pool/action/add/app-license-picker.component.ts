@@ -3,7 +3,7 @@ import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
 } from "@angular/forms";
 import { MatCheckboxChange, MatDialog, MatDialogConfig } from "@angular/material";
-import { List, Map } from "immutable";
+import { List } from "immutable";
 
 import { TableComponent, TableConfig } from "app/components/base/table";
 import { ApplicationLicense } from "app/models";
@@ -34,7 +34,6 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
 
     private _propagateChange: (value: string[]) => void = null;
     private _propagateTouched: (value: boolean) => void = null;
-    private _pickedLicenses: Map<string, boolean> = Map<string, boolean>({});
     private _eulaRead: boolean = false;
 
     constructor(
@@ -74,7 +73,7 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
 
     public writeValue(value: any) {
         if (value) {
-            this._pickedLicenses = value;
+            this.pickedLicenses = value;
         }
     }
 

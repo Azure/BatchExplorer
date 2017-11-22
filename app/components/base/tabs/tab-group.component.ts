@@ -73,5 +73,4 @@ export class TabGroupComponent implements AfterViewInit, OnInit {
         });
         this.changeDetector.markForCheck();
     }
-
 }

@@ -9,13 +9,8 @@ import { EntityDetailsListMockComponent } from "test/utils/mocks/components";
 describe("ApplicationPackagesComponent", () => {
     let fixture: ComponentFixture<ApplicationPackagesComponent>;
     let component: ApplicationPackagesComponent;
-    let applicationServiceSpy: any;
 
     beforeEach(() => {
-        applicationServiceSpy = {
-            get: jasmine.createSpy("get-once"),
-        };
-
         TestBed.configureTestingModule({
             declarations: [ApplicationPackagesComponent, EntityDetailsListMockComponent],
             schemas: [NO_ERRORS_SCHEMA],

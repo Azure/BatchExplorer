@@ -11,7 +11,9 @@ export class Record<TInput> {
     public _original: Partial<TInput>;
     private _map: Map<string, any> = Map({});
     private _defaultValues = {};
+    // @ts-ignore
     private _initialized = false;
+    // @ts-ignore
     private _keys: Set<string>;
 
     constructor(data: Partial<TInput> = {}) {

@@ -21,7 +21,6 @@ class TestComponent {
 
 describe("SSHKeyPickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
-    let testComponent: TestComponent;
     let component: SSHKeyPickerComponent;
     let de: DebugElement;
     let sshKeyServiceSpy;
@@ -44,7 +43,6 @@ describe("SSHKeyPickerComponent", () => {
             schemas: [NO_ERRORS_SCHEMA],
         });
         fixture = TestBed.createComponent(TestComponent);
-        testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-ssh-key-picker"));
         component = de.componentInstance;
         fixture.detectChanges();
