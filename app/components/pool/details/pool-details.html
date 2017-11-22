@@ -1,5 +1,5 @@
 <bl-loading [status]="data.newDataStatus | async" [error]="data.error | async">
-    <div *ngIf="pool && poolDecorator">
+    <div *ngIf="pool && poolDecorator" class="fit-details-container">
         <bl-summary-card>
             <div summaryTitle>{{pool.id}}</div>
             <div summarySubtitle>{{pool.vmSize}}, {{pool.allocationState}}</div>
