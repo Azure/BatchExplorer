@@ -87,7 +87,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public addJob() {
-        const createRef = this.sidebarManager.open("add-basic-job", JobCreateBasicDialogComponent);
+        const createRef = this.sidebarManager.open("add-job", JobCreateBasicDialogComponent);
         createRef.component.preSelectPool(this.pool.id);
     }
 
@@ -100,7 +100,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public clonePool() {
-        const ref = this.sidebarManager.open(`clone-pool-${this.poolId}`, PoolCreateBasicDialogComponent);
+        const ref = this.sidebarManager.open(`add-pool-${this.poolId}`, PoolCreateBasicDialogComponent);
         ref.component.setValueFromEntity(this.pool);
     }
 

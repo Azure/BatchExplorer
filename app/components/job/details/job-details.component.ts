@@ -89,7 +89,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public addTask() {
-        const createRef = this.sidebarManager.open("add-basic-task", TaskCreateBasicDialogComponent);
+        const createRef = this.sidebarManager.open("add-task", TaskCreateBasicDialogComponent);
         createRef.component.jobId = this.job.id;
     }
 
@@ -122,7 +122,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public cloneJob() {
-        const ref = this.sidebarManager.open(`clone-job-${this.jobId}`, JobCreateBasicDialogComponent);
+        const ref = this.sidebarManager.open(`add-job-${this.jobId}`, JobCreateBasicDialogComponent);
         ref.component.setValueFromEntity(this.job);
     }
 
