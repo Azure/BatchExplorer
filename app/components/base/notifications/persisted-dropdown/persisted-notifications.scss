@@ -97,12 +97,12 @@ bl-persisted-notifications-dropdown {
         .no-notifications {
             flex: 1;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
 
             .fa-bell {
                 font-size: 40px;
+                margin-right: 20px;
             }
         }
     }
