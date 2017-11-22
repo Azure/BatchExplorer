@@ -1,7 +1,7 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
 import { autobind } from "core-decorators";
-import { AsyncSubject, Observable } from "rxjs";
+import { Observable } from "rxjs";
 
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
@@ -13,7 +13,6 @@ import { NcjFileGroupService, StorageService } from "app/services";
 import { Constants, log } from "app/utils";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
-import { setInterval } from "timers";
 import "./file-group-create-form.scss";
 
 @Component({

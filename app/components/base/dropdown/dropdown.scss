@@ -5,6 +5,7 @@ bl-dropdown {
     $dropdown-content-hover-color: map-get($primary, 200);
     .dropdown {
         position: relative;
+        height: 100%;
     }
 
     .dropdown-btn-container {
@@ -12,6 +13,7 @@ bl-dropdown {
         padding: 0 5px;
         color: white;
         display: flex;
+        height: 100%;
         text-align: center;
         align-items: center;
         justify-content: center;

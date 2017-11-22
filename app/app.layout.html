@@ -14,6 +14,8 @@
                 <img src="./assets/images/header/batchlabs.png" height="19" alt="Batch labs logo">
             </a>
         </div>
+        <div class="flex-separator"></div>
+        <bl-pinned-dropdown></bl-pinned-dropdown>
         <bl-sidebar-bookmarks></bl-sidebar-bookmarks>
     </header>
     <nav [class.no-userinteract]="!(hasAccount | async)" class="noselect">
