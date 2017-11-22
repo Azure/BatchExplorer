@@ -79,20 +79,20 @@ $h6FontSize         : $font-size-base;
 $body-background: $whiteSmoke-darker;
 $content-background :  $whiteSmoke-darker;
 $listview-background :  white;
-$footer-background: white;
+$footer-background: map-get($primary, 200);
 $navigation-text: $whiteSmoke;
 $border-color: $alto;
 
 // Layout sizing
 //---------------------------------------------
 $header-height                       : 30px;
+$footer-height                       : 22px;
 $navigationbar-width                 : 60px;
 $listview-width                      : 350px;
 $listview-filtering-width            : 55vw;
 $listview-header-height              : 90px;
-$footer-height                       : 0;
 $content-top-position                : $header-height;
-$contentview-height                  : calc(100vh - #{$header-height});
+$contentview-height                  : calc(100vh - #{$header-height} - #{$footer-height});
 
 
 // Base component dimensions

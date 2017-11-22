@@ -1,0 +1,8 @@
+@import "app/styles/variables";
+
+bl-footer {
+    display: block;
+    height: $footer-height;
+    background-color: $footer-background;
+    width: 100vw;
+}
