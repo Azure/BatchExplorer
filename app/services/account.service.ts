@@ -162,7 +162,7 @@ export class AccountService {
         return obs;
     }
 
-    public list(subscriptionId: string): Observable<List<Account>> {
+    public list(subscriptionId: string): Observable<List<AccountResource>> {
         const search = new URLSearchParams();
         search.set("$filter", "resourceType eq 'Microsoft.Batch/batchAccounts'");
         const options = new RequestOptions({ search });
@@ -171,7 +171,7 @@ export class AccountService {
             .flatMap((subscription) => {
                 return this.azure.get(subscription, `/subscriptions/${subscriptionId}/resources`, options)
                     .map(response => {
-                        return List(response.json().value.map((data) => {
+                        return List<AccountResource>(response.json().value.map((data) => {
                             return new AccountResource(Object.assign({}, data, { subscription }));
                         }));
                     });

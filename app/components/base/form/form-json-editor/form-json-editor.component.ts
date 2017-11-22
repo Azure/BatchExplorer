@@ -1,4 +1,4 @@
-import { Component, OnDestroy, forwardRef } from "@angular/core";
+import { Component, Input, OnDestroy, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from "@angular/forms";
 import { Subscription } from "rxjs";
 
@@ -27,8 +27,12 @@ export class FormJsonEditorComponent implements ControlValueAccessor, OnDestroy 
         },
     };
 
+    @Input()
+    public set fileUri(uri: string) {
+        this.editorConfig.uri = uri;
+    }
+
     private _propagateChange: any;
-    private _propagateTouched: any;
     private _sub: Subscription;
 
     constructor() {
@@ -55,6 +59,6 @@ export class FormJsonEditorComponent implements ControlValueAccessor, OnDestroy 
     }
 
     public registerOnTouched(fn: any): void {
-        this._propagateTouched = fn;
+        // Nothing
     }
 }

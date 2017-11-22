@@ -24,7 +24,6 @@ export class SubmitMarketApplicationComponent implements OnInit {
 
     private applicationId: string;
     private actionId: string;
-    private icon: string;
 
     constructor(
         private route: ActivatedRoute,
@@ -38,7 +37,6 @@ export class SubmitMarketApplicationComponent implements OnInit {
             this.title = `Run ${this.actionId} from ${this.applicationId}`;
 
             this.templateService.getApplication(this.applicationId).subscribe((application) => {
-                this.icon = application.icon;
                 this._updateTemplates();
             });
         });

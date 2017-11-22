@@ -1,0 +1,16 @@
+@import "app/styles/variables";
+
+bl-footer {
+    display: flex;
+    height: $footer-height;
+    align-items: center;
+    color: $whitesmoke;
+    background-color: $footer-background;
+    width: 100vw;
+    font-size: 12px;
+    line-height: $footer-height;
+
+    > .menu-item {
+        margin: 0 5px;
+    }
+}

@@ -5,10 +5,11 @@ import { List } from "immutable";
 import { Subscription } from "rxjs";
 
 import { SidebarManager } from "app/components/base/sidebar";
+import { PerformanceData } from "app/components/pool/graphs/performance-graph";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { Job, JobState, Node, NodeState, Pool, Task } from "app/models";
-import { JobListParams, JobService, NodeListParams, NodeService } from "app/services";
-import { ListView, PollObservable } from "app/services/core";
+import { AppInsightsQueryService, JobListParams, JobService, NodeListParams, NodeService } from "app/services";
+import { ListView, PollObservable, PollService } from "app/services/core";
 import { FilterBuilder } from "app/utils/filter-builder";
 import { NodesStateHistoryData, RunningTasksHistoryData } from "./history-data";
 import "./pool-graphs.scss";
@@ -18,15 +19,22 @@ enum AvailableGraph {
     Heatmap,
     AvailableNodes,
     RunningTasks,
+    Cpu,
+    Memory,
+    Network,
+    Disk,
+    EnableAppInsights,
 }
 
 const historyLength = {
-    OneMinute: 1,
     TenMinute: 10,
     OneHour: 60,
+    OnDay: 60 * 24,
+    OnWeek: 60 * 24 * 7,
 };
 
 const refreshRate = 5000;
+const appInsightsRefreshRate = 60 * 1000; // Every minute(Aggregation is minimum 1 min)
 
 @Component({
     selector: "bl-pool-graphs",
@@ -57,18 +65,22 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
 
     public focusedGraph = AvailableGraph.Heatmap;
     public selectedHistoryLength = new FormControl(historyLength.TenMinute);
+    public performanceData: PerformanceData;
 
     private _jobData: ListView<Job, JobListParams>;
     private _stateCounter = new StateCounter();
 
-    private _poll: PollObservable;
+    private _polls: PollObservable[] = [];
     private _nodesSub: Subscription;
 
     constructor(
+        appInsightsQueryService: AppInsightsQueryService,
+        pollService: PollService,
         private nodeService: NodeService,
         jobService: JobService,
         private sidebarManager: SidebarManager,
     ) {
+        this.performanceData = new PerformanceData(appInsightsQueryService);
         this.data = nodeService.listView({
             pageSize: 1000,
             select: "id,state,runningTasksCount,isDedicated",
@@ -77,7 +89,6 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
             this.nodes = nodes;
 
             if (nodes.size !== 0) {
-
                 this._stateCounter.updateCount(nodes);
                 this.runningNodesHistory.update(this.nodes);
                 this.runningTaskHistory.update(this.nodes);
@@ -95,12 +106,19 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
         this.selectedHistoryLength.valueChanges.subscribe((value) => {
             this.runningNodesHistory.setHistorySize(value);
             this.runningTaskHistory.setHistorySize(value);
+            this.performanceData.historySize = value;
+            this.performanceData.update();
         });
-        this._poll = this.data.startPoll(refreshRate, true);
+        this._polls.push(this.data.startPoll(refreshRate, true));
+
+        this._polls.push(pollService.startPoll("pool-app-insights", appInsightsRefreshRate, () => {
+            return this.performanceData.update();
+        }));
     }
 
     public ngOnChanges(changes: SimpleChanges) {
         if (changes.pool) {
+            this.performanceData.pool = this.pool;
             const prev = changes.pool.previousValue;
             const cur = changes.pool.currentValue;
             this.maxRunningTasks = this.pool ? this.pool.targetNodes * this.pool.maxTasksPerNode : 0;
@@ -109,6 +127,9 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
                 return;
             }
 
+            this._checkTabIsValid();
+
+            this.performanceData.update();
             this.data.updateParams({ poolId: this.pool.id });
             this.data.refreshAll(false);
 
@@ -122,7 +143,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     }
 
     public ngOnDestroy() {
-        this._poll.destroy();
+        this._polls.forEach(x => x.destroy());
         this._nodesSub.unsubscribe();
         this.data.dispose();
         this._jobData.dispose();
@@ -148,6 +169,9 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
         this.focusedGraph = graph;
     }
 
+    public get appInsightsEnabled() {
+        return Boolean(this.performanceData.appId);
+    }
     private _scanForProblems() {
         const failedNodes = this._stateCounter.get(NodeState.startTaskFailed).getValue();
         const nodeCount = this.nodes.size;
@@ -165,5 +189,17 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
             FilterBuilder.prop("state").eq(JobState.active),
             FilterBuilder.prop("executionInfo/poolId").eq(this.pool.id),
         ).toOData();
+    }
+
+    private _checkTabIsValid() {
+        if (this.appInsightsEnabled && this.focusedGraph === AvailableGraph.EnableAppInsights) {
+            this.focusGraph(AvailableGraph.Heatmap);
+        } else if (this.appInsightsEnabled
+            && !(this.focusedGraph === AvailableGraph.EnableAppInsights
+                || this.focusedGraph === AvailableGraph.Heatmap
+                || this.focusedGraph === AvailableGraph.AvailableNodes
+                || this.focusedGraph === AvailableGraph.RunningTasks)) {
+            this.focusGraph(AvailableGraph.Heatmap);
+        }
     }
 }

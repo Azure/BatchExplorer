@@ -106,16 +106,17 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
     }
 
     public fetchAll(): Observable<any> {
-        const obs = this._getter.fetchAll(this._params, this._options);
-
-        obs.subscribe({
-            next: (items) => {
+        const fetchObs = () => this._getter.fetchAll(this._params, this._options);
+        return this.fetchData({
+            getData: fetchObs,
+            next: (items: List<TEntity>) => {
                 this._updateNewKeys(this._retrieveKeys(items));
                 this._hasMore.next(false);
             },
-            error: (e) => this._hasMore.next(false),
+            error: (error) => {
+                this._hasMore.next(false);
+            },
         });
-        return obs;
     }
 
     /**

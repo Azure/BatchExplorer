@@ -4,10 +4,6 @@
 bl-pinned-dropdown {
     $ddl-width: 280px;
 
-    .account-dropdown [bl-dropdown-btn], .account-dropdown [bl-dropdown-content] {
-        width: $ddl-width;
-    }
-
     .fa {
         font-size: 1.2em;
         padding-right: 5px;

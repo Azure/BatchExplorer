@@ -36,7 +36,6 @@ export class ChartDirective implements OnDestroy, OnChanges, OnInit {
 
     public ctx: any;
     public chart: Chart;
-    private cvs: any;
     private initFlag: boolean = false;
 
     public constructor(private _element: ElementRef) { }
@@ -66,7 +65,6 @@ export class ChartDirective implements OnDestroy, OnChanges, OnInit {
 
     public ngOnInit(): any {
         this.ctx = this._element.nativeElement.getContext("2d");
-        this.cvs = this._element.nativeElement;
         this.initFlag = true;
         if (this.data || this.datasets) {
             this._refresh();
@@ -82,11 +80,17 @@ export class ChartDirective implements OnDestroy, OnChanges, OnInit {
         if (changes.data || changes.datasets) {
             if (changes.data) {
                 this.updateChartData(this.data);
+                this.chart.update();
             } else {
-                this.updateChartData(this.datasets);
+                const { previousValue, currentValue } = changes.datasets;
+                if (previousValue && currentValue && previousValue.length !== currentValue.length) {
+                    this._refresh();
+                } else {
+                    this.updateChartData(this.datasets);
+                    this.chart.update();
+                }
             }
 
-            this.chart.update();
         }
         if (changes.options || changes.labels || changes.colors || changes.chartType) {
             // otherwise rebuild the chart

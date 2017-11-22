@@ -21,7 +21,6 @@ class TaskTimelineStateMockComponent {
 describe("TaskTimelineStateComponent", () => {
     let fixture: ComponentFixture<TaskTimelineStateMockComponent>;
     let testComponent: TaskTimelineStateMockComponent;
-    let component: TaskTimelineStateComponent;
     let debugElement: DebugElement;
 
     beforeEach(() => {
@@ -32,7 +31,6 @@ describe("TaskTimelineStateComponent", () => {
         fixture = TestBed.createComponent(TaskTimelineStateMockComponent);
         testComponent = fixture.componentInstance;
         debugElement = fixture.debugElement.query(By.css("bl-task-timeline-state"));
-        component = debugElement.componentInstance;
         fixture.detectChanges();
     });
 
