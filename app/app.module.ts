@@ -37,6 +37,8 @@ import { PollService } from "app/services/core";
 import {
     AccountService,
     AdalService,
+    AppInsightsApiService,
+    AppInsightsQueryService,
     ApplicationService,
     ArmHttpService,
     AutoscaleFormulaService,
@@ -110,6 +112,8 @@ const modules = [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         AccountService,
         AdalService,
+        AppInsightsApiService,
+        AppInsightsQueryService,
         ApplicationService,
         AutoscaleFormulaService,
         AzureHttpService,

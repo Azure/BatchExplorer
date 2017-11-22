@@ -1,30 +1,26 @@
-import { Record } from "immutable";
+import { Model, Prop, Record } from "app/core";
 
-// tslint:disable:variable-name object-literal-sort-keys
-const ImageReferenceRecord = Record({
-    publisher: null,
-    offer: null,
-    sku: null,
-    version: null,
-});
-
-export interface ImageReferenceAttributes {
+export interface MarketImageReferenceAttributes {
     publisher: string;
     offer: string;
     sku: string;
     version: string;
 }
 
+export interface CustomImageAttributes {
+    virtualMachineImageId: string;
+}
+
+export type ImageReferenceAttributes = MarketImageReferenceAttributes | CustomImageAttributes;
+
 /**
  * Class for displaying Batch ImageReference information.
  */
-export class ImageReference extends ImageReferenceRecord {
-    public publisher: string;
-    public offer: string;
-    public sku: string;
-    public version: string;
-
-    constructor(data: ImageReferenceAttributes) {
-        super(data);
-    }
+@Model()
+export class ImageReference extends Record<ImageReferenceAttributes> {
+    @Prop() public publisher: string;
+    @Prop() public offer: string;
+    @Prop() public sku: string;
+    @Prop() public version: string;
+    @Prop() public virtualMachineImageId: string;
 }

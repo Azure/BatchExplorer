@@ -13,6 +13,12 @@ bl-file-explorer {
         overflow-x: hidden;
         overflow-y: auto;
 
+        > bl-file-tree-view {
+            min-height: 10px;
+            flex-shrink: 0;
+            flex-grow: 1;
+        }
+
         > bl-file-tree-view:only-child {
             flex: 1;
         }

@@ -31,7 +31,6 @@ export const routes: Routes = [
     {
         component: AccountHomeComponent,
         path: "accounts",
-        canActivate: [NavigationGuard],
         children: [
             { path: "", component: AccountDefaultComponent }, // accounts/
             { path: ":id", component: AccountDetailsComponent }, // accounts/{account.id}

@@ -12,7 +12,6 @@ export class NavigationGuard implements CanActivate  {
 
     public canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot) {
         return this.accountService.currentAccountId.map((accountId) => {
-            console.log(accountId);
             return !!accountId;
         });
     }

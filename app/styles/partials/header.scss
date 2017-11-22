@@ -36,6 +36,7 @@
 
         &.invalid {
             color: map-get($danger, 500);
+            pointer-events: none;
         }
 
         i {

@@ -17,7 +17,7 @@
                 <i class="fa fa-check"></i>
             </div>
         </div>
-        <div class="dropdown-item" routerLink="accounts">
+        <div *ngIf="selectedId" class="dropdown-item" routerLink="accounts">
             <i class="fa fa-cog fa-2x"></i>Manage accounts
         </div>
     </div>

@@ -1,10 +1,10 @@
 import { NgModule } from "@angular/core";
 
-import { NavigationDisabledDirective } from "./navigation-disabled.directive";
+import { HiddenIfNoAccountDirective } from "./hidden-navigation.directive";
 import { NavigationGuard } from "./navigation-guard.component";
 
 const components = [
-    NavigationDisabledDirective,
+    HiddenIfNoAccountDirective,
 ];
 
 @NgModule({

@@ -1,3 +1,3 @@
 export * from "./guards.module";
-export * from "./navigation-disabled.directive";
+export * from "./hidden-navigation.directive";
 export * from "./navigation-guard.component";
