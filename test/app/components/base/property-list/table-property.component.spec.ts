@@ -34,8 +34,6 @@ describe("TablePropertyComponent", () => {
     let fixture: ComponentFixture<TestTableComponent>;
     let de: DebugElement;
     let component: TestTableComponent;
-    let section: DebugElement;
-    let table: TablePropertyComponent;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -52,9 +50,7 @@ describe("TablePropertyComponent", () => {
         fixture = TestBed.createComponent(TestTableComponent);
         de = fixture.debugElement;
         component = fixture.componentInstance;
-        section = de.query(By.css("section"));
         fixture.detectChanges();
-        table = de.query(By.css("bl-table-property")).componentInstance;
     });
 
     it("Should show the label", () => {

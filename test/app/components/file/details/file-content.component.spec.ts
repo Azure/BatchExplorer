@@ -21,7 +21,6 @@ class TestComponent {
 describe("FileContentComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
-    let component: FileContentComponent;
     let de: DebugElement;
 
     let storageServiceSpy;
@@ -49,7 +48,6 @@ describe("FileContentComponent", () => {
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-file-content"));
-        component = de.componentInstance;
         fixture.detectChanges();
     });
 

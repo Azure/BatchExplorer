@@ -1,3 +1,8 @@
+/**
+ * AutoscaleLanguage class defines autoscale formula syntax highlight and keyword autocomplete features in
+ * Monaco text editor. Autoscale text editor can be viewed directly in create pool flyout.
+ */
+
 const variables = [
     "$ActiveTasks", "$CPUPercent", "$CurrentDedicated", "$DiskBytes",
     "$DiskReadBytes", "$DiskReadOps", "$DiskWriteBytes", "$DiskWriteOps",

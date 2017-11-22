@@ -5,7 +5,6 @@ import { List } from "immutable";
 
 import {
     Notification,
-    NotificationContainerComponent,
     NotificationLevel,
     NotificationModule,
     NotificationService,
@@ -24,7 +23,6 @@ describe("Notification", () => {
     let currentPersistedNotifications: List<Notification>;
     let fixture: ComponentFixture<FakeAppComponent>;
     let de: DebugElement;
-    let notificationContainer: NotificationContainerComponent;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -36,8 +34,6 @@ describe("Notification", () => {
         notificationService.persistedNotifications.subscribe((x) => currentPersistedNotifications = x);
         fixture = TestBed.createComponent(FakeAppComponent);
         de = fixture.debugElement;
-
-        notificationContainer = de.query(By.css("bl-notification-container")).componentInstance;
     });
 
     it("Should not have any notifications to start with", () => {

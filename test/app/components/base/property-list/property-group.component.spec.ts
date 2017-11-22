@@ -23,7 +23,6 @@ describe("PropertyGroupComponent", () => {
     let fixture: ComponentFixture<TestGroupComponent>;
     let de: DebugElement;
     let component: TestGroupComponent;
-    let section: DebugElement;
     let header: DebugElement;
     let group: PropertyGroupComponent;
 
@@ -35,7 +34,6 @@ describe("PropertyGroupComponent", () => {
         fixture = TestBed.createComponent(TestGroupComponent);
         de = fixture.debugElement;
         component = fixture.componentInstance;
-        section = de.query(By.css("section"));
         fixture.detectChanges();
         header = de.query(By.css(".group-header"));
         group = de.query(By.css("bl-property-group")).componentInstance;

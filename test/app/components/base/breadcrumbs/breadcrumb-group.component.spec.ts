@@ -8,7 +8,6 @@ import { jobsCrumb, node1Crumb, pool1Crumb, pool1PropertiesCrumb, poolsCrumb } f
 
 describe("BreadcrumbGroupComponent", () => {
     let fixture: ComponentFixture<BreadcrumbGroupComponent>;
-    let component: BreadcrumbGroupComponent;
     let serviceSpy;
 
     beforeEach(() => {
@@ -20,7 +19,6 @@ describe("BreadcrumbGroupComponent", () => {
             providers: [{ provide: BreadcrumbService, useValue: serviceSpy }],
         });
         fixture = TestBed.createComponent(BreadcrumbGroupComponent);
-        component = fixture.componentInstance;
         fixture.detectChanges();
     });
 

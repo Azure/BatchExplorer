@@ -43,7 +43,6 @@ function createTask(state: string, timeout = "PT6M") {
 describe("TaskTimelineComponent", () => {
     let fixture: ComponentFixture<TaskTimelineMockComponent>;
     let testComponent: TaskTimelineMockComponent;
-    let component: TaskTimelineComponent;
     let stateLinks: DebugElement[];
     let de: DebugElement;
 
@@ -58,7 +57,6 @@ describe("TaskTimelineComponent", () => {
         fixture = TestBed.createComponent(TaskTimelineMockComponent);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-task-timeline"));
-        component = de.componentInstance;
         fixture.detectChanges();
         stateLinks = de.queryAll(By.css(".state-link"));
     });
