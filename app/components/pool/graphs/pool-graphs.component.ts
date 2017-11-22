@@ -89,7 +89,6 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
             this.nodes = nodes;
 
             if (nodes.size !== 0) {
-
                 this._stateCounter.updateCount(nodes);
                 this.runningNodesHistory.update(this.nodes);
                 this.runningTaskHistory.update(this.nodes);
