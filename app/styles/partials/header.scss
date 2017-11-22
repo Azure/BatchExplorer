@@ -1,5 +1,7 @@
 
 #header {
+    display: flex;
+
     .logo-banner-bar {
         float: left;
         height: 31px;
@@ -22,49 +24,6 @@
             margin-top: 5px;
             margin-left: 7px;
             float: left;
-        }
-    }
-}
-
-.account-dropdown {
-    $account-dropdown-width: 240px;
-
-    [bl-dropdown-btn] {
-        width: $account-dropdown-width;
-        border-left: 1px solid $navigation-background;
-        border-right: 1px solid $navigation-background;
-
-        &.invalid {
-            color: map-get($danger, 500);
-        }
-
-        i {
-            margin: 0 5px;
-            font-weight: bold;
-        }
-    }
-
-    [bl-dropdown-content] {
-        width: $account-dropdown-width;
-
-        .url {
-            font-size: 0.6em;
-            text-overflow: ellipsis;
-        }
-
-        i.fa {
-            margin-right: 5px;
-        }
-
-        .selected {
-            cursor: not-allowed;
-
-            .main {
-                opacity: 0.3;
-            }
-            &:hover {
-                background-color: $navigation-background;
-            }
         }
     }
 }
