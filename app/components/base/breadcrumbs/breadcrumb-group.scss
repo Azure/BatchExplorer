@@ -1,3 +1,4 @@
+@import "app/styles/variables";
 
 bl-breadcrumb-group {
     $separation: 3px;
@@ -19,7 +20,8 @@ bl-breadcrumb-group {
     }
 
     ul > bl-breadcrumb {
-        display: block;
+        display: flex;
+        align-items: center;
         height: $height;
         background: $color;
         padding: 0 2px;
@@ -29,6 +31,7 @@ bl-breadcrumb-group {
         min-width: 40px;
         max-width: 100px;
         cursor: pointer;
+        color: $whitesmoke;
 
         &:after {
             content: "";
@@ -40,7 +43,7 @@ bl-breadcrumb-group {
             top: 0;
         }
 
-        &:before {
+        &:not(:first-child):before {
             content: "";
             position: absolute;
             border-width: $half-height 0 $half-height $half-height;
@@ -61,41 +64,27 @@ bl-breadcrumb-group {
             }
         }
 
-        > div.crumb-content, > div.crumb-label {
+        > .crumb-icon {
+            margin-left: 3px;
+        }
+
+        > .crumb-content {
             overflow: hidden;
             text-overflow: ellipsis;
             word-break: break-all;
             white-space: nowrap;
-        }
-
-        > div.crumb-content {
             text-align: left;
-            color: $whiteSmoke;
             font-size: 12px;
             line-height: 16px;
-
-            &.no-label {
-                height: 100%;
-                display: flex;
-                align-items: center;
-                margin-left: 3px;
-            }
+            height: 100%;
+            display: flex;
+            align-items: center;
+            margin-left: 3px;
 
             &.invert-ellipsis {
-                // width:170px;
-                // border:1px solid #999;
                 direction:rtl;
                 text-align:left;
             }
-        }
-
-        > div.crumb-label {
-            color: $whiteSmoke-darker;
-            font-style: italic;
-            text-align: right;
-            line-height: 9px;
-            font-size: 9px;
-            margin-top: 2px;
         }
     }
 

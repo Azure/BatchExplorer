@@ -4,6 +4,8 @@ import { Subscription } from "rxjs";
 import { Breadcrumb } from "./breadcrumb-models";
 import { BreadcrumbService } from "./breadcrumb.service";
 
+import "./breadcrumb-group.scss";
+
 // Max number of breadcrumb to display without expanding
 const expandableCount = 4;
 @Component({

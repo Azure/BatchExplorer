@@ -2,28 +2,19 @@
 #header {
     display: flex;
 
-    .logo-banner-bar {
-        float: left;
+    .logo {
         height: 31px;
+        margin: 5px 10px 0;
+        height: 100%;
+        color: $whitesmoke;
+        font-size: 16px;
 
-        a {
-            position: relative;
-            display: inline-block;
+        &:hover {
+            background-color: $navigation-bg;
         }
 
-        a:after {
-            content: "";
-            position: absolute;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
-        }
-
-        .logo {
-            margin-top: 5px;
-            margin-left: 7px;
-            float: left;
+        > .fa  {
+            margin-right: 5px;
         }
     }
 }
