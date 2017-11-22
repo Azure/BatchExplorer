@@ -16,8 +16,6 @@ class TestComponent {
 describe("ResourcefilePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
-    let component: ResourcefilePickerComponent;
-    let de: DebugElement;
     let editableTableEl: DebugElement;
     let editableTable: EditableTableComponent;
 
@@ -29,10 +27,8 @@ describe("ResourcefilePickerComponent", () => {
         });
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
-        de = fixture.debugElement.query(By.css("bl-resourcefile-picker"));
         editableTableEl = fixture.debugElement.query(By.css("bl-editable-table"));
         editableTable = editableTableEl.componentInstance;
-        component = de.componentInstance;
         fixture.detectChanges();
     });
 

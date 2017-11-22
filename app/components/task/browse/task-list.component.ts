@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Input, OnInit, ViewChild } from "@angular/core";
+import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { autobind } from "core-decorators";
 import { Observable, Subscription } from "rxjs";
 
@@ -17,7 +17,7 @@ import { DeleteTaskAction } from "../action";
     selector: "bl-task-list",
     templateUrl: "task-list.html",
 })
-export class TaskListComponent extends SelectableList implements OnInit {
+export class TaskListComponent extends SelectableList implements OnInit, OnDestroy {
     public LoadingStatus = LoadingStatus;
 
     /**
@@ -75,6 +75,10 @@ export class TaskListComponent extends SelectableList implements OnInit {
 
     public ngOnInit() {
         this.data.fetchNext();
+    }
+
+    public ngOnDestroy() {
+        this._onTaskAddedSub.unsubscribe();
     }
 
     @autobind()

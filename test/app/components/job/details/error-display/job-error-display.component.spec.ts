@@ -4,12 +4,10 @@ import { By } from "@angular/platform-browser";
 import { RouterTestingModule } from "@angular/router/testing";
 
 import * as moment from "moment";
-import { Observable } from "rxjs";
 
 import { JobErrorDisplayComponent } from "app/components/job/details";
 import { Job, JobState, JobTerminateReason } from "app/models";
 import { JobService } from "app/services";
-import * as Fixtures from "test/fixture";
 import { BannerMockComponent } from "test/utils/mocks/components";
 
 @Component({
@@ -23,13 +21,8 @@ describe("JobErrorDisplayComponent", () => {
     let fixture: ComponentFixture<TestJobErrorDisplayComponent>;
     let testComponent: TestJobErrorDisplayComponent;
     let component: JobErrorDisplayComponent;
-    let accountServiceSpy: any;
 
     beforeEach(() => {
-        accountServiceSpy = {
-            currentAccount: Observable.of(Fixtures.account.create()),
-        };
-
         TestBed.configureTestingModule({
             imports: [RouterTestingModule],
             declarations: [JobErrorDisplayComponent, TestJobErrorDisplayComponent, BannerMockComponent],

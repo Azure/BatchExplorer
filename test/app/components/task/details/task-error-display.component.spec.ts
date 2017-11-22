@@ -1,13 +1,11 @@
 import { Component, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
-import { Observable } from "rxjs";
 
 import { SidebarManager } from "app/components/base/sidebar";
 import { TaskErrorDisplayComponent } from "app/components/task/details";
 import { Task, TaskState } from "app/models";
 import { TaskService } from "app/services";
-import * as Fixtures from "test/fixture";
 import { BannerMockComponent } from "test/utils/mocks/components";
 
 @Component({
@@ -21,13 +19,8 @@ describe("TaskErrorDisplayComponent", () => {
     let fixture: ComponentFixture<TaskErrorDisplayMockComponent>;
     let testComponent: TaskErrorDisplayMockComponent;
     let component: TaskErrorDisplayComponent;
-    let accountServiceSpy: any;
 
     beforeEach(() => {
-        accountServiceSpy = {
-            currentAccount: Observable.of(Fixtures.account.create()),
-        };
-
         TestBed.configureTestingModule({
             declarations: [BannerMockComponent, TaskErrorDisplayComponent, TaskErrorDisplayMockComponent],
             providers: [

@@ -36,7 +36,6 @@ class TestComponent {
 describe("StorageAccountCardComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
-    let component: StorageAccountCardComponent;
     let de: DebugElement;
     let storageAccountServiceSpy;
 
@@ -68,7 +67,6 @@ describe("StorageAccountCardComponent", () => {
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-storage-account-card"));
-        component = de.componentInstance;
         fixture.detectChanges();
     });
 
