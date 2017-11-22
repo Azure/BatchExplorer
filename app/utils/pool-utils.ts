@@ -127,12 +127,14 @@ export class PoolUtils {
 
         if (pool.virtualMachineConfiguration) {
             const config = pool.virtualMachineConfiguration;
-            if (config.osDisk) {
-                return "Custom Image";
-            }
             if (!config.imageReference) {
                 return "Unkown";
             }
+
+            if (config.imageReference.virtualMachineImageId) {
+                return "Custom image";
+            }
+
             if (config.imageReference.publisher === "MicrosoftWindowsServer") {
                 return `Windows Server ${pool.virtualMachineConfiguration.imageReference.sku}`;
             }
