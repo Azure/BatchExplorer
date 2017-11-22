@@ -122,7 +122,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public cloneJob() {
-        const ref = this.sidebarManager.open("add-basic-pool", JobCreateBasicDialogComponent);
+        const ref = this.sidebarManager.open(`clone-job-${this.jobId}`, JobCreateBasicDialogComponent);
         ref.component.setValueFromEntity(this.job);
     }
 
