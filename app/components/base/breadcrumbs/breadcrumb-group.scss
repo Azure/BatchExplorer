@@ -1,13 +1,15 @@
 @import "app/styles/variables";
 
 bl-breadcrumb-group {
+    $header-margin: 4px;
     $separation: 3px;
-    $height: 28px;
+    $height: $header-height - 2 * $header-margin;
     $half-height: $height / 2;
     $color: map-get($primary, 500);
     $hover-color: map-get($primary, 600);
     display: block;
     height: $height;
+    margin-top: $header-margin;
 
     ul {
         display: flex;
@@ -29,7 +31,7 @@ bl-breadcrumb-group {
         margin: 0 ($half-height + $separation) 0 0;
         text-decoration: none;
         min-width: 40px;
-        max-width: 100px;
+        max-width: 140px;
         cursor: pointer;
         color: $whitesmoke;
 
