@@ -322,6 +322,14 @@ export class StorageService {
         return observable;
     }
 
+    public createContainer(containerName: string): Observable<any> {
+        return this._callStorageClient((client) => {
+            return client.createContainer(containerName);
+        }, (error) => {
+            log.error(`Error creating container: ${containerName}`, { ...error });
+        });
+    }
+
     public uploadToSasUrl(sasUrl: string, filePath: string): Observable<any> {
         const subject = new AsyncSubject<storage.BlobService.BlobResult>();
 
@@ -382,7 +390,7 @@ export class StorageService {
         promise: (client: any) => Promise<any>,
         errorCallback?: (error: any) => void): Observable<T> {
 
-        return this.storageClient.get().flatMap((client) => {
+        return this.storageClient.get().take(1).flatMap((client) => {
             return Observable.fromPromise<T>(promise(client)).catch((err) => {
                 const serverError = ServerError.fromStorage(err);
                 if (errorCallback) {
@@ -391,7 +399,7 @@ export class StorageService {
 
                 return Observable.throw(serverError);
             });
-        });
+        }).share();
     }
 
     private _parseSasUrl(sasUrl: string) {
