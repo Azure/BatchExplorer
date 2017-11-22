@@ -1,4 +1,4 @@
-<bl-dropdown class="account-dropdown">
+<bl-dropdown class="account-dropdown" [footer]="true" align="left">
     <div bl-dropdown-btn [routerLink]="['/accounts/', accountService.currentAccountId | async]" [class.invalid]="currentAccountValid === status.Invalid">
         {{selectedAccountAlias}}
 
