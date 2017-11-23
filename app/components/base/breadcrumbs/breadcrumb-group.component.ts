@@ -20,7 +20,6 @@ export class BreadcrumbGroupComponent implements OnDestroy {
         this._subscription = breadcrumbService.crumbs.subscribe((crumbs) => {
             this.crumbs = crumbs;
             if (crumbs.length > this._lastCrumbCount) {
-                console.log("SW", this.elementRef.nativeElement.scrollWidth);
                 setTimeout(() => {
                     this.elementRef.nativeElement.scrollLeft = this.elementRef.nativeElement.scrollWidth;
                 });
