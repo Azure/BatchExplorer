@@ -17,6 +17,20 @@
             margin-right: 5px;
         }
     }
+
+    > *  {
+        flex-shrink: 0;
+    }
+
+    > bl-breadcrumb-group {
+        flex: 1;
+        min-width: 200px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        &::-webkit-scrollbar {
+           height: 1px;
+        }
+    }
 }
 
 .bookmarks-container {

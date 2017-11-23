@@ -40,6 +40,11 @@ export class BreadcrumbGroupComponent implements OnDestroy {
         }
     }
 
+    @HostListener("mousewheel", ["$event"])
+    public mouseWheelMoves(event: WheelEvent) {
+        this.elementRef.nativeElement.scrollLeft -= (event.wheelDelta > 0 ? 10 : -10);
+    }
+
     public expand(event: Event) {
         this.expanded = true;
         this._updateDisplayedCrumbs();
