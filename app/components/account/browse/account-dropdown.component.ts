@@ -3,6 +3,8 @@ import { AccountResource } from "app/models";
 import { AccountService, AccountStatus } from "app/services";
 import { ArmResourceUtils } from "app/utils";
 
+import "./account-dropdown.scss";
+
 @Component({
     selector: "bl-account-dropdown",
     templateUrl: "account-dropdown.html",

@@ -26,7 +26,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     public editing: boolean;
     public title: string = "Create file group";
     public description: string = "Upload files into a managed storage container that you can use " +
-    "for resource files in your jobs and tasks";
+        "for resource files in your jobs and tasks";
 
     constructor(
         public sidebarRef: SidebarRef<FileGroupCreateFormComponent>,
@@ -115,8 +115,8 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
 
     private _formGroupName(fileGroupName: string) {
         return fileGroupName && fileGroupName.length > 10
-        ? `${fileGroupName.substring(0, 9)}...`
-        : fileGroupName;
+            ? `${fileGroupName.substring(0, 9)}...`
+            : fileGroupName;
     }
 
     /**
