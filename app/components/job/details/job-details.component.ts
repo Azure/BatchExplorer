@@ -30,6 +30,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
         return {
             name: id,
             label,
+            icon: "tasks",
         };
     }
 

@@ -1,9 +1,14 @@
 <ul [class.expanded]="expanded">
-    <bl-breadcrumb *ngIf="expandable && !expanded" [index]="0" [crumb]="crumbs[0]">
+    <bl-breadcrumb *ngFor="let crumb of crumbs; let i = index" [index]="i" [crumb]="crumb">
     </bl-breadcrumb>
-    <div class="expand" *ngIf="expandable && !expanded" (click)="expand($event)">
-        ...
-    </div>
-    <bl-breadcrumb *ngFor="let crumb of displayCrumbs; let i = index" [index]="i" [crumb]="crumb">
+    <bl-breadcrumb *ngFor="let crumb of crumbs; let i = index" [index]="i" [crumb]="crumb">
+    </bl-breadcrumb>
+    <bl-breadcrumb *ngFor="let crumb of crumbs; let i = index" [index]="i" [crumb]="crumb">
+    </bl-breadcrumb>
+    <bl-breadcrumb *ngFor="let crumb of crumbs; let i = index" [index]="i" [crumb]="crumb">
+    </bl-breadcrumb>
+    <bl-breadcrumb *ngFor="let crumb of crumbs; let i = index" [index]="i" [crumb]="crumb">
+    </bl-breadcrumb>
+    <bl-breadcrumb *ngFor="let crumb of crumbs; let i = index" [index]="i" [crumb]="crumb">
     </bl-breadcrumb>
 </ul>
