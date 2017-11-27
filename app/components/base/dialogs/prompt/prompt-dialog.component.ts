@@ -1,8 +1,10 @@
 import { Component } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { AsyncValidatorFn, FormControl, FormGroup, ValidatorFn } from "@angular/forms";
 import { MatDialogRef } from "@angular/material";
 import { autobind } from "core-decorators";
 import { AsyncSubject, Observable } from "rxjs";
+import { setInterval } from "timers";
+import { ValidatorMessage } from "../dialog.service";
 
 @Component({
     selector: "bl-prompt-dialog",
@@ -13,11 +15,26 @@ export class PromptDialogComponent {
     public description: string;
     public execute: (value: string) => Observable<any>;
     public promptControl = new FormControl();
+    public form: FormGroup;
+    public validatorMessages: ValidatorMessage[];
+
+    public set validator(validator: ValidatorFn | ValidatorFn[] | null) {
+        this.promptControl.setValidators(validator);
+    }
+    public set asyncValidator(asyncValidator: AsyncValidatorFn | AsyncValidatorFn[]) {
+        this.promptControl.setAsyncValidators(asyncValidator);
+        setInterval(() => {
+            console.log("Error", this.promptControl.errors);
+        }, 2000);
+    }
 
     public response = new AsyncSubject<string>();
 
     constructor(public dialogRef: MatDialogRef<PromptDialogComponent>) {
         this.response.next(null);
+        this.form = new FormGroup({
+            prompt: this.promptControl,
+        });
     }
 
     @autobind()

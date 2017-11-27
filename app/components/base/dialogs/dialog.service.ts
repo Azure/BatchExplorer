@@ -1,5 +1,6 @@
 import { ComponentType } from "@angular/cdk/portal";
 import { Injectable } from "@angular/core";
+import { AsyncValidatorFn, ValidatorFn } from "@angular/forms";
 import { MatDialog, MatDialogConfig, MatDialogRef } from "@angular/material";
 import { PromptDialogComponent } from "app/components/base/dialogs";
 import { Observable } from "rxjs";
@@ -10,9 +11,17 @@ export interface ConfirmOptions {
     yes: () => Observable<any>;
 }
 
+export interface ValidatorMessage {
+    code: string;
+    message: string;
+}
+
 export interface PromptOptions {
     description?: string;
     prompt: (value: string) => Observable<any>;
+    validator?: ValidatorFn | ValidatorFn[] | null;
+    asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[];
+    validatorMessages: ValidatorMessage[];
 }
 
 /**
@@ -37,6 +46,9 @@ export class DialogService {
         component.title = title;
         component.description = options.description;
         component.execute = options.prompt;
+        component.validator = options.validator;
+        component.asyncValidator = options.asyncValidator;
+        component.validatorMessages = options.validatorMessages;
     }
 
     public open<T>(type: ComponentType<T>, config?: MatDialogConfig): MatDialogRef<T> {
