@@ -4,25 +4,26 @@ import { Subscription } from "rxjs";
 import { Breadcrumb } from "./breadcrumb-models";
 import { BreadcrumbService } from "./breadcrumb.service";
 
-// Max number of breadcrumb to display without expanding
-const expandableCount = 4;
+import "./breadcrumb-group.scss";
+
 @Component({
     selector: "bl-breadcrumb-group",
     templateUrl: "breadcrumb-group.html",
 })
 export class BreadcrumbGroupComponent implements OnDestroy {
     public crumbs: Breadcrumb[] = [];
-    public displayCrumbs: Breadcrumb[] = [];
-    public expandable = false;
-    public expanded = false;
 
     private _subscription: Subscription;
+    private _lastCrumbCount = 0;
 
     constructor(breadcrumbService: BreadcrumbService, private elementRef: ElementRef) {
         this._subscription = breadcrumbService.crumbs.subscribe((crumbs) => {
             this.crumbs = crumbs;
-            this.expandable = crumbs.length > expandableCount;
-            this._updateDisplayedCrumbs();
+            if (crumbs.length > this._lastCrumbCount) {
+                setTimeout(() => {
+                    this.elementRef.nativeElement.scrollLeft = this.elementRef.nativeElement.scrollWidth;
+                });
+            }
         });
     }
 
@@ -30,26 +31,8 @@ export class BreadcrumbGroupComponent implements OnDestroy {
         this._subscription.unsubscribe();
     }
 
-    @HostListener("document:click", ["$event"])
-    public onClick(event: Event) {
-        if (!this.elementRef.nativeElement.contains(event.target)) {
-            this.expanded = false;
-            this._updateDisplayedCrumbs();
-        }
-    }
-
-    public expand(event: Event) {
-        this.expanded = true;
-        this._updateDisplayedCrumbs();
-        event.stopImmediatePropagation();
-    }
-
-    private _updateDisplayedCrumbs() {
-        const crumbs = this.crumbs;
-        if (this.expandable && !this.expanded) {
-            this.displayCrumbs = crumbs.slice(crumbs.length - 3, crumbs.length);
-        } else {
-            this.displayCrumbs = crumbs;
-        }
+    @HostListener("mousewheel", ["$event"])
+    public mouseWheelMoves(event: WheelEvent) {
+        this.elementRef.nativeElement.scrollLeft -= (event.wheelDelta > 0 ? 10 : -10);
     }
 }

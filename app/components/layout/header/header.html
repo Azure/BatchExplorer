@@ -1,0 +1,19 @@
+<div class="back-nav">
+    <div class="back" (click)="goBack()" title="Back">
+        <i class="fa fa-angle-left"></i>
+    </div>
+    <div class="forward" (click)="goForward()" title="Forward">
+        <i class="fa fa-angle-right"></i>
+    </div>
+</div>
+<a class="logo" href="#" [routerLink]="['']" title="Batch labs - Home">
+    <i class="fa fa-flask"></i>Batch Labs
+</a>
+<bl-breadcrumb-group>
+</bl-breadcrumb-group>
+<div class="menu-item">
+    <bl-pinned-dropdown></bl-pinned-dropdown>
+</div>
+<div class="menu-item">
+    <bl-sidebar-bookmarks></bl-sidebar-bookmarks>
+</div>

@@ -1,12 +1,15 @@
+@import "app/styles/variables";
 
 bl-breadcrumb-group {
+    $header-margin: 4px;
     $separation: 3px;
-    $height: 28px;
+    $height: $header-height - 2 * $header-margin;
     $half-height: $height / 2;
     $color: map-get($primary, 500);
     $hover-color: map-get($primary, 600);
     display: block;
     height: $height;
+    margin-top: $header-margin;
 
     ul {
         display: flex;
@@ -19,7 +22,8 @@ bl-breadcrumb-group {
     }
 
     ul > bl-breadcrumb {
-        display: block;
+        display: flex;
+        align-items: center;
         height: $height;
         background: $color;
         padding: 0 2px;
@@ -27,8 +31,9 @@ bl-breadcrumb-group {
         margin: 0 ($half-height + $separation) 0 0;
         text-decoration: none;
         min-width: 40px;
-        max-width: 100px;
+        max-width: 140px;
         cursor: pointer;
+        color: $whitesmoke;
 
         &:after {
             content: "";
@@ -40,7 +45,7 @@ bl-breadcrumb-group {
             top: 0;
         }
 
-        &:before {
+        &:not(:first-child):before {
             content: "";
             position: absolute;
             border-width: $half-height 0 $half-height $half-height;
@@ -61,41 +66,27 @@ bl-breadcrumb-group {
             }
         }
 
-        > div.crumb-content, > div.crumb-label {
+        > .crumb-icon {
+            margin-left: 3px;
+        }
+
+        > .crumb-content {
             overflow: hidden;
             text-overflow: ellipsis;
             word-break: break-all;
             white-space: nowrap;
-        }
-
-        > div.crumb-content {
             text-align: left;
-            color: $whiteSmoke;
             font-size: 12px;
             line-height: 16px;
-
-            &.no-label {
-                height: 100%;
-                display: flex;
-                align-items: center;
-                margin-left: 3px;
-            }
+            height: 100%;
+            display: flex;
+            align-items: center;
+            margin-left: 3px;
 
             &.invert-ellipsis {
-                // width:170px;
-                // border:1px solid #999;
                 direction:rtl;
                 text-align:left;
             }
-        }
-
-        > div.crumb-label {
-            color: $whiteSmoke-darker;
-            font-style: italic;
-            text-align: right;
-            line-height: 9px;
-            font-size: 9px;
-            margin-top: 2px;
         }
     }
 

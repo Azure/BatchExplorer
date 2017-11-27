@@ -27,6 +27,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         return {
             name: id,
             label,
+            icon: "database",
         };
     }
 

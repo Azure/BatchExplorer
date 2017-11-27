@@ -99,7 +99,9 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     }
 
     public ngOnDestroy() {
-        this._editor.dispose();
+        if (this._editor) {
+            this._editor.dispose();
+        }
         this._resizeDetector.uninstall(this.elementRef.nativeElement);
     }
 
