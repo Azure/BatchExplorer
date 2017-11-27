@@ -3,7 +3,6 @@ import { AsyncValidatorFn, FormControl, FormGroup, ValidatorFn } from "@angular/
 import { MatDialogRef } from "@angular/material";
 import { autobind } from "core-decorators";
 import { AsyncSubject, Observable } from "rxjs";
-import { setInterval } from "timers";
 import { ValidatorMessage } from "../dialog.service";
 
 @Component({
