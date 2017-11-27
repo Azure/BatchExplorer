@@ -21,7 +21,7 @@ export interface PromptOptions {
     prompt: (value: string) => Observable<any>;
     validator?: ValidatorFn | ValidatorFn[] | null;
     asyncValidator?: AsyncValidatorFn | AsyncValidatorFn[];
-    validatorMessages: ValidatorMessage[];
+    validatorMessages?: ValidatorMessage[];
 }
 
 /**
