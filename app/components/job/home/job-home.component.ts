@@ -31,7 +31,7 @@ export class JobHomeComponent {
 
     @autobind()
     public addJob() {
-        this.sidebarManager.open("add-basic-job", JobCreateBasicDialogComponent);
+        this.sidebarManager.open("add-job", JobCreateBasicDialogComponent);
     }
 
     public advancedFilterChanged(filter: Filter) {

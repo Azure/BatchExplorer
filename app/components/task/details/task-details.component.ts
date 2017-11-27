@@ -113,7 +113,7 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public cloneTask() {
-        const ref = this.sidebarManager.open("add-basic-pool", TaskCreateBasicDialogComponent);
+        const ref = this.sidebarManager.open(`add-task-${this.taskId}`, TaskCreateBasicDialogComponent);
         ref.component.jobId = this.jobId;
         ref.component.setValueFromEntity(this.task);
     }

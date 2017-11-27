@@ -19,6 +19,6 @@ export class PoolHomeComponent {
 
     @autobind()
     public addPool() {
-        this.sidebarManager.open("add-basic-pool", PoolCreateBasicDialogComponent);
+        this.sidebarManager.open("add-pool", PoolCreateBasicDialogComponent);
     }
 }
