@@ -17,8 +17,8 @@ bl-pinned-dropdown {
         width: calc(#{$ddl-width} - 65px);
         padding-right: 4px;
 
-        .url {
-            font-size: 0.8em !important;
+        .type {
+            font-size: 10px;
         }
     }
 }
