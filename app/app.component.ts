@@ -1,4 +1,3 @@
-import { Location } from "@angular/common";
 import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { MatIconRegistry, MatSidenav } from "@angular/material";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -33,7 +32,6 @@ export class AppComponent implements AfterViewInit, OnInit {
     private sidebarContent: SidebarContentComponent;
 
     constructor(
-        private location: Location,
         matIconRegistry: MatIconRegistry,
         sanitizer: DomSanitizer,
         private sidebarManager: SidebarManager,
@@ -98,14 +96,6 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     public logout() {
         this.adalService.logout();
-    }
-
-    public goBack() {
-        this.location.back();
-    }
-
-    public goForward() {
-        this.location.forward();
     }
 
     /**

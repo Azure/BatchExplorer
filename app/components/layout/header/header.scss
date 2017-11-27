@@ -4,7 +4,6 @@ bl-header {
     display: flex;
     user-select: none;
     height: $header-height;
-    // align-items: center;
     color: $whitesmoke;
     background-color: $header-background;
     width: 100vw;
@@ -16,7 +15,6 @@ bl-header {
     }
 
     .back-nav {
-        float: left;
         > .back, > .forward {
             padding-top: 2px;
             display:  inline-block;
@@ -26,8 +24,8 @@ bl-header {
             cursor: pointer;
             text-align: center;
 
-            &:hover {
-                background: $header-hover;
+            &:hover, &:focus {
+                background-color: $header-hover;
                 color: map-get($primary, 300);
             }
 
@@ -44,7 +42,7 @@ bl-header {
         color: $whitesmoke;
         font-size: 16px;
 
-        &:hover {
+        &:hover, &:focus {
             background-color: $header-hover;
             color: map-get($primary, 300);
         }
