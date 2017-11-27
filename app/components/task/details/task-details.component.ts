@@ -21,6 +21,7 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
         return {
             name: id,
             label,
+            icon: "cogs",
         };
     }
 

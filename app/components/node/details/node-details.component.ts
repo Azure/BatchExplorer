@@ -21,6 +21,7 @@ export class NodeDetailsComponent implements OnInit, OnDestroy {
         return {
             name: id,
             label,
+            icon: "microchip",
         };
     }
 
