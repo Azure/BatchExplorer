@@ -187,36 +187,6 @@ nav {
     }
 }
 
-.sidebar-bookmarks-btn {
-    position: relative;
-    color: white;
-    height: $header-height;
-    width: $header-height;
-    display: flex;
-    float: right;
-    text-align: center;
-    font-size: 1.5em;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    background-color: $navigation-hover;
-
-    &:hover, &.active {
-        background-color: $navigation-background;
-    }
-
-    .count {
-        font-size: 0.7em;
-        position: absolute;
-        left: 0;
-        top: 0;
-        background-color: map-get($danger, 500);
-        border-radius: 10px;
-        width: 18px;
-        height: 18px;
-    }
-}
-
 .context-button-bar {
     position: relative !important;
     margin: -35px 10px 0 !important;
