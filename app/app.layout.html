@@ -1,21 +1,7 @@
 <div id="container" [hidden]="!isAppReady">
     <!--[class.no-userinteract]="!(hasAccount | async)" -->
-    <header id="header" class="noselect">
-        <div class="back-nav">
-            <div class="back" (click)="goBack()" title="Back">
-                <i class="fa fa-angle-left"></i>
-            </div>
-            <div class="forward" (click)="goForward()" title="Forward">
-                <i class="fa fa-angle-right"></i>
-            </div>
-        </div>
-        <a class="logo" href="#" [routerLink]="['']" title="Batch labs - Home">
-            <i class="fa fa-flask"></i>Batch Labs
-        </a>
-        <bl-breadcrumb-group>
-        </bl-breadcrumb-group>
-        <bl-pinned-dropdown></bl-pinned-dropdown>
-        <bl-sidebar-bookmarks></bl-sidebar-bookmarks>
+    <header>
+        <bl-header></bl-header>
     </header>
     <nav [class.no-userinteract]="!(hasAccount | async)" class="noselect">
         <bl-app-nav></bl-app-nav>

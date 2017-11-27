@@ -1,0 +1,70 @@
+@import "app/styles/variables";
+
+bl-header {
+    display: flex;
+    user-select: none;
+    height: $header-height;
+    // align-items: center;
+    color: $whitesmoke;
+    background-color: $header-background;
+    width: 100vw;
+    font-size: 12px;
+    line-height: $footer-height;
+
+    > .menu-item {
+        margin: 0 5px;
+    }
+
+    .back-nav {
+        float: left;
+        > .back, > .forward {
+            padding-top: 2px;
+            display:  inline-block;
+            width: 30px;
+            height: $header-height;
+            color: $whiteSmoke;
+            cursor: pointer;
+            text-align: center;
+
+            &:hover {
+                background: $header-hover;
+                color: map-get($primary, 300);
+            }
+
+            > .fa {
+                font-size: 26px;
+                margin: 0 5px;
+            }
+        }
+    }
+
+    .logo {
+        padding: 5px 10px 0;
+        height: 100%;
+        color: $whitesmoke;
+        font-size: 16px;
+
+        &:hover {
+            background-color: $header-hover;
+            color: map-get($primary, 300);
+        }
+
+        > .fa {
+            margin-right: 5px;
+        }
+    }
+
+    > * {
+        flex-shrink: 0;
+    }
+
+    > bl-breadcrumb-group {
+        flex: 1;
+        min-width: 200px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        &::-webkit-scrollbar {
+            height: 1px;
+        }
+    }
+}
