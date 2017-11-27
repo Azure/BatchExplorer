@@ -1,5 +1,6 @@
 import {
     Component,
+    OnDestroy,
     ViewEncapsulation,
 } from "@angular/core";
 import { Subscription } from "rxjs";
@@ -14,7 +15,7 @@ import "./sidebar-bookmarks.scss";
     selector: "bl-sidebar-bookmarks",
     templateUrl: "sidebar-bookmarks.html",
 })
-export class SidebarBookmarksComponent {
+export class SidebarBookmarksComponent implements OnDestroy {
     public references = [];
 
     private _sub: Subscription;

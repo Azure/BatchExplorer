@@ -52,21 +52,22 @@ bl-dropdown {
             right: 0;
         }
 
+        $dropdown-shadow: 20px 0 rgba(0, 0, 0, 0.3);
         &.below[align=left] {
-            box-shadow: 3px 3px 20px 0 rgba(0, 0, 0, 0.2);
+            box-shadow: 3px 3px $dropdown-shadow;
         }
 
         &.below[align=right] {
-            box-shadow: -3px 3px 20px 0 rgba(0, 0, 0, 0.2);
+            box-shadow: -3px 3px $dropdown-shadow;
         }
 
 
         &.above[align=left] {
-            box-shadow: 3px -3px 20px 0 rgba(0, 0, 0, 0.2);
+            box-shadow: 3px -3px $dropdown-shadow;
         }
 
         &.above[align=right] {
-            box-shadow: -3px -3px 20px 0 rgba(0, 0, 0, 0.2);
+            box-shadow: -3px -3px $dropdown-shadow;
         }
 
 
