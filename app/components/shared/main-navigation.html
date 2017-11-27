@@ -5,27 +5,27 @@
         </a>
     </li>
     <li>
-        <a routerLink="/jobs" routerLinkActive="active">
+        <a *blHiddenIfNoAccount routerLink="/jobs" routerLinkActive="active">
             <i class="fa fa-tasks fa-lg"></i><div class="label">Jobs</div>
         </a>
     </li>
     <li>
-        <a routerLink="/pools" routerLinkActive="active">
+        <a *blHiddenIfNoAccount routerLink="/pools" routerLinkActive="active">
             <i class="fa fa-database fa-lg"></i><div class="label">Pools</div>
         </a>
     </li>
     <li>
-        <a routerLink="/applications" routerLinkActive="active" title="Application packages">
+        <a *blHiddenIfNoAccount routerLink="/applications" routerLinkActive="active" title="Application packages">
             <i class="fa fa-file-archive-o fa-lg"></i><div class="label">Packages</div>
         </a>
     </li>
     <li>
-        <a routerLink="/data" routerLinkActive="active" title="File groups">
+        <a *blHiddenIfNoAccount routerLink="/data" routerLinkActive="active" title="File groups">
             <i class="fa fa-cloud-upload fa-lg"></i><div class="label">Data</div>
         </a>
     </li>
     <li>
-        <a href="#" routerLink="market" routerLinkActive="active" title="Gallery">
+        <a *blHiddenIfNoAccount href="#" routerLink="market" routerLinkActive="active" title="Gallery">
             <i class="fa fa-cubes" aria-hidden="true"></i><div class="label">Gallery</div>
         </a>
     </li>
