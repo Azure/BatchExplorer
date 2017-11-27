@@ -3,7 +3,6 @@
     display: flex;
 
     .logo {
-        height: 31px;
         margin: 5px 10px 0;
         height: 100%;
         color: $whitesmoke;
@@ -13,12 +12,12 @@
             background-color: $navigation-background;
         }
 
-        > .fa  {
+        > .fa {
             margin-right: 5px;
         }
     }
 
-    > *  {
+    > * {
         flex-shrink: 0;
     }
 
@@ -28,7 +27,7 @@
         overflow-x: auto;
         overflow-y: hidden;
         &::-webkit-scrollbar {
-           height: 1px;
+            height: 1px;
         }
     }
 }
