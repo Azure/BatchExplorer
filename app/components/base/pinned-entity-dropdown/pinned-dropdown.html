@@ -8,7 +8,7 @@
             <i class="fa" [ngClass]="entityIcon(favorite)"></i>
             <div class="main">
                 <div class="alias">{{favorite.name || favorite.id}}</div>
-                <div class="url">{{entityType(favorite)}}</div>
+                <div class="type">{{entityType(favorite)}}</div>
             </div>
             <div *ngIf="favorite.url === currentUrl" class="extra">
                 <i class="fa fa-check"></i>
