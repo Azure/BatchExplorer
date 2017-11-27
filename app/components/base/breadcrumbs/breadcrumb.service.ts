@@ -12,7 +12,7 @@ function breadcrumbMethodMissingMessage(componentName) {
     class ${componentName} {
         // Add this method
         public static breadcrumb(params, queryParams) {
-            return {name: "Some name", label: "Some label"};
+            return {name: "Some name", label: "Some label", icon: "fontawesome-icon"};
         }
     }
 `;
