@@ -2,13 +2,14 @@ import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
+import { remote } from "electron";
 import { List } from "immutable";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
-import { PoolParams, PoolService, PricingService } from "app/services";
+import { FileSystemService, PoolParams, PoolService, PricingService } from "app/services";
 import { EntityView } from "app/services/core/data";
 import { NumberUtils } from "app/utils";
 import { SidebarManager } from "../../base/sidebar";
@@ -47,6 +48,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         private router: Router,
         private activatedRoute: ActivatedRoute,
         private dialog: MatDialog,
+        private fs: FileSystemService,
         private sidebarManager: SidebarManager,
         private pricingService: PricingService,
         private poolService: PoolService) {
@@ -88,7 +90,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public addJob() {
-        const createRef = this.sidebarManager.open("add-basic-job", JobCreateBasicDialogComponent);
+        const createRef = this.sidebarManager.open("add-job", JobCreateBasicDialogComponent);
         createRef.component.preSelectPool(this.pool.id);
     }
 
@@ -101,7 +103,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public clonePool() {
-        const ref = this.sidebarManager.open("add-basic-pool", PoolCreateBasicDialogComponent);
+        const ref = this.sidebarManager.open(`add-pool-${this.poolId}`, PoolCreateBasicDialogComponent);
         ref.component.setValueFromEntity(this.pool);
     }
 
@@ -119,6 +121,20 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         return this.poolService.updateTags(this.pool, newTags).flatMap(() => {
             return this.data.refresh();
         });
+    }
+
+    @autobind()
+    public exportAsJSON() {
+        const dialog = remote.dialog;
+        const localPath = dialog.showSaveDialog({
+            buttonLabel: "Export",
+            defaultPath: `${this.pool.id}.json`,
+        });
+
+        if (localPath) {
+            const content = JSON.stringify(this.pool._original, null, 2);
+            return Observable.fromPromise(this.fs.saveFile(localPath, content));
+        }
     }
 
     private _updatePrice() {

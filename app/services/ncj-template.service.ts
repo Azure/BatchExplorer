@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { FileSystemService, LocalFileStorage } from "app/services";
 import { List } from "immutable";
 import * as path from "path";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
@@ -7,10 +6,12 @@ import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 import {
     Application,
     ApplicationAction,
-    NcjJobTemplate, NcjPoolTemplate,
+    NcjJobTemplate,
+    NcjPoolTemplate,
     NcjTemplateMode,
     NcjTemplateType,
 } from "app/models";
+import { FileSystemService, LocalFileStorage } from "app/services";
 import { DateUtils, SecureUtils, log } from "app/utils";
 
 const branch = "master";
@@ -178,7 +179,7 @@ export class NcjTemplateService {
     }
 
     public createParameterFileFromSubmission(path: string, submission: RecentSubmission) {
-        const content = JSON.stringify(this._parameterData(submission));
+        const content = JSON.stringify(this._parameterData(submission), null, 2);
         return this.fs.saveFile(path, content);
     }
 
