@@ -23,9 +23,6 @@ export class PromptDialogComponent {
     }
     public set asyncValidator(asyncValidator: AsyncValidatorFn | AsyncValidatorFn[]) {
         this.promptControl.setAsyncValidators(asyncValidator);
-        setInterval(() => {
-            console.log("Error", this.promptControl.errors);
-        }, 2000);
     }
 
     public response = new AsyncSubject<string>();
