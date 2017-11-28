@@ -26,7 +26,7 @@
     "test-client-watch": "npm run -s test-client -- --watch",
     "build-client": "tsc -p tsconfig.node.json",
     "build-app": "npm run webpack -- --profile --colors --display-error-details --display-cached",
-    "build-python": "npm run -s ts config/build-python.ts",
+    "build-python": "pyinstaller python/main.spec --distpath=python/dist --workpath=python/build",
     "build": "npm run -s clean && npm run -s build-client && npm run -s build-app",
     "build:prod": "cross-env NODE_ENV=production npm run -s build",
     "watch": "npm run webpack -- --watch --progress --profile --colors --display-error-details --display-cached",
