@@ -8,7 +8,7 @@ import { AsyncSubject, Observable } from "rxjs";
 import { BackgroundTask, BackgroundTaskService } from "app/components/base/background-task";
 import { NotificationService } from "app/components/base/notifications";
 import { ElectronShell, FileSystemService, StorageService } from "app/services";
-import { CloudPathUtils, SecureUtils } from "app/utils";
+import { SecureUtils } from "app/utils";
 import { autobind } from "core-decorators";
 import * as minimatch from "minimatch";
 import "./file-tree-download.scss";
@@ -101,7 +101,7 @@ export class FileTreeDownloadComponent {
         const progressStep = 90 / files.size;
         return files.map((file) => {
             const fileLoader = this.storageService.getBlobContent(this.containerId, file.name);
-            const fileName = CloudPathUtils.leafDir(CloudPathUtils.normalize(file.name));
+            const fileName = this._getSubdirectoryPath(file.name);
             const filePath = path.join(folder, fileName);
             return fileLoader.download(filePath).do(() => {
                 task.progress.next(task.progress.value + progressStep);
@@ -115,11 +115,14 @@ export class FileTreeDownloadComponent {
         return data.fetchAll().flatMap(() => data.items.take(1)).map((items) => {
             data.dispose();
             const files = items.filter((file) => {
+                // Filter files that are not part of this directory
                 if (!file.name.startsWith(this.pathPrefix)) {
                     return false;
                 }
                 for (let pattern of patterns) {
-                    if (minimatch(file.name, pattern)) {
+                    // Path prefix must be excluded when compared to pattern
+                    const fileName = this._getSubdirectoryPath(file.name);
+                    if (minimatch(fileName, pattern)) {
                         return true;
                     }
                 }
@@ -131,5 +134,9 @@ export class FileTreeDownloadComponent {
 
     private get _defaultDownloadFolder() {
         return path.join(this.fs.commonFolders.downloads, "batch-labs");
+    }
+
+    private _getSubdirectoryPath(filePath: string) {
+        return filePath.slice(this.pathPrefix.length);
     }
 }

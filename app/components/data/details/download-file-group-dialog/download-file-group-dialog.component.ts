@@ -6,6 +6,7 @@ import * as path from "path";
 import { AsyncSubject, Observable } from "rxjs";
 
 import { BackgroundTask, BackgroundTaskService } from "app/components/base/background-task";
+import { NotificationService } from "app/components/base/notifications";
 import { ElectronShell, FileSystemService, StorageService } from "app/services";
 import { SecureUtils } from "app/utils";
 import { autobind } from "core-decorators";
@@ -33,6 +34,7 @@ export class DownloadFileGroupDialogComponent {
         private backgroundTaskService: BackgroundTaskService,
         private fs: FileSystemService,
         private shell: ElectronShell,
+        private notificationService: NotificationService,
     ) {
     }
 
@@ -53,12 +55,21 @@ export class DownloadFileGroupDialogComponent {
             const subject = new AsyncSubject();
             task.progress.next(1);
             this._getListOfFilesToDownload().subscribe((files) => {
-                task.progress.next(10);
-                const downloadObs = this._downloadFiles(task, folder, files);
-                Observable.combineLatest(downloadObs).subscribe(() => {
-                    this.shell.showItemInFolder(folder);
+                if (files.count() === 0) {
+                    this.notificationService.warn(
+                        "Pattern not found",
+                        `Failed to find pattern: ${this._getPatterns()}`,
+                    );
+                    task.progress.next(100);
                     subject.complete();
-                });
+                } else {
+                    task.progress.next(10);
+                    const downloadObs = this._downloadFiles(task, folder, files);
+                    Observable.combineLatest(downloadObs).subscribe(() => {
+                        this.shell.showItemInFolder(folder);
+                        subject.complete();
+                    });
+                }
             });
 
             return subject.asObservable();
