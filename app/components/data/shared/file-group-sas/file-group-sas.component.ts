@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit, forwardRef } from "@angular/core";
+import { Component, Input, OnChanges, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
@@ -6,23 +6,22 @@ import { autobind } from "core-decorators";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
-import { DialogService } from "app/components/base/dialogs";
 import { BlobContainer } from "app/models";
 import { ListContainerParams, StorageService } from "app/services";
 import { ListView } from "app/services/core";
-import { CloudFilePickerDialogComponent } from "./cloud-file-picker-dialog.component";
-import "./cloud-file-picker.scss";
+
+import "./file-group-sas.scss";
 
 // tslint:disable:no-forward-ref
 @Component({
-    selector: "bl-cloud-file-picker",
-    templateUrl: "cloud-file-picker.html",
+    selector: "bl-file-group-sas",
+    templateUrl: "file-group-sas.html",
     providers: [
-        { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => CloudFilePickerComponent), multi: true },
-        { provide: NG_VALIDATORS, useExisting: forwardRef(() => CloudFilePickerComponent), multi: true },
+        { provide: NG_VALUE_ACCESSOR, useExisting: forwardRef(() => FileGroupSasComponent), multi: true },
+        { provide: NG_VALIDATORS, useExisting: forwardRef(() => FileGroupSasComponent), multi: true },
     ],
 })
-export class CloudFilePickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
+export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, OnInit, OnDestroy {
     @Input() public label: string;
     @Input() public hint: string;
 
@@ -39,7 +38,12 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnInit, O
     private _propagateChange: (value: any[]) => void = null;
     private _subscriptions: Subscription[] = [];
 
-    constructor(private storageService: StorageService, private dialog: DialogService) {
+    /**
+     * TODO: see if we can listen to the form and auto populate a SAS when
+     * the user selects a FG.
+     */
+
+    constructor(private storageService: StorageService) {
         this.fileGroupsData = this.storageService.containerListView(storageService.ncjFileGroupPrefix);
         this.fileGroupsData.items.subscribe((fileGroups) => {
             this.fileGroups = fileGroups;
@@ -51,6 +55,16 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnInit, O
                 this._propagateChange(value);
             }
         }));
+    }
+
+    public ngOnChanges(inputs) {
+        if (this.containerId && inputs.containerId &&
+            inputs.containerId.currentValue !== inputs.containerId.previousValue) {
+            console.log("ngOnChanges: ", this.containerId);
+            this.generateSasToken();
+        } else {
+            this.value.setValue(null);
+        }
     }
 
     public ngOnInit() {
@@ -79,17 +93,10 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnInit, O
     }
 
     @autobind()
-    public openFilePickerDialog() {
-        const ref = this.dialog.open(CloudFilePickerDialogComponent);
-        const component = ref.componentInstance;
-        component.containerId = this.containerId;
-        component.pickedFile = this.value.value;
-        component.done.subscribe((save) => {
-            if (save) {
-                this.value.setValue(component.pickedFile);
-            }
-        });
-        return component.done;
+    public generateSasToken() {
+        // todo-andrew: call off to storage service to generate container sas
+        console.log("generateSasToken: ", this.containerId);
+        this.value.setValue(this.containerId);
     }
 
     private _checkValid(value: string) {
