@@ -1,0 +1,18 @@
+<bl-simple-form [submit]="startDownload"
+                [containerRef]="dialogRef"
+                [multiUse]="false"
+                title="Download directory: {{ pathPrefix }}"
+                actionName="Download">
+    <div>
+        <mat-form-field class="form-element">
+            <textarea matInput placeholder="Pattern of files to include(1 per line)" [formControl]="patterns" matTextareaAutosize matAutosizeMaxRows="10"></textarea>
+            <mat-hint align="end">e.g. **/*.png for all png files recursively. subfolder/* for all files in subfolder</mat-hint>
+        </mat-form-field>
+    </div>
+    <div blFormSummary>
+        <bl-directory-picker label="" (onChange)="downloadFolder.setValue($event)">
+            Change
+        </bl-directory-picker>
+        <span>{{downloadFolder.value}}</span>
+    </div>
+</bl-simple-form>

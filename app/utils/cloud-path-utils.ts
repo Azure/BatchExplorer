@@ -11,6 +11,10 @@ export class CloudPathUtils {
         return path.split("/").slice(0, -1).join("/");
     }
 
+    public static leafDir(path: string): string {
+        return path.split("/").last();
+    }
+
     public static asBaseDirectory(path: string): string {
         const norm = CloudPathUtils.normalize(path);
         if (norm.endsWith("/")) {

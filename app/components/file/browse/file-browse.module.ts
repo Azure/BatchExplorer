@@ -4,14 +4,15 @@ import { FileDetailsModule } from "app/components/file/details";
 import { BlobFilesBrowserComponent } from "./blob-files-browser";
 import { FileDirectoryFilter, FileListDisplayComponent } from "./display";
 import {
-    FileExplorerComponent, FileExplorerTabsComponent, FileTableViewComponent, FileTreeViewComponent,
+    FileExplorerComponent, FileExplorerTabsComponent, FileTableViewComponent, FileTreeDownloadComponent,
+    FileTreeViewComponent,
 } from "./file-explorer";
+
 import { NodeFileBrowseComponent } from "./node-file-browse.component";
 
 const components = [
     FileDirectoryFilter, FileTreeViewComponent, FileListDisplayComponent,
-    NodeFileBrowseComponent,
-    BlobFilesBrowserComponent,
+    FileTreeDownloadComponent, NodeFileBrowseComponent, BlobFilesBrowserComponent,
     FileExplorerComponent, FileTableViewComponent, FileExplorerTabsComponent,
 ];
 
@@ -19,6 +20,9 @@ const components = [
     declarations: components,
     exports: components,
     imports: [FileDetailsModule, ...commonModules],
+    entryComponents: [
+        FileTreeDownloadComponent,
+    ],
 })
 export class FileBrowseModule {
 
