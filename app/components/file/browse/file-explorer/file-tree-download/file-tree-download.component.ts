@@ -52,7 +52,7 @@ export class FileTreeDownloadComponent {
     private async _startDownloadAsync() {
         const folder = await this._getDownloadFolder();
 
-        this.backgroundTaskService.startTask("Download file group", (task: BackgroundTask) => {
+        this.backgroundTaskService.startTask("Download directory", (task: BackgroundTask) => {
             const subject = new AsyncSubject();
             task.progress.next(1);
             this._getListOfFilesToDownload().subscribe((files) => {
@@ -73,6 +73,8 @@ export class FileTreeDownloadComponent {
     }
 
     private _getDownloadFolder(): Promise<string> {
+        // Gets current selected folder by joining base download folder and selected directory name
+        // Ensures that this selected directory is unique under base download folder
         const folder = path.join(this.downloadFolder.value, this.subfolder);
         return this.fs.exists(folder).then((exists) => {
             if (exists) {

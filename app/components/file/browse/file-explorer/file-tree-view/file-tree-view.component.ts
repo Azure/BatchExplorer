@@ -180,10 +180,7 @@ export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     /**
-     * Download action in context menu in tree view
-     * There are two different download situation
-     * 1, Directory that was downloaded along with recursive files
-     * 2, Single file that was download
+     * Treeview context menu directory/files download actions
      * @param treeRow
      */
     public download(treeRow: TreeRow) {
