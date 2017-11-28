@@ -6,6 +6,7 @@ import * as path from "path";
 import { AsyncSubject, Observable } from "rxjs";
 
 import { BackgroundTask, BackgroundTaskService } from "app/components/base/background-task";
+import { NotificationService } from "app/components/base/notifications";
 import { ElectronShell, FileSystemService, StorageService } from "app/services";
 import { CloudPathUtils, SecureUtils } from "app/utils";
 import { autobind } from "core-decorators";
@@ -36,6 +37,7 @@ export class FileTreeDownloadComponent {
         private backgroundTaskService: BackgroundTaskService,
         private fs: FileSystemService,
         private shell: ElectronShell,
+        private notificationService: NotificationService,
     ) {
     }
 
@@ -52,16 +54,26 @@ export class FileTreeDownloadComponent {
     private async _startDownloadAsync() {
         const folder = await this._getDownloadFolder();
 
-        this.backgroundTaskService.startTask("Download directory", (task: BackgroundTask) => {
+        this.backgroundTaskService.startTask(`Download ${this.pathPrefix}`, (task: BackgroundTask) => {
             const subject = new AsyncSubject();
             task.progress.next(1);
             this._getListOfFilesToDownload().subscribe((files) => {
-                task.progress.next(10);
-                const downloadObs = this._downloadFiles(task, folder, files);
-                Observable.combineLatest(downloadObs).subscribe(() => {
-                    this.shell.showItemInFolder(folder);
+                if (files.count() === 0) {
+                    this.notificationService.warn(
+                        "Pattern not found",
+                        `Failed to find pattern: ${this._getPatterns()}`,
+                    );
+                    task.progress.next(100);
                     subject.complete();
-                });
+                } else {
+                    task.progress.next(10);
+                    const downloadObs = this._downloadFiles(task, folder, files);
+                    Observable.combineLatest(downloadObs).subscribe(() => {
+                        this.shell.showItemInFolder(folder);
+                        task.progress.next(100);
+                        subject.complete();
+                    });
+                }
             });
 
             return subject.asObservable();
@@ -118,6 +130,6 @@ export class FileTreeDownloadComponent {
     }
 
     private get _defaultDownloadFolder() {
-        return path.join(this.fs.commonFolders.downloads, "batch-labs", this._containerId);
+        return path.join(this.fs.commonFolders.downloads, "batch-labs");
     }
 }

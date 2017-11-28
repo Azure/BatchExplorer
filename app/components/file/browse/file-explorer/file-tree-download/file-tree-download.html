@@ -1,6 +1,7 @@
 <bl-simple-form [submit]="startDownload"
                 [containerRef]="dialogRef"
                 [multiUse]="false"
+                [formGroup]="patterns"
                 title="Download directory: {{ pathPrefix }}"
                 actionName="Download">
     <div>
