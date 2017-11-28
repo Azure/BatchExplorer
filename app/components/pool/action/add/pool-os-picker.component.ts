@@ -140,6 +140,10 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
         return this._nodeAgentSkuMap.renderingOffers;
     }
 
+    public get dockerOffers() {
+        return this._nodeAgentSkuMap.dockerOffers;
+    }
+
     private _updateSelection() {
         const vmConfig = this.value && this.value.virtualMachineConfiguration;
         const ref = vmConfig && vmConfig.imageReference;
