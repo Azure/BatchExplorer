@@ -36,7 +36,7 @@ export class TaskHomeComponent implements OnInit, OnDestroy {
 
     @autobind()
     public addTask() {
-        const createRef = this.sidebarManager.open("add-basic-task", TaskCreateBasicDialogComponent);
+        const createRef = this.sidebarManager.open("add-task", TaskCreateBasicDialogComponent);
         createRef.component.jobId = this.jobId;
     }
 }

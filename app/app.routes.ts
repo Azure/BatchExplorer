@@ -1,6 +1,7 @@
 // tslint:disable: object-literal-sort-keys
 import { Routes } from "@angular/router";
 
+import { NavigationGuard } from "app/components/base/guards";
 import { JobGraphsComponent } from "app/components/job/graphs/job-graphs-home";
 import { ChooseActionComponent } from "app/components/market/application-action";
 import { LocalTemplateBrowserComponent } from "app/components/market/local-template-browser";
@@ -41,6 +42,7 @@ export const routes: Routes = [
     },
     {
         path: "jobs",
+        canActivate: [NavigationGuard],
         component: JobHomeComponent,
         children: [
             { path: "", component: JobDefaultComponent }, // jobs/
@@ -49,6 +51,7 @@ export const routes: Routes = [
     },
     {
         path: "pools",
+        canActivate: [NavigationGuard],
         component: PoolHomeComponent,
         children: [
             { path: "", component: PoolDefaultComponent }, // pools/
@@ -57,6 +60,7 @@ export const routes: Routes = [
     },
     {
         path: "market",
+        canActivate: [NavigationGuard],
         component: MarketComponent,
     },
     {
@@ -81,6 +85,7 @@ export const routes: Routes = [
     },
     {
         path: "applications",
+        canActivate: [NavigationGuard],
         component: ApplicationHomeComponent,
         children: [
             { path: "", component: ApplicationDefaultComponent }, // applications/
@@ -89,6 +94,7 @@ export const routes: Routes = [
     },
     {
         path: "data",
+        canActivate: [NavigationGuard],
         component: DataHomeComponent,
         children: [
             { path: "", component: DataDefaultComponent }, // data/

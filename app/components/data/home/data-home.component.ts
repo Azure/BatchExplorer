@@ -1,5 +1,5 @@
 import { Component, OnDestroy, ViewChild } from "@angular/core";
-import { FormControl } from "@angular/forms";
+import { FormControl, Validators } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Subscription } from "rxjs";
 
@@ -10,6 +10,8 @@ import { FileGroupCreateFormComponent } from "../action";
 
 import { MatMenuTrigger } from "@angular/material";
 import { DialogService } from "app/components/base/dialogs";
+import { BlobContainer } from "app/models";
+import { Constants } from "app/utils";
 import "./data-home.scss";
 
 @Component({
@@ -57,8 +59,25 @@ export class DataHomeComponent implements OnDestroy {
     }
 
     public openEmptyFileGroupForm() {
+        const validation = Constants.forms.validation;
+
         this.dialogService.prompt("Add a new file group", {
             prompt: (name) => this._createEmptyFileGroup(name),
+            validator: [
+                Validators.required,
+                Validators.maxLength(validation.maxLength.fileGroup),
+                Validators.pattern(validation.regex.fileGroup),
+            ],
+            asyncValidator: [
+                this._validateFileGroupName.bind(this),
+            ],
+            validatorMessages: [
+                { code: "required", message: "The file group name is a required field" },
+                { code: "maxlength", message: "The file group name has a maximum length of 64 characters" },
+                { code: "duplicateFileGroup", message: "A file group with this name already exist." },
+                // tslint:disable-next-line:max-line-length
+                { code: "pattern", message: "The file group name can contain any combination of lowercase alphanumeric characters including single hyphens" },
+            ],
         });
     }
 
@@ -83,5 +102,32 @@ export class DataHomeComponent implements OnDestroy {
             error: () => null,
         });
         return obs;
+    }
+
+    /**
+     * Async validator to check if a given file-group exists.
+     * If it does exist then we inform the user that they will be modifying
+     * the existing group and not creating a new one.
+     */
+    private _validateFileGroupName(control: FormControl): Promise<any> {
+        return new Promise((resolve) => {
+            setTimeout(() => {
+                const containerName = `${this.storageService.ncjFileGroupPrefix}${control.value}`;
+                this.storageService.getContainerOnce(containerName).subscribe({
+                    next: (container: BlobContainer) => {
+                        resolve({
+                            duplicateFileGroup: {
+                                valid: false,
+                            },
+                        });
+                    },
+                    error: (error) => {
+                        resolve(null);
+                    },
+                });
+                // timeout for allowing the user to type more than one character.
+                // async validation fires after every kepress.
+            }, 500);
+        });
     }
 }

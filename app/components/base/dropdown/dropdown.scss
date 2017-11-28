@@ -1,7 +1,7 @@
 @import "app/styles/variables";
 
 bl-dropdown {
-    $dropdown-content-color: $whitesmoke-darker;
+    $dropdown-content-color: $whitesmoke;
     $dropdown-content-hover-color: map-get($primary, 200);
     .dropdown {
         position: relative;
@@ -38,12 +38,10 @@ bl-dropdown {
 
         &.below {
             top: $header-height;
-            box-shadow: 1px 1px 5px 0 rgba(0, 0, 0, 0.2);
         }
 
         &.above {
             bottom: $footer-height;
-            box-shadow: 1px -1px 5px 0 rgba(0, 0, 0, 0.2);
         }
 
         &[align=left] {
@@ -53,6 +51,25 @@ bl-dropdown {
         &[align=right] {
             right: 0;
         }
+
+        $dropdown-shadow: 20px 0 rgba(0, 0, 0, 0.3);
+        &.below[align=left] {
+            box-shadow: 3px 3px $dropdown-shadow;
+        }
+
+        &.below[align=right] {
+            box-shadow: -3px 3px $dropdown-shadow;
+        }
+
+
+        &.above[align=left] {
+            box-shadow: 3px -3px $dropdown-shadow;
+        }
+
+        &.above[align=right] {
+            box-shadow: -3px -3px $dropdown-shadow;
+        }
+
 
         .no-items {
             padding: 10px 5px;

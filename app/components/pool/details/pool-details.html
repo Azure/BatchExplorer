@@ -16,6 +16,7 @@
                 <bl-resize-button [action]="resizePool"></bl-resize-button>
                 <bl-clone-button [action]="clonePool"></bl-clone-button>
                 <bl-delete-button [action]="deletePool"></bl-delete-button>
+                <bl-button [action]="exportAsJSON" color="light" title="Export as JSON"><i class="fa fa-code"></i></bl-button>
             </bl-button-group>
             <div summaryRightContent>
                 <bl-pool-nodes-preview [pool]="pool" size="large"></bl-pool-nodes-preview>

@@ -4,6 +4,10 @@
     align-items: center;
     justify-content: center;
 
+    .mat-form-field-infix {
+        width: auto;
+    }
+
     mat-select {
         padding-top: 0;
     }

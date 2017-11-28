@@ -21,15 +21,12 @@ body {
     width: 100vw;
 }
 
-#header {
+header {
     position: absolute;
     top: 0;
     left: 0;
     right: 0;
     height: $header-height;
-    min-width: 100%;
-    margin-bottom: 0;
-    background-color: $header-background;
 }
 
 footer {
@@ -187,36 +184,6 @@ nav {
     }
 }
 
-.sidebar-bookmarks-btn {
-    position: relative;
-    color: white;
-    height: $header-height;
-    width: $header-height;
-    display: flex;
-    float: right;
-    text-align: center;
-    font-size: 1.5em;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    background-color: $navigation-hover;
-
-    &:hover, &.active {
-        background-color: $navigation-background;
-    }
-
-    .count {
-        font-size: 0.7em;
-        position: absolute;
-        left: 0;
-        top: 0;
-        background-color: map-get($danger, 500);
-        border-radius: 10px;
-        width: 18px;
-        height: 18px;
-    }
-}
-
 .context-button-bar {
     position: relative !important;
     margin: -35px 10px 0 !important;
@@ -334,29 +301,6 @@ ul.list-point {
     }
 }
 
-
-.back-nav {
-    float: left;
-    > .back, > .forward {
-        padding-top: 2px;
-        display:  inline-block;
-        width: 30px;
-        height: $header-height;
-        color: $whiteSmoke;
-        cursor: pointer;
-        text-align: center;
-
-        &:hover {
-            background: $header-hover;
-            color: map-get($primary, 300);
-        }
-
-        > .fa {
-            font-size: 26px;
-            margin: 0 5px;
-        }
-    }
-}
 
 
 .fit-details-container {

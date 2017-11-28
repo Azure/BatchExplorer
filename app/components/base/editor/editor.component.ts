@@ -99,7 +99,9 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
     }
 
     public ngOnDestroy() {
-        this._editor.dispose();
+        if (this._editor) {
+            this._editor.dispose();
+        }
         this._resizeDetector.uninstall(this.elementRef.nativeElement);
     }
 
@@ -108,7 +110,13 @@ export class EditorComponent implements ControlValueAccessor, AfterViewInit, OnC
         const options: monaco.editor.IEditorConstructionOptions = this.config;
 
         options.value = this._value;
-        this._model = monaco.editor.createModel(this._value || "", this.config.language, this.config.uri as any);
+
+        // Monaco editor model should not be created when model exists.
+        // Assign _model to existing model instead of create new one to avoid error
+        const uri = this.config.uri as any;
+        const model = uri ? monaco.editor.getModel(uri) : null;
+        this._model = model || monaco.editor.createModel(this._value || "", this.config.language, uri);
+
         this._editor = monaco.editor.create(myDiv, { ...this.config as any, model: this._model });
 
         if (this.config.tabSize) {
