@@ -10,9 +10,9 @@ import { RecoverWindow } from "../recover-window";
 import { SplashScreen } from "../splash-screen";
 
 const osName = `${os.platform()}-${os.arch()}/${os.release()}`;
-const isDev = Constants.isDev ? "dev" : "";
+const isDev = Constants.isDev ? "-dev" : "";
 
-const userAgent = `BatchLabs/${Constants.version} (${osName}) ${isDev}`;
+const userAgent = `(${osName}) BatchLabs/${Constants.version}${isDev}`;
 export class BatchLabsApplication {
     public splashScreen = new SplashScreen(this);
     public authenticationWindow = new AuthenticationWindow(this);
