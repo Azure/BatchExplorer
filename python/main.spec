@@ -4,10 +4,10 @@ block_cipher = None
 
 
 a = Analysis(['main.py'],
-             pathex=['D:\\dev\\js\\BatchLabs'],
+             pathex=['.', '/controllers'],
              binaries=[],
-             datas=[],
-             hiddenimports=[],
+             datas=[('controllers/*', 'controllers')],
+             hiddenimports=["controllers", "typing"],
              hookspath=[],
              runtime_hooks=[],
              excludes=[],

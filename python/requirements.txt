@@ -1,5 +1,4 @@
 websockets==3.3
 pylint==1.6.5
-cx_Freeze==5.0.2
 azure-batch-extensions==0.2.0
 pyinstaller==3.3
