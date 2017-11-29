@@ -22,7 +22,6 @@ import { updateInput } from "test/utils/helpers";
 import { MockListView } from "test/utils/mocks";
 import { NoItemMockComponent } from "test/utils/mocks/components";
 
-
 @Component({
     template: `
         <bl-parameter-input [formControl]="paramControl" [parameter]="param" [parameterValues]="paramValue">
