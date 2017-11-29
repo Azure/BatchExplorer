@@ -4,6 +4,7 @@ import {
 } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { List } from "immutable";
+import * as moment from "moment";
 import { Subscription } from "rxjs";
 
 import { BlobContainer } from "app/models";
@@ -94,9 +95,22 @@ export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, O
 
     @autobind()
     public generateSasToken() {
-        // todo-andrew: call off to storage service to generate container sas
-        console.log("generateSasToken: ", this.containerId);
-        this.value.setValue(this.containerId);
+        /**
+         * Blob Container read access policy that is valid for 7 days, The maximum
+         * lifetime of a task in Batch.
+         */
+        const accessPolicy = {
+            AccessPolicy: {
+                Permissions: "READ",
+                ResourceTypes: "CONTAINER",
+                Services: "BLOB",
+                Expiry: moment.utc().add(7, "day").toDate(),
+            },
+        };
+
+        this.storageService.generateSharedAccessSignature(this.containerId, accessPolicy).subscribe((value) => {
+            this.value.setValue(value);
+        });
     }
 
     private _checkValid(value: string) {

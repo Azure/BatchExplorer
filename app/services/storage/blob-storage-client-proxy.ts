@@ -1,6 +1,6 @@
 import * as storage from "azure-storage";
 
-import { BlobStorageResult, StorageRequestOptions } from "./models";
+import { BlobStorageResult, SharedAccessPolicy, StorageRequestOptions } from "./models";
 
 export interface ListBlobOptions {
     /**
@@ -304,6 +304,16 @@ export class BlobStorageClientProxy {
                 }
             });
         });
+    }
+
+    /**
+     * Retrieves a shared access signature token.
+     * http://azure.github.io/azure-storage-node/BlobService.html#generateSharedAccessSignature__anchor
+     *
+     * @param {string} container - Name of the storage container
+     */
+    public generateSharedAccessSignature(container: string, sharedAccessPolicy: SharedAccessPolicy): string {
+        return this.client.generateSharedAccessSignature(container, null, sharedAccessPolicy, null);
     }
 
     /**
