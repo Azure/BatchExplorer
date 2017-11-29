@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { List } from "immutable";
 import { BehaviorSubject, Observable } from "rxjs";
 
-import { Notification, NotificationConfig, NotificationLevel } from "./notification";
+import { Notification, NotificationConfig, NotificationLevel, NotificationTimer } from "./notification";
 
 function mergeConfig(defaultConfig: NotificationConfig, userConfig: NotificationConfig) {
     return Object.assign({}, defaultConfig, userConfig);
@@ -15,7 +15,7 @@ export class NotificationService {
 
     private _notifications = new BehaviorSubject(List<Notification>([]));
     private _persistedNotifications = new BehaviorSubject(List<Notification>([]));
-    private _dimissTimeouts = {};
+    private _dismissTimers: StringMap<NotificationTimer> = {};
 
     constructor() {
         this.notifications = this._notifications.asObservable();
@@ -62,8 +62,8 @@ export class NotificationService {
         if (!notification) {
             return;
         }
-        if (this._dimissTimeouts[notification.id]) {
-            clearTimeout(this._dimissTimeouts[notification.id]);
+        if (this._dismissTimers[notification.id]) {
+            this._dismissTimers[notification.id].clear();
         }
         const newNotifications = this._notifications.value.filter(x => x.id !== notification.id);
         this._notifications.next(List<Notification>(newNotifications));
@@ -83,8 +83,20 @@ export class NotificationService {
         this._persistedNotifications.next(List([]));
     }
 
+    public pauseAutoDimiss(notification: Notification) {
+        if (notification.id in this._dismissTimers) {
+            this._dismissTimers[notification.id].pause();
+        }
+    }
+
+    public resumeAutoDimiss(notification: Notification) {
+        if (notification.id in this._dismissTimers) {
+            this._dismissTimers[notification.id].resume();
+        }
+    }
+
     private _registerForDismiss(notification: Notification) {
-        this._dimissTimeouts[notification.id] = setTimeout(() => {
+        this._dismissTimers[notification.id] = new NotificationTimer(() => {
             this.dismiss(notification, true);
         }, notification.config.autoDismiss);
     }

@@ -4,12 +4,14 @@ import { BrowserModule } from "@angular/platform-browser";
 import { RouterModule } from "@angular/router";
 import { MaterialModule } from "app/core";
 
+import { EditorModule } from "app/components/base/editor";
 import { ButtonsModule } from "../buttons";
 import { ComplexFormComponent } from "./complex-form";
 import { EditMetadataFormComponent } from "./edit-metadata-form";
 import { EditableTableColumnComponent, EditableTableComponent } from "./editable-table";
 import { ExpandingTextareaComponent } from "./expanding-textarea";
 import { FormErrorComponent } from "./form-error";
+import { FormJsonEditorComponent } from "./form-json-editor";
 import { FormPageComponent } from "./form-page";
 import { FormMultiPickerComponent, FormPickerComponent, FormPickerItemTemplateDirective } from "./form-picker";
 import { FormSectionComponent } from "./form-section";
@@ -40,6 +42,7 @@ const components = [
     EditMetadataFormComponent,
     ExpandingTextareaComponent,
     SingleLineTextareaDirective,
+    FormJsonEditorComponent,
 ];
 
 @NgModule({
@@ -52,6 +55,7 @@ const components = [
         MaterialModule,
         ReactiveFormsModule,
         RouterModule,
+        EditorModule,
         ...modules,
     ],
     providers: [

@@ -20,6 +20,10 @@ export class BreadcrumbComponent {
         return this.crumb && this.crumb.data.name;
     }
 
+    public get icon() {
+        return this.crumb && this.crumb.data.icon;
+    }
+
     @HostBinding("class")
     public classes = "noselect";
 

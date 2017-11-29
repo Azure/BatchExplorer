@@ -48,4 +48,26 @@ describe("NumberUtils", () => {
             expect(NumberUtils.ordinal(39949)).toBe("th");
         });
     });
+
+    it("#magnitudeExponent get the right magnitude", () => {
+        expect(NumberUtils.magnitudeExponent(5)).toBe(0);
+        expect(NumberUtils.magnitudeExponent(1859)).toBe(1);
+        expect(NumberUtils.magnitudeExponent(49599473)).toBe(2);
+        expect(NumberUtils.magnitudeExponent(933948854949)).toBe(3);
+    });
+
+    describe("#prettyMagnitude", () => {
+        it("add the right magnitude unit", () => {
+            expect(NumberUtils.prettyMagnitude(5)).toBe("5");
+            expect(NumberUtils.prettyMagnitude(1859)).toBe("1.86 k");
+            expect(NumberUtils.prettyMagnitude(49599473)).toBe("49.6 M");
+            expect(NumberUtils.prettyMagnitude(933948854949)).toBe("934 G");
+        });
+
+        it("add the suffix at the end unit", () => {
+            expect(NumberUtils.prettyMagnitude(5, "Bps")).toBe("5 Bps");
+            expect(NumberUtils.prettyMagnitude(1859, "B")).toBe("1.86 kB");
+            expect(NumberUtils.prettyMagnitude(49599473, "iB")).toBe("49.6 MiB");
+        });
+    });
 });

@@ -56,7 +56,6 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
     @ViewChildren("button")
     private _buttons: QueryList<ElementRef>;
 
-    private _lastOpenedButton: HTMLElement;
     private _propagateChange: (value: any) => void;
     private _currentEditIndex = -1;
     constructor(formBuilder: FormBuilder) {
@@ -87,7 +86,6 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
     }
 
     public openPicker(event: MouseEvent, index: number) {
-        this._lastOpenedButton = event.currentTarget as HTMLElement;
         this.currentEditValue.setValue(this.values[index]);
         this._currentEditIndex = index;
         this._page.activate(this);

@@ -10,7 +10,7 @@ import { NodeConnectComponent } from "app/components/node/connect";
 import { NodeAgentSku } from "app/models";
 import { ElectronShell, FileSystemService, NodeService, NodeUserService } from "app/services";
 import * as Fixtures from "test/fixture";
-import { RxMockListProxy } from "test/utils/mocks";
+import { MockListView } from "test/utils/mocks";
 
 @Component({
     template: `<bl-node-connect></bl-node-connect>`,
@@ -20,7 +20,6 @@ class TestComponent {
 
 describe("NodeConnectComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
-    let testComponent: TestComponent;
     let component: NodeConnectComponent;
     let de: DebugElement;
 
@@ -31,7 +30,7 @@ describe("NodeConnectComponent", () => {
 
         nodeServiceSpy = {
             getRemoteDesktop: jasmine.createSpy("").and.returnValue(Observable.of({ content: "banana" })),
-            listNodeAgentSkus: jasmine.createSpy("").and.returnValue(new RxMockListProxy(NodeAgentSku, {
+            listNodeAgentSkus: jasmine.createSpy("").and.returnValue(new MockListView(NodeAgentSku, {
                 items: [],
             })),
         };
@@ -56,7 +55,6 @@ describe("NodeConnectComponent", () => {
             schemas: [NO_ERRORS_SCHEMA],
         });
         fixture = TestBed.createComponent(TestComponent);
-        testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-node-connect"));
         component = de.componentInstance;
         component.pool = Fixtures.pool.create();

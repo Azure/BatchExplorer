@@ -1,0 +1,4 @@
+<div class="editor-header">
+    <div class="error" *ngIf="!jsonControl.valid">Invalid json: {{jsonControl.errors?.validJson?.message}}</div>
+</div>
+<bl-editor [formControl]="jsonControl" [config]="editorConfig"></bl-editor>

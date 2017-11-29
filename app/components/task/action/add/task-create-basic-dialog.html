@@ -1,4 +1,4 @@
-<bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef" [multiUse]="multiUse" [actionName]="actionName">
+<bl-complex-form [formGroup]="form" [submit]="submit" [containerRef]="sidebarRef" [multiUse]="multiUse" [actionName]="actionName" [config]="complexFormConfig" [fileUri]="fileUri">
     <bl-form-page main-form-page [title]="title" [formGroup]="form">
         <bl-form-section title="General info" subtitle="Basic information about the task">
             <div class="grow">
@@ -26,17 +26,22 @@
                 <bl-error controlName="commandLine" code="required">Command line is a required field</bl-error>
             </div>
 
+            <div class="form-element pad-top">
+                <bl-user-identity-picker formControlName="userIdentity" [userAccounts]="userAccounts">
+                </bl-user-identity-picker>
+            </div>
+        </bl-form-section>
+
+        <bl-form-section title="Constraints" subtitle="The execution constraints that apply to this task">
             <div formGroupName="constraints">
+                <bl-duration-picker formControlName="maxWallClockTime" label="Max wall clock time"></bl-duration-picker>
                 <div class="form-element">
                     <mat-form-field>
                         <input matInput formControlName="maxTaskRetryCount" placeholder="Max retry count" type="number">
                     </mat-form-field>
                     <bl-error controlName="maxTaskRetryCount" code="validateRange">Retry count values can range from -1 to 100</bl-error>
                 </div>
-            </div>
-            <div class="form-element pad-top">
-                <bl-user-identity-picker formControlName="userIdentity" [userAccounts]="userAccounts">
-                </bl-user-identity-picker>
+                <bl-duration-picker formControlName="retentionTime" label="Retention time"></bl-duration-picker>
             </div>
         </bl-form-section>
 

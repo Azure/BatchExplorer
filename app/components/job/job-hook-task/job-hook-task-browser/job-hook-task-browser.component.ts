@@ -5,7 +5,7 @@ import { Subscription } from "rxjs";
 
 import { Job, JobHookTask, JobHookTaskResult, JobHookTaskState } from "app/models";
 import { JobHookTaskListParams, JobHookTaskService } from "app/services";
-import { RxListProxy } from "app/services/core";
+import { ListView } from "app/services/core";
 import { DateUtils } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 
@@ -28,7 +28,7 @@ export class JobHookTaskBrowserComponent implements OnDestroy, OnChanges {
     @Input()
     public job: Job;
 
-    public data: RxListProxy<JobHookTaskListParams, JobHookTask>;
+    public data: ListView<JobHookTask, JobHookTaskListParams>;
 
     public tasks: List<JobHookTask>;
     public displayItems: any[];

@@ -1,4 +1,4 @@
-<bl-dropdown class="account-dropdown">
+<bl-dropdown class="account-dropdown" [footer]="true" align="left">
     <div bl-dropdown-btn [routerLink]="['/accounts/', accountService.currentAccountId | async]" [class.invalid]="currentAccountValid === status.Invalid">
         {{selectedAccountAlias}}
 
@@ -13,11 +13,11 @@
                 <div class="alias">{{account.name}}</div>
                 <div class="url">{{account.properties.accountEndpoint}}</div>
             </div>
-            <div *ngIf="account === selectedId" class="extra">
+            <div *ngIf="account.id === selectedId" class="extra">
                 <i class="fa fa-check"></i>
             </div>
         </div>
-        <div class="dropdown-item" routerLink="accounts">
+        <div *ngIf="selectedId" class="dropdown-item" routerLink="accounts">
             <i class="fa fa-cog fa-2x"></i>Manage accounts
         </div>
     </div>

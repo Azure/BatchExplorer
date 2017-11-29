@@ -1,23 +1,7 @@
 <div id="container" [hidden]="!isAppReady">
     <!--[class.no-userinteract]="!(hasAccount | async)" -->
-    <header id="header" class="noselect">
-        <div class="back-nav">
-            <div class="back" (click)="goBack()" title="Back">
-                <i class="fa fa-angle-left"></i>
-            </div>
-            <div class="forward" (click)="goForward()" title="Forward">
-                <i class="fa fa-angle-right"></i>
-            </div>
-        </div>
-        <div class="logo-banner-bar">
-            <a class="logo" href="#" [routerLink]="['']" title="Batch labs - Home">
-                <img src="./assets/images/header/batchlabs.png" height="19" alt="Batch labs logo">
-            </a>
-        </div>
-        <bl-sidebar-bookmarks></bl-sidebar-bookmarks>
-        <bl-persisted-notifications-dropdown></bl-persisted-notifications-dropdown>
-        <bl-account-dropdown></bl-account-dropdown>
-        <bl-background-task-tracker></bl-background-task-tracker>
+    <header>
+        <bl-header></bl-header>
     </header>
     <nav [class.no-userinteract]="!(hasAccount | async)" class="noselect">
         <bl-app-nav></bl-app-nav>
@@ -36,6 +20,6 @@
         </div>
     </section>
     <footer>
-        <!-- set to 0px for now as are not using it -->
+        <bl-footer></bl-footer>
     </footer>
 </div>

@@ -1,5 +1,6 @@
 import { app, ipcMain, session } from "electron";
 import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
+import * as os from "os";
 
 import { AuthenticationWindow } from "../authentication";
 import { Constants } from "../client-constants";
@@ -8,6 +9,10 @@ import { MainWindow } from "../main-window";
 import { RecoverWindow } from "../recover-window";
 import { SplashScreen } from "../splash-screen";
 
+const osName = `${os.platform()}-${os.arch()}/${os.release()}`;
+const isDev = Constants.isDev ? "-dev" : "";
+
+const userAgent = `(${osName}) BatchLabs/${Constants.version}${isDev}`;
 export class BatchLabsApplication {
     public splashScreen = new SplashScreen(this);
     public authenticationWindow = new AuthenticationWindow(this);
@@ -30,7 +35,7 @@ export class BatchLabsApplication {
                 details.requestHeaders["Origin"] = "http://localhost";
                 details.requestHeaders["Cache-Control"] = "no-cache";
             }
-            details.requestHeaders["User-Agent"] = `BatchLabs/${Constants.version}`;
+            details.requestHeaders["User-Agent"] = userAgent;
             callback({ cancel: false, requestHeaders: details.requestHeaders });
         });
 

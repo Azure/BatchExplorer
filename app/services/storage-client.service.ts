@@ -1,4 +1,5 @@
 import { Injectable } from "@angular/core";
+import { BlobService } from "azure-storage";
 import { Observable } from "rxjs";
 
 import { AutoStorageAccount, ServerError, StorageKeys, StorageKeysAttributes } from "app/models";
@@ -91,6 +92,10 @@ export class StorageClientService {
                     });
             }
         }).share();
+    }
+
+    public getBlobClient(): Observable<BlobService> {
+        return this.get().map(x => x.client);
     }
 
     public getForSharedKey(options: StorageAccountSharedKeyOptions) {

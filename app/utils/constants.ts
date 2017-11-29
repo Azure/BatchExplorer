@@ -136,11 +136,13 @@ export const Environment = {
 export const ServiceUrl = {
     arm: "https://management.azure.com",
     githubRaw: "https://raw.githubusercontent.com",
+    appInsights: "https://api.applicationinsights.io/v1",
 };
 
 export const ResourceUrl = {
     batch: "https://batch.core.windows.net/",
     arm: "https://management.core.windows.net/",
+    appInsights: "https://api.applicationinsights.io",
 };
 
 export const APIErrorCodes = {

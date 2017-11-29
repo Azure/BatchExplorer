@@ -3,13 +3,14 @@ import { Observable, Subject } from "rxjs";
 
 import { Pool } from "app/models";
 import { PoolCreateDto, PoolEnableAutoScaleDto, PoolPatchDto, PoolResizeDto } from "app/models/dtos";
-import { BatchEntityGetter } from "app/services/core";
-import { EntityView } from "app/services/core/data";
+import { BatchEntityGetter, EntityView, ListView } from "app/services/core";
 import { Constants, ModelUtils, log } from "app/utils";
 import { List } from "immutable";
 import { BatchClientService } from "./batch-client.service";
-import { DataCache, RxBatchListProxy, RxListProxy } from "./core";
+import { BatchListGetter, ContinuationToken, DataCache, ListOptionsAttributes } from "./core";
 import { ServiceBase } from "./service-base";
+
+export interface PoolListParams { }
 
 export interface PoolParams {
     id?: string;
@@ -27,6 +28,7 @@ export class PoolService extends ServiceBase {
     private _cache = new DataCache<Pool>();
 
     private _getter: BatchEntityGetter<Pool, PoolParams>;
+    private _listGetter: BatchListGetter<Pool, PoolListParams>;
 
     constructor(batchService: BatchClientService) {
         super(batchService);
@@ -34,6 +36,12 @@ export class PoolService extends ServiceBase {
         this._getter = new BatchEntityGetter(Pool, this.batchService, {
             cache: () => this._cache,
             getFn: (client, params: PoolParams) => client.pool.get(params.id),
+        });
+
+        this._listGetter = new BatchListGetter(Pool, this.batchService, {
+            cache: () => this._cache,
+            list: (client, params: PoolListParams, options) => client.pool.list({ poolListOptions: options }),
+            listNext: (client, nextLink: string) => client.pool.listNext(nextLink),
         });
     }
 
@@ -47,11 +55,21 @@ export class PoolService extends ServiceBase {
         });
     }
 
-    public list(initialOptions: any = {}): RxListProxy<{}, Pool> {
-        return new RxBatchListProxy<{}, Pool>(Pool, this.batchService, {
+    public list(options?: ListOptionsAttributes, forceNew?: boolean);
+    public list(nextLink: ContinuationToken);
+    public list(nextLinkOrOptions: any, options = {}, forceNew = false) {
+        if (nextLinkOrOptions.nextLink) {
+            return this._listGetter.fetch(nextLinkOrOptions);
+        } else {
+            return this._listGetter.fetch({}, options, forceNew);
+        }
+    }
+
+    public listView(options: ListOptionsAttributes = {}): ListView<Pool, PoolListParams> {
+        return new ListView({
             cache: () => this._cache,
-            proxyConstructor: (client, params, options) => client.pool.list(options),
-            initialOptions,
+            getter: this._listGetter,
+            initialOptions: options,
         });
     }
 

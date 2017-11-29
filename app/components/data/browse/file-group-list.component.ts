@@ -12,8 +12,8 @@ import { ListOrTableBase } from "app/components/base/selectable-list";
 import { SidebarManager } from "app/components/base/sidebar";
 import { BlobContainer, LeaseStatus } from "app/models";
 import { FileGroupCreateDto } from "app/models/dtos";
-import { ListContainerParams, StorageService } from "app/services";
-import { RxListProxy } from "app/services/core";
+import { ListContainerParams, PinnedEntityService, StorageService } from "app/services";
+import { ListView } from "app/services/core";
 import { Filter } from "app/utils/filter-builder";
 import { DeleteContainerAction, DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "../action";
 
@@ -23,7 +23,7 @@ import { DeleteContainerAction, DeleteContainerDialogComponent, FileGroupCreateF
 })
 export class FileGroupListComponent extends ListOrTableBase implements OnInit, OnDestroy {
     public status: Observable<LoadingStatus>;
-    public data: RxListProxy<ListContainerParams, BlobContainer>;
+    public data: ListView<BlobContainer, ListContainerParams>;
     public hasAutoStorage: boolean;
 
     @Input()
@@ -45,10 +45,11 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
         dialog: MatDialog,
         private sidebarManager: SidebarManager,
         private taskManager: BackgroundTaskService,
+        private pinnedEntityService: PinnedEntityService,
         private storageService: StorageService) {
 
         super(dialog);
-        this.data = this.storageService.listContainers(storageService.ncjFileGroupPrefix);
+        this.data = this.storageService.containerListView(storageService.ncjFileGroupPrefix);
 
         this.hasAutoStorage = false;
         this._autoStorageSub = storageService.hasAutoStorage.subscribe((hasAutoStorage) => {
@@ -111,6 +112,10 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
         return new ContextMenu([
             new ContextMenuItem({ label: "Delete", click: () => this._deleteFileGroup(container) }),
             new ContextMenuItem({ label: "Add more files", click: () => this._manageFileGroup(container) }),
+            new ContextMenuItem({
+                label: this.pinnedEntityService.isFavorite(container) ? "Unpin favorite" : "Pin to favorites",
+                click: () => this._pinFileGroup(container),
+            }),
         ]);
     }
 
@@ -146,6 +151,14 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
 
         sidebarRef.afterCompletion.subscribe(() => {
             this.storageService.onFileGroupUpdated.next();
+        });
+    }
+
+    private _pinFileGroup(container: BlobContainer) {
+        this.pinnedEntityService.pinFavorite(container).subscribe((result) => {
+            if (result) {
+                this.pinnedEntityService.unPinFavorite(container);
+            }
         });
     }
 }

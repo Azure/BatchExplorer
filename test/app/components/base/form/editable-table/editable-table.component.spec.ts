@@ -21,7 +21,6 @@ class TestComponent {
 describe("EditableTableComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
-    let component: EditableTableComponent;
     let de: DebugElement;
 
     beforeEach(() => {
@@ -32,7 +31,6 @@ describe("EditableTableComponent", () => {
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-editable-table"));
-        component = de.componentInstance;
         fixture.detectChanges();
     });
 

@@ -9,9 +9,10 @@ import { Constants, log } from "app/utils";
 import {
     DataCache,
     EntityView,
-    RxListProxy,
-    RxStorageListProxy,
+    ListOptionsAttributes,
+    ListView,
     StorageEntityGetter,
+    StorageListGetter,
     TargetedDataCache,
 } from "./core";
 import { FileLoadOptions, FileLoader, FileNavigator, FileSource } from "./file";
@@ -74,6 +75,8 @@ export class StorageService {
 
     private _containerGetter: StorageEntityGetter<BlobContainer, GetContainerParams>;
     private _blobGetter: StorageEntityGetter<File, BlobFileParams>;
+    private _containerListGetter: StorageListGetter<BlobContainer, ListContainerParams>;
+    private _blobListGetter: StorageListGetter<File, ListBlobParams>;
 
     constructor(
         private storageClient: StorageClientService,
@@ -92,36 +95,45 @@ export class StorageService {
             getFn: (client, params: BlobFileParams) =>
                 client.getBlobProperties(params.container, params.blobName, params.blobPrefix),
         });
+
+        this._containerListGetter = new StorageListGetter(BlobContainer, this.storageClient, {
+            cache: () => this._containerCache,
+            getData: (client, params, options, continuationToken) => {
+                return client.listContainersWithPrefix(
+                    params.prefix,
+                    options.filter,
+                    continuationToken);
+            },
+            logIgnoreError: storageIgnoredErrors,
+        });
+
+        this._blobListGetter = new StorageListGetter(File, this.storageClient, {
+            cache: (params) => this.getBlobFileCache(params),
+            getData: (client, params, options, continuationToken) => {
+                return client.listBlobs(
+                    params.container,
+                    options.original,
+                    continuationToken,
+                );
+            },
+            logIgnoreError: storageIgnoredErrors,
+        });
     }
 
     public getBlobFileCache(params: ListBlobParams): DataCache<File> {
         return this._blobListCache.getCache(params);
     }
 
-    /**
-     * List blobs in the linked storage account container that match the supplied prefix and filter
-     * @param container - Promise to return the name of the blob container
-     * @param options - Options for filtering blobs
-     */
-    public listBlobs(
-        container: string,
-        options: ListBlobOptions = {})
-        : RxListProxy<ListBlobParams, File> {
+    public blobListView(container: string, options: ListBlobOptions = {})
+        : ListView<File, ListBlobParams> {
 
-        const initialOptions: any = { maxResults: this.maxBlobPageSize, recursive: false, ...options };
-        return new RxStorageListProxy<ListBlobParams, File>(File, this.storageClient, {
+        const view = new ListView({
             cache: (params) => this.getBlobFileCache(params),
-            getData: (client, params, options, continuationToken) => {
-                return client.listBlobs(
-                    params.container,
-                    options,
-                    continuationToken,
-                );
-            },
-            initialParams: { container: container },
-            initialOptions,
-            logIgnoreError: storageIgnoredErrors,
+            getter: this._blobListGetter,
+            initialOptions: options,
         });
+        view.params = { container };
+        return view;
     }
 
     /**
@@ -135,7 +147,7 @@ export class StorageService {
             cache: this.getBlobFileCache({ container: container }),
             basePath: prefix,
             loadPath: (folder) => {
-                return this.listBlobs(container, {
+                return this.blobListView(container, {
                     recursive: false,
                     startswith: folder,
                 });
@@ -263,37 +275,25 @@ export class StorageService {
     }
 
     /**
-     * List containers in the linked storage account that match the optional container name prefix
-     * @param prefix - Container name prefix for filtering containers
-     * @param onError - Callback for interrogating the server error to see if we want to handle it.
-     */
-    public listContainers(prefix: string, onError?: (error: ServerError) => boolean)
-        : RxListProxy<ListContainerParams, BlobContainer> {
-
-        const initialOptions: any = { maxResults: this.maxContainerPageSize };
-        return new RxStorageListProxy<ListContainerParams, BlobContainer>(BlobContainer, this.storageClient, {
-            cache: () => this._containerCache,
-            getData: (client, params, options, continuationToken) => {
-                return client.listContainersWithPrefix(
-                    params.prefix,
-                    options.filter,
-                    continuationToken,
-                    initialOptions);
-            },
-            initialParams: { prefix: prefix },
-            initialOptions,
-            logIgnoreError: storageIgnoredErrors,
-            onError: onError,
-        });
-    }
-
-    /**
      * Get a particular container from the linked storage account
      * @param container - Name of the blob container
      * @param options - Optional parameters for the request
      */
     public getContainerOnce(container: string, options: any = {}): Observable<BlobContainer> {
         return this._containerGetter.fetch({ id: container });
+    }
+
+    public containerListView(prefix?: string, options: ListOptionsAttributes = {})
+        : ListView<BlobContainer, ListContainerParams> {
+
+        const view = new ListView({
+            cache: () => this._containerCache,
+            getter: this._containerListGetter,
+            initialOptions: options,
+        });
+
+        view.params = { prefix };
+        return view;
     }
 
     /**
@@ -320,6 +320,14 @@ export class StorageService {
         });
 
         return observable;
+    }
+
+    public createContainer(containerName: string): Observable<any> {
+        return this._callStorageClient((client) => {
+            return client.createContainer(containerName);
+        }, (error) => {
+            log.error(`Error creating container: ${containerName}`, { ...error });
+        });
     }
 
     public uploadToSasUrl(sasUrl: string, filePath: string): Observable<any> {
@@ -382,7 +390,7 @@ export class StorageService {
         promise: (client: any) => Promise<any>,
         errorCallback?: (error: any) => void): Observable<T> {
 
-        return this.storageClient.get().flatMap((client) => {
+        return this.storageClient.get().take(1).flatMap((client) => {
             return Observable.fromPromise<T>(promise(client)).catch((err) => {
                 const serverError = ServerError.fromStorage(err);
                 if (errorCallback) {
@@ -391,7 +399,7 @@ export class StorageService {
 
                 return Observable.throw(serverError);
             });
-        });
+        }).share();
     }
 
     private _parseSasUrl(sasUrl: string) {

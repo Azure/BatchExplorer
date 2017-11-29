@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { ServerError } from "app/models";
 import { FileGroupCreateDto } from "app/models/dtos";
 import { PythonRpcService } from "./python-rpc/python-rpc.service";
+import { StorageService } from "./storage.service";
 
 /**
  * Service to handle file-group calls to the Python RPC service.
@@ -11,7 +12,12 @@ import { PythonRpcService } from "./python-rpc/python-rpc.service";
 @Injectable()
 export class NcjFileGroupService {
     constructor(
+        private storageService: StorageService,
         private pythonRpcService: PythonRpcService) {
+    }
+
+    public createEmptyFileGroup(name: string): Observable<any> {
+        return this.storageService.createContainer(`${this.storageService.ncjFileGroupPrefix}${name}`);
     }
 
     /**

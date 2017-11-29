@@ -8,7 +8,7 @@ import { Job, JobTaskCounts, Node, Pool } from "app/models";
 import { JobService, NodeService, PoolService } from "app/services";
 import { PollService } from "app/services/core";
 import { click } from "test/utils/helpers";
-import { MockEntityView, RxMockListProxy } from "test/utils/mocks";
+import { MockEntityView, MockListView } from "test/utils/mocks";
 import { GaugeMockComponent } from "test/utils/mocks/components";
 
 @Component({
@@ -22,7 +22,6 @@ class TestComponent {
 
 describe("JobProgressStatusComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
-    let component: JobProgressStatusComponent;
     let gaugeComponent: GaugeMockComponent;
     let testComponent: TestComponent;
 
@@ -40,7 +39,7 @@ describe("JobProgressStatusComponent", () => {
         };
 
         nodeServiceSpy = {
-            list: () => new RxMockListProxy<any, Node>(Node, {
+            listView: () => new MockListView<Node, any>(Node, {
                 items: [
                     new Node({ id: "node-1", runningTasksCount: 2 }),
                     new Node({ id: "node-2", runningTasksCount: 2 }),
@@ -76,7 +75,6 @@ describe("JobProgressStatusComponent", () => {
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-job-progress-status"));
-        component = de.componentInstance;
         testComponent.poolId = "pool-1";
         testComponent.job = new Job({ id: "job-1" });
         fixture.detectChanges();

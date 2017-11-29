@@ -1,4 +1,3 @@
-import { Location } from "@angular/common";
 import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { MatIconRegistry, MatSidenav } from "@angular/material";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -6,10 +5,9 @@ import { Observable } from "rxjs";
 
 import { registerIcons } from "app/config";
 import {
-    AccountService, AdalService, AutoscaleFormulaService, CommandService, NcjTemplateService,
-    NodeService, PredefinedFormulaService, PricingService, PythonRpcService, SSHKeyService, SettingsService,
-    SubscriptionService,
-    VmSizeService,
+    AccountService, AdalService, AutoscaleFormulaService, CommandService, MonacoLoader,
+    NcjTemplateService, NodeService, PredefinedFormulaService, PricingService, PythonRpcService,
+    SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
 } from "app/services";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
@@ -34,7 +32,6 @@ export class AppComponent implements AfterViewInit, OnInit {
     private sidebarContent: SidebarContentComponent;
 
     constructor(
-        private location: Location,
         matIconRegistry: MatIconRegistry,
         sanitizer: DomSanitizer,
         private sidebarManager: SidebarManager,
@@ -48,6 +45,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         private sshKeyService: SSHKeyService,
         pythonRpcService: PythonRpcService,
         private vmSizeService: VmSizeService,
+        monacoLoader: MonacoLoader,
         private pricingService: PricingService,
         private ncjTemplateService: NcjTemplateService,
         private predefinedFormulaService: PredefinedFormulaService,
@@ -63,6 +61,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.ncjTemplateService.init();
         pythonRpcService.init();
         this.predefinedFormulaService.init();
+        monacoLoader.get();
         this.hasAccount = accountService.currentAccount.map((x) => Boolean(x));
 
         Observable
@@ -97,14 +96,6 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     public logout() {
         this.adalService.logout();
-    }
-
-    public goBack() {
-        this.location.back();
-    }
-
-    public goForward() {
-        this.location.forward();
     }
 
     /**

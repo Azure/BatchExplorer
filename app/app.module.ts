@@ -1,4 +1,5 @@
 import { HashLocationStrategy, LocationStrategy } from "@angular/common";
+import { HttpClientModule } from "@angular/common/http";
 import { ErrorHandler, NgModule } from "@angular/core";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
@@ -31,11 +32,14 @@ import { BatchLabsErrorHandler } from "app/error-handler";
 
 // services
 import { HttpModule } from "@angular/http";
+import { LayoutModule } from "app/components/layout";
 import { MaterialModule } from "app/core";
 import { PollService } from "app/services/core";
 import {
     AccountService,
     AdalService,
+    AppInsightsApiService,
+    AppInsightsQueryService,
     ApplicationService,
     ArmHttpService,
     AutoscaleFormulaService,
@@ -53,11 +57,13 @@ import {
     JobHookTaskService,
     JobService,
     LocalFileStorage,
+    MonacoLoader,
     NcjFileGroupService,
     NcjSubmitService,
     NcjTemplateService,
     NodeService,
     NodeUserService,
+    PinnedEntityService,
     PoolService,
     PredefinedFormulaService,
     PricingService,
@@ -76,7 +82,7 @@ import {
 const modules = [
     AccountModule, ApplicationModule, DataModule,
     FileModule, JobModule, NodeModule, PoolModule,
-    SettingsModule, TaskModule, MarketModule,
+    SettingsModule, TaskModule, MarketModule, LayoutModule,
 ];
 
 @NgModule({
@@ -100,12 +106,15 @@ const modules = [
         HttpModule,
         RouterModule.forRoot(routes, { useHash: true }),
         BaseModule,
+        HttpClientModule,
         ...modules,
     ],
     providers: [
         { provide: LocationStrategy, useClass: HashLocationStrategy },
         AccountService,
         AdalService,
+        AppInsightsApiService,
+        AppInsightsQueryService,
         ApplicationService,
         AutoscaleFormulaService,
         AzureHttpService,
@@ -123,11 +132,13 @@ const modules = [
         JobHookTaskService,
         JobService,
         LocalFileStorage,
+        MonacoLoader,
         NcjFileGroupService,
         NcjSubmitService,
         NcjTemplateService,
         NodeService,
         NodeUserService,
+        PinnedEntityService,
         PollService,
         PoolService,
         PricingService,

@@ -3,26 +3,25 @@
 
 bl-persisted-notifications-dropdown {
     .fa-bell {
-        font-size: 20px;
+        font-size: 16px;
+        vertical-align: middle;
     }
 
     .count {
-        font-size: 0.7em;
+        color: whitesmoke;
+        font-size: 10px;
         position: absolute;
         left: 0;
         top: 0;
         background-color: map-get($danger, 500);
         border-radius: 10px;
-        width: 18px;
-        height: 18px;
-    }
-
-    [bl-dropdown-btn] {
-        border-right: 1px solid $navigation-background;
+        width: 14px;
+        height: 14px;
+        line-height: 14px;
     }
 
     [bl-dropdown-content] {
-        width: 400px;
+        width: 500px;
 
         .icon {
             font-size: 30px;
@@ -53,11 +52,11 @@ bl-persisted-notifications-dropdown {
 
             > .action {
                 padding: 5px;
-                background: rgba(255, 255, 255, 0.2);
+                background: rgba(0, 0, 0, 0.1);
                 margin-right: 3px;
                 white-space: nowrap;
                 &:hover {
-                    background: rgba(255, 255, 255, 0.3);
+                    background: rgba(0, 0, 0, 0.3);
                 }
             }
         }
@@ -98,12 +97,12 @@ bl-persisted-notifications-dropdown {
         .no-notifications {
             flex: 1;
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
 
             .fa-bell {
                 font-size: 40px;
+                margin-right: 20px;
             }
         }
     }

@@ -73,7 +73,7 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
             description: description,
             yes: () => {
                 const listParams = { recursive: true, startswith: path };
-                const data = this.storageService.listBlobs(this.container, listParams);
+                const data = this.storageService.blobListView(this.container, listParams);
                 const obs = data.fetchAll().flatMap(() => data.items.take(1)).shareReplay(1);
                 obs.subscribe((items) => {
                     data.dispose();

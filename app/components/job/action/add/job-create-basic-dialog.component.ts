@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
+import { ComplexFormConfig } from "app/components/base/form";
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { RangeValidatorDirective } from "app/components/base/validation";
@@ -22,8 +23,10 @@ import "./job-create-basic-dialog.scss";
 export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto> {
     public AllTasksCompleteAction = AllTasksCompleteAction;
     public TaskFailureAction = TaskFailureAction;
+    public complexFormConfig: ComplexFormConfig;
     public constraintsGroup: FormGroup;
     public showJobReleaseTask: boolean;
+    public fileUri = "create.job.batch.json";
 
     constructor(
         private formBuilder: FormBuilder,
@@ -32,6 +35,8 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
         poolService: PoolService,
         private notificationService: NotificationService) {
         super(JobCreateDto);
+        this._setComplexFormConfig();
+
         const validation = Constants.forms.validation;
         this.constraintsGroup = this.formBuilder.group({
             maxWallClockTime: null,
@@ -75,19 +80,18 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
     }
 
     @autobind()
-    public submit(): Observable<any> {
-        const job = this.getCurrentValue();
-        const observable = this.jobService.add(job, {});
-        observable.subscribe({
+    public submit(data: JobCreateDto): Observable<any> {
+        const id = data.id;
+        const obs = this.jobService.add(data);
+        obs.subscribe({
             next: () => {
-                const id = job.id;
                 this.jobService.onJobAdded.next(id);
                 this.notificationService.success("Job added!", `Job '${id}' was created successfully!`);
             },
             error: () => null,
         });
 
-        return observable;
+        return obs;
     }
 
     public preSelectPool(poolId: string) {
@@ -110,5 +114,15 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
         this.showJobReleaseTask = false;
         let jobReleaseTask =  this.form.controls.jobReleaseTask;
         jobReleaseTask.setValue(null);
+    }
+
+    private _setComplexFormConfig() {
+        this.complexFormConfig = {
+            jsonEditor: {
+                dtoType: JobCreateDto,
+                toDto: (value) => this.formToDto(value),
+                fromDto: (value) => this.dtoToForm(value),
+            },
+        };
     }
 }

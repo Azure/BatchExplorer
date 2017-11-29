@@ -133,14 +133,12 @@ describe("UserAuthorization", () => {
 
         let result: AuthorizeResult;
         let error: AuthorizeError;
-        let currentAuthObs: Observable<any>;
         let callAuth: () => void;
         let authorizeOutput: jasmine.Spy;
 
         beforeEach(() => {
             result = null;
             error = null;
-            currentAuthObs = null;
             callAuth = () => {
                 const obs = userAuthorization.authorizeTrySilentFirst("tenant-1");
                 obs.subscribe(

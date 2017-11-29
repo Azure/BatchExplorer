@@ -43,14 +43,14 @@ export class DurationPickerComponent implements ControlValueAccessor {
     @Input() public label: string;
     @Input() public allowUnlimited: boolean = true;
 
-    protected _propagateChange: (value: any) => void = null;
-    protected _duration: string;
+    protected _propagateChange: (value: moment.Duration) => void = null;
+    protected _duration: moment.Duration;
 
-    public get duration() {
+    public get duration(): moment.Duration {
         return this._duration;
     }
 
-    public set duration(value: string) {
+    public set duration(value: moment.Duration) {
         this._duration = value;
     }
 
@@ -76,10 +76,9 @@ export class DurationPickerComponent implements ControlValueAccessor {
         }
     }
 
-    public writeValue(value: any): void {
-        if (value !== undefined) {
-            this._duration = value;
-        }
+    public writeValue(value: moment.Duration): void {
+        this._duration = value;
+        this._setValueAndUnit();
     }
 
     public registerOnChange(fn) {
@@ -94,7 +93,41 @@ export class DurationPickerComponent implements ControlValueAccessor {
         return null;
     }
 
-    private _getDuration(): any {
+    private _getDuration(): moment.Duration {
         return moment.duration(this.value, this.unit);
+    }
+
+    /**
+     * _setValueAndUnit helps setting constraint duration picker value once constraint form vlaue is patched.
+     * Unit is checked from 'days' to 'seconds'. Value will be taken when current unit has an integer value,
+     * otherwise next smaller unit will be checked until last unit.
+     */
+    private _setValueAndUnit() {
+        this.unlimited = !this.duration as boolean;
+
+        if (this.duration) {
+            const days = this.duration.asDays();
+            const hours = this.duration.asHours();
+            const minutes = this.duration.asMinutes();
+            const seconds = this.duration.asSeconds();
+            if (this._isValidUnit(days)) {
+                this.value = days;
+                this.unit = ConstraintsUnit.days;
+            } else if (this._isValidUnit(hours)) {
+                this.value = hours;
+                this.unit = ConstraintsUnit.hours;
+            } else if (this._isValidUnit(minutes)) {
+                this.value = minutes;
+                this.unit = ConstraintsUnit.minutes;
+            } else if (seconds > 0) {
+                // don't check whether second is integer or not, just display whatever this value is
+                this.value = seconds;
+                this.unit = ConstraintsUnit.seconds;
+            }
+        }
+    }
+
+    private _isValidUnit(value: number) {
+        return Number(value) === value && value % 1 === 0 && value > 0;
     }
 }

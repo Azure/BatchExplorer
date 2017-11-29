@@ -19,7 +19,6 @@ class TestPoolErrorDisplayComponent {
 describe("PoolErrorDisplayComponent", () => {
     let fixture: ComponentFixture<TestPoolErrorDisplayComponent>;
     let testComponent: TestPoolErrorDisplayComponent;
-    let component: PoolErrorDisplayComponent;
     let accountServiceSpy: any;
 
     beforeEach(() => {
@@ -40,7 +39,6 @@ describe("PoolErrorDisplayComponent", () => {
 
         fixture = TestBed.createComponent(TestPoolErrorDisplayComponent);
         testComponent = fixture.componentInstance;
-        component = fixture.debugElement.query(By.css("bl-pool-error-display")).componentInstance;
         fixture.detectChanges();
     });
 

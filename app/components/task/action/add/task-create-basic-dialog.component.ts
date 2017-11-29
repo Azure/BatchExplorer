@@ -3,6 +3,7 @@ import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
+import { ComplexFormConfig } from "app/components/base/form";
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { RangeValidatorDirective } from "app/components/base/validation";
@@ -19,6 +20,7 @@ import { Constants } from "app/utils";
 })
 export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreateDto> {
     public jobId: string;
+    public complexFormConfig: ComplexFormConfig;
     public constraintsGroup: FormGroup;
     public resourceFiles: FormArray;
     public hasLinkedStorage: boolean = true;
@@ -26,6 +28,7 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
     public subtitle = "Adds a task to the selected job";
     public multiUse = true;
     public actionName = "Add";
+    public fileUri = "create.task.batch.json";
 
     constructor(
         private formBuilder: FormBuilder,
@@ -33,14 +36,17 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
         protected taskService: TaskService,
         private notificationService: NotificationService) {
         super(TaskCreateDto);
+        this._setComplexFormConfig();
 
         this.hasLinkedStorage = true;
         const validation = Constants.forms.validation;
         this.constraintsGroup = this.formBuilder.group({
+            maxWallClockTime: null,
             maxTaskRetryCount: [
                 0,
                 new RangeValidatorDirective(validation.range.retry.min, validation.range.retry.max).validator,
             ],
+            retentionTime: null,
         });
 
         this.form = this.formBuilder.group({
@@ -69,11 +75,10 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
     }
 
     @autobind()
-    public submit(): Observable<any> {
-        const task = this.getCurrentValue();
-        const id = task.id;
+    public submit(data: TaskCreateDto): Observable<any> {
+        const id = data.id;
         const onAddedParams = { jobId: this.jobId, id };
-        const observable = this.taskService.add(this.jobId, task, {});
+        const observable = this.taskService.add(this.jobId, data, {});
         observable.subscribe({
             next: () => {
                 this.notificationService.success("Task added!", `Task '${id}' was created successfully!`);
@@ -87,5 +92,15 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
 
     public handleHasLinkedStorage(hasLinkedStorage) {
         this.hasLinkedStorage = hasLinkedStorage;
+    }
+
+    private _setComplexFormConfig() {
+        this.complexFormConfig = {
+            jsonEditor: {
+                dtoType: TaskCreateDto,
+                toDto: (value) => this.formToDto(value),
+                fromDto: (value) => this.dtoToForm(value),
+            },
+        };
     }
 }

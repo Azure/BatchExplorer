@@ -9,7 +9,7 @@ import { PoolPickerComponent } from "app/components/job/action/add";
 import { Pool } from "app/models";
 import { PoolService, VmSizeService } from "app/services";
 import { click } from "test/utils/helpers";
-import { RxMockListProxy } from "test/utils/mocks";
+import { MockListView } from "test/utils/mocks";
 
 @Component({
     template: `<bl-pool-picker [(ngModel)]="poolInfo"></bl-pool-picker>`,
@@ -29,14 +29,13 @@ const pool3 = new Pool({ id: "pool-3", targetDedicatedNodes: 19, virtualMachineC
 describe("PoolPickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
-    let component: PoolPickerComponent;
     let de: DebugElement;
     let poolServiceSpy;
     let vmSizeServiceSpy;
 
     beforeEach(() => {
         poolServiceSpy = {
-            list: () => new RxMockListProxy(Pool, {
+            listView: () => new MockListView(Pool, {
                 items: [pool1, pool2, pool3],
             }),
         };
@@ -55,7 +54,6 @@ describe("PoolPickerComponent", () => {
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-pool-picker"));
-        component = de.componentInstance;
         fixture.detectChanges();
     });
 
