@@ -5,20 +5,23 @@ import { MatOption, MatSelect } from "@angular/material";
 import { By } from "@angular/platform-browser";
 import { NoopAnimationsModule } from "@angular/platform-browser/animations";
 import { RouterTestingModule } from "@angular/router/testing";
+import { Subject } from "rxjs";
+import { Observable } from "rxjs/Observable";
 
 import { DialogService } from "app/components/base/dialogs";
 import { SidebarManager } from "app/components/base/sidebar";
 import { FileGroupPickerComponent } from "app/components/data/shared";
 import { CloudFilePickerComponent } from "app/components/data/shared/cloud-file-picker";
+import { FileGroupSasComponent } from "app/components/data/shared/file-group-sas";
 import { NcjParameterExtendedType, NcjParameterWrapper, ParameterInputComponent } from "app/components/market/submit";
 import { MaterialModule } from "app/core";
 import { BatchApplication, NcjParameterRawType } from "app/models";
 import { StorageService } from "app/services";
-import { Subject } from "rxjs";
 import * as Fixtures from "test/fixture";
 import { updateInput } from "test/utils/helpers";
 import { MockListView } from "test/utils/mocks";
 import { NoItemMockComponent } from "test/utils/mocks/components";
+
 
 @Component({
     template: `
@@ -43,6 +46,7 @@ class TestComponent {
         frameStart: 1,
         jobName: "jobname",
         outputFileGroup: "outputfilegroup",
+        outputFileGroupSas: "",
         sceneData: "scenedata",
     };
 }
@@ -73,6 +77,9 @@ describe("ParameterInputComponent", () => {
             listView: () => listProxy,
             onFileGroupAdded: new Subject(),
             containerListView: () => listProxy,
+            generateSharedAccessContainerUrl: (containerId, accessPolicy) => {
+                return Observable.of(`https://${containerId}.com?sastoken`);
+            },
         };
 
         sidebarSpy = {
@@ -81,7 +88,7 @@ describe("ParameterInputComponent", () => {
 
         TestBed.configureTestingModule({
             imports: [RouterTestingModule, ReactiveFormsModule, FormsModule, MaterialModule, NoopAnimationsModule],
-            declarations: [NoItemMockComponent, ParameterInputComponent,
+            declarations: [NoItemMockComponent, ParameterInputComponent, FileGroupSasComponent,
                 TestComponent, FileGroupPickerComponent, CloudFilePickerComponent],
             providers: [
                 { provide: StorageService, useValue: storageServiceSpy },
@@ -428,11 +435,62 @@ describe("ParameterInputComponent", () => {
             fixture.detectChanges();
             expect(fileInputComponent.value.value).toBe(newInput);
         });
+    });
+
+    describe("filegroup sas parameter type", () => {
+        const initialInput = "";
+        const newInput = "newinput";
+        const containerIdValue = "fgrp-scenedata";
+        let fileInputComponent: FileGroupSasComponent;
+        let fileInputEl: DebugElement;
+
+        beforeEach(() => {
+            testComponent.param = new NcjParameterWrapper("outputFileGroupSas", {
+                type: NcjParameterRawType.string,
+                metadata: {
+                    description: "description",
+                    advancedType: NcjParameterExtendedType.fileGroupSas,
+                    dependsOn: "sceneData",
+                },
+            });
+            testComponent.paramControl.setValue(initialInput);
+            fixture.detectChanges();
+            fileInputEl = de.query(By.css("bl-file-group-sas"));
+            expect(fileInputEl).not.toBeFalsy();
+            fileInputComponent = fileInputEl.componentInstance;
+        });
+
+        it("should show initial input", () => {
+            expect(fileInputComponent.value.value).toBe(initialInput);
+        });
+
+        it("should be ensure containerId is set to input of dependsOn", () => {
+            expect(fileInputComponent.containerId).toBe(containerIdValue);
+        });
 
         it("should show updated input", () => {
             testComponent.paramControl.setValue(newInput);
             fixture.detectChanges();
             expect(fileInputComponent.value.value).toBe(newInput);
+        });
+
+        it("generates sas token", () => {
+            fileInputComponent.generateSasToken();
+            fixture.detectChanges();
+            expect(fileInputComponent.value.value).toBe(`https://${containerIdValue}.com?sastoken`);
+        });
+
+        it("auto-generates token when inputs change", () => {
+            fileInputComponent.containerId = "fgrp-bob";
+            fileInputComponent.ngOnChanges({
+                containerId: {
+                    previousValue: undefined,
+                    currentValue: fileInputComponent.containerId,
+                    firstChange: true,
+                },
+            });
+            fixture.detectChanges();
+            expect(fileInputComponent.value.value).toBe(`https://${fileInputComponent.containerId}.com?sastoken`);
         });
     });
 });
