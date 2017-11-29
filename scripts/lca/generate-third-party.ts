@@ -17,7 +17,7 @@ const defaultThirdPartyNoticeOptions: ThirdPartyNoticeOptions = {
 const thirdPartyNoticeFile = path.join(Constants.root, "ThirdPartyNotices.txt");
 
 const output = [];
-const gitUrlRegex = /(?:git|ssh|https?|git@[-\w.]+):(\/\/[-\w.]+\/)?(.*)(\.git)?(\/?|\#[-\d\w._]+?)$/;
+const gitUrlRegex = /(?:git|ssh|https?|git@[-\w.]+):(\/\/[-\w.]+\/)?(.*?)(\.git)?(\/?|\#[-\d\w._]+?)$/;
 const repoNameRegex = /https?:\/\/github\.com\/(.*)/;
 const innerSeparator = "-".repeat(60);
 const outerSeparator = "=".repeat(60);
@@ -98,12 +98,7 @@ function getRepoUrl(dependency) {
     }
     const match = gitUrlRegex.exec(repo.url);
     if (!match) { return null; }
-
-    const url = match[2].endsWith(".git")
-    ? match[2].substring(0, match[2].length - 4)
-    : match[2];
-
-    return `https://github.com/${url}`;
+    return `https://github.com/${match[2]}`;
 }
 
 function getRepoName(repoUrl: string): string {
