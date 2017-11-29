@@ -1,5 +1,31 @@
+@import "app/styles/variables";
 
 bl-list-and-show-layout {
+    .list-header {
+        display: flex;
+        margin-top: 5px;
+        padding: 0px 15px;
+
+        > .title {
+            text-transform: uppercase;
+            font-size: 14px;
+            color: $headings-color;
+        }
+
+        > .actions {
+            font-size: 16px;
+
+            bl-button {
+                height: 18px;
+                width: 18px;
+                line-height: 18px;
+            }
+
+            > * {
+                // margin-left: 5px
+            }
+        }
+    }
 
     .context-button-bar {
         &.left {
@@ -85,3 +111,45 @@ bl-list-and-show-layout {
     justify-content: center;
     padding: 20px 0;
 }
+
+.quicksearch {
+    padding: 5px 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid $border-color;
+
+    .mat-form-field-infix {
+        width: auto;
+    }
+
+    mat-select {
+        padding-top: 0;
+    }
+
+    input {
+        flex: 1 0 auto;
+        padding: 5px;
+        color: $emperor-grey;
+        font-size: 1.1em;
+
+        background-color: $athensGrey;
+        border: none;
+
+        &:focus {
+            outline: none;
+        }
+
+    }
+
+    i.fa-filter {
+        color: $scorpion;
+        cursor: pointer;
+        margin-left: 5px;
+
+        &:hover {
+            color: $dusty-grey;
+        }
+    }
+}
+
