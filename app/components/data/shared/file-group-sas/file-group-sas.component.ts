@@ -107,7 +107,7 @@ export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, O
             },
         };
 
-        this.storageService.generateSharedAccessSignature(this.containerId, accessPolicy).subscribe((value) => {
+        this.storageService.generateSharedAccessContainerUrl(this.containerId, accessPolicy).subscribe((value) => {
             this.value.setValue(value);
         });
     }

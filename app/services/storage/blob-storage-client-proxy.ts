@@ -311,9 +311,22 @@ export class BlobStorageClientProxy {
      * http://azure.github.io/azure-storage-node/BlobService.html#generateSharedAccessSignature__anchor
      *
      * @param {string} container - Name of the storage container
+     * @param {string} sharedAccessPolicy - The shared access policy
      */
     public generateSharedAccessSignature(container: string, sharedAccessPolicy: SharedAccessPolicy): string {
         return this.client.generateSharedAccessSignature(container, null, sharedAccessPolicy, null);
+    }
+
+    /**
+     * Retrieves a blob or container URL.
+     * http://azure.github.io/azure-storage-node/BlobService.html#getUrl__anchor
+     *
+     * @param {string} container - Name of the storage container
+     * @param {string} blob - Optional blob name.
+     * @param {string} sasToken - The Shared Access Signature token.
+     */
+    public getUrl(container: string, blob?: string, sasToken?: string): string {
+        return this.client.getUrl(container, blob, sasToken);
     }
 
     /**

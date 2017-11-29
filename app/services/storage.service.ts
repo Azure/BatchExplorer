@@ -331,10 +331,11 @@ export class StorageService {
         });
     }
 
-    public generateSharedAccessSignature(container: string, sharedAccessPolicy: SharedAccessPolicy)
+    public generateSharedAccessContainerUrl(container: string, sharedAccessPolicy: SharedAccessPolicy)
         : Observable<string> {
         return this._callStorageClient((client) => {
-            return Promise.resolve(client.generateSharedAccessSignature(container, sharedAccessPolicy));
+            const sasToken = client.generateSharedAccessSignature(container, sharedAccessPolicy);
+            return Promise.resolve(client.getUrl(container, null, sasToken));
         }, (error) => {
             // TODO-Andrew: test that errors are caught
             log.error(`Error generating container SAS: ${container}`, { ...error });
