@@ -18,6 +18,8 @@ This will help with tracking the required task for a new release.
 
 ## Step 2: Perform above task
 
+Create a branch called release/prepare-<milestone>, i.e. release/prepare-0.10.0
+
 #### Update version in package.json
 
 This is quite straightforward. Just change the following line to have the version wanted
@@ -41,13 +43,15 @@ Example:
 * Added this awesome thing in the pool details [\#123](https://github.com/Azure/BatchLabs/issues/123)
 ```
 
+**Note:** There is now a utility to generate the change log for a millestone also so you don't have to write it manually.
+[https://www.npmjs.com/package/github-changelog-gen](https://www.npmjs.com/package/github-changelog-gen)
+
 #### Double check the prod build is working
 
 Travis should check on master that the build itself it not failing. However there could still be runtime errors that happens.
 Do the following and test the application.
 ```
-npm run build:prod
-npm run electron:prod
+npm run build-and-pack
 ```
 
 
@@ -63,9 +67,10 @@ Then click on merge commit(Make sure it is not squash merge)
 All the commits in master should now be in stable with the merge commit.
 Now disable the "Allow merge commit" again to prevent mistake when merging to master.
 
-## Step 5: Create a new github release
-
- * Go to github [release](https://github.com/Azure/BatchLabs/releases).
- * Click "Draft a new release".
- * Enter the version number in the tag and title
- * Copy the changelog(only for the version) in the description
+## Step 5: Publish the release
+* Wait for the CI to test and build stable branch [Travis](https://travis-ci.org/Azure/BatchLabs/branches)
+* Go to github [release](https://github.com/Azure/BatchLabs/releases).
+* You should see a new draft release with the new version
+* Double check every platform executable and installer is present(exe, app, zip, dmg, deb, rpm)
+* Copy the changelog(only for the version) in the description
+* Click publish release(Mark as pre-release for now)

@@ -1,3 +1,40 @@
+# 0.10.0
+[All items](https://github.com/Azure/BatchLabs/milestone/11?closed=1)
+
+### feature:
+
+* Move breadcrumb in the header [\#906](https://github.com/Azure/BatchLabs/issues/906)
+* Create Pool/Job/Task monaco json editor intellisense [\#888](https://github.com/Azure/BatchLabs/issues/888)
+* Log viewer should switch to monaco editor [\#882](https://github.com/Azure/BatchLabs/issues/882)
+* Pause notification dismiss timeout when hovering the notification [\#879](https://github.com/Azure/BatchLabs/issues/879)
+* Allow to pick expiry time for user when connecting to a node [\#878](https://github.com/Azure/BatchLabs/issues/878)
+* Node files display message when node is not available [\#876](https://github.com/Azure/BatchLabs/issues/876)
+* Move from Codemirror to Monaco editor [\#870](https://github.com/Azure/BatchLabs/issues/870)
+* Make notification stay longer on the screen [\#848](https://github.com/Azure/BatchLabs/issues/848)
+* Ability to write json payload in the create forms and submit instead of UI [\#844](https://github.com/Azure/BatchLabs/issues/844)
+* Allow users to create empty file groups [\#826](https://github.com/Azure/BatchLabs/issues/826)
+
+### bug:
+
+* Data upload in file group is not working [\#912](https://github.com/Azure/BatchLabs/issues/912)
+* Create empty file-group doesn't validate container name [\#905](https://github.com/Azure/BatchLabs/issues/905)
+* CSS for "forms in progress" needs updating and fonts made readable and consistent [\#904](https://github.com/Azure/BatchLabs/issues/904)
+* Switching fast between pools crash UI [\#898](https://github.com/Azure/BatchLabs/issues/898)
+* CSS bug when too many files in task outputs file explorer [\#893](https://github.com/Azure/BatchLabs/issues/893)
+* Account quota not updating when refreshing [\#885](https://github.com/Azure/BatchLabs/issues/885)
+* Missing SKU details about Linux N series VM [\#872](https://github.com/Azure/BatchLabs/issues/872)
+
+### other:
+
+* Prepare release 0.10.0 [\#915](https://github.com/Azure/BatchLabs/issues/915)
+* Useragent should include OS [\#895](https://github.com/Azure/BatchLabs/issues/895)
+* Should we integrate Application Insights into Batch Labs? [\#824](https://github.com/Azure/BatchLabs/issues/824)
+* Refactor rx-list-proxy to a new system [\#814](https://github.com/Azure/BatchLabs/issues/814)
+* Suggest using iconography instead of a label for the breadcrumb bar [\#696](https://github.com/Azure/BatchLabs/issues/696)
+* Ability to pin Jobs, Tasks, or Pools. [\#456](https://github.com/Azure/BatchLabs/issues/456)
+* Add typing to RxProxy options [\#204](https://github.com/Azure/BatchLabs/issues/204)
+* Perf counter support [\#112](https://github.com/Azure/BatchLabs/issues/112)
+
 # 0.9.0
 [All items](https://github.com/Azure/BatchLabs/milestone/10?closed=1)
 
