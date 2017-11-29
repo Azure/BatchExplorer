@@ -1,4 +1,4 @@
-import { Component, OnInit, forwardRef } from "@angular/core";
+import { Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
@@ -7,6 +7,8 @@ import { NodeAgentSku, NodeAgentSkuMap, Offer, Sku } from "app/models";
 import { PoolOSPickerModel, PoolOsSources } from "app/models/forms";
 import { NodeService } from "app/services";
 import { ListView } from "app/services/core";
+import { Subscription } from "rxjs";
+import "./pool-os-picker.scss";
 
 const cloudServiceOsFamilies = [{
     id: "2",
@@ -31,7 +33,7 @@ const cloudServiceOsFamilies = [{
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => PoolOsPickerComponent), multi: true },
     ],
 })
-export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
+export class PoolOsPickerComponent implements ControlValueAccessor, OnInit, OnDestroy {
     public value: PoolOSPickerModel;
     public accountData: ListView<NodeAgentSku, {}>;
 
@@ -47,13 +49,21 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
     // Cloud service
     public selectedFamilyName: string;
 
+    // Container configuration
+    public containerConfiguration: FormControl = new FormControl();
+
     private _propagateChange: (value: PoolOSPickerModel) => void = null;
     private _nodeAgentSkuMap: NodeAgentSkuMap = new NodeAgentSkuMap();
+    private _sub: Subscription;
 
     constructor(formBuilder: FormBuilder, private nodeService: NodeService) {
         this.accountData = this.nodeService.listNodeAgentSkus();
         this.accountData.items.subscribe((result) => {
             this._buildNodeAgentSkuMap(result);
+        });
+
+        this._sub = this.containerConfiguration.valueChanges.subscribe((value) => {
+            console.log("LISTEN TO FORM CONTROL CHANGE: ", value);
         });
     }
 
@@ -72,6 +82,10 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit {
 
     public registerOnTouched() {
         // Do nothing
+    }
+
+    public ngOnDestroy(): void {
+        this._sub.unsubscribe();
     }
 
     public validate(c: FormControl) {

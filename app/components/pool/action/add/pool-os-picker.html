@@ -22,11 +22,23 @@
             {{offer.name}}
         </bl-os-offer-tile>
     </mat-tab>
-    <mat-tab label="Docker container">
+    <mat-tab label="Container configuration">
         <bl-os-offer-tile *ngFor="let offer of dockerOffers" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickOffer(offer)" (pickSku)="pickSku(offer, $event)"
             [active]="offer.name === selectedOffer" [selectedSku]="selectedSku">
             {{offer.name}}
         </bl-os-offer-tile>
+        <div *ngIf="selectedSku">
+            <p style="padding-top: 10px;">
+                Please specify the container configuration for the pool.
+            </p>
+            <bl-form-picker [formControl]="containerConfiguration" #containerConfigurationPicker>
+                <div no-value-title>Container configuration</div>
+                <div value-title>{{containerConfiguration?.value?.type}}</div>
+                <div nested-form>
+                    <bl-container-configuration [formControl]="containerConfigurationPicker.nestedValue"></bl-container-configuration>
+                </div>
+            </bl-form-picker>
+        </div>
     </mat-tab>
 </mat-tab-group>
 <p *ngIf="selectedSku" style="padding-top: 10px;">Based on your selection, node agent <b>'{{selectedNodeAgentId}}'</b> will be used</p>
