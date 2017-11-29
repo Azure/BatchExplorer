@@ -1,7 +1,7 @@
 # 0.10.0
 [All items](https://github.com/Azure/BatchLabs/milestone/11?closed=1)
 
-### feature:
+### Feature:
 
 * Move breadcrumb in the header [\#906](https://github.com/Azure/BatchLabs/issues/906)
 * Create Pool/Job/Task monaco json editor intellisense [\#888](https://github.com/Azure/BatchLabs/issues/888)
@@ -14,7 +14,7 @@
 * Ability to write json payload in the create forms and submit instead of UI [\#844](https://github.com/Azure/BatchLabs/issues/844)
 * Allow users to create empty file groups [\#826](https://github.com/Azure/BatchLabs/issues/826)
 
-### bug:
+### Bug:
 
 * Data upload in file group is not working [\#912](https://github.com/Azure/BatchLabs/issues/912)
 * Create empty file-group doesn't validate container name [\#905](https://github.com/Azure/BatchLabs/issues/905)
@@ -24,7 +24,7 @@
 * Account quota not updating when refreshing [\#885](https://github.com/Azure/BatchLabs/issues/885)
 * Missing SKU details about Linux N series VM [\#872](https://github.com/Azure/BatchLabs/issues/872)
 
-### other:
+### Other:
 
 * Prepare release 0.10.0 [\#915](https://github.com/Azure/BatchLabs/issues/915)
 * Useragent should include OS [\#895](https://github.com/Azure/BatchLabs/issues/895)

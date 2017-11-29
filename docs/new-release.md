@@ -10,7 +10,7 @@ Create a new issue in the millestone with the title `Prepare version x.y.z` and 
 ```md
 - [ ] Update version in package.json
 - [ ] Update changelog
-- [ ] Update third party notices if needed `npm run ts scripts/lca/generate-third-party`
+- [ ] Update third party notices if needed
 - [ ] Double check the prod build is working
 ```
 
@@ -45,6 +45,22 @@ Example:
 
 **Note:** There is now a utility to generate the change log for a millestone also so you don't have to write it manually.
 [https://www.npmjs.com/package/github-changelog-gen](https://www.npmjs.com/package/github-changelog-gen)
+
+
+#### Update third party notices
+Running the following command will update any required third party notices.
+```
+npm run ts scripts/lca/generate-third-party
+```
+
+You might see an error like:
+```
+const value = match[1];
+                    ^
+TypeError: Cannot read property '1' of null
+```
+
+This probably means that a dependancy in package.json has a differnt format to what we are expecting.
 
 #### Double check the prod build is working
 
