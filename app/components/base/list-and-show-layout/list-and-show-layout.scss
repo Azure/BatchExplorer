@@ -5,20 +5,22 @@ bl-list-and-show-layout {
         display: flex;
         margin-top: 5px;
         padding: 0px 15px;
+        align-items: center;
 
         > .title {
             text-transform: uppercase;
             font-size: 14px;
             color: $headings-color;
+            font-weight: 500;
         }
 
         > .actions {
             font-size: 16px;
 
             bl-button {
-                height: 18px;
-                width: 18px;
-                line-height: 18px;
+                height: 24px;
+                width: 24px;
+                line-height: 24px;
             }
 
             > * {
@@ -113,7 +115,7 @@ bl-list-and-show-layout {
 }
 
 .quicksearch {
-    padding: 5px 10px;
+    padding: 0 10px 10px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -132,6 +134,7 @@ bl-list-and-show-layout {
         padding: 5px;
         color: $emperor-grey;
         font-size: 1.1em;
+        height: 26px;
 
         background-color: $athensGrey;
         border: none;
@@ -142,10 +145,15 @@ bl-list-and-show-layout {
 
     }
 
-    i.fa-filter {
+    .toggle-advanced-filter {
         color: $scorpion;
         cursor: pointer;
-        margin-left: 5px;
+        padding-left: 5px;
+        padding-top: 5px;
+        font-size: 16px;
+        background: $athensGrey;
+        height: 26px;
+        width: 26px;
 
         &:hover {
             color: $dusty-grey;
