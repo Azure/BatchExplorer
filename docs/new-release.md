@@ -84,6 +84,9 @@ Now create a pull request against stable. Wait for the CI to pass.
 
 **Important:** DO NOT squash merge the changes.(Go in BatchLabs [settings](https://github.com/Azure/BatchLabs/settings) and renenable "Allow merge commits")
 Then click on merge commit(Make sure it is not squash merge)
+
+![](images/merge-commit.png)
+
 All the commits in master should now be in stable with the merge commit.
 Now disable the "Allow merge commit" again to prevent mistake when merging to master.
 
