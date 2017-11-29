@@ -53,7 +53,10 @@ Running the following command will update any required third party notices.
 npm run ts scripts/lca/generate-third-party
 ```
 
-You might see an error like:
+**Important:** Make sure you have an environment variable called GH_TOKEN set that contains a valid GitHub API auth token.
+You can manage and setup personal access tokens here: [https://github.com/settings/tokens](https://github.com/settings/tokens)
+
+If you see an error like the following while executing the 'generate-third-party' script:
 ```
 const value = match[1];
                     ^
@@ -61,6 +64,7 @@ TypeError: Cannot read property '1' of null
 ```
 
 This probably means that a dependancy in package.json has a differnt format to what we are expecting.
+You will need to modify '\scripts\lca\generate-third-party.ts' in order to get it to work.
 
 #### Double check the prod build is working
 
