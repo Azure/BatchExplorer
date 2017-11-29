@@ -61,7 +61,6 @@ export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, O
     public ngOnChanges(inputs) {
         if (this.containerId && inputs.containerId &&
             inputs.containerId.currentValue !== inputs.containerId.previousValue) {
-            console.log("ngOnChanges: ", this.containerId);
             this.generateSasToken();
         } else {
             this.value.setValue(null);
