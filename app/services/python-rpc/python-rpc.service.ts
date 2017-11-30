@@ -3,7 +3,9 @@ import { AsyncSubject, BehaviorSubject, Observable, Subject } from "rxjs";
 
 import { AccountResource, ServerError } from "app/models";
 import { JsonRpcRequest, JsonRpcResponse, RequestContainer, RequestOptions } from "app/models/python-rpc";
+import { ElectronRemote } from "app/services";
 import { Constants, SecureUtils, log } from "app/utils";
+import { PythonRpcServerProcess } from "client/python-process";
 import { AccountService } from "../account.service";
 import { AdalService } from "../adal";
 
@@ -17,8 +19,15 @@ export class PythonRpcService {
     private _currentRequests: StringMap<RequestContainer> = {};
     private _retryCount = 0;
     private _connected = new BehaviorSubject<boolean>(false);
+    private _serverProcess: PythonRpcServerProcess;
 
-    constructor(private accountService: AccountService, private adalService: AdalService, private _zone: NgZone) {
+    constructor(
+        remote: ElectronRemote,
+        private accountService: AccountService,
+        private adalService: AdalService,
+        private _zone: NgZone,
+    ) {
+        this._serverProcess = remote.getBatchLabsApp().pythonServer;
         this.connected = this._connected.asObservable();
     }
     /**
@@ -26,6 +35,19 @@ export class PythonRpcService {
      */
     public init() {
         this.resetConnection();
+    }
+
+    public async startServer() {
+        await this._serverProcess.start();
+        this.resetConnection();
+    }
+
+    public stopServer() {
+        this._serverProcess.stop();
+    }
+
+    public restartServer() {
+        this._serverProcess.restart();
     }
 
     /**
