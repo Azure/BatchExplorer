@@ -159,6 +159,10 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit, OnDe
         this.showContainerConfiguration = false;
     }
 
+    public clearContaienrConfiguration() {
+        this.containerConfiguration.patchValue(null);
+    }
+
     public get vmOffers() {
         return this._nodeAgentSkuMap.vmOffers;
     }
@@ -221,13 +225,18 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit, OnDe
     @autobind()
     private _updateContainerConfiguration(value) {
         const vmConfig = this.value && this.value.virtualMachineConfiguration;
-        if (vmConfig && value) {
-            const containerRegistries = value.containerRegistries.length > 0 ? value.containerRegistries : undefined;
-            vmConfig.containerConfiguration = {
-                type: value.type,
-                containerImageNames: value.containerImageNames.map(x => x.imageName),
-                containerRegistries: containerRegistries,
-            };
+        if (vmConfig) {
+            if (value) {
+                const containerRegistries = value.containerRegistries.length > 0 ?
+                    value.containerRegistries : undefined;
+                vmConfig.containerConfiguration = {
+                    type: value.type,
+                    containerImageNames: value.containerImageNames.map(x => x.imageName),
+                    containerRegistries: containerRegistries,
+                };
+            } else {
+                vmConfig.containerConfiguration = null;
+            }
         }
     }
 }

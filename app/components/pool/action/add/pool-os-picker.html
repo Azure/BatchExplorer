@@ -22,7 +22,7 @@
             {{offer.name}}
         </bl-os-offer-tile>
     </mat-tab>
-    <mat-tab label="Container configuration">
+    <mat-tab label="Container">
         <bl-os-offer-tile *ngFor="let offer of dockerOffers" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickContainerOffer(offer)" (pickSku)="pickContainerSku(offer, $event)"
             [active]="isOsActive(offer)" [selectedSku]="selectedSku">
             {{offer.name}}
@@ -31,7 +31,7 @@
             <p style="padding-top: 10px;">
                 Please specify the container configuration for the pool.
             </p>
-            <bl-form-picker [formControl]="containerConfiguration" #containerConfigurationPicker>
+            <bl-form-picker [formControl]="containerConfiguration" (clear)="clearContaienrConfiguration()" #containerConfigurationPicker>
                 <div no-value-title>Container configuration</div>
                 <div value-title>{{containerConfiguration?.value?.type}}</div>
                 <div nested-form>
