@@ -1,7 +1,7 @@
 @import "app/styles/variables";
 
 bl-list-and-show-layout {
-    .list-header {
+    .layout-list-header {
         display: flex;
         margin-top: 5px;
         padding: 0 13px;
@@ -23,6 +23,15 @@ bl-list-and-show-layout {
                 line-height: 24px;
             }
         }
+    }
+
+    .quick-filter-content {
+        border-bottom: 1px solid $border-color;
+        padding-bottom: 10px;
+    }
+
+    .quicksearch {
+        margin: 0 10px;
     }
 
     .context-button-bar {
@@ -111,11 +120,9 @@ bl-list-and-show-layout {
 }
 
 .quicksearch {
-    padding: 0 10px 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom: 1px solid $border-color;
 
     .mat-form-field-infix {
         width: auto;
