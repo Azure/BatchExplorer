@@ -1,4 +1,4 @@
-import { Pool, SpecCost } from "app/models";
+import { CloudServiceOsFamily, Pool, SpecCost } from "app/models";
 import { PoolUtils } from "app/utils";
 
 describe("PoolUtils", () => {
@@ -7,28 +7,28 @@ describe("PoolUtils", () => {
             const cs2Pool = new Pool({
                 cloudServiceConfiguration: {
                     currentOSVersion: "*",
-                    osFamily: 2,
+                    osFamily: CloudServiceOsFamily.windowsServer2008R2,
                 },
             });
 
             const cs3Pool = new Pool({
                 cloudServiceConfiguration: {
                     currentOSVersion: "*",
-                    osFamily: 3,
+                    osFamily: CloudServiceOsFamily.windowsServer2012,
                 },
             });
 
             const cs4Pool = new Pool({
                 cloudServiceConfiguration: {
                     currentOSVersion: "*",
-                    osFamily: 4,
+                    osFamily: CloudServiceOsFamily.windowsServer2012R2,
                 },
             });
 
             const cs5Pool = new Pool({
                 cloudServiceConfiguration: {
                     currentOSVersion: "*",
-                    osFamily: 5,
+                    osFamily: CloudServiceOsFamily.windowsServer2016,
                 },
             });
 
@@ -70,28 +70,28 @@ describe("PoolUtils", () => {
             const cs2Pool = new Pool({
                 cloudServiceConfiguration: {
                     currentOSVersion: "*",
-                    osFamily: 2,
+                    osFamily: CloudServiceOsFamily.windowsServer2008R2,
                 },
             });
 
             const cs3Pool = new Pool({
                 cloudServiceConfiguration: {
                     currentOSVersion: "*",
-                    osFamily: 3,
+                    osFamily: CloudServiceOsFamily.windowsServer2012,
                 },
             });
 
             const cs4Pool = new Pool({
                 cloudServiceConfiguration: {
                     currentOSVersion: "*",
-                    osFamily: 4,
+                    osFamily: CloudServiceOsFamily.windowsServer2012R2,
                 },
             });
 
             const cs5Pool = new Pool({
                 cloudServiceConfiguration: {
                     currentOSVersion: "*",
-                    osFamily: 5,
+                    osFamily: CloudServiceOsFamily.windowsServer2016,
                 },
             });
 

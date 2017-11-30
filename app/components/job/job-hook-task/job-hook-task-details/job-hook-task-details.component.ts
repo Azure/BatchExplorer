@@ -1,21 +1,45 @@
-import { Component, Input } from "@angular/core";
-import { JobHookTask } from "app/models";
+import { Component, Input, OnInit } from "@angular/core";
 
 import { FileExplorerConfig } from "app/components/file/browse/file-explorer";
+import { JobHookTask, Node } from "app/models";
+import { NodeParams, NodeService } from "app/services";
+import { EntityView } from "app/services/core";
 import "./job-hook-task-details.scss";
 
 @Component({
     selector: "bl-job-hook-task-details",
     templateUrl: "job-hook-task-details.html",
 })
-export class JobHookTaskDetailsComponent {
+export class JobHookTaskDetailsComponent implements OnInit {
     @Input() public task: JobHookTask;
-
     @Input() public type: string = "preparationTask";
+    public node: Node;
+    public loading = true;
 
     public fileExplorerConfig: FileExplorerConfig = {
         showTreeView: false,
     };
+
+    private _nodeData: EntityView<Node, NodeParams>;
+
+    constructor(nodeService: NodeService) {
+        this._nodeData = nodeService.view();
+        this._nodeData.item.subscribe((node) => {
+            this.node = node;
+        });
+    }
+
+    public ngOnInit() {
+        this._nodeData.fetch().subscribe({
+            next: () => {
+                this.loading = false;
+            },
+            error: () => {
+                this.loading = false;
+            },
+        });
+    }
+
     public get currentFolder() {
         const info = this.task[this.type];
         return info && info.taskRootDirectory;
