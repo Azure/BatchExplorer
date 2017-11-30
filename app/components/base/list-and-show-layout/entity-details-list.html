@@ -3,14 +3,13 @@
         <ng-content select="[pre-quicksearch]"></ng-content>
     </div>
     <input [formControl]="searchQuery" placeholder="{{filterPlaceholder}}" />
-    <i *ngIf="enableAdvancedFilter" class="fa fa-filter fa-2x" [routerLink]="baseLink" [queryParams]="{filter: true}"></i>
-</div>
-<hr />
-<div class="context-button-bar">
-    <bl-button type="round" color="light" icon="fa fa-expand spin-hover" *ngIf="showExpandButton" color="primary" [routerLink]="baseLink"
+    <bl-clickable class="toggle-advanced-filter" (do)="toggleFilter()" *ngIf="advancedFilterContent?.children.length > 0">
+        <i class="fa fa-filter" ></i>
+    </bl-clickable>
+    <bl-button type="plain" color="light" icon="fa fa-expand spin-hover" *ngIf="showExpandButton" color="light" [routerLink]="baseLink"
         title="{{expandButtonHoverText}}">
     </bl-button>
-    <bl-refresh-btn *ngIf="showRefreshButton" type="round" [refresh]="refresh" title="{{refreshButtonHoverText}}" tooltipPosition="left"></bl-refresh-btn>
+    <bl-refresh-btn *ngIf="showRefreshButton" type="plain" [refresh]="refresh" title="{{refreshButtonHoverText}}" tooltipPosition="left"></bl-refresh-btn>
     <ng-content select="[bl-list-buttons]"></ng-content>
 </div>
 <ng-content></ng-content>
