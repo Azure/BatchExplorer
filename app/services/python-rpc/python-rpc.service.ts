@@ -1,8 +1,9 @@
 import { Injectable, NgZone } from "@angular/core";
+import { AsyncSubject, BehaviorSubject, Observable, Subject } from "rxjs";
+
 import { AccountResource, ServerError } from "app/models";
 import { JsonRpcRequest, JsonRpcResponse, RequestContainer, RequestOptions } from "app/models/python-rpc";
 import { Constants, SecureUtils, log } from "app/utils";
-import { AsyncSubject, Observable, Subject } from "rxjs";
 import { AccountService } from "../account.service";
 import { AdalService } from "../adal";
 
@@ -10,12 +11,16 @@ const ResourceUrl = Constants.ResourceUrl;
 
 @Injectable()
 export class PythonRpcService {
+    public connected: Observable<boolean>;
     private _socket: WebSocket;
     private _ready = new AsyncSubject();
     private _currentRequests: StringMap<RequestContainer> = {};
     private _retryCount = 0;
+    private _connected = new BehaviorSubject<boolean>(false);
 
-    constructor(private accountService: AccountService, private adalService: AdalService, private _zone: NgZone) { }
+    constructor(private accountService: AccountService, private adalService: AdalService, private _zone: NgZone) {
+        this.connected = this._connected.asObservable();
+    }
     /**
      * Initialize the connection to the rpc server
      */
@@ -34,6 +39,7 @@ export class PythonRpcService {
             this._ready = new AsyncSubject<any>();
             const socket = this._socket = new WebSocket(`ws://127.0.0.1:${port}/ws`);
             socket.onopen = (event: Event) => {
+                this._connected.next(true);
                 if (this._retryCount > 0) {
                     log.info("Reconnected to websocket successfully.");
                 }
@@ -45,12 +51,14 @@ export class PythonRpcService {
             };
 
             socket.onerror = (error: Event) => {
+                this._connected.next(false);
                 this._zone.run(() => {
                     this._ready.error(event);
                 });
             };
 
             socket.onclose = () => {
+                this._connected.next(false);
                 const waitingTime = Math.floor(2 ** this._retryCount);
                 this._retryCount++;
                 log.info(`Websocket connection closed. Retrying to connect in ${waitingTime}s`);
