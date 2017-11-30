@@ -1,4 +1,4 @@
-import { CloudServiceConfiguration } from "app/models";
+import { CloudServiceConfiguration, CloudServiceOsFamily } from "app/models";
 import { DecoratorBase } from "app/utils/decorators";
 
 export class CloudServiceConfigurationDecorator extends DecoratorBase<CloudServiceConfiguration> {
@@ -14,7 +14,7 @@ export class CloudServiceConfigurationDecorator extends DecoratorBase<CloudServi
         this.currentOSVersion = this.stringField(cloudServiceConfiguration.currentOSVersion);
     }
 
-    private _translateOSFamily(osName: string, osFamilyId: number): string {
+    private _translateOSFamily(osName: string, osFamilyId: CloudServiceOsFamily): string {
         return `${osName}, (ID: ${osFamilyId})`;
     }
 }
