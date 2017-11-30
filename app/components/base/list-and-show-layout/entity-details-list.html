@@ -4,7 +4,7 @@
             <ng-content select="[pre-quicksearch]"></ng-content>
         </div>
         <input [formControl]="searchQuery" placeholder="{{filterPlaceholder}}" />
-        <bl-clickable class="toggle-advanced-filter" (do)="toggleFilter()" *ngIf="enableAdvancedFilter">
+        <bl-clickable class="toggle-advanced-filter" [routerLink]="baseLink" [queryParams]="{filter: true}" *ngIf="enableAdvancedFilter">
             <i class="fa fa-filter"></i>
         </bl-clickable>
     </div>
