@@ -1,7 +1,9 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding, HostListener } from "@angular/core";
 import * as path from "path";
 
-import { ContextMenu, ContextMenuItem, ContextMenuSeparator, ContextMenuService } from "app/components/base/context-menu";
+import {
+    ContextMenu, ContextMenuItem, ContextMenuSeparator, ContextMenuService,
+} from "app/components/base/context-menu";
 import { ElectronShell, FileSystemService, PythonRpcService } from "app/services";
 import "./rpc-server-status.scss";
 
