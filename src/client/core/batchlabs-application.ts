@@ -21,9 +21,12 @@ export class BatchLabsApplication {
     public mainWindow = new MainWindow(this);
     public pythonServer = new PythonRpcServerProcess();
 
-    constructor(public autoUpdater: AppUpdater) { }
+    constructor(public autoUpdater: AppUpdater) {
+        logger.info("ARguments", process.argv);
+    }
 
     public init() {
+        this._registerProtocol();
         this.setupProcessEvents();
     }
 
@@ -99,5 +102,17 @@ export class BatchLabsApplication {
 
     public checkForUpdates(): Promise<UpdateCheckResult> {
         return autoUpdater.checkForUpdates();
+    }
+
+    private _registerProtocol() {
+        if (Constants.isDev) {
+            return;
+        }
+
+        if (app.setAsDefaultProtocolClient(Constants.customProtocolName)) {
+            logger.info(`Registered ${Constants.customProtocolName}:// as a protocol for batchlabs`);
+        } else {
+            logger.error(`Failed to register ${Constants.customProtocolName}:// as a protocol for batchlabs`);
+        }
     }
 }
