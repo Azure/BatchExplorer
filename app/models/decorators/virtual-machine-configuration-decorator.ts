@@ -1,5 +1,6 @@
 import { VirtualMachineConfiguration } from "app/models";
 import { DecoratorBase } from "app/utils/decorators";
+import { ContainerConfigurationDecorator } from "./container-configuration-decorator";
 import { ImageReferenceDecorator } from "./image-reference-decorator";
 import { WindowsConfigurationDecorator } from "./windows-configuration-decorator";
 
@@ -7,6 +8,7 @@ export class VirtualMachineConfigurationDecorator extends DecoratorBase<VirtualM
     public imageReference: ImageReferenceDecorator;
     public nodeAgentSKUId: string;
     public windowsConfiguration: WindowsConfigurationDecorator;
+    public containerConfiguration: ContainerConfigurationDecorator;
 
     constructor(virtualMachieConfiguration: VirtualMachineConfiguration, osName: string) {
         super(virtualMachieConfiguration);
@@ -17,5 +19,7 @@ export class VirtualMachineConfigurationDecorator extends DecoratorBase<VirtualM
             virtualMachieConfiguration.nodeAgentSKUId);
         this.windowsConfiguration = new WindowsConfigurationDecorator(
             virtualMachieConfiguration.windowsConfiguration || {} as any);
+        this.containerConfiguration = new ContainerConfigurationDecorator(
+            virtualMachieConfiguration.containerConfiguration || {} as any);
     }
 }

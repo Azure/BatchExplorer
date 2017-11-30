@@ -49,6 +49,18 @@
             <bl-text-property label="Version" [value]="decorator.virtualMachineConfiguration.imageReference.version"></bl-text-property>
             <bl-text-property label="Node agent sku id" [value]="decorator.virtualMachineConfiguration.nodeAgentSKUId"></bl-text-property>
             <bl-text-property *ngIf="decorator.virtualMachineConfiguration.windowsConfiguration" label="Enable automatic updates" [value]="decorator.virtualMachineConfiguration.windowsConfiguration.enableAutomaticUpdates"></bl-text-property>
+            <bl-text-property *ngIf="decorator.virtualMachineConfiguration.containerConfiguration" label="Container type" [value]="decorator.virtualMachineConfiguration.containerConfiguration.type"></bl-text-property>
+            <bl-text-property *ngIf="decorator.virtualMachineConfiguration.containerConfiguration" label="Container images" [value]="decorator.virtualMachineConfiguration.containerConfiguration.containerImageNames"></bl-text-property>
+            <bl-table-property label="Container registries" *ngIf="decorator.virtualMachineConfiguration.containerConfiguration?.containerRegistries?.length > 0">
+                <bl-table-property-header>
+                    <div tp-column>Registry server</div>
+                    <div tp-column>Username</div>
+                </bl-table-property-header>
+                <bl-table-property-row *ngFor="let registry of decorator.virtualMachineConfiguration.containerConfiguration.containerRegistries">
+                    <bl-tp-cell [value]="registry.registryServer"></bl-tp-cell>
+                    <bl-tp-cell [value]="registry.userName"></bl-tp-cell>
+                </bl-table-property-row>
+            </bl-table-property>
         </bl-property-group>
 
         <bl-property-group label="Start task settings" [collapsed]="true" class="wide" [edit]="editStartTask">

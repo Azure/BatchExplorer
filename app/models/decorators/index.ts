@@ -1,6 +1,7 @@
 export * from "./application-decorator";
 export * from "./cloud-service-configuration-decorator";
 export * from "./compute-node-info-decorator";
+export * from "./container-configuration-decorator";
 export * from "./container-decorator";
 export * from "./container-lease-decorator";
 export * from "./failure-info-decorator";
