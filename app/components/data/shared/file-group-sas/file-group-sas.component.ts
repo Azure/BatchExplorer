@@ -100,9 +100,10 @@ export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, O
          */
         const accessPolicy = {
             AccessPolicy: {
-                Permissions: "READ",
+                Permissions: "rl",
                 ResourceTypes: "CONTAINER",
                 Services: "BLOB",
+                Start: moment.utc().add(-15, "minutes").toDate(),
                 Expiry: moment.utc().add(7, "day").toDate(),
             },
         };
