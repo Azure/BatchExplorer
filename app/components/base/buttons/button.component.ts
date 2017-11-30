@@ -8,7 +8,7 @@ import { log } from "app/utils";
 import "./button.scss";
 import { ClickableComponent } from "./clickable";
 
-export type ButtonType = "square" | "round" | "wide";
+export type ButtonType = "square" | "round" | "wide" | "plain";
 export type ButtonColor = "primary" | "light" | "danger" | "warn" | "success";
 export type ButtonAction = (event?: Event) => Observable<any> | void;
 

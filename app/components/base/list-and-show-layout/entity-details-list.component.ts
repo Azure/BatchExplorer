@@ -4,6 +4,8 @@ import { Observable } from "rxjs";
 
 import { FilterBuilder } from "app/utils/filter-builder";
 
+import "./entity-details-list.scss";
+
 /**
  * Wrapper for a list that should be displayed in the detailed area
  * Adds a search box and a refresh button
