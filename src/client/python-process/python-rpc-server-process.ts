@@ -49,9 +49,9 @@ export class PythonRpcServerProcess {
         }
     }
 
-    public restart() {
+    public async restart() {
         this.stop();
-        this.start();
+        return this.start();
     }
 
     private async _getCommandLine(): Promise<{ cmd: string, args: string[] }> {

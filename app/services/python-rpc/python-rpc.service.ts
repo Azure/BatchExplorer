@@ -46,8 +46,9 @@ export class PythonRpcService {
         this._serverProcess.stop();
     }
 
-    public restartServer() {
-        this._serverProcess.restart();
+    public async restartServer() {
+        await this._serverProcess.restart();
+        this.resetConnection();
     }
 
     /**
