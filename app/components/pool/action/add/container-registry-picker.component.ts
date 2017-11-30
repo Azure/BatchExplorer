@@ -4,7 +4,7 @@ import {
 } from "@angular/forms";
 import { Subscription } from "rxjs";
 
-import { ContainerRegistry } from "app/models/dtos/container-setup.dto";
+import { ContainerRegistry } from "app/models/dtos";
 
 @Component({
     selector: "bl-container-registry-picker",

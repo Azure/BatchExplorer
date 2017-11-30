@@ -4,7 +4,7 @@ import {
 } from "@angular/forms";
 import { Subscription } from "rxjs";
 
-import { ContainerImage } from "app/models/dtos/container-setup.dto";
+import { ContainerImage } from "app/models/dtos";
 
 @Component({
     selector: "bl-container-images-picker",

@@ -1,7 +1,7 @@
 <mat-tab-group class="form-tabs" [@.disabled]="true">
     <mat-tab label="Distributions" title="selectedSource === PoolOsSources.IaaS" class="banana">
         <bl-os-offer-tile *ngFor="let offer of vmOffers" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickOffer(offer)" (pickSku)="pickSku(offer, $event)"
-            [active]="offer.name === selectedOffer" [selectedSku]="selectedSku">
+            [active]="isOsActive(offer)" [selectedSku]="selectedSku">
             {{offer.name}}
         </bl-os-offer-tile>
         <bl-os-offer-tile name="WindowsServer" [skus]="cloudServiceOsFamilies" (pickOffer)="pickCloudService()" (pickSku)="pickCloudService($event.id)"
@@ -12,22 +12,22 @@
     </mat-tab>
     <mat-tab label="Data science VM">
         <bl-os-offer-tile *ngFor="let offer of dataScienceOffers" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickOffer(offer)" (pickSku)="pickSku(offer, $event)"
-            [active]="offer.name === selectedOffer" [selectedSku]="selectedSku">
+            [active]="isOsActive(offer)" [selectedSku]="selectedSku">
             {{offer.name}}
         </bl-os-offer-tile>
     </mat-tab>
     <mat-tab label="Graphics and rendering">
         <bl-os-offer-tile *ngFor="let offer of renderingOffers" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickOffer(offer)" (pickSku)="pickSku(offer, $event)"
-            [active]="offer.name === selectedOffer" [selectedSku]="selectedSku">
+            [active]="isOsActive(offer)" [selectedSku]="selectedSku">
             {{offer.name}}
         </bl-os-offer-tile>
     </mat-tab>
     <mat-tab label="Container configuration">
-        <bl-os-offer-tile *ngFor="let offer of dockerOffers" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickOffer(offer)" (pickSku)="pickSku(offer, $event)"
-            [active]="offer.name === selectedOffer" [selectedSku]="selectedSku">
+        <bl-os-offer-tile *ngFor="let offer of dockerOffers" [name]="offer.name" [skus]="offer.skus" (pickOffer)="pickContainerOffer(offer)" (pickSku)="pickContainerSku(offer, $event)"
+            [active]="isOsActive(offer)" [selectedSku]="selectedSku">
             {{offer.name}}
         </bl-os-offer-tile>
-        <div *ngIf="selectedSku">
+        <div *ngIf="showContainerConfiguration">
             <p style="padding-top: 10px;">
                 Please specify the container configuration for the pool.
             </p>

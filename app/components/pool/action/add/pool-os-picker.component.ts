@@ -2,6 +2,7 @@ import { Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
+import { autobind } from "core-decorators";
 
 import { NodeAgentSku, NodeAgentSkuMap, Offer, Sku } from "app/models";
 import { PoolOSPickerModel, PoolOsSources } from "app/models/forms";
@@ -51,6 +52,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit, OnDe
 
     // Container configuration
     public containerConfiguration: FormControl = new FormControl();
+    public showContainerConfiguration: boolean = false;
 
     private _propagateChange: (value: PoolOSPickerModel) => void = null;
     private _nodeAgentSkuMap: NodeAgentSkuMap = new NodeAgentSkuMap();
@@ -61,10 +63,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit, OnDe
         this.accountData.items.subscribe((result) => {
             this._buildNodeAgentSkuMap(result);
         });
-
-        this._sub = this.containerConfiguration.valueChanges.subscribe((value) => {
-            console.log("LISTEN TO FORM CONTROL CHANGE: ", value);
-        });
+        this._sub = this.containerConfiguration.valueChanges.subscribe(this._updateContainerConfiguration);
     }
 
     public ngOnInit() {
@@ -102,11 +101,27 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit, OnDe
         return null;
     }
 
+    public pickContainerOffer(offer: Offer) {
+        this.pickOffer(offer);
+        this.showContainerConfiguration = true;
+    }
+
+    public pickContainerSku(offer: Offer, sku: Sku) {
+        this.pickSku(offer, sku);
+        this.showContainerConfiguration = true;
+    }
+
     public pickOffer(offer: Offer) {
         this.pickSku(offer, offer.skus.first());
     }
 
     public pickSku(offer: Offer, sku: Sku) {
+        // preventing user clicking pick same sku multiple times
+        if (this.selectedOffer === offer.name &&
+            this.selectedSku === sku.name &&
+            this.selectedNodeAgentId === sku.nodeAgentId) {
+            return;
+        }
         this.value = {
             source: PoolOsSources.IaaS,
             virtualMachineConfiguration: {
@@ -124,6 +139,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit, OnDe
         if (this._propagateChange) {
             this._propagateChange(this.value);
         }
+        this.showContainerConfiguration = false;
     }
 
     public pickCloudService(version = null) {
@@ -140,6 +156,7 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit, OnDe
         if (this._propagateChange) {
             this._propagateChange(this.value);
         }
+        this.showContainerConfiguration = false;
     }
 
     public get vmOffers() {
@@ -158,6 +175,17 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit, OnDe
         return this._nodeAgentSkuMap.dockerOffers;
     }
 
+    /**
+     * Function that determines whether this OS is active or not
+     * Two conditions must be satisfied
+     * 1, selectedOffer equals current offer name
+     * 2, selectedSku is in current offer sku list
+     */
+    public isOsActive(offer) {
+        const hasSku = offer.skus.filter(x => x.name === this.selectedSku).length > 0;
+        return offer.name === this.selectedOffer && hasSku;
+    }
+
     private _updateSelection() {
         const vmConfig = this.value && this.value.virtualMachineConfiguration;
         const ref = vmConfig && vmConfig.imageReference;
@@ -169,9 +197,37 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit, OnDe
         const familyId = csConfig && csConfig.osFamily;
         const item = cloudServiceOsFamilies.filter(x => x.id === familyId).first();
         this.selectedFamilyName = item && item.name;
+
+        // Map values to container configuration form
+        const containerConfiguration = vmConfig && vmConfig.containerConfiguration;
+        const mappedContainerConfiguration = containerConfiguration ? {
+            type: containerConfiguration.type,
+            containerImageNames: containerConfiguration.containerImageNames.map(x => {
+                return { imageName: x };
+            }),
+            containerRegistries: containerConfiguration.containerRegistries || [],
+        } : null;
+        this.containerConfiguration.patchValue(mappedContainerConfiguration);
     }
 
     private _buildNodeAgentSkuMap(nodeAgentSkus: any) {
         this._nodeAgentSkuMap = new NodeAgentSkuMap(nodeAgentSkus);
+    }
+
+    /**
+     * Callback function of container configuration form
+     * @param value
+     */
+    @autobind()
+    private _updateContainerConfiguration(value) {
+        const vmConfig = this.value && this.value.virtualMachineConfiguration;
+        if (vmConfig && value) {
+            const containerRegistries = value.containerRegistries.length > 0 ? value.containerRegistries : undefined;
+            vmConfig.containerConfiguration = {
+                type: value.type,
+                containerImageNames: value.containerImageNames.map(x => x.imageName),
+                containerRegistries: containerRegistries,
+            };
+        }
     }
 }

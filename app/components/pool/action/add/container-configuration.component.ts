@@ -9,14 +9,8 @@ import {
     Validators,
 } from "@angular/forms";
 
-import { ContainerType } from "app/models/dtos/container-setup.dto";
+import { ContainerType } from "app/models/dtos";
 import "./container-configuration.scss";
-
-const DEFAULT_CONTAINER_CONFIGURATION = {
-    type: null,
-    containerImageNames: [],
-    containerRegistries: [],
-};
 
 @Component({
     selector: "bl-container-configuration",
@@ -32,15 +26,12 @@ export class ContainerConfigurationComponent implements ControlValueAccessor {
     public form: FormGroup;
 
     private _propagateChange: (value: any) => void = null;
-    private _defaultValue: any;
     constructor(formBuilder: FormBuilder) {
-        this._defaultValue = DEFAULT_CONTAINER_CONFIGURATION;
-        const formValues = {
+        this.form = formBuilder.group({
             type: [null, Validators.required],
             containerImageNames: [[], Validators.required],
             containerRegistries: [[]],
-        };
-        this.form = formBuilder.group(formValues);
+        });
         this.form.valueChanges.subscribe((val: any) => {
             if (this._propagateChange) {
                 this._propagateChange(val);
@@ -57,7 +48,11 @@ export class ContainerConfigurationComponent implements ControlValueAccessor {
     }
 
     public reset() {
-        this.form.reset(this._defaultValue);
+        this.form.reset({
+            type: null,
+            containerImageNames: [],
+            containerRegistries: [],
+        });
     }
 
     public registerOnChange(fn) {
