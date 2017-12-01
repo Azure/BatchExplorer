@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Constants } from "app/utils";
+import { Constants, OS } from "app/utils";
 import { AutoscaleLanguage } from "app/utils/monaco-languages/autoscale.language";
 import { JsonLanguage } from "app/utils/monaco-languages/json/json.language";
 
@@ -24,9 +24,12 @@ export class MonacoLoader {
 
     public load(): Promise<any> {
         return new Promise((resolve) => {
-
+            let baseUrl = path.join(Constants.Client.root, "build/vendor/");
+            if (!OS.isWindows()) {
+                baseUrl = `file://${baseUrl}`;
+            }
             const onGotAmdLoader = () => {
-                anyWindow.amdRequire.config({ baseUrl: path.join(Constants.Client.root, "build/vendor/") });
+                anyWindow.amdRequire.config({ baseUrl });
                 // workaround monaco-css not understanding the environment
                 (self as any).module = undefined;
                 // workaround monaco-typescript not understanding the environment
