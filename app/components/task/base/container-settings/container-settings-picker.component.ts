@@ -54,6 +54,15 @@ export class ContainerSettingsPickerComponent implements ControlValueAccessor, O
     }
 
     public validate(c: FormControl) {
+        const valid = this.containerSettings.valid;
+        if (!valid) {
+            return {
+                ContainerSettingsPicker: {
+                    valid: false,
+                    missingSelection: true,
+                },
+            };
+        }
         return null;
     }
 }
