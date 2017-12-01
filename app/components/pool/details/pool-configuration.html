@@ -91,7 +91,7 @@
             <bl-text-property *ngIf="startTask.containerSettings" label="Container image" [value]="startTask.containerSettings.imageName"></bl-text-property>
             <bl-text-property *ngIf="startTask.containerSettings?.containerRunOptions" label="Container run option" [value]="startTask.containerSettings.containerRunOptions" [wrap]="true"></bl-text-property>
             <bl-text-property *ngIf="startTask.containerSettings?.registry" label="Registry server" [value]="startTask.containerSettings.registry.registryServer" [wrap]="true"></bl-text-property>
-            <bl-text-property *ngIf="startTask.containerSettings?.registry" label="Registry username" [value]="startTask.containerSettings.registry.username"></bl-text-property>
+            <bl-text-property *ngIf="startTask.containerSettings?.registry" label="Registry username" [value]="startTask.containerSettings.registry.userName"></bl-text-property>
             <bl-no-item [itemCount]="startTaskItemCount" [slimline]="true">
                 <span no-filter>Start task is not specified for current pool.</span>
             </bl-no-item>

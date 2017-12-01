@@ -74,7 +74,7 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
         // Load current pool container configuration to indicate whether job manager, preparation and release task
         // displays task container setting accordingly
         this.form.controls.poolInfo.valueChanges.subscribe((value) => {
-            if (value && value.poolId) {
+            if (poolService && poolService.get && value && value.poolId) {
                 poolService.get(value.poolId).cascade((pool) => {
                     const poolData = pool.toJS();
                     this.virtualMachineConfiguration = poolData.virtualMachineConfiguration;
