@@ -1,3 +1,8 @@
+# 0.10.2
+### Bug:
+
+* VM Size selector broken [\#940](https://github.com/Azure/BatchLabs/issues/940)
+
 # 0.10.1
 [All items](https://github.com/Azure/BatchLabs/milestone/13?closed=1)
 
