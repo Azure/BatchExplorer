@@ -38,8 +38,7 @@ export class FileTreeDownloadComponent {
         private fs: FileSystemService,
         private shell: ElectronShell,
         private notificationService: NotificationService,
-    ) {
-    }
+    ) { }
 
     @autobind()
     public startDownload() {
@@ -58,7 +57,7 @@ export class FileTreeDownloadComponent {
             const subject = new AsyncSubject();
             task.progress.next(1);
             this._getListOfFilesToDownload().subscribe((files) => {
-                if (files.count() === 0) {
+                if (files.size === 0) {
                     this.notificationService.warn(
                         "Pattern not found",
                         `Failed to find pattern: ${this._getPatterns()}`,
