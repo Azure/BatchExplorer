@@ -1,5 +1,38 @@
+@import "app/styles/variables";
 
 bl-list-and-show-layout {
+    .layout-list-header {
+        display: flex;
+        margin-top: 5px;
+        padding: 0 13px;
+        align-items: center;
+
+        > .title {
+            text-transform: uppercase;
+            font-size: 14px;
+            color: $headings-color;
+            font-weight: 500;
+        }
+
+        > .actions {
+            font-size: 16px;
+
+            bl-button {
+                height: 24px;
+                width: 24px;
+                line-height: 24px;
+            }
+        }
+    }
+
+    .quick-filter-content {
+        border-bottom: 1px solid $border-color;
+        padding-bottom: 10px;
+    }
+
+    .quicksearch {
+        margin: 0 10px;
+    }
 
     .context-button-bar {
         &.left {
@@ -85,3 +118,50 @@ bl-list-and-show-layout {
     justify-content: center;
     padding: 20px 0;
 }
+
+.quicksearch {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .mat-form-field-infix {
+        width: auto;
+    }
+
+
+    mat-select {
+        padding-top: 0;
+    }
+
+    input {
+        flex: 1 0 auto;
+        padding: 5px;
+        color: $emperor-grey;
+        font-size: 1.1em;
+        height: 26px;
+
+        background-color: $athensGrey;
+        border: none;
+
+        &:focus {
+            outline: none;
+        }
+
+    }
+
+    .toggle-advanced-filter {
+        color: $scorpion;
+        cursor: pointer;
+        padding-left: 5px;
+        padding-top: 5px;
+        font-size: 16px;
+        background: $athensGrey;
+        height: 26px;
+        width: 26px;
+
+        &:hover {
+            color: $dusty-grey;
+        }
+    }
+}
+

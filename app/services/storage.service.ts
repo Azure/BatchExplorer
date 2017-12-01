@@ -5,6 +5,7 @@ import { AsyncSubject, Observable, Subject } from "rxjs";
 import { BackgroundTaskService } from "app/components/base/background-task";
 import { BlobContainer, File, ServerError } from "app/models";
 import { FileSystemService } from "app/services";
+import { SharedAccessPolicy } from "app/services/storage/models";
 import { Constants, log } from "app/utils";
 import {
     DataCache,
@@ -327,6 +328,17 @@ export class StorageService {
             return client.createContainer(containerName);
         }, (error) => {
             log.error(`Error creating container: ${containerName}`, { ...error });
+        });
+    }
+
+    public generateSharedAccessContainerUrl(container: string, sharedAccessPolicy: SharedAccessPolicy)
+        : Observable<string> {
+        return this._callStorageClient((client) => {
+            const sasToken = client.generateSharedAccessSignature(container, sharedAccessPolicy);
+            return Promise.resolve(client.getUrl(container, null, sasToken));
+        }, (error) => {
+            // TODO-Andrew: test that errors are caught
+            log.error(`Error generating container SAS: ${container}`, { ...error });
         });
     }
 

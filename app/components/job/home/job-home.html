@@ -1,6 +1,9 @@
 <bl-list-and-show-layout #layout (listScrolledToBottom)="jobList.onScrollToBottom()" [list]="jobList">
+    <div bl-list-title>
+        Jobs
+    </div>
     <div bl-list-buttons>
-        <bl-button color="light" type="round" icon="fa fa-plus spin-hover" title="Add a job" [action]="addJob">
+        <bl-button color="light" type="plain" icon="fa fa-plus spin-hover" title="Add a job" [action]="addJob">
         </bl-button>
     </div>
     <div bl-list-content>
