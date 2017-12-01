@@ -93,8 +93,8 @@ export class NodeProxy {
         return mapGet(this.client.computeNode.getRemoteLoginSettings(poolId, nodeId, wrapOptions(options)));
     }
 
-    private async _readContent(stream: ReadableStream): Promise<string> {
-        const reader = stream.getReader();
+    private async _readContent(response: Response): Promise<string> {
+        const reader = response.body.getReader();
 
         let text = "";
         let result;
