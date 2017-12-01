@@ -51,6 +51,29 @@ bl-button {
         }
     }
 
+    &[type="plain"] {
+        &[color="primary"] {
+            color: map-get($primary, 300);
+            &:hover, &:focus {
+                color: map-get($primary, 500);
+            }
+        }
+
+        &[color="light"] {
+            color: $scorpion;
+            &:hover, &:focus {
+                color: $silver-grey;
+            }
+        }
+
+        &[color="danger"] {
+            color: map-get($danger, 500);
+            &:hover, &:focus {
+                color: map-get($danger, 800);
+            }
+        }
+    }
+
     &[type="square"], &[type="round"] {
         width: $action-btn-size;
     }
@@ -69,57 +92,59 @@ bl-button {
         min-width: $action-btn-size;
     }
 
-    &[color="primary"] {
-        background: map-get($primary, 300);
-        color: $whitesmoke;
+    &[type="square"], &[type="round"], &[type="wide"] {
+        &[color="primary"] {
+            background: map-get($primary, 300);
+            color: $whitesmoke;
 
-        &:hover, &:focus {
-            background: map-get($primary, 500);
+            &:hover, &:focus {
+                background: map-get($primary, 500);
+            }
+
+            &:active {
+                background: map-get($primary, 600);
+            }
         }
 
-        &:active {
-            background: map-get($primary, 600);
+        &[color="light"] {
+            background: $mercury-grey;
+            color: map-get($primary, 500);
+
+            &:hover, &:focus {
+                background: $alto;
+                color: map-get($primary, 200);
+            }
+
+            &:active {
+                background: $silver-grey;
+            }
         }
-    }
 
-    &[color="light"] {
-        background: $mercury-grey;
-        color: map-get($primary, 500);
+        &[color="danger"] {
+            background: map-get($danger, 500);
+            color: $whitesmoke;
 
-        &:hover, &:focus {
-            background: $alto;
-            color: map-get($primary, 200);
+            &:hover, &:focus {
+                background: map-get($danger, 800);
+            }
         }
 
-        &:active {
-            background: $silver-grey;
+        &[color="warn"] {
+            background: map-get($warn, 500);
+            color: $whitesmoke;
+
+            &:hover, &:focus {
+                background: map-get($warn, 800);
+            }
         }
-    }
 
-    &[color="danger"] {
-        background: map-get($danger, 500);
-        color: $whitesmoke;
+        &[color="success"] {
+            background: map-get($success, 500);
+            color: $whitesmoke;
 
-        &:hover, &:focus {
-            background: map-get($danger, 800);
-        }
-    }
-
-    &[color="warn"] {
-        background: map-get($warn, 500);
-        color: $whitesmoke;
-
-        &:hover, &:focus {
-            background: map-get($warn, 800);
-        }
-    }
-
-    &[color="success"] {
-        background: map-get($success, 500);
-        color: $whitesmoke;
-
-        &:hover, &:focus {
-            background: map-get($success, 800);
+            &:hover, &:focus {
+                background: map-get($success, 800);
+            }
         }
     }
 }

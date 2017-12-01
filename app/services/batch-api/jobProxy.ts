@@ -1,8 +1,9 @@
 import { BatchServiceClient, BatchServiceModels } from "azure-batch";
 
+import { DisableJobOption } from "azure-batch/typings/lib/models";
 import { ListProxy, mapGet, wrapOptions } from "./shared";
 
-export  class JobProxy {
+export class JobProxy {
 
     constructor(private client: BatchServiceClient) {
     }
@@ -54,7 +55,7 @@ export  class JobProxy {
      *  Possible values include: 'requeue', 'terminate', 'wait'
      * @param options: Optional Parameters.
      */
-    public disable(jobId: string, disableTasks: string, options?: any): Promise<any> {
+    public disable(jobId: string, disableTasks: DisableJobOption, options?: any): Promise<any> {
         return this.client.job.disable(jobId, disableTasks, wrapOptions(options));
     }
 

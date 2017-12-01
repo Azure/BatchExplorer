@@ -7,6 +7,7 @@ export enum NcjParameterExtendedType {
     int = "int",
     fileGroup = "file-group",
     fileInFileGroup = "file-in-file-group",
+    fileGroupSas = "file-group-sas",
     dropDown = "drop-down",
 }
 

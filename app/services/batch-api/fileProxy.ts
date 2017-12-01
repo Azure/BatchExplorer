@@ -113,22 +113,12 @@ export class FileProxy {
         };
     }
 
-    private async _readContent(stream: ReadableStream): Promise<string> {
-        const reader = stream.getReader();
-
-        let text = "";
-        let result;
-        while (true) {
-            result = await reader.read();
-            if (result.done) {
-                return text;
-            }
-            text += new TextDecoder("utf-8").decode(result.value);
-        }
+    private async _readContent(response: Response): Promise<string> {
+        return response.text();
     }
 
-    private async _downloadContent(stream: ReadableStream, destination: string): Promise<boolean> {
-        const reader = stream.getReader();
+    private async _downloadContent(response: Response, destination: string): Promise<boolean> {
+        const reader = response.body.getReader();
 
         let result;
         const output = fs.createWriteStream(destination);
