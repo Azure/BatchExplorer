@@ -65,6 +65,8 @@ export * from "./storage-keys";
 export * from "./subscription";
 export * from "./subtask-information";
 export * from "./task";
+export * from "./task-container-execution-information";
+export * from "./task-container-settings";
 export * from "./task-constraints";
 export * from "./task-dependencies";
 export * from "./task-dependency";

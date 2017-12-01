@@ -55,6 +55,16 @@
             <bl-text-property label="Task root directory URL" [value]="nodeInfo.taskRootDirectoryUrl"></bl-text-property>
         </bl-property-group>
 
+        <bl-property-group label="Container settings" class="wide" [collapsed]="true">
+            <bl-text-property *ngIf="containerSettings.count > 0" label="Image name" [value]="containerSettings.imageName"></bl-text-property>
+            <bl-text-property *ngIf="containerSettings.count > 0" label="Container run option" [value]="containerSettings.containerRunOptions"></bl-text-property>
+            <bl-text-property *ngIf="containerSettings.count > 0" label="Registry server" [value]="containerSettings.registryServer"></bl-text-property>
+            <bl-text-property *ngIf="containerSettings.count > 0" label="Registry username" [value]="containerSettings.registryUsername"></bl-text-property>
+            <bl-no-item [itemCount]="containerSettings.count" [slimline]="true">
+                <span no-filter>This task contains no container settings</span>
+            </bl-no-item>
+        </bl-property-group>
+
         <bl-property-group label="Constraints" class="wide" [collapsed]="true">
             <bl-text-property label="Max task retry count" [value]="constraints.maxTaskRetryCount"></bl-text-property>
             <bl-text-property label="Max wall-clock time" [value]="constraints.maxWallClockTime"></bl-text-property>
@@ -63,10 +73,10 @@
 
         <bl-property-group label="Environment settings" class="wide" [collapsed]="true">
             <div collapsed-preview>
-                <span>{{environmentSettings?.length}} environment settings</span>
+                <span>{{environmentSettings?.size}} environment settings</span>
             </div>
             <bl-text-property *ngFor="let setting of environmentSettings" label="{{setting.name}}" [value]="setting.value"></bl-text-property>
-            <bl-no-item [itemCount]="environmentSettings.length" [slimline]="true">
+            <bl-no-item [itemCount]="environmentSettings.size" [slimline]="true">
                 <span no-filter>This task contains no environment settings</span>
             </bl-no-item>
         </bl-property-group>
@@ -86,6 +96,9 @@
             <bl-text-property label="Last retry time" [value]="executionInfo.lastRetryTime" *ngIf="executionInfo.retryCount > 0"></bl-text-property>
             <bl-text-property label="Requeue count" [value]="executionInfo.requeueCount"></bl-text-property>
             <bl-text-property label="Last requeue time" [value]="executionInfo.lastRequeueTime" *ngIf="executionInfo.requeueCount > 0"></bl-text-property>
+            <bl-text-property label="Container Id" [value]="executionInfo.containerInfo.containerId" *ngIf="executionInfo.containerInfo?.containerId"></bl-text-property>
+            <bl-text-property label="Container state" [value]="executionInfo.containerInfo.state" *ngIf="executionInfo.containerInfo?.state"></bl-text-property>
+            <bl-text-property label="Container error" [value]="executionInfo.containerInfo.error" *ngIf="executionInfo.containerInfo?.error"></bl-text-property>
         </bl-property-group>
 
         <bl-property-group label="Exit conditions" [warningMessage]="exitConditionWarningMessage" [collapsed]="true">

@@ -4,6 +4,7 @@ import { ApplicationPackageReference } from "./application-package-reference";
 import { NameValuePair } from "./name-value-pair";
 import { ResourceFile } from "./resource-file";
 import { TaskConstraints } from "./task-constraints";
+import { TaskContainerSettings, TaskContainerSettingsAttributes } from "./task-container-settings";
 
 export interface JobManagerTaskAttributes {
     id: string;
@@ -16,6 +17,7 @@ export interface JobManagerTaskAttributes {
     killJobOnCompletion: boolean;
     runElevated: boolean;
     runExclusive: boolean;
+    containerSettings: TaskContainerSettingsAttributes;
 }
 /**
  * Class for displaying job manager task information.
@@ -32,4 +34,5 @@ export class JobManagerTask extends Record<JobManagerTaskAttributes> {
     @Prop() public killJobOnCompletion: boolean;
     @Prop() public runElevated: boolean;
     @Prop() public runExclusive: boolean;
+    @Prop() public containerSettings: TaskContainerSettings;
 }

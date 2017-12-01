@@ -9,6 +9,7 @@ import { MultiInstanceSettings } from "./multi-instance-settings";
 import { NameValuePair } from "./name-value-pair";
 import { ResourceFile } from "./resource-file";
 import { TaskConstraints } from "./task-constraints";
+import { TaskContainerSettings } from "./task-container-settings";
 import { TaskDependencies } from "./task-dependencies";
 import { TaskExecutionInformation } from "./task-execution-information";
 import { TaskExitConditions } from "./task-exit-conditions";
@@ -32,6 +33,7 @@ export interface TaskAttributes {
     resourceFiles: ResourceFile[];
     environmentSettings: NameValuePair[];
     affinityInfo: AffinityInformation;
+    containerSettings: TaskContainerSettings;
     constraints: TaskConstraints;
     executionInfo: TaskExecutionInformation;
     nodeInfo: ComputeNodeInformation;
@@ -62,6 +64,7 @@ export class Task extends Record<TaskAttributes> {
     @ListProp(TaskOutputFile) public outputFiles: List<TaskOutputFile> = List([]);
     @ListProp(NameValuePair) public environmentSettings: List<NameValuePair> = List([]);
     @Prop() public affinityInfo: AffinityInformation;
+    @Prop() public containerSettings: TaskContainerSettings;
     @Prop() public constraints: TaskConstraints;
     @Prop() public executionInfo: TaskExecutionInformation;
     @Prop() public nodeInfo: ComputeNodeInformation;

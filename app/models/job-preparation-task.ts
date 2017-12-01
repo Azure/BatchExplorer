@@ -2,6 +2,7 @@ import { Model, Prop, Record } from "app/core";
 import { NameValuePair } from "./name-value-pair";
 import { ResourceFile } from "./resource-file";
 import { TaskConstraints } from "./task-constraints";
+import { TaskContainerSettings, TaskContainerSettingsAttributes } from "./task-container-settings";
 
 export interface JobPreparationTaskAttributes {
     id: string;
@@ -12,6 +13,7 @@ export interface JobPreparationTaskAttributes {
     waitForSuccess: boolean;
     runElevated: boolean;
     rerunOnNodeRebootAfterSuccess: boolean;
+    containerSettings: TaskContainerSettingsAttributes;
 }
 
 /**
@@ -27,4 +29,5 @@ export class JobPreparationTask extends Record<JobPreparationTaskAttributes> {
     @Prop() public waitForSuccess: boolean;
     @Prop() public runElevated: boolean;
     @Prop() public rerunOnNodeRebootAfterSuccess: boolean;
+    @Prop() public containerSettings: TaskContainerSettings;
 }

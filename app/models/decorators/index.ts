@@ -18,6 +18,8 @@ export * from "./start-task-info-decorator";
 export * from "./sub-task-decorator";
 export * from "./node-decorator";
 export * from "./task-constraints-decorator";
+export * from "./task-container-execution-info-decorator";
+export * from "./task-container-settings-decorator";
 export * from "./task-decorator";
 export * from "./task-execution-info-decorator";
 export * from "./task-scheduling-policy-decorator";
