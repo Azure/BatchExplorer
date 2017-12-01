@@ -3158,6 +3158,13 @@ fetch-ponyfill@amarzavery/fetch-ponyfill#master:
     fetch-cookie "~0.6.0"
     node-fetch "~1.7.1"
 
+"fetch-ponyfill@github:amarzavery/fetch-ponyfill#master":
+  version "4.1.0"
+  resolved "https://codeload.github.com/amarzavery/fetch-ponyfill/tar.gz/136e6f8192bdb2aa0b7983f0b3b4361c357be9db"
+  dependencies:
+    fetch-cookie "~0.6.0"
+    node-fetch "~1.7.1"
+
 file-entry-cache@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/file-entry-cache/-/file-entry-cache-2.0.0.tgz#c392990c3e684783d838b8c84a45d8a048458361"
@@ -5024,25 +5031,6 @@ ms-rest-azure-js@^0.2.0:
   dependencies:
     ms-rest-js "^0.2.1"
 
-ms-rest-js@0.2.3:
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/ms-rest-js/-/ms-rest-js-0.2.3.tgz#176140e77636dd3fa01821ff4d5bb0a3269ef2e7"
-  dependencies:
-    "@types/form-data" "^2.2.0"
-    "@types/is-stream" "^1.1.0"
-    "@types/node" "^8.0.28"
-    "@types/node-fetch" "^1.6.7"
-    "@types/uuid" "^3.4.2"
-    detect-node "^2.0.3"
-    fetch-cookie "^0.6.0"
-    fetch-ponyfill amarzavery/fetch-ponyfill#master
-    form-data "^2.3.1"
-    is-buffer "^1.1.5"
-    is-stream "^1.1.0"
-    moment "~2.18.1"
-    url-parse "^1.1.9"
-    uuid "^3.1.0"
-
 ms-rest-js@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/ms-rest-js/-/ms-rest-js-0.2.1.tgz#58a547b61b84b10a82c8adde279e32cd6c38f667"
@@ -5059,6 +5047,25 @@ ms-rest-js@^0.2.1:
     is-buffer "^1.1.5"
     is-stream "^1.1.0"
     moment "2.18.1"
+    url-parse "^1.1.9"
+    uuid "^3.1.0"
+
+ms-rest-js@~0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/ms-rest-js/-/ms-rest-js-0.2.3.tgz#176140e77636dd3fa01821ff4d5bb0a3269ef2e7"
+  dependencies:
+    "@types/form-data" "^2.2.0"
+    "@types/is-stream" "^1.1.0"
+    "@types/node" "^8.0.28"
+    "@types/node-fetch" "^1.6.7"
+    "@types/uuid" "^3.4.2"
+    detect-node "^2.0.3"
+    fetch-cookie "^0.6.0"
+    fetch-ponyfill amarzavery/fetch-ponyfill#master
+    form-data "^2.3.1"
+    is-buffer "^1.1.5"
+    is-stream "^1.1.0"
+    moment "~2.18.1"
     url-parse "^1.1.9"
     uuid "^3.1.0"
 

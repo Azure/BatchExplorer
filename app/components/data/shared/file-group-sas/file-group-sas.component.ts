@@ -39,11 +39,6 @@ export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, O
     private _propagateChange: (value: any[]) => void = null;
     private _subscriptions: Subscription[] = [];
 
-    /**
-     * TODO: see if we can listen to the form and auto populate a SAS when
-     * the user selects a FG.
-     */
-
     constructor(private storageService: StorageService) {
         this.fileGroupsData = this.storageService.containerListView(storageService.ncjFileGroupPrefix);
         this.fileGroupsData.items.subscribe((fileGroups) => {
