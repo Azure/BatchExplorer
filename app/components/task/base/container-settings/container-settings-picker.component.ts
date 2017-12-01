@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, forwardRef } from "@angular/core";
+import { Component, Input, OnChanges, OnDestroy, SimpleChanges, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validators,
 } from "@angular/forms";
@@ -15,8 +15,9 @@ import { ContainerConfiguration, TaskContainerSettings } from "app/models/dtos";
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => ContainerSettingsPickerComponent), multi: true },
     ],
 })
-export class ContainerSettingsPickerComponent implements ControlValueAccessor, OnDestroy {
+export class ContainerSettingsPickerComponent implements ControlValueAccessor, OnChanges, OnDestroy {
     @Input() public containerConfiguration: ContainerConfiguration = null;
+    @Input() public required: boolean = true;
     public containerSettings: FormGroup;
 
     private _propagateChange: (value: TaskContainerSettings) => void = null;
@@ -24,15 +25,23 @@ export class ContainerSettingsPickerComponent implements ControlValueAccessor, O
 
     constructor(private formBuilder: FormBuilder) {
         this.containerSettings = this.formBuilder.group({
-            imageName: ["", Validators.required],
+            imageName: [""],
             containerRunOptions: [null],
             registry: [null],
         });
+
         this._sub = this.containerSettings.valueChanges.subscribe((containerSettings) => {
             if (this._propagateChange) {
                 this._propagateChange(containerSettings);
             }
         });
+    }
+
+    public ngOnChanges(changes: SimpleChanges) {
+        if (changes.required && changes.required.currentValue !== changes.required.previousValue) {
+            const validators = changes.required.currentValue ? [Validators.required] : [];
+            this.containerSettings.get("imageName").setValidators(validators);
+        }
     }
 
     public ngOnDestroy() {

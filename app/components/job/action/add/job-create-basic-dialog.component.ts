@@ -8,7 +8,7 @@ import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { RangeValidatorDirective } from "app/components/base/validation";
 import { DynamicForm } from "app/core";
-import { AllTasksCompleteAction, Job, TaskFailureAction } from "app/models";
+import { AllTasksCompleteAction, Job, TaskFailureAction, VirtualMachineConfiguration } from "app/models";
 import { JobCreateDto } from "app/models/dtos";
 import { createJobFormToJsonData, jobToFormModel } from "app/models/forms";
 import { JobService, PoolService } from "app/services";
@@ -27,6 +27,7 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
     public constraintsGroup: FormGroup;
     public showJobReleaseTask: boolean;
     public fileUri = "create.job.batch.json";
+    public virtualMachineConfiguration: VirtualMachineConfiguration = null;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -68,6 +69,25 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
 
         this.form.controls.jobPreparationTask.valueChanges.subscribe((value) => {
             this.showJobReleaseTask = value && value.id;
+        });
+
+        // Load current pool container configuration to indicate whether job manager, preparation and release task
+        // displays task container setting accordingly
+        this.form.controls.poolInfo.valueChanges.subscribe((value) => {
+            if (value && value.poolId) {
+                poolService.get(value.poolId).cascade((pool) => {
+                    const poolData = pool.toJS();
+                    this.virtualMachineConfiguration = poolData.virtualMachineConfiguration;
+                    if (!this.virtualMachineConfiguration || !this.virtualMachineConfiguration.containerConfiguration) {
+                        // Reset job manager, preperation and release task container settings because pool id is changed
+                        this.form.controls.jobManagerTask.patchValue({
+                            containerSettings: null,
+                        });
+                    }
+                });
+            } else {
+                this.virtualMachineConfiguration = null;
+            }
         });
     }
 
