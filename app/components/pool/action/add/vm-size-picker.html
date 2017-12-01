@@ -1,4 +1,4 @@
-<mat-tab-group class="form-tabs">
+<mat-tab-group class="form-tabs" [@.disabled]="true">
     <mat-tab *ngFor="let category of categoryNames" [label]="categoryLabelName(category)">
         <bl-focus-section>
             <bl-table [activeItem]="pickedSize" (activeItemChange)="pickSize($event)">

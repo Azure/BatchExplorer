@@ -1,7 +1,7 @@
 @import "app/styles/variables";
 
-// todo: should probably share this CSS with file group sas
-bl-cloud-file-picker {
+// todo: should probably share this CSS with file group picker
+bl-file-group-sas {
     display: flex;
     align-items: center;
 
@@ -21,6 +21,10 @@ bl-cloud-file-picker {
                 background: map-get($primary, 50);
                 color: $whitesmoke;
             }
+        }
+
+        .fa-refresh {
+            color: $whitesmoke;
         }
     }
 }
