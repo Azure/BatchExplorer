@@ -40,17 +40,6 @@ bl-button {
         display: inline-block;
     }
 
-    &.disabled[color] {
-        cursor: not-allowed;
-        color: #d5d5d5;
-        background: #f5f5f5;
-
-        &:hover, &:focus, &:active {
-            color: #d5d5d5;
-            background: #f5f5f5;
-        }
-    }
-
     &[type="plain"] {
         &[color="primary"] {
             color: map-get($primary, 300);
@@ -93,6 +82,17 @@ bl-button {
     }
 
     &[type="square"], &[type="round"], &[type="wide"] {
+        &.disabled[color] {
+            cursor: not-allowed;
+            color: #d5d5d5;
+            background: #f5f5f5;
+
+            &:hover, &:focus, &:active {
+                color: #d5d5d5;
+                background: #f5f5f5;
+            }
+        }
+
         &[color="primary"] {
             background: map-get($primary, 300);
             color: $whitesmoke;
