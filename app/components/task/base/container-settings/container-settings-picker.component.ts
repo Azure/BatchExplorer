@@ -50,7 +50,11 @@ export class ContainerSettingsPickerComponent implements ControlValueAccessor, O
 
     public writeValue(value: TaskContainerSettings) {
         if (value) {
-            this.containerSettings.setValue(value);
+            this.containerSettings.setValue({
+                imageName: value.imageName,
+                containerRunOptions: value.containerRunOptions || null,
+                registry: value.registry || null,
+            });
         }
     }
 

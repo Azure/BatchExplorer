@@ -19,7 +19,9 @@ export class VirtualMachineConfigurationDecorator extends DecoratorBase<VirtualM
             virtualMachieConfiguration.nodeAgentSKUId);
         this.windowsConfiguration = new WindowsConfigurationDecorator(
             virtualMachieConfiguration.windowsConfiguration || {} as any);
-        this.containerConfiguration = new ContainerConfigurationDecorator(
-            virtualMachieConfiguration.containerConfiguration || {} as any);
+        if (virtualMachieConfiguration.containerConfiguration) {
+            this.containerConfiguration = new ContainerConfigurationDecorator(
+                virtualMachieConfiguration.containerConfiguration);
+        }
     }
 }

@@ -80,9 +80,15 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
                     this.virtualMachineConfiguration = poolData.virtualMachineConfiguration;
                     if (!this.virtualMachineConfiguration || !this.virtualMachineConfiguration.containerConfiguration) {
                         // Reset job manager, preperation and release task container settings because pool id is changed
-                        this.form.controls.jobManagerTask.patchValue({
-                            containerSettings: null,
-                        });
+                        if (this.form.controls.jobManagerTask.value) {
+                            this.form.controls.jobManagerTask.patchValue({ containerSettings: null });
+                        }
+                        if (this.form.controls.jobPreparationTask.value) {
+                            this.form.controls.jobPreparationTask.patchValue({ containerSettings: null });
+                        }
+                        if (this.form.controls.jobReleaseTask.value) {
+                            this.form.controls.jobReleaseTask.patchValue({ containerSettings: null });
+                        }
                     }
                 });
             } else {
