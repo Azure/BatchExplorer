@@ -48,3 +48,10 @@ document.addEventListener("drop", (event) => {
     event.preventDefault();
     return false;
 }, false);
+
+document.addEventListener("DOMContentLoaded", () => {
+    const { ipcRenderer } = require("electron");
+    ipcRenderer.on("update-message", (event, arg) => {
+        message.innerHTML = arg;
+    })
+});
