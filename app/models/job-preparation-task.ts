@@ -1,8 +1,8 @@
 import { Model, Prop, Record } from "app/core";
+import { TaskContainerSettings, TaskContainerSettingsAttributes } from "./container-setup";
 import { NameValuePair } from "./name-value-pair";
 import { ResourceFile } from "./resource-file";
 import { TaskConstraints } from "./task-constraints";
-import { TaskContainerSettings, TaskContainerSettingsAttributes } from "./task-container-settings";
 
 export interface JobPreparationTaskAttributes {
     id: string;

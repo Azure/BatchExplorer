@@ -9,7 +9,7 @@ import {
     Validators,
 } from "@angular/forms";
 
-import { ContainerType } from "app/models/dtos";
+import { ContainerType } from "app/models";
 import "./container-configuration.scss";
 
 @Component({

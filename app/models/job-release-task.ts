@@ -1,9 +1,9 @@
 import { Model, Prop, Record } from "app/core";
 import { Duration } from "moment";
 
+import { TaskContainerSettings, TaskContainerSettingsAttributes } from "./container-setup";
 import { NameValuePair } from "./name-value-pair";
 import { ResourceFile } from "./resource-file";
-import { TaskContainerSettings, TaskContainerSettingsAttributes } from "./task-container-settings";
 
 export interface JobReleaseTaskAttributes {
     id: string;

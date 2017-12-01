@@ -1,5 +1,5 @@
 import { Model, Prop, Record } from "app/core";
-import { ContainerConfiguration } from "./dtos";
+import { ContainerConfiguration } from "./container-setup";
 import { ImageReference, ImageReferenceAttributes } from "./image-reference";
 import { PoolOSDisk, PoolOSDiskAttributes } from "./pool-os-disk";
 import { WindowsConfiguration } from "./windows-configuration";

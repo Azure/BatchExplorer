@@ -1,5 +1,6 @@
 import { Dto, DtoAttr } from "app/core";
-import { ContainerRegistry, ContainerType } from "./container-setup.dto";
+import { ContainerConfiguration } from "./container-setup.dto";
+
 export class VirtualMachineConfiguration extends Dto<VirtualMachineConfiguration> {
     @DtoAttr()
     public nodeAgentSKUId: string;
@@ -13,11 +14,7 @@ export class VirtualMachineConfiguration extends Dto<VirtualMachineConfiguration
     };
 
     @DtoAttr()
-    public containerConfiguration: {
-        containerImageNames: string[];
-        containerRegistries: ContainerRegistry[];
-        type: ContainerType;
-    };
+    public containerConfiguration: ContainerConfiguration;
 
     @DtoAttr()
     public windowsConfiguration?: {

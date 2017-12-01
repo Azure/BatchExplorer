@@ -1,5 +1,15 @@
 import { Model, Prop, Record } from "app/core";
 
+export enum ContainerType {
+    Docker = "docker",
+}
+
+export interface ContainerConfigurationAttributes {
+    containerImageNames: string[];
+    containerRegistries: ContainerRegistryAttributes[];
+    type: ContainerType;
+}
+
 export interface ContainerRegistryAttributes {
     username: string;
     password: string;
@@ -24,4 +34,11 @@ export class TaskContainerSettings extends Record<TaskContainerSettingsAttribute
     @Prop() public imageName: string;
     @Prop() public containerRunOptions: string;
     @Prop() public registry: ContainerRegistry;
+}
+
+@Model()
+export class ContainerConfiguration extends Record<ContainerConfigurationAttributes> {
+    @Prop() public containerImageNames: string[];
+    @Prop() public containerRegistries: ContainerRegistry[];
+    @Prop() public type: ContainerType;
 }

@@ -1,6 +1,4 @@
-export enum ContainerType {
-    Docker = "docker",
-}
+import { ContainerType } from "../container-setup";
 
 export interface ContainerImage {
     imageName: string;
