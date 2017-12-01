@@ -51,6 +51,10 @@ export class PoolConfigurationComponent {
         ref.component.pool = this.pool;
     }
 
+    public get startTaskItemCount() {
+        return Object.keys(this.startTask).length;
+    }
+
     private _refresh(pool: Pool) {
         if (pool) {
             this.decorator = new PoolDecorator(this._pool);
