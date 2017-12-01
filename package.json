@@ -14,7 +14,7 @@
   "scripts": {
     "ts": "ts-node --project tsconfig.node.json",
     "start": "npm run -s electron:prod",
-    "clean": "rimraf build/* dll/* python/build/*",
+    "clean": "rimraf build/* dll/* python/dist/* python/build/*",
     "test": "npm run -s test-client && npm run -s test-app",
     "test-app": "karma start",
     "test-app:mem": "cross-env DEBUG_MEM=1 npm run -s test-app",
@@ -26,7 +26,7 @@
     "test-client-watch": "npm run -s test-client -- --watch",
     "build-client": "tsc -p tsconfig.node.json",
     "build-app": "npm run webpack -- --profile --colors --display-error-details --display-cached",
-    "build-python": "npm run -s ts config/build-python.ts",
+    "build-python": "pyinstaller python/main.spec -y --distpath=python/dist --workpath=python/build",
     "build": "npm run -s clean && npm run -s build-client && npm run -s build-app",
     "build:prod": "cross-env NODE_ENV=production npm run -s build",
     "watch": "npm run webpack -- --watch --progress --profile --colors --display-error-details --display-cached",
