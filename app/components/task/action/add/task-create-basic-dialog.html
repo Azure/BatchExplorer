@@ -60,5 +60,11 @@
                 <bl-error controlName="appPackages" code="duplicate">There is a duplicate package version selected</bl-error>
             </div>
         </bl-form-section>
+
+        <bl-form-section *ngIf="virtualMachineConfiguration?.containerConfiguration" title="Task container settings" subtitle="The settings for the container under which the task runs.">
+            <bl-container-settings-picker formControlName="containerSettings"
+                [containerConfiguration]="virtualMachineConfiguration.containerConfiguration"
+                [required]="true"></bl-container-settings-picker>
+        </bl-form-section>
     </bl-form-page>
 </bl-complex-form>
