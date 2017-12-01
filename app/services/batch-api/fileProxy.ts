@@ -117,8 +117,8 @@ export class FileProxy {
         return response.text();
     }
 
-    private async _downloadContent(stream: Response, destination: string): Promise<boolean> {
-        const reader = stream.body.getReader();
+    private async _downloadContent(response: Response, destination: string): Promise<boolean> {
+        const reader = response.body.getReader();
 
         let result;
         const output = fs.createWriteStream(destination);
