@@ -6,18 +6,20 @@ import { AuthenticationWindow } from "../authentication";
 import { Constants } from "../client-constants";
 import { logger } from "../logger";
 import { MainWindow } from "../main-window";
+import { PythonRpcServerProcess } from "../python-process";
 import { RecoverWindow } from "../recover-window";
 import { SplashScreen } from "../splash-screen";
 
 const osName = `${os.platform()}-${os.arch()}/${os.release()}`;
 const isDev = Constants.isDev ? "-dev" : "";
-
 const userAgent = `(${osName}) BatchLabs/${Constants.version}${isDev}`;
+
 export class BatchLabsApplication {
     public splashScreen = new SplashScreen(this);
     public authenticationWindow = new AuthenticationWindow(this);
     public recoverWindow = new RecoverWindow(this);
     public mainWindow = new MainWindow(this);
+    public pythonServer = new PythonRpcServerProcess();
 
     constructor(public autoUpdater: AppUpdater) { }
 
@@ -29,6 +31,7 @@ export class BatchLabsApplication {
      * Start the app by showing the splash screen
      */
     public start() {
+        this.pythonServer.start();
         const requestFilter = { urls: ["https://*", "http://*"] };
         session.defaultSession.webRequest.onBeforeSendHeaders(requestFilter, (details, callback) => {
             if (details.url.indexOf("batch.azure.com") !== -1) {
@@ -90,6 +93,7 @@ export class BatchLabsApplication {
     }
 
     public quit() {
+        this.pythonServer.stop();
         app.quit();
     }
 

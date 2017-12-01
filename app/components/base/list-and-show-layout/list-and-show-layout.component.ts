@@ -14,6 +14,8 @@ import { SelectableList } from "app/components/base/selectable-list";
 import { Filter, FilterBuilder } from "app/utils/filter-builder";
 import { DeleteSelectedItemsDialogComponent } from "./delete-selected-items-dialog.component";
 
+import "./list-and-show-layout.scss";
+
 @Component({
     selector: "bl-list-and-show-layout",
     templateUrl: "list-and-show-layout.html",
