@@ -9,10 +9,10 @@ import { FileDeleteEvent, FileDropEvent } from "../file-explorer.component";
 import { ActivatedRoute } from "@angular/router";
 import { DialogService } from "app/components/base/dialogs";
 import { NotificationService } from "app/components/base/notifications";
+import { DownloadFileGroupDialogComponent } from "app/components/data/details";
 import { ServerError } from "app/models";
 import { ElectronShell } from "app/services";
 import { remote } from "electron";
-import { FileTreeDownloadComponent } from "../file-tree-download";
 import "./file-tree-view.scss";
 
 export interface TreeRow {
@@ -185,7 +185,7 @@ export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
      */
     public download(treeRow: TreeRow) {
         if (treeRow.isDirectory) {
-            const ref = this.dialog.open(FileTreeDownloadComponent);
+            const ref = this.dialog.open(DownloadFileGroupDialogComponent);
             ref.componentInstance.containerId = this.containerId;
             ref.componentInstance.subfolder = treeRow.name;
             ref.componentInstance.pathPrefix = treeRow.path;
