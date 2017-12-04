@@ -49,6 +49,7 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
                     return List<TEntity>(keys.map((x) => {
                         const item = items.get(x);
                         if (!item && prependKeys.has(x)) {
+                            console.log("Creating...", this.cache.uniqueField, x);
                             return new this._getter.type({ [this.cache.uniqueField]: x });
                         }
                         return item;

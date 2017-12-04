@@ -10,7 +10,7 @@ function getSavedData(): PinnableEntity[] {
     return jsonDataFromFileService;
 }
 
-fdescribe("PinnedEntityService", () => {
+describe("PinnedEntityService", () => {
     let pinService: PinnedEntityService;
     let favourites: List<PinnableEntity> = List<PinnableEntity>();
     let subscriptions: Subscription[] = [];

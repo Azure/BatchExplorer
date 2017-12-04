@@ -19,7 +19,11 @@ export class ComponentUtils {
     public static setActiveItem<TEntity>(route: ActivatedRoute, view: ListView<TEntity, any>): Subscription {
         return route.firstChild.params.subscribe((params) => {
             const key = params[view.getCache(params).uniqueField];
-            view.setFixedKeys([key]);
+            if (key) {
+                view.setFixedKeys([key]);
+            } else {
+                view.setFixedKeys([]);
+            }
         });
     }
 }
