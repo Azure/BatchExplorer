@@ -34,13 +34,14 @@
     "electron:prod": "cross-env NODE_ENV=production electron build/client/main.js",
     "dev": "concurrently --kill-others \"npm run -s dev-server\" \"npm run -s dev-electron\"",
     "dev-electron": "cross-env HOT=1 electron build/client/main.js",
-    "dev-server": "webpack-dev-server --hot --inline --colors --content-base app/",
+    "dev-server": "npm run webpack-dev-server -- --hot --inline --colors --content-base app/",
     "tslint": "tslint -c tslint.json \"app/**/*.ts\" \"src/**/*.ts\" \"test/**/*.ts\" \"./*.js\" \"config/**/*.js\"",
     "stylelint": "stylelint --syntax scss \"app/**/*.scss\"",
     "lint": "npm run -s tslint && npm run -s stylelint",
     "package": "build",
     "build-and-pack": "npm run -s build:prod && npm run -s build-python && npm run -s package",
-    "webpack": "node --max_old_space_size=4096 node_modules/webpack/bin/webpack.js"
+    "webpack": "node --max_old_space_size=4096 node_modules/webpack/bin/webpack.js",
+    "webpack-dev-server": "node --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js"
   },
   "license": "MIT",
   "engines": {

@@ -140,8 +140,10 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         }
 
         this._subs.push(this.items.changes.subscribe(() => {
-            const active = this.getActiveItemFromRouter();
-            this.setActiveItem(active && active.key);
+            setTimeout(() => {
+                const active = this.getActiveItemFromRouter();
+                this.setActiveItem(active && active.key);
+            });
             this._updateDisplayItems();
         }));
         this._updateDisplayItems();
