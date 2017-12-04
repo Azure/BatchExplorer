@@ -35,6 +35,9 @@ function startApplication() {
             {
                 label: "Application",
                 submenu: [
+                    { role: "hide" },
+                    { role: "hideothers" },
+                    { type: "separator" },
                     { label: "Quit", accelerator: "Command+Q", click: () => app.quit() },
                 ],
             },
@@ -49,6 +52,12 @@ function startApplication() {
                     { role: "paste" },
                     { role: "delete" },
                     { role: "selectall" },
+                ],
+            },
+            {
+                label: "Window",
+                submenu: [
+                    { role: "minimize" },
                 ],
             },
         ]));
