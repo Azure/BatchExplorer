@@ -72,6 +72,11 @@ bl-button {
                 color: map-get($danger, 800);
             }
         }
+
+        &.disabled[color] {
+            color: #d5d5d5;
+            background: none;
+        }
     }
 
     &[type="square"], &[type="round"] {
