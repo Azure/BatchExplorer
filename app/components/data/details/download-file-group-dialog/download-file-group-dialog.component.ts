@@ -67,7 +67,7 @@ export class DownloadFileGroupDialogComponent {
                 } else {
                     task.progress.next(10);
                     const downloadObs = this._downloadFiles(task, folder, files);
-                    Observable.combineLatest(downloadObs).subscribe(() => {
+                    Observable.forkJoin(downloadObs).subscribe(() => {
                         this.shell.showItemInFolder(folder);
                         task.progress.next(100);
                         subject.complete();
