@@ -79,7 +79,7 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
 
         super(dialog);
         this.data = this.poolService.listView();
-        this._subs.push(ComponentUtils.setActiveItem(activatedRoute, this.data));
+        ComponentUtils.setActiveItem(activatedRoute, this.data);
 
         this.status = this.data.status;
         this._subs.push(poolService.onPoolAdded.subscribe((poolId) => {
@@ -154,10 +154,6 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
 
     public trackById(index, pool) {
         return pool.id;
-    }
-
-    public activePoolChanged(data: any) {
-        console.log("Active?/", data);
     }
 
     public _pinPool(decorator: PoolDecorator) {

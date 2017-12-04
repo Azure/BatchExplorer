@@ -13,7 +13,6 @@ import { Metadata, MetadataAttributes } from "./metadata";
 import { NameValuePair, NameValuePairAttributes } from "./name-value-pair";
 import { NavigableRecord } from "./navigable-record";
 
-
 export interface JobAttributes {
     id: string;
     displayName: string;
