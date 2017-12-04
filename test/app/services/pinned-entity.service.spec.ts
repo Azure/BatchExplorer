@@ -1,18 +1,18 @@
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { PinnedEntity, PinnedEntityType } from "app/models";
+import { PinnableEntity, PinnedEntityType } from "app/models";
 import { PinnedEntityService } from "app/services";
 import * as Fixtures from "test/fixture";
 
 let jsonDataFromFileService: any;
-function getSavedData(): PinnedEntity[] {
-    return List<PinnedEntity>(jsonDataFromFileService.map(x => new PinnedEntity(x))).toArray();
+function getSavedData(): PinnableEntity[] {
+    return jsonDataFromFileService;
 }
 
 describe("PinnedEntityService", () => {
     let pinService: PinnedEntityService;
-    let favourites: List<PinnedEntity> = List<PinnedEntity>();
+    let favourites: List<PinnableEntity> = List<PinnableEntity>();
     let subscriptions: Subscription[] = [];
     let localFileStorageSpy;
     let accountServiceSpy;
@@ -103,7 +103,7 @@ describe("PinnedEntityService", () => {
     });
 
     describe("isFavorite", () => {
-        let favorite: PinnedEntity;
+        let favorite: PinnableEntity;
         beforeEach(() => {
             favorite = Fixtures.pinnable.create({
                 id: "my-pin",
@@ -131,7 +131,7 @@ describe("PinnedEntityService", () => {
     });
 
     describe("unPinFavorite", () => {
-        let favorite: PinnedEntity;
+        let favorite: PinnableEntity;
         beforeEach(() => {
             favorite = Fixtures.pinnable.create({
                 id: "pin-2",
