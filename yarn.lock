@@ -3158,13 +3158,6 @@ fetch-ponyfill@amarzavery/fetch-ponyfill#master:
     fetch-cookie "~0.6.0"
     node-fetch "~1.7.1"
 
-"fetch-ponyfill@github:amarzavery/fetch-ponyfill#master":
-  version "4.1.0"
-  resolved "https://codeload.github.com/amarzavery/fetch-ponyfill/tar.gz/136e6f8192bdb2aa0b7983f0b3b4361c357be9db"
-  dependencies:
-    fetch-cookie "~0.6.0"
-    node-fetch "~1.7.1"
-
 file-entry-cache@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/file-entry-cache/-/file-entry-cache-2.0.0.tgz#c392990c3e684783d838b8c84a45d8a048458361"
