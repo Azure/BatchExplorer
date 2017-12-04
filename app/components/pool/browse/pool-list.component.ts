@@ -79,8 +79,8 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
 
         super(dialog);
         this.data = this.poolService.listView();
-        // this.data.include = Observable.of(["insights-ubuntu"]);
-        ComponentUtils.setActiveItem(activatedRoute, this.data);
+        this._subs.push(ComponentUtils.setActiveItem(activatedRoute, this.data));
+
         this.status = this.data.status;
         this._subs.push(poolService.onPoolAdded.subscribe((poolId) => {
             this.data.loadNewItem(poolService.get(poolId));
