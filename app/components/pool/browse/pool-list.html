@@ -1,12 +1,12 @@
 <bl-server-error class="error-in-list" [error]="data.error | async" *ngIf="(status | async) === LoadingStatus.Error"></bl-server-error>
-<bl-quick-list #list *ngIf="quickList">
+<bl-quick-list #list *ngIf="quickList" (activeItemChange)="activePoolChanged($event)">
     <bl-quick-list-item *ngFor="let pool of pools, trackBy: trackById" [link]="['/pools/', pool.id]" [key]="pool.id" [contextmenu]="contextmenu(pool)">
         <bl-quick-list-item-status [status]="poolStatus(pool.original)" [tooltip]="poolStatusText(pool.original)">
         </bl-quick-list-item-status>
         <div bl-quick-list-item-title>{{pool.id}}</div>
         <div bl-quick-list-item-field>
             {{pool.state}}
-            <bl-tags [tags]="pool.original.tags" [maxTags]="3"></bl-tags>
+            <bl-tags [tags]="pool?.original.tags" [maxTags]="3"></bl-tags>
         </div>
 
         <div bl-quick-list-item-preview>
