@@ -17,13 +17,16 @@ export class ComponentUtils {
 
     public static setActiveItem<TEntity>(route: ActivatedRoute, view: ListView<TEntity, any>) {
         route.url.subscribe((url) => {
-            const params = route.snapshot.firstChild.params;
-            const key = params[view.getCache(params).uniqueField];
-            if (key) {
-                view.setFixedKeys([key]);
-            } else {
-                view.setFixedKeys([]);
+            const child = route.snapshot.firstChild;
+            if (child) {
+                const params = child.params;
+                const key = params[view.getCache(params).uniqueField];
+                if (key) {
+                    view.setFixedKeys([key]);
+                    return;
+                }
             }
+            view.setFixedKeys([]);
         });
     }
 }
