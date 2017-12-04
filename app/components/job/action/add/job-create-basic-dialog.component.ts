@@ -73,28 +73,26 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
 
         // Load current pool container configuration to indicate whether job manager, preparation and release task
         // displays task container setting accordingly
-        this.form.controls.poolInfo.valueChanges.subscribe((value) => {
-            if (poolService && poolService.get && value && value.poolId) {
-                poolService.get(value.poolId).cascade((pool) => {
-                    const poolData = pool.toJS();
-                    this.virtualMachineConfiguration = poolData.virtualMachineConfiguration;
-                    if (!this.virtualMachineConfiguration || !this.virtualMachineConfiguration.containerConfiguration) {
-                        // Reset job manager, preperation and release task container settings because pool id is changed
-                        if (this.form.controls.jobManagerTask.value) {
-                            this.form.controls.jobManagerTask.patchValue({ containerSettings: null });
-                        }
-                        if (this.form.controls.jobPreparationTask.value) {
-                            this.form.controls.jobPreparationTask.patchValue({ containerSettings: null });
-                        }
-                        if (this.form.controls.jobReleaseTask.value) {
-                            this.form.controls.jobReleaseTask.patchValue({ containerSettings: null });
-                        }
+        this.form.controls.poolInfo.valueChanges
+            .debounceTime(400)
+            .distinctUntilChanged()
+            .flatMap(pool => pool ? poolService.get(pool.poolId) : Observable.of(null))
+            .subscribe(pool => {
+                this.virtualMachineConfiguration = pool && pool.virtualMachineConfiguration;
+                if (!this.virtualMachineConfiguration || !this.virtualMachineConfiguration.containerConfiguration) {
+                    // Reset job manager, preperation and release task container settings because pool id is changed
+                    // because user might change a container-pool to a non-container pool or vice versa
+                    if (this.form.controls.jobManagerTask.value) {
+                        this.form.controls.jobManagerTask.patchValue({ containerSettings: null });
                     }
-                });
-            } else {
-                this.virtualMachineConfiguration = null;
-            }
-        });
+                    if (this.form.controls.jobPreparationTask.value) {
+                        this.form.controls.jobPreparationTask.patchValue({ containerSettings: null });
+                    }
+                    if (this.form.controls.jobReleaseTask.value) {
+                        this.form.controls.jobReleaseTask.patchValue({ containerSettings: null });
+                    }
+                }
+            });
     }
 
     public dtoToForm(job: JobCreateDto) {

@@ -10,6 +10,7 @@ import {
 } from "@angular/forms";
 
 import { ContainerType } from "app/models";
+
 import "./container-configuration.scss";
 
 @Component({
@@ -26,12 +27,14 @@ export class ContainerConfigurationComponent implements ControlValueAccessor {
     public form: FormGroup;
 
     private _propagateChange: (value: any) => void = null;
+
     constructor(formBuilder: FormBuilder) {
         this.form = formBuilder.group({
             type: [null, Validators.required],
             containerImageNames: [[], Validators.required],
             containerRegistries: [[]],
         });
+
         this.form.valueChanges.subscribe((val: any) => {
             if (this._propagateChange) {
                 this._propagateChange(val);

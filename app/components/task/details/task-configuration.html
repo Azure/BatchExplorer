@@ -56,11 +56,13 @@
         </bl-property-group>
 
         <bl-property-group label="Container settings" class="wide" [collapsed]="true">
-            <bl-text-property *ngIf="containerSettings.count > 0" label="Image name" [value]="containerSettings.imageName"></bl-text-property>
-            <bl-text-property *ngIf="containerSettings.count > 0" label="Container run option" [value]="containerSettings.containerRunOptions"></bl-text-property>
-            <bl-text-property *ngIf="containerSettings.count > 0" label="Registry server" [value]="containerSettings.registryServer"></bl-text-property>
-            <bl-text-property *ngIf="containerSettings.count > 0" label="Registry username" [value]="containerSettings.registryUsername"></bl-text-property>
-            <bl-no-item [itemCount]="containerSettings.count" [slimline]="true">
+            <ng-container *ngIf="containerSettings.propertyCount">
+                <bl-text-property label="Image name" [value]="containerSettings.imageName"></bl-text-property>
+                <bl-text-property label="Container run option" [value]="containerSettings.containerRunOptions"></bl-text-property>
+                <bl-text-property label="Registry server" [value]="containerSettings.registryServer"></bl-text-property>
+                <bl-text-property label="Registry username" [value]="containerSettings.registryUsername"></bl-text-property>
+            </ng-container>
+            <bl-no-item [itemCount]="containerSettings.propertyCount" [slimline]="true">
                 <span no-filter>This task contains no container settings</span>
             </bl-no-item>
         </bl-property-group>

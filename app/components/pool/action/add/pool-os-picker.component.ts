@@ -3,12 +3,13 @@ import {
     ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { autobind } from "core-decorators";
+import { Subscription } from "rxjs";
 
 import { NodeAgentSku, NodeAgentSkuMap, Offer, Sku } from "app/models";
 import { PoolOSPickerModel, PoolOsSources } from "app/models/forms";
 import { NodeService } from "app/services";
 import { ListView } from "app/services/core";
-import { Subscription } from "rxjs";
+
 import "./pool-os-picker.scss";
 
 const cloudServiceOsFamilies = [{

@@ -43,8 +43,10 @@
     </div>
     <div *ngIf="virtualMachineConfiguration?.containerConfiguration" class="form-element pad-top">
         <h4>Container settings</h4>
-        <bl-container-settings-picker formControlName="containerSettings"
+        <bl-container-settings-picker
+            formControlName="containerSettings"
             [containerConfiguration]="virtualMachineConfiguration.containerConfiguration"
-            [required]="false"></bl-container-settings-picker>
+            [required]="false">
+        </bl-container-settings-picker>
     </div>
 </div>

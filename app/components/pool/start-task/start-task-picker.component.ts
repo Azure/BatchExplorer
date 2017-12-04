@@ -20,6 +20,7 @@ export class StartTaskPickerComponent implements ControlValueAccessor {
     @Input() public virtualMachineConfiguration: VirtualMachineConfiguration = null;
 
     public form: FormGroup;
+
     private _propagateChange: (value: any) => void = null;
 
     constructor(formBuilder: FormBuilder) {

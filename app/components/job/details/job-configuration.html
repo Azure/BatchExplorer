@@ -85,10 +85,12 @@
                     <bl-tp-cell [value]="file.filePath"></bl-tp-cell>
                 </bl-table-property-row>
             </bl-table-property>
-            <bl-text-property *ngIf="managerTask.containerSettings.count > 0" label="Container image name" [value]="managerTask.containerSettings.imageName"></bl-text-property>
-            <bl-text-property *ngIf="managerTask.containerSettings.count > 0" label="Container run option" [value]="managerTask.containerSettings.containerRunOptions"></bl-text-property>
-            <bl-text-property *ngIf="managerTask.containerSettings.count > 0" label="Registry server" [value]="managerTask.containerSettings.registryServer"></bl-text-property>
-            <bl-text-property *ngIf="managerTask.containerSettings.count > 0" label="Registry username" [value]="managerTask.containerSettings.registryUsername"></bl-text-property>
+            <ng-container *ngIf="managerTask.containerSettings.propertyCount">
+                <bl-text-property label="Container image name" [value]="managerTask.containerSettings.imageName"></bl-text-property>
+                <bl-text-property label="Container run option" [value]="managerTask.containerSettings.containerRunOptions"></bl-text-property>
+                <bl-text-property label="Registry server" [value]="managerTask.containerSettings.registryServer"></bl-text-property>
+                <bl-text-property label="Registry username" [value]="managerTask.containerSettings.registryUsername"></bl-text-property>
+            </ng-container>
         </bl-property-group>
 
         <bl-property-group *ngIf="job.jobPreparationTask" label="Job preparation task" class="wide" [collapsed]="true">
@@ -121,10 +123,12 @@
                     <bl-tp-cell [value]="setting.value"></bl-tp-cell>
                 </bl-table-property-row>
             </bl-table-property>
-            <bl-text-property *ngIf="prepTask.containerSettings.count > 0" label="Container image name" [value]="prepTask.containerSettings.imageName"></bl-text-property>
-            <bl-text-property *ngIf="prepTask.containerSettings.count > 0" label="Container run option" [value]="prepTask.containerSettings.containerRunOptions"></bl-text-property>
-            <bl-text-property *ngIf="prepTask.containerSettings.count > 0" label="Registry server" [value]="prepTask.containerSettings.registryServer"></bl-text-property>
-            <bl-text-property *ngIf="prepTask.containerSettings.count > 0" label="Registry username" [value]="prepTask.containerSettings.registryUsername"></bl-text-property>
+            <ng-container *ngIf="prepTask.containerSettings.propertyCount">
+                <bl-text-property label="Container image name" [value]="prepTask.containerSettings.imageName"></bl-text-property>
+                <bl-text-property label="Container run option" [value]="prepTask.containerSettings.containerRunOptions"></bl-text-property>
+                <bl-text-property label="Registry server" [value]="prepTask.containerSettings.registryServer"></bl-text-property>
+                <bl-text-property label="Registry username" [value]="prepTask.containerSettings.registryUsername"></bl-text-property>
+            </ng-container>
         </bl-property-group>
 
         <bl-property-group *ngIf="job.jobReleaseTask" label="Job release task" class="wide" [collapsed]="true">
@@ -154,10 +158,12 @@
                     <bl-tp-cell [value]="setting.value"></bl-tp-cell>
                 </bl-table-property-row>
             </bl-table-property>
-            <bl-text-property *ngIf="releaseTask.containerSettings.count > 0" label="Container image name" [value]="releaseTask.containerSettings.imageName"></bl-text-property>
-            <bl-text-property *ngIf="releaseTask.containerSettings.count > 0" label="Container run option" [value]="releaseTask.containerSettings.containerRunOptions"></bl-text-property>
-            <bl-text-property *ngIf="releaseTask.containerSettings.count > 0" label="Registry server" [value]="releaseTask.containerSettings.registryServer"></bl-text-property>
-            <bl-text-property *ngIf="releaseTask.containerSettings.count > 0" label="Registry username" [value]="releaseTask.containerSettings.registryUsername"></bl-text-property>
+            <ng-container *ngIf="releaseTask.containerSettings.propertyCount">
+                <bl-text-property label="Container image name" [value]="releaseTask.containerSettings.imageName"></bl-text-property>
+                <bl-text-property label="Container run option" [value]="releaseTask.containerSettings.containerRunOptions"></bl-text-property>
+                <bl-text-property label="Registry server" [value]="releaseTask.containerSettings.registryServer"></bl-text-property>
+                <bl-text-property label="Registry username" [value]="releaseTask.containerSettings.registryUsername"></bl-text-property>
+            </ng-container>
         </bl-property-group>
 
         <bl-property-group label="Metadata" class="wide" [collapsed]="true" [edit]="job.editable ? editMetadata : null">
