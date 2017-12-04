@@ -1,5 +1,9 @@
-<bl-simple-form [submit]="startDownload" [containerRef]="dialogRef" [multiUse]="false" title="Download files in this file group"
-    actionName="Download">
+<bl-simple-form [submit]="startDownload"
+                [containerRef]="dialogRef"
+                [multiUse]="false"
+                [formGroup]="patterns"
+                title=" {{ pathPrefix ? 'Download directory: ' + pathPrefix : 'Download files in this file group' }}"
+                actionName="Download">
     <div>
         <mat-form-field class="form-element">
             <textarea matInput placeholder="Pattern of files to include(1 per line)" [formControl]="patterns" matTextareaAutosize matAutosizeMaxRows="10"></textarea>
