@@ -61,7 +61,7 @@
     "@types/strip-json-comments": "~0.0.28",
     "add-asset-html-webpack-plugin": "^2.1.2",
     "angular2-template-loader": "~0.6.2",
-    "awesome-typescript-loader": "^3.4.0",
+    "awesome-typescript-loader": "^3.4.1",
     "codelyzer": "~4.0.1",
     "commander": "~2.12.2",
     "concurrently": "^3.5.1",
@@ -97,7 +97,7 @@
     "tslint": "~5.8.0",
     "typescript": "~2.6.2",
     "url-loader": "^0.6.2",
-    "webpack": "~3.9.1",
+    "webpack": "~3.10.0",
     "webpack-dev-server": "^2.9.5",
     "webpack-dll-bundles-plugin": "^1.0.0-beta.5",
     "webpack-merge": "~4.1.1"

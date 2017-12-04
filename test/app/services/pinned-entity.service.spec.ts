@@ -1,7 +1,7 @@
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { PinnableEntity, PinnedEntityType } from "app/models";
+import { BatchApplication, Job, PinnableEntity, PinnedEntityType } from "app/models";
 import { PinnedEntityService } from "app/services";
 import * as Fixtures from "test/fixture";
 
@@ -10,7 +10,7 @@ function getSavedData(): PinnableEntity[] {
     return jsonDataFromFileService;
 }
 
-describe("PinnedEntityService", () => {
+fdescribe("PinnedEntityService", () => {
     let pinService: PinnedEntityService;
     let favourites: List<PinnableEntity> = List<PinnableEntity>();
     let subscriptions: Subscription[] = [];
@@ -56,10 +56,8 @@ describe("PinnedEntityService", () => {
 
     describe("pinFavorite", () => {
         beforeEach(() => {
-            pinService.pinFavorite(Fixtures.pinnable.create({
+            pinService.pinFavorite(new Job({
                 id: "my-job-matt",
-                routerLink: ["/jobs", "my-job-matt"],
-                pinnableType: PinnedEntityType.Job,
                 url: "https://myaccount.westus.batch.com/jobs/my-job-matt",
             }));
         });
@@ -86,10 +84,8 @@ describe("PinnedEntityService", () => {
         });
 
         it("fixes empty url", () => {
-            pinService.pinFavorite(Fixtures.pinnable.create({
+            pinService.pinFavorite(new BatchApplication({
                 id: "new-one",
-                routerLink: ["/applications", "new-one"],
-                pinnableType: PinnedEntityType.Application,
                 url: "",
             }));
 
@@ -103,11 +99,10 @@ describe("PinnedEntityService", () => {
     });
 
     describe("isFavorite", () => {
-        let favorite: PinnableEntity;
+        let favorite: Job;
         beforeEach(() => {
-            favorite = Fixtures.pinnable.create({
+            favorite = new Job({
                 id: "my-pin",
-                pinnableType: PinnedEntityType.Job,
             });
 
             pinService.pinFavorite(favorite);
@@ -131,11 +126,10 @@ describe("PinnedEntityService", () => {
     });
 
     describe("unPinFavorite", () => {
-        let favorite: PinnableEntity;
+        let favorite: Job;
         beforeEach(() => {
-            favorite = Fixtures.pinnable.create({
+            favorite = new Job({
                 id: "pin-2",
-                pinnableType: PinnedEntityType.Job,
             });
 
             pinService.pinFavorite(favorite);
