@@ -87,9 +87,6 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
     }
 
     public ngOnDestroy(): void {
-        this.activateItemEnabled.unsubscribe();
-        this.deleteItemEnabled.unsubscribe();
-        this.editItemEnabled.unsubscribe();
         this._subs.forEach(x => x.unsubscribe());
     }
 
