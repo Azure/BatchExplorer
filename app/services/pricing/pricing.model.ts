@@ -1,4 +1,3 @@
-
 export type OsType = "linux" | "windows";
 
 export interface RegionPrices {
@@ -11,12 +10,18 @@ export interface VMPrices {
     lowpri: number;
 }
 
+const missingCategoryRegex = /^a[0-9]+$/;
+
 export class OSPricing {
     private _map: Map<string, VMPrices> = new Map();
 
     constructor(public name: string, public os: OsType) { }
 
     public add(vmsize: string, lowpri: boolean, price: number) {
+        vmsize = vmsize.toLowerCase().replace(/\./g, "_");
+        if (missingCategoryRegex.exec(vmsize)) {
+            vmsize = `standard_${vmsize}`;
+        }
         if (!this._map.has(vmsize)) {
             this._map.set(vmsize, {
                 regular: null,
@@ -25,14 +30,8 @@ export class OSPricing {
         }
         const vmPrices = this._map.get(vmsize);
         if (lowpri) {
-            if (vmPrices.lowpri !== null) {
-                console.log("Duplicate vm", lowpri, vmsize, "for region");
-            }
             vmPrices.lowpri = price;
         } else {
-            if (vmPrices.regular !== null) {
-                console.log("Duplicate vm", lowpri, vmsize, "for region");
-            }
             vmPrices.regular = price;
         }
     }
@@ -41,18 +40,15 @@ export class OSPricing {
         return [...this._map];
     }
 
-    public getVMPrices(vmSize: string): VMPrices {
-        if (this._map.has(vmSize)) {
-            return null;
-        }
-        return this._map.get(vmSize);
+    public getVMPrices(vmsize: string): VMPrices {
+        vmsize = vmsize.toLowerCase();
+        if (!this._map.has(vmsize)) { return null; }
+        return this._map.get(vmsize);
     }
 
-    public getPrice(vmSize: string, lowpri = false): number {
-        if (this._map.has(vmSize)) {
-            return null;
-        }
-        const vm = this._map.get(vmSize);
+    public getPrice(vmsize: string, lowpri = false): number {
+        const vm = this.getVMPrices(vmsize);
+        if (!vm) { return null; }
         return lowpri ? vm.lowpri : vm.regular;
     }
 }
