@@ -67,7 +67,7 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
 
         this._subs.push(this.activatedItemChange.subscribe((activatedItem) => {
             this.activateItemEnabled.next(this._activatedItemActivateEnabled(activatedItem.key));
-            this.deleteItemEnabled.next(this.application.allowUpdates && this.isAnyItemSelected());
+            this.deleteItemEnabled.next(this.application.allowUpdates && this.isAnyItemSelected() && activatedItem.key);
             this.editItemEnabled.next(this._activatedItemEditEnabled(activatedItem.key));
         }));
     }
