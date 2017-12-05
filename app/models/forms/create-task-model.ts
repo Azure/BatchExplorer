@@ -1,6 +1,6 @@
 import * as moment from "moment";
 
-import { TaskCreateDto } from "app/models/dtos";
+import { TaskContainerSettings, TaskCreateDto } from "app/models/dtos";
 import { PackageReferenceModel } from "./create-pool-model";
 
 export interface TaskConstraintsModel {
@@ -21,6 +21,7 @@ export interface CreateTaskModel {
     userIdentity: any;
     multiInstanceSettings: any;
     appPackages: PackageReferenceModel[];
+    containerSettings: TaskContainerSettings;
 }
 
 export function createTaskFormToJsonData(formData: CreateTaskModel): TaskCreateDto {
@@ -40,6 +41,7 @@ export function createTaskFormToJsonData(formData: CreateTaskModel): TaskCreateD
         userIdentity: formData.userIdentity,
         multiInstanceSettings: null,
         applicationPackageReferences: null,
+        containerSettings: formData.containerSettings,
     };
 
     if (formData.appPackages && formData.appPackages.length > 0) {
@@ -61,6 +63,7 @@ export function taskToFormModel(task: TaskCreateDto): CreateTaskModel {
         userIdentity: task.userIdentity,
         multiInstanceSettings: task.multiInstanceSettings,
         appPackages: task.applicationPackageReferences,
+        containerSettings: task.containerSettings,
     };
 
     if (task.constraints) {
