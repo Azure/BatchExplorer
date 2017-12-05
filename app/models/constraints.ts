@@ -1,5 +1,5 @@
-import { Model, Prop, Record } from "app/core";
-import { Duration } from "moment";
+import { Model, Prop, Record, TransformDuration } from "app/core";
+import { Duration, duration } from "moment";
 
 export interface ConstraintsAttributes {
     maxTaskRetryCount: Duration;
@@ -11,6 +11,6 @@ export interface ConstraintsAttributes {
  */
 @Model()
 export class Constraints extends Record<ConstraintsAttributes> {
-    @Prop() public maxWallClockTime: any;
+    @Prop(duration, TransformDuration) public maxWallClockTime: Duration;
     @Prop() public maxTaskRetryCount: number;
 }

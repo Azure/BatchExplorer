@@ -93,6 +93,10 @@ export class Record<TInput> {
                     } else {
                         obj[key] = new typeMetadata.type(value);
                     }
+
+                    if (typeMetadata.transform) {
+                        obj[key] = typeMetadata.transform(obj[key]);
+                    }
                 }
             } else {
                 obj[key] = value;
