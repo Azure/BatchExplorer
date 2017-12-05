@@ -7,7 +7,7 @@ import { BehaviorSubject, Observable } from "rxjs";
 
 import { DropdownModule } from "app/components/base/dropdown";
 import { PinnedDropDownComponent } from "app/components/base/pinned-entity-dropdown";
-import { PinnedEntity, PinnedEntityType } from "app/models";
+import { NavigableRecord, PinnableEntity, PinnedEntityType } from "app/models";
 import { AccountService, PinnedEntityService } from "app/services";
 import * as Fixtures from "test/fixture";
 
@@ -17,7 +17,7 @@ import * as Fixtures from "test/fixture";
 class TestComponent {
 }
 
-function createPin(type?: PinnedEntityType): PinnedEntity {
+function createPin(type?: PinnedEntityType): PinnableEntity {
     return Fixtures.pinnable.create({ pinnableType: type });
 }
 
@@ -26,7 +26,7 @@ describe("PinnedDropDownComponent", () => {
     let component: PinnedDropDownComponent;
     let debugElement;
 
-    let favorites: BehaviorSubject<List<PinnedEntity>> = new BehaviorSubject(List([]));
+    let favorites: BehaviorSubject<List<NavigableRecord>> = new BehaviorSubject(List([]));
     let accountServiceSpy;
     let pinServiceSpy;
     let dropDownButton;

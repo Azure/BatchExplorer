@@ -11,7 +11,7 @@ import { JobReleaseTask } from "./job-release-task";
 import { JobStats } from "./job-stats";
 import { Metadata, MetadataAttributes } from "./metadata";
 import { NameValuePair, NameValuePairAttributes } from "./name-value-pair";
-import { PinnableEntity, PinnedEntityType } from "./pinned-entity";
+import { NavigableRecord } from "./navigable-record";
 
 export interface JobAttributes {
     id: string;
@@ -43,7 +43,7 @@ export interface JobAttributes {
  * Class for displaying Batch job information.
  */
 @Model()
-export class Job extends Record<JobAttributes> implements PinnableEntity {
+export class Job extends Record<JobAttributes> implements NavigableRecord {
     @Prop() public id: string;
     @Prop() public displayName: string;
     @Prop() public usesTaskDependencies: boolean;
@@ -95,10 +95,6 @@ export class Job extends Record<JobAttributes> implements PinnableEntity {
 
     public get routerLink(): string[] {
         return ["/jobs", this.id];
-    }
-
-    public get pinnableType(): PinnedEntityType {
-        return PinnedEntityType.Job;
     }
 }
 
