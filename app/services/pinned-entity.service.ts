@@ -2,17 +2,25 @@ import { Injectable } from "@angular/core";
 import { List } from "immutable";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
-import { PinnableEntity, PinnedEntity } from "app/models";
+import {
+    BatchApplication, BlobContainer, Job, NavigableRecord, PinnableEntity, PinnedEntityType, Pool,
+} from "app/models";
 import { AccountService } from "./account.service";
 import { LocalFileStorage } from "./local-file-storage.service";
+
+const pinnedTypeMap = new Map();
+pinnedTypeMap.set(PinnedEntityType.Application, BatchApplication);
+pinnedTypeMap.set(PinnedEntityType.Pool, Pool);
+pinnedTypeMap.set(PinnedEntityType.Job, Job);
+pinnedTypeMap.set(PinnedEntityType.FileGroup, BlobContainer);
 
 @Injectable()
 export class PinnedEntityService {
     public loaded: Observable<boolean>;
-    public favourites: Observable<List<PinnedEntity>>;
+    public favourites: Observable<List<PinnableEntity>>;
 
     private _pinnedFavouritesJsonFileName: string = "pinned";
-    private _favorites: BehaviorSubject<List<PinnedEntity>> = new BehaviorSubject(List([]));
+    private _favorites: BehaviorSubject<List<PinnableEntity>> = new BehaviorSubject(List([]));
     private _loaded = new BehaviorSubject<boolean>(false);
     private _currentAccountEndpoint: string = "";
 
@@ -23,28 +31,27 @@ export class PinnedEntityService {
         this.loaded = this._loaded.asObservable();
         this.accountService.currentAccount.subscribe((account) => {
             this._currentAccountEndpoint = account.properties.accountEndpoint;
-            this._favorites.next(List<PinnedEntity>());
+            this._favorites.next(List<PinnableEntity>());
             this._loadInitialData();
         });
     }
 
-    public get favorites(): Observable<List<PinnedEntity>> {
+    public get favorites(): Observable<List<PinnableEntity>> {
         return this._favorites.asObservable();
     }
 
-    public pinFavorite(entity: PinnableEntity): Observable<any> {
+    public pinFavorite(entity: NavigableRecord): Observable<any> {
         if (this.isFavorite(entity)) {
             return Observable.of(true);
         }
-
         const subject = new AsyncSubject();
-        const favourite = new PinnedEntity({
+        const favourite: PinnableEntity = {
             id: entity.id,
             name: entity.name,
             routerLink: entity.routerLink,
-            pinnableType: entity.pinnableType,
-            url:  this._fudgeArmUrl(entity),
-        });
+            pinnableType: this.getEntityType(entity),
+            url: this._fudgeArmUrl(entity),
+        };
 
         this._favorites.next(this._favorites.getValue().push(favourite));
         this._saveAccountFavorites().subscribe({
@@ -58,22 +65,34 @@ export class PinnedEntityService {
         return subject.asObservable();
     }
 
-    public unPinFavorite(entity: PinnableEntity) {
+    public unPinFavorite(entity: NavigableRecord) {
         if (!this.isFavorite(entity)) {
             return;
         }
 
         const url = this._fudgeArmUrl(entity);
         const newFavorites = this._favorites.getValue().filter(pinned => pinned.url !== url);
-        this._favorites.next(List<PinnedEntity>(newFavorites));
+        this._favorites.next(List<PinnableEntity>(newFavorites));
         this._saveAccountFavorites();
     }
 
-    public isFavorite(entity: PinnableEntity): boolean {
+    public getEntityType(entity: NavigableRecord): PinnedEntityType {
+        for (let [type, cls] of pinnedTypeMap) {
+            if (entity instanceof cls) {
+                return type as any;
+            }
+        }
+        return null;
+    }
+
+    public isFavorite(entity: NavigableRecord): boolean {
         const id = entity.id.toLowerCase();
         const favorites = this._favorites.getValue();
+        const entityType = this.getEntityType(entity);
+        if (!entityType) { return false; }
+
         const found = favorites.filter((pinned) => {
-            return pinned.id.toLowerCase() === id && pinned.pinnableType === entity.pinnableType;
+            return pinned.id.toLowerCase() === id && pinned.pinnableType === entityType;
         }).first();
 
         return Boolean(found);
@@ -87,17 +106,17 @@ export class PinnedEntityService {
         });
     }
 
-    private _loadFavorites(): Observable<List<PinnedEntity>> {
+    private _loadFavorites(): Observable<List<PinnableEntity>> {
         return this.localFileStorage.get(this._jsonFilename).map((data) => {
             if (Array.isArray(data)) {
-                return List(data.map(x => new PinnedEntity(x)));
+                return List(data);
             } else {
                 return List([]);
             }
         }).share();
     }
 
-    private _saveAccountFavorites(favourites: List<PinnedEntity> = null): Observable<any> {
+    private _saveAccountFavorites(favourites: List<PinnableEntity> = null): Observable<any> {
         favourites = favourites === null ? this._favorites.getValue() : favourites;
         return this.localFileStorage.set(this._jsonFilename, favourites.toJS());
     }
@@ -107,7 +126,7 @@ export class PinnedEntityService {
      * one for ARM entities so we can use the current ID selection in
      * the drop down.
      */
-    private _fudgeArmUrl(favorite: PinnableEntity) {
+    private _fudgeArmUrl(favorite: NavigableRecord) {
         return !favorite.url
             ? `https://${this._currentAccountEndpoint}${favorite.routerLink.join("/")}`
             : favorite.url;

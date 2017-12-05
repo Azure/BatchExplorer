@@ -1,6 +1,6 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Observable, Subscription } from "rxjs";
 
@@ -14,6 +14,7 @@ import { BlobContainer, LeaseStatus } from "app/models";
 import { FileGroupCreateDto } from "app/models/dtos";
 import { ListContainerParams, PinnedEntityService, StorageService } from "app/services";
 import { ListView } from "app/services/core";
+import { ComponentUtils } from "app/utils";
 import { Filter } from "app/utils/filter-builder";
 import { DeleteContainerAction, DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "../action";
 
@@ -43,6 +44,7 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
     constructor(
         router: Router,
         dialog: MatDialog,
+        activatedRoute: ActivatedRoute,
         private sidebarManager: SidebarManager,
         private taskManager: BackgroundTaskService,
         private pinnedEntityService: PinnedEntityService,
@@ -50,6 +52,7 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
 
         super(dialog);
         this.data = this.storageService.containerListView(storageService.ncjFileGroupPrefix);
+        ComponentUtils.setActiveItem(activatedRoute, this.data);
 
         this.hasAutoStorage = false;
         this._autoStorageSub = storageService.hasAutoStorage.subscribe((hasAutoStorage) => {
