@@ -4,8 +4,10 @@ import { Observable } from "rxjs";
 
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
+import { TaskCreateDto } from "app/models/dtos";
 import { TaskService } from "app/services";
 import { ObservableUtils } from "app/utils";
+import { autobind } from "core-decorators";
 import { TaskCreateBasicDialogComponent } from "./task-create-basic-dialog.component";
 
 @Component({
@@ -27,12 +29,13 @@ export class RerunTaskFormComponent extends TaskCreateBasicDialogComponent {
         this.disable("id");
     }
 
-    public execute() {
+    @autobind()
+    public submit(data: TaskCreateDto): Observable<any> {
         const id = this.form.getRawValue().id;
-
+        data.id = id;
         return ObservableUtils.queue(
             () => this.taskService.delete(this.jobId, id).catch(() => Observable.of({})),
-            () => super.submit(super.getCurrentValue()),
+            () => super.submit(data),
         );
     }
 }
