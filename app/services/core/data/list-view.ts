@@ -13,11 +13,12 @@ export interface ListViewConfig<TEntity, TParams> extends GenericViewConfig<TEnt
 }
 
 export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, ListOptions> {
-    public items: Observable<List<TEntity>>;
-    public hasMore: Observable<boolean>;
+    public readonly items: Observable<List<TEntity>>;
+    public readonly hasMore: Observable<boolean>;
 
     private _itemKeys: BehaviorSubject<OrderedSet<string>> = new BehaviorSubject(OrderedSet([]));
     private _hasMore: BehaviorSubject<boolean> = new BehaviorSubject(true);
+    private _prepend: BehaviorSubject<OrderedSet<string>> = new BehaviorSubject(OrderedSet([]));
 
     private _getter: ListGetter<TEntity, TParams>;
     private _nextLink: ContinuationToken = null;
@@ -33,15 +34,27 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
         this._getter = config.getter;
         this._options = new ListOptions(config.initialOptions || {});
 
-        this.items = this._itemKeys.distinctUntilChanged().map((itemKeys) => {
-            return this.cache.items.map((items) => {
-                let keys: any = itemKeys;
-                if (this._options.maxItems) {
-                    keys = itemKeys.slice(0, this._options.maxItems);
-                }
-                return List<TEntity>(keys.map((x) => items.get(x)));
-            });
-        }).switch().distinctUntilChanged((a, b) => a.equals(b)).takeUntil(this.isDisposed);
+        this.items = Observable.combineLatest(
+            this._itemKeys.distinctUntilChanged(),
+            this._prepend.distinctUntilChanged())
+            .map(([itemKeys, prependKeys]) => {
+                prependKeys = prependKeys.filter(x => !itemKeys.has(x)) as any;
+                const allKeys = prependKeys.concat(itemKeys.toJS());
+
+                return this.cache.items.map((items) => {
+                    let keys = allKeys;
+                    if (this._options.maxItems) {
+                        keys = allKeys.slice(0, this._options.maxItems);
+                    }
+                    return List<TEntity>(keys.map((x) => {
+                        const item = items.get(x);
+                        if (!item && prependKeys.has(x)) {
+                            return new this._getter.type({ [this.cache.uniqueField]: x });
+                        }
+                        return item;
+                    }));
+                });
+            }).switch().distinctUntilChanged((a, b) => a.equals(b)).takeUntil(this.isDisposed);
         this.hasMore = this._hasMore.asObservable();
 
         this.deleted.subscribe((deletedKey) => {
@@ -157,6 +170,10 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
             },
         });
         return getObs;
+    }
+
+    public setFixedKeys(keys: string[]) {
+        this._prepend.next(OrderedSet(keys));
     }
 
     protected pollRefresh() {
