@@ -168,7 +168,7 @@ describe("PoolUtils", () => {
     describe("#computePoolPrice()", () => {
         const cost = {
             regular: 12,
-            lowpri: 12 * 0.4,
+            lowpri: 4.8,
         };
 
         it("works for a windows pool", () => {
@@ -190,26 +190,5 @@ describe("PoolUtils", () => {
                 unit: "USD",
             });
         });
-
-        it("works for a linux pool", () => {
-            const windowsConfig = {
-                imageReference: { publisher: "Openlogic", offer: "Centos", sku: "7.2", version: "*" },
-                nodeAgentSKUId: "agent.centos",
-            };
-
-            const pool = new Pool({
-                virtualMachineConfiguration: windowsConfig,
-                currentDedicatedNodes: 2,
-                currentLowPriorityNodes: 10,
-            });
-            const poolCost = PoolUtils.computePoolPrice(pool, cost);
-            expect(poolCost).toEqual({
-                dedicated: 24,
-                lowPri: 120 * 0.2, // AT a 60% discount
-                total: 24 + 120 * 0.2,
-                unit: "USD",
-            });
-        });
-
     });
 });
