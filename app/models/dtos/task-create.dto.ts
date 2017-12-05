@@ -1,5 +1,6 @@
 import { Dto, DtoAttr } from "app/core";
 import { AppPackageReferenceDto } from "./application-package-reference.dto";
+import { TaskContainerSettings } from "./container-setup.dto";
 import { EnvironmentSetting } from "./metadata.dto";
 import { TaskConstraintsDto } from "./task-constraints.dto";
 
@@ -29,6 +30,8 @@ export class TaskCreateDto extends Dto<TaskCreateDto> {
     @DtoAttr() public dependsOn?: any;
 
     @DtoAttr() public exitConditions?: any;
+
+    @DtoAttr() public containerSettings?: TaskContainerSettings;
 }
 
 export interface ResourceFileDto {
