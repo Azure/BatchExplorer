@@ -4,7 +4,7 @@ import {
 } from "@angular/forms";
 import { List } from "immutable";
 
-import { UserAccount } from "app/models";
+import { UserAccount, VirtualMachineConfiguration } from "app/models";
 
 @Component({
     selector: "bl-start-task-picker",
@@ -16,10 +16,11 @@ import { UserAccount } from "app/models";
     ],
 })
 export class StartTaskPickerComponent implements ControlValueAccessor {
-    @Input()
-    public userAccounts: List<UserAccount> | UserAccount[];
+    @Input() public userAccounts: List<UserAccount> | UserAccount[];
+    @Input() public virtualMachineConfiguration: VirtualMachineConfiguration = null;
 
     public form: FormGroup;
+
     private _propagateChange: (value: any) => void = null;
 
     constructor(formBuilder: FormBuilder) {
@@ -30,6 +31,7 @@ export class StartTaskPickerComponent implements ControlValueAccessor {
             waitForSuccess: [false],
             resourceFiles: [[]],
             environmentSettings: [[]],
+            containerSettings: [null],
         });
 
         this.form.valueChanges.subscribe((val: any) => {

@@ -7,9 +7,9 @@
     </div>
 </div>
 <button class="select-version" [matMenuTriggerFor]="menu">
-        <span *ngIf="!active">Select Version<i class="fa fa-caret-down"></i></span>
-        <span *ngIf="active">{{selectedSku}}</span>
-    </button>
+    <span *ngIf="!active">Select Version<i class="fa fa-caret-down"></i></span>
+    <span *ngIf="active">{{selectedSku}}</span>
+</button>
 <mat-menu #menu="matMenu">
     <button mat-menu-item *ngFor="let sku of skus" (click)="onClickSku(sku)">{{sku.name}}</button>
 </mat-menu>

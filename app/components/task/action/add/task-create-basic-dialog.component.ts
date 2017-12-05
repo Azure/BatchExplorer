@@ -3,22 +3,23 @@ import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
+import { OnInit } from "@angular/core/src/metadata/lifecycle_hooks";
 import { ComplexFormConfig } from "app/components/base/form";
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { RangeValidatorDirective } from "app/components/base/validation";
 import { DynamicForm } from "app/core";
-import { Task } from "app/models";
+import { Task, VirtualMachineConfiguration } from "app/models";
 import { TaskCreateDto } from "app/models/dtos";
 import { createTaskFormToJsonData, taskToFormModel } from "app/models/forms";
-import { TaskService } from "app/services";
+import { JobService, PoolService, TaskService } from "app/services";
 import { Constants } from "app/utils";
 
 @Component({
     selector: "bl-task-create-basic-dialog",
     templateUrl: "task-create-basic-dialog.html",
 })
-export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreateDto> {
+export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreateDto> implements OnInit {
     public jobId: string;
     public complexFormConfig: ComplexFormConfig;
     public constraintsGroup: FormGroup;
@@ -29,12 +30,15 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
     public multiUse = true;
     public actionName = "Add";
     public fileUri = "create.task.batch.json";
+    public virtualMachineConfiguration: VirtualMachineConfiguration = null;
 
     constructor(
         private formBuilder: FormBuilder,
         public sidebarRef: SidebarRef<TaskCreateBasicDialogComponent>,
         protected taskService: TaskService,
-        private notificationService: NotificationService) {
+        private notificationService: NotificationService,
+        protected jobService: JobService,
+        protected poolService: PoolService) {
         super(TaskCreateDto);
         this._setComplexFormConfig();
 
@@ -63,6 +67,19 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
             resourceFiles: [[]],
             environmentSettings: [[]],
             appPackages: [[]],
+            containerSettings: [null],
+        });
+        }
+
+    public ngOnInit(): void {
+        this.jobService.get(this.jobId).cascade((job) => {
+            const jobData = job.toJS();
+            if (jobData.poolInfo && jobData.poolInfo.poolId) {
+                this.poolService.get(jobData.poolInfo.poolId).cascade((pool) => {
+                    const poolData = pool.toJS();
+                    this.virtualMachineConfiguration = poolData.virtualMachineConfiguration;
+                });
+            }
         });
     }
 

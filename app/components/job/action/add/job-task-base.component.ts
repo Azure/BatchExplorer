@@ -6,13 +6,15 @@ import {
     FormGroup,
     Validators,
 } from "@angular/forms";
+
 import { RangeValidatorDirective } from "app/components/base/validation";
-import { UserAccount } from "app/models";
+import { UserAccount, VirtualMachineConfiguration } from "app/models";
 import { Constants } from "app/utils";
 import { List } from "immutable";
 
 export class JobTaskBaseComponent implements ControlValueAccessor {
     @Input() public userAccounts: List<UserAccount> | UserAccount[];
+    @Input() public virtualMachineConfiguration: VirtualMachineConfiguration;
 
     public form: FormGroup;
     public constraintsGroup: FormGroup;
@@ -36,6 +38,7 @@ export class JobTaskBaseComponent implements ControlValueAccessor {
             userIdentity: [null],
             resourceFiles: [[]],
             environmentSettings: [[]],
+            containerSettings: [[]],
         };
 
         this._defaultValue = defaultValue;

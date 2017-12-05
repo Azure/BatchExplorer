@@ -60,6 +60,17 @@ describe("JobCreateBasicDialogComponent ", () => {
 
         poolServiceSpy = {
             listView: () => poolListProxy,
+            get: (poolId) => Observable.of(Fixtures.pool.create({
+                id: poolId,
+                virtualMachineConfiguration: {
+                    containerConfiguration: {
+                        type: "docker",
+                        containerImageNames: [
+                            "busybox",
+                        ],
+                    },
+                },
+            })),
         };
 
         notificationServiceSpy = {
