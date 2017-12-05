@@ -1,5 +1,6 @@
 import { Icon, IconSources } from "app/components/base/icon";
-import { CloudServiceOsFamily, Pool, PoolAllocationState, SpecCost } from "app/models";
+import { CloudServiceOsFamily, Pool, PoolAllocationState } from "app/models";
+import { VMPrices } from "app/services/pricing";
 import { LowPriDiscount } from "app/utils/constants";
 import * as Icons from "./icons";
 
@@ -170,7 +171,7 @@ export class PoolUtils {
         }
     }
 
-    public static computePoolPrice(pool: Pool, cost: SpecCost, options: PoolPriceOptions = {}): PoolPrice {
+    public static computePoolPrice(pool: Pool, cost: VMPrices, options: PoolPriceOptions = {}): PoolPrice {
         if (!cost) {
             return null;
         }
@@ -178,16 +179,14 @@ export class PoolUtils {
         const dedicatedCount = count.dedicated || 0;
         const lowPriCount = count.lowPri || 0;
 
-        const lowPriDiscount = PoolUtils.isWindows(pool) ? LowPriDiscount.windows : LowPriDiscount.linux;
-
-        const dedicatedPrice = cost.amount * dedicatedCount;
-        const lowPriPrice = cost.amount * lowPriCount * lowPriDiscount;
+        const dedicatedPrice = cost.regular * dedicatedCount;
+        const lowPriPrice = cost.lowpri * lowPriCount;
 
         return {
             dedicated: dedicatedPrice,
             lowPri: lowPriPrice,
             total: dedicatedPrice + lowPriPrice,
-            unit: cost.currencyCode,
+            unit: "USD",
         };
     }
 
