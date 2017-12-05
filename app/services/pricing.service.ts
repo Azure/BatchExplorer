@@ -142,9 +142,6 @@ export class PricingService {
             }
         }
 
-        console.log("Meters", meters);
-        console.log("Vms", vms);
-
         return vms;
     }
 
