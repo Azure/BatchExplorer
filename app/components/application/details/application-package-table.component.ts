@@ -67,7 +67,7 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
 
         this._subs.push(this.activatedItemChange.subscribe((activatedItem) => {
             this.activateItemEnabled.next(this._activatedItemActivateEnabled(activatedItem.key));
-            this.deleteItemEnabled.next(this.application.allowUpdates && this.isAnyItemSelected() && activatedItem.key);
+            this.deleteItemEnabled.next(this._activatedItemDeleteEnabled(activatedItem.key));
             this.editItemEnabled.next(this._activatedItemEditEnabled(activatedItem.key));
         }));
     }
@@ -138,13 +138,17 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
         });
     }
 
-    private _activatedItemEditEnabled(activeItem: string) {
-        return activeItem && this.application.allowUpdates && !this._isPackagePending(activeItem)
+    private _activatedItemEditEnabled(activeItemKey: string) {
+        return this.application.allowUpdates && !this._isPackagePending(activeItemKey)
             && this.selectedItems.length <= 1;
     }
 
-    private _activatedItemActivateEnabled(activeItem: string) {
-        return activeItem && this._isPackagePending(activeItem) && this.selectedItems.length <= 1;
+    private _activatedItemDeleteEnabled(activeItemKey: any) {
+        return this.application.allowUpdates && this.isAnyItemSelected() && Boolean(activeItemKey);
+    }
+
+    private _activatedItemActivateEnabled(activeItemKey: string) {
+        return this._isPackagePending(activeItemKey) && this.selectedItems.length <= 1;
     }
 
     private _isPackagePending(version: string): boolean {
