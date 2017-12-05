@@ -1,4 +1,4 @@
-import { CloudServiceOsFamily, Pool, SpecCost } from "app/models";
+import { CloudServiceOsFamily, Pool } from "app/models";
 import { PoolUtils } from "app/utils";
 
 describe("PoolUtils", () => {
@@ -166,12 +166,10 @@ describe("PoolUtils", () => {
     });
 
     describe("#computePoolPrice()", () => {
-        const cost = new SpecCost({
-            id: "standard_a1",
-            amount: 12,
-            currencyCode: "USD",
-            statusCode: 0,
-        });
+        const cost = {
+            regular: 12,
+            lowpri: 12 * 0.4,
+        };
 
         it("works for a windows pool", () => {
             const windowsConfig = {

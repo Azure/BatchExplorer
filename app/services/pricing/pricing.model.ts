@@ -13,6 +13,11 @@ export interface VMPrices {
 const missingCategoryRegex = /^a[0-9]+$/;
 
 export class OSPricing {
+    public static fromJS(name, os, data: any[]): OSPricing {
+        const pricing = new OSPricing(name, os);
+        pricing._map = new Map(data);
+        return pricing;
+    }
     private _map: Map<string, VMPrices> = new Map();
 
     constructor(public name: string, public os: OsType) { }
@@ -54,6 +59,18 @@ export class OSPricing {
 }
 
 export class PricingMap {
+    public static fromJS(data: any[]): PricingMap {
+        const pricing = new PricingMap();
+        const entries = data.map(([region, x]) => {
+            return [region, {
+                windows: OSPricing.fromJS(region, "windows", x.windows),
+                linux: OSPricing.fromJS(region, "linux", x.linux),
+            }];
+        });
+        pricing._map = new Map(entries as any);
+        return pricing;
+    }
+
     private _map: Map<string, RegionPrices> = new Map();
 
     public add(region: string, vmName: string, price: number) {

@@ -86,7 +86,6 @@ export class PricingService {
     public getVmPrices(os: OsType, vmSize: string): Observable<VMPrices> {
         return this.accountService.currentAccount.flatMap((account) => {
             return this.pricing.take(1).map((map) => {
-                // console.log("Get vm price", account.location, os, vmSize, map.getOSPricing(account.location, os), map.getVMPrices(account.location, os, vmSize));
                 return map.getVMPrices(account.location, os, vmSize);
             });
         });
@@ -160,9 +159,7 @@ export class PricingService {
         });
     }
 
-    private _loadPricingFromStorage(): Observable<any> {
-        return Observable.of(null);
-
+    private _loadPricingFromStorage(): Observable<PricingMap> {
         return this.localFileStorage.get(pricingFilename).map((data: { lastSync: string, map: any }) => {
             // If wrong format
             if (!data.lastSync || !data.map) {
@@ -174,10 +171,10 @@ export class PricingService {
             if (lastSync.isBefore(weekOld)) {
                 return null;
             }
-            return data.map as any;
+            return PricingMap.fromJS(data.map);
         }).catch((error) => {
             log.error("Error retrieving pricing locally", error);
-            return null;
+            return Observable.of(null);
         });
     }
 

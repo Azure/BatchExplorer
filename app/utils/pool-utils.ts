@@ -1,7 +1,6 @@
 import { Icon, IconSources } from "app/components/base/icon";
 import { CloudServiceOsFamily, Pool, PoolAllocationState } from "app/models";
 import { VMPrices } from "app/services/pricing";
-import { LowPriDiscount } from "app/utils/constants";
 import * as Icons from "./icons";
 
 export interface PoolPrice {
