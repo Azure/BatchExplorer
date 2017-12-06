@@ -176,7 +176,6 @@ export class PoolUtils {
         nodeCost: VMPrices,
         softwarePricing: SoftwarePricing,
         options: PoolPriceOptions = {}): PoolPrice {
-        console.log("oool?", pool.toJS());
         if (!nodeCost) {
             return null;
         }
@@ -188,7 +187,6 @@ export class PoolUtils {
         let lowPriPrice = nodeCost.lowpri * lowPriCount;
 
         pool.applicationLicenses.forEach((license) => {
-            console.log("Get price", softwarePricing.getPrice(license, vmSpec.numberOfCores));
             dedicatedPrice += softwarePricing.getPrice(license, vmSpec.numberOfCores) * dedicatedCount;
             lowPriPrice += softwarePricing.getPrice(license, vmSpec.numberOfCores) * lowPriCount;
         });

@@ -86,6 +86,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         this.form.valueChanges.subscribe((value) => {
             if (!this._lastFormValue
                 || value.os !== this._lastFormValue.os
+                || value.appLicenses !== this._lastFormValue.appLicenses
                 || value.vmSize !== this._lastFormValue.vmSize
                 || this._lastFormValue.scale !== value.scale) {
                 this._updateEstimatedPrice();

@@ -155,7 +155,6 @@ export class PricingService {
         }
         this._processSoftwaresPricings(meters, pricing);
 
-        console.log("Pricing is", pricing);
         return pricing;
     }
 
