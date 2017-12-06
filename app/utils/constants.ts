@@ -158,6 +158,7 @@ export const MetadataInternalKey = {
 
 export const PollRate = {
     entity: 10000,
+    batchApplication: 60000,
 };
 
 /**
