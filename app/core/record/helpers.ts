@@ -25,7 +25,7 @@ function metadataForCtr(ctr: any) {
 interface TypeMetadata {
     list: boolean;
     type: Type<any>;
-
+    transform?: (value: any) => any;
 }
 
 export function updateTypeMetadata(ctr: Type<any>, attr: string, type: TypeMetadata) {

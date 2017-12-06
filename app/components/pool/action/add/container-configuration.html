@@ -1,0 +1,19 @@
+<div [formGroup]="form">
+    <div class="form-element">
+        <mat-form-field>
+            <mat-select formControlName="type" color="primary" placeholder="Container type" required>
+                <mat-option [value]="ContainerType.Docker">Docker</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+    <div class="form-element">
+        <div class="form-left">
+            <h4>Container images <span class="required">*</span></h4>
+            <bl-container-images-picker formControlName="containerImageNames"></bl-container-images-picker>
+        </div>
+        <div class="form-right">
+            <h4>Container registries</h4>
+            <bl-container-registry-picker formControlName="containerRegistries"></bl-container-registry-picker>
+        </div>
+    </div>
+</div>

@@ -1,5 +1,6 @@
 import { JobReleaseTask } from "app/models";
 import { DecoratorBase } from "app/utils/decorators";
+import { TaskContainerSettingsDecorator } from "./task-container-settings-decorator";
 
 export class JobReleaseTaskDecorator extends DecoratorBase<JobReleaseTask> {
     public commandLine: string;
@@ -9,6 +10,7 @@ export class JobReleaseTaskDecorator extends DecoratorBase<JobReleaseTask> {
 
     public resourceFiles: {};
     public environmentSettings: {};
+    public containerSettings: {};
 
     constructor(task: JobReleaseTask) {
         super(task);
@@ -20,5 +22,6 @@ export class JobReleaseTaskDecorator extends DecoratorBase<JobReleaseTask> {
 
         this.resourceFiles = task.resourceFiles || {};
         this.environmentSettings = task.environmentSettings || {};
+        this.containerSettings = new TaskContainerSettingsDecorator(task.containerSettings || {} as any);
     }
 }

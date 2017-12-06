@@ -1,7 +1,7 @@
 import * as moment from "moment";
 
 import { NodeFillType } from "app/models";
-import { PoolCreateDto, UserAccountDto } from "app/models/dtos";
+import { ContainerRegistry, PoolCreateDto, UserAccountDto } from "app/models/dtos";
 
 export enum PoolOsSources {
     PaaS,
@@ -19,6 +19,11 @@ export interface PoolOSPickerModel {
             publisher: string,
             offer: string,
             sku: string,
+        },
+        containerConfiguration?: {
+            type: string,
+            containerImageNames: string[],
+            containerRegistries: ContainerRegistry[],
         },
     };
 }

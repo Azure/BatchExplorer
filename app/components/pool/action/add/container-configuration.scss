@@ -1,0 +1,16 @@
+bl-container-configuration {
+    .form-element {
+        .form-left {
+            display: inline-block;
+            width: 25%;
+            margin-right: 2%;
+        }
+        .form-right {
+            display: inline-block;
+            width: 72%;
+        }
+    }
+    span.required {
+        color: #f44336;
+    }
+}

@@ -1,4 +1,5 @@
 import { Model, Prop, Record } from "app/core";
+import { ContainerConfiguration } from "./container-setup";
 import { ImageReference, ImageReferenceAttributes } from "./image-reference";
 import { PoolOSDisk, PoolOSDiskAttributes } from "./pool-os-disk";
 import { WindowsConfiguration } from "./windows-configuration";
@@ -8,6 +9,7 @@ export interface VirtualMachineConfigurationAttributes {
     nodeAgentSKUId: string;
     windowsConfiguration: WindowsConfiguration;
     osDisk?: PoolOSDiskAttributes;
+    containerConfiguration: ContainerConfiguration;
 }
 
 /**
@@ -19,4 +21,5 @@ export class VirtualMachineConfiguration extends Record<VirtualMachineConfigurat
     @Prop() public nodeAgentSKUId: string;
     @Prop() public windowsConfiguration: WindowsConfiguration;
     @Prop() public osDisk: PoolOSDisk;
+    @Prop() public containerConfiguration: ContainerConfiguration;
 }
