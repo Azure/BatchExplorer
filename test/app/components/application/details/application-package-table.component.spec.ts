@@ -41,7 +41,7 @@ const applicationMap: Map<string, BatchApplication> = new Map()
 
 @Component({
     template: `
-        <bl-application-package-table [application]="application" [filter]="filter"
+        <bl-application-package-table [application]="application" [filter]="filter">
         </bl-application-package-table>
     `,
 })
