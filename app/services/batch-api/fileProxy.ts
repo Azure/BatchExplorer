@@ -1,3 +1,4 @@
+import { MimeUtils } from "app/utils";
 import { BatchServiceClient } from "azure-batch";
 import * as fs from "fs";
 import { ListProxy, wrapOptions } from "./shared";
@@ -114,7 +115,23 @@ export class FileProxy {
     }
 
     private async _readContent(response: Response): Promise<string> {
-        return response.text();
+        const reader = response.body.getReader();
+
+        let text = "";
+        let result;
+        while (true) {
+            result = await reader.read();
+            if (result.done) {
+                return text;
+            }
+            const mimeType = MimeUtils.detectMimeAndEncodingFromBuffer({
+                buffer: new Buffer(result.value.buffer),
+                bytesRead: result.value.length,
+            });
+            console.log("Result", result.value.buffer, result.value.length, mimeType);
+            const encoding = mimeType.encoding || "utf-8";
+            text += new TextDecoder(encoding).decode(result.value);
+        }
     }
 
     private async _downloadContent(response: Response, destination: string): Promise<boolean> {
