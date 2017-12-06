@@ -48,6 +48,8 @@
     "ban-comma-operator": true,
 
     // Codelyzer rules(Angular2)
+    "contextual-life-cycle": true,
+    "decorator-not-allowed": true,
     "directive-selector": [true, "attribute", "bl", "camelCase"],
     "component-selector": [true, "element", "bl", "kebab-case"],
     "use-input-property-decorator": true,
