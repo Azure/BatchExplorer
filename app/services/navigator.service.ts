@@ -26,7 +26,6 @@ export class NavigatorService {
 
     public init() {
         ipcRenderer.on(Constants.Client.rendererEvents.batchlabsLink, (event, link) => {
-            console.log("Got dem link....");
             this.openBatchLabsLink(link);
         });
     }
@@ -42,7 +41,6 @@ export class NavigatorService {
     }
 
     public perform(action: string, path: string, params: URLSearchParams) {
-        console.log("ACtion", action, params);
         switch (action) {
             case LinkAction.route:
                 const newParams = new URLSearchParams(params);

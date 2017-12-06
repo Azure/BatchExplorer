@@ -63,7 +63,6 @@
     "component-class-suffix": true,
     "directive-class-suffix": true,
     "import-destructuring-spacing": true,
-    "invoke-injectable": true,
     "no-shadowed-variable": false,
     // TODO enable
     "prefer-const": false
