@@ -1,4 +1,5 @@
-import { CloudServiceOsFamily, Pool, SpecCost } from "app/models";
+import { CloudServiceOsFamily, Pool, VmSize } from "app/models";
+import { SoftwarePricing } from "app/services/pricing";
 import { PoolUtils } from "app/utils";
 
 describe("PoolUtils", () => {
@@ -166,14 +167,21 @@ describe("PoolUtils", () => {
     });
 
     describe("#computePoolPrice()", () => {
-        const cost = new SpecCost({
-            id: "standard_a1",
-            amount: 12,
-            currencyCode: "USD",
-            statusCode: 0,
-        });
+        const cost = {
+            regular: 12,
+            lowpri: 4.8,
+        };
 
-        it("works for a windows pool", () => {
+        const vmSize = new VmSize({
+            numberOfCores: 3,
+        } as any);
+
+        const softwares = new SoftwarePricing();
+        softwares.add("vray", 0.02, true);
+        softwares.add("3dsmax", 0.65, false);
+        softwares.add("maya", 0.75, false);
+
+        it("works for a basic pool", () => {
             const windowsConfig = {
                 imageReference: { publisher: "Microsoft", offer: "windows", sku: "2016", version: "*" },
                 nodeAgentSKUId: "agent.windows",
@@ -184,7 +192,7 @@ describe("PoolUtils", () => {
                 currentDedicatedNodes: 2,
                 currentLowPriorityNodes: 10,
             });
-            const poolCost = PoolUtils.computePoolPrice(pool, cost);
+            const poolCost = PoolUtils.computePoolPrice(pool, vmSize, cost, softwares);
             expect(poolCost).toEqual({
                 dedicated: 24,
                 lowPri: 120 * 0.4, // AT a 60% discount
@@ -193,25 +201,26 @@ describe("PoolUtils", () => {
             });
         });
 
-        it("works for a linux pool", () => {
+        it("works for a pool with application licenses", () => {
             const windowsConfig = {
-                imageReference: { publisher: "Openlogic", offer: "Centos", sku: "7.2", version: "*" },
-                nodeAgentSKUId: "agent.centos",
+                imageReference: { publisher: "Microsoft", offer: "windows", sku: "2016", version: "*" },
+                nodeAgentSKUId: "agent.windows",
             };
 
             const pool = new Pool({
                 virtualMachineConfiguration: windowsConfig,
                 currentDedicatedNodes: 2,
                 currentLowPriorityNodes: 10,
+                applicationLicenses: ["vray", "3dsmax"],
             });
-            const poolCost = PoolUtils.computePoolPrice(pool, cost);
-            expect(poolCost).toEqual({
-                dedicated: 24,
-                lowPri: 120 * 0.2, // AT a 60% discount
-                total: 24 + 120 * 0.2,
-                unit: "USD",
-            });
+            const poolCost = PoolUtils.computePoolPrice(pool, vmSize, cost, softwares);
+            const licenseExtraPerNode = 0.65 + 3 * 0.02;
+            const dedicated = 2 * (12 + licenseExtraPerNode);
+            const lowPri = 10 * (4.8 + licenseExtraPerNode);
+            expect(poolCost.dedicated).toBeCloseTo(dedicated, 10);
+            expect(poolCost.lowPri).toBeCloseTo(lowPri, 10);
+            expect(poolCost.total).toBeCloseTo(dedicated + lowPri, 10);
+            expect(poolCost.unit).toBe("USD");
         });
-
     });
 });
