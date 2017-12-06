@@ -1,4 +1,4 @@
-import { NO_ERRORS_SCHEMA } from "@angular/core";
+import { Component, NO_ERRORS_SCHEMA } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { MatDialog } from "@angular/material";
 import { By } from "@angular/platform-browser";
@@ -39,8 +39,20 @@ const applicationMap: Map<string, BatchApplication> = new Map()
         ],
     }));
 
+@Component({
+    template: `
+        <bl-application-package-table [application]="application" [filter]="filter"
+        </bl-application-package-table>
+    `,
+})
+class TestComponent {
+    public application: BatchApplication;
+    public filter;
+}
+
 describe("ApplicationPackageTableComponent", () => {
-    let fixture: ComponentFixture<ApplicationPackageTableComponent>;
+    let fixture: ComponentFixture<TestComponent>;
+    let testComponent: TestComponent;
     let component: ApplicationPackageTableComponent;
     let applicationServiceSpy: any;
 
@@ -60,7 +72,7 @@ describe("ApplicationPackageTableComponent", () => {
             imports: [RouterTestingModule],
             declarations: [
                 ApplicationPackageTableComponent, NoItemMockComponent, TableComponent, TableCellComponent,
-                TableColumnComponent, TableHeadComponent,
+                TableColumnComponent, TableHeadComponent, TestComponent,
             ],
             providers: [
                 { provide: MatDialog, useValue: null },
@@ -71,15 +83,16 @@ describe("ApplicationPackageTableComponent", () => {
             schemas: [NO_ERRORS_SCHEMA],
         });
 
-        fixture = TestBed.createComponent(ApplicationPackageTableComponent);
-        component = fixture.componentInstance;
-        component.application = applicationMap.get(appWithPackagesId);
+        fixture = TestBed.createComponent(TestComponent);
+        testComponent = fixture.componentInstance;
+        component = fixture.debugElement.query(By.css("bl-application-package-table")).componentInstance;
+        testComponent.application = applicationMap.get(appWithPackagesId);
         fixture.detectChanges();
     });
 
     describe("when application has no packages", () => {
         beforeEach(() => {
-            component.application = applicationMap.get(appWithoutPackagesId);
+            testComponent.application = applicationMap.get(appWithoutPackagesId);
             fixture.detectChanges();
         });
 
@@ -108,7 +121,7 @@ describe("ApplicationPackageTableComponent", () => {
 
     describe("can filter application packages based on ID", () => {
         beforeEach(() => {
-            component.filter = Object.assign(new Property("version"), { value: "1.0" });
+            testComponent.filter = Object.assign(new Property("version"), { value: "1.0" });
             fixture.detectChanges();
         });
 
@@ -118,7 +131,7 @@ describe("ApplicationPackageTableComponent", () => {
         });
 
         it("show filter warning if nothing matches", () => {
-            component.filter = Object.assign(new Property("version"), { value: "asdasd" });
+            testComponent.filter = Object.assign(new Property("version"), { value: "asdasd" });
             fixture.detectChanges();
 
             expect(component.displayedPackages.size).toBe(0);
