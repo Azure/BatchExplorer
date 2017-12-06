@@ -1,6 +1,6 @@
 import { Icon, IconSources } from "app/components/base/icon";
-import { CloudServiceOsFamily, Pool, PoolAllocationState } from "app/models";
-import { VMPrices } from "app/services/pricing";
+import { CloudServiceOsFamily, Pool, PoolAllocationState, VmSize } from "app/models";
+import { SoftwarePricing, VMPrices } from "app/services/pricing";
 import * as Icons from "./icons";
 
 export interface PoolPrice {
@@ -170,16 +170,28 @@ export class PoolUtils {
         }
     }
 
-    public static computePoolPrice(pool: Pool, cost: VMPrices, options: PoolPriceOptions = {}): PoolPrice {
-        if (!cost) {
+    public static computePoolPrice(
+        pool: Pool,
+        vmSpec: VmSize,
+        nodeCost: VMPrices,
+        softwarePricing: SoftwarePricing,
+        options: PoolPriceOptions = {}): PoolPrice {
+        console.log("oool?", pool.toJS());
+        if (!nodeCost) {
             return null;
         }
         const count = PoolUtils._getPoolNodes(pool, options.target);
         const dedicatedCount = count.dedicated || 0;
         const lowPriCount = count.lowPri || 0;
 
-        const dedicatedPrice = cost.regular * dedicatedCount;
-        const lowPriPrice = cost.lowpri * lowPriCount;
+        let dedicatedPrice = nodeCost.regular * dedicatedCount;
+        let lowPriPrice = nodeCost.lowpri * lowPriCount;
+
+        pool.applicationLicenses.forEach((license) => {
+            console.log("Get price", softwarePricing.getPrice(license, vmSpec.numberOfCores));
+            dedicatedPrice += softwarePricing.getPrice(license, vmSpec.numberOfCores) * dedicatedCount;
+            lowPriPrice += softwarePricing.getPrice(license, vmSpec.numberOfCores) * lowPriCount;
+        });
 
         return {
             dedicated: dedicatedPrice,

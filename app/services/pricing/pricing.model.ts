@@ -58,9 +58,9 @@ export class OSPricing {
     }
 }
 
-export class PricingMap {
-    public static fromJS(data: any[]): PricingMap {
-        const pricing = new PricingMap();
+export class NodePricing {
+    public static fromJS(data: any[]): NodePricing {
+        const pricing = new NodePricing();
         const entries = data.map(([region, x]) => {
             return [region, {
                 windows: OSPricing.fromJS(region, "windows", x.windows),
@@ -122,5 +122,61 @@ export class PricingMap {
         const os = name.includes("(Windows)") ? "windows" : "linux";
         const lowpri = name.includes("Low Priority");
         return { os, lowpri, vmsize };
+    }
+}
+
+export interface SoftwarePrice {
+    name: string;
+    price: number;
+    perCore: boolean;
+}
+
+export class SoftwarePricing {
+    public static fromJS(data: any[]): SoftwarePricing {
+        const pricing = new SoftwarePricing();
+        pricing._map = new Map(data);
+        return pricing;
+    }
+    private _map: Map<string, SoftwarePrice> = new Map();
+
+    public add(software: string, price: number, perCore = false) {
+        this._map.set(software, {
+            name: software,
+            price,
+            perCore,
+        });
+    }
+
+    public toJS() {
+        return [...this._map];
+    }
+
+    public get(software: string): SoftwarePrice {
+        return this._map.get(software);
+    }
+
+    public getPrice(software: string, coreCount = 1): number {
+        const data = this._map.get(software);
+        if (!data) { return null; }
+        return data.perCore ? coreCount * data.price : data.price;
+    }
+}
+
+export class BatchPricing {
+    public static fromJS(data): BatchPricing {
+        const pricing = new BatchPricing();
+        pricing.softwares = SoftwarePricing.fromJS(data.softwares);
+        pricing.nodes = NodePricing.fromJS(data.nodes);
+        return pricing;
+    }
+
+    public softwares = new SoftwarePricing();
+    public nodes = new NodePricing();
+
+    public toJS() {
+        return {
+            softwares: this.softwares.toJS(),
+            nodes: this.nodes.toJS(),
+        };
     }
 }

@@ -2,13 +2,14 @@ import { Injectable } from "@angular/core";
 import * as moment from "moment";
 import { Observable } from "rxjs";
 
-import { Pool, RateCardMeter } from "app/models";
-import { OSPricing, OsType, PricingMap, VMPrices } from "app/services/pricing";
+import { AccountResource, BatchSoftwareLicense, Pool, RateCardMeter } from "app/models";
+import { BatchPricing, OSPricing, OsType, SoftwarePricing, VMPrices } from "app/services/pricing";
 import { PoolPrice, PoolPriceOptions, PoolUtils, log } from "app/utils";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { AccountService } from "./account.service";
 import { ArmHttpService } from "./arm-http.service";
 import { LocalFileStorage } from "./local-file-storage.service";
+import { VmSizeService } from "./vm-size.service";
 
 const pricingFilename = "pricing.json";
 
@@ -53,13 +54,21 @@ const regionMapping = {
     "UK South 2": "uksouth2",
 };
 
+const softwareMeterId = {
+    "089f79d8-0349-432c-96a6-8add90b8a40e": BatchSoftwareLicense.arnold,
+    "0ec88494-2022-4939-b809-0d914d954692": BatchSoftwareLicense["3dsmax"],
+    "1d3bb602-0cde-4618-9fb0-f9d94805c2a6": BatchSoftwareLicense.maya,
+    "e2d2d63e-8741-499a-8989-f5f7ec5c3b3f": BatchSoftwareLicense.vray,
+};
+
 @Injectable()
 export class PricingService {
-    public pricing: Observable<PricingMap>;
-    private _pricingMap = new BehaviorSubject<PricingMap>(null);
+    public pricing: Observable<BatchPricing>;
+    private _pricingMap = new BehaviorSubject<BatchPricing>(null);
 
     constructor(
         private arm: ArmHttpService,
+        private vmSizeService: VmSizeService,
         private localFileStorage: LocalFileStorage,
         private accountService: AccountService) {
 
@@ -70,32 +79,32 @@ export class PricingService {
         this._loadPricings();
     }
 
+    public getSoftwarePricing(): Observable<SoftwarePricing> {
+        return this._getPrice((account, pricing) => {
+            return pricing.softwares;
+        });
+    }
+
     /**
      * Get the prices for all vms for a given region
      * @param region Account location
      * @param os OS for the VM.
      */
     public getPrices(os: OsType): Observable<OSPricing> {
-        return this.accountService.currentAccount.flatMap((account) => {
-            return this.pricing.take(1).map((map) => {
-                return map.getOSPricing(account.location, os);
-            });
+        return this._getPrice((account, pricing) => {
+            return pricing.nodes.getOSPricing(account.location, os);
         });
     }
 
     public getVmPrices(os: OsType, vmSize: string): Observable<VMPrices> {
-        return this.accountService.currentAccount.flatMap((account) => {
-            return this.pricing.take(1).map((map) => {
-                return map.getVMPrices(account.location, os, vmSize);
-            });
+        return this._getPrice((account, pricing) => {
+            return pricing.nodes.getVMPrices(account.location, os, vmSize);
         });
     }
 
     public getPrice(os: OsType, vmSize: string, lowpri = false): Observable<number> {
-        return this.accountService.currentAccount.flatMap((account) => {
-            return this.pricing.take(1).map((map) => {
-                return map.getPrice(account.location, os, vmSize, lowpri);
-            });
+        return this._getPrice((account, pricing) => {
+            return pricing.nodes.getPrice(account.location, os, vmSize, lowpri);
         });
     }
 
@@ -105,8 +114,11 @@ export class PricingService {
      */
     public computePoolPrice(pool: Pool, options: PoolPriceOptions = {}): Observable<PoolPrice> {
         const os = PoolUtils.isWindows(pool) ? "windows" : "linux";
-        return this.getVmPrices(os, pool.vmSize).map((cost) => {
-            return PoolUtils.computePoolPrice(pool, cost, options);
+        const vmSizeObs = this.vmSizeService.get(pool.vmSize);
+        const priceObs = this.getVmPrices(os, pool.vmSize);
+        return Observable.forkJoin(vmSizeObs, priceObs).map(([vmSpec, cost]) => {
+            const softwarePricing = this._pricingMap.value.softwares;
+            return PoolUtils.computePoolPrice(pool, vmSpec, cost, softwarePricing, options);
         });
     }
 
@@ -126,8 +138,8 @@ export class PricingService {
         }).share();
     }
 
-    private _processMeters(meters: RateCardMeter[]): PricingMap {
-        const vms = new PricingMap();
+    private _processMeters(meters: RateCardMeter[]): BatchPricing {
+        const pricing = new BatchPricing();
         const categories = new Set();
         for (const meter of meters) {
             categories.add(meter.MeterCategory);
@@ -137,12 +149,24 @@ export class PricingService {
                     && meter.MeterRegion !== "Azure Stack"
                     && meter.MeterRegion in regionMapping
                     && !meter.MeterSubCategory.includes("VM_Promo")) {
-                    vms.add(regionMapping[meter.MeterRegion], meter.MeterSubCategory, meter.MeterRates["0"]);
+                    pricing.nodes.add(regionMapping[meter.MeterRegion], meter.MeterSubCategory, meter.MeterRates["0"]);
                 }
             }
         }
+        this._processSoftwaresPricings(meters, pricing);
 
-        return vms;
+        console.log("Pricing is", pricing);
+        return pricing;
+    }
+
+    private _processSoftwaresPricings(meters: RateCardMeter[], pricing: BatchPricing) {
+        for (const meter of meters) {
+            if (meter.MeterId in softwareMeterId) {
+                const software = softwareMeterId[meter.MeterId];
+                const perCore = meter.MeterSubCategory.includes("core)");
+                pricing.softwares.add(software, meter.MeterRates["0"], perCore);
+            }
+        }
     }
 
     private _loadPricings() {
@@ -156,7 +180,7 @@ export class PricingService {
         });
     }
 
-    private _loadPricingFromStorage(): Observable<PricingMap> {
+    private _loadPricingFromStorage(): Observable<BatchPricing> {
         return this.localFileStorage.get(pricingFilename).map((data: { lastSync: string, map: any }) => {
             // If wrong format
             if (!data.lastSync || !data.map) {
@@ -168,14 +192,14 @@ export class PricingService {
             if (lastSync.isBefore(weekOld)) {
                 return null;
             }
-            return PricingMap.fromJS(data.map);
+            return BatchPricing.fromJS(data.map);
         }).catch((error) => {
             log.error("Error retrieving pricing locally", error);
             return Observable.of(null);
         });
     }
 
-    private _savePricing(map: PricingMap) {
+    private _savePricing(map: BatchPricing) {
         const data = {
             lastSync: new Date().toISOString(),
             map: map.toJS(),
@@ -185,5 +209,17 @@ export class PricingService {
                 log.error("Error saving harwaremap", error);
             },
         });
+    }
+
+    /**
+     * Wait for the prices and account to be loaded and returns callback
+     * @param callback Callback when account and prices are loaded
+     */
+    private _getPrice<T>(callback: (account: AccountResource, pricing: BatchPricing) => T) {
+        return this.accountService.currentAccount.take(1).flatMap((account) => {
+            return this.pricing.take(1).map((map) => {
+                return callback(account, map);
+            });
+        }).share();
     }
 }

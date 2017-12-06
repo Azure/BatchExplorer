@@ -3,6 +3,7 @@ export * from "./account-keys";
 export * from "./aad-user";
 export * from "./affinity-information";
 export * from "./batch-application";
+export * from "./batch-software-license";
 export * from "./app-insights";
 export * from "./application";
 export * from "./application-action";
