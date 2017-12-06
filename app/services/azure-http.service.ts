@@ -28,6 +28,7 @@ const providersApiVersion = {
     "microsoft.classicstorage": Constants.ApiVersion.armClassicStorage,
     "microsoft.storage": Constants.ApiVersion.armStorage,
     "microsoft.compute": Constants.ApiVersion.compute,
+    "microsoft.commerce": Constants.ApiVersion.commerce,
 };
 
 type SubscriptionOrTenant = Subscription | string;
