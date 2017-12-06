@@ -1,8 +1,8 @@
-import { Component, Input, OnChanges } from "@angular/core";
+import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { autobind } from "core-decorators";
 import { List } from "immutable";
-import { BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
 import { ListOrTableBase } from "app/components/base/selectable-list";
@@ -17,8 +17,7 @@ import { ActivatePackageDialogComponent, ApplicationCreateDialogComponent, Delet
     selector: "bl-application-package-table",
     templateUrl: "application-package-table.html",
 })
-
-export class ApplicationPackageTableComponent extends ListOrTableBase implements OnChanges {
+export class ApplicationPackageTableComponent extends ListOrTableBase implements OnChanges, OnDestroy {
     @Input()
     public set application(application: BatchApplication) {
         this._application = application;
@@ -48,6 +47,7 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
     private _filter: Filter;
     private _application: BatchApplication;
     private _stateMap: Map<string, PackageState>;
+    private _subs: Subscription[] = [];
 
     constructor(
         protected dialog: MatDialog,
@@ -58,22 +58,23 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
         super(dialog);
         this._stateMap = new Map();
         this.entityName = "application packages";
-        this.selectedItemsChange.subscribe((items) => {
+        this._subs.push(this.selectedItemsChange.subscribe((items) => {
             if (items.length !== 1) {
                 this.activateItemEnabled.next(false);
                 this.editItemEnabled.next(false);
             }
-        });
+        }));
 
-        this.activatedItemChange.subscribe((activatedItem) => {
+        this._subs.push(this.activatedItemChange.subscribe((activatedItem) => {
             this.activateItemEnabled.next(this._activatedItemActivateEnabled(activatedItem.key));
-            this.deleteItemEnabled.next(this.application.allowUpdates && this.isAnyItemSelected());
+            this.deleteItemEnabled.next(this._activatedItemDeleteEnabled(activatedItem.key));
             this.editItemEnabled.next(this._activatedItemEditEnabled(activatedItem.key));
-        });
+        }));
     }
 
     public ngOnChanges(inputs) {
-        if (inputs.application) {
+        if (!inputs.application.previousValue ||
+            inputs.application.currentValue.id !== inputs.application.previousValue.id) {
             this._stateMap.clear();
             this.application.packages.map((pkg) => {
                 this._stateMap.set(pkg.version, pkg.state);
@@ -83,6 +84,10 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
                 this._resetSubjects();
             });
         }
+    }
+
+    public ngOnDestroy(): void {
+        this._subs.forEach(x => x.unsubscribe());
     }
 
     public formatDate(date: Date) {
@@ -133,13 +138,17 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
         });
     }
 
-    private _activatedItemEditEnabled(activeItem: string) {
-        return activeItem && this.application.allowUpdates && !this._isPackagePending(activeItem)
+    private _activatedItemEditEnabled(activeItemKey: string) {
+        return this.application.allowUpdates && !this._isPackagePending(activeItemKey)
             && this.selectedItems.length <= 1;
     }
 
-    private _activatedItemActivateEnabled(activeItem: string) {
-        return activeItem && this._isPackagePending(activeItem) && this.selectedItems.length <= 1;
+    private _activatedItemDeleteEnabled(activeItemKey: any) {
+        return this.application.allowUpdates && this.isAnyItemSelected() && Boolean(activeItemKey);
+    }
+
+    private _activatedItemActivateEnabled(activeItemKey: string) {
+        return this._isPackagePending(activeItemKey) && this.selectedItems.length <= 1;
     }
 
     private _isPackagePending(version: string): boolean {
