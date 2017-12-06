@@ -77,6 +77,7 @@ export class BlobFilesBrowserComponent implements OnChanges, OnDestroy {
                 const obs = data.fetchAll().flatMap(() => data.items.take(1)).shareReplay(1);
                 obs.subscribe((items) => {
                     data.dispose();
+                    // subscribe delete observable and refresh file tree explorer after completion
                     this.delete(items.toArray()).subscribe({
                         complete: () => {
                             this.fileNavigator.refresh(event.path);
