@@ -1,6 +1,6 @@
 import { Icon, IconSources } from "app/components/base/icon";
-import { CloudServiceOsFamily, Pool, PoolAllocationState, SpecCost } from "app/models";
-import { LowPriDiscount } from "app/utils/constants";
+import { CloudServiceOsFamily, Pool, PoolAllocationState, VmSize } from "app/models";
+import { SoftwarePricing, VMPrices } from "app/services/pricing";
 import * as Icons from "./icons";
 
 export interface PoolPrice {
@@ -170,24 +170,32 @@ export class PoolUtils {
         }
     }
 
-    public static computePoolPrice(pool: Pool, cost: SpecCost, options: PoolPriceOptions = {}): PoolPrice {
-        if (!cost) {
+    public static computePoolPrice(
+        pool: Pool,
+        vmSpec: VmSize,
+        nodeCost: VMPrices,
+        softwarePricing: SoftwarePricing,
+        options: PoolPriceOptions = {}): PoolPrice {
+        if (!nodeCost) {
             return null;
         }
         const count = PoolUtils._getPoolNodes(pool, options.target);
         const dedicatedCount = count.dedicated || 0;
         const lowPriCount = count.lowPri || 0;
 
-        const lowPriDiscount = PoolUtils.isWindows(pool) ? LowPriDiscount.windows : LowPriDiscount.linux;
+        let dedicatedPrice = nodeCost.regular * dedicatedCount;
+        let lowPriPrice = nodeCost.lowpri * lowPriCount;
 
-        const dedicatedPrice = cost.amount * dedicatedCount;
-        const lowPriPrice = cost.amount * lowPriCount * lowPriDiscount;
+        pool.applicationLicenses.forEach((license) => {
+            dedicatedPrice += softwarePricing.getPrice(license, vmSpec.numberOfCores) * dedicatedCount;
+            lowPriPrice += softwarePricing.getPrice(license, vmSpec.numberOfCores) * lowPriCount;
+        });
 
         return {
             dedicated: dedicatedPrice,
             lowPri: lowPriPrice,
             total: dedicatedPrice + lowPriPrice,
-            unit: cost.currencyCode,
+            unit: "USD",
         };
     }
 

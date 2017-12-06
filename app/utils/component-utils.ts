@@ -1,4 +1,7 @@
 import { SimpleChange } from "@angular/core";
+import { ActivatedRoute } from "@angular/router";
+
+import { ListView } from "app/services/core";
 
 export class ComponentUtils {
     /**
@@ -10,5 +13,20 @@ export class ComponentUtils {
         const { previousValue, currentValue } = change;
         const same = previousValue && currentValue && previousValue.id === currentValue.id;
         return !same;
+    }
+
+    public static setActiveItem<TEntity>(route: ActivatedRoute, view: ListView<TEntity, any>) {
+        route.url.subscribe((url) => {
+            const child = route.snapshot.firstChild;
+            if (child) {
+                const params = child.params;
+                const key = params[view.getCache(params).uniqueField];
+                if (key) {
+                    view.setFixedKeys([key]);
+                    return;
+                }
+            }
+            view.setFixedKeys([]);
+        });
     }
 }

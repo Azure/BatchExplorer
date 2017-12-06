@@ -4,6 +4,8 @@ import {
     NG_VALIDATORS,
     NG_VALUE_ACCESSOR,
 } from "@angular/forms";
+
+import { UNLIMITED_DURATION_THRESHOLD } from "app/core";
 import * as moment from "moment";
 
 import "./duration-picker.scss";
@@ -94,11 +96,14 @@ export class DurationPickerComponent implements ControlValueAccessor {
     }
 
     private _getDuration(): moment.Duration {
-        return moment.duration(this.value, this.unit);
+        const duration = moment.duration(this.value, this.unit);
+        const days = duration.asDays();
+        // Days must not be greater than threshold, otherwise just set it to unlimited
+        return days > UNLIMITED_DURATION_THRESHOLD ? null : duration;
     }
 
     /**
-     * _setValueAndUnit helps setting constraint duration picker value once constraint form vlaue is patched.
+     * _setValueAndUnit helps setting constraint duration picker value once constraint form value is patched.
      * Unit is checked from 'days' to 'seconds'. Value will be taken when current unit has an integer value,
      * otherwise next smaller unit will be checked until last unit.
      */

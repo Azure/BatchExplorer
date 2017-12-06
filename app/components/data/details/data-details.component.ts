@@ -94,5 +94,7 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
     public download() {
         const ref = this.dialog.open(DownloadFileGroupDialogComponent);
         ref.componentInstance.containerId = this.containerId;
+        ref.componentInstance.subfolder = this.containerId;
+        ref.componentInstance.pathPrefix = "";
     }
 }

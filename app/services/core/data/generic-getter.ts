@@ -29,7 +29,7 @@ export class GenericGetter<TEntity, TParams> {
     protected getCache: (params: TParams) => DataCache<TEntity>;
     private _logIgnoreError: number[];
 
-    constructor(protected type: Type<TEntity>, protected config: GenericGetterConfig<TEntity, TParams>) {
+    constructor(public type: Type<TEntity>, protected config: GenericGetterConfig<TEntity, TParams>) {
         this.getCache = config.cache;
         this._logIgnoreError = exists(config.logIgnoreError) ? config.logIgnoreError : [Constants.HttpCode.NotFound];
     }

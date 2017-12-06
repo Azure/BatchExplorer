@@ -86,6 +86,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         this.form.valueChanges.subscribe((value) => {
             if (!this._lastFormValue
                 || value.os !== this._lastFormValue.os
+                || value.appLicenses !== this._lastFormValue.appLicenses
                 || value.vmSize !== this._lastFormValue.vmSize
                 || this._lastFormValue.scale !== value.scale) {
                 this._updateEstimatedPrice();
@@ -139,7 +140,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
         if (!value.vmSize || !this.osType) {
             return;
         }
-        const imaginaryPool = createPoolToData(this.form.value);
+        const imaginaryPool = new Pool(createPoolToData(this.form.value).toJS() as any);
         return this.pricingService.computePoolPrice(imaginaryPool as any, { target: true }).subscribe((cost) => {
             if (cost) {
                 this.estimatedCost = `${cost.unit} ${NumberUtils.pretty(cost.total)}`;

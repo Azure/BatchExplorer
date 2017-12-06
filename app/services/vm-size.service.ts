@@ -41,7 +41,7 @@ export class VmSizeService {
     public virtualMachineSizes: Observable<List<VmSize>>;
     public vmSizeCategories: Observable<StringMap<string[]>>;
 
-    private _sizes = new BehaviorSubject<List<VmSize>>(List([]));
+    private _sizes = new BehaviorSubject<List<VmSize>>(null);
     private _excludedSizes = new BehaviorSubject<ExcludedSizes>(null);
     private _vmSizeCategories = new BehaviorSubject<StringMap<string[]>>(null);
 
@@ -52,7 +52,7 @@ export class VmSizeService {
         private githubData: GithubDataService, private accountService: AccountService) {
 
         const obs = Observable.combineLatest(this._sizes, this._excludedSizes);
-        this.sizes = this._sizes.asObservable();
+        this.sizes = this._sizes.filter(x => x !== null);
 
         this.cloudServiceSizes = obs.map(([sizes, excluded]) => {
             if (!excluded) {
@@ -108,9 +108,9 @@ export class VmSizeService {
     }
 
     public get(vmSize: string): Observable<VmSize> {
-        return this._sizes.map(sizes => {
+        return this.sizes.map(sizes => {
             return sizes.filter(x => x.name.toLowerCase() === vmSize.toLowerCase()).first();
-        });
+        }).take(1).share();
     }
     /**
      * Filter the given list of vm sizes by excluding any patching the given patterns.

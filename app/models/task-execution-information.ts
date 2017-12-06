@@ -1,6 +1,9 @@
 import { Model, Prop, Record } from "app/core";
 import * as moment from "moment";
 import { FailureInfo, FailureInfoAttributes } from "./failure-info";
+import {
+    TaskContainerExecutionInfo, TaskContainerExecutionInfoAttributes,
+} from "./task-container-execution-information";
 
 export interface TaskExecutionInformationAttributes {
     startTime: Date;
@@ -13,6 +16,7 @@ export interface TaskExecutionInformationAttributes {
     retryCount: number;
     lastRetryTime?: Date;
     result?: string;
+    containerInfo?: TaskContainerExecutionInfoAttributes;
 }
 
 /**
@@ -28,6 +32,7 @@ export class TaskExecutionInformation extends Record<TaskExecutionInformationAtt
     @Prop() public lastRetryTime: Date;
     @Prop() public requeueCount: number;
     @Prop() public lastRequeueTime: Date;
+    @Prop() public containerInfo: TaskContainerExecutionInfo;
 
     public get runningTime() {
         return moment.duration(moment(this.endTime).diff(this.startTime));

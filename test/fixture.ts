@@ -2,7 +2,7 @@ import { Type } from "@angular/core";
 import * as moment from "moment";
 
 import { AccountResource, ApplicationPackage, BatchApplication, File, Job, Node, PackageState,
-    PinnedEntity, PinnedEntityType, Pool, Subscription, SubtaskInformation, Task,
+     PinnedEntityType, Pool, Subscription, SubtaskInformation, Task,
 } from "app/models";
 
 export class FixtureFactory<TEntity> {
@@ -250,7 +250,7 @@ export const file = new FixtureFactory<File>(File, {
     },
 });
 
-export const pinnable = new FixtureFactory<PinnedEntity>(PinnedEntity, {
+export const pinnable = new FixtureFactory<any>(Object, {
     id: "pin-1",
     routerLink: [],
     pinnableType: PinnedEntityType.Application,

@@ -58,8 +58,13 @@ bl-button {
         &[color="danger"] {
             color: map-get($danger, 500);
             &:hover, &:focus {
-                color: map-get($danger, 800);
+                color: map-get($danger, 200);
             }
+        }
+
+        &.disabled[color] {
+            color: #d5d5d5;
+            background: none;
         }
     }
 

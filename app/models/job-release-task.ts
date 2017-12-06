@@ -1,6 +1,7 @@
 import { Model, Prop, Record } from "app/core";
 import { Duration } from "moment";
 
+import { TaskContainerSettings, TaskContainerSettingsAttributes } from "./container-setup";
 import { NameValuePair } from "./name-value-pair";
 import { ResourceFile } from "./resource-file";
 
@@ -12,6 +13,7 @@ export interface JobReleaseTaskAttributes {
     maxWallClockTime: Duration;
     retentionTime: Duration;
     runElevated: boolean;
+    containerSettings: TaskContainerSettingsAttributes;
 }
 
 /**
@@ -26,4 +28,5 @@ export class JobReleaseTask extends Record<JobReleaseTaskAttributes> {
     @Prop() public maxWallClockTime: Duration;
     @Prop() public retentionTime: Duration;
     @Prop() public runElevated: boolean;
+    @Prop() public containerSettings: TaskContainerSettings;
 }
