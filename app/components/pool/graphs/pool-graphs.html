@@ -71,14 +71,19 @@
             </div>
         </ng-container>
         <div class="config">
-            <mat-form-field>
-                <mat-select [formControl]="selectedHistoryLength" placeholder="History">
-                    <mat-option [value]="historyLength.TenMinute">10 Minutes</mat-option>
-                    <mat-option [value]="historyLength.OneHour">1 Hour</mat-option>
-                    <mat-option [value]="historyLength.OnDay">24 Hour</mat-option>
-                    <mat-option [value]="historyLength.OnDay">7 days</mat-option>
-                </mat-select>
-            </mat-form-field>
+            <bl-button class="open-new-window" matTooltip="Open in a new window" [action]="openInNewWindow" type="plain">
+                <i class="fa fa-window-restore"></i>
+            </bl-button>
+            <div class="flex-separator"></div>
+            <div class="history-length">
+                <span>Last</span>
+                <select [formControl]="selectedHistoryLength" placeholder="History">
+                    <option [value]="historyLength.TenMinute">10 Minutes</option>
+                    <option [value]="historyLength.OneHour">1 Hour</option>
+                    <option [value]="historyLength.OnDay">24 Hour</option>
+                    <option [value]="historyLength.OnDay">7 days</option>
+                </select>
+            </div>
         </div>
     </div>
 

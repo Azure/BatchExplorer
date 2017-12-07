@@ -51,6 +51,13 @@ bl-pool-graphs {
 
         > .config {
             padding: 20px 10px;
+            display: flex;
+            align-items: center;
+
+            > .open-new-window {
+                font-size: 16px;
+                color: $link-color;
+            }
         }
     }
 
