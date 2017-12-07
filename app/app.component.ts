@@ -6,8 +6,8 @@ import { Observable } from "rxjs";
 import { registerIcons } from "app/config";
 import {
     AccountService, AdalService, AutoscaleFormulaService, CommandService, MonacoLoader,
-    NcjTemplateService, NodeService, PredefinedFormulaService, PricingService, PythonRpcService,
-    SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
+    NavigatorService, NcjTemplateService, NodeService, PredefinedFormulaService, PricingService,
+    PythonRpcService, SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
 } from "app/services";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
@@ -40,6 +40,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         private commandService: CommandService,
         private adalService: AdalService,
         private accountService: AccountService,
+        private navigatorService: NavigatorService,
         private subscriptionService: SubscriptionService,
         private nodeService: NodeService,
         private sshKeyService: SSHKeyService,
@@ -55,6 +56,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.sshKeyService.init();
         this.commandService.init();
         this.pricingService.init();
+        this.navigatorService.init();
         this.vmSizeService.init();
         this.adalService.init(adalConfig);
         this.accountService.loadInitialData();
