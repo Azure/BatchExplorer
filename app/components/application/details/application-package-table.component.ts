@@ -140,7 +140,7 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
 
     private _activatedItemEditEnabled(activeItemKey: string) {
         return this.application.allowUpdates && !this._isPackagePending(activeItemKey)
-            && this.selectedItems.length <= 1;
+        && Boolean(activeItemKey);
     }
 
     private _activatedItemDeleteEnabled(activeItemKey: any) {
@@ -148,7 +148,7 @@ export class ApplicationPackageTableComponent extends ListOrTableBase implements
     }
 
     private _activatedItemActivateEnabled(activeItemKey: string) {
-        return this._isPackagePending(activeItemKey) && this.selectedItems.length <= 1;
+        return this._isPackagePending(activeItemKey);
     }
 
     private _isPackagePending(version: string): boolean {
