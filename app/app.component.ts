@@ -3,6 +3,7 @@ import { MatIconRegistry, MatSidenav } from "@angular/material";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
+import { ActivatedRoute } from "@angular/router";
 import { registerIcons } from "app/config";
 import {
     AccountService, AdalService, AutoscaleFormulaService, CommandService, MonacoLoader,
@@ -24,6 +25,7 @@ const adalConfig = {
 export class AppComponent implements AfterViewInit, OnInit {
     public hasAccount: Observable<boolean>;
     public isAppReady = false;
+    public fullscreen = false;
 
     @ViewChild("rightSidebar")
     private sidebar: MatSidenav;
@@ -46,6 +48,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         private sshKeyService: SSHKeyService,
         pythonRpcService: PythonRpcService,
         private vmSizeService: VmSizeService,
+        private route: ActivatedRoute,
         monacoLoader: MonacoLoader,
         private pricingService: PricingService,
         private ncjTemplateService: NcjTemplateService,
@@ -90,6 +93,10 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.adalService.login();
         this.subscriptionService.load();
         this.accountService.load();
+
+        this.route.queryParams.subscribe(({ fullscreen }) => {
+            this.fullscreen = Boolean(fullscreen);
+        });
     }
 
     public open() {

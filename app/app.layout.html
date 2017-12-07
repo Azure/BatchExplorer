@@ -1,4 +1,4 @@
-<div id="container" [hidden]="!isAppReady">
+<div id="container" [hidden]="!isAppReady" *ngIf="!fullscreen">
     <!--[class.no-userinteract]="!(hasAccount | async)" -->
     <header>
         <bl-header></bl-header>
@@ -22,4 +22,7 @@
     <footer>
         <bl-footer></bl-footer>
     </footer>
+</div>
+<div class="fullscreen" *ngIf="fullscreen">
+    <router-outlet></router-outlet>
 </div>
