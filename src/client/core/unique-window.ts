@@ -1,10 +1,8 @@
 import { BatchLabsApplication } from ".";
 import { logger } from "../logger";
 
-/**
- * Unique window is a wrapper around a electron browser window which makes sure there is only 1 window of this type.
- */
-export abstract class UniqueWindow {
+export abstract class GenericWindow {
+    public expectedClose = false;
     public domReady: Promise<void>;
     protected _window: Electron.BrowserWindow;
     private _resolveDomReady: () => void;
@@ -14,8 +12,10 @@ export abstract class UniqueWindow {
             this._resolveDomReady = resolve;
         });
     }
+
     public create() {
         this.destroy();
+        this.expectedClose = true;
         this._window = this.createWindow();
         this._window.webContents.once("dom-ready", () => {
             this._resolveDomReady();
@@ -63,18 +63,30 @@ export abstract class UniqueWindow {
     }
 
     public destroy() {
+        this.expectedClose = true;
         if (this._window) {
             this._window.destroy();
             this._window = null;
         }
     }
 
+    protected abstract createWindow(): Electron.BrowserWindow;
+
+}
+/**
+ * Unique window is a wrapper around a electron browser window which makes sure there is only 1 window of this type.
+ */
+export abstract class UniqueWindow extends GenericWindow {
+    public create() {
+        super.create();
+        this.setupCommonEvents(this._window);
+    }
+
     public setupCommonEvents(window: Electron.BrowserWindow) {
         window.on("closed", () => {
+            if (this.expectedClose) { return; }
             logger.info(`Window ${this.constructor.name} closed. Quiting the app.`);
             this.batchLabsApp.quit();
         });
     }
-    protected abstract createWindow(): Electron.BrowserWindow;
-
 }

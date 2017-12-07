@@ -2,7 +2,7 @@ import { BrowserWindow } from "electron";
 
 import { FileUtils } from "../api";
 import { Constants } from "../client-constants";
-import { BatchLabsApplication, UniqueWindow } from "../core";
+import { BatchLabsApplication, GenericWindow } from "../core";
 import { logger, renderLogger } from "../logger";
 
 // Webpack dev server url when using HOT=1
@@ -11,7 +11,7 @@ const devServerUrl = Constants.urls.main.dev;
 // Webpack build output
 const buildFileUrl = Constants.urls.main.prod;
 
-export class MainWindow extends UniqueWindow {
+export class MainWindow extends GenericWindow {
     private _showWindowOnstart = false;
 
     constructor(batchLabsApp: BatchLabsApplication) { super(batchLabsApp); }
@@ -63,7 +63,6 @@ export class MainWindow extends UniqueWindow {
     }
 
     private _setupEvents(window: Electron.BrowserWindow) {
-        this.setupCommonEvents(window);
         window.webContents.on("crashed", (event: Electron.Event, killed: boolean) => {
             logger.error("There was a crash", event, killed);
             this.batchLabsApp.recoverWindow.createWithError(event.returnValue);
