@@ -16,6 +16,7 @@ export class AccountDropDownComponent implements AfterViewInit {
     public selectedAccountAlias: string = "";
     public showDropdown = false;
     public currentAccountValid = AccountStatus.Loading;
+    public currentAccountInvalidError = "";
 
     constructor(
         private accountService: AccountService,
@@ -39,6 +40,10 @@ export class AccountDropDownComponent implements AfterViewInit {
         this.accountService.currentAccountValid.subscribe((status) => {
             this.currentAccountValid = status;
             this.changeDetection.detectChanges();
+        });
+
+        this.accountService.currentAccountInvalidError.subscribe((error) => {
+            this.currentAccountInvalidError = error;
         });
     }
 }
