@@ -3,13 +3,13 @@ import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import * as os from "os";
 import * as Url from "url";
 
-import { AuthenticationWindow } from "../authentication";
 import { Constants } from "../client-constants";
 import { logger } from "../logger";
 import { MainWindow } from "../main-window";
 import { PythonRpcServerProcess } from "../python-process";
 import { RecoverWindow } from "../recover-window";
 import { SplashScreen } from "../splash-screen";
+import { AuthenticationWindow } from "./aad";
 
 const osName = `${os.platform()}-${os.arch()}/${os.release()}`;
 const isDev = Constants.isDev ? "-dev" : "";

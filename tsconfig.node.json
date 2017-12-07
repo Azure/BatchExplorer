@@ -21,6 +21,7 @@
     "listEmittedFiles": true, // debug option
     "listFiles": true, // debug option
     "outDir": "build/client",
+    "baseUrl": "src/",
     "types": [
       "node",
       "electron",
@@ -38,6 +39,7 @@
   ],
   // This is not actually used for building but to let the editor know what files use this config
   "include": [
-    "./src/client/**/*.ts"
+    "./src/client/**/*.ts",
+    "./src/common/**/*.ts"
   ]
 }

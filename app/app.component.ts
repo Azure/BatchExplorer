@@ -11,12 +11,6 @@ import {
 } from "app/services";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
-const adalConfig = {
-    tenant: "common",
-    clientId: "04b07795-8ddb-461a-bbee-02f9e1bf7b46", // Azure CLI
-    redirectUri: "urn:ietf:wg:oauth:2.0:oob",
-};
-
 @Component({
     selector: "bl-app",
     templateUrl: "app.layout.html",
