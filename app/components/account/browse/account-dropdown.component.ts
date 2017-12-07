@@ -17,7 +17,7 @@ export class AccountDropDownComponent implements AfterViewInit {
     public selectedAccountAlias: string = "";
     public showDropdown = false;
     public currentAccountValid = AccountStatus.Loading;
-    public currentAccountInvalidError = "";
+    public currentAccountInvalidError: any = null;
 
     constructor(
         private accountService: AccountService,
