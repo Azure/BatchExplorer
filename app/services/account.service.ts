@@ -256,6 +256,7 @@ export class AccountService {
 
     public validateCurrentAccount() {
         this._currentAccountValid.next(AccountStatus.Valid);
+        this._currentAccountInvalidError.next(null);
     }
 
     public loadInitialData() {

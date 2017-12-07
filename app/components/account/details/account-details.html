@@ -1,3 +1,9 @@
+
+<bl-banner *ngIf="loadingError" type="error">
+    <div code>{{ loadingError.code }}</div>
+    <div message>{{ loadingError.message }}</div>
+</bl-banner>
+
 <bl-loading [status]="data.status">
     <div *ngIf="account">
         <bl-summary-card>
