@@ -52,7 +52,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.pricingService.init();
         this.navigatorService.init();
         this.vmSizeService.init();
-        this.adalService.init(adalConfig);
+        this.adalService.init();
         this.accountService.loadInitialData();
         this.ncjTemplateService.init();
         pythonRpcService.init();
@@ -81,7 +81,6 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
 
     public ngOnInit() {
-        this.adalService.login();
         this.subscriptionService.load();
         this.accountService.load();
     }

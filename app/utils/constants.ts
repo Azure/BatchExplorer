@@ -1,1 +1,2 @@
-export * from "common/constants";
+import { Constants } from "common";
+export { Constants };

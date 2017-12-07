@@ -49,8 +49,8 @@
   ],
   // This is not actually used for building but to let the editor know what files use this config
   "include": [
-    "./client/**/*.ts",
     "./app/**/*.ts",
+    "./src/common/**/*.ts",
     "./test/**/*.ts"
   ],
   "awesomeTypescriptLoaderOptions": {

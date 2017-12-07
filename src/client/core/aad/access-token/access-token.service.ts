@@ -1,7 +1,7 @@
 import fetch, { RequestInit } from "node-fetch";
 
 import { logger } from "client/logger";
-import { AdalConfig } from "../adal-config";
+import { AADConfig } from "../aad-config";
 import { baseUrl, objectToParams } from "../adal-constants";
 import { AccessToken } from "./access-token.model";
 
@@ -24,7 +24,7 @@ export interface AccessTokenErrorResult {
  * This service handle the retrival of the access token to auth AAD queries
  */
 export class AccessTokenService {
-    constructor(private config: AdalConfig) {
+    constructor(private config: AADConfig) {
     }
 
     /**
@@ -34,6 +34,7 @@ export class AccessTokenService {
         try {
             const response = await fetch(this._buildUrl(tenantId), {
                 method: "post",
+                body: this._redeemBody(resource, authorizationCode),
                 ...this._options(),
             });
             const data = await response.json();

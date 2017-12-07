@@ -1,17 +1,17 @@
 
 import * as moment from "moment";
 import fetch from "node-fetch";
-import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 
 import { BatchLabsApplication } from "client/core";
 import { logger } from "client/logger";
 import { Constants } from "common";
 import { Deferred } from "common/deferred";
+import { AADConfig } from "../aad-config";
 import {
     AccessToken, AccessTokenCache,
     AccessTokenError, AccessTokenErrorResult, AccessTokenService,
 } from "../access-token";
-import { AdalConfig } from "../adal-config";
 import { AuthenticationService, AuthorizeResult } from "../authentication";
 import { AADUser } from "./aad-user";
 import { UserDecoder } from "./user-decoder";
@@ -21,7 +21,7 @@ const resources = [
     Constants.ResourceUrl.batch,
 ];
 
-const adalConfig: AdalConfig = {
+const adalConfig: AADConfig = {
     tenant: "common",
     clientId: "04b07795-8ddb-461a-bbee-02f9e1bf7b46", // Azure CLI
     redirectUri: "urn:ietf:wg:oauth:2.0:oob",
@@ -29,7 +29,7 @@ const adalConfig: AdalConfig = {
 
 const defaultResource = resources[0];
 
-export class AdalService {
+export class AADService {
     /**
      * Minimum number of milliseconds the token should have left before we refresh
      * 2 minutes
@@ -74,7 +74,6 @@ export class AdalService {
             this.app.splashScreen.updateMessage("Retrieving access tokens");
 
             this._tenantsIds.next(tenantIds);
-            const queries: Array<() => Observable<any>> = [];
             for (let tenantId of tenantIds) {
                 for (let resource of resources) {
                     await this._retrieveNewAccessToken(tenantId, resource);

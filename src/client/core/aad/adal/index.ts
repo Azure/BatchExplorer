@@ -1,1 +1,1 @@
-export * from "./adal.service";
+export * from "./aad.service";

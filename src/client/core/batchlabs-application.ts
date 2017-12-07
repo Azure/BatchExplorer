@@ -9,7 +9,7 @@ import { MainWindow } from "../main-window";
 import { PythonRpcServerProcess } from "../python-process";
 import { RecoverWindow } from "../recover-window";
 import { SplashScreen } from "../splash-screen";
-import { AuthenticationWindow } from "./aad";
+import { AADService, AuthenticationWindow } from "./aad";
 
 const osName = `${os.platform()}-${os.arch()}/${os.release()}`;
 const isDev = Constants.isDev ? "-dev" : "";
@@ -21,6 +21,7 @@ export class BatchLabsApplication {
     public recoverWindow = new RecoverWindow(this);
     public mainWindow = new MainWindow(this);
     public pythonServer = new PythonRpcServerProcess();
+    public aadService = new AADService(this);
 
     constructor(public autoUpdater: AppUpdater) {
         logger.info("ARguments", process.argv);

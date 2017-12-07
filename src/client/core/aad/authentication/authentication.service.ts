@@ -1,7 +1,7 @@
 import { BatchLabsApplication } from "client/core";
 import { Deferred } from "common";
 import { SecureUtils } from "common/utils";
-import { AdalConfig } from "../adal-config";
+import { AADConfig } from "../aad-config";
 import * as AdalConstants from "../adal-constants";
 
 enum AuthorizePromptType {
@@ -37,7 +37,7 @@ export class AuthenticationService {
     private _authorizeQueue: AuthorizeQueueItem[] = [];
     private _currentAuthorization: AuthorizeQueueItem = null;
 
-    constructor(private app: BatchLabsApplication, private config: AdalConfig) { }
+    constructor(private app: BatchLabsApplication, private config: AADConfig) { }
     /**
      * Authorize the user.
      * @param silent If set to true it will not ask the user for prompt. (i.e prompt=none for AD)

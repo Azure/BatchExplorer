@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
 import { ListFilterType } from "app/components/base/advanced-filter";
 import { Job, JobTerminateReason, TaskState } from "app/models";
 import { DateUtils } from "app/utils";
-import { ODataFields } from "app/utils/constants";
+import { ODataFields } from "common/constants";
 
 @Component({
     selector: "bl-job-error-display",
