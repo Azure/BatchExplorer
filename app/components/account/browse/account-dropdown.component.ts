@@ -44,6 +44,7 @@ export class AccountDropDownComponent implements AfterViewInit {
 
         this.accountService.currentAccountInvalidError.subscribe((error) => {
             this.currentAccountInvalidError = error;
+            this.changeDetection.detectChanges();
         });
     }
 }
