@@ -5,7 +5,7 @@ import { shell } from "electron";
 import { Pool, ResizeErrorCode } from "app/models";
 import { PoolResizeDto } from "app/models/dtos";
 import { AccountService, PoolService } from "app/services";
-import { ExternalLinks } from "app/utils/constants";
+import { ExternalLinks } from "common/constants";
 
 @Component({
     selector: "bl-pool-error-display",

@@ -21,6 +21,14 @@ export class AdalService {
         this.aadService.logout();
     }
 
+    public get tenantsIds() {
+        return this.aadService.tenantsIds;
+    }
+
+    public get currentUser() {
+        return this.aadService.currentUser;
+    }
+
     public accessTokenFor(tenantId: string, resource?: string) {
         return Observable.fromPromise(this.aadService.accessTokenFor(tenantId, resource));
     }

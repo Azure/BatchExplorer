@@ -112,7 +112,7 @@ export class AADService {
             const token = this._tokenCache.getToken(tenantId, resource);
 
             const expireIn = moment(token.expires_on).diff(moment());
-            if (expireIn > AdalService.refreshMargin) {
+            if (expireIn > AADService.refreshMargin) {
                 return token;
             }
         }

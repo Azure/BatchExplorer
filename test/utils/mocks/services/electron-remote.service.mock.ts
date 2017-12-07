@@ -1,7 +1,7 @@
 import { Subject } from "rxjs";
 
 import { ElectronRemote } from "app/services";
-import { AuthenticationWindow } from "client/authentication";
+import { AuthenticationWindow } from "client/core/aad/authentication";
 import { SplashScreen } from "client/splash-screen";
 
 export class MockElectronRemote extends ElectronRemote {

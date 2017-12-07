@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { FileUtils } from "client/api";
-import { AuthenticationWindow } from "client/authentication";
 import { BatchLabsApplication } from "client/core";
+import { AuthenticationWindow } from "client/core/aad";
 import { SplashScreen } from "client/splash-screen";
 import { remote } from "electron";
 

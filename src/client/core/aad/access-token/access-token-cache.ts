@@ -69,27 +69,27 @@ export class AccessTokenCache {
         // }
     }
 
-    private _processSerializedTokens(data: any) {
-        const tokens = {};
-        for (let tenantId of Object.keys(data)) {
-            const tenant = data[tenantId];
-            if (!tenant || typeof tenant !== "object") {
-                continue;
-            }
+    // private _processSerializedTokens(data: any) {
+    //     const tokens = {};
+    //     for (let tenantId of Object.keys(data)) {
+    //         const tenant = data[tenantId];
+    //         if (!tenant || typeof tenant !== "object") {
+    //             continue;
+    //         }
 
-            for (let resource of Object.keys(tenant)) {
-                if (!AccessToken.isValidToken(tenant[resource])) {
-                    continue;
-                }
-                const token = new AccessToken(tenant[resource]);
-                if (!token.hasExpired()) {
-                    if (!(tenantId in tokens)) {
-                        tokens[tenantId] = {};
-                    }
-                    tokens[tenantId][resource] = token;
-                }
-            }
-        }
-        return tokens;
-    }
+    //         for (let resource of Object.keys(tenant)) {
+    //             if (!AccessToken.isValidToken(tenant[resource])) {
+    //                 continue;
+    //             }
+    //             const token = new AccessToken(tenant[resource]);
+    //             if (!token.hasExpired()) {
+    //                 if (!(tenantId in tokens)) {
+    //                     tokens[tenantId] = {};
+    //                 }
+    //                 tokens[tenantId][resource] = token;
+    //             }
+    //         }
+    //     }
+    //     return tokens;
+    // }
 }
