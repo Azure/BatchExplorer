@@ -1,5 +1,4 @@
-import { Headers, Http, RequestOptions } from "@angular/http";
-import { Observable } from "rxjs";
+import fetch, { RequestInit } from "node-fetch";
 
 import { logger } from "client/logger";
 import { AdalConfig } from "../adal-config";
@@ -25,48 +24,40 @@ export interface AccessTokenErrorResult {
  * This service handle the retrival of the access token to auth AAD queries
  */
 export class AccessTokenService {
-    constructor(private config: AdalConfig, private http: Http) {
+    constructor(private config: AdalConfig) {
     }
 
     /**
      * Retrieve the access token using the given authorization code
      */
-    public redeem(resource: string, tenantId: string, authorizationCode: string): Observable<AccessToken> {
-        const obs = this.http.post(this._buildUrl(tenantId),
-            this._redeemBody(resource, authorizationCode),
-            this._options())
-            .share()
-            .map((response) => {
-                const data = response.json();
-                return this._processResponse(data);
+    public async redeem(resource: string, tenantId: string, authorizationCode: string): Promise<AccessToken> {
+        try {
+            const response = await fetch(this._buildUrl(tenantId), {
+                method: "post",
+                ...this._options(),
             });
+            const data = await response.json();
 
-        obs.subscribe({
-            error: (error) => {
-                logger.error("Error redeem the auth code for access token", error);
-            },
-        });
-
-        return obs;
+            return this._processResponse(data);
+        } catch (error) {
+            logger.error("Error redeem the auth code for access token", error);
+            throw error;
+        }
     }
 
-    public refresh(resource: string, tenantId: string, refreshToken: string): Observable<AccessToken> {
-        const obs = this.http.post(
-            this._buildUrl(tenantId),
-            this._refreshBody(resource, refreshToken),
-            this._options())
-            .share()
-            .map((response) => {
-                const data = response.json();
-                return this._processResponse(data);
+    public async refresh(resource: string, tenantId: string, refreshToken: string): Promise<AccessToken> {
+        try {
+            const response = await fetch(this._buildUrl(tenantId), {
+                method: "post",
+                body: this._refreshBody(resource, refreshToken),
+                ...this._options(),
             });
-
-        obs.subscribe({
-            error: (error) => {
-                logger.error("Error refresh access token", error);
-            },
-        });
-        return obs;
+            const data = await response.json();
+            return this._processResponse(data);
+        } catch (error) {
+            logger.error("Error refresh access token", error);
+            throw error;
+        }
     }
 
     private _buildUrl(tenantId: string) {
@@ -95,9 +86,9 @@ export class AccessTokenService {
         return objectToParams(params);
     }
 
-    private _options(): RequestOptions {
-        const headers = new Headers({ "Content-Type": contentType });
-        return new RequestOptions({ headers });
+    private _options(): RequestInit {
+        const headers = { "Content-Type": contentType };
+        return { headers };
     }
 
     private _processResponse(data: any): AccessToken {

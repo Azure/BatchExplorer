@@ -1,6 +1,5 @@
-import { AsyncSubject, Observable } from "rxjs";
-
 import { BatchLabsApplication } from "client/core";
+import { Deferred } from "common";
 import { SecureUtils } from "common/utils";
 import { AdalConfig } from "../adal-config";
 import * as AdalConstants from "../adal-constants";
@@ -26,25 +25,19 @@ export interface AuthorizeError {
 interface AuthorizeQueueItem {
     tenantId: string;
     silent: boolean;
-    subject: AsyncSubject<any>;
+    deferred: Deferred<any>;
 }
-
-const adalConfig: AdalConfig = {
-    tenant: "common",
-    clientId: "04b07795-8ddb-461a-bbee-02f9e1bf7b46", // Azure CLI
-    redirectUri: "urn:ietf:wg:oauth:2.0:oob",
-};
 
 /**
  * This will open a new window at the /authorize endpoint to get the user
  */
-export class UserAuthorization {
+export class AuthenticationService {
     // @ts-ignore
     private _waitingForAuth = false;
     private _authorizeQueue: AuthorizeQueueItem[] = [];
     private _currentAuthorization: AuthorizeQueueItem = null;
 
-    constructor(private app: BatchLabsApplication) { }
+    constructor(private app: BatchLabsApplication, private config: AdalConfig) { }
     /**
      * Authorize the user.
      * @param silent If set to true it will not ask the user for prompt. (i.e prompt=none for AD)
@@ -52,21 +45,21 @@ export class UserAuthorization {
      * @returns Observable with the successfull AuthorizeResult.
      *      If silent is true and the access fail the observable will return and error of type AuthorizeError
      */
-    public authorize(tenantId: string, silent = false): Observable<AuthorizeResult> {
+    public async authorize(tenantId: string, silent = false): Promise<AuthorizeResult> {
         if (this._isAuthorizingTenant(tenantId)) {
-            return this._getTenantSubject(tenantId).asObservable();
+            return this._getTenantDeferred(tenantId).promise;
         }
-        const subject = new AsyncSubject<AuthorizeResult>();
-        this._authorizeQueue.push({ tenantId, silent, subject });
+        const deferred = new Deferred<AuthorizeResult>();
+        this._authorizeQueue.push({ tenantId, silent, deferred });
         this._authorizeNext();
-        return subject.asObservable();
+        return deferred.promise;
     }
 
     /**
      * This will try to do authorize silently first and if it fails show the login window to the user
      */
-    public authorizeTrySilentFirst(tenantId: string): Observable<AuthorizeResult> {
-        return this.authorize(tenantId, true).catch((error, source) => {
+    public async authorizeTrySilentFirst(tenantId: string): Promise<AuthorizeResult> {
+        return this.authorize(tenantId, true).catch((error) => {
             return this.authorize(tenantId, false);
         });
     }
@@ -74,17 +67,18 @@ export class UserAuthorization {
     /**
      * Log the user out
      */
-    public logout(): Observable<any> {
+    public async logout(): Promise<any> {
         this._waitingForAuth = true;
-        const subject = new AsyncSubject();
-        const url = AdalConstants.logoutUrl(adalConfig.tenant);
+        // TODO-TIM this doesn't seem to resolve
+        const deferred = new Deferred();
+        const url = AdalConstants.logoutUrl(this.config.tenant);
         const authWindow = this.app.authenticationWindow;
         authWindow.create();
 
         authWindow.loadURL(url);
         this._setupEvents();
         authWindow.show();
-        return subject.asObservable();
+        return deferred.promise;
     }
 
     private _authorizeNext() {
@@ -110,8 +104,8 @@ export class UserAuthorization {
     private _buildUrl(tenantId, silent: boolean): string {
         const params: AdalConstants.AuthorizeUrlParams = {
             response_type: "id_token+code",
-            redirect_uri: encodeURIComponent(adalConfig.redirectUri),
-            client_id: adalConfig.clientId,
+            redirect_uri: encodeURIComponent(this.config.redirectUri),
+            client_id: this.config.clientId,
             scope: "user_impersonation+openid",
             nonce: SecureUtils.uuid(),
             state: SecureUtils.uuid(),
@@ -149,10 +143,9 @@ export class UserAuthorization {
         this._currentAuthorization = null;
 
         if ((params as any).error) {
-            auth.subject.error(params as AuthorizeError);
+            auth.deferred.reject(params as AuthorizeError);
         } else {
-            auth.subject.next(params as AuthorizeResult);
-            auth.subject.complete();
+            auth.deferred.resolve(params as AuthorizeResult);
         }
         this._authorizeNext();
     }
@@ -161,7 +154,7 @@ export class UserAuthorization {
      * If the given url is the final redirect_uri
      */
     private _isRedirectUrl(url: string) {
-        return url.startsWith(adalConfig.redirectUri);
+        return url.startsWith(this.config.redirectUri);
     }
 
     /**
@@ -188,9 +181,9 @@ export class UserAuthorization {
         return this._authorizeQueue.filter(x => x.tenantId === tenantId)[0];
     }
 
-    private _getTenantSubject(tenantId: string): AsyncSubject<any> {
+    private _getTenantDeferred(tenantId: string): Deferred<any> {
         const auth = this._getTenantAuthorization(tenantId);
-        return auth && auth.subject;
+        return auth && auth.deferred;
     }
 
     private _closeWindow() {

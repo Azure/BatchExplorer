@@ -25,8 +25,5 @@ export * from "common/utils";
 import * as icons from "./icons";
 export const Icons = icons;
 
-import * as constants from "./constants";
-export const Constants = constants;
-
 import * as validators from "./validators";
 export const CustomValidators = validators;
