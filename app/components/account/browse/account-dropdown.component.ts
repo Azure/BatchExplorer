@@ -51,16 +51,17 @@ export class AccountDropDownComponent implements AfterViewInit {
     }
 
     public openContextMenu(account: AccountResource) {
+        if (this.selectedId === account.id) {
+            return;
+        }
         const items = [
             new ContextMenuItem({
                 label: "Select",
                 click: () => this.selectAccount(account),
-                enabled: this._contextMenuItemEnabled(account),
              }),
             new ContextMenuItem({
                 label: "Remove favorite",
                 click: () => this._unFavoriteAccount(account),
-                enabled: this._contextMenuItemEnabled(account),
              }),
         ];
         this.contextMenuService.openMenu(new ContextMenu(items));
@@ -68,9 +69,5 @@ export class AccountDropDownComponent implements AfterViewInit {
 
     private _unFavoriteAccount(account: AccountResource) {
         this.accountService.unFavoriteAccount(account.id);
-    }
-
-    private _contextMenuItemEnabled(account: AccountResource): boolean {
-        return this.selectedId !== account.id;
     }
 }
