@@ -21,7 +21,12 @@
     "listEmittedFiles": true, // debug option
     "listFiles": true, // debug option
     "outDir": "build/client",
-    "baseUrl": "src/",
+    "baseUrl": ".",
+    "paths": {
+      "*": [
+        "src/*"
+      ]
+    },
     "types": [
       "node",
       "electron",

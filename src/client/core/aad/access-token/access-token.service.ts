@@ -1,10 +1,10 @@
 import { Headers, Http, RequestOptions } from "@angular/http";
 import { Observable } from "rxjs";
 
-import { log } from "app/utils";
-import { AccessToken } from "./access-token";
-import { AdalConfig } from "./adal-config";
-import { baseUrl, objectToParams } from "./adal-constants";
+import { logger } from "client/logger";
+import { AdalConfig } from "../adal-config";
+import { baseUrl, objectToParams } from "../adal-constants";
+import { AccessToken } from "./access-token.model";
 
 const contentType = "application/x-www-form-urlencoded";
 
@@ -43,7 +43,7 @@ export class AccessTokenService {
 
         obs.subscribe({
             error: (error) => {
-                log.error("Error redeem the auth code for access token", error);
+                logger.error("Error redeem the auth code for access token", error);
             },
         });
 
@@ -63,7 +63,7 @@ export class AccessTokenService {
 
         obs.subscribe({
             error: (error) => {
-                log.error("Error refresh access token", error);
+                logger.error("Error refresh access token", error);
             },
         });
         return obs;

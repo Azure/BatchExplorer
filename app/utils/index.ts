@@ -13,7 +13,6 @@ export * from "./misc";
 export * from "./model-utils";
 export * from "./monaco-languages";
 export * from "./number-utils";
-export * from "./object";
 export * from "./os";
 export * from "./pool-utils";
 export * from "./arm-resource-utils";

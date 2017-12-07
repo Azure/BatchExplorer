@@ -2,8 +2,8 @@ import { AsyncSubject, Observable } from "rxjs";
 
 import { BatchLabsApplication } from "client/core";
 import { SecureUtils } from "common/utils";
-import { AdalConfig } from "./adal-config";
-import * as AdalConstants from "./adal-constants";
+import { AdalConfig } from "../adal-config";
+import * as AdalConstants from "../adal-constants";
 
 enum AuthorizePromptType {
     login = "login",
