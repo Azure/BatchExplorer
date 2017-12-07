@@ -222,10 +222,6 @@ nav {
     user-select: none;
 }
 
-.no-userinteract {
-    pointer-events: none;
-}
-
 .warn-text {
     color: map-get($warn, 800);
 }

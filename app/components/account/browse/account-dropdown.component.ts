@@ -3,6 +3,7 @@ import { AccountResource } from "app/models";
 import { AccountService, AccountStatus } from "app/services";
 import { ArmResourceUtils } from "app/utils";
 
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
 import "./account-dropdown.scss";
 
 @Component({
@@ -16,17 +17,19 @@ export class AccountDropDownComponent implements AfterViewInit {
     public selectedAccountAlias: string = "";
     public showDropdown = false;
     public currentAccountValid = AccountStatus.Loading;
-    public currentAccountInvalidError = "";
+    public currentAccountInvalidError: any = null;
 
     constructor(
         private accountService: AccountService,
-        private changeDetection: ChangeDetectorRef) {
+        private changeDetection: ChangeDetectorRef,
+        private contextMenuService: ContextMenuService) {
 
         accountService.currentAccountId.subscribe((accountId) => {
             if (accountId) {
                 this.selectedId = accountId;
                 this.selectedAccountAlias = ArmResourceUtils.getAccountNameFromResourceId(accountId);
             } else {
+                this.selectedId = null;
                 this.selectedAccountAlias = "No account selected!";
             }
         });
@@ -46,5 +49,26 @@ export class AccountDropDownComponent implements AfterViewInit {
             this.currentAccountInvalidError = error;
             this.changeDetection.detectChanges();
         });
+    }
+
+    public openContextMenu(account: AccountResource) {
+        if (this.selectedId === account.id) {
+            return;
+        }
+        const items = [
+            new ContextMenuItem({
+                label: "Select",
+                click: () => this.selectAccount(account),
+             }),
+            new ContextMenuItem({
+                label: "Remove favorite",
+                click: () => this._unFavoriteAccount(account),
+             }),
+        ];
+        this.contextMenuService.openMenu(new ContextMenu(items));
+    }
+
+    private _unFavoriteAccount(account: AccountResource) {
+        this.accountService.unFavoriteAccount(account.id);
     }
 }
