@@ -10,8 +10,13 @@
         <i *ngIf="currentAccountValid === status.Loading" class="fa fa-spinner fa-spin"></i>
     </div>
     <div bl-dropdown-content>
-        <div *ngFor="let account of accountService.accountFavorites | async" class="dropdown-item" [routerLink]="['/accounts', account.id]"
-            (click)="selectAccount(account)" [class.selected]="account.id === selectedId" [title]="account.id">
+        <div *ngFor="let account of accountService.accountFavorites | async"
+             class="dropdown-item"
+             [routerLink]="['/accounts', account.id]"
+             (click)="selectAccount(account)"
+             (contextmenu)="openContextMenu(account)"
+             [class.selected]="account.id === selectedId"
+             [title]="account.id">
             <div class="main">
                 <div class="alias">{{account.name}}</div>
                 <div class="url">{{account.properties.accountEndpoint}}</div>
