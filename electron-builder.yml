@@ -16,6 +16,12 @@ extraResources:
       - "**/*"
   - "ThirdPartyNotices.txt"
 
+protocols:
+  - name: "BatchLabs protocol"
+    role: "Viewer"
+    schemes:
+     - ms-batchlabs
+
 # Mac OS configuration
 mac:
   icon: "app/assets/images/icon.icns"

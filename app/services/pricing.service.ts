@@ -1,63 +1,88 @@
 import { Injectable } from "@angular/core";
-import { List } from "immutable";
 import * as moment from "moment";
 import { Observable } from "rxjs";
 
-import { Pool, SpecCost } from "app/models";
+import { AccountResource, BatchSoftwareLicense, Pool, RateCardMeter } from "app/models";
+import { BatchPricing, OSPricing, OsType, SoftwarePricing, VMPrices } from "app/services/pricing";
 import { PoolPrice, PoolPriceOptions, PoolUtils, log } from "app/utils";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { AccountService } from "./account.service";
-import { GithubDataService } from "./github-data.service";
+import { ArmHttpService } from "./arm-http.service";
 import { LocalFileStorage } from "./local-file-storage.service";
+import { VmSizeService } from "./vm-size.service";
 
-const resourceIdsPath = "data/vm-resource-ids.json";
-const hardwaremapFilename = "hardware-map.json";
+const pricingFilename = "pricing.json";
 
-interface PricingResource {
-    ResourceId: string;
-    Multiplier: number;
+export function commerceUrl(subscriptionId: string) {
+    return `subscriptions/${subscriptionId}/providers/Microsoft.Commerce`;
 }
 
-interface PricingOS {
-    [os: string]: PricingResource;
+export function rateCardFilter() {
+    return `OfferDurableId eq 'MS-AZR-0003P' and Currency eq 'USD' and Locale eq 'en-US' and RegionInfo eq 'US'`;
 }
 
-interface PricingLocation {
-    [os: string]: PricingOS;
-}
+const regionMapping = {
+    "US West 2": "westus2",
+    "AP Southeast": "southeastasia",
+    "BR South": "brazilsouth",
+    "AU East": "australiaeast",
+    "US West": "westus",
+    "CA East": "canadaeast",
+    "UK South": "uksouth",
+    "US Central": "centralus",
+    "US East 2": "eastus2",
+    "AU Southeast": "australiasoutheast",
+    "US East": "eastus",
+    "JA East": "japaneast",
+    "KR South": "koreasouth",
+    "CA Central": "canadacentral",
+    "FR South": "francesouth",
+    "EU West": "westeurope",
+    "AP East": "eastasia",
+    "JA West": "japanwest",
+    "US North Central": "northcentralus",
+    "EU North": "northeurope",
+    "UK North": "uknorth",
+    "UK West": "ukwest",
+    "US South Central": "southcentralus",
+    "IN South": "southindia",
+    "IN West": "westindia",
+    "IN Central": "centralindia",
+    "KR Central": "koreacentral",
+    "FR Central": "francecentral",
+    "US West Central": "westcentralus",
+    "UK South 2": "uksouth2",
+};
 
-interface HardwareMap {
-    [location: string]: PricingLocation;
-}
-
-interface ResourceSpec {
-    id: string;
-    firstParty: Array<{ resourceId: string, quantity: number }>;
-    thirdParty: Array<{ resourceId: string, quantity: number }>;
-}
-
-// const specCostUrl = "https://s2.billing.ext.azure.com/api/Billing/Subscription/GetSpecsCosts";
-
-export type OsType = "linux" | "windows";
+const softwareMeterId = {
+    "089f79d8-0349-432c-96a6-8add90b8a40e": BatchSoftwareLicense.arnold,
+    "0ec88494-2022-4939-b809-0d914d954692": BatchSoftwareLicense["3dsmax"],
+    "1d3bb602-0cde-4618-9fb0-f9d94805c2a6": BatchSoftwareLicense.maya,
+    "e2d2d63e-8741-499a-8989-f5f7ec5c3b3f": BatchSoftwareLicense.vray,
+};
 
 @Injectable()
 export class PricingService {
-    private hardwareMap: Observable<HardwareMap>;
-    private _hardwareMap = new BehaviorSubject<HardwareMap>(null);
-
-    private _prices: StringMap<List<SpecCost>> = {};
+    public pricing: Observable<BatchPricing>;
+    private _pricingMap = new BehaviorSubject<BatchPricing>(null);
 
     constructor(
-        // private arm: ArmHttpService,
-        private githubData: GithubDataService,
+        private arm: ArmHttpService,
+        private vmSizeService: VmSizeService,
         private localFileStorage: LocalFileStorage,
         private accountService: AccountService) {
 
-        this.hardwareMap = this._hardwareMap.filter(x => x !== null);
+        this.pricing = this._pricingMap.filter(x => x !== null);
     }
 
     public init() {
-        return this._loadResourceIds();
+        this._loadPricings();
+    }
+
+    public getSoftwarePricing(): Observable<SoftwarePricing> {
+        return this._getPrice((account, pricing) => {
+            return pricing.softwares;
+        });
     }
 
     /**
@@ -65,44 +90,21 @@ export class PricingService {
      * @param region Account location
      * @param os OS for the VM.
      */
-    public getPrices(os: OsType): Observable<List<SpecCost>> {
-        return this.accountService.currentAccount.flatMap((account) => {
-            const key = `${account.location}-${os}`;
-
-            if (key in this._prices) {
-                return Observable.of(this._prices[key]);
-            }
-            return this._getResourceFor(account.location, os).flatMap((specs) => {
-                // const subId = account.subscription.subscriptionId;
-
-                // const options = new RequestOptions();
-                // options.headers = new Headers();
-                // options.headers.append("x-ms-client-request-id", SecureUtils.uuid());
-                // options.headers.append("x-ms-client-session-id", SecureUtils.uuid());
-                // options.headers.append("Content-type", "application/json");
-                // const data = {
-                //     subscriptionId: subId,
-                //     specResourceSets: specs,
-                //     specsToAllowZeroCost: [],
-                //     specType: "VM",
-                // };
-                // return this.arm.post(specCostUrl, JSON.stringify(data), options).map((response) => {
-                //     const costs = response.json().costs;
-                //     if (!costs) {
-                //         log.error("Unexpected format returned from GetSpecsCosts", response.json());
-                //         return [];
-                //     }
-                //     const prices = this._prices[key] = List<SpecCost>(costs.map(x => new SpecCost(x)));
-                //     return prices as any;
-                // });
-                return Observable.of(List([]));
-            });
+    public getPrices(os: OsType): Observable<OSPricing> {
+        return this._getPrice((account, pricing) => {
+            return pricing.nodes.getOSPricing(account.location, os);
         });
     }
 
-    public getPrice(os: OsType, vmSize: string): Observable<SpecCost> {
-        return this.getPrices(os).map((prices) => {
-            return prices.filter(x => x.id === vmSize).first();
+    public getVmPrices(os: OsType, vmSize: string): Observable<VMPrices> {
+        return this._getPrice((account, pricing) => {
+            return pricing.nodes.getVMPrices(account.location, os, vmSize);
+        });
+    }
+
+    public getPrice(os: OsType, vmSize: string, lowpri = false): Observable<number> {
+        return this._getPrice((account, pricing) => {
+            return pricing.nodes.getPrice(account.location, os, vmSize, lowpri);
         });
     }
 
@@ -112,51 +114,73 @@ export class PricingService {
      */
     public computePoolPrice(pool: Pool, options: PoolPriceOptions = {}): Observable<PoolPrice> {
         const os = PoolUtils.isWindows(pool) ? "windows" : "linux";
-        return this.getPrice(os, pool.vmSize).map((cost) => {
-            return PoolUtils.computePoolPrice(pool, cost, options);
+        const vmSizeObs = this.vmSizeService.get(pool.vmSize);
+        const priceObs = this.getVmPrices(os, pool.vmSize);
+        return Observable.forkJoin(vmSizeObs, priceObs).map(([vmSpec, cost]) => {
+            const softwarePricing = this._pricingMap.value.softwares;
+            return PoolUtils.computePoolPrice(pool, vmSpec, cost, softwarePricing, options);
         });
     }
 
-    private _getResourceFor(region: string, os: "linux" | "windows"): Observable<ResourceSpec[]> {
-        return this.hardwareMap.first().map((hardwareMap: HardwareMap) => {
-            const regionData = hardwareMap[region.toLowerCase()];
-            if (!regionData) {
-                return [];
-            }
-
-            const osData = regionData[os.toLowerCase()];
-            if (!osData) {
-                return [];
-            }
-
-            return Object.keys(osData).map(x => this._buildSpec(x, osData[x]));
+    private _loadPricingFromApi() {
+        return this._loadRateCardMeters().map((x) => this._processMeters(x)).cascade((map) => {
+            this._savePricing(map);
+            this._pricingMap.next(map);
         });
     }
 
-    private _buildSpec(size, data: PricingResource): ResourceSpec {
-        return {
-            id: size,
-            firstParty: [{
-                resourceId: data.ResourceId,
-                quantity: 1, // 1 hour
-            }],
-            thirdParty: [],
-        };
+    private _loadRateCardMeters(): Observable<RateCardMeter[]> {
+        return this.accountService.currentAccount.flatMap((account) => {
+            const { subscription } = account;
+
+            const url = `${commerceUrl(subscription.subscriptionId)}/RateCard?$filter=${rateCardFilter()}`;
+            return this.arm.get(url).map((response) => response.json().Meters);
+        }).share();
     }
 
-    private _loadResourceIds() {
-        this._loadResourceIdsFromStorage().cascade((map) => {
+    private _processMeters(meters: RateCardMeter[]): BatchPricing {
+        const pricing = new BatchPricing();
+        const categories = new Set();
+        for (const meter of meters) {
+            categories.add(meter.MeterCategory);
+            if (meter.MeterCategory === "Virtual Machines") {
+                if (meter.MeterStatus === "Active"
+                    && meter.MeterRegion !== ""
+                    && meter.MeterRegion !== "Azure Stack"
+                    && meter.MeterRegion in regionMapping
+                    && !meter.MeterSubCategory.includes("VM_Promo")) {
+                    pricing.nodes.add(regionMapping[meter.MeterRegion], meter.MeterSubCategory, meter.MeterRates["0"]);
+                }
+            }
+        }
+        this._processSoftwaresPricings(meters, pricing);
+
+        return pricing;
+    }
+
+    private _processSoftwaresPricings(meters: RateCardMeter[], pricing: BatchPricing) {
+        for (const meter of meters) {
+            if (meter.MeterId in softwareMeterId) {
+                const software = softwareMeterId[meter.MeterId];
+                const perCore = meter.MeterSubCategory.includes("core)");
+                pricing.softwares.add(software, meter.MeterRates["0"], perCore);
+            }
+        }
+    }
+
+    private _loadPricings() {
+        this._loadPricingFromStorage().cascade((map) => {
             if (map) {
-                this._hardwareMap.next(map);
+                this._pricingMap.next(map);
                 return true;
             } else {
-                return this._loadResourceIdsFromGithub();
+                return this._loadPricingFromApi();
             }
         });
     }
 
-    private _loadResourceIdsFromStorage(): Observable<HardwareMap> {
-        return this.localFileStorage.get(hardwaremapFilename).map((data: { lastSync: string, map: HardwareMap }) => {
+    private _loadPricingFromStorage(): Observable<BatchPricing> {
+        return this.localFileStorage.get(pricingFilename).map((data: { lastSync: string, map: any }) => {
             // If wrong format
             if (!data.lastSync || !data.map) {
                 return null;
@@ -167,62 +191,34 @@ export class PricingService {
             if (lastSync.isBefore(weekOld)) {
                 return null;
             }
-            return data.map as any;
+            return BatchPricing.fromJS(data.map);
         }).catch((error) => {
-            log.error("Error retrieving hardwaremap locally", error);
-            return null;
+            log.error("Error retrieving pricing locally", error);
+            return Observable.of(null);
         });
     }
 
-    private _loadResourceIdsFromGithub(): Observable<boolean> {
-        const obs = this.githubData.get(resourceIdsPath);
-        obs.subscribe({
-            next: (response) => {
-                this._buildHardwareMap(response.json());
-            },
-            error: (error) => {
-                log.error("Error loading resource ids for pricing", error);
-            },
-        });
-        return obs.map(x => true);
-    }
-
-    private _buildHardwareMap(data: StringMap<StringMap<StringMap<PricingResource>>>) {
-        let hardwareMap: HardwareMap = {};
-        for (let sizeName of Object.keys(data)) {
-            const size = data[sizeName];
-            for (let regionName of Object.keys(size)) {
-                const region = size[regionName];
-                if (!(regionName.toLowerCase() in hardwareMap)) {
-                    hardwareMap[regionName.toLowerCase()] = {};
-                }
-
-                const hardwareMapRegion = hardwareMap[regionName.toLowerCase()];
-
-                for (let osName of Object.keys(region)) {
-                    const os = region[osName];
-                    if (!(osName.toLowerCase() in hardwareMapRegion)) {
-                        hardwareMapRegion[osName.toLowerCase()] = {};
-                    }
-
-                    hardwareMapRegion[osName.toLowerCase()][sizeName.toLowerCase()] = os;
-                }
-            }
-        }
-
-        this._hardwareMap.next(hardwareMap);
-        this._saveHardwareMap(hardwareMap);
-    }
-
-    private _saveHardwareMap(map: HardwareMap) {
+    private _savePricing(map: BatchPricing) {
         const data = {
             lastSync: new Date().toISOString(),
-            map,
+            map: map.toJS(),
         };
-        this.localFileStorage.set(hardwaremapFilename, data).subscribe({
+        this.localFileStorage.set(pricingFilename, data).subscribe({
             error: (error) => {
                 log.error("Error saving harwaremap", error);
             },
         });
+    }
+
+    /**
+     * Wait for the prices and account to be loaded and returns callback
+     * @param callback Callback when account and prices are loaded
+     */
+    private _getPrice<T>(callback: (account: AccountResource, pricing: BatchPricing) => T) {
+        return this.accountService.currentAccount.take(1).flatMap((account) => {
+            return this.pricing.take(1).map((map) => {
+                return callback(account, map);
+            });
+        }).share();
     }
 }
