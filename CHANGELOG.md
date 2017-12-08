@@ -1,3 +1,18 @@
+# 0.10.2
+### Bug:
+
+* VM Size selector broken [\#940](https://github.com/Azure/BatchLabs/issues/940)
+
+# 0.10.1
+[All items](https://github.com/Azure/BatchLabs/milestone/13?closed=1)
+
+### Bug:
+
+* Nodes with start task failed state don't show the files [\#929](https://github.com/Azure/BatchLabs/issues/929)
+* OS Family Not Reported on Pool Correctly [\#927](https://github.com/Azure/BatchLabs/issues/927)
+* Error reading job prep-task [\#926](https://github.com/Azure/BatchLabs/issues/926)
+
+
 # 0.10.0
 [All items](https://github.com/Azure/BatchLabs/milestone/11?closed=1)
 

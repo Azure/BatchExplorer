@@ -49,14 +49,27 @@
             <bl-text-property label="Version" [value]="decorator.virtualMachineConfiguration.imageReference.version"></bl-text-property>
             <bl-text-property label="Node agent sku id" [value]="decorator.virtualMachineConfiguration.nodeAgentSKUId"></bl-text-property>
             <bl-text-property *ngIf="decorator.virtualMachineConfiguration.windowsConfiguration" label="Enable automatic updates" [value]="decorator.virtualMachineConfiguration.windowsConfiguration.enableAutomaticUpdates"></bl-text-property>
+            <bl-text-property *ngIf="containerConfiguration" label="Container type" [value]="containerConfiguration.type"></bl-text-property>
+            <bl-text-property *ngIf="containerConfiguration" label="Container images" [value]="containerConfiguration.containerImageNames"></bl-text-property>
+            <bl-table-property *ngIf="containerConfiguration?.containerRegistries?.length > 0" label="Container registries">
+                <bl-table-property-header>
+                    <div tp-column>Registry server</div>
+                    <div tp-column>Username</div>
+                </bl-table-property-header>
+                <bl-table-property-row *ngFor="let registry of containerConfiguration.containerRegistries">
+                    <bl-tp-cell [value]="registry.registryServer"></bl-tp-cell>
+                    <bl-tp-cell [value]="registry.userName"></bl-tp-cell>
+                </bl-table-property-row>
+            </bl-table-property>
         </bl-property-group>
 
         <bl-property-group label="Start task settings" [collapsed]="true" class="wide" [edit]="editStartTask">
-            <bl-text-property label="Command line" [value]="startTask.commandLine" [wrap]="true"></bl-text-property>
-            <bl-text-property label="Max retry count" [value]="startTask.maxTaskRetryCount"></bl-text-property>
-            <bl-text-property label="User identity" [value]="decorator.startTask?.userIdentitySummary"></bl-text-property>
-            <bl-bool-property label="Wait for success" [value]="startTask.waitForSuccess" yesNo="true"></bl-bool-property>
-
+            <ng-container *ngIf="startTaskItemCount">
+                <bl-text-property label="Command line" [value]="startTask.commandLine" [wrap]="true"></bl-text-property>
+                <bl-text-property label="Max retry count" [value]="startTask.maxTaskRetryCount"></bl-text-property>
+                <bl-text-property label="User identity" [value]="decorator.startTask?.userIdentitySummary"></bl-text-property>
+                <bl-bool-property label="Wait for success" [value]="startTask.waitForSuccess" yesNo="true"></bl-bool-property>
+            </ng-container>
             <bl-table-property label="Resource files" *ngIf="startTask.resourceFiles?.size > 0">
                 <bl-table-property-header>
                     <div tp-column>Blob source</div>
@@ -67,7 +80,6 @@
                     <bl-tp-cell [value]="file.filePath"></bl-tp-cell>
                 </bl-table-property-row>
             </bl-table-property>
-
             <bl-table-property label="Environment settings" *ngIf="startTask.environmentSettings?.size > 0">
                 <bl-table-property-header>
                     <div tp-column>Key</div>
@@ -78,6 +90,15 @@
                     <bl-tp-cell [value]="setting.value"></bl-tp-cell>
                 </bl-table-property-row>
             </bl-table-property>
+            <bl-text-property *ngIf="startTask.containerSettings" label="Container image" [value]="startTask.containerSettings.imageName"></bl-text-property>
+            <bl-text-property *ngIf="startTask.containerSettings?.containerRunOptions" label="Container run option" [value]="startTask.containerSettings.containerRunOptions" [wrap]="true"></bl-text-property>
+            <ng-container *ngIf="startTask.containerSettings?.registry">
+                <bl-text-property label="Registry server" [value]="startTask.containerSettings.registry.registryServer" [wrap]="true"></bl-text-property>
+                <bl-text-property label="Registry username" [value]="startTask.containerSettings.registry.userName"></bl-text-property>
+            </ng-container>
+            <bl-no-item [itemCount]="startTaskItemCount" [slimline]="true">
+                <span no-filter>Start task is not specified for current pool.</span>
+            </bl-no-item>
         </bl-property-group>
 
         <bl-property-group label="Application packages" class="wide" [collapsed]="true">

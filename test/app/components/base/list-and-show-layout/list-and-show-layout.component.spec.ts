@@ -8,6 +8,7 @@ import { ActivatedRoute } from "@angular/router";
 import { BehaviorSubject } from "rxjs";
 
 import { BreadcrumbService } from "app/components/base/breadcrumbs";
+import { ClickableComponent } from "app/components/base/buttons/clickable";
 import { ListAndShowLayoutComponent } from "app/components/base/list-and-show-layout";
 import { RefreshButtonComponent } from "app/components/base/refresh-btn";
 import { ScrollableComponent, ScrollableService } from "app/components/base/scrollable";
@@ -49,6 +50,7 @@ describe("ListAndShowLayout", () => {
                 ListAndShowLayoutComponent,
                 ScrollableComponent,
                 RefreshButtonComponent,
+                ClickableComponent,
             ],
             providers: [
                 ScrollableService,
@@ -111,8 +113,9 @@ describe("ListAndShowLayout", () => {
             const advancedFilterEl = de.query(By.css(".advanced-filter-content"));
             expect(advancedFilterEl).not.toBeVisible();
 
-            const filterBtn = de.query(By.css(".fa.fa-filter"));
+            const filterBtn = de.query(By.css(".toggle-advanced-filter"));
             click(filterBtn);
+
             fixture.detectChanges();
 
             expect(advancedFilterEl).toBeVisible();

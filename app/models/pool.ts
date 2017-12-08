@@ -5,8 +5,8 @@ import { ListProp, Model, Prop, Record } from "app/core";
 import { ModelUtils, PoolUtils } from "app/utils";
 import { CloudServiceConfiguration } from "./cloud-service-configuration";
 import { Metadata, MetadataAttributes } from "./metadata";
+import { NavigableRecord } from "./navigable-record";
 import { NetworkConfiguration } from "./network-configuration";
-import { PinnableEntity, PinnedEntityType } from "./pinned-entity";
 import { ResizeError } from "./resize-error";
 import { StartTask, StartTaskAttributes } from "./start-task";
 import { TaskSchedulingPolicy } from "./task-scheduling-policy";
@@ -48,7 +48,7 @@ export interface PoolAttributes {
  * Class for displaying Batch pool information.
  */
 @Model()
-export class Pool extends Record<PoolAttributes> implements PinnableEntity  {
+export class Pool extends Record<PoolAttributes> implements NavigableRecord  {
 
     @Prop() public allocationState: string;
 
@@ -149,10 +149,6 @@ export class Pool extends Record<PoolAttributes> implements PinnableEntity  {
 
     public get routerLink(): string[] {
         return ["/pools", this.id];
-    }
-
-    public get pinnableType(): PinnedEntityType {
-        return PinnedEntityType.Pool;
     }
 }
 

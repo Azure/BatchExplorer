@@ -2,11 +2,13 @@ import { Component, Input, OnInit, ViewChild } from "@angular/core";
 import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
+import { ActivatedRoute } from "@angular/router";
 import { LoadingStatus } from "app/components/base/loading";
 import { SelectableList } from "app/components/base/selectable-list";
 import { Node } from "app/models";
 import { NodeListParams, NodeService } from "app/services";
 import { ListView } from "app/services/core";
+import { ComponentUtils } from "app/utils";
 import { Filter } from "app/utils/filter-builder";
 import { NodeListDisplayComponent } from "./display";
 
@@ -56,9 +58,10 @@ export class NodeListComponent extends SelectableList implements OnInit {
     private _filter: Filter;
     private _poolId: string;
 
-    constructor(private nodeService: NodeService) {
+    constructor(private nodeService: NodeService, activatedRoute: ActivatedRoute) {
         super();
         this.data = this.nodeService.listView();
+        ComponentUtils.setActiveItem(activatedRoute, this.data);
     }
 
     public ngOnInit() {

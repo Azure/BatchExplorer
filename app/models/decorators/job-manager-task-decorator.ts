@@ -1,6 +1,7 @@
 import { JobManagerTask } from "app/models";
 import { DecoratorBase } from "app/utils/decorators";
 import { TaskConstraintsDecorator } from "./task-constraints-decorator";
+import { TaskContainerSettingsDecorator } from "./task-container-settings-decorator";
 
 export class JobManagerTaskDecorator extends DecoratorBase<JobManagerTask> {
     public displayName: string;
@@ -13,6 +14,7 @@ export class JobManagerTaskDecorator extends DecoratorBase<JobManagerTask> {
     public applicationPackageReferences: {};
     public environmentSettings: {};
     public constraints: {};
+    public containerSettings: {};
 
     constructor(task: JobManagerTask) {
         super(task);
@@ -27,5 +29,6 @@ export class JobManagerTaskDecorator extends DecoratorBase<JobManagerTask> {
         this.applicationPackageReferences = task.applicationPackageReferences || {};
         this.environmentSettings = task.environmentSettings || {};
         this.constraints = new TaskConstraintsDecorator(task.constraints || {} as any);
+        this.containerSettings = new TaskContainerSettingsDecorator(task.containerSettings || {} as any);
     }
 }

@@ -25,6 +25,7 @@ export class TaskConfigurationComponent {
     public decorator: TaskDecorator;
     public appPackages: any[];
     public constraints: any;
+    public containerSettings: any;
     public executionInfo: any;
     public exitConditionData: any;
     public environmentSettings: List<NameValuePair> = List([]);
@@ -87,6 +88,7 @@ export class TaskConfigurationComponent {
             this.constraints = this.decorator.constraints || {};
             this.executionInfo = this.decorator.executionInfo || {};
             this.nodeInfo = this.decorator.nodeInfo || {};
+            this.containerSettings = this.decorator.containerSettings || {};
         }
     }
 

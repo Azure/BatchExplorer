@@ -6,10 +6,6 @@ app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 import { Constants } from "./client-constants";
 import { BatchLabsApplication, listenToSelectCertifcateEvent } from "./core";
 import { logger } from "./logger";
-import { PythonRpcServerProcess } from "./python-process";
-
-const pythonServer = new PythonRpcServerProcess();
-pythonServer.start();
 
 if (Constants.isDev) {
     autoUpdater.updateConfigPath = path.join(Constants.root, "dev-app-update.yml");
@@ -17,6 +13,8 @@ if (Constants.isDev) {
 autoUpdater.allowPrerelease = true;
 autoUpdater.autoDownload = true;
 autoUpdater.logger = logger;
+
+const batchLabsApp = new BatchLabsApplication(autoUpdater);
 
 // Create the browser window.
 function startApplication() {
@@ -26,7 +24,6 @@ function startApplication() {
         callback();
     });
 
-    const batchLabsApp = new BatchLabsApplication(autoUpdater);
     // Uncomment to view why windows don't show up.
     // batchLabsApp.debugCrash();
     batchLabsApp.init();
@@ -38,6 +35,9 @@ function startApplication() {
             {
                 label: "Application",
                 submenu: [
+                    { role: "hide" },
+                    { role: "hideothers" },
+                    { type: "separator" },
                     { label: "Quit", accelerator: "Command+Q", click: () => app.quit() },
                 ],
             },
@@ -54,6 +54,12 @@ function startApplication() {
                     { role: "selectall" },
                 ],
             },
+            {
+                label: "Window",
+                submenu: [
+                    { role: "minimize" },
+                ],
+            },
         ]));
     }
 }
@@ -66,7 +72,7 @@ app.on("ready", startApplication);
 listenToSelectCertifcateEvent();
 
 process.on("exit", () => {
-    pythonServer.stop();
+    batchLabsApp.quit();
 });
 
 process.on("SIGINT", () => {

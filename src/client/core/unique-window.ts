@@ -5,11 +5,21 @@ import { logger } from "../logger";
  * Unique window is a wrapper around a electron browser window which makes sure there is only 1 window of this type.
  */
 export abstract class UniqueWindow {
+    public domReady: Promise<void>;
     protected _window: Electron.BrowserWindow;
-    constructor(protected batchLabsApp: BatchLabsApplication) { }
+    private _resolveDomReady: () => void;
+
+    constructor(protected batchLabsApp: BatchLabsApplication) {
+        this.domReady = new Promise((resolve) => {
+            this._resolveDomReady = resolve;
+        });
+    }
     public create() {
         this.destroy();
         this._window = this.createWindow();
+        this._window.webContents.once("dom-ready", () => {
+            this._resolveDomReady();
+        });
     }
 
     /**
@@ -17,6 +27,13 @@ export abstract class UniqueWindow {
      */
     public exists() {
         return Boolean(this._window);
+    }
+
+    public async send(key: string, message: string) {
+        if (this._window) {
+            await this.domReady;
+            this._window.webContents.send(key, message);
+        }
     }
 
     /**

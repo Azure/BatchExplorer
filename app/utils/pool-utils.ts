@@ -1,6 +1,6 @@
 import { Icon, IconSources } from "app/components/base/icon";
-import { Pool, PoolAllocationState, SpecCost } from "app/models";
-import { LowPriDiscount } from "app/utils/constants";
+import { CloudServiceOsFamily, Pool, PoolAllocationState, VmSize } from "app/models";
+import { SoftwarePricing, VMPrices } from "app/services/pricing";
 import * as Icons from "./icons";
 
 export interface PoolPrice {
@@ -113,12 +113,11 @@ export class PoolUtils {
     public static getOsName(pool: Pool): string {
         if (pool.cloudServiceConfiguration) {
             let osFamily = pool.cloudServiceConfiguration.osFamily;
-
-            if (osFamily === 2) {
+            if (osFamily === CloudServiceOsFamily.windowsServer2008R2) {
                 return "Windows Server 2008 R2 SP1";
-            } else if (osFamily === 3) {
+            } else if (osFamily === CloudServiceOsFamily.windowsServer2012) {
                 return "Windows Server 2012";
-            } else if (osFamily === 4) {
+            } else if (osFamily === CloudServiceOsFamily.windowsServer2012R2) {
                 return "Windows Server 2012 R2";
             } else {
                 return "Windows Server 2016";
@@ -171,24 +170,32 @@ export class PoolUtils {
         }
     }
 
-    public static computePoolPrice(pool: Pool, cost: SpecCost, options: PoolPriceOptions = {}): PoolPrice {
-        if (!cost) {
+    public static computePoolPrice(
+        pool: Pool,
+        vmSpec: VmSize,
+        nodeCost: VMPrices,
+        softwarePricing: SoftwarePricing,
+        options: PoolPriceOptions = {}): PoolPrice {
+        if (!nodeCost) {
             return null;
         }
         const count = PoolUtils._getPoolNodes(pool, options.target);
         const dedicatedCount = count.dedicated || 0;
         const lowPriCount = count.lowPri || 0;
 
-        const lowPriDiscount = PoolUtils.isWindows(pool) ? LowPriDiscount.windows : LowPriDiscount.linux;
+        let dedicatedPrice = nodeCost.regular * dedicatedCount;
+        let lowPriPrice = nodeCost.lowpri * lowPriCount;
 
-        const dedicatedPrice = cost.amount * dedicatedCount;
-        const lowPriPrice = cost.amount * lowPriCount * lowPriDiscount;
+        pool.applicationLicenses.forEach((license) => {
+            dedicatedPrice += softwarePricing.getPrice(license, vmSpec.numberOfCores) * dedicatedCount;
+            lowPriPrice += softwarePricing.getPrice(license, vmSpec.numberOfCores) * lowPriCount;
+        });
 
         return {
             dedicated: dedicatedPrice,
             lowPri: lowPriPrice,
             total: dedicatedPrice + lowPriPrice,
-            unit: cost.currencyCode,
+            unit: "USD",
         };
     }
 

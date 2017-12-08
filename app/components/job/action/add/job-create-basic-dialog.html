@@ -27,21 +27,33 @@
                 <div no-value-title>Job manager task</div>
                 <div value-title>{{jobManagerTask?.id}}</div>
                 <div nested-form>
-                    <bl-job-manager-task-picker [formControl]="jobManagerTaskPicker.nestedValue" [userAccounts]="form.value.userAccounts"></bl-job-manager-task-picker>
+                    <bl-job-manager-task-picker
+                        [formControl]="jobManagerTaskPicker.nestedValue"
+                        [userAccounts]="form.value.userAccounts"
+                        [virtualMachineConfiguration]="virtualMachineConfiguration">
+                    </bl-job-manager-task-picker>
                 </div>
             </bl-form-picker>
             <bl-form-picker formControlName="jobPreparationTask" (clear)="resetJobPreparationTask()" #jobPreparationTaskPicker>
                 <div no-value-title>Job preparation task</div>
                 <div value-title>{{jobPreparationTask?.id}}</div>
                 <div nested-form>
-                    <bl-job-preparation-task-picker [formControl]="jobPreparationTaskPicker.nestedValue" [userAccounts]="form.value.userAccounts"                        ></bl-job-preparation-task-picker>
+                    <bl-job-preparation-task-picker
+                        [formControl]="jobPreparationTaskPicker.nestedValue"
+                        [userAccounts]="form.value.userAccounts"
+                        [virtualMachineConfiguration]="virtualMachineConfiguration">
+                    </bl-job-preparation-task-picker>
                 </div>
             </bl-form-picker>
             <bl-form-picker *ngIf="showJobReleaseTask" formControlName="jobReleaseTask" #jobReleaseTaskPicker>
                 <div no-value-title>Job release task</div>
                 <div value-title>{{jobReleaseTask?.id}}</div>
                 <div nested-form>
-                    <bl-job-release-task-picker [formControl]="jobReleaseTaskPicker.nestedValue" [userAccounts]="form.value.userAccounts"></bl-job-release-task-picker>
+                    <bl-job-release-task-picker
+                        [formControl]="jobReleaseTaskPicker.nestedValue"
+                        [userAccounts]="form.value.userAccounts"
+                        [virtualMachineConfiguration]="virtualMachineConfiguration">
+                    </bl-job-release-task-picker>
                 </div>
             </bl-form-picker>
         </bl-form-section>

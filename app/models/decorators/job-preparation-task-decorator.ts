@@ -1,6 +1,7 @@
 import { JobPreparationTask } from "app/models";
 import { DecoratorBase } from "app/utils/decorators";
 import { TaskConstraintsDecorator } from "./task-constraints-decorator";
+import { TaskContainerSettingsDecorator } from "./task-container-settings-decorator";
 
 export class JobPreparationTaskDecorator extends DecoratorBase<JobPreparationTask> {
     public commandLine: string;
@@ -11,6 +12,7 @@ export class JobPreparationTaskDecorator extends DecoratorBase<JobPreparationTas
     public resourceFiles: {};
     public environmentSettings: {};
     public constraints: {};
+    public containerSettings: {};
 
     constructor(task: JobPreparationTask) {
         super(task);
@@ -23,5 +25,6 @@ export class JobPreparationTaskDecorator extends DecoratorBase<JobPreparationTas
         this.resourceFiles = task.resourceFiles || {};
         this.environmentSettings = task.environmentSettings || {};
         this.constraints = new TaskConstraintsDecorator(task.constraints || {} as any);
+        this.containerSettings = new TaskContainerSettingsDecorator(task.containerSettings || {} as any);
     }
 }

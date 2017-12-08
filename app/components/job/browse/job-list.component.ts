@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { MatDialog } from "@angular/material";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "core-decorators";
 import { Observable, Subscription } from "rxjs";
 
@@ -15,6 +15,7 @@ import { Job, JobState } from "app/models";
 import { FailureInfoDecorator } from "app/models/decorators";
 import { JobListParams, JobService, PinnedEntityService } from "app/services";
 import { ListView } from "app/services/core";
+import { ComponentUtils } from "app/utils";
 import { Filter } from "app/utils/filter-builder";
 import {
     DeleteJobAction,
@@ -61,17 +62,20 @@ export class JobListComponent extends ListOrTableBase implements OnInit, OnDestr
     private _filter: Filter;
 
     // todo: ask tim about setting difference select options for list and details.
-    private _baseOptions = {};
+    private _baseOptions = {  };
     private _onJobAddedSub: Subscription;
 
     constructor(
         router: Router,
         dialog: MatDialog,
+        activatedRoute: ActivatedRoute,
         private jobService: JobService,
         private pinnedEntityService: PinnedEntityService,
         private taskManager: BackgroundTaskService) {
         super(dialog);
         this.data = this.jobService.listView();
+        ComponentUtils.setActiveItem(activatedRoute, this.data);
+
         this.status = this.data.status;
         this._onJobAddedSub = jobService.onJobAdded.subscribe((jobId) => {
             this.data.loadNewItem(jobService.get(jobId));

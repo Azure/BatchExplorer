@@ -5,6 +5,7 @@ import { ListProp, Model, Prop, Record } from "app/core";
 import { AffinityInformation } from "./affinity-information";
 import { ApplicationPackageReference } from "./application-package-reference";
 import { ComputeNodeInformation } from "./compute-node-information";
+import { TaskContainerSettings } from "./container-setup";
 import { MultiInstanceSettings } from "./multi-instance-settings";
 import { NameValuePair } from "./name-value-pair";
 import { ResourceFile } from "./resource-file";
@@ -32,6 +33,7 @@ export interface TaskAttributes {
     resourceFiles: ResourceFile[];
     environmentSettings: NameValuePair[];
     affinityInfo: AffinityInformation;
+    containerSettings: TaskContainerSettings;
     constraints: TaskConstraints;
     executionInfo: TaskExecutionInformation;
     nodeInfo: ComputeNodeInformation;
@@ -62,6 +64,7 @@ export class Task extends Record<TaskAttributes> {
     @ListProp(TaskOutputFile) public outputFiles: List<TaskOutputFile> = List([]);
     @ListProp(NameValuePair) public environmentSettings: List<NameValuePair> = List([]);
     @Prop() public affinityInfo: AffinityInformation;
+    @Prop() public containerSettings: TaskContainerSettings;
     @Prop() public constraints: TaskConstraints;
     @Prop() public executionInfo: TaskExecutionInformation;
     @Prop() public nodeInfo: ComputeNodeInformation;

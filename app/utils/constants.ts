@@ -115,6 +115,7 @@ export const ApiVersion = {
     armStorage: "2016-12-01",
     armBatch: "2017-05-01",
     compute: "2017-03-30",
+    commerce: "2016-08-31-preview",
 };
 
 export const ExternalLinks = {
@@ -158,6 +159,7 @@ export const MetadataInternalKey = {
 
 export const PollRate = {
     entity: 10000,
+    batchApplication: 60000,
 };
 
 /**

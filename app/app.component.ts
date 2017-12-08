@@ -6,8 +6,8 @@ import { Observable } from "rxjs";
 import { registerIcons } from "app/config";
 import {
     AccountService, AdalService, AutoscaleFormulaService, CommandService, MonacoLoader,
-    NcjTemplateService, NodeService, PredefinedFormulaService, PricingService, PythonRpcService,
-    SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
+    NavigatorService, NcjTemplateService, NodeService, PredefinedFormulaService, PricingService,
+    PythonRpcService, SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
 } from "app/services";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
@@ -22,7 +22,6 @@ const adalConfig = {
     templateUrl: "app.layout.html",
 })
 export class AppComponent implements AfterViewInit, OnInit {
-    public hasAccount: Observable<boolean>;
     public isAppReady = false;
 
     @ViewChild("rightSidebar")
@@ -40,6 +39,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         private commandService: CommandService,
         private adalService: AdalService,
         private accountService: AccountService,
+        private navigatorService: NavigatorService,
         private subscriptionService: SubscriptionService,
         private nodeService: NodeService,
         private sshKeyService: SSHKeyService,
@@ -55,6 +55,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.sshKeyService.init();
         this.commandService.init();
         this.pricingService.init();
+        this.navigatorService.init();
         this.vmSizeService.init();
         this.adalService.init(adalConfig);
         this.accountService.loadInitialData();
@@ -62,7 +63,6 @@ export class AppComponent implements AfterViewInit, OnInit {
         pythonRpcService.init();
         this.predefinedFormulaService.init();
         monacoLoader.get();
-        this.hasAccount = accountService.currentAccount.map((x) => Boolean(x));
 
         Observable
             .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)

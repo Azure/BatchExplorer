@@ -8,7 +8,7 @@ import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { RangeValidatorDirective } from "app/components/base/validation";
 import { DynamicForm } from "app/core";
-import { AllTasksCompleteAction, Job, TaskFailureAction } from "app/models";
+import { AllTasksCompleteAction, Job, TaskFailureAction, VirtualMachineConfiguration } from "app/models";
 import { JobCreateDto } from "app/models/dtos";
 import { createJobFormToJsonData, jobToFormModel } from "app/models/forms";
 import { JobService, PoolService } from "app/services";
@@ -27,6 +27,7 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
     public constraintsGroup: FormGroup;
     public showJobReleaseTask: boolean;
     public fileUri = "create.job.batch.json";
+    public virtualMachineConfiguration: VirtualMachineConfiguration = null;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -69,6 +70,29 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
         this.form.controls.jobPreparationTask.valueChanges.subscribe((value) => {
             this.showJobReleaseTask = value && value.id;
         });
+
+        // Load current pool container configuration to indicate whether job manager, preparation and release task
+        // displays task container setting accordingly
+        this.form.controls.poolInfo.valueChanges
+            .debounceTime(400)
+            .distinctUntilChanged()
+            .flatMap(pool => pool ? poolService.get(pool.poolId) : Observable.of(null))
+            .subscribe(pool => {
+                this.virtualMachineConfiguration = pool && pool.virtualMachineConfiguration;
+                if (!this.virtualMachineConfiguration || !this.virtualMachineConfiguration.containerConfiguration) {
+                    // Reset job manager, preperation and release task container settings because pool id is changed
+                    // because user might change a container-pool to a non-container pool or vice versa
+                    if (this.form.controls.jobManagerTask.value) {
+                        this.form.controls.jobManagerTask.patchValue({ containerSettings: null });
+                    }
+                    if (this.form.controls.jobPreparationTask.value) {
+                        this.form.controls.jobPreparationTask.patchValue({ containerSettings: null });
+                    }
+                    if (this.form.controls.jobReleaseTask.value) {
+                        this.form.controls.jobReleaseTask.patchValue({ containerSettings: null });
+                    }
+                }
+            });
     }
 
     public dtoToForm(job: JobCreateDto) {

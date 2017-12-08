@@ -178,10 +178,6 @@ nav {
 .tab-padding {
     padding: 10px;
     padding-bottom: 4px;
-
-    .quicksearch {
-        padding: 0 0 15px;
-    }
 }
 
 .context-button-bar {
@@ -224,10 +220,6 @@ nav {
 
 .noselect {
     user-select: none;
-}
-
-.no-userinteract {
-    pointer-events: none;
 }
 
 .warn-text {
