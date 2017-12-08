@@ -19,22 +19,23 @@ $contrast-theme-classic: (
 );
 
 $primary-theme-classic: (
-    50: #cde0ed,
-    100: #94bdd9,
-    200: #6ba3cb,
-    300: #3e81b0,
-    400: #36719a,
-    500: #2e6083,
-    600: #264f6c,
-    700: #1e3f56,
-    800: #162e3f,
-    900: #0e1e28,
-    A100: #cde0ed,
-    A200: #94bdd9,
-    A400: #36719a,
-    A700: #1e3f56,
+    50 : #e8f0f8,
+    100 : #c5daee,
+    200 : #9ec2e3,
+    300 : #77aad7,
+    400 : #5a97cf,
+    500 : #3d85c6,
+    600 : #377dc0,
+    700 : #2f72b9,
+    800 : #2768b1,
+    900 : #1a55a4,
+    A100 : #dae9ff,
+    A200 : #a7caff,
+    A400 : #74abff,
+    A700 : #5b9cff,
     contrast: $contrast-theme-classic,
 );
+
 
 $danger-theme-classic: (
     50: #f5e7e7,
@@ -90,10 +91,37 @@ $success-theme-classic: (
     contrast: $contrast-theme-classic,
 );
 
+$primary-color:         #2196f3;
+$dark-primary-color:    #1976d2;
+$light-primary-color:   #bbedfbed;
+$accent-color:          #4caf50;
+$text-color:            #ffffff;
+$primary-text:          #212121;
+$secondary-text:        #757575;
+$divider-color:         #bdbdbd;
+$header-background:     #333333;
+$header-hover:          #757575;
+$navigation-background: #5b5b5b;
+$navigation-hover:      #666666;
+$breadcrumb-color:      #5b5b5b;
+$breadcrumb-hover-color:#666666;
+
+
+// $header-color: map-get($primary);
+
 body {
     // Primary color
     @include css-var-theme(--primary, $primary-theme-classic);
     @include css-var-theme(--danger, $danger-theme-classic);
     @include css-var-theme(--warn, $warn-theme-classic);
     @include css-var-theme(--success, $success-theme-classic);
+
+    --primary-color: $primary-color;
+    --dark-primary-color: $dark-primary-color;
+    --light-primary-color: $light-primary-color;
+    --primary-text: $primary-text;
+    --secondary-text: $secondary-text;
+    --text-color: $text-color;
+    --accent-color: $accent-color;
+    --divider-color: $divider-color;
 }
