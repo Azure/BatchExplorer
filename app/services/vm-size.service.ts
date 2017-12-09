@@ -118,6 +118,9 @@ export class VmSizeService {
      * @param excludePatterns List of wildcard patterns to exclude
      */
     private _filterSizes(sizes: List<VmSize>, excludePatterns: string[]): List<VmSize> {
+        if (!sizes) {
+            return null;
+        }
         return List<VmSize>(sizes.filter((size) => {
             for (let wildcard of excludePatterns) {
                 if (StringUtils.matchWildcard(size.name, wildcard)) {
