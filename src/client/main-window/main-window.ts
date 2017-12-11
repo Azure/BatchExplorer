@@ -30,6 +30,8 @@ export class MainWindow extends UniqueWindow {
                 webSecurity: false,
             },
         });
+        console.log("Created window");
+        window.show();
         const url = process.env.HOT ? devServerUrl : buildFileUrl;
         this._setupEvents(window);
         window.loadURL(url);

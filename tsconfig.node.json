@@ -20,7 +20,7 @@
     "moduleResolution": "node",
     "listEmittedFiles": false, // debug option
     "listFiles": false, // debug option
-    "outDir": "build/client",
+    "outDir": "build",
     "baseUrl": ".",
     "paths": {
       "*": [

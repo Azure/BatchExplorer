@@ -6,6 +6,7 @@ import * as path from "path";
  * Root of BatchLabs(This is relative to where this file is when in the build folder)
  */
 const root = path.join(__dirname, "../..");
+console.log("Root", root);
 
 const portrange = 45032;
 function getPort(port = portrange): Promise<number> {

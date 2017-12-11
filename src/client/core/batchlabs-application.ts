@@ -36,7 +36,10 @@ export class BatchLabsApplication {
      * Start the app by showing the splash screen
      */
     public start() {
+        logger.info("Start...");
         this.pythonServer.start();
+        logger.debug("Start...2");
+
         const requestFilter = { urls: ["https://*", "http://*"] };
         session.defaultSession.webRequest.onBeforeSendHeaders(requestFilter, (details, callback) => {
             if (details.url.indexOf("batch.azure.com") !== -1) {
@@ -49,9 +52,12 @@ export class BatchLabsApplication {
 
         this.splashScreen.create();
         this.splashScreen.updateMessage("Loading app");
+        logger.debug("Start...3");
 
         this.mainWindow.create();
         this._processArguments(process.argv);
+        logger.debug("Start...4");
+
     }
 
     public setupProcessEvents() {

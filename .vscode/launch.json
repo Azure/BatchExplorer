@@ -20,7 +20,7 @@
         "--nolazy"
       ],
       "env": {
-        "NODE_PATH": "src/"
+        "NODE_PATH": "src/",
         "NODE_ENV": "development",
         "HOT": "1"
       },

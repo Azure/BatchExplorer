@@ -1,6 +1,11 @@
+import * as path from "path";
+process.env.NODE_PATH = path.join(__dirname, "..");
+console.log("Dirname is", path.join(__dirname, ".."));
+// tslint:disable-next-line:no-var-requires
+require("module").Module._initPaths();
+
 import { Menu, app, dialog, ipcMain, protocol } from "electron";
 import { autoUpdater } from "electron-updater";
-import * as path from "path";
 app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 
 import { Constants } from "./client-constants";
