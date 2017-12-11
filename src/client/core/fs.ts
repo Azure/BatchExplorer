@@ -14,12 +14,18 @@ export interface CommonFolders {
 
 const fileUtils = new FileUtils();
 export class FileSystem {
-    public commonFolders = {
-        temp: path.join(app.getPath("temp"), "batch-labs"),
-        downloads: app.getPath("downloads"),
-        appData: app.getPath("appData"),
-        userData: app.getPath("userData"),
-    };
+    public commonFolders: CommonFolders;
+
+    constructor() {
+        if (process.env.NODE_ENV !== "test") { // App is not defined in the test
+            this.commonFolders = {
+                temp: path.join(app.getPath("temp"), "batch-labs"),
+                downloads: app.getPath("downloads"),
+                appData: app.getPath("appData"),
+                userData: app.getPath("userData"),
+            };
+        }
+    }
 
     /**
      * Check if a file exists async

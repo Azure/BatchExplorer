@@ -11,10 +11,6 @@ export class LocalStorage {
     private _data: StringMap<string> = {};
     private _loadPromise: Promise<any>;
 
-    constructor() {
-        this._load();
-    }
-
     public async setItem(key: string, value: string) {
         return this._loadPromise.then(() => {
             this._data[key] = value;
@@ -33,7 +29,7 @@ export class LocalStorage {
         return this._save();
     }
 
-    private _load() {
+    public async load() {
         this._loadPromise = localFileStorage.get<any>(fileKey).then((data) => {
             this._data = data;
             return data;

@@ -1,5 +1,4 @@
 import { BrowserWindow } from "electron";
-
 import { UniqueWindow } from "client/core";
 
 export class AuthenticationWindow extends UniqueWindow {

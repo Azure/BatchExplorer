@@ -1,4 +1,4 @@
-import { BatchLabsApplication } from "client/core";
+import { BatchLabsApplication } from "client/core//batchlabs-application";
 import { Deferred } from "common";
 import { SecureUtils } from "common/utils";
 import { AADConfig } from "../aad-config";

@@ -58,9 +58,11 @@ export class AADService {
         this._accessTokenService = new AccessTokenService(adalConfig);
     }
 
-    public init() {
-        this._retrieveUserFromLocalStorage();
-        this._tokenCache.init();
+    public async init() {
+        await Promise.all([
+            this._retrieveUserFromLocalStorage(),
+            this._tokenCache.init(),
+        ]);
         if (this._currentUser.value) {
             this._showMainWindow();
         }

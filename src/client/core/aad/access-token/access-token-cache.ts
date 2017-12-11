@@ -9,8 +9,8 @@ import { AccessToken } from "./access-token.model";
 export class AccessTokenCache {
     private _tokens: any = {};
 
-    public init() {
-        this._loadFromStorage();
+    public async init() {
+        return this._loadFromStorage();
     }
 
     public hasToken(tenantId: string, resource: string) {
