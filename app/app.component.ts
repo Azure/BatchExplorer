@@ -16,7 +16,6 @@ import { SidebarContentComponent, SidebarManager } from "./components/base/sideb
     templateUrl: "app.layout.html",
 })
 export class AppComponent implements AfterViewInit, OnInit {
-    public hasAccount: Observable<boolean>;
     public isAppReady = false;
 
     @ViewChild("rightSidebar")
@@ -58,7 +57,6 @@ export class AppComponent implements AfterViewInit, OnInit {
         pythonRpcService.init();
         this.predefinedFormulaService.init();
         monacoLoader.get();
-        this.hasAccount = accountService.currentAccount.map((x) => Boolean(x));
 
         Observable
             .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)
