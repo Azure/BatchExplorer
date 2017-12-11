@@ -22,7 +22,9 @@ export class LocalFileStorage {
      * @returns Observable which will resolve the data contained in the file if successfull or reject if any error
      */
     public get<T>(key: string): Observable<T> {
-        return Observable.fromPromise(this._localStorage.get(key));
+        return Observable.fromPromise(this._localStorage.get(key).then((x) => {
+            return JSON.parse(JSON.stringify(x));
+        }));
     }
 
     /**
