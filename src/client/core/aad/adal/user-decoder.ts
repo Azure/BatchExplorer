@@ -50,6 +50,6 @@ export class UserDecoder {
     private base64DecodeStringUrlSafe(base64IdToken: string) {
         // html5 should support atob function for decoding
         base64IdToken = base64IdToken.replace(/-/g, "+").replace(/_/g, "/");
-        return decodeURIComponent(escape(atob(base64IdToken)));
+        return decodeURIComponent(escape(Buffer.from(base64IdToken, "base64").toString()));
     }
 }

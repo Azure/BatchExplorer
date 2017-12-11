@@ -45,7 +45,7 @@ export class AccessTokenCache {
         for (const tenantId of Object.keys(this._tokens)) {
             tokens[tenantId] = {};
             for (const resource of Object.keys(this._tokens[tenantId])) {
-                tokens[tenantId][resource] = this._tokens[tenantId][resource].toJS();
+                tokens[tenantId][resource] = this._tokens[tenantId][resource];
             }
         }
         // localStorage.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(tokens));

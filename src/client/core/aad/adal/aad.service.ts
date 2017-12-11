@@ -86,8 +86,8 @@ export class AADService {
     }
 
     public logout(): void {
-        localStorage.removeItem(Constants.localStorageKey.currentUser);
-        localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
+        // localStorage.removeItem(Constants.localStorageKey.currentUser);
+        // localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
 
         if (this.app.mainWindow.isVisible()) {
             this.app.mainWindow.hide();
@@ -123,15 +123,15 @@ export class AADService {
      * Look into the localStorage to see if there is a user to be loaded
      */
     private _retrieveUserFromLocalStorage() {
-        const userStr = localStorage.getItem(Constants.localStorageKey.currentUser);
-        if (userStr) {
-            try {
-                const user = JSON.parse(userStr);
-                this._currentUser.next(user);
-            } catch (e) {
-                localStorage.removeItem(Constants.localStorageKey.currentUser);
-            }
-        }
+        // const userStr = localStorage.getItem(Constants.localStorageKey.currentUser);
+        // if (userStr) {
+        //     try {
+        //         const user = JSON.parse(userStr);
+        //         this._currentUser.next(user);
+        //     } catch (e) {
+        //         localStorage.removeItem(Constants.localStorageKey.currentUser);
+        //     }
+        // }
 
     }
 
@@ -222,7 +222,7 @@ export class AADService {
             this._clearUserSpecificCache();
         }
         this._currentUser.next(user);
-        localStorage.setItem(Constants.localStorageKey.currentUser, JSON.stringify(user));
+        // localStorage.setItem(Constants.localStorageKey.currentUser, JSON.stringify(user));
     }
 
     private _processAccessToken(tenantId: string, resource: string, token: AccessToken) {
@@ -230,6 +230,7 @@ export class AADService {
     }
 
     private async _processAccessTokenError(tenantId: string, resource: string, error: Response) {
+        console.log("Error", error);
         const data: AccessTokenErrorResult = await error.json();
         if (data.error === AccessTokenError.invalidGrant) {
             // TODO redeem a new token once(need to track number of failure)
@@ -251,9 +252,10 @@ export class AADService {
     }
 
     private _clearUserSpecificCache() {
-        localStorage.removeItem(Constants.localStorageKey.subscriptions);
-        localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
-        localStorage.removeItem(Constants.localStorageKey.selectedAccountId);
+        // TODO-TIM deal with this
+        // localStorage.removeItem(Constants.localStorageKey.subscriptions);
+        // localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
+        // localStorage.removeItem(Constants.localStorageKey.selectedAccountId);
     }
 
     private _showMainWindow() {

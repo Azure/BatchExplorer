@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { ElectronRemote } from "app/services";
 import { AADService } from "client/core/aad";
 import { AccessToken } from "client/core/aad/access-token";
+import { ElectronRemote } from "../electron";
 
 @Injectable()
 export class AdalService {
