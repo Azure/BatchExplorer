@@ -1,38 +1,46 @@
-import { logger } from "client/logger";
-import * as path from "path";
-import { FileSystem } from "./fs";
+import { LocalFileStorage } from "./local-file-storage";
 
-const fs = new FileSystem();
+const localFileStorage = new LocalFileStorage();
+
+const fileKey = "node-local-storage";
+/**
+ * Implementation of the browser local storage
+ */
 export class LocalStorage {
-    public async get<T>(key: string): Promise<T> {
-        const content = await this.read(key);
-        if (!content) {
-            return {} as any;
-        }
+    private _data: StringMap<string>;
+    private _loadPromise: Promise<any>;
 
-        try {
-            return JSON.parse(content);
-        } catch (e) {
-            logger.error("Loading file from storage has invalid json", { key, content });
-            return {} as any;
-        }
+    constructor() {
+        this._load();
     }
 
-    public async set<T>(key: string, data: T) {
-        const content = JSON.stringify(data);
-        return this.write(key, content);
+    public async setItem(key: string, value: string) {
+        await this._loadPromise;
+        this._data[key] = value;
+        return this._save();
     }
 
-    public async read(key: string): Promise<string> {
-        return fs.readFile(this._getFile(key)).catch(() => null);
+    public async getItem(key: string): Promise<string> {
+        await this._loadPromise;
+        return this._data[key];
     }
 
-    public async write(key: string, content: string): Promise<string> {
-        return fs.saveFile(this._getFile(key), content);
+    public async removeItem(key: string) {
+        await this._loadPromise;
+        delete this._data;
+        return this._save();
     }
 
-    private _getFile(key: string) {
-        const filename = key.endsWith(".json") ? key : `${key}.json`;
-        return path.join(fs.commonFolders.userData, filename);
+    private async _load() {
+        this._loadPromise = localFileStorage.get<any>(fileKey).then((data) => {
+            this._data = data;
+        });
+        return this._loadPromise;
+    }
+
+    private async _save() {
+        return localFileStorage.set(fileKey, this._data);
     }
 }
+
+export const localStorage = new LocalStorage();

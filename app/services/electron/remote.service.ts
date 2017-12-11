@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { BatchLabsApplication, FileSystem, LocalStorage } from "client/core";
+import { BatchLabsApplication, FileSystem, LocalFileStorage } from "client/core";
 import { AuthenticationWindow } from "client/core/aad";
 import { SplashScreen } from "client/splash-screen";
 import { remote } from "electron";
@@ -41,7 +41,7 @@ export class ElectronRemote {
         return this._currentWindow().fs;
     }
 
-    public getLocalFileStorage(): LocalStorage {
+    public getLocalFileStorage(): LocalFileStorage {
         return this._currentWindow().localFileStorage;
     }
 

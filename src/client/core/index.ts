@@ -3,4 +3,4 @@ export * from "./subprocess";
 export * from "./batchlabs-application";
 export * from "./smart-card-certificate";
 export * from "./fs";
-export * from "./local-storage";
+export * from "./local-file-storage";

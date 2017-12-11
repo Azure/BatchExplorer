@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { LocalStorage } from "client/core";
+import { LocalFileStorage as NodeLocalFileStorage } from "client/core";
 import { ElectronRemote } from "./electron";
 
 /**
@@ -11,7 +11,7 @@ import { ElectronRemote } from "./electron";
  */
 @Injectable()
 export class LocalFileStorage {
-    private _localStorage: LocalStorage;
+    private _localStorage: NodeLocalFileStorage;
 
     constructor(remote: ElectronRemote) {
         this._localStorage = remote.getLocalFileStorage();

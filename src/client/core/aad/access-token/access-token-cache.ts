@@ -1,4 +1,6 @@
 // import { Constants } from "app/utils";
+import { localStorage } from "client/core/local-storage";
+import { Constants } from "common";
 import { AccessToken } from "./access-token.model";
 
 /**
@@ -37,10 +39,10 @@ export class AccessTokenCache {
 
     public clear() {
         this._tokens = {};
-        // localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
+        localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
     }
 
-    private _saveToStorage() {
+    private async _saveToStorage() {
         const tokens = {};
         for (const tenantId of Object.keys(this._tokens)) {
             tokens[tenantId] = {};
@@ -48,48 +50,48 @@ export class AccessTokenCache {
                 tokens[tenantId][resource] = this._tokens[tenantId][resource];
             }
         }
-        // localStorage.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(tokens));
+        return localStorage.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(tokens));
     }
 
-    private _loadFromStorage() {
-        // const tokenStr = localStorage.getItem(Constants.localStorageKey.currentAccessToken);
-        // if (!tokenStr) {
-        //     return;
-        // }
-        // try {
-        //     const data = JSON.parse(tokenStr);
-        //     const tokens = this._processSerializedTokens(data);
-        //     if (Object.keys(tokens).length === 0) {
-        //         localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
-        //     } else {
-        //         this._tokens = tokens;
-        //     }
-        // } catch (e) {
-        //     localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
-        // }
+    private async _loadFromStorage() {
+        const tokenStr = await localStorage.getItem(Constants.localStorageKey.currentAccessToken);
+        if (!tokenStr) {
+            return;
+        }
+        try {
+            const data = JSON.parse(tokenStr);
+            const tokens = this._processSerializedTokens(data);
+            if (Object.keys(tokens).length === 0) {
+                localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
+            } else {
+                this._tokens = tokens;
+            }
+        } catch (e) {
+            localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
+        }
     }
 
-    // private _processSerializedTokens(data: any) {
-    //     const tokens = {};
-    //     for (let tenantId of Object.keys(data)) {
-    //         const tenant = data[tenantId];
-    //         if (!tenant || typeof tenant !== "object") {
-    //             continue;
-    //         }
+    private _processSerializedTokens(data: any) {
+        const tokens = {};
+        for (let tenantId of Object.keys(data)) {
+            const tenant = data[tenantId];
+            if (!tenant || typeof tenant !== "object") {
+                continue;
+            }
 
-    //         for (let resource of Object.keys(tenant)) {
-    //             if (!AccessToken.isValidToken(tenant[resource])) {
-    //                 continue;
-    //             }
-    //             const token = new AccessToken(tenant[resource]);
-    //             if (!token.hasExpired()) {
-    //                 if (!(tenantId in tokens)) {
-    //                     tokens[tenantId] = {};
-    //                 }
-    //                 tokens[tenantId][resource] = token;
-    //             }
-    //         }
-    //     }
-    //     return tokens;
-    // }
+            for (let resource of Object.keys(tenant)) {
+                if (!AccessToken.isValidToken(tenant[resource])) {
+                    continue;
+                }
+                const token = new AccessToken(tenant[resource]);
+                if (!token.hasExpired()) {
+                    if (!(tenantId in tokens)) {
+                        tokens[tenantId] = {};
+                    }
+                    tokens[tenantId][resource] = token;
+                }
+            }
+        }
+        return tokens;
+    }
 }

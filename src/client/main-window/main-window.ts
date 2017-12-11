@@ -1,7 +1,7 @@
 import { BrowserWindow } from "electron";
 
 import { Constants } from "../client-constants";
-import { BatchLabsApplication, FileSystem, LocalStorage, UniqueWindow } from "../core";
+import { BatchLabsApplication, FileSystem, LocalFileStorage, UniqueWindow } from "../core";
 import { logger, renderLogger } from "../logger";
 
 // Webpack dev server url when using HOT=1
@@ -40,7 +40,7 @@ export class MainWindow extends UniqueWindow {
         anyWindow.splashScreen = this.batchLabsApp.splashScreen;
         anyWindow.authenticationWindow = this.batchLabsApp.authenticationWindow;
         anyWindow.fs = new FileSystem();
-        anyWindow.localFileStorage = new LocalStorage();
+        anyWindow.localFileStorage = new LocalFileStorage();
         anyWindow.clientConstants = Constants;
 
         // Open the DevTools.
