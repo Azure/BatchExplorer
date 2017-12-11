@@ -3,11 +3,12 @@ import { LocalFileStorage } from "./local-file-storage";
 const localFileStorage = new LocalFileStorage();
 
 const fileKey = "node-local-storage";
+
 /**
  * Implementation of the browser local storage
  */
 export class LocalStorage {
-    private _data: StringMap<string>;
+    private _data: StringMap<string> = {};
     private _loadPromise: Promise<any>;
 
     constructor() {
@@ -15,9 +16,10 @@ export class LocalStorage {
     }
 
     public async setItem(key: string, value: string) {
-        await this._loadPromise;
-        this._data[key] = value;
-        return this._save();
+        return this._loadPromise.then(() => {
+            this._data[key] = value;
+            return this._save();
+        });
     }
 
     public async getItem(key: string): Promise<string> {
@@ -27,13 +29,14 @@ export class LocalStorage {
 
     public async removeItem(key: string) {
         await this._loadPromise;
-        delete this._data;
+        delete this._data[key];
         return this._save();
     }
 
-    private async _load() {
+    private _load() {
         this._loadPromise = localFileStorage.get<any>(fileKey).then((data) => {
             this._data = data;
+            return data;
         });
         return this._loadPromise;
     }

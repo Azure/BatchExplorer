@@ -28,6 +28,7 @@ export class BatchLabsApplication {
     }
 
     public init() {
+        this.aadService.init();
         this._registerProtocol();
         this.setupProcessEvents();
     }

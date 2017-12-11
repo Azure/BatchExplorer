@@ -1,3 +1,4 @@
+// tslint:disable:variable-name
 export * from "./utils";
 export * from "./deferred";
 
