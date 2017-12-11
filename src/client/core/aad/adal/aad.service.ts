@@ -74,11 +74,13 @@ export class AADService {
             this.app.splashScreen.updateMessage("Retrieving access tokens");
 
             this._tenantsIds.next(tenantIds);
+            console.log("Teneants", tenantIds);
             for (let tenantId of tenantIds) {
                 for (let resource of resources) {
                     await this._retrieveNewAccessToken(tenantId, resource);
                 }
             }
+            console.log("Show main window");
             this._showMainWindow();
         } catch (error) {
             logger.error("Error login", error);
@@ -248,7 +250,7 @@ export class AADService {
         const url = `${Constants.ServiceUrl.arm}/tenants?api-version=${Constants.ApiVersion.arm}`;
         const response = await fetch(url, options);
         const { value } = await response.json();
-        return value.tenantId;
+        return value.map(x => x.tenantId);
     }
 
     private _clearUserSpecificCache() {
@@ -262,6 +264,6 @@ export class AADService {
         if (!this.app.mainWindow.isVisible()) {
             this.app.mainWindow.show();
         }
-        this.app.mainWindow.destroy();
+        this.app.splashScreen.destroy();
     }
 }

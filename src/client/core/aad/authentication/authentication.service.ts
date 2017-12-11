@@ -91,6 +91,7 @@ export class AuthenticationService {
         authWindow.create();
         authWindow.loadURL(this._buildUrl(tenantId, silent));
         this._setupEvents();
+
         if (!silent) {
             authWindow.show();
             this.app.splashScreen.hide();
