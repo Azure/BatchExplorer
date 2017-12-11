@@ -1,6 +1,6 @@
 <bl-dropdown [footer]="true" align="right">
     <div bl-dropdown-btn>
-        <i class="fa fa-bell"></i>
+        <i class="fa fa-envelope-o"></i>
         <span class="count" *ngIf="notifications.size > 0">{{notifications.size}}</span>
     </div>
     <div bl-dropdown-content>
@@ -28,7 +28,7 @@
         </div>
         <div class="dropdown-item" *ngIf="notifications.size === 0">
             <div class="no-notifications">
-                <i class="fa fa-bell"></i>
+                <i class="fa fa-envelope-o"></i>
                 <span>No new notifications</span>
             </div>
         </div>

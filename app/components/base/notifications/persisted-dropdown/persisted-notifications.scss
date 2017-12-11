@@ -2,9 +2,8 @@
 
 
 bl-persisted-notifications-dropdown {
-    .fa-bell {
-        font-size: 16px;
-        vertical-align: middle;
+    .fa-envelope-o {
+        font-size: 14px;
     }
 
     .count {
@@ -56,7 +55,7 @@ bl-persisted-notifications-dropdown {
                 margin-right: 3px;
                 white-space: nowrap;
                 &:hover {
-                    background: rgba(0, 0, 0, 0.3);
+                    background-color: $dark-primary-color;
                 }
             }
         }
@@ -100,7 +99,7 @@ bl-persisted-notifications-dropdown {
             align-items: center;
             justify-content: center;
 
-            .fa-bell {
+            .fa-envelope-o {
                 font-size: 40px;
                 margin-right: 20px;
             }

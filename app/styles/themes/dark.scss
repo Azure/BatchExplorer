@@ -91,36 +91,18 @@ $success-theme-classic: (
     contrast: $contrast-theme-classic,
 );
 
-$primary-color:         #2196f3;
-$dark-primary-color:    #1976d2;
-$light-primary-color:   #bbedfbed;
-$accent-color:          #4caf50;
-$text-color:            #ffffff;
-$primary-text:          #212121;
-$secondary-text:        #757575;
-$divider-color:         #bdbdbd;
-$header-background:     #333333;
-$header-hover:          #757575;
-$navigation-background: #5b5b5b;
-$navigation-hover:      #666666;
-$breadcrumb-color:      #5b5b5b;
-$breadcrumb-hover-color:#666666;
+$primary-text: black;
+$secondary-text: #555;
+$header-color: map-get($primary);
 
-// $header-color: map-get($primary);
-
-body {
+body.dark {
     // Primary color
     @include css-var-theme(--primary, $primary-theme-classic);
     @include css-var-theme(--danger, $danger-theme-classic);
     @include css-var-theme(--warn, $warn-theme-classic);
     @include css-var-theme(--success, $success-theme-classic);
+    @include css-var-theme(--pablo, $pablo-theme);
 
-    --primary-color: $primary-color;
-    --dark-primary-color: $dark-primary-color;
-    --light-primary-color: $light-primary-color;
-    --primary-text: $primary-text;
-    --secondary-text: $secondary-text;
-    --text-color: $text-color;
-    --accent-color: $accent-color;
-    --divider-color: $divider-color;
+    @include prop(--primary-text, $primary-text);
+    @include prop(--secondary-text, $secondary-text);
 }

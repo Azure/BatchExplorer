@@ -61,7 +61,8 @@ $headingsFontWeight : semilight;
 $headingWeightBold  : semibold;
 $headingsLineHeight : $baseLineHeight;
 $textColor          : $mineShaftGray;
-$main-font          : "Roboto", Helvetica, Arial, sans-serif;
+$main-font          : -apple-system,BlinkMacSystemFont,Segoe WPC,Segoe UI,HelveticaNeue-Light,Ubuntu,Droid Sans,sans-serif;
+
 
 $h1FontSize         : $font-size-base * 1.8;
 $h2FontSize         : $font-size-base * 1.6;

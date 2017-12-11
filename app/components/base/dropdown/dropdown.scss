@@ -1,7 +1,7 @@
 @import "app/styles/variables";
 
 bl-dropdown {
-    $dropdown-content-color: $whitesmoke;
+    $dropdown-content-color: $text-color;
     $dropdown-content-hover-color: map-get($primary, 200);
     .dropdown {
         position: relative;
@@ -23,8 +23,8 @@ bl-dropdown {
         cursor: pointer;
 
         &:hover, &.active {
-            color: $mineshaft-grey;
-            background-color: $dropdown-content-color;
+            color: $text-color;
+            background-color: $dark-primary-color;
         }
     }
 
