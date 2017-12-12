@@ -17,18 +17,20 @@ bl-account-quotas-card {
         > .label {
             font-size: 11px;
             color: $dusty-grey;
+            height: 35%;
         }
 
         > .value {
             font-size: 15px;
             color: map-get($primary, 500);
-
+            height: 65%;
             > .statistic {
                 margin-bottom: 2px;
             }
 
             mat-progress-bar {
-                height: 7px;
+                height: 5px;
+                margin-top: 12px;
                 .mat-progress-bar-buffer {
                     background-color: transparent;
                 }

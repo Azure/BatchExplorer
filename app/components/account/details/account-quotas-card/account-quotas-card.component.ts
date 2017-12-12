@@ -12,13 +12,6 @@ import { Observable } from "rxjs/Observable";
 import "./account-quotas-card.scss";
 
 type ProgressColorClass = "high-usage" | "medium-usage" | "low-usage";
-const additionalVmSizeCores = {
-    extrasmall: 1,
-    small: 1,
-    medium: 2,
-    large: 4,
-    extralarge: 8,
-};
 
 @Component({
     selector: "bl-account-quotas-card",
@@ -30,7 +23,7 @@ export class AccountQuotasCardComponent implements OnChanges, OnDestroy {
         return 100;
     }
     public poolData: ListView<Pool, PoolListParams>;
-    public vmSizeCores: StringMap<number> = {...additionalVmSizeCores};
+    public vmSizeCores: StringMap<number>;
 
     private _usedPool: number = null;
     private _totalPoolQuota: number = null;
@@ -50,6 +43,7 @@ export class AccountQuotasCardComponent implements OnChanges, OnDestroy {
     constructor(private computeService: ComputeService,
                 private poolService: PoolService,
                 private vmSizeService: VmSizeService) {
+        this.vmSizeCores = {...vmSizeService.additionalVmSizeCores};
         const vmSizeObs = Observable.merge(
             this.vmSizeService.virtualMachineSizes, this.vmSizeService.cloudServiceSizes);
         this._vmSizeSub = vmSizeObs.subscribe(vmSizes => {
@@ -109,7 +103,7 @@ export class AccountQuotasCardComponent implements OnChanges, OnDestroy {
         const used = this._usedPool;
         const total = this._totalPoolQuota;
         if (used !== null && total !== null) {
-            return `${used}/${total} (${this.poolUsagePercent.toFixed(2)}%)`;
+            return `${used}/${total} (${Math.floor(this.poolUsagePercent)}%)`;
         }
         return "N/A";
     }
@@ -133,7 +127,7 @@ export class AccountQuotasCardComponent implements OnChanges, OnDestroy {
                 const used = this._usedDedicatedCore;
                 const total = this._dedicatedCoreQuota;
                 if (used !== null && total !== null) {
-                    return `${used}/${total} (${this.dedicatedCoresPercent.toFixed(2)}%)`;
+                    return `${used}/${total} (${Math.floor(this.dedicatedCoresPercent)}%)`;
                 }
             case LoadingStatus.Error:
             default:
@@ -160,7 +154,7 @@ export class AccountQuotasCardComponent implements OnChanges, OnDestroy {
                 const used = this._usedLowPrioirtyCore;
                 const total = this._lowPriorityCoreQuota;
                 if (used !== null && total !== null) {
-                    return `${used}/${total} (${this.lowPriorityCoresPercent.toFixed(2)}%)`;
+                    return `${used}/${total} (${Math.floor(this.lowPriorityCoresPercent)}%)`;
                 }
             case LoadingStatus.Error:
             default:
@@ -216,17 +210,18 @@ export class AccountQuotasCardComponent implements OnChanges, OnDestroy {
     private _loadCoreUsages(pools: List<Pool>) {
         this._usedDedicatedCore = 0;
         this._usedLowPrioirtyCore = 0;
-        if (pools) {
-            pools.forEach(pool => {
-                if (pool && pool.vmSize) {
-                    const key = pool.vmSize.toLowerCase();
-                    if (this.vmSizeCores[key]) {
-                        this._usedDedicatedCore += (this.vmSizeCores[key] * pool.currentDedicatedNodes);
-                        this._usedLowPrioirtyCore += (this.vmSizeCores[key] * pool.currentLowPriorityNodes);
-                    }
-                }
-            });
+        if (!pools || pools.size === 0) {
+            return;
         }
+        pools.forEach(pool => {
+            if (pool && pool.vmSize) {
+                const key = pool.vmSize.toLowerCase();
+                if (this.vmSizeCores[key]) {
+                    this._usedDedicatedCore += (this.vmSizeCores[key] * pool.currentDedicatedNodes);
+                    this._usedLowPrioirtyCore += (this.vmSizeCores[key] * pool.currentLowPriorityNodes);
+                }
+            }
+        });
     }
 
     /**
