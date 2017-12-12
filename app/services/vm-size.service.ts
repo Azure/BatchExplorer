@@ -40,6 +40,13 @@ export class VmSizeService {
      */
     public virtualMachineSizes: Observable<List<VmSize>>;
     public vmSizeCategories: Observable<StringMap<string[]>>;
+    public additionalVmSizeCores = {
+        extrasmall: 1,
+        small: 1,
+        medium: 2,
+        large: 4,
+        extralarge: 8,
+    };
 
     private _sizes = new BehaviorSubject<List<VmSize>>(null);
     private _excludedSizes = new BehaviorSubject<ExcludedSizes>(null);
@@ -118,6 +125,9 @@ export class VmSizeService {
      * @param excludePatterns List of wildcard patterns to exclude
      */
     private _filterSizes(sizes: List<VmSize>, excludePatterns: string[]): List<VmSize> {
+        if (!sizes) {
+            return null;
+        }
         return List<VmSize>(sizes.filter((size) => {
             for (let wildcard of excludePatterns) {
                 if (StringUtils.matchWildcard(size.name, wildcard)) {
