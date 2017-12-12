@@ -67,10 +67,8 @@ export class AuthenticationService {
     /**
      * Log the user out
      */
-    public async logout(): Promise<any> {
+    public logout() {
         this._waitingForAuth = true;
-        // TODO-TIM this doesn't seem to resolve
-        const deferred = new Deferred();
         const url = AdalConstants.logoutUrl(this.config.tenant);
         const authWindow = this.app.authenticationWindow;
         authWindow.create();
@@ -78,7 +76,6 @@ export class AuthenticationService {
         authWindow.loadURL(url);
         this._setupEvents();
         authWindow.show();
-        return deferred.promise;
     }
 
     private _authorizeNext() {

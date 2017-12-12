@@ -13,10 +13,6 @@ export class AdalService {
         this.aadService = remote.getBatchLabsApp().aadService;
     }
 
-    public init() {
-        // TODO-TIM something?
-    }
-
     public logout() {
         this.aadService.logout();
     }
