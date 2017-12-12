@@ -134,7 +134,8 @@ async function createIssueIfNot(millestoneId, version) {
         success("Issue was already created earlier.");
     } else {
         issue = await createIssue(repoName, title, newIssueBody, millestoneId);
-        success(`Created a new issue ${issueUrl(repoName, issue.id)}`);
+        console.log("issue", issue);
+        success(`Created a new issue ${issue.html_url}`);
     }
     return issue;
 }
