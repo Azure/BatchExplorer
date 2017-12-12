@@ -39,6 +39,7 @@
     "stylelint": "stylelint --syntax scss \"app/**/*.scss\"",
     "lint": "npm run -s tslint && npm run -s stylelint",
     "package": "build",
+    "publish": "npm run -s ts -- scripts/publish/publish.ts",
     "build-and-pack": "npm run -s build:prod && npm run -s build-python && npm run -s package",
     "webpack": "node --max_old_space_size=4096 node_modules/webpack/bin/webpack.js",
     "webpack-dev-server": "node --max_old_space_size=4096 node_modules/webpack-dev-server/bin/webpack-dev-server.js"
@@ -50,6 +51,7 @@
   "devDependencies": {
     "@types/bunyan": "~1.8.0",
     "@types/chart.js": "~2.7.1",
+    "@types/colors": "~1.1.3",
     "@types/core-decorators": "^0.10.30",
     "@types/d3": "~4.12.0",
     "@types/extract-zip": "~1.6.2",
@@ -64,6 +66,7 @@
     "angular2-template-loader": "~0.6.2",
     "awesome-typescript-loader": "^3.4.1",
     "codelyzer": "~4.0.1",
+    "colors": "~1.1.2",
     "commander": "~2.12.2",
     "concurrently": "^3.5.1",
     "copy-webpack-plugin": "^4.2.3",
@@ -101,7 +104,8 @@
     "webpack": "~3.10.0",
     "webpack-dev-server": "^2.9.5",
     "webpack-dll-bundles-plugin": "^1.0.0-beta.5",
-    "webpack-merge": "~4.1.1"
+    "webpack-merge": "~4.1.1",
+    "yesno": "~0.0.1"
   },
   "dependencies": {
     "@angular/animations": "5.0.3",
