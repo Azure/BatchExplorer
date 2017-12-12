@@ -116,6 +116,7 @@ async function updateChangeLog(version, millestoneId) {
 
 async function updateThirdParty() {
     await run(`npm run -s ts scripts/lca/generate-third-party`);
+    success("Updated ThirdPartyNotices.txt");
 }
 
 async function commitChanges() {
