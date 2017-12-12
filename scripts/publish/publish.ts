@@ -158,17 +158,17 @@ async function startPublish() {
     const millestoneId = getMillestoneId();
     const millestone = await loadMillestone(millestoneId);
     const version = millestone.title;
-    // await confirmVersion(version);
+    await confirmVersion(version);
     const releaseBranch = getPreparationBranchName(version);
-    // const branch = await getCurrentBranch();
-    // if (branch !== releaseBranch) {
-    //     await gotoMaster();
-    //     await switchToNewBranch(releaseBranch);
-    // }
-    // await bumpVersion(version);
-    // await updateChangeLog(version, millestoneId);
-    // await commitChanges();
-    // await push();
+    const branch = await getCurrentBranch();
+    if (branch !== releaseBranch) {
+        await gotoMaster();
+        await switchToNewBranch(releaseBranch);
+    }
+    await bumpVersion(version);
+    await updateChangeLog(version, millestoneId);
+    await commitChanges();
+    await push();
     const issue = await createIssueIfNot(millestoneId, version);
     await createPullrequestIfNot(version, releaseBranch, issue);
 }
