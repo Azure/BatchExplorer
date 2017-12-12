@@ -3,11 +3,10 @@ import "colors";
 import * as fs from "fs";
 import * as path from "path";
 import { ask } from "yesno";
-import { createIssue, getMilestone, listMilestoneIssues } from "./github-api";
+import { createIssue, getMilestone, githubToken, listMilestoneIssues } from "./github-api";
 import { issueUrl } from "./github-urls";
 
 const root = path.resolve(path.join(__dirname, "../.."));
-const githubToken = process.env.GH_TOKEN;
 const allMessages = [];
 const repoName = "Azure/BatchLabs";
 const newIssueBody = `

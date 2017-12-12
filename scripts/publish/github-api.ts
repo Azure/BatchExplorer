@@ -2,6 +2,11 @@ import fetch from "node-fetch";
 import { issuesUrl, milestoneIssuesUrl, milestoneUrl } from "./github-urls";
 import { Issue, Milestone } from "./models";
 
+export const githubToken = process.env.GH_TOKEN;
+const header = {
+    Authorization: `token ${githubToken}`,
+};
+
 export async function get(url: string) {
     const response = await fetch(url);
     return response.json();
