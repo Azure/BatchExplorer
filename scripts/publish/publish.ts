@@ -119,7 +119,7 @@ async function updateThirdParty(version, millestoneId) {
 }
 
 async function commitChanges() {
-    await run(`git commit -am "Updated changelog and version."`);
+    await run(`git commit --allow-empty -am "Updated changelog and version."`);
 }
 
 async function push() {
