@@ -33,7 +33,7 @@ export async function createIssue(repo: string, title: string, description: stri
     return post(issuesUrl(repo), {
         title,
         body: description,
-        millestone: milestoneId,
+        milestone: milestoneId,
     });
 }
 
