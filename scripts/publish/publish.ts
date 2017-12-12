@@ -1,11 +1,20 @@
 import { exec } from "child_process";
 import "colors";
+import * as fs from "fs";
+import * as path from "path";
 import { ask } from "yesno";
-import { getMilestone } from "./github-api";
+import { createIssue, getMilestone, listMilestoneIssues } from "./github-api";
+import { issueUrl } from "./github-urls";
 
+const root = path.resolve(path.join(__dirname, "../.."));
 const githubToken = process.env.GH_TOKEN;
 const allMessages = [];
 const repoName = "Azure/BatchLabs";
+const newIssueBody = `
+- [x] Update version in package.json
+- [x] Update changelog
+- [ ] Update third party notices if needed
+- [ ] Double check the prod build is working`;
 
 function log(text: string) {
     allMessages.push(text);
@@ -89,7 +98,45 @@ async function switchToNewBranch(branchName: string) {
 }
 
 async function bumpVersion(version) {
+    await run(`npm version --no-git-tag-version --allow-same-version ${version}`);
+    success(`Updated version in package.json to ${version}`);
+}
 
+async function updateChangeLog(version, millestoneId) {
+    const { stdout } = await run(`gh-changelog-gen --repo ${repoName} ${millestoneId} --formatter markdown`);
+    const changelogFile = path.join(root, "CHANGELOG.md");
+    const changelogContent = fs.readFileSync(changelogFile);
+
+    if (changelogContent.indexOf(`# ${version}`) === -1) {
+        fs.writeFileSync(changelogFile, `${stdout}\n${changelogContent}`);
+        success("Added changes to the changelog");
+    } else {
+        success("Changelog already contains the changes for this version");
+    }
+}
+
+async function updateThirdParty(version, millestoneId) {
+    await run(`npm run -s ts scripts/lca/generate-third-party`);
+}
+
+async function commitChanges() {
+    await run(`git commit -am "Updated changelog and version."`);
+}
+
+async function push() {
+    await run(`git push -u"`);
+}
+
+async function createIssueIfNot(millestoneId, version) {
+    const title = `Prepare for release of version ${version}`;
+    let issue = (await listMilestoneIssues(repoName, millestoneId)).filter(x => x.title === title)[0];
+    if (issue) {
+        success("Issue was already created earlier.");
+    } else {
+        issue = await createIssue(repoName, title, newIssueBody, millestoneId);
+        success(`Created a new issue ${issueUrl(repoName, issue.id)}`);
+    }
+    return issue;
 }
 
 async function startPublish() {
@@ -97,13 +144,18 @@ async function startPublish() {
     const millestoneId = getMillestoneId();
     const millestone = await loadMillestone(millestoneId);
     const version = millestone.title;
-    await confirmVersion(version);
-    const releaseBranch = getPreparationBranchName(version);
-    const branch = await getCurrentBranch();
-    if (branch !== releaseBranch) {
-        await gotoMaster();
-        await switchToNewBranch(releaseBranch);
-    }
+    // await confirmVersion(version);
+    // const releaseBranch = getPreparationBranchName(version);
+    // const branch = await getCurrentBranch();
+    // if (branch !== releaseBranch) {
+    //     await gotoMaster();
+    //     await switchToNewBranch(releaseBranch);
+    // }
+    await bumpVersion(version);
+    await updateChangeLog(version, millestoneId);
+    await commitChanges();
+    await push();
+    await createIssueIfNot(millestoneId, version);
 }
 
 startPublish().then(() => {
