@@ -154,6 +154,7 @@ async function createPullrequestIfNot(version, releaseBranch, issue) {
 }
 
 async function buildApp() {
+    // tslint:disable-next-line:no-console
     console.log("Building the app with npm run build-and-pack...");
     await run("npm run build-and-pack");
     success("Build the app successfully. Starting it now, double check it is working correctly");
