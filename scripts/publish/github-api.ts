@@ -24,6 +24,7 @@ export async function listMilestoneIssues(repo: string, milestone: string | numb
 }
 
 export async function createIssue(repo: string, title: string, description: string, milestoneId) {
+    console.log("issues", issuesUrl(repo));
     return post(issuesUrl(repo), {
         title,
         body: description,
