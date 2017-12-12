@@ -153,6 +153,13 @@ async function createPullrequestIfNot(version, releaseBranch, issue) {
     return pr;
 }
 
+async function buildApp() {
+    console.log("Building the app with npm run build-and-pack...");
+    await run("npm run build-and-pack");
+    success("Build the app successfully. Starting it now, double check it is working correctly");
+    await run(path.join(root, "release/win-unpacked/BatchLabs.exe"));
+}
+
 async function startPublish() {
     checkGithubToken();
     const millestoneId = getMillestoneId();
@@ -171,6 +178,7 @@ async function startPublish() {
     await push();
     const issue = await createIssueIfNot(millestoneId, version);
     await createPullrequestIfNot(version, releaseBranch, issue);
+    await buildApp();
 }
 
 startPublish().then(() => {
