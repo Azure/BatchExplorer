@@ -3,7 +3,7 @@ import "colors";
 import * as fs from "fs";
 import * as path from "path";
 import { ask } from "yesno";
-import { createIssue, getMilestone, githubToken, listMilestoneIssues } from "./github-api";
+import { createIssue, createPullRequest, getMilestone, githubToken, listMilestoneIssues, listPullRequests } from "./github-api";
 import { issueUrl } from "./github-urls";
 
 const root = path.resolve(path.join(__dirname, "../.."));
@@ -12,7 +12,7 @@ const repoName = "Azure/BatchLabs";
 const newIssueBody = `
 - [x] Update version in package.json
 - [x] Update changelog
-- [ ] Update third party notices if needed
+- [x] Update third party notices if needed
 - [ ] Double check the prod build is working`;
 
 function log(text: string) {
@@ -128,15 +128,29 @@ async function push() {
 
 async function createIssueIfNot(millestoneId, version) {
     const title = `Prepare for release of version ${version}`;
-    let issue = (await listMilestoneIssues(repoName, millestoneId)).filter(x => x.title === title)[0];
+    const issues = await listMilestoneIssues(repoName, millestoneId);
+    let issue = issues.filter(x => x.title === title)[0];
     if (issue) {
-        success("Issue was already created earlier.");
+        success(`Issue was already created earlier ${issue.html_url}`);
     } else {
-        issue = await createIssue(repoName, title, newIssueBody, millestoneId);
-        console.log("issue", issue);
+        // issue = await createIssue(repoName, title, newIssueBody, millestoneId);
         success(`Created a new issue ${issue.html_url}`);
     }
     return issue;
+}
+
+async function createPullrequestIfNot(version, releaseBranch, issue) {
+    const title = `Prepare for release ${version}`;
+    const body = `fix #${issue.id}`;
+    const prs = await listPullRequests(repoName, releaseBranch);
+    let pr = prs[0];
+    if (pr) {
+        success(`There is already a pr created ${pr.html_url}`);
+    } else {
+        pr = await createPullRequest(repoName, title, body, releaseBranch);
+        success(`Create a new pull request ${pr.html_url}`);
+    }
+    return pr;
 }
 
 async function startPublish() {
@@ -145,17 +159,18 @@ async function startPublish() {
     const millestone = await loadMillestone(millestoneId);
     const version = millestone.title;
     // await confirmVersion(version);
-    // const releaseBranch = getPreparationBranchName(version);
+    const releaseBranch = getPreparationBranchName(version);
     // const branch = await getCurrentBranch();
     // if (branch !== releaseBranch) {
     //     await gotoMaster();
     //     await switchToNewBranch(releaseBranch);
     // }
-    await bumpVersion(version);
-    await updateChangeLog(version, millestoneId);
-    await commitChanges();
-    await push();
-    await createIssueIfNot(millestoneId, version);
+    // await bumpVersion(version);
+    // await updateChangeLog(version, millestoneId);
+    // await commitChanges();
+    // await push();
+    const issue = await createIssueIfNot(millestoneId, version);
+    await createPullrequestIfNot(version, releaseBranch, issue);
 }
 
 startPublish().then(() => {

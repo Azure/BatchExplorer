@@ -1,14 +1,14 @@
 import fetch from "node-fetch";
-import { issuesUrl, milestoneIssuesUrl, milestoneUrl } from "./github-urls";
+import { issuesUrl, milestoneIssuesUrl, milestoneUrl, pullRequestsUrl } from "./github-urls";
 import { Issue, Milestone } from "./models";
 
 export const githubToken = process.env.GH_TOKEN;
-const header = {
+const headers = {
     Authorization: `token ${githubToken}`,
 };
 
 export async function get(url: string) {
-    const response = await fetch(url);
+    const response = await fetch(url, { headers });
     return response.json();
 }
 
@@ -16,6 +16,7 @@ export async function post(url: string, body: any) {
     const response = await fetch(url, {
         method: "post",
         body: JSON.stringify(body),
+        headers,
     });
     return response.json();
 }
@@ -29,10 +30,23 @@ export async function listMilestoneIssues(repo: string, milestone: string | numb
 }
 
 export async function createIssue(repo: string, title: string, description: string, milestoneId) {
-    console.log("issues", issuesUrl(repo));
     return post(issuesUrl(repo), {
         title,
         body: description,
         millestone: milestoneId,
+    });
+}
+
+export async function listPullRequests(repo: string, source: string, target = "master"): Promise<Issue[]> {
+    const url = `${pullRequestsUrl(repo)}?head=${source}&base=${target}`;
+    return get(url);
+}
+
+export async function createPullRequest(repo: string, title: string, body: string, source: string, target = "master") {
+    return post(pullRequestsUrl(repo), {
+        title,
+        body,
+        head: source,
+        base: target,
     });
 }

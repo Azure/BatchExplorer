@@ -8,6 +8,10 @@ export function issuesUrl(repo: string) {
     return `${repoUrl(repo)}/issues`;
 }
 
+export function pullRequestsUrl(repo: string) {
+    return `${repoUrl(repo)}/pulls`;
+}
+
 export function issueUrl(repo: string, issueId: number) {
     return `${repoUrl(repo)}/issues/${issueId}`;
 }
