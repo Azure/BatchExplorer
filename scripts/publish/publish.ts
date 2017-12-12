@@ -114,7 +114,7 @@ async function updateChangeLog(version, millestoneId) {
     }
 }
 
-async function updateThirdParty(version, millestoneId) {
+async function updateThirdParty() {
     await run(`npm run -s ts scripts/lca/generate-third-party`);
 }
 
@@ -175,6 +175,7 @@ async function startPublish() {
     }
     await bumpVersion(version);
     await updateChangeLog(version, millestoneId);
+    await updateThirdParty();
     await commitChanges();
     await push();
     const issue = await createIssueIfNot(millestoneId, version);
