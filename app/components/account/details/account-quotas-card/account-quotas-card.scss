@@ -1,6 +1,7 @@
 @import "app/styles/variables";
 
 bl-account-quotas-card {
+    font-size: 0; // This is needed to remove the white space between the quota inline-block
     > div {
         height: 50%;
         &:not(:last-child) {
@@ -11,26 +12,30 @@ bl-account-quotas-card {
         display: inline-block;
         width: 140px;
         height: 100%;
-        padding: 3px 5px 0;
+        padding: 0;
         vertical-align: top;
 
         > .label {
             font-size: 11px;
             color: $dusty-grey;
             height: 35%;
+            margin: 3px 5px 0;
         }
 
         > .value {
             font-size: 15px;
             color: map-get($primary, 500);
-            height: 65%;
+            margin: 0 5px;
+
             > .statistic {
                 margin-bottom: 2px;
             }
+        }
 
+        > .progress {
             mat-progress-bar {
-                height: 5px;
-                margin-top: 12px;
+                height: 4px;
+                margin-top: 13px;
                 .mat-progress-bar-buffer {
                     background-color: transparent;
                 }
