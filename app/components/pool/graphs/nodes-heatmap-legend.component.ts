@@ -79,6 +79,6 @@ export class NodesHeatmapLegendComponent {
     }
 
     public trackState(index, state: StateNode | CategoryNode) {
-        return state.state || state.category;
+        return (state as StateNode).state || (state as CategoryNode).category;
     }
 }
