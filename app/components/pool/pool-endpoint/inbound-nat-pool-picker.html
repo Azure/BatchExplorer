@@ -1,0 +1,38 @@
+<div [formGroup]="form">
+    <div class="form-element">
+        <mat-form-field>
+            <input matInput formControlName="name" placeholder="Name of endpoint">
+        </mat-form-field>
+        <bl-error controlName="name" code="required">Name of endpoint is a required field</bl-error>
+    </div>
+    <div class="form-element">
+        <mat-form-field>
+            <input matInput type="number" formControlName="backendPort" placeholder="Backend port">
+        </mat-form-field>
+        <bl-error controlName="backendPort" code="required">Backend port is a required field</bl-error>
+    </div>
+    <div class="form-element">
+        <mat-form-field>
+            <input matInput type="number" formControlName="frontendPortRangeStart" placeholder="Frontend port start">
+        </mat-form-field>
+        <bl-error controlName="frontendPortRangeStart" code="required">Frontend port start is a required field</bl-error>
+    </div>
+    <div class="form-element">
+        <mat-form-field>
+            <input matInput type="number" formControlName="frontendPortRangeEnd" placeholder="Frontend port end">
+        </mat-form-field>
+        <bl-error controlName="frontendPortRangeEnd" code="required">Frontend port end is a required field</bl-error>
+    </div>
+    <div class="form-element pad-top">
+        <h4>Network security group rules</h4>
+        <bl-network-security-group-rules formControlName="networkSecurityGroupRules"></bl-network-security-group-rules>
+    </div>
+    <div class="form-element">
+        <mat-form-field>
+            <mat-select formControlName="protocol" color="primary" placeholder="Protocol" required>
+                <mat-option [value]="InboundEndpointProtocol.TCP">TCP</mat-option>
+                <mat-option [value]="InboundEndpointProtocol.UDP">UDP</mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
+</div>
