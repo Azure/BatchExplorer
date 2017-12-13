@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
 
-import { LoadingStatus } from "app/components/base/loading";
 import { AccountKeys, AccountResource } from "app/models";
 import { AccountService } from "app/services";
 import { Observable } from "rxjs";
