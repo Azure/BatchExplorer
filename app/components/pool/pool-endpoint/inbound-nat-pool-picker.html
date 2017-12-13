@@ -10,19 +10,34 @@
             <input matInput type="number" formControlName="backendPort" placeholder="Backend port">
         </mat-form-field>
         <bl-error controlName="backendPort" code="required">Backend port is a required field</bl-error>
+        <bl-error controlName="backendPort" code="invalidRange">Backend port must be between {{minPort}} and {{maxBackendPort}}</bl-error>
+        <bl-error controlName="backendPort" code="reservedPort">{{ reservedBackendPort.join(", ") }} are reserved by the Batch service</bl-error>
     </div>
     <div class="form-element">
         <mat-form-field>
             <input matInput type="number" formControlName="frontendPortRangeStart" placeholder="Frontend port start">
         </mat-form-field>
         <bl-error controlName="frontendPortRangeStart" code="required">Frontend port start is a required field</bl-error>
+        <bl-error controlName="frontendPortRangeStart" code="invalidRange">Frontend port must be between {{minPort}} and {{maxFronendPort}}</bl-error>
+        <bl-error controlName="frontendPortRangeStart" code="reservedPort">Ports from {{minReservedFrontend}} to {{maxReservedFrontend}} are reserved by the Batch service</bl-error>
     </div>
     <div class="form-element">
         <mat-form-field>
             <input matInput type="number" formControlName="frontendPortRangeEnd" placeholder="Frontend port end">
         </mat-form-field>
         <bl-error controlName="frontendPortRangeEnd" code="required">Frontend port end is a required field</bl-error>
+        <bl-error controlName="frontendPortRangeEnd" code="invalidRange">Frontend port must be between {{minPort}} and {{maxFronendPort}}</bl-error>
+        <bl-error controlName="frontendPortRangeEnd" code="reservedPort">Ports from {{minReservedFrontend}} to {{maxReservedFrontend}} are reserved by the Batch service</bl-error>
     </div>
+
+    <div *ngIf="form.errors?.invalidFrontEnd">
+        Front end port start must be smaller than front end port end.
+    </div>
+
+    <div *ngIf="form.errors?.insufficientPorts">
+        Front end port range must contain at least {{minFrontendRange}} ports.
+    </div>
+
     <div class="form-element pad-top">
         <h4>Network security group rules</h4>
         <bl-network-security-group-rules formControlName="networkSecurityGroupRules"></bl-network-security-group-rules>

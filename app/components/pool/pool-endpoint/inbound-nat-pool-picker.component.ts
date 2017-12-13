@@ -5,6 +5,7 @@ import {
 import { Subscription } from "rxjs";
 
 import { InboundEndpointProtocol, InboundNATPool } from "app/models";
+import * as EndpointHelper from "./pool-endpoint-helper";
 
 @Component({
     selector: "bl-inbound-nat-pool-picker",
@@ -17,6 +18,14 @@ import { InboundEndpointProtocol, InboundNATPool } from "app/models";
 })
 export class InboundNATPoolPickerComponent implements ControlValueAccessor, Validator, OnDestroy {
     public InboundEndpointProtocol = InboundEndpointProtocol;
+    public minPort = EndpointHelper.MININUM_PORT;
+    public maxBackendPort = EndpointHelper.MAXIMUM_BACKEND_PORT;
+    public reservedBackendPort = EndpointHelper.RESERVED_BACKEND_PORT;
+    public maxFronendPort = EndpointHelper.MAXIMUM_FRONTEND_PORT;
+    public minReservedFrontend = EndpointHelper.MINIMUM_RESERVED_FRONTEND_PORT;
+    public maxReservedFrontend = EndpointHelper.MAXIMUM_RESERVED_FRONTEND_PORT;
+    public minFrontendRange = EndpointHelper.MINIMUM_FRONTEND_PORT_RANGE;
+
     public form: FormGroup;
 
     private _propagateChange: (value: InboundNATPool) => void = null;
@@ -24,12 +33,23 @@ export class InboundNATPoolPickerComponent implements ControlValueAccessor, Vali
 
     constructor(formBuilder: FormBuilder) {
         this.form = formBuilder.group({
-            backendPort: ["", Validators.required],
-            frontendPortRangeEnd: ["", Validators.required],
-            frontendPortRangeStart: ["", Validators.required],
+            backendPort: ["", [
+                Validators.required,
+                EndpointHelper.backendPortValidator(),
+            ]],
+            frontendPortRangeEnd: ["", [
+                Validators.required,
+                EndpointHelper.frontendPortValidator(),
+            ]],
+            frontendPortRangeStart: ["", [
+                Validators.required,
+                EndpointHelper.frontendPortValidator(),
+            ]],
             name: ["", Validators.required],
             networkSecurityGroupRules: [[]],
             protocol: [InboundEndpointProtocol.TCP],
+        }, {
+            validator: EndpointHelper.frontendPortRangeValidator("frontendPortRangeStart", "frontendPortRangeEnd"),
         });
 
         this._sub = this.form.valueChanges.subscribe((values: any) => {
