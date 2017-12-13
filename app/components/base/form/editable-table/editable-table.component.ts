@@ -106,7 +106,7 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
     }
 
     public trackRows(index, row: any) {
-        return index;
+        return row;
     }
 
     private _isEmpty(obj: any) {
