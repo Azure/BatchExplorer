@@ -15,8 +15,7 @@ import { ExternalLinks } from "app/utils/constants";
 export class PoolErrorDisplayComponent {
     public ResizeErrorCode = ResizeErrorCode;
 
-    @Input()
-    public pool: Pool;
+    @Input() public pool: Pool;
 
     constructor(private poolService: PoolService, private accountService: AccountService) {
     }
@@ -48,5 +47,9 @@ export class PoolErrorDisplayComponent {
 
     public refreshPool() {
         return this.poolService.get(this.pool.id);
+    }
+
+    public trackErrorValue(index, pair: NameValuePair) {
+        return pair.name;
     }
 }

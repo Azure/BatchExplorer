@@ -77,4 +77,8 @@ export class NodesHeatmapLegendComponent {
             this.nodeService.reimageAll(this.pool.id, category.states.map(x => x.state));
         }
     }
+
+    public trackState(index, state: StateNode | CategoryNode) {
+        return state.state || state.category;
+    }
 }

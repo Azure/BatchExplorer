@@ -10,8 +10,7 @@ import { TabComponent } from "./tab.component";
     templateUrl: "tab-group.html",
 })
 export class TabGroupComponent implements AfterViewInit, OnInit {
-    @Input()
-    public dataKey = "tab";
+    @Input() public dataKey = "tab";
 
     @ContentChildren(TabComponent)
     public tabs: QueryList<TabComponent>;
@@ -58,6 +57,10 @@ export class TabGroupComponent implements AfterViewInit, OnInit {
 
     public detectChanges() {
         this.changeDetector.markForCheck();
+    }
+
+    public trackTab(index, tab: TabComponent) {
+        return tab.key;
     }
 
     private _updateSelectedTab() {

@@ -3,7 +3,7 @@ import { Subscription } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { SplitPaneConfig } from "app/components/base/split-pane";
-import { CurrentNode, FileExplorerWorkspace, FileSource } from "app/components/file/browse/file-explorer";
+import { CurrentNode, FileExplorerWorkspace, FileSource, OpenedFile } from "app/components/file/browse/file-explorer";
 import { FileNavigator, FileTreeNode } from "app/services/file";
 import "./file-explorer.scss";
 
@@ -150,6 +150,14 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
 
     public handleDelete(event: FileDeleteEvent) {
         this.deleteFiles.emit(event);
+    }
+
+    public trackSource(index, source: FileSource) {
+        return source.name;
+    }
+
+    public trackOpenedFile(index, file: OpenedFile) {
+        return `${file.source.name}/${file.path}`;
     }
 
     private _updateWorkspaceEvents() {

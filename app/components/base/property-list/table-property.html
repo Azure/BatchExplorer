@@ -5,7 +5,7 @@
             <ng-template [ngTemplateOutlet]="header.content"></ng-template>
         </tr>
 
-        <tr *ngFor="let row of displayRows" class="row">
+        <tr *ngFor="let row of displayRows;trackBy: trackRow" class="row">
             <td class="label">{{row.label}}</td>
             <ng-template [ngTemplateOutlet]="row.content"></ng-template>
         </tr>
