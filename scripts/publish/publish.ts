@@ -3,7 +3,9 @@ import "colors";
 import * as fs from "fs";
 import * as path from "path";
 import { ask } from "yesno";
-import { createIssue, createPullRequest, getMilestone, githubToken, listMilestoneIssues, listPullRequests } from "./github-api";
+import {
+    createIssue, createPullRequest, getMilestone, githubToken, listMilestoneIssues, listPullRequests,
+} from "./github-api";
 import { issueUrl } from "./github-urls";
 
 const root = path.resolve(path.join(__dirname, "../.."));
