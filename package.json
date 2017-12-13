@@ -65,7 +65,7 @@
     "add-asset-html-webpack-plugin": "^2.1.2",
     "angular2-template-loader": "~0.6.2",
     "awesome-typescript-loader": "^3.4.1",
-    "codelyzer": "~4.0.1",
+    "codelyzer": "~4.0.2",
     "colors": "~1.1.2",
     "commander": "~2.12.2",
     "concurrently": "^3.5.1",

@@ -27,20 +27,16 @@ export class FormPickerItemTemplateDirective {
     ],
 })
 export class FormMultiPickerComponent implements ControlValueAccessor, Validator {
-    @Input()
-    public name: string;
+    @Input() public name: string;
 
-    @Input()
-    public addTitle: string;
+    @Input() public addTitle: string;
 
-    @Input()
-    public title: (value: any) => string;
+    @Input() public title: (value: any) => string;
 
     /**
      * If the picker should not have more than x values
      */
-    @Input()
-    public max = -1;
+    @Input() public max = -1;
 
     @ContentChild(FormPickerItemTemplateDirective)
     public itemTemplate: FormPickerItemTemplateDirective;
@@ -118,6 +114,10 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
         this.values.splice(index, 1);
         this.currentEditValue.setValue(null);
         this._emitNewValue();
+    }
+
+    public trackByFn(index) {
+        return index;
     }
 
     private _emitNewValue() {

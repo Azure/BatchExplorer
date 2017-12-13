@@ -41,4 +41,9 @@ export class PromptDialogComponent {
     public done() {
         this.response.complete();
     }
+
+    public trackByFn(index, entry: ValidatorMessage) {
+      return entry.code;
+    }
+
 }
