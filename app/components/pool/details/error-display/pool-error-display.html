@@ -1,5 +1,5 @@
 <div *ngIf="pool">
-    <div *ngFor="let resizeError of pool.resizeErrors" [ngSwitch]="resizeError.code">
+    <div *ngFor="let resizeError of pool.resizeErrors;trackBy: trackResizeError" [ngSwitch]="resizeError.code">
         <bl-banner *ngSwitchCase="ResizeErrorCode.accountCoreQuotaReached" fixMessage="Increase quota" [fix]="increaseQuota">
             <div [other-fix]="fixStopResizeError" fixMessage="Rescale"></div>
             <div code>{{resizeError.code}}</div>

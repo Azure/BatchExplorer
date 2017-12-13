@@ -89,6 +89,10 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
         // do not need
     }
 
+    public trackOption(index, option: string) {
+        return option;
+    }
+
     private _updateValidators() {
         const validatorGroup: any[] = [];
         const parameterTemplate = this.parameter.param;
