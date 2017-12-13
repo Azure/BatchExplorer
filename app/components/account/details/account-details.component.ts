@@ -64,6 +64,9 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
             this.selectAccount(this.accountId);
             this.data.params = { id: this.accountId };
             this.data.fetch().subscribe({
+                next: () => {
+                    this.loadingError = null;
+                },
                 error: (error) => {
                     this.loadingError = error;
                 },

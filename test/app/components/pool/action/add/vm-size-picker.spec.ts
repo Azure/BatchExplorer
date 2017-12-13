@@ -10,6 +10,7 @@ import { VmSizePickerComponent } from "app/components/pool/action/add";
 import { AccountResource, VmSize } from "app/models";
 import { PoolOsSources } from "app/models/forms";
 import { AccountService, PricingService, VmSizeService } from "app/services";
+import { OSPricing } from "app/services/pricing";
 
 @Component({
     template: `<bl-vm-size-picker [(ngModel)]="vmSize" [osSource]="osSource"></bl-vm-size-picker>`,
@@ -57,7 +58,8 @@ describe("VmSizePickerComponent", () => {
         };
 
         pricingServiceSpy = {
-            getPrices: () => Observable.of([]),
+            getPrice: () => Observable.of(0),
+            getPrices: () => Observable.of(new OSPricing("westus", "linux")),
         };
 
         TestBed.configureTestingModule({

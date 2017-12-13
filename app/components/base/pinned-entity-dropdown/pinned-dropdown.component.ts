@@ -3,7 +3,7 @@ import { NavigationEnd, Router } from "@angular/router";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { PinnedEntity, PinnedEntityType } from "app/models";
+import { PinnableEntity, PinnedEntityType } from "app/models";
 import { AccountService, PinnedEntityService } from "app/services";
 
 import "./pinned-dropdown.scss";
@@ -14,7 +14,7 @@ import "./pinned-dropdown.scss";
 })
 export class PinnedDropDownComponent implements OnInit, OnDestroy {
     public currentUrl: string;
-    public favorites: Observable<List<PinnedEntity>>;
+    public favorites: Observable<List<PinnableEntity>>;
     public title: string = "";
 
     private _subscriptions: Subscription[] = [];
@@ -39,16 +39,16 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
         this._subscriptions.push(this.router.events
             .filter(event => event instanceof NavigationEnd)
             .subscribe((event: NavigationEnd) => {
-            // Application URL scheme maps the Batch API URL for the entity
-            this.currentUrl = `https://${this._accountEndpoint}${event.url}`;
-        }));
+                // Application URL scheme maps the Batch API URL for the entity
+                this.currentUrl = `https://${this._accountEndpoint}${event.url}`;
+            }));
     }
 
     public ngOnDestroy() {
         this._subscriptions.forEach(x => x.unsubscribe());
     }
 
-    public entityType(favorite: PinnedEntity) {
+    public entityType(favorite: PinnableEntity) {
         switch (favorite.pinnableType) {
             case PinnedEntityType.Application:
                 return "Batch application";
@@ -63,7 +63,7 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
         }
     }
 
-    public entityIcon(favorite: PinnedEntity) {
+    public entityIcon(favorite: PinnableEntity) {
         switch (favorite.pinnableType) {
             case PinnedEntityType.Application:
                 return "fa-file-archive-o";

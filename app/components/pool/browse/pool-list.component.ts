@@ -18,6 +18,7 @@ import { Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
 import { PinnedEntityService, PoolListParams, PoolService } from "app/services";
 import { ListView } from "app/services/core";
+import { ComponentUtils } from "app/utils";
 import { Filter } from "app/utils/filter-builder";
 import { DeletePoolDialogComponent, PoolResizeDialogComponent } from "../action";
 import { DeletePoolTask } from "../action/delete";
@@ -50,7 +51,7 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
         this._filter = filter;
 
         if (filter.isEmpty()) {
-            this.data.setOptions({});
+            this.data.setOptions({ });
         } else {
             this.data.setOptions({ filter: filter.toOData() });
         }
@@ -78,6 +79,8 @@ export class PoolListComponent extends ListOrTableBase implements OnInit, OnDest
 
         super(dialog);
         this.data = this.poolService.listView();
+        ComponentUtils.setActiveItem(activatedRoute, this.data);
+
         this.status = this.data.status;
         this._subs.push(poolService.onPoolAdded.subscribe((poolId) => {
             this.data.loadNewItem(poolService.get(poolId));

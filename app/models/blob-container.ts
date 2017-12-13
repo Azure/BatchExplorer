@@ -1,6 +1,6 @@
 import { Model, Prop, Record } from "app/core";
 import { ContainerLease, ContainerLeaseAttributes } from "./container-lease";
-import { PinnableEntity, PinnedEntityType } from "./pinned-entity";
+import { NavigableRecord } from "./navigable-record";
 
 export interface BlobContainerAttributes {
     id: string;
@@ -15,7 +15,7 @@ export interface BlobContainerAttributes {
  * Class for displaying blob container information.
  */
 @Model()
-export class BlobContainer extends Record<BlobContainerAttributes> implements PinnableEntity {
+export class BlobContainer extends Record<BlobContainerAttributes> implements NavigableRecord {
     // container name
     @Prop() public id: string;
 
@@ -30,9 +30,5 @@ export class BlobContainer extends Record<BlobContainerAttributes> implements Pi
 
     public get routerLink(): string[] {
         return ["/data", this.id];
-    }
-
-    public get pinnableType(): PinnedEntityType {
-        return PinnedEntityType.FileGroup;
     }
 }

@@ -86,7 +86,7 @@ export class PoolDecorator extends DecoratorBase<Pool> {
             new VirtualMachineConfigurationDecorator(pool.virtualMachineConfiguration || {} as any, this.poolOs);
 
         this.taskSchedulingPolicy =
-            new TaskSchedulingPolicyDecorator(pool.taskSchedulingPolicy);
+            new TaskSchedulingPolicyDecorator(pool.taskSchedulingPolicy || {});
 
         this.applicationPackageReferences = List(pool.applicationPackageReferences);
         this.certificateReferences = List(pool.certificateReferences);

@@ -51,6 +51,15 @@ export class PoolConfigurationComponent {
         ref.component.pool = this.pool;
     }
 
+    public get startTaskItemCount() {
+        return Object.keys(this.startTask).length;
+    }
+
+    public get containerConfiguration() {
+        const vmConfig = this.decorator.virtualMachineConfiguration;
+        return  vmConfig && vmConfig.containerConfiguration;
+    }
+
     private _refresh(pool: Pool) {
         if (pool) {
             this.decorator = new PoolDecorator(this._pool);

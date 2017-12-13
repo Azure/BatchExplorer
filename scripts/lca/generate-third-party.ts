@@ -211,4 +211,4 @@ const options = commander
     .option("-c, --check", "Check the current third party notice file is valid.")
     .parse(process.argv);
 
-run(options);
+run(options as any);

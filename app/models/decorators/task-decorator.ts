@@ -1,4 +1,5 @@
 import { AutoUserScope, Task, TaskState, UserAccountElevationLevel } from "app/models";
+import { TaskContainerSettingsDecorator } from "app/models/decorators";
 import { DecoratorBase } from "app/utils/decorators";
 import { ComputeNodeInfoDecorator } from "./compute-node-info-decorator";
 import { TaskConstraintsDecorator } from "./task-constraints-decorator";
@@ -22,6 +23,7 @@ export class TaskDecorator extends DecoratorBase<Task> {
     public resourceFiles: {};
     public environmentSettings: {};
     public affinityInfo: {};
+    public containerSettings: {};
     public constraints: {};
     public executionInfo: {};
     public nodeInfo: {};
@@ -50,6 +52,7 @@ export class TaskDecorator extends DecoratorBase<Task> {
         this.resourceFiles = task.resourceFiles || {};
         this.environmentSettings = task.environmentSettings || {};
         this.affinityInfo = task.affinityInfo || {};
+        this.containerSettings = new TaskContainerSettingsDecorator(task.containerSettings || {} as any);
         this.constraints = new TaskConstraintsDecorator(task.constraints || {} as any);
         this.executionInfo = new TaskExecutionInfoDecorator(task.executionInfo || {} as any);
         this.nodeInfo = new ComputeNodeInfoDecorator(task.nodeInfo || {} as any);

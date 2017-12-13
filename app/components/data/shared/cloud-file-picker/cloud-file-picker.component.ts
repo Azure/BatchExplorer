@@ -40,7 +40,6 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnInit, O
     private _subscriptions: Subscription[] = [];
 
     constructor(private storageService: StorageService, private dialog: DialogService) {
-
         this.fileGroupsData = this.storageService.containerListView(storageService.ncjFileGroupPrefix);
         this.fileGroupsData.items.subscribe((fileGroups) => {
             this.fileGroups = fileGroups;

@@ -1,3 +1,4 @@
+import { Duration } from "moment";
 import { RecordMissingExtendsError } from "./errors";
 import { setProp, updateTypeMetadata } from "./helpers";
 import { Record } from "./record";
@@ -16,16 +17,17 @@ import { Record } from "./record";
  * public bar:string; // Default will be null
  * ```
  */
-export function Prop<T>(...args) {
+export function Prop<T>(type?: any, transform?: (value: any) => any) {
     return (target, attr, descriptor?: TypedPropertyDescriptor<T>) => {
         const ctr = target.constructor;
-
-        const type = Reflect.getMetadata("design:type", target, attr);
+        if (!type) {
+            type = Reflect.getMetadata("design:type", target, attr);
+        }
         if (!type) {
             throw new Error(`Cannot retrieve the type for RecordAttribute ${target.constructor.name}#${attr}`
                 + ". Check your nested type is defined in another file or above this DtoAttr");
         }
-        updateTypeMetadata(ctr, attr, { type, list: false });
+        updateTypeMetadata(ctr, attr, { type, list: false, transform });
         if (descriptor) {
             descriptor.writable = false;
         } else {
@@ -73,4 +75,18 @@ export function Model() {
             }
         });
     };
+}
+
+/**
+ * The value of unlimited maxWallClockTime/retentionTime threshold
+ */
+export const UNLIMITED_DURATION_THRESHOLD = 365;
+
+/**
+ * The function that converts duration to unlimited when current duration is greater than UNLIMITED_DURATION_THRESHOLD
+ * in both mutator and accessor of maxWallClockTime/retentionTime.
+ * @param duration
+ */
+export function TransformDuration(duration: Duration) {
+    return (duration && duration.asDays() < UNLIMITED_DURATION_THRESHOLD) ? duration : null;
 }

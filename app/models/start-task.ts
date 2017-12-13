@@ -1,6 +1,7 @@
 import { List } from "immutable";
 
 import { ListProp, Model, Prop, Record } from "app/core";
+import { TaskContainerSettings } from "app/models/dtos";
 import { NameValuePair } from "./name-value-pair";
 import { ResourceFile } from "./resource-file";
 import { UserIdentity } from "./user-identity";
@@ -12,6 +13,7 @@ export interface StartTaskAttributes {
     resourceFiles: any[];
     environmentSettings: any[];
     waitForSuccess: boolean;
+    containerSettings: TaskContainerSettings;
 }
 
 /**
@@ -26,6 +28,8 @@ export class StartTask extends Record<StartTaskAttributes> {
     @Prop() public userIdentity: UserIdentity;
 
     @Prop() public maxTaskRetryCount: number;
+
+    @Prop() public containerSettings: TaskContainerSettings;
 
     @ListProp(ResourceFile) public resourceFiles: List<ResourceFile> = List([]);
 

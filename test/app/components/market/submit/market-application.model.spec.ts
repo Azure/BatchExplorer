@@ -193,4 +193,15 @@ describe("marketApplicationModel", () => {
         expect(parameter.defaultValue).toBe("fileinput");
     });
 
+    it("should detect filegroup sas type", () => {
+        parameter = new NcjParameterWrapper("fileGroupSas", {
+            type: NcjParameterRawType.string,
+            metadata : {
+                description: "description",
+                advancedType: NcjParameterExtendedType.fileGroupSas,
+                dependsOn: "fileGroup",
+            },
+        });
+        expect(parameter.type).toBe(NcjParameterExtendedType.fileGroupSas);
+    });
 });

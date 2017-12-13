@@ -54,6 +54,7 @@ export class AccountService {
     private _accountFavorites: BehaviorSubject<List<AccountResource>> = new BehaviorSubject(List([]));
     private _currentAccount: BehaviorSubject<SelectedAccount> = new BehaviorSubject(null);
     private _currentAccountValid: BehaviorSubject<AccountStatus> = new BehaviorSubject(AccountStatus.Invalid);
+    private _currentAccountInvalidError: BehaviorSubject<string> = new BehaviorSubject(null);
     private _accountLoaded = new BehaviorSubject<boolean>(false);
     private _currentAccountId = new BehaviorSubject<string>(null);
     private _accounts = new BehaviorSubject<List<AccountResource>>(List([]));
@@ -83,6 +84,7 @@ export class AccountService {
                 this.validateCurrentAccount();
             } else {
                 this._currentAccountValid.next(AccountStatus.Invalid);
+                this._currentAccountInvalidError.next(null);
             }
         });
 
@@ -103,6 +105,10 @@ export class AccountService {
         return this._currentAccountValid.asObservable();
     }
 
+    public get currentAccountInvalidError(): Observable<string> {
+        return this._currentAccountInvalidError.asObservable();
+    }
+
     public selectAccount(accountId: string) {
         const current = this._currentAccountId.value;
         if (current === accountId) {
@@ -118,6 +124,7 @@ export class AccountService {
     public refresh(): Observable<any> {
         const accountId = this._currentAccountId.value;
         this._currentAccountValid.next(AccountStatus.Loading);
+        this._currentAccountInvalidError.next(null);
 
         const obs = this.get(accountId);
         DataCacheTracker.clearAllCaches(this._cache);
@@ -127,12 +134,12 @@ export class AccountService {
                 if (!this._accountLoaded.value) {
                     this._accountLoaded.next(true);
                 }
-
                 this._currentAccountValid.next(AccountStatus.Valid);
             },
             error: (error) => {
                 log.error(`Error Loading account ${accountId}`, error);
                 this._currentAccountValid.next(AccountStatus.Invalid);
+                this._currentAccountInvalidError.next(error && error.message);
             },
         });
 
@@ -249,6 +256,7 @@ export class AccountService {
 
     public validateCurrentAccount() {
         this._currentAccountValid.next(AccountStatus.Valid);
+        this._currentAccountInvalidError.next(null);
     }
 
     public loadInitialData() {
