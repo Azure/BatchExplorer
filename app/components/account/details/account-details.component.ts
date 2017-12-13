@@ -10,7 +10,9 @@ import {
 } from "app/services";
 import { EntityView, ListView } from "app/services/core";
 
+import { DialogService } from "app/components/base/dialogs";
 import "./account-details.scss";
+import { BatchAccountKeysDialogComponent } from "./keys-dialog";
 
 @Component({
     selector: "bl-account-details",
@@ -44,6 +46,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         router: Router,
         private activatedRoute: ActivatedRoute,
         private accountService: AccountService,
+        private dialogService: DialogService,
         private applicationService: ApplicationService,
         private jobService: JobService,
         private poolService: PoolService,
@@ -81,6 +84,12 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     @autobind()
     public refresh() {
         return this.data.refresh();
+    }
+
+    @autobind()
+    public showKeys() {
+        const ref = this.dialogService.open(BatchAccountKeysDialogComponent);
+        ref.componentInstance.accountId = this.accountId;
     }
 
     public selectAccount(accountId: string): void {

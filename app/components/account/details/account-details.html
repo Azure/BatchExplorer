@@ -12,9 +12,10 @@
                 <div>{{account.properties.accountEndpoint}}</div>
                 <div>{{account.subscription?.displayName}}</div>
             </div>
-                <bl-button-group summaryActions>
-                    <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
-                </bl-button-group>
+            <bl-button-group summaryActions>
+                <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+                <bl-button [action]="showKeys" color="light" mdTooltip="Account shared keys"><i class="fa fa-key"></i></bl-button>
+            </bl-button-group>
             <div summaryTile>
                 <bl-account-quotas-card [account]="account"></bl-account-quotas-card>
             </div>
