@@ -1,8 +1,27 @@
-<bl-property-list>
-    <bl-property-group label="Account credentials {{loading ? '(Loading ...)' : ''}}" class="wide">
-        <bl-text-property label="Name" [value]="account?.name"></bl-text-property>
-        <bl-text-property label="Url" [value]="account?.properties.accountEndpoint"></bl-text-property>
-        <bl-text-property label="Primary key" [value]="keys?.primary"></bl-text-property>
-        <bl-text-property label="Secondary key" [value]="keys?.secondary"></bl-text-property>
-    </bl-property-group>
-</bl-property-list>
+<mat-tab-group [@.disabled]="true">
+    <mat-tab>
+        <ng-template mat-tab-label>
+            Keys
+        </ng-template>
+        <bl-property-list>
+            <bl-property-group label="Account credentials {{loading ? '(Loading ...)' : ''}}" class="wide">
+                <bl-text-property label="Name" [value]="account?.name"></bl-text-property>
+                <bl-text-property label="Url" [value]="account?.properties.accountEndpoint"></bl-text-property>
+                <bl-text-property label="Primary key" [value]="keys?.primary"></bl-text-property>
+                <bl-text-property label="Secondary key" [value]="keys?.secondary"></bl-text-property>
+            </bl-property-group>
+        </bl-property-list>
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            Python
+        </ng-template>
+        <bl-programing-sample language="python" [account]="account" [keys]="keys"></bl-programing-sample>
+    </mat-tab>
+    <mat-tab>
+        <ng-template mat-tab-label>
+            CSharp
+        </ng-template>
+        <bl-programing-sample language="csharp" [account]="account" [keys]="keys"></bl-programing-sample>
+    </mat-tab>
+</mat-tab-group>
