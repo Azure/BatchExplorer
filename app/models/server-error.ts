@@ -4,7 +4,7 @@ import { BatchError } from "./batch-error";
 import { JsonRpcError } from "./python-rpc";
 import { StorageError } from "./storage-error";
 
-interface ErrorDetail {
+export interface ErrorDetail {
     key?: string;
     value?: string;
 }

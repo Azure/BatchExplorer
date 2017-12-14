@@ -1,6 +1,6 @@
 <bl-split-pane [config]="splitPaneConfig">
     <section blFirstPane class="tree-explorer-container" *ngIf="config.showTreeView">
-        <bl-file-tree-view *ngFor="let source of this.workspace.sources"
+        <bl-file-tree-view *ngFor="let source of this.workspace.sources;trackBy: trackSource"
             [fileNavigator]="source.navigator"
             [currentPath]="currentNode.path"
             [active]="source === currentSource"
@@ -27,7 +27,7 @@
                 (dropFiles)="handleDrop($event)">
             </bl-file-table-view>
 
-            <bl-file-details-view *ngFor="let file of workspace.openedFiles | async"
+            <bl-file-details-view *ngFor="let file of workspace.openedFiles | async;trackBy: trackOpenedFile"
                 [fileLoader]="file.loader"
                 [tailable]="config.tailable"
                 [hidden]="file.path !== currentNode.path"

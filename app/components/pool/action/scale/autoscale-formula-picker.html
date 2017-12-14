@@ -1,6 +1,6 @@
 <div class="evaluation-error" *ngIf="evaluationError">
     <div>{{evaluationError.message}}</div>
-    <div *ngFor="let detail of evaluationError.values">
+    <div *ngFor="let detail of evaluationError.values;trackBy: trackEvaluationErrors">
         {{detail.name}}: {{detail.value}}
     </div>
 </div>
@@ -21,7 +21,7 @@
             <div>
                 <div *ngIf="canEvaluateFormula" class="evaluate-formula-results">
                     <div *ngIf="evaluationResults.length === 0">View your formula results</div>
-                    <div *ngFor="let result of evaluationResults">
+                    <div *ngFor="let result of evaluationResults;trackBy: trackEvaluationResult">
                         {{result}}
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                 </bl-clickable>
             </div>
             <div class="formula-list">
-                <div class="formula" *ngFor="let formula of savedAutoscaleFormulas" (click)="selectFormula(formula)">
+                <div class="formula" *ngFor="let formula of savedAutoscaleFormulas;trackBy: trackFormula" (click)="selectFormula(formula)">
                     <span class="label">{{formula.name}}</span>
                     <i class="fa fa-times" title="Delete" (click)="deleteFormula(formula)"></i>
                 </div>
@@ -56,7 +56,7 @@
                 <div class="name" (do)="handleClickTreeViewHeader()"> Sample formulas </div>
             </div>
             <div class="formula-list">
-                <div class="formula" *ngFor="let formula of predefinedFormula" (click)="selectFormula(formula)">
+                <div class="formula" *ngFor="let formula of predefinedFormula;trackBy: trackFormula" (click)="selectFormula(formula)">
                     <span class="label">{{formula.name}}</span>
                 </div>
                 <div class="no-formula" *ngIf="predefinedFormula?.size === 0">

@@ -16,7 +16,7 @@
                 <i class="fa fa-plus"></i>
             </div>
             <div *ngIf="showOtherFixes" class="other-fixes">
-                <div *ngFor="let otherFix of otherFixes" class="other-fix" (click)="triggerFix(otherFix)">
+                <div *ngFor="let otherFix of otherFixes;trackBy: trackByFn" class="other-fix" (click)="triggerFix(otherFix)">
                     {{otherFix.fixMessage}}
                 </div>
             </div>

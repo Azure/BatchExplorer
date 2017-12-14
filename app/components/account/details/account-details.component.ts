@@ -97,6 +97,10 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         this.accountService.selectAccount(accountId);
     }
 
+    public trackByFn(index, item: Pool | Job | BatchApplication) {
+        return item.id;
+    }
+
     private _loadQuickAccessLists() {
         this.applicationData = this.applicationService.listView();
         this.applicationData.setOptions(this.initialOptions);

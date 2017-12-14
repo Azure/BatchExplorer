@@ -41,7 +41,11 @@ export class ChooseActionComponent implements OnInit, OnDestroy {
 
     @autobind()
     public openLink(link: string) {
-        this.electronShell.openExternal(link, {activate: true});
+        this.electronShell.openExternal(link, { activate: true });
+    }
+
+    public trackAction(index, action: ApplicationAction) {
+        return action.id;
     }
 
     private _updateActions() {

@@ -59,13 +59,17 @@ export class AccountDropDownComponent implements AfterViewInit {
             new ContextMenuItem({
                 label: "Select",
                 click: () => this.selectAccount(account),
-             }),
+            }),
             new ContextMenuItem({
                 label: "Remove favorite",
                 click: () => this._unFavoriteAccount(account),
-             }),
+            }),
         ];
         this.contextMenuService.openMenu(new ContextMenu(items));
+    }
+
+    public trackByFn(index, account: AccountResource) {
+        return account.id;
     }
 
     private _unFavoriteAccount(account: AccountResource) {
