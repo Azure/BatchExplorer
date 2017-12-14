@@ -4,8 +4,8 @@ import azure.batch.models as batchmodels
 
 # Batch account credentials
 BATCH_ACCOUNT_NAME = "{0}"
-BATCH_ACCOUNT_KEY = "{1}"
-BATCH_ACCOUNT_URL = "{2}"
+BATCH_ACCOUNT_URL = "{1}"
+BATCH_ACCOUNT_KEY = "{2}"
 
 # Create a Batch service client. We'll now be interacting with the Batch
 # service in addition to Storage.
