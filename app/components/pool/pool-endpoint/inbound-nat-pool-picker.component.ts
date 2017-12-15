@@ -1,9 +1,10 @@
-import { Component, OnDestroy, forwardRef } from "@angular/core";
+import { Component, Input, OnDestroy, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator, Validators,
 } from "@angular/forms";
 import { Subscription } from "rxjs";
 
+import { OnChanges } from "@angular/core/src/metadata/lifecycle_hooks";
 import { InboundEndpointProtocol, InboundNATPool } from "app/models";
 import * as EndpointHelper from "./pool-endpoint-helper";
 
@@ -16,7 +17,9 @@ import * as EndpointHelper from "./pool-endpoint-helper";
         { provide: NG_VALIDATORS, useExisting: forwardRef(() => InboundNATPoolPickerComponent), multi: true },
     ],
 })
-export class InboundNATPoolPickerComponent implements ControlValueAccessor, Validator, OnDestroy {
+export class InboundNATPoolPickerComponent implements ControlValueAccessor, Validator, OnDestroy, OnChanges {
+    @Input() public inboundNATPools: InboundNATPool[];
+
     public InboundEndpointProtocol = InboundEndpointProtocol;
     public minPort = EndpointHelper.MININUM_PORT;
     public maxBackendPort = EndpointHelper.MAXIMUM_BACKEND_PORT;
@@ -31,12 +34,9 @@ export class InboundNATPoolPickerComponent implements ControlValueAccessor, Vali
     private _propagateChange: (value: InboundNATPool) => void = null;
     private _sub: Subscription;
 
-    constructor(formBuilder: FormBuilder) {
-        this.form = formBuilder.group({
-            backendPort: ["", [
-                Validators.required,
-                EndpointHelper.backendPortValidator(),
-            ]],
+    constructor(public formBuilder: FormBuilder) {
+        this.form = this.formBuilder.group({
+            backendPort: [""],
             frontendPortRangeEnd: ["", [
                 Validators.required,
                 EndpointHelper.frontendPortValidator(),
@@ -45,11 +45,9 @@ export class InboundNATPoolPickerComponent implements ControlValueAccessor, Vali
                 Validators.required,
                 EndpointHelper.frontendPortValidator(),
             ]],
-            name: ["", Validators.required],
+            name: [""],
             networkSecurityGroupRules: [[]],
             protocol: [InboundEndpointProtocol.TCP],
-        }, {
-            validator: EndpointHelper.frontendPortRangeValidator("frontendPortRangeStart", "frontendPortRangeEnd"),
         });
 
         this._sub = this.form.valueChanges.subscribe((values: any) => {
@@ -57,6 +55,19 @@ export class InboundNATPoolPickerComponent implements ControlValueAccessor, Vali
                 this._propagateChange(values);
             }
         });
+    }
+
+    public ngOnChanges(): void {
+        this.form.controls["backendPort"].setValidators([
+            Validators.required,
+            EndpointHelper.backendPortValidator(this.inboundNATPools),
+        ]);
+        this.form.controls["name"].setValidators([
+            Validators.required,
+            EndpointHelper.nameValidator(this.inboundNATPools),
+        ]);
+        this.form.setValidators(EndpointHelper.frontendPortRangeValidator(
+            "frontendPortRangeStart", "frontendPortRangeEnd", this.inboundNATPools));
     }
 
     public ngOnDestroy() {

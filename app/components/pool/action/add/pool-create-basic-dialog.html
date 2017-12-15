@@ -118,7 +118,10 @@
                     </div>
                 </ng-template>
                 <div nested-form>
-                    <bl-inbound-nat-pool-picker [formControl]="inboundNATPoolsPicker.currentEditValue"></bl-inbound-nat-pool-picker>
+                    <bl-inbound-nat-pool-picker
+                        [formControl]="inboundNATPoolsPicker.currentEditValue"
+                        [inboundNATPools]="form.value.inboundNATPools">
+                    </bl-inbound-nat-pool-picker>
                 </div>
             </bl-form-multi-picker>
         </bl-form-section>
