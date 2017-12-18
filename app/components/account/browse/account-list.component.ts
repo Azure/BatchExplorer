@@ -35,7 +35,7 @@ export class AccountListComponent {
         subscriptionService: SubscriptionService) {
         this._updateDisplayedAccounts();
 
-        this.accountService.accountsLoaded.filter(x => x).first().subscribe(() => {
+        this.accountService.accountsLoaded.subscribe(() => {
             this.loadingStatus = LoadingStatus.Ready;
         });
     }

@@ -96,6 +96,11 @@ export const localStorageKey = {
     subscriptions: "subscriptions",
 
     /**
+     * Subscriptions cached
+     */
+    batchAccounts: "batchAccounts",
+
+    /**
      * Last batch account selected.
      */
     selectedAccountId: "selected-account-id",
