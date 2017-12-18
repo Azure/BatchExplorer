@@ -58,7 +58,7 @@ export class AccountService {
     private _accountLoaded = new BehaviorSubject<boolean>(false);
     private _currentAccountId = new BehaviorSubject<string>(null);
     private _accounts = new BehaviorSubject<List<AccountResource>>(List([]));
-    private _accountsLoaded = new BehaviorSubject<boolean>(false);
+    private _accountsLoaded = new AsyncSubject<boolean>();
     private _cache = new DataCache<AccountResource>();
     private _getter: BasicEntityGetter<AccountResource, AccountParams>;
 
@@ -147,6 +147,7 @@ export class AccountService {
     }
 
     public load() {
+        this._loadCachedAccounts();
         const obs = this.subscriptionService.subscriptions.flatMap((subscriptions) => {
             const accountObs = subscriptions.map((subscription) => {
                 return this.list(subscription.subscriptionId);
@@ -159,7 +160,8 @@ export class AccountService {
             next: (accountsPerSubscriptions) => {
                 const accounts = accountsPerSubscriptions.map(x => x.toArray()).flatten();
                 this._accounts.next(List(accounts));
-                this._accountsLoaded.next(true);
+                this._cacheAccounts();
+                this._markAccountsAsLoaded();
             },
             error: (error) => {
                 log.error("Error loading accounts", error);
@@ -308,4 +310,36 @@ export class AccountService {
     private _createAccount(subscription: Subscription, data: any): AccountResource {
         return new AccountResource(Object.assign({}, data, { subscription }));
     }
+
+    private _markAccountsAsLoaded() {
+        this._accountsLoaded.next(true);
+        this._accountsLoaded.complete();
+    }
+
+    private _cacheAccounts() {
+        localStorage.setItem(Constants.localStorageKey.batchAccounts, JSON.stringify(this._accounts.value.toJS()));
+    }
+
+    private _loadCachedAccounts() {
+        const str = localStorage.getItem(Constants.localStorageKey.batchAccounts);
+
+        try {
+            const data = JSON.parse(str);
+
+            if (data.length === 0) {
+                this._clearCachedAccounts();
+            } else {
+                const accounts = data.map(x => new AccountResource(x));
+                this._accounts.next(List<AccountResource>(accounts));
+                this._markAccountsAsLoaded();
+            }
+        } catch (e) {
+            this._clearCachedAccounts();
+        }
+    }
+
+    private _clearCachedAccounts() {
+        localStorage.removeItem(Constants.localStorageKey.batchAccounts);
+    }
+
 }
