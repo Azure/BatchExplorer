@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CheckerPlugin = require("awesome-typescript-loader").CheckerPlugin;
 const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const ngcWebpack = require("ngc-webpack");
 
 const isDevServer = helpers.isWebpackDevServer();
 const METADATA = {
@@ -25,9 +26,8 @@ const baseConfig = {
     module: {
         rules: [
             {
-                test: /\.ts$/,
-                loaders: ["awesome-typescript-loader", "angular2-template-loader"],
-                exclude: [/node_modules/],
+                test: /(?:\.ngfactory\.js|\.ngstyle\.js|\.ts)$/,
+                use: [ "@ngtools/webpack" ]
             },
             {
                 test: /\.html$/,
@@ -51,7 +51,11 @@ const baseConfig = {
     },
     plugins: [
         new CheckerPlugin(),
-
+        new ngcWebpack.NgcWebpackPlugin({
+            AOT: false,                            // alias for skipCodeGeneration: false
+            tsConfigPath: "./tsconfig.json",
+            mainPath: "./app/app.ts"              // will auto-detect the root NgModule.
+        }),
         new CopyWebpackPlugin([
             { context: "src/client/splash-screen", from: "**/*", to: "client/splash-screen" },
             { context: "app/assets", from: "**/*", to: "assets" },
