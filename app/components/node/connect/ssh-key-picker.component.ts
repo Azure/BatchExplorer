@@ -96,6 +96,10 @@ export class SSHKeyPickerComponent implements OnDestroy, ControlValueAccessor {
         this.sshKeyService.deleteKey(key);
     }
 
+    public trackSavedKey(index, key: SSHPublicKey) {
+        return key.id;
+    }
+
     private _saveKey(name: string) {
         const value = this.sshKeyValue.value;
 

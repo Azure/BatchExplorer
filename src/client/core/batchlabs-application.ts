@@ -3,13 +3,13 @@ import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import * as os from "os";
 import * as Url from "url";
 
-import { AuthenticationWindow } from "../authentication";
 import { Constants } from "../client-constants";
 import { logger } from "../logger";
 import { MainWindow } from "../main-window";
 import { PythonRpcServerProcess } from "../python-process";
 import { RecoverWindow } from "../recover-window";
 import { SplashScreen } from "../splash-screen";
+import { AADService, AuthenticationWindow } from "./aad";
 
 const osName = `${os.platform()}-${os.arch()}/${os.release()}`;
 const isDev = Constants.isDev ? "-dev" : "";
@@ -21,12 +21,14 @@ export class BatchLabsApplication {
     public recoverWindow = new RecoverWindow(this);
     public windows = [new MainWindow(this)];
     public pythonServer = new PythonRpcServerProcess();
+    public aadService = new AADService(this);
 
     constructor(public autoUpdater: AppUpdater) {
         logger.info("Arguments", process.argv);
     }
 
     public init() {
+        this.aadService.init();
         this._registerProtocol();
         this.setupProcessEvents();
     }
@@ -36,6 +38,7 @@ export class BatchLabsApplication {
      */
     public start() {
         this.pythonServer.start();
+
         const requestFilter = { urls: ["https://*", "http://*"] };
         session.defaultSession.webRequest.onBeforeSendHeaders(requestFilter, (details, callback) => {
             if (details.url.indexOf("batch.azure.com") !== -1) {
@@ -50,6 +53,7 @@ export class BatchLabsApplication {
         this.splashScreen.updateMessage("Loading app");
 
         this.windows.forEach(x => x.create());
+        this.aadService.login();
         this._processArguments(process.argv);
     }
 

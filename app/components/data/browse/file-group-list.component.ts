@@ -122,6 +122,10 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
         ]);
     }
 
+    public trackFileGroup(index, fileGroup: BlobContainer) {
+        return fileGroup.id;
+    }
+
     private _setContainerFilter(filter: Filter) {
         if (filter.isEmpty() || filter.properties.length === 0) {
             this.data.setOptions({});

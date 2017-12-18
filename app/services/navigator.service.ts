@@ -64,7 +64,7 @@ export class NavigatorService {
             log.error(`Cannot open this link in batchlabs, unknown protocol '${url.protocol}'`, { link });
             return null;
         }
-        const queryParams = new URLSearchParams(url.query);
+        const queryParams = new URLSearchParams(url.query as string);
         return {
             action: url.host,
             path: url.pathname,

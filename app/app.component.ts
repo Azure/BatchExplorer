@@ -12,12 +12,6 @@ import {
 } from "app/services";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
-const adalConfig = {
-    tenant: "common",
-    clientId: "04b07795-8ddb-461a-bbee-02f9e1bf7b46", // Azure CLI
-    redirectUri: "urn:ietf:wg:oauth:2.0:oob",
-};
-
 @Component({
     selector: "bl-app",
     templateUrl: "app.layout.html",
@@ -60,7 +54,6 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.pricingService.init();
         this.navigatorService.init();
         this.vmSizeService.init();
-        this.adalService.init(adalConfig);
         this.accountService.loadInitialData();
         this.ncjTemplateService.init();
         pythonRpcService.init();
@@ -88,7 +81,6 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
 
     public ngOnInit() {
-        this.adalService.login();
         this.subscriptionService.load();
         this.accountService.load();
 

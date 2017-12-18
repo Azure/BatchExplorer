@@ -78,4 +78,8 @@ export class ContainerSettingsPickerComponent implements ControlValueAccessor, O
         }
         return null;
     }
+
+    public trackImage(index, image: string) {
+        return image;
+    }
 }

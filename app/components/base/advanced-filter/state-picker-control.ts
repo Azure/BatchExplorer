@@ -30,7 +30,7 @@ export class StatePickerControl extends AdvancedFilterControlBase {
         <div [formGroup]="advancedFilter.group" *ngIf="advancedFilter && control">
             <fieldset formGroupName="{{control.name}}" >
                 <h3>{{control.label}}</h3>
-                <span *ngFor="let state of control.states" class="state-checkbox">
+                <span *ngFor="let state of control.states;trackBy: trackByFn" class="state-checkbox">
                     <mat-checkbox color="primary" formControlName="{{state}}" name="{{state}}">
                         {{state}}
                     </mat-checkbox>
@@ -40,9 +40,11 @@ export class StatePickerControl extends AdvancedFilterControlBase {
     `,
 })
 export class AdvancedFilterStatePickerComponent {
-    @Input()
-    public advancedFilter: AdvancedFilter;
+    @Input() public advancedFilter: AdvancedFilter;
 
-    @Input()
-    public control: StatePickerControl;
+    @Input() public control: StatePickerControl;
+
+    public trackByFn(index, state: string) {
+        return state;
+    }
 }

@@ -141,6 +141,18 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
         this.autoscaleFormulaService.deleteFormula(formula);
     }
 
+    public trackFormula(index, formula: AutoscaleFormula) {
+        return formula.id;
+    }
+
+    public trackEvaluationErrors(index, error: AutoScaleRunError) {
+        return index;
+    }
+
+    public trackEvaluationResult(index, result: string) {
+        return result;
+    }
+
     private _saveFormula(name: string) {
         const value = this.autoscaleFormulaValue;
         this.autoscaleFormulaService.saveFormula(new AutoscaleFormula({

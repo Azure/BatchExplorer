@@ -57,6 +57,10 @@ export class MarketComponent implements OnInit, OnDestroy {
         return obs;
     }
 
+    public trackApplication(index, action: Application) {
+        return action.id;
+    }
+
     /**
      * Filter all the application according to the current filter.
      * It will set the displayedApplication.

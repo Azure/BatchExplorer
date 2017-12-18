@@ -2,10 +2,10 @@ import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
 import { autobind } from "core-decorators";
 import { shell } from "electron";
 
-import { Pool, ResizeErrorCode } from "app/models";
+import { NameValuePair, Pool, ResizeError, ResizeErrorCode } from "app/models";
 import { PoolResizeDto } from "app/models/dtos";
 import { AccountService, PoolService } from "app/services";
-import { ExternalLinks } from "app/utils/constants";
+import { ExternalLinks } from "common/constants";
 
 @Component({
     selector: "bl-pool-error-display",
@@ -15,8 +15,7 @@ import { ExternalLinks } from "app/utils/constants";
 export class PoolErrorDisplayComponent {
     public ResizeErrorCode = ResizeErrorCode;
 
-    @Input()
-    public pool: Pool;
+    @Input() public pool: Pool;
 
     constructor(private poolService: PoolService, private accountService: AccountService) {
     }
@@ -48,5 +47,13 @@ export class PoolErrorDisplayComponent {
 
     public refreshPool() {
         return this.poolService.get(this.pool.id);
+    }
+
+    public trackResizeError(index, error: ResizeError) {
+        return index;
+    }
+
+    public trackErrorValue(index, pair: NameValuePair) {
+        return pair.name;
     }
 }

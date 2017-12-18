@@ -10,6 +10,7 @@ import { PoolDecorator } from "app/models/decorators";
 import { PoolPatchDto } from "app/models/dtos";
 import { PoolService } from "app/services";
 
+// tslint:disable:trackBy-function
 @Component({
     selector: "bl-pool-configuration",
     templateUrl: "pool-configuration.html",

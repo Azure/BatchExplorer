@@ -35,7 +35,7 @@ export class AccountListComponent {
         subscriptionService: SubscriptionService) {
         this._updateDisplayedAccounts();
 
-        this.accountService.accountsLoaded.filter(x => x).first().subscribe(() => {
+        this.accountService.accountsLoaded.subscribe(() => {
             this.loadingStatus = LoadingStatus.Ready;
         });
     }
@@ -61,6 +61,10 @@ export class AccountListComponent {
         return this.isAccountFavorite(accountId)
             ? QuickListItemStatus.accent
             : QuickListItemStatus.normal;
+    }
+
+    public trackByFn(index, account: AccountResource) {
+        return account.id;
     }
 
     private _updateDisplayedAccounts() {

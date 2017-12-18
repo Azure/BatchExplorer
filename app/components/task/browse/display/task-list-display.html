@@ -1,5 +1,5 @@
 <bl-quick-list *ngIf="quickList">
-    <bl-quick-list-item *ngFor="let task of tasks" [link]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id" [contextmenu]="contextmenu(task)">
+    <bl-quick-list-item *ngFor="let task of tasks;trackBy: trackByFn" [link]="['/jobs', jobId, 'tasks', task.id]" [key]="task.id" [contextmenu]="contextmenu(task)">
         <bl-quick-list-item-status [status]="taskStatus(task)" [tooltip]="taskStatusText(task)">
         </bl-quick-list-item-status>
 

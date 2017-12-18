@@ -9,6 +9,7 @@ import {
 } from "app/components/base/property-list";
 import { click } from "test/utils/helpers";
 
+// tslint:disable:trackBy-function
 @Component({
     template: `
         <bl-table-property label="Files">
