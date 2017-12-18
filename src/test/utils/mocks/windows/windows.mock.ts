@@ -1,34 +1,5 @@
 import { Subject } from "rxjs";
 
-import { ElectronRemote } from "app/services";
-import { AuthenticationWindow } from "client/authentication";
-import { SplashScreen } from "client/splash-screen";
-
-export class MockElectronRemote extends ElectronRemote {
-    public authenticationWindow: MockAuthenticationWindow;
-    public currentWindow: MockBrowserWindow;
-    public splashScreen: MockSplashScreen;
-
-    constructor() {
-        super();
-        this.currentWindow = new MockBrowserWindow();
-        this.splashScreen = new MockSplashScreen();
-        this.authenticationWindow = new MockAuthenticationWindow();
-    }
-
-    public getCurrentWindow(): Electron.BrowserWindow {
-        return this.currentWindow as any;
-    }
-
-    public getAuthenticationWindow(): AuthenticationWindow {
-        return this.authenticationWindow as any;
-    }
-
-    public getSplashScreen(): SplashScreen {
-        return this.splashScreen as any;
-    }
-}
-
 export class MockBrowserWindow {
     public destroy: jasmine.Spy;
     public loadURL: jasmine.Spy;

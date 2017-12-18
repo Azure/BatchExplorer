@@ -1,14 +1,16 @@
-import { Constants } from "app/utils";
-import { AccessToken } from "./access-token";
+// import { Constants } from "app/utils";
+import { localStorage } from "client/core/local-storage";
+import { Constants } from "common";
+import { AccessToken } from "./access-token.model";
 
 /**
  * Hellper class to storage the access tokens in memory and in the localstorage.
  */
-export class TokenCache {
-    private _tokens: StringMap<StringMap<AccessToken>> = {};
+export class AccessTokenCache {
+    private _tokens: any = {};
 
-    public init() {
-        this._loadFromStorage();
+    public async init() {
+        return this._loadFromStorage();
     }
 
     public hasToken(tenantId: string, resource: string) {
@@ -40,19 +42,19 @@ export class TokenCache {
         localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
     }
 
-    private _saveToStorage() {
+    private async _saveToStorage() {
         const tokens = {};
         for (const tenantId of Object.keys(this._tokens)) {
             tokens[tenantId] = {};
             for (const resource of Object.keys(this._tokens[tenantId])) {
-                tokens[tenantId][resource] = this._tokens[tenantId][resource].toJS();
+                tokens[tenantId][resource] = this._tokens[tenantId][resource];
             }
         }
-        localStorage.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(tokens));
+        return localStorage.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(tokens));
     }
 
-    private _loadFromStorage() {
-        const tokenStr = localStorage.getItem(Constants.localStorageKey.currentAccessToken);
+    private async _loadFromStorage() {
+        const tokenStr = await localStorage.getItem(Constants.localStorageKey.currentAccessToken);
         if (!tokenStr) {
             return;
         }

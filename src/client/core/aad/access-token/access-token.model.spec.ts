@@ -1,9 +1,8 @@
 import * as moment from "moment";
 
-import { AccessTokenAttributes } from "app/services";
-import { AccessToken } from "app/services/adal";
+import { AccessToken, AccessTokenAttributes } from "./access-token.model";
 
-describe("AccessToken", () => {
+describe("AccessToken.model", () => {
     it("Should expires in less", () => {
         const token = new AccessToken({
             access_token: "sometoken",

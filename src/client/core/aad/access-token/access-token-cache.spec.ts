@@ -1,19 +1,20 @@
 import * as moment from "moment";
 
-import { TokenCache } from "app/services/adal/token-cache";
-import { Constants } from "app/utils";
-import { mockStorage } from "test/utils/mocks";
+import { localStorage } from "client/core/local-storage";
+import { Constants } from "common";
+import { mockNodeStorage } from "test/utils/mocks/storage";
+import { AccessTokenCache } from "./access-token-cache";
 
 const tenant1 = "tenant-1";
 const resource1 = "http://example.com";
 
-describe("TokenCache", () => {
-    let cache: TokenCache;
+describe("AccessTokenCache", () => {
+    let cache: AccessTokenCache;
 
     beforeEach(() => {
 
-        mockStorage(localStorage);
-        cache = new TokenCache();
+        mockNodeStorage(localStorage);
+        cache = new AccessTokenCache();
     });
 
     it("doesn't set the access token if not in localstorage", () => {
@@ -33,7 +34,7 @@ describe("TokenCache", () => {
         expect(cache.getToken(tenant1, resource1)).toBeFalsy();
     });
 
-    it("should load the token from local storage if present and not expired", () => {
+    it("should load the token from local storage if present and not expired", async (done) => {
         const data = {
             [tenant1]: {
                 [resource1]: {
@@ -48,9 +49,10 @@ describe("TokenCache", () => {
             },
         };
         localStorage.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(data));
-        cache.init();
+        await cache.init();
         const token = cache.getToken(tenant1, resource1);
         expect(token).not.toBeFalsy();
         expect(token.access_token).toEqual("sometoken");
+        done();
     });
 });

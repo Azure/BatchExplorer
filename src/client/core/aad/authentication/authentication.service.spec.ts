@@ -1,33 +1,34 @@
 import { Observable } from "rxjs";
-
+import { F } from "test/utils";
+import { MockAuthenticationWindow, MockSplashScreen } from "test/utils/mocks/windows";
 import {
-    AuthorizeError, AuthorizeResult, UserAuthorization,
-} from "app/services/adal/user-authorization";
-import { MockAuthenticationWindow, MockElectronRemote } from "test/utils/mocks";
+    AuthenticationService, AuthorizeError, AuthorizeResult,
+} from "./authentication.service";
 
-describe("UserAuthorization", () => {
-    let userAuthorization: UserAuthorization;
-    let remoteSpy: MockElectronRemote;
+describe("AuthenticationService", () => {
+    let userAuthorization: AuthenticationService;
     let fakeAuthWindow: MockAuthenticationWindow;
+    let appSpy;
 
     beforeEach(() => {
-        remoteSpy = new MockElectronRemote();
+        appSpy = {
+            splashScreen: new MockSplashScreen(),
+            authenticationWindow: new MockAuthenticationWindow(),
+        };
         const config = { tenant: "common", clientId: "abc", redirectUri: "http://localhost" };
-        userAuthorization = new UserAuthorization(config, remoteSpy);
-        fakeAuthWindow = remoteSpy.authenticationWindow;
+        userAuthorization = new AuthenticationService(appSpy, config);
+        fakeAuthWindow = appSpy.authenticationWindow;
     });
 
     describe("Authorize", () => {
         let result: AuthorizeResult;
         let error: AuthorizeError;
+        let promise;
         beforeEach(() => {
             result = null;
             error = null;
             const obs = userAuthorization.authorize("tenant-1");
-            obs.subscribe(
-                (out) => result = out,
-                (e) => error = e,
-            );
+            promise = obs.then((out) => result = out).catch((e) => error = e);
         });
 
         it("Should have called loadurl", () => {
@@ -49,52 +50,56 @@ describe("UserAuthorization", () => {
         });
 
         it("should have hidden the splash screen", () => {
-            expect(remoteSpy.splashScreen.hide).toHaveBeenCalledOnce();
+            expect(appSpy.splashScreen.hide).toHaveBeenCalledTimes(1);
         });
 
-        it("Should return the id token and code when sucessfull", () => {
+        it("Should return the id token and code when sucessfull", F(async () => {
             const newUrl = "http://localhost/#id_token=sometoken&code=somecode";
             fakeAuthWindow.notifyRedirect(newUrl);
+            await promise;
             expect(result).not.toBeNull();
             expect(result.id_token).toEqual("sometoken");
             expect(result.code).toEqual("somecode");
             expect(error).toBeNull();
 
             expect(fakeAuthWindow.destroy).toHaveBeenCalledTimes(1);
-            expect(remoteSpy.splashScreen.show).toHaveBeenCalledOnce();
-        });
+            expect(appSpy.splashScreen.show).toHaveBeenCalledTimes(1);
+        }));
 
-        it("Should error when the url redirect returns an error", () => {
+        it("Should error when the url redirect returns an error", F(async () => {
             const newUrl = "http://localhost/#error=someerror&error_description=There was an error";
             fakeAuthWindow.notifyRedirect(newUrl);
+            await promise;
+
             expect(result).toBeNull();
             expect(error).not.toBeNull();
             expect(error.error).toEqual("someerror");
             expect(error.error_description).toEqual("There was an error");
 
             expect(fakeAuthWindow.destroy).toHaveBeenCalledTimes(1);
-        });
+        }));
 
-        it("should only authorize 1 tenant at the time and queue the others", () => {
+        it("should only authorize 1 tenant at the time and queue the others", F(async () => {
             const obs1 = userAuthorization.authorize("tenant-1");
             const obs2 = userAuthorization.authorize("tenant-2");
             const tenant1Spy = jasmine.createSpy("Tenant-1");
             const tenant2Spy = jasmine.createSpy("Tenant-2");
-            obs1.subscribe(tenant1Spy);
-            obs2.subscribe(tenant2Spy);
+            const p1 = obs1.then(tenant1Spy);
+            const p2 = obs2.then(tenant2Spy);
 
             expect(tenant1Spy).not.toHaveBeenCalled();
             expect(tenant2Spy).not.toHaveBeenCalled();
 
             const newUrl1 = "http://localhost/#id_token=sometoken&code=somecode";
             fakeAuthWindow.notifyRedirect(newUrl1);
+            await p1;
 
             // Should have set tenant-1
             expect(result).not.toBeNull();
             expect(result.id_token).toEqual("sometoken");
             expect(result.code).toEqual("somecode");
 
-            expect(fakeAuthWindow.destroy).toHaveBeenCalledOnce();
+            expect(fakeAuthWindow.destroy).toHaveBeenCalledTimes(1);
             expect(tenant1Spy).toHaveBeenCalled();
             expect(tenant1Spy).toHaveBeenCalledWith({ id_token: "sometoken", code: "somecode" });
 
@@ -103,11 +108,12 @@ describe("UserAuthorization", () => {
             // Should now authorize for tenant-2
             const newUrl2 = "http://localhost/#id_token=sometoken2&code=somecode2";
             fakeAuthWindow.notifyRedirect(newUrl2);
+            await p2;
 
             expect(tenant2Spy).toHaveBeenCalled();
             expect(tenant2Spy).toHaveBeenCalledWith({ id_token: "sometoken2", code: "somecode2" });
             expect(fakeAuthWindow.destroy).toHaveBeenCalledTimes(2);
-        });
+        }));
     });
 
     describe("Authorize silently", () => {
@@ -135,38 +141,37 @@ describe("UserAuthorization", () => {
         let error: AuthorizeError;
         let callAuth: () => void;
         let authorizeOutput: jasmine.Spy;
+        let promise;
 
         beforeEach(() => {
             result = null;
             error = null;
             callAuth = () => {
                 const obs = userAuthorization.authorizeTrySilentFirst("tenant-1");
-                obs.subscribe(
-                    (out) => result = out,
-                    (e) => error = e,
-                );
+                promise = obs.then((out) => result = out).catch((e) => error = e);
             };
             userAuthorization.authorize = jasmine.createSpy("authorize").and.callFake(() => {
                 return authorizeOutput();
             });
         });
 
-        it("Should not call silent false if silent true return sucessfully", () => {
-            authorizeOutput = jasmine.createSpy("output").and.returnValue(Observable.of(goodResult));
+        it("Should not call silent false if silent true return sucessfully", F(async () => {
+            authorizeOutput = jasmine.createSpy("output").and.returnValue(Promise.resolve(goodResult));
             callAuth();
+            await promise;
             expect(result).toEqual(goodResult);
             expect(error).toBeNull();
 
-            expect(userAuthorization.authorize).toHaveBeenCalledOnce();
+            expect(userAuthorization.authorize).toHaveBeenCalledTimes(1);
             expect(userAuthorization.authorize).toHaveBeenCalledWith("tenant-1", true);
-        });
+        }));
 
-        it("Should call silent false if silent true return sucessfully", () => {
+        it("Should call silent false if silent true return sucessfully", async () => {
             authorizeOutput = jasmine.createSpy("output").and.returnValues(
-                Observable.throw(badResult),
-                Observable.of(goodResult));
-
+                Promise.reject(badResult),
+                Promise.resolve(goodResult));
             callAuth();
+            await promise;
             expect(result).toEqual(goodResult);
             expect(error).toBeNull();
 
@@ -175,9 +180,10 @@ describe("UserAuthorization", () => {
             expect(userAuthorization.authorize).toHaveBeenCalledWith("tenant-1", false);
         });
 
-        it("Should return error if both silent true and false return an error", () => {
-            authorizeOutput = jasmine.createSpy("output").and.returnValue(Observable.throw(badResult));
+        it("Should return error if both silent true and false return an error", async () => {
+            authorizeOutput = jasmine.createSpy("output").and.returnValue(Promise.reject(badResult));
             callAuth();
+            await promise;
 
             expect(userAuthorization.authorize).toHaveBeenCalledTimes(2);
             expect(result).toBeNull();

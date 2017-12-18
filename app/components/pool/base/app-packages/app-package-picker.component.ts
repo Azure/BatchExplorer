@@ -58,7 +58,6 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
 
         this._data = this.applicationService.listView();
 
-        // TODO-TIM handle error.
         this._data.onError = (error: ServerError) => {
             if (this.applicationService.isAutoStorageError(error)) {
                 this.hasLinkedStorage.emit(false);

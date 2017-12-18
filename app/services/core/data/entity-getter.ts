@@ -4,7 +4,7 @@ import { Observable } from "rxjs";
 import { ServerError } from "app/models";
 import { DataCache } from "app/services/core";
 import { log } from "app/utils";
-import { HttpCode } from "app/utils/constants";
+import { HttpCode } from "common/constants";
 import { GenericGetter, GenericGetterConfig } from "./generic-getter";
 
 export interface FetchOptions {

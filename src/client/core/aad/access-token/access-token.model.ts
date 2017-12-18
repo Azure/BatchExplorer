@@ -1,7 +1,6 @@
 import * as moment from "moment";
 
-import { Model, Prop, Record } from "app/core";
-import { exists } from "app/utils";
+import { exists } from "common/utils";
 
 // tslint:disable:variable-name
 
@@ -24,8 +23,7 @@ export interface AccessTokenAttributes {
     not_before: Date;
 }
 
-@Model()
-export class AccessToken extends Record<AccessTokenAttributes> {
+export class AccessToken {
     public static isValidToken(data: AccessTokenAttributes) {
         return exists(data.access_token)
             && exists(data.refresh_token)
@@ -36,25 +34,31 @@ export class AccessToken extends Record<AccessTokenAttributes> {
             && exists(data.not_before);
     }
 
-    @Prop() public access_token: string;
-    @Prop() public refresh_token: string = "Bearer";
-    @Prop() public token_type: string;
+    public access_token: string;
+    public refresh_token: string = "Bearer";
+    public token_type: string;
 
     /**
      * Number of seconds before the token expires
      */
-    @Prop() public expires_in: number;
+    public expires_in: number;
 
     /**
      * Datetime when the token expires
      */
-    @Prop() public expires_on: Date;
+    public expires_on: Date;
 
-    @Prop() public ext_expires_in: number;
-    @Prop() public not_before: Date;
+    public ext_expires_in: number;
+    public not_before: Date;
 
     constructor(data: AccessTokenAttributes) {
-        super(data);
+        this.access_token = data.access_token;
+        this.refresh_token = data.refresh_token;
+        this.token_type = data.token_type;
+        this.expires_in = data.expires_in;
+        this.expires_on = data.expires_on;
+        this.ext_expires_in = data.ext_expires_in;
+        this.not_before = data.not_before;
     }
 
     /**

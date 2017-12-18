@@ -1,8 +1,13 @@
+import * as path from "path";
+process.env.NODE_PATH = path.join(__dirname, "..");
+// tslint:disable-next-line:no-var-requires
+require("module").Module._initPaths();
+
 import { Menu, app, dialog, ipcMain, protocol } from "electron";
 import { autoUpdater } from "electron-updater";
-import * as path from "path";
 app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 
+import { localStorage } from "client/core/local-storage";
 import { Constants } from "./client-constants";
 import { BatchLabsApplication, listenToSelectCertifcateEvent } from "./core";
 import { logger } from "./logger";
@@ -13,6 +18,7 @@ if (Constants.isDev) {
 autoUpdater.allowPrerelease = true;
 autoUpdater.autoDownload = true;
 autoUpdater.logger = logger;
+localStorage.load();
 
 const batchLabsApp = new BatchLabsApplication(autoUpdater);
 

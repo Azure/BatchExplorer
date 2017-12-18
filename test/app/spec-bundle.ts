@@ -1,5 +1,5 @@
 // tslint:disable-next-line
-/// <reference path="../utils/matchers/index.d.ts"/>
+/// <reference path="../../src/test/utils/matchers/index.d.ts"/>
 jasmine.MAX_PRETTY_PRINT_DEPTH = 2;
 
 import "reflect-metadata";
@@ -17,6 +17,6 @@ Error.stackTraceLimit = 5;
 
 import "hammerjs";
 import "moment-duration-format";
-import "../utils/matchers";
+import "test/utils/matchers";
 
 import "../../app/styles/main.scss";

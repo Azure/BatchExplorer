@@ -1,4 +1,4 @@
-export interface AdalConfig {
+export interface AADConfig {
     tenant: string;
     clientId: string;
     redirectUri: string;
