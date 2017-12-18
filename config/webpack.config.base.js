@@ -12,6 +12,9 @@ const METADATA = {
     isDevServer: isDevServer,
 };
 
+// Set to false for now, as it doesn't seem to work correctly https://github.com/angular/angular-cli/issues/2799
+const AOT = false;
+
 const baseConfig = {
     entry: {
         "polyfills": "./app/polyfills.browser",
@@ -53,7 +56,7 @@ const baseConfig = {
     plugins: [
         new CheckerPlugin(),
         new ngcWebpack.NgcWebpackPlugin({
-            AOT: true,                            // alias for skipCodeGeneration: false
+            AOT,                            // alias for skipCodeGeneration: false
             tsConfigPath: "./tsconfig.json",
             mainPath: "./app/app.ts"              // will auto-detect the root NgModule.
         }),

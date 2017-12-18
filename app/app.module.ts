@@ -154,5 +154,4 @@ const modules = [
         { provide: ErrorHandler, useClass: BatchLabsErrorHandler },
     ],
 })
-
 export class AppModule { }
