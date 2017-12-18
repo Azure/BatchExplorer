@@ -29,9 +29,10 @@ export class InboundNATPoolPickerComponent implements ControlValueAccessor, Vali
     public minReservedFrontend = EndpointHelper.MINIMUM_RESERVED_FRONTEND_PORT;
     public maxReservedFrontend = EndpointHelper.MAXIMUM_RESERVED_FRONTEND_PORT;
     public minFrontendRange = EndpointHelper.MINIMUM_FRONTEND_PORT_RANGE;
+    public maxRules = EndpointHelper.MAXIMUM_SECURITY_GROUP_RULES;
     public minRulePriority = EndpointHelper.MINIMUM_SECURITY_GROUP_RULE_PRIORITY;
     public maxRulePriority = EndpointHelper.MAXIMUM_SECURITY_GROUP_RULE_PRIORITY;
-
+    public maxEndpointNameLength = EndpointHelper.ENDPOINTNAME_LENGTH;
     public form: FormGroup;
 
     private _propagateChange: (value: InboundNATPool) => void = null;

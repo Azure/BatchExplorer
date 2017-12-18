@@ -9,11 +9,11 @@ export const MAXIMUM_FRONTEND_PORT = 65534;
 export const MINIMUM_RESERVED_FRONTEND_PORT = 50000;
 export const MAXIMUM_RESERVED_FRONTEND_PORT = 55000;
 export const MINIMUM_FRONTEND_PORT_RANGE = 40;
-
+export const MAXIMUM_SECURITY_GROUP_RULES = 25;
 export const MINIMUM_SECURITY_GROUP_RULE_PRIORITY = 150;
 export const MAXIMUM_SECURITY_GROUP_RULE_PRIORITY = 3500;
-
-// const endpointNameLength: number = 77;
+export const ENDPOINTNAME_REGEX = "^(?=.{0,77}$)[0-9a-zA-Z][a-zA-Z0-9_.-]*[0-9a-zA-Z_]*$";
+export const ENDPOINTNAME_LENGTH = 77;
 
 /**
  * backendPortValidator is a custom validator that validates backend port input
@@ -145,13 +145,26 @@ export function frontendPortRangeValidator(
 /**
  * nameValidator is a custom validator that validates name input
  * One requirements must be met:
- * 1, Backend port must be unique
+ * 1, Endponit name must be valid that contain letters, numbers, underscores, periods, and hyphens.
+ *    Names must start with a letter or number, must end with a letter, number, or underscore,
+ *    and cannot exceed 77 characters.
+ * 2, Endponit name must be unique within a Batch pool
  */
 export function nameValidator(inboundNATPools: InboundNATPool[]) {
     return (control: FormControl): {[key: string]: any} => {
         if (control.value === null) {
             return null;
         }
+        // Check endpoint regex test pass or not
+        const nameRegex = new RegExp(ENDPOINTNAME_REGEX);
+        if (!nameRegex.test(control.value)) {
+            return {
+                invalidValue: {
+                    value: control.value,
+                },
+            };
+        }
+        // Check whether name is duplicate
         let hasDuplicate = false;
         if (inboundNATPools) {
             for (let pool of inboundNATPools) {

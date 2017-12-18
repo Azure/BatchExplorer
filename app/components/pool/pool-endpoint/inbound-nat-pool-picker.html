@@ -6,6 +6,9 @@
             </mat-form-field>
             <bl-error controlName="name" code="required">Name of endpoint is a required field</bl-error>
             <bl-error controlName="name" code="duplicateValue">Name of endpoint must be unique</bl-error>
+            <bl-error controlName="name" code="invalidValue">
+                Name of endpoint can only contain letters, numbers, underscores, periods, and hyphens. Names must start with a letter or number, must end with a letter, number, or underscore, and cannot exceed {{maxEndpointNameLength}} characters
+            </bl-error>
         </div>
         <div class="gcol">
             <mat-form-field class="form-element">
@@ -62,6 +65,9 @@
         </div>
         <div *ngIf="networkSecurityGroupRules.errors?.outOfRange" class="form-error">
             Network security rule priority must be between {{minRulePriority}} and {{maxRulePriority}}
+        </div>
+        <div *ngIf="networkSecurityGroupRules.errors?.maximumReached" class="form-error">
+            Number of network security rules can not exceed {{maxRules}}
         </div>
     </div>
 </div>

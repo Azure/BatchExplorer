@@ -62,6 +62,13 @@ export class NetworkSecurityGroupRulesComponent implements ControlValueAccessor,
 
     public validate(c: FormControl) {
         if (Array.isArray(c.value)) {
+            if (c.value.length > EndpointHelper.MAXIMUM_SECURITY_GROUP_RULES) {
+                return {
+                    maximumReached: {
+                        valid: false,
+                    },
+                };
+            }
             const uniquePriorities = [...new Set(c.value.map(item => item.priority))];
             if (uniquePriorities.length !== c.value.length) {
                 return {

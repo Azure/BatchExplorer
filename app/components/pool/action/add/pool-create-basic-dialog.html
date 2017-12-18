@@ -108,7 +108,7 @@
         </bl-form-section>
 
         <bl-form-section title="Pool endpoint configuration" subtitle="The configuration for endpoints on compute nodes in the Batch pool.">
-            <bl-form-multi-picker formControlName="inboundNATPools" #inboundNATPoolsPicker addTitle="Add a inbound NAT Pool" [max]="5">
+            <bl-form-multi-picker formControlName="inboundNATPools" #inboundNATPoolsPicker addTitle="Inbound NAT Pool" [max]="5">
                 <ng-template blFormPickerItem let-value>
                     <div title>
                         {{value?.name}}
