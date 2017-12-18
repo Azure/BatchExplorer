@@ -18,7 +18,7 @@ e.g.
 ```typescript
 import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { Observable } from "rxjs";
 
 import { NotificationService } from "app/components/base/notifications";

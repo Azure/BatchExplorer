@@ -1,5 +1,5 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { List } from "immutable";
 import * as moment from "moment";
 import { Subscription } from "rxjs";

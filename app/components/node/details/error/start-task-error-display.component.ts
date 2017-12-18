@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges, SimpleChanges } from "@angular/core";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarManager } from "app/components/base/sidebar";

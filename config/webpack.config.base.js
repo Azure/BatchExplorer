@@ -27,7 +27,8 @@ const baseConfig = {
         rules: [
             {
                 test: /(?:\.ngfactory\.js|\.ngstyle\.js|\.ts)$/,
-                use: [ "@ngtools/webpack" ]
+                use: [ "@ngtools/webpack" ],
+                exclude: [/\.spec\.ts/, /src\/test\//]
             },
             {
                 test: /\.html$/,
@@ -52,7 +53,7 @@ const baseConfig = {
     plugins: [
         new CheckerPlugin(),
         new ngcWebpack.NgcWebpackPlugin({
-            AOT: false,                            // alias for skipCodeGeneration: false
+            AOT: true,                            // alias for skipCodeGeneration: false
             tsConfigPath: "./tsconfig.json",
             mainPath: "./app/app.ts"              // will auto-detect the root NgModule.
         }),

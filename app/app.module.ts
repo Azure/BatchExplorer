@@ -76,7 +76,6 @@ import {
     SubscriptionService,
     TaskService,
     VmSizeService,
-    commands,
 } from "./services";
 
 const modules = [
@@ -153,7 +152,6 @@ const modules = [
         VmSizeService,
         PredefinedFormulaService,
         { provide: ErrorHandler, useClass: BatchLabsErrorHandler },
-        ...commands,
     ],
 })
 

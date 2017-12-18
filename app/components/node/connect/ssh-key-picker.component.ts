@@ -1,6 +1,6 @@
 import { Component, ElementRef, OnDestroy, ViewChild, forwardRef } from "@angular/core";
 import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR } from "@angular/forms";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 

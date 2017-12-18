@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { Observable } from "rxjs";
 
 import { ComplexFormConfig } from "app/components/base/form";

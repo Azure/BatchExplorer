@@ -5,7 +5,7 @@ import { Subscription } from "rxjs";
 
 import { Application } from "app/models";
 import { NcjTemplateService, StorageService } from "app/services";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import "./market.scss";
 
 @Component({

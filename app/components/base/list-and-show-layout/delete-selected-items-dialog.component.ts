@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { MatDialogRef } from "@angular/material";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { Observable } from "rxjs";
 
 @Component({

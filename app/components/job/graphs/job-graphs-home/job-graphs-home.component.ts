@@ -10,7 +10,7 @@ import { CacheDataService, ElectronShell, FileSystemService, JobParams, JobServi
 import { EntityView } from "app/services/core";
 import { log } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import "./job-graphs-home.scss";
 
 enum AvailableGraph {

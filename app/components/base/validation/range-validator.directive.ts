@@ -1,13 +1,6 @@
-import { Directive } from "@angular/core";
-import { FormControl, NG_VALIDATORS } from "@angular/forms";
+import { FormControl } from "@angular/forms";
 
-// note: unsure if this needs to be a directive ....
-@Directive({
-    selector: "[bl_validateRange][ngModel],[bl_validateRange][formControl]",
-    providers: [
-        { provide: NG_VALIDATORS, useExisting: RangeValidatorDirective, multi: true },
-    ],
-})
+// TODO-TIM change, remove directive suffix
 export class RangeValidatorDirective {
     public validator: (control: FormControl) => any;
 

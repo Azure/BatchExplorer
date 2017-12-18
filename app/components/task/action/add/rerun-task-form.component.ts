@@ -7,7 +7,7 @@ import { SidebarRef } from "app/components/base/sidebar";
 import { TaskCreateDto } from "app/models/dtos";
 import { JobService, PoolService, TaskService } from "app/services";
 import { ObservableUtils } from "app/utils";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { TaskCreateBasicDialogComponent } from "./task-create-basic-dialog.component";
 
 @Component({

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, ViewChild } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { Subscription } from "rxjs";
 
 import { NcjFileGroupService, StorageService } from "app/services";

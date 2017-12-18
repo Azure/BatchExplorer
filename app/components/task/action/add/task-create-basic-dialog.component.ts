@@ -1,6 +1,6 @@
 import { Component } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { Observable } from "rxjs";
 
 import { OnInit } from "@angular/core/src/metadata/lifecycle_hooks";

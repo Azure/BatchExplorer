@@ -9,7 +9,7 @@ import { BackgroundTask, BackgroundTaskService } from "app/components/base/backg
 import { NotificationService } from "app/components/base/notifications";
 import { ElectronShell, FileSystemService, StorageService } from "app/services";
 import { SecureUtils } from "app/utils";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import * as minimatch from "minimatch";
 import "./download-file-group-dialog.scss";
 
