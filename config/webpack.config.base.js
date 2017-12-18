@@ -5,6 +5,7 @@ const CheckerPlugin = require("awesome-typescript-loader").CheckerPlugin;
 const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const ngcWebpack = require("ngc-webpack");
+const {commonRules} = require("./webpack.common");
 
 const isDevServer = helpers.isWebpackDevServer();
 const METADATA = {
@@ -33,24 +34,7 @@ const baseConfig = {
                 use: [ "@ngtools/webpack" ],
                 exclude: [/\.spec\.ts/, /src\/test\//]
             },
-            {
-                test: /\.html$/,
-                loader: "raw-loader",
-                exclude: [/node_modules/, helpers.root("app/index.html")],
-            },
-            {
-                test: /\.json$/,
-                loader: "raw-loader",
-                exclude: [],
-            },
-            {
-                test: /\.(ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: "file-loader",
-            },
-            {
-                test: /\.woff(2)?(\?v=\d+\.\d+\.\d+)?$/,
-                loader: "url-loader?limit=10000&mimetype=application/font-woff",
-            },
+            ...commonRules,
         ],
     },
     plugins: [
