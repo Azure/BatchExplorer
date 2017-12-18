@@ -35,7 +35,7 @@ function startApplication() {
     batchLabsApp.init();
     batchLabsApp.start();
 
-    if (process.platform === "darwin") {
+    if (process.platform === "darwin" && process.env.NODE_ENV === "production") {
         // Create our menu entries so that we can use MAC shortcuts
         Menu.setApplicationMenu(Menu.buildFromTemplate([
             {
