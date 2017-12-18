@@ -4,10 +4,10 @@ import { Observable } from "rxjs";
 
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
+import { autobind } from "app/core";
 import { TaskCreateDto } from "app/models/dtos";
 import { JobService, PoolService, TaskService } from "app/services";
 import { ObservableUtils } from "app/utils";
-import { autobind } from "app/core";
 import { TaskCreateBasicDialogComponent } from "./task-create-basic-dialog.component";
 
 @Component({

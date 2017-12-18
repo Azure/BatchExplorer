@@ -93,7 +93,7 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
         return null;
     }
 
-    public textEditorOnChange($event) {
+    public textEditorOnChange() {
         if (this._propagateChange && this.autoscaleFormulaValue !== null) {
             this._propagateChange(this.autoscaleFormulaValue);
         }

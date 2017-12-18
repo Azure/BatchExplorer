@@ -31,6 +31,7 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
     public actionName = "Add";
     public fileUri = "create.task.batch.json";
     public virtualMachineConfiguration: VirtualMachineConfiguration = null;
+    public userAccounts: any[] = [];
 
     constructor(
         private formBuilder: FormBuilder,

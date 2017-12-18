@@ -32,7 +32,7 @@ export class DataHomeComponent implements OnDestroy {
         private sidebarManager: SidebarManager,
         private dialogService: DialogService,
         private filegroupService: NcjFileGroupService,
-        private storageService: StorageService) {
+        public storageService: StorageService) {
 
         this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
             if (query === "") {

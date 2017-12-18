@@ -10,6 +10,7 @@ import { DateUtils } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 
 import "./job-hook-task-browser.scss";
+import { JobPreparationAndReleaseTaskExecutionInformation } from "azure-batch/typings/lib/models";
 
 enum HookTaskType {
     preparationTask = "preparationTask",
@@ -106,6 +107,10 @@ export class JobHookTaskBrowserComponent implements OnDestroy, OnChanges {
 
     public get hasReleaseTask() {
         return Boolean(this.job.jobReleaseTask);
+    }
+
+    public trackTask(index, task: any) {
+        return task.id;
     }
 
     private _computeDisplayItems() {
