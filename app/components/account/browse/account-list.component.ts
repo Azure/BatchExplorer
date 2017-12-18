@@ -63,6 +63,10 @@ export class AccountListComponent {
             : QuickListItemStatus.normal;
     }
 
+    public trackByFn(index, account: AccountResource) {
+        return account.id;
+    }
+
     private _updateDisplayedAccounts() {
         this.displayedAccounts = this.accountService.accounts.map((accounts) => {
             const matcher = new FilterMatcher<AccountResource>({

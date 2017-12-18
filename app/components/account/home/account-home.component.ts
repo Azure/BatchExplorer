@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
 import { FormControl } from "@angular/forms";
 import { Set } from "immutable";
-import { Subscription } from "rxjs";
 
 import { ListAndShowLayoutComponent } from "app/components/base/list-and-show-layout";
+import { Subscription } from "app/models";
 import { SubscriptionService } from "app/services";
 import { Filter, FilterBuilder } from "app/utils/filter-builder";
 
@@ -18,7 +18,7 @@ export class AccountHomeComponent implements OnInit, OnDestroy {
 
     public subscriptionIds = new FormControl();
 
-    private _subs: Subscription[] = [];
+    private _subs = [];
 
     constructor(public subscriptionService: SubscriptionService) {
 
@@ -38,6 +38,10 @@ export class AccountHomeComponent implements OnInit, OnDestroy {
 
     public ngOnDestroy() {
         this._subs.forEach(x => x.unsubscribe());
+    }
+
+    public trackByFn(index, subscription: Subscription) {
+        return subscription.id;
     }
 
     private _buildSubscriptionFilter(subscriptionIds: Set<string>): Filter {

@@ -16,11 +16,12 @@ const sizeB = new VmSize({ name: "Size B", numberOfCores: 8, resourceDiskSizeInM
 const sizeC = new VmSize({ name: "Size C", numberOfCores: 4, resourceDiskSizeInMB: 80000 } as any);
 const sizeD = new VmSize({ name: "Size D", numberOfCores: 2, resourceDiskSizeInMB: 4000 } as any);
 
+// tslint:disable:trackBy-function
 @Component({
     template: `
         <bl-table [(activeItem)]="pickedSize">
             <bl-thead>
-                <bl-column >Name</bl-column>
+                <bl-column>Name</bl-column>
                 <bl-column [sortable]="true">Cores</bl-column>
                 <bl-column [sortable]="true">RAM</bl-column>
             </bl-thead>

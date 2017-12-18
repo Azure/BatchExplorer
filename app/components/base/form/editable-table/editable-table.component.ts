@@ -101,6 +101,14 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
         return null;
     }
 
+    public trackColumn(index, column: EditableTableColumnComponent) {
+        return column.name;
+    }
+
+    public trackRows(index, row: any) {
+        return row;
+    }
+
     private _isEmpty(obj: any) {
         for (let value of ObjectUtils.values(obj)) {
             if (value) {

@@ -191,6 +191,10 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit, OnDe
         return offer.name === this.selectedOffer && hasSku;
     }
 
+    public trackOffer(index, offer: Offer) {
+        return offer.name;
+    }
+
     private _updateSelection() {
         const vmConfig = this.value && this.value.virtualMachineConfiguration;
         const ref = vmConfig && vmConfig.imageReference;

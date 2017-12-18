@@ -85,6 +85,10 @@ export class FileTableViewComponent implements OnChanges {
         DragUtils.allowDrop(event, this.canDropExternalFiles);
     }
 
+    public trackTreeNode(index, node: FileTreeNode) {
+        return node.path;
+    }
+
     private _updateTableConfig() {
         this.tableConfig = {
             droppable: this.canDropExternalFiles,

@@ -1,0 +1,8 @@
+<bl-property-list>
+    <bl-property-group label="Account credentials {{loading ? '(Loading ...)' : ''}}" class="wide">
+        <bl-text-property label="Name" [value]="account?.name"></bl-text-property>
+        <bl-text-property label="Url" [value]="account?.properties.accountEndpoint"></bl-text-property>
+        <bl-text-property label="Primary key" [value]="keys?.primary"></bl-text-property>
+        <bl-text-property label="Secondary key" [value]="keys?.secondary"></bl-text-property>
+    </bl-property-group>
+</bl-property-list>

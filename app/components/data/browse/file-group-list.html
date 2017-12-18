@@ -1,5 +1,5 @@
 <bl-quick-list *ngIf="quickList">
-    <bl-quick-list-item *ngFor="let container of data.items | async" [link]="['/data/', container.id]"
+    <bl-quick-list-item *ngFor="let container of data.items | async;trackBy: trackFileGroup" [link]="['/data/', container.id]"
         [key]="container.id" [contextmenu]="contextmenu(container)">
         <bl-quick-list-item-status [status]="containerStatus(container)">
         </bl-quick-list-item-status>
@@ -19,7 +19,7 @@
         <bl-column>Lease status</bl-column>
         <bl-column>Last modified</bl-column>
     </bl-thead>
-    <bl-row *ngFor="let container of data.items | async" [link]="['/data/', container.id]" [key]="container.id"
+    <bl-row *ngFor="let container of data.items | async;trackBy: trackFileGroup" [link]="['/data/', container.id]" [key]="container.id"
         [contextmenu]="contextmenu(container)">
         <bl-cell>{{container.name}}</bl-cell>
         <bl-cell>{{container.lease?.state}}</bl-cell>

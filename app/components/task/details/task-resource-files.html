@@ -4,7 +4,7 @@
         <bl-column style="width: 400px">Local file path</bl-column>
         <bl-column style="width: 100px">File mode</bl-column>
     </bl-thead>
-    <bl-row *ngFor="let file of resourceFiles" [key]="file.blobSource">
+    <bl-row *ngFor="let file of resourceFiles;trackBy: trackByFn" [key]="file.blobSource">
         <bl-cell [value]="file.blobSource"></bl-cell>
         <bl-cell [value]="file.filePath"></bl-cell>
         <bl-cell [value]="file.fileMode"></bl-cell>

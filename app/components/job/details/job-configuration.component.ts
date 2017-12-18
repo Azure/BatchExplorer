@@ -14,6 +14,7 @@ import {
 import { JobPatchDto } from "app/models/dtos";
 import { JobService } from "app/services";
 
+// tslint:disable:trackBy-function
 @Component({
     selector: "bl-job-configuration",
     templateUrl: "job-configuration.html",

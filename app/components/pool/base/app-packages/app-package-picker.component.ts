@@ -194,6 +194,18 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
         return version.toLowerCase() !== this._defaultVersionText.toLowerCase() ? version : this._defaultVersionValue;
     }
 
+    public trackRow(index) {
+        return index;
+    }
+
+    public trackApplication(index, application: BatchApplication) {
+        return application.id;
+    }
+
+    public trackPackage(index, pkg: ApplicationPackage) {
+        return pkg.version;
+    }
+
     private _setPackageMap(applicationId: string, index: number) {
         // each table row needs it's own package list based on the selected application
         this.packageMap[index] = List(this._applicationMap[applicationId] || []);

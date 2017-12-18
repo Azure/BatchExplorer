@@ -33,4 +33,12 @@ export class PersistedNotificationDropdownComponent {
         action.do();
         this.dismiss(event, notification);
     }
+
+    public trackNotification(index, notification: Notification) {
+        return notification.id;
+    }
+
+    public trackAction(index, action: NotificationAction) {
+        return action.name;
+    }
 }

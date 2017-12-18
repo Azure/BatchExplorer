@@ -10,7 +10,7 @@
         <i *ngIf="currentAccountValid === status.Loading" class="fa fa-spinner fa-spin"></i>
     </div>
     <div bl-dropdown-content>
-        <div *ngFor="let account of accountService.accountFavorites | async"
+        <div *ngFor="let account of accountService.accountFavorites | async; trackBy: trackByFn"
              class="dropdown-item"
              [routerLink]="['/accounts', account.id]"
              (click)="selectAccount(account)"

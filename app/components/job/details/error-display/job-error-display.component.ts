@@ -4,7 +4,7 @@ import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
 import { ListFilterType } from "app/components/base/advanced-filter";
-import { Job, JobTerminateReason, TaskState } from "app/models";
+import { Job, JobTerminateReason, NameValuePair, TaskState } from "app/models";
 import { DateUtils } from "app/utils";
 import { ODataFields } from "common/constants";
 
@@ -58,5 +58,9 @@ export class JobErrorDisplayComponent {
             queryParams: { filter: JSON.stringify(filter) },
         });
         return Observable.of(0);
+    }
+
+    public trackDetail(index, detail: NameValuePair) {
+        return detail.name;
     }
 }

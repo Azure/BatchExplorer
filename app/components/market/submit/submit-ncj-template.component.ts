@@ -118,6 +118,10 @@ export class SubmitNcjTemplateComponent implements OnInit, OnChanges {
         }
     }
 
+    public trackParameter(index, param: NcjParameterWrapper) {
+        return param.id;
+    }
+
     @autobind()
     private _createJobWithAutoPool() {
         this._saveTemplateAsRecent();
