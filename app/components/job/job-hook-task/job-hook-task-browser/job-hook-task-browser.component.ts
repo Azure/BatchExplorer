@@ -10,7 +10,6 @@ import { DateUtils } from "app/utils";
 import { FilterBuilder } from "app/utils/filter-builder";
 
 import "./job-hook-task-browser.scss";
-import { JobPreparationAndReleaseTaskExecutionInformation } from "azure-batch/typings/lib/models";
 
 enum HookTaskType {
     preparationTask = "preparationTask",

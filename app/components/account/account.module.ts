@@ -28,7 +28,6 @@ const modules = [
     exports: [...modules, ...components],
     imports: [...modules],
     entryComponents: [
-        AccountCreateDialogComponent,
         DeleteAccountDialogComponent,
         EditStorageAccountFormComponent,
         BatchAccountKeysDialogComponent,
