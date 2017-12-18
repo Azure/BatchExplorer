@@ -2,18 +2,17 @@ import { FormControl, FormGroup } from "@angular/forms";
 
 import { InboundNATPool } from "app/models";
 
-export const MININUM_PORT: number = 1;
-export const MAXIMUM_BACKEND_PORT: number = 65535;
+export const MININUM_PORT = 1;
+export const MAXIMUM_BACKEND_PORT = 65535;
 export const RESERVED_BACKEND_PORT: number[] = [22, 3389, 29876, 29877];
-export const MAXIMUM_FRONTEND_PORT: number = 65534;
-export const MINIMUM_RESERVED_FRONTEND_PORT: number = 50000;
-export const MAXIMUM_RESERVED_FRONTEND_PORT: number = 55000;
+export const MAXIMUM_FRONTEND_PORT = 65534;
+export const MINIMUM_RESERVED_FRONTEND_PORT = 50000;
+export const MAXIMUM_RESERVED_FRONTEND_PORT = 55000;
 export const MINIMUM_FRONTEND_PORT_RANGE = 40;
 
-// const defaultReservedFrontendPortEnd: number = 49999;
+export const MINIMUM_SECURITY_GROUP_RULE_PRIORITY = 150;
+export const MAXIMUM_SECURITY_GROUP_RULE_PRIORITY = 3500;
 
-// const minSecurityGroupRulePriority: number = 150;
-// const maxSecurityGroupRulePriority: number = 3500;
 // const endpointNameLength: number = 77;
 
 /**

@@ -43,13 +43,13 @@
             <bl-error controlName="backendPort" code="reservedPort">{{ reservedBackendPort.join(", ") }} are reserved by the Batch service</bl-error>
         </div>
     </div>
-    <div *ngIf="form.errors?.invalidFrontEnd">
+    <div *ngIf="form.errors?.invalidFrontEnd" class="form-error">
         Front end port start must be smaller than front end port end.
     </div>
-    <div *ngIf="form.errors?.insufficientPorts">
+    <div *ngIf="form.errors?.insufficientPorts" class="form-error">
         Front end port range must contain at least {{minFrontendRange}} ports.
     </div>
-    <div *ngIf="form.errors?.overlappedRange">
+    <div *ngIf="form.errors?.overlappedRange" class="form-error">
         Front end port range is overlapped with range {{form.errors?.overlappedRange.start}} - {{form.errors?.overlappedRange.end}}
     </div>
     <div class="form-element pad-top">
@@ -57,5 +57,11 @@
         <bl-network-security-group-rules
             formControlName="networkSecurityGroupRules">
         </bl-network-security-group-rules>
+        <div *ngIf="networkSecurityGroupRules.errors?.duplicatePriority" class="form-error">
+            Network security rule priority must be unique between {{minRulePriority}} and {{maxRulePriority}}
+        </div>
+        <div *ngIf="networkSecurityGroupRules.errors?.outOfRange" class="form-error">
+            Network security rule priority must be between {{minRulePriority}} and {{maxRulePriority}}
+        </div>
     </div>
 </div>

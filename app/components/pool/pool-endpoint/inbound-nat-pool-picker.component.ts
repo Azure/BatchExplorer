@@ -6,6 +6,7 @@ import { Subscription } from "rxjs";
 
 import { OnChanges } from "@angular/core/src/metadata/lifecycle_hooks";
 import { InboundEndpointProtocol, InboundNATPool } from "app/models";
+import "./inbound-nat-pool-picker.scss";
 import * as EndpointHelper from "./pool-endpoint-helper";
 
 @Component({
@@ -28,6 +29,8 @@ export class InboundNATPoolPickerComponent implements ControlValueAccessor, Vali
     public minReservedFrontend = EndpointHelper.MINIMUM_RESERVED_FRONTEND_PORT;
     public maxReservedFrontend = EndpointHelper.MAXIMUM_RESERVED_FRONTEND_PORT;
     public minFrontendRange = EndpointHelper.MINIMUM_FRONTEND_PORT_RANGE;
+    public minRulePriority = EndpointHelper.MINIMUM_SECURITY_GROUP_RULE_PRIORITY;
+    public maxRulePriority = EndpointHelper.MAXIMUM_SECURITY_GROUP_RULE_PRIORITY;
 
     public form: FormGroup;
 
@@ -100,5 +103,9 @@ export class InboundNATPoolPickerComponent implements ControlValueAccessor, Vali
             };
         }
         return null;
+    }
+
+    public get networkSecurityGroupRules() {
+        return this.form.controls.networkSecurityGroupRules;
     }
 }
