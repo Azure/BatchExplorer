@@ -97,9 +97,9 @@
   dependencies:
     tslib "^1.7.1"
 
-"@ngtools/webpack@1.8.0":
-  version "1.8.0"
-  resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-1.8.0.tgz#443204e016aa3a287544eacadb4c95964ae6e2c4"
+"@ngtools/webpack@1.9.1":
+  version "1.9.1"
+  resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-1.9.1.tgz#c09db646432723f8f912412144313d4830b2eb4d"
   dependencies:
     chalk "~2.2.0"
     enhanced-resolve "^3.1.0"
