@@ -34,7 +34,23 @@ config.module.rules = config.module.rules = [{
         {
             test: /node_modules.*\.css$/,
             loader: "style-loader!css-loader",
-        }
+        },
+        /**
+         * Instruments JS files with Istanbul for subsequent code coverage reporting.
+         * Instrument only testing sources.
+         *
+         * See: https://github.com/deepsweet/istanbul-instrumenter-loader
+         */
+        {
+            enforce: "post",
+            test: /\.(js|ts)$/,
+            loader: "istanbul-instrumenter-loader",
+            include: helpers.root("app"),
+            exclude: [
+              /\.(e2e|spec)\.ts$/,
+              /node_modules/
+            ]
+          }
     ]
 );
 

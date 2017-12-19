@@ -1,11 +1,11 @@
-import "../test/app/spec-bundle";
-import * as moment from "moment";
+require("../test/app/spec-bundle");
+const moment = require("moment");
 // tslint:disable:no-var-requires
 // tslint:disable:no-console
 
 Error.stackTraceLimit = Infinity;
-import "app/utils/extensions";
-import * as fs from "fs";
+require("app/utils/extensions");
+const fs = require("fs");
 
 const testing = require("@angular/core/testing");
 const browser = require("@angular/platform-browser-dynamic/testing");
