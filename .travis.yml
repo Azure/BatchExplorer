@@ -50,6 +50,7 @@ matrix:
         - sleep 3
 
 install:
+  - npm install -g codecov
   - npm install -g yarn
   - yarn install
   - python3 --version
