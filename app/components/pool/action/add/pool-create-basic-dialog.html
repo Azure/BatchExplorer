@@ -120,7 +120,7 @@
                 <div nested-form>
                     <bl-inbound-nat-pool-picker
                         [formControl]="inboundNATPoolsPicker.currentEditValue"
-                        [inboundNATPools]="form.value.inboundNATPools">
+                        [inboundNATPools]="form.controls.inboundNATPools.value">
                     </bl-inbound-nat-pool-picker>
                 </div>
             </bl-form-multi-picker>

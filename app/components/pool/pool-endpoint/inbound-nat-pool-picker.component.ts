@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, forwardRef } from "@angular/core";
+import { Component, Input, OnDestroy, SimpleChanges, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator, Validators,
 } from "@angular/forms";
@@ -61,24 +61,28 @@ export class InboundNATPoolPickerComponent implements ControlValueAccessor, Vali
         });
     }
 
-    public ngOnChanges(): void {
-        this.form.controls["backendPort"].setValidators([
-            Validators.required,
-            EndpointHelper.backendPortValidator(this.inboundNATPools),
-        ]);
-        this.form.controls["name"].setValidators([
-            Validators.required,
-            EndpointHelper.nameValidator(this.inboundNATPools),
-        ]);
-        this.form.setValidators(EndpointHelper.frontendPortRangeValidator(
-            "frontendPortRangeStart", "frontendPortRangeEnd", this.inboundNATPools));
+    public ngOnChanges(changes: SimpleChanges): void {
+        if (changes.inboundNATPools) {
+            this.form.controls["backendPort"].setValidators([
+                Validators.required,
+                EndpointHelper.backendPortValidator(this.inboundNATPools),
+            ]);
+            this.form.controls["name"].setValidators([
+                Validators.required,
+                EndpointHelper.nameValidator(this.inboundNATPools),
+            ]);
+        }
     }
 
     public ngOnDestroy() {
         this._sub.unsubscribe();
-
     }
+
     public writeValue(value: InboundNATPool) {
+        this.form.setValidators(
+            EndpointHelper.frontendPortRangeValidator("frontendPortRangeStart", "frontendPortRangeEnd",
+            this.inboundNATPools, value && value.frontendPortRangeStart, value && value.frontendPortRangeEnd),
+        );
         if (value) {
             this.form.patchValue(value);
         } else {

@@ -13,6 +13,7 @@ export * from "./job-patch.dto";
 export * from "./metadata.dto";
 export * from "./pool-create.dto";
 export * from "./pool-enable-autoscale.dto";
+export * from "./pool-endpoint-configuration.dto";
 export * from "./pool-patch.dto";
 export * from "./pool-resize.dto";
 export * from "./task-create.dto";
