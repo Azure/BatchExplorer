@@ -7,7 +7,7 @@ import { OnInit } from "@angular/core/src/metadata/lifecycle_hooks";
 import { ComplexFormConfig } from "app/components/base/form";
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
-import { RangeValidatorDirective } from "app/components/base/validation";
+import { RangeValidator } from "app/components/base/validation";
 import { DynamicForm } from "app/core";
 import { Task, VirtualMachineConfiguration } from "app/models";
 import { TaskCreateDto } from "app/models/dtos";
@@ -49,7 +49,7 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
             maxWallClockTime: null,
             maxTaskRetryCount: [
                 0,
-                new RangeValidatorDirective(validation.range.retry.min, validation.range.retry.max).validator,
+                new RangeValidator(validation.range.retry.min, validation.range.retry.max).validator,
             ],
             retentionTime: null,
         });

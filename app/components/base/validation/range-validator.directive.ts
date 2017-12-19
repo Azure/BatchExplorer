@@ -1,7 +1,6 @@
 import { FormControl } from "@angular/forms";
 
-// TODO-TIM change, remove directive suffix
-export class RangeValidatorDirective {
+export class RangeValidator {
     public validator: (control: FormControl) => any;
 
     constructor(rangeStart: number, rangeEnd: number) {

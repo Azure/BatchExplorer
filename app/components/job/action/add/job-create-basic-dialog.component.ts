@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
 import { ComplexFormConfig } from "app/components/base/form";
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
-import { RangeValidatorDirective } from "app/components/base/validation";
+import { RangeValidator } from "app/components/base/validation";
 import { DynamicForm } from "app/core";
 import { AllTasksCompleteAction, Job, TaskFailureAction, VirtualMachineConfiguration } from "app/models";
 import { JobCreateDto } from "app/models/dtos";
@@ -43,7 +43,7 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
             maxWallClockTime: null,
             maxTaskRetryCount: [
                 0,
-                new RangeValidatorDirective(validation.range.retry.min, validation.range.retry.max).validator,
+                new RangeValidator(validation.range.retry.min, validation.range.retry.max).validator,
             ],
         });
 
@@ -56,7 +56,7 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
             displayName: ["", Validators.maxLength(validation.maxLength.displayName)],
             priority: [
                 0,
-                new RangeValidatorDirective(validation.range.priority.min, validation.range.priority.max).validator,
+                new RangeValidator(validation.range.priority.min, validation.range.priority.max).validator,
             ],
             constraints: this.constraintsGroup,
             poolInfo: [null, Validators.required],
@@ -136,7 +136,7 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
 
     public resetJobPreparationTask() {
         this.showJobReleaseTask = false;
-        let jobReleaseTask =  this.form.controls.jobReleaseTask;
+        let jobReleaseTask = this.form.controls.jobReleaseTask;
         jobReleaseTask.setValue(null);
     }
 
