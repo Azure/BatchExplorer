@@ -37,6 +37,15 @@ export class LocalStorage {
         return this._loadPromise;
     }
 
+    public async clear() {
+        this._data = {};
+        return this._save();
+    }
+
+    public get length(): number {
+        return Object.keys(this._data).length;
+    }
+
     private async _save() {
         return localFileStorage.set(fileKey, this._data);
     }

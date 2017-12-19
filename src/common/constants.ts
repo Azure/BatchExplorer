@@ -181,3 +181,12 @@ export enum MouseButton {
     middle = 1,
     right = 2,
 }
+
+export const AAD = {
+    /**
+     * Minimum number of milliseconds the token should have left before we refresh
+     * 2 minutes
+     */
+    refreshMargin: 1000 * 120,
+    defaultResource: ResourceUrl.arm,
+};

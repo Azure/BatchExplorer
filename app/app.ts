@@ -17,9 +17,17 @@ import "roboto-fontface/css/roboto/roboto-fontface.css";
 import "./environment";
 import "./styles/main.scss";
 
+console.timeEnd("Load scripts");
+console.time("Bootstrap");
+
 (remote.getCurrentWindow() as any).splashScreen.updateMessage("Initializing app");
 
 platformBrowserDynamic().bootstrapModule(AppModule)
+    .then(() => {
+        console.timeEnd("Bootstrap");
+        console.time("Render");
+        console.profile("Render profile");
+    })
     .catch(error => {
         log.error("Bootstrapping failed :: ", error);
         handleCoreError(error);

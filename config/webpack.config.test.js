@@ -45,12 +45,16 @@ config.module.rules = config.module.rules = [{
             enforce: "post",
             test: /\.(js|ts)$/,
             loader: "istanbul-instrumenter-loader",
-            include: helpers.root("app"),
+            include: [
+                helpers.root("app"),
+                helpers.root("src"),
+            ],
             exclude: [
-              /\.(e2e|spec)\.ts$/,
-              /node_modules/
+                helpers.root("src/test"),
+                /\.(e2e|spec)\.ts$/,
+                /node_modules/
             ]
-          }
+        }
     ]
 );
 

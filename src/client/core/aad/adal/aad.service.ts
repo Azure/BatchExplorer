@@ -4,7 +4,6 @@ import { localStorage } from "client/core/local-storage";
 import { logger } from "client/logger";
 import { Constants } from "common";
 import { Deferred } from "common/deferred";
-import * as moment from "moment";
 import fetch from "node-fetch";
 import { BehaviorSubject, Observable } from "rxjs";
 import { AADConfig } from "../aad-config";
@@ -27,15 +26,9 @@ const adalConfig: AADConfig = {
     redirectUri: "urn:ietf:wg:oauth:2.0:oob",
 };
 
-const defaultResource = resources[0];
+const defaultResource = Constants.AAD.defaultResource;
 
 export class AADService {
-    /**
-     * Minimum number of milliseconds the token should have left before we refresh
-     * 2 minutes
-     */
-    public static refreshMargin = 1000 * 120;
-
     public currentUser: Observable<AADUser>;
 
     public tenantsIds: Observable<string[]>;
@@ -45,7 +38,7 @@ export class AADService {
     private _userDecoder: UserDecoder;
     private _newAccessTokenSubject: StringMap<Deferred<AccessToken>> = {};
 
-    private _tokenCache = new AccessTokenCache();
+    private _tokenCache = new AccessTokenCache(localStorage);
 
     private _currentUser = new BehaviorSubject<AADUser>(null);
     private _tenantsIds = new BehaviorSubject<string[]>([]);
@@ -112,9 +105,7 @@ export class AADService {
     public async accessTokenData(tenantId: string, resource: string = defaultResource): Promise<AccessToken> {
         if (this._tokenCache.hasToken(tenantId, resource)) {
             const token = this._tokenCache.getToken(tenantId, resource);
-
-            const expireIn = moment(token.expires_on).diff(moment());
-            if (expireIn > AADService.refreshMargin) {
+            if (!token.expireInLess(Constants.AAD.refreshMargin)) {
                 return token;
             }
         }
