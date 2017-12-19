@@ -1,6 +1,6 @@
 import { Component, OnDestroy, ViewChild } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { Subscription } from "rxjs";
 
 import { NcjFileGroupService, StorageService } from "app/services";
@@ -32,7 +32,7 @@ export class DataHomeComponent implements OnDestroy {
         private sidebarManager: SidebarManager,
         private dialogService: DialogService,
         private filegroupService: NcjFileGroupService,
-        private storageService: StorageService) {
+        public storageService: StorageService) {
 
         this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
             if (query === "") {

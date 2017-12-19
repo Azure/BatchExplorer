@@ -1,4 +1,4 @@
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 export class WaitForDeletePoller {

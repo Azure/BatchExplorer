@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { Observable, Subscription } from "rxjs";
 
 // tslint:disable-next-line:no-var-requires

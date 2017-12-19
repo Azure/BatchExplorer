@@ -2,7 +2,7 @@ import {
     AfterViewInit, ChangeDetectorRef, ContentChildren, EventEmitter, Input, OnDestroy, Output, QueryList,
 } from "@angular/core";
 import { NavigationEnd, Router } from "@angular/router";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { BehaviorSubject, Subscription } from "rxjs";
 
 import { FocusSectionComponent } from "../focus-section";

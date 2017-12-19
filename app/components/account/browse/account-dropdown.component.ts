@@ -20,7 +20,7 @@ export class AccountDropDownComponent implements AfterViewInit {
     public currentAccountInvalidError: any = null;
 
     constructor(
-        private accountService: AccountService,
+        public accountService: AccountService,
         private changeDetection: ChangeDetectorRef,
         private contextMenuService: ContextMenuService) {
 

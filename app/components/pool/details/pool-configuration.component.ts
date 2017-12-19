@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { List } from "immutable";
 
 import { EditMetadataFormComponent } from "app/components/base/form/edit-metadata-form";

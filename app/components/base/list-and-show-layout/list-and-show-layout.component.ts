@@ -6,7 +6,7 @@ import {
 import { FormControl } from "@angular/forms";
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute } from "@angular/router";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { BehaviorSubject, Observable, Subscription } from "rxjs";
 
 import { FocusSectionComponent } from "app/components/base/focus-section";

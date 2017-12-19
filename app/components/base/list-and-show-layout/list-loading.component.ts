@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { Observable } from "rxjs";
 
 import { LoadingStatus } from "app/components/base/loading";

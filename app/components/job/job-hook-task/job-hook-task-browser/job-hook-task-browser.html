@@ -21,7 +21,7 @@
             <bl-column style="width: 100px">Exit code</bl-column>
         </bl-thead>
 
-        <bl-row *ngFor="let task of displayItems; trackBy: task?.id" [key]="task.id">
+        <bl-row *ngFor="let task of displayItems; trackBy: trackTask" [key]="task.id">
             <bl-cell>{{task.nodeId}}</bl-cell>
             <bl-cell style="width: 45px" [title]="task.status">
                 <span *ngIf="task.status === 'running'" class="fa fa-spinner"></span>

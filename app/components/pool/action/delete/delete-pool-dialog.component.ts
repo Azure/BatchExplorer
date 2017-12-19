@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
 import { MatDialogRef } from "@angular/material";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
 import { Job } from "app/models";

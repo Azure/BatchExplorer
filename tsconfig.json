@@ -51,7 +51,6 @@
   "include": [
     "./app/**/*.ts",
     "./src/common/**/*.ts",
-    "./test/**/*.ts"
   ],
   "awesomeTypescriptLoaderOptions": {
     "forkChecker": true,

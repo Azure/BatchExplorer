@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, ViewChild } from "@angular/core";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { Subscription } from "rxjs";
 
 import { BackgroundTaskService } from "app/components/base/background-task";

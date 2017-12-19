@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, FormGroup, Validators } from "@angular/forms";
 import { Router } from "@angular/router";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { Observable } from "rxjs";
 
 import { NcjJobTemplate, NcjParameter, NcjPoolTemplate, NcjTemplateMode, ServerError } from "app/models";

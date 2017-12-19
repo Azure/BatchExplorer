@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 import { FormBuilder, FormControl } from "@angular/forms";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import * as moment from "moment";
 import { Observable } from "rxjs";
 

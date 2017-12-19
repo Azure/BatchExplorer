@@ -108,6 +108,10 @@ export class JobHookTaskBrowserComponent implements OnDestroy, OnChanges {
         return Boolean(this.job.jobReleaseTask);
     }
 
+    public trackTask(index, task: any) {
+        return task.id;
+    }
+
     private _computeDisplayItems() {
         this.displayItems = this.tasks.map((task) => {
             const info = task[this.type];
