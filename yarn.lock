@@ -97,9 +97,9 @@
   dependencies:
     tslib "^1.7.1"
 
-"@ngtools/webpack@^1.9.1":
-  version "1.9.1"
-  resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-1.9.1.tgz#c09db646432723f8f912412144313d4830b2eb4d"
+"@ngtools/webpack@1.8.0":
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/@ngtools/webpack/-/webpack-1.8.0.tgz#443204e016aa3a287544eacadb4c95964ae6e2c4"
   dependencies:
     chalk "~2.2.0"
     enhanced-resolve "^3.1.0"
@@ -343,10 +343,6 @@
 "@types/jasmine@~2.8.2":
   version "2.8.2"
   resolved "https://registry.yarnpkg.com/@types/jasmine/-/jasmine-2.8.2.tgz#6ae4d8740c0da5d5a627df725b4eed71b8e36668"
-
-"@types/minimist@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@types/minimist/-/minimist-1.2.0.tgz#69a23a3ad29caf0097f06eda59b361ee2f0639f6"
 
 "@types/moment-duration-format@1.3.1":
   version "1.3.1"
@@ -5384,16 +5380,14 @@ negotiator@0.6.1:
   version "0.6.1"
   resolved "https://registry.yarnpkg.com/negotiator/-/negotiator-0.6.1.tgz#2b327184e8992101177b28563fb5e7102acd0ca9"
 
-ngc-webpack@^4.1.2:
-  version "4.1.2"
-  resolved "https://registry.yarnpkg.com/ngc-webpack/-/ngc-webpack-4.1.2.tgz#1f28e0baab8af34d079cda4141145396d627daa0"
+ngc-webpack@4.0.2:
+  version "4.0.2"
+  resolved "https://registry.yarnpkg.com/ngc-webpack/-/ngc-webpack-4.0.2.tgz#2769c51f07864032e97c01befca824aabe706a93"
   dependencies:
-    "@types/minimist" "^1.2.0"
     loader-utils "^1.1.0"
     magic-string "^0.22.3"
     minimist "^1.2.0"
     reflect-metadata "^0.1.10"
-    resolve "^1.5.0"
     semver "^5.4.1"
     source-map "^0.5.6"
     ts-node "^3.2.0"
@@ -6913,12 +6907,6 @@ resolve-url@^0.2.1:
 resolve@^1.3.2:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.4.0.tgz#a75be01c53da25d934a98ebd0e4c4a7312f92a86"
-  dependencies:
-    path-parse "^1.0.5"
-
-resolve@^1.5.0:
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/resolve/-/resolve-1.5.0.tgz#1f09acce796c9a762579f31b2c1cc4c3cddf9f36"
   dependencies:
     path-parse "^1.0.5"
 

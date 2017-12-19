@@ -14,7 +14,7 @@ const METADATA = {
 };
 
 // Set to false for now, as it doesn't seem to work correctly https://github.com/angular/angular-cli/issues/2799
-const AOT = false;
+const AOT = true;
 
 const baseConfig = {
     entry: {
@@ -40,9 +40,10 @@ const baseConfig = {
     plugins: [
         new CheckerPlugin(),
         new ngcWebpack.NgcWebpackPlugin({
-            AOT,                            // alias for skipCodeGeneration: false
+            skipCodeGeneration: !AOT,
             tsConfigPath: "./tsconfig.json",
-            mainPath: "./app/app.ts"              // will auto-detect the root NgModule.
+            mainPath: "./app/app.ts",              // will auto-detect the root NgModule.
+            sourceMap: true,
         }),
         new CopyWebpackPlugin([
             { context: "src/client/splash-screen", from: "**/*", to: "client/splash-screen" },
