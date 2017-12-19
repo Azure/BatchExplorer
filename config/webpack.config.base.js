@@ -8,13 +8,12 @@ const ngcWebpack = require("ngc-webpack");
 const {commonRules} = require("./webpack.common");
 
 const isDevServer = helpers.isWebpackDevServer();
+const AOT = !isDevServer;
 const METADATA = {
     baseUrl: "/",
     isDevServer: isDevServer,
+    AOT,
 };
-
-// Set to false for now, as it doesn't seem to work correctly https://github.com/angular/angular-cli/issues/2799
-const AOT = true;
 
 const baseConfig = {
     entry: {
