@@ -1,6 +1,5 @@
 import { Component } from "@angular/core";
 import { FormArray, FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { autobind } from "app/core";
 import { Observable } from "rxjs";
 
 import { OnInit } from "@angular/core/src/metadata/lifecycle_hooks";
@@ -8,7 +7,7 @@ import { ComplexFormConfig } from "app/components/base/form";
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { RangeValidator } from "app/components/base/validation";
-import { DynamicForm } from "app/core";
+import { DynamicForm, autobind } from "app/core";
 import { Task, VirtualMachineConfiguration } from "app/models";
 import { TaskCreateDto } from "app/models/dtos";
 import { createTaskFormToJsonData, taskToFormModel } from "app/models/forms";

@@ -1,13 +1,12 @@
 import { Component } from "@angular/core";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
-import { autobind } from "app/core";
 import { Observable } from "rxjs";
 
 import { ComplexFormConfig } from "app/components/base/form";
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { RangeValidator } from "app/components/base/validation";
-import { DynamicForm } from "app/core";
+import { DynamicForm, autobind } from "app/core";
 import { AllTasksCompleteAction, Job, TaskFailureAction, VirtualMachineConfiguration } from "app/models";
 import { JobCreateDto } from "app/models/dtos";
 import { createJobFormToJsonData, jobToFormModel } from "app/models/forms";

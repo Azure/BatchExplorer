@@ -7,9 +7,9 @@ import { AsyncSubject, Observable } from "rxjs";
 
 import { BackgroundTask, BackgroundTaskService } from "app/components/base/background-task";
 import { NotificationService } from "app/components/base/notifications";
+import { autobind } from "app/core";
 import { ElectronShell, FileSystemService, StorageService } from "app/services";
 import { SecureUtils } from "app/utils";
-import { autobind } from "app/core";
 import * as minimatch from "minimatch";
 import "./download-file-group-dialog.scss";
 
