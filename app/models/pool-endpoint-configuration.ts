@@ -48,5 +48,5 @@ export class InboundNATPool extends Record<InboundNATPoolAttributes> {
 
 @Model()
 export class PoolEndpointConfiguration extends Record<PoolEndpointConfigurationAttributes> {
-    @Prop() public inboundNATPools: InboundEndpointProtocol[];
+    @Prop() public inboundNATPools: InboundNATPool[];
 }
