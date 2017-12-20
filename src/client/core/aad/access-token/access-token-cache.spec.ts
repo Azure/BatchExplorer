@@ -12,9 +12,8 @@ describe("AccessTokenCache", () => {
     let cache: AccessTokenCache;
 
     beforeEach(() => {
-
         mockNodeStorage(localStorage);
-        cache = new AccessTokenCache();
+        cache = new AccessTokenCache(localStorage);
     });
 
     it("doesn't set the access token if not in localstorage", () => {
