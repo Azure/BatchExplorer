@@ -50,7 +50,8 @@
   // This is not actually used for building but to let the editor know what files use this config
   "include": [
     "app/**/*.ts",
-    "src/**/*.ts"
+    "src/common/**/*.ts",
+    "test/**/*.ts"
   ],
   "awesomeTypescriptLoaderOptions": {
     "forkChecker": true,
