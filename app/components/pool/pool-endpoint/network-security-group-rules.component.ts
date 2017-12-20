@@ -104,9 +104,7 @@ export class NetworkSecurityGroupRulesComponent implements ControlValueAccessor,
                 const currentPriorities = c.value.map(rule => !isNaN(rule.priority) && rule.priority);
                 for (let pool of this.inboundNATPools) {
                     const otherPriorities = pool.networkSecurityGroupRules.map(rule => rule.priority);
-                    console.log(otherPriorities, currentPriorities);
                     const duplicate = otherPriorities.filter(priority => currentPriorities.includes(priority));
-                    console.log(duplicate);
                     if (duplicate && duplicate.length > 0) {
                         hasDuplicate = true;
                         break;
