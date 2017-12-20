@@ -29,13 +29,13 @@ export class NetworkSecurityGroupRulesComponent implements ControlValueAccessor,
     constructor(private formBuilder: FormBuilder) {
         this.rules = this.formBuilder.control([]);
         this._sub = this.rules.valueChanges.subscribe((rules) => {
-            const decoratedRules = rules.map(rule => {
+            const decoratedRules = rules ? rules.map(rule => {
                 return {
                     access: rule.access,
                     priority: parseInt(rule.priority, 10),
                     sourceAddressPrefix: rule.sourceAddressPrefix,
                 } as NetworkSecurityGroupRule;
-            });
+            }) : null;
             if (this._propagateChange) {
                 this._propagateChange(decoratedRules);
             }
@@ -49,6 +49,8 @@ export class NetworkSecurityGroupRulesComponent implements ControlValueAccessor,
     public writeValue(value: NetworkSecurityGroupRule[]) {
         if (value) {
             this.rules.setValue(value);
+        } else {
+            this.rules.reset();
         }
     }
 

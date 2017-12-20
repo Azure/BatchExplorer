@@ -102,7 +102,9 @@ export function createPoolToData(output: CreatePoolModel): PoolCreateDto {
 
     if (output.inboundNATPools && output.inboundNATPools.length > 0) {
         data.networkConfiguration = {
-            endpointConfiguration: output.inboundNATPools,
+            endpointConfiguration: {
+                inboundNATPools: output.inboundNATPools,
+            },
         };
     }
     return new PoolCreateDto(data);
@@ -139,6 +141,6 @@ export function poolToFormModel(pool: PoolCreateDto): CreatePoolModel {
         appLicenses: pool.applicationLicenses || [],
         appPackages: pool.applicationPackageReferences,
         inboundNATPools: pool.networkConfiguration && pool.networkConfiguration.endpointConfiguration ?
-            pool.networkConfiguration.endpointConfiguration.inboundNatPools : null,
+            pool.networkConfiguration.endpointConfiguration.inboundNATPools : null,
     };
 }

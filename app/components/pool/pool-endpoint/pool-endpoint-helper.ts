@@ -99,9 +99,7 @@ export function frontendPortValidator() {
  */
 export function frontendPortRangeValidator(frontendPortRangeStart: string,
                                            frontendPortRangeEnd: string,
-                                           inboundNATPools: InboundNATPool[],
-                                           excludeStart: number,
-                                           excludeEnd: number) {
+                                           inboundNATPools: InboundNATPool[]) {
     return (group: FormGroup): {[key: string]: any} => {
         const start = group.controls[frontendPortRangeStart];
         const end = group.controls[frontendPortRangeEnd];
@@ -125,10 +123,6 @@ export function frontendPortRangeValidator(frontendPortRangeStart: string,
         let overlapStart = null;
         let overlapEnd = null;
         if (inboundNATPools) {
-            inboundNATPools = inboundNATPools.filter(pool => {
-                return pool.frontendPortRangeStart !== excludeStart &&
-                       pool.frontendPortRangeEnd !== excludeEnd;
-            });
             for (let pool of inboundNATPools) {
                 // Overlap algorithm can be defined like:
                 // bool overlap = a.start <= b.end && b.start <= a.end; (inclusive)
