@@ -28,6 +28,7 @@ const chromePerformance = performance;
  * we say do this recursively
  */
 const testContext = require.context("../test/app", true, /\.spec\.ts/);
+const testAppContext = require.context("../app", true, /\.spec\.ts/);
 
 if (process.env.DEBUG_MEM) {
     let initialValue = null;
@@ -85,5 +86,5 @@ function requireAll(requireContext) {
 }
 
 // requires and returns all modules that match
-const modules = requireAll(testContext);
+const modules = [...requireAll(testContext), ...requireAll(testAppContext)];
 console.warn(`Running specs from ${modules.length} files`);

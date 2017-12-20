@@ -40,7 +40,7 @@ const baseConfig = {
         new CheckerPlugin(),
         new ngcWebpack.NgcWebpackPlugin({
             skipCodeGeneration: !AOT,
-            tsConfigPath: "./tsconfig.json",
+            tsConfigPath: "./tsconfig.browser.json",
             mainPath: "./app/app.ts",              // will auto-detect the root NgModule.
             sourceMap: true,
         }),
