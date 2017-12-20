@@ -61,10 +61,12 @@ export class AdalService {
                 return token;
             }
         }
+
         const promise = this.aadService.accessTokenData(tenantId, resource).then((x) => {
-            this.tokenCache.storeToken(tenantId, resource, new AccessToken({ ...x }));
+            const token = new AccessToken({ ...x });
+            this.tokenCache.storeToken(tenantId, resource, token);
             delete this._waitingPromises[key];
-            return x;
+            return token;
         });
         this._waitingPromises[key] = promise;
         return promise;
