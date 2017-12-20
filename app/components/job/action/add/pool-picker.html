@@ -3,7 +3,7 @@
 </div>
 <bl-loading [status]="poolsData.status | async">
     <div class="pool-list">
-        <button class="pool" *ngFor="let pool of pools, trackBy: pool?.id" (click)="pickPool(pool)" [class.active]="pool.id === pickedPool" [title]="pool.id">
+        <button class="pool" *ngFor="let pool of pools; trackBy: trackPool" (click)="pickPool(pool)" [class.active]="pool.id === pickedPool" [title]="pool.id">
             <div class="pool-wrapper">
                 <div class="icon">
                     <bl-icon [icon]="iconForPool(pool)"></bl-icon>

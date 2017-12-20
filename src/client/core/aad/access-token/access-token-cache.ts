@@ -1,5 +1,4 @@
-// import { Constants } from "app/utils";
-import { localStorage } from "client/core/local-storage";
+import { LocalStorage } from "client/core/local-storage";
 import { Constants } from "common";
 import { AccessToken } from "./access-token.model";
 
@@ -8,6 +7,8 @@ import { AccessToken } from "./access-token.model";
  */
 export class AccessTokenCache {
     private _tokens: any = {};
+
+    constructor(private storage: LocalStorage = null) { }
 
     public async init() {
         return this._loadFromStorage();
@@ -39,10 +40,13 @@ export class AccessTokenCache {
 
     public clear() {
         this._tokens = {};
-        localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
+        if (this.storage) {
+            this.storage.removeItem(Constants.localStorageKey.currentAccessToken);
+        }
     }
 
     private async _saveToStorage() {
+        if (!this.storage) { return; }
         const tokens = {};
         for (const tenantId of Object.keys(this._tokens)) {
             tokens[tenantId] = {};
@@ -50,24 +54,25 @@ export class AccessTokenCache {
                 tokens[tenantId][resource] = this._tokens[tenantId][resource];
             }
         }
-        return localStorage.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(tokens));
+        return this.storage.setItem(Constants.localStorageKey.currentAccessToken, JSON.stringify(tokens));
     }
 
     private async _loadFromStorage() {
-        const tokenStr = await localStorage.getItem(Constants.localStorageKey.currentAccessToken);
+        if (!this.storage) { return; }
+        const tokenStr = await this.storage.getItem(Constants.localStorageKey.currentAccessToken);
         if (!tokenStr) {
             return;
         }
         try {
             const data = JSON.parse(tokenStr);
             const tokens = this._processSerializedTokens(data);
-            if (Object.keys(tokens).length === 0) {
-                localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
-            } else {
+            if (Object.keys(tokens).length !== 0) {
                 this._tokens = tokens;
             }
         } catch (e) {
-            localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
+            if (this.storage) {
+                this.storage.removeItem(Constants.localStorageKey.currentAccessToken);
+            }
         }
     }
 

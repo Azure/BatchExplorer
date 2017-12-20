@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import * as moment from "moment";
 
 import { AddNodeUserAttributes } from "app/services";

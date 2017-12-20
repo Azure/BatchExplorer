@@ -1,11 +1,10 @@
 import { Component, OnInit } from "@angular/core";
 import { FormBuilder, FormControl, Validators } from "@angular/forms";
-import { autobind } from "core-decorators";
 import { Observable } from "rxjs";
 
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
-import { DynamicForm } from "app/core";
+import { DynamicForm, autobind } from "app/core";
 import { BlobContainer } from "app/models";
 import { FileGroupCreateDto } from "app/models/dtos";
 import { CreateFileGroupModel, createFileGroupFormToJsonData, fileGroupToFormModel } from "app/models/forms";

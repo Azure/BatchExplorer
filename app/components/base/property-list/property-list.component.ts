@@ -54,7 +54,7 @@ export class VoidLinkPropertyComponent {
             <label>{{label}}</label>
             <span class="value">
                 <i class="fa" [class.fa-toggle-on]="value" [class.fa-toggle-off]="!value"></i>
-                {{ ValueSting }}
+                {{ text }}
             </span>
         </section>
     `,
@@ -70,7 +70,7 @@ export class BoolPropertyComponent {
     @Input()
     public yesNo: boolean;
 
-    private get ValueSting() {
+    public get text() {
         return this.yesNo
             ? (this.value ? "Yes" : "No")
             : (this.value ? "Enabled" : "Disabled");

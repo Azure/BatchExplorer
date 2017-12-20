@@ -3,7 +3,7 @@ process.env.NODE_PATH = path.join(__dirname, "..");
 // tslint:disable-next-line:no-var-requires
 require("module").Module._initPaths();
 
-import { Menu, app, dialog, ipcMain, protocol } from "electron";
+import { Menu, app, protocol } from "electron";
 import { autoUpdater } from "electron-updater";
 app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 

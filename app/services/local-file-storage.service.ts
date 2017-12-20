@@ -1,6 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
+import { log } from "app/utils";
 import { LocalFileStorage as NodeLocalFileStorage } from "client/core";
 import { ElectronRemote } from "./electron";
 
@@ -17,14 +18,28 @@ export class LocalFileStorage {
         this._localStorage = remote.getLocalFileStorage();
 
     }
+
     /**
      * @param key Key where the data is store
      * @returns Observable which will resolve the data contained in the file if successfull or reject if any error
      */
     public get<T>(key: string): Observable<T> {
-        return Observable.fromPromise(this._localStorage.get(key).then((x) => {
-            return JSON.parse(JSON.stringify(x));
-        }));
+        return Observable.fromPromise(this.getAsync(key));
+    }
+
+    public async getAsync<T>(key: string): Promise<T> {
+        const content = await this._localStorage.read(key);
+        if (!content) {
+            return {} as any;
+        }
+
+        try {
+            const json = JSON.parse(content);
+            return json;
+        } catch (e) {
+            log.error("Loading file from storage has invalid json", { key, content });
+            return {} as any;
+        }
     }
 
     /**

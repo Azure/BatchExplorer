@@ -1,5 +1,6 @@
 # BatchLabs
 [![Build Status](https://travis-ci.org/Azure/BatchLabs.svg?branch=master)](https://travis-ci.org/Azure/BatchLabs)
+[![codecov](https://codecov.io/gh/Azure/BatchLabs/branch/master/graph/badge.svg)](https://codecov.io/gh/Azure/BatchLabs)
 
 **Note: BatchLabs is in beta.**
 

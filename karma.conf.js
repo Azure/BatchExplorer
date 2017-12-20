@@ -6,13 +6,13 @@ module.exports = function(config) {
     config.set({
         basePath: ".",
         frameworks: ["jasmine"],
-        files: [
-            { pattern: "./config/karma.shim.js", watched: false },
-        ],
+        files: [{
+            pattern: "./config/karma.shim.js",
+            watched: false
+        }, ],
 
         // proxied base paths
-        proxies: {
-        },
+        proxies: {},
 
         port: 9876,
 
@@ -38,22 +38,12 @@ module.exports = function(config) {
                 "blinkFeatures": "PreciseMemoryInfo"
             }
         },
-        // Karma plugins loaded
-        plugins: [
-            "karma-jasmine",
-            // "karma-coverage",
-            "karma-jasmine-html-reporter",
-            "karma-sourcemap-loader",
-            "karma-mocha-reporter",
-            "karma-electron",
-            "karma-webpack",
-        ],
 
         // Coverage reporter generates the coverage
-        reporters: ["mocha"],
+        reporters: ["mocha", "coverage", "remap-coverage"],
 
         preprocessors: {
-            "config/karma.shim.js": ["webpack", "sourcemap", "electron"],
+            "config/karma.shim.js": ["coverage", "webpack", "sourcemap", "electron"],
         },
         client: {
             useIframe: false,
@@ -67,6 +57,14 @@ module.exports = function(config) {
         mochaReporter: {
             output: "autowatch",
             reportSlowerThan: 200,
+        },
+        coverageReporter: {
+            type: "in-memory"
+        },
+        remapCoverageReporter: {
+            "text-summary": null,
+            json: "./coverage/coverage.json",
+            html: "./coverage/html"
         },
     });
 };

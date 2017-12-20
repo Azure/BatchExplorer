@@ -7,7 +7,7 @@ import {
     Validators,
 } from "@angular/forms";
 
-import { RangeValidatorDirective } from "app/components/base/validation";
+import { RangeValidator } from "app/components/base/validation";
 import { UserAccount, VirtualMachineConfiguration } from "app/models";
 import { Constants } from "app/utils";
 import { List } from "immutable";
@@ -27,7 +27,7 @@ export class JobTaskBaseComponent implements ControlValueAccessor {
         this.constraintsGroup = formBuilder.group({
             maxTaskRetryCount: [
                 0,
-                new RangeValidatorDirective(validation.range.retry.min, validation.range.retry.max).validator,
+                new RangeValidator(validation.range.retry.min, validation.range.retry.max).validator,
             ],
         });
 

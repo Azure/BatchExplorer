@@ -3,9 +3,9 @@ import { FormControl } from "@angular/forms";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
+import { autobind } from "app/core";
 import { Application } from "app/models";
 import { NcjTemplateService, StorageService } from "app/services";
-import { autobind } from "core-decorators";
 import "./market.scss";
 
 @Component({
