@@ -58,10 +58,11 @@
     <div class="form-element pad-top">
         <h4>Network security group rules</h4>
         <bl-network-security-group-rules
-            formControlName="networkSecurityGroupRules">
+            formControlName="networkSecurityGroupRules"
+            [inboundNATPools]="otherInboundNATPools">
         </bl-network-security-group-rules>
         <div *ngIf="networkSecurityGroupRules.errors?.duplicatePriority" class="form-error">
-            Network security rule priority must be unique between {{minRulePriority}} and {{maxRulePriority}}
+            Network security rule priority must be unique between {{minRulePriority}} and {{maxRulePriority}} within batch pool
         </div>
         <div *ngIf="networkSecurityGroupRules.errors?.outOfRange" class="form-error">
             Network security rule priority must be between {{minRulePriority}} and {{maxRulePriority}}

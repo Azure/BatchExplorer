@@ -33,6 +33,7 @@ export class InboundNATPoolPickerComponent implements ControlValueAccessor, Vali
     public maxRulePriority = EndpointHelper.MAXIMUM_SECURITY_GROUP_RULE_PRIORITY;
     public maxEndpointNameLength = EndpointHelper.ENDPOINTNAME_LENGTH;
     public form: FormGroup;
+    public otherInboundNATPools: InboundNATPool[];
 
     private _propagateChange: (value: InboundNATPool) => void = null;
     private _sub: Subscription;
@@ -65,7 +66,13 @@ export class InboundNATPoolPickerComponent implements ControlValueAccessor, Vali
     }
 
     public writeValue(value: InboundNATPool) {
-        this._setDynamicValidators(value);
+        this.otherInboundNATPools = value ? this.inboundNATPools.filter(pool => {
+            return  pool.frontendPortRangeStart !== value.frontendPortRangeStart &&
+                    pool.frontendPortRangeEnd !== value.frontendPortRangeEnd &&
+                    pool.name !== value.name &&
+                    pool.backendPort !== value.backendPort;
+        }) : this.inboundNATPools;
+        this._setDynamicValidators();
         if (value) {
             this.form.patchValue(value);
         } else {
@@ -97,24 +104,22 @@ export class InboundNATPoolPickerComponent implements ControlValueAccessor, Vali
         return this.form.controls.networkSecurityGroupRules;
     }
 
-    private _setDynamicValidators(value: InboundNATPool) {
-        const inboundNATPools = value ? this.inboundNATPools.filter(pool => {
-            return  pool.frontendPortRangeStart !== value.frontendPortRangeStart &&
-                    pool.frontendPortRangeEnd !== value.frontendPortRangeEnd &&
-                    pool.name !== value.name &&
-                    pool.backendPort !== value.backendPort;
-        }) : this.inboundNATPools;
+    private _setDynamicValidators() {
+
         this.form.controls["backendPort"].setValidators([
             Validators.required,
-            EndpointHelper.backendPortValidator(inboundNATPools),
+            EndpointHelper.backendPortValidator(this.otherInboundNATPools),
         ]);
         this.form.controls["name"].setValidators([
             Validators.required,
-            EndpointHelper.nameValidator(inboundNATPools),
+            EndpointHelper.nameValidator(this.otherInboundNATPools),
         ]);
+        // this.form.controls["networkSecurityGroupRules"].setValidators([
+        //     EndpointHelper.networkSecurityGroupRulesValidator(this.otherInboundNATPools),
+        // ]);
         this.form.setValidators(
             EndpointHelper.frontendPortRangeValidator(
-                "frontendPortRangeStart", "frontendPortRangeEnd", inboundNATPools),
+                "frontendPortRangeStart", "frontendPortRangeEnd", this.otherInboundNATPools),
         );
     }
 }

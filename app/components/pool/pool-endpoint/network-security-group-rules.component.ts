@@ -1,10 +1,11 @@
-import { Component, OnDestroy, forwardRef } from "@angular/core";
+import { Component, Input, OnDestroy, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import { Subscription } from "rxjs";
 
 import { NetworkSecurityGroupRule, NetworkSecurityGroupRuleAccess } from "app/models";
+import { InboundNATPool } from "azure-batch/typings/lib/models";
 import * as EndpointHelper from "./pool-endpoint-helper";
 
 // tslint:disable:no-forward-ref
@@ -22,6 +23,7 @@ export class NetworkSecurityGroupRulesComponent implements ControlValueAccessor,
         NetworkSecurityGroupRuleAccess.Allow,
         NetworkSecurityGroupRuleAccess.Deny,
     ];
+    @Input() public inboundNATPools: InboundNATPool[];
 
     private _propagateChange: (value: NetworkSecurityGroupRule[]) => void = null;
     private _sub: Subscription;
@@ -95,6 +97,28 @@ export class NetworkSecurityGroupRulesComponent implements ControlValueAccessor,
                         valid: false,
                     },
                 };
+            }
+
+            let hasDuplicate = false;
+            if (this.inboundNATPools) {
+                const currentPriorities = c.value.map(rule => !isNaN(rule.priority) && rule.priority);
+                for (let pool of this.inboundNATPools) {
+                    const otherPriorities = pool.networkSecurityGroupRules.map(rule => rule.priority);
+                    console.log(otherPriorities, currentPriorities);
+                    const duplicate = otherPriorities.filter(priority => currentPriorities.includes(priority));
+                    console.log(duplicate);
+                    if (duplicate && duplicate.length > 0) {
+                        hasDuplicate = true;
+                        break;
+                    }
+                }
+                if (hasDuplicate) {
+                    return {
+                        duplicatePriority: {
+                            valid: false,
+                        },
+                    };
+                }
             }
         }
         return null;

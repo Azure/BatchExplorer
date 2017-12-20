@@ -153,7 +153,7 @@
             </bl-no-item>
         </bl-property-group>
 
-        <bl-property-group label="Pool endpoint configuration" class="wide" [collapsed]="true">
+        <bl-property-group *ngIf="poolEndpointConfiguration" label="Pool endpoint configuration" class="wide" [collapsed]="true">
             <div collapsed-preview>
                 <span>{{poolEndpointConfiguration?.length}} inbound NAT pools</span>
             </div>
