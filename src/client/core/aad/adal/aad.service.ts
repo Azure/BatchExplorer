@@ -56,11 +56,13 @@ export class AADService {
             this._retrieveUserFromLocalStorage(),
             this._tokenCache.init(),
         ]);
-        if (this._currentUser.value) {
-            this._showMainWindow();
-        }
     }
 
+    /**
+     * Login to azure active directory.
+     * This will retrieve fresh tokens for all tenant and resources needed by BatchLabs.
+     * It will try to use the refresh token cached to prevent a new prompt window if possible.
+     */
     public async login(): Promise<any> {
         this.app.splashScreen.updateMessage("Login to azure active directory");
         try {
@@ -103,7 +105,10 @@ export class AADService {
      * @param resource
      */
     public async accessTokenData(tenantId: string, resource: string = defaultResource): Promise<AccessToken> {
+        logger.debug(`"Accesstokendata ${tenantId}, ${resource}`);
         if (this._tokenCache.hasToken(tenantId, resource)) {
+            logger.debug(`"Accesstokendata has token`);
+
             const token = this._tokenCache.getToken(tenantId, resource);
             if (!token.expireInLess(Constants.AAD.refreshMargin)) {
                 return token;
@@ -250,6 +255,7 @@ export class AADService {
     }
 
     private _showMainWindow() {
+        logger.debug("SHow main window...");
         if (!this.app.mainWindow.isVisible()) {
             this.app.mainWindow.show();
         }
