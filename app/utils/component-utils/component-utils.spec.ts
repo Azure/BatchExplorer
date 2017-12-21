@@ -79,7 +79,6 @@ describe("ComponentUtils", () => {
             };
 
             ComponentUtils.setActiveItem(mockRoute, view);
-            console.log("Items", items.toJS());
             expect(items.size).toBe(3);
             expect(items.get(0).toJS()).toEqual(pool3.toJS());
             expect(items.get(1).toJS()).toEqual(pool1.toJS());
