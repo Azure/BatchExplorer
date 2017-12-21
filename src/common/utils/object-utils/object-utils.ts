@@ -76,7 +76,3 @@ export function exists(obj: any): boolean {
 export function nil(obj: any): boolean {
     return obj === undefined || obj === null;
 }
-
-export function isPresent(obj: any): boolean {
-    return exists(obj);
-}
