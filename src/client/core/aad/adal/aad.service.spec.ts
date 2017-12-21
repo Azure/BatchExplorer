@@ -35,16 +35,10 @@ const sampleUser: AADUser = {
 
 describe("AADService", () => {
     let service: AADService;
-    let http: any = {};
     let currentUser: AADUser;
-    const config = { tenant: "common", clientId: "abc", redirectUri: "http://localhost" };
-    let zoneSpy;
     let appSpy;
 
     beforeEach(() => {
-        zoneSpy = {
-            run: jasmine.createSpy("Zone.run").and.callFake((callback) => callback()),
-        };
         appSpy = {
             mainWindow: new MockBrowserWindow(),
             splashScreen: new MockSplashScreen(),
