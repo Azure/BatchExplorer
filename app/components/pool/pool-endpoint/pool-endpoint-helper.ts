@@ -37,11 +37,13 @@ export function backendPortValidator(inboundNATPools: InboundNATPool[]) {
                     }
                 }
             }
-            return hasDuplicate ? {
-                duplicateValue: {
-                    value: control.value,
-                },
-            } : null;
+            if (hasDuplicate) {
+                return {
+                    duplicateValue: {
+                        value: control.value,
+                    },
+                };
+            }
         }
         if (control.value < MININUM_PORT || control.value > MAXIMUM_BACKEND_PORT) {
             return {
@@ -182,6 +184,36 @@ export function nameValidator(inboundNATPools: InboundNATPool[]) {
         return hasDuplicate ? {
             duplicateValue: {
                 value: control.value,
+            },
+        } : null;
+    };
+}
+
+/**
+ * networkSecurityGroupRuleValidator is a custom validator that validates network security group rule priority
+ * One requirement must be met:
+ * 1, networkSecurityGroupRules priority must be unique across different inbound NAT pools
+ */
+export function networkSecurityGroupRuleValidator(networkSecurityGroupRules: string,
+                                                  inboundNATPools: InboundNATPool[]) {
+    return (group: FormGroup): {[key: string]: any} => {
+        const control = group.controls[networkSecurityGroupRules];
+        if (control.value === null) {
+            return null;
+        }
+        let hasDuplicate = false;
+        const currentPriorities = control.value.map(rule => rule.priority);
+        for (let pool of inboundNATPools) {
+            const otherPriorities = pool.networkSecurityGroupRules.map(rule => rule.priority);
+            const duplicate = otherPriorities.filter(priority => currentPriorities.includes(priority));
+            if (duplicate && duplicate.length > 0) {
+                hasDuplicate = true;
+                break;
+            }
+        }
+        return hasDuplicate ? {
+            duplicatePriority: {
+                valid: false,
             },
         } : null;
     };
