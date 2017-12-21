@@ -29,6 +29,7 @@ const chromePerformance = performance;
  */
 const testContext = require.context("../test/app", true, /\.spec\.ts/);
 const testAppContext = require.context("../app", true, /\.spec\.ts/);
+const testCommonContext = require.context("../src/common", true, /\.spec\.ts/);
 
 if (process.env.DEBUG_MEM) {
     let initialValue = null;
@@ -86,5 +87,5 @@ function requireAll(requireContext) {
 }
 
 // requires and returns all modules that match
-const modules = [...requireAll(testContext), ...requireAll(testAppContext)];
+const modules = [...requireAll(testContext), ...requireAll(testAppContext), ...requireAll(testCommonContext)];
 console.warn(`Running specs from ${modules.length} files`);

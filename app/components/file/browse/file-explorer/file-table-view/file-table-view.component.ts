@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
+import * as moment from "moment";
 
 import { LoadingStatus } from "app/components/base/loading";
 import { DropEvent, TableConfig } from "app/components/base/table";
 import { ServerError } from "app/models";
 import { FileTreeNode } from "app/services/file";
-import { DateUtils, DragUtils, prettyBytes } from "app/utils";
+import { DragUtils, prettyBytes } from "app/utils";
 import { FileDropEvent } from "../file-explorer.component";
 import "./file-table-view.scss";
 
@@ -39,7 +40,7 @@ export class FileTableViewComponent implements OnChanges {
     }
 
     public prettyDate(date: Date) {
-        return DateUtils.customFormat(date, "MMM Do, YYYY, HH:mm:ss");
+        return moment(date).format("MMM Do, YYYY, HH:mm:ss");
     }
 
     public isErrorState(file: any) {
