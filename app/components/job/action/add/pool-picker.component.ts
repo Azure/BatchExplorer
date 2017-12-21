@@ -94,6 +94,10 @@ export class PoolPickerComponent implements ControlValueAccessor, OnInit, OnDest
         return cores * pool.targetNodes;
     }
 
+    public trackPool(index, pool: Pool) {
+        return pool.id;
+    }
+
     private _computeOptions(query: string = null) {
         let options: ListOptionsAttributes = { maxItems: 20 };
         if (query) {

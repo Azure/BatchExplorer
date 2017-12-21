@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { Subscription } from "rxjs";
 
 import { NodeAgentSku, NodeAgentSkuMap, Offer, Sku } from "app/models";
@@ -189,6 +189,10 @@ export class PoolOsPickerComponent implements ControlValueAccessor, OnInit, OnDe
     public isOsActive(offer) {
         const hasSku = offer.skus.filter(x => x.name === this.selectedSku).length > 0;
         return offer.name === this.selectedOffer && hasSku;
+    }
+
+    public trackOffer(index, offer: Offer) {
+        return offer.name;
     }
 
     private _updateSelection() {

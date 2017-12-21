@@ -1,5 +1,5 @@
 import { AbstractControl, ValidatorFn, Validators } from "@angular/forms";
-import { isPresent } from "../object";
+import { isPresent } from "common/utils/object-utils";
 
 /**
  * Validator that requires controls to have a value of a min value.

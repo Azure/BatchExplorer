@@ -39,6 +39,10 @@ export class BackgroundTaskTrackerComponent {
             this.showFlash = false;
         }, 1000);
     }
+
+    public trackByFn(index, task: BackgroundTask) {
+        return task.id;
+    }
 }
 
 @Component({
@@ -46,6 +50,5 @@ export class BackgroundTaskTrackerComponent {
     templateUrl: "background-task-tracker-item.html",
 })
 export class BackgroundTaskTrackerItemComponent {
-    @Input()
-    public task: BackgroundTask;
+    @Input() public task: BackgroundTask;
 }

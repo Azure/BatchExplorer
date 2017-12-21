@@ -101,4 +101,8 @@ export class TablePropertyComponent {
     public expand() {
         this.expanded = true;
     }
+
+    public trackRow(index, row: TablePropertyRowComponent) {
+        return index;
+    }
 }

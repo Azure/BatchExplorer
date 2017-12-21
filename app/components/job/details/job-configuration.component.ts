@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from "@angular/core";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { List } from "immutable";
 
 import { EditMetadataFormComponent } from "app/components/base/form/edit-metadata-form";
@@ -14,6 +14,7 @@ import {
 import { JobPatchDto } from "app/models/dtos";
 import { JobService } from "app/services";
 
+// tslint:disable:trackBy-function
 @Component({
     selector: "bl-job-configuration",
     templateUrl: "job-configuration.html",

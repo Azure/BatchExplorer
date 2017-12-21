@@ -77,4 +77,8 @@ export class PinnedDropDownComponent implements OnInit, OnDestroy {
                 return "fa-question";
         }
     }
+
+    public trackPinnned(index, entity: PinnableEntity) {
+        return `${entity.pinnableType}/${entity.id}`;
+    }
 }

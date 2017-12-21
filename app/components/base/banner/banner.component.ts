@@ -20,12 +20,10 @@ import "./banner.scss";
     selector: "[other-fix]",
 })
 export class BannerOtherFixDirective {
-    @Input()
-    public fixMessage: string;
+    @Input() public fixMessage: string;
 
     // tslint:disable-next-line:no-input-rename
-    @Input("other-fix")
-    public fix: () => Observable<any>;
+    @Input("other-fix") public fix: () => Observable<any>;
 }
 
 /**
@@ -43,20 +41,15 @@ export class BannerComponent implements OnChanges {
     /**
      * Use this to give an unique id to a banner so if you component change above the banner will reset.
      */
-    @Input()
-    public id: string;
+    @Input() public id: string;
 
-    @Input()
-    public fixMessage: string;
+    @Input() public fixMessage: string;
 
-    @Input()
-    public fix: () => Observable<any>;
+    @Input() public fix: () => Observable<any>;
 
-    @Input()
-    public type = BannerType.error;
+    @Input() public type = BannerType.error;
 
-    @Input()
-    public height: string = "standard";
+    @Input() public height: string = "standard";
 
     @ContentChildren(BannerOtherFixDirective)
     public otherFixes: QueryList<BannerOtherFixDirective>;
@@ -91,6 +84,10 @@ export class BannerComponent implements OnChanges {
         } else {
             this._markFixed();
         }
+    }
+
+    public trackByFn(index, item: BannerOtherFixDirective) {
+        return index;
     }
 
     private _markFixed() {

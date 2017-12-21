@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { remote } from "electron";
 import { Observable } from "rxjs";
 

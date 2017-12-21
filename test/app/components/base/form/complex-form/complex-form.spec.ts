@@ -2,7 +2,7 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA, ViewChild } from "@angular/c
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { By } from "@angular/platform-browser";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { AsyncSubject } from "rxjs";
 
 import { ButtonComponent } from "app/components/base/buttons";

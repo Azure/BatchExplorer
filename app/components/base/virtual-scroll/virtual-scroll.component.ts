@@ -23,7 +23,7 @@ export interface ChangeEvent {
     end?: number;
 }
 
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import "./virtual-scroll.scss";
 
 @Component({

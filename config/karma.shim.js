@@ -1,11 +1,11 @@
-import "../test/app/spec-bundle";
-import * as moment from "moment";
+require("../test/app/spec-bundle");
+const moment = require("moment");
 // tslint:disable:no-var-requires
 // tslint:disable:no-console
 
 Error.stackTraceLimit = Infinity;
-import "app/utils/extensions";
-import * as fs from "fs";
+require("app/utils/extensions");
+const fs = require("fs");
 
 const testing = require("@angular/core/testing");
 const browser = require("@angular/platform-browser-dynamic/testing");
@@ -28,6 +28,7 @@ const chromePerformance = performance;
  * we say do this recursively
  */
 const testContext = require.context("../test/app", true, /\.spec\.ts/);
+const testAppContext = require.context("../app", true, /\.spec\.ts/);
 
 if (process.env.DEBUG_MEM) {
     let initialValue = null;
@@ -85,5 +86,5 @@ function requireAll(requireContext) {
 }
 
 // requires and returns all modules that match
-const modules = requireAll(testContext);
+const modules = [...requireAll(testContext), ...requireAll(testAppContext)];
 console.warn(`Running specs from ${modules.length} files`);

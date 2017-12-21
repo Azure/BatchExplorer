@@ -43,4 +43,8 @@ export class NodeListDisplayComponent extends ListOrTableBase {
         }
         return false;
     }
+
+    public trackNode(index, node: Node) {
+        return node.id;
+    }
 }
