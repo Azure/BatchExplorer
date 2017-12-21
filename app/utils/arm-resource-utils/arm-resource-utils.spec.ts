@@ -5,7 +5,7 @@ const resource1 = `${prefix}/providers/pro123/type123/res123`;
 const resource2 = `${prefix}/providers/Microsoft.Batch/batchAccounts/account-1`;
 const invalidResource = `${prefix}/Microsoft.Batch/batchAccounts/account-1/list`;
 
-fdescribe("ArmResourceUtils", () => {
+describe("ArmResourceUtils", () => {
     describe("#isResourceId()", () => {
         it("returns true with valid resource", () => {
             expect(ArmResourceUtils.isResourceId(resource1)).toBe(true);

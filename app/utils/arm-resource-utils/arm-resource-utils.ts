@@ -14,6 +14,8 @@ export class ArmResourceUtils {
      * @param id Arm resource id
      */
     public static getSubscriptionIdFromResourceId(id: string) {
+        if (!id) { return null; }
+
         const regex = /subscriptions\/(.*)\/resourcegroups/;
         const out = regex.exec(id.toLowerCase());
 
