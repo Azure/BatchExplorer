@@ -27,8 +27,8 @@ export class BatchLabsApplication {
         logger.info("ARguments", process.argv);
     }
 
-    public init() {
-        this.aadService.init();
+    public async init() {
+        await this.aadService.init();
         this._registerProtocol();
         this.setupProcessEvents();
     }
