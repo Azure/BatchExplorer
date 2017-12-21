@@ -1,4 +1,4 @@
-import { AbstractControl, ValidatorFn, Validators } from "@angular/forms";
+import { AbstractControl, ValidationErrors, ValidatorFn, Validators } from "@angular/forms";
 import { exists } from "common/utils/object-utils";
 
 /**
@@ -28,7 +28,7 @@ export function max(val: number): ValidatorFn {
 /**
  * Validator that requires controls to have a value of number.
  */
-export function number(control: AbstractControl): { [key: string]: boolean } {
+export function number(control: AbstractControl): ValidationErrors | null {
     if (exists(Validators.required(control))) { return null; }
 
     let v: string = control.value;
