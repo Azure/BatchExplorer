@@ -105,10 +105,7 @@ export class AADService {
      * @param resource
      */
     public async accessTokenData(tenantId: string, resource: string = defaultResource): Promise<AccessToken> {
-        logger.debug(`"Accesstokendata ${tenantId}, ${resource}`);
         if (this._tokenCache.hasToken(tenantId, resource)) {
-            logger.debug(`"Accesstokendata has token`);
-
             const token = this._tokenCache.getToken(tenantId, resource);
             if (!token.expireInLess(Constants.AAD.refreshMargin)) {
                 return token;
@@ -255,7 +252,6 @@ export class AADService {
     }
 
     private _showMainWindow() {
-        logger.debug("SHow main window...");
         if (!this.app.mainWindow.isVisible()) {
             this.app.mainWindow.show();
         }
