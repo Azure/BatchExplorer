@@ -1,6 +1,6 @@
 import { List } from "immutable";
 
-import { Metadata } from "app/models";
+import { Metadata, MetadataAttributes } from "app/models";
 import { MetadataInternalKey } from "common/constants";
 
 export class ModelUtils {
@@ -13,7 +13,7 @@ export class ModelUtils {
         }
     }
 
-    public static updateMetadataWithTags(metadata: List<Metadata>, tags: List<string>): Metadata[] {
+    public static updateMetadataWithTags(metadata: List<Metadata>, tags: List<string>): MetadataAttributes[] {
         const newMetadata = metadata.filter(x => x.name !== MetadataInternalKey.tags).toJS();
         newMetadata.push({ name: MetadataInternalKey.tags, value: tags.join(",") });
         return newMetadata;

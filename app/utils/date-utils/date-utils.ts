@@ -79,16 +79,6 @@ export class DateUtils {
     }
 
     /**
-     * Returns a date with a specified format, or default to fullDateAndTime
-     * @example custom format || Feb 14th, 2017, 14:03:01
-     */
-    public static customFormat(date: Date | moment.Moment, format?: string) {
-        return date
-            ? format ? moment(date).format(format) : DateUtils.fullDateAndTime(date)
-            : "";
-    }
-
-    /**
      * Using the supplied start and end times, compute the duration.
      * @example 9m 2s, or null if no start time supplied.
      *
