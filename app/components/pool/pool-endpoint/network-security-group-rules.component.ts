@@ -4,6 +4,7 @@ import {
 } from "@angular/forms";
 import { Subscription } from "rxjs";
 
+import { EditableTableColumnType } from "app/components/base/form/editable-table";
 import { NetworkSecurityGroupRule, NetworkSecurityGroupRuleAccess } from "app/models";
 import * as EndpointHelper from "./pool-endpoint-helper";
 
@@ -17,6 +18,7 @@ import * as EndpointHelper from "./pool-endpoint-helper";
     ],
 })
 export class NetworkSecurityGroupRulesComponent implements ControlValueAccessor, OnDestroy {
+    public EditableTableColumnType = EditableTableColumnType;
     public rules: FormControl;
     public allowSelections: string[] = [
         NetworkSecurityGroupRuleAccess.Allow,

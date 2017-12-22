@@ -12,7 +12,7 @@
         <tr *ngFor="let item of items.controls;trackBy: trackRows; let i=index; let isLast=last" [formGroupName]="i">
                 <td *ngFor="let column of columns;trackBy: trackColumn">
                     <ng-container [ngSwitch]="column.type">
-                        <ng-container *ngSwitchCase="'select'">
+                        <ng-container *ngSwitchCase="EditableTableColumnType.Select">
                             <mat-select [formControlName]="column.name">
                                 <mat-option *ngFor="let item of column.options;trackBy: trackIndex" [value]="item">{{ item }}</mat-option>
                             </mat-select>
