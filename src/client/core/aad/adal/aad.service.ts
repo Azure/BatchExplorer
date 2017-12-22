@@ -1,5 +1,6 @@
 
 import { BatchLabsApplication } from "client/core";
+import * as ipcMain from "client/core//ipc-promise-main";
 import { localStorage } from "client/core/local-storage";
 import { logger } from "client/logger";
 import { Constants } from "common";
@@ -14,6 +15,10 @@ import {
 import { AuthenticationService, AuthorizeResult } from "../authentication";
 import { AADUser } from "./aad-user";
 import { UserDecoder } from "./user-decoder";
+
+ipcMain.on("test-async", (data) => {
+    return new Promise((resolve) => setTimeout(() => resolve("Banana"), 1000));
+});
 
 const resources = [
     Constants.ResourceUrl.arm,

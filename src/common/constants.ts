@@ -190,3 +190,11 @@ export const AAD = {
     refreshMargin: 1000 * 120,
     defaultResource: ResourceUrl.arm,
 };
+
+export const IpcPromiseEvent = {
+    request: "ipc-promise-request",
+    successSuffix: "-success",
+    failureSuffix: "-failure",
+    responseSuccess: "ipc-promise-response-success",
+    responseFailure: "ipc-promise-response-failure",
+};

@@ -17,6 +17,9 @@ export class AdalService {
 
     constructor(remote: ElectronRemote) {
         this.aadService = remote.getBatchLabsApp().aadService;
+        remote.send("test-async").then((data) => {
+            console.log("Got success", data);
+        });
     }
 
     public logout() {
@@ -33,7 +36,7 @@ export class AdalService {
     }
 
     public accessTokenFor(tenantId: string, resource: string = defaultResource) {
-        return Observable.fromPromise(this.aadService.accessTokenData(tenantId, resource).then(x => x.access_token));
+        return Observable.fromPromise(this.accessTokenDataAsync(tenantId, resource).then(x => x.access_token));
     }
 
     /**
