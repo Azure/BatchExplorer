@@ -14,7 +14,7 @@
                     <ng-container [ngSwitch]="column.type">
                         <ng-container *ngSwitchCase="'select'">
                             <mat-select [formControlName]="column.name">
-                                <mat-option *ngFor="let item of column.select" [value]="item">{{ item }}</mat-option>
+                                <mat-option *ngFor="let item of column.options;trackBy: trackIndex" [value]="item">{{ item }}</mat-option>
                             </mat-select>
                         </ng-container>
                         <ng-container *ngSwitchDefault>
