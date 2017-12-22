@@ -3,6 +3,8 @@ import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import * as os from "os";
 import * as Url from "url";
 
+import { BlIpcMain } from "client/core";
+import { IpcEvent } from "common/constants";
 import { Constants } from "../client-constants";
 import { logger } from "../logger";
 import { MainWindow } from "../main-window";
@@ -25,6 +27,10 @@ export class BatchLabsApplication {
 
     constructor(public autoUpdater: AppUpdater) {
         logger.info("ARguments", process.argv);
+
+        BlIpcMain.on(IpcEvent.AAD.accessTokenData, ({ tenantId, resource }) => {
+            return this.aadService.accessTokenData(tenantId, resource);
+        });
     }
 
     public async init() {

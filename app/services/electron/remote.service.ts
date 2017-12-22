@@ -53,7 +53,7 @@ export class ElectronRemote {
      * @param data data for send.
      * @return promise.
      */
-    public send(eventName: string, data?: any) {
+    public send(eventName: string, data?: any): Promise<any> {
         return new Promise((resolve, reject) => {
             const id = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
             const onSuccess =  (event, params) => {
