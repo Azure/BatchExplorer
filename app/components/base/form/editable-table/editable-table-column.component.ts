@@ -10,7 +10,7 @@ export class EditableTableColumnComponent {
     @Input() public type: string = "text";
 
     /** Select options when type is 'select' */
-    @Input() public select: string[];
+    @Input() public options: string[];
 
     @ViewChild(TemplateRef) public content: TemplateRef<any>;
 }

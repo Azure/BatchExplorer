@@ -1,5 +1,5 @@
 <bl-editable-table [formControl]="rules">
-    <bl-editable-table-column name="access" type="select" [select]="allowSelections">Access</bl-editable-table-column>
+    <bl-editable-table-column name="access" type="select" [options]="allowSelections">Access</bl-editable-table-column>
     <bl-editable-table-column name="priority" type="number">Priority</bl-editable-table-column>
     <bl-editable-table-column name="sourceAddressPrefix">Source address prefix</bl-editable-table-column>
 </bl-editable-table>

@@ -21,17 +21,7 @@ export class InboundNATPoolPickerComponent implements ControlValueAccessor, Vali
     @Input() public inboundNATPools: InboundNATPool[];
 
     public InboundEndpointProtocol = InboundEndpointProtocol;
-    public minPort = EndpointHelper.MININUM_PORT;
-    public maxBackendPort = EndpointHelper.MAXIMUM_BACKEND_PORT;
-    public reservedBackendPort = EndpointHelper.RESERVED_BACKEND_PORT;
-    public maxFronendPort = EndpointHelper.MAXIMUM_FRONTEND_PORT;
-    public minReservedFrontend = EndpointHelper.MINIMUM_RESERVED_FRONTEND_PORT;
-    public maxReservedFrontend = EndpointHelper.MAXIMUM_RESERVED_FRONTEND_PORT;
-    public minFrontendRange = EndpointHelper.MINIMUM_FRONTEND_PORT_RANGE;
-    public maxRules = EndpointHelper.MAXIMUM_SECURITY_GROUP_RULES;
-    public minRulePriority = EndpointHelper.MINIMUM_SECURITY_GROUP_RULE_PRIORITY;
-    public maxRulePriority = EndpointHelper.MAXIMUM_SECURITY_GROUP_RULE_PRIORITY;
-    public maxEndpointNameLength = EndpointHelper.ENDPOINTNAME_LENGTH;
+    public EndpointHelper = EndpointHelper;
     public form: FormGroup;
 
     private _propagateChange: (value: InboundNATPool) => void = null;
@@ -83,14 +73,14 @@ export class InboundNATPoolPickerComponent implements ControlValueAccessor, Vali
 
     public validate(c: FormControl) {
         const valid = this.form.valid;
-        if (!valid) {
-            return {
-                inboundNATPool: {
-                    valid: false,
-                },
-            };
+        if (valid) {
+            return null;
         }
-        return null;
+        return {
+            inboundNATPool: {
+                valid: false,
+            },
+        };
     }
 
     public get networkSecurityGroupRules() {
