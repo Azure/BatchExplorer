@@ -4,10 +4,16 @@ import { prerequisites, sampleTemplates } from "./samples";
 import { EditorConfig } from "app/components/base/editor";
 import { AccountKeys, AccountResource } from "app/models";
 import "./programing-sample.scss";
+
 export enum SampleLanguage {
     python = "python",
     csharp = "csharp",
+    nodejs = "nodejs",
 }
+
+const engineLanguages = {
+    nodejs: "javascript",
+};
 
 @Component({
     selector: "bl-programing-sample",
@@ -58,8 +64,12 @@ export class ProgramingSampleComponent implements OnChanges {
     }
 
     private _updateConfig() {
+        let language = this.language;
+        if (language in engineLanguages) {
+            language = engineLanguages[language];
+        }
         this.editorConfig = {
-            language: this.language,
+            language,
         };
     }
 }

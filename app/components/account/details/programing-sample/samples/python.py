@@ -1,6 +1,5 @@
 import azure.batch.batch_service_client as batch
 import azure.batch.batch_auth as batchauth
-import azure.batch.models as batchmodels
 
 # Batch account credentials
 BATCH_ACCOUNT_NAME = "{0}"
@@ -17,3 +16,7 @@ batch_client = batch.BatchServiceClient(
     base_url=BATCH_ACCOUNT_URL)
 
 # Perform action with the batch_client
+jobs = batch_client.job.list()
+
+for job in jobs:
+    print(job.id)
