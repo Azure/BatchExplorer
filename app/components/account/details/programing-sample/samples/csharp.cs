@@ -1,12 +1,13 @@
 
 namespace Microsoft.Azure.Batch.Samples.HelloWorld
 {
-    using System.Collections.Generic;
+    using System;
+    using Auth;
 
     public class AccountSettings {
-        const string accountName = "{0}";
-        const string accountUrl = "{1}";
-        const string key = "{2}";
+        public const string accountName = "{0}";
+        public const string accountUrl = "{1}";
+        public const string key = "{2}";
     }
 
     /// <summary>
@@ -16,6 +17,7 @@ namespace Microsoft.Azure.Batch.Samples.HelloWorld
     {
         public static void Main(string[] args)
         {
+
             // Set up the Batch Service credentials used to authenticate with the Batch Service.
             BatchSharedKeyCredentials credentials = new BatchSharedKeyCredentials(
                 AccountSettings.url,
@@ -23,10 +25,14 @@ namespace Microsoft.Azure.Batch.Samples.HelloWorld
                 AccountSettings.key);
 
             // Get an instance of the BatchClient for a given Azure Batch account.
-            using (BatchClient batchClient = await BatchClient.OpenAsync(credentials))
+            using (BatchClient batchClient =  BatchClient.Open(credentials))
             {
                 // Perform actions using the batchClient
-                var jobs = batchClient.JobOperations.ListJobs()
+                var jobs = batchClient.JobOperations.ListJobs();
+                foreach(var job in jobs)
+                {
+                    Console.Write(job.Id + "\n");
+                }
             }
         }
     }
