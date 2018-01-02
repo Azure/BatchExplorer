@@ -61,6 +61,10 @@ export class TaskDependenciesComponent {
         }
     }
 
+    public trackByFn(index, dependency: TaskDependency) {
+        return dependency.id;
+    }
+
     private _refresh(task: Task) {
         this._skip = 0;
         this._take = 20;

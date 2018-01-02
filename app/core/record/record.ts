@@ -1,6 +1,6 @@
 import { List, Map } from "immutable";
 
-import { exists, nil } from "app/utils/object";
+import { exists, nil } from "common/utils/object-utils";
 import { metadataForRecord, primitives } from "./helpers";
 
 /**
@@ -11,7 +11,9 @@ export class Record<TInput> {
     public _original: Partial<TInput>;
     private _map: Map<string, any> = Map({});
     private _defaultValues = {};
+    // @ts-ignore
     private _initialized = false;
+    // @ts-ignore
     private _keys: Set<string>;
 
     constructor(data: Partial<TInput> = {}) {
@@ -90,6 +92,10 @@ export class Record<TInput> {
                         obj[key] = value;
                     } else {
                         obj[key] = new typeMetadata.type(value);
+                    }
+
+                    if (typeMetadata.transform) {
+                        obj[key] = typeMetadata.transform(obj[key]);
                     }
                 }
             } else {

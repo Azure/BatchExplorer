@@ -1,7 +1,7 @@
 <div class="main">
     <div class="tags">
         <div class="tag-list" *ngIf="!isEditing">
-            <span class="tag" *ngFor="let tag of displayTags">{{tag}}</span>
+            <span class="tag" *ngFor="let tag of displayTags;trackBy: trackTag">{{tag}}</span>
             <span class="expand-tags" *ngIf="tags.size > maxTags" [matTooltip]="tags.join(', ')">
                 <i class="fa fa-ellipsis-h"></i>
             </span>

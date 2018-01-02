@@ -48,6 +48,8 @@
     "ban-comma-operator": true,
 
     // Codelyzer rules(Angular2)
+    "contextual-life-cycle": true,
+    "decorator-not-allowed": true,
     "directive-selector": [true, "attribute", "bl", "camelCase"],
     "component-selector": [true, "element", "bl", "kebab-case"],
     "use-input-property-decorator": true,
@@ -63,8 +65,9 @@
     "component-class-suffix": true,
     "directive-class-suffix": true,
     "import-destructuring-spacing": true,
-    "invoke-injectable": true,
     "no-shadowed-variable": false,
+    "trackBy-function": true,
+    "banana-in-box": true,
     // TODO enable
     "prefer-const": false
   },

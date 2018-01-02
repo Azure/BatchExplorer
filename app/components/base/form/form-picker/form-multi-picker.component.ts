@@ -27,20 +27,16 @@ export class FormPickerItemTemplateDirective {
     ],
 })
 export class FormMultiPickerComponent implements ControlValueAccessor, Validator {
-    @Input()
-    public name: string;
+    @Input() public name: string;
 
-    @Input()
-    public addTitle: string;
+    @Input() public addTitle: string;
 
-    @Input()
-    public title: (value: any) => string;
+    @Input() public title: (value: any) => string;
 
     /**
      * If the picker should not have more than x values
      */
-    @Input()
-    public max = -1;
+    @Input() public max = -1;
 
     @ContentChild(FormPickerItemTemplateDirective)
     public itemTemplate: FormPickerItemTemplateDirective;
@@ -56,7 +52,6 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
     @ViewChildren("button")
     private _buttons: QueryList<ElementRef>;
 
-    private _lastOpenedButton: HTMLElement;
     private _propagateChange: (value: any) => void;
     private _currentEditIndex = -1;
     constructor(formBuilder: FormBuilder) {
@@ -87,7 +82,6 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
     }
 
     public openPicker(event: MouseEvent, index: number) {
-        this._lastOpenedButton = event.currentTarget as HTMLElement;
         this.currentEditValue.setValue(this.values[index]);
         this._currentEditIndex = index;
         this._page.activate(this);
@@ -120,6 +114,10 @@ export class FormMultiPickerComponent implements ControlValueAccessor, Validator
         this.values.splice(index, 1);
         this.currentEditValue.setValue(null);
         this._emitNewValue();
+    }
+
+    public trackByFn(index) {
+        return index;
     }
 
     private _emitNewValue() {

@@ -1,6 +1,6 @@
 import { Component, NgZone, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { Subscription } from "rxjs";
 
 import { AccountResource, BatchApplication, Job, Pool, ServerError } from "app/models";
@@ -10,7 +10,9 @@ import {
 } from "app/services";
 import { EntityView, ListView } from "app/services/core";
 
+import { DialogService } from "app/components/base/dialogs";
 import "./account-details.scss";
+import { BatchAccountKeysDialogComponent } from "./keys-dialog";
 
 @Component({
     selector: "bl-account-details",
@@ -44,6 +46,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         router: Router,
         private activatedRoute: ActivatedRoute,
         private accountService: AccountService,
+        private dialogService: DialogService,
         private applicationService: ApplicationService,
         private jobService: JobService,
         private poolService: PoolService,
@@ -64,6 +67,9 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
             this.selectAccount(this.accountId);
             this.data.params = { id: this.accountId };
             this.data.fetch().subscribe({
+                next: () => {
+                    this.loadingError = null;
+                },
                 error: (error) => {
                     this.loadingError = error;
                 },
@@ -80,9 +86,19 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         return this.data.refresh();
     }
 
+    @autobind()
+    public showKeys() {
+        const ref = this.dialogService.open(BatchAccountKeysDialogComponent);
+        ref.componentInstance.accountId = this.accountId;
+    }
+
     public selectAccount(accountId: string): void {
         this.noLinkedStorage = false;
         this.accountService.selectAccount(accountId);
+    }
+
+    public trackByFn(index, item: Pool | Job | BatchApplication) {
+        return item.id;
     }
 
     private _loadQuickAccessLists() {

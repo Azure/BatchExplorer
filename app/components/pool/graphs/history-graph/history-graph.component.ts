@@ -7,17 +7,13 @@ import * as moment from "moment";
     templateUrl: "history-graph.html",
 })
 export class HistoryGraphComponent implements OnChanges {
-    @Input()
-    public max: number = 1;
+    @Input() public max: number = 1;
 
-    @Input()
-    public history: HistoryItem[] = [];
+    @Input() public history: HistoryItem[] = [];
 
-    @Input()
-    public interactive = true;
+    @Input() public interactive = true;
 
-    @Input()
-    public historySize = 10;
+    @Input() public historySize = 10;
 
     public type = "line";
 
@@ -48,6 +44,7 @@ export class HistoryGraphComponent implements OnChanges {
         const hitRadius = this.interactive ? 10 : 0;
         this.options = {
             responsive: true,
+            maintainAspectRatio: false,
             elements: {
                 point: { radius: 0, hitRadius: hitRadius, hoverRadius: hitRadius },
                 line: {
@@ -60,6 +57,7 @@ export class HistoryGraphComponent implements OnChanges {
             scales: {
                 yAxes: [{
                     type: "linear",
+                    display: this.interactive,
                     ticks: {
                         max: this.max * 1.01, // Need to have max slightly more otherwise the line get's cut.
                         min: 0,
@@ -70,6 +68,7 @@ export class HistoryGraphComponent implements OnChanges {
                 xAxes: [{
                     type: "linear",
                     position: "bottom",
+                    display: this.interactive,
                     ticks: {
                         max: 0,
                         min: -100,

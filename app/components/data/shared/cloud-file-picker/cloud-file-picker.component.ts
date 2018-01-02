@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
@@ -40,7 +40,6 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnInit, O
     private _subscriptions: Subscription[] = [];
 
     constructor(private storageService: StorageService, private dialog: DialogService) {
-
         this.fileGroupsData = this.storageService.containerListView(storageService.ncjFileGroupPrefix);
         this.fileGroupsData.items.subscribe((fileGroups) => {
             this.fileGroups = fileGroups;

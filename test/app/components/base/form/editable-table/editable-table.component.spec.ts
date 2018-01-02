@@ -1,6 +1,7 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
+import { MatSelectModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
 
 import { EditableTableColumnComponent, EditableTableComponent } from "app/components/base/form/editable-table";
@@ -21,18 +22,16 @@ class TestComponent {
 describe("EditableTableComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
-    let component: EditableTableComponent;
     let de: DebugElement;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [ReactiveFormsModule],
+            imports: [ReactiveFormsModule, MatSelectModule],
             declarations: [EditableTableComponent, EditableTableColumnComponent, TestComponent],
         });
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
         de = fixture.debugElement.query(By.css("bl-editable-table"));
-        component = de.componentInstance;
         fixture.detectChanges();
     });
 

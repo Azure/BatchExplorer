@@ -15,4 +15,8 @@ export class NotificationContainerComponent {
     constructor(notificationService: NotificationService) {
         this.notifications = notificationService.notifications;
     }
+
+    public trackNotification(index, notification: Notification) {
+        return notification.id;
+    }
 }

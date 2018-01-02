@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { Subscription } from "rxjs/Subscription";
 
 import { DialogService } from "app/components/base/dialogs";
@@ -94,5 +94,7 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
     public download() {
         const ref = this.dialog.open(DownloadFileGroupDialogComponent);
         ref.componentInstance.containerId = this.containerId;
+        ref.componentInstance.subfolder = this.containerId;
+        ref.componentInstance.pathPrefix = "";
     }
 }

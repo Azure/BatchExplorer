@@ -2,13 +2,14 @@ import { Component, Input, OnChanges, OnDestroy, OnInit, forwardRef } from "@ang
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { List, Map } from "immutable";
+import { List } from "immutable";
 import { Subscription } from "rxjs";
 
-import { SpecCost, VmSize } from "app/models";
+import { VmSize } from "app/models";
 import { PoolOsSources } from "app/models/forms";
 import { PricingService, VmSizeService } from "app/services";
-import { StringUtils, prettyBytes } from "app/utils";
+import { OSPricing } from "app/services/pricing";
+import { StringUtils, exists, prettyBytes } from "app/utils";
 
 const categoriesDisplayName = {
     standard: "General purpose",
@@ -28,17 +29,17 @@ export class VmSizeDecorator {
     public price: number;
     public prettyPrice: string;
 
-    constructor(public vmSize: VmSize, prices: Map<string, SpecCost>) {
+    constructor(public vmSize: VmSize, prices: OSPricing) {
         this.title = this.prettyTitle(vmSize.name);
         this.prettyCores = this.prettyMb(vmSize.numberOfCores);
         this.prettyRAM = this.prettyMb(vmSize.memoryInMB);
         this.prettyOSDiskSize = this.prettyMb(vmSize.osDiskSizeInMB);
         this.prettyResourceDiskSize = this.prettyMb(vmSize.resourceDiskSizeInMB);
 
-        const price = prices.get(vmSize.name.toLowerCase());
-        if (price) {
-            this.price = price.amount;
-            this.prettyPrice = `${price.currencyCode} ${price.amount.toFixed(2)}`;
+        const price = prices && prices.getPrice(vmSize.name.toLowerCase());
+        if (exists(price)) {
+            this.price = price;
+            this.prettyPrice = `${"USD"} ${price.toFixed(2)}`;
         } else {
             this.price = -1;
         }
@@ -73,7 +74,7 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
 
     public categoryNames: string[];
     public categories: StringMap<VmSizeDecorator[]>;
-    public prices: Map<string, SpecCost> = Map<string, SpecCost>({});
+    public prices: OSPricing = null;
 
     private _propagateChange: (value: string) => void = null;
     private _categories: StringMap<string[]> = {};
@@ -160,6 +161,14 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
         return `${name} (${count})`;
     }
 
+    public trackCategory(index, category: string) {
+        return category;
+    }
+
+    public trackVmSize(index, size: VmSize) {
+        return size.id;
+    }
+
     private _categorizeSizes() {
         let remainingSizes = this._vmSizes.toArray();
         const categories = {};
@@ -201,10 +210,8 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
 
     private _loadPrices() {
         const os = this.osType || "linux";
-        return this.pricingService.getPrices(os).subscribe((prices: List<SpecCost>) => {
-            const map: StringMap<SpecCost> = {};
-            prices.forEach(x => map[x.id] = x);
-            this.prices = Map(map);
+        return this.pricingService.getPrices(os).subscribe((prices: OSPricing) => {
+            this.prices = prices;
             this._categorizeSizes();
         });
     }

@@ -1,6 +1,7 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormsModule, ReactiveFormsModule } from "@angular/forms";
+import { MatSelectModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
 
 import { EditableTableColumnComponent, EditableTableComponent } from "app/components/base/form/editable-table";
@@ -16,23 +17,19 @@ class TestComponent {
 describe("ResourcefilePickerComponent", () => {
     let fixture: ComponentFixture<TestComponent>;
     let testComponent: TestComponent;
-    let component: ResourcefilePickerComponent;
-    let de: DebugElement;
     let editableTableEl: DebugElement;
     let editableTable: EditableTableComponent;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [FormsModule, ReactiveFormsModule],
+            imports: [FormsModule, ReactiveFormsModule, MatSelectModule],
             declarations: [ResourcefilePickerComponent, TestComponent,
                 EditableTableComponent, EditableTableColumnComponent],
         });
         fixture = TestBed.createComponent(TestComponent);
         testComponent = fixture.componentInstance;
-        de = fixture.debugElement.query(By.css("bl-resourcefile-picker"));
         editableTableEl = fixture.debugElement.query(By.css("bl-editable-table"));
         editableTable = editableTableEl.componentInstance;
-        component = de.componentInstance;
         fixture.detectChanges();
     });
 

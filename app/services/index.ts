@@ -1,5 +1,6 @@
 export * from "./account.service";
 export * from "./application-service";
+export * from "./app-insights";
 export * from "./autoscale-formula.service";
 export * from "./azure-http.service";
 export * from "./arm-http.service";
@@ -14,6 +15,8 @@ export * from "./job-service";
 export * from "./job-hook-task.service";
 export * from "./local-file-storage.service";
 export * from "./monaco-loader.service";
+export * from "./navigator.service";
+export * from "./pinned-entity.service";
 export * from "./pool-service";
 export * from "./ncj-file-group.service";
 export * from "./ncj-submit.service";

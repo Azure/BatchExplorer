@@ -58,7 +58,6 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
 
         this._data = this.applicationService.listView();
 
-        // TODO-TIM handle error.
         this._data.onError = (error: ServerError) => {
             if (this.applicationService.isAutoStorageError(error)) {
                 this.hasLinkedStorage.emit(false);
@@ -193,6 +192,18 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
 
     public getPackageValue(version: string) {
         return version.toLowerCase() !== this._defaultVersionText.toLowerCase() ? version : this._defaultVersionValue;
+    }
+
+    public trackRow(index) {
+        return index;
+    }
+
+    public trackApplication(index, application: BatchApplication) {
+        return application.id;
+    }
+
+    public trackPackage(index, pkg: ApplicationPackage) {
+        return pkg.version;
     }
 
     private _setPackageMap(applicationId: string, index: number) {

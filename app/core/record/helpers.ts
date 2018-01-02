@@ -1,6 +1,6 @@
 import { Type } from "@angular/core";
 
-import { exists } from "app/utils/object";
+import { exists } from "common/utils/object-utils";
 import { RecordSetAttributeError } from "./errors";
 import { Record } from "./record";
 
@@ -25,7 +25,7 @@ function metadataForCtr(ctr: any) {
 interface TypeMetadata {
     list: boolean;
     type: Type<any>;
-
+    transform?: (value: any) => any;
 }
 
 export function updateTypeMetadata(ctr: Type<any>, attr: string, type: TypeMetadata) {

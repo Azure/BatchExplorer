@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { List } from "immutable";
 
 import { SidebarRef } from "app/components/base/sidebar";
@@ -96,6 +96,11 @@ export class NodeConnectComponent implements OnInit {
     @autobind()
     public specifyCredentials() {
         this.credentialSource = CredentialSource.Specified;
+    }
+
+    @autobind()
+    public goToHome() {
+        this.credentialSource = null;
     }
 
     @autobind()

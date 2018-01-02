@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 
 import { SidebarManager } from "../../base/sidebar";
 import { PoolCreateBasicDialogComponent } from "../action";
@@ -19,6 +19,6 @@ export class PoolHomeComponent {
 
     @autobind()
     public addPool() {
-        this.sidebarManager.open("add-basic-pool", PoolCreateBasicDialogComponent);
+        this.sidebarManager.open("add-pool", PoolCreateBasicDialogComponent);
     }
 }

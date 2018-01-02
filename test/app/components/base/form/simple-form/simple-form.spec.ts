@@ -14,6 +14,7 @@ import { complexFormMockComponents } from "test/utils/mocks/components";
         <bl-simple-form
             [submit]="submit"
             [containerRef]="dialogRef"
+            [formGroup]="form"
             title="Simple form title"
             subtitle="Simple form subtitle">
         </bl-simple-form>

@@ -1,0 +1,18 @@
+<bl-dropdown [footer]="false" align="right">
+    <div bl-dropdown-btn>
+        <i class="fa fa-star"></i> {{title}}
+    </div>
+    <div bl-dropdown-content>
+        <div *ngFor="let favorite of favorites | async;trackBy: trackPinnned" class="dropdown-item" [routerLink]="favorite.routerLink" [class.selected]="favorite.url === currentUrl"
+            [title]="favorite.id">
+            <i class="fa" [ngClass]="entityIcon(favorite)"></i>
+            <div class="main">
+                <div class="alias">{{favorite.name || favorite.id}}</div>
+                <div class="type">{{entityType(favorite)}}</div>
+            </div>
+            <div *ngIf="favorite.url === currentUrl" class="extra">
+                <i class="fa fa-check"></i>
+            </div>
+        </div>
+    </div>
+</bl-dropdown>

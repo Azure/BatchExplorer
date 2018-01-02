@@ -77,6 +77,10 @@ export class StorageAccountPickerComponent implements OnInit, ControlValueAccess
         }
     }
 
+    public trackByFn(index, account: StorageAccount) {
+        return account.id;
+    }
+
     private _processStorageAccounts(storageAccounts: List<StorageAccount>) {
         const prefered = [];
         const others = [];

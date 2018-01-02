@@ -35,6 +35,7 @@ class BatchLabsApp:
             app.add_procedure('foo', foo)
 
         """
+        print("Adding new proc", name)
         self.procedures[name] = callback
 
     async def call_procedure(self, request):

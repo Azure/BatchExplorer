@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { List } from "immutable";
 
 import { EditMetadataFormComponent } from "app/components/base/form/edit-metadata-form";
@@ -10,6 +10,7 @@ import { PoolDecorator } from "app/models/decorators";
 import { PoolPatchDto } from "app/models/dtos";
 import { PoolService } from "app/services";
 
+// tslint:disable:trackBy-function
 @Component({
     selector: "bl-pool-configuration",
     templateUrl: "pool-configuration.html",
@@ -49,6 +50,20 @@ export class PoolConfigurationComponent {
     public editStartTask() {
         const ref = this.sidebarManager.open(`edit-start-task-${this._pool.id}`, StartTaskEditFormComponent);
         ref.component.pool = this.pool;
+    }
+
+    public get startTaskItemCount() {
+        return Object.keys(this.startTask).length;
+    }
+
+    public get containerConfiguration() {
+        const vmConfig = this.decorator.virtualMachineConfiguration;
+        return  vmConfig && vmConfig.containerConfiguration;
+    }
+
+    public get poolEndpointConfiguration() {
+        const poolEndpointConfig = this.decorator.poolEndpointConfiguration;
+        return  poolEndpointConfig && poolEndpointConfig.inboundNATPools;
     }
 
     private _refresh(pool: Pool) {

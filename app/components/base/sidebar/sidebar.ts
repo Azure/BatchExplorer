@@ -3,6 +3,7 @@ import { FormsModule } from "@angular/forms";
 import { BrowserModule } from "@angular/platform-browser";
 import { MaterialModule } from "app/core";
 
+import { DropdownModule } from "app/components/base/dropdown";
 import { SidebarBookmarksComponent } from "./sidebar-bookmarks";
 import { SidebarContentComponent } from "./sidebar-content";
 import { SidebarManager } from "./sidebar-manager";
@@ -24,6 +25,7 @@ import { SidebarPageComponent } from "./sidebar-page";
     imports: [
         BrowserModule,
         FormsModule,
+        DropdownModule,
         MaterialModule,
     ],
     providers: [

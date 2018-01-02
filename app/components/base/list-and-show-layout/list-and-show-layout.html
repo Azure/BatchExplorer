@@ -1,27 +1,29 @@
 <div class="layout-container" [class.filtering]="showAdvancedFilter | async">
     <section class="list-view">
         <div class="left-pane">
-            <div class="bl-breadcrumbs">
-                <bl-breadcrumb-group>
-                </bl-breadcrumb-group>
-            </div>
-            <div class="bl-quick-filter-content">
+            <div class="quick-filter-content">
+                <div class="layout-list-header">
+                    <div class="title">
+                        <ng-content select="[bl-list-title]"></ng-content>
+                    </div>
+                    <div class="flex-separator"></div>
+                    <div class="actions">
+                        <bl-button icon="fa fa-trash" type="plain" color="light" *ngIf="deleteSelectedIsEnabled && selectedItems.length > 0" [skipSuccess]="true"
+                            [action]="deleteSelectedItems">
+                        </bl-button>
+                        <bl-refresh-btn [refresh]="refresh" *ngIf="refresh" type="plain" color="light"></bl-refresh-btn>
+                        <ng-content select="[bl-list-buttons]"></ng-content>
+                    </div>
+                </div>
                 <div class="quicksearch">
                     <div class="pre-quicksearch">
                         <ng-content select="[pre-quicksearch]"></ng-content>
                     </div>
                     <input [formControl]="quickSearchQuery" placeholder="Search" #quickSearchInput (keydown)="handleKeyPressedInQuickSearch($event)"
                     />
-                    <i class="fa fa-filter fa-2x" (click)="toggleFilter()" *ngIf="advancedFilterContent?.children.length > 0"></i>
-                </div>
-                <hr />
-                <div class="context-button-bar left">
-                    <bl-button type="round" icon="fa fa-trash" color="danger" *ngIf="deleteSelectedIsEnabled && selectedItems.length > 0" [action]="deleteSelectedItems">
-                    </bl-button>
-                </div>
-                <div class="context-button-bar right">
-                    <bl-refresh-btn [refresh]="refresh" *ngIf="refresh" type="round"></bl-refresh-btn>
-                    <ng-content select="[bl-list-buttons]"></ng-content>
+                    <bl-clickable class="toggle-advanced-filter" (do)="toggleFilter()" *ngIf="advancedFilterContent?.children.length > 0">
+                        <i class="fa fa-filter"></i>
+                    </bl-clickable>
                 </div>
             </div>
             <div #listContent class="bl-list-content">

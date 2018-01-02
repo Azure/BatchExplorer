@@ -7,7 +7,8 @@ import { Observable } from "rxjs";
 
 import { ServerError, Subscription } from "app/models";
 import { Constants } from "app/utils";
-import { AccessToken, AdalService } from "./adal";
+import { AccessToken } from "client/core/aad/access-token";
+import { AdalService } from "./adal";
 
 const apiVersionParams = "api-version";
 const apiVersion = Constants.ApiVersion.arm;
@@ -28,6 +29,7 @@ const providersApiVersion = {
     "microsoft.classicstorage": Constants.ApiVersion.armClassicStorage,
     "microsoft.storage": Constants.ApiVersion.armStorage,
     "microsoft.compute": Constants.ApiVersion.compute,
+    "microsoft.commerce": Constants.ApiVersion.commerce,
 };
 
 type SubscriptionOrTenant = Subscription | string;

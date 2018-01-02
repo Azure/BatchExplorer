@@ -93,7 +93,7 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
         return null;
     }
 
-    public textEditorOnChange($event) {
+    public textEditorOnChange() {
         if (this._propagateChange && this.autoscaleFormulaValue !== null) {
             this._propagateChange(this.autoscaleFormulaValue);
         }
@@ -139,6 +139,18 @@ export class AutoscaleFormulaPickerComponent implements OnInit, OnDestroy, Contr
 
     public deleteFormula(formula: AutoscaleFormula) {
         this.autoscaleFormulaService.deleteFormula(formula);
+    }
+
+    public trackFormula(index, formula: AutoscaleFormula) {
+        return formula.id;
+    }
+
+    public trackEvaluationErrors(index, error: AutoScaleRunError) {
+        return index;
+    }
+
+    public trackEvaluationResult(index, result: string) {
+        return result;
     }
 
     private _saveFormula(name: string) {

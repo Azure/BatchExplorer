@@ -5,10 +5,14 @@ import { RouterModule } from "@angular/router";
 import { MaterialModule } from "app/core";
 
 import { BaseModule } from "app/components/base";
+import { ContainerSettingsPickerComponent, RegistryPickerComponent } from "./container-settings";
 import { ResourcefilePickerComponent } from "./resourcefile-picker.component";
 import { UserIdentityComponent } from "./user-identity";
 
-const components = [ResourcefilePickerComponent, UserIdentityComponent];
+const components = [
+    ContainerSettingsPickerComponent, RegistryPickerComponent,
+    ResourcefilePickerComponent, UserIdentityComponent,
+];
 
 @NgModule({
     declarations: components,

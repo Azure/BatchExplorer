@@ -1,4 +1,3 @@
-import { Location } from "@angular/common";
 import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
 import { MatIconRegistry, MatSidenav } from "@angular/material";
 import { DomSanitizer } from "@angular/platform-browser";
@@ -7,25 +6,16 @@ import { Observable } from "rxjs";
 import { registerIcons } from "app/config";
 import {
     AccountService, AdalService, AutoscaleFormulaService, CommandService, MonacoLoader,
-    NcjTemplateService, NodeService, PredefinedFormulaService, PricingService, PythonRpcService, SSHKeyService,
-    SettingsService,
-    SubscriptionService,
-    VmSizeService,
+    NavigatorService, NcjTemplateService, NodeService, PredefinedFormulaService, PricingService,
+    PythonRpcService, SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
 } from "app/services";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
-
-const adalConfig = {
-    tenant: "common",
-    clientId: "04b07795-8ddb-461a-bbee-02f9e1bf7b46", // Azure CLI
-    redirectUri: "urn:ietf:wg:oauth:2.0:oob",
-};
 
 @Component({
     selector: "bl-app",
     templateUrl: "app.layout.html",
 })
 export class AppComponent implements AfterViewInit, OnInit {
-    public hasAccount: Observable<boolean>;
     public isAppReady = false;
 
     @ViewChild("rightSidebar")
@@ -35,7 +25,6 @@ export class AppComponent implements AfterViewInit, OnInit {
     private sidebarContent: SidebarContentComponent;
 
     constructor(
-        private location: Location,
         matIconRegistry: MatIconRegistry,
         sanitizer: DomSanitizer,
         private sidebarManager: SidebarManager,
@@ -44,6 +33,7 @@ export class AppComponent implements AfterViewInit, OnInit {
         private commandService: CommandService,
         private adalService: AdalService,
         private accountService: AccountService,
+        private navigatorService: NavigatorService,
         private subscriptionService: SubscriptionService,
         private nodeService: NodeService,
         private sshKeyService: SSHKeyService,
@@ -59,14 +49,13 @@ export class AppComponent implements AfterViewInit, OnInit {
         this.sshKeyService.init();
         this.commandService.init();
         this.pricingService.init();
+        this.navigatorService.init();
         this.vmSizeService.init();
-        this.adalService.init(adalConfig);
         this.accountService.loadInitialData();
         this.ncjTemplateService.init();
         pythonRpcService.init();
         this.predefinedFormulaService.init();
         monacoLoader.get();
-        this.hasAccount = accountService.currentAccount.map((x) => Boolean(x));
 
         Observable
             .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)
@@ -89,7 +78,6 @@ export class AppComponent implements AfterViewInit, OnInit {
     }
 
     public ngOnInit() {
-        this.adalService.login();
         this.subscriptionService.load();
         this.accountService.load();
     }
@@ -100,14 +88,6 @@ export class AppComponent implements AfterViewInit, OnInit {
 
     public logout() {
         this.adalService.logout();
-    }
-
-    public goBack() {
-        this.location.back();
-    }
-
-    public goForward() {
-        this.location.forward();
     }
 
     /**

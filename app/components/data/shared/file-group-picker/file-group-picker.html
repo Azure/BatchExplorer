@@ -12,7 +12,7 @@
     <mat-option value="" (onSelectionChange)="createFileGroup($event)" class="new-file-group">
         + Create a new file group
     </mat-option>
-    <mat-option *ngFor="let fileGroup of fileGroups" [value]="fileGroup.name">
+    <mat-option *ngFor="let fileGroup of fileGroups;trackBy: trackFileGroup" [value]="fileGroup.name">
         {{ fileGroup.name }}
     </mat-option>
 </mat-autocomplete>

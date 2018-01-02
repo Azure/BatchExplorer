@@ -1,5 +1,5 @@
 import { Component, Input, OnDestroy, ViewChild } from "@angular/core";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { Subscription } from "rxjs";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
@@ -66,12 +66,14 @@ export class DataContainerFilesComponent implements OnDestroy {
 
     @autobind()
     public handleFileDelete(files: File[]) {
-        this.storageService.deleteFilesFromContainer(this.container, files).subscribe({
+        const obs = this.storageService.deleteFilesFromContainer(this.container, files);
+        obs.subscribe({
             complete: () => {
                 // tslint:disable-next-line:max-line-length
                 const message = `The files were successfully removed from the file group: ${this.container.name}`;
                 this.notificationService.success("Removed files from group", message);
             },
         });
+        return obs;
     }
 }

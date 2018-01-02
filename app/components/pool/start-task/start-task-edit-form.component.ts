@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Output } from "@angular/core";
 import { FormBuilder, FormGroup } from "@angular/forms";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
-import { Pool, StartTask } from "app/models";
+import { Pool } from "app/models";
 import { PoolPatchDto } from "app/models/dtos";
 import { NodeService, PoolService } from "app/services";
 
@@ -23,7 +23,6 @@ export class StartTaskEditFormComponent {
 
     public set pool(pool: Pool) {
         this._pool = pool;
-        this._startTask = pool.startTask;
         if (!this.form.dirty) {
             this.form.patchValue({
                 enableStartTask: Boolean(pool.startTask),
@@ -37,7 +36,6 @@ export class StartTaskEditFormComponent {
     public form: FormGroup;
 
     private _pool: Pool;
-    private _startTask: StartTask;
 
     constructor(
         formBuilder: FormBuilder,

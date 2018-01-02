@@ -1,12 +1,13 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "core-decorators";
-import { Subscription } from "rxjs";
+import { autobind } from "app/core";
+import { remote } from "electron";
+import { Observable, Subscription } from "rxjs";
 
 import { Job, Task } from "app/models";
 import { TaskDecorator } from "app/models/decorators";
-import { JobParams, JobService, TaskParams, TaskService } from "app/services";
+import { FileSystemService, JobParams, JobService, TaskParams, TaskService } from "app/services";
 import { EntityView } from "app/services/core";
 import { SidebarManager } from "../../base/sidebar";
 import { DeleteTaskDialogComponent, TaskCreateBasicDialogComponent, TerminateTaskDialogComponent } from "../action";
@@ -21,6 +22,7 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
         return {
             name: id,
             label,
+            icon: "cogs",
         };
     }
 
@@ -47,6 +49,7 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
         private dialog: MatDialog,
         private route: ActivatedRoute,
         private sidebarManager: SidebarManager,
+        private fs: FileSystemService,
         taskService: TaskService,
         jobService: JobService,
         private router: Router) {
@@ -111,9 +114,23 @@ export class TaskDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public cloneTask() {
-        const ref = this.sidebarManager.open("add-basic-pool", TaskCreateBasicDialogComponent);
+        const ref = this.sidebarManager.open(`add-task-${this.taskId}`, TaskCreateBasicDialogComponent);
         ref.component.jobId = this.jobId;
         ref.component.setValueFromEntity(this.task);
+    }
+
+    @autobind()
+    public exportAsJSON() {
+        const dialog = remote.dialog;
+        const localPath = dialog.showSaveDialog({
+            buttonLabel: "Export",
+            defaultPath: `${this.jobId}.${this.taskId}.json`,
+        });
+
+        if (localPath) {
+            const content = JSON.stringify(this.task._original, null, 2);
+            return Observable.fromPromise(this.fs.saveFile(localPath, content));
+        }
     }
 
     public update() {

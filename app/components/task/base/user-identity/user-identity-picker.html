@@ -1,6 +1,6 @@
 <mat-form-field>
     <mat-select placeholder="User identity" [formControl]="selected" name="food">
-        <mat-option *ngFor="let option of options" [value]="option.identity">
+        <mat-option *ngFor="let option of options;trackBy: trackOption" [value]="option.identity">
             {{option.label}}
         </mat-option>
     </mat-select>

@@ -14,7 +14,8 @@
     "dll/**": true
   },
   "files.exclude": {
-    "**/__pycache__/**/*": true
+    "**/__pycache__/**/*": true,
+    ".awcache/**": true
   },
   "python.autoComplete.extraPaths": [
     "${workspaceRoot}/python"
@@ -22,5 +23,8 @@
   "tslint.jsEnable": true,
   "tslint.autoFixOnSave": true,
   "vsicons.presets.angular": true,
-  "tslint.alwaysShowRuleFailuresAsWarnings": true
+  "tslint.alwaysShowRuleFailuresAsWarnings": true,
+  "stylelint.enable": true,
+  "css.validate": false,
+  "scss.validate": false
 }

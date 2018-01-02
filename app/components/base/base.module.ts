@@ -21,12 +21,14 @@ import { ElapsedTimeComponent } from "./elapsed-time";
 import { FocusSectionModule } from "./focus-section";
 import { FormModule } from "./form";
 import { GraphsModule } from "./graphs";
+import { GuardsModule } from "./guards";
 import { InfoBoxModule } from "./info-box";
 import {
     DeleteSelectedItemsDialogComponent, EntityDetailsListComponent, ListAndShowLayoutComponent, ListLoadingComponent,
 } from "./list-and-show-layout";
 import { LoadingComponent, SimpleLoadingComponent } from "./loading";
 import { NotificationModule } from "./notifications";
+import { PinnedDropDownComponent } from "./pinned-entity-dropdown";
 import { PropertyListModule } from "./property-list";
 import { QuickListModule } from "./quick-list";
 import { RefreshButtonComponent } from "./refresh-btn";
@@ -56,6 +58,7 @@ const modules = [
     NotificationModule,
     PropertyListModule,
     GraphsModule,
+    GuardsModule,
     QuickListModule,
     SidebarModule,
     TableModule,
@@ -77,6 +80,7 @@ const components = [
     DurationPickerComponent,
     IconComponent,
     ListAndShowLayoutComponent,
+    PinnedDropDownComponent,
     SimpleLoadingComponent,
     SimpleDialogComponent,
     LoadingComponent,

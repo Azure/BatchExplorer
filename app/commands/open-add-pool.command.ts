@@ -13,6 +13,6 @@ export class OpenAddPoolCommand extends CommandBase {
     }
 
     public execute() {
-        this.sidebarManager.open("add-basic-pool", PoolCreateBasicDialogComponent);
+        this.sidebarManager.open("add-pool", PoolCreateBasicDialogComponent);
     }
 }

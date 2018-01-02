@@ -9,11 +9,15 @@ import { PoolGraphsModule } from "app/components/pool/graphs";
 import { PoolHomeComponent } from "app/components/pool/home/pool-home.component";
 import { StartTaskModule } from "app/components/pool/start-task";
 import { TaskBaseModule } from "app/components/task/base";
+import { PoolEndpointModule } from "./pool-endpoint";
 import { UserAccountModule } from "./user-account";
 
 import {
     AppLicensePickerComponent,
     AutoscaleFormulaPickerComponent,
+    ContaienrImagesPickerComponent,
+    ContainerConfigurationComponent,
+    ContainerRegistryPickerComponent,
     DeletePoolDialogComponent,
     LicenseEulaDialogComponent,
     OsOfferTileComponent,
@@ -25,14 +29,15 @@ import {
 } from "app/components/pool/action";
 
 const components = [
-    AppLicensePickerComponent, AutoscaleFormulaPickerComponent, DeletePoolDialogComponent,
-    LicenseEulaDialogComponent, OsOfferTileComponent, PoolAdvancedFilterComponent, PoolCreateBasicDialogComponent,
-    PoolHomeComponent, PoolListComponent, PoolOsPickerComponent, PoolScalePickerComponent, VmSizePickerComponent,
-    PoolResizeDialogComponent,
+    AppLicensePickerComponent, AutoscaleFormulaPickerComponent,
+    ContainerConfigurationComponent, ContaienrImagesPickerComponent, ContainerRegistryPickerComponent,
+    DeletePoolDialogComponent, LicenseEulaDialogComponent, OsOfferTileComponent, PoolAdvancedFilterComponent,
+    PoolCreateBasicDialogComponent, PoolHomeComponent, PoolListComponent, PoolOsPickerComponent,
+    PoolScalePickerComponent, VmSizePickerComponent, PoolResizeDialogComponent,
 ];
 
 const modules = [
-    PoolBaseModule, PoolDetailsModule, PoolGraphsModule, StartTaskModule, UserAccountModule,
+    PoolBaseModule, PoolDetailsModule, PoolEndpointModule, PoolGraphsModule, StartTaskModule, UserAccountModule,
     TaskBaseModule, ...commonModules,
 ];
 

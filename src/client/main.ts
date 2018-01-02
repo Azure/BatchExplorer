@@ -1,15 +1,16 @@
-import { Menu, app, dialog, ipcMain, protocol } from "electron";
-import { autoUpdater } from "electron-updater";
 import * as path from "path";
+process.env.NODE_PATH = path.join(__dirname, "..");
+// tslint:disable-next-line:no-var-requires
+require("module").Module._initPaths();
+
+import { Menu, app, protocol } from "electron";
+import { autoUpdater } from "electron-updater";
 app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 
+import { localStorage } from "client/core/local-storage";
 import { Constants } from "./client-constants";
 import { BatchLabsApplication, listenToSelectCertifcateEvent } from "./core";
 import { logger } from "./logger";
-import { PythonRpcServerProcess } from "./python-process";
-
-const pythonServer = new PythonRpcServerProcess();
-pythonServer.start();
 
 if (Constants.isDev) {
     autoUpdater.updateConfigPath = path.join(Constants.root, "dev-app-update.yml");
@@ -17,6 +18,9 @@ if (Constants.isDev) {
 autoUpdater.allowPrerelease = true;
 autoUpdater.autoDownload = true;
 autoUpdater.logger = logger;
+localStorage.load();
+
+const batchLabsApp = new BatchLabsApplication(autoUpdater);
 
 // Create the browser window.
 function startApplication() {
@@ -28,16 +32,19 @@ function startApplication() {
 
     // Uncomment to view why windows don't show up.
     // batchLabsApp.debugCrash();
-    const batchLabsApp = new BatchLabsApplication(autoUpdater);
-    batchLabsApp.init();
-    batchLabsApp.start();
+    batchLabsApp.init().then(() => {
+        batchLabsApp.start();
+    });
 
-    if (process.platform === "darwin") {
+    if (process.platform === "darwin" && process.env.NODE_ENV === "production") {
         // Create our menu entries so that we can use MAC shortcuts
         Menu.setApplicationMenu(Menu.buildFromTemplate([
             {
                 label: "Application",
                 submenu: [
+                    { role: "hide" },
+                    { role: "hideothers" },
+                    { type: "separator" },
                     { label: "Quit", accelerator: "Command+Q", click: () => app.quit() },
                 ],
             },
@@ -54,6 +61,12 @@ function startApplication() {
                     { role: "selectall" },
                 ],
             },
+            {
+                label: "Window",
+                submenu: [
+                    { role: "minimize" },
+                ],
+            },
         ]));
     }
 }
@@ -66,7 +79,7 @@ app.on("ready", startApplication);
 listenToSelectCertifcateEvent();
 
 process.on("exit", () => {
-    pythonServer.stop();
+    batchLabsApp.quit();
 });
 
 process.on("SIGINT", () => {
