@@ -23,7 +23,7 @@
         <mat-form-field>
             <mat-select [formControl]="parameterValue" [placeholder]="parameter.name">
                 <mat-hint align="end"> {{ parameter.description }} </mat-hint>
-                <mat-option *ngFor="let opt of parameter.allowedValues" [value]="opt"> {{ opt }} </mat-option>
+                <mat-option *ngFor="let opt of parameter.allowedValues;trackBy: trackOption" [value]="opt"> {{ opt }} </mat-option>
             </mat-select>
         </mat-form-field>
     </div>

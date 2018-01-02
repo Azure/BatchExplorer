@@ -1,6 +1,6 @@
 import { Component, NgZone, OnDestroy, OnInit, ViewContainerRef } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { Subscription } from "rxjs";
 
 import { AccountResource, BatchApplication, Job, Pool, ServerError } from "app/models";
@@ -95,6 +95,10 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
     public selectAccount(accountId: string): void {
         this.noLinkedStorage = false;
         this.accountService.selectAccount(accountId);
+    }
+
+    public trackByFn(index, item: Pool | Job | BatchApplication) {
+        return item.id;
     }
 
     private _loadQuickAccessLists() {

@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { Observable, Subscription } from "rxjs";
 
 import { TaskListDisplayComponent } from "./display";

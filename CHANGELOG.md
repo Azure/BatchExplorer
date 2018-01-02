@@ -10,6 +10,7 @@
 * File explorer download a folder with right click [\#657](https://github.com/Azure/BatchLabs/issues/657)
 * Goto directly to an entity doesn't show the entity in the quicklist [\#199](https://github.com/Azure/BatchLabs/issues/199)
 * Export entities to template to allow cloning after deleted [\#19](https://github.com/Azure/BatchLabs/issues/19)
+* NCJ advanced type for generating a container SAS [\#757](https://github.com/Azure/BatchLabs/issues/757)
 
 ### bug:
 

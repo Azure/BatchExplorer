@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { Observable, Subscription } from "rxjs";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
@@ -120,6 +120,10 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
                 click: () => this._pinFileGroup(container),
             }),
         ]);
+    }
+
+    public trackFileGroup(index, fileGroup: BlobContainer) {
+        return fileGroup.id;
     }
 
     private _setContainerFilter(filter: Filter) {

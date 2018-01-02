@@ -4,13 +4,13 @@
     </div>
     <div blSecondPane class="saved-keys">
         <div class="basic-header">
-            <div class="name" (do)="handleClickTreeViewHeader()"> Saved public keys </div>
+            <div class="name"> Saved public keys </div>
             <bl-clickable (do)="addKey()" class="action add-key-btn">
                 <i class="fa fa-save" title="Save"></i>
             </bl-clickable>
         </div>
         <div class="saved-key-list">
-            <div class="saved-key" *ngFor="let key of savedSSHKeys" (click)="selectKey(key)">
+            <div class="saved-key" *ngFor="let key of savedSSHKeys;trackBy: trackSavedKey" (click)="selectKey(key)">
                 <span class="label">{{key.name}}</span>
                 <i class="fa fa-times" title="Delete" (click)="deleteKey(key)"></i>
             </div>

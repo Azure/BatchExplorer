@@ -98,6 +98,10 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
         }
     }
 
+    public trackFileGroup(index, fileGroup: BlobContainer) {
+        return fileGroup.id;
+    }
+
     private _checkValid(value: string) {
         const valid = this._loading || !value || this.fileGroups.map(x => x.name).includes(value);
         this.warning = !valid;

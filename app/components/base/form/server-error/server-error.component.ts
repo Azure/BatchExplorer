@@ -1,6 +1,6 @@
 import { Component, Input } from "@angular/core";
 
-import { ServerError } from "app/models";
+import { ErrorDetail, ServerError } from "app/models";
 import { log } from "app/utils";
 
 @Component({
@@ -19,4 +19,8 @@ export class ServerErrorComponent {
     public get error() { return this._error; }
 
     private _error: ServerError = null;
+
+    public trackDetail(index, detail: ErrorDetail) {
+        return detail.key;
+    }
 }

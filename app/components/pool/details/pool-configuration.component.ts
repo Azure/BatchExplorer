@@ -1,5 +1,5 @@
 import { Component, Input } from "@angular/core";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { List } from "immutable";
 
 import { EditMetadataFormComponent } from "app/components/base/form/edit-metadata-form";
@@ -10,6 +10,7 @@ import { PoolDecorator } from "app/models/decorators";
 import { PoolPatchDto } from "app/models/dtos";
 import { PoolService } from "app/services";
 
+// tslint:disable:trackBy-function
 @Component({
     selector: "bl-pool-configuration",
     templateUrl: "pool-configuration.html",

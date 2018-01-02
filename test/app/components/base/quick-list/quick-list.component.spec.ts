@@ -12,7 +12,7 @@ interface TestItem {
     id: string;
     name: string;
 }
-
+// tslint:disable:trackBy-function
 @Component({
     template: `
         <bl-focus-section #focusSection>

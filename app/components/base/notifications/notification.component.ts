@@ -58,4 +58,8 @@ export class NotificationComponent {
         action.do();
         this.dismiss();
     }
+
+    public trackAction(index, action: NotificationAction) {
+        return action.name;
+    }
 }

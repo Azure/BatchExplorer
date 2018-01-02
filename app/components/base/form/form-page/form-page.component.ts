@@ -21,29 +21,24 @@ export class FormPageComponent {
     /**
      * Title of the page. It will be shown when this page is the current page of a form.
      */
-    @Input()
-    public title: string;
+    @Input() public title: string;
 
     /**
      * Subtitle of the page. It will be shown when this page is the current page of a form.
      */
-    @Input()
-    public subtitle: string;
+    @Input() public subtitle: string;
 
-    @Input()
-    public formGroup: AbstractControl;
+    @Input() public formGroup: AbstractControl;
 
     /**
      * Event that will trigger when user click cancel or back.
      */
-    @Output()
-    public cancel = new EventEmitter();
+    @Output() public cancel = new EventEmitter();
 
     /**
      * Event that will trigger when user click select or submit.
      */
-    @Output()
-    public submit = new EventEmitter();
+    @Output() public submit = new EventEmitter();
 
     @ViewChild(TemplateRef)
     public content: TemplateRef<any>;
@@ -73,5 +68,9 @@ export class FormPageComponent {
      */
     public get submitEnabled() {
         return !this.formGroup || this.formGroup.valid;
+    }
+
+    public trackByFn(index, section: FormSectionComponent) {
+        return index;
     }
 }

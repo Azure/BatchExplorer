@@ -2,9 +2,8 @@ import {
     AfterViewInit, ChangeDetectorRef, Component, ContentChildren, HostBinding, Input, QueryList, Type,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { autobind } from "core-decorators";
 
-import { Dto } from "app/core";
+import { Dto, autobind } from "app/core";
 import { ServerError } from "app/models";
 import { log } from "app/utils";
 import { validJsonConfig } from "app/utils/validators";

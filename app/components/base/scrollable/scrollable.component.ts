@@ -114,7 +114,7 @@ export class ScrollableComponent implements OnDestroy, AfterViewInit {
     }
 
     @HostListener("scroll")
-    public onScroll($event: Event) {
+    public onScroll() {
         const currentSroll = {
             left: this.scrollContent.nativeElement.scrollLeft,
             top: this.scrollContent.nativeElement.scrollTop,

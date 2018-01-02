@@ -5,10 +5,9 @@ import { MaterialModule } from "app/core";
 
 import { BaseModule } from "app/components/base";
 import { AccountDropDownComponent } from "./account-dropdown.component";
-import { AccountFavListComponent } from "./account-fav-list.component";
 import { AccountListComponent } from "./account-list.component";
 
-const components = [AccountDropDownComponent, AccountListComponent, AccountFavListComponent];
+const components = [AccountDropDownComponent, AccountListComponent];
 
 @NgModule({
     declarations: components,
