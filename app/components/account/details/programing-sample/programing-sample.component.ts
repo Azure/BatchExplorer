@@ -15,6 +15,7 @@ const engineLanguages = {
     nodejs: "javascript",
 };
 
+// tslint:disable:trackBy-function
 @Component({
     selector: "bl-programing-sample",
     templateUrl: "programing-sample.html",
