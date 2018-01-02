@@ -5,8 +5,8 @@ namespace Microsoft.Azure.Batch.Samples.HelloWorld
     using Auth;
 
     public class AccountSettings {
-        public const string accountName = "{0}";
-        public const string accountUrl = "{1}";
+        public const string name = "{0}";
+        public const string url = "{1}";
         public const string key = "{2}";
     }
 

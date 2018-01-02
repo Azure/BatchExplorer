@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from "@angular/core";
-import { sampleTemplates } from "./samples";
+import { prerequisites, sampleTemplates } from "./samples";
 
 import { EditorConfig } from "app/components/base/editor";
 import { AccountKeys, AccountResource } from "app/models";
@@ -19,12 +19,14 @@ export class ProgramingSampleComponent implements OnChanges {
     @Input() public account: AccountResource;
     @Input() public keys: AccountKeys;
 
+    public prerequisites: string[];
     public content: string;
     public editorConfig: EditorConfig;
 
     public ngOnChanges(changes) {
         if (changes.language || changes.account || changes.keys) {
             this._updateContent();
+            this._updatePrerequisites();
             this._updateConfig();
         }
     }
@@ -34,7 +36,7 @@ export class ProgramingSampleComponent implements OnChanges {
     }
 
     private get accountUrl() {
-        const url =  this.account && this.account.properties.accountEndpoint;
+        const url = this.account && this.account.properties.accountEndpoint;
         return url ? `https://${url}` : "";
     }
 
@@ -49,6 +51,10 @@ export class ProgramingSampleComponent implements OnChanges {
         } else {
             this.content = "";
         }
+    }
+
+    private _updatePrerequisites() {
+        this.prerequisites = prerequisites[this.language];
     }
 
     private _updateConfig() {

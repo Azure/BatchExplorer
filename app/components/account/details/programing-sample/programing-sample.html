@@ -1,2 +1,11 @@
-
+<div class="description">
+    <div class="dependency"></div>
+    <bl-property-group label="" class="wide">
+        <bl-table-property label="Prerequisites" *ngIf="prerequisites">
+            <bl-table-property-row *ngFor="let prerequisite of prerequisites">
+                <bl-tp-cell [value]="prerequisite"></bl-tp-cell>
+            </bl-table-property-row>
+        </bl-table-property>
+    </bl-property-group>
+</div>
 <bl-editor [ngModel]="content" [config]="editorConfig"></bl-editor>
