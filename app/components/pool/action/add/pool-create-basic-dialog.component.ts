@@ -61,6 +61,7 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
             userAccounts: [[]],
             appLicenses: [[]],
             appPackages: [[]],
+            inboundNATPools: [[]],
         });
 
         this._sub = this._osControl.valueChanges.subscribe((value) => {
@@ -79,6 +80,12 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
                 } else {
                     this.osType = "linux";
                 }
+            }
+
+            if (!value.virtualMachineConfiguration) {
+                this.form.patchValue({
+                    inboundNATPools: [],
+                });
             }
         });
 
@@ -131,6 +138,10 @@ export class PoolCreateBasicDialogComponent extends DynamicForm<Pool, PoolCreate
 
     public get renderingSkuSelected(): boolean {
         return this._renderingSkuSelected;
+    }
+
+    public get virtualMachineConfiguration() {
+        return this._osControl.value && this._osControl.value.virtualMachineConfiguration;
     }
 
     private _updateEstimatedPrice() {
