@@ -34,7 +34,8 @@ export class ProgramingSampleComponent implements OnChanges {
     }
 
     private get accountUrl() {
-        return this.account && this.account.properties.accountEndpoint || "";
+        const url =  this.account && this.account.properties.accountEndpoint;
+        return url ? `https://${url}` : "";
     }
 
     private get key() {
