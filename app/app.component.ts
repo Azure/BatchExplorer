@@ -10,6 +10,7 @@ import {
     NavigatorService, NcjTemplateService, NodeService, PredefinedFormulaService, PricingService,
     PythonRpcService, SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
 } from "app/services";
+import { ipcRenderer } from "electron";
 import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
 @Component({
@@ -64,6 +65,7 @@ export class AppComponent implements AfterViewInit, OnInit {
             .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)
             .subscribe((loadedArray) => {
                 this.isAppReady = loadedArray[0] && loadedArray[1];
+                console.log("Is app ready...", this.isAppReady);
             });
 
         // Wait for the first account to be loaded.
@@ -72,6 +74,13 @@ export class AppComponent implements AfterViewInit, OnInit {
         });
 
         registerIcons(matIconRegistry, sanitizer);
+
+        this.route.queryParams.subscribe(({ fullscreen }) => {
+            console.log("Got query params", fullscreen);
+            this.fullscreen = Boolean(fullscreen);
+        });
+
+        ipcRenderer.send("app-ready");
     }
 
     public ngAfterViewInit() {
@@ -83,10 +92,6 @@ export class AppComponent implements AfterViewInit, OnInit {
     public ngOnInit() {
         this.subscriptionService.load();
         this.accountService.load();
-
-        this.route.queryParams.subscribe(({ fullscreen }) => {
-            this.fullscreen = Boolean(fullscreen);
-        });
     }
 
     public open() {

@@ -1,4 +1,4 @@
-import { BrowserWindow } from "electron";
+import { BrowserWindow, ipcMain } from "electron";
 
 import { Constants } from "../client-constants";
 import { BatchLabsApplication, FileSystem, GenericWindow, LocalFileStorage } from "../core";
@@ -11,12 +11,26 @@ const devServerUrl = Constants.urls.main.dev;
 const buildFileUrl = Constants.urls.main.prod;
 
 export class MainWindow extends GenericWindow {
+    public appReady: Promise<void>;
     private _showWindowOnstart = false;
+    private _resolveAppReady: () => void;
 
-    constructor(batchLabsApp: BatchLabsApplication) { super(batchLabsApp); }
+    constructor(batchLabsApp: BatchLabsApplication) {
+        super(batchLabsApp);
+        this.appReady = new Promise((resolve) => {
+            this._resolveAppReady = resolve;
+        });
+    }
 
     public debugCrash() {
         this._showWindowOnstart = true;
+    }
+
+    public async send(key: string, message: string) {
+        if (this._window) {
+            await this.appReady;
+            this._window.webContents.send(key, message);
+        }
     }
 
     protected createWindow() {
@@ -67,6 +81,13 @@ export class MainWindow extends GenericWindow {
         window.webContents.on("crashed", (event: Electron.Event, killed: boolean) => {
             logger.error("There was a crash", event, killed);
             this.batchLabsApp.recoverWindow.createWithError(event.returnValue);
+        });
+
+        ipcMain.once("app-ready", (event) => {
+            if (event.sender.id === window.webContents.id) {
+                logger.info("++== window");
+                this._resolveAppReady();
+            }
         });
 
         window.webContents.on("did-fail-load", (error) => {

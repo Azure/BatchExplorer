@@ -107,6 +107,7 @@ export class BatchLabsApplication {
         window.create();
         window.send(Constants.rendererEvents.batchlabsLink, link);
         this.windows.push(window);
+        window.show();
         return window;
     }
 
