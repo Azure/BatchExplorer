@@ -56,11 +56,13 @@ export class AADService {
             this._retrieveUserFromLocalStorage(),
             this._tokenCache.init(),
         ]);
-        if (this._currentUser.value) {
-            this._showMainWindow();
-        }
     }
 
+    /**
+     * Login to azure active directory.
+     * This will retrieve fresh tokens for all tenant and resources needed by BatchLabs.
+     * It will try to use the refresh token cached to prevent a new prompt window if possible.
+     */
     public async login(): Promise<any> {
         this.app.splashScreen.updateMessage("Login to azure active directory");
         try {

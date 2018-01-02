@@ -1,4 +1,3 @@
-import { Observable } from "rxjs";
 import { F } from "test/utils";
 import { MockAuthenticationWindow, MockSplashScreen } from "test/utils/mocks/windows";
 import {

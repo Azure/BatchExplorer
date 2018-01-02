@@ -8,7 +8,14 @@ import { log } from "app/utils";
  */
 export class ArmResourceUtils {
 
+    /**
+     * Parse the arm resource id uri to retrieve the subscription id inside.
+     * This could also be used for any arm url depending on subscriptions
+     * @param id Arm resource id
+     */
     public static getSubscriptionIdFromResourceId(id: string) {
+        if (!id) { return null; }
+
         const regex = /subscriptions\/(.*)\/resourcegroups/;
         const out = regex.exec(id.toLowerCase());
 
@@ -23,6 +30,7 @@ export class ArmResourceUtils {
      * Returns the account name from a resource id
      */
     public static getAccountNameFromResourceId(id: string): string {
+        if (!id) { return null; }
         try {
             return this._resourceDescriptorParser(id).resource;
         } catch (e) {
@@ -74,30 +82,6 @@ export class ArmResourceUtils {
     public static isResourceGroupId(id: string): boolean {
         return ArmResourceUtils.regExpResourceGroupId.test(id);
     }
-
-    /**
-     * Determines if a given ID is a deployment ID.
-     * Supports ids of the form:
-     * /subscriptions/{subId}/resourceGroups/{rgName}/providers/Microsoft.Resources/deployments/{deploymentName}
-     * /subscriptions/{subId}/resourceGroups/{rgName}/deployments/{deploymentName}
-     *
-     * @param id The ID to check.
-     * @return Boolean true if the ID is a deployment ID, otherwise false.
-     */
-    public static isDeploymentId(id: string): boolean {
-        return ArmResourceUtils.regExpDeploymentResourceId.test(id) || ArmResourceUtils.regExpDeploymentId.test(id);
-    }
-
-    /**
-     * Determines if a given ID is a tag ID.
-     *
-     * @param id The ID to check.
-     * @return Boolean true if the ID is a tag ID, otherwise false.
-     */
-    public static isTagId(id: string): boolean {
-        return ArmResourceUtils.regExpTagId.test(id);
-    }
-
     // - matches (/{type}/{instance})+
     private static regExpResourceTypeExtractor = /\/([^\/]+)\/([^\/]+)/ig;
 
@@ -109,15 +93,6 @@ export class ArmResourceUtils {
 
     // - matches (/subscriptions/{subscriptionId}/resourcegroups/{resourcegroup})? + /providers + (/something/something)+
     private static regExpResourceId = /^(?:\/cloudname\/[^\/\s]+)?(?:\/subscriptions\/[^\/\s]+(\/resourcegroups\/[^\/\s]+)?)?(?:\/providers\/[^\/]+(?:\/[^\/]+\/[^\/]+)*)*(?!(?:\/[^\/]+\/[^\/]+)+\/providers)\/providers\/([^\/]+)((?:\/[^\/]+\/[^\/]+)+)$/i;
-
-    // - matches /subscriptions/{subscriptionId}/resourcegroups/{resourcegroup}/deployments/{deploymentName}
-    private static regExpDeploymentId = /^\/subscriptions\/([^\/\s]+)\/resourcegroups\/([^\/\s]+)\/deployments\/([^\/]+)$/i;
-
-    // - matches /subscriptions/{subscriptionId}/resourcegroups/{resourcegroup}/providers/microsoft.resources/deployments/{deploymentName}
-    private static regExpDeploymentResourceId = /^\/subscriptions\/([^\/\s]+)\/resourcegroups\/([^\/\s]+)\/providers\/microsoft.resources\/deployments\/([^\/]+)$/i;
-
-    // - matches /subscriptions/{subscriptionId}/tagNames/{tagName} + (/tagValues/{tagValue}) *
-    private static regExpTagId = /^\/subscriptions\/([^\/\s]+)\/tagNames\/([^\/]+)(?:\/tagValues\/([^\/]+))?$/i;
 
     // - matches exactly /subscriptions/{subscriptionId}
     private static regExpSubscriptionId = /^\/subscriptions\/([^\/\s]+)$/i;

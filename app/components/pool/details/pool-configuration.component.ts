@@ -61,6 +61,11 @@ export class PoolConfigurationComponent {
         return  vmConfig && vmConfig.containerConfiguration;
     }
 
+    public get poolEndpointConfiguration() {
+        const poolEndpointConfig = this.decorator.poolEndpointConfiguration;
+        return  poolEndpointConfig && poolEndpointConfig.inboundNATPools;
+    }
+
     private _refresh(pool: Pool) {
         if (pool) {
             this.decorator = new PoolDecorator(this._pool);

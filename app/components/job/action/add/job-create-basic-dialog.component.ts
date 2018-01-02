@@ -27,6 +27,7 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
     public showJobReleaseTask: boolean;
     public fileUri = "create.job.batch.json";
     public virtualMachineConfiguration: VirtualMachineConfiguration = null;
+    public containerSettingsRequired: boolean = true;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -81,15 +82,22 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
                 if (!this.virtualMachineConfiguration || !this.virtualMachineConfiguration.containerConfiguration) {
                     // Reset job manager, preperation and release task container settings because pool id is changed
                     // because user might change a container-pool to a non-container pool or vice versa
-                    if (this.form.controls.jobManagerTask.value) {
-                        this.form.controls.jobManagerTask.patchValue({ containerSettings: null });
+                    let jobManagerTask = this.form.controls.jobManagerTask.value;
+                    let jobPreparationTask = this.form.controls.jobPreparationTask.value;
+                    let jobReleaseTask = this.form.controls.jobReleaseTask.value;
+                    if (jobManagerTask) {
+                        jobManagerTask.containerSettings = null;
+                        this.form.controls.jobManagerTask.patchValue(jobManagerTask);
                     }
-                    if (this.form.controls.jobPreparationTask.value) {
-                        this.form.controls.jobPreparationTask.patchValue({ containerSettings: null });
+                    if (jobPreparationTask) {
+                        jobPreparationTask.containerSettings = null;
                     }
-                    if (this.form.controls.jobReleaseTask.value) {
-                        this.form.controls.jobReleaseTask.patchValue({ containerSettings: null });
+                    if (jobReleaseTask) {
+                        jobReleaseTask.containerSettings = null;
                     }
+                    this.containerSettingsRequired = false;
+                } else {
+                    this.containerSettingsRequired = true;
                 }
             });
     }

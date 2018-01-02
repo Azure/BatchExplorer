@@ -29,7 +29,7 @@ export class MainWindow extends GenericWindow {
                 webSecurity: false,
             },
         });
-        window.show();
+
         const url = process.env.HOT ? devServerUrl : buildFileUrl;
         this._setupEvents(window);
         window.loadURL(url);

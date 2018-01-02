@@ -1,6 +1,7 @@
 import { Component, DebugElement } from "@angular/core";
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { FormControl, ReactiveFormsModule } from "@angular/forms";
+import { MatSelectModule } from "@angular/material";
 import { By } from "@angular/platform-browser";
 
 import { EditableTableColumnComponent, EditableTableComponent } from "app/components/base/form/editable-table";
@@ -25,7 +26,7 @@ describe("EditableTableComponent", () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [ReactiveFormsModule],
+            imports: [ReactiveFormsModule, MatSelectModule],
             declarations: [EditableTableComponent, EditableTableColumnComponent, TestComponent],
         });
         fixture = TestBed.createComponent(TestComponent);
