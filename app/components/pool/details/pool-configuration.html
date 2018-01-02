@@ -152,5 +152,34 @@
                 <span no-filter>This pool contains no metadata</span>
             </bl-no-item>
         </bl-property-group>
+
+        <bl-property-group *ngIf="poolEndpointConfiguration" label="Pool endpoint configuration" class="wide" [collapsed]="true">
+            <div collapsed-preview>
+                <span>{{poolEndpointConfiguration?.length}} inbound NAT pools</span>
+            </div>
+            <ng-container *ngFor="let inboundNATPool of poolEndpointConfiguration">
+                <bl-text-property label="Name" [value]="inboundNATPool.name"></bl-text-property>
+                <bl-text-property label="Backend port" [value]="inboundNATPool.backendPort"></bl-text-property>
+                <bl-text-property label="Frontend port range" [value]="inboundNATPool.frontendPortRange"></bl-text-property>
+                <bl-text-property label="Protocol" [value]="inboundNATPool.protocol"></bl-text-property>
+                <bl-table-property *ngIf="inboundNATPool.networkSecurityRules?.length > 0" label="Network security rules">
+                    <bl-table-property-header>
+                        <div tp-column>Access</div>
+                        <div tp-column>Priority</div>
+                        <div tp-column>Source address prefix</div>
+                    </bl-table-property-header>
+                    <bl-table-property-row *ngFor="let securityRule of inboundNATPool.networkSecurityRules">
+                        <bl-tp-cell [value]="securityRule.access"></bl-tp-cell>
+                        <bl-tp-cell [value]="securityRule.priority"></bl-tp-cell>
+                        <bl-tp-cell [value]="securityRule.sourceAddressPrefix"></bl-tp-cell>
+                    </bl-table-property-row>
+                </bl-table-property>
+                <br />
+            </ng-container>
+
+            <bl-no-item [itemCount]="poolEndpointConfiguration.length" [slimline]="true">
+                <span no-filter>This pool contains no inbound NAT pools</span>
+            </bl-no-item>
+        </bl-property-group>
     </bl-property-list>
 </bl-entity-configuration>

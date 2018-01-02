@@ -7,7 +7,7 @@ import {
 import { Subscription } from "rxjs";
 
 import { ObjectUtils } from "app/utils";
-import { EditableTableColumnComponent } from "./editable-table-column.component";
+import { EditableTableColumnComponent, EditableTableColumnType } from "./editable-table-column.component";
 
 import "./editable-table.scss";
 
@@ -23,7 +23,7 @@ import "./editable-table.scss";
 export class EditableTableComponent implements ControlValueAccessor, Validator, AfterViewInit, OnDestroy {
     @ContentChildren(EditableTableColumnComponent)
     public columns: QueryList<EditableTableColumnComponent>;
-
+    public EditableTableColumnType = EditableTableColumnType;
     public items: FormArray;
     public form: FormGroup;
 

@@ -106,6 +106,25 @@
                 </div>
             </bl-form-picker>
         </bl-form-section>
+
+        <bl-form-section *ngIf="virtualMachineConfiguration" title="Pool endpoint configuration" subtitle="The configuration for endpoints on compute nodes in the Batch pool.">
+            <bl-form-multi-picker formControlName="inboundNATPools" #inboundNATPoolsPicker addTitle="Inbound NAT Pool" [max]="5">
+                <ng-template blFormPickerItem let-value>
+                    <div title>
+                        {{value?.name}}
+                    </div>
+                    <div subtitle class="unaccent">
+                        {{value?.protocol}}
+                    </div>
+                </ng-template>
+                <div nested-form>
+                    <bl-inbound-nat-pool-picker
+                        [formControl]="inboundNATPoolsPicker.currentEditValue"
+                        [inboundNATPools]="form.controls.inboundNATPools.value">
+                    </bl-inbound-nat-pool-picker>
+                </div>
+            </bl-form-multi-picker>
+        </bl-form-section>
     </bl-form-page>
     <div blFormSummary>
         <div>Estimated cost: {{estimatedCost}}/h</div>

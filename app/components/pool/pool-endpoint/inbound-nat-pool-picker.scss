@@ -1,0 +1,7 @@
+@import "app/styles/variables";
+
+bl-inbound-nat-pool-picker {
+    .form-error {
+        color: map-get($danger, 500);
+    }
+}
