@@ -1,12 +1,12 @@
 <section>
     <table>
-        <tr class="head">
+        <tr class="head" *ngIf="header">
             <td class="label">{{label}}</td>
             <ng-template [ngTemplateOutlet]="header.content"></ng-template>
         </tr>
 
-        <tr *ngFor="let row of displayRows;trackBy: trackRow" class="row">
-            <td class="label">{{row.label}}</td>
+        <tr *ngFor="let row of displayRows;trackBy: trackRow; let first = first;" class="row">
+            <td class="label">{{row.label || (!header && first && label) || ""}}</td>
             <ng-template [ngTemplateOutlet]="row.content"></ng-template>
         </tr>
     </table>
