@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
-import { MatIconRegistry, MatSidenav } from "@angular/material";
+import { Component, OnInit } from "@angular/core";
+import { MatIconRegistry } from "@angular/material";
 import { DomSanitizer } from "@angular/platform-browser";
 import { Observable } from "rxjs";
 
@@ -11,26 +11,18 @@ import {
     PythonRpcService, SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
 } from "app/services";
 import { ipcRenderer } from "electron";
-import { SidebarContentComponent, SidebarManager } from "./components/base/sidebar";
 
 @Component({
     selector: "bl-app",
     templateUrl: "app.layout.html",
 })
-export class AppComponent implements AfterViewInit, OnInit {
+export class AppComponent implements OnInit {
     public isAppReady = false;
     public fullscreen = false;
-
-    @ViewChild("rightSidebar")
-    private sidebar: MatSidenav;
-
-    @ViewChild("sidebarContent")
-    private sidebarContent: SidebarContentComponent;
 
     constructor(
         matIconRegistry: MatIconRegistry,
         sanitizer: DomSanitizer,
-        private sidebarManager: SidebarManager,
         private autoscaleFormulaService: AutoscaleFormulaService,
         private settingsService: SettingsService,
         private commandService: CommandService,
@@ -65,7 +57,6 @@ export class AppComponent implements AfterViewInit, OnInit {
             .combineLatest(accountService.accountLoaded, settingsService.hasSettingsLoaded)
             .subscribe((loadedArray) => {
                 this.isAppReady = loadedArray[0] && loadedArray[1];
-                console.log("Is app ready...", this.isAppReady);
             });
 
         // Wait for the first account to be loaded.
@@ -76,26 +67,16 @@ export class AppComponent implements AfterViewInit, OnInit {
         registerIcons(matIconRegistry, sanitizer);
 
         this.route.queryParams.subscribe(({ fullscreen }) => {
-            console.log("Got query params", fullscreen);
+            // console.log("Query params?", fullscreen);
             this.fullscreen = Boolean(fullscreen);
         });
 
         ipcRenderer.send("app-ready");
     }
 
-    public ngAfterViewInit() {
-        // Give the reference to the sidebar to the sidebar manager
-        this.sidebarManager.sidebar = this.sidebar;
-        this.sidebarManager.sidebarContent = this.sidebarContent;
-    }
-
     public ngOnInit() {
         this.subscriptionService.load();
         this.accountService.load();
-    }
-
-    public open() {
-        this.sidebar.open();
     }
 
     public logout() {

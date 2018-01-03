@@ -13,9 +13,7 @@
                     <mat-sidenav #rightSidebar align="end">
                         <bl-sidebar-content #sidebarContent [sidebar]="rightSidebar"></bl-sidebar-content>
                     </mat-sidenav>
-                    <div *ngIf="isAppReady">
-                        <router-outlet></router-outlet>
-                    </div>
+                    <router-outlet></router-outlet>
                 </mat-sidenav-container>
             </div>
         </section>
@@ -24,6 +22,11 @@
         </footer>
     </div>
     <div class="fullscreen" *ngIf="fullscreen">
-        <router-outlet></router-outlet>
+        <mat-sidenav-container>
+            <mat-sidenav #rightSidebar align="end">
+                <bl-sidebar-content #sidebarContent [sidebar]="rightSidebar"></bl-sidebar-content>
+            </mat-sidenav>
+            <router-outlet></router-outlet>
+        </mat-sidenav-container>
     </div>
 </ng-container>
