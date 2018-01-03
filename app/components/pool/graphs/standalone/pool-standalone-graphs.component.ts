@@ -16,7 +16,6 @@ export class PoolStandaloneGraphsComponent implements OnInit, OnDestroy {
         return { name: `Pool ${params.poolId} graphs` };
     }
 
-
     public poolId: string;
     public pool: Pool;
     private _data: EntityView<Pool, PoolParams>;

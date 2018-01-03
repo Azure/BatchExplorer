@@ -8,7 +8,9 @@ import { SidebarManager } from "app/components/base/sidebar";
 import { PerformanceData } from "app/components/pool/graphs/performance-graph";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { Job, JobState, Node, NodeState, Pool, Task } from "app/models";
-import { AppInsightsQueryService, ElectronRemote, JobListParams, JobService, NodeListParams, NodeService } from "app/services";
+import {
+    AppInsightsQueryService, ElectronRemote, JobListParams, JobService, NodeListParams, NodeService,
+} from "app/services";
 import { ListView, PollObservable, PollService } from "app/services/core";
 import { FilterBuilder } from "app/utils/filter-builder";
 import { NodesStateHistoryData, RunningTasksHistoryData } from "./history-data";

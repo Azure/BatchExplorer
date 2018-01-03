@@ -347,5 +347,10 @@ bl-app {
     .fullscreen {
         height: 100vh;
         width: 100vw;
+        position: relative;
+
+        > mat-sidenav-container {
+            height: 100%;
+        }
     }
 }

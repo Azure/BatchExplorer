@@ -81,10 +81,9 @@ export class BatchLabsApplication {
         app.on("activate", () => {
             // On macOS it's common to re-create a window in the app when the
             // dock icon is clicked and there are no other windows open.
-            // TODO-TIM check that
-            // if (!this.mainWindow.exists()) {
-            //     this.start();
-            // }
+            if (this.windows.length === 0) {
+                this.start();
+            }
         });
 
         ipcMain.once("exit", () => {
@@ -107,7 +106,9 @@ export class BatchLabsApplication {
         window.create();
         window.send(Constants.rendererEvents.batchlabsLink, link);
         this.windows.push(window);
-        window.show();
+        window.appReady.then(() => {
+            window.show();
+        });
         return window;
     }
 
