@@ -15,7 +15,6 @@ const engineLanguages = {
     nodejs: "javascript",
 };
 
-// tslint:disable:trackBy-function
 @Component({
     selector: "bl-programing-sample",
     templateUrl: "programing-sample.html",
@@ -36,6 +35,10 @@ export class ProgramingSampleComponent implements OnChanges {
             this._updatePrerequisites();
             this._updateConfig();
         }
+    }
+
+    public trackPrerequisite(index, item) {
+        return item;
     }
 
     private get accountName() {
