@@ -143,7 +143,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         const link = `ms-batchlabs://route/standalone/pools/${this.pool.id}/graphs?fullscreen=true`;
         const window = this.remote.getBatchLabsApp().openNewWindow(link);
 
-        return Observable.fromPromise(window.domReady);
+        return Observable.fromPromise(window.appReady);
     }
 
     private _updatePrice() {
