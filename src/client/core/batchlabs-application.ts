@@ -19,12 +19,12 @@ export class BatchLabsApplication {
     public splashScreen = new SplashScreen(this);
     public authenticationWindow = new AuthenticationWindow(this);
     public recoverWindow = new RecoverWindow(this);
-    public mainWindow = new MainWindow(this);
+    public windows = [new MainWindow(this)];
     public pythonServer = new PythonRpcServerProcess();
     public aadService = new AADService(this);
 
     constructor(public autoUpdater: AppUpdater) {
-        logger.info("ARguments", process.argv);
+        logger.info("Arguments", process.argv);
     }
 
     public async init() {
@@ -52,7 +52,7 @@ export class BatchLabsApplication {
         this.splashScreen.create();
         this.splashScreen.updateMessage("Loading app");
 
-        this.mainWindow.create();
+        this.windows.forEach(x => x.create());
         this.aadService.login();
         this._processArguments(process.argv);
     }
@@ -60,7 +60,7 @@ export class BatchLabsApplication {
     public setupProcessEvents() {
         ipcMain.on("reload", () => {
             // Destroy window and error window if applicable
-            this.mainWindow.destroy();
+            this.windows.forEach(x => x.destroy());
             this.recoverWindow.destroy();
             this.splashScreen.destroy();
             this.authenticationWindow.destroy();
@@ -81,7 +81,7 @@ export class BatchLabsApplication {
         app.on("activate", () => {
             // On macOS it's common to re-create a window in the app when the
             // dock icon is clicked and there are no other windows open.
-            if (!this.mainWindow.exists()) {
+            if (this.windows.length === 0) {
                 this.start();
             }
         });
@@ -97,8 +97,23 @@ export class BatchLabsApplication {
 
     }
 
+    /**
+     * Open a new link in the ms-batchlabs format
+     * @param link ms-batchlabs://...
+     */
+    public openNewWindow(link: string): MainWindow {
+        const window = new MainWindow(this);
+        window.create();
+        window.send(Constants.rendererEvents.batchlabsLink, link);
+        this.windows.push(window);
+        window.appReady.then(() => {
+            window.show();
+        });
+        return window;
+    }
+
     public debugCrash() {
-        this.mainWindow.debugCrash();
+        this.windows.forEach(x => x.debugCrash());
     }
 
     public quit() {
@@ -128,7 +143,7 @@ export class BatchLabsApplication {
         }
         const arg = argv[1];
         if (Url.parse(arg).protocol === Constants.customProtocolName + ":") {
-            this.mainWindow.send(Constants.rendererEvents.batchlabsLink, arg);
+            this.windows[0].send(Constants.rendererEvents.batchlabsLink, arg);
         }
     }
 }
