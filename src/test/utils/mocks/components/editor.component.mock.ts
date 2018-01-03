@@ -27,6 +27,7 @@ export class MockEditorComponent implements ControlValueAccessor {
     }
 
     public writeValue(value) {
+        console.log("WRite dem value", value);
         this._value = value || "";
     }
 

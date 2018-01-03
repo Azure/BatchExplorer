@@ -1,8 +1,8 @@
 // tslint:disable:no-var-requires
 
-const python = require("raw-loader!./python.py");
-const csharp = require("raw-loader!./csharp.cs");
-const nodejs = require("raw-loader!./node.js");
+const python = require("raw-loader!./python.py.template");
+const csharp = require("raw-loader!./csharp.cs.template");
+const nodejs = require("raw-loader!./node.js.template");
 
 export const sampleTemplates = {
     python,
