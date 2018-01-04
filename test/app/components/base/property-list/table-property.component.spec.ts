@@ -7,6 +7,7 @@ import { ButtonComponent } from "app/components/base/buttons";
 import {
     TablePropertyCellComponent, TablePropertyComponent, TablePropertyHeaderComponent, TablePropertyRowComponent,
 } from "app/components/base/property-list";
+import { AuthorizationHttpService } from "app/services";
 import { click } from "test/utils/helpers";
 
 // tslint:disable:trackBy-function
@@ -45,6 +46,9 @@ describe("TablePropertyComponent", () => {
                 TablePropertyHeaderComponent,
                 TablePropertyRowComponent,
                 ButtonComponent,
+            ],
+            providers: [
+                { provide: AuthorizationHttpService, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
