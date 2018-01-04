@@ -2,7 +2,6 @@ import * as Url from "url";
 import { URLSearchParams } from "url";
 import { Constants } from "../constants";
 
-console.log("URL", process.version, require("url").URLSearchParams, URLSearchParams, Object.keys(Url));
 export enum BatchLabsLinkAction {
     route = "route",
 }
@@ -54,7 +53,6 @@ export class BatchLabsLink implements BatchLabsLinkAttributes {
     }
 
     public toString(): string {
-        Url.URLSearchParams;
         const queryParams = new Url.URLSearchParams(this.queryParams);
         if (this.accountId) {
             queryParams.append("accountId", this.accountId);

@@ -29,19 +29,13 @@ export class NavigatorService {
      * Handle opening a link with the ms-batchlabs:// protocol
      * @param value Full string starting with ms-batchlabs://
      */
-    public openBatchLabsLink(link: string) {
-        const data = new BatchLabsLink(link);
-        this.perform(data.action, data.path, data.queryParams);
-
-    }
-
-    public perform(action: string, path: string, params: URLSearchParams) {
-        switch (action) {
+    public openBatchLabsLink(link: string | BatchLabsLink) {
+        const labsLink = new BatchLabsLink(link);
+        switch (labsLink.action) {
             case BatchLabsLinkAction.route:
-                const newParams = new URLSearchParams(params);
-                newParams.delete("accountId");
-                this.goto(`${path}?${newParams.toString()}`, {
-                    accountId: params.get("accountId"),
+                const params = new URLSearchParams(labsLink.queryParams);
+                this.goto(`${labsLink.path}?${params.toString()}`, {
+                    accountId: labsLink.accountId,
                 });
         }
     }
