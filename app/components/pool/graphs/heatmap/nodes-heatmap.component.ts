@@ -57,7 +57,7 @@ const stateTree: StateTree = [
 ];
 
 const maxNodes = 1000;
-const maxTileSize = 300;
+const maxTileSize = 100;
 
 @Component({
     selector: "bl-nodes-heatmap",
@@ -68,33 +68,24 @@ const maxTileSize = 300;
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestroy {
-    @Input()
-    public pool: Pool;
+    @Input() public pool: Pool;
 
-    @Input()
-    public showLegend: boolean = true;
+    @Input() public showLegend: boolean = true;
 
-    @Input()
-    public showRunningTasks: boolean = true;
+    @Input() public showRunningTasks: boolean = true;
 
-    @Input()
-    @HostBinding("class.interactive")
+    @Input() @HostBinding("class.interactive")
     public interactive: boolean = true;
 
-    @Input()
-    public limitNode: number = null;
+    @Input() public limitNode: number = null;
 
-    @ViewChild("heatmap")
-    public heatmapEl: ElementRef;
+    @Input() public nodes: List<Node>;
 
-    @ViewChild("svg")
-    public svgEl: ElementRef;
+    @Input() public jobs: List<Job> = List([]);
 
-    @Input()
-    public nodes: List<Node>;
+    @ViewChild("heatmap") public heatmapEl: ElementRef;
 
-    @Input()
-    public jobs: List<Job> = List([]);
+    @ViewChild("svg") public svgEl: ElementRef;
 
     public colors: HeatmapColor;
     public selectedNodeId = new BehaviorSubject<string>(null);
