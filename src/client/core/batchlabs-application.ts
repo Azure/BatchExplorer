@@ -3,7 +3,9 @@ import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import * as os from "os";
 import * as Url from "url";
 
-import { Constants } from "../client-constants";
+import { MainWindowManager } from "client/core/main-window-manager";
+import { Constants } from "common";
+import { Constants as ClientConstants } from "../client-constants";
 import { logger } from "../logger";
 import { MainWindow } from "../main-window";
 import { PythonRpcServerProcess } from "../python-process";
@@ -12,14 +14,14 @@ import { SplashScreen } from "../splash-screen";
 import { AADService, AuthenticationWindow } from "./aad";
 
 const osName = `${os.platform()}-${os.arch()}/${os.release()}`;
-const isDev = Constants.isDev ? "-dev" : "";
-const userAgent = `(${osName}) BatchLabs/${Constants.version}${isDev}`;
+const isDev = ClientConstants.isDev ? "-dev" : "";
+const userAgent = `(${osName}) BatchLabs/${ClientConstants.version}${isDev}`;
 
 export class BatchLabsApplication {
     public splashScreen = new SplashScreen(this);
     public authenticationWindow = new AuthenticationWindow(this);
     public recoverWindow = new RecoverWindow(this);
-    public windows = [new MainWindow(this)];
+    public windows = new MainWindowManager(this);
     public pythonServer = new PythonRpcServerProcess();
     public aadService = new AADService(this);
 
@@ -52,7 +54,6 @@ export class BatchLabsApplication {
         this.splashScreen.create();
         this.splashScreen.updateMessage("Loading app");
 
-        this.windows.forEach(x => x.create());
         this.aadService.login();
         this._processArguments(process.argv);
     }
@@ -60,7 +61,7 @@ export class BatchLabsApplication {
     public setupProcessEvents() {
         ipcMain.on("reload", () => {
             // Destroy window and error window if applicable
-            this.windows.forEach(x => x.destroy());
+            this.windows.closeAll();
             this.recoverWindow.destroy();
             this.splashScreen.destroy();
             this.authenticationWindow.destroy();
@@ -81,7 +82,7 @@ export class BatchLabsApplication {
         app.on("activate", () => {
             // On macOS it's common to re-create a window in the app when the
             // dock icon is clicked and there are no other windows open.
-            if (this.windows.length === 0) {
+            if (this.windows.size === 0) {
                 this.start();
             }
         });
@@ -99,21 +100,23 @@ export class BatchLabsApplication {
 
     /**
      * Open a new link in the ms-batchlabs format
+     * If the link provide a session id which already exists it will change the window with that session id.
+     * @param link ms-batchlabs://...
+     */
+    public openLink(link: string) {
+        return this.windows.openLink(link);
+    }
+
+    /**
+     * Open a new link in the ms-batchlabs format
      * @param link ms-batchlabs://...
      */
     public openNewWindow(link: string): MainWindow {
-        const window = new MainWindow(this);
-        window.create();
-        window.send(Constants.rendererEvents.batchlabsLink, link);
-        this.windows.push(window);
-        window.appReady.then(() => {
-            window.show();
-        });
-        return window;
+        return this.windows.openNewWindow(link);
     }
 
     public debugCrash() {
-        this.windows.forEach(x => x.debugCrash());
+        this.windows.debugCrash();
     }
 
     public quit() {
@@ -126,7 +129,7 @@ export class BatchLabsApplication {
     }
 
     private _registerProtocol() {
-        if (Constants.isDev) {
+        if (ClientConstants.isDev) {
             return;
         }
 
@@ -138,7 +141,7 @@ export class BatchLabsApplication {
     }
 
     private _processArguments(argv: string[]) {
-        if (Constants.isDev || argv.length < 2) {
+        if (ClientConstants.isDev || argv.length < 2) {
             return;
         }
         const arg = argv[1];

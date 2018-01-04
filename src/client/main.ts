@@ -30,6 +30,14 @@ function startApplication() {
         callback();
     });
 
+    const shouldQuit = app.makeSingleInstance((commandLine) => {
+        logger.info("Try to open labs again", commandLine);
+    });
+
+    if (shouldQuit) {
+        app.quit();
+    }
+
     // Uncomment to view why windows don't show up.
     // batchLabsApp.debugCrash();
     batchLabsApp.init().then(() => {

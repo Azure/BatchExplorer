@@ -190,3 +190,12 @@ export const AAD = {
     refreshMargin: 1000 * 120,
     defaultResource: ResourceUrl.arm,
 };
+
+export const customProtocolName = "ms-batchlabs";
+
+/**
+ * Name of events that needs to be passed between rendered and main
+ */
+export const rendererEvents = {
+    batchlabsLink: "batchlabs-link",
+};
