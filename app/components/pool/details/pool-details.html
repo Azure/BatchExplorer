@@ -30,7 +30,12 @@
         <mat-card class="details">
             <bl-tab-group>
                 <bl-tab key="graphs">
-                    <bl-tab-label>Graphs</bl-tab-label>
+                    <bl-tab-label>
+                        Graphs
+                        <bl-button class="open-pool-graphs-new-window" matTooltip="Open in a new window" [action]="openInNewWindow" type="plain">
+                            <i class="fa fa-window-restore"></i>
+                        </bl-button>
+                    </bl-tab-label>
                     <bl-pool-graphs [pool]="pool"></bl-pool-graphs>
                 </bl-tab>
                 <bl-tab key="configuration">
