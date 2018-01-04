@@ -32,6 +32,13 @@ export class ArmHttpService {
             .share();
     }
 
+    public recursiveRequest(uri: string, options?: RequestOptionsArgs): Observable<Response> {
+        options = mergeOptions(options, RequestMethod.Get);
+        return this.request(uri, options).expand(obs => {
+            return obs.json().nextLink ? this.request(obs.json().nextLink, options) : Observable.empty();
+        });
+    }
+
     public get(uri: string, options?: RequestOptionsArgs) {
         return this.request(uri, mergeOptions(options, RequestMethod.Get));
     }
@@ -50,5 +57,9 @@ export class ArmHttpService {
 
     public delete(uri: string, options?: RequestOptionsArgs) {
         return this.request(uri, mergeOptions(options, RequestMethod.Delete));
+    }
+
+    public getPermissionUrl(resourceId: string) {
+        return `${resourceId}/providers/Microsoft.Authorization/permissions`;
     }
 }

@@ -49,6 +49,7 @@ export * from "./node-user";
 export * from "./node-agent-sku";
 export * from "./node-agent-sku-map";
 export * from "./node-recent-task";
+export * from "./permission";
 export * from "./pool";
 export * from "./pool-endpoint-configuration";
 export * from "./rate-card";
