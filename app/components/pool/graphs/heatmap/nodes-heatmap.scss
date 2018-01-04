@@ -15,9 +15,22 @@ bl-nodes-heatmap {
 
     .heatmap-graph {
         display: flex;
+        flex-direction: row-reverse;
         height: 100%;
         width: 100%;
         position: relative;
+
+        > .legend {
+            border-left: 1px solid $border-color;
+        }
+
+        > .heatmap-container {
+            width: calc(100% - #{$legend-width});
+            flex: 1 0 calc(100% - 160px);
+            height: 100%;
+            max-height: 100%;
+            padding: 2px;
+        }
 
         g.node-group {
             cursor: pointer;
@@ -39,13 +52,6 @@ bl-nodes-heatmap {
                     fill-opacity: 0.7;
                 }
             }
-        }
-
-        .heatmap-container {
-            width: calc(100% - #{$legend-width});
-            flex: 1 0 calc(100% - 160px);
-            height: 100%;
-            max-height: 100%;
         }
     }
 
