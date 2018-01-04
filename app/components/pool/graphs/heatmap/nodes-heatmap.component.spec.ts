@@ -21,8 +21,8 @@ import { NodesHeatmapComponent, NodesHeatmapLegendComponent } from ".";
     `,
 })
 export class HeatmapMockComponent {
-    public width = "700px";
-    public height = "500px";
+    public width = "400px";
+    public height = "250px";
     public nodes: List<Node> = List([]);
     public pool = new Pool({ id: "pool-id", maxTasksPerNode: 1 });
     public interactive = true;
@@ -82,8 +82,8 @@ describe("NodesHeatmapComponent", () => {
     it("Should have created the svg in the right dimensions", () => {
         expect(svg).not.toBeNull();
         const legendWidth = 160;
-        expect(svg.attr("width")).toBe((700 - legendWidth).toString());
-        expect(svg.attr("height")).toBe("500");
+        expect(svg.attr("width")).toBe((400 - legendWidth).toString());
+        expect(svg.attr("height")).toBe("250");
     });
 
     it("should reszize the svg when container width change", () => {
@@ -94,7 +94,7 @@ describe("NodesHeatmapComponent", () => {
         // Force notify because the element-reszize-detector is not instant
         heatmap.containerSizeChanged();
         expect(svg.attr("width")).toBe((800 - legendWidth).toString());
-        expect(svg.attr("height")).toBe("500");
+        expect(svg.attr("height")).toBe("250");
     });
 
     it("Should compute optimal tile dimensions for 1 tile(Max tile size)", () => {
@@ -104,7 +104,7 @@ describe("NodesHeatmapComponent", () => {
         fixture.detectChanges();
         expect(heatmap.dimensions.columns).toBe(1);
         expect(heatmap.dimensions.rows).toBe(1);
-        expect(heatmap.dimensions.tileSize).toBe(300);
+        expect(heatmap.dimensions.tileSize).toBe(100);
     });
 
     it("Should compute optimal tile dimensions for 4 tile", () => {
@@ -112,7 +112,7 @@ describe("NodesHeatmapComponent", () => {
         fixture.detectChanges();
         expect(heatmap.dimensions.columns).toBe(2);
         expect(heatmap.dimensions.rows).toBe(2);
-        expect(heatmap.dimensions.tileSize).toBe(250);
+        expect(heatmap.dimensions.tileSize).toBe(100);
     });
 
     it("should create a tile for each node", () => {
@@ -120,7 +120,7 @@ describe("NodesHeatmapComponent", () => {
         fixture.detectChanges();
         const tiles = svg.selectAll("g.node-group");
         expect(tiles.size()).toBe(7);
-        const size = (heatmap.dimensions.tileSize - 6).toString();
+        const size = (heatmap.dimensions.tileSize - Math.ceil(heatmap.dimensions.tileSize / 20)).toString();
         tiles.each((d, i, groups) => {
             const group = d3.select(groups[i]);
             expect(group.attr("width")).toBe(size);
