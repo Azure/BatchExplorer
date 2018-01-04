@@ -1,5 +1,5 @@
 
-import { BatchLabsApplication, BlIpcMain } from "client/core";
+import { BatchLabsApplication } from "client/core";
 import { localStorage } from "client/core/local-storage";
 import { logger } from "client/logger";
 import { Constants } from "common";
