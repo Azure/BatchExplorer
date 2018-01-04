@@ -56,7 +56,7 @@ const stateTree: StateTree = [
     },
 ];
 
-const maxNodes = 1000;
+const maxNodes = 2500;
 const maxTileSize = 100;
 
 @Component({
@@ -203,7 +203,8 @@ export class NodesHeatmapComponent implements AfterViewInit, OnChanges, OnDestro
     }
 
     private _updateSvg(groups: any) {
-        const z = Math.max(this.dimensions.tileSize - 6, 0);
+        const spaceInBetweenNode = Math.ceil(this.dimensions.tileSize / 20);
+        const z = Math.max(this.dimensions.tileSize - spaceInBetweenNode, 0);
         const nodeEnter = groups.enter().append("g")
             .attr("class", "node-group")
             .on("click", (tile) => {
