@@ -4,8 +4,7 @@ import {
 } from "@angular/core";
 import { Observable, Subscription } from "rxjs";
 
-import { BatchAccountPermission, RoleDefinitionPermission } from "app/models";
-import { AccountService, ArmHttpService } from "app/services";
+import { AuthorizationHttpService } from "app/services";
 import { log } from "app/utils";
 import "./button.scss";
 import { ClickableComponent } from "./clickable";
@@ -59,11 +58,9 @@ export class ButtonComponent extends ClickableComponent implements OnChanges, On
 
     public get status() { return this._status; }
     private _status = SubmitStatus.Idle;
-    private _accountSub: Subscription;
-    private _permissionSub: Subscription;
+    private _sub: Subscription;
 
-    constructor(private accountService: AccountService,
-                private armService: ArmHttpService,
+    constructor(private authHttpService: AuthorizationHttpService,
                 private changeDetectionRef: ChangeDetectorRef) {
         super();
     }
@@ -81,22 +78,20 @@ export class ButtonComponent extends ClickableComponent implements OnChanges, On
             this.tabindex = this.disabled ? "-1" : "0";
         }
         if ("enforcePermission" in changes) {
-            this._destorySubscriptions();
-            this._accountSub = this.accountService.currentAccount.subscribe(account => {
-                const resourceId = account && account.id;
-                if (resourceId) {
-                    const url = this.armService.getPermissionUrl(resourceId);
-                    this._permissionSub = this.armService.recursiveRequest(url).subscribe((result) => {
-                        const permissions = result.json().value;
-                        this._checkButtonPermissions(permissions);
-                    });
+            this._sub = this.authHttpService.requestPermissions().subscribe(response => {
+                if (this.authHttpService.isResourceReadOnly(response.json().value)) {
+                    this.disabled = true;
+                    this.tabindex = "-1";
+                    this.title += " (You don't have permission to perform this action)";
                 }
             });
         }
     }
 
     public ngOnDestroy(): void {
-        this._destorySubscriptions();
+        if (this._sub) {
+            this._sub.unsubscribe();
+        }
     }
 
     public done() {
@@ -129,32 +124,6 @@ export class ButtonComponent extends ClickableComponent implements OnChanges, On
                 this.done();
             },
         });
-    }
-
-    private _checkButtonPermissions(permissions: RoleDefinitionPermission[]) {
-        for (let permission of permissions) {
-            if (permission.actions) {
-                // If user only has 'Reader' role without any 'Write' role, button should be disabled
-                // Note that user could be assigned to multiple roles at same time (Reader, Owner, Contributor),
-                // in this case, permission should be checked from highest to lowest
-                if (!permission.actions.includes(BatchAccountPermission.ReadWrite)
-                    && permission.actions.includes(BatchAccountPermission.Read)) {
-                    this.disabled = true;
-                    this.tabindex = "-1";
-                    this.title += " (You don't have permission to perform this action)";
-                }
-            }
-        }
-    }
-
-    private _destorySubscriptions() {
-        if (this._accountSub) {
-            this._accountSub.unsubscribe();
-        }
-
-        if (this._permissionSub) {
-            this._permissionSub.unsubscribe();
-        }
     }
 }
 
