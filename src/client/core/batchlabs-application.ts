@@ -1,10 +1,9 @@
-import { app, ipcMain, session } from "electron";
+import { app, dialog, ipcMain, session } from "electron";
 import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import * as os from "os";
-import * as Url from "url";
 
 import { MainWindowManager } from "client/core/main-window-manager";
-import { Constants } from "common";
+import { BatchLabsLink, Constants } from "common";
 import { Constants as ClientConstants } from "../client-constants";
 import { logger } from "../logger";
 import { MainWindow } from "../main-window";
@@ -103,7 +102,7 @@ export class BatchLabsApplication {
      * If the link provide a session id which already exists it will change the window with that session id.
      * @param link ms-batchlabs://...
      */
-    public openLink(link: string) {
+    public openLink(link: string | BatchLabsLink) {
         return this.windows.openLink(link);
     }
 
@@ -111,7 +110,7 @@ export class BatchLabsApplication {
      * Open a new link in the ms-batchlabs format
      * @param link ms-batchlabs://...
      */
-    public openNewWindow(link: string): MainWindow {
+    public openNewWindow(link?: string | BatchLabsLink): MainWindow {
         return this.windows.openNewWindow(link);
     }
 
@@ -141,12 +140,29 @@ export class BatchLabsApplication {
     }
 
     private _processArguments(argv: string[]) {
-        if (ClientConstants.isDev || argv.length < 2) {
-            return;
-        }
+        argv = ["", "ms-batchlabs://route/pools/a"];
+        // if (ClientConstants.isDev || argv.length < 2) {
+        //     this.openNewWindow();
+        //     return;
+        // }
+
         const arg = argv[1];
-        if (Url.parse(arg).protocol === Constants.customProtocolName + ":") {
-            this.windows[0].send(Constants.rendererEvents.batchlabsLink, arg);
+        console.log("OTatao21", arg);
+        try {
+            const link = new BatchLabsLink(arg);
+            this.openLink(link);
+        } catch (e) {
+            console.log("OTatao", e);
+            dialog.showMessageBox({
+                type: "error",
+                title: "Cannot open given link in BatchLabs",
+                message: e.message,
+            }, () => {
+                // If there is no window open we quit the app
+                if (this.windows.size === 0) {
+                    this.quit();
+                }
+            });
         }
     }
 }

@@ -1,6 +1,8 @@
-import { Constants } from "common";
 import * as Url from "url";
+import { URLSearchParams } from "url";
+import { Constants } from "../constants";
 
+console.log("URL", process.version, require("url").URLSearchParams, URLSearchParams, Object.keys(Url));
 export enum BatchLabsLinkAction {
     route = "route",
 }
@@ -11,6 +13,12 @@ export interface BatchLabsLinkAttributes {
     queryParams: URLSearchParams;
     session: string;
     accountId: string;
+}
+
+export class BatchLabsInvalidLinkError extends Error {
+    constructor(public link: string, message: string) {
+        super(message);
+    }
 }
 
 /**
@@ -46,7 +54,8 @@ export class BatchLabsLink implements BatchLabsLinkAttributes {
     }
 
     public toString(): string {
-        const queryParams = new URLSearchParams(this.queryParams);
+        Url.URLSearchParams;
+        const queryParams = new Url.URLSearchParams(this.queryParams);
         if (this.accountId) {
             queryParams.append("accountId", this.accountId);
         }
@@ -59,11 +68,10 @@ export class BatchLabsLink implements BatchLabsLinkAttributes {
     private _parseLink(link: string) {
         const url = Url.parse(link);
         if (url.protocol !== Constants.customProtocolName + ":") {
-            // TODO-TIM check this
-            // log.error(`Cannot open this link in batchlabs, unknown protocol '${url.protocol}'`, { link });
-            return null;
+            throw new BatchLabsInvalidLinkError(link,
+                `Link '${link}' doesn't use right protocol ${Constants.customProtocolName}`);
         }
-        const queryParams = new URLSearchParams(url.query as string);
+        const queryParams = new Url.URLSearchParams(url.query as string);
         queryParams.delete("accountId");
         queryParams.delete("session");
         this.accountId = queryParams.get("accountId");

@@ -19,7 +19,7 @@ export class MainWindowManager {
      * If the link provide a session id which already exists it will change the window with that session id.
      * @param link ms-batchlabs://...
      */
-    public openLink(link: string): MainWindow {
+    public openLink(link: string | BatchLabsLink | BatchLabsLinkAttributes): MainWindow {
         const labsLink = new BatchLabsLink(link);
         const windowId = labsLink.session || SecureUtils.uuid();
         let window: MainWindow;
@@ -42,7 +42,7 @@ export class MainWindowManager {
      * Open a new link in the ms-batchlabs format
      * @param link ms-batchlabs://...
      */
-    public openNewWindow(link: string | BatchLabsLink | BatchLabsLinkAttributes): MainWindow {
+    public openNewWindow(link?: string | BatchLabsLink | BatchLabsLinkAttributes): MainWindow {
         const window = new MainWindow(this.batchLabsApp);
         window.create();
         const windowId = SecureUtils.uuid();
@@ -55,6 +55,7 @@ export class MainWindowManager {
     }
 
     public goTo(link: string | BatchLabsLink | BatchLabsLinkAttributes, window: MainWindow) {
+        if (!link) { return; }
         const labsLink = new BatchLabsLink(link);
         window.send(Constants.rendererEvents.batchlabsLink, labsLink.toString());
     }

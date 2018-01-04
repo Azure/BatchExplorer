@@ -199,3 +199,5 @@ export const customProtocolName = "ms-batchlabs";
 export const rendererEvents = {
     batchlabsLink: "batchlabs-link",
 };
+
+export const isRenderer = (process && process.type === "renderer");

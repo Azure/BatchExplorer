@@ -2,7 +2,6 @@ import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { ipcRenderer } from "electron";
 
-
 import { Constants } from "app/utils";
 import { BatchLabsLink, BatchLabsLinkAction } from "common";
 import { AccountService } from "./account.service";
@@ -21,7 +20,7 @@ export class NavigatorService {
     }
 
     public init() {
-        ipcRenderer.on(Constants.Client.rendererEvents.batchlabsLink, (event, link) => {
+        ipcRenderer.on(Constants.rendererEvents.batchlabsLink, (event, link) => {
             this.openBatchLabsLink(link);
         });
     }
