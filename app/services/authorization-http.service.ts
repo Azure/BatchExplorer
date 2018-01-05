@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { RequestOptionsArgs, Response } from "@angular/http";
+import { RequestOptionsArgs } from "@angular/http";
 import { Observable } from "rxjs";
 
 import { AccountService } from "./account.service";
@@ -36,7 +36,7 @@ export class AuthorizationHttpService {
                 if (resourceId) {
                     const url = this._getPermissionUrl(resourceId);
                     return this._recursiveRequest(url).flatMap(permissions => {
-                        const permission = this._checkResoucePermissions(permissions.json().value);
+                        const permission = this._checkResoucePermissions(permissions);
                         return Observable.of(permission);
                     });
                 }
@@ -56,16 +56,21 @@ export class AuthorizationHttpService {
         // If user only has 'Reader' role without any 'Write' roles, action should be disabled
         // Note that user could be assigned to multiple roles at same time (Reader, Owner, Contributor),
         // in this case, permission should be checked from highest to lowest
-        if (!actions.includes(BatchAccountPermission.ReadWrite) && actions.includes(BatchAccountPermission.Read)) {
+        if (actions.includes(BatchAccountPermission.ReadWrite)) {
+            return "write";
+        }
+        if (actions.includes(BatchAccountPermission.Read)) {
             return "read";
         }
-        return "write";
+        return "none";
     }
 
-    private _recursiveRequest(uri: string, options?: RequestOptionsArgs): Observable<Response> {
+    private _recursiveRequest(uri: string, options?: RequestOptionsArgs): Observable<any> {
         return this.armService.get(uri, options).expand(obs => {
             return obs.json().nextLink ? this.armService.get(obs.json().nextLink, options) : Observable.empty();
-        });
+        }).reduce((permission, response) => {
+            return [...permission, ...response.json().value];
+        }, []);
     }
 
     private _getPermissionUrl(resourceId: string) {
