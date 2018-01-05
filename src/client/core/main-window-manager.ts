@@ -1,4 +1,3 @@
-import { logger } from "client/logger";
 import { MainWindow } from "client/main-window";
 import { BatchLabsLink, BatchLabsLinkAttributes, Constants, SecureUtils } from "common";
 import { BatchLabsApplication } from "./batchlabs-application";
