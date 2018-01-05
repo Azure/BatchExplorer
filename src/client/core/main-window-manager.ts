@@ -1,7 +1,9 @@
+import { logger } from "client/logger";
 import { MainWindow } from "client/main-window";
 import { BatchLabsLink, BatchLabsLinkAttributes, Constants, SecureUtils } from "common";
 import { BatchLabsApplication } from "./batchlabs-application";
-
+logger.debug("Open new link...");
+console.log("Banana...");
 /**
  * Manage the current window
  */
@@ -27,13 +29,12 @@ export class MainWindowManager {
             window = this.windows.get(windowId);
             window.show();
         } else {
-            window = new MainWindow(this.batchLabsApp);
-            window.create();
-            this.windows.set(windowId, window);
-            window.appReady.then(() => {
-                window.show();
-            });
+            window = this._createNewWindow(windowId);
         }
+        window.once("closed", () => {
+            logger.debug("Destroy window...");
+            this.windows.delete(windowId);
+        });
         this.goTo(link, window);
         return window;
     }
@@ -43,14 +44,10 @@ export class MainWindowManager {
      * @param link ms-batchlabs://...
      */
     public openNewWindow(link?: string | BatchLabsLink | BatchLabsLinkAttributes): MainWindow {
-        const window = new MainWindow(this.batchLabsApp);
-        window.create();
-        const windowId = SecureUtils.uuid();
-        this.windows.set(windowId, window);
-        window.appReady.then(() => {
-            window.show();
-        });
+        const window = this._createNewWindow();
+
         this.goTo(link, window);
+
         return window;
     }
 
@@ -90,5 +87,23 @@ export class MainWindowManager {
 
     public [Symbol.iterator]() {
         return this.windows[Symbol.iterator]();
+    }
+
+    private _createNewWindow(windowId?: string) {
+        windowId = windowId || SecureUtils.uuid();
+        const window = new MainWindow(this.batchLabsApp);
+        window.create();
+        this.windows.set(windowId, window);
+
+        window.appReady.then(() => {
+            window.show();
+        });
+
+        window.once("closed", () => {
+            logger.debug("Destroy window...");
+            this.windows.delete(windowId);
+        });
+
+        return window;
     }
 }
