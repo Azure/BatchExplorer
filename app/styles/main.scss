@@ -1,6 +1,9 @@
+
 // Themes
-@import "./variables";
 @import "./mixins";
+@import "./themes/classic";
+
+@import "./variables";
 @import "./common/type";
 
 // Base styles

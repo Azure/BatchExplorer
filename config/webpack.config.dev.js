@@ -32,11 +32,28 @@ module.exports = merge(config, {
         rules: [
             {
                 test: /\.scss$/,
-                loader: "style-loader!css-loader!sass-loader",
+                loader: [
+                    {
+                        loader: "style-loader",
+                        options: {
+                            singleton: true,
+                        },
+                    },
+                    "css-loader",
+                    "sass-loader",
+                ],
             },
             {
                 test: /\.css$/,
-                loader: "style-loader!css-loader",
+                loader: [
+                    {
+                        loader: "style-loader",
+                        options: {
+                            singleton: true,
+                        },
+                    },
+                    "css-loader",
+                ],
             }
         ],
     },

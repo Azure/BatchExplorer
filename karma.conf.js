@@ -1,5 +1,7 @@
 const webpackConfig = require("./config/webpack.config.test");
 
+// Only enable coverage if env is defined(So we don't enable it in watch mode as it duplicate logs)
+const coverageReporters = process.env.COVERAGE ? ["coverage", "remap-coverage"] : [];
 // Karma config for testing the code running the browser environemnt.
 // For the client testing use the mocha command line.
 module.exports = function(config) {
@@ -40,7 +42,7 @@ module.exports = function(config) {
         },
 
         // Coverage reporter generates the coverage
-        reporters: ["mocha", "coverage", "remap-coverage"],
+        reporters: ["mocha", ...coverageReporters],
 
         preprocessors: {
             "config/karma.shim.js": ["coverage", "webpack", "sourcemap", "electron"],
