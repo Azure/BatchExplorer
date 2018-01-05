@@ -1,6 +1,4 @@
-// tslint:disable:variable-name
+export { Constants } from "./constants";
 export * from "./utils";
 export * from "./deferred";
-
-import * as constants from "./constants";
-export const Constants = constants;
+export * from "./batchlabs-link";
