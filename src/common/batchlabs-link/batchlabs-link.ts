@@ -1,5 +1,4 @@
 import * as Url from "url";
-import { URLSearchParams } from "url";
 import { Constants } from "../constants";
 
 export enum BatchLabsLinkAction {
@@ -58,9 +57,10 @@ export class BatchLabsLink implements BatchLabsLinkAttributes {
             queryParams.append("accountId", this.accountId);
         }
         if (this.session) {
-            queryParams.append("session", this.accountId);
+            queryParams.append("session", this.session);
         }
-        return `ms-batchlabs://${this.action}/${this.path}?${this.queryParams}`;
+        const path = [this.action, this.path].filter(x => Boolean(x)).join("");
+        return `ms-batchlabs://${path}?${queryParams}`;
     }
 
     private _parseLink(link: string) {
@@ -70,13 +70,14 @@ export class BatchLabsLink implements BatchLabsLinkAttributes {
                 `Link '${link}' doesn't use right protocol ${Constants.customProtocolName}`);
         }
         const queryParams = new Url.URLSearchParams(url.query as string);
-        queryParams.delete("accountId");
-        queryParams.delete("session");
+
         this.accountId = queryParams.get("accountId");
         this.session = queryParams.get("session");
         this.action = url.host as BatchLabsLinkAction;
         this.path = url.pathname;
-        this.queryParams = queryParams;
 
+        queryParams.delete("accountId");
+        queryParams.delete("session");
+        this.queryParams = queryParams;
     }
 }

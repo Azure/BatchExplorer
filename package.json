@@ -17,7 +17,7 @@
     "clean": "rimraf build/* dll/* python/dist/* python/build/*",
     "karma": "node --max_old_space_size=4096 node_modules/karma/bin/karma",
     "test": "npm run -s test-client && npm run -s test-app",
-    "test-app": "npm run -s karma -- start",
+    "test-app": "cross-env COVERAGE=1 npm run -s karma -- start",
     "test-app:mem": "cross-env DEBUG_MEM=1 npm run -s test-app",
     "test-app-watch": "npm run -s karma -- start --auto-watch --no-single-run",
     "test-app-watch:time": "cross-env DEBUG_TIME=1 npm run -s test-app-watch",
