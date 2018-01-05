@@ -3,7 +3,7 @@ import {
     OnChanges, OnDestroy, Output, SimpleChanges,
 } from "@angular/core";
 
-import { AuthorizationHttpService } from "app/services";
+import { AuthorizationHttpService, Permission } from "app/services";
 import { Subscription } from "rxjs";
 import "./clickable.scss";
 
@@ -28,7 +28,7 @@ export class ClickableComponent implements OnChanges, OnDestroy {
         if (changes.permission) {
             this._clearSubscription();
             if (changes.permission.currentValue === "write") {
-                this._sub = this.authHttpService.getResourcePermission().subscribe(permission => {
+                this._sub = this.authHttpService.getResourcePermission().subscribe((permission: Permission) => {
                     // when user only got 'read' permission
                     if (permission === "read") {
                         this.disabled = true;
