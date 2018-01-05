@@ -54,7 +54,7 @@ export class BatchLabsApplication {
         this.splashScreen.updateMessage("Loading app");
 
         this.aadService.login();
-        this._processArguments(process.argv);
+        this.openFromArguments(process.argv);
     }
 
     public setupProcessEvents() {
@@ -114,6 +114,30 @@ export class BatchLabsApplication {
         return this.windows.openNewWindow(link);
     }
 
+    public openFromArguments(argv: string[]) {
+        if (ClientConstants.isDev || argv.length < 2) {
+            this.openNewWindow();
+            return;
+        }
+
+        const arg = argv[1];
+        try {
+            const link = new BatchLabsLink(arg);
+            this.openLink(link);
+        } catch (e) {
+            dialog.showMessageBox({
+                type: "error",
+                title: "Cannot open given link in BatchLabs",
+                message: e.message,
+            }, () => {
+                // If there is no window open we quit the app
+                if (this.windows.size === 0) {
+                    this.quit();
+                }
+            });
+        }
+    }
+
     public debugCrash() {
         this.windows.debugCrash();
     }
@@ -139,30 +163,4 @@ export class BatchLabsApplication {
         }
     }
 
-    private _processArguments(argv: string[]) {
-        argv = ["", "ms-batchlabs://route/pools/a"];
-        // if (ClientConstants.isDev || argv.length < 2) {
-        //     this.openNewWindow();
-        //     return;
-        // }
-
-        const arg = argv[1];
-        console.log("OTatao21", arg);
-        try {
-            const link = new BatchLabsLink(arg);
-            this.openLink(link);
-        } catch (e) {
-            console.log("OTatao", e);
-            dialog.showMessageBox({
-                type: "error",
-                title: "Cannot open given link in BatchLabs",
-                message: e.message,
-            }, () => {
-                // If there is no window open we quit the app
-                if (this.windows.size === 0) {
-                    this.quit();
-                }
-            });
-        }
-    }
 }

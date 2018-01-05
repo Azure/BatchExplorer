@@ -32,6 +32,7 @@ function startApplication() {
 
     const shouldQuit = app.makeSingleInstance((commandLine) => {
         logger.info("Try to open labs again", commandLine);
+        batchLabsApp.openFromArguments(commandLine);
     });
 
     if (shouldQuit) {
