@@ -78,6 +78,7 @@ export class ButtonComponent extends ClickableComponent implements OnChanges {
         if ("disabled" in changes) {
             this.tabindex = this.disabled ? "-1" : "0";
         }
+        this.onPermissionChange(changes);
     }
 
     public done() {

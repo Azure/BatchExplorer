@@ -1,6 +1,6 @@
 import {
-    Component, EventEmitter, HostBinding, HostListener, Input,
-    OnChanges, OnDestroy, Output, SimpleChanges,
+    Component, EventEmitter, HostBinding, HostListener,
+    Input, OnDestroy, Output, SimpleChanges,
 } from "@angular/core";
 
 import { AuthorizationHttpService, Permission } from "app/services";
@@ -11,7 +11,7 @@ import "./clickable.scss";
     selector: "bl-clickable",
     template: `<ng-content></ng-content>`,
 })
-export class ClickableComponent implements OnChanges, OnDestroy {
+export class ClickableComponent implements OnDestroy {
     @Input() @HostBinding("class.disabled") public disabled = false;
 
     @Output() public do = new EventEmitter<Event>();
@@ -23,7 +23,7 @@ export class ClickableComponent implements OnChanges, OnDestroy {
     public constructor(private authHttpService: AuthorizationHttpService) {
     }
 
-    public ngOnChanges(changes: SimpleChanges): void {
+    public onPermissionChange(changes: SimpleChanges): void {
         this.subtitle = "";
         if (changes.permission) {
             this._clearSubscription();
