@@ -79,7 +79,8 @@ export class ButtonComponent extends ClickableComponent implements OnChanges, On
         }
         if ("enforcePermission" in changes) {
             this._sub = this.authHttpService.requestPermissions().subscribe(response => {
-                if (this.authHttpService.isResourceReadOnly(response.json().value)) {
+                const permissions = response.json().value;
+                if (this.authHttpService.isResourceReadOnly(permissions)) {
                     this.disabled = true;
                     this.tabindex = "-1";
                     this.title += " (You don't have permission to perform this action)";

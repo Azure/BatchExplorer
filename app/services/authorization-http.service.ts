@@ -49,16 +49,19 @@ export class AuthorizationHttpService {
     }
 
     public isResourceReadOnly(permissions: RoleDefinitionPermission[]) {
+        if (!permissions) {
+            return false;
+        }
+        let actions = [];
         for (let permission of permissions) {
             if (permission.actions) {
-                // If user only has 'Reader' role without any 'Write' roles, button should be disabled
-                // Note that user could be assigned to multiple roles at same time (Reader, Owner, Contributor),
-                // in this case, permission should be checked from highest to lowest
-                return (!permission.actions.includes(BatchAccountPermission.ReadWrite)
-                    && permission.actions.includes(BatchAccountPermission.Read));
+                actions = actions.concat(permission.actions);
             }
         }
-        return false;
+        // If user only has 'Reader' role without any 'Write' roles, button should be disabled
+        // Note that user could be assigned to multiple roles at same time (Reader, Owner, Contributor),
+        // in this case, permission should be checked from highest to lowest
+        return !actions.includes(BatchAccountPermission.ReadWrite) && actions.includes(BatchAccountPermission.Read);
     }
 
     public recursiveRequest(uri: string, options?: RequestOptionsArgs): Observable<Response> {
