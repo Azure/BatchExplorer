@@ -37,18 +37,25 @@ export class AuthorizationHttpService {
                 private armService: ArmHttpService) {
     }
 
-    public requestPermissions() {
+    /**
+     * Check current account resouce permission
+     * Return true if current user only has 'reader' permission, otherwise return false
+     */
+    public isResourceReadOnly() {
         return this.accountService.currentAccount.first()
             .flatMap(account => {
                 const resourceId = account && account.id;
                 if (resourceId) {
                     const url = this._getPermissionUrl(resourceId);
-                    return this.recursiveRequest(url);
+                    return this.recursiveRequest(url).flatMap(permissions => {
+                        const isReadOnly = this.checkResoucePermissions(permissions.json().value);
+                        return Observable.of(isReadOnly);
+                    });
                 }
             }).share();
     }
 
-    public isResourceReadOnly(permissions: RoleDefinitionPermission[]) {
+    public checkResoucePermissions(permissions: RoleDefinitionPermission[]) {
         if (!permissions) {
             return false;
         }
