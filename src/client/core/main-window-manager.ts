@@ -2,8 +2,7 @@ import { logger } from "client/logger";
 import { MainWindow } from "client/main-window";
 import { BatchLabsLink, BatchLabsLinkAttributes, Constants, SecureUtils } from "common";
 import { BatchLabsApplication } from "./batchlabs-application";
-logger.debug("Open new link...");
-console.log("Banana...");
+
 /**
  * Manage the current window
  */
@@ -31,10 +30,6 @@ export class MainWindowManager {
         } else {
             window = this._createNewWindow(windowId);
         }
-        window.once("closed", () => {
-            logger.debug("Destroy window...");
-            this.windows.delete(windowId);
-        });
         this.goTo(link, window);
         return window;
     }
@@ -100,7 +95,6 @@ export class MainWindowManager {
         });
 
         window.once("closed", () => {
-            logger.debug("Destroy window...");
             this.windows.delete(windowId);
         });
 
