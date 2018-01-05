@@ -1,7 +1,5 @@
 import { Injectable } from "@angular/core";
-import {
-    RequestMethod, RequestOptions, RequestOptionsArgs, Response,
-} from "@angular/http";
+import { RequestOptionsArgs, Response } from "@angular/http";
 import { Observable } from "rxjs";
 
 import { AccountService } from "./account.service";
@@ -17,15 +15,7 @@ export enum BatchAccountPermission {
     ReadWrite = "*",
 }
 
-function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?: any): RequestOptionsArgs {
-    const options = original || new RequestOptions();
-    options.method = method;
-    if (body) {
-        options.body = body;
-    }
-
-    return options;
-}
+export type Permission = "none" | "read" | "write";
 
 /**
  * Wrapper around the http service so call the azure ARM authorization api.
@@ -33,31 +23,29 @@ function mergeOptions(original: RequestOptionsArgs, method: RequestMethod, body?
  */
 @Injectable()
 export class AuthorizationHttpService {
-    constructor(private accountService: AccountService,
-                private armService: ArmHttpService) {
+    constructor(private accountService: AccountService, private armService: ArmHttpService) {
     }
 
     /**
      * Check current account resouce permission
-     * Return true if current user only has 'reader' permission, otherwise return false
      */
-    public isResourceReadOnly() {
+    public getResourcePermission(): Observable<Permission> {
         return this.accountService.currentAccount.first()
             .flatMap(account => {
                 const resourceId = account && account.id;
                 if (resourceId) {
                     const url = this._getPermissionUrl(resourceId);
-                    return this.recursiveRequest(url).flatMap(permissions => {
-                        const isReadOnly = this.checkResoucePermissions(permissions.json().value);
-                        return Observable.of(isReadOnly);
+                    return this._recursiveRequest(url).flatMap(permissions => {
+                        const permission = this._checkResoucePermissions(permissions.json().value);
+                        return Observable.of(permission);
                     });
                 }
             }).share();
     }
 
-    public checkResoucePermissions(permissions: RoleDefinitionPermission[]) {
-        if (!permissions) {
-            return false;
+    private _checkResoucePermissions(permissions: RoleDefinitionPermission[]): Permission {
+        if (!Array.isArray(permissions) || permissions.length === 0) {
+            return "none";
         }
         let actions = [];
         for (let permission of permissions) {
@@ -65,16 +53,18 @@ export class AuthorizationHttpService {
                 actions = actions.concat(permission.actions);
             }
         }
-        // If user only has 'Reader' role without any 'Write' roles, button should be disabled
+        // If user only has 'Reader' role without any 'Write' roles, action should be disabled
         // Note that user could be assigned to multiple roles at same time (Reader, Owner, Contributor),
         // in this case, permission should be checked from highest to lowest
-        return !actions.includes(BatchAccountPermission.ReadWrite) && actions.includes(BatchAccountPermission.Read);
+        if (!actions.includes(BatchAccountPermission.ReadWrite) && actions.includes(BatchAccountPermission.Read)) {
+            return "read";
+        }
+        return "write";
     }
 
-    public recursiveRequest(uri: string, options?: RequestOptionsArgs): Observable<Response> {
-        options = mergeOptions(options, RequestMethod.Get);
-        return this.armService.request(uri, options).expand(obs => {
-            return obs.json().nextLink ? this.armService.request(obs.json().nextLink, options) : Observable.empty();
+    private _recursiveRequest(uri: string, options?: RequestOptionsArgs): Observable<Response> {
+        return this.armService.get(uri, options).expand(obs => {
+            return obs.json().nextLink ? this.armService.get(obs.json().nextLink, options) : Observable.empty();
         });
     }
 

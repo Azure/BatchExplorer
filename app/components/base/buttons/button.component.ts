@@ -1,10 +1,10 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding,
-    Input, OnChanges, OnDestroy, SimpleChanges, animate, style, transition, trigger,
+    Input, OnChanges, SimpleChanges, animate, style, transition, trigger,
 } from "@angular/core";
-import { Observable, Subscription } from "rxjs";
+import { Observable } from "rxjs";
 
-import { AuthorizationHttpService } from "app/services";
+import { AuthorizationHttpService, Permission } from "app/services";
 import { log } from "app/utils";
 import "./button.scss";
 import { ClickableComponent } from "./clickable";
@@ -34,14 +34,14 @@ export enum SubmitStatus {
     changeDetection: ChangeDetectionStrategy.OnPush,
 
 })
-export class ButtonComponent extends ClickableComponent implements OnChanges, OnDestroy {
+export class ButtonComponent extends ClickableComponent implements OnChanges {
     public SubmitStatus = SubmitStatus;
 
     @Input() public action: ButtonAction;
     @Input() public icon: string;
     @Input() public title: string;
     @Input() public tooltipPosition: string = "above";
-    @Input() public enforcePermission?: boolean;
+    @Input() public permission?: Permission;
 
     /**
      * If set to true the check mark animation will not be shown
@@ -57,12 +57,13 @@ export class ButtonComponent extends ClickableComponent implements OnChanges, On
     }
 
     public get status() { return this._status; }
-    private _status = SubmitStatus.Idle;
-    private _sub: Subscription;
+    public get tooltipTitle() { return `${this.title}${this.subtitle}`; }
 
-    constructor(private authHttpService: AuthorizationHttpService,
+    private _status = SubmitStatus.Idle;
+
+    constructor(authHttpService: AuthorizationHttpService,
                 private changeDetectionRef: ChangeDetectorRef) {
-        super();
+        super(authHttpService);
     }
 
     public handleAction(event: Event) {
@@ -76,21 +77,6 @@ export class ButtonComponent extends ClickableComponent implements OnChanges, On
     public ngOnChanges(changes: SimpleChanges) {
         if ("disabled" in changes) {
             this.tabindex = this.disabled ? "-1" : "0";
-        }
-        if ("enforcePermission" in changes) {
-            this._sub = this.authHttpService.isResourceReadOnly().subscribe(resouceReadOnly => {
-                if (resouceReadOnly) {
-                    this.disabled = true;
-                    this.tabindex = "-1";
-                    this.title += " (You don't have permission to perform this action)";
-                }
-            });
-        }
-    }
-
-    public ngOnDestroy(): void {
-        if (this._sub) {
-            this._sub.unsubscribe();
         }
     }
 
