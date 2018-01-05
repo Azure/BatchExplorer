@@ -12,12 +12,14 @@ import {
     MemoryUsageGraphComponent, NetworkUsageGraphComponent, PerformanceGraphComponent,
 } from "./performance-graph";
 import { PoolGraphsComponent } from "./pool-graphs.component";
+import { PoolStandaloneGraphsComponent } from "./standalone";
 
 const components = [NodesHeatmapComponent,
     NodesHeatmapLegendComponent, PoolGraphsComponent, HistoryGraphComponent,
     PerformanceGraphComponent, CpuUsageGraphComponent,
     MemoryUsageGraphComponent, DiskUsageGraphComponent,
     NetworkUsageGraphComponent, EnableAppInsightsDocComponent,
+    PoolStandaloneGraphsComponent,
 ];
 
 @NgModule({

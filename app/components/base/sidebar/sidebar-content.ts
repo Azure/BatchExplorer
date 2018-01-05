@@ -3,12 +3,14 @@ import {
     Component,
     ComponentRef,
     Input,
+    OnInit,
     Type,
     ViewChild,
 } from "@angular/core";
 import { MatSidenav } from "@angular/material";
 
 import { log } from "app/utils";
+import { SidebarManager } from "./sidebar-manager";
 import { SidebarPageComponent } from "./sidebar-page";
 import { SidebarRef } from "./sidebar-ref";
 
@@ -16,19 +18,23 @@ import { SidebarRef } from "./sidebar-ref";
     selector: "bl-sidebar-content",
     templateUrl: "sidebar.html",
 })
-export class SidebarContentComponent {
+export class SidebarContentComponent implements OnInit {
     @ViewChild(PortalHostDirective)
     private portalHost: PortalHostDirective;
 
     @Input("sidebar")
     private sidebar: MatSidenav;
 
-    // @ViewChild("contentAnchor", { read: ViewContainerRef })
-    // private contentAnchor: ViewContainerRef;
-
     private currentComponentRef: ComponentRef<SidebarPageComponent>;
 
     private componentRefs: { [key: string]: ComponentRef<SidebarPageComponent> } = {};
+
+    constructor(private sidebarManager: SidebarManager) { }
+
+    public ngOnInit() {
+        this.sidebarManager.sidebar = this.sidebar;
+        this.sidebarManager.sidebarContent = this;
+    }
 
     /**
      * This will create a new component and display it.
