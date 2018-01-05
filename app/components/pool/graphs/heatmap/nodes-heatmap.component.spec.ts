@@ -231,7 +231,7 @@ describe("NodesHeatmapComponent", () => {
         fixture.detectChanges();
         heatmap.containerSizeChanged();
 
-        expect(svg.attr("width")).toBe("0", "Svg width should be 0");
+        expect(svg.attr("width")).toBe("0", "Svg width should be 4(2 padding)");
         expect(heatmap.dimensions.rows).toBe(0);
         expect(heatmap.dimensions.columns).toBe(0);
         expect(heatmap.dimensions.tileSize).toBe(0);

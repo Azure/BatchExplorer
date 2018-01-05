@@ -25,11 +25,13 @@ bl-nodes-heatmap {
         }
 
         > .heatmap-container {
-            width: calc(100% - #{$legend-width});
-            flex: 1 0 calc(100% - 160px);
+            $container-margin: 2px;
+            width: calc(100% - #{$legend-width} - #{$container-margin * 2});
+            flex: 1 0 calc(100% - #{$legend-width} - #{$container-margin * 2});
             height: 100%;
             max-height: 100%;
-            padding: 2px;
+            margin: $container-margin;
+            position: relative;
         }
 
         g.node-group {
