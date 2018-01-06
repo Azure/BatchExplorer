@@ -27,12 +27,7 @@ export class MainWindowManager {
             window = this.windows.get(windowId);
             window.show();
         } else {
-            window = new MainWindow(this.batchLabsApp);
-            window.create();
-            this.windows.set(windowId, window);
-            window.appReady.then(() => {
-                window.show();
-            });
+            window = this._createNewWindow(windowId);
         }
         this.goTo(link, window);
         return window;
@@ -43,14 +38,10 @@ export class MainWindowManager {
      * @param link ms-batchlabs://...
      */
     public openNewWindow(link?: string | BatchLabsLink | BatchLabsLinkAttributes): MainWindow {
-        const window = new MainWindow(this.batchLabsApp);
-        window.create();
-        const windowId = SecureUtils.uuid();
-        this.windows.set(windowId, window);
-        window.appReady.then(() => {
-            window.show();
-        });
+        const window = this._createNewWindow();
+
         this.goTo(link, window);
+
         return window;
     }
 
@@ -90,5 +81,22 @@ export class MainWindowManager {
 
     public [Symbol.iterator]() {
         return this.windows[Symbol.iterator]();
+    }
+
+    private _createNewWindow(windowId?: string) {
+        windowId = windowId || SecureUtils.uuid();
+        const window = new MainWindow(this.batchLabsApp);
+        window.create();
+        this.windows.set(windowId, window);
+
+        window.appReady.then(() => {
+            window.show();
+        });
+
+        window.once("closed", () => {
+            this.windows.delete(windowId);
+        });
+
+        return window;
     }
 }

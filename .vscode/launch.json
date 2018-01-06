@@ -24,6 +24,7 @@
         "HOT": "1"
       },
       "console": "internalConsole",
+      "outputCapture": "std",
       "sourceMaps": true,
       "outFiles": [
         "${workspaceRoot}/build/**/*.js"

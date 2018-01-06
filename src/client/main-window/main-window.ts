@@ -33,6 +33,10 @@ export class MainWindow extends GenericWindow {
         }
     }
 
+    public once(event: any, callback: (...args) => void) {
+        return this._window.once(event, callback);
+    }
+
     protected createWindow() {
         const window = new BrowserWindow({
             height: 1000,
@@ -85,7 +89,6 @@ export class MainWindow extends GenericWindow {
 
         ipcMain.once("app-ready", (event) => {
             if (event.sender.id === window.webContents.id) {
-                logger.info("++== window");
                 this._resolveAppReady();
             }
         });
