@@ -2,8 +2,8 @@ import { Injectable } from "@angular/core";
 import { RequestOptionsArgs } from "@angular/http";
 import { Observable } from "rxjs";
 
-import { AccountService } from "./account.service";
-import { ArmHttpService } from "./arm-http.service";
+import { AccountService } from "../account.service";
+import { ArmHttpService } from "../arm-http.service";
 
 export interface RoleDefinitionPermission {
     actions: string[];
@@ -15,7 +15,11 @@ export enum BatchAccountPermission {
     ReadWrite = "*",
 }
 
-export type Permission = "none" | "read" | "write";
+export enum Permission {
+    None = "none",
+    Read = "read",
+    Write = "write",
+}
 
 /**
  * Wrapper around the http service so call the azure ARM authorization api.
@@ -30,7 +34,7 @@ export class AuthorizationHttpService {
      * Check current account resouce permission
      */
     public getResourcePermission(): Observable<Permission> {
-        return this.accountService.currentAccount.first()
+        return this.accountService.currentAccount.take(1)
             .flatMap(account => {
                 const resourceId = account && account.id;
                 if (resourceId) {
@@ -45,7 +49,7 @@ export class AuthorizationHttpService {
 
     private _checkResoucePermissions(permissions: RoleDefinitionPermission[]): Permission {
         if (!Array.isArray(permissions) || permissions.length === 0) {
-            return "none";
+            return Permission.None;
         }
         let actions = [];
         for (let permission of permissions) {
@@ -57,12 +61,12 @@ export class AuthorizationHttpService {
         // Note that user could be assigned to multiple roles at same time (Reader, Owner, Contributor),
         // in this case, permission should be checked from highest to lowest
         if (actions.includes(BatchAccountPermission.ReadWrite)) {
-            return "write";
+            return Permission.Write;
         }
         if (actions.includes(BatchAccountPermission.Read)) {
-            return "read";
+            return Permission.Read;
         }
-        return "none";
+        return Permission.None;
     }
 
     private _recursiveRequest(uri: string, options?: RequestOptionsArgs): Observable<any> {

@@ -2,7 +2,7 @@ import { Response, ResponseOptions } from "@angular/http";
 import { Observable, Subscription } from "rxjs";
 import * as Fixtures from "test/fixture";
 
-import { AuthorizationHttpService } from "app/services";
+import { AuthorizationHttpService, BatchAccountPermission, Permission } from "./authorization-http.service";
 
 describe("AuthorizationHttpService", () => {
     let authService: AuthorizationHttpService;
@@ -11,7 +11,7 @@ describe("AuthorizationHttpService", () => {
     let mockNextLinkResponse = {
         body: JSON.stringify({
             value: [{
-                actions: ["*/read"],
+                actions: [BatchAccountPermission.Read],
                 noactions: [],
             }],
         }),
@@ -48,14 +48,14 @@ describe("AuthorizationHttpService", () => {
         mockAuthResponse = {
             body: JSON.stringify({
                 value: [{
-                    actions: ["*/read"],
+                    actions: [BatchAccountPermission.Read],
                     noactions: [],
                 }],
             }),
         };
         subs.push(authService.getResourcePermission().subscribe(response => {
             expect(requestUrl).toEqual("myaccount/providers/Microsoft.Authorization/permissions");
-            expect(response).toEqual("read");
+            expect(response).toEqual(Permission.Read);
         }));
     });
 
@@ -63,14 +63,14 @@ describe("AuthorizationHttpService", () => {
         mockAuthResponse = {
             body: JSON.stringify({
                 value: [{
-                    actions: ["*/read", "*"],
+                    actions: [BatchAccountPermission.Read, BatchAccountPermission.ReadWrite],
                     noactions: [],
                 }],
             }),
         };
         subs.push(authService.getResourcePermission().subscribe(response => {
             expect(requestUrl).toEqual("myaccount/providers/Microsoft.Authorization/permissions");
-            expect(response).toEqual("write");
+            expect(response).toEqual(Permission.Write);
         }));
     });
 
@@ -78,7 +78,7 @@ describe("AuthorizationHttpService", () => {
         mockAuthResponse = {
             body: JSON.stringify({
                 value: [{
-                    actions: ["*"],
+                    actions: [BatchAccountPermission.ReadWrite],
                     noactions: [],
                 }],
                 nextLink: "fakeNextLink",
@@ -86,7 +86,7 @@ describe("AuthorizationHttpService", () => {
         };
         subs.push(authService.getResourcePermission().subscribe(response => {
             expect(requestUrl).toEqual("fakeNextLink");
-            expect(response).toEqual("write");
+            expect(response).toEqual(Permission.Write);
         }));
     });
 });

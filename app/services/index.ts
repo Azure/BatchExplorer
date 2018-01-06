@@ -1,5 +1,5 @@
 export * from "./account.service";
-export * from "./authorization-http.service";
+export * from "./authorization-http";
 export * from "./application-service";
 export * from "./app-insights";
 export * from "./autoscale-formula.service";

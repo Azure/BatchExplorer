@@ -1,10 +1,10 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, HostBinding,
-    Input, OnChanges, SimpleChanges, animate, style, transition, trigger,
+    Input, animate, style, transition, trigger,
 } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { AuthorizationHttpService, Permission } from "app/services";
+import { AuthorizationHttpService } from "app/services";
 import { log } from "app/utils";
 import "./button.scss";
 import { ClickableComponent } from "./clickable";
@@ -34,14 +34,13 @@ export enum SubmitStatus {
     changeDetection: ChangeDetectionStrategy.OnPush,
 
 })
-export class ButtonComponent extends ClickableComponent implements OnChanges {
+export class ButtonComponent extends ClickableComponent {
     public SubmitStatus = SubmitStatus;
 
     @Input() public action: ButtonAction;
     @Input() public icon: string;
     @Input() public title: string;
     @Input() public tooltipPosition: string = "above";
-    @Input() public permission?: Permission;
 
     /**
      * If set to true the check mark animation will not be shown
@@ -72,13 +71,6 @@ export class ButtonComponent extends ClickableComponent implements OnChanges {
             return;
         }
         this._execute(event);
-    }
-
-    public ngOnChanges(changes: SimpleChanges) {
-        if ("disabled" in changes) {
-            this.tabindex = this.disabled ? "-1" : "0";
-        }
-        this.onPermissionChange(changes);
     }
 
     public done() {
