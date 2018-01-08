@@ -15,7 +15,7 @@
     </div>
     <div bl-list-content>
         <bl-focus-section>
-            <bl-file-group-list #fileGroupList [filter]="layout.filter" [quickList]="!(layout.showAdvancedFilter | async)"></bl-file-group-list>
+            <bl-data-container-list #fileGroupList [filter]="layout.filter" [quickList]="!(layout.showAdvancedFilter | async)"></bl-data-container-list>
         </bl-focus-section>
     </div>
     <div bl-show-content>

@@ -20,10 +20,10 @@ import { Constants } from "common";
 import { DeleteContainerAction, DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "../action";
 
 @Component({
-    selector: "bl-file-group-list",
-    templateUrl: "file-group-list.html",
+    selector: "bl-data-container-list",
+    templateUrl: "data-container-list.html",
 })
-export class FileGroupListComponent extends ListOrTableBase implements OnInit, OnDestroy {
+export class DataContainerListComponent extends ListOrTableBase implements OnInit, OnDestroy {
     public status: Observable<LoadingStatus>;
     public data: ListView<BlobContainer, ListContainerParams>;
     public hasAutoStorage: boolean;
@@ -52,7 +52,7 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
         private storageService: StorageService) {
 
         super(dialog);
-        this.data = this.storageService.containerListView(Constants.ncjFileGroupPrefix);
+        this.data = this.storageService.containerListView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
 
         this.hasAutoStorage = false;
@@ -132,6 +132,7 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
             this.data.setOptions({});
         } else {
             let filterText = (this._filter.properties[0] as any).value;
+            console.log("Filter is", filterText);
             this.data.setOptions({ filter: filterText && filterText.toLowerCase() });
         }
 
