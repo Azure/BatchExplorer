@@ -85,10 +85,7 @@ export class AADService {
     public logout(): void {
         localStorage.removeItem(Constants.localStorageKey.currentUser);
         localStorage.removeItem(Constants.localStorageKey.currentAccessToken);
-
-        if (this.app.mainWindow.isVisible()) {
-            this.app.mainWindow.hide();
-        }
+        this.app.windows.hideAll();
         this._tokenCache.clear();
         this._currentUser.next(null);
         this._clearUserSpecificCache();
@@ -252,9 +249,7 @@ export class AADService {
     }
 
     private _showMainWindow() {
-        if (!this.app.mainWindow.isVisible()) {
-            this.app.mainWindow.show();
-        }
+        this.app.windows.showAll();
         this.app.splashScreen.destroy();
     }
 }

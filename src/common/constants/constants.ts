@@ -207,3 +207,14 @@ export const IpcEvent = {
         accessTokenData: "AAD_ACCESS_TOKEN_DATA",
     },
 };
+
+export const customProtocolName = "ms-batchlabs";
+
+/**
+ * Name of events that needs to be passed between rendered and main
+ */
+export const rendererEvents = {
+    batchlabsLink: "batchlabs-link",
+};
+
+export const isRenderer = (process && process.type === "renderer");

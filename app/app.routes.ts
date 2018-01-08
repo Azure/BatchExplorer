@@ -7,6 +7,7 @@ import { ChooseActionComponent } from "app/components/market/application-action"
 import { LocalTemplateBrowserComponent } from "app/components/market/local-template-browser";
 import { SubmitLocalTemplateComponent } from "app/components/market/submit-local-template";
 import { SubmitRecentTemplateComponent } from "app/components/market/submit-recent-template";
+import { PoolStandaloneGraphsComponent } from "app/components/pool/graphs/standalone";
 import { SettingsComponent } from "app/components/settings";
 import { AccountDefaultComponent, AccountDetailsComponent } from "./components/account/details";
 import { AccountHomeComponent } from "./components/account/home/account-home.component";
@@ -120,6 +121,10 @@ export const routes: Routes = [
     {
         path: "jobs/:jobId/graphs",
         component: JobGraphsComponent,
+    },
+    {
+        path: "standalone/pools/:poolId/graphs",
+        component: PoolStandaloneGraphsComponent,
     },
 ];
 
