@@ -9,6 +9,7 @@ import {
     NotificationModule,
     NotificationService,
 } from "app/components/base/notifications";
+import { AuthorizationHttpService } from "app/services";
 
 @Component({
     template: `<bl-notification-container></bl-notification-container>`,
@@ -28,6 +29,9 @@ describe("Notification", () => {
         TestBed.configureTestingModule({
             imports: [NotificationModule],
             declarations: [FakeAppComponent],
+            providers: [
+                { provide: AuthorizationHttpService, useValue: null },
+            ],
         });
         notificationService = TestBed.get(NotificationService);
         notificationService.notifications.subscribe((x) => currentNotifications = x);

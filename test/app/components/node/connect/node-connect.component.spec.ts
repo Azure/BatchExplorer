@@ -8,7 +8,7 @@ import { PropertyGroupComponent, TextPropertyComponent } from "app/components/ba
 import { SidebarRef } from "app/components/base/sidebar";
 import { NodeConnectComponent } from "app/components/node/connect";
 import { NodeAgentSku } from "app/models";
-import { ElectronShell, FileSystemService, NodeService, NodeUserService } from "app/services";
+import { AuthorizationHttpService, ElectronShell, FileSystemService, NodeService, NodeUserService } from "app/services";
 import * as Fixtures from "test/fixture";
 import { MockListView } from "test/utils/mocks";
 
@@ -50,6 +50,7 @@ describe("NodeConnectComponent", () => {
                 { provide: NodeUserService, useValue: nodeUserServiceSpy },
                 { provide: NodeUserService, useValue: nodeUserServiceSpy },
                 { provide: FileSystemService, useValue: null },
+                { provide: AuthorizationHttpService, useValue: null },
                 { provide: ElectronShell, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],

@@ -11,6 +11,7 @@ import {
 } from "app/components/base/form";
 import { ServerErrorComponent } from "app/components/base/form/server-error";
 import { ServerError } from "app/models";
+import { AuthorizationHttpService } from "app/services";
 import { click } from "test/utils/helpers";
 
 const date = new Date(2017, 9, 13, 23, 43, 38);
@@ -97,6 +98,9 @@ describe("ComplexFormComponent", () => {
                 FormPageComponent,
                 FormSectionComponent,
                 FormPickerComponent,
+            ],
+            providers: [
+                { provide: AuthorizationHttpService, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });
