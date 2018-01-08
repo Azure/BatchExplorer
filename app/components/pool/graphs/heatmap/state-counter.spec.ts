@@ -1,8 +1,8 @@
 import { List } from "immutable";
 
-import { StateCounter } from "app/components/pool/graphs/state-counter";
 import { Node, NodeState } from "app/models";
 import * as Fixtures from "test/fixture";
+import { StateCounter } from "./state-counter";
 
 describe("Statecounter", () => {
     let counter: StateCounter;

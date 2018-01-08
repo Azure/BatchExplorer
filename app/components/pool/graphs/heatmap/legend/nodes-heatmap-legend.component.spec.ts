@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 import { By } from "@angular/platform-browser";
 
-import { NodesHeatmapLegendComponent } from "app/components/pool/graphs";
-import { HeatmapColor } from "app/components/pool/graphs/heatmap-color";
 import { NodeService } from "app/services";
 import * as Fixtures from "test/fixture";
-import {  click, rightClick } from "test/utils/helpers";
+import { click, rightClick } from "test/utils/helpers";
 import { ContextMenuServiceMock } from "test/utils/mocks";
+import { HeatmapColor } from "../heatmap-color";
+import { NodesHeatmapLegendComponent } from "./nodes-heatmap-legend.component";
 
 const stateTree = [
     { state: "idle", color: "#aaaaaa" },
