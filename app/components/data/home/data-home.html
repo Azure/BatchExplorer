@@ -13,9 +13,18 @@
             <button mat-menu-item (click)="openFileGroupForm()"> From local folder </button>
         </mat-menu>
     </div>
+    <div pre-quicksearch>
+        <mat-form-field>
+            <mat-select placeholder="Container Type" [formControl]="containerTypePrefix">
+                <mat-option *ngFor="let type of containerTypes;trackBy: trackType" [value]="type.prefix">
+                    {{type.name}}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+    </div>
     <div bl-list-content>
         <bl-focus-section>
-            <bl-data-container-list #fileGroupList [filter]="layout.filter" [quickList]="!(layout.showAdvancedFilter | async)"></bl-data-container-list>
+            <bl-data-container-list #fileGroupList [filter]="filter" [quickList]="!(layout.showAdvancedFilter | async)"></bl-data-container-list>
         </bl-focus-section>
     </div>
     <div bl-show-content>

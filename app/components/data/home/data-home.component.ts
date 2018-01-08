@@ -14,6 +14,17 @@ import { BlobContainer } from "app/models";
 import { Constants } from "common";
 import "./data-home.scss";
 
+const containerTypes = [
+    {
+        name: "All",
+        prefix: "",
+    },
+    {
+        name: "File groups",
+        prefix: Constants.ncjFileGroupPrefix,
+    },
+];
+
 @Component({
     selector: "bl-data-home",
     templateUrl: "data-home.html",
@@ -21,10 +32,11 @@ import "./data-home.scss";
 export class DataHomeComponent implements OnDestroy {
     @ViewChild(MatMenuTrigger) public trigger: MatMenuTrigger;
 
+    public containerTypes = containerTypes;
     public quickSearchQuery = new FormControl();
     public filter: Filter = FilterBuilder.none();
-    public quickFilter: Filter = FilterBuilder.none();
     public hasAutoStorage = true;
+    public containerTypePrefix = new FormControl("");
 
     private _autoStorageSub: Subscription;
 
@@ -35,12 +47,10 @@ export class DataHomeComponent implements OnDestroy {
         public storageService: StorageService) {
 
         this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
-            if (query === "") {
-                this.quickFilter = FilterBuilder.none();
-            } else {
-                this.quickFilter = FilterBuilder.prop("id").startswith(query);
-            }
+            this._updateFilter();
+        });
 
+        this.containerTypePrefix.valueChanges.subscribe((prefix) => {
             this._updateFilter();
         });
 
@@ -89,8 +99,19 @@ export class DataHomeComponent implements OnDestroy {
         this._updateFilter();
     }
 
+    public trackType(index, type) {
+        return type.prefix;
+    }
+
     private _updateFilter() {
-        this.filter = this.quickFilter;
+        const prefix = this.containerTypePrefix.value || "";
+        const search = this.quickSearchQuery.value || "";
+        const query = prefix + search;
+        if (query === "") {
+            this.filter = FilterBuilder.none();
+        } else {
+            this.filter = FilterBuilder.prop("id").startswith(query);
+        }
     }
 
     private _createEmptyFileGroup(name: string) {

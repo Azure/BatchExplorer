@@ -16,7 +16,6 @@ import { ListContainerParams, PinnedEntityService, StorageService } from "app/se
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
 import { Filter } from "app/utils/filter-builder";
-import { Constants } from "common";
 import { DeleteContainerAction, DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "../action";
 
 @Component({
@@ -128,11 +127,10 @@ export class DataContainerListComponent extends ListOrTableBase implements OnIni
     }
 
     private _setContainerFilter(filter: Filter) {
-        if (filter.isEmpty() || filter.properties.length === 0) {
+        if (filter.isEmpty()) {
             this.data.setOptions({});
         } else {
-            let filterText = (this._filter.properties[0] as any).value;
-            console.log("Filter is", filterText);
+            let filterText = (this._filter as any).value;
             this.data.setOptions({ filter: filterText && filterText.toLowerCase() });
         }
 
