@@ -14,13 +14,13 @@
         </mat-menu>
     </div>
     <div pre-quicksearch>
-        <mat-form-field>
-            <mat-select placeholder="Container Type" [formControl]="containerTypePrefix">
-                <mat-option *ngFor="let type of containerTypes;trackBy: trackType" [value]="type.prefix">
+        <div class="blselect">
+            <select placeholder="Container Type" [formControl]="containerTypePrefix">
+                <option *ngFor="let type of containerTypes;trackBy: trackType" [value]="type.prefix">
                     {{type.name}}
-                </mat-option>
-            </mat-select>
-        </mat-form-field>
+                </option>
+            </select>
+        </div>
     </div>
     <div bl-list-content>
         <bl-focus-section>

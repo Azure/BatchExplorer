@@ -101,9 +101,10 @@ export class StorageService {
             cache: () => this._containerCache,
             getData: (client, params, options, continuationToken) => {
                 return client.listContainersWithPrefix(
-                    params.prefix,
-                    options.filter,
-                    continuationToken);
+                    params && params.prefix,
+                    options && options.filter,
+                    continuationToken,
+                    { maxResults: options && options.maxResults });
             },
             logIgnoreError: storageIgnoredErrors,
         });

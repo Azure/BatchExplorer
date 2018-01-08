@@ -16,8 +16,12 @@ import { ListContainerParams, PinnedEntityService, StorageService } from "app/se
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
 import { Filter } from "app/utils/filter-builder";
+import { Constants } from "common";
 import { DeleteContainerAction, DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "../action";
 
+const defaultListOptions = {
+    pageSize: Constants.ListPageSizes.default,
+};
 @Component({
     selector: "bl-data-container-list",
     templateUrl: "data-container-list.html",
@@ -27,11 +31,9 @@ export class DataContainerListComponent extends ListOrTableBase implements OnIni
     public data: ListView<BlobContainer, ListContainerParams>;
     public hasAutoStorage: boolean;
 
-    @Input()
-    public quickList: boolean;
+    @Input() public quickList: boolean;
 
-    @Input()
-    public set filter(filter: Filter) {
+    @Input() public set filter(filter: Filter) {
         this._filter = filter;
         this._setContainerFilter(this._filter);
     }
@@ -98,6 +100,7 @@ export class DataContainerListComponent extends ListOrTableBase implements OnIni
 
     public onScrollToBottom(x) {
         if (this.hasAutoStorage) {
+            console.log("Fetch next...");
             this.data.fetchNext();
         }
     }
@@ -128,10 +131,10 @@ export class DataContainerListComponent extends ListOrTableBase implements OnIni
 
     private _setContainerFilter(filter: Filter) {
         if (filter.isEmpty()) {
-            this.data.setOptions({});
+            this.data.setOptions({ ...defaultListOptions });
         } else {
             let filterText = (this._filter as any).value;
-            this.data.setOptions({ filter: filterText && filterText.toLowerCase() });
+            this.data.setOptions({ ...defaultListOptions, filter: filterText && filterText.toLowerCase() });
         }
 
         if (this.hasAutoStorage) {
