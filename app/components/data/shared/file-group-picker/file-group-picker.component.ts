@@ -45,7 +45,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
         });
 
         // listen to file group add events
-        this._subscriptions.push(this.storageService.onFileGroupAdded.subscribe((fileGroupId: string) => {
+        this._subscriptions.push(this.storageService.onContainerAdded.subscribe((fileGroupId: string) => {
             const container = storageService.getContainerOnce(fileGroupId);
             this.fileGroupsData.loadNewItem(container);
             container.subscribe((blobContainer) => {

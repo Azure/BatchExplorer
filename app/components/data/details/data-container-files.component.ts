@@ -27,10 +27,9 @@ export class DataContainerFilesComponent implements OnDestroy {
     constructor(
         private storageService: StorageService,
         private backgroundTaskService: BackgroundTaskService,
-        private notificationService: NotificationService,
-        private fileGroupService: NcjFileGroupService) {
+        private notificationService: NotificationService) {
 
-        this._onGroupUpdatedSub = this.storageService.onFileGroupUpdated.subscribe(() => {
+        this._onGroupUpdatedSub = this.storageService.onContainerAdded.subscribe(() => {
             this.blobExplorer.refresh();
         });
     }
@@ -57,7 +56,6 @@ export class DataContainerFilesComponent implements OnDestroy {
                 complete: () => {
                     task.progress.next(100);
                     const message = `${lastData.uploaded} files were successfully uploaded to the file group`;
-                    this.storageService.onFileGroupAdded.next(this.container.id);
                     this.notificationService.success("Added files to group", message);
                 },
                 error: (error) => {

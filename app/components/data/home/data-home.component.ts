@@ -43,7 +43,6 @@ export class DataHomeComponent implements OnDestroy {
     constructor(
         private sidebarManager: SidebarManager,
         private dialogService: DialogService,
-        private filegroupService: NcjFileGroupService,
         public storageService: StorageService) {
 
         this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
@@ -72,7 +71,7 @@ export class DataHomeComponent implements OnDestroy {
         const validation = Constants.forms.validation;
         const type = fileGroup ? "file group" : "container";
         this.dialogService.prompt(`Create a new empty ${type}`, {
-            prompt: (name) => this._createEmptyContainer(name),
+            prompt: (name) => this._createEmptyContainer(name, fileGroup),
             validator: [
                 Validators.required,
                 Validators.maxLength(validation.maxLength.fileGroup),
@@ -114,11 +113,13 @@ export class DataHomeComponent implements OnDestroy {
         }
     }
 
-    private _createEmptyContainer(name: string) {
-        const obs = this.filegroupService.createEmptyFileGroup(name);
+    private _createEmptyContainer(name: string, fileGroup = false) {
+        const prefix = fileGroup ? Constants.ncjFileGroupPrefix : "";
+        const container = `${prefix}${name}`;
+        const obs = this.storageService.createContainer(container);
         obs.subscribe({
             next: () => {
-                this.storageService.onFileGroupAdded.next(this.storageService.fileGroupContainer(name));
+                this.storageService.onContainerAdded.next(container);
             },
             error: () => null,
         });

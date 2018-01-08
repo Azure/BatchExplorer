@@ -65,7 +65,7 @@ export class DataContainerListComponent extends ListOrTableBase implements OnIni
         });
 
         this.status = this.data.status;
-        this._onGroupAddedSub = this.storageService.onFileGroupAdded.subscribe((fileGroupId: string) => {
+        this._onGroupAddedSub = this.storageService.onContainerAdded.subscribe((fileGroupId: string) => {
             this.data.loadNewItem(storageService.getContainerOnce(fileGroupId));
         });
     }
@@ -100,7 +100,6 @@ export class DataContainerListComponent extends ListOrTableBase implements OnIni
 
     public onScrollToBottom(x) {
         if (this.hasAutoStorage) {
-            console.log("Fetch next...");
             this.data.fetchNext();
         }
     }

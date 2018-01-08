@@ -71,8 +71,8 @@ export class StorageService {
      * Triggered only when a file group is added through this app.
      * Used to notify the list of a new item
      */
-    public onFileGroupAdded = new Subject<string>();
-    public onFileGroupUpdated = new Subject();
+    public onContainerAdded = new Subject<string>();
+    public onContainerUpdated = new Subject();
     public maxBlobPageSize: number = 100; // 500 slows down the UI too much.
     public maxContainerPageSize: number = 50;
 
