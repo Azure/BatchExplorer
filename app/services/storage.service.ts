@@ -1,12 +1,13 @@
 import { Injectable, NgZone } from "@angular/core";
 import * as storage from "azure-storage";
+import * as path from "path";
 import { AsyncSubject, Observable, Subject } from "rxjs";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
 import { BlobContainer, File, ServerError } from "app/models";
 import { FileSystemService } from "app/services";
 import { SharedAccessPolicy } from "app/services/storage/models";
-import { log } from "app/utils";
+import { CloudPathUtils, log } from "app/utils";
 import { Constants } from "common";
 import {
     DataCache,
@@ -18,7 +19,7 @@ import {
     TargetedDataCache,
 } from "./core";
 import { FileLoadOptions, FileLoader, FileNavigator, FileSource } from "./file";
-import { ListBlobOptions } from "./storage";
+import { BlobStorageClientProxy, ListBlobOptions } from "./storage";
 import { StorageClientService } from "./storage-client.service";
 
 export interface ListBlobParams {
@@ -54,6 +55,12 @@ const storageIgnoredErrors = [
     Constants.HttpCode.NotFound,
     Constants.HttpCode.Conflict,
 ];
+
+export interface BulkUploadStatus {
+    uploaded: number;
+    total: number;
+    current: string;
+}
 
 // Regex to extract the host, container and blob from a sasUrl
 const storageBlobUrlRegex = /^(https:\/\/[\w\._\-]+)\/([\w\-_]+)\/([\w\-_.]+)\?(.*)$/i;
@@ -365,6 +372,49 @@ export class StorageService {
     }
 
     /**
+     * Upload a single file to storage.
+     * @param container Container Id
+     * @param file Absolute path to the local file
+     * @param remotePath Blob name
+     */
+    public uploadFile(container: string, file: string, remotePath: string) {
+        return this._callStorageClient((client) => client.uploadFile(container, file, remotePath), (error) => {
+            log.error(`Error upload file ${file} to container ${container}`, error);
+        });
+    }
+
+    /**
+     * Uploads the given files to the container. All files will be flatten under the given remotePath.
+     *
+     * @example uploadFilesToContainer("abc", ["/home/file1.txt", "/home/etc/file2.txt"], "user/files")
+     * // Will create 2 blob container
+     *  - user/files/file1.txt
+     *  - user/files/file2.txt
+     * It will override files if exists
+     * @param container Container id
+     * @param files List of absolute path to the files to upload
+     * @param remotePath Optional path on the blob where to put the files.
+     */
+    public uploadFiles(container: string, files: string[], remotePath?: string): Observable<BulkUploadStatus> {
+        const total = files.length;
+        return Observable.from(files).concatMap((file, index) => {
+            const status: BulkUploadStatus = {
+                uploaded: index,
+                total,
+                current: file,
+            };
+            const filename = path.basename(file);
+            const blob = remotePath ? CloudPathUtils.join(remotePath, filename) : filename;
+            const uploadObs = this.uploadFile(container, file, blob).map(x => ({
+                uploaded: index + 1,
+                total,
+                current: file,
+            }));
+            return Observable.of(status).concat(uploadObs);
+        }).share();
+    }
+
+    /**
      * Allow access to the hasAutoStorage observable in the base client
      */
     public get hasAutoStorage(): Observable<boolean> {
@@ -400,7 +450,7 @@ export class StorageService {
      * @param  errorCallback Optional error callback if want to log
      */
     private _callStorageClient<T>(
-        promise: (client: any) => Promise<any>,
+        promise: (client: BlobStorageClientProxy) => Promise<any>,
         errorCallback?: (error: any) => void): Observable<T> {
 
         return this.storageClient.get().take(1).flatMap((client) => {

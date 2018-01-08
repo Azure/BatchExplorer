@@ -332,6 +332,16 @@ export class BlobStorageClientProxy {
         return this.client.getUrl(container, blob, sasToken);
     }
 
+    public async uploadFile(container: string, file: string, remotePath: string) {
+        return new Promise((resolve, reject) => {
+            this.client.createBlockBlobFromLocalFile(container, remotePath, file,
+                (error: any, result: storage.BlobService.BlobResult) => {
+                    if (error) { return reject(error); }
+                    resolve(result);
+                });
+        });
+    }
+
     /**
      * Return the list of folder names return by listing blobs with a delimiter
      * @param response
