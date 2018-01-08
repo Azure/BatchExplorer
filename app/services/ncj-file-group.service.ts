@@ -3,6 +3,7 @@ import { Observable } from "rxjs";
 
 import { ServerError } from "app/models";
 import { FileGroupCreateDto } from "app/models/dtos";
+import { Constants } from "common";
 import { PythonRpcService } from "./python-rpc/python-rpc.service";
 import { StorageService } from "./storage.service";
 
@@ -17,7 +18,7 @@ export class NcjFileGroupService {
     }
 
     public createEmptyFileGroup(name: string): Observable<any> {
-        return this.storageService.createContainer(`${this.storageService.ncjFileGroupPrefix}${name}`);
+        return this.storageService.createContainer(`${Constants.ncjFileGroupPrefix}${name}`);
     }
 
     /**

@@ -11,7 +11,7 @@ import { FileGroupCreateFormComponent } from "../action";
 import { MatMenuTrigger } from "@angular/material";
 import { DialogService } from "app/components/base/dialogs";
 import { BlobContainer } from "app/models";
-import { Constants } from "app/utils";
+import { Constants } from "common";
 import "./data-home.scss";
 
 @Component({
@@ -112,7 +112,7 @@ export class DataHomeComponent implements OnDestroy {
     private _validateFileGroupName(control: FormControl): Promise<any> {
         return new Promise((resolve) => {
             setTimeout(() => {
-                const containerName = `${this.storageService.ncjFileGroupPrefix}${control.value}`;
+                const containerName = `${Constants.ncjFileGroupPrefix}${control.value}`;
                 this.storageService.getContainerOnce(containerName).subscribe({
                     next: (container: BlobContainer) => {
                         resolve({

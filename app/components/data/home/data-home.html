@@ -2,7 +2,7 @@
 
 <bl-list-and-show-layout #layout (listScrolledToBottom)="fileGroupList.onScrollToBottom()" [list]="fileGroupList" *ngIf="storageService.hasArmAutoStorage | async">
     <div bl-list-title>
-        File groups
+        Storage containers
     </div>
     <div bl-list-buttons>
         <bl-button type="plain" icon="fa fa-plus spin-hover" color="light" title="Add a file group" [matMenuTriggerFor]="addFileGroupMenu"

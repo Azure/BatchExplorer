@@ -16,6 +16,7 @@ import { ListContainerParams, PinnedEntityService, StorageService } from "app/se
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
 import { Filter } from "app/utils/filter-builder";
+import { Constants } from "common";
 import { DeleteContainerAction, DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "../action";
 
 @Component({
@@ -51,7 +52,7 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
         private storageService: StorageService) {
 
         super(dialog);
-        this.data = this.storageService.containerListView(storageService.ncjFileGroupPrefix);
+        this.data = this.storageService.containerListView(Constants.ncjFileGroupPrefix);
         ComponentUtils.setActiveItem(activatedRoute, this.data);
 
         this.hasAutoStorage = false;

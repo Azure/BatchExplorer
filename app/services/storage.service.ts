@@ -6,7 +6,8 @@ import { BackgroundTaskService } from "app/components/base/background-task";
 import { BlobContainer, File, ServerError } from "app/models";
 import { FileSystemService } from "app/services";
 import { SharedAccessPolicy } from "app/services/storage/models";
-import { Constants, log } from "app/utils";
+import { log } from "app/utils";
+import { Constants } from "common";
 import {
     DataCache,
     EntityView,
@@ -65,7 +66,6 @@ export class StorageService {
      */
     public onFileGroupAdded = new Subject<string>();
     public onFileGroupUpdated = new Subject();
-    public ncjFileGroupPrefix: string = "fgrp-";
     public maxBlobPageSize: number = 100; // 500 slows down the UI too much.
     public maxContainerPageSize: number = 50;
 
@@ -88,7 +88,7 @@ export class StorageService {
         this._containerGetter = new StorageEntityGetter(BlobContainer, this.storageClient, {
             cache: () => this._containerCache,
             getFn: (client, params: GetContainerParams) =>
-                client.getContainerProperties(params.id, this.ncjFileGroupPrefix),
+                client.getContainerProperties(params.id),
         });
 
         this._blobGetter = new StorageEntityGetter(File, this.storageClient, {
@@ -389,7 +389,7 @@ export class StorageService {
      * @param fileGroupName Name of the file group
      */
     public fileGroupContainer(fileGroupName: string) {
-        return `${this.ncjFileGroupPrefix}${fileGroupName}`;
+        return `${Constants.ncjFileGroupPrefix}${fileGroupName}`;
     }
 
     /**

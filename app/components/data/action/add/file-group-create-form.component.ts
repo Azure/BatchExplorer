@@ -126,7 +126,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     private _validateFileGroupName(control: FormControl): Promise<any> {
         return new Promise((resolve) => {
             setTimeout(() => {
-                const containerName = `${this.storageService.ncjFileGroupPrefix}${control.value}`;
+                const containerName = `${Constants.ncjFileGroupPrefix}${control.value}`;
                 this.storageService.getContainerOnce(containerName).subscribe({
                     next: (container: BlobContainer) => {
                         this.groupExists = true;

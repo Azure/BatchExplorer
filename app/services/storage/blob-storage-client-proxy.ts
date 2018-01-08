@@ -223,10 +223,10 @@ export class BlobStorageClientProxy {
                     } else {
                         resolve({
                             data: result.entries.map((container) => {
-                                return Object.assign(container, {
+                                return {
+                                    ...container,
                                     id: container.name,
-                                    name: container.name.replace(prefix, ""),
-                                });
+                                };
                             }),
                             continuationToken: result.continuationToken,
                         });
@@ -253,10 +253,10 @@ export class BlobStorageClientProxy {
                     reject(error);
                 } else {
                     resolve({
-                        data: Object.assign(result, {
+                        data: {
+                            ...result,
                             id: result.name,
-                            name: result.name.replace(prefix, ""),
-                        }),
+                        },
                     });
                 }
             });
