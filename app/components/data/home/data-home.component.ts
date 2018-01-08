@@ -3,7 +3,7 @@ import { FormControl, Validators } from "@angular/forms";
 import { autobind } from "app/core";
 import { Observable, Subscription } from "rxjs";
 
-import { NcjFileGroupService, StorageService } from "app/services";
+import { StorageService } from "app/services";
 import { Filter, FilterBuilder } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
 import { FileGroupCreateFormComponent } from "../action";

@@ -159,7 +159,7 @@ export class DataContainerListComponent extends ListOrTableBase implements OnIni
         }));
 
         sidebarRef.afterCompletion.subscribe(() => {
-            this.storageService.onFileGroupUpdated.next();
+            this.storageService.onContainerUpdated.next();
         });
     }
 

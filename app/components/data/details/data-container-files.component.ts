@@ -8,7 +8,7 @@ import { NotificationService } from "app/components/base/notifications";
 import { BlobFilesBrowserComponent } from "app/components/file/browse";
 import { FileDropEvent } from "app/components/file/browse/file-explorer";
 import { BlobContainer, File } from "app/models";
-import { NcjFileGroupService, StorageService } from "app/services";
+import { StorageService } from "app/services";
 import { log } from "app/utils";
 
 @Component({
@@ -49,7 +49,7 @@ export class DataContainerFilesComponent implements OnDestroy {
             observable.subscribe({
                 next: (data) => {
                     lastData = data;
-                    const {uploaded, total, current} = data;
+                    const { uploaded, total, current } = data;
                     task.name.next(`Uploading ${path.basename(current)} to ${container} (${uploaded}/${total})`);
                     task.progress.next(data.uploaded / data.total * 100);
                 },
