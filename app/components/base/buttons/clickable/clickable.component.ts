@@ -25,9 +25,6 @@ export class ClickableComponent implements OnChanges, OnDestroy {
     }
 
     public ngOnChanges(changes: SimpleChanges): void {
-        if ("disabled" in changes) {
-            this.tabindex = this.disabled ? "-1" : "0";
-        }
         if (changes.permission) {
             this._clearSubscription();
             this._sub = this.authHttpService.getResourcePermission().subscribe((userPermission: Permission) => {
@@ -48,6 +45,7 @@ export class ClickableComponent implements OnChanges, OnDestroy {
                 }
             });
         }
+        this.tabindex = this.disabled ? "-1" : "0";
     }
 
     public ngOnDestroy(): void {
