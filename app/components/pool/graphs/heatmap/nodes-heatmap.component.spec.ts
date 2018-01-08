@@ -13,6 +13,9 @@ import { click, dblclick, rightClick } from "test/utils/helpers";
 import { ContextMenuServiceMock, NotificationServiceMock } from "test/utils/mocks";
 import { NodesHeatmapComponent, NodesHeatmapLegendComponent } from ".";
 
+const legendWidth = 160;
+const svgMargin = 4; // 2x2
+
 @Component({
     template: `
         <div [style.width]="width" [style.height]="height" [style.position]="'relative'">
@@ -81,19 +84,18 @@ describe("NodesHeatmapComponent", () => {
 
     it("Should have created the svg in the right dimensions", () => {
         expect(svg).not.toBeNull();
-        const legendWidth = 160;
-        expect(svg.attr("width")).toBe((400 - legendWidth).toString());
+
+        expect(svg.attr("width")).toBe((400 - legendWidth - svgMargin).toString());
         expect(svg.attr("height")).toBe("250");
     });
 
     it("should reszize the svg when container width change", () => {
         testComponent.width = "800px";
         fixture.detectChanges();
-        const legendWidth = 160;
 
         // Force notify because the element-reszize-detector is not instant
         heatmap.containerSizeChanged();
-        expect(svg.attr("width")).toBe((800 - legendWidth).toString());
+        expect(svg.attr("width")).toBe((800 - legendWidth - svgMargin).toString());
         expect(svg.attr("height")).toBe("250");
     });
 
