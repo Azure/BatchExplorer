@@ -5,6 +5,18 @@ import { SplashScreen } from "client/splash-screen";
 import { IpcPromiseEvent } from "common/constants";
 import { ipcRenderer, remote } from "electron";
 
+// Uncomment bellow to check sendSync performance issues
+// let total = 0;
+// const sendSyncOriginal = ipcRenderer.sendSync.bind(ipcRenderer);
+// ipcRenderer.sendSync = (channel: string, ...args) => {
+//     const start = new Date().getTime();
+//     const result = sendSyncOriginal(channel, ...args);
+//     const run = new Date().getTime() - start;
+//     total += run;
+//     console.log("Send sync", channel, total, run);
+//     return result;
+// };
+
 /**
  * Injectable service wrapping electron shell.
  * This makes it easier to mock the electron shell.
@@ -56,7 +68,7 @@ export class ElectronRemote {
     public send(eventName: string, data?: any): Promise<any> {
         return new Promise((resolve, reject) => {
             const id = Math.floor(Math.random() * Number.MAX_SAFE_INTEGER);
-            const onSuccess =  (event, params) => {
+            const onSuccess = (event, params) => {
                 if (params.id !== id || params.eventName !== eventName) {
                     return;
                 }
@@ -67,7 +79,7 @@ export class ElectronRemote {
 
                 resolve(params.data);
             };
-            const onFailure =  (event, params) => {
+            const onFailure = (event, params) => {
                 if (params.id !== id || params.eventName !== eventName) {
                     return;
                 }
