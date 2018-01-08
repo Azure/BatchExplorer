@@ -9,8 +9,9 @@
             [disabled]="!hasAutoStorage" [@.disabled]="true">
         </bl-button>
         <mat-menu #addFileGroupMenu="matMenu" [@.disabled]="true">
-            <button mat-menu-item (click)="openEmptyFileGroupForm()"> Empty file group </button>
-            <button mat-menu-item (click)="openFileGroupForm()"> From local folder </button>
+            <button mat-menu-item (click)="openEmptyContainerForm()"> Empty container </button>
+            <button mat-menu-item (click)="openEmptyContainerForm(true)"> Empty file group </button>
+            <button mat-menu-item (click)="openFileGroupForm()"> From local folder(File group) </button>
         </mat-menu>
     </div>
     <div pre-quicksearch>

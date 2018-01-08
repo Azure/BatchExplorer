@@ -461,7 +461,7 @@ export class StorageService {
                 }
 
                 return Observable.throw(serverError);
-            });
+            }).map((x) => this.zone.run(() => x));
         }).share();
     }
 
