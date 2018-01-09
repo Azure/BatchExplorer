@@ -56,7 +56,8 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
         this._subscriptions.push(this.value.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((value) => {
             this._checkValid(value);
             if (this._propagateChange) {
-                this._propagateChange(value);
+                console.log("Value", value && value.replace(Constants.ncjFileGroupPrefix, ""));
+                this._propagateChange(value && value.replace(Constants.ncjFileGroupPrefix, ""));
             }
         }));
     }

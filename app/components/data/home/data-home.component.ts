@@ -133,7 +133,6 @@ export class DataHomeComponent implements OnDestroy {
      */
     private _validateContainerUnique(prefix = "") {
         return (control: FormControl) => {
-            // ${Constants.ncjFileGroupPrefix}
             const containerName = `${prefix}${control.value}`;
             return Observable.of(null).debounceTime(500)
                 .flatMap(() => this.storageService.getContainerOnce(containerName))
