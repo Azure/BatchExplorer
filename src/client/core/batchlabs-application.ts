@@ -2,8 +2,9 @@ import { app, dialog, ipcMain, session } from "electron";
 import { AppUpdater, UpdateCheckResult, autoUpdater } from "electron-updater";
 import * as os from "os";
 
-import { MainWindowManager } from "client/core/main-window-manager";
+import { BlIpcMain } from "client/core";
 import { BatchLabsLink, Constants } from "common";
+import { IpcEvent } from "common/constants";
 import { Constants as ClientConstants } from "../client-constants";
 import { logger } from "../logger";
 import { MainWindow } from "../main-window";
@@ -11,6 +12,7 @@ import { PythonRpcServerProcess } from "../python-process";
 import { RecoverWindow } from "../recover-window";
 import { SplashScreen } from "../splash-screen";
 import { AADService, AuthenticationWindow } from "./aad";
+import { MainWindowManager } from "./main-window-manager";
 
 const osName = `${os.platform()}-${os.arch()}/${os.release()}`;
 const isDev = ClientConstants.isDev ? "-dev" : "";
@@ -25,10 +27,13 @@ export class BatchLabsApplication {
     public aadService = new AADService(this);
 
     constructor(public autoUpdater: AppUpdater) {
-        logger.info("Arguments", process.argv);
+        BlIpcMain.on(IpcEvent.AAD.accessTokenData, ({ tenantId, resource }) => {
+            return this.aadService.accessTokenData(tenantId, resource);
+        });
     }
 
     public async init() {
+        BlIpcMain.init();
         await this.aadService.init();
         this._registerProtocol();
         this.setupProcessEvents();

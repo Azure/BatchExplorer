@@ -15,7 +15,7 @@ export class AdalService {
     private tokenCache = new AccessTokenCache();
     private _waitingPromises: StringMap<Promise<AccessToken>> = {};
 
-    constructor(remote: ElectronRemote) {
+    constructor(private remote: ElectronRemote) {
         this.aadService = remote.getBatchLabsApp().aadService;
     }
 
@@ -33,7 +33,7 @@ export class AdalService {
     }
 
     public accessTokenFor(tenantId: string, resource: string = defaultResource) {
-        return Observable.fromPromise(this.aadService.accessTokenData(tenantId, resource).then(x => x.access_token));
+        return Observable.fromPromise(this.accessTokenDataAsync(tenantId, resource).then(x => x.access_token));
     }
 
     /**
@@ -62,7 +62,7 @@ export class AdalService {
             }
         }
 
-        const promise = this.aadService.accessTokenData(tenantId, resource).then((x) => {
+        const promise = this.remote.send(Constants.IpcEvent.AAD.accessTokenData, {tenantId, resource}).then((x) => {
             const token = new AccessToken({ ...x });
             this.tokenCache.storeToken(tenantId, resource, token);
             delete this._waitingPromises[key];
