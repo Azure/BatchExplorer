@@ -202,3 +202,9 @@ export const rendererEvents = {
 };
 
 export const isRenderer = (process && process.type === "renderer");
+
+export const ncjFileGroupPrefix = "fgrp-";
+
+export const ListPageSizes = {
+    default: 50,
+};

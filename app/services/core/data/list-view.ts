@@ -113,6 +113,7 @@ export class ListView<TEntity, TParams> extends GenericView<TEntity, TParams, Li
                 this._hasMore.next(Boolean(response.nextLink)); // This NEEDS to be called after processResponse
             },
             error: (error) => {
+                log.error(`Error loading data in ListView for ${this._getter.type.name}`, error);
                 this._hasMore.next(false);
             },
         });

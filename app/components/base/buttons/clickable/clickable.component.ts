@@ -12,14 +12,29 @@ import "./clickable.scss";
     template: `<ng-content></ng-content>`,
 })
 export class ClickableComponent implements OnChanges, OnDestroy {
-    @Input() @HostBinding("class.disabled") public disabled = false;
+    /**
+     * Set this to false to disable the button because its an invalid action at the time
+     */
+    @Input() public disabled = false;
+
+    /**
+     * Optional requirement to be able to access this button
+     */
     @Input() public permission?: Permission;
+
+    /**
+     * @returns true if either the disabled attribute is set to true or there is no permission for this action
+     */
+    @HostBinding("class.disabled") public get isDisabled() { return this.disabled || this._permissionDisabled; }
     @Output() public do = new EventEmitter<Event>();
-    @HostBinding("tabindex") public tabindex = "0";
+    @HostBinding("tabindex") public get tabindex() {
+        return this.isDisabled ? "-1" : "0";
+    }
     @HostBinding("class.focus-outline") public focusOutline = true;
     public subtitle = "";
 
     private _sub: Subscription;
+    private _permissionDisabled = false;
 
     constructor(private authHttpService: AuthorizationHttpService) {
     }
@@ -27,25 +42,15 @@ export class ClickableComponent implements OnChanges, OnDestroy {
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes.permission) {
             this._clearSubscription();
-            this._sub = this.authHttpService.getResourcePermission().subscribe((userPermission: Permission) => {
-                if (this.permission === Permission.Write) {
-                    switch (userPermission) {
-                        case Permission.None:
-                        case Permission.Read:
-                            this.disabled = true;
-                            this.tabindex = "-1";
-                            this.subtitle = " (You don't have permission to perform this action)";
-                            break;
-                        case Permission.Write:
-                            this.disabled = ("disabled" in changes);
-                            this.tabindex = this.disabled ? "-1" : "0";
-                            this.subtitle = "";
-                            break;
-                    }
+            this._sub = this.authHttpService.hasPermission(this.permission).subscribe((hasPermission) => {
+                this._permissionDisabled = !hasPermission;
+                if (hasPermission) {
+                    this.subtitle = "";
+                } else {
+                    this.subtitle = " (You don't have permission to perform this action)";
                 }
             });
         }
-        this.tabindex = this.disabled ? "-1" : "0";
     }
 
     public ngOnDestroy(): void {
@@ -66,7 +71,7 @@ export class ClickableComponent implements OnChanges, OnDestroy {
     }
 
     public handleAction(event: Event) {
-        if (this.disabled) {
+        if (this.isDisabled) {
             return;
         }
         this.do.emit(event);

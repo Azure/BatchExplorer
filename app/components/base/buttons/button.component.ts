@@ -56,7 +56,7 @@ export class ButtonComponent extends ClickableComponent {
     }
 
     public get status() { return this._status; }
-    public get tooltipTitle() { return `${this.title}${this.subtitle}`; }
+    public get tooltipTitle() { return `${this.title || ""}${this.subtitle || ""}`; }
 
     private _status = SubmitStatus.Idle;
 
@@ -67,7 +67,7 @@ export class ButtonComponent extends ClickableComponent {
 
     public handleAction(event: Event) {
         super.handleAction(event);
-        if (this.disabled || !this.action) {
+        if (this.isDisabled || !this.action) {
             return;
         }
         this._execute(event);

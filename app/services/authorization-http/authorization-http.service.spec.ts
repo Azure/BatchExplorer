@@ -89,4 +89,42 @@ describe("AuthorizationHttpService", () => {
             expect(response).toEqual(Permission.Write);
         }));
     });
+
+    describe("#hasPermission", () => {
+        let permission: Permission;
+        beforeEach(() => {
+            const getResourcePermissionSpy = jasmine.createSpy("getResourcePermission").and.callFake(() => {
+               return Observable.of(permission);
+            });
+            authService.getResourcePermission = getResourcePermissionSpy;
+        });
+
+        it("returns TRUE when need write and has write access", () => {
+            permission = Permission.Write;
+            authService.hasPermission(Permission.Write).take(1).subscribe(hasPermission => {
+                expect(hasPermission).toBe(true);
+            });
+        });
+
+        it("returns TRUE when need read and has read access", () => {
+            permission = Permission.Read;
+            authService.hasPermission(Permission.Read).take(1).subscribe(hasPermission => {
+                expect(hasPermission).toBe(true);
+            });
+        });
+
+        it("returns TRUE when need read and has write access", () => {
+            permission = Permission.Write;
+            authService.hasPermission(Permission.Read).take(1).subscribe(hasPermission => {
+                expect(hasPermission).toBe(true);
+            });
+        });
+
+        it("returns FALSE when need write and has read access", () => {
+            permission = Permission.Read;
+            authService.hasPermission(Permission.Write).take(1).subscribe(hasPermission => {
+                expect(hasPermission).toBe(false);
+            });
+        });
+    });
 });

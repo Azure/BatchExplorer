@@ -1,33 +1,45 @@
-import { Component, Input, OnChanges } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
 import { AbstractControl, ControlContainer, FormGroupDirective } from "@angular/forms";
+import { Subscription } from "rxjs";
 
 @Component({
     selector: "bl-error",
     template: `<div *ngIf="hasError"><ng-content></ng-content></div>`,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormErrorComponent implements OnChanges {
+export class FormErrorComponent implements OnChanges, OnDestroy {
 
     /**
      * Name of the control.
      * Should be the same name used on the input with formControlName
      */
-    @Input()
-    public controlName: string;
+    @Input() public controlName: string;
 
     /**
      * Error code. If specified this will only show if for the given error code.
      */
-    @Input()
-    public code: string = null;
+    @Input() public code: string = null;
 
+    private _hasError = false;
     private _control: AbstractControl;
+    private _sub: Subscription;
 
-    constructor(private formGroup: FormGroupDirective, private parent: ControlContainer) {
+    constructor(
+        private formGroup: FormGroupDirective,
+        private parent: ControlContainer,
+        private changeDetector: ChangeDetectorRef) {
     }
 
     public ngOnChanges(inputs) {
         if (inputs.controlName) {
             this._control = this.retrieveControl();
+        }
+        this._listenForChanges();
+    }
+
+    public ngOnDestroy() {
+        if (this._sub) {
+            this._sub.unsubscribe();
         }
     }
 
@@ -45,11 +57,27 @@ export class FormErrorComponent implements OnChanges {
         return current;
     }
 
+    public get hasError() {
+        return this._hasError && this._control.touched;
+    }
+
     /**
      * Check if this formControl has an error and has been touched
      */
-    public get hasError(): boolean {
+    private _computeHasError() {
         const control = this._control;
-        return control.hasError(this.code) && control.touched;
+        this._hasError = control.hasError(this.code);
+        this.changeDetector.markForCheck();
+    }
+
+    private _listenForChanges() {
+        this._computeHasError();
+        if (this._sub) {
+            this._sub.unsubscribe();
+            this._sub = null;
+        }
+        this._sub = this._control.statusChanges.subscribe((x) => {
+            this._computeHasError();
+        });
     }
 }

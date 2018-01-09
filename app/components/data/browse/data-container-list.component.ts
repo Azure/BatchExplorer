@@ -16,22 +16,24 @@ import { ListContainerParams, PinnedEntityService, StorageService } from "app/se
 import { ListView } from "app/services/core";
 import { ComponentUtils } from "app/utils";
 import { Filter } from "app/utils/filter-builder";
+import { Constants } from "common";
 import { DeleteContainerAction, DeleteContainerDialogComponent, FileGroupCreateFormComponent } from "../action";
 
+const defaultListOptions = {
+    pageSize: Constants.ListPageSizes.default,
+};
 @Component({
-    selector: "bl-file-group-list",
-    templateUrl: "file-group-list.html",
+    selector: "bl-data-container-list",
+    templateUrl: "data-container-list.html",
 })
-export class FileGroupListComponent extends ListOrTableBase implements OnInit, OnDestroy {
+export class DataContainerListComponent extends ListOrTableBase implements OnInit, OnDestroy {
     public status: Observable<LoadingStatus>;
     public data: ListView<BlobContainer, ListContainerParams>;
     public hasAutoStorage: boolean;
 
-    @Input()
-    public quickList: boolean;
+    @Input() public quickList: boolean;
 
-    @Input()
-    public set filter(filter: Filter) {
+    @Input() public set filter(filter: Filter) {
         this._filter = filter;
         this._setContainerFilter(this._filter);
     }
@@ -51,7 +53,7 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
         private storageService: StorageService) {
 
         super(dialog);
-        this.data = this.storageService.containerListView(storageService.ncjFileGroupPrefix);
+        this.data = this.storageService.containerListView();
         ComponentUtils.setActiveItem(activatedRoute, this.data);
 
         this.hasAutoStorage = false;
@@ -63,7 +65,7 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
         });
 
         this.status = this.data.status;
-        this._onGroupAddedSub = this.storageService.onFileGroupAdded.subscribe((fileGroupId: string) => {
+        this._onGroupAddedSub = this.storageService.onContainerAdded.subscribe((fileGroupId: string) => {
             this.data.loadNewItem(storageService.getContainerOnce(fileGroupId));
         });
     }
@@ -127,11 +129,11 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
     }
 
     private _setContainerFilter(filter: Filter) {
-        if (filter.isEmpty() || filter.properties.length === 0) {
-            this.data.setOptions({});
+        if (filter.isEmpty()) {
+            this.data.setOptions({ ...defaultListOptions });
         } else {
-            let filterText = (this._filter.properties[0] as any).value;
-            this.data.setOptions({ filter: filterText && filterText.toLowerCase() });
+            let filterText = (this._filter as any).value;
+            this.data.setOptions({ ...defaultListOptions, filter: filterText && filterText.toLowerCase() });
         }
 
         if (this.hasAutoStorage) {
@@ -157,7 +159,7 @@ export class FileGroupListComponent extends ListOrTableBase implements OnInit, O
         }));
 
         sidebarRef.afterCompletion.subscribe(() => {
-            this.storageService.onFileGroupUpdated.next();
+            this.storageService.onContainerUpdated.next();
         });
     }
 

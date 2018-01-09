@@ -2,20 +2,30 @@
 
 <bl-list-and-show-layout #layout (listScrolledToBottom)="fileGroupList.onScrollToBottom()" [list]="fileGroupList" *ngIf="storageService.hasArmAutoStorage | async">
     <div bl-list-title>
-        File groups
+        Storage containers
     </div>
     <div bl-list-buttons>
         <bl-button type="plain" icon="fa fa-plus spin-hover" color="light" title="Add a file group" [matMenuTriggerFor]="addFileGroupMenu"
-            [disabled]="!hasAutoStorage" [@.disabled]="true" permission="write">
+            [disabled]="!hasAutoStorage" [@.disabled]="true">
         </bl-button>
         <mat-menu #addFileGroupMenu="matMenu" [@.disabled]="true">
-            <button mat-menu-item (click)="openEmptyFileGroupForm()"> Empty file group </button>
-            <button mat-menu-item (click)="openFileGroupForm()"> From local folder </button>
+            <button mat-menu-item (click)="openEmptyContainerForm()"> Empty container </button>
+            <button mat-menu-item (click)="openEmptyContainerForm(true)"> Empty file group </button>
+            <button mat-menu-item (click)="openFileGroupForm()"> From local folder(File group) </button>
         </mat-menu>
+    </div>
+    <div pre-quicksearch>
+        <div class="blselect">
+            <select placeholder="Container Type" [formControl]="containerTypePrefix">
+                <option *ngFor="let type of containerTypes;trackBy: trackType" [value]="type.prefix">
+                    {{type.name}}
+                </option>
+            </select>
+        </div>
     </div>
     <div bl-list-content>
         <bl-focus-section>
-            <bl-file-group-list #fileGroupList [filter]="layout.filter" [quickList]="!(layout.showAdvancedFilter | async)"></bl-file-group-list>
+            <bl-data-container-list #fileGroupList [filter]="filter" [quickList]="!(layout.showAdvancedFilter | async)"></bl-data-container-list>
         </bl-focus-section>
     </div>
     <div bl-show-content>

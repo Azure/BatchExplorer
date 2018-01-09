@@ -1,9 +1,9 @@
 import { Component, OnDestroy, ViewChild } from "@angular/core";
 import { FormControl, Validators } from "@angular/forms";
 import { autobind } from "app/core";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
-import { NcjFileGroupService, StorageService } from "app/services";
+import { StorageService } from "app/services";
 import { Filter, FilterBuilder } from "app/utils/filter-builder";
 import { SidebarManager } from "../../base/sidebar";
 import { FileGroupCreateFormComponent } from "../action";
@@ -11,8 +11,19 @@ import { FileGroupCreateFormComponent } from "../action";
 import { MatMenuTrigger } from "@angular/material";
 import { DialogService } from "app/components/base/dialogs";
 import { BlobContainer } from "app/models";
-import { Constants } from "app/utils";
+import { Constants } from "common";
 import "./data-home.scss";
+
+const containerTypes = [
+    {
+        name: "All",
+        prefix: "",
+    },
+    {
+        name: "File groups",
+        prefix: Constants.ncjFileGroupPrefix,
+    },
+];
 
 @Component({
     selector: "bl-data-home",
@@ -21,26 +32,24 @@ import "./data-home.scss";
 export class DataHomeComponent implements OnDestroy {
     @ViewChild(MatMenuTrigger) public trigger: MatMenuTrigger;
 
+    public containerTypes = containerTypes;
     public quickSearchQuery = new FormControl();
     public filter: Filter = FilterBuilder.none();
-    public quickFilter: Filter = FilterBuilder.none();
     public hasAutoStorage = true;
+    public containerTypePrefix = new FormControl("");
 
     private _autoStorageSub: Subscription;
 
     constructor(
         private sidebarManager: SidebarManager,
         private dialogService: DialogService,
-        private filegroupService: NcjFileGroupService,
         public storageService: StorageService) {
 
         this.quickSearchQuery.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((query: string) => {
-            if (query === "") {
-                this.quickFilter = FilterBuilder.none();
-            } else {
-                this.quickFilter = FilterBuilder.prop("id").startswith(query);
-            }
+            this._updateFilter();
+        });
 
+        this.containerTypePrefix.valueChanges.subscribe((prefix) => {
             this._updateFilter();
         });
 
@@ -58,25 +67,25 @@ export class DataHomeComponent implements OnDestroy {
         this.trigger.openMenu();
     }
 
-    public openEmptyFileGroupForm() {
+    public openEmptyContainerForm(fileGroup = false) {
         const validation = Constants.forms.validation;
-
-        this.dialogService.prompt("Add a new file group", {
-            prompt: (name) => this._createEmptyFileGroup(name),
+        const type = fileGroup ? "file group" : "container";
+        this.dialogService.prompt(`Create a new empty ${type}`, {
+            prompt: (name) => this._createEmptyContainer(name, fileGroup),
             validator: [
                 Validators.required,
                 Validators.maxLength(validation.maxLength.fileGroup),
                 Validators.pattern(validation.regex.fileGroup),
             ],
             asyncValidator: [
-                this._validateFileGroupName.bind(this),
+                this._validateContainerUnique(fileGroup ? Constants.ncjFileGroupPrefix : ""),
             ],
             validatorMessages: [
-                { code: "required", message: "The file group name is a required field" },
-                { code: "maxlength", message: "The file group name has a maximum length of 64 characters" },
-                { code: "duplicateFileGroup", message: "A file group with this name already exist." },
+                { code: "required", message: `The ${type} name is a required field` },
+                { code: "maxlength", message: `The ${type} name has a maximum length of 64 characters` },
+                { code: "duplicateContainer", message: `A ${type} with this name already exist.` },
                 // tslint:disable-next-line:max-line-length
-                { code: "pattern", message: "The file group name can contain any combination of lowercase alphanumeric characters including single hyphens" },
+                { code: "pattern", message: `The ${type} can contain any combination of lowercase alphanumeric characters including single hyphens` },
             ],
         });
     }
@@ -89,15 +98,28 @@ export class DataHomeComponent implements OnDestroy {
         this._updateFilter();
     }
 
-    private _updateFilter() {
-        this.filter = this.quickFilter;
+    public trackType(index, type) {
+        return type.prefix;
     }
 
-    private _createEmptyFileGroup(name: string) {
-        const obs = this.filegroupService.createEmptyFileGroup(name);
+    private _updateFilter() {
+        const prefix = this.containerTypePrefix.value || "";
+        const search = this.quickSearchQuery.value || "";
+        const query = prefix + search;
+        if (query === "") {
+            this.filter = FilterBuilder.none();
+        } else {
+            this.filter = FilterBuilder.prop("id").startswith(query);
+        }
+    }
+
+    private _createEmptyContainer(name: string, fileGroup = false) {
+        const prefix = fileGroup ? Constants.ncjFileGroupPrefix : "";
+        const container = `${prefix}${name}`;
+        const obs = this.storageService.createContainer(container);
         obs.subscribe({
             next: () => {
-                this.storageService.onFileGroupAdded.next(this.storageService.fileGroupContainer(name));
+                this.storageService.onContainerAdded.next(container);
             },
             error: () => null,
         });
@@ -109,25 +131,18 @@ export class DataHomeComponent implements OnDestroy {
      * If it does exist then we inform the user that they will be modifying
      * the existing group and not creating a new one.
      */
-    private _validateFileGroupName(control: FormControl): Promise<any> {
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                const containerName = `${this.storageService.ncjFileGroupPrefix}${control.value}`;
-                this.storageService.getContainerOnce(containerName).subscribe({
-                    next: (container: BlobContainer) => {
-                        resolve({
-                            duplicateFileGroup: {
-                                valid: false,
-                            },
-                        });
-                    },
-                    error: (error) => {
-                        resolve(null);
-                    },
-                });
-                // timeout for allowing the user to type more than one character.
-                // async validation fires after every kepress.
-            }, 500);
-        });
+    private _validateContainerUnique(prefix = "") {
+        return (control: FormControl) => {
+            const containerName = `${prefix}${control.value}`;
+            return Observable.of(null).debounceTime(500)
+                .flatMap(() => this.storageService.getContainerOnce(containerName))
+                .map((container: BlobContainer) => {
+                    return {
+                        duplicateContainer: {
+                            valid: false,
+                        },
+                    };
+                }).catch(() => Observable.of(null));
+        };
     }
 }

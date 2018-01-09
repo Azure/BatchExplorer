@@ -74,7 +74,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
                 complete: () => {
                     task.progress.next(100);
                     const message = `${lastData.uploaded} files were successfully uploaded to the file group`;
-                    this.storageService.onFileGroupAdded.next(this.storageService.fileGroupContainer(formData.name));
+                    this.storageService.onContainerAdded.next(this.storageService.fileGroupContainer(formData.name));
                     this.notificationService.success("Create file group", message, { persist: true });
                 },
                 error: (error) => {
@@ -126,7 +126,7 @@ export class FileGroupCreateFormComponent extends DynamicForm<BlobContainer, Fil
     private _validateFileGroupName(control: FormControl): Promise<any> {
         return new Promise((resolve) => {
             setTimeout(() => {
-                const containerName = `${this.storageService.ncjFileGroupPrefix}${control.value}`;
+                const containerName = `${Constants.ncjFileGroupPrefix}${control.value}`;
                 this.storageService.getContainerOnce(containerName).subscribe({
                     next: (container: BlobContainer) => {
                         this.groupExists = true;

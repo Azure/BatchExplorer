@@ -10,6 +10,7 @@ import { Subscription } from "rxjs";
 import { BlobContainer } from "app/models";
 import { ListContainerParams, StorageService } from "app/services";
 import { ListView } from "app/services/core";
+import { Constants } from "common";
 
 import "./file-group-sas.scss";
 
@@ -40,7 +41,7 @@ export class FileGroupSasComponent implements ControlValueAccessor, OnChanges, O
     private _subscriptions: Subscription[] = [];
 
     constructor(private storageService: StorageService) {
-        this.fileGroupsData = this.storageService.containerListView(storageService.ncjFileGroupPrefix);
+        this.fileGroupsData = this.storageService.containerListView(Constants.ncjFileGroupPrefix);
         this.fileGroupsData.items.subscribe((fileGroups) => {
             this.fileGroups = fileGroups;
         });

@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { ServerError } from "app/models";
 import { StorageClientService } from "app/services";
 import { ListGetter, ListGetterConfig } from "app/services/core/data/list-getter";
+import { ContinuationToken } from "./list-options";
 
 export interface StorageListConfig<TEntity, TParams> extends ListGetterConfig<TEntity, TParams> {
     getData: (client: any, params: TParams, options: any, token: any) => any;
@@ -30,8 +31,8 @@ export class StorageListGetter<TEntity, TParams> extends ListGetter<TEntity, TPa
         }).share();
     }
 
-    protected listNext(nextLink: string): Observable<any> {
-        return this._clientProxy(null, null, nextLink).flatMap((client) => {
+    protected listNext(token: ContinuationToken): Observable<any> {
+        return this._clientProxy(null, token.options, token.nextLink).flatMap((client) => {
             return Observable.fromPromise(client);
         }).map(response => this._processStorageResponse(response)).catch((error) => {
             return Observable.throw(ServerError.fromStorage(error));

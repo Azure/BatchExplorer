@@ -27,14 +27,9 @@ export enum Permission {
  */
 @Injectable()
 export class AuthorizationHttpService {
+    private _permission: Observable<Permission>;
     constructor(private accountService: AccountService, private armService: ArmHttpService) {
-    }
-
-    /**
-     * Check current account resouce permission
-     */
-    public getResourcePermission(): Observable<Permission> {
-        return this.accountService.currentAccount.take(1)
+        this._permission = this.accountService.currentAccount.take(1)
             .flatMap(account => {
                 const resourceId = account && account.id;
                 if (resourceId) {
@@ -44,7 +39,24 @@ export class AuthorizationHttpService {
                         return Observable.of(permission);
                     });
                 }
-            }).share();
+            }).shareReplay(1);
+    }
+
+    /**
+     * Check current account resouce permission
+     */
+    public getResourcePermission(): Observable<Permission> {
+        return this._permission;
+    }
+
+    /**
+     * Check if you have the @param permission with the current account
+     */
+    public hasPermission(permission: Permission): Observable<boolean> {
+        return this.getResourcePermission().map((userPermission) => {
+            if (permission === Permission.Read) { return userPermission !== Permission.None; }
+            return userPermission === Permission.Write;
+        });
     }
 
     private _checkResoucePermissions(permissions: RoleDefinitionPermission[]): Permission {

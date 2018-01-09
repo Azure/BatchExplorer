@@ -74,7 +74,7 @@ describe("ParameterInputComponent", () => {
 
         storageServiceSpy = {
             listView: () => listProxy,
-            onFileGroupAdded: new Subject(),
+            onContainerAdded: new Subject(),
             containerListView: () => listProxy,
             generateSharedAccessContainerUrl: (containerId, accessPolicy) => {
                 return Observable.of(`https://${containerId}.com?sastoken`);

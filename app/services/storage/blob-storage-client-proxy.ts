@@ -214,6 +214,7 @@ export class BlobStorageClientProxy {
         continuationToken?: any,
         options?: StorageRequestOptions): Promise<BlobStorageResult> {
 
+        prefix = prefix || "";
         const prefixAndFilter = filter ? prefix + filter : prefix;
         return new Promise((resolve, reject) => {
             this.client.listContainersSegmentedWithPrefix(prefixAndFilter, continuationToken, options,
@@ -223,10 +224,10 @@ export class BlobStorageClientProxy {
                     } else {
                         resolve({
                             data: result.entries.map((container) => {
-                                return Object.assign(container, {
+                                return {
+                                    ...container,
                                     id: container.name,
-                                    name: container.name.replace(prefix, ""),
-                                });
+                                };
                             }),
                             continuationToken: result.continuationToken,
                         });
@@ -253,10 +254,10 @@ export class BlobStorageClientProxy {
                     reject(error);
                 } else {
                     resolve({
-                        data: Object.assign(result, {
+                        data: {
+                            ...result,
                             id: result.name,
-                            name: result.name.replace(prefix, ""),
-                        }),
+                        },
                     });
                 }
             });
@@ -327,6 +328,16 @@ export class BlobStorageClientProxy {
      */
     public getUrl(container: string, blob?: string, sasToken?: string): string {
         return this.client.getUrl(container, blob, sasToken);
+    }
+
+    public async uploadFile(container: string, file: string, remotePath: string) {
+        return new Promise((resolve, reject) => {
+            this.client.createBlockBlobFromLocalFile(container, remotePath, file,
+                (error: any, result: storage.BlobService.BlobResult) => {
+                    if (error) { return reject(error); }
+                    resolve(result);
+                });
+        });
     }
 
     /**
