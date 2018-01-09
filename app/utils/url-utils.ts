@@ -7,4 +7,8 @@ export class UrlUtils {
         }
         return params;
     }
+
+    public static isHttpUrl(url: string) {
+        return /^https?:\/\/.*$/.test(url);
+    }
 }
