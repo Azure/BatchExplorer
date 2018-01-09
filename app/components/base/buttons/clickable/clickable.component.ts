@@ -27,7 +27,9 @@ export class ClickableComponent implements OnChanges, OnDestroy {
      */
     @HostBinding("class.disabled") public get isDisabled() { return this.disabled || this._permissionDisabled; }
     @Output() public do = new EventEmitter<Event>();
-    @HostBinding("tabindex") public tabindex = "0";
+    @HostBinding("tabindex") public get tabindex() {
+        return this.isDisabled ? "-1" : "0";
+    }
     @HostBinding("class.focus-outline") public focusOutline = true;
     public subtitle = "";
 
@@ -40,23 +42,15 @@ export class ClickableComponent implements OnChanges, OnDestroy {
     public ngOnChanges(changes: SimpleChanges): void {
         if (changes.permission) {
             this._clearSubscription();
-            this._sub = this.authHttpService.getResourcePermission().subscribe((userPermission: Permission) => {
-                if (this.permission === Permission.Write) {
-                    switch (userPermission) {
-                        case Permission.None:
-                        case Permission.Read:
-                            this._permissionDisabled = true;
-                            this.subtitle = " (You don't have permission to perform this action)";
-                            break;
-                        case Permission.Write:
-                            this._permissionDisabled = false;
-                            this.subtitle = "";
-                            break;
-                    }
+            this._sub = this.authHttpService.hasPermission(this.permission).subscribe((hasPermission) => {
+                this._permissionDisabled = !hasPermission;
+                if (hasPermission) {
+                    this.subtitle = "";
+                } else {
+                    this.subtitle = " (You don't have permission to perform this action)";
                 }
             });
         }
-        this.tabindex = this.disabled ? "-1" : "0";
     }
 
     public ngOnDestroy(): void {
@@ -77,7 +71,7 @@ export class ClickableComponent implements OnChanges, OnDestroy {
     }
 
     public handleAction(event: Event) {
-        if (this.disabled) {
+        if (this.isDisabled) {
             return;
         }
         this.do.emit(event);

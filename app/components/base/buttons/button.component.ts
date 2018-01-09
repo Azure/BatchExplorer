@@ -67,7 +67,7 @@ export class ButtonComponent extends ClickableComponent {
 
     public handleAction(event: Event) {
         super.handleAction(event);
-        if (this.disabled || !this.action) {
+        if (this.isDisabled || !this.action) {
             return;
         }
         this._execute(event);
