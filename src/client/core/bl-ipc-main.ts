@@ -81,4 +81,3 @@ export class BlIpcMain {
         eventEmitter.emit(arg.eventName, arg.id, arg.data, event);
     }
 }
-BlIpcMain.init();

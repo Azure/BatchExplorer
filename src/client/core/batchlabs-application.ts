@@ -33,6 +33,7 @@ export class BatchLabsApplication {
     }
 
     public async init() {
+        BlIpcMain.init();
         await this.aadService.init();
         this._registerProtocol();
         this.setupProcessEvents();
