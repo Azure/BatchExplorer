@@ -30,6 +30,7 @@ const providersApiVersion = {
     "microsoft.storage": Constants.ApiVersion.armStorage,
     "microsoft.compute": Constants.ApiVersion.compute,
     "microsoft.commerce": Constants.ApiVersion.commerce,
+    "microsoft.authorization": Constants.ApiVersion.authorization,
 };
 
 type SubscriptionOrTenant = Subscription | string;

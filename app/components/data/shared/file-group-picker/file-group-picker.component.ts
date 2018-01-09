@@ -11,6 +11,7 @@ import { FileGroupCreateFormComponent } from "app/components/data/action";
 import { BlobContainer } from "app/models";
 import { ListContainerParams, StorageService } from "app/services";
 import { ListView } from "app/services/core";
+import { Constants } from "common";
 
 import "./file-group-picker.scss";
 
@@ -38,13 +39,13 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
 
     constructor(private storageService: StorageService, private sidebarManager: SidebarManager) {
 
-        this.fileGroupsData = this.storageService.containerListView(storageService.ncjFileGroupPrefix);
+        this.fileGroupsData = this.storageService.containerListView(Constants.ncjFileGroupPrefix);
         this.fileGroupsData.items.subscribe((fileGroups) => {
             this.fileGroups = fileGroups;
         });
 
         // listen to file group add events
-        this._subscriptions.push(this.storageService.onFileGroupAdded.subscribe((fileGroupId: string) => {
+        this._subscriptions.push(this.storageService.onContainerAdded.subscribe((fileGroupId: string) => {
             const container = storageService.getContainerOnce(fileGroupId);
             this.fileGroupsData.loadNewItem(container);
             container.subscribe((blobContainer) => {
@@ -55,7 +56,7 @@ export class FileGroupPickerComponent implements ControlValueAccessor, OnInit, O
         this._subscriptions.push(this.value.valueChanges.debounceTime(400).distinctUntilChanged().subscribe((value) => {
             this._checkValid(value);
             if (this._propagateChange) {
-                this._propagateChange(value);
+                this._propagateChange(value && value.replace(Constants.ncjFileGroupPrefix, ""));
             }
         }));
     }

@@ -162,11 +162,12 @@ export class FileExplorerComponent implements OnChanges, OnDestroy {
 
     private _updateWorkspaceEvents() {
         this._clearWorkspaceSubs();
-        this._workspaceSubs.push(this.workspace.currentNode.subscribe((node) => {
-            this.currentNode = node;
-        }));
         this._workspaceSubs.push(this.workspace.currentSource.subscribe((source) => {
             this.currentSource = source;
+        }));
+
+        this._workspaceSubs.push(this.workspace.currentNode.subscribe((node) => {
+            this.currentNode = { ...node, treeNode: new FileTreeNode(node.treeNode) };
         }));
     }
 

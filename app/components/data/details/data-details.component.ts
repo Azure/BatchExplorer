@@ -74,7 +74,7 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
         }));
 
         sidebarRef.afterCompletion.subscribe(() => {
-            this.storageService.onFileGroupUpdated.next();
+            this.storageService.onContainerUpdated.next();
         });
     }
 

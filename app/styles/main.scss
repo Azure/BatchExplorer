@@ -44,3 +44,7 @@
 // Vendor styles
 @import "./vendor/angular-extras";
 @import "./vendor/material-theme.scss";
+
+select {
+    cursor: pointer;
+}
