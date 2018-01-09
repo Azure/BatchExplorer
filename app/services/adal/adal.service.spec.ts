@@ -18,21 +18,20 @@ const token1 = new AccessToken({
 
 describe("AdalService spec", () => {
     let service: AdalService;
-    let aadServiceSpy;
+    let aadServiceSpy = {};
+    let remoteSpy;
 
     beforeEach(() => {
-        aadServiceSpy = {
-            accessTokenData: jasmine.createSpy("accessTokenData").and.returnValue(Promise.resolve(token1)),
-        };
-        const remote = {
+        remoteSpy = {
             getBatchLabsApp: () => ({ aadService: aadServiceSpy }),
+            send: jasmine.createSpy("accessTokenData").and.returnValue(Promise.resolve(token1)),
         };
-        service = new AdalService(remote as any);
+        service = new AdalService(remoteSpy);
     });
 
     it("#accessTokenFor returns observable with token string", (done) => {
         service.accessTokenFor(tenant1, resource1).subscribe((token) => {
-            expect(aadServiceSpy.accessTokenData).toHaveBeenCalledOnce();
+            expect(remoteSpy.send).toHaveBeenCalledOnce();
             expect(token).toEqual(token1.access_token);
             done();
         });
@@ -40,7 +39,7 @@ describe("AdalService spec", () => {
 
     it("#accessTokenData returns observable with token", (done) => {
         service.accessTokenData(tenant1, resource1).subscribe((token) => {
-            expect(aadServiceSpy.accessTokenData).toHaveBeenCalledOnce();
+            expect(remoteSpy.send).toHaveBeenCalledOnce();
             expect(token).toEqual(token1);
             done();
         });
@@ -49,16 +48,16 @@ describe("AdalService spec", () => {
     describe("#accessTokenDataAsync", () => {
         it("load a new token by calling aadService", F(async () => {
             const token = await service.accessTokenDataAsync(tenant1, resource1);
-            expect(aadServiceSpy.accessTokenData).toHaveBeenCalledOnce();
+            expect(remoteSpy.send).toHaveBeenCalledOnce();
             expect(token).toEqual(token1);
         }));
 
         it("load a new token by calling aadService", F(async () => {
             const tokenA = await service.accessTokenDataAsync(tenant1, resource1);
-            expect(aadServiceSpy.accessTokenData).toHaveBeenCalledOnce();
+            expect(remoteSpy.send).toHaveBeenCalledOnce();
             expect(tokenA).toEqual(token1);
             const tokenB = await service.accessTokenDataAsync(tenant1, resource1);
-            expect(aadServiceSpy.accessTokenData).toHaveBeenCalledOnce();
+            expect(remoteSpy.send).toHaveBeenCalledOnce();
             expect(tokenB).toEqual(token1);
         }));
 
@@ -66,7 +65,7 @@ describe("AdalService spec", () => {
             const promiseA = service.accessTokenDataAsync(tenant1, resource1);
             const promiseB = service.accessTokenDataAsync(tenant1, resource1);
             const [tokenA, tokenB] = await Promise.all([promiseA, promiseB]);
-            expect(aadServiceSpy.accessTokenData).toHaveBeenCalledOnce();
+            expect(remoteSpy.send).toHaveBeenCalledOnce();
             expect(tokenA).toEqual(token1);
             expect(tokenB).toEqual(token1);
         }));
