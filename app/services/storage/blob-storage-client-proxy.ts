@@ -215,7 +215,6 @@ export class BlobStorageClientProxy {
         options?: StorageRequestOptions): Promise<BlobStorageResult> {
 
         prefix = prefix || "";
-        console.log("List dis", continuationToken);
         const prefixAndFilter = filter ? prefix + filter : prefix;
         return new Promise((resolve, reject) => {
             this.client.listContainersSegmentedWithPrefix(prefixAndFilter, continuationToken, options,
@@ -223,7 +222,6 @@ export class BlobStorageClientProxy {
                     if (error) {
                         reject(error);
                     } else {
-                        console.log("Got containrs", result);
                         resolve({
                             data: result.entries.map((container) => {
                                 return {

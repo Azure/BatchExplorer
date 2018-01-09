@@ -20,7 +20,7 @@ export class FormErrorComponent implements OnChanges, OnDestroy {
      */
     @Input() public code: string = null;
 
-    public hasError = false;
+    private _hasError = false;
     private _control: AbstractControl;
     private _sub: Subscription;
 
@@ -57,12 +57,16 @@ export class FormErrorComponent implements OnChanges, OnDestroy {
         return current;
     }
 
+    public get hasError() {
+        return this._hasError && this._control.touched;
+    }
+
     /**
      * Check if this formControl has an error and has been touched
      */
     private _computeHasError() {
         const control = this._control;
-        this.hasError = control.hasError(this.code) && control.touched;
+        this._hasError = control.hasError(this.code);
         this.changeDetector.markForCheck();
     }
 
@@ -72,6 +76,8 @@ export class FormErrorComponent implements OnChanges, OnDestroy {
             this._sub.unsubscribe();
             this._sub = null;
         }
-        this._sub = this._control.statusChanges.subscribe(() => this._computeHasError());
+        this._sub = this._control.statusChanges.subscribe((x) => {
+            this._computeHasError();
+        });
     }
 }

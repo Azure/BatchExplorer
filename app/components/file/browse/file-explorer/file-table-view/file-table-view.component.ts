@@ -29,7 +29,6 @@ export class FileTableViewComponent implements OnChanges {
     public LoadingStatus = LoadingStatus;
 
     public ngOnChanges(inputs) {
-        console.log("new INput", inputs);
         if (inputs.canDropExternalFiles) {
             this._updateTableConfig();
         }

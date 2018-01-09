@@ -64,6 +64,7 @@ describe("FormErrorComponent", () => {
         component.form.patchValue({ id: "" });
         component.form.get("id").markAsTouched();
         fixture.detectChanges();
+
         expect(component.idRequiredError.hasError).toBe(true);
         expect(component.idMaxLengthError.hasError).toBe(false);
 
