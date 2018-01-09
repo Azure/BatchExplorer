@@ -1,5 +1,5 @@
-import { HeatmapColor } from "app/components/pool/graphs/heatmap-color";
 import { ColorUtils } from "app/utils";
+import { HeatmapColor } from "./heatmap-color";
 
 const stateTree = [
     { state: "idle", color: "#aaaaaa" },

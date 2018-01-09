@@ -6,7 +6,7 @@
     </div>
     <div bl-list-buttons>
         <bl-button type="plain" icon="fa fa-plus spin-hover" color="light" title="Add a file group" [matMenuTriggerFor]="addFileGroupMenu"
-            [disabled]="!hasAutoStorage" [@.disabled]="true">
+            [disabled]="!hasAutoStorage" [@.disabled]="true" permission="write">
         </bl-button>
         <mat-menu #addFileGroupMenu="matMenu" [@.disabled]="true">
             <button mat-menu-item (click)="openEmptyContainerForm()"> Empty container </button>

@@ -4,8 +4,8 @@ import { List } from "immutable";
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
 import { Node, Pool } from "app/models";
 import { NodeService } from "app/services";
-import { StateCounter } from "./state-counter";
-import { CategoryNode, StateNode, StateTree } from "./state-tree";
+import { StateCounter } from "../state-counter";
+import { CategoryNode, StateNode, StateTree } from "../state-tree";
 
 import "./nodes-heatmap-legend.scss";
 
