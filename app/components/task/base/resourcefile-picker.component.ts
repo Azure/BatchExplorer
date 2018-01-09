@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, forwardRef } from "@angular/core";
+import { ChangeDetectorRef, Component, HostListener, OnDestroy, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
@@ -7,7 +7,11 @@ import { Subscription } from "rxjs";
 
 import { ResourceFile } from "app/models";
 import { DragUtils, UrlUtils } from "app/utils";
+import { BlobUtilities } from "azure-storage";
+import * as moment from "moment";
 
+import { StorageService } from "app/services";
+import { SharedAccessPolicy } from "app/services/storage/models";
 import "./resourcefile-picker.scss";
 
 // tslint:disable:no-forward-ref
@@ -22,11 +26,17 @@ import "./resourcefile-picker.scss";
 export class ResourcefilePickerComponent implements ControlValueAccessor, OnDestroy {
     public files: FormControl;
     public isDraging = 0;
+    public uploadingFiles = [];
 
     private _propagateChange: (value: ResourceFile[]) => void = null;
     private _sub: Subscription;
+    // TODO-TIM read from settings
+    private _containerId = "batchlabs-input";
 
-    constructor(private formBuilder: FormBuilder) {
+    constructor(
+        private formBuilder: FormBuilder,
+        private storageService: StorageService,
+        private changeDetector: ChangeDetectorRef) {
         this.files = this.formBuilder.control([]);
         this._sub = this.files.valueChanges.subscribe((files) => {
             if (this._propagateChange) {
@@ -89,14 +99,44 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
             }
         } else if (this._hasFile(dataTransfer)) {
             console.log("Droped files", files);
+            this._uploadFiles(files);
         }
         this.isDraging = 0;
     }
 
     private _addResourceFileFromUrl(url: string) {
+        this._addResourceFile(url, path.basename(url));
+    }
+
+    private _uploadFiles(files) {
+        for (const file of files) {
+            this._uploadFile(file);
+        }
+    }
+
+    private _uploadFile(file: File) {
+        const filename = path.basename(file.path);
+        this.uploadingFiles.push(filename);
+        this.storageService.uploadFile(this._containerId, file.path, filename).subscribe((result) => {
+            this.uploadingFiles = this.uploadingFiles.filter(x => x !== filename);
+            this.changeDetector.detectChanges();
+            const sas: SharedAccessPolicy = {
+                AccessPolicy: {
+                    Permissions: BlobUtilities.SharedAccessPermissions.READ,
+                    Start: new Date(),
+                    Expiry: moment().add(1, "week").toDate(),
+                },
+            };
+            this.storageService.generateSharedAccessBlobUrl(this._containerId, filename, sas).subscribe((url) => {
+                this._addResourceFile(url, filename);
+            });
+        });
+    }
+
+    private _addResourceFile(blobSource: string, filePath: string) {
         const files = this.files.value.concat([{
-            blobSource: url,
-            filePath: path.basename(url),
+            blobSource,
+            filePath,
         }]);
         this.files.setValue(files);
     }

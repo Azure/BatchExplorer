@@ -8,6 +8,7 @@ import { BlobContainer, File, ServerError } from "app/models";
 import { FileSystemService } from "app/services";
 import { SharedAccessPolicy } from "app/services/storage/models";
 import { CloudPathUtils, log } from "app/utils";
+import { BlobService } from "azure-storage";
 import { Constants } from "common";
 import {
     DataCache,
@@ -342,8 +343,21 @@ export class StorageService {
     public generateSharedAccessContainerUrl(container: string, sharedAccessPolicy: SharedAccessPolicy)
         : Observable<string> {
         return this._callStorageClient((client) => {
-            const sasToken = client.generateSharedAccessSignature(container, sharedAccessPolicy);
+            const sasToken = client.generateSharedAccessSignature(container, null, sharedAccessPolicy);
             return Promise.resolve(client.getUrl(container, null, sasToken));
+        }, (error) => {
+            // TODO-Andrew: test that errors are caught
+            log.error(`Error generating container SAS: ${container}`, { ...error });
+        });
+    }
+
+    public generateSharedAccessBlobUrl(
+        container: string, blob: string,
+        sharedAccessPolicy: SharedAccessPolicy): Observable<string> {
+
+        return this._callStorageClient((client) => {
+            const sasToken = client.generateSharedAccessSignature(container, blob, sharedAccessPolicy);
+            return Promise.resolve(client.getUrl(container, blob, sasToken));
         }, (error) => {
             // TODO-Andrew: test that errors are caught
             log.error(`Error generating container SAS: ${container}`, { ...error });
@@ -377,7 +391,7 @@ export class StorageService {
      * @param file Absolute path to the local file
      * @param remotePath Blob name
      */
-    public uploadFile(container: string, file: string, remotePath: string) {
+    public uploadFile(container: string, file: string, remotePath: string): Observable<BlobService.BlobResult> {
         return this._callStorageClient((client) => client.uploadFile(container, file, remotePath), (error) => {
             log.error(`Error upload file ${file} to container ${container}`, error);
         });
