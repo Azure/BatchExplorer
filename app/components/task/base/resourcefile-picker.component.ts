@@ -6,11 +6,11 @@ import * as path from "path";
 import { Subscription } from "rxjs";
 
 import { ResourceFile } from "app/models";
-import { DragUtils, UrlUtils } from "app/utils";
+import { CloudPathUtils, DragUtils, UrlUtils } from "app/utils";
 import { BlobUtilities } from "azure-storage";
 import * as moment from "moment";
 
-import { StorageService } from "app/services";
+import { FileSystemService, StorageService } from "app/services";
 import { SharedAccessPolicy } from "app/services/storage/models";
 import "./resourcefile-picker.scss";
 
@@ -36,6 +36,7 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
     constructor(
         private formBuilder: FormBuilder,
         private storageService: StorageService,
+        private fs: FileSystemService,
         private changeDetector: ChangeDetectorRef) {
         this.files = this.formBuilder.control([]);
         this._sub = this.files.valueChanges.subscribe((files) => {
@@ -98,8 +99,7 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
                 this._addResourceFileFromUrl(link);
             }
         } else if (this._hasFile(dataTransfer)) {
-            console.log("Droped files", files);
-            this._uploadFiles(files);
+            this._uploadFiles(files.map(x => x.path));
         }
         this.isDraging = 0;
     }
@@ -108,17 +108,30 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
         this._addResourceFile(url, path.basename(url));
     }
 
-    private _uploadFiles(files) {
+    private async _uploadFiles(files: string[], root = "") {
         for (const file of files) {
-            this._uploadFile(file);
+            await this._uploadPath(file, root);
         }
     }
 
-    private _uploadFile(file: File) {
-        const filename = path.basename(file.path);
-        this.uploadingFiles.push(filename);
-        this.storageService.uploadFile(this._containerId, file.path, filename).subscribe((result) => {
-            this.uploadingFiles = this.uploadingFiles.filter(x => x !== filename);
+    private async _uploadPath(filePath: string, root = "") {
+        const stats = await this.fs.lstat(filePath);
+        if (stats.isFile()) {
+            this._uploadFile(filePath, root);
+        } else {
+            const files = await this.fs.readdir(filePath);
+            const paths = files.map(x => path.join(filePath, x));
+            await this._uploadFiles(paths, CloudPathUtils.join(root, path.basename(filePath)));
+        }
+    }
+
+    private _uploadFile(filePath: string, root = "") {
+        const filename = path.basename(filePath);
+        const nodeFilePath = CloudPathUtils.join(root, filename);
+        const blobName = CloudPathUtils.join(root, filename);
+        this.uploadingFiles.push(nodeFilePath);
+        this.storageService.uploadFile(this._containerId, filePath, blobName).subscribe((result) => {
+            this.uploadingFiles = this.uploadingFiles.filter(x => x !== nodeFilePath);
             this.changeDetector.detectChanges();
             const sas: SharedAccessPolicy = {
                 AccessPolicy: {
@@ -127,8 +140,8 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
                     Expiry: moment().add(1, "week").toDate(),
                 },
             };
-            this.storageService.generateSharedAccessBlobUrl(this._containerId, filename, sas).subscribe((url) => {
-                this._addResourceFile(url, filename);
+            this.storageService.generateSharedAccessBlobUrl(this._containerId, blobName, sas).subscribe((url) => {
+                this._addResourceFile(url, nodeFilePath);
             });
         });
     }
