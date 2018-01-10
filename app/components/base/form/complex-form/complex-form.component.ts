@@ -1,13 +1,13 @@
 import {
-    AfterViewInit, ChangeDetectorRef, Component, ContentChildren, HostBinding, Input, QueryList, Type,
+    AfterViewInit, ChangeDetectorRef, Component, ContentChildren, HostBinding, Input, OnChanges, QueryList, Type,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 
-import { Dto, autobind } from "app/core";
+import { AsyncTask, Dto, autobind } from "app/core";
 import { ServerError } from "app/models";
 import { log } from "app/utils";
 import { validJsonConfig } from "app/utils/validators";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { FormBase } from "../form-base";
 import { FormPageComponent } from "../form-page";
 import "./complex-form.scss";
@@ -34,7 +34,7 @@ export const defaultComplexFormConfig: ComplexFormConfig = {
     selector: "bl-complex-form",
     templateUrl: "complex-form.html",
 })
-export class ComplexFormComponent extends FormBase implements AfterViewInit {
+export class ComplexFormComponent extends FormBase implements AfterViewInit, OnChanges {
     /**
      * If the form should allow multi use. \
      * If true the form will have a "Save" AND a "Save and Close" button.
@@ -62,6 +62,7 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
      * Needs to return an observable that will have a {ServerError} if failing.
      */
     @Input() public submit: (dto?: Dto<any>) => Observable<any>;
+    @Input() public asyncTasks: Observable<Iterable<AsyncTask>>;
 
     @Input() @HostBinding("class") public size: FormSize = "large";
 
@@ -75,6 +76,8 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
     public jsonValue = new FormControl(null, null, validJsonConfig);
 
     private _pageStack: FormPageComponent[] = [];
+    private _asyncTaskSub: Subscription;
+    private _hasAsyncTask = false;
 
     constructor(private changeDetector: ChangeDetectorRef) {
         super();
@@ -90,14 +93,32 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
         this.changeDetector.detectChanges();
     }
 
+    public ngOnChanges(changes) {
+        if (changes.asyncTasks) {
+            this._listenToAsyncTasks();
+        }
+    }
+
     public get isMainWindow() {
         return this.currentPage === this.mainPage;
     }
 
     @autobind()
     public save(): Observable<any> {
+        let ready;
+        if (this._hasAsyncTask) {
+            console.log("HAs async task delay");
+            ready = this.asyncTasks.filter(x => [...x].length === 0).first();
+        } else {
+            ready = Observable.of(null);
+        }
+
         this.loading = true;
-        const obs = this.submit(this.getCurrentDto());
+        const obs = ready.flatMap(() => {
+            console.log("Saving task now...");
+            return Observable.of();
+            // return this.submit(this.getCurrentDto());
+        }).share();
         obs.subscribe({
             next: () => {
                 this.loading = false;
@@ -217,5 +238,18 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
         if (!this.config.jsonEditor) { return; }
         const data = JSON.parse(this.jsonValue.value);
         return new this.config.jsonEditor.dtoType(data || {});
+    }
+
+    private _listenToAsyncTasks() {
+        if (this._asyncTaskSub) {
+            this._asyncTaskSub.unsubscribe();
+            this._asyncTaskSub = null;
+            this._hasAsyncTask = false;
+        }
+        if (this.asyncTasks) {
+            this._asyncTaskSub = this.asyncTasks.subscribe((asyncTasks) => {
+                this._hasAsyncTask = [...asyncTasks].length > 0;
+            });
+        }
     }
 }

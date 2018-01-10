@@ -12,12 +12,12 @@
         <form novalidate>
             <ng-template [ngTemplateOutlet]="currentPage.content"></ng-template>
         </form>
-        <div class="loading-overlay" *ngIf="loading"></div>
     </div>
 
     <div *ngIf="showJsonEditor" class="json-editor-container">
         <bl-form-json-editor [formControl]="jsonValue" [fileUri]="fileUri"></bl-form-json-editor>
     </div>
+    <div class="loading-overlay" *ngIf="loading"></div>
 </div>
 <div class="form-server-error" *ngIf="showError">
     <bl-server-error [error]="error"></bl-server-error>

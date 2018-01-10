@@ -1,11 +1,11 @@
-import { ChangeDetectorRef, Component, HostListener, OnDestroy, forwardRef } from "@angular/core";
+import { ChangeDetectorRef, Component, EventEmitter, HostListener, OnDestroy, Output, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormBuilder, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
 import * as path from "path";
-import { Subscription } from "rxjs";
+import { AsyncSubject, Observable, Subscription } from "rxjs";
 
-import { ResourceFile } from "app/models";
+import { ResourceFileAttributes } from "app/models";
 import { CloudPathUtils, DragUtils, UrlUtils } from "app/utils";
 import { BlobUtilities } from "azure-storage";
 import * as moment from "moment";
@@ -13,6 +13,11 @@ import * as moment from "moment";
 import { FileSystemService, StorageService } from "app/services";
 import { SharedAccessPolicy } from "app/services/storage/models";
 import "./resourcefile-picker.scss";
+
+export interface UploadResourceFileEvent {
+    filename: string;
+    done: Observable<any>;
+}
 
 // tslint:disable:no-forward-ref
 @Component({
@@ -24,11 +29,12 @@ import "./resourcefile-picker.scss";
     ],
 })
 export class ResourcefilePickerComponent implements ControlValueAccessor, OnDestroy {
-    public files: FormControl;
+    @Output() public upload = new EventEmitter();
+    public files: FormControl<ResourceFileAttributes[]>;
     public isDraging = 0;
     public uploadingFiles = [];
 
-    private _propagateChange: (value: ResourceFile[]) => void = null;
+    private _propagateChange: (value: ResourceFileAttributes[]) => void = null;
     private _sub: Subscription;
     // TODO-TIM read from settings
     private _containerId = "batchlabs-input";
@@ -44,13 +50,18 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
                 this._propagateChange(files);
             }
         });
+
+        setTimeout(() => {
+            const subject = new AsyncSubject();
+            this.upload.emit({ filename: "Banana", done: subject });
+        }, 3000);
     }
 
     public ngOnDestroy() {
         this._sub.unsubscribe();
     }
 
-    public writeValue(value: ResourceFile[]) {
+    public writeValue(value: ResourceFileAttributes[]) {
         if (value) {
             this.files.setValue(value);
         }
