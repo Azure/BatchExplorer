@@ -1,0 +1,37 @@
+@import "app/styles/variables";
+
+bl-form-footer {
+    padding: 5px;
+    display: flex;
+    align-items: center;
+
+    .toggle-mode {
+        margin: 0 10px;
+    }
+
+    > .toggle-error-btn {
+        button {
+            font-size: 26px;
+        }
+    }
+
+    > .summary {
+        margin: 0 5px;
+        flex: 1;
+    }
+
+    > .form-buttons {
+        margin: 0 5px;
+
+        bl-button {
+            margin-right: 5px;
+        }
+    }
+
+    .waiting-for-async-task-message {
+        > .task {
+            font-style: italic;
+            color: $alto;
+        }
+    }
+}

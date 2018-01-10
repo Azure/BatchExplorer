@@ -24,40 +24,15 @@
 <div class="form-server-error" *ngIf="showError">
     <bl-server-error [error]="error"></bl-server-error>
 </div>
-<div class="form-footer" *ngIf="!hideFooter">
-    <div class="toggle-mode" *ngIf="config.jsonEditor">
-        <bl-button type="square" [disabled]="classicFormDisabled" (do)="switchToClassicForm()">
-            <i class="fa fa-commenting"></i>
-        </bl-button>
-        <bl-button type="square" [disabled]="showJsonEditor" (do)="switchToJsonEditor()">
-            <i class="fa fa-code"></i>
-        </bl-button>
-    </div>
-    <div class="toggle-error-btn" *ngIf="error">
-        <button mat-icon-button color="warn" (click)="toggleShowError()" matTooltip="There was an error submitting this form" matTooltipPosition="above">
-            <mat-icon fontIcon="fa-exclamation-triangle"></mat-icon>
-        </button>
-    </div>
-    <div class="summary">
-        <div *ngIf="waitingForAsyncTask && asyncTaskList" class="waiting-for-async-task-message">
-            <i class="fa fa-spinner fa-spin"></i>
-            <span class="main">Waiting for </span>
-            <span class="task">{{asyncTaskList[0].name}}</span>
-            <span class="main" *ngIf="asyncTaskList.length > 1">and {{asyncTaskList.length - 1}} tasks</span>
-        </div>
-        <ng-content select="[blFormSummary]" *ngIf="!waitingForAsyncTask"></ng-content>
-    </div>
-    <div class="form-buttons">
-        <div *ngIf="isMainWindow">
-            <bl-button type="wide" *ngIf="multiUse" [action]="save" [disabled]="!submitEnabled" class="add">{{actionName}}</bl-button>
-            <bl-button type="wide" *ngIf="containerRef" [action]="saveAndClose" [disabled]="!submitEnabled" [color]="actionColor" class="add-and-close">{{saveAndCloseText}}</bl-button>
-            <span style="display: inline-block">
-                <bl-button type="wide" color="light" [disabled]="isSaving" [action]="close" class="close">{{cancelText}}</bl-button>
-            </span>
-        </div>
-        <div *ngIf="!isMainWindow">
-            <bl-button type="wide" class="cancel" color="primary" [action]="cancelPage">Cancel</bl-button>
-            <bl-button type="wide" class="select" color="primary" [action]="closePageOrSubmit" [disabled]="!currentPage.submitEnabled">Select</bl-button>
-        </div>
-    </div>
-</div>
+<bl-form-footer class="form-footer" *ngIf="!hideFooter"
+    [config]="config"
+    [waitingForAsyncTask]="waitingForAsyncTask"
+    [asyncTasks]="asyncTaskList"
+    [jsonValue]="jsonValue"
+    [showJsonEditor]="showJsonEditor"
+    [actionConfig]="actionConfig"
+    [currentPage]="currentPage"
+    [formGroup]="formGroup"
+    [isMainWindow]="isMainWindow"
+    (showJsonEditorChanges)="toggleJsonEditor($event)">
+</bl-form-footer>

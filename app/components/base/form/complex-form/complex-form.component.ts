@@ -10,6 +10,8 @@ import { validJsonConfig } from "app/utils/validators";
 import { Observable, Subscription } from "rxjs";
 import { FormBase } from "../form-base";
 import { FormPageComponent } from "../form-page";
+import { FormActionConfig } from "./footer";
+
 import "./complex-form.scss";
 
 export type FormSize = "small" | "medium" | "large";
@@ -76,6 +78,7 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
     public jsonValue = new FormControl(null, null, validJsonConfig);
     public waitingForAsyncTask = false;
     public asyncTaskList: AsyncTask[];
+    public actionConfig: FormActionConfig;
 
     private _pageStack: FormPageComponent[] = [];
     private _asyncTaskSub: Subscription;
@@ -99,6 +102,7 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
         if (changes.asyncTasks) {
             this._listenToAsyncTasks();
         }
+        this._buildActionConfig();
     }
 
     public get isMainWindow() {
@@ -120,7 +124,6 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
 
         this.loading = true;
         const obs = ready.flatMap(() => {
-            console.log("Saving task now...", this.getCurrentDto().toJS());
             return this.submit(this.getCurrentDto());
         }).share();
         obs.subscribe({
@@ -188,6 +191,14 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
         this.closePage();
     }
 
+    public toggleJsonEditor(jsonEditor) {
+        if (jsonEditor) {
+            this.switchToJsonEditor();
+        } else {
+            this.switchToClassicForm();
+        }
+    }
+
     public switchToJsonEditor() {
         if (!this.config.jsonEditor) { return; }
         const obj = this.getCurrentDto().toJS();
@@ -211,21 +222,6 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
         } else {
             const form = this.config.jsonEditor.toDto(this.formGroup.value);
             return base.merge(form);
-        }
-    }
-
-    public get saveAndCloseText() {
-        return this.multiUse ? `${this.actionName} and close` : this.actionName;
-    }
-
-    /**
-     * Enabled if the formGroup is valid or there is no formGroup
-     */
-    public get submitEnabled() {
-        if (this.showJsonEditor) {
-            return this.jsonValue.valid;
-        } else {
-            return !this.formGroup || this.formGroup.valid;
         }
     }
 
@@ -256,5 +252,14 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
                 this._hasAsyncTask = asyncTasks.length > 0;
             });
         }
+    }
+
+    private _buildActionConfig() {
+        this.actionConfig = {
+            name: this.actionName,
+            color: this.actionColor,
+            cancel: this.cancelText,
+            multiUse: this.multiUse,
+        };
     }
 }
