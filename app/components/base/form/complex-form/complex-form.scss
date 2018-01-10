@@ -34,6 +34,7 @@ bl-complex-form {
     .header {
         display: flex;
         margin: 10px;
+        flex-shrink: 0;
 
         > .main {
             flex: 1;
@@ -49,12 +50,16 @@ bl-complex-form {
     }
 
     > .content {
-        overflow-y: auto;
+        // overflow-y: auto;
         position: relative;
         height: calc(100% - #{$footer-height});
 
         > .content-wrapper {
-            height: 100%; // TODO-TIM Check get this working...
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            height: 100%;
+
             .loading-overlay {
                 position: absolute;
                 background: white;

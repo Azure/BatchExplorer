@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ChangeDetectorRef } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 
 import { FormPageComponent } from "app/components/base/form/form-page";
@@ -42,7 +42,7 @@ const defaultActionConfig: FormActionConfig = {
 @Component({
     selector: "bl-form-footer",
     templateUrl: "form-footer.html",
-    // changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FormFooterComponent {
     @Input() public waitingForAsyncTask: boolean;
@@ -61,11 +61,12 @@ export class FormFooterComponent {
 
     private _actionConfig: FormActionConfig;
 
-    constructor(public form: ComplexFormComponent) { }
+    constructor(public form: ComplexFormComponent, private changeDetector: ChangeDetectorRef) { }
 
     public toggleJsonEditor(show) {
         this.showJsonEditorChanges.emit(show);
         this.showJsonEditor = show;
+        this.changeDetector.markForCheck();
     }
 
     /**
