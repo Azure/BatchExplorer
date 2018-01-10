@@ -105,10 +105,6 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
         this._buildActionConfig();
     }
 
-    public get isMainWindow() {
-        return this.currentPage === this.mainPage;
-    }
-
     @autobind()
     public save(): Observable<any> {
         let ready;

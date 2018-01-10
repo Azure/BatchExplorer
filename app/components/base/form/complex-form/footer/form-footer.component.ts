@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ChangeDetectorRef } from "@angular/core";
+import {
+    ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ChangeDetectorRef, OnChanges, OnDestroy,
+} from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 
 import { FormPageComponent } from "app/components/base/form/form-page";
@@ -6,6 +8,7 @@ import { ComplexFormComponent, ComplexFormConfig } from "../complex-form.compone
 
 import { AsyncTask } from "app/core";
 import "./form-footer.scss";
+import { Subscription } from "rxjs";
 
 export interface FormActionConfig {
     /**
@@ -44,7 +47,7 @@ const defaultActionConfig: FormActionConfig = {
     templateUrl: "form-footer.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class FormFooterComponent {
+export class FormFooterComponent implements OnChanges, OnDestroy {
     @Input() public waitingForAsyncTask: boolean;
     @Input() public asyncTasks: AsyncTask[];
     @Input() public config: ComplexFormConfig;
@@ -56,12 +59,34 @@ export class FormFooterComponent {
     @Input() public showJsonEditor: boolean;
     @Input() public currentPage: FormPageComponent;
     @Input() public formGroup: FormGroup;
-    @Input() public isMainWindow: boolean;
     @Output() public showJsonEditorChanges = new EventEmitter<boolean>();
 
+    public isMainWindow: boolean;
     private _actionConfig: FormActionConfig;
+    private _statusSub: Subscription;
 
     constructor(public form: ComplexFormComponent, private changeDetector: ChangeDetectorRef) { }
+
+    public ngOnChanges(changes) {
+        if (changes.currentPage) {
+            this.isMainWindow = this.currentPage === this.form.mainPage;
+            if (this._statusSub) {
+                this._statusSub.unsubscribe();
+            }
+            if (this.currentPage) {
+                this._statusSub = this.currentPage.formGroup.statusChanges.distinctUntilChanged()
+                    .subscribe((status) => {
+                        this.changeDetector.markForCheck();
+                    });
+            }
+        }
+    }
+
+    public ngOnDestroy() {
+        if (this._statusSub) {
+            this._statusSub.unsubscribe();
+        }
+    }
 
     public toggleJsonEditor(show) {
         this.showJsonEditorChanges.emit(show);
@@ -84,8 +109,10 @@ export class FormFooterComponent {
     public get submitEnabled() {
         if (this.showJsonEditor) {
             return this.jsonValue.valid;
+        } else if (this.currentPage) {
+            return !this.currentPage.formGroup || this.currentPage.formGroup.valid;
         } else {
-            return !this.formGroup || this.formGroup.valid;
+            return false;
         }
     }
 

@@ -31,6 +31,6 @@
     </div>
     <div *ngIf="!isMainWindow">
         <bl-button type="wide" class="cancel" color="primary" [action]="form.cancelPage">Cancel</bl-button>
-        <bl-button type="wide" class="select" color="primary" [action]="form.closePageOrSubmit" [disabled]="!currentPage?.submitEnabled">Select</bl-button>
+        <bl-button type="wide" class="select" color="primary" [action]="form.closePageOrSubmit" [disabled]="!submitEnabled">Select</bl-button>
     </div>
 </div>
