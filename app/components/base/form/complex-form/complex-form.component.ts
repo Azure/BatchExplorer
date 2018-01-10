@@ -62,7 +62,7 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
      * Needs to return an observable that will have a {ServerError} if failing.
      */
     @Input() public submit: (dto?: Dto<any>) => Observable<any>;
-    @Input() public asyncTasks: Observable<Iterable<AsyncTask>>;
+    @Input() public asyncTasks: Observable<AsyncTask[]>;
 
     @Input() @HostBinding("class") public size: FormSize = "large";
 
@@ -74,6 +74,8 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
     public currentPage: FormPageComponent;
     public showJsonEditor = false;
     public jsonValue = new FormControl(null, null, validJsonConfig);
+    public waitingForAsyncTask = false;
+    public asyncTaskList: AsyncTask[];
 
     private _pageStack: FormPageComponent[] = [];
     private _asyncTaskSub: Subscription;
@@ -108,16 +110,18 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
         let ready;
         if (this._hasAsyncTask) {
             console.log("HAs async task delay");
-            ready = this.asyncTasks.filter(x => [...x].length === 0).first();
+            this.waitingForAsyncTask = true;
+            ready = this.asyncTasks.filter(x => [...x].length === 0).first().do(() => {
+                this.waitingForAsyncTask = false;
+            });
         } else {
             ready = Observable.of(null);
         }
 
         this.loading = true;
         const obs = ready.flatMap(() => {
-            console.log("Saving task now...");
-            return Observable.of();
-            // return this.submit(this.getCurrentDto());
+            console.log("Saving task now...", this.getCurrentDto().toJS());
+            return this.submit(this.getCurrentDto());
         }).share();
         obs.subscribe({
             next: () => {
@@ -248,7 +252,8 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
         }
         if (this.asyncTasks) {
             this._asyncTaskSub = this.asyncTasks.subscribe((asyncTasks) => {
-                this._hasAsyncTask = [...asyncTasks].length > 0;
+                this.asyncTaskList = asyncTasks;
+                this._hasAsyncTask = asyncTasks.length > 0;
             });
         }
     }

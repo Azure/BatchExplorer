@@ -53,14 +53,16 @@ bl-complex-form {
         position: relative;
         height: calc(100% - #{$footer-height});
 
-        > .loading-overlay {
-            position: absolute;
-            background: white;
-            opacity: 0.5;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
+        > .content-wrapper {
+            .loading-overlay {
+                position: absolute;
+                background: white;
+                opacity: 0.5;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+            }
         }
 
         .classic-form {
@@ -108,6 +110,13 @@ bl-complex-form {
 
             bl-button {
                 margin-right: 5px;
+            }
+        }
+
+        .waiting-for-async-task-message {
+            > .task {
+                font-style: italic;
+                color: $alto;
             }
         }
     }

@@ -1,23 +1,25 @@
 <div class="content" *ngIf="currentPage">
-    <div class="header">
-        <div *ngIf="_pageStack.length > 0">
-            <bl-button type="wide" color="primary" [action]="closePage">Back</bl-button>
+    <div class="content-wrapper">
+        <div class="header">
+            <div *ngIf="_pageStack.length > 0">
+                <bl-button type="wide" color="primary" [action]="closePage">Back</bl-button>
+            </div>
+            <div class="main">
+                <h1 *ngIf="currentPage.title">{{currentPage.title}}</h1>
+                <p *ngIf="currentPage.subtitle">{{currentPage.subtitle}}</p>
+            </div>
         </div>
-        <div class="main">
-            <h1 *ngIf="currentPage.title">{{currentPage.title}}</h1>
-            <p *ngIf="currentPage.subtitle">{{currentPage.subtitle}}</p>
+        <div *ngIf="!showJsonEditor" class="classic-form-container">
+            <form novalidate>
+                <ng-template [ngTemplateOutlet]="currentPage.content"></ng-template>
+            </form>
         </div>
-    </div>
-    <div *ngIf="!showJsonEditor" class="classic-form-container">
-        <form novalidate>
-            <ng-template [ngTemplateOutlet]="currentPage.content"></ng-template>
-        </form>
-    </div>
 
-    <div *ngIf="showJsonEditor" class="json-editor-container">
-        <bl-form-json-editor [formControl]="jsonValue" [fileUri]="fileUri"></bl-form-json-editor>
+        <div *ngIf="showJsonEditor" class="json-editor-container">
+            <bl-form-json-editor [formControl]="jsonValue" [fileUri]="fileUri"></bl-form-json-editor>
+        </div>
+        <div class="loading-overlay" *ngIf="loading"></div>
     </div>
-    <div class="loading-overlay" *ngIf="loading"></div>
 </div>
 <div class="form-server-error" *ngIf="showError">
     <bl-server-error [error]="error"></bl-server-error>
@@ -37,7 +39,13 @@
         </button>
     </div>
     <div class="summary">
-        <ng-content select="[blFormSummary]"></ng-content>
+        <div *ngIf="waitingForAsyncTask && asyncTaskList" class="waiting-for-async-task-message">
+            <i class="fa fa-spinner fa-spin"></i>
+            <span class="main">Waiting for </span>
+            <span class="task">{{asyncTaskList[0].name}}</span>
+            <span class="main" *ngIf="asyncTaskList.length > 1">and {{asyncTaskList.length - 1}} tasks</span>
+        </div>
+        <ng-content select="[blFormSummary]" *ngIf="!waitingForAsyncTask"></ng-content>
     </div>
     <div class="form-buttons">
         <div *ngIf="isMainWindow">

@@ -50,11 +50,6 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
                 this._propagateChange(files);
             }
         });
-
-        setTimeout(() => {
-            const subject = new AsyncSubject();
-            this.upload.emit({ filename: "Banana", done: subject });
-        }, 3000);
     }
 
     public ngOnDestroy() {
@@ -141,7 +136,8 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
         const nodeFilePath = CloudPathUtils.join(root, filename);
         const blobName = CloudPathUtils.join(root, filename);
         this.uploadingFiles.push(nodeFilePath);
-        this.storageService.uploadFile(this._containerId, filePath, blobName).subscribe((result) => {
+
+        const obs = this.storageService.uploadFile(this._containerId, filePath, blobName).flatMap((result) => {
             this.uploadingFiles = this.uploadingFiles.filter(x => x !== nodeFilePath);
             this.changeDetector.detectChanges();
             const sas: SharedAccessPolicy = {
@@ -151,10 +147,12 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
                     Expiry: moment().add(1, "week").toDate(),
                 },
             };
-            this.storageService.generateSharedAccessBlobUrl(this._containerId, blobName, sas).subscribe((url) => {
+            return this.storageService.generateSharedAccessBlobUrl(this._containerId, blobName, sas).do((url) => {
                 this._addResourceFile(url, nodeFilePath);
             });
-        });
+        }).share();
+        this.upload.emit({ filename: nodeFilePath, done: obs });
+        obs.subscribe();
     }
 
     private _addResourceFile(blobSource: string, filePath: string) {

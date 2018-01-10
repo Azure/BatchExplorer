@@ -12,13 +12,13 @@ export interface AsyncTask {
 export abstract class DynamicForm<TEntity, TDto extends Dto<TDto>> {
     public originalData: TDto;
     public form: FormGroup;
-    public readonly asyncTasks: Observable<Iterable<AsyncTask>>;
+    public readonly asyncTasks: Observable<AsyncTask[]>;
     public readonly hasAsyncTask: Observable<boolean>;
 
     private _asyncTasks = new BehaviorSubject(new Map<number, AsyncTask>());
 
     constructor(private dtoType: Type<TDto>) {
-        this.asyncTasks = this._asyncTasks.map(x => x.values());
+        this.asyncTasks = this._asyncTasks.map(x => [...x.values()]);
         this.hasAsyncTask = this._asyncTasks.map(x => x.size > 0);
     }
 
