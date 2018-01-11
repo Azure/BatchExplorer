@@ -308,6 +308,25 @@ export class BlobStorageClientProxy {
     }
 
     /**
+     * Creates a new container under the specified account if it doesn't exsits.
+     *
+     * @param {string} container - Name of the storage container
+     */
+    public createContainerIfNotExists(containerName: string)
+        : Promise<BlobStorageResult> {
+
+        return new Promise((resolve, reject) => {
+            this.client.createContainerIfNotExists(containerName, (error, response) => {
+                if (error) {
+                    reject(error);
+                } else {
+                    resolve();
+                }
+            });
+        });
+    }
+
+    /**
      * Retrieves a shared access signature token.
      * http://azure.github.io/azure-storage-node/BlobService.html#generateSharedAccessSignature__anchor
      *

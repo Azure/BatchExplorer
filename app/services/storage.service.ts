@@ -340,6 +340,14 @@ export class StorageService {
         });
     }
 
+    public createContainerIfNotExists(containerName: string): Observable<any> {
+        return this._callStorageClient((client) => {
+            return client.createContainerIfNotExists(containerName);
+        }, (error) => {
+            log.error(`Error creating container: ${containerName}`, { ...error });
+        });
+    }
+
     public generateSharedAccessContainerUrl(container: string, sharedAccessPolicy: SharedAccessPolicy)
         : Observable<string> {
         return this._callStorageClient((client) => {

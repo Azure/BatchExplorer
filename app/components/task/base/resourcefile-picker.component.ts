@@ -12,6 +12,7 @@ import * as moment from "moment";
 
 import { FileSystemService, StorageService } from "app/services";
 import { SharedAccessPolicy } from "app/services/storage/models";
+import { SecureUtils } from "common";
 import "./resourcefile-picker.scss";
 
 export interface UploadResourceFileEvent {
@@ -29,6 +30,9 @@ export interface UploadResourceFileEvent {
     ],
 })
 export class ResourcefilePickerComponent implements ControlValueAccessor, OnDestroy {
+    /**
+     * Event emitted when a file is being uploaded, use this to add async task to the form
+     */
     @Output() public upload = new EventEmitter();
     public files: FormControl<ResourceFileAttributes[]>;
     public isDraging = 0;
@@ -39,11 +43,17 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
     // TODO-TIM read from settings
     private _containerId = "batchlabs-input";
 
+    /**
+     * Unique id generated for this
+     */
+    private _folderId: string;
+
     constructor(
         private formBuilder: FormBuilder,
         private storageService: StorageService,
         private fs: FileSystemService,
         private changeDetector: ChangeDetectorRef) {
+        this._folderId = SecureUtils.uuid();
         this.files = this.formBuilder.control([]);
         this._sub = this.files.valueChanges.subscribe((files) => {
             if (this._propagateChange) {
@@ -115,6 +125,7 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
     }
 
     private async _uploadFiles(files: string[], root = "") {
+        await this.storageService.createContainerIfNotExists(this._containerId).toPromise();
         for (const file of files) {
             await this._uploadPath(file, root);
         }
@@ -134,7 +145,7 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
     private _uploadFile(filePath: string, root = "") {
         const filename = path.basename(filePath);
         const nodeFilePath = CloudPathUtils.join(root, filename);
-        const blobName = CloudPathUtils.join(root, filename);
+        const blobName = CloudPathUtils.join(this._folderId, root, filename);
         this.uploadingFiles.push(nodeFilePath);
 
         const obs = this.storageService.uploadFile(this._containerId, filePath, blobName).flatMap((result) => {
