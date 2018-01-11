@@ -73,7 +73,7 @@ export class FormFooterComponent implements OnChanges, OnDestroy {
             if (this._statusSub) {
                 this._statusSub.unsubscribe();
             }
-            if (this.currentPage) {
+            if (this.currentPage && this.currentPage.formGroup) {
                 this._statusSub = this.currentPage.formGroup.statusChanges.distinctUntilChanged()
                     .subscribe((status) => {
                         this.changeDetector.markForCheck();
