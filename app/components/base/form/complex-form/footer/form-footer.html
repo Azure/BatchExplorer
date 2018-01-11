@@ -16,7 +16,7 @@
         <i class="fa fa-spinner fa-spin"></i>
         <span class="main">Waiting for </span>
         <span class="task">{{asyncTasks[0].name}}</span>
-        <span class="main" *ngIf="asyncTasks.length > 1">and {{asyncTasks.length - 1}} tasks</span>
+        <span class="main" *ngIf="asyncTasks.length > 1" [matTooltip]="asyncTaskTooltip">and {{asyncTasks.length - 1}} tasks</span>
     </div>
     <ng-content select="[blFormSummary]" *ngIf="!waitingForAsyncTask"></ng-content>
 </div>

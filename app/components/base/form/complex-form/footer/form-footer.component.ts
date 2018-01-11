@@ -1,5 +1,5 @@
 import {
-    ChangeDetectionStrategy, Component, EventEmitter, Input, Output, ChangeDetectorRef, OnChanges, OnDestroy,
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnDestroy, Output,
 } from "@angular/core";
 import { FormControl, FormGroup } from "@angular/forms";
 
@@ -7,8 +7,8 @@ import { FormPageComponent } from "app/components/base/form/form-page";
 import { ComplexFormComponent, ComplexFormConfig } from "../complex-form.component";
 
 import { AsyncTask } from "app/core";
-import "./form-footer.scss";
 import { Subscription } from "rxjs";
+import "./form-footer.scss";
 
 export interface FormActionConfig {
     /**
@@ -118,5 +118,10 @@ export class FormFooterComponent implements OnChanges, OnDestroy {
 
     public get saveAndCloseText() {
         return this.actionConfig.multiUse ? `${this.actionConfig.name} and close` : this.actionConfig.name;
+    }
+
+    public get asyncTaskTooltip() {
+        if (!this.asyncTasks) { return null; }
+        return this.asyncTasks.slice(1).map(x => x.name).join("\n");
     }
 }
