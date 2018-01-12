@@ -7,6 +7,7 @@ import { FormPageComponent } from "app/components/base/form/form-page";
 import { ComplexFormComponent, ComplexFormConfig } from "../complex-form.component";
 
 import { AsyncTask } from "app/core";
+import { ServerError } from "app/models";
 import { Subscription } from "rxjs";
 import "./form-footer.scss";
 
@@ -59,6 +60,9 @@ export class FormFooterComponent implements OnChanges, OnDestroy {
     @Input() public showJsonEditor: boolean;
     @Input() public currentPage: FormPageComponent;
     @Input() public formGroup: FormGroup;
+    @Input() public error: ServerError;
+    @Input() public showError: boolean;
+    @Output() public showErrorChange = new EventEmitter<boolean>();
     @Output() public showJsonEditorChanges = new EventEmitter<boolean>();
 
     public isMainWindow: boolean;
@@ -92,6 +96,11 @@ export class FormFooterComponent implements OnChanges, OnDestroy {
         this.showJsonEditorChanges.emit(show);
         this.showJsonEditor = show;
         this.changeDetector.markForCheck();
+    }
+
+    public toggleShowError() {
+        this.showError = !this.showError;
+        this.showErrorChange.emit(this.showError);
     }
 
     /**

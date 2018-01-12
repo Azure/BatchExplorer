@@ -109,19 +109,17 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit, OnC
     public save(): Observable<any> {
         let ready;
         if (this._hasAsyncTask) {
-            console.log("HAs async task delay");
             this.waitingForAsyncTask = true;
             ready = this.asyncTasks.filter(x => [...x].length === 0).first().do(() => {
                 this.waitingForAsyncTask = false;
-            });
+            }).share();
         } else {
             ready = Observable.of(null);
         }
-
         this.loading = true;
         const obs = ready.flatMap(() => {
             return this.submit(this.getCurrentDto());
-        }).share();
+        }).shareReplay(1);
         obs.subscribe({
             next: () => {
                 this.loading = false;
