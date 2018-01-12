@@ -13,7 +13,6 @@ import "chart.js";
 import "hammerjs";
 
 import "font-awesome/css/font-awesome.min.css";
-import "roboto-fontface/css/roboto/roboto-fontface.css";
 import "./environment";
 import "./styles/main.scss";
 
