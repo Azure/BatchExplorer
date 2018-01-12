@@ -1,5 +1,10 @@
 <div class="header">
-    <h2>{{ title }}</h2>
+    <h2>
+        {{ title }}
+        <a (click)="openTimeFramePicker()" class="timeframe-picker">
+            <i class="fa fa-clock-o" aria-hidden="true"></i>&nbsp;{{timeframe}}
+        </a>
+    </h2>
 </div>
 <div *ngIf="datasets">
     <canvas blChart [datasets]="datasets" [options]="options" [chartType]="type"></canvas>

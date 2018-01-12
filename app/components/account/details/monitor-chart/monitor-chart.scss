@@ -6,6 +6,11 @@ bl-monitor-chart {
         text-align: justify;
         margin-top: 0;
         padding-bottom: 12px;
+
+        .timeframe-picker {
+            float: right;
+            cursor: pointer;
+        }
     }
     background-color: white;
     display: inline-block;

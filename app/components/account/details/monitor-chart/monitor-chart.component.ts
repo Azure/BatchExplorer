@@ -1,16 +1,10 @@
 import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
 import { Observable, Subscription } from "rxjs";
 
-import { Metric, MonitorHttpService } from "app/services";
+import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
+import { Metric, MonitorChartType, MonitorHttpService, TimeFrame } from "app/services";
 
 import "./monitor-chart.scss";
-
-export enum MonitorChartType {
-    CoreCount = "coreCount",
-    FailedTask = "failedTask",
-    NodeStates = "nodeStates",
-    TaskStates = "taskStates",
-}
 
 @Component({
     selector: "bl-monitor-chart",
@@ -22,40 +16,65 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
     public type = "line";
     public datasets: Chart.ChartDataSets[];
     public options = {};
+    public timeframe: TimeFrame = TimeFrame.Hour;
 
     private _sub: Subscription;
-
-    constructor(private monitor: MonitorHttpService) {
+    private _observable: Observable<Metric[]>;
+    constructor(private monitor: MonitorHttpService, private contextMenuService: ContextMenuService) {
         this._setChartOptions();
     }
 
     public ngOnChanges(changes): void {
         if (changes.chartType) {
-            let observable = this._getChartObservable();
-            if (observable) {
-                this._sub = observable.subscribe(metrics => {
-                    this.datasets = metrics.map((metric: Metric): Chart.ChartDataSets => {
-                        return {
-                            data: metric.data.map(data => {
-                                return {
-                                    x: data.timeStamp,
-                                    y: data.total || 0,
-                                } as Chart.ChartPoint;
-                            }),
-                            fill: false,
-                            label: metric.name.localizedValue,
-                            borderWidth: 1,
-                        } as Chart.ChartDataSets;
-                    });
-                });
-            }
+            this.fetchObservable();
         }
     }
 
     public ngOnDestroy(): void {
-        if (this._sub) {
-            this._sub.unsubscribe();
+        this._destroySub();
+    }
+
+    public fetchObservable() {
+        this._observable = this._getChartObservable();
+        if (this._observable) {
+            this._destroySub();
+            this._sub = this._observable.subscribe(metrics => {
+                this.datasets = metrics.map((metric: Metric): Chart.ChartDataSets => {
+                    return {
+                        data: metric.data.map(data => {
+                            return {
+                                x: data.timeStamp,
+                                y: data.total || 0,
+                            } as Chart.ChartPoint;
+                        }),
+                        fill: false,
+                        label: metric.name.localizedValue,
+                        borderWidth: 1,
+                    } as Chart.ChartDataSets;
+                });
+            });
         }
+    }
+
+    public openTimeFramePicker() {
+        const items = [
+            new ContextMenuItem({ label: "Past hour", click: () => {
+                this.timeframe = TimeFrame.Hour;
+                this.monitor.updateTimeFrame(this.timeframe, this.chartType);
+                this.fetchObservable();
+            }}),
+            new ContextMenuItem({ label: "Past day", click: () => {
+                this.timeframe = TimeFrame.Day;
+                this.monitor.updateTimeFrame(this.timeframe, this.chartType);
+                this.fetchObservable();
+            }}),
+            new ContextMenuItem({ label: "Past week", click: () => {
+                this.timeframe = TimeFrame.Week;
+                this.monitor.updateTimeFrame(this.timeframe, this.chartType);
+                this.fetchObservable();
+            }}),
+        ];
+        this.contextMenuService.openMenu(new ContextMenu(items));
     }
 
     private _getChartObservable(): Observable<Metric[]> {
@@ -63,19 +82,19 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         switch (this.chartType) {
             case MonitorChartType.CoreCount:
                 this.title = "Core count";
-                observable = this.monitor.coreCounts;
+                observable = this.monitor.getCoreCount();
                 break;
             case MonitorChartType.FailedTask:
                 this.title = "Failed task";
-                observable = this.monitor.failedTask;
+                observable = this.monitor.getFailedTask();
                 break;
             case MonitorChartType.NodeStates:
                 this.title = "Node states";
-                observable = this.monitor.nodeStates;
+                observable = this.monitor.getNodeStates();
                 break;
             case MonitorChartType.TaskStates:
                 this.title = "Task states";
-                observable = this.monitor.taskStates;
+                observable = this.monitor.getTaskStates();
                 break;
         }
         return observable;
@@ -122,5 +141,11 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
                 }],
             },
         };
+    }
+
+    private _destroySub() {
+        if (this._sub) {
+            this._sub.unsubscribe();
+        }
     }
 }
