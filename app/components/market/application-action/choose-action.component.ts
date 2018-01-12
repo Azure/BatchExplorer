@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
@@ -41,7 +41,11 @@ export class ChooseActionComponent implements OnInit, OnDestroy {
 
     @autobind()
     public openLink(link: string) {
-        this.electronShell.openExternal(link, {activate: true});
+        this.electronShell.openExternal(link, { activate: true });
+    }
+
+    public trackAction(index, action: ApplicationAction) {
+        return action.id;
     }
 
     private _updateActions() {

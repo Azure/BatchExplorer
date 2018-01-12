@@ -4,7 +4,7 @@
         <bl-column>State</bl-column>
         <bl-column>Depends on</bl-column>
     </bl-thead>
-    <bl-row *ngFor="let dependency of dependencies | async" [key]="dependency.id" [link]="['/jobs', jobId, 'tasks', dependency.id]" [forceBreadcrumb]="true">
+    <bl-row *ngFor="let dependency of dependencies | async;trackBy: trackByFn" [key]="dependency.id" [link]="['/jobs', jobId, 'tasks', dependency.id]" [forceBreadcrumb]="true">
         <bl-cell>{{dependency.id}}</bl-cell>
         <bl-cell>
             <span *ngIf="!dependency.loading">{{dependency.state}}</span>

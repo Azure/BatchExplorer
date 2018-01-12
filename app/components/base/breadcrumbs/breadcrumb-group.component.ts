@@ -31,6 +31,10 @@ export class BreadcrumbGroupComponent implements OnDestroy {
         this._subscription.unsubscribe();
     }
 
+    public trackByFn(index, crumb: Breadcrumb) {
+        return index;
+    }
+
     @HostListener("mousewheel", ["$event"])
     public mouseWheelMoves(event: WheelEvent) {
         this.elementRef.nativeElement.scrollLeft -= (event.wheelDelta > 0 ? 10 : -10);

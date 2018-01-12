@@ -1,3 +1,5 @@
+@import "./core";
+
 $black-87-opacity: rgba(black, 0.87);
 $white-87-opacity: rgba(white, 0.87);
 
@@ -91,28 +93,6 @@ $success-theme-classic: (
     contrast: $contrast-theme-classic,
 );
 
-$primary-color:         #2196f3;
-$dark-primary-color:    #1976d2;
-$light-primary-color:   #bbedfbed;
-$accent-color:          #4caf50;
-$error-color:           #aa3939;
-$text-color:            #ffffff;
-$primary-text:          #212121;
-$secondary-text:        #757575;
-$divider-color:         #bdbdbd;
-$header-background:     #333333;
-$header-hover:          #757575;
-$navigation-background: #5b5b5b;
-$navigation-hover:      #666666;
-$breadcrumb-color:      #5b5b5b;
-$breadcrumb-hover-color:#666666;
-$disabled-button-color: #d5d5d5;
-$main-background:       #f5f5f5;
-
-$folder-icon-color:     #f8d979;
-// $header-color: map-get($primary);
-
-
 body {
     // Primary color
     @include css-var-theme(--primary, $primary-theme-classic);
@@ -120,13 +100,22 @@ body {
     @include css-var-theme(--warn, $warn-theme-classic);
     @include css-var-theme(--success, $success-theme-classic);
 
-    --primary-color: $primary-color;
-    --dark-primary-color: $dark-primary-color;
-    --light-primary-color: $light-primary-color;
-    --primary-text: $primary-text;
-    --secondary-text: $secondary-text;
-    --text-color: $text-color;
-    --accent-color: $accent-color;
-    --divider-color: $divider-color;
-    --error-colro: $error-color;
+    --primary-color:            #2196f3;
+    --dark-primary-color:       #1976d2;
+    --light-primary-color:      #bbedfb;
+    --primary-text:             #212121;
+    --secondary-text:           #757575;
+    --text-color:               #ffffff;
+    --accent-color:             #4caf50;
+    --divider-color:            #bdbdbd;
+    --error-color:              #aa3939;
+    --header-background:        #333333;
+    --header-hover:             #757575;
+    --navigation-background:    #5b5b5b;
+    --navigation-hover:         #666666;
+    --breadcrumb-color:         #5b5b5b;
+    --breadcrumb-hover-color:   #666666;
+    --disabled-button-color:    #d5d5d5;
+    --main-background:          #f5f5f5;
+    --folder-icon-color:        #f8d979;
 }

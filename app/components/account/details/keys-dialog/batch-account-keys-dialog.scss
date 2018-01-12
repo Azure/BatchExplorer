@@ -1,0 +1,10 @@
+bl-batch-account-keys-dialog {
+    display: block;
+    position: relative;
+    width: 800px;
+    height: 80vh;
+
+    > mat-tab-group {
+        height: 100%;
+    }
+}

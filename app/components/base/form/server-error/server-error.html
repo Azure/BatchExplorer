@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="details" *ngIf="error.details">
-            <div *ngFor="let detail of error.details"><b>{{detail.key}}</b>: {{detail.value}}</div>
+            <div *ngFor="let detail of error.details;trackBy: trackDetail"><b>{{detail.key}}</b>: {{detail.value}}</div>
         </div>
     </div>
     <div class="troubleshoot-info" *ngIf="showErrorTroubleshoot">

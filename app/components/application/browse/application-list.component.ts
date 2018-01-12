@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog } from "@angular/material";
 import { Router } from "@angular/router";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
@@ -106,6 +106,10 @@ export class ApplicationListComponent extends ListOrTableBase implements OnInit,
                 click: () => this._pinApplication(application),
             }),
         ]);
+    }
+
+    public trackByFn(index, application: BatchApplication) {
+        return application.id;
     }
 
     private _filterApplications() {

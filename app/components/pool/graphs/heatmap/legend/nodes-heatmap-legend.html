@@ -1,0 +1,19 @@
+<div *ngFor="let item of stateTree;trackBy: trackState">
+    <div *ngIf="item.state" class="legend-item state" (click)="selectState(item.state)" [class.highlighted]="item.state === highlightedState"
+        (contextmenu)="openContextMenu(item)">
+        <div [style.backgroundColor]="colors.get(item.state)" class="color"></div>
+        <div class="label">{{item.state}} ({{stateCounter.get(item.state) | async}})</div>
+    </div>
+    <div *ngIf="item.category">
+        <div class="legend-item category" (click)="selectState(item.category)" [class.highlighted]="item.category === highlightedState"
+            (contextmenu)="openContextMenu(item)">
+            <div [style.backgroundColor]="item.color" class="color"></div>
+            <div class="label">{{item.label}}</div>
+        </div>
+        <div *ngFor="let subitem of item.states;trackBy: trackState" class="legend-subitem state" (click)="selectState(subitem.state)" [class.highlighted]="subitem.state === highlightedState"
+            (contextmenu)="openContextMenu(item)">
+            <div [style.backgroundColor]="colors.get(subitem.state)" class="color"></div>
+            <div class="label">{{subitem.state}} ({{stateCounter.get(subitem.state) | async}})</div>
+        </div>
+    </div>
+</div>

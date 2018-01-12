@@ -1,6 +1,5 @@
 export * from "./account";
 export * from "./account-keys";
-export * from "./aad-user";
 export * from "./affinity-information";
 export * from "./batch-application";
 export * from "./batch-software-license";
@@ -51,6 +50,7 @@ export * from "./node-agent-sku";
 export * from "./node-agent-sku-map";
 export * from "./node-recent-task";
 export * from "./pool";
+export * from "./pool-endpoint-configuration";
 export * from "./rate-card";
 export * from "./resize-error";
 export * from "./resource-descriptor";

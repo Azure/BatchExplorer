@@ -51,6 +51,8 @@ bl-pool-graphs {
 
         > .config {
             padding: 20px 10px;
+            display: flex;
+            align-items: center;
         }
     }
 
@@ -71,7 +73,7 @@ bl-pool-graphs {
     .full-display-heatmap {
         display: block;
         width: 100%;
-        height: 600px;
+        height: 100%;
     }
 
     .focused-graph {

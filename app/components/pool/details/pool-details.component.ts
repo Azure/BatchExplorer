@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { remote } from "electron";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
@@ -9,7 +9,7 @@ import { Observable, Subscription } from "rxjs";
 import { JobCreateBasicDialogComponent } from "app/components/job/action";
 import { Pool } from "app/models";
 import { PoolDecorator } from "app/models/decorators";
-import { FileSystemService, PoolParams, PoolService, PricingService } from "app/services";
+import { ElectronRemote, FileSystemService, PoolParams, PoolService, PricingService } from "app/services";
 import { EntityView } from "app/services/core/data";
 import { NumberUtils } from "app/utils";
 import { SidebarManager } from "../../base/sidebar";
@@ -50,6 +50,7 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
         private dialog: MatDialog,
         private fs: FileSystemService,
         private sidebarManager: SidebarManager,
+        private remote: ElectronRemote,
         private pricingService: PricingService,
         private poolService: PoolService) {
 
@@ -135,6 +136,14 @@ export class PoolDetailsComponent implements OnInit, OnDestroy {
             const content = JSON.stringify(this.pool._original, null, 2);
             return Observable.fromPromise(this.fs.saveFile(localPath, content));
         }
+    }
+
+    @autobind()
+    public openInNewWindow() {
+        const link = `ms-batchlabs://route/standalone/pools/${this.pool.id}/graphs?fullscreen=true`;
+        const window = this.remote.getBatchLabsApp().openNewWindow(link);
+
+        return Observable.fromPromise(window.appReady);
     }
 
     private _updatePrice() {

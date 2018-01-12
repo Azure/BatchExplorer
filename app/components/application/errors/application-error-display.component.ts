@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from "@angular/core";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 
 import { EditStorageAccountFormComponent } from "app/components/account/action/edit-storage-account";
 import { SidebarManager } from "app/components/base/sidebar";

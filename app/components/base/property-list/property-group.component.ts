@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from "@angular/core";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 
 @Component({
     selector: "bl-property-group",

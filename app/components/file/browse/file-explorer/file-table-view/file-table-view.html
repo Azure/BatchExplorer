@@ -17,7 +17,7 @@
                     <bl-column style="width: 80px">Size</bl-column>
                     <bl-column style="width: 155px">Last Modified</bl-column>
                 </bl-thead>
-                <bl-row *ngFor="let treeNode of treeNode.walk()" [key]="treeNode.path">
+                <bl-row *ngFor="let treeNode of treeNode.walk();trackBy: trackTreeNode" [key]="treeNode.path">
                     <bl-cell [value]="treeNode.name">
                         <span class="icon">
                         <i class="fa" [class.fa-folder]="treeNode.isDirectory" [class.fa-file]="!treeNode.isDirectory"></i>

@@ -16,10 +16,17 @@ import "font-awesome/css/font-awesome.min.css";
 import "./environment";
 import "./styles/main.scss";
 
-(remote.getCurrentWindow() as any).splashScreen.updateMessage("Initializing app");
-const platform = platformBrowserDynamic();
+// console.timeEnd("Load scripts");
+// console.time("Bootstrap");
 
-platform.bootstrapModule(AppModule)
+(remote.getCurrentWindow() as any).splashScreen.updateMessage("Initializing app");
+
+platformBrowserDynamic().bootstrapModule(AppModule)
+    .then(() => {
+        // console.timeEnd("Bootstrap");
+        // console.time("Render");
+        // console.profile("Render profile");
+    })
     .catch(error => {
         log.error("Bootstrapping failed :: ", error);
         handleCoreError(error);

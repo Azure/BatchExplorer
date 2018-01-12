@@ -1,8 +1,13 @@
-import { Menu, app, dialog, ipcMain, protocol } from "electron";
-import { autoUpdater } from "electron-updater";
 import * as path from "path";
+process.env.NODE_PATH = path.join(__dirname, "..");
+// tslint:disable-next-line:no-var-requires
+require("module").Module._initPaths();
+
+import { Menu, app, protocol } from "electron";
+import { autoUpdater } from "electron-updater";
 app.setPath("userData", path.join(app.getPath("appData"), "batch-labs"));
 
+import { localStorage } from "client/core/local-storage";
 import { Constants } from "./client-constants";
 import { BatchLabsApplication, listenToSelectCertifcateEvent } from "./core";
 import { logger } from "./logger";
@@ -13,6 +18,7 @@ if (Constants.isDev) {
 autoUpdater.allowPrerelease = true;
 autoUpdater.autoDownload = true;
 autoUpdater.logger = logger;
+localStorage.load();
 
 const batchLabsApp = new BatchLabsApplication(autoUpdater);
 
@@ -24,12 +30,22 @@ function startApplication() {
         callback();
     });
 
+    const shouldQuit = app.makeSingleInstance((commandLine) => {
+        logger.info("Try to open labs again", commandLine);
+        batchLabsApp.openFromArguments(commandLine);
+    });
+
+    if (shouldQuit) {
+        app.quit();
+    }
+
     // Uncomment to view why windows don't show up.
     // batchLabsApp.debugCrash();
-    batchLabsApp.init();
-    batchLabsApp.start();
+    batchLabsApp.init().then(() => {
+        batchLabsApp.start();
+    });
 
-    if (process.platform === "darwin") {
+    if (process.platform === "darwin" && process.env.NODE_ENV === "production") {
         // Create our menu entries so that we can use MAC shortcuts
         Menu.setApplicationMenu(Menu.buildFromTemplate([
             {

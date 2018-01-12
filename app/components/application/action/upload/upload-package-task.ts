@@ -1,5 +1,5 @@
 // TODO :: Work in progress
-// import { autobind } from "core-decorators";
+// import { autobind } from "app/core";
 // import { AsyncSubject, BehaviorSubject, Observable } from "rxjs";
 
 import { BackgroundTaskService } from "app/components/base/background-task";

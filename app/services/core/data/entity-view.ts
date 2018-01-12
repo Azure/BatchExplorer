@@ -1,7 +1,7 @@
 import { LoadingStatus } from "app/components/base/loading";
 import { ServerError } from "app/models";
 import { PollObservable } from "app/services/core";
-import { HttpCode } from "app/utils/constants";
+import { HttpCode } from "common/constants";
 import { BehaviorSubject, Observable } from "rxjs";
 import { EntityGetter } from "./entity-getter";
 import { GenericView, GenericViewConfig } from "./generic-view";
