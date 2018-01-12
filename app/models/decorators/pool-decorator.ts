@@ -4,7 +4,7 @@ import * as moment from "moment";
 import {
     ApplicationPackageReference, CertificateReference, Pool, UserAccount, UserAccountElevationLevel,
 } from "app/models";
-import { StartTaskDecorator } from "app/models/decorators";
+import { PoolEndpointConfigurationDecorator, StartTaskDecorator } from "app/models/decorators";
 import { PoolUtils } from "app/utils";
 import { DecoratorBase } from "app/utils/decorators";
 import { CloudServiceConfigurationDecorator } from "./cloud-service-configuration-decorator";
@@ -37,6 +37,7 @@ export class PoolDecorator extends DecoratorBase<Pool> {
     public url: string;
     public virtualMachineConfiguration: VirtualMachineConfigurationDecorator;
     public vmSize: string;
+    public poolEndpointConfiguration: PoolEndpointConfigurationDecorator;
     public poolOs: string;
     public poolOsIcon: string;
     public lastResized: string;
@@ -92,6 +93,8 @@ export class PoolDecorator extends DecoratorBase<Pool> {
         this.certificateReferences = List(pool.certificateReferences);
         this.networkSubnetId = pool.networkConfiguration && pool.networkConfiguration.subnetId;
         this.applicationLicenses = pool.applicationLicenses.join(", ");
+        this.poolEndpointConfiguration = new PoolEndpointConfigurationDecorator(
+            (pool.networkConfiguration && pool.networkConfiguration.endpointConfiguration) || {});
     }
 
     private _computePoolOs(): string {

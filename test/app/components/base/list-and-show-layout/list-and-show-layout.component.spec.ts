@@ -12,6 +12,7 @@ import { ClickableComponent } from "app/components/base/buttons/clickable";
 import { ListAndShowLayoutComponent } from "app/components/base/list-and-show-layout";
 import { RefreshButtonComponent } from "app/components/base/refresh-btn";
 import { ScrollableComponent, ScrollableService } from "app/components/base/scrollable";
+import { AuthorizationHttpService } from "app/services";
 import { FilterBuilder } from "app/utils/filter-builder";
 import { click } from "test/utils/helpers";
 
@@ -55,8 +56,9 @@ describe("ListAndShowLayout", () => {
             providers: [
                 ScrollableService,
                 BreadcrumbService,
-                { provide: BreadcrumbService, useValue: breadcrumbServiceSpy },
                 { provide: ActivatedRoute, useValue: activatedRouteSpy },
+                { provide: AuthorizationHttpService, useValue: null },
+                { provide: BreadcrumbService, useValue: breadcrumbServiceSpy },
                 { provide: MatDialog, useValue: {} },
             ],
             schemas: [NO_ERRORS_SCHEMA],

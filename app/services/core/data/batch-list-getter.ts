@@ -5,7 +5,7 @@ import { Observable } from "rxjs";
 import { ServerError } from "app/models";
 import { BatchClientService } from "app/services";
 import { ListGetter, ListGetterConfig } from "app/services/core/data/list-getter";
-import { ListOptions } from "./list-options";
+import { ContinuationToken, ListOptions } from "./list-options";
 
 export interface BatchListConfig<TEntity, TParams> extends ListGetterConfig<TEntity, TParams> {
     list: (client: BatchServiceClient, params: TParams, options: any) => Promise<any[]>;
@@ -34,9 +34,9 @@ export class BatchListGetter<TEntity, TParams> extends ListGetter<TEntity, TPara
         }).share();
     }
 
-    protected listNext(nextLink: string): Observable<any> {
+    protected listNext(token: ContinuationToken): Observable<any> {
         return this.batchClient.get().flatMap((proxy) => {
-            return Observable.fromPromise(this._listNext(proxy.client, nextLink));
+            return Observable.fromPromise(this._listNext(proxy.client, token.nextLink));
         }).map(x => this._processBatchResponse(x)).catch((error) => {
             return Observable.throw(ServerError.fromBatch(error));
         }).share();

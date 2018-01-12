@@ -1,6 +1,6 @@
 import { List, Map } from "immutable";
 
-import { exists, nil } from "app/utils/object";
+import { exists, nil } from "common/utils/object-utils";
 import { metadataForRecord, primitives } from "./helpers";
 
 /**

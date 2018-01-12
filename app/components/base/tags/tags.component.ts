@@ -70,6 +70,10 @@ export class TagsComponent implements OnChanges {
         this.isEditing = false;
     }
 
+    public trackTag(index, tag: string) {
+        return tag;
+    }
+
     private _resetTagEditStr() {
         this.tagEditString = this.tags.join(",");
     }

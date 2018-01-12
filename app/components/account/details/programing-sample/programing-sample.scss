@@ -1,0 +1,17 @@
+@import "app/styles/variables";
+
+bl-programing-sample {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+
+    > .description {
+        padding-top: 10px;
+        border-bottom: 1px solid $border-color;
+    }
+
+    > bl-editor {
+        flex: 1;
+    }
+}

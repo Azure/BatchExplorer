@@ -1,6 +1,6 @@
 import { EventEmitter, OnDestroy, ViewChild } from "@angular/core";
 import { MatDialog, MatDialogConfig } from "@angular/material";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { Observable, Subscription } from "rxjs";
 
 import { DeleteSelectedItemsDialogComponent } from "app/components/base/list-and-show-layout";

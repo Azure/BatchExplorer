@@ -1,5 +1,5 @@
 import { Component } from "@angular/core";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 
 import { SidebarManager } from "../../base/sidebar";
 import { PoolCreateBasicDialogComponent } from "../action";

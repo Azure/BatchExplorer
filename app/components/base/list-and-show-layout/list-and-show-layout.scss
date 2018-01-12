@@ -163,5 +163,18 @@ bl-list-and-show-layout {
             color: $dusty-grey;
         }
     }
+
+    select {
+        height: 26px;
+        color: $emperor-grey;
+        border: none;
+        border-radius: 3px;
+        margin-right: 10px;
+        background-color: $athensGrey;
+        appearance: none;
+        &:active, &:focus {
+            outline: none;
+        }
+    }
 }
 

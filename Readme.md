@@ -1,13 +1,13 @@
 # BatchLabs
 [![Build Status](https://travis-ci.org/Azure/BatchLabs.svg?branch=master)](https://travis-ci.org/Azure/BatchLabs)
+[![codecov](https://codecov.io/gh/Azure/BatchLabs/branch/master/graph/badge.svg)](https://codecov.io/gh/Azure/BatchLabs)
 
-**Note: BatchLabs is in preview.**
-
-
-## Description
+**Note: BatchLabs is in beta.**
 
 Batch Labs is a tool to manage your Azure Batch accounts. The goal is to implement a great user experience that will help you debug, monitor and manage your pools, jobs and tasks.
 It will also include expermiental features such as `Batch Templates` in the aim to improve your Batch experience. We are open to any feedback, ideas and contributions you might have.
+
+BatchLabs is updated monthly with new features and bug fixes. You can download it for Windows, macOS, and Linux on [Batch Labs website](https://azure.github.io/BatchLabs/).
 
 ![](docs/images/job-home.png)
 
@@ -60,10 +60,16 @@ npm run build
 npm run electron
 ```
 
+## Feedback
+* Request a new feature on [GitHub](https://github.com/Azure/BatchLabs/issues)
+* Vote for popular [feature requests](https://github.com/Azure/BatchLabs/issues?utf8=%E2%9C%93&q=is%3Aopen+is%3Aissue+label%3Afeature+sort%3Areactions-%2B1-desc+)
+* File a bug on [GitHub](https://github.com/Azure/BatchLabs/issues)
+
 ## Developers
 [Dev docs](docs/readme.md)
 
 ## License
+Copyright (c) Microsoft Corporation. All rights reserved.
 
 Batch labs is licensed under MIT [See license](LICENSE)
 Some icons are under Creative Commons Attribution-ShareAlike 3.0 Unported [See license](app/assets/images/logos/LICENSE)

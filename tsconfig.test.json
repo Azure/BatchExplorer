@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.json",
+  "files": [
+    "definitions/index.d.ts",
+    "node_modules/monaco-editor/monaco.d.ts"
+  ],
+  "include": [
+    "app/**/*.ts",
+    "app/**/*.spec.ts",
+    "src/common/**/*.ts",
+    "test/**/*.ts"
+  ],
+  "exclude": []
+}

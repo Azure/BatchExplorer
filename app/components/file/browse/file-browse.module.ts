@@ -2,7 +2,6 @@ import { NgModule } from "@angular/core";
 import { commonModules } from "app/common";
 import { FileDetailsModule } from "app/components/file/details";
 import { BlobFilesBrowserComponent } from "./blob-files-browser";
-import { FileDirectoryFilter, FileListDisplayComponent } from "./display";
 import {
     FileExplorerComponent, FileExplorerTabsComponent, FileTableViewComponent,
     FileTreeViewComponent,
@@ -11,7 +10,7 @@ import {
 import { NodeFileBrowseComponent } from "./node-file-browse.component";
 
 const components = [
-    FileDirectoryFilter, FileTreeViewComponent, FileListDisplayComponent,
+    FileTreeViewComponent,
     NodeFileBrowseComponent, BlobFilesBrowserComponent,
     FileExplorerComponent, FileTableViewComponent, FileExplorerTabsComponent,
 ];

@@ -7,7 +7,7 @@ import { StorageAccountCardComponent } from "app/components/account/details";
 import { ButtonComponent } from "app/components/base/buttons";
 import { SidebarManager } from "app/components/base/sidebar";
 import { AccountResource, ServerError, StorageAccount } from "app/models";
-import { StorageAccountService } from "app/services";
+import { AuthorizationHttpService , StorageAccountService } from "app/services";
 
 const accountNoStorage = new AccountResource({ id: "acc-1", location: "westus", properties: {} } as any);
 const accountWithStorage = new AccountResource({
@@ -59,6 +59,7 @@ describe("StorageAccountCardComponent", () => {
             imports: [],
             declarations: [StorageAccountCardComponent, TestComponent, ButtonComponent],
             providers: [
+                { provide: AuthorizationHttpService, useValue: null },
                 { provide: SidebarManager, useValue: null },
                 { provide: StorageAccountService, useValue: storageAccountServiceSpy },
             ],

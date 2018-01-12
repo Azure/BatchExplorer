@@ -2,7 +2,7 @@ import { Component, DebugElement, NO_ERRORS_SCHEMA, ViewChild } from "@angular/c
 import { ComponentFixture, TestBed, fakeAsync, tick } from "@angular/core/testing";
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from "@angular/forms";
 import { By } from "@angular/platform-browser";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { AsyncSubject } from "rxjs";
 
 import { ButtonComponent } from "app/components/base/buttons";
@@ -11,6 +11,7 @@ import {
 } from "app/components/base/form";
 import { ServerErrorComponent } from "app/components/base/form/server-error";
 import { ServerError } from "app/models";
+import { AuthorizationHttpService } from "app/services";
 import { click } from "test/utils/helpers";
 
 const date = new Date(2017, 9, 13, 23, 43, 38);
@@ -97,6 +98,9 @@ describe("ComplexFormComponent", () => {
                 FormPageComponent,
                 FormSectionComponent,
                 FormPickerComponent,
+            ],
+            providers: [
+                { provide: AuthorizationHttpService, useValue: null },
             ],
             schemas: [NO_ERRORS_SCHEMA],
         });

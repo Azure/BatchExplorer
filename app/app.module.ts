@@ -12,7 +12,6 @@ import { routes } from "./app.routes";
 // components
 import { AppComponent } from "app/app.component";
 import { MainNavigationComponent } from "app/components/shared/main-navigation.component";
-import { AADUserDropdownComponent } from "app/components/user";
 
 // extenal modules
 import { AccountModule } from "app/components/account/account.module";
@@ -42,6 +41,7 @@ import {
     AppInsightsQueryService,
     ApplicationService,
     ArmHttpService,
+    AuthorizationHttpService,
     AutoscaleFormulaService,
     AzureHttpService,
     BatchClientService,
@@ -77,7 +77,6 @@ import {
     SubscriptionService,
     TaskService,
     VmSizeService,
-    commands,
 } from "./services";
 
 const modules = [
@@ -91,7 +90,6 @@ const modules = [
         AppComponent,
     ],
     declarations: [
-        AADUserDropdownComponent,
         AppComponent,
         MainNavigationComponent,
     ],
@@ -120,6 +118,7 @@ const modules = [
         AutoscaleFormulaService,
         AzureHttpService,
         ArmHttpService,
+        AuthorizationHttpService,
         BatchClientService,
         CacheDataService,
         CommandService,
@@ -155,8 +154,6 @@ const modules = [
         VmSizeService,
         PredefinedFormulaService,
         { provide: ErrorHandler, useClass: BatchLabsErrorHandler },
-        ...commands,
     ],
 })
-
 export class AppModule { }

@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { Subscription } from "rxjs/Subscription";
 
 import { DialogService } from "app/components/base/dialogs";
@@ -74,7 +74,7 @@ export class DataDetailsComponent implements OnInit, OnDestroy {
         }));
 
         sidebarRef.afterCompletion.subscribe(() => {
-            this.storageService.onFileGroupUpdated.next();
+            this.storageService.onContainerUpdated.next();
         });
     }
 

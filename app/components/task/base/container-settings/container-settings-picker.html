@@ -4,7 +4,7 @@
             <input matInput [matAutocomplete]="auto" formControlName="imageName" placeholder="Image name" type="text">
         </mat-form-field>
         <mat-autocomplete #auto="matAutocomplete" >
-            <mat-option *ngFor="let image of containerConfiguration?.containerImageNames" [value]="image">
+            <mat-option *ngFor="let image of containerConfiguration?.containerImageNames;trackBy: trackImage" [value]="image">
                 {{ image }}
             </mat-option>
         </mat-autocomplete>

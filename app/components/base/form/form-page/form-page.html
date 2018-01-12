@@ -1,5 +1,5 @@
 <ng-template>
-    <div class="form-section" *ngFor="let section of sections; let i = index">
+    <div class="form-section" *ngFor="let section of sections;trackBy: trackByFn let i = index">
         <div class="section-title" *ngIf="section.title">
             <span class="step-index">{{i + 1}}</span>
             <div class="step-header">

@@ -6,7 +6,7 @@ import * as path from "path";
 import { ButtonComponent } from "app/components/base/buttons";
 import { DownloadRdpComponent } from "app/components/node/connect";
 import { NodeConnectionSettings } from "app/models";
-import { ElectronShell, FileSystemService } from "app/services";
+import { AuthorizationHttpService, ElectronShell, FileSystemService } from "app/services";
 import { OS } from "app/utils";
 
 @Component({
@@ -48,6 +48,7 @@ describe("DownloadRdpComponent", () => {
         TestBed.configureTestingModule({
             declarations: [DownloadRdpComponent, DownloadRdpMockComponent, ButtonComponent],
             providers: [
+                { provide: AuthorizationHttpService, useValue: null },
                 { provide: FileSystemService, useValue: fsServiceSpy },
                 { provide: ElectronShell, useValue: shellSpy },
             ],

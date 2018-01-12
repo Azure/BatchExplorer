@@ -1,3 +1,29 @@
+# 0.11.0
+[All items](https://github.com/Azure/BatchLabs/milestone/12?closed=1)
+
+### feature:
+
+* Register batchlabs default protocol to open from the browser [\#934](https://github.com/Azure/BatchLabs/issues/934)
+* Batch Labs should show a clear error when it cannot connect to its python web service [\#923](https://github.com/Azure/BatchLabs/issues/923)
+* Implement a footer for the app and move some of the dropdown from the header [\#901](https://github.com/Azure/BatchLabs/issues/901)
+* Show current quota usage on the account page [\#799](https://github.com/Azure/BatchLabs/issues/799)
+* File explorer download a folder with right click [\#657](https://github.com/Azure/BatchLabs/issues/657)
+* Goto directly to an entity doesn't show the entity in the quicklist [\#199](https://github.com/Azure/BatchLabs/issues/199)
+* Export entities to template to allow cloning after deleted [\#19](https://github.com/Azure/BatchLabs/issues/19)
+* NCJ advanced type for generating a container SAS [\#757](https://github.com/Azure/BatchLabs/issues/757)
+
+### bug:
+
+* Shortcut "cmd+H" is not supported on macOS [\#948](https://github.com/Azure/BatchLabs/issues/948)
+* Pricing is broken [\#857](https://github.com/Azure/BatchLabs/issues/857)
+* Pool estimated cost take rendering license into account [\#684](https://github.com/Azure/BatchLabs/issues/684)
+
+### other:
+
+* Application package icons need updating [\#939](https://github.com/Azure/BatchLabs/issues/939)
+* Tweak quick search ui [\#924](https://github.com/Azure/BatchLabs/issues/924)
+* List multi select should change color when losing focus [\#31](https://github.com/Azure/BatchLabs/issues/31)
+
 # 0.10.2
 ### Bug:
 

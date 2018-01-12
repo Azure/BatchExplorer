@@ -37,4 +37,8 @@ export class SidebarBookmarksComponent implements OnDestroy {
     public destroyBookmark(reference: SidebarRef<any>) {
         reference.destroy();
     }
+
+    public trackReference(index, reference: SidebarRef<any>) {
+        return reference.id;
+    }
 }

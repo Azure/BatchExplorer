@@ -61,6 +61,10 @@ export class CpuUsageGraphComponent extends PerformanceGraphComponent implements
         this.updateData();
     }
 
+    public trackCpu(index) {
+        return index;
+    }
+
     private _showOverallCpuUsage() {
         this.datasets = [
             {
