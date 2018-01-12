@@ -6,13 +6,13 @@ import * as path from "path";
 import { Observable, Subscription } from "rxjs";
 
 import { ResourceFileAttributes } from "app/models";
-import { CloudPathUtils, DragUtils, UrlUtils } from "app/utils";
+import { CloudPathUtils, DragUtils } from "app/utils";
 import { BlobUtilities } from "azure-storage";
 import * as moment from "moment";
 
 import { FileSystemService, SettingsService, StorageService } from "app/services";
 import { SharedAccessPolicy } from "app/services/storage/models";
-import { SecureUtils } from "common";
+import { SecureUtils, UrlUtils} from "common";
 import "./resourcefile-picker.scss";
 
 export interface UploadResourceFileEvent {
@@ -117,20 +117,25 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
                 this._addResourceFileFromUrl(link);
             }
         } else if (this._hasFile(dataTransfer)) {
-            this._uploadFiles(files.map(x => x.path));
+            this.uploadFiles(files.map(x => x.path));
         }
         this.isDraging = 0;
     }
 
-    private _addResourceFileFromUrl(url: string) {
-        this._addResourceFile(url, path.basename(url));
-    }
-
-    private async _uploadFiles(files: string[], root = "") {
+    /**
+     * Upload files to storage and add then to the resource files list
+     * @param files: List of files or folder
+     * @returns async when the all  file upload started
+     */
+    public async uploadFiles(files: string[], root = "") {
         await this.storageService.createContainerIfNotExists(this._containerId).toPromise();
         for (const file of files) {
             await this._uploadPath(file, root);
         }
+    }
+
+    private _addResourceFileFromUrl(url: string) {
+        this._addResourceFile(url, path.basename(url));
     }
 
     private async _uploadPath(filePath: string, root = "") {
@@ -140,7 +145,7 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
         } else {
             const files = await this.fs.readdir(filePath);
             const paths = files.map(x => path.join(filePath, x));
-            await this._uploadFiles(paths, CloudPathUtils.join(root, path.basename(filePath)));
+            await this.uploadFiles(paths, CloudPathUtils.join(root, path.basename(filePath)));
         }
     }
 
