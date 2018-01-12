@@ -85,10 +85,10 @@ export class MonitorHttpService {
                 const metrics: Metric[] = value.json().value.map((metric): Metric => {
                     return {
                         name: metric.name,
-                        data: metric.timeseries[0].data.map((time): MetricValue => {
+                        data: metric.timeseries[0].data.map((data): MetricValue => {
                             return {
-                                timeStamp: time.timeStamp,
-                                total: time.total,
+                                timeStamp: data.timeStamp,
+                                total: data.total,
                             } as MetricValue;
                         }),
                     } as Metric;

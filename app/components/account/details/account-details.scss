@@ -27,4 +27,16 @@ bl-account-details {
             padding: 0 5px;
         }
     }
+
+    .monitor-charts {
+        margin-top: 5px;
+        min-width: 800px;
+        display: grid;
+        grid-template-columns: 24% 24% 24% 24%;
+        grid-template-rows: 200px;
+        grid-column-gap: 1%;
+        grid-row-gap: 20px;
+        justify-items: stretch;
+        align-items: stretch;
+    }
 }

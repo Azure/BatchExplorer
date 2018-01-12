@@ -6,7 +6,7 @@ import { Subscription } from "rxjs";
 import { AccountResource, BatchApplication, Job, Pool, ServerError } from "app/models";
 import {
     AccountParams, AccountService, ApplicationListParams, ApplicationService,
-    JobListParams, JobService, PoolListParams, PoolService,
+    JobListParams, JobService, MonitorHttpService, PoolListParams, PoolService,
 } from "app/services";
 import { EntityView, ListView } from "app/services/core";
 
@@ -50,6 +50,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
         private applicationService: ApplicationService,
         private jobService: JobService,
         private poolService: PoolService,
+        monitor: MonitorHttpService,
         zone: NgZone,
         viewContainerRef: ViewContainerRef) {
         this.data = this.accountService.view();
