@@ -49,7 +49,7 @@ bl-button {
         }
 
         &[color="light"] {
-            color: $scorpion;
+            color: $black;
             &:hover, &:focus {
                 color: $silver-grey;
             }
@@ -63,7 +63,7 @@ bl-button {
         }
 
         &.disabled[color] {
-            color: #d5d5d5;
+            color: $disabled-button-color;
             background: none;
         }
     }
@@ -89,12 +89,12 @@ bl-button {
     &[type="square"], &[type="round"], &[type="wide"] {
         &.disabled[color] {
             cursor: not-allowed;
-            color: #d5d5d5;
-            background: #f5f5f5;
+            color: $disabled-button-color;
+            background: $main-background;
 
             &:hover, &:focus, &:active {
-                color: #d5d5d5;
-                background: #f5f5f5;
+                color: $disabled-button-color;
+                background: $main-background;
             }
         }
 

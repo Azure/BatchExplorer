@@ -5,8 +5,8 @@ bl-breadcrumb-group {
     $separation: 3px;
     $height: $header-height - 2 * $header-margin;
     $half-height: $height / 2;
-    $color: map-get($primary, 500);
-    $hover-color: map-get($primary, 600);
+    $color: $breadcrumb-color;
+    $hover-color: $breadcrumb-hover-color;
     display: block;
     height: $height;
     margin-top: $header-margin;

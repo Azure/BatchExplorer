@@ -60,7 +60,7 @@ bl-file-table-view {
         width: 16px;
 
         .fa-folder {
-            color: #f8d979;
+            color: $folder-icon-color;
         }
 
         .fa-file {
