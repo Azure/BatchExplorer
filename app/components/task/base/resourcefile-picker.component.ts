@@ -106,7 +106,7 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
     }
 
     @HostListener("drop", ["$event"])
-    public handleDropOnRow(event: DragEvent) {
+    public handleDrop(event: DragEvent) {
         event.preventDefault();
         event.stopPropagation();
         const dataTransfer = event.dataTransfer;
@@ -178,6 +178,7 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
     }
 
     private _addResourceFile(blobSource: string, filePath: string) {
+        console.log("Adding file", blobSource, this.files.value);
         const files = this.files.value.concat([{
             blobSource,
             filePath,

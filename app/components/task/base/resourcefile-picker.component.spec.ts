@@ -92,7 +92,64 @@ describe("ResourcefilePickerComponent", () => {
         }]);
     });
 
-    describe("when dropping files to be uploaded", () => {
+    describe("when dropping files", () => {
+        it("adds a link to the list of files", () => {
+            const event = {
+                preventDefault: () => null,
+                stopPropagation: () => null,
+                dataTransfer: {
+                    types: ["text/html", "text/uri-list"],
+                    files: [],
+                    getData: () => "https://example.com/path/file1.txt",
+                },
+            };
+            component.handleDrop(event as any);
+            expect(component.files.value.length).toBe(1);
+            expect(component.files.value.first()).toEqual({
+                blobSource: "https://example.com/path/file1.txt",
+                filePath: "file1.txt",
+            });
+        });
+
+        it("adds a file to the list of files", (done) => {
+            const event = {
+                preventDefault: () => null,
+                stopPropagation: () => null,
+                dataTransfer: {
+                    types: ["Files"],
+                    files: [{
+                        path: "some/file1.txt",
+                    }],
+                },
+            };
+            component.handleDrop(event as any);
+            setTimeout(() => {
+                fixture.detectChanges();
+                expect(component.files.value.length).toBe(1);
+                expect(component.files.value.first()).toEqual({
+                    blobSource: "test-custom-container?key=abc",
+                    filePath: "file1.txt",
+                });
+                done();
+            });
+        });
+
+        it("doesn't do anything if no links or files", () => {
+            const event = {
+                preventDefault: () => null,
+                stopPropagation: () => null,
+                dataTransfer: {
+                    types: ["text/html"],
+                    files: [],
+                    getData: () => "some text invalid",
+                },
+            };
+            component.handleDrop(event as any);
+            expect(component.files.value.length).toBe(0);
+        });
+    });
+
+    describe("uplading files", () => {
         let uploadFolder: string;
 
         beforeEach(() => {
