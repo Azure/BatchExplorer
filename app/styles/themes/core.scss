@@ -1,3 +1,7 @@
+@mixin propL($name, $var) {
+    #{$name}: $var;
+}
+
 @mixin prop($name, $var, $index) {
     #{$name}-#{$index}: map-get($var, $index);
 }
@@ -87,3 +91,22 @@ $success: (
     A400: var(--success-A400),
     A700: var(--success-A700),
 );
+
+$primary-text:              var(--primary-text);
+$secondary-text:            var(--secondary-text);
+$primary-color:             var(--primary-color);
+$dark-primary-color:        var(--dark-primary-color);
+$light-primary-color:       var(--light-primary-color);
+$accent-color:              var(--accent-color);
+$text-color:                var(--text-color);
+$divider-color:             var(--divider-color);
+$error-color:               var(--error-color);
+$header-background:         var(--header-background);
+$header-hover:              var(--header-hover);
+$navigation-background:     var(--navigation-background);
+$navigation-hover:          var(--navigation-hover);
+$breadcrumb-color:          var(--breadcrumb-color);
+$breadcrumb-hover-color:    var(--breadcrumb-hover-color);
+$disabled-button-color:     var(--disabled-button-color);
+$main-background:           var(--main-background);
+$folder-icon-color:         var(--folder-icon-color);
