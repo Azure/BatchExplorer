@@ -1,5 +1,4 @@
 import { Injectable, NgZone } from "@angular/core";
-import * as storage from "azure-storage";
 import * as path from "path";
 import { AsyncSubject, Observable, Subject } from "rxjs";
 
@@ -8,7 +7,7 @@ import { BlobContainer, File, ServerError } from "app/models";
 import { FileSystemService } from "app/services";
 import { SharedAccessPolicy } from "app/services/storage/models";
 import { CloudPathUtils, log } from "app/utils";
-import { BlobService } from "azure-storage";
+import { BlobService, createBlobServiceWithSas } from "azure-storage";
 import { Constants } from "common";
 import {
     DataCache,
@@ -373,12 +372,12 @@ export class StorageService {
     }
 
     public uploadToSasUrl(sasUrl: string, filePath: string): Observable<any> {
-        const subject = new AsyncSubject<storage.BlobService.BlobResult>();
+        const subject = new AsyncSubject<BlobService.BlobResult>();
 
         const { accountUrl, sasToken, container, blob } = this._parseSasUrl(sasUrl);
-        const service = storage.createBlobServiceWithSas(accountUrl, sasToken);
+        const service = createBlobServiceWithSas(accountUrl, sasToken);
         service.createBlockBlobFromLocalFile(container, blob, filePath,
-            (error: any, result: storage.BlobService.BlobResult) => {
+            (error: any, result: BlobService.BlobResult) => {
                 this.zone.run(() => {
 
                     if (error) {

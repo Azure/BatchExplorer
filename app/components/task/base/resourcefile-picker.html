@@ -4,7 +4,7 @@
 </bl-editable-table>
 <span class="help">You can drag and drop files here to be uploaded automatically</span>
 <div class="uploading-files" *ngIf="uploadingFiles.length > 0">
-    <div class="file" *ngFor="let file of uploadingFiles">
+    <div class="file" *ngFor="let file of uploadingFiles;trackBy: trackUploadingFile">
         <i class="fa fa-spinner fa-spin"></i>
         {{file}}
     </div>

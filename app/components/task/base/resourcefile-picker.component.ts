@@ -12,7 +12,7 @@ import * as moment from "moment";
 
 import { FileSystemService, SettingsService, StorageService } from "app/services";
 import { SharedAccessPolicy } from "app/services/storage/models";
-import { SecureUtils, UrlUtils} from "common";
+import { SecureUtils, UrlUtils } from "common";
 import "./resourcefile-picker.scss";
 
 export interface UploadResourceFileEvent {
@@ -132,6 +132,10 @@ export class ResourcefilePickerComponent implements ControlValueAccessor, OnDest
         for (const file of files) {
             await this._uploadPath(file, root);
         }
+    }
+
+    public trackUploadingFile(index, file: string) {
+        return file;
     }
 
     private _addResourceFileFromUrl(url: string) {
