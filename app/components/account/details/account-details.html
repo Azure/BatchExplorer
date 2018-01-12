@@ -1,4 +1,3 @@
-
 <bl-banner *ngIf="loadingError" type="error">
     <div code>{{ loadingError.code }}</div>
     <div message>{{ loadingError.message }}</div>
@@ -25,10 +24,10 @@
             </div>
         </bl-summary-card>
         <div class="monitor-charts">
-            <div></div>
-            <div></div>
-            <div></div>
-            <div></div>
+            <bl-monitor-chart chartType="coreCount"></bl-monitor-chart>
+            <bl-monitor-chart chartType="failedTask"></bl-monitor-chart>
+            <bl-monitor-chart chartType="nodeStates"></bl-monitor-chart>
+            <bl-monitor-chart chartType="taskStates"></bl-monitor-chart>
         </div>
         <div class="account-cards">
             <mat-card class="account-card">

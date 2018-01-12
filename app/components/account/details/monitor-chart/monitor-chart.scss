@@ -1,0 +1,18 @@
+
+bl-monitor-chart {
+    .header {
+        font-size: 2em;
+        color: #5b5b5b;
+        text-align: justify;
+        margin-top: 0;
+        padding-bottom: 12px;
+    }
+    background-color: white;
+    display: inline-block;
+    width: calc(25% - 4px);
+    min-width: 210px;
+    font-size: 2em;
+    text-align: justify;
+    margin-top: 8px;
+    padding: 12px;
+}

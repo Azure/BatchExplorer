@@ -50,25 +50,27 @@ export class MonitorHttpService {
     private _setCoreCounts() {
         this.coreCounts = this._getCurrentAccount().flatMap(resourceId => {
             return this._getMetrics(this._coreCountMetrics, resourceId);
-        }).take(1);
+        }).share();
     }
 
     private _setTaskState() {
         this.taskStates = this._getCurrentAccount().flatMap(resourceId => {
             return this._getMetrics(this._taskStateMetrics, resourceId);
-        }).take(1);
+        }).share();
     }
 
     private _setFailedTask() {
         this.failedTask = this._getCurrentAccount().flatMap(resourceId => {
             return this._getMetrics(this._failedTaskMetrics, resourceId);
-        }).take(1);
+        }).share();
     }
 
     private _setNodeState() {
         this.nodeStates = this._getCurrentAccount().flatMap(resourceId => {
-            return this._getMetrics(this._nodeStateMetrics, resourceId);
-        }).take(1);
+            return this._getMetrics(this._nodeStateMetrics, resourceId, (name) => {
+                return name.split(" ")[0];
+            });
+        }).share();
     }
 
     private _getCurrentAccount() {
@@ -77,12 +79,14 @@ export class MonitorHttpService {
         }).share();
     }
 
-    private _getMetrics(metric: MonitorMetrics, resourceId: string) {
+    private _getMetrics(metric: MonitorMetrics, resourceId: string, customNameFunc?: (name: string) => string) {
         if (resourceId) {
             const url = metric.getRequestUrl(resourceId);
             const options = metric.getRequestOptions();
             return this.armService.get(url, options).flatMap(value => {
                 const metrics: Metric[] = value.json().value.map((metric): Metric => {
+                    const localizedValue = metric.name.localizedValue;
+                    metric.name.localizedValue = customNameFunc ? customNameFunc(localizedValue) : localizedValue;
                     return {
                         name: metric.name,
                         data: metric.timeseries[0].data.map((data): MetricValue => {

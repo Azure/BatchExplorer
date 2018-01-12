@@ -1,0 +1,6 @@
+<div class="header">
+    <h2>{{ title }}</h2>
+</div>
+<div *ngIf="datasets">
+    <canvas blChart [datasets]="datasets" [options]="options" [chartType]="type"></canvas>
+</div>
