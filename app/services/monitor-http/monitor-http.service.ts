@@ -95,7 +95,7 @@ export class MonitorHttpService {
         // Note that here only take first word to truncate legends for node states chart
         return this._getCurrentAccount().flatMap(resourceId => {
             return this._getMetrics(this._nodeStateMetrics, resourceId, (name) => {
-                return name.replace(" node count", "").replace("NodeCount", "");
+                return name.replace(" node count", "").replace("nodecount", "");
             });
         }).share();
     }
@@ -120,17 +120,19 @@ export class MonitorHttpService {
             return this.armService.get(url, options).flatMap(value => {
                 const metrics: Metric[] = value.json().value.map((object): Metric => {
                     object.name.localizedValue = this._convertToSentenceCase(object.name.localizedValue);
+                    object.name.value = object.name.value.toLowerCase();
                     // format localized name
                     const localizedValue = object.name.localizedValue;
                     const nameValue = object.name.value;
 
-                    let color;
                     if (customNameFunc) {
                         object.name.localizedValue = customNameFunc(localizedValue);
-                        object.name.value = customNameFunc(nameValue).toLowerCase();
-                        const colorFound = metric.colors.find((c) => c.state === object.name.value);
-                        color = colorFound && colorFound.color;
+                        object.name.value = customNameFunc(nameValue);
                     }
+
+                    const colorFound = metric.colors.find((c) => c.state === object.name.value);
+                    const color = colorFound && colorFound.color;
+
                     return {
                         name: object.name,
                         data: object.timeseries[0].data.map((data): MetricValue => {
