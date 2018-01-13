@@ -17,6 +17,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
     public datasets: Chart.ChartDataSets[];
     public options = {};
     public timeframe: MonitorChartTimeFrame = MonitorChartTimeFrame.Hour;
+    public colors: any[];
 
     private _sub: Subscription;
     private _observable: Observable<Metric[]>;
@@ -39,24 +40,22 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         if (this._observable) {
             this._destroySub();
             this._sub = this._observable.subscribe(metrics => {
+                this.colors = [];
                 this.datasets = metrics.map((metric: Metric): Chart.ChartDataSets => {
+                    this.colors.push({
+                        borderColor: metric.color,
+                        backgroundColor: metric.color,
+                    });
                     return {
+                        label: metric.name.localizedValue,
                         data: metric.data.map(data => {
                             return {
                                 x: data.timeStamp,
                                 y: data.total || 0,
                             } as Chart.ChartPoint;
                         }),
-                        fill: false,
-                        label: metric.name.localizedValue,
                         borderWidth: 1,
-
-                        // none of them are working
-                        // borderColor: metric.color,
-                        // backgroundColor: metric.color,
-                        // pointBackgroundColor: metric.color,
-                        // pointBorderColor: metric.color,
-                        // pointHoverBorderColor: metric.color,
+                        fill: false,
                     } as Chart.ChartDataSets;
                 });
             });
