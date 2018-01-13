@@ -2,8 +2,8 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs/Observable";
 
 import {
-    CoreCountMetrics, FailedTaskMetrics, MonitorChartType, MonitorMetrics,
-    NodeStatesMetrics, TaskStatesMetrics, TimeFrame,
+    CoreCountMetrics, FailedTaskMetrics, MonitorChartColor,
+    MonitorChartType, MonitorMetrics, NodeStatesMetrics, TaskStatesMetrics, TimeFrame,
 } from "app/services";
 import { AccountService } from "../account.service";
 import { ArmHttpService } from "../arm-http.service";
@@ -21,6 +21,7 @@ export interface MetricValue {
 export interface Metric {
     name: LocalizableString;
     data: MetricValue[];
+    color: string;
 }
 
 /**
@@ -94,7 +95,7 @@ export class MonitorHttpService {
         // Note that here only take first word to truncate legends for node states chart
         return this._getCurrentAccount().flatMap(resourceId => {
             return this._getMetrics(this._nodeStateMetrics, resourceId, (name) => {
-                return name.split(" ")[0];
+                return name.replace(" node count", "").replace("NodeCount", "");
             });
         }).share();
     }
@@ -117,22 +118,42 @@ export class MonitorHttpService {
             const url = metric.getRequestUrl(resourceId);
             const options = metric.getRequestOptions();
             return this.armService.get(url, options).flatMap(value => {
-                const metrics: Metric[] = value.json().value.map((metric): Metric => {
+                const metrics: Metric[] = value.json().value.map((object): Metric => {
+                    object.name.localizedValue = this._convertToSentenceCase(object.name.localizedValue);
                     // format localized name
-                    const localizedValue = metric.name.localizedValue;
-                    metric.name.localizedValue = customNameFunc ? customNameFunc(localizedValue) : localizedValue;
+                    const localizedValue = object.name.localizedValue;
+                    const nameValue = object.name.value;
+
+                    let color;
+                    if (customNameFunc) {
+                        object.name.localizedValue = customNameFunc(localizedValue);
+                        object.name.value = customNameFunc(nameValue).toLowerCase();
+                        const colorFound = metric.colors.find((c) => c.state === object.name.value);
+                        color = colorFound && colorFound.color;
+                    }
                     return {
-                        name: metric.name,
-                        data: metric.timeseries[0].data.map((data): MetricValue => {
+                        name: object.name,
+                        data: object.timeseries[0].data.map((data): MetricValue => {
                             return {
                                 timeStamp: data.timeStamp,
                                 total: data.total,
                             } as MetricValue;
                         }),
+                        color: color,
                     } as Metric;
                 });
                 return Observable.of(metrics);
             });
         }
+    }
+
+    /**
+     * Convert a string case to format like a sentence
+     * @param text
+     */
+    private _convertToSentenceCase(text: string): string {
+        return text.split(" ")
+                .map((value, index) => index !== 0 ? value.toLowerCase() : value)
+                .join(" ");
     }
 }

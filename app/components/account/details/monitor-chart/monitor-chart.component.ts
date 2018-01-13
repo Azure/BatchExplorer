@@ -40,6 +40,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
             this._destroySub();
             this._sub = this._observable.subscribe(metrics => {
                 this.datasets = metrics.map((metric: Metric): Chart.ChartDataSets => {
+                    console.log(metric.color);
                     return {
                         data: metric.data.map(data => {
                             return {
@@ -50,6 +51,13 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
                         fill: false,
                         label: metric.name.localizedValue,
                         borderWidth: 1,
+
+                        // none of them are working
+                        // borderColor: metric.color,
+                        // backgroundColor: metric.color,
+                        // pointBackgroundColor: metric.color,
+                        // pointBorderColor: metric.color,
+                        // pointHoverBorderColor: metric.color,
                     } as Chart.ChartDataSets;
                 });
             });
@@ -105,8 +113,14 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
             responsive: true,
             maintainAspectRatio: false,
             elements: {
-                point: { radius: 0, hitRadius: 10, hoverRadius: 3 },
-                line: { tension: 0.05 },
+                point: {
+                    radius: 0,
+                    hitRadius: 10,
+                    hoverRadius: 3,
+                },
+                line: {
+                    tension: 0.05,
+                },
             },
             legend: {
                 display: true,

@@ -37,6 +37,11 @@ export enum MetricsParams {
     Aggregation = "aggregation",
 }
 
+export interface MonitorChartColor {
+    state: string;
+    color: string;
+}
+
 const hourTimeSpan = moment.duration({ hours: 1 });
 const dayTimeSpan = moment.duration({ days: 1 });
 const weekTimeSpan = moment.duration({ weeks: 1 });
@@ -48,6 +53,7 @@ const parameterDelimiter = ",";
 export interface MonitorMetrics {
     metrics: Metrics[];
     aggregation: Aggregation[];
+    colors: MonitorChartColor[];
     setTimeFrame(timeFrame: TimeFrame): void;
     getRequestUrl(resourceId: string): string;
     getRequestOptions(): RequestOptions;
@@ -56,6 +62,7 @@ export interface MonitorMetrics {
 export class MonitorMetricsBase implements MonitorMetrics {
     public metrics: Metrics[];
     public aggregation: Aggregation[];
+    public colors: MonitorChartColor[];
 
     // Set internally
     // supported interval are: 00:01:00,00:05:00,00:15:00,00:30:00,01:00:00,06:00:00,12:00:00,1.00:00:00)
@@ -63,9 +70,10 @@ export class MonitorMetricsBase implements MonitorMetrics {
     private _timeSpanStart: string;
     private _timeSpanEnd: string;
 
-    constructor(metrics: Metrics[], aggregation: Aggregation[]) {
+    constructor(metrics: Metrics[], aggregation: Aggregation[], colors?: MonitorChartColor[]) {
         this.metrics = metrics;
         this.aggregation = aggregation;
+        this.colors = colors;
         this.setTimeFrame(TimeFrame.Hour);
     }
 
