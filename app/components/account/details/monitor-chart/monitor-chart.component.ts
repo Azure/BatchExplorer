@@ -2,7 +2,7 @@ import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
 import { Observable, Subscription } from "rxjs";
 
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
-import { Metric, MonitorChartType, MonitorHttpService, TimeFrame } from "app/services";
+import { Metric, MonitorChartTimeFrame, MonitorChartType, MonitorHttpService } from "app/services";
 
 import "./monitor-chart.scss";
 
@@ -16,7 +16,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
     public type = "line";
     public datasets: Chart.ChartDataSets[];
     public options = {};
-    public timeframe: TimeFrame = TimeFrame.Hour;
+    public timeframe: MonitorChartTimeFrame = MonitorChartTimeFrame.Hour;
 
     private _sub: Subscription;
     private _observable: Observable<Metric[]>;
@@ -40,7 +40,6 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
             this._destroySub();
             this._sub = this._observable.subscribe(metrics => {
                 this.datasets = metrics.map((metric: Metric): Chart.ChartDataSets => {
-                    console.log(metric.color);
                     return {
                         data: metric.data.map(data => {
                             return {
@@ -67,17 +66,17 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
     public openTimeFramePicker() {
         const items = [
             new ContextMenuItem({ label: "Past hour", click: () => {
-                this.timeframe = TimeFrame.Hour;
+                this.timeframe = MonitorChartTimeFrame.Hour;
                 this.monitor.updateTimeFrame(this.timeframe, this.chartType);
                 this.fetchObservable();
             }}),
             new ContextMenuItem({ label: "Past day", click: () => {
-                this.timeframe = TimeFrame.Day;
+                this.timeframe = MonitorChartTimeFrame.Day;
                 this.monitor.updateTimeFrame(this.timeframe, this.chartType);
                 this.fetchObservable();
             }}),
             new ContextMenuItem({ label: "Past week", click: () => {
-                this.timeframe = TimeFrame.Week;
+                this.timeframe = MonitorChartTimeFrame.Week;
                 this.monitor.updateTimeFrame(this.timeframe, this.chartType);
                 this.fetchObservable();
             }}),

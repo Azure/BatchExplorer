@@ -1,5 +1,5 @@
 import { NodeState } from "app/models";
-import { Aggregation, Metrics, MonitorMetricsBase } from "./monitor-metrics-base";
+import { MonitorChartAggregation, MonitorChartMetrics, MonitorMetricsBase } from "./monitor-metrics-base";
 
 const statesColor = [
     { state: NodeState.starting, color: "#fffe5c" },
@@ -12,17 +12,17 @@ const statesColor = [
 export class NodeStatesMetrics extends MonitorMetricsBase {
     constructor() {
         super([
-            Metrics.StartingNodeCount,
-            Metrics.IdleNodeCount,
-            Metrics.RunningNodeCount,
-            Metrics.StartTaskFailedNodeCount,
-            Metrics.RebootingNodeCount,
+            MonitorChartMetrics.StartingNodeCount,
+            MonitorChartMetrics.IdleNodeCount,
+            MonitorChartMetrics.RunningNodeCount,
+            MonitorChartMetrics.StartTaskFailedNodeCount,
+            MonitorChartMetrics.RebootingNodeCount,
         ], [
-            Aggregation.Total,
-            Aggregation.Total,
-            Aggregation.Total,
-            Aggregation.Total,
-            Aggregation.Total,
+            MonitorChartAggregation.Total,
+            MonitorChartAggregation.Total,
+            MonitorChartAggregation.Total,
+            MonitorChartAggregation.Total,
+            MonitorChartAggregation.Total,
         ], statesColor);
     }
 }

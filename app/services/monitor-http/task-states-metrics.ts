@@ -1,4 +1,4 @@
-import { Aggregation, Metrics, MonitorMetricsBase } from "./monitor-metrics-base";
+import { MonitorChartAggregation, MonitorChartMetrics, MonitorMetricsBase } from "./monitor-metrics-base";
 
 const statesColor = [
     { state: "taskstartevent", color: "#fffe5c" },
@@ -8,11 +8,11 @@ const statesColor = [
 export class TaskStatesMetrics extends MonitorMetricsBase {
     constructor() {
         super([
-            Metrics.TaskStartEvent,
-            Metrics.TaskCompleteEvent,
+            MonitorChartMetrics.TaskStartEvent,
+            MonitorChartMetrics.TaskCompleteEvent,
         ], [
-            Aggregation.Total,
-            Aggregation.Total,
+            MonitorChartAggregation.Total,
+            MonitorChartAggregation.Total,
         ], statesColor);
     }
 }

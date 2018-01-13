@@ -1,4 +1,4 @@
-import { Aggregation, Metrics, MonitorMetricsBase } from "./monitor-metrics-base";
+import { MonitorChartAggregation, MonitorChartMetrics, MonitorMetricsBase } from "./monitor-metrics-base";
 
 const statesColor = [
     { state: "corecount", color: "#1C3F95" },
@@ -6,6 +6,6 @@ const statesColor = [
 
 export class CoreCountMetrics extends MonitorMetricsBase {
     constructor() {
-        super([ Metrics.CoreCount ], [ Aggregation.Total], statesColor);
+        super([ MonitorChartMetrics.CoreCount ], [ MonitorChartAggregation.Total], statesColor);
     }
 }

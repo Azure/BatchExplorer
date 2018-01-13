@@ -2,8 +2,8 @@ import { Injectable } from "@angular/core";
 import { Observable } from "rxjs/Observable";
 
 import {
-    CoreCountMetrics, FailedTaskMetrics, MonitorChartColor,
-    MonitorChartType, MonitorMetrics, NodeStatesMetrics, TaskStatesMetrics, TimeFrame,
+    CoreCountMetrics, FailedTaskMetrics, MonitorChartTimeFrame, MonitorChartType,
+    MonitorMetrics, NodeStatesMetrics, TaskStatesMetrics,
 } from "app/services";
 import { AccountService } from "../account.service";
 import { ArmHttpService } from "../arm-http.service";
@@ -46,7 +46,7 @@ export class MonitorHttpService {
      * @param timeframe
      * @param chartType
      */
-    public updateTimeFrame(timeframe: TimeFrame, chartType: MonitorChartType) {
+    public updateTimeFrame(timeframe: MonitorChartTimeFrame, chartType: MonitorChartType) {
         switch (chartType) {
             case MonitorChartType.CoreCount:
                 this._coreCountMetrics.setTimeFrame(timeframe);
