@@ -113,7 +113,7 @@ bl-table {
         &.sortable {
             cursor: pointer;
             > .sort-icon {
-                color: #f5f5f5;
+                color: $main-background;
             }
 
             &:hover:not(.sorting) > .sort-icon {

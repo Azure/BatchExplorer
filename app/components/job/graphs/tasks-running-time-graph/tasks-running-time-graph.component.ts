@@ -36,13 +36,13 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges, OnDest
 
     public colors: any[] = [
         {
-            pointBackgroundColor: "#aa3939",
-            pointBorderColor: "#aa3939",
+            pointBackgroundColor: "var(--error-color)",
+            pointBorderColor: "var(--error-color)",
         },
         {
 
-            pointBackgroundColor: "#4caf50",
-            pointBorderColor: "#4caf50",
+            pointBackgroundColor: "var(--accent-color)",
+            pointBorderColor: "var(--accent-color)",
         },
     ];
 
