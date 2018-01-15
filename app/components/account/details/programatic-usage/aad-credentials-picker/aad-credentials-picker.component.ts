@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnInit } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit } from "@angular/core";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
@@ -8,6 +8,8 @@ import { ResourceAccessService } from "app/services";
 import { ListView } from "app/services/core";
 import { ServicePrincipalListParams, ServicePrincipalService } from "app/services/ms-graph";
 
+import { FormControl } from "@angular/forms";
+import { FilterBuilder } from "app/utils/filter-builder";
 import "./aad-credentials-picker.scss";
 
 @Component({
@@ -15,11 +17,12 @@ import "./aad-credentials-picker.scss";
     templateUrl: "aad-credentials-picker.html",
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AADCredentialsPickerComponent implements OnInit {
+export class AADCredentialsPickerComponent implements OnInit, OnDestroy {
     @Input() public account: AccountResource;
 
     public apps: ServicePrincipal[] = [];
     public allApps: List<ServicePrincipal> = List([]);
+    public searchAppControl = new FormControl("");
     private _allAppsView: ListView<ServicePrincipal, ServicePrincipalListParams>;
     constructor(
         private servicePrincipalService: ServicePrincipalService,
@@ -27,8 +30,22 @@ export class AADCredentialsPickerComponent implements OnInit {
         private changeDetector: ChangeDetectorRef) {
         this._allAppsView = servicePrincipalService.listView();
         this._allAppsView.items.subscribe((apps) => {
+            console.log("new apps");
             this.allApps = apps;
             this.changeDetector.markForCheck();
+        });
+
+        this.searchAppControl.valueChanges.debounceTime(400).subscribe((query) => {
+            let options;
+            if (query) {
+                options = {
+                    $filter: FilterBuilder.prop("displayName").startswith(query).toOData(),
+                };
+            } else {
+                options = {};
+            }
+            this._allAppsView.setOptions(options);
+            this._allAppsView.refresh();
         });
     }
 
@@ -46,6 +63,10 @@ export class AADCredentialsPickerComponent implements OnInit {
             this.apps = servicePrincipals;
             this.changeDetector.markForCheck();
         });
+    }
+
+    public ngOnDestroy() {
+        this._allAppsView.dispose();
     }
 
     public trackApp(index, app: ServicePrincipal) {
