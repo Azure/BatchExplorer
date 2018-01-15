@@ -25,12 +25,8 @@ export class ProgramaticUsageComponent {
     private _accountId: string;
 
     constructor(
-        resourceAccessService: ResourceAccessService,
         private accountService: AccountService,
         private changeDetector: ChangeDetectorRef) {
-        resourceAccessService.listRolesForCurrentAccount().subscribe((roles) => {
-            console.log("Account roles are", roles.toJS());
-        });
     }
 
     private _loadDetails() {

@@ -16,7 +16,7 @@ export interface HttpRequestOptions {
         [header: string]: string | string[];
     };
     reportProgress?: boolean;
-    observe: "events";
+    observe?: "events";
     params?: HttpParams | {
         [param: string]: string | string[];
     };
@@ -103,7 +103,13 @@ export class MsGraphHttpService {
                 return Observable.timer(100 * Math.pow(3, retryCount));
             });
     }
+
     private _computeUrl(uri: string): string {
-        return Location.joinWithSlash(Constants.ServiceUrl.msGraph, uri);
+        // TODO-TIM change to url-utils
+        if (/^https?:\/\//i.test(uri)) {
+            return uri;
+        } else {
+            return Location.joinWithSlash(Constants.ServiceUrl.msGraph, uri);
+        }
     }
 }
