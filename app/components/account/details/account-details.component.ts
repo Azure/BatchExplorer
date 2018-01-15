@@ -13,7 +13,6 @@ import { EntityView, ListView } from "app/services/core";
 import { ProgramaticUsageComponent } from "app/components/account/details/programatic-usage";
 import { DialogService } from "app/components/base/dialogs";
 import "./account-details.scss";
-import { BatchAccountKeysDialogComponent } from "./keys-dialog";
 
 @Component({
     selector: "bl-account-details",

@@ -143,12 +143,14 @@ export const ServiceUrl = {
     arm: "https://management.azure.com",
     githubRaw: "https://raw.githubusercontent.com",
     appInsights: "https://api.applicationinsights.io/v1",
+    msGraph: "https://graph.microsoft.com/beta",
 };
 
 export const ResourceUrl = {
     batch: "https://batch.core.windows.net/",
     arm: "https://management.core.windows.net/",
     appInsights: "https://api.applicationinsights.io",
+    msGraph: "https://graph.microsoft.com",
 };
 
 export const APIErrorCodes = {

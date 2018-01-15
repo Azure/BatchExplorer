@@ -34,6 +34,7 @@ import { HttpModule } from "@angular/http";
 import { LayoutModule } from "app/components/layout";
 import { MaterialModule } from "app/core";
 import { PollService } from "app/services/core";
+import { MsGraphHttpService, ServicePrincipalService } from "app/services/ms-graph";
 import {
     AccountService,
     AdalService,
@@ -85,6 +86,8 @@ const modules = [
     FileModule, JobModule, NodeModule, PoolModule,
     SettingsModule, TaskModule, MarketModule, LayoutModule,
 ];
+
+const graphApiServices = [MsGraphHttpService, ServicePrincipalService];
 
 @NgModule({
     bootstrap: [
@@ -155,6 +158,7 @@ const modules = [
         TaskService,
         VmSizeService,
         PredefinedFormulaService,
+        ...graphApiServices,
         { provide: ErrorHandler, useClass: BatchLabsErrorHandler },
     ],
 })

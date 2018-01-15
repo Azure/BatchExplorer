@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/
 import { AccountResource } from "app/models";
 import { AccountService, ResourceAccessService } from "app/services";
 
+import "./programatic-usage.scss";
+
 @Component({
     selector: "bl-programatic-usage",
     templateUrl: "programatic-usage.html",

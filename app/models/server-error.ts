@@ -1,5 +1,6 @@
 import { Response } from "@angular/http";
 
+import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
 import { BatchError } from "./batch-error";
 import { JsonRpcError } from "./python-rpc";
 import { StorageError } from "./storage-error";
@@ -124,6 +125,34 @@ export class ServerError {
             message: message,
             details: error.data && error.data.values,
             original: error,
+            requestId,
+            timestamp,
+        });
+    }
+
+    public static fromMsGraph(response: HttpErrorResponse): ServerError {
+        const { error } = response.error;
+        let requestId = null;
+        let timestamp = null;
+        let code = null;
+        let message = null;
+
+        if (error.innerError) {
+            requestId = error.innerError["request-id"];
+            const date = error.innerError["date"];
+            timestamp = date && new Date(date);
+        }
+
+        if (error) {
+            code = error.code;
+            message = error.message;
+        }
+        return new ServerError({
+            status: response.status,
+            code: code,
+            statusText: response.statusText,
+            original: response,
+            message: message,
             requestId,
             timestamp,
         });
