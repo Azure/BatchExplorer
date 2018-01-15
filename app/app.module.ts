@@ -34,7 +34,8 @@ import { HttpModule } from "@angular/http";
 import { LayoutModule } from "app/components/layout";
 import { MaterialModule } from "app/core";
 import { PollService } from "app/services/core";
-import { MsGraphHttpService, ServicePrincipalService } from "app/services/ms-graph";
+import { ServicePrincipalService } from "app/services/ms-graph";
+import { MsGraphHttpService } from "app/services/ms-graph/core";
 import {
     AccountService,
     AdalService,
@@ -88,7 +89,7 @@ const modules = [
 ];
 
 const graphApiServices = [MsGraphHttpService, ServicePrincipalService];
-
+console.log("Babab", graphApiServices);
 @NgModule({
     bootstrap: [
         AppComponent,

@@ -1,6 +1,6 @@
 import { Response } from "@angular/http";
 
-import { HttpErrorResponse, HttpResponse } from "@angular/common/http";
+import { HttpErrorResponse } from "@angular/common/http";
 import { BatchError } from "./batch-error";
 import { JsonRpcError } from "./python-rpc";
 import { StorageError } from "./storage-error";

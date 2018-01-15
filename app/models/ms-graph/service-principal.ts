@@ -2,6 +2,7 @@ import { ListProp, Prop, Record } from "app/core";
 import { List } from "immutable";
 
 export interface ServicePrincipalAttributes {
+    id: string;
     accountEnabled: boolean;
     appDisplayName: string;
     appId: string;
@@ -10,13 +11,13 @@ export interface ServicePrincipalAttributes {
     displayName: string;
     errorUrl: string;
     homepage: string;
-    id: string;
     logoutUrl: string;
     publisherName: string;
     tags: string[];
 }
 
 export class ServicePrincipal extends Record<ServicePrincipalAttributes> {
+    @Prop() public id: string;
     @Prop() public accountEnabled: boolean;
     @Prop() public appDisplayName: string;
     @Prop() public appId: string;
@@ -25,7 +26,6 @@ export class ServicePrincipal extends Record<ServicePrincipalAttributes> {
     @Prop() public displayName: string;
     @Prop() public errorUrl: string;
     @Prop() public homepage: string;
-    @Prop() public id: string;
     @Prop() public logoutUrl: string;
     @Prop() public publisherName: string;
     @ListProp(String) public tags: List<string>;
