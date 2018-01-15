@@ -4,6 +4,7 @@ export * from "./affinity-information";
 export * from "./batch-application";
 export * from "./batch-software-license";
 export * from "./app-insights";
+export * from "./authorization";
 export * from "./application";
 export * from "./application-action";
 export * from "./application-license";

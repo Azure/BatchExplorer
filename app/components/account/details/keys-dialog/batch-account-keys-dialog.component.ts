@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
 
 import { AccountKeys, AccountResource } from "app/models";
-import { AccountService } from "app/services";
+import { AccountService, ResourceAccessService } from "app/services";
 import { Observable } from "rxjs";
 import "./batch-account-keys-dialog.scss";
 
@@ -27,8 +27,12 @@ export class BatchAccountKeysDialogComponent {
     private _accountId: string;
 
     constructor(
+        resourceAccessService: ResourceAccessService,
         private accountService: AccountService,
         private changeDetector: ChangeDetectorRef) {
+        resourceAccessService.listRolesForCurrentAccount().subscribe((roles) => {
+            console.log("Account roles are", roles.toJS());
+        });
     }
 
     private _loadDetails() {
