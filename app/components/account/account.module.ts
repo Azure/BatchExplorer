@@ -9,15 +9,16 @@ import { AccountBrowseModule } from "./browse";
 import { AccountDefaultComponent, AccountDetailsComponent } from "./details";
 import { AccountQuotasCardComponent } from "./details/account-quotas-card";
 import { BatchAccountKeysDialogComponent } from "./details/keys-dialog";
+import { AADCredentialsPickerComponent, ProgramaticUsageComponent } from "./details/programatic-usage";
 import { ProgramingSampleComponent } from "./details/programing-sample";
 import { StorageAccountCardComponent } from "./details/storage-account-card";
 import { AccountHomeComponent } from "./home";
 
 const components = [
-    AccountDefaultComponent, AccountDetailsComponent,
+    AADCredentialsPickerComponent, AccountDefaultComponent, AccountDetailsComponent,
     AccountHomeComponent, DeleteAccountDialogComponent, StorageAccountCardComponent,
     EditStorageAccountFormComponent, StorageAccountPickerComponent, AccountQuotasCardComponent,
-    BatchAccountKeysDialogComponent, ProgramingSampleComponent,
+    BatchAccountKeysDialogComponent, ProgramingSampleComponent, ProgramaticUsageComponent,
 ];
 
 const modules = [
@@ -31,7 +32,7 @@ const modules = [
     entryComponents: [
         DeleteAccountDialogComponent,
         EditStorageAccountFormComponent,
-        BatchAccountKeysDialogComponent,
+        ProgramaticUsageComponent,
     ],
 })
 export class AccountModule {
