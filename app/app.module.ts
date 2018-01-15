@@ -89,7 +89,7 @@ const modules = [
 ];
 
 const graphApiServices = [MsGraphHttpService, ServicePrincipalService];
-console.log("Babab", graphApiServices);
+
 @NgModule({
     bootstrap: [
         AppComponent,
