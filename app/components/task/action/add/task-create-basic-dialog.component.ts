@@ -7,6 +7,7 @@ import { ComplexFormConfig } from "app/components/base/form";
 import { NotificationService } from "app/components/base/notifications";
 import { SidebarRef } from "app/components/base/sidebar";
 import { RangeValidator } from "app/components/base/validation";
+import { UploadResourceFileEvent } from "app/components/task/base";
 import { DynamicForm, autobind } from "app/core";
 import { Task, VirtualMachineConfiguration } from "app/models";
 import { TaskCreateDto } from "app/models/dtos";
@@ -69,7 +70,7 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
             appPackages: [[]],
             containerSettings: [null],
         });
-        }
+    }
 
     public ngOnInit(): void {
         this.jobService.get(this.jobId).cascade((job) => {
@@ -109,6 +110,10 @@ export class TaskCreateBasicDialogComponent extends DynamicForm<Task, TaskCreate
 
     public handleHasLinkedStorage(hasLinkedStorage) {
         this.hasLinkedStorage = hasLinkedStorage;
+    }
+
+    public registerFileUpload(event: UploadResourceFileEvent) {
+        this.registerAsyncTask(`Uploading file ${event.filename}`, event.done);
     }
 
     private _setComplexFormConfig() {

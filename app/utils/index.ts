@@ -19,7 +19,6 @@ export * from "./arm-resource-utils";
 export * from "./shared-key-utils";
 export * from "./storage-utils";
 export * from "./string-utils";
-export * from "./url-utils";
 export * from "common/utils";
 export * from "./constants";
 
