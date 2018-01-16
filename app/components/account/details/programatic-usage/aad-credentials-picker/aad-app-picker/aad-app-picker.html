@@ -3,27 +3,24 @@
         <h2>Step 1: Pick the application you want to use</h2>
     </div>
     <div class="create-new">
-        <bl-button type="wide" color="primary" >Create new</bl-button>
+        <bl-button type="wide" color="primary">Create new</bl-button>
     </div>
     <div class="search">
         <input [formControl]="searchAppControl" placeholder="Search">
     </div>
-    <div class="app-list-title">
-        With permissions
-    </div>
-    <div class="app-list-title">
-        All apps
+    <div class="app-list-subtitle">
+        Listing below the applications you have permission to create secrets for.
     </div>
     <bl-table (activeItemChange)="pickApplication($event)" class="app-list apps-with-permission">
+        <bl-thead>
+            <bl-column [sortable]="true">Application name</bl-column>
+            <bl-column [sortable]="true">prodtest5 (Batch)</bl-column>
+            <bl-column [sortable]="true">prodtest5 (Storage)</bl-column>
+        </bl-thead>
         <bl-row *ngFor="let app of apps; trackBy: trackApp" [key]="app.id">
             <bl-cell [value]="app.displayName"></bl-cell>
             <bl-cell [value]="getPermission(app.id)" style="width: 40px"></bl-cell>
-        </bl-row>
-    </bl-table>
-
-    <bl-table (activeItemChange)="pickApplication($event)" class="app-list apps-with-permission">
-        <bl-row *ngFor="let app of allApps; trackBy: trackApp" [key]="app.id">
-            <bl-cell [value]="app.displayName"></bl-cell>
+            <bl-cell [value]="getPermission(app.id)" style="width: 40px"></bl-cell>
         </bl-row>
     </bl-table>
 </div>

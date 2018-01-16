@@ -10,7 +10,6 @@ const privateComponents = [
     AADAppPickerComponent,
     GenerateAADAppSecretComponent,
 ];
-console.log("PRivate", privateComponents);
 
 const publicComponents = [
     ProgramaticUsageComponent,

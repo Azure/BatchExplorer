@@ -7,7 +7,7 @@ import { MsGraphEntityGetter, MsGraphHttpService, MsGraphListGetter } from "./co
 // import {  } from "./core/ms-graph-http.service";
 
 export interface ServicePrincipalListParams {
-
+    owned?: boolean;
 }
 
 export interface ServicePrincipalParams {
@@ -28,7 +28,13 @@ export class ServicePrincipalService {
 
         this._listGetter = new MsGraphListGetter(ServicePrincipal, msGraph, {
             cache: () => this._cache,
-            uri: () => `/servicePrincipals`,
+            uri: ({ owned }) => {
+                if (owned) {
+                    return `/me/ownedObjects/$/microsoft.graph.servicePrincipal`;
+                } else {
+                    return `/servicePrincipals`;
+                }
+            },
         });
     }
 
@@ -45,5 +51,9 @@ export class ServicePrincipalService {
             getter: this._listGetter,
             initialOptions: options,
         });
+    }
+
+    public listAllOwned() {
+        this._listGetter.fetchAll({owned: true});
     }
 }

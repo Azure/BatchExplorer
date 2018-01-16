@@ -46,13 +46,14 @@ bl-aad-app-picker {
             }
         }
 
-        > .app-list-title {
+        > .app-list-subtitle {
             margin-bottom: 4px;
             color: $generic-grey;
-            grid-column: span 2;
+            grid-column: span 4;
         }
+
         > .app-list {
-            grid-column: span 2;
+            grid-column: span 4;
 
             // border: 1px solid $border-color;
             // border-bottom: none;

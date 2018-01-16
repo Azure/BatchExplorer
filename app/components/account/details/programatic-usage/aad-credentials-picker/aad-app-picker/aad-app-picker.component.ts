@@ -6,10 +6,10 @@ import { List } from "immutable";
 import { Observable } from "rxjs";
 
 import { RoleAssignmentPrincipalType } from "app/models";
-import { ServicePrincipal } from "app/models/ms-graph";
+import { AADApplication, ServicePrincipal } from "app/models/ms-graph";
 import { ArmHttpService, AuthorizationHttpService, ResourceAccessService } from "app/services";
 import { ListView } from "app/services/core";
-import { ServicePrincipalListParams, ServicePrincipalService } from "app/services/ms-graph";
+import { AADApplicationListParams, AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
 import { FilterBuilder } from "app/utils/filter-builder";
 
 import "./aad-app-picker.scss";
@@ -23,24 +23,26 @@ export class AADAppPickerComponent implements OnInit, OnDestroy {
     @Input() public selectedApplication: ServicePrincipal;
     @Output() public selectedApplicationChanged = new EventEmitter<ServicePrincipal>();
 
-    public apps: ServicePrincipal[] = [];
-    public allApps: List<ServicePrincipal> = List([]);
+    public apps: List<ServicePrincipal> = List([]);
 
     public searchAppControl = new FormControl("");
-    private _allAppsView: ListView<ServicePrincipal, ServicePrincipalListParams>;
+    private _allAppsView: ListView<AADApplication, AADApplicationListParams>;
     private _permissions = new Map<string, string>();
     private _roleDefs = new Map<string, string>();
     private _appMap = new Map<string, ServicePrincipal>();
+    // private _appMap = new Map<string, string>;
 
     constructor(
         private servicePrincipalService: ServicePrincipalService,
+        aadApplicationService: AADApplicationService,
         private resourceAccessService: ResourceAccessService,
         private arm: ArmHttpService,
         private permissionService: AuthorizationHttpService,
         private changeDetector: ChangeDetectorRef) {
-        this._allAppsView = servicePrincipalService.listView();
+        this._allAppsView = aadApplicationService.listView();
+        this._allAppsView.params = { owned: true };
         this._allAppsView.items.subscribe((apps) => {
-            this.allApps = apps;
+            this.apps = apps;
             this._updateAppMap(apps.toArray());
             this.changeDetector.markForCheck();
         });
@@ -61,25 +63,7 @@ export class AADAppPickerComponent implements OnInit, OnDestroy {
 
     public ngOnInit() {
         this._allAppsView.fetchNext();
-        this.resourceAccessService.listRolesForCurrentAccount().flatMap((roles) => {
-            const apps = roles.filter(x => x.properties.principalType === RoleAssignmentPrincipalType.App).toArray();
-            for (const app of apps) {
-                this._roleDefs.set(app.properties.principalId, app.properties.roleDefinitionId);
-            }
-            const roleDefs = new Set<string>(apps.map(x => x.properties.roleDefinitionId));
-            console.log("Account roles are", roleDefs);
-            this._loadRoleDefinitions([...roleDefs]);
-            const obs = apps.map((x) => {
-                return this.servicePrincipalService.get(x.properties.principalId);
-            });
-
-            return Observable.forkJoin(obs);
-        }).subscribe((servicePrincipals: ServicePrincipal[]) => {
-            console.log(servicePrincipals.map(x => x.toJS()));
-            this.apps = servicePrincipals;
-            this._updateAppMap(servicePrincipals);
-            this.changeDetector.markForCheck();
-        });
+        this._loadApplicationWithAccessToAccount();
     }
 
     public ngOnDestroy() {
@@ -96,12 +80,14 @@ export class AADAppPickerComponent implements OnInit, OnDestroy {
         this.selectedApplicationChanged.emit(application);
     }
 
-    public getPermission(principalId: string) {
-        return this._permissions.get(this._roleDefs.get(principalId));
+    public getPermission(applicationId: string) {
+        return this._permissions.get(this._roleDefs.get(applicationId));
     }
 
     private _loadRoleDefinitions(roleDefs: string[]) {
-        const obs = roleDefs.map((x) => {
+        const unique = new Set<string>(roleDefs);
+
+        const obs = [...unique].map((x) => {
             return this.arm.get(x).map(x => x.json());
         });
         Observable.forkJoin(obs).subscribe((roles) => {
@@ -113,9 +99,29 @@ export class AADAppPickerComponent implements OnInit, OnDestroy {
         });
     }
 
-    private _updateAppMap(apps: Iterable<ServicePrincipal>) {
+    private _updateAppMap(apps: Iterable<AADApplication>) {
         for (const app of apps) {
             this._appMap.set(app.id, app);
         }
     }
+
+    private _loadApplicationWithAccessToAccount() {
+        this.resourceAccessService.listRolesForCurrentAccount().subscribe((roles) => {
+            const apps = roles.filter(x => x.properties.principalType === RoleAssignmentPrincipalType.App).toArray();
+
+            this._loadRoleDefinitions(apps.map(x => x.properties.roleDefinitionId));
+            const obs = apps.map((x) => {
+                return this.servicePrincipalService.get(x.properties.principalId);
+            });
+
+            Observable.forkJoin(obs).subscribe((servicePrincipals: ServicePrincipal[]) => {
+                for (const [index, servicePrincipal] of servicePrincipals.entries()) {
+                    const role = apps[index];
+                    this._roleDefs.set(servicePrincipal.appId, role.properties.roleDefinitionId);
+                }
+                this.changeDetector.markForCheck();
+            });
+        });
+    }
+
 }

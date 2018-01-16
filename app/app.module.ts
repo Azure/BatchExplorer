@@ -34,7 +34,7 @@ import { HttpModule } from "@angular/http";
 import { LayoutModule } from "app/components/layout";
 import { MaterialModule } from "app/core";
 import { PollService } from "app/services/core";
-import { ServicePrincipalService } from "app/services/ms-graph";
+import { AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
 import { MsGraphHttpService } from "app/services/ms-graph/core";
 import {
     AccountService,
@@ -88,7 +88,7 @@ const modules = [
     SettingsModule, TaskModule, MarketModule, LayoutModule,
 ];
 
-const graphApiServices = [MsGraphHttpService, ServicePrincipalService];
+const graphApiServices = [AADApplicationService, MsGraphHttpService, ServicePrincipalService];
 
 @NgModule({
     bootstrap: [
