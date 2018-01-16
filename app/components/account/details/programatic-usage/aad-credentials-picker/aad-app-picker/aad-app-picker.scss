@@ -1,0 +1,63 @@
+@import "app/styles/variables";
+
+bl-aad-app-picker {
+    display: block;
+    margin: 10px;
+    position: relative;
+    height: calc(100% - 20px);
+    width: calc(100% - 20px);
+
+    .app-lists {
+        display: grid;
+        grid-template-rows: 40px 20px 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+
+        grid-column-gap: 10px;
+        height: 100%;
+        overflow: hidden;
+        > .heading {
+            grid-column: 1 / 3;
+        }
+
+        > .create-new {
+            grid-row: 1;
+            grid-column: 3;
+        }
+
+        > .search {
+            grid-row: 1;
+            grid-column: 4;
+            align-items: end;
+            > input {
+                flex: 1 0 auto;
+                padding: 5px;
+                color: $emperor-grey;
+                font-size: 1.1em;
+                height: 26px;
+
+                background-color: $athensGrey;
+                border: none;
+                width: 100%;
+
+                &:focus {
+                    outline: none;
+                    border-bottom: 2px solid map-get($primary, 500);
+                }
+            }
+        }
+
+        > .app-list-title {
+            margin-bottom: 4px;
+            color: $generic-grey;
+            grid-column: span 2;
+        }
+        > .app-list {
+            grid-column: span 2;
+
+            // border: 1px solid $border-color;
+            // border-bottom: none;
+            background: $whitesmoke-darker;
+            overflow: auto;
+        }
+    }
+}

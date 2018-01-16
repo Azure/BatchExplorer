@@ -9,20 +9,20 @@ import { AccountBrowseModule } from "./browse";
 import { AccountDefaultComponent, AccountDetailsComponent } from "./details";
 import { AccountQuotasCardComponent } from "./details/account-quotas-card";
 import { BatchAccountKeysDialogComponent } from "./details/keys-dialog";
-import { AADCredentialsPickerComponent, ProgramaticUsageComponent } from "./details/programatic-usage";
+import { ProgramaticUsageModule } from "./details/programatic-usage";
 import { ProgramingSampleComponent } from "./details/programing-sample";
 import { StorageAccountCardComponent } from "./details/storage-account-card";
 import { AccountHomeComponent } from "./home";
 
 const components = [
-    AADCredentialsPickerComponent, AccountDefaultComponent, AccountDetailsComponent,
+    AccountDefaultComponent, AccountDetailsComponent,
     AccountHomeComponent, DeleteAccountDialogComponent, StorageAccountCardComponent,
     EditStorageAccountFormComponent, StorageAccountPickerComponent, AccountQuotasCardComponent,
-    BatchAccountKeysDialogComponent, ProgramingSampleComponent, ProgramaticUsageComponent,
+    BatchAccountKeysDialogComponent, ProgramingSampleComponent,
 ];
 
 const modules = [
-    AccountBrowseModule, PoolBaseModule, ...commonModules,
+    AccountBrowseModule, PoolBaseModule, ProgramaticUsageModule, ...commonModules,
 ];
 
 @NgModule({
@@ -32,7 +32,6 @@ const modules = [
     entryComponents: [
         DeleteAccountDialogComponent,
         EditStorageAccountFormComponent,
-        ProgramaticUsageComponent,
     ],
 })
 export class AccountModule {
