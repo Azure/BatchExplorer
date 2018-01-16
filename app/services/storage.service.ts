@@ -1,5 +1,4 @@
 import { Injectable, NgZone } from "@angular/core";
-import * as storage from "azure-storage";
 import * as path from "path";
 import { AsyncSubject, Observable, Subject } from "rxjs";
 
@@ -8,6 +7,7 @@ import { BlobContainer, File, ServerError } from "app/models";
 import { FileSystemService } from "app/services";
 import { SharedAccessPolicy } from "app/services/storage/models";
 import { CloudPathUtils, log } from "app/utils";
+import { BlobService, createBlobServiceWithSas } from "azure-storage";
 import { Constants } from "common";
 import {
     DataCache,
@@ -339,10 +339,18 @@ export class StorageService {
         });
     }
 
+    public createContainerIfNotExists(containerName: string): Observable<any> {
+        return this._callStorageClient((client) => {
+            return client.createContainerIfNotExists(containerName);
+        }, (error) => {
+            log.error(`Error creating container: ${containerName}`, { ...error });
+        });
+    }
+
     public generateSharedAccessContainerUrl(container: string, sharedAccessPolicy: SharedAccessPolicy)
         : Observable<string> {
         return this._callStorageClient((client) => {
-            const sasToken = client.generateSharedAccessSignature(container, sharedAccessPolicy);
+            const sasToken = client.generateSharedAccessSignature(container, null, sharedAccessPolicy);
             return Promise.resolve(client.getUrl(container, null, sasToken));
         }, (error) => {
             // TODO-Andrew: test that errors are caught
@@ -350,13 +358,26 @@ export class StorageService {
         });
     }
 
+    public generateSharedAccessBlobUrl(
+        container: string, blob: string,
+        sharedAccessPolicy: SharedAccessPolicy): Observable<string> {
+
+        return this._callStorageClient((client) => {
+            const sasToken = client.generateSharedAccessSignature(container, blob, sharedAccessPolicy);
+            return Promise.resolve(client.getUrl(container, blob, sasToken));
+        }, (error) => {
+            // TODO-Andrew: test that errors are caught
+            log.error(`Error generating container SAS: ${container}`, { ...error });
+        });
+    }
+
     public uploadToSasUrl(sasUrl: string, filePath: string): Observable<any> {
-        const subject = new AsyncSubject<storage.BlobService.BlobResult>();
+        const subject = new AsyncSubject<BlobService.BlobResult>();
 
         const { accountUrl, sasToken, container, blob } = this._parseSasUrl(sasUrl);
-        const service = storage.createBlobServiceWithSas(accountUrl, sasToken);
+        const service = createBlobServiceWithSas(accountUrl, sasToken);
         service.createBlockBlobFromLocalFile(container, blob, filePath,
-            (error: any, result: storage.BlobService.BlobResult) => {
+            (error: any, result: BlobService.BlobResult) => {
                 this.zone.run(() => {
 
                     if (error) {
@@ -377,7 +398,7 @@ export class StorageService {
      * @param file Absolute path to the local file
      * @param remotePath Blob name
      */
-    public uploadFile(container: string, file: string, remotePath: string) {
+    public uploadFile(container: string, file: string, remotePath: string): Observable<BlobService.BlobResult> {
         return this._callStorageClient((client) => client.uploadFile(container, file, remotePath), (error) => {
             log.error(`Error upload file ${file} to container ${container}`, error);
         });
