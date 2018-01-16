@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from "@angular/core";
 
 import { AccountResource } from "app/models";
-import { ServicePrincipal } from "app/models/ms-graph";
+import { AADApplication } from "app/models/ms-graph";
 
 import "./aad-credentials-picker.scss";
 
@@ -19,11 +19,11 @@ export class AADCredentialsPickerComponent {
     public Step = Step;
     @Input() public account: AccountResource;
 
-    public pickedApplication: ServicePrincipal;
+    public pickedApplication: AADApplication;
     public currentStep = Step.pickApplication;
     constructor(private changeDetector: ChangeDetectorRef) {
     }
-    public pickApplication(app: ServicePrincipal) {
+    public pickApplication(app: AADApplication) {
         this.pickedApplication = app;
         this.currentStep = Step.generateSecret;
         this.changeDetector.markForCheck();
