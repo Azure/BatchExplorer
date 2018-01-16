@@ -45,12 +45,14 @@ export class FileSystemService {
 
     public readFile(path: string): Promise<string> {
         return this._fs.readFile(path);
+    }
 
+    public async readdir(path: string): Promise<string[]> {
+        return this._fs.readdir(path);
     }
 
     public download(source: string, dest: string): Promise<string> {
         return this._fs.download(source, dest);
-
     }
 
     /**
@@ -60,5 +62,9 @@ export class FileSystemService {
      */
     public unzip(source: string, dest: string): Promise<void> {
         return this._fs.unzip(source, dest);
+    }
+
+    public async lstat(path: string) {
+        return this._fs.lstat(path);
     }
 }

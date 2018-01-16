@@ -1,0 +1,36 @@
+<div class="toggle-mode" *ngIf="config.jsonEditor">
+    <bl-button type="square" [disabled]="classicFormDisabled" (do)="toggleJsonEditor(false)">
+        <i class="fa fa-commenting"></i>
+    </bl-button>
+    <bl-button type="square" [disabled]="showJsonEditor" (do)="toggleJsonEditor(true)">
+        <i class="fa fa-code"></i>
+    </bl-button>
+</div>
+<div class="toggle-error-btn" *ngIf="error">
+    <button mat-icon-button color="warn" (click)="toggleShowError()" matTooltip="There was an error submitting this form" matTooltipPosition="above">
+        <mat-icon fontIcon="fa-exclamation-triangle"></mat-icon>
+    </button>
+</div>
+<div class="summary">
+    <div *ngIf="waitingForAsyncTask && asyncTasks" class="waiting-for-async-task-message">
+        <i class="fa fa-spinner fa-spin"></i>
+        <span class="main">Waiting for </span>
+        <span class="task">{{asyncTasks[0].name}}</span>
+        <span class="main" *ngIf="asyncTasks.length > 1" [matTooltip]="asyncTaskTooltip">and {{asyncTasks.length - 1}} tasks</span>
+    </div>
+    <ng-content select="[blFormSummary]" *ngIf="!waitingForAsyncTask"></ng-content>
+</div>
+<div class="form-buttons">
+    <div *ngIf="isMainWindow">
+        <bl-button type="wide" *ngIf="actionConfig.multiUse" [action]="form.save" [disabled]="!submitEnabled" class="add">{{actionConfig.name}}</bl-button>
+        <bl-button type="wide" *ngIf="form.containerRef" [action]="form.saveAndClose" [disabled]="!submitEnabled" [color]="actionConfig.color"
+            class="add-and-close">{{saveAndCloseText}}</bl-button>
+        <span style="display: inline-block">
+            <bl-button type="wide" color="light" [disabled]="isSaving" [action]="form.close" class="close">{{actionConfig.cancel}}</bl-button>
+        </span>
+    </div>
+    <div *ngIf="!isMainWindow">
+        <bl-button type="wide" class="cancel" color="primary" [action]="form.cancelPage">Cancel</bl-button>
+        <bl-button type="wide" class="select" color="primary" [action]="form.closePageOrSubmit" [disabled]="!submitEnabled">Select</bl-button>
+    </div>
+</div>

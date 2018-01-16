@@ -90,6 +90,28 @@ export class FileSystem {
         return fileUtils.unzip(source, dest);
     }
 
+    public async lstat(path: string): Promise<fs.Stats> {
+        return new Promise<fs.Stats>((resolve, reject) => {
+            fs.lstat(path, (error, stats) => {
+                if (error) {
+                    return reject(error);
+                }
+                resolve(stats);
+            });
+        });
+    }
+
+    public async readdir(path: string): Promise<string[]> {
+        return new Promise<string[]>((resolve, reject) => {
+            fs.readdir(path, (error, files) => {
+                if (error) {
+                    return reject(error);
+                }
+                resolve(files);
+            });
+        });
+    }
+
     private _writeFile(path: string, content: string): Promise<string> {
         return new Promise<string>((resolve, reject) => {
             fs.writeFile(path, content, (err) => {

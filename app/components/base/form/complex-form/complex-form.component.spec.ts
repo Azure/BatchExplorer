@@ -9,6 +9,7 @@ import { ButtonComponent } from "app/components/base/buttons";
 import {
     ComplexFormComponent, FormPageComponent, FormPickerComponent, FormSectionComponent,
 } from "app/components/base/form";
+import { FormFooterComponent } from "app/components/base/form/complex-form/footer";
 import { ServerErrorComponent } from "app/components/base/form/server-error";
 import { ServerError } from "app/models";
 import { AuthorizationHttpService } from "app/services";
@@ -98,6 +99,7 @@ describe("ComplexFormComponent", () => {
                 FormPageComponent,
                 FormSectionComponent,
                 FormPickerComponent,
+                FormFooterComponent,
             ],
             providers: [
                 { provide: AuthorizationHttpService, useValue: null },
@@ -205,8 +207,8 @@ describe("ComplexFormComponent", () => {
         });
 
         it("should toggle the error when clicking the warning button", () => {
-            const toggleBtn = de.query(By.css(".toggle-error-btn > button"));
-            expect(toggleBtn).not.toBeFalsy();
+            const toggleBtn = de.query(By.css("bl-form-footer .toggle-error-btn > button"));
+            expect(toggleBtn).not.toBeFalsy("Error toggle button should be defined");
 
             // Toggle hidden
             click(toggleBtn);

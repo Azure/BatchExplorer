@@ -1,15 +1,17 @@
 import {
-    AfterViewInit, ChangeDetectorRef, Component, ContentChildren, HostBinding, Input, QueryList, Type,
+    AfterViewInit, ChangeDetectorRef, Component, ContentChildren, HostBinding, Input, OnChanges, QueryList, Type,
 } from "@angular/core";
 import { FormControl } from "@angular/forms";
 
-import { Dto, autobind } from "app/core";
+import { AsyncTask, Dto, autobind } from "app/core";
 import { ServerError } from "app/models";
 import { log } from "app/utils";
 import { validJsonConfig } from "app/utils/validators";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 import { FormBase } from "../form-base";
 import { FormPageComponent } from "../form-page";
+import { FormActionConfig } from "./footer";
+
 import "./complex-form.scss";
 
 export type FormSize = "small" | "medium" | "large";
@@ -34,7 +36,7 @@ export const defaultComplexFormConfig: ComplexFormConfig = {
     selector: "bl-complex-form",
     templateUrl: "complex-form.html",
 })
-export class ComplexFormComponent extends FormBase implements AfterViewInit {
+export class ComplexFormComponent extends FormBase implements AfterViewInit, OnChanges {
     /**
      * If the form should allow multi use. \
      * If true the form will have a "Save" AND a "Save and Close" button.
@@ -62,6 +64,7 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
      * Needs to return an observable that will have a {ServerError} if failing.
      */
     @Input() public submit: (dto?: Dto<any>) => Observable<any>;
+    @Input() public asyncTasks: Observable<AsyncTask[]>;
 
     @Input() @HostBinding("class") public size: FormSize = "large";
 
@@ -73,8 +76,13 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
     public currentPage: FormPageComponent;
     public showJsonEditor = false;
     public jsonValue = new FormControl(null, null, validJsonConfig);
+    public waitingForAsyncTask = false;
+    public asyncTaskList: AsyncTask[];
+    public actionConfig: FormActionConfig;
 
     private _pageStack: FormPageComponent[] = [];
+    private _asyncTaskSub: Subscription;
+    private _hasAsyncTask = false;
 
     constructor(private changeDetector: ChangeDetectorRef) {
         super();
@@ -90,14 +98,28 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
         this.changeDetector.detectChanges();
     }
 
-    public get isMainWindow() {
-        return this.currentPage === this.mainPage;
+    public ngOnChanges(changes) {
+        if (changes.asyncTasks) {
+            this._listenToAsyncTasks();
+        }
+        this._buildActionConfig();
     }
 
     @autobind()
     public save(): Observable<any> {
+        let ready;
+        if (this._hasAsyncTask) {
+            this.waitingForAsyncTask = true;
+            ready = this.asyncTasks.filter(x => [...x].length === 0).first().do(() => {
+                this.waitingForAsyncTask = false;
+            }).share();
+        } else {
+            ready = Observable.of(null);
+        }
         this.loading = true;
-        const obs = this.submit(this.getCurrentDto());
+        const obs = ready.flatMap(() => {
+            return this.submit(this.getCurrentDto());
+        }).shareReplay(1);
         obs.subscribe({
             next: () => {
                 this.loading = false;
@@ -163,6 +185,14 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
         this.closePage();
     }
 
+    public toggleJsonEditor(jsonEditor) {
+        if (jsonEditor) {
+            this.switchToJsonEditor();
+        } else {
+            this.switchToClassicForm();
+        }
+    }
+
     public switchToJsonEditor() {
         if (!this.config.jsonEditor) { return; }
         const obj = this.getCurrentDto().toJS();
@@ -189,21 +219,6 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
         }
     }
 
-    public get saveAndCloseText() {
-        return this.multiUse ? `${this.actionName} and close` : this.actionName;
-    }
-
-    /**
-     * Enabled if the formGroup is valid or there is no formGroup
-     */
-    public get submitEnabled() {
-        if (this.showJsonEditor) {
-            return this.jsonValue.valid;
-        } else {
-            return !this.formGroup || this.formGroup.valid;
-        }
-    }
-
     /**
      * There are two cases that classic form selector in footer should be disabled
      * 1. showJsonEditor variable is false which means current form is already classic form
@@ -217,5 +232,28 @@ export class ComplexFormComponent extends FormBase implements AfterViewInit {
         if (!this.config.jsonEditor) { return; }
         const data = JSON.parse(this.jsonValue.value);
         return new this.config.jsonEditor.dtoType(data || {});
+    }
+
+    private _listenToAsyncTasks() {
+        if (this._asyncTaskSub) {
+            this._asyncTaskSub.unsubscribe();
+            this._asyncTaskSub = null;
+            this._hasAsyncTask = false;
+        }
+        if (this.asyncTasks) {
+            this._asyncTaskSub = this.asyncTasks.subscribe((asyncTasks) => {
+                this.asyncTaskList = asyncTasks;
+                this._hasAsyncTask = asyncTasks.length > 0;
+            });
+        }
+    }
+
+    private _buildActionConfig() {
+        this.actionConfig = {
+            name: this.actionName,
+            color: this.actionColor,
+            cancel: this.cancelText,
+            multiUse: this.multiUse,
+        };
     }
 }

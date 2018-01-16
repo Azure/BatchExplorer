@@ -59,6 +59,10 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
     }
 
     public addNewItem() {
+        const last = this.items.value.last();
+        if (last && this._isEmpty(last)) {
+            return;
+        }
         if (!this.columns) {
             return;
         }
