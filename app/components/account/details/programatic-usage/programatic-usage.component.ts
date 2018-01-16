@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
 import { AccountResource } from "app/models";
-import { AccountService, ResourceAccessService } from "app/services";
+import { AccountService } from "app/services";
 
 import "./programatic-usage.scss";
 

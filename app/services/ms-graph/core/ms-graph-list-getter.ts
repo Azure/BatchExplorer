@@ -1,10 +1,11 @@
-import { HttpParams, HttpResponse } from "@angular/common/http";
+import { HttpParams } from "@angular/common/http";
 import { Type } from "@angular/core";
 import { Observable } from "rxjs";
 
+import { HttpRequestOptions } from "app/core";
 import { ListGetter, ListGetterConfig } from "app/services/core/data/list-getter";
 import { ContinuationToken, ListOptions } from "app/services/core/data/list-options";
-import { HttpRequestOptions, MsGraphHttpService } from "./ms-graph-http.service";
+import { MsGraphHttpService } from "./ms-graph-http.service";
 
 export interface MsGraphListConfig<TEntity, TParams> extends ListGetterConfig<TEntity, TParams> {
     uri: (params: TParams, options: any) => string;

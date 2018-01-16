@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import { List } from "immutable";
 import { Observable } from "rxjs";
 
 import { ServicePrincipal } from "app/models/ms-graph";
