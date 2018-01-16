@@ -30,6 +30,7 @@ export class AADAppPickerComponent implements OnInit, OnDestroy {
     private _allAppsView: ListView<ServicePrincipal, ServicePrincipalListParams>;
     private _permissions = new Map<string, string>();
     private _roleDefs = new Map<string, string>();
+    private _appMap = new Map<string, ServicePrincipal>();
 
     constructor(
         private servicePrincipalService: ServicePrincipalService,
@@ -39,8 +40,8 @@ export class AADAppPickerComponent implements OnInit, OnDestroy {
         private changeDetector: ChangeDetectorRef) {
         this._allAppsView = servicePrincipalService.listView();
         this._allAppsView.items.subscribe((apps) => {
-            console.log("new apps");
             this.allApps = apps;
+            this._updateAppMap(apps.toArray());
             this.changeDetector.markForCheck();
         });
 
@@ -76,6 +77,7 @@ export class AADAppPickerComponent implements OnInit, OnDestroy {
         }).subscribe((servicePrincipals: ServicePrincipal[]) => {
             console.log(servicePrincipals.map(x => x.toJS()));
             this.apps = servicePrincipals;
+            this._updateAppMap(servicePrincipals);
             this.changeDetector.markForCheck();
         });
     }
@@ -88,7 +90,8 @@ export class AADAppPickerComponent implements OnInit, OnDestroy {
         return app.id;
     }
 
-    public pickApplication(application: ServicePrincipal) {
+    public pickApplication(id: string) {
+        const application = this._appMap.get(id);
         this.selectedApplication = application;
         this.selectedApplicationChanged.emit(application);
     }
@@ -108,5 +111,11 @@ export class AADAppPickerComponent implements OnInit, OnDestroy {
             }
             this.changeDetector.markForCheck();
         });
+    }
+
+    private _updateAppMap(apps: Iterable<ServicePrincipal>) {
+        for (const app of apps) {
+            this._appMap.set(app.id, app);
+        }
     }
 }
