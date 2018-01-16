@@ -120,7 +120,7 @@ export const ApiVersion = {
     armBatch: "2017-05-01",
     compute: "2017-03-30",
     commerce: "2016-08-31-preview",
-    authorization: "2017-09-01",
+    authorization: "2017-05-01",
 };
 
 export const ExternalLinks = {
