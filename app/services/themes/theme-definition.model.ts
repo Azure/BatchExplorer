@@ -38,15 +38,15 @@ export interface ThemeDefinition {
     /**
      * Header  color
      */
-    header: EntityColor;
+    header: EntityColorDefinition;
 
     /**
      * Left navigation color
      */
-    navigation: EntityColor;
+    navigation: EntityColorDefinition;
 
     /**
      * Footer color
      */
-    footer: EntityColor;
+    footer: EntityColorDefinition;
 }

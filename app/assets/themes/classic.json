@@ -22,9 +22,9 @@
     "hover-background": "#757575"
   },
   "navigation": {
-    "text": "",
-    "background": "",
-    "hover": ""
+    "text": "white",
+    "background": "#5b5b5b",
+    "hover-background": "#666666"
   },
   "footer": {
     "text": "white",

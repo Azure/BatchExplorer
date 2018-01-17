@@ -71,13 +71,12 @@ $success: (
 );
 
 @function entity-color($name) {
-    $val: (
+    @return (
         text: var(--color-#{$name}-text),
         bg: var(--color-#{$name}-background),
-        hover-text: var(--color-#{$name}-hover),
+        hover-text: var(--color-#{$name}-hover-text),
         hover-bg: var(--color-#{$name}-hover-background),
     );
-    @return $val;
 }
 
 $primary-color:             var(--primary);
@@ -109,8 +108,6 @@ $text-color:                var(--text-color);
 $divider-color:             var(--divider-color);
 $error-color:               var(--error-color);
 
-$navigation-background:     var(--navigation-background);
-$navigation-hover:          var(--navigation-hover);
 $breadcrumb-color:          var(--breadcrumb-color);
 $breadcrumb-hover-color:    var(--breadcrumb-hover-color);
 $disabled-button-color:     var(--disabled-button-color);

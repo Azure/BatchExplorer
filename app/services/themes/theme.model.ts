@@ -31,8 +31,8 @@ export class EntityColor {
     constructor(def: EntityColorDefinition) {
         this.text = def.text;
         this.background = def.background;
-        this.hoverText = def["hover-text"];
-        this.hoverBackground = def["hover-background"];
+        this.hoverText = def["hover-text"] || def.text;
+        this.hoverBackground = def["hover-background"] || def.background;
     }
 }
 
