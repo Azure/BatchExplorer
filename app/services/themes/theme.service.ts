@@ -63,6 +63,8 @@ export class ThemeService {
         this._applyColorPalette("danger", theme.danger);
         this._applyColorPalette("warn", theme.warn);
         this._applyColorPalette("success", theme.success);
+        this._applyVar(`--main-background`, theme.mainBackground);
+        this._applyVar(`--card-background`, theme.cardBackground);
         this._applyVar(`--primary-text`, theme.text.primary);
         this._applyVar(`--secondary-text`, theme.text.secondary);
         this._applyEntityColor("header", theme.header);

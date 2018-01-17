@@ -27,7 +27,8 @@ bl-file-explorer {
     .file-content-container {
         width: 100%;
         height: 100%;
-        background-color: $content-background;
+        background-color: $main-background;
+
         flex: 1;
         position: relative;
         overflow: hidden;

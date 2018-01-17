@@ -28,6 +28,16 @@ export interface ThemeDefinition {
     success: string;
 
     /**
+     * Overall background color
+     */
+    "main-background": string;
+
+    /**
+     * Background for any card on top the main background
+     */
+    "card-background": string;
+
+    /**
      * Generic text color,
      */
     text: {

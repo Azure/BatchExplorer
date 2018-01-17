@@ -60,6 +60,7 @@ export function formatLineColor(colors: number[]): Color {
         backgroundColor: rgba(colors, 0.4),
         borderColor: rgba(colors, 1),
         pointBackgroundColor: rgba(colors, 1),
+        // TODO-TIM update this
         pointBorderColor: "$main-background",
         pointHoverBackgroundColor: "$main-background",
         pointHoverBorderColor: rgba(colors, 0.8),

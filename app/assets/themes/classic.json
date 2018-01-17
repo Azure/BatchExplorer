@@ -4,6 +4,8 @@
   "danger": "#aa3939",
   "warn": "#f4ad42",
   "success": "#4caf50",
+  "main-background": "#f5f5f5",
+  "card-background": "white",
   "text": {
     "primary": "#212121",
     "secondary": "#757575"

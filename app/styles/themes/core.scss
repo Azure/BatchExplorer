@@ -97,6 +97,8 @@ $success-color-light:       var(--success-light);
 
 $primary-text:              var(--primary-text);
 $secondary-text:            var(--secondary-text);
+$main-background:           var(--main-background);
+$card-background:           var(--card-background);
 
 // Header
 $header-color:              entity-color(header);
@@ -110,5 +112,4 @@ $divider-color:             var(--divider-color);
 $error-color:               var(--error-color);
 
 $disabled-button-color:     var(--disabled-button-color);
-$main-background:           var(--main-background);
 $folder-icon-color:         var(--folder-icon-color);

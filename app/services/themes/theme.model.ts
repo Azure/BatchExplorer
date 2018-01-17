@@ -41,6 +41,8 @@ export class Theme {
     public danger: ColorPalette;
     public warn: ColorPalette;
     public success: ColorPalette;
+    public mainBackground: string;
+    public cardBackground: string;
     public text: {
         primary: string;
         secondary: string;
@@ -55,6 +57,8 @@ export class Theme {
         this.danger = this._computeMaterialPalette(theme.danger);
         this.warn = this._computeMaterialPalette(theme.warn);
         this.success = this._computeMaterialPalette(theme.success);
+        this.mainBackground = theme["main-background"];
+        this.cardBackground = theme["card-background"];
         this.text = theme.text;
         this.header = new EntityColor(theme.header);
         this.navigation = new EntityColor(theme.navigation);

@@ -101,7 +101,8 @@ bl-list-and-show-layout {
             width: calc(100vw - #{$listview-width} - #{$navigationbar-width});
             height: $contentview-height;
             overflow-y: auto;
-            background-color: $content-background;
+            background-color: $main-background;
+
             position: relative;
 
             .content-wrapper {
