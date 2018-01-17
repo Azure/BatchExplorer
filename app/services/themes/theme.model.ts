@@ -17,7 +17,7 @@ export interface MaterialPalette {
     A700: string;
 }
 
-export interface Theme {
+export interface ThemeDefinition {
     /**
      * Primary color
      */
@@ -39,13 +39,13 @@ export interface Theme {
     success: string;
 }
 
-export class ComputedTheme {
+export class Theme {
     public primary: MaterialPalette;
     public danger: MaterialPalette;
     public warn: MaterialPalette;
     public success: MaterialPalette;
 
-    constructor(theme: Theme) {
+    constructor(theme: ThemeDefinition) {
         this.primary = this._computeMaterialPalette(theme.primary);
         this.danger = this._computeMaterialPalette(theme.danger);
         this.warn = this._computeMaterialPalette(theme.warn);

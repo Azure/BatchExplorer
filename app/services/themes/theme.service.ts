@@ -1,27 +1,32 @@
 import { Injectable } from "@angular/core";
 import * as path from "path";
+import { BehaviorSubject, Observable } from "rxjs";
 // tslint:disable-next-line:no-var-requires
 const stripJsonComments = require("strip-json-comments");
 
 import { FileSystemService } from "app/services";
 import { Constants } from "app/utils";
-import { ComputedTheme, MaterialPalette, Theme } from "./theme.model";
+import { MaterialPalette, Theme } from "./theme.model";
+
 /**
  * Service handling theme selection
  */
 @Injectable()
 export class ThemeService {
     public defaultTheme = "classic";
-
-    constructor(private fs: FileSystemService) { }
+    public currentTheme: Observable<Theme>;
+    private _currentTheme = new BehaviorSubject(null);
+    constructor(private fs: FileSystemService) {
+        this.currentTheme = this._currentTheme.filter(x => x !== null);
+    }
 
     public init() {
-
         this.setTheme(this.defaultTheme);
     }
 
     public async setTheme(name: string) {
         const theme = await this._loadTheme(name);
+        this._currentTheme.next(theme);
         this._applyTheme(theme);
     }
 
@@ -30,15 +35,14 @@ export class ThemeService {
         const content = await this.fs.readFile(filePath);
 
         console.log("Content", content);
-        return JSON.parse(stripJsonComments(content)) as any;
+        return new Theme(JSON.parse(stripJsonComments(content)));
     }
 
     private _applyTheme(theme: Theme) {
-        const computedTheme = new ComputedTheme(theme);
-        this._applyMaterialPalette("primary", computedTheme.primary);
-        this._applyMaterialPalette("danger", computedTheme.danger);
-        this._applyMaterialPalette("warn", computedTheme.warn);
-        this._applyMaterialPalette("success", computedTheme.success);
+        this._applyMaterialPalette("primary", theme.primary);
+        this._applyMaterialPalette("danger", theme.danger);
+        this._applyMaterialPalette("warn", theme.warn);
+        this._applyMaterialPalette("success", theme.success);
         // this._applyVar(`--primary`, theme.primary);
     }
 

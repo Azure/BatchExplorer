@@ -36,6 +36,7 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges, OnDest
 
     public colors: any[] = [
         {
+            // TODO-TIM change to call theme service
             pointBackgroundColor: "var(--error-color)",
             pointBorderColor: "var(--error-color)",
         },

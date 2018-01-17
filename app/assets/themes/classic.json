@@ -1,6 +1,6 @@
 {
-  // "primary": "#3d85c6",
-  "primary": "red",
+  "primary": "#3d85c6",
+  // "primary": "red",
   "danger": "#aa3939",
   "warn": "#f4ad42",
   "success": "#4caf50"
