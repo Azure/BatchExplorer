@@ -82,8 +82,9 @@ mat-tab-group:not(.form-tabs) {
     }
 }
 
-mat-card {
+mat-card.mat-card {
     transition: none !important;
+    background: $card-background;
     box-shadow: 1px 1px 5px 0 #d5d5d5 !important;
 
     mat-card-subtitle {
