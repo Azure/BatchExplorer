@@ -1,5 +1,4 @@
 import { Injectable } from "@angular/core";
-import * as jsonwebtoken from "jsonwebtoken";
 import { Observable } from "rxjs";
 
 import { AADApplication } from "app/models/ms-graph";
@@ -71,7 +70,4 @@ export class AADApplicationService {
         });
     }
 
-    // private _createJWT() {
-    //     return jsonwebtoken.sign({ foo: "bar" }, "shhhhh");
-    // }
 }
