@@ -7,6 +7,7 @@ import { MaterialModule } from "app/core";
 import { EditorModule } from "app/components/base/editor";
 import { ButtonsModule } from "../buttons";
 import { ComplexFormComponent } from "./complex-form";
+import { FormFooterComponent } from "./complex-form/footer";
 import { EditMetadataFormComponent } from "./edit-metadata-form";
 import { EditableTableColumnComponent, EditableTableComponent } from "./editable-table";
 import { ExpandingTextareaComponent } from "./expanding-textarea";
@@ -43,6 +44,7 @@ const components = [
     ExpandingTextareaComponent,
     SingleLineTextareaDirective,
     FormJsonEditorComponent,
+    FormFooterComponent,
 ];
 
 @NgModule({

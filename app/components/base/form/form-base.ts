@@ -51,8 +51,4 @@ export class FormBase {
             container.destroy();
         }
     }
-
-    public toggleShowError() {
-        this.showError = !this.showError;
-    }
 }
