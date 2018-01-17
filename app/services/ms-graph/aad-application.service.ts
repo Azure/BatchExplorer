@@ -58,16 +58,22 @@ export class AADApplicationService {
     }
 
     public createSecret(appId: string, name: string) {
-        // console.log("OTken", this._createJWT());
-        return this.aadGraph.patch(`/applicationsByAppId/${appId}`, {
-            passwordCredentials: [{
-                customKeyIdentifier: "dABlAHMAdAA=",
-                endDate: "2018-10-11T07:00:00Z",
-                keyId: SecureUtils.uuid(),
-                startDate: "2018-01-16T16:06:00Z",
-                value: "dABlAHMAdAA=",
-            }],
-        });
+        const startDate = new Date();
+        const endDate = new Date(2299, 12, 31);
+        return this.get(appId).flatMap((app) => {
+            const existingKeys = app.passwordCredentials.map((cred) => {
+                return { keyId: cred.keyId };
+            }).toJS();
+            return this.aadGraph.patch(`/applicationsByAppId/${appId}`, {
+                passwordCredentials: [...existingKeys, {
+                    customKeyIdentifier: btoa(name),
+                    endDate: endDate.toISOString(),
+                    keyId: SecureUtils.uuid(),
+                    startDate: startDate.toISOString(),
+                    value: SecureUtils.token(),
+                }],
+            });
+        }).shareReplay(1);
     }
 
 }

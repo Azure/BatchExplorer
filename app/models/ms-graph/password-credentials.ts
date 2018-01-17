@@ -12,10 +12,9 @@ export interface PasswordCredentialsAttributes {
 export class PasswordCredentials extends Record<PasswordCredentialsAttributes> {
     @Prop() public keyId: string;
     @Prop() public customKeyIdentifier: string;
-    @Prop() public startDateTime: Date;
-    @Prop() public endDateTime: Date;
-    @Prop() public secretText: string;
-    @Prop() public hint: string;
+    @Prop() public startDate: Date;
+    @Prop() public endDate: Date;
+    @Prop() public value: string;
 
     public get name() {
         return atob(this.customKeyIdentifier);

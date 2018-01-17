@@ -15,7 +15,7 @@ export class GenerateAADAppSecretComponent implements OnChanges {
     public ngOnChanges(changes) {
         if (this.application) {
             console.log("PAssword creds", this.application.passwordCredentials.map(x => x.name).toJS(), this.application.passwordCredentials.toJS());
-            this.aadApplicationService.createSecret(this.application.id, "SOme test").subscribe((result) => {
+            this.aadApplicationService.createSecret(this.application.id, "New pass").subscribe((result) => {
                 console.log("Result is", result);
             });
         }

@@ -158,6 +158,33 @@ export class ServerError {
         });
     }
 
+    public static fromAADGraph(response: HttpErrorResponse): ServerError {
+        const error = response.error["odata.error"];
+        let requestId = null;
+        let timestamp = null;
+        let code = null;
+        let message = null;
+        let details = null;
+        if (error) {
+            code = error.code;
+            message = error.message && error.message.value;
+            requestId = error.requestId;
+            details = error.values && error.values.map((x) => {
+                return { key: x.item, value: x.value };
+            });
+        }
+        return new ServerError({
+            status: response.status,
+            code: code,
+            statusText: response.statusText,
+            original: response,
+            message: message,
+            requestId,
+            timestamp,
+            details,
+        });
+    }
+
     private static _mapPythonErrorCode(code: number) {
         switch (code) {
             case -32602:

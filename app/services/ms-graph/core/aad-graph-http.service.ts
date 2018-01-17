@@ -35,7 +35,7 @@ export class AADGraphHttpService extends HttpService {
                             options)
                             .retryWhen(attempts => this.retryWhen(attempts))
                             .catch((error) => {
-                                const err = ServerError.fromMsGraph(error);
+                                const err = ServerError.fromAADGraph(error);
                                 return Observable.throw(err);
                             });
                     });
