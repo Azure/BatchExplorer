@@ -9,6 +9,7 @@ import {
 import { NotificationService } from "app/components/base/notifications";
 import { AccountService, AdalService, ElectronRemote, ElectronShell, FileSystemService } from "app/services";
 import { Constants, OS } from "app/utils";
+import { jobsCrumb } from "test/app/components/base/breadcrumbs/crumbs-data";
 import "./main-navigation.scss";
 
 @Component({
@@ -21,8 +22,11 @@ export class MainNavigationComponent implements OnInit {
     public selectedAccountAlias: string = "";
     public currentUserName: string = "";
     public update: any;
+    public showSecondary = false;
+
     private _autoUpdater: AppUpdater;
     private _showNotification = false;
+    private _jobCategoryDefaultOrder = true;
 
     constructor(
         accountService: AccountService,
@@ -94,6 +98,34 @@ export class MainNavigationComponent implements OnInit {
             items.unshift(new ContextMenuItem({ label: "Check for updates", click: () => this._checkForUpdates() }));
         }
         this.contextMenuService.openMenu(new ContextMenu(items));
+    }
+
+    public toggleJobCategory() {
+        this.showSecondary = !this.showSecondary;
+    }
+
+    public setJobCategoryMenuItem(id: string) {
+        if (this._jobCategoryDefaultOrder !== (id === "job")) {
+            this._jobCategoryDefaultOrder = !this._jobCategoryDefaultOrder;
+        }
+    }
+
+    public get menuSelection() {
+        const jobSelection = {
+            id: "job",
+            label: "Jobs",
+            icon: "fa-tasks",
+            routerLink: "/jobs",
+        };
+        const jobScheduleSelection = {
+            id: "jobschedule",
+            label: "Job schedules",
+            icon: "fa-calendar",
+            routerLink: "/jobschedule",
+        };
+        return this._jobCategoryDefaultOrder ?
+            { primary: jobSelection, secondary: jobScheduleSelection } :
+            { primary: jobScheduleSelection, secondary: jobSelection };
     }
 
     private _goToSettings() {
