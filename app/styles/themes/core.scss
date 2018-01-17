@@ -18,7 +18,6 @@ $primary: (
     A400: var(--primary-A400),
     A700: var(--primary-A700),
 );
-$primary: $primary;
 
 $danger: (
     50: var(--danger-50),
@@ -71,11 +70,25 @@ $success: (
     A700: var(--success-A700),
 );
 
+$primary-color:             var(--primary);
+$primary-color-dark:        var(--primary-dark);
+$primary-color-light:       var(--primary-light);
+
+$danger-color:              var(--danger);
+$danger-color-dark:         var(--danger-dark);
+$danger-color-light:        var(--danger-light);
+
+$warn-color:                var(--warn);
+$warn-color-dark:           var(--warn-dark);
+$warn-color-light:          var(--warn-light);
+
+$success-color:             var(--success);
+$success-color-dark:        var(--success-dark);
+$success-color-light:       var(--success-light);
+
 $primary-text:              var(--primary-text);
 $secondary-text:            var(--secondary-text);
-$primary-color:             var(--primary-color);
-$dark-primary-color:        var(--dark-primary-color);
-$light-primary-color:       var(--light-primary-color);
+
 $accent-color:              var(--accent-color);
 $text-color:                var(--text-color);
 $divider-color:             var(--divider-color);

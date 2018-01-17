@@ -3,5 +3,27 @@
   // "primary": "red",
   "danger": "#aa3939",
   "warn": "#f4ad42",
-  "success": "#4caf50"
+  "success": "#4caf50",
+  "text": {
+    "primary": "#212121",
+    "secondary": "#757575"
+  },
+  "card": {
+    "background": "red"
+  },
+  "breadcrumb": {
+    "text": "",
+    "background": "",
+    "hover": ""
+  },
+  "header": {
+    "text": "",
+    "background": "var(--primary-dark)",
+    "hover": ""
+  },
+  "nav": {
+    "text": "",
+    "background": "",
+    "hover": ""
+  }
 }

@@ -1,6 +1,11 @@
+import { ThemeDefinition } from "app/services";
 import * as tinycolor from "tinycolor2";
 
-export interface MaterialPalette {
+export interface ColorPalette {
+    main: string;
+    light: string;
+    dark: string;
+
     50: string;
     100: string;
     200: string;
@@ -17,46 +22,29 @@ export interface MaterialPalette {
     A700: string;
 }
 
-export interface ThemeDefinition {
-    /**
-     * Primary color
-     */
-    primary: string;
-
-    /**
-     * Danger and error color
-     */
-    danger: string;
-
-    /**
-     * Warning color
-     */
-    warn: string;
-
-    /**
-     * Success color
-     */
-    success: string;
-}
-
 export class Theme {
-    public primary: MaterialPalette;
-    public danger: MaterialPalette;
-    public warn: MaterialPalette;
-    public success: MaterialPalette;
+    public primary: ColorPalette;
+    public danger: ColorPalette;
+    public warn: ColorPalette;
+    public success: ColorPalette;
+    public text: {
+        primary: string;
+        secondary: string;
+    };
 
     constructor(theme: ThemeDefinition) {
         this.primary = this._computeMaterialPalette(theme.primary);
         this.danger = this._computeMaterialPalette(theme.danger);
         this.warn = this._computeMaterialPalette(theme.warn);
         this.success = this._computeMaterialPalette(theme.success);
+        this.text = theme.text;
     }
 
-    private _computeMaterialPalette(base: string): MaterialPalette {
+    private _computeMaterialPalette(base: string): ColorPalette {
         const baseLight = tinycolor("#ffffff");
         const baseDark = multiply(tinycolor(base).toRgb(), tinycolor(base).toRgb());
         const baseTriad = tinycolor(base).tetrad();
-        return {
+        const a: any = {
             50: tinycolor.mix(baseLight, base, 12).toHexString(),
             100: tinycolor.mix(baseLight, base, 30).toHexString(),
             200: tinycolor.mix(baseLight, base, 50).toHexString(),
@@ -72,6 +60,10 @@ export class Theme {
             A400: tinycolor.mix(baseDark, baseTriad[4], 15).saturate(100).lighten(45).toHexString(),
             A700: tinycolor.mix(baseDark, baseTriad[4], 15).saturate(100).lighten(40).toHexString(),
         };
+        a.main = a[500];
+        a.light = a[300];
+        a.dark = a[700];
+        return a;
     }
 }
 
