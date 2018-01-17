@@ -1,5 +1,5 @@
-import { ThemeDefinition } from "app/services";
 import * as tinycolor from "tinycolor2";
+import { EntityColorDefinition, ThemeDefinition } from "./theme-definition.model";
 
 export interface ColorPalette {
     main: string;
@@ -22,6 +22,20 @@ export interface ColorPalette {
     A700: string;
 }
 
+export class EntityColor {
+    public text: string;
+    public background: string;
+    public hoverText: string;
+    public hoverBackground: string;
+
+    constructor(def: EntityColorDefinition) {
+        this.text = def.text;
+        this.background = def.background;
+        this.hoverText = def["hover-text"];
+        this.hoverBackground = def["hover-background"];
+    }
+}
+
 export class Theme {
     public primary: ColorPalette;
     public danger: ColorPalette;
@@ -31,6 +45,9 @@ export class Theme {
         primary: string;
         secondary: string;
     };
+    public header: EntityColor;
+    public navigation: EntityColor;
+    public footer: EntityColor;
 
     constructor(theme: ThemeDefinition) {
         this.primary = this._computeMaterialPalette(theme.primary);
@@ -38,6 +55,9 @@ export class Theme {
         this.warn = this._computeMaterialPalette(theme.warn);
         this.success = this._computeMaterialPalette(theme.success);
         this.text = theme.text;
+        this.header = new EntityColor(theme.header);
+        this.navigation = new EntityColor(theme.navigation);
+        this.footer = new EntityColor(theme.footer);
     }
 
     private _computeMaterialPalette(base: string): ColorPalette {

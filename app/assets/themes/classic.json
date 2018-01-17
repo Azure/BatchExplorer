@@ -17,13 +17,18 @@
     "hover": ""
   },
   "header": {
-    "text": "",
-    "background": "var(--primary-dark)",
-    "hover": ""
+    "text": "white",
+    "background": "#333333",
+    "hover-background": "#757575"
   },
-  "nav": {
+  "navigation": {
     "text": "",
     "background": "",
     "hover": ""
+  },
+  "footer": {
+    "text": "white",
+    "background": "#333333",
+    "hover": "#757575"
   }
 }

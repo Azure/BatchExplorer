@@ -5,9 +5,9 @@ import { BehaviorSubject, Observable } from "rxjs";
 // tslint:disable-next-line:no-var-requires
 const stripJsonComments = require("strip-json-comments");
 
-import { FileSystemService } from "app/services";
+import { FileSystemService } from "app/services/fs.service";
 import { Constants, log } from "app/utils";
-import { ColorPalette, Theme } from "./theme.model";
+import { ColorPalette, EntityColor, Theme } from "./theme.model";
 
 /**
  * Service handling theme selection
@@ -65,6 +65,16 @@ export class ThemeService {
         this._applyColorPalette("success", theme.success);
         this._applyVar(`--primary-text`, theme.text.primary);
         this._applyVar(`--secondary-text`, theme.text.secondary);
+        this._applyEntityColor("header", theme.header);
+        this._applyEntityColor("nav", theme.navigation);
+        this._applyEntityColor("footer", theme.footer);
+    }
+
+    private _applyEntityColor(entity: string, theme: EntityColor) {
+        this._applyVar(`--color-${entity}-text`, theme.text);
+        this._applyVar(`--color-${entity}-background`, theme.background);
+        this._applyVar(`--color-${entity}-text-background`, theme.hoverText);
+        this._applyVar(`--color-${entity}-hover-background`, theme.hoverBackground);
     }
 
     private _applyColorPalette(color, palette: ColorPalette) {

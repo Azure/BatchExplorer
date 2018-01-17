@@ -70,6 +70,16 @@ $success: (
     A700: var(--success-A700),
 );
 
+@function entity-color($name) {
+    $val: (
+        text: var(--color-#{$name}-text),
+        bg: var(--color-#{$name}-background),
+        hover-text: var(--color-#{$name}-hover),
+        hover-bg: var(--color-#{$name}-hover-background),
+    );
+    @return $val;
+}
+
 $primary-color:             var(--primary);
 $primary-color-dark:        var(--primary-dark);
 $primary-color-light:       var(--primary-light);
@@ -89,12 +99,16 @@ $success-color-light:       var(--success-light);
 $primary-text:              var(--primary-text);
 $secondary-text:            var(--secondary-text);
 
+// Header
+$header-color:              entity-color(header);
+$footer-color:              entity-color(footer);
+$navigation-color:          entity-color(navigation);
+
 $accent-color:              var(--accent-color);
 $text-color:                var(--text-color);
 $divider-color:             var(--divider-color);
 $error-color:               var(--error-color);
-$header-background:         var(--header-background);
-$header-hover:              var(--header-hover);
+
 $navigation-background:     var(--navigation-background);
 $navigation-hover:          var(--navigation-hover);
 $breadcrumb-color:          var(--breadcrumb-color);

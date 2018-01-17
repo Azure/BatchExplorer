@@ -1,4 +1,11 @@
 
+export interface EntityColorDefinition {
+    text: string;
+    background: string;
+    "hover-text": string;
+    "hover-background": string;
+}
+
 export interface ThemeDefinition {
     /**
      * Primary color
@@ -27,4 +34,19 @@ export interface ThemeDefinition {
         primary: string;
         secondary: string;
     };
+
+    /**
+     * Header  color
+     */
+    header: EntityColor;
+
+    /**
+     * Left navigation color
+     */
+    navigation: EntityColor;
+
+    /**
+     * Footer color
+     */
+    footer: EntityColor;
 }
