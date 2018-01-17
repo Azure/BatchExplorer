@@ -12,21 +12,9 @@ bl-monitor-chart {
         }
     }
     background-color: white;
-    display: inline-block;
     font-size: 2em;
-    text-align: justify;
-    margin-top: 8px;
+    margin-top: 5px;
+    margin-right: 5px;
     padding: 12px;
-
-    &.small {
-        width: calc(20% - 4px);
-    }
-
-    &.medium {
-        width: calc(25% - 4px);
-    }
-
-    &.large {
-        width: calc(35% - 4px);
-    }
+    height: 200px;
 }
