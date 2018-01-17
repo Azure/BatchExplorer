@@ -1,6 +1,8 @@
 import { ListProp, Prop, Record } from "app/core";
 import { List } from "immutable";
 
+import { PasswordCredentials, PasswordCredentialsAttributes } from "./password-credentials";
+
 export interface AADApplicationAttributes {
     id: string;
     displayName: string;
@@ -8,6 +10,7 @@ export interface AADApplicationAttributes {
     allowPublicClient: boolean;
     createdDateTime: Date;
     tags: string[];
+    passwordCredentials: PasswordCredentialsAttributes[];
 }
 
 export class AADApplication extends Record<AADApplicationAttributes> {
@@ -23,4 +26,5 @@ export class AADApplication extends Record<AADApplicationAttributes> {
     @Prop() public logoutUrl: string;
     @Prop() public publisherName: string;
     @ListProp(String) public tags: List<string>;
+    @ListProp(PasswordCredentials) public passwordCredentials: List<PasswordCredentials>;
 }

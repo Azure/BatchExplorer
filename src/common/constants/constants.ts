@@ -121,6 +121,7 @@ export const ApiVersion = {
     compute: "2017-03-30",
     commerce: "2016-08-31-preview",
     authorization: "2017-05-01",
+    aadGraph: "1.6",
 };
 
 export const ExternalLinks = {
@@ -144,6 +145,7 @@ export const ServiceUrl = {
     githubRaw: "https://raw.githubusercontent.com",
     appInsights: "https://api.applicationinsights.io/v1",
     msGraph: "https://graph.microsoft.com/beta",
+    aadGraph: "https://graph.windows.net",
 };
 
 export const ResourceUrl = {
@@ -151,6 +153,7 @@ export const ResourceUrl = {
     arm: "https://management.core.windows.net/",
     appInsights: "https://api.applicationinsights.io",
     msGraph: "https://graph.microsoft.com",
+    aadGraph: "https://graph.windows.net",
 };
 
 export const APIErrorCodes = {

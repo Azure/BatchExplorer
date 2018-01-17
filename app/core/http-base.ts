@@ -1,6 +1,8 @@
+import { Location } from "@angular/common";
 import { HttpEvent, HttpHeaders, HttpParams, HttpResponse } from "@angular/common/http";
+import { AccessToken } from "client/core/aad/access-token";
+import { Constants, UrlUtils } from "common";
 import { Observable } from "rxjs";
-import { Constants } from "common";
 
 export type HttpRequestObservable = "body" | "events" | "response";
 
@@ -23,6 +25,7 @@ export interface HttpRequestOptions<T extends HttpRequestObservable = "body"> {
  * This use angular 5 HttpClient
  */
 export abstract class HttpService {
+    public abstract get serviceUrl();
 
     public abstract request<T>(
         method: string,
@@ -41,25 +44,25 @@ export abstract class HttpService {
         return this.request<T>("get", uri, options);
     }
 
-    public post<T>(uri: string, options: HttpRequestOptions<"events">): Observable<HttpEvent<T>>;
-    public post<T>(uri: string, options: HttpRequestOptions<"response">): Observable<HttpResponse<T>>;
-    public post<T>(uri: string, options?: HttpRequestOptions): Observable<T>;
-    public post(uri: string, options?: any) {
-        return this.request("post", uri, options);
+    public post<T>(uri: string, body: any, options: HttpRequestOptions<"events">): Observable<HttpEvent<T>>;
+    public post<T>(uri: string, body: any, options: HttpRequestOptions<"response">): Observable<HttpResponse<T>>;
+    public post<T>(uri: string, body: any, options?: HttpRequestOptions): Observable<T>;
+    public post(uri: string, body?: any, options?: any) {
+        return this.request("post", uri, { body, ...options });
     }
 
-    public patch<T>(uri: string, options: HttpRequestOptions<"events">): Observable<HttpEvent<T>>;
-    public patch<T>(uri: string, options: HttpRequestOptions<"response">): Observable<HttpResponse<T>>;
-    public patch<T>(uri: string, options?: HttpRequestOptions): Observable<T>;
-    public patch(uri: string, options?: any) {
-        return this.request("patch", uri, options);
+    public patch<T>(uri: string, body: any, options: HttpRequestOptions<"events">): Observable<HttpEvent<T>>;
+    public patch<T>(uri: string, body: any, options: HttpRequestOptions<"response">): Observable<HttpResponse<T>>;
+    public patch<T>(uri: string, body: any, options?: HttpRequestOptions): Observable<T>;
+    public patch(uri: string, body?: any, options?: any) {
+        return this.request("patch", uri, { body, ...options });
     }
 
-    public put<T>(uri: string, options: HttpRequestOptions<"events">): Observable<HttpEvent<T>>;
-    public put<T>(uri: string, options: HttpRequestOptions<"response">): Observable<HttpResponse<T>>;
-    public put<T>(uri: string, options?: HttpRequestOptions): Observable<T>;
-    public put(uri: string, options?: any) {
-        return this.request("put", uri, options);
+    public put<T>(uri: string, body: any, options: HttpRequestOptions<"events">): Observable<HttpEvent<T>>;
+    public put<T>(uri: string, body: any, options: HttpRequestOptions<"response">): Observable<HttpResponse<T>>;
+    public put<T>(uri: string, body: any, options?: HttpRequestOptions): Observable<T>;
+    public put(uri: string, body?: any, options?: any) {
+        return this.request("put", uri, { body, ...options });
     }
 
     public delete<T>(uri: string, options: HttpRequestOptions<"events">): Observable<HttpEvent<T>>;
@@ -87,5 +90,25 @@ export abstract class HttpService {
             .flatMap((retryCount) => {
                 return Observable.timer(100 * Math.pow(3, retryCount));
             });
+    }
+
+    protected computeUrl(uri: string) {
+        if (UrlUtils.isHttpUrl(uri)) {
+            return uri;
+        } else {
+            return Location.joinWithSlash(this.serviceUrl, uri);
+        }
+    }
+
+    protected addAuthorizationHeader(
+        originalOptions: HttpRequestOptions,
+        accessToken: AccessToken): HttpRequestOptions {
+
+        const options = { ...originalOptions };
+        if (!(options.headers instanceof HttpHeaders)) {
+            options.headers = new HttpHeaders(options.headers);
+        }
+        options.headers = options.headers.set("Authorization", `${accessToken.token_type} ${accessToken.access_token}`);
+        return options;
     }
 }

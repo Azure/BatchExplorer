@@ -1,9 +1,11 @@
 import { Injectable } from "@angular/core";
+import * as jsonwebtoken from "jsonwebtoken";
 import { Observable } from "rxjs";
 
 import { AADApplication } from "app/models/ms-graph";
 import { DataCache, ListOptionsAttributes, ListView } from "app/services/core";
-import { MsGraphEntityGetter, MsGraphHttpService, MsGraphListGetter } from "./core";
+import { SecureUtils } from "app/utils";
+import { AADGraphHttpService, MsGraphEntityGetter, MsGraphHttpService, MsGraphListGetter } from "./core";
 
 export interface AADApplicationListParams {
     owned?: boolean;
@@ -19,7 +21,7 @@ export class AADApplicationService {
     private _listGetter: MsGraphListGetter<AADApplication, AADApplicationListParams>;
     private _cache = new DataCache<AADApplication>();
 
-    constructor(msGraph: MsGraphHttpService) {
+    constructor(private aadGraph: AADGraphHttpService, msGraph: MsGraphHttpService) {
         this._getter = new MsGraphEntityGetter(AADApplication, msGraph, {
             cache: () => this._cache,
             uri: ({ id }) => `/applications/${id}`,
@@ -53,6 +55,23 @@ export class AADApplicationService {
     }
 
     public listAllOwned() {
-        this._listGetter.fetchAll({owned: true});
+        this._listGetter.fetchAll({ owned: true });
     }
+
+    public createSecret(appId: string, name: string) {
+        // console.log("OTken", this._createJWT());
+        return this.aadGraph.patch(`/applicationsByAppId/${appId}`, {
+            passwordCredentials: [{
+                customKeyIdentifier: "dABlAHMAdAA=",
+                endDate: "2018-10-11T07:00:00Z",
+                keyId: SecureUtils.uuid(),
+                startDate: "2018-01-16T16:06:00Z",
+                value: "dABlAHMAdAA=",
+            }],
+        });
+    }
+
+    // private _createJWT() {
+    //     return jsonwebtoken.sign({ foo: "bar" }, "shhhhh");
+    // }
 }
