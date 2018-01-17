@@ -12,9 +12,9 @@
     "background": "red"
   },
   "breadcrumb": {
-    "text": "",
-    "background": "",
-    "hover": ""
+    "text": "white",
+    "background": "#5b5b5b",
+    "hover-background": "#666666"
   },
   "header": {
     "text": "white",

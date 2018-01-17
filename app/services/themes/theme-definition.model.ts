@@ -49,4 +49,9 @@ export interface ThemeDefinition {
      * Footer color
      */
     footer: EntityColorDefinition;
+
+    /**
+     * Breadcrumb color
+     */
+    breadcrumb: EntityColorDefinition;
 }

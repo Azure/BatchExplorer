@@ -52,7 +52,7 @@ export class ThemeService {
         }
         this._watcher = this.fs.watch(filePath);
         this._watcher.on("change", async () => {
-            log.debug("Theme file updated. Reloading theme.");
+            log.info("[BatchLabs] Theme file updated. Reloading theme.");
             const theme = await this._loadThemeAt(filePath);
             this._currentTheme.next(theme);
         });
@@ -68,6 +68,7 @@ export class ThemeService {
         this._applyEntityColor("header", theme.header);
         this._applyEntityColor("navigation", theme.navigation);
         this._applyEntityColor("footer", theme.footer);
+        this._applyEntityColor("breadcrumb", theme.breadcrumb);
     }
 
     private _applyEntityColor(entity: string, theme: EntityColor) {

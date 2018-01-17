@@ -48,6 +48,7 @@ export class Theme {
     public header: EntityColor;
     public navigation: EntityColor;
     public footer: EntityColor;
+    public breadcrumb: EntityColor;
 
     constructor(theme: ThemeDefinition) {
         this.primary = this._computeMaterialPalette(theme.primary);
@@ -58,6 +59,7 @@ export class Theme {
         this.header = new EntityColor(theme.header);
         this.navigation = new EntityColor(theme.navigation);
         this.footer = new EntityColor(theme.footer);
+        this.breadcrumb = new EntityColor(theme.breadcrumb);
     }
 
     private _computeMaterialPalette(base: string): ColorPalette {
