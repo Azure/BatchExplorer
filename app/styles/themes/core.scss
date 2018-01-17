@@ -2,27 +2,6 @@
     #{$name}: $var;
 }
 
-@mixin prop($name, $var, $index) {
-    #{$name}-#{$index}: map-get($var, $index);
-}
-
-@mixin css-var-theme($name, $var) {
-    @include prop($name, $var, 50);
-    @include prop($name, $var, 100);
-    @include prop($name, $var, 200);
-    @include prop($name, $var, 300);
-    @include prop($name, $var, 400);
-    @include prop($name, $var, 500);
-    @include prop($name, $var, 600);
-    @include prop($name, $var, 700);
-    @include prop($name, $var, 800);
-    @include prop($name, $var, 900);
-    @include prop($name, $var, A100);
-    @include prop($name, $var, A200);
-    @include prop($name, $var, A400);
-    @include prop($name, $var, A700);
-};
-
 $primary: (
     50: var(--primary-50),
     100: var(--primary-100),

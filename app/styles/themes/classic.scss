@@ -94,12 +94,6 @@ $success-theme-classic: (
 );
 
 body {
-    // Primary color
-    @include css-var-theme(--primary, $primary-theme-classic);
-    @include css-var-theme(--danger, $danger-theme-classic);
-    @include css-var-theme(--warn, $warn-theme-classic);
-    @include css-var-theme(--success, $success-theme-classic);
-
     --primary-color:            #2196f3;
     --dark-primary-color:       #1976d2;
     --light-primary-color:      #bbedfb;
