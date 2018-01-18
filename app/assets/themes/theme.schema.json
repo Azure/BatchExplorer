@@ -27,11 +27,11 @@
       "properties": {
         "primary": {"$ref": "#/definitions/color"},
         "secondary": {"$ref": "#/definitions/color"}
-      },
+      }
     },
     "header": {"$ref": "#/definitions/entity-colors"},
     "navigation": {"$ref": "#/definitions/entity-colors"},
     "footer": {"$ref": "#/definitions/entity-colors"},
-    "breadcrumb": {"$ref": "#/definitions/entity-colors"},
+    "breadcrumb": {"$ref": "#/definitions/entity-colors"}
   }
 }
