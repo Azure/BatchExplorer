@@ -7,7 +7,7 @@
   "main-background": "#f5f5f5",
   "card-background": "white",
   "text": {
-    "primary": "#212121",
+    "primary": "",
     "secondary": "#757575"
   },
   "breadcrumb": {

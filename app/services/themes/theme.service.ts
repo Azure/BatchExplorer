@@ -59,46 +59,13 @@ export class ThemeService {
     }
 
     private _applyTheme(theme: Theme) {
-        this._applyColorPalette("primary", theme.primary);
-        this._applyColorPalette("danger", theme.danger);
-        this._applyColorPalette("warn", theme.warn);
-        this._applyColorPalette("success", theme.success);
-        this._applyVar(`--main-background`, theme.mainBackground);
-        this._applyVar(`--card-background`, theme.cardBackground);
-        this._applyVar(`--primary-text`, theme.text.primary);
-        this._applyVar(`--secondary-text`, theme.text.secondary);
-        this._applyEntityColor("header", theme.header);
-        this._applyEntityColor("navigation", theme.navigation);
-        this._applyEntityColor("footer", theme.footer);
-        this._applyEntityColor("breadcrumb", theme.breadcrumb);
+        for (const entry of theme.asCss()) {
+            this._applyCss(entry);
+        }
     }
 
-    private _applyEntityColor(entity: string, theme: EntityColor) {
-        this._applyVar(`--color-${entity}-text`, theme.text);
-        this._applyVar(`--color-${entity}-background`, theme.background);
-        this._applyVar(`--color-${entity}-hover-text`, theme.hoverText);
-        this._applyVar(`--color-${entity}-hover-background`, theme.hoverBackground);
-    }
-
-    private _applyColorPalette(color, palette: ColorPalette) {
-        this._applyVar(`--${color}-50`, palette[50]);
-        this._applyVar(`--${color}-100`, palette[100]);
-        this._applyVar(`--${color}-200`, palette[200]);
-        this._applyVar(`--${color}-300`, palette[300]);
-        this._applyVar(`--${color}-400`, palette[400]);
-        this._applyVar(`--${color}-500`, palette[500]);
-        this._applyVar(`--${color}-600`, palette[600]);
-        this._applyVar(`--${color}-700`, palette[700]);
-        this._applyVar(`--${color}-800`, palette[800]);
-        this._applyVar(`--${color}-900`, palette[900]);
-        this._applyVar(`--${color}-A100`, palette.A100);
-        this._applyVar(`--${color}-A200`, palette.A200);
-        this._applyVar(`--${color}-A400`, palette.A400);
-        this._applyVar(`--${color}-A700`, palette.A700);
-
-        this._applyVar(`--${color}`, palette.main);
-        this._applyVar(`--${color}-light`, palette.light);
-        this._applyVar(`--${color}-dark`, palette.dark);
+    private _applyCss({ key, value }) {
+        this._applyVar(`--color-${key}`, value);
     }
 
     private _applyVar(varName: string, value: string) {
