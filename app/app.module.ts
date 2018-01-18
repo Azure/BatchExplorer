@@ -20,7 +20,7 @@ import { BaseModule } from "app/components/base";
 import { DataModule } from "app/components/data/data.module";
 import { FileModule } from "app/components/file/file.module";
 import { JobModule } from "app/components/job/job.module";
-import { JobScheduleModule } from "app/components/jobSchedule/job-schedule.module";
+import { JobScheduleModule } from "app/components/job-schedule/job-schedule.module";
 import { MarketModule } from "app/components/market/market.module";
 import { NodeModule } from "app/components/node/node.module";
 import { PoolModule } from "app/components/pool/pool.module";

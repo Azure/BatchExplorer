@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/
 import { MatDialogRef } from "@angular/material";
 
 import { BackgroundTaskService } from "app/components/base/background-task";
-import { DeleteJobScheduleAction } from "app/components/jobSchedule/action";
+import { DeleteJobScheduleAction } from "app/components/job-schedule/action";
 import { autobind } from "app/core";
 import { JobScheduleService } from "app/services";
 

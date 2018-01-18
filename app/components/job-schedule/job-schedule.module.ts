@@ -1,7 +1,7 @@
 import { NgModule } from "@angular/core";
 
 import { commonModules } from "app/common";
-import { JobScheduleActionModule } from "app/components/jobSchedule/action";
+import { JobScheduleActionModule } from "app/components/job-schedule/action";
 import { JobScheduleListComponent } from "./browse/job-schedule-list.component";
 import { JobScheduleHomeComponent } from "./home/job-schedule-home.component";
 
