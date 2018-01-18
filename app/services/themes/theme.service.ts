@@ -1,10 +1,11 @@
-import { Injectable } from "@angular/core";
+import { Injectable, NgZone } from "@angular/core";
 import { FSWatcher } from "chokidar";
 import * as path from "path";
 import { BehaviorSubject, Observable } from "rxjs";
 // tslint:disable-next-line:no-var-requires
 const stripJsonComments = require("strip-json-comments");
 
+import { NotificationService } from "app/components/base/notifications";
 import { FileSystemService } from "app/services/fs.service";
 import { Constants, log } from "app/utils";
 import { Theme } from "./theme.model";
@@ -18,9 +19,10 @@ export class ThemeService {
     public currentTheme: Observable<Theme>;
     private _currentTheme = new BehaviorSubject(null);
     private _watcher: FSWatcher;
-    constructor(private fs: FileSystemService) {
+    constructor(private fs: FileSystemService, private notificationService: NotificationService, private zone: NgZone) {
         this.currentTheme = this._currentTheme.filter(x => x !== null);
         this.currentTheme.subscribe((theme) => {
+            console.log("Apply tehem", theme);
             this._applyTheme(theme);
         });
     }
@@ -42,8 +44,16 @@ export class ThemeService {
     }
 
     private async _loadThemeAt(filePath: string) {
-        const content = await this.fs.readFile(filePath);
-        return new Theme(JSON.parse(stripJsonComments(content)));
+        try {
+            const content = await this.fs.readFile(filePath);
+            return new Theme(JSON.parse(stripJsonComments(content)));
+        } catch (e) {
+            log.error(`Error loading theme file ${filePath}`, { e });
+            this.zone.run(() => {
+                this.notificationService.warn(`Error loading theme file at ${filePath}`, "Theme contains invalid json");
+            });
+            return null;
+        }
     }
 
     private _watchThemeFile(filePath: string) {
@@ -54,7 +64,9 @@ export class ThemeService {
         this._watcher.on("change", async () => {
             log.info("[BatchLabs] Theme file updated. Reloading theme.");
             const theme = await this._loadThemeAt(filePath);
-            this._currentTheme.next(theme);
+            this.zone.run(() => {
+                this._currentTheme.next(theme);
+            });
         });
     }
 
