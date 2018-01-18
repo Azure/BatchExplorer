@@ -3,6 +3,7 @@ import { Routes } from "@angular/router";
 
 import { NavigationGuard } from "app/components/base/guards";
 import { JobGraphsComponent } from "app/components/job/graphs/job-graphs-home";
+import { JobScheduleHomeComponent } from "app/components/jobSchedule/home/job-schedule-home.component";
 import { ChooseActionComponent } from "app/components/market/application-action";
 import { LocalTemplateBrowserComponent } from "app/components/market/local-template-browser";
 import { SubmitLocalTemplateComponent } from "app/components/market/submit-local-template";
@@ -49,6 +50,15 @@ export const routes: Routes = [
             { path: "", component: JobDefaultComponent }, // jobs/
             { path: ":id", component: JobDetailsComponent }, // jobs/{job.id}
         ],
+    },
+    {
+        path: "jobschedule",
+        canActivate: [NavigationGuard],
+        component: JobScheduleHomeComponent,
+        // children: [
+        //     { path: "", component: JobDefaultComponent }, // jobs/
+        //     { path: ":id", component: JobDetailsComponent }, // jobs/{job.id}
+        // ],
     },
     {
         path: "pools",
