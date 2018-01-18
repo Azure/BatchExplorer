@@ -52,7 +52,7 @@ export const routes: Routes = [
         ],
     },
     {
-        path: "jobschedule",
+        path: "jobschedules",
         canActivate: [NavigationGuard],
         component: JobScheduleHomeComponent,
         // children: [

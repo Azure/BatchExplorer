@@ -22,10 +22,10 @@ export class MainNavigationComponent implements OnInit {
     public currentUserName: string = "";
     public update: any;
     public showSecondary = false;
+    public jobCategoryDefaultOrder = true;
 
     private _autoUpdater: AppUpdater;
     private _showNotification = false;
-    private _jobCategoryDefaultOrder = true;
 
     constructor(
         accountService: AccountService,
@@ -104,8 +104,9 @@ export class MainNavigationComponent implements OnInit {
     }
 
     public setJobCategoryMenuItem(id: string) {
-        if (this._jobCategoryDefaultOrder !== (id === "job")) {
-            this._jobCategoryDefaultOrder = !this._jobCategoryDefaultOrder;
+        if (this.jobCategoryDefaultOrder !== (id === "job")) {
+            this.jobCategoryDefaultOrder = !this.jobCategoryDefaultOrder;
+            this.showSecondary = false;
         }
     }
 
@@ -120,11 +121,12 @@ export class MainNavigationComponent implements OnInit {
             id: "jobschedule",
             label: "Job schedules",
             icon: "fa-calendar",
-            routerLink: "/jobschedule",
+            routerLink: "/jobschedules",
         };
-        return this._jobCategoryDefaultOrder ?
-            { primary: jobSelection, secondary: jobScheduleSelection } :
-            { primary: jobScheduleSelection, secondary: jobSelection };
+        return {
+            primary: jobSelection,
+            secondary: jobScheduleSelection,
+        };
     }
 
     private _goToSettings() {
