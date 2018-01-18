@@ -231,7 +231,6 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges, OnDest
     }
 
     private _updateColors(theme: Theme) {
-        console.log("Updated colors");
         this.colors = [
             {
                 pointBackgroundColor: theme.danger.main,
