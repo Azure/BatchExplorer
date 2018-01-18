@@ -51,13 +51,13 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges, OnDest
     private _succeededTasks: TaskPoint[];
     private _subs: Subscription[] = [];
 
-    constructor(private router: Router, private themeService: ThemeService) {
+    constructor(private router: Router, themeService: ThemeService) {
         this.updateOptions();
         this.updateData();
         this._subs.push(this.sortControl.valueChanges.subscribe(() => {
             this.updateData();
         }));
-        this._subs.push(this.themeService.currentTheme.subscribe((theme) => {
+        this._subs.push(themeService.currentTheme.subscribe((theme) => {
             this._updateColors(theme);
         }));
     }
