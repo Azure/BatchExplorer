@@ -1,11 +1,26 @@
+import { OnDestroy } from "@angular/core";
+import { Subscription } from "rxjs";
+
+import { Theme, ThemeService } from "app/services";
 import { MonitorChartAggregation, MonitorChartMetrics, MonitorMetricsBase } from "./monitor-metrics-base";
 
-const statesColor = [
-    { state: "taskfailevent", color: "#aa3939" },
-];
+export class FailedTaskMetrics extends MonitorMetricsBase implements OnDestroy {
+    private _sub: Subscription;
 
-export class FailedTaskMetrics extends MonitorMetricsBase {
-    constructor() {
-        super([ MonitorChartMetrics.TaskFailEvent ], [ MonitorChartAggregation.Total ], statesColor);
+    constructor(themeService: ThemeService) {
+        super([ MonitorChartMetrics.TaskFailEvent ], [ MonitorChartAggregation.Total ]);
+
+        this._sub = themeService.currentTheme.subscribe((theme: Theme) => {
+            const statesColor = [
+                { state: MonitorChartMetrics.TaskFailEvent, color: theme.monitorChart.taskFailEvent },
+            ];
+            super.setColor(statesColor);
+        });
+    }
+
+    public ngOnDestroy(): void {
+        if (this._sub) {
+            this._sub.unsubscribe();
+        }
     }
 }

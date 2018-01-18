@@ -1,20 +1,15 @@
+@import "app/styles/variables";
+
 bl-monitor-chart {
     .header {
-        font-size: 2em;
-        color: #5b5b5b;
-        text-align: justify;
-        margin-top: 0;
         padding-bottom: 12px;
-
         .timeframe-picker {
             float: right;
             cursor: pointer;
         }
     }
-    background-color: white;
-    font-size: 2em;
+    background-color: $card-background;
     margin-top: 5px;
     margin-right: 5px;
-    padding: 12px;
-    height: 200px;
+    padding: 10px;
 }

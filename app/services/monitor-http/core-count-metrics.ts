@@ -1,18 +1,33 @@
+import { OnDestroy } from "@angular/core";
+import { Subscription } from "rxjs";
+
+import { Theme, ThemeService } from "app/services";
 import { MonitorChartAggregation, MonitorChartMetrics, MonitorMetricsBase } from "./monitor-metrics-base";
 
-const statesColor = [
-    { state: "corecount", color: "#1C3F95" },
-    { state: "lowprioritycorecount", color: "#551A8B" },
-];
+export class CoreCountMetrics extends MonitorMetricsBase implements OnDestroy {
+    private _sub: Subscription;
 
-export class CoreCountMetrics extends MonitorMetricsBase {
-    constructor() {
+    constructor(themeService: ThemeService) {
         super([
             MonitorChartMetrics.CoreCount,
             MonitorChartMetrics.LowPriorityCoreCount,
         ], [
             MonitorChartAggregation.Total,
             MonitorChartAggregation.Total,
-        ], statesColor);
+        ]);
+
+        this._sub = themeService.currentTheme.subscribe((theme: Theme) => {
+            const statesColor = [
+                { state: MonitorChartMetrics.CoreCount, color: theme.monitorChart.coreCount },
+                { state: MonitorChartMetrics.LowPriorityCoreCount, color: theme.monitorChart.lowPriorityCoreCount },
+            ];
+            super.setColor(statesColor);
+        });
+    }
+
+    public ngOnDestroy(): void {
+        if (this._sub) {
+            this._sub.unsubscribe();
+        }
     }
 }

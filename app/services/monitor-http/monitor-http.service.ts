@@ -7,6 +7,7 @@ import {
 } from "app/services";
 import { AccountService } from "../account.service";
 import { ArmHttpService } from "../arm-http.service";
+import { ThemeService } from "../themes";
 
 export interface LocalizableString {
     value: string;
@@ -34,11 +35,14 @@ export class MonitorHttpService {
     private _failedTaskMetrics: MonitorMetrics;
     private _nodeStateMetrics: MonitorMetrics;
 
-    constructor(private accountService: AccountService, private armService: ArmHttpService) {
-        this._coreCountMetrics = new CoreCountMetrics();
-        this._taskStateMetrics = new TaskStatesMetrics();
-        this._failedTaskMetrics = new FailedTaskMetrics();
-        this._nodeStateMetrics = new NodeStatesMetrics();
+    constructor(
+        themeService: ThemeService,
+        private accountService: AccountService,
+        private armService: ArmHttpService) {
+        this._coreCountMetrics = new CoreCountMetrics(themeService);
+        this._taskStateMetrics = new TaskStatesMetrics(themeService);
+        this._failedTaskMetrics = new FailedTaskMetrics(themeService);
+        this._nodeStateMetrics = new NodeStatesMetrics(themeService);
     }
 
     /**
@@ -69,6 +73,7 @@ export class MonitorHttpService {
     public getCoreCount() {
         return this._getCurrentAccount().flatMap(resourceId => {
             return this._getMetrics(this._coreCountMetrics, resourceId, (name) => {
+                // trim ending words for a shorter label
                 return name.replace(" core count", "");
             });
         }).share();
@@ -97,7 +102,8 @@ export class MonitorHttpService {
         // Note that here only take first word to truncate legends for node states chart
         return this._getCurrentAccount().flatMap(resourceId => {
             return this._getMetrics(this._nodeStateMetrics, resourceId, (name) => {
-                return name.replace(" node count", "").replace("nodecount", "");
+                // trim ending words for a shorter label
+                return name.replace(" node count", "");
             });
         }).share();
     }
@@ -122,14 +128,12 @@ export class MonitorHttpService {
             return this.armService.get(url, options).flatMap(value => {
                 const metrics: Metric[] = value.json().value.map((object): Metric => {
                     object.name.localizedValue = this._convertToSentenceCase(object.name.localizedValue);
-                    object.name.value = object.name.value.toLowerCase();
+                    object.name.value = object.name.value;
                     // format localized name
                     const localizedValue = object.name.localizedValue;
-                    const nameValue = object.name.value;
 
                     if (customNameFunc) {
                         object.name.localizedValue = customNameFunc(localizedValue);
-                        object.name.value = customNameFunc(nameValue);
                     }
 
                     const colorFound = metric.colors.find((c) => c.state === object.name.value);

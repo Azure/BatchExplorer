@@ -56,7 +56,7 @@ export enum MonitorChartMetricsParams {
 /**
  * MonitorChartColor defines the interface of chart color name value pair
  */
-export interface MonitorChartColor {
+export interface MonitorChartColorPair {
     state: string;
     color: string;
 }
@@ -67,7 +67,7 @@ export interface MonitorChartColor {
 export interface MonitorMetrics {
     metrics: MonitorChartMetrics[];
     aggregation: MonitorChartAggregation[];
-    colors: MonitorChartColor[];
+    colors: MonitorChartColorPair[];
     setTimeFrame(timeFrame: MonitorChartTimeFrame): void;
     getRequestUrl(resourceId: string): string;
     getRequestOptions(): RequestOptions;
@@ -87,7 +87,7 @@ const parameterDelimiter = ",";
 export class MonitorMetricsBase implements MonitorMetrics {
     public metrics: MonitorChartMetrics[];
     public aggregation: MonitorChartAggregation[];
-    public colors: MonitorChartColor[];
+    public colors: MonitorChartColorPair[];
 
     // Set internally
     // supported interval are: 00:01:00,00:05:00,00:15:00,00:30:00,01:00:00,06:00:00,12:00:00,1.00:00:00
@@ -95,11 +95,15 @@ export class MonitorMetricsBase implements MonitorMetrics {
     private _timeSpanStart: string;
     private _timeSpanEnd: string;
 
-    constructor(metrics: MonitorChartMetrics[], aggregation: MonitorChartAggregation[], colors?: MonitorChartColor[]) {
+    constructor(metrics: MonitorChartMetrics[], aggregation: MonitorChartAggregation[] ) {
         this.metrics = metrics;
         this.aggregation = aggregation;
-        this.colors = colors;
         this.setTimeFrame(MonitorChartTimeFrame.Hour);
+    }
+
+    /** Set theme colors after calling themeService */
+    public setColor(colors?: MonitorChartColorPair[]) {
+        this.colors = colors;
     }
 
     /**
