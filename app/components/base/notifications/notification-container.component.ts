@@ -1,6 +1,6 @@
-import { Component } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy } from "@angular/core";
 import { List } from "immutable";
-import { Observable } from "rxjs";
+import { Subscription } from "rxjs";
 
 import { Notification } from "./notification";
 import { NotificationService } from "./notification-service";
@@ -8,15 +8,25 @@ import { NotificationService } from "./notification-service";
 @Component({
     selector: "bl-notification-container",
     templateUrl: "notification-container.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class NotificationContainerComponent {
-    public notifications: Observable<List<Notification>>;
+export class NotificationContainerComponent implements OnDestroy {
+    public notifications: List<Notification>;
 
-    constructor(notificationService: NotificationService) {
-        this.notifications = notificationService.notifications;
+    private _sub: Subscription;
+
+    constructor(notificationService: NotificationService, changeDetector: ChangeDetectorRef) {
+        this._sub = notificationService.notifications.subscribe((notifications) => {
+            this.notifications = notifications;
+            changeDetector.markForCheck();
+        });
+    }
+
+    public ngOnDestroy() {
+        this._sub.unsubscribe();
     }
 
     public trackNotification(index, notification: Notification) {
-        return notification.id;
+        return index;
     }
 }

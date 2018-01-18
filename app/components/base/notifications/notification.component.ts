@@ -10,8 +10,7 @@ import "./notification.scss";
     templateUrl: "notification.html",
 })
 export class NotificationComponent {
-    @Input()
-    public notification: Notification;
+    @Input() public notification: Notification;
 
     @HostBinding("class")
     public get notificationClass(): string {
