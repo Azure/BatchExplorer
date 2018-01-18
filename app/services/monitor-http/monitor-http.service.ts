@@ -68,7 +68,9 @@ export class MonitorHttpService {
      */
     public getCoreCount() {
         return this._getCurrentAccount().flatMap(resourceId => {
-            return this._getMetrics(this._coreCountMetrics, resourceId);
+            return this._getMetrics(this._coreCountMetrics, resourceId, (name) => {
+                return name.replace(" core count", "");
+            });
         }).share();
     }
 

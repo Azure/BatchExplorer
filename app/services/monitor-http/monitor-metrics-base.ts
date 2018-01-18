@@ -25,6 +25,7 @@ export enum MonitorChartType {
  */
 export enum MonitorChartMetrics {
     CoreCount = "CoreCount",
+    LowPriorityCoreCount = "LowPriorityCoreCount",
     TaskStartEvent = "TaskStartEvent",
     TaskCompleteEvent = "TaskCompleteEvent",
     TaskFailEvent = "TaskFailEvent",

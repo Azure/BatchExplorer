@@ -6,6 +6,6 @@ const statesColor = [
 
 export class FailedTaskMetrics extends MonitorMetricsBase {
     constructor() {
-        super([ MonitorChartMetrics.TaskFailEvent ], [ MonitorChartAggregation.Total], statesColor);
+        super([ MonitorChartMetrics.TaskFailEvent ], [ MonitorChartAggregation.Total ], statesColor);
     }
 }
