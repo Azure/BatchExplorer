@@ -97,7 +97,6 @@ export class NotificationService {
 
     private _registerForDismiss(notification: Notification) {
         this._dismissTimers[notification.id] = new NotificationTimer(() => {
-            console.log("NOtification dismiss");
             this.dismiss(notification, true);
         }, notification.config.autoDismiss);
     }

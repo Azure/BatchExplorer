@@ -15,7 +15,6 @@ export function CssColor<T>(name?: string) {
 export class ThemeElement {
     public asCss(): Array<{ key: string, value: string }> {
         const metadata = Reflect.getMetadata(attrMetadataKey, this.constructor) || {};
-        console.log("Metadata", metadata);
         let css = [];
         for (const key of Object.keys(metadata)) {
             const { name } = metadata[key];
