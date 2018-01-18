@@ -15,7 +15,7 @@ import { Theme } from "./theme.model";
  */
 @Injectable()
 export class ThemeService {
-    public defaultTheme = "banana2";
+    public defaultTheme = "classic";
     public currentTheme: Observable<Theme>;
     private _currentTheme = new BehaviorSubject(null);
     private _watcher: FSWatcher;
