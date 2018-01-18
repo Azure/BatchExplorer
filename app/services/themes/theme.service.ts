@@ -7,7 +7,7 @@ const stripJsonComments = require("strip-json-comments");
 
 import { FileSystemService } from "app/services/fs.service";
 import { Constants, log } from "app/utils";
-import { ColorPalette, EntityColor, Theme } from "./theme.model";
+import { Theme } from "./theme.model";
 
 /**
  * Service handling theme selection
