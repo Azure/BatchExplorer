@@ -9,7 +9,6 @@ import {
 import { NotificationService } from "app/components/base/notifications";
 import { AccountService, AdalService, ElectronRemote, ElectronShell, FileSystemService } from "app/services";
 import { Constants, OS } from "app/utils";
-import { jobsCrumb } from "test/app/components/base/breadcrumbs/crumbs-data";
 import "./main-navigation.scss";
 
 @Component({

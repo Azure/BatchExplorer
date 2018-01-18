@@ -103,8 +103,8 @@ export class JobScheduleService extends ServiceBase {
         return this.callBatchClient((client) => client.jobSchedule.terminate(jobId, options));
     }
 
-    public disable(jobId: string, disableTasks: string, options: any = {}): Observable<{}> {
-        return this.callBatchClient((client) => client.jobSchedule.disable(jobId, disableTasks, options));
+    public disable(jobId: string, options: any = {}): Observable<{}> {
+        return this.callBatchClient((client) => client.jobSchedule.disable(jobId, options));
     }
 
     public enable(jobId: string, options: any = {}): Observable<{}> {
