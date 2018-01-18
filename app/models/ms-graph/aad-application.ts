@@ -9,6 +9,7 @@ export interface AADApplicationAttributes {
     deletedDateTime: Date;
     allowPublicClient: boolean;
     createdDateTime: Date;
+    publicClient: boolean;
     tags: string[];
     passwordCredentials: PasswordCredentialsAttributes[];
 }
@@ -25,6 +26,22 @@ export class AADApplication extends Record<AADApplicationAttributes> {
     @Prop() public homepage: string;
     @Prop() public logoutUrl: string;
     @Prop() public publisherName: string;
+    @Prop() public publicClient: boolean;
     @ListProp(String) public tags: List<string>;
     @ListProp(PasswordCredentials) public passwordCredentials: List<PasswordCredentials>;
+
+    constructor(data) {
+        super({
+            ...data,
+            id: data.appId,
+        });
+    }
+
+    public get isApiApp(): boolean {
+        return !this.publicClient;
+    }
+
+    public get isNativeApp(): boolean {
+        return Boolean(this.publicClient);
+    }
 }

@@ -4,7 +4,9 @@ import { Observable } from "rxjs";
 import { AADApplication } from "app/models/ms-graph";
 import { DataCache, ListOptionsAttributes, ListView } from "app/services/core";
 import { SecureUtils } from "app/utils";
-import { AADGraphHttpService, MsGraphEntityGetter, MsGraphHttpService, MsGraphListGetter } from "./core";
+import {
+    AADGraphEntityGetter, AADGraphHttpService, AADGraphListGetter,
+} from "./core";
 
 export interface AADApplicationListParams {
     owned?: boolean;
@@ -16,25 +18,26 @@ export interface AADApplicationParams {
 
 @Injectable()
 export class AADApplicationService {
-    private _getter: MsGraphEntityGetter<AADApplication, AADApplicationParams>;
-    private _listGetter: MsGraphListGetter<AADApplication, AADApplicationListParams>;
+    private _getter: AADGraphEntityGetter<AADApplication, AADApplicationParams>;
+    private _listGetter: AADGraphListGetter<AADApplication, AADApplicationListParams>;
     private _cache = new DataCache<AADApplication>();
 
-    constructor(private aadGraph: AADGraphHttpService, msGraph: MsGraphHttpService) {
-        this._getter = new MsGraphEntityGetter(AADApplication, msGraph, {
+    constructor(private aadGraph: AADGraphHttpService) {
+        this._getter = new AADGraphEntityGetter(AADApplication, aadGraph, {
             cache: () => this._cache,
-            uri: ({ id }) => `/applications/${id}`,
+            uri: ({ id }) => `/applicationsByAppId/${id}`,
         });
 
-        this._listGetter = new MsGraphListGetter(AADApplication, msGraph, {
+        this._listGetter = new AADGraphListGetter(AADApplication, aadGraph, {
             cache: () => this._cache,
             uri: ({ owned }) => {
                 if (owned) {
-                    return `/me/ownedObjects/$/microsoft.graph.application`;
+                    return `/me/ownedObjects/$/Microsoft.DirectoryServices.Application`;
                 } else {
                     return `/applications`;
                 }
             },
+            filter: (obj: any) => obj.objectType === "Application",
         });
     }
 
@@ -62,7 +65,13 @@ export class AADApplicationService {
         const endDate = new Date(2299, 12, 31);
         return this.get(appId).flatMap((app) => {
             const existingKeys = app.passwordCredentials.map((cred) => {
-                return { keyId: cred.keyId };
+                return {
+                    keyId: cred.keyId,
+                    customKeyIdentifier: cred.customKeyIdentifier,
+                    startDate: cred.startDate,
+                    endDate: cred.endDate,
+                    value: null,
+                };
             }).toJS();
             return this.aadGraph.patch(`/applicationsByAppId/${appId}`, {
                 passwordCredentials: [...existingKeys, {

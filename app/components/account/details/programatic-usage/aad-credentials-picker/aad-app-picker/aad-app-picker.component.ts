@@ -25,12 +25,10 @@ export class AADAppPickerComponent implements OnInit, OnDestroy {
 
     public apps: List<ServicePrincipal> = List([]);
 
-    public searchAppControl = new FormControl("");
     private _allAppsView: ListView<AADApplication, AADApplicationListParams>;
     private _permissions = new Map<string, string>();
     private _roleDefs = new Map<string, string>();
     private _appMap = new Map<string, ServicePrincipal>();
-    // private _appMap = new Map<string, string>;
 
     constructor(
         private servicePrincipalService: ServicePrincipalService,
@@ -42,22 +40,11 @@ export class AADAppPickerComponent implements OnInit, OnDestroy {
         this._allAppsView = aadApplicationService.listView();
         this._allAppsView.params = { owned: true };
         this._allAppsView.items.subscribe((apps) => {
+            // Only take web apps(exclude native apps)
+            apps = List(apps.filter(x => x.isApiApp));
             this.apps = apps;
             this._updateAppMap(apps.toArray());
             this.changeDetector.markForCheck();
-        });
-
-        this.searchAppControl.valueChanges.debounceTime(400).subscribe((query) => {
-            let options;
-            if (query) {
-                options = {
-                    $filter: FilterBuilder.prop("displayName").startswith(query).toOData(),
-                };
-            } else {
-                options = {};
-            }
-            this._allAppsView.setOptions(options);
-            this._allAppsView.refresh();
         });
     }
 

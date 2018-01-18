@@ -21,28 +21,10 @@ bl-aad-app-picker {
 
         > .create-new {
             grid-row: 1;
-            grid-column: 3;
-        }
-
-        > .search {
-            grid-row: 1;
             grid-column: 4;
-            align-items: end;
-            > input {
-                flex: 1 0 auto;
-                padding: 5px;
-                color: $emperor-grey;
-                font-size: 1.1em;
-                height: 26px;
 
-                background-color: $athensGrey;
-                border: none;
+            > bl-button {
                 width: 100%;
-
-                &:focus {
-                    outline: none;
-                    border-bottom: 2px solid map-get($primary, 500);
-                }
             }
         }
 
