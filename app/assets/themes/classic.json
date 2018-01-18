@@ -10,9 +10,6 @@
     "primary": "#212121",
     "secondary": "#757575"
   },
-  "card": {
-    "background": "red"
-  },
   "breadcrumb": {
     "text": "white",
     "background": "#5b5b5b",
