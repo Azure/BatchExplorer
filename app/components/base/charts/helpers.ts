@@ -60,8 +60,8 @@ export function formatLineColor(colors: number[]): Color {
         backgroundColor: rgba(colors, 0.4),
         borderColor: rgba(colors, 1),
         pointBackgroundColor: rgba(colors, 1),
-        pointBorderColor: "$main-background",
-        pointHoverBackgroundColor: "$main-background",
+        pointBorderColor: "#fff",
+        pointHoverBackgroundColor: "#fff",
         pointHoverBorderColor: rgba(colors, 0.8),
     };
 }
@@ -85,9 +85,9 @@ export function formatBarColor(colors: number[]): Color {
 export function formatPieColors(colors: number[][]): Colors {
     return {
         backgroundColor: colors.map((color: number[]) => rgba(color, 0.6)),
-        borderColor: colors.map(() => "$main-background"),
+        borderColor: colors.map(() => "#fff"),
         pointBackgroundColor: colors.map((color: number[]) => rgba(color, 1)),
-        pointBorderColor: colors.map(() => "$main-background"),
+        pointBorderColor: colors.map(() => "#fff"),
         pointHoverBackgroundColor: colors.map((color: number[]) => rgba(color, 1)),
         pointHoverBorderColor: colors.map((color: number[]) => rgba(color, 1)),
     };
