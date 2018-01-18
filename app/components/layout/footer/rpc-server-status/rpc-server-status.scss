@@ -17,7 +17,7 @@ bl-rpc-server-status {
         background-color: $primary-color;
 
         &:hover, &.active {
-            background-color: $dark-primary-color;
+            background-color: $primary-color-dark;
         }
         .fa {
             margin-right: 2px;

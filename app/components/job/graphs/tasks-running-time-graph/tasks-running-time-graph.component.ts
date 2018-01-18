@@ -6,6 +6,7 @@ import * as moment from "moment";
 import { Subscription } from "rxjs";
 
 import { Job, Task } from "app/models";
+import { Theme, ThemeService } from "app/services";
 import { DateUtils } from "app/utils";
 import "./tasks-running-time-graph.scss";
 
@@ -34,17 +35,7 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges, OnDest
 
     public type = "scatter";
 
-    public colors: any[] = [
-        {
-            pointBackgroundColor: "var(--error-color)",
-            pointBorderColor: "var(--error-color)",
-        },
-        {
-
-            pointBackgroundColor: "var(--accent-color)",
-            pointBorderColor: "var(--accent-color)",
-        },
-    ];
+    public colors: any[] = [];
 
     public labels = null;
 
@@ -58,14 +49,17 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges, OnDest
 
     private _failedTasks: TaskPoint[];
     private _succeededTasks: TaskPoint[];
-    private _sub: Subscription;
+    private _subs: Subscription[] = [];
 
-    constructor(private router: Router) {
+    constructor(private router: Router, themeService: ThemeService) {
         this.updateOptions();
         this.updateData();
-        this._sub = this.sortControl.valueChanges.subscribe(() => {
+        this._subs.push(this.sortControl.valueChanges.subscribe(() => {
             this.updateData();
-        });
+        }));
+        this._subs.push(themeService.currentTheme.subscribe((theme) => {
+            this._updateColors(theme);
+        }));
     }
 
     public ngOnInit() {
@@ -73,7 +67,7 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges, OnDest
     }
 
     public ngOnDestroy() {
-        this._sub.unsubscribe();
+        this._subs.forEach(x => x.unsubscribe());
     }
 
     public ngOnChanges(changes: SimpleChanges) {
@@ -234,5 +228,19 @@ export class TasksRunningTimeGraphComponent implements OnInit, OnChanges, OnDest
             point = this._succeededTasks[index];
         }
         return point && point.task;
+    }
+
+    private _updateColors(theme: Theme) {
+        this.colors = [
+            {
+                pointBackgroundColor: theme.danger.main,
+                pointBorderColor: theme.danger.main,
+            },
+            {
+
+                pointBackgroundColor: theme.success.main,
+                pointBorderColor: theme.success.main,
+            },
+        ];
     }
 }

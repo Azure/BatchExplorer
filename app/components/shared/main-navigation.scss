@@ -4,6 +4,7 @@ bl-app-nav {
     height: 100%;
     display: flex;
     flex-direction: column;
+    background-color: map-get($navigation-color, bg);
 
     > ul {
         margin: 0;
@@ -23,7 +24,7 @@ bl-app-nav {
             display: block;
             padding: 13px 0;
             outline: none;
-            color: $navigation-text;
+            color: map-get($navigation-color, text);
             -webkit-user-drag: none;
 
             i.fa {
@@ -40,8 +41,8 @@ bl-app-nav {
             }
 
             &:hover:not(.active), &:focus:not(.active) {
-                background-color: $navigation-hover;
-                color: $white;
+                background-color: map-get($navigation-color, hover-bg);
+                color: map-get($navigation-color, hover-text);
             }
         }
         > li > .menu-items {
@@ -54,13 +55,13 @@ bl-app-nav {
             color: $navigation-text;
             -webkit-user-drag: none;
             z-index: 99999;
-            background-color: $navigation-background;
+            background-color: map-get($navigation-color, bg);
 
             > a {
                 padding: 13px 5px;
                 &:hover, &:focus {
-                    background-color: $navigation-hover;
-                    color: $white;
+                    background-color: map-get($navigation-color, hover-bg);
+                    color: map-get($navigation-color, hover-text);
                 }
             }
         }

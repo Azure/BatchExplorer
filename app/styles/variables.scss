@@ -46,10 +46,7 @@ $link-color                 : map-get($primary, 700);
 $link-alt-color             : map-get($primary, 300);
 $link-color-hover           : map-get($primary, 800);
 $validation-error-color     : map-get($danger, 500);
-$label-text                 : $dusty-grey;
 
-$folder-color: #f8d979;
-$outline-color: #528bff;
 
 $font-size-base     : 13px;
 $font-size-large    : 15px;
@@ -71,8 +68,6 @@ $h5FontSize         : $font-size-base * 1.1;
 $h6FontSize         : $font-size-base;
 
 // Theme
-$body-background: $whiteSmoke-darker;
-$content-background :  $whiteSmoke-darker;
 $listview-background :  white;
 $footer-background: map-get($primary, 200);
 $navigation-text: $whiteSmoke;
@@ -92,10 +87,3 @@ $contentview-height                  : calc(100vh - #{$header-height} - #{$foote
 
 // Base component dimensions
 $action-btn-size: 32px;
-
-// Headers and navigation
-//----------------------------------------------
-$header-background      : $mineshaft-grey;
-$header-hover           : $genericGray;
-$navigation-background  : $scorpion;
-$navigation-hover       : $dove-grey;

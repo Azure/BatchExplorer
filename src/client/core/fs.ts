@@ -1,3 +1,4 @@
+import * as chokidar from "chokidar";
 import { FileUtils } from "client/api";
 import { logger } from "client/logger";
 import { app } from "electron";
@@ -110,6 +111,10 @@ export class FileSystem {
                 resolve(files);
             });
         });
+    }
+
+    public watch(path: string): chokidar.FSWatcher {
+        return chokidar.watch(path);
     }
 
     private _writeFile(path: string, content: string): Promise<string> {

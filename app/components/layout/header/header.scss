@@ -4,8 +4,8 @@ bl-header {
     display: flex;
     user-select: none;
     height: $header-height;
-    color: $whitesmoke;
-    background-color: $header-background;
+    color: map-get($header-color, text);
+    background-color: map-get($header-color, bg);
     width: 100vw;
     font-size: 12px;
     line-height: $footer-height;
@@ -20,13 +20,13 @@ bl-header {
             display:  inline-block;
             width: 34px;
             height: $header-height;
-            color: $text-color;
+            color: map-get($header-color, text);
             cursor: pointer;
             text-align: center;
 
             &:hover, &:focus {
-                background-color: $header-hover;
-                color: $text-color;
+                background-color: map-get($header-color, hover-bg);
+                color: map-get($header-color, hover-text);
             }
 
             > .fa {
@@ -43,8 +43,8 @@ bl-header {
         font-size: 16px;
 
         &:hover, &:focus {
-            background-color: $header-hover;
-            color: $text-color;
+            background-color: map-get($header-color, hover-bg);
+            color: map-get($header-color, hover-text);
         }
 
         > .fa {

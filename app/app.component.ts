@@ -8,7 +8,7 @@ import { registerIcons } from "app/config";
 import {
     AccountService, AdalService, AutoscaleFormulaService, CommandService, MonacoLoader,
     NavigatorService, NcjTemplateService, NodeService, PredefinedFormulaService, PricingService,
-    PythonRpcService, SSHKeyService, SettingsService, SubscriptionService, VmSizeService,
+    PythonRpcService, SSHKeyService, SettingsService, SubscriptionService, ThemeService, VmSizeService,
 } from "app/services";
 import { ipcRenderer } from "electron";
 
@@ -34,6 +34,7 @@ export class AppComponent implements OnInit {
         private sshKeyService: SSHKeyService,
         pythonRpcService: PythonRpcService,
         private vmSizeService: VmSizeService,
+        themeService: ThemeService,
         private route: ActivatedRoute,
         monacoLoader: MonacoLoader,
         private pricingService: PricingService,
@@ -51,6 +52,7 @@ export class AppComponent implements OnInit {
         this.ncjTemplateService.init();
         pythonRpcService.init();
         this.predefinedFormulaService.init();
+        themeService.init();
         monacoLoader.get();
 
         Observable
