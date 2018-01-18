@@ -22,7 +22,6 @@ export class ThemeService {
     constructor(private fs: FileSystemService, private notificationService: NotificationService, private zone: NgZone) {
         this.currentTheme = this._currentTheme.filter(x => x !== null);
         this.currentTheme.subscribe((theme) => {
-            console.log("Apply tehem", theme);
             this._applyTheme(theme);
         });
     }
@@ -37,7 +36,7 @@ export class ThemeService {
     }
 
     private async _loadTheme(name: string): Promise<Theme> {
-        const filePath = path.join(Constants.Client.resourcesFolder, "app", "assets", "themes", `${name}.json`);
+        const filePath = path.join(Constants.Client.resourcesFolder, "data", "themes", `${name}.json`);
         const theme = await this._loadThemeAt(filePath);
         this._watchThemeFile(filePath);
         return theme;
