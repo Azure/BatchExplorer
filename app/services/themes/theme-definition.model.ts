@@ -66,4 +66,8 @@ export interface ThemeDefinition {
      * Breadcrumb color
      */
     breadcrumb: EntityColorDefinition;
+
+    "file-explorer": {
+        "folder-icon": string;
+    };
 }

@@ -30,5 +30,8 @@
     "text": "whitesmoke",
     "background": "var(--color-primary)",
     "hover": "#757575"
+  },
+  "file-explorer": {
+    "folder-icon": "#f8d979"
   }
 }

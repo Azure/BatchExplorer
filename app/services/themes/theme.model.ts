@@ -68,6 +68,15 @@ export class EntityColor extends ThemeElement {
     }
 }
 
+export class FileExplorerColors extends ThemeElement {
+    @CssColor("folder-icon") public folderIcon: string;
+
+    constructor(def: ThemeDefinition["file-explorer"]) {
+        super();
+        this.folderIcon = def["folder-icon"];
+    }
+}
+
 export class TextColor extends ThemeElement {
     @CssColor() public primary: string;
     @CssColor() public secondary: string;
@@ -92,6 +101,7 @@ export class Theme extends ThemeElement {
     @CssColor() public navigation: EntityColor;
     @CssColor() public footer: EntityColor;
     @CssColor() public breadcrumb: EntityColor;
+    @CssColor("file-explorer") public fileExplorer: FileExplorerColors;
 
     constructor(theme: ThemeDefinition) {
         super();
@@ -107,6 +117,7 @@ export class Theme extends ThemeElement {
         this.navigation = new EntityColor(theme.navigation);
         this.footer = new EntityColor(theme.footer);
         this.breadcrumb = new EntityColor(theme.breadcrumb);
+        this.fileExplorer = new FileExplorerColors(theme["file-explorer"]);
     }
 
 }

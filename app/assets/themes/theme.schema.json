@@ -33,6 +33,12 @@
     "header": {"$ref": "#/definitions/entity-colors"},
     "navigation": {"$ref": "#/definitions/entity-colors"},
     "footer": {"$ref": "#/definitions/entity-colors"},
-    "breadcrumb": {"$ref": "#/definitions/entity-colors"}
+    "breadcrumb": {"$ref": "#/definitions/entity-colors"},
+    "file-explorer": {
+      "type": "object",
+      "properties": {
+        "folder-icon": {"$ref": "#/definitions/color"}
+      }
+    }
   }
 }
