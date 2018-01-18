@@ -37,6 +37,8 @@ export interface ThemeDefinition {
      */
     "card-background": string;
 
+    outline: string;
+
     /**
      * Generic text color,
      */

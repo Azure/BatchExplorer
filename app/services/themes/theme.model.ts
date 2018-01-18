@@ -86,6 +86,7 @@ export class Theme extends ThemeElement {
     @CssColor() public success: ColorPalette;
     @CssColor("main-background") public mainBackground: string;
     @CssColor("card-background") public cardBackground: string;
+    @CssColor() public outline: string;
     @CssColor() public text: TextColor;
     @CssColor() public header: EntityColor;
     @CssColor() public navigation: EntityColor;
@@ -98,6 +99,7 @@ export class Theme extends ThemeElement {
         this.danger = new ColorPalette(theme.danger);
         this.warn = new ColorPalette(theme.warn);
         this.success = new ColorPalette(theme.success);
+        this.outline = theme.outline;
         this.mainBackground = theme["main-background"];
         this.cardBackground = theme["card-background"];
         this.text = new TextColor(theme.text);

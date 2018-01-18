@@ -6,6 +6,7 @@
   "success": "#4caf50",
   "main-background": "#f5f5f5",
   "card-background": "white",
+  "outline": "#528bff",
   "text": {
     "primary": "",
     "secondary": "#757575"
