@@ -3,38 +3,45 @@ import { Observable } from "rxjs";
 
 import { ServicePrincipal } from "app/models/ms-graph";
 import { DataCache, ListOptionsAttributes, ListView } from "app/services/core";
-import { MsGraphEntityGetter, MsGraphHttpService, MsGraphListGetter } from "./core";
-// import {  } from "./core/ms-graph-http.service";
+import { AADGraphEntityGetter, AADGraphHttpService, AADGraphListGetter } from "./core";
 
 export interface ServicePrincipalListParams {
     owned?: boolean;
 }
 
 export interface ServicePrincipalParams {
-    id: string;
+    id?: string;
+    appId?: string;
 }
 
 @Injectable()
 export class ServicePrincipalService {
-    private _getter: MsGraphEntityGetter<ServicePrincipal, ServicePrincipalParams>;
-    private _listGetter: MsGraphListGetter<ServicePrincipal, ServicePrincipalListParams>;
+    private _getter: AADGraphEntityGetter<ServicePrincipal, ServicePrincipalParams>;
+    private _listGetter: AADGraphListGetter<ServicePrincipal, ServicePrincipalListParams>;
     private _cache = new DataCache<ServicePrincipal>();
 
-    constructor(msGraph: MsGraphHttpService) {
-        this._getter = new MsGraphEntityGetter(ServicePrincipal, msGraph, {
+    constructor(aadGraph: AADGraphHttpService) {
+        this._getter = new AADGraphEntityGetter(ServicePrincipal, aadGraph, {
             cache: () => this._cache,
-            uri: ({ id }) => `/servicePrincipals/${id}`,
+            uri: ({ id, appId }) => {
+                if (id) {
+                    return `/servicePrincipals/${id}`;
+                } else {
+                    return `/servicePrincipalsByAppId/${appId}`;
+                }
+            },
         });
 
-        this._listGetter = new MsGraphListGetter(ServicePrincipal, msGraph, {
+        this._listGetter = new AADGraphListGetter(ServicePrincipal, aadGraph, {
             cache: () => this._cache,
             uri: ({ owned }) => {
                 if (owned) {
-                    return `/me/ownedObjects/$/microsoft.graph.servicePrincipal`;
+                    return `/me/ownedObjects`;
                 } else {
                     return `/servicePrincipals`;
                 }
             },
+            filter: (obj: any) => obj.objectType === "ServicePrincipal",
         });
     }
 
@@ -43,6 +50,13 @@ export class ServicePrincipalService {
      */
     public get(principalId: string): Observable<ServicePrincipal> {
         return this._getter.fetch({ id: principalId });
+    }
+
+    /**
+     * @returns principal with given id
+     */
+    public getByAppId(appId: string): Observable<ServicePrincipal> {
+        return this._getter.fetch({ appId });
     }
 
     public listView(options: ListOptionsAttributes = {}): ListView<ServicePrincipal, ServicePrincipalListParams> {
@@ -54,6 +68,6 @@ export class ServicePrincipalService {
     }
 
     public listAllOwned() {
-        this._listGetter.fetchAll({owned: true});
+        this._listGetter.fetchAll({ owned: true });
     }
 }

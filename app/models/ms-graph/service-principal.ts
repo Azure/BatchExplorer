@@ -29,4 +29,11 @@ export class ServicePrincipal extends Record<ServicePrincipalAttributes> {
     @Prop() public logoutUrl: string;
     @Prop() public publisherName: string;
     @ListProp(String) public tags: List<string>;
+
+    constructor(data) {
+        super({
+            ...data,
+            id: data.objectId,
+        });
+    }
 }
