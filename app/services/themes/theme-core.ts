@@ -32,8 +32,8 @@ export class ThemeElement {
                     };
                 }));
             } else {
-                log.error("Theme element has unknown attribute."
-                    + "If attribute not a string make sure to extends ThemeElement", { key, name });
+                log.error(`Theme element has unknown attribute. ${key}`
+                    + "If attribute not a string make sure to extends ThemeElement", { key, name, value });
             }
         }
         return css;

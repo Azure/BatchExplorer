@@ -39,6 +39,13 @@
       "properties": {
         "folder-icon": {"$ref": "#/definitions/color"}
       }
+    },
+    "button": {
+      "type": "object",
+      "properties": {
+        "disabled-text": {"$ref": "#/definitions/color"},
+        "disabled-bg": {"$ref": "#/definitions/color"}
+      }
     }
   }
 }

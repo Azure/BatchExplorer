@@ -70,4 +70,9 @@ export interface ThemeDefinition {
     "file-explorer": {
         "folder-icon": string;
     };
+
+    button: {
+        "disabled-text": string;
+        "disabled-bg": string;
+    };
 }

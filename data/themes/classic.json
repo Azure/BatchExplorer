@@ -33,5 +33,9 @@
   },
   "file-explorer": {
     "folder-icon": "#f8d979"
+  },
+  "button": {
+    "disabled-text": "#d5d5d5",
+    "disabled-bg": "#f5f5f5"
   }
 }

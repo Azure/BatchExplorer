@@ -77,6 +77,17 @@ export class FileExplorerColors extends ThemeElement {
     }
 }
 
+export class ButtonColors extends ThemeElement {
+    @CssColor("disabled-text") public disabledText: string;
+    @CssColor("disabled-bg") public disabledBg: string;
+
+    constructor(def: ThemeDefinition["button"]) {
+        super();
+        this.disabledText = def["disabled-text"];
+        this.disabledBg = def["disabled-bg"];
+    }
+}
+
 export class TextColor extends ThemeElement {
     @CssColor() public primary: string;
     @CssColor() public secondary: string;
@@ -102,6 +113,7 @@ export class Theme extends ThemeElement {
     @CssColor() public footer: EntityColor;
     @CssColor() public breadcrumb: EntityColor;
     @CssColor("file-explorer") public fileExplorer: FileExplorerColors;
+    @CssColor() public button: ButtonColors;
 
     constructor(theme: ThemeDefinition) {
         super();
@@ -118,6 +130,7 @@ export class Theme extends ThemeElement {
         this.footer = new EntityColor(theme.footer);
         this.breadcrumb = new EntityColor(theme.breadcrumb);
         this.fileExplorer = new FileExplorerColors(theme["file-explorer"]);
+        this.button = new ButtonColors(theme.button);
     }
 
 }
