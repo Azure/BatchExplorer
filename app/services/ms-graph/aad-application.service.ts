@@ -16,6 +16,24 @@ export interface AADApplicationParams {
     id: string;
 }
 
+export interface SecretParams {
+    /**
+     * Description for the secret.
+     * @default "BatchLabs secret"
+     */
+    name?: string;
+
+    /**
+     * @default generate secret
+     */
+    value?: string;
+
+    /**
+     *
+     */
+    endDate?: Date;
+}
+
 @Injectable()
 export class AADApplicationService {
     private _getter: AADGraphEntityGetter<AADApplication, AADApplicationParams>;
@@ -60,11 +78,13 @@ export class AADApplicationService {
         this._listGetter.fetchAll({ owned: true });
     }
 
-    public createSecret(appId: string, name: string) {
+    public createSecret(appId: string, secret: SecretParams = {}, reset = false) {
         const startDate = new Date();
-        const endDate = new Date(2299, 12, 31);
+        const endDate = secret.endDate || new Date(2299, 12, 31);
+        const name = secret.name || "BatchLabs secret";
+        const value = secret.value || SecureUtils.token();
         return this.get(appId).flatMap((app) => {
-            const existingKeys = app.passwordCredentials.map((cred) => {
+            const existingKeys = reset ? [] : app.passwordCredentials.map((cred) => {
                 return {
                     keyId: cred.keyId,
                     customKeyIdentifier: cred.customKeyIdentifier,
@@ -79,7 +99,7 @@ export class AADApplicationService {
                     endDate: endDate.toISOString(),
                     keyId: SecureUtils.uuid(),
                     startDate: startDate.toISOString(),
-                    value: SecureUtils.token(),
+                    value,
                 }],
             });
         }).shareReplay(1);
