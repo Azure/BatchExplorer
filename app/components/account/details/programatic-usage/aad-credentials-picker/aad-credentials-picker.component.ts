@@ -23,6 +23,11 @@ export class AADCredentialsPickerComponent {
     public pickedApplication: AADApplication;
     public pickedSecret: PasswordCredential;
     public currentStep = Step.pickApplication;
+
+    public get tenantId() {
+        return this.account && this.account.subscription.tenantId;
+    }
+
     constructor(private changeDetector: ChangeDetectorRef) {
     }
 
