@@ -4,12 +4,13 @@ import {
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
-import { RoleAssignmentPrincipalType } from "app/models";
+import { RoleAssignmentPrincipalType, ServerError } from "app/models";
 import { AADApplication, ServicePrincipal } from "app/models/ms-graph";
 import { ArmHttpService, AuthorizationHttpService, ResourceAccessService } from "app/services";
 import { ListView } from "app/services/core";
 import { AADApplicationListParams, AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
 
+import { HttpCode } from "common/constants";
 import "./aad-app-picker.scss";
 
 @Component({
@@ -97,13 +98,19 @@ export class AADAppPickerComponent implements OnInit, OnDestroy {
 
             this._loadRoleDefinitions(apps.map(x => x.properties.roleDefinitionId));
             const obs = apps.map((x) => {
-                return this.servicePrincipalService.get(x.properties.principalId);
+                return this.servicePrincipalService.get(x.properties.principalId).catch((error: ServerError) => {
+                    if (error.status === HttpCode.NotFound) {
+                        return Observable.of(null);
+                    }
+                });
             });
 
             Observable.forkJoin(obs).subscribe((servicePrincipals: ServicePrincipal[]) => {
                 for (const [index, servicePrincipal] of servicePrincipals.entries()) {
-                    const role = apps[index];
-                    this._roleDefs.set(servicePrincipal.appId, role.properties.roleDefinitionId);
+                    if (servicePrincipal) {
+                        const role = apps[index];
+                        this._roleDefs.set(servicePrincipal.appId, role.properties.roleDefinitionId);
+                    }
                 }
                 this.changeDetector.markForCheck();
             });

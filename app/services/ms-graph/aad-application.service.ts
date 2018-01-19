@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { AADApplication, PasswordCredential } from "app/models/ms-graph";
+import { AADApplication, PasswordCredential, PasswordCredentialAttributes } from "app/models/ms-graph";
 import { DataCache, ListOptionsAttributes, ListView } from "app/services/core";
 import { SecureUtils } from "app/utils";
 import {
@@ -84,6 +84,7 @@ export class AADApplicationService {
     }
 
     public create(application: ApplicationCreateParams): Observable<AADApplication> {
+        const secretAttributes = this._builtSecret(application.secret);
         const name = application.name.replace(/ /g, "-");
         return this.aadGraph.post("/applications", {
             displayName: application.name,
@@ -91,37 +92,36 @@ export class AADApplicationService {
             identifierUris: [`https://${name}`],
             availableToOtherTenants: false,
             passwordCredentials: [
-                this._builtSecret(application.secret),
+                this._secretToParams(secretAttributes),
             ],
-        }).map(response => new AADApplication(response));
+        }).map(response => new AADApplication({ ...response, passwordCredentials: [secretAttributes] }));
     }
 
     public createSecret(appId: string, secret: SecretParams = {}, reset = false): Observable<PasswordCredential> {
-        const startDate = new Date();
-        const endDate = secret.endDate || new Date(2299, 12, 31);
-        const name = secret.name || "BatchLabs secret";
-        const value = secret.value || SecureUtils.token();
-        const customKeyIdentifier = btoa(name);
-        const keyId = SecureUtils.uuid();
+        const secretAttributes = this._builtSecret(secret);
         return this.get(appId).flatMap((app) => {
             const existingKeys = reset ? [] : app.passwordCredentials.map((cred) => {
                 return cred._original;
             }).toJS();
             return this.aadGraph.patch(`/applicationsByAppId/${appId}`, {
-                passwordCredentials: [...existingKeys, this._builtSecret(secret)],
+                passwordCredentials: [...existingKeys, this._secretToParams(secretAttributes)],
             });
         }).map(() => {
-            return new PasswordCredential({
-                value,
-                startDate,
-                endDate,
-                keyId,
-                customKeyIdentifier,
-            });
+            return new PasswordCredential(secretAttributes);
         }).shareReplay(1);
     }
 
-    private _builtSecret(secret: SecretParams) {
+    private _secretToParams(secret: PasswordCredentialAttributes) {
+        return {
+            customKeyIdentifier: secret.customKeyIdentifier,
+            endDate: secret.endDate.toISOString(),
+            keyId: secret.keyId,
+            startDate: secret.startDate.toISOString(),
+            value: secret.value,
+        };
+    }
+
+    private _builtSecret(secret: SecretParams): PasswordCredentialAttributes {
         const startDate = new Date();
         const endDate = secret.endDate || new Date(2299, 12, 31);
         const name = secret.name || "BatchLabs secret";
@@ -131,9 +131,9 @@ export class AADApplicationService {
 
         return {
             customKeyIdentifier,
-            endDate: endDate.toISOString(),
+            endDate,
             keyId,
-            startDate: startDate.toISOString(),
+            startDate,
             value,
         };
     }
