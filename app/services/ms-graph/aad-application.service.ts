@@ -16,6 +16,11 @@ export interface AADApplicationParams {
     id: string;
 }
 
+export interface ApplicationCreateParams {
+    name?: string;
+    secret?: SecretParams;
+}
+
 export interface SecretParams {
     /**
      * Description for the secret.
@@ -78,6 +83,19 @@ export class AADApplicationService {
         this._listGetter.fetchAll({ owned: true });
     }
 
+    public create(application: ApplicationCreateParams): Observable<AADApplication> {
+        const name = application.name.replace(/ /g, "-");
+        return this.aadGraph.post("/applications", {
+            displayName: application.name,
+            homepage: `https://${name}`,
+            identifierUris: [`https://${name}`],
+            availableToOtherTenants: false,
+            passwordCredentials: [
+                this._builtSecret(application.secret),
+            ],
+        }).map(response => new AADApplication(response));
+    }
+
     public createSecret(appId: string, secret: SecretParams = {}, reset = false): Observable<PasswordCredential> {
         const startDate = new Date();
         const endDate = secret.endDate || new Date(2299, 12, 31);
@@ -90,13 +108,7 @@ export class AADApplicationService {
                 return cred._original;
             }).toJS();
             return this.aadGraph.patch(`/applicationsByAppId/${appId}`, {
-                passwordCredentials: [...existingKeys, {
-                    customKeyIdentifier,
-                    endDate: endDate.toISOString(),
-                    keyId,
-                    startDate: startDate.toISOString(),
-                    value,
-                }],
+                passwordCredentials: [...existingKeys, this._builtSecret(secret)],
             });
         }).map(() => {
             return new PasswordCredential({
@@ -109,4 +121,20 @@ export class AADApplicationService {
         }).shareReplay(1);
     }
 
+    private _builtSecret(secret: SecretParams) {
+        const startDate = new Date();
+        const endDate = secret.endDate || new Date(2299, 12, 31);
+        const name = secret.name || "BatchLabs secret";
+        const value = secret.value || SecureUtils.token();
+        const customKeyIdentifier = btoa(name);
+        const keyId = SecureUtils.uuid();
+
+        return {
+            customKeyIdentifier,
+            endDate: endDate.toISOString(),
+            keyId,
+            startDate: startDate.toISOString(),
+            value,
+        };
+    }
 }

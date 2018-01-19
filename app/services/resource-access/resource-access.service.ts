@@ -56,6 +56,12 @@ export class ResourceAccessService {
         return this._rolesListGetter.fetchAll({ scope });
     }
 
+    public getRoleByName(scope: string, name: string): Observable<RoleDefinition> {
+        return this._rolesListGetter.fetch({ scope }, { filter: `roleName eq '${name}'` }, true).map(x => {
+            return x.items.first();
+        });
+    }
+
     public createAssignment(resourceId: string, principalId: string, roleDefinitionId: string): Observable<any> {
         const id = SecureUtils.uuid();
         return this.arm.put(`${resourceId}/providers/Microsoft.Authorization/roleAssignments/${id}`, {

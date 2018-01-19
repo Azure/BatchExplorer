@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from "@a
 import { AccountResource } from "app/models";
 import { AADApplication, PasswordCredential } from "app/models/ms-graph";
 
+import { AppCreatedEvent } from "app/components/account/details/programatic-usage";
 import "./aad-credentials-picker.scss";
 
 enum Step {
@@ -31,9 +32,26 @@ export class AADCredentialsPickerComponent {
     constructor(private changeDetector: ChangeDetectorRef) {
     }
 
+    public get storageAccountId() {
+        const autoStorage = this.account && this.account.autoStorage;
+        return autoStorage && autoStorage.storageAccountId;
+    }
+
     public pickApplication(app: AADApplication) {
         this.pickedApplication = app;
         this.currentStep = Step.generateSecret;
+        this.changeDetector.markForCheck();
+    }
+
+    public createApp() {
+        this.currentStep = Step.createApplication;
+        this.changeDetector.markForCheck();
+    }
+
+    public appCreated(event: AppCreatedEvent) {
+        this.pickedApplication = event.application;
+        this.pickedSecret = event.secret;
+        this.currentStep = Step.displaySecret;
         this.changeDetector.markForCheck();
     }
 

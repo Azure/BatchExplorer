@@ -61,6 +61,10 @@ input.bl-input {
     padding: 0 5px;
     height: 26px;
 
+    &::-webkit-input-placeholder {
+        color: $dusty-grey;
+    }
+
     &:active, &:focus {
         outline: none;
         border-bottom-color: $primary-color;

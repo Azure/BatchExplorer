@@ -3,7 +3,7 @@
         <h2>Step 1: Pick the application you want to use</h2>
     </div>
     <div class="create-new">
-        <bl-button type="wide" color="primary">Create new</bl-button>
+        <bl-button type="wide" color="primary" (do)="createApp.emit()">Create new</bl-button>
     </div>
     <div class="app-list-subtitle">
         Listing below the applications you have permission to create secrets for.

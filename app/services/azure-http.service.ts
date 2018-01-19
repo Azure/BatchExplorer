@@ -121,7 +121,6 @@ export class AzureHttpService {
         if (!uri.includes(apiVersionParams)) {
             options.search.set(apiVersionParams, this.apiVersion(uri));
         }
-
         return options;
     }
 

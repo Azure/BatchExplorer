@@ -20,6 +20,7 @@ import "./aad-app-picker.scss";
 export class AADAppPickerComponent implements OnInit, OnDestroy {
     @Input() public selectedApplication: ServicePrincipal;
     @Output() public selectedApplicationChanged = new EventEmitter<ServicePrincipal>();
+    @Output() public createApp = new EventEmitter<void>();
 
     public apps: List<ServicePrincipal> = List([]);
 

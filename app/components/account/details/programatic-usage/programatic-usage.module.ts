@@ -2,7 +2,8 @@ import { NgModule } from "@angular/core";
 import { commonModules } from "app/common";
 import {
     AADAppPickerComponent, AADAppSecretPickerComponent,
-    AADCredentialsPickerComponent, GenerateAADAppSecretComponent,
+    AADCredentialsPickerComponent, CreateNewAadAppComponent,
+    GenerateAADAppSecretComponent,
     ResourcePermissionButtonComponent,
 } from "./aad-credentials-picker";
 import { ProgramaticUsageComponent } from "./programatic-usage.component";
@@ -13,6 +14,7 @@ const privateComponents = [
     GenerateAADAppSecretComponent,
     ResourcePermissionButtonComponent,
     AADAppSecretPickerComponent,
+    CreateNewAadAppComponent,
 ];
 
 const publicComponents = [
