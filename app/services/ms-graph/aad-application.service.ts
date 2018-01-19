@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
 
-import { AADApplication } from "app/models/ms-graph";
+import { AADApplication, PasswordCredential } from "app/models/ms-graph";
 import { DataCache, ListOptionsAttributes, ListView } from "app/services/core";
 import { SecureUtils } from "app/utils";
 import {
@@ -78,29 +78,33 @@ export class AADApplicationService {
         this._listGetter.fetchAll({ owned: true });
     }
 
-    public createSecret(appId: string, secret: SecretParams = {}, reset = false) {
+    public createSecret(appId: string, secret: SecretParams = {}, reset = false): Observable<PasswordCredential> {
         const startDate = new Date();
         const endDate = secret.endDate || new Date(2299, 12, 31);
         const name = secret.name || "BatchLabs secret";
         const value = secret.value || SecureUtils.token();
+        const customKeyIdentifier = btoa(name);
+        const keyId = SecureUtils.uuid();
         return this.get(appId).flatMap((app) => {
             const existingKeys = reset ? [] : app.passwordCredentials.map((cred) => {
-                return {
-                    keyId: cred.keyId,
-                    customKeyIdentifier: cred.customKeyIdentifier,
-                    startDate: cred.startDate,
-                    endDate: cred.endDate,
-                    value: null,
-                };
+                return cred._original;
             }).toJS();
             return this.aadGraph.patch(`/applicationsByAppId/${appId}`, {
                 passwordCredentials: [...existingKeys, {
-                    customKeyIdentifier: btoa(name),
+                    customKeyIdentifier,
                     endDate: endDate.toISOString(),
-                    keyId: SecureUtils.uuid(),
+                    keyId,
                     startDate: startDate.toISOString(),
                     value,
                 }],
+            });
+        }).map(() => {
+            return new PasswordCredential({
+                value,
+                startDate,
+                endDate,
+                keyId,
+                customKeyIdentifier,
             });
         }).shareReplay(1);
     }

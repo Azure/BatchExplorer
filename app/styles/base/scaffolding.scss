@@ -59,6 +59,8 @@ input.bl-input {
     border-top: 2px solid transparent;
     border-bottom: 2px solid transparent;
     padding: 0 5px;
+    height: 26px;
+
     &:active, &:focus {
         outline: none;
         border-bottom-color: $primary-color;

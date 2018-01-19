@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input, OnChanges } from "@angular/core";
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
 import { FormControl } from "@angular/forms";
 
 import { autobind } from "app/core";
@@ -15,6 +15,7 @@ import "./generate-aad-app-secret.scss";
 export class GenerateAADAppSecretComponent implements OnChanges {
     @Input() public account: AccountResource;
     @Input() public application: AADApplication;
+    @Output() public secretPicked = new EventEmitter();
     public principalId: string;
     public secret = new FormControl({});
     public get storageAccountId() {
@@ -43,13 +44,12 @@ export class GenerateAADAppSecretComponent implements OnChanges {
 
     @autobind()
     public addNewSecret() {
-
-        return this.aadApplicationService.createSecret(this.application.id);
+        return this._addNewSecret(false);
     }
 
     @autobind()
     public resetCredentials() {
-        return this.aadApplicationService.createSecret(this.application.id);
+        return this._addNewSecret(true);
     }
 
     private _addNewSecret(reset) {
@@ -59,8 +59,9 @@ export class GenerateAADAppSecretComponent implements OnChanges {
             value: secret.value,
             endDate: secret.endDate,
         }, reset);
-        obs.subscribe(() => {
-
+        obs.subscribe((credential) => {
+            console.log("new cred", credential.toJS());
+            this.secretPicked.emit(credential);
         });
         return obs;
     }

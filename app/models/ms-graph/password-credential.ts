@@ -1,15 +1,14 @@
 import { Prop, Record } from "app/core";
 
-export interface PasswordCredentialsAttributes {
+export interface PasswordCredentialAttributes {
     keyId: string;
     customKeyIdentifier: string; // Base64
-    startDateTime: Date;
-    endDateTime: Date;
-    secretText: string;
-    hint: string;
+    startDate: Date;
+    endDate: Date;
+    value: string;
 }
 
-export class PasswordCredentials extends Record<PasswordCredentialsAttributes> {
+export class PasswordCredential extends Record<PasswordCredentialAttributes> {
     @Prop() public keyId: string;
     @Prop() public customKeyIdentifier: string;
     @Prop() public startDate: Date;
