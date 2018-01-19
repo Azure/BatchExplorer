@@ -17,29 +17,41 @@
             <bl-property-group label="Account credentials {{loading ? '(Loading ...)' : ''}}" class="wide">
                 <bl-text-property label="Name" [value]="account?.name"></bl-text-property>
                 <bl-text-property label="Url" [value]="account?.properties.accountEndpoint"></bl-text-property>
-                <bl-text-property label="Primary key" [value]="keys?.primary"></bl-text-property>
-                <bl-text-property label="Secondary key" [value]="keys?.secondary"></bl-text-property>
+                <bl-text-property label="Primary key" [value]="sharedKeys?.primary"></bl-text-property>
+                <bl-text-property label="Secondary key" [value]="sharedKeys?.secondary"></bl-text-property>
             </bl-property-group>
         </bl-property-list>
-        <bl-aad-credentials-picker [account]="account" [hidden]="pickedCredentialType !== CredentialType.AAD"></bl-aad-credentials-picker>
+        <bl-aad-credentials-picker [account]="account" (credentialsChange)="updateAADCredentials($event)" [hidden]="pickedCredentialType !== CredentialType.AAD"></bl-aad-credentials-picker>
     </bl-vtab>
     <bl-vtab>
         <div tabLabel>
             Python
         </div>
-        <bl-programing-sample language="python" [account]="account" [sharedKeys]="sharedKeys"></bl-programing-sample>
+        <bl-programing-sample language="python"
+            [account]="account"
+            [credentialType]="pickedCredentialType"
+            [sharedKeys]="sharedKeys"
+            [aadCredentials]="aadCredentials"></bl-programing-sample>
     </bl-vtab>
     <bl-vtab>
         <div tabLabel>
             C#
         </div>
-        <bl-programing-sample language="csharp" [account]="account" [sharedKeys]="sharedKeys"></bl-programing-sample>
+        <bl-programing-sample language="csharp"
+            [account]="account"
+            [credentialType]="pickedCredentialType"
+            [sharedKeys]="sharedKeys"
+            [aadCredentials]="aadCredentials"></bl-programing-sample>
     </bl-vtab>
 
     <bl-vtab>
         <div tabLabel>
             Node.js
         </div>
-        <bl-programing-sample language="nodejs" [account]="account" [sharedKeys]="sharedKeys"></bl-programing-sample>
+        <bl-programing-sample language="nodejs"
+            [account]="account"
+            [credentialType]="pickedCredentialType"
+            [sharedKeys]="sharedKeys"
+            [aadCredentials]="aadCredentials"></bl-programing-sample>
     </bl-vtab>
 </bl-vtab-group>

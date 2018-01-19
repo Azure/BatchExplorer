@@ -4,7 +4,7 @@ import { AccountService } from "app/services";
 
 import "./programatic-usage.scss";
 
-enum CredentialType {
+export enum CredentialType {
     SharedKey,
     AAD,
 }
@@ -24,6 +24,7 @@ export class ProgramaticUsageComponent {
     public CredentialType = CredentialType;
     public account: AccountResource;
     public sharedKeys: AccountKeys;
+    public aadCredentials: AADCredential;
 
     public pickedCredentialType = CredentialType.SharedKey;
 
@@ -49,6 +50,10 @@ export class ProgramaticUsageComponent {
         this.changeDetector.markForCheck();
     }
 
+    public updateAADCredentials(cred: AADCredential) {
+        this.aadCredentials = cred;
+        this.changeDetector.markForCheck();
+    }
     private _loadDetails() {
         this.accountService.get(this.accountId).subscribe((account) => {
             this.account = account;

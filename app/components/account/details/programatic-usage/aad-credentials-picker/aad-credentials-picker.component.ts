@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, Output } from "@angular/core";
 
 import { AccountResource } from "app/models";
 import { AADApplication, PasswordCredential } from "app/models/ms-graph";
 
-import { AppCreatedEvent } from "app/components/account/details/programatic-usage";
-import "./aad-credentials-picker.scss";
+import { AADCredential, AppCreatedEvent } from "app/components/account/details/programatic-usage";
 import { ServicePrincipalService } from "app/services/ms-graph";
+import "./aad-credentials-picker.scss";
 
 enum Step {
     pickApplication,
@@ -21,6 +21,7 @@ enum Step {
 export class AADCredentialsPickerComponent {
     public Step = Step;
     @Input() public account: AccountResource;
+    @Output() public credentialsChange = new EventEmitter<AADCredential>();
 
     public pickedApplication: AADApplication;
     public pickedSecret: PasswordCredential;
@@ -56,12 +57,14 @@ export class AADCredentialsPickerComponent {
         this.pickedSecret = event.secret;
         this.currentStep = Step.displaySecret;
         this._loadServicePrincipal();
+        this._notifyNewCredential();
         this.changeDetector.markForCheck();
     }
 
     public pickSecret(secret: PasswordCredential) {
         this.pickedSecret = secret;
         this.currentStep = Step.displaySecret;
+        this._notifyNewCredential();
         this.changeDetector.markForCheck();
     }
 
@@ -72,6 +75,14 @@ export class AADCredentialsPickerComponent {
         this.servicePrincipalService.getByAppId(this.pickedApplication.appId).subscribe((servicePrincipal) => {
             this.principalId = servicePrincipal.id;
             this.changeDetector.markForCheck();
+        });
+    }
+
+    private _notifyNewCredential() {
+        this.credentialsChange.emit({
+            tenantId: this.account.subscription.tenantId,
+            clientId: this.pickedApplication.id,
+            secret: this.pickedSecret.value,
         });
     }
 }
