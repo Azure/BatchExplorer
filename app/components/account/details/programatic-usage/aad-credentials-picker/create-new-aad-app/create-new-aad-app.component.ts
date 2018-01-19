@@ -17,7 +17,7 @@ export interface AppCreatedEvent {
     secret: PasswordCredential;
 }
 
-const maxRetry = 10;
+const maxRetry = 36;
 
 @Component({
     selector: "bl-create-new-aad-app",
@@ -107,7 +107,8 @@ export class CreateNewAadAppComponent {
                     .flatMap(() => this._try(name, callback, retryCount))
                     .shareReplay(1);
             } else {
-                return Observable.throw(error);
+                // Make it like it succeeded. User can add permissions later
+                return Observable.of(null);
             }
         });
     }

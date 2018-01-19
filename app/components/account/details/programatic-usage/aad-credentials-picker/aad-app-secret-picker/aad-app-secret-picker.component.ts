@@ -31,10 +31,11 @@ export class AADAppSecretPickerComponent implements ControlValueAccessor, Valida
             value: [""],
             expireIn: [Expire.year1],
         });
-        this.form.valueChanges.subscribe(({ secret, expireIn }) => {
+        this.form.valueChanges.subscribe(({ value, name, expireIn }) => {
             if (this._propagateChanges) {
                 this._propagateChanges({
-                    secret,
+                    name,
+                    value,
                     endDate: this._computeEndDate(expireIn),
                 });
             }
@@ -66,7 +67,7 @@ export class AADAppSecretPickerComponent implements ControlValueAccessor, Valida
                 return now.add(1, "year").toDate();
             case Expire.year2:
                 return now.add(2, "year").toDate();
-            case Expire.never:
+            default:
                 return new Date(2299, 12, 31);
         }
     }
