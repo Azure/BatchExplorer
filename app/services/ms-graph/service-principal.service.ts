@@ -14,13 +14,16 @@ export interface ServicePrincipalParams {
     appId?: string;
 }
 
+export interface ServicePrincipalCreateParams {
+    appId: string;
+}
 @Injectable()
 export class ServicePrincipalService {
     private _getter: AADGraphEntityGetter<ServicePrincipal, ServicePrincipalParams>;
     private _listGetter: AADGraphListGetter<ServicePrincipal, ServicePrincipalListParams>;
     private _cache = new DataCache<ServicePrincipal>();
 
-    constructor(aadGraph: AADGraphHttpService) {
+    constructor(private aadGraph: AADGraphHttpService) {
         this._getter = new AADGraphEntityGetter(ServicePrincipal, aadGraph, {
             cache: () => this._cache,
             uri: ({ id, appId }) => {
@@ -69,5 +72,12 @@ export class ServicePrincipalService {
 
     public listAllOwned() {
         this._listGetter.fetchAll({ owned: true });
+    }
+
+    public create(params: ServicePrincipalCreateParams): Observable<ServicePrincipal> {
+        return this.aadGraph.post("/servicePrincipals", {
+            appId: params.appId,
+            accountEnabled: true,
+        }).map(x => new ServicePrincipal(x));
     }
 }

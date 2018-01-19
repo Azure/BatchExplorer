@@ -5,6 +5,7 @@ import { AADApplication, PasswordCredential } from "app/models/ms-graph";
 
 import { AppCreatedEvent } from "app/components/account/details/programatic-usage";
 import "./aad-credentials-picker.scss";
+import { ServicePrincipalService } from "app/services/ms-graph";
 
 enum Step {
     pickApplication,
@@ -24,12 +25,13 @@ export class AADCredentialsPickerComponent {
     public pickedApplication: AADApplication;
     public pickedSecret: PasswordCredential;
     public currentStep = Step.pickApplication;
+    public principalId: string;
 
     public get tenantId() {
         return this.account && this.account.subscription.tenantId;
     }
 
-    constructor(private changeDetector: ChangeDetectorRef) {
+    constructor(private changeDetector: ChangeDetectorRef, private servicePrincipalService: ServicePrincipalService) {
     }
 
     public get storageAccountId() {
@@ -40,6 +42,7 @@ export class AADCredentialsPickerComponent {
     public pickApplication(app: AADApplication) {
         this.pickedApplication = app;
         this.currentStep = Step.generateSecret;
+        this._loadServicePrincipal();
         this.changeDetector.markForCheck();
     }
 
@@ -52,6 +55,7 @@ export class AADCredentialsPickerComponent {
         this.pickedApplication = event.application;
         this.pickedSecret = event.secret;
         this.currentStep = Step.displaySecret;
+        this._loadServicePrincipal();
         this.changeDetector.markForCheck();
     }
 
@@ -59,5 +63,15 @@ export class AADCredentialsPickerComponent {
         this.pickedSecret = secret;
         this.currentStep = Step.displaySecret;
         this.changeDetector.markForCheck();
+    }
+
+    private _loadServicePrincipal() {
+        if (!this.pickedApplication) {
+            return;
+        }
+        this.servicePrincipalService.getByAppId(this.pickedApplication.appId).subscribe((servicePrincipal) => {
+            this.principalId = servicePrincipal.id;
+            this.changeDetector.markForCheck();
+        });
     }
 }
