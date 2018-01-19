@@ -1,8 +1,19 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from "@angular/core";
-import { AccountResource } from "app/models";
+import { AccountKeys, AccountResource } from "app/models";
 import { AccountService } from "app/services";
 
 import "./programatic-usage.scss";
+
+enum CredentialType {
+    SharedKey,
+    AAD,
+}
+
+export interface AADCredential {
+    tenantId: string;
+    clientId: string;
+    secret: string;
+}
 
 @Component({
     selector: "bl-programatic-usage",
@@ -10,7 +21,11 @@ import "./programatic-usage.scss";
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProgramaticUsageComponent {
+    public CredentialType = CredentialType;
     public account: AccountResource;
+    public sharedKeys: AccountKeys;
+
+    public pickedCredentialType = CredentialType.SharedKey;
 
     public set accountId(accountId: string) {
         const changed = accountId !== this._accountId;
@@ -29,9 +44,19 @@ export class ProgramaticUsageComponent {
         private changeDetector: ChangeDetectorRef) {
     }
 
+    public pickCredentialType(type: CredentialType) {
+        this.pickedCredentialType = type;
+        this.changeDetector.markForCheck();
+    }
+
     private _loadDetails() {
         this.accountService.get(this.accountId).subscribe((account) => {
             this.account = account;
+            this.changeDetector.markForCheck();
+        });
+
+        this.accountService.getAccountKeys(this.accountId).subscribe((keys) => {
+            this.sharedKeys = keys;
             this.changeDetector.markForCheck();
         });
     }

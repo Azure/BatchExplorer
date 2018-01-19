@@ -7,6 +7,7 @@ import {
     ResourcePermissionButtonComponent,
 } from "./aad-credentials-picker";
 import { ProgramaticUsageComponent } from "./programatic-usage.component";
+import { ProgramingSampleComponent } from "./programing-sample";
 
 const privateComponents = [
     AADCredentialsPickerComponent,
@@ -15,6 +16,7 @@ const privateComponents = [
     ResourcePermissionButtonComponent,
     AADAppSecretPickerComponent,
     CreateNewAadAppComponent,
+    ProgramingSampleComponent,
 ];
 
 const publicComponents = [

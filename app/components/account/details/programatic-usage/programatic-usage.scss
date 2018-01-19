@@ -1,7 +1,29 @@
+@import "app/styles/variables";
+
 bl-programatic-usage {
     display: block;
+    $header-height: 50px;
     position: relative;
     width: 1000px;
     height: 80vh;
     overflow: auto;
+
+    > .header {
+        height: $header-height;
+        border-bottom: 1px solid $border-color;
+        display: flex;
+        align-items: center;
+        > h1 {
+            padding: 10px;
+            flex: 1;
+        }
+
+        > .credential-type-picker {
+            flex-basis: 200px;
+        }
+    }
+
+    > .content {
+        height: calc(100% - #{$header-height});
+    }
 }
