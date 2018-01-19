@@ -7,12 +7,19 @@ import { MonitorHttpService } from "./monitor-http.service";
 describe("MonitorHttpService", () => {
     let monitorService: MonitorHttpService;
     let requestUrl;
+    let themeServiceSpy;
     let accountServiceSpy;
     let armServiceSpy;
     let mockeResponse;
     let subs: Subscription[] = [];
 
     beforeEach(() => {
+        themeServiceSpy = {
+            currentTheme: Observable.of({
+                monitorChart: {},
+            }),
+        };
+
         accountServiceSpy = {
             currentAccount: Observable.of(Fixtures.account.create({
                 id: "myaccount",
@@ -25,7 +32,7 @@ describe("MonitorHttpService", () => {
                 return Observable.of(new Response(new ResponseOptions(mockeResponse)));
             }),
         };
-        monitorService = new MonitorHttpService(accountServiceSpy, armServiceSpy);
+        monitorService = new MonitorHttpService(themeServiceSpy, accountServiceSpy, armServiceSpy);
     });
 
     afterEach(() => {
@@ -89,10 +96,10 @@ describe("MonitorHttpService", () => {
         subs.push(monitorService.getTaskStates().subscribe(response => {
             expect(requestUrl).toEqual("myaccount/providers/Microsoft.Insights/metrics");
             expect(response.length).toEqual(2);
-            expect(response[0].name.value).toEqual("taskcompleteevent");
+            expect(response[0].name.value).toEqual("TaskCompleteEvent");
             expect(response[0].name.localizedValue).toEqual("Task complete events");
             expect(response[0].data.length).toEqual(7);
-            expect(response[1].name.value).toEqual("taskstartevent");
+            expect(response[1].name.value).toEqual("TaskStartEvent");
             expect(response[1].name.localizedValue).toEqual("Task start events");
             expect(response[1].data.length).toEqual(3);
         }));
@@ -117,7 +124,7 @@ describe("MonitorHttpService", () => {
             expect(requestUrl).toEqual("myaccount/providers/Microsoft.Insights/metrics");
             expect(response.length).toEqual(1);
             expect(response[0].name.localizedValue).toEqual("Test");
-            expect(response[0].name.value).toEqual("test");
+            expect(response[0].name.value).toEqual("TestNodeCount");
         }));
     });
 });
