@@ -31,6 +31,10 @@ ol ul {
     color: map-get($danger, 500);
 }
 
+.highlight {
+    color: $primary-color;
+}
+
 .unaccent {
     color: $silver-grey;
 }

@@ -2,6 +2,7 @@ import { Injectable } from "@angular/core";
 
 import { RoleAssignment, RoleDefinition } from "app/models";
 import { ArmListGetter, TargetedDataCache } from "app/services/core";
+import { SecureUtils } from "common";
 import { List } from "immutable";
 import { Observable } from "rxjs/Observable";
 import { AccountService } from "../account.service";
@@ -53,5 +54,21 @@ export class ResourceAccessService {
 
     public listRoleDefinitions(scope: string): Observable<List<RoleDefinition>> {
         return this._rolesListGetter.fetchAll({ scope });
+    }
+
+    public createAssignment(resourceId: string, principalId: string, roleDefinitionId: string): Observable<any> {
+        const id = SecureUtils.uuid();
+        return this.arm.put(`${resourceId}/providers/Microsoft.Authorization/roleAssignments/${id}`, {
+            body: {
+                properties: {
+                    roleDefinitionId,
+                    principalId,
+                },
+            },
+        });
+    }
+
+    public deleteAssignment(id: string): Observable<any> {
+        return this.arm.delete(id);
     }
 }
