@@ -1,3 +1,14 @@
-<ng-container *ngIf="account">
-    <bl-aad-credentials-picker [account]="account"></bl-aad-credentials-picker>
-</ng-container>
+<bl-vtab-group>
+    <bl-vtab>
+        <div tabLabel>
+            Credentials
+        </div>
+        <bl-aad-credentials-picker [account]="account"></bl-aad-credentials-picker>
+    </bl-vtab>
+    <bl-vtab>
+        <div tabLabel>
+            Python
+        </div>
+        Some python stuff
+    </bl-vtab>
+</bl-vtab-group>
