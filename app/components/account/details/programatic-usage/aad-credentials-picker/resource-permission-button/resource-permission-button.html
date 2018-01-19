@@ -1,0 +1,8 @@
+<bl-button type="wide" [color]="color">
+    <ng-container *ngIf="loading">
+        Loading
+    </ng-container>
+    <ng-container *ngIf="!loading">
+        {{currentRole?.properties.roleName || "None"}}
+    </ng-container>
+</bl-button>

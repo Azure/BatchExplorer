@@ -1,27 +1,40 @@
 import { Injectable } from "@angular/core";
 
-import { RoleAssignment } from "app/models";
+import { RoleAssignment, RoleDefinition } from "app/models";
 import { ArmListGetter, TargetedDataCache } from "app/services/core";
 import { List } from "immutable";
 import { Observable } from "rxjs/Observable";
 import { AccountService } from "../account.service";
 import { ArmHttpService } from "../arm-http.service";
 
-interface RolesListParams {
+interface RoleAssignmentListParams {
     resourceId: string;
+}
+
+interface RoleListParams {
+    scope: string;
 }
 
 @Injectable()
 export class ResourceAccessService {
-    private _rolesListGetter: ArmListGetter<RoleAssignment, RolesListParams>;
-    private _rolesCache = new TargetedDataCache<RolesListParams, RoleAssignment>({
+    private _rolesAssignmentListGetter: ArmListGetter<RoleAssignment, RoleAssignmentListParams>;
+    private _rolesListGetter: ArmListGetter<RoleDefinition, RoleListParams>;
+    private _roleAssignmentsCache = new TargetedDataCache<RoleAssignmentListParams, RoleAssignment>({
         key: ({ resourceId }) => resourceId,
+    });
+    private _rolesCache = new TargetedDataCache<RoleListParams, RoleDefinition>({
+        key: ({ scope }) => scope,
     });
 
     constructor(private accountService: AccountService, private arm: ArmHttpService) {
-        this._rolesListGetter = new ArmListGetter<RoleAssignment, RolesListParams>(RoleAssignment, this.arm, {
+        this._rolesAssignmentListGetter = new ArmListGetter<RoleAssignment, RoleAssignmentListParams>(RoleAssignment,
+            this.arm, {
+                cache: (params) => this._roleAssignmentsCache.getCache(params),
+                uri: ({ resourceId }) => `${resourceId}/providers/Microsoft.Authorization/roleAssignments`,
+            });
+        this._rolesListGetter = new ArmListGetter<RoleDefinition, RoleListParams>(RoleDefinition, this.arm, {
             cache: (params) => this._rolesCache.getCache(params),
-            uri: ({resourceId}) => `${resourceId}/providers/Microsoft.Authorization/roleAssignments`,
+            uri: ({ scope }) => `${scope}/providers/Microsoft.Authorization/roleDefinitions`,
         });
     }
 
@@ -35,6 +48,10 @@ export class ResourceAccessService {
     }
 
     public listRolesFor(resourceId: string): Observable<List<RoleAssignment>> {
-        return this._rolesListGetter.fetchAll({resourceId});
+        return this._rolesAssignmentListGetter.fetchAll({ resourceId });
+    }
+
+    public listRoleDefinitions(scope: string): Observable<List<RoleDefinition>> {
+        return this._rolesListGetter.fetchAll({ scope });
     }
 }

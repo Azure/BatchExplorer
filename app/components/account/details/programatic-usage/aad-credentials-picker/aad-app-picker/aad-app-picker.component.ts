@@ -1,7 +1,6 @@
 import {
     ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output,
 } from "@angular/core";
-import { FormControl } from "@angular/forms";
 import { List } from "immutable";
 import { Observable } from "rxjs";
 
@@ -10,7 +9,6 @@ import { AADApplication, ServicePrincipal } from "app/models/ms-graph";
 import { ArmHttpService, AuthorizationHttpService, ResourceAccessService } from "app/services";
 import { ListView } from "app/services/core";
 import { AADApplicationListParams, AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
-import { FilterBuilder } from "app/utils/filter-builder";
 
 import "./aad-app-picker.scss";
 
