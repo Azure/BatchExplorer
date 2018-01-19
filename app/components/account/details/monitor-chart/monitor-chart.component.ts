@@ -1,7 +1,8 @@
-import { Component, Input, OnChanges, OnDestroy } from "@angular/core";
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges, OnDestroy } from "@angular/core";
 import { Observable, Subscription } from "rxjs";
 
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
+import { LoadingStatus } from "app/components/base/loading";
 import { Metric, MonitorChartTimeFrame, MonitorChartType, MonitorHttpService } from "app/services";
 
 import "./monitor-chart.scss";
@@ -9,6 +10,7 @@ import "./monitor-chart.scss";
 @Component({
     selector: "bl-monitor-chart",
     templateUrl: "monitor-chart.html",
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MonitorChartComponent implements OnChanges, OnDestroy {
     @Input() public chartType: MonitorChartType;
@@ -18,10 +20,14 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
     public options = {};
     public timeframe: MonitorChartTimeFrame = MonitorChartTimeFrame.Hour;
     public colors: any[];
+    public loadingStatus: LoadingStatus = LoadingStatus.Loading;
 
     private _sub: Subscription;
     private _observable: Observable<Metric[]>;
-    constructor(private monitor: MonitorHttpService, private contextMenuService: ContextMenuService) {
+    constructor(
+        private changeDetector: ChangeDetectorRef,
+        private monitor: MonitorHttpService,
+        private contextMenuService: ContextMenuService) {
         this._setChartOptions();
     }
 
@@ -40,6 +46,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         if (this._observable) {
             this._destroySub();
             this._sub = this._observable.subscribe(metrics => {
+                this._updateLoadingStatus(LoadingStatus.Loading);
                 this.colors = [];
                 this.datasets = metrics.map((metric: Metric): Chart.ChartDataSets => {
                     this.colors.push({
@@ -58,6 +65,9 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
                         fill: false,
                     } as Chart.ChartDataSets;
                 });
+                this._updateLoadingStatus(LoadingStatus.Ready);
+            }, (error) => {
+                this._updateLoadingStatus(LoadingStatus.Error);
             });
         }
     }
@@ -81,6 +91,14 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
             }}),
         ];
         this.contextMenuService.openMenu(new ContextMenu(items));
+    }
+
+    public get isChartReady() {
+        return this.loadingStatus === LoadingStatus.Ready && this.datasets;
+    }
+
+    public get chartError() {
+        return this.loadingStatus === LoadingStatus.Error;
     }
 
     private _getChartObservable(): Observable<Metric[]> {
@@ -153,6 +171,11 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
                 }],
             },
         };
+    }
+
+    private _updateLoadingStatus(status: LoadingStatus) {
+        this.loadingStatus = status;
+        this.changeDetector.markForCheck();
     }
 
     private _destroySub() {

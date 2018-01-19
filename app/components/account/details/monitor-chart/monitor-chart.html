@@ -6,6 +6,10 @@
         </a>
     </h2>
 </div>
-<div *ngIf="datasets">
+<div *ngIf="isChartReady">
     <canvas blChart [datasets]="datasets" [options]="options" [chartType]="type" [colors]="colors"></canvas>
 </div>
+<div *ngIf="chartError">
+    There is an error occurred when loading this chart
+</div>
+<bl-loading [status]="loadingStatus"></bl-loading>
