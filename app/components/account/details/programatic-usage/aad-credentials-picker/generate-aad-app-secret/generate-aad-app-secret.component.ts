@@ -16,6 +16,8 @@ export class GenerateAADAppSecretComponent implements OnChanges {
     @Input() public account: AccountResource;
     @Input() public application: AADApplication;
     @Output() public secretPicked = new EventEmitter();
+    @Output() public cancel = new EventEmitter();
+
     public principalId: string;
     public secret = new FormControl({});
     public get storageAccountId() {

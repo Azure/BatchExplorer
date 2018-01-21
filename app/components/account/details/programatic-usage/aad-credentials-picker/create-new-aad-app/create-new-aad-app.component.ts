@@ -26,6 +26,7 @@ const maxRetry = 36;
 export class CreateNewAadAppComponent {
     @Input() public account: AccountResource;
     @Output() public appCreated = new EventEmitter<AppCreatedEvent>();
+    @Output() public cancel = new EventEmitter<void>();
 
     public form: FormGroup;
     public set createStatus(status: string) {

@@ -1,8 +1,12 @@
 @import "app/styles/variables";
 
 bl-create-new-aad-app {
-    h1 {
+    .header {
         padding: 10px;
+        display: flex;
+        h1 {
+            margin-left: 10px;
+        }
     }
 
     > .form-container {

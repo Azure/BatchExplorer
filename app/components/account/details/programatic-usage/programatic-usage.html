@@ -5,7 +5,7 @@
 
     <div class="credential-type-picker">
         <bl-button type="wide" (do)="pickCredentialType(CredentialType.SharedKey)" [disabled]="pickedCredentialType === CredentialType.SharedKey">Shared key</bl-button>
-        <bl-button type="wide" (do)="pickCredentialType(CredentialType.AAD)" [disabled]="pickedCredentialType === CredentialType.AAD">AAD</bl-button>
+        <bl-button type="wide" (do)="pickCredentialType(CredentialType.AAD)" [disabled]="pickedCredentialType === CredentialType.AAD">Azure AD</bl-button>
     </div>
 </div>
 <bl-vtab-group class="content">

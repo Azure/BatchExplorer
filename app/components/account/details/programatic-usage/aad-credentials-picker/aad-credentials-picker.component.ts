@@ -68,6 +68,11 @@ export class AADCredentialsPickerComponent {
         this.changeDetector.markForCheck();
     }
 
+    public goBackToHome() {
+        this.currentStep = Step.pickApplication;
+        this.changeDetector.markForCheck();
+    }
+
     private _loadServicePrincipal() {
         if (!this.pickedApplication) {
             return;
