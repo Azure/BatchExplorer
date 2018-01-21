@@ -42,16 +42,16 @@ bl-button {
 
     &[type="plain"] {
         &[color="primary"] {
-            color: map-get($primary, 300);
+            color: $primary-color;
             &:hover, &:focus {
-                color: map-get($primary, 500);
+                color: $dark-primary-color;
             }
         }
 
         &[color="light"] {
             color: $black;
             &:hover, &:focus {
-                color: $silver-grey;
+                color: $main-background;
             }
         }
 
@@ -99,11 +99,11 @@ bl-button {
         }
 
         &[color="primary"] {
-            background: map-get($primary, 300);
+            background: $primary-color;
             color: $whitesmoke;
 
             &:hover, &:focus {
-                background: map-get($primary, 500);
+                background: $dark-primary-color;
             }
 
             &:active {
