@@ -1,10 +1,9 @@
-import { OnDestroy } from "@angular/core";
 import { Subscription } from "rxjs";
 
 import { Theme, ThemeService } from "app/services";
 import { MonitorChartAggregation, MonitorChartMetrics, MonitorMetricsBase } from "./monitor-metrics-base";
 
-export class CoreCountMetrics extends MonitorMetricsBase implements OnDestroy {
+export class CoreCountMetrics extends MonitorMetricsBase {
     private _sub: Subscription;
 
     constructor(themeService: ThemeService) {
@@ -25,7 +24,7 @@ export class CoreCountMetrics extends MonitorMetricsBase implements OnDestroy {
         });
     }
 
-    public ngOnDestroy(): void {
+    public dispose(): void {
         if (this._sub) {
             this._sub.unsubscribe();
         }

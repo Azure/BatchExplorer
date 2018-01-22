@@ -29,7 +29,7 @@ export interface Metric {
  * Wrapper around the http service so call the azure ARM monitor api.
  */
 @Injectable()
-export class MonitorHttpService {
+export class InsightsMetricsService {
     private _coreCountMetrics: MonitorMetrics;
     private _taskStateMetrics: MonitorMetrics;
     private _failedTaskMetrics: MonitorMetrics;

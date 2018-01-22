@@ -3,7 +3,7 @@ import { Observable, Subscription } from "rxjs";
 
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
-import { Metric, MonitorChartTimeFrame, MonitorChartType, MonitorHttpService } from "app/services";
+import { InsightsMetricsService, Metric, MonitorChartTimeFrame, MonitorChartType } from "app/services";
 
 import "./monitor-chart.scss";
 
@@ -26,7 +26,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
     private _observable: Observable<Metric[]>;
     constructor(
         private changeDetector: ChangeDetectorRef,
-        private monitor: MonitorHttpService,
+        private monitor: InsightsMetricsService,
         private contextMenuService: ContextMenuService) {
         this._setChartOptions();
     }
@@ -43,33 +43,34 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
 
     public fetchObservable() {
         this._observable = this._getChartObservable();
-        if (this._observable) {
-            this._destroySub();
-            this._sub = this._observable.subscribe(metrics => {
-                this._updateLoadingStatus(LoadingStatus.Loading);
-                this.colors = [];
-                this.datasets = metrics.map((metric: Metric): Chart.ChartDataSets => {
-                    this.colors.push({
-                        borderColor: metric.color,
-                        backgroundColor: metric.color,
-                    });
-                    return {
-                        label: metric.name.localizedValue,
-                        data: metric.data.map(data => {
-                            return {
-                                x: data.timeStamp,
-                                y: data.total || 0,
-                            } as Chart.ChartPoint;
-                        }),
-                        borderWidth: 1,
-                        fill: false,
-                    } as Chart.ChartDataSets;
-                });
-                this._updateLoadingStatus(LoadingStatus.Ready);
-            }, (error) => {
-                this._updateLoadingStatus(LoadingStatus.Error);
-            });
+        if (!this._observable) {
+            return;
         }
+        this._destroySub();
+        this._sub = this._observable.subscribe(metrics => {
+            this._updateLoadingStatus(LoadingStatus.Loading);
+            this.colors = [];
+            this.datasets = metrics.map((metric: Metric): Chart.ChartDataSets => {
+                this.colors.push({
+                    borderColor: metric.color,
+                    backgroundColor: metric.color,
+                });
+                return {
+                    label: metric.name.localizedValue,
+                    data: metric.data.map(data => {
+                        return {
+                            x: data.timeStamp,
+                            y: data.total || 0,
+                        } as Chart.ChartPoint;
+                    }),
+                    borderWidth: 1,
+                    fill: false,
+                } as Chart.ChartDataSets;
+            });
+            this._updateLoadingStatus(LoadingStatus.Ready);
+        }, (error) => {
+            this._updateLoadingStatus(LoadingStatus.Error);
+        });
     }
 
     public openTimeFramePicker() {

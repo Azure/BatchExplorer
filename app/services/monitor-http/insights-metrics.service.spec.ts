@@ -2,10 +2,10 @@ import { Response, ResponseOptions } from "@angular/http";
 import { Observable, Subscription } from "rxjs";
 import * as Fixtures from "test/fixture";
 
-import { MonitorHttpService } from "./monitor-http.service";
+import { InsightsMetricsService } from "./insights-metrics.service";
 
-describe("MonitorHttpService", () => {
-    let monitorService: MonitorHttpService;
+describe("InsightsMetricsService", () => {
+    let monitorService: InsightsMetricsService;
     let requestUrl;
     let themeServiceSpy;
     let accountServiceSpy;
@@ -32,7 +32,7 @@ describe("MonitorHttpService", () => {
                 return Observable.of(new Response(new ResponseOptions(mockeResponse)));
             }),
         };
-        monitorService = new MonitorHttpService(themeServiceSpy, accountServiceSpy, armServiceSpy);
+        monitorService = new InsightsMetricsService(themeServiceSpy, accountServiceSpy, armServiceSpy);
     });
 
     afterEach(() => {
