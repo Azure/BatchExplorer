@@ -62,6 +62,46 @@ export class ResourceAccessService {
         });
     }
 
+    /**
+     * Check if the given principal has any role assigned to it
+     * @param resourceId Resource id to check permission
+     * @param principalId Principal id(User or Service Principal)
+     */
+    public getRoleAssignmentFor(resourceId: string, principalId: string): Observable<RoleAssignment> {
+        const filter = `principalId eq '${principalId}'`;
+        return this._rolesAssignmentListGetter.fetch({ resourceId }, { filter }, true)
+            .map(x => x.items.first()).share();
+    }
+
+    /**
+     * Get the role definition of the role assignment between resource and principal if exists
+     * @param resourceId Resource id to check permission
+     * @param principalId Principal id(User or Service Principal)
+     */
+    public getRoleFor(resourceId: string, principalId: string)
+        : Observable<{ role: RoleDefinition, roleAssignment: RoleAssignment }> {
+
+        return this.getRoleAssignmentFor(resourceId, principalId).flatMap((roleAssignment) => {
+            if (!roleAssignment) { return Observable.of({ role: null, roleAssignment: null }); }
+            return this.arm.get(roleAssignment.properties.roleDefinitionId).map(x => {
+                const role = new RoleDefinition(x.json());
+                return { role, roleAssignment };
+            });
+        }).share();
+    }
+
+    /**
+     * Get the role definition of the role assignment between resource and principal if exists
+     * @param resourceId Resource id to check permission
+     * @param principalId Principal id(User or Service Principal)
+     */
+    public getRoleDefinitionFor(resourceId: string, principalId: string): Observable<RoleDefinition> {
+        return this.getRoleAssignmentFor(resourceId, principalId).flatMap((roleAssignment) => {
+            if (!roleAssignment) { return Observable.of(null); }
+            return this.arm.get(roleAssignment.properties.roleDefinitionId);
+        }).map(x => new RoleDefinition(x.json())).share();
+    }
+
     public createAssignment(resourceId: string, principalId: string, roleDefinitionId: string): Observable<any> {
         const id = SecureUtils.uuid();
         return this.arm.put(`${resourceId}/providers/Microsoft.Authorization/roleAssignments/${id}`, {

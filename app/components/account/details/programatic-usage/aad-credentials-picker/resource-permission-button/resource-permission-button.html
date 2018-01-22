@@ -1,6 +1,6 @@
-<bl-button type="wide" [color]="color" [matMenuTriggerFor]="pickRoleMenu">
+<bl-button type="wide" [color]="color" [matMenuTriggerFor]="pickRoleMenu" [disabled]="loading">
     <ng-container *ngIf="loading">
-        Loading
+        <i class="fa fa-spinner fa-spin"></i> Loading
     </ng-container>
     <ng-container *ngIf="!loading">
         {{currentRole?.properties.roleName || "None"}}

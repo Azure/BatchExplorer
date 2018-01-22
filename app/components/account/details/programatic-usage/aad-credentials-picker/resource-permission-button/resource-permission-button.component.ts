@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnChanges
 import { List } from "immutable";
 
 import { RoleAssignment, RoleDefinition } from "app/models";
-import { ArmHttpService, AuthorizationHttpService, ResourceAccessService } from "app/services";
+import { ResourceAccessService } from "app/services";
 import { Observable } from "rxjs";
 import "./resource-permission-button.scss";
 
@@ -27,35 +27,26 @@ export class ResourcePermissionButtonComponent implements OnChanges {
 
     public currentRole: RoleDefinition = null;
     public loading = true;
-    private _roleAssignments: List<RoleAssignment> = null;
+    private _roleAssignment: RoleAssignment = null;
     private _roleDefinitions: List<RoleDefinition> = null;
 
     constructor(
         private changeDetector: ChangeDetectorRef,
-        private permissionService: AuthorizationHttpService,
-        private arm: ArmHttpService,
         private resourceAccessService: ResourceAccessService) {
     }
 
     public ngOnChanges(changes) {
         if (changes.resourceId) {
-            this._loadRoleAssignments();
             this._loadRoleDefinitions();
         }
 
-        if (changes.principalId) {
+        if (changes.reosurceId || changes.principalId) {
             this._loadCurrentRole();
         }
     }
 
-    public get permission() {
-        const role = this.currentRole;
-        if (!role) { return null; }
-        return this.permissionService.checkResoucePermissions(role.properties.permissions.toJS());
-    }
-
     public get color() {
-        if (this.loading || this.permission) {
+        if (this.loading || this.currentRole) {
             return "primary";
         } else {
             return "danger";
@@ -87,7 +78,7 @@ export class ResourcePermissionButtonComponent implements OnChanges {
         obs.subscribe(() => {
             this.currentRole = role;
             this.changeDetector.markForCheck();
-            this._loadRoleAssignments();
+            this._loadCurrentRole();
         });
     }
 
@@ -95,7 +86,7 @@ export class ResourcePermissionButtonComponent implements OnChanges {
      * Delete the assignment if applicable
      */
     private _deleteAssignment(): Observable<any> {
-        const assignment = this._getRoleAssignment();
+        const assignment = this._roleAssignment;
         if (assignment) {
             return this.resourceAccessService.deleteAssignment(assignment.id);
         } else {
@@ -103,30 +94,18 @@ export class ResourcePermissionButtonComponent implements OnChanges {
         }
     }
 
-    private _loadRoleAssignments() {
-        this.resourceAccessService.listRolesFor(this.resourceId).subscribe((response) => {
-            this._roleAssignments = response;
-            this._loadCurrentRole();
-            this.changeDetector.markForCheck();
-        });
-    }
-
     private _loadCurrentRole() {
-        const assignment = this._getRoleAssignment();
-        if (!assignment) {
-            this.loading = false;
+        if (!this.principalId || !this.resourceId) {
             return;
         }
-        // Already loaded this one
-        if (this.currentRole && this.currentRole.id === assignment.properties.roleDefinitionId) { return; }
 
-        // TODO change to use role getter
-        this.arm.get(assignment.properties.roleDefinitionId).subscribe((response) => {
-            this.loading = false;
-            const role = new RoleDefinition(response.json());
-            this.currentRole = role;
-            this.changeDetector.markForCheck();
-        });
+        this.resourceAccessService.getRoleFor(this.resourceId, this.principalId)
+            .subscribe(({ role, roleAssignment }) => {
+                this._roleAssignment = roleAssignment;
+                this.currentRole = role;
+                this.loading = false;
+                this.changeDetector.markForCheck();
+            });
     }
 
     private _loadRoleDefinitions() {
@@ -134,10 +113,5 @@ export class ResourcePermissionButtonComponent implements OnChanges {
             this._roleDefinitions = roles;
             this.changeDetector.markForCheck();
         });
-    }
-
-    private _getRoleAssignment() {
-        if (!this._roleAssignments || !this.principalId) { return null; }
-        return this._roleAssignments.filter(x => x.properties.principalId === this.principalId).first();
     }
 }

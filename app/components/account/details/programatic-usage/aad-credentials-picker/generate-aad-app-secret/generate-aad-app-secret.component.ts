@@ -1,4 +1,6 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnChanges, Output } from "@angular/core";
+import {
+    ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, Output,
+} from "@angular/core";
 import { FormControl } from "@angular/forms";
 
 import { autobind } from "app/core";
@@ -30,6 +32,7 @@ export class GenerateAADAppSecretComponent implements OnChanges {
     }
 
     constructor(
+        private changeDetector: ChangeDetectorRef,
         private aadApplicationService: AADApplicationService,
         private servicePrincipalService: ServicePrincipalService) {
     }
@@ -66,6 +69,7 @@ export class GenerateAADAppSecretComponent implements OnChanges {
     private _loadServicePrincipal() {
         this.servicePrincipalService.getByAppId(this.application.id).subscribe((servicePrincipal) => {
             this.principalId = servicePrincipal.id;
+            this.changeDetector.markForCheck();
         });
     }
 }
