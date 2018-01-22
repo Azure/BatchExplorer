@@ -8,8 +8,8 @@ import { DeleteAccountDialogComponent } from "./action/delete/delete-account-dia
 import { AccountBrowseModule } from "./browse";
 import { AccountDefaultComponent, AccountDetailsComponent } from "./details";
 import { AccountQuotasCardComponent } from "./details/account-quotas-card";
-import { ProgramaticUsageModule } from "./details/programatic-usage";
 import { MonitorChartComponent } from "./details/monitor-chart";
+import { ProgramaticUsageModule } from "./details/programatic-usage";
 import { StorageAccountCardComponent } from "./details/storage-account-card";
 import { AccountHomeComponent } from "./home";
 
