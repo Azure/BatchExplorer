@@ -1,7 +1,7 @@
 # 0.12.0
 [All items](https://github.com/Azure/BatchLabs/milestone/14?closed=1)
 
-### feature:
+### Feature:
 
 * Data view should show all blob container not just file group [\#1006](https://github.com/Azure/BatchLabs/issues/1006)
 * Rbac permission support. Disable action in batchlabs if user doesn't have write permission [\#1000](https://github.com/Azure/BatchLabs/issues/1000)
@@ -13,16 +13,12 @@
 * Account credentials access [\#970](https://github.com/Azure/BatchLabs/issues/970)
 * Support for inbound endpoints [\#965](https://github.com/Azure/BatchLabs/issues/965)
 * Make a open component in a new window  [\#74](https://github.com/Azure/BatchLabs/issues/74)
-
-### bug:
-
-
-### other:
-
 * Update the theming system to use json instead of scss [\#1012](https://github.com/Azure/BatchLabs/issues/1012)
+
+### Other:
+
 * Implement a new promise base communication from renderer to main process [\#1004](https://github.com/Azure/BatchLabs/issues/1004)
 * Add code coverage [\#987](https://github.com/Azure/BatchLabs/issues/987)
-* Job's task list does not respond to job refresh button [\#971](https://github.com/Azure/BatchLabs/issues/971)
 * Extract AAD logic to be outside of the angular service into the node environment [\#963](https://github.com/Azure/BatchLabs/issues/963)
 
 # 0.11.0
