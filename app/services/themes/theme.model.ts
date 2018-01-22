@@ -99,6 +99,33 @@ export class TextColor extends ThemeElement {
     }
 }
 
+export class MonitorChartColor extends ThemeElement {
+    @CssColor("core-count") public coreCount: string;
+    @CssColor("low-priority-core-count") public lowPriorityCoreCount: string;
+    @CssColor("task-start-event") public taskStartEvent: string;
+    @CssColor("task-complete-event") public taskCompleteEvent: string;
+    @CssColor("task-fail-event") public taskFailEvent: string;
+    @CssColor("starting-node-count") public startingNodeCount: string;
+    @CssColor("idle-node-count") public idleNodeCount: string;
+    @CssColor("running-node-count") public runningNodeCount: string;
+    @CssColor("start-task-failed-node-count") public startTaskFailedNodeCount: string;
+    @CssColor("rebooting-node-count") public rebootingNodeCount: string;
+
+    constructor(def) {
+        super();
+        this.coreCount = def["core-count"];
+        this.lowPriorityCoreCount = def["low-priority-core-count"];
+        this.taskStartEvent = def["task-start-event"];
+        this.taskCompleteEvent = def["task-complete-event"];
+        this.taskFailEvent = def["task-fail-event"];
+        this.startingNodeCount = def["starting-node-count"];
+        this.idleNodeCount = def["idle-node-count"];
+        this.runningNodeCount = def["running-node-count"];
+        this.startTaskFailedNodeCount = def["start-task-failed-node-count"];
+        this.rebootingNodeCount = def["rebooting-node-count"];
+    }
+}
+
 export class Theme extends ThemeElement {
     @CssColor() public primary: ColorPalette;
     @CssColor() public danger: ColorPalette;
@@ -114,6 +141,7 @@ export class Theme extends ThemeElement {
     @CssColor() public breadcrumb: EntityColor;
     @CssColor("file-explorer") public fileExplorer: FileExplorerColors;
     @CssColor() public button: ButtonColors;
+    @CssColor() public monitorChart: MonitorChartColor;
 
     constructor(theme: ThemeDefinition) {
         super();
@@ -131,6 +159,7 @@ export class Theme extends ThemeElement {
         this.breadcrumb = new EntityColor(theme.breadcrumb);
         this.fileExplorer = new FileExplorerColors(theme["file-explorer"]);
         this.button = new ButtonColors(theme.button);
+        this.monitorChart = new MonitorChartColor(theme.monitorChart);
     }
 
 }

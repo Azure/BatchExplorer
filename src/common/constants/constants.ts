@@ -121,6 +121,7 @@ export const ApiVersion = {
     compute: "2017-03-30",
     commerce: "2016-08-31-preview",
     authorization: "2015-07-01",
+    monitor: "2017-05-01-preview",
 };
 
 export const ExternalLinks = {

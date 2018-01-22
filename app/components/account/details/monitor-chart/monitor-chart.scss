@@ -1,0 +1,16 @@
+@import "app/styles/variables";
+
+bl-monitor-chart {
+    .header {
+        padding-bottom: 12px;
+        .timeframe-picker {
+            float: right;
+            cursor: pointer;
+        }
+    }
+    background-color: $card-background;
+    margin-top: 5px;
+    margin-right: 5px;
+    padding: 10px;
+    height: 210px;
+}
