@@ -38,8 +38,8 @@ export async function createIssue(repo: string, title: string, description: stri
 }
 
 export async function listPullRequests(repo: string, source: string, target = "master"): Promise<Issue[]> {
-    console.log("Listing prs", source, target);
-    const url = `${pullRequestsUrl(repo)}?head=${source}&base=${target}`;
+    const url = `${pullRequestsUrl(repo)}?head=Azure:${source}&base=${target}`;
+    console.log("Listing prs", source, target, url);
     return get(url);
 }
 
