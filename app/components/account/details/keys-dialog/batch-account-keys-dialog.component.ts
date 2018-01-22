@@ -30,9 +30,6 @@ export class BatchAccountKeysDialogComponent {
         resourceAccessService: ResourceAccessService,
         private accountService: AccountService,
         private changeDetector: ChangeDetectorRef) {
-        resourceAccessService.listRolesForCurrentAccount().subscribe((roles) => {
-            console.log("Account roles are", roles.toJS());
-        });
     }
 
     private _loadDetails() {

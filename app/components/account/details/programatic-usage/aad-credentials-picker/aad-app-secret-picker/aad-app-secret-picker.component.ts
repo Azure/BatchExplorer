@@ -1,5 +1,7 @@
 import { Component, forwardRef } from "@angular/core";
-import { AbstractControl, ControlValueAccessor, FormBuilder, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator } from "@angular/forms";
+import {
+    AbstractControl, ControlValueAccessor, FormBuilder, FormGroup, NG_VALIDATORS, NG_VALUE_ACCESSOR, Validator,
+} from "@angular/forms";
 import * as moment from "moment";
 import "./aad-app-secret-picker.scss";
 

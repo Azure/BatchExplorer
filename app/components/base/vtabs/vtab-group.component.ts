@@ -20,4 +20,8 @@ export class VTabGroupComponent implements AfterViewInit {
     public selectTab(tab: VTabComponent) {
         this.currentTab = tab;
     }
+
+    public trackTab(index, tab: VTabComponent) {
+        return index;
+    }
 }
