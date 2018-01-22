@@ -1,0 +1,54 @@
+<bl-loading [status]="data.newDataStatus | async">
+    <div *ngIf="jobSchedule" class="fit-details-container">
+        <!-- <bl-summary-card>
+            <div summaryTitle>{{decorator.id}}</div>
+            <div summarySubtitle>
+                <i class="fa" [ngClass]="decorator.stateIcon"></i> {{decorator.state}}
+            </div>
+            <div summaryDetails>Pool: <a [routerLink]="['/pools', job.poolId]">{{job.poolId}}</a></div>
+            <bl-tags summaryTags [tags]="job.tags" [editable]="job.editable" [save]="updateTags" noTagsMessage="No tags."></bl-tags>
+            <bl-button-group summaryActions>
+                <bl-refresh-btn [refresh]="refresh"></bl-refresh-btn>
+                <bl-add-task-button title="Add task" [job]="job" [action]="addTask"></bl-add-task-button>
+                <bl-terminate-button [entity]="job" [action]="terminateJob"></bl-terminate-button>
+                <bl-delete-button [action]="deleteJob" [enabled]="job.state !== JobState.deleting && job.state !== JobState.terminating"></bl-delete-button>
+                <bl-disable-button [job]="job" [action]="disableJob"></bl-disable-button>
+                <bl-enable-button [job]="job" [action]="enableJob"></bl-enable-button>
+                <bl-clone-button [action]="cloneJob"></bl-clone-button>
+                <bl-button [action]="exportAsJSON" color="light" title="Export as JSON"><i class="fa fa-code"></i></bl-button>
+            </bl-button-group>
+            <div summaryTile>
+                <div class="job-graphs-link" [routerLink]="['/jobs', job.id, 'graphs']">
+                    <i class="fa fa-line-chart"></i>
+                    <i class="fa fa-area-chart"></i>
+                    <div>Job statistics</div>
+                </div>
+            </div>
+            <div summaryTile>
+                <bl-job-progress-status [job]="job" [poolId]="job.poolId"></bl-job-progress-status>
+            </div>
+        </bl-summary-card>
+        <bl-job-error-display [job]="job"></bl-job-error-display>
+        <mat-card class="details">
+            <bl-tab-group>
+                <bl-tab key="tasks">
+                    <bl-tab-label>Tasks</bl-tab-label>
+                    <div class="tab-padding">
+                        <bl-entity-details-list #listWrapper [refresh]="list.refresh" [baseLink]="['/jobs', job.id, 'tasks']" [loadMore]="list.loadMore"
+                            [filterPlaceholder]="filterPlaceholderText">
+                            <bl-task-list [jobId]="job.id" [filter]="listWrapper.filter" [quickList]="false" #list [manualLoading]="true"></bl-task-list>
+                        </bl-entity-details-list>
+                    </div>
+                </bl-tab>
+                <bl-tab key="configuration">
+                    <bl-tab-label>Configuration</bl-tab-label>
+                    <bl-job-configuration [job]="job"></bl-job-configuration>
+                </bl-tab>
+                <bl-tab key="hooktasks" [disabled]="!hasHookTask">
+                    <bl-tab-label>Prep/Release tasks</bl-tab-label>
+                    <bl-job-hook-task-browser [job]="job" *ngIf="hasHookTask"></bl-job-hook-task-browser>
+                </bl-tab>
+            </bl-tab-group>
+        </mat-card> -->
+    </div>
+</bl-loading>
