@@ -130,14 +130,13 @@ async function push() {
 }
 
 async function createIssueIfNot(millestoneId, version) {
-    console.log("Create issue if not")
     const title = `Prepare for release of version ${version}`;
     const issues = await listMilestoneIssues(repoName, millestoneId);
     let issue = issues.filter(x => x.title === title)[0];
     if (issue) {
         success(`Issue was already created earlier ${issue.html_url}`);
     } else {
-        // issue = await createIssue(repoName, title, newIssueBody, millestoneId);
+        issue = await createIssue(repoName, title, newIssueBody, millestoneId);
         success(`Created a new issue ${issue.html_url}`);
     }
     return issue;
