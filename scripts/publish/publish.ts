@@ -130,6 +130,7 @@ async function push() {
 }
 
 async function createIssueIfNot(millestoneId, version) {
+    console.log("Create issue if not")
     const title = `Prepare for release of version ${version}`;
     const issues = await listMilestoneIssues(repoName, millestoneId);
     let issue = issues.filter(x => x.title === title)[0];
