@@ -9,6 +9,7 @@ import { AccountBrowseModule } from "./browse";
 import { AccountDefaultComponent, AccountDetailsComponent } from "./details";
 import { AccountQuotasCardComponent } from "./details/account-quotas-card";
 import { ProgramaticUsageModule } from "./details/programatic-usage";
+import { MonitorChartComponent } from "./details/monitor-chart";
 import { StorageAccountCardComponent } from "./details/storage-account-card";
 import { AccountHomeComponent } from "./home";
 
@@ -16,6 +17,7 @@ const components = [
     AccountDefaultComponent, AccountDetailsComponent,
     AccountHomeComponent, DeleteAccountDialogComponent, StorageAccountCardComponent,
     EditStorageAccountFormComponent, StorageAccountPickerComponent, AccountQuotasCardComponent,
+    MonitorChartComponent,
 ];
 
 const modules = [

@@ -31,6 +31,7 @@ const providersApiVersion = {
     "microsoft.compute": Constants.ApiVersion.compute,
     "microsoft.commerce": Constants.ApiVersion.commerce,
     "microsoft.authorization": Constants.ApiVersion.authorization,
+    "microsoft.insights": Constants.ApiVersion.monitor,
 };
 
 type SubscriptionOrTenant = Subscription | string;

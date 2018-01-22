@@ -122,6 +122,7 @@ export const ApiVersion = {
     commerce: "2016-08-31-preview",
     authorization: "2017-05-01",
     aadGraph: "1.6",
+    monitor: "2017-05-01-preview",
 };
 
 export const ExternalLinks = {
