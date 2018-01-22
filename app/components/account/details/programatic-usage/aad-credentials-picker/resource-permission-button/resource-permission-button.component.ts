@@ -137,7 +137,6 @@ export class ResourcePermissionButtonComponent implements OnChanges {
     }
 
     private _getRoleAssignment() {
-        console.log("Principal", this._roleAssignments, this.principalId);
         if (!this._roleAssignments || !this.principalId) { return null; }
         return this._roleAssignments.filter(x => x.properties.principalId === this.principalId).first();
     }

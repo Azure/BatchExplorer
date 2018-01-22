@@ -37,10 +37,6 @@ export class GenerateAADAppSecretComponent implements OnChanges {
     public ngOnChanges(changes) {
         if (changes.application) {
             this._loadServicePrincipal();
-            // console.log("PAssword creds", this.application.passwordCredentials.map(x => x.name).toJS(), this.application.passwordCredentials.toJS());
-            // this.aadApplicationService.createSecret(this.application.id, "New pass").subscribe((result) => {
-            //     console.log("Result is", result);
-            // });
         }
     }
 
@@ -62,7 +58,6 @@ export class GenerateAADAppSecretComponent implements OnChanges {
             endDate: secret.endDate,
         }, reset);
         obs.subscribe((credential) => {
-            console.log("new cred", credential.toJS());
             this.secretPicked.emit(credential);
         });
         return obs;

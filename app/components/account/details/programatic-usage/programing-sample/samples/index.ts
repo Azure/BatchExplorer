@@ -44,5 +44,5 @@ export const prerequisites = {
             `npm install ms-rest`,
             `npm install ms-rest-azure`,
         ],
-    }
+    },
 };
