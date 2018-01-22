@@ -4,22 +4,26 @@ bl-account-details {
     .account-cards {
         margin: 0 auto;
         text-align: justify;
+        display: grid;
+        grid-template-columns: minmax(210px, 1fr) minmax(210px, 1fr) minmax(210px, 1fr);
 
         .account-card {
-            display: inline-block;
-            width: calc(33% - 4px);
-            min-width: 210px;
             font-size: 2em;
             color: $scorpion;
-            text-align: justify;
-            margin-top: 8px;
-            margin-right: 4px;
+            margin-top: 5px;
+            margin-right: 5px;
             padding: 12px;
 
             .account-card-content {
                 height: 300px;
             }
         }
+    }
+
+    .monitor-charts {
+        display: grid;
+        grid-template-columns: minmax(210px, 20%)  minmax(210px, 20%)  minmax(210px, 24%) minmax(210px, auto);
+        text-align: justify;
     }
 
     bl-table.dashboard {
