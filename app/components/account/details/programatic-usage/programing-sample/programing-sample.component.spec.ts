@@ -11,7 +11,9 @@ import { ProgramingSampleComponent } from "./programing-sample.component";
 
 const account1 = Fixtures.account.create();
 @Component({
-    template: `<bl-programing-sample [language]="language" [keys]="keys" [account]="account"></bl-programing-sample>`,
+    template: `
+        <bl-programing-sample [language]="language" [sharedKeys]="keys" [account]="account">
+        </bl-programing-sample>`,
 })
 class TestComponent {
     public language = null;
@@ -82,7 +84,7 @@ describe("ProgramingSampleComponent", () => {
 
         it("show right code in the editor", () => {
             expect(code.value).toContain(
-                `const { SharedKeyCredentials, BatchServiceClient } = require("azure-batch");`);
+                `const { SharedKeyCredentials, ServiceClient } = require("azure-batch");`);
             expect(code.value).toContain(`const accountName = "${account1.name}";`);
             expect(code.value).toContain(`const accountUrl = "https://${account1.properties.accountEndpoint}";`);
             expect(code.value).toContain(`const accountKey = "primary-key";`);

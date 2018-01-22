@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input, OnChanges } from "@angular/core";
 import { prerequisites, sampleTemplates } from "./samples";
 
+import { AADCredential, CredentialType } from "app/components/account/details/programatic-usage";
 import { EditorConfig } from "app/components/base/editor";
 import { AccountKeys, AccountResource } from "app/models";
 import "./programing-sample.scss";
@@ -23,18 +24,18 @@ const engineLanguages = {
 export class ProgramingSampleComponent implements OnChanges {
     @Input() public language: SampleLanguage;
     @Input() public account: AccountResource;
-    @Input() public keys: AccountKeys;
+    @Input() public sharedKeys: AccountKeys;
+    @Input() public aadCredentials: AADCredential;
+    @Input() public credentialType: CredentialType;
 
     public prerequisites: string[];
     public content: string;
     public editorConfig: EditorConfig;
 
     public ngOnChanges(changes) {
-        if (changes.language || changes.account || changes.keys) {
-            this._updateContent();
-            this._updatePrerequisites();
-            this._updateConfig();
-        }
+        this._updateContent();
+        this._updatePrerequisites();
+        this._updateConfig();
     }
 
     public trackPrerequisite(index, item) {
@@ -51,20 +52,39 @@ export class ProgramingSampleComponent implements OnChanges {
     }
 
     private get key() {
-        return this.keys && this.keys.primary || "";
+        return this.sharedKeys && this.sharedKeys.primary || "";
     }
 
     private _updateContent() {
-        const template: string = sampleTemplates[this.language];
-        if (template) {
-            this.content = template.format(this.accountName, this.accountUrl, this.key);
+        const template: string = this._getTemplate();
+        if (!template) {
+            return this.content = "";
+        }
+        if (this.credentialType === CredentialType.AAD) {
+            const cred = this.aadCredentials || {} as any;
+            this.content = template.format(this.accountUrl,
+                cred.tenantId,
+                cred.clientId,
+                cred.secret);
         } else {
-            this.content = "";
+            this.content = template.format(this.accountName, this.accountUrl, this.key);
+        }
+    }
+
+    private _getTemplate() {
+        if (this.credentialType === CredentialType.AAD) {
+            return sampleTemplates.aad[this.language];
+        } else {
+            return sampleTemplates.sharedKey[this.language];
         }
     }
 
     private _updatePrerequisites() {
-        this.prerequisites = prerequisites[this.language];
+        if (this.credentialType === CredentialType.AAD) {
+            this.prerequisites = prerequisites.aad[this.language];
+        } else {
+            this.prerequisites = prerequisites.sharedKey[this.language];
+        }
     }
 
     private _updateConfig() {
@@ -74,6 +94,7 @@ export class ProgramingSampleComponent implements OnChanges {
         }
         this.editorConfig = {
             language,
+            readOnly: true,
         };
     }
 }

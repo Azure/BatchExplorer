@@ -1,4 +1,4 @@
-const { SharedKeyCredentials, BatchServiceClient } = require("azure-batch");
+const { SharedKeyCredentials, ServiceClient } = require("azure-batch");
 
 const accountName = "{0}";
 const accountUrl = "{1}";

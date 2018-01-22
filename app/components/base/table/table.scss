@@ -99,6 +99,11 @@ bl-table {
             padding: 0 $padding-first-and-last 0 0;
         }
 
+        // If only one cell
+        &:only-child {
+            padding: 0 $padding-first-and-last;
+        }
+
         &[numericField] {
             text-align: right;
         }

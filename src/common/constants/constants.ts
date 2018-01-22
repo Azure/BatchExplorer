@@ -120,7 +120,8 @@ export const ApiVersion = {
     armBatch: "2017-05-01",
     compute: "2017-03-30",
     commerce: "2016-08-31-preview",
-    authorization: "2015-07-01",
+    authorization: "2017-05-01",
+    aadGraph: "1.6",
     monitor: "2017-05-01-preview",
 };
 
@@ -144,12 +145,16 @@ export const ServiceUrl = {
     arm: "https://management.azure.com",
     githubRaw: "https://raw.githubusercontent.com",
     appInsights: "https://api.applicationinsights.io/v1",
+    msGraph: "https://graph.microsoft.com/beta",
+    aadGraph: "https://graph.windows.net",
 };
 
 export const ResourceUrl = {
     batch: "https://batch.core.windows.net/",
     arm: "https://management.core.windows.net/",
     appInsights: "https://api.applicationinsights.io",
+    msGraph: "https://graph.microsoft.com",
+    aadGraph: "https://graph.windows.net",
 };
 
 export const APIErrorCodes = {
