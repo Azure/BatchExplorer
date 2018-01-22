@@ -3,7 +3,7 @@ import { Observable, Subscription } from "rxjs";
 
 import { ContextMenu, ContextMenuItem, ContextMenuService } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
-import { InsightsMetricsService, Metric, MonitorChartTimeFrame, MonitorChartType } from "app/services";
+import { InsightsMetricsService, Metric, MetricResponse, MonitorChartTimeFrame, MonitorChartType } from "app/services";
 
 import "./monitor-chart.scss";
 
@@ -18,12 +18,12 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
     public type = "line";
     public datasets: Chart.ChartDataSets[];
     public options = {};
-    public timeframe: MonitorChartTimeFrame = MonitorChartTimeFrame.Hour;
+    public timeFrame: MonitorChartTimeFrame = MonitorChartTimeFrame.Hour;
     public colors: any[];
     public loadingStatus: LoadingStatus = LoadingStatus.Loading;
 
     private _sub: Subscription;
-    private _observable: Observable<Metric[]>;
+    private _observable: Observable<MetricResponse>;
     constructor(
         private changeDetector: ChangeDetectorRef,
         private monitor: InsightsMetricsService,
@@ -47,10 +47,11 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
             return;
         }
         this._destroySub();
-        this._sub = this._observable.subscribe(metrics => {
+        this._sub = this._observable.subscribe(response => {
             this._updateLoadingStatus(LoadingStatus.Loading);
             this.colors = [];
-            this.datasets = metrics.map((metric: Metric): Chart.ChartDataSets => {
+            this.timeFrame = response.timeFrame;
+            this.datasets = response.metrics.map((metric: Metric): Chart.ChartDataSets => {
                 this.colors.push({
                     borderColor: metric.color,
                     backgroundColor: metric.color,
@@ -76,18 +77,18 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
     public openTimeFramePicker() {
         const items = [
             new ContextMenuItem({ label: "Past hour", click: () => {
-                this.timeframe = MonitorChartTimeFrame.Hour;
-                this.monitor.updateTimeFrame(this.timeframe, this.chartType);
+                this.timeFrame = MonitorChartTimeFrame.Hour;
+                this.monitor.updateTimeFrame(this.timeFrame, this.chartType);
                 this.fetchObservable();
             }}),
             new ContextMenuItem({ label: "Past day", click: () => {
-                this.timeframe = MonitorChartTimeFrame.Day;
-                this.monitor.updateTimeFrame(this.timeframe, this.chartType);
+                this.timeFrame = MonitorChartTimeFrame.Day;
+                this.monitor.updateTimeFrame(this.timeFrame, this.chartType);
                 this.fetchObservable();
             }}),
             new ContextMenuItem({ label: "Past week", click: () => {
-                this.timeframe = MonitorChartTimeFrame.Week;
-                this.monitor.updateTimeFrame(this.timeframe, this.chartType);
+                this.timeFrame = MonitorChartTimeFrame.Week;
+                this.monitor.updateTimeFrame(this.timeFrame, this.chartType);
                 this.fetchObservable();
             }}),
         ];
@@ -102,8 +103,8 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
         return this.loadingStatus === LoadingStatus.Error;
     }
 
-    private _getChartObservable(): Observable<Metric[]> {
-        let observable: Observable<Metric[]>;
+    private _getChartObservable(): Observable<MetricResponse> {
+        let observable: Observable<MetricResponse>;
         switch (this.chartType) {
             case MonitorChartType.CoreCount:
                 this.title = "Core count";

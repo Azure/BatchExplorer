@@ -95,13 +95,13 @@ describe("InsightsMetricsService", () => {
 
         subs.push(monitorService.getTaskStates().subscribe(response => {
             expect(requestUrl).toEqual("myaccount/providers/Microsoft.Insights/metrics");
-            expect(response.length).toEqual(2);
-            expect(response[0].name.value).toEqual("TaskCompleteEvent");
-            expect(response[0].name.localizedValue).toEqual("Task complete events");
-            expect(response[0].data.length).toEqual(7);
-            expect(response[1].name.value).toEqual("TaskStartEvent");
-            expect(response[1].name.localizedValue).toEqual("Task start events");
-            expect(response[1].data.length).toEqual(3);
+            expect(response.metrics.length).toEqual(2);
+            expect(response.metrics[0].name.value).toEqual("TaskCompleteEvent");
+            expect(response.metrics[0].name.localizedValue).toEqual("Task complete events");
+            expect(response.metrics[0].data.length).toEqual(7);
+            expect(response.metrics[1].name.value).toEqual("TaskStartEvent");
+            expect(response.metrics[1].name.localizedValue).toEqual("Task start events");
+            expect(response.metrics[1].data.length).toEqual(3);
         }));
     });
 
@@ -122,9 +122,9 @@ describe("InsightsMetricsService", () => {
 
         subs.push(monitorService.getNodeStates().subscribe(response => {
             expect(requestUrl).toEqual("myaccount/providers/Microsoft.Insights/metrics");
-            expect(response.length).toEqual(1);
-            expect(response[0].name.localizedValue).toEqual("Test");
-            expect(response[0].name.value).toEqual("TestNodeCount");
+            expect(response.metrics.length).toEqual(1);
+            expect(response.metrics[0].name.localizedValue).toEqual("Test");
+            expect(response.metrics[0].name.value).toEqual("TestNodeCount");
         }));
     });
 });

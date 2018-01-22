@@ -25,6 +25,11 @@ export interface Metric {
     color: string;
 }
 
+export interface MetricResponse {
+    timeFrame: MonitorChartTimeFrame;
+    metrics: Metric[];
+}
+
 /**
  * Wrapper around the http service so call the azure ARM monitor api.
  */
@@ -70,7 +75,7 @@ export class InsightsMetricsService {
     /**
      * Get core counts observable for rendering core count
      */
-    public getCoreCount() {
+    public getCoreCount(): Observable<MetricResponse> {
         return this._getCurrentAccount().flatMap(resourceId => {
             return this._getMetrics(this._coreCountMetrics, resourceId, (name) => {
                 // trim ending words for a shorter label
@@ -82,7 +87,7 @@ export class InsightsMetricsService {
     /**
      * Get task state observable for rendering task states
      */
-    public getTaskStates() {
+    public getTaskStates(): Observable<MetricResponse> {
         return this._getCurrentAccount().flatMap(resourceId => {
             return this._getMetrics(this._taskStateMetrics, resourceId);
         }).share();
@@ -91,14 +96,14 @@ export class InsightsMetricsService {
     /**
      * Get failed task observable for rendering failed task
      */
-    public getFailedTask() {
+    public getFailedTask(): Observable<MetricResponse> {
         return this._getCurrentAccount().flatMap(resourceId => {
             return this._getMetrics(this._failedTaskMetrics, resourceId);
         }).share();
     }
 
     /** Get node states observable for rendering node states */
-    public getNodeStates() {
+    public getNodeStates(): Observable<MetricResponse> {
         // Note that here only take first word to truncate legends for node states chart
         return this._getCurrentAccount().flatMap(resourceId => {
             return this._getMetrics(this._nodeStateMetrics, resourceId, (name) => {
@@ -121,38 +126,44 @@ export class InsightsMetricsService {
      * Actual request being sent to monitor api. Convert response to simplified objects which could be
      * directly used by chartjs datasets
      */
-    private _getMetrics(metric: MonitorMetrics, resourceId: string, customNameFunc?: (name: string) => string) {
-        if (resourceId) {
-            const url = metric.getRequestUrl(resourceId);
-            const options = metric.getRequestOptions();
-            return this.armService.get(url, options).flatMap(value => {
-                const metrics: Metric[] = value.json().value.map((object): Metric => {
-                    object.name.localizedValue = this._convertToSentenceCase(object.name.localizedValue);
-                    object.name.value = object.name.value;
-                    // format localized name
-                    const localizedValue = object.name.localizedValue;
-
-                    if (customNameFunc) {
-                        object.name.localizedValue = customNameFunc(localizedValue);
-                    }
-
-                    const colorFound = metric.colors.find((c) => c.state === object.name.value);
-                    const color = colorFound && colorFound.color;
-
-                    return {
-                        name: object.name,
-                        data: object.timeseries[0].data.map((data): MetricValue => {
-                            return {
-                                timeStamp: data.timeStamp,
-                                total: data.total,
-                            } as MetricValue;
-                        }),
-                        color: color,
-                    } as Metric;
-                });
-                return Observable.of(metrics);
-            });
+    private _getMetrics(metric: MonitorMetrics,
+                        resourceId: string,
+                        customNameFunc?: (name: string) => string): Observable<MetricResponse> {
+        if (!resourceId) {
+            return Observable.empty();
         }
+        const url = metric.getRequestUrl(resourceId);
+        const options = metric.getRequestOptions();
+        return this.armService.get(url, options).flatMap(value => {
+            const metrics: Metric[] = value.json().value.map((object): Metric => {
+                object.name.localizedValue = this._convertToSentenceCase(object.name.localizedValue);
+                object.name.value = object.name.value;
+                // format localized name
+                const localizedValue = object.name.localizedValue;
+
+                if (customNameFunc) {
+                    object.name.localizedValue = customNameFunc(localizedValue);
+                }
+
+                const colorFound = metric.colors.find((c) => c.state === object.name.value);
+                const color = colorFound && colorFound.color;
+
+                return {
+                    name: object.name,
+                    data: object.timeseries[0].data.map((data): MetricValue => {
+                        return {
+                            timeStamp: data.timeStamp,
+                            total: data.total,
+                        } as MetricValue;
+                    }),
+                    color: color,
+                } as Metric;
+            });
+            return Observable.of({
+                timeFrame: metric.timeFrame,
+                metrics: metrics,
+            });
+        });
     }
 
     /**

@@ -68,6 +68,7 @@ export interface MonitorMetrics {
     metrics: MonitorChartMetrics[];
     aggregation: MonitorChartAggregation[];
     colors: MonitorChartColorPair[];
+    timeFrame: MonitorChartTimeFrame;
     setTimeFrame(timeFrame: MonitorChartTimeFrame): void;
     getRequestUrl(resourceId: string): string;
     getRequestOptions(): RequestOptions;
@@ -88,6 +89,7 @@ export class MonitorMetricsBase implements MonitorMetrics {
     public metrics: MonitorChartMetrics[];
     public aggregation: MonitorChartAggregation[];
     public colors: MonitorChartColorPair[];
+    public timeFrame: MonitorChartTimeFrame;
 
     // Set internally
     // supported interval are: 00:01:00,00:05:00,00:15:00,00:30:00,01:00:00,06:00:00,12:00:00,1.00:00:00
@@ -141,6 +143,7 @@ export class MonitorMetricsBase implements MonitorMetrics {
                 this._interval = oneHoursInterval;
                 break;
         }
+        this.timeFrame = timeFrame;
         this._setTimeSpan(timeFrame);
     }
 
