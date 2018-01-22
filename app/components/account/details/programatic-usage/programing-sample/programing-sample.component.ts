@@ -80,7 +80,11 @@ export class ProgramingSampleComponent implements OnChanges {
     }
 
     private _updatePrerequisites() {
-        this.prerequisites = prerequisites[this.language];
+        if (this.credentialType === CredentialType.AAD) {
+            this.prerequisites = prerequisites.aad[this.language];
+        } else {
+            this.prerequisites = prerequisites.sharedKey[this.language];
+        }
     }
 
     private _updateConfig() {

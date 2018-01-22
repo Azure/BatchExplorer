@@ -19,13 +19,30 @@ export const samplesLink = {
 };
 
 export const prerequisites = {
-    python: [
-        `pip install azure-batch`,
-    ],
-    csharp: [
-        `dotnet add package Azure.Batch`,
-    ],
-    nodejs: [
-        `npm install azure-batch`,
-    ],
+    sharedKey: {
+        python: [
+            `pip install azure-batch`,
+        ],
+        csharp: [
+            `dotnet add package Azure.Batch`,
+        ],
+        nodejs: [
+            `npm install azure-batch`,
+        ],
+    },
+    aad: {
+        python: [
+            `pip install azure-batch`,
+            `pip install msrestazure`,
+        ],
+        csharp: [
+            `dotnet add package Azure.Batch`,
+            `dotnet add package Microsoft.IdentityModel.Clients.ActiveDirectory`,
+        ],
+        nodejs: [
+            `npm install azure-batch`,
+            `npm install ms-rest`,
+            `npm install ms-rest-azure`,
+        ],
+    }
 };
