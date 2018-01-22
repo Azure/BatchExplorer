@@ -44,7 +44,7 @@ bl-button {
         &[color="primary"] {
             color: $primary-color;
             &:hover, &:focus {
-                color: $dark-primary-color;
+                color: $primary-color-dark;
             }
         }
 
@@ -103,7 +103,7 @@ bl-button {
             color: $whitesmoke;
 
             &:hover, &:focus {
-                background: $dark-primary-color;
+                background: $primary-color-dark;
             }
 
             &:active {
