@@ -11,6 +11,7 @@ import { BackgroundTaskModule } from "./background-task";
 import { BannerComponent, BannerOtherFixDirective } from "./banner";
 import { BreadcrumbModule } from "./breadcrumbs";
 import { ButtonsModule } from "./buttons";
+import { CardComponent } from "./card";
 import { ChartsModule } from "./charts";
 import { ContextMenuModule } from "./context-menu";
 import { DialogsModule } from "./dialogs";
@@ -75,6 +76,7 @@ const modules = [
 const components = [
     BannerComponent,
     BannerOtherFixDirective,
+    CardComponent,
     ElapsedTimeComponent,
     EntityDetailsListComponent,
     DurationPickerComponent,
