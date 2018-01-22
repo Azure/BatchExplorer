@@ -15,6 +15,7 @@ extraResources:
     filter:
       - "**/*"
   - "ThirdPartyNotices.txt"
+  - "data"
 
 protocols:
   - name: "BatchLabs protocol"

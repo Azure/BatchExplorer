@@ -1,0 +1,41 @@
+{
+  "$schema": "./theme.schema.json",
+  "primary": "#3d85c6",
+  "danger": "#aa3939",
+  "warn": "#f4ad42",
+  "success": "#4caf50",
+  "main-background": "#f5f5f5",
+  "card-background": "white",
+  "outline": "#528bff",
+  "text": {
+    "primary": "",
+    "secondary": "#757575"
+  },
+  "breadcrumb": {
+    "text": "white",
+    "background": "#5b5b5b",
+    "hover-background": "#666666"
+  },
+  "header": {
+    "text": "white",
+    "background": "#333333",
+    "hover-background": "#757575"
+  },
+  "navigation": {
+    "text": "white",
+    "background": "#5b5b5b",
+    "hover-background": "#666666"
+  },
+  "footer": {
+    "text": "whitesmoke",
+    "background": "var(--color-primary)",
+    "hover": "#757575"
+  },
+  "file-explorer": {
+    "folder-icon": "#f8d979"
+  },
+  "button": {
+    "disabled-text": "#d5d5d5",
+    "disabled-bg": "#f5f5f5"
+  }
+}

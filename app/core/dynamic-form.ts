@@ -56,7 +56,6 @@ export abstract class DynamicForm<TEntity, TDto extends Dto<TDto>> {
             next: () => {
                 this.disposeAsyncTask(id);
             },
-            // TODO-TIM handle error somehow
         });
         return id;
     }
