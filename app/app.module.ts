@@ -32,6 +32,7 @@ import { BatchLabsErrorHandler } from "app/error-handler";
 // services
 import { HttpModule } from "@angular/http";
 import { LayoutModule } from "app/components/layout";
+import { MiscModule } from "app/components/misc";
 import { MaterialModule } from "app/core";
 import { PollService } from "app/services/core";
 import { AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
@@ -88,6 +89,7 @@ const modules = [
     AccountModule, ApplicationModule, DataModule,
     FileModule, JobModule, NodeModule, PoolModule,
     SettingsModule, TaskModule, MarketModule, LayoutModule,
+    MiscModule,
 ];
 
 const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHttpService, ServicePrincipalService];

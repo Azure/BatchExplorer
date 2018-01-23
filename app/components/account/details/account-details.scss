@@ -8,14 +8,21 @@ bl-account-details {
         grid-template-columns: minmax(210px, 1fr) minmax(210px, 1fr) minmax(210px, 1fr);
 
         .account-card {
-            font-size: 2em;
-            color: $scorpion;
             margin-top: 5px;
             margin-right: 5px;
             padding: 12px;
 
-            .account-card-content {
-                height: 300px;
+            > .title {
+                margin-bottom: 5px;
+            }
+
+            > .content {
+            }
+
+            > .actions {
+                color: $link-color;
+                margin-top: 10px;
+                text-align: right;
             }
         }
     }
