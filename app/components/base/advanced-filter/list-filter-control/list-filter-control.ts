@@ -72,7 +72,7 @@ export class ListFilterControl extends AdvancedFilterControlBase {
         if (!value) {
             return { items: [], ranges: [] };
         }
-        let values = this._parseInput(value);
+        const values = this._parseInput(value);
 
         let {items, ranges} = this._extractRanges(values) as any;
 

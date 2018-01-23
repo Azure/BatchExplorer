@@ -42,11 +42,11 @@ const colorFromLevel = {
     60: "inverse",  // FATAL
 };
 
-let nameFromLevel = {};
-let upperNameFromLevel = {};
-let upperPaddedNameFromLevel = {};
+const nameFromLevel = {};
+const upperNameFromLevel = {};
+const upperPaddedNameFromLevel = {};
 Object.keys(levelFromName).forEach((name) => {
-    let lvl = levelFromName[name];
+    const lvl = levelFromName[name];
     nameFromLevel[lvl] = name;
     upperNameFromLevel[lvl] = name.toUpperCase();
     upperPaddedNameFromLevel[lvl] = (name.length === 4 ? " " : "") + name.toUpperCase();

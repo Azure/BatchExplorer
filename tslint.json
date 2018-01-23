@@ -71,7 +71,7 @@
     "trackBy-function": true,
     "banana-in-box": true,
     // TODO enable
-    "prefer-const": false
+    "prefer-const": true
   },
   "jsRules": {
     "object-literal-sort-keys": false,
