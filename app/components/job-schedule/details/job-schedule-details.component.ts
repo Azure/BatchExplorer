@@ -1,5 +1,4 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-// import { MatDialog, MatDialogConfig } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { autobind } from "app/core";
 import { remote } from "electron";
@@ -10,7 +9,6 @@ import { Job, JobSchedule, JobScheduleState, Pool } from "app/models";
 import { JobScheduleDecorator } from "app/models/decorators";
 import { FileSystemService, JobScheduleParams, JobScheduleService } from "app/services";
 import { EntityView } from "app/services/core";
-// import { SidebarManager } from "../../base/sidebar";
 
 import "./job-schedule-details.scss";
 
@@ -24,7 +22,7 @@ export class JobScheduleDetailsComponent implements OnInit, OnDestroy {
         return {
             name: id,
             label,
-            icon: "tasks",
+            icon: "calendar",
         };
     }
 
@@ -38,10 +36,8 @@ export class JobScheduleDetailsComponent implements OnInit, OnDestroy {
     private _paramsSubscriber: Subscription;
 
     constructor(
-        // private dialog: MatDialog,
         private activatedRoute: ActivatedRoute,
         private fs: FileSystemService,
-        // private sidebarManager: SidebarManager,
         private jobScheduleService: JobScheduleService,
         private router: Router) {
 
