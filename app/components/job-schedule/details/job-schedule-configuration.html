@@ -22,8 +22,15 @@
             </div>
             <bl-text-property label="Next run time" [value]="executionInfo.nextRunTime"></bl-text-property>
             <bl-text-property label="End time" [value]="executionInfo.endTime"></bl-text-property>
-            <bl-text-property label="Most recent job id" [value]="executionInfo.recentJob?.id"></bl-text-property>
+            <bl-link-property label="Most recent job id" [value]="executionInfo.recentJob?.id" [link]="['/jobs/', executionInfo.recentJob?.id]"></bl-link-property>
             <bl-text-property label="Most recent job url" [value]="executionInfo.recentJob?.url"></bl-text-property>
+        </bl-property-group>
+
+        <bl-property-group *ngIf="jobSchedule.schedule" label="Schedule" class="wide" [collapsed]="true">
+            <bl-text-property label="Next run time" [value]="schedule.doNotRunAfter"></bl-text-property>
+            <bl-text-property label="End time" [value]="schedule.doNotRunUntil"></bl-text-property>
+            <bl-text-property label="Most recent job id" [value]="schedule.recurrenceInterval"></bl-text-property>
+            <bl-text-property label="Most recent job url" [value]="schedule.startWindow"></bl-text-property>
         </bl-property-group>
 
         <bl-property-group label="Metadata" class="wide" [collapsed]="true" [edit]="jobSchedule.editable ? editMetadata : null">

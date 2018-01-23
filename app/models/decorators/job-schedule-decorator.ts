@@ -1,6 +1,7 @@
 import { JobSchedule, JobScheduleState } from "app/models";
 import { DecoratorBase } from "app/utils/decorators";
 import { JobScheduleExecutionInfoDecorator } from "./job-schedule-execution-info-decorator";
+import { JobScheduleScheduleDecorator } from "./job-schedule-schedule-decorator";
 
 export class JobScheduleDecorator extends DecoratorBase<JobSchedule> {
     public state: string;
@@ -13,6 +14,7 @@ export class JobScheduleDecorator extends DecoratorBase<JobSchedule> {
     public previousStateTransitionTime: string;
 
     public executionInfo: JobScheduleExecutionInfoDecorator;
+    public schedule: JobScheduleScheduleDecorator;
 
     constructor(jobSchedule: JobSchedule) {
         super(jobSchedule);
@@ -27,6 +29,7 @@ export class JobScheduleDecorator extends DecoratorBase<JobSchedule> {
         this.previousStateTransitionTime = this.dateField(jobSchedule.previousStateTransitionTime);
 
         this.executionInfo = new JobScheduleExecutionInfoDecorator(jobSchedule.executionInfo || {} as any);
+        this.schedule = new JobScheduleScheduleDecorator(jobSchedule.schedule || {} as any);
     }
 
     private _getStateIcon(state: JobScheduleState): string {

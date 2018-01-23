@@ -26,9 +26,8 @@ export class JobScheduleConfigurationComponent {
 
     public decorator: JobScheduleDecorator = { } as any;
     public executionInfo: any = {};
-    // public environmentSettings: List<NameValuePair> = List([]);
+    public schedule: any = {};
     public jobScheduleMetadata: List<Metadata> = List([]);
-    // public poolInfo: any = {};
 
     private _jobSchedule: JobSchedule;
 
@@ -50,6 +49,7 @@ export class JobScheduleConfigurationComponent {
         if (this.jobSchedule) {
             this.decorator = new JobScheduleDecorator(this.jobSchedule);
             this.executionInfo = this.decorator.executionInfo || {};
+            this.schedule = this.decorator.schedule || {};
             this.jobScheduleMetadata = this.jobSchedule.metadata;
         }
     }
