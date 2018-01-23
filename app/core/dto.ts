@@ -14,7 +14,7 @@ function metadataForDto<T>(dto: Dto<T>) {
 export class Dto<T> {
     constructor(data: AttrOf<T>) {
         const attrs = metadataForDto(this);
-        for (let key of Object.keys(attrs)) {
+        for (const key of Object.keys(attrs)) {
             const type = attrs[key];
             if (!(key in data)) {
                 continue;
@@ -39,7 +39,7 @@ export class Dto<T> {
     public toJS?(): AttrOf<T> {
         let output: any = {};
         const attrs = metadataForDto(this);
-        for (let key of Object.keys(attrs)) {
+        for (const key of Object.keys(attrs)) {
             if (!(key in this)) {
                 continue;
             }

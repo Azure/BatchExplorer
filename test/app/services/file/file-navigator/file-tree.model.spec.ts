@@ -15,10 +15,10 @@ function reprTree(tree: FileTreeStructure) {
 
 function reprNode(node: FileTreeNode, indent = 0) {
     let rows = [];
-    for (let [_, child] of node.children) {
+    for (const [_, child] of node.children) {
         rows.push({ indent, node: child });
         if (child.children.size > 0) {
-            for (let row of reprNode(child, indent + 1)) {
+            for (const row of reprNode(child, indent + 1)) {
                 rows.push(row);
             }
         }

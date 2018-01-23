@@ -138,7 +138,7 @@ export class FileNavigator {
         if (this._fileDeletedSub) {
             this._fileDeletedSub.unsubscribe();
         }
-        for (let proxy of ObjectUtils.values(this._proxies)) {
+        for (const proxy of ObjectUtils.values(this._proxies)) {
             proxy.dispose();
         }
     }

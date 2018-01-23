@@ -43,11 +43,11 @@ export class HeatmapColor {
      */
     private _initialColors(): ColorMap {
         const colors: ColorMap = {};
-        for (let item of this._stateTree as any) {
+        for (const item of this._stateTree as any) {
             if (item.state) {
                 colors[item.state] = item.color;
             } else {
-                for (let subitem of item.states) {
+                for (const subitem of item.states) {
                     colors[subitem.state] = item.color;
                 }
             }
@@ -61,16 +61,16 @@ export class HeatmapColor {
     private _colorsForHighlight(highlightedState: string): ColorMap {
         const stateTree = this._stateTree;
         const colors: ColorMap = {};
-        for (let item of stateTree as any) {
+        for (const item of stateTree as any) {
             if (item.state) {
                 colors[item.state] = this._getHighlightColor(item.state, highlightedState, item.color);
             } else {
                 if (item.category === highlightedState) {
-                    for (let subitem of item.states) {
+                    for (const subitem of item.states) {
                         colors[subitem.state] = subitem.color;
                     }
                 } else {
-                    for (let subitem of item.states) {
+                    for (const subitem of item.states) {
                         colors[subitem.state] = this._getHighlightColor(subitem.state,
                             highlightedState,
                             subitem.color,

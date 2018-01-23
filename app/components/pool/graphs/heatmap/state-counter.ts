@@ -11,7 +11,7 @@ export class StateCounter {
     private _data: CounObsMap = {};
 
     constructor() {
-        for (let state of ObjectUtils.values(NodeState)) {
+        for (const state of ObjectUtils.values(NodeState)) {
             this._data[state] = new BehaviorSubject(0);
         }
     }
@@ -22,7 +22,7 @@ export class StateCounter {
 
     public updateCount(nodes: List<Node>) {
         let counts: CountMap = {};
-        for (let state of ObjectUtils.values(NodeState)) {
+        for (const state of ObjectUtils.values(NodeState)) {
             counts[state] = 0;
         }
         nodes.forEach((node) => {
@@ -32,7 +32,7 @@ export class StateCounter {
                 log.error(`Node '${node.id}' has an unknown state '${node.state}'`);
             }
         });
-        for (let state of ObjectUtils.values(NodeState)) {
+        for (const state of ObjectUtils.values(NodeState)) {
             (this._data[state] as BehaviorSubject<number>).next(counts[state]);
         }
     }

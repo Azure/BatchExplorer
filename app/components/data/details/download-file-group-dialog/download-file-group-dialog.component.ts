@@ -118,7 +118,7 @@ export class DownloadFileGroupDialogComponent {
                 if (!file.name.startsWith(this.pathPrefix)) {
                     return false;
                 }
-                for (let pattern of patterns) {
+                for (const pattern of patterns) {
                     // Path prefix must be excluded when compared to pattern
                     const fileName = this._getSubdirectoryPath(file.name);
                     if (minimatch(fileName, pattern)) {

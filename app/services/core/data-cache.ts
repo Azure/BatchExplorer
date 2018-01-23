@@ -16,7 +16,7 @@ export class DataCacheTracker {
 
     public static clearAllCaches(...except: Array<DataCache<any>>) {
         const excludeIds = except.map(x => x.id);
-        for (let cache of ObjectUtils.values(this._caches)) {
+        for (const cache of ObjectUtils.values(this._caches)) {
             if (excludeIds.indexOf(cache.id) === -1) {
                 cache.clear();
             }
@@ -97,7 +97,7 @@ export class DataCache<T> {
     public addItems(items: T[], select?: string): string[] {
         const newItems: { [key: string]: T } = {};
         const keys = [];
-        for (let item of items) {
+        for (const item of items) {
             const key = this.getItemKey(item);
             keys.push(key);
             newItems[key] = this._computeNewItem(item, key, select);

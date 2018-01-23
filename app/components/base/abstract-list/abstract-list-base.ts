@@ -292,7 +292,7 @@ export class AbstractListBase implements AfterViewInit, OnDestroy {
         const items: AbstractListItemBase[] = this.displayItems;
         let index = 0;
         let currentItem;
-        for (let item of items) {
+        for (const item of items) {
             if (item.key === this.focusedItem.value) {
                 currentItem = item;
                 break;

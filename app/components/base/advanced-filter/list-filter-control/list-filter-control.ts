@@ -124,7 +124,7 @@ export class ListFilterControl extends AdvancedFilterControlBase {
         }
         const items: string[] = [];
         const ranges: string[][] = [];
-        for (let v of values) {
+        for (const v of values) {
             const range = v.split(this._config.rangeSeparator, 2).filter(x => x !== "");
             if (range.length === 1) {
                 items.push(v);

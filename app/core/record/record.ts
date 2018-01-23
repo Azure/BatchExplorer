@@ -49,7 +49,7 @@ export class Record<TInput> {
         let output: any = {};
         const attrs = metadataForRecord(this);
 
-        for (let key of Object.keys(attrs)) {
+        for (const key of Object.keys(attrs)) {
             if (!(key in this)) {
                 continue;
             }
@@ -75,7 +75,7 @@ export class Record<TInput> {
         const keys = Object.keys(attrs);
         this._keys = new Set(keys);
 
-        for (let key of keys) {
+        for (const key of keys) {
             this._defaultValues[key] = null;
             const typeMetadata = attrs[key];
             if (!(key in data)) {

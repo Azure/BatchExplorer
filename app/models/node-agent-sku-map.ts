@@ -47,7 +47,7 @@ export class NodeAgentSkuMap {
          */
         let targetOffers = null;
         skus.forEach((sku) => {
-            for (let imageReference of sku.verifiedImageReferences) {
+            for (const imageReference of sku.verifiedImageReferences) {
                 targetOffers = offers;
                 if (dockerContainer[imageReference.offer] &&
                     dockerContainer[imageReference.offer].includes(imageReference.sku)) {

@@ -89,7 +89,7 @@ export class BreadcrumbService {
             return null;
         }
 
-        for (let child of route.children) {
+        for (const child of route.children) {
             if (child.outlet !== PRIMARY_OUTLET) {
                 continue;
             }

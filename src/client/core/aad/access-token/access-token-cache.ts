@@ -78,13 +78,13 @@ export class AccessTokenCache {
 
     private _processSerializedTokens(data: any) {
         const tokens = {};
-        for (let tenantId of Object.keys(data)) {
+        for (const tenantId of Object.keys(data)) {
             const tenant = data[tenantId];
             if (!tenant || typeof tenant !== "object") {
                 continue;
             }
 
-            for (let resource of Object.keys(tenant)) {
+            for (const resource of Object.keys(tenant)) {
                 if (!AccessToken.isValidToken(tenant[resource])) {
                     continue;
                 }

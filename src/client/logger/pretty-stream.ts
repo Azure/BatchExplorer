@@ -105,7 +105,7 @@ function extractCustomDetails(rec) {
     const details = [];
     const extras = {};
 
-    for (let key of Object.keys(rec)) {
+    for (const key of Object.keys(rec)) {
         if (skip.has(key)) { continue; }
         let value = rec[key];
         if (typeof value === "undefined") { value = ""; }
@@ -131,10 +131,10 @@ function extractCustomDetails(rec) {
 
 function applyDetails(results, details, extras) {
     if (!results) { return; }
-    for (let detail of results.details) {
+    for (const detail of results.details) {
         details.push(indent(detail));
     }
-    for (let key of Object.keys(results.extras)) {
+    for (const key of Object.keys(results.extras)) {
         extras.push(key + "=" + results.extras[key]);
     }
 }
