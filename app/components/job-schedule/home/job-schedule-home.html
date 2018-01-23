@@ -3,8 +3,6 @@
         Job schedules
     </div>
     <div bl-list-buttons>
-        <!-- <bl-button color="light" type="plain" icon="fa fa-plus spin-hover" title="Add a job schedule" [action]="addJobSchedule" permission="write">
-        </bl-button> -->
     </div>
     <div bl-list-content>
         <bl-focus-section>
@@ -14,8 +12,8 @@
     <div bl-show-content>
         <router-outlet></router-outlet>
     </div>
-    <!-- <div bl-show-advanced-filter>
-        <bl-job-advanced-filter (change)="layout.advancedFilterChanged($event)">
-        </bl-job-advanced-filter>
-    </div> -->
+    <div bl-show-advanced-filter>
+        <bl-job-schedule-advanced-filter (change)="layout.advancedFilterChanged($event)">
+        </bl-job-schedule-advanced-filter>
+    </div>
 </bl-list-and-show-layout>

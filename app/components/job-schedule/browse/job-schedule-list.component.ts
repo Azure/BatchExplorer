@@ -33,8 +33,7 @@ export class JobScheduleListComponent extends ListOrTableBase implements OnInit,
     @ViewChild(TableComponent)
     public table: TableComponent;
 
-    @Input()
-    public quickList: boolean;
+    @Input() public quickList: boolean;
 
     @Input()
     public set filter(filter: Filter) {
@@ -51,8 +50,6 @@ export class JobScheduleListComponent extends ListOrTableBase implements OnInit,
     public get filter(): Filter { return this._filter; }
 
     private _filter: Filter;
-
-    // todo: ask tim about setting difference select options for list and details.
     private _baseOptions = {  };
     private _onJobScheduleAddedSub: Subscription;
 

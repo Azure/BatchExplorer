@@ -46,7 +46,7 @@ export class JobScheduleService extends ServiceBase {
         this._listGetter = new BatchListGetter(JobSchedule, this.batchService, {
             cache: () => this.cache,
             list: (client, params: JobScheduleListParams, options) => {
-                return client.jobSchedule.list({ jobListOptions: options });
+                return client.jobSchedule.list({ jobScheduleListOptions: options });
             },
             listNext: (client, nextLink: string) => client.jobSchedule.listNext(nextLink),
         });
@@ -78,8 +78,8 @@ export class JobScheduleService extends ServiceBase {
         return this._listGetter.fetchAll({}, options);
     }
 
-    public get(jobId: string, options: any = {}): Observable<JobSchedule> {
-        return this._getter.fetch({ id: jobId });
+    public get(jobScheduleId: string, options: any = {}): Observable<JobSchedule> {
+        return this._getter.fetch({ id: jobScheduleId });
     }
 
     /**
@@ -93,36 +93,36 @@ export class JobScheduleService extends ServiceBase {
         });
     }
 
-    public delete(jobId: string, options: any = {}): Observable<{}> {
-        return this.callBatchClient((client) => client.jobSchedule.delete(jobId, options), (error) => {
-            log.error("Error deleting job: " + jobId, error);
+    public delete(jobScheduleId: string, options: any = {}): Observable<{}> {
+        return this.callBatchClient((client) => client.jobSchedule.delete(jobScheduleId, options), (error) => {
+            log.error("Error deleting job schedule: " + jobScheduleId, error);
         });
     }
 
-    public terminate(jobId: string, options: any = {}): Observable<{}> {
-        return this.callBatchClient((client) => client.jobSchedule.terminate(jobId, options));
+    public terminate(jobScheduleId: string, options: any = {}): Observable<{}> {
+        return this.callBatchClient((client) => client.jobSchedule.terminate(jobScheduleId, options));
     }
 
-    public disable(jobId: string, options: any = {}): Observable<{}> {
-        return this.callBatchClient((client) => client.jobSchedule.disable(jobId, options));
+    public disable(jobScheduleId: string, options: any = {}): Observable<{}> {
+        return this.callBatchClient((client) => client.jobSchedule.disable(jobScheduleId, options));
     }
 
-    public enable(jobId: string, options: any = {}): Observable<{}> {
-        return this.callBatchClient((client) => client.jobSchedule.enable(jobId, options));
+    public enable(jobScheduleId: string, options: any = {}): Observable<{}> {
+        return this.callBatchClient((client) => client.jobSchedule.enable(jobScheduleId, options));
     }
 
-    public add(job: JobScheduleCreateDto, options: any = {}): Observable<{}> {
-        return this.callBatchClient((client) => client.jobSchedule.add(job.toJS(), options));
+    public add(jobSchedule: JobScheduleCreateDto, options: any = {}): Observable<{}> {
+        return this.callBatchClient((client) => client.jobSchedule.add(jobSchedule.toJS(), options));
     }
 
-    public patch(jobId: string, attributes: JobSchedulePatchDto, options: any = {}) {
-        return this.callBatchClient((client) => client.jobSchedule.patch(jobId, options));
+    public patch(jobScheduleId: string, attributes: JobSchedulePatchDto, options: any = {}) {
+        return this.callBatchClient((client) => client.jobSchedule.patch(jobScheduleId, options));
     }
 
-    public updateTags(job: JobSchedule, tags: List<string>) {
+    public updateTags(jobSchedule: JobSchedule, tags: List<string>) {
         const attributes = new JobSchedulePatchDto({
-            metadata: ModelUtils.updateMetadataWithTags(job.metadata, tags),
+            metadata: ModelUtils.updateMetadataWithTags(jobSchedule.metadata, tags),
         });
-        return this.patch(job.id, attributes);
+        return this.patch(jobSchedule.id, attributes);
     }
 }
