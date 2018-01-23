@@ -12,7 +12,7 @@ export interface JobScheduleExecutionInformationAttributes {
  */
 @Model()
 export class JobScheduleExecutionInformation extends Record<JobScheduleExecutionInformationAttributes> {
-    @Prop() public startTime: Date;
     @Prop() public endTime: Date;
+    @Prop() public nextRunTime: Date;
     @Prop() public recentJob: RecentJob;
 }

@@ -12,12 +12,12 @@ export class JobScheduleExecutionInfoDecorator extends DecoratorBase<JobSchedule
     constructor(executionInfo: JobScheduleExecutionInformation) {
         super(executionInfo);
 
-        this.nextRunTime = this.dateField(executionInfo.startTime);
+        this.nextRunTime = this.dateField(executionInfo.nextRunTime);
         this.endTime = this.dateField(executionInfo.endTime);
         this.recentJob = executionInfo.recentJob;
 
-        if (executionInfo.startTime) {
-            this.nextRunTimeFromNow = DateUtils.timeFromNow(executionInfo.startTime);
+        if (executionInfo.nextRunTime) {
+            this.nextRunTimeFromNow = DateUtils.timeFromNow(executionInfo.nextRunTime);
         }
 
         if (executionInfo.endTime) {
