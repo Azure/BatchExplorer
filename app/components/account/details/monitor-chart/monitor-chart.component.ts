@@ -17,7 +17,8 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
     public title = "";
     public type = "line";
     public datasets: Chart.ChartDataSets[];
-    public options = {};
+    public lastValue: any[] = [];
+    public options: Chart.ChartOptions = {};
     public timeFrame: MonitorChartTimeFrame = MonitorChartTimeFrame.Hour;
     public colors: any[];
     public loadingStatus: LoadingStatus = LoadingStatus.Loading;
@@ -51,11 +52,13 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
             this._updateLoadingStatus(LoadingStatus.Loading);
             this.colors = [];
             this.timeFrame = response.timeFrame;
+            this.lastValue = [];
             this.datasets = response.metrics.map((metric: Metric): Chart.ChartDataSets => {
                 this.colors.push({
                     borderColor: metric.color,
                     backgroundColor: metric.color,
                 });
+                this.lastValue.push(metric.data.last().total || 0)
                 return {
                     label: metric.name.localizedValue,
                     data: metric.data.map(data => {
@@ -141,12 +144,7 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
                 },
             },
             legend: {
-                display: true,
-                position: "bottom",
-                labels: {
-                    usePointStyle: true,
-                    fontSize: 10,
-                },
+                display: false,
             },
             tooltips: {
                 enabled: true,
@@ -170,6 +168,12 @@ export class MonitorChartComponent implements OnChanges, OnDestroy {
                     type: "time",
                     position: "bottom",
                     display: false,
+                    // ticks: {
+                    //     display: false,
+                    // },
+                    // scaleLabel: {
+                    //     display: false,
+                    // }
                 }],
             },
         };
