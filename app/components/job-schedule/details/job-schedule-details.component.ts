@@ -7,7 +7,7 @@ import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
 import { JobSchedule, JobScheduleState } from "app/models";
-// import { JobScheduleDecorator } from "app/models/decorators";
+import { JobScheduleDecorator } from "app/models/decorators";
 import { FileSystemService, JobScheduleParams, JobScheduleService } from "app/services";
 import { EntityView } from "app/services/core";
 // import { SidebarManager } from "../../base/sidebar";
@@ -15,8 +15,8 @@ import { EntityView } from "app/services/core";
 import "./job-schedule-details.scss";
 
 @Component({
-    selector: "bl-job-details",
-    templateUrl: "job-details.html",
+    selector: "bl-job-schedule-details",
+    templateUrl: "job-schedule-details.html",
 })
 export class JobScheduleDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({ id }, { tab }) {
@@ -30,7 +30,7 @@ export class JobScheduleDetailsComponent implements OnInit, OnDestroy {
 
     public jobScheduleId: string;
     public jobSchedule: JobSchedule;
-    // public decorator: JobDecorator;
+    public decorator: JobScheduleDecorator;
     public data: EntityView<JobSchedule, JobScheduleParams>;
     public JobScheduleState = JobScheduleState;
     public hasHookTask = false;
@@ -48,12 +48,13 @@ export class JobScheduleDetailsComponent implements OnInit, OnDestroy {
         this.data = this.jobScheduleService.view();
         this.data.item.subscribe((jobSchedule) => {
             this.jobSchedule = jobSchedule;
-            console.log(jobSchedule.toJS());
+            if (jobSchedule) {
+                this.decorator = new JobScheduleDecorator(jobSchedule);
+            }
         });
-
         this.data.deleted.subscribe((key) => {
             if (this.jobScheduleId === key) {
-                this.router.navigate(["/jobSchedules"]);
+                this.router.navigate(["/jobschedules"]);
             }
         });
     }

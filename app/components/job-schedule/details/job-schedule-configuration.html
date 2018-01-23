@@ -1,0 +1,39 @@
+<bl-entity-configuration [value]="jobSchedule">
+    <bl-property-list>
+        <bl-property-group label="General" class="wide">
+            <bl-text-property label="Id" [value]="decorator.id"></bl-text-property>
+            <bl-text-property label="Display name" [value]="decorator.displayName"></bl-text-property>
+            <bl-text-property label="State" [value]="decorator.state"></bl-text-property>
+            <bl-text-property label="State transition time" [value]="decorator.stateTransitionTime"></bl-text-property>
+            <bl-text-property label="Creation time" [value]="decorator.creationTime"></bl-text-property>
+            <bl-text-property label="Last modified" [value]="decorator.lastModified"></bl-text-property>
+            <bl-text-property label="Previous state" [value]="decorator.previousState"></bl-text-property>
+            <bl-text-property label="Previous transition time" [value]="decorator.previousStateTransitionTime"></bl-text-property>
+        </bl-property-group>
+
+        <bl-property-group label="Execution information" class="wide" [collapsed]="true">
+            <div collapsed-preview>
+                <span *ngIf="jobSchedule.executionInfo?.nextRunTime && !jobSchedule.executionInfo?.endTime">
+                    Next run time: {{ executionInfo.nextRunTimeFromNow }}
+                </span>
+                <span *ngIf="!jobSchedule.executionInfo?.nextRunTime && jobSchedule.executionInfo?.endTime">
+                    Completed: {{ executionInfo.endTimeFromNow }}
+                </span>
+            </div>
+            <bl-text-property label="Next run time" [value]="executionInfo.nextRunTime"></bl-text-property>
+            <bl-text-property label="End time" [value]="executionInfo.endTime"></bl-text-property>
+            <bl-text-property label="Most recent job id" [value]="executionInfo.recentJob?.id"></bl-text-property>
+            <bl-text-property label="Most recent job url" [value]="executionInfo.recentJob?.url"></bl-text-property>
+        </bl-property-group>
+
+        <bl-property-group label="Metadata" class="wide" [collapsed]="true" [edit]="jobSchedule.editable ? editMetadata : null">
+            <div collapsed-preview>
+                <span>{{jobScheduleMetadata?.size}} meta items</span>
+            </div>
+            <bl-text-property *ngFor="let metaItem of jobScheduleMetadata" label="{{metaItem.name}}" [value]="metaItem.value"></bl-text-property>
+            <bl-no-item [itemCount]="jobScheduleMetadata.size" [slimline]="true">
+                <span no-filter>This job schedule contains no metadata</span>
+            </bl-no-item>
+        </bl-property-group>
+    </bl-property-list>
+</bl-entity-configuration>

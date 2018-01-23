@@ -12,6 +12,7 @@ export * from "./job-execution-info-decorator";
 export * from "./job-manager-task-decorator";
 export * from "./job-preparation-task-decorator";
 export * from "./job-release-task-decorator";
+export * from "./job-schedule-decorator";
 export * from "./pool-decorator";
 export * from "./pool-endpoint-configuration-decorator";
 export * from "./start-task.decorator";

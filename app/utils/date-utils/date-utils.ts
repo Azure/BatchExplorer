@@ -94,4 +94,15 @@ export class DateUtils {
         const runtime = moment.duration(currentEndTime.diff(moment(startTime)));
         return DateUtils.prettyDuration(runtime);
     }
+
+    /**
+     * Display a moment in relation to a time other than now
+     * @param timeToCompare - time to compare
+     */
+    public static timeFromNow(timeToCompare: Date): string {
+        if (!timeToCompare) {
+            return null;
+        }
+        return moment(timeToCompare).fromNow();
+    }
 }
