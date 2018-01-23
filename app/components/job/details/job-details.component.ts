@@ -28,7 +28,7 @@ import "./job-details.scss";
 })
 export class JobDetailsComponent implements OnInit, OnDestroy {
     public static breadcrumb({ id }, { tab }) {
-        let label = tab ? `Job - ${tab}` : "Job";
+        const label = tab ? `Job - ${tab}` : "Job";
         return {
             name: id,
             label,
@@ -99,7 +99,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public terminateJob() {
-        let config = new MatDialogConfig();
+        const config = new MatDialogConfig();
         const dialogRef = this.dialog.open(TerminateJobDialogComponent, config);
         dialogRef.componentInstance.jobId = this.job.id;
         dialogRef.afterClosed().subscribe((obj) => {
@@ -109,14 +109,14 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public deleteJob() {
-        let config = new MatDialogConfig();
+        const config = new MatDialogConfig();
         const dialogRef = this.dialog.open(DeleteJobDialogComponent, config);
         dialogRef.componentInstance.jobId = this.job.id;
     }
 
     @autobind()
     public disableJob() {
-        let config = new MatDialogConfig();
+        const config = new MatDialogConfig();
         const dialogRef = this.dialog.open(DisableJobDialogComponent, config);
         dialogRef.componentInstance.jobId = this.job.id;
         dialogRef.afterClosed().subscribe((obj) => {
@@ -132,7 +132,7 @@ export class JobDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public enableJob() {
-        let config = new MatDialogConfig();
+        const config = new MatDialogConfig();
         const dialogRef = this.dialog.open(EnableJobDialogComponent, config);
         dialogRef.componentInstance.jobId = this.job.id;
         dialogRef.afterClosed().subscribe((obj) => {

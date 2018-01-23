@@ -159,7 +159,7 @@ export class DataCache<T> {
         if (!select) { return item; }
         const oldItem = this._items.getValue().get(key);
         if (!oldItem) { return item; }
-        let attributes = ObjectUtils.slice((item as any).toJS(), this._getAttributesList(select));
+        const attributes = ObjectUtils.slice((item as any).toJS(), this._getAttributesList(select));
         return (oldItem as any).merge(attributes);
     }
 }

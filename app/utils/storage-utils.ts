@@ -72,7 +72,7 @@ export class StorageUtils {
 
     private static _mungeToContainerName(jobId: string): Promise<string> {
         return this._getJobIdHash(jobId).then((hash: string) => {
-            let hashText = hash;
+            const hashText = hash;
             let safeString = jobId.replace(this._regexUnderscoresAndMultipleDashes, this._singleDashChar);
             safeString = safeString.replace(this._regexTrimStartAndEnd, "");
 

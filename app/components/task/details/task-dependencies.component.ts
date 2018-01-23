@@ -117,7 +117,7 @@ export class TaskDependenciesComponent {
     private _getTaskDependencyIds(dependencies: TaskDependencies): string[] {
         const ids = dependencies.taskIds;
         const ranges = dependencies.taskIdRanges;
-        let out = ids.toJS();
+        const out = ids.toJS();
 
         if (!ranges) {
             return out;

@@ -21,7 +21,7 @@ export function mockStorage(storage: Storage) {
 }
 
 export function mockNodeStorage(storage: LocalStorage) {
-    let data: { [key: string]: string } = {};
+    const data: { [key: string]: string } = {};
 
     spyOn(storage, "setItem").and.callFake((key, value) => {
         data[key] = value;

@@ -21,7 +21,7 @@ export class StateCounter {
     }
 
     public updateCount(nodes: List<Node>) {
-        let counts: CountMap = {};
+        const counts: CountMap = {};
         for (const state of ObjectUtils.values(NodeState)) {
             counts[state] = 0;
         }

@@ -14,7 +14,7 @@ function reprTree(tree: FileTreeStructure) {
 }
 
 function reprNode(node: FileTreeNode, indent = 0) {
-    let rows = [];
+    const rows = [];
     for (const [_, child] of node.children) {
         rows.push({ indent, node: child });
         if (child.children.size > 0) {

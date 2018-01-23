@@ -46,7 +46,7 @@ export class Record<TInput> {
     }
 
     private _toJS() {
-        let output: any = {};
+        const output: any = {};
         const attrs = metadataForRecord(this);
 
         for (const key of Object.keys(attrs)) {

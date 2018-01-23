@@ -37,7 +37,7 @@ export class Dto<T> {
     }
 
     public toJS?(): AttrOf<T> {
-        let output: any = {};
+        const output: any = {};
         const attrs = metadataForDto(this);
         for (const key of Object.keys(attrs)) {
             if (!(key in this)) {

@@ -98,7 +98,7 @@ export class AppPackagePickerComponent implements ControlValueAccessor, Validato
 
             if (this._propagateChange) {
                 const cloned = this.items.value.slice(0, -1).map(item => {
-                    let clone = JSON.parse(JSON.stringify(item));
+                    const clone = JSON.parse(JSON.stringify(item));
                     if (clone.version === this._defaultVersionValue) {
                         clone.version = null;
                     }

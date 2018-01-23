@@ -103,7 +103,7 @@ export class StorageClientService {
     }
 
     public clearCurrentStorageKeys() {
-        let cachedItem = this._getCachedItem(this._currentStorageAccountId);
+        const cachedItem = this._getCachedItem(this._currentStorageAccountId);
         if (cachedItem) {
             cachedItem.keys = null;
         }

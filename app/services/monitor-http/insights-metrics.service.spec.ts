@@ -11,7 +11,7 @@ describe("InsightsMetricsService", () => {
     let accountServiceSpy;
     let armServiceSpy;
     let mockeResponse;
-    let subs: Subscription[] = [];
+    const subs: Subscription[] = [];
 
     beforeEach(() => {
         themeServiceSpy = {

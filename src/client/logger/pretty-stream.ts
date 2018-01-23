@@ -61,7 +61,7 @@ function stylize(str, color = "white") {
         return str;
     }
 
-    let codes = colors[color];
+    const codes = colors[color];
     if (codes) {
         return "\x1B[" + codes[0] + "m" + str +
             "\x1B[" + codes[1] + "m";
@@ -74,7 +74,7 @@ function indent(s) {
 }
 
 function extractTime(rec) {
-    let time = (typeof rec.time === "object") ? rec.time.toISOString() : rec.time;
+    const time = (typeof rec.time === "object") ? rec.time.toISOString() : rec.time;
 
     return stylize(time.substr(11));
 }
@@ -142,7 +142,7 @@ function applyDetails(results, details, extras) {
 export class PrettyStream extends Stream {
     constructor(opts = {}) {
         super();
-        let options = {};
+        const options = {};
 
         if (opts) {
             Object.keys(opts).forEach((key) => {
@@ -183,12 +183,12 @@ export class PrettyStream extends Stream {
         const level = extractLevel(rec);
         const component = rec.name;
 
-        let msg = isSingleLineMsg(rec) ? extractMsg(rec) : "";
+        const msg = isSingleLineMsg(rec) ? extractMsg(rec) : "";
         if (!msg) {
             details.push(indent(extractMsg(rec)));
         }
 
-        let error = extractError(rec);
+        const error = extractError(rec);
         if (error) {
             details.push(indent(error));
         }

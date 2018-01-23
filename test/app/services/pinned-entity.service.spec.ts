@@ -13,7 +13,7 @@ function getSavedData(): PinnableEntity[] {
 describe("PinnedEntityService", () => {
     let pinService: PinnedEntityService;
     let favourites: List<PinnableEntity> = List<PinnableEntity>();
-    let subscriptions: Subscription[] = [];
+    const subscriptions: Subscription[] = [];
     let localFileStorageSpy;
     let accountServiceSpy;
 

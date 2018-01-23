@@ -252,7 +252,7 @@ export class FileTreeViewComponent implements OnInit, OnChanges, OnDestroy {
     }
 
     private _getTreeRowsForNode(node: FileTreeNode, indent = 0): TreeRow[] {
-        let rows = [];
+        const rows = [];
         for (const [_, child] of node.children) {
             if (this.autoExpand && !(child.path in this.expandedDirs)) {
                 this.expandedDirs[child.path] = true;

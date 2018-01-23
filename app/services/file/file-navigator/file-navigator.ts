@@ -215,7 +215,7 @@ export class FileNavigator {
     }
 
     private _getFolderToLoad(path: string, asDirectory = true) {
-        let fullPath = [this._normalizedBasePath, path].filter(x => Boolean(x)).join("");
+        const fullPath = [this._normalizedBasePath, path].filter(x => Boolean(x)).join("");
         if (fullPath) {
             if (asDirectory) {
                 return CloudPathUtils.asBaseDirectory(fullPath);
