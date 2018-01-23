@@ -14,13 +14,13 @@ bl-rpc-server-status {
     }
 
     &:not(.connected) {
-        background-color: map-get($danger, 500);
+        background-color: $primary-color;
 
         &:hover, &.active {
-            background-color: map-get($danger, 700);
+            background-color: $primary-color-dark;
         }
         .fa {
-            margin-right: 5px;
+            margin-right: 2px;
         }
     }
 }

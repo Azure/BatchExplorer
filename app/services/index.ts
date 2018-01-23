@@ -1,4 +1,5 @@
 export * from "./account.service";
+export * from "./authorization-http";
 export * from "./application-service";
 export * from "./app-insights";
 export * from "./autoscale-formula.service";
@@ -15,6 +16,7 @@ export * from "./job-service";
 export * from "./job-hook-task.service";
 export * from "./local-file-storage.service";
 export * from "./monaco-loader.service";
+export * from "./monitor-http";
 export * from "./navigator.service";
 export * from "./pinned-entity.service";
 export * from "./pool-service";
@@ -24,6 +26,7 @@ export * from "./ncj-template.service";
 export * from "./node-service";
 export * from "./node-user.service";
 export * from "./pricing.service";
+export * from "./resource-access";
 export * from "./settings.service";
 export * from "./ssh-key.service";
 export * from "./storage.service";
@@ -36,6 +39,7 @@ export * from "./batch-client.service";
 export * from "./storage-account.service";
 export * from "./storage-client.service";
 export * from "./predefined-formula.service";
+export * from "./themes";
 
 // This needs to be last(as it does dynamic inject which problably have dependencies on above services)
 export * from "./command-service";

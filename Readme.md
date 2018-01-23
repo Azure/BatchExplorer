@@ -1,12 +1,13 @@
 # BatchLabs
 [![Build Status](https://travis-ci.org/Azure/BatchLabs.svg?branch=master)](https://travis-ci.org/Azure/BatchLabs)
+[![codecov](https://codecov.io/gh/Azure/BatchLabs/branch/master/graph/badge.svg)](https://codecov.io/gh/Azure/BatchLabs)
 
 **Note: BatchLabs is in beta.**
 
 Batch Labs is a tool to manage your Azure Batch accounts. The goal is to implement a great user experience that will help you debug, monitor and manage your pools, jobs and tasks.
 It will also include expermiental features such as `Batch Templates` in the aim to improve your Batch experience. We are open to any feedback, ideas and contributions you might have.
 
-BatchLabs is updated monthly with new features and bug fixes. You can download it for Windows, macOS, and Linux on [Batch Labs website](https://github.com/Azure/BatchLabs/releases).
+BatchLabs is updated monthly with new features and bug fixes. You can download it for Windows, macOS, and Linux on [Batch Labs website](https://azure.github.io/BatchLabs/).
 
 ![](docs/images/job-home.png)
 

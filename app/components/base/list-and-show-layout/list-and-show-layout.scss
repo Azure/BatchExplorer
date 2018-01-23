@@ -101,7 +101,8 @@ bl-list-and-show-layout {
             width: calc(100vw - #{$listview-width} - #{$navigationbar-width});
             height: $contentview-height;
             overflow-y: auto;
-            background-color: $content-background;
+            background-color: $main-background;
+
             position: relative;
 
             .content-wrapper {
@@ -161,6 +162,19 @@ bl-list-and-show-layout {
 
         &:hover {
             color: $dusty-grey;
+        }
+    }
+
+    select {
+        height: 26px;
+        color: $emperor-grey;
+        border: none;
+        border-radius: 3px;
+        margin-right: 10px;
+        background-color: $athensGrey;
+        appearance: none;
+        &:active, &:focus {
+            outline: none;
         }
     }
 }

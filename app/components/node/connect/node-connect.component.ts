@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from "@angular/core";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { List } from "immutable";
 
 import { SidebarRef } from "app/components/base/sidebar";

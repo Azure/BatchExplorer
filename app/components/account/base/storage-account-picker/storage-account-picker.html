@@ -15,7 +15,7 @@
                 <bl-column [sortable]="true">Region</bl-column>
                 <bl-column [sortable]="false"></bl-column>
             </bl-thead>
-            <bl-row *ngFor="let account of preferedAccounts" [key]="account.id.toLowerCase()">
+            <bl-row *ngFor="let account of preferedAccounts; trackBy: trackByFn" [key]="account.id.toLowerCase()">
                 <bl-cell [value]="account.name"></bl-cell>
                 <bl-cell [value]="account.location"></bl-cell>
                 <bl-cell [value]="account.isClassic">{{account.isClassic ? "Classic" : ""}}</bl-cell>
@@ -34,7 +34,7 @@
                     <bl-column [sortable]="false"></bl-column>
 
                 </bl-thead>
-                <bl-row *ngFor="let account of otherAccounts" [key]="account.id.toLowerCase()">
+                <bl-row *ngFor="let account of otherAccounts; trackBy: trackByFn" [key]="account.id.toLowerCase()">
                     <bl-cell [value]="account.name"></bl-cell>
                     <bl-cell [value]="account.location"></bl-cell>
                     <bl-cell [value]="account.isClassic">

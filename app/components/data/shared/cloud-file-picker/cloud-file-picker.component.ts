@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit, forwardRef } from "@angular/core";
 import {
     ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR,
 } from "@angular/forms";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { List } from "immutable";
 import { Subscription } from "rxjs";
 
@@ -10,6 +10,7 @@ import { DialogService } from "app/components/base/dialogs";
 import { BlobContainer } from "app/models";
 import { ListContainerParams, StorageService } from "app/services";
 import { ListView } from "app/services/core";
+import { Constants } from "common";
 import { CloudFilePickerDialogComponent } from "./cloud-file-picker-dialog.component";
 import "./cloud-file-picker.scss";
 
@@ -40,7 +41,7 @@ export class CloudFilePickerComponent implements ControlValueAccessor, OnInit, O
     private _subscriptions: Subscription[] = [];
 
     constructor(private storageService: StorageService, private dialog: DialogService) {
-        this.fileGroupsData = this.storageService.containerListView(storageService.ncjFileGroupPrefix);
+        this.fileGroupsData = this.storageService.containerListView(Constants.ncjFileGroupPrefix);
         this.fileGroupsData.items.subscribe((fileGroups) => {
             this.fileGroups = fileGroups;
         });

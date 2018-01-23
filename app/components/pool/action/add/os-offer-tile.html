@@ -11,5 +11,5 @@
     <span *ngIf="active">{{selectedSku}}</span>
 </button>
 <mat-menu #menu="matMenu">
-    <button mat-menu-item *ngFor="let sku of skus" (click)="onClickSku(sku)">{{sku.name}}</button>
+    <button mat-menu-item *ngFor="let sku of skus;trackBy: trackSku" (click)="onClickSku(sku)">{{sku.name}}</button>
 </mat-menu>

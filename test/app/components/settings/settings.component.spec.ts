@@ -9,7 +9,7 @@ import { Observable } from "rxjs";
 import { ButtonComponent } from "app/components/base/buttons";
 import { EditorComponent } from "app/components/base/editor";
 import { SettingsComponent } from "app/components/settings";
-import { SettingsService } from "app/services";
+import { AuthorizationHttpService, SettingsService } from "app/services";
 import { click } from "test/utils/helpers";
 import { MockEditorComponent } from "test/utils/mocks/components";
 
@@ -51,6 +51,7 @@ describe("SettingsComponent", () => {
             imports: [ReactiveFormsModule, MaterialModule, NoopAnimationsModule],
             declarations: [SettingsComponent, TestComponent, ButtonComponent, MockEditorComponent],
             providers: [
+                { provide: AuthorizationHttpService, useValue: null },
                 { provide: SettingsService, useValue: settingsServiceSpy },
             ],
         });

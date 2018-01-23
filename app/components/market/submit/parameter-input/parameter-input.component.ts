@@ -3,6 +3,7 @@ import { ControlValueAccessor, FormControl, NG_VALIDATORS, NG_VALUE_ACCESSOR, Va
 import { Subscription } from "rxjs";
 
 import { NcjParameterRawType } from "app/models";
+import { Constants } from "common";
 import { NcjParameterExtendedType, NcjParameterWrapper } from "../market-application.model";
 import "./parameter-input.scss";
 
@@ -41,7 +42,7 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
     }
 
     public getContainerFromFileGroup(fileGroup: string) {
-        return fileGroup && `fgrp-${fileGroup}`;
+        return fileGroup && `${Constants.ncjFileGroupPrefix}${fileGroup}`;
     }
 
     public ngOnDestroy(): void {
@@ -87,6 +88,10 @@ export class ParameterInputComponent implements ControlValueAccessor, OnChanges,
 
     public registerOnTouched(fn: any): void {
         // do not need
+    }
+
+    public trackOption(index, option: string) {
+        return option;
     }
 
     private _updateValidators() {

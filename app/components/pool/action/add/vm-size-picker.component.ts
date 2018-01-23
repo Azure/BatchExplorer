@@ -161,6 +161,14 @@ export class VmSizePickerComponent implements ControlValueAccessor, OnInit, OnCh
         return `${name} (${count})`;
     }
 
+    public trackCategory(index, category: string) {
+        return category;
+    }
+
+    public trackVmSize(index, size: VmSize) {
+        return size.id;
+    }
+
     private _categorizeSizes() {
         let remainingSizes = this._vmSizes.toArray();
         const categories = {};

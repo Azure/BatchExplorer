@@ -1,6 +1,6 @@
 import { Type } from "@angular/core";
 
-import { exists } from "app/utils/object";
+import { exists } from "common/utils/object-utils";
 import { RecordSetAttributeError } from "./errors";
 import { Record } from "./record";
 

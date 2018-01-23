@@ -14,4 +14,5 @@ export interface Settings {
     fileTypes: StringMap<string[]>;
     "configuration.default-view": EntityConfigurationView;
     "subscription.ignore": string[];
+    "storage.default-upload-container": string;
 }

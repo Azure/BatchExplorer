@@ -7,7 +7,7 @@
 
 body {
     overflow: hidden;
-    background-color: $body-background;
+    background-color: $main-background;
     /* The html and body elements cannot have any padding or margin. */
 }
 
@@ -16,7 +16,7 @@ body {
     /* needed for footer positioning*/
     margin: 0 auto;
     /* center, not in IE5 */
-    background: $body-background;
+    background: $main-background;
     height: 100vh;
     width: 100vw;
 }
@@ -42,7 +42,6 @@ nav {
     left: 0;
     bottom: $footer-height;
     width: $navigationbar-width;
-    background-color: $navigation-background;
     text-align: center;
 }
 
@@ -74,6 +73,11 @@ nav {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.flex {
+    display: flex;
+    align-items: center;
 }
 
 /*--------------------------------------------------------------------------------------
@@ -340,4 +344,17 @@ ul.list-point {
 
 ::-webkit-scrollbar-thumb {
     background:  $dusty-grey;
+}
+
+
+bl-app {
+    .fullscreen {
+        height: 100vh;
+        width: 100vw;
+        position: relative;
+
+        > mat-sidenav-container {
+            height: 100%;
+        }
+    }
 }

@@ -12,7 +12,6 @@ import { routes } from "./app.routes";
 // components
 import { AppComponent } from "app/app.component";
 import { MainNavigationComponent } from "app/components/shared/main-navigation.component";
-import { AADUserDropdownComponent } from "app/components/user";
 
 // extenal modules
 import { AccountModule } from "app/components/account/account.module";
@@ -35,6 +34,8 @@ import { HttpModule } from "@angular/http";
 import { LayoutModule } from "app/components/layout";
 import { MaterialModule } from "app/core";
 import { PollService } from "app/services/core";
+import { AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
+import { AADGraphHttpService, MsGraphHttpService } from "app/services/ms-graph/core";
 import {
     AccountService,
     AdalService,
@@ -42,6 +43,7 @@ import {
     AppInsightsQueryService,
     ApplicationService,
     ArmHttpService,
+    AuthorizationHttpService,
     AutoscaleFormulaService,
     AzureHttpService,
     BatchClientService,
@@ -54,6 +56,7 @@ import {
     FileSystemService,
     GithubDataService,
     HttpUploadService,
+    InsightsMetricsService,
     JobHookTaskService,
     JobService,
     LocalFileStorage,
@@ -69,6 +72,7 @@ import {
     PredefinedFormulaService,
     PricingService,
     PythonRpcService,
+    ResourceAccessService,
     SSHKeyService,
     SettingsService,
     StorageAccountService,
@@ -76,8 +80,8 @@ import {
     StorageService,
     SubscriptionService,
     TaskService,
+    ThemeService,
     VmSizeService,
-    commands,
 } from "./services";
 
 const modules = [
@@ -86,12 +90,13 @@ const modules = [
     SettingsModule, TaskModule, MarketModule, LayoutModule,
 ];
 
+const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHttpService, ServicePrincipalService];
+
 @NgModule({
     bootstrap: [
         AppComponent,
     ],
     declarations: [
-        AADUserDropdownComponent,
         AppComponent,
         MainNavigationComponent,
     ],
@@ -120,6 +125,7 @@ const modules = [
         AutoscaleFormulaService,
         AzureHttpService,
         ArmHttpService,
+        AuthorizationHttpService,
         BatchClientService,
         CacheDataService,
         CommandService,
@@ -130,6 +136,7 @@ const modules = [
         FileSystemService,
         GithubDataService,
         HttpUploadService,
+        InsightsMetricsService,
         JobHookTaskService,
         JobService,
         LocalFileStorage,
@@ -145,6 +152,7 @@ const modules = [
         PoolService,
         PricingService,
         PythonRpcService,
+        ResourceAccessService,
         SettingsService,
         StorageAccountService,
         StorageClientService,
@@ -152,11 +160,11 @@ const modules = [
         SSHKeyService,
         SubscriptionService,
         TaskService,
+        ThemeService,
         VmSizeService,
         PredefinedFormulaService,
+        ...graphApiServices,
         { provide: ErrorHandler, useClass: BatchLabsErrorHandler },
-        ...commands,
     ],
 })
-
 export class AppModule { }

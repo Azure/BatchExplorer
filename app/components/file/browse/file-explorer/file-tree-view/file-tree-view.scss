@@ -106,7 +106,7 @@ bl-file-tree-view {
 
         > .file-icon {
             > .fa-folder, > .fa-folder-open {
-                color: $folder-color;
+                color: $folder-icon-color;
             }
 
             > .fa-file {
@@ -164,7 +164,7 @@ bl-file-tree-view {
     position: absolute;
     font-family: FontAwesome;
     cursor: default;
-    color: #f8d979;
+    color: $folder-icon-color;
 }
 
 .toggle-children-wrapper-expanded .toggle-children:before, .node-wrapper.tree-node-expanded .toggle-children-placeholder:before {
@@ -172,5 +172,5 @@ bl-file-tree-view {
     position: absolute;
     font-family: FontAwesome;
     cursor: default;
-    color: #f8d979;
+    color: $folder-icon-color;
 }

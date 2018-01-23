@@ -9,6 +9,7 @@ cd $(dirname $0)/../..
 if [[ $TRAVIS_OS_NAME == 'linux' ]]; then # Only run the CI checks on the linux build
     # Run the test
     npm run test -s
+    codecov
 
     # Run the lint
     npm run lint -s

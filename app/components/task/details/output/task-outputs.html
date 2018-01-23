@@ -1,4 +1,4 @@
-<bl-file-explorer [data]="workspace" [config]="fileExplorerConfig" *ngIf="!isTaskQueued && workspace">
+<bl-file-explorer [data]="workspace" [config]="fileExplorerConfig" *ngIf="!isTaskQueued && !!workspace">
 </bl-file-explorer>
 <div *ngIf="isTaskQueued" class="info-overlay task-queued">
     Task is currently <span class="highlight" [matTooltip]="stateTooltip">&nbsp;{{task.state}}&nbsp;</span> there is no output

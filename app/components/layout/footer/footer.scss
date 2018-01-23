@@ -4,8 +4,8 @@ bl-footer {
     display: flex;
     height: $footer-height;
     align-items: center;
-    color: $whitesmoke;
-    background-color: $footer-background;
+    color: map-get($footer-color, text);
+    background-color: map-get($footer-color, bg);
     width: 100vw;
     font-size: 12px;
     line-height: $footer-height;

@@ -1,0 +1,27 @@
+@import "app/styles/variables";
+
+bl-vtab-group {
+    width: 100%;
+    height: 100%;
+    display: flex;
+
+    > .tab-navigation {
+        // flex: 0 0 200px;
+        border-right: 1px solid $border-color;
+
+        > .tab-navigation-item {
+            display: block;
+            width: 100%;
+            border-bottom: 1px solid $border-color;
+            padding: 10px;
+
+            &:hover {
+                background: $athens-grey;
+            }
+        }
+    }
+
+    > .tab-content {
+        flex-grow: 1;
+    }
+}

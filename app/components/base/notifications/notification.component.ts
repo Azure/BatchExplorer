@@ -10,8 +10,7 @@ import "./notification.scss";
     templateUrl: "notification.html",
 })
 export class NotificationComponent {
-    @Input()
-    public notification: Notification;
+    @Input() public notification: Notification;
 
     @HostBinding("class")
     public get notificationClass(): string {
@@ -57,5 +56,9 @@ export class NotificationComponent {
     public performAction(event: Event, action: NotificationAction) {
         action.do();
         this.dismiss();
+    }
+
+    public trackAction(index, action: NotificationAction) {
+        return action.name;
     }
 }

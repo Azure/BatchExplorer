@@ -7,7 +7,7 @@ import {
 import { Subscription } from "rxjs";
 
 import { ObjectUtils } from "app/utils";
-import { EditableTableColumnComponent } from "./editable-table-column.component";
+import { EditableTableColumnComponent, EditableTableColumnType } from "./editable-table-column.component";
 
 import "./editable-table.scss";
 
@@ -23,7 +23,7 @@ import "./editable-table.scss";
 export class EditableTableComponent implements ControlValueAccessor, Validator, AfterViewInit, OnDestroy {
     @ContentChildren(EditableTableColumnComponent)
     public columns: QueryList<EditableTableColumnComponent>;
-
+    public EditableTableColumnType = EditableTableColumnType;
     public items: FormArray;
     public form: FormGroup;
 
@@ -59,6 +59,10 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
     }
 
     public addNewItem() {
+        const last = this.items.value.last();
+        if (last && this._isEmpty(last)) {
+            return;
+        }
         if (!this.columns) {
             return;
         }
@@ -99,6 +103,14 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
 
     public validate(c: FormControl) {
         return null;
+    }
+
+    public trackColumn(index, column: EditableTableColumnComponent) {
+        return column.name;
+    }
+
+    public trackRows(index, row: any) {
+        return row;
     }
 
     private _isEmpty(obj: any) {

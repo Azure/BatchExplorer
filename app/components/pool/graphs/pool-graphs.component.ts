@@ -1,19 +1,21 @@
 import { Component, Input, OnChanges, OnDestroy, SimpleChanges } from "@angular/core";
 import { FormControl } from "@angular/forms";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 import { List } from "immutable";
-import { Subscription } from "rxjs";
+import { Observable, Subscription } from "rxjs";
 
 import { SidebarManager } from "app/components/base/sidebar";
 import { PerformanceData } from "app/components/pool/graphs/performance-graph";
 import { StartTaskEditFormComponent } from "app/components/pool/start-task";
 import { Job, JobState, Node, NodeState, Pool, Task } from "app/models";
-import { AppInsightsQueryService, JobListParams, JobService, NodeListParams, NodeService } from "app/services";
+import {
+    AppInsightsQueryService, ElectronRemote, JobListParams, JobService, NodeListParams, NodeService,
+} from "app/services";
 import { ListView, PollObservable, PollService } from "app/services/core";
 import { FilterBuilder } from "app/utils/filter-builder";
+import { StateCounter } from "./heatmap";
 import { NodesStateHistoryData, RunningTasksHistoryData } from "./history-data";
 import "./pool-graphs.scss";
-import { StateCounter } from "./state-counter";
 
 enum AvailableGraph {
     Heatmap,
@@ -44,8 +46,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
     public AvailableGraph = AvailableGraph;
     public historyLength = historyLength;
 
-    @Input()
-    public pool: Pool;
+    @Input() public pool: Pool;
 
     public data: ListView<Node, NodeListParams>;
 
@@ -78,6 +79,7 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
         pollService: PollService,
         private nodeService: NodeService,
         jobService: JobService,
+        private remote: ElectronRemote,
         private sidebarManager: SidebarManager,
     ) {
         this.performanceData = new PerformanceData(appInsightsQueryService);
@@ -167,6 +169,14 @@ export class PoolGraphsComponent implements OnChanges, OnDestroy {
 
     public focusGraph(graph: AvailableGraph) {
         this.focusedGraph = graph;
+    }
+
+    @autobind()
+    public openInNewWindow() {
+        const link = `ms-batchlabs://route/standalone/pools/${this.pool.id}/graphs?fullscreen=true`;
+        const window = this.remote.getBatchLabsApp().openNewWindow(link);
+
+        return Observable.fromPromise(window.domReady);
     }
 
     public get appInsightsEnabled() {

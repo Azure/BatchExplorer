@@ -9,7 +9,7 @@ import {
 import { DataSharedModule } from "app/components/data/shared";
 import { FileBrowseModule } from "app/components/file/browse";
 import { FileDetailsModule } from "app/components/file/details";
-import { FileGroupListComponent, FileGroupPreviewComponent } from "./browse";
+import { DataContainerListComponent, FileGroupPreviewComponent } from "./browse";
 import {
     DataContainerConfigurationComponent,
     DataContainerFilesComponent,
@@ -22,7 +22,7 @@ import { DataHomeComponent } from "./home";
 const components = [
     DataContainerConfigurationComponent, DataContainerFilesComponent, DataHomeComponent,
     DataDefaultComponent, DataDetailsComponent, FileGroupCreateFormComponent, DeleteContainerDialogComponent,
-    FileGroupListComponent, FileGroupOptionsPickerComponent, FileGroupPreviewComponent,
+    DataContainerListComponent, FileGroupOptionsPickerComponent, FileGroupPreviewComponent,
     DownloadFileGroupDialogComponent,
 ];
 

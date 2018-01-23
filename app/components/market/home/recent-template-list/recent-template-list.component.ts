@@ -49,6 +49,10 @@ export class RecentTemplateListComponent implements OnDestroy {
         }
     }
 
+    public trackTemplate(index, recent: RecentSubmission) {
+        return recent.id;
+    }
+
     private _getParameterFileName(mode: NcjTemplateMode) {
         switch (mode) {
             case NcjTemplateMode.NewPool:

@@ -8,4 +8,8 @@ bl-form-json-editor {
         height: 20px;
         border-bottom: 1px solid $border-color;
     }
+
+    > bl-editor {
+        height: calc(100% - 20px);
+    }
 }

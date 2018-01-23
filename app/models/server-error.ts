@@ -1,10 +1,11 @@
 import { Response } from "@angular/http";
 
+import { HttpErrorResponse } from "@angular/common/http";
 import { BatchError } from "./batch-error";
 import { JsonRpcError } from "./python-rpc";
 import { StorageError } from "./storage-error";
 
-interface ErrorDetail {
+export interface ErrorDetail {
     key?: string;
     value?: string;
 }
@@ -126,6 +127,61 @@ export class ServerError {
             original: error,
             requestId,
             timestamp,
+        });
+    }
+
+    public static fromMsGraph(response: HttpErrorResponse): ServerError {
+        const { error } = response.error;
+        let requestId = null;
+        let timestamp = null;
+        let code = null;
+        let message = null;
+
+        if (error.innerError) {
+            requestId = error.innerError["request-id"];
+            const date = error.innerError["date"];
+            timestamp = date && new Date(date);
+        }
+
+        if (error) {
+            code = error.code;
+            message = error.message;
+        }
+        return new ServerError({
+            status: response.status,
+            code: code,
+            statusText: response.statusText,
+            original: response,
+            message: message,
+            requestId,
+            timestamp,
+        });
+    }
+
+    public static fromAADGraph(response: HttpErrorResponse): ServerError {
+        const error = response.error["odata.error"];
+        let requestId = null;
+        let timestamp = null;
+        let code = null;
+        let message = null;
+        let details = null;
+        if (error) {
+            code = error.code;
+            message = error.message && error.message.value;
+            requestId = error.requestId;
+            details = error.values && error.values.map((x) => {
+                return { key: x.item, value: x.value };
+            });
+        }
+        return new ServerError({
+            status: response.status,
+            code: code,
+            statusText: response.statusText,
+            original: response,
+            message: message,
+            requestId,
+            timestamp,
+            details,
         });
     }
 

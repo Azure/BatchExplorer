@@ -56,11 +56,6 @@ const pythonServerPort = {
     prod: getPort(),
 };
 
-const customProtocolName = "ms-batchlabs";
-
-const rendererEvents = {
-    batchlabsLink: "batchlabs-link",
-};
 // tslint:disable-next-line:variable-name
 export const Constants = {
     isAsar,
@@ -70,7 +65,5 @@ export const Constants = {
     logsFolder,
     resourcesFolder,
     pythonServerPort,
-    customProtocolName,
-    rendererEvents,
     version: packageConfig.version,
 };

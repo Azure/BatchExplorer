@@ -6,8 +6,9 @@ import {
 import { Observable } from "rxjs";
 
 import { ServerError, Subscription } from "app/models";
-import { Constants } from "app/utils";
-import { AccessToken, AdalService } from "./adal";
+import { AccessToken } from "client/core/aad/access-token";
+import { Constants } from "common";
+import { AdalService } from "./adal";
 
 const apiVersionParams = "api-version";
 const apiVersion = Constants.ApiVersion.arm;
@@ -29,6 +30,8 @@ const providersApiVersion = {
     "microsoft.storage": Constants.ApiVersion.armStorage,
     "microsoft.compute": Constants.ApiVersion.compute,
     "microsoft.commerce": Constants.ApiVersion.commerce,
+    "microsoft.authorization": Constants.ApiVersion.authorization,
+    "microsoft.insights": Constants.ApiVersion.monitor,
 };
 
 type SubscriptionOrTenant = Subscription | string;
@@ -119,7 +122,6 @@ export class AzureHttpService {
         if (!uri.includes(apiVersionParams)) {
             options.search.set(apiVersionParams, this.apiVersion(uri));
         }
-
         return options;
     }
 

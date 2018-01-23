@@ -19,12 +19,12 @@ bl-expanding-textarea {
 
     &.expanded {
         .mat-input-infix {
-            background-color: #f5f5f5;
+            background-color: $main-background;
             z-index: 1000;
         }
 
         textarea {
-            background-color: #f5f5f5;
+            background-color: $main-background;
             resize: vertical;
         }
     }

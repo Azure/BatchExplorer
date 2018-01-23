@@ -1,7 +1,7 @@
 import { EventEmitter, Input, Output } from "@angular/core";
 import { FormGroup } from "@angular/forms";
 import { MatDialogRef } from "@angular/material";
-import { autobind } from "core-decorators";
+import { autobind } from "app/core";
 
 import { ServerError } from "app/models";
 import { SidebarRef } from "../sidebar";
@@ -50,9 +50,5 @@ export class FormBase {
         } else {
             container.destroy();
         }
-    }
-
-    public toggleShowError() {
-        this.showError = !this.showError;
     }
 }
