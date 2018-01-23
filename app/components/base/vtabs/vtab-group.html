@@ -1,5 +1,5 @@
 <div class="tab-navigation">
-    <bl-clickable class="tab-navigation-item" *ngFor="let tab of tabs;trackBy: trackTab" (do)="selectTab(tab)">
+    <bl-clickable class="tab-navigation-item" *ngFor="let tab of tabs;trackBy: trackTab" (do)="selectTab(tab)" [class.active]="tab === currentTab">
         <ng-template [ngTemplateOutlet]="tab.label"></ng-template>
     </bl-clickable>
 </div>
