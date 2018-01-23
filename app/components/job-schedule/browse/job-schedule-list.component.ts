@@ -4,7 +4,6 @@ import { MatDialog } from "@angular/material";
 import { ActivatedRoute, Router } from "@angular/router";
 import { Observable, Subscription } from "rxjs";
 
-import { BackgroundTaskService } from "app/components/base/background-task";
 import { ContextMenu, ContextMenuItem } from "app/components/base/context-menu";
 import { LoadingStatus } from "app/components/base/loading";
 import { QuickListComponent, QuickListItemStatus } from "app/components/base/quick-list";
@@ -63,7 +62,6 @@ export class JobScheduleListComponent extends ListOrTableBase implements OnInit,
         activatedRoute: ActivatedRoute,
         private jobScheduleService: JobScheduleService,
         private pinnedEntityService: PinnedEntityService,
-        private taskManager: BackgroundTaskService,
     ) {
         super(dialog);
         this.data = this.jobScheduleService.listView();

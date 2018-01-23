@@ -6,7 +6,7 @@ import { remote } from "electron";
 import { List } from "immutable";
 import { Observable, Subscription } from "rxjs";
 
-import { JobSchedule, JobScheduleState } from "app/models";
+import { Job, JobSchedule, JobScheduleState, Pool } from "app/models";
 import { JobScheduleDecorator } from "app/models/decorators";
 import { FileSystemService, JobScheduleParams, JobScheduleService } from "app/services";
 import { EntityView } from "app/services/core";
@@ -96,5 +96,29 @@ export class JobScheduleDetailsComponent implements OnInit, OnDestroy {
             const content = JSON.stringify(this.jobSchedule._original, null, 2);
             return Observable.fromPromise(this.fs.saveFile(localPath, content));
         }
+    }
+
+    public get jobSpecification(): Job {
+        if (!this.jobSchedule.jobSpecification) {
+            return null;
+        }
+        return new Job(this.jobSchedule.jobSpecification);
+    }
+
+    public get autoPoolSpecification() {
+        if (!this.jobSchedule.jobSpecification) {
+            return null;
+        }
+        if (!this.jobSchedule.jobSpecification.poolInfo) {
+            return null;
+        }
+        return this.jobSchedule.jobSpecification.poolInfo.autoPoolSpecification;
+    }
+
+    public get autoPool(): Pool {
+        if (!this.autoPoolSpecification) {
+            return null;
+        }
+        return new Pool(this.autoPoolSpecification.pool);
     }
 }

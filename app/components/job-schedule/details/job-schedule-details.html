@@ -17,6 +17,14 @@
                     <bl-tab-label>Configuration</bl-tab-label>
                     <bl-job-schedule-configuration [jobSchedule]="jobSchedule"></bl-job-schedule-configuration>
                 </bl-tab>
+                <bl-tab key="jobSpecification" *ngIf="jobSpecification">
+                    <bl-tab-label>Job specification</bl-tab-label>
+                    <bl-job-schedule-job-spec [job]="jobSpecification"></bl-job-schedule-job-spec>
+                </bl-tab>
+                <bl-tab key="autoPoolSpecification" *ngIf="autoPoolSpecification">
+                    <bl-tab-label>Auto pool specification</bl-tab-label>
+                    <bl-job-schedule-autopool [properties]="autoPoolSpecification"></bl-job-schedule-autopool>
+                </bl-tab>
             </bl-tab-group>
         </mat-card>
     </div>
