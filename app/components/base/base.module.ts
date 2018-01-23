@@ -42,6 +42,7 @@ import { TableModule } from "./table";
 import { TabsModule } from "./tabs";
 import { TagsModule } from "./tags";
 import { VirtualScrollModule } from "./virtual-scroll";
+import { VTabsModule } from "./vtabs";
 
 // Add submodules there
 const modules = [
@@ -70,6 +71,7 @@ const modules = [
     SplitPaneModule,
     SummaryCardModule,
     VirtualScrollModule,
+    VTabsModule,
 ];
 
 // Add subcomponnent not in a module here

@@ -30,4 +30,13 @@ export class SecureUtils {
         }
         return retVal;
     }
+
+    /**
+     * Generate a hexadecimal token
+     */
+    public static token(): string {
+        const array = new Uint8Array(24);
+        window.crypto.getRandomValues(array);
+        return [...array].map(x => x.toString(16)).join("");
+    }
 }
