@@ -33,8 +33,11 @@ import { BatchLabsErrorHandler } from "app/error-handler";
 // services
 import { HttpModule } from "@angular/http";
 import { LayoutModule } from "app/components/layout";
+import { MiscModule } from "app/components/misc";
 import { MaterialModule } from "app/core";
 import { PollService } from "app/services/core";
+import { AADApplicationService, ServicePrincipalService } from "app/services/ms-graph";
+import { AADGraphHttpService, MsGraphHttpService } from "app/services/ms-graph/core";
 import {
     AccountService,
     AdalService,
@@ -72,6 +75,7 @@ import {
     PredefinedFormulaService,
     PricingService,
     PythonRpcService,
+    ResourceAccessService,
     SSHKeyService,
     SettingsService,
     StorageAccountService,
@@ -87,7 +91,10 @@ const modules = [
     AccountModule, ApplicationModule, DataModule,
     FileModule, JobModule, JobScheduleModule, NodeModule, PoolModule,
     SettingsModule, TaskModule, MarketModule, LayoutModule,
+    MiscModule,
 ];
+
+const graphApiServices = [AADApplicationService, AADGraphHttpService, MsGraphHttpService, ServicePrincipalService];
 
 @NgModule({
     bootstrap: [
@@ -150,6 +157,7 @@ const modules = [
         PoolService,
         PricingService,
         PythonRpcService,
+        ResourceAccessService,
         SettingsService,
         StorageAccountService,
         StorageClientService,
@@ -160,6 +168,7 @@ const modules = [
         ThemeService,
         VmSizeService,
         PredefinedFormulaService,
+        ...graphApiServices,
         { provide: ErrorHandler, useClass: BatchLabsErrorHandler },
     ],
 })

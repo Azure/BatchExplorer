@@ -18,7 +18,7 @@ const token1 = new AccessToken({
 
 describe("AdalService spec", () => {
     let service: AdalService;
-    let aadServiceSpy = {};
+    const aadServiceSpy = {};
     let remoteSpy;
 
     beforeEach(() => {

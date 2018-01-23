@@ -11,6 +11,7 @@ import { BackgroundTaskModule } from "./background-task";
 import { BannerComponent, BannerOtherFixDirective } from "./banner";
 import { BreadcrumbModule } from "./breadcrumbs";
 import { ButtonsModule } from "./buttons";
+import { CardComponent } from "./card";
 import { ChartsModule } from "./charts";
 import { ContextMenuModule } from "./context-menu";
 import { DialogsModule } from "./dialogs";
@@ -41,6 +42,7 @@ import { TableModule } from "./table";
 import { TabsModule } from "./tabs";
 import { TagsModule } from "./tags";
 import { VirtualScrollModule } from "./virtual-scroll";
+import { VTabsModule } from "./vtabs";
 
 // Add submodules there
 const modules = [
@@ -69,12 +71,14 @@ const modules = [
     SplitPaneModule,
     SummaryCardModule,
     VirtualScrollModule,
+    VTabsModule,
 ];
 
 // Add subcomponnent not in a module here
 const components = [
     BannerComponent,
     BannerOtherFixDirective,
+    CardComponent,
     ElapsedTimeComponent,
     EntityDetailsListComponent,
     DurationPickerComponent,

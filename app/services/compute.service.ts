@@ -37,7 +37,7 @@ export class ComputeService {
     }
 
     private _getTotalRegionalQuotas(data: ComputeUsage[]): number {
-        for (let obj of data) {
+        for (const obj of data) {
             if (obj.name && obj.name.localizedValue && obj.name.value) {
                 if (obj.limit && obj.name.value.toLowerCase() === "cores") {
                     return obj.limit;

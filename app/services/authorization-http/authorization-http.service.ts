@@ -35,7 +35,7 @@ export class AuthorizationHttpService {
                 if (resourceId) {
                     const url = this._getPermissionUrl(resourceId);
                     return this._recursiveRequest(url).flatMap(permissions => {
-                        const permission = this._checkResoucePermissions(permissions);
+                        const permission = this.checkResoucePermissions(permissions);
                         return Observable.of(permission);
                     });
                 }
@@ -59,12 +59,12 @@ export class AuthorizationHttpService {
         });
     }
 
-    private _checkResoucePermissions(permissions: RoleDefinitionPermission[]): Permission {
+    public checkResoucePermissions(permissions: RoleDefinitionPermission[]): Permission {
         if (!Array.isArray(permissions) || permissions.length === 0) {
             return Permission.None;
         }
         let actions = [];
-        for (let permission of permissions) {
+        for (const permission of permissions) {
             if (permission.actions) {
                 actions = actions.concat(permission.actions);
             }

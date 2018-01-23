@@ -57,14 +57,14 @@ describe("BannerComponent", () => {
 
     it("should be of error type by default", () => {
         expect(component.type).toBe("error");
-        expect(de.query(By.css("mat-card")).nativeElement.className).toContain("error");
+        expect(de.query(By.css("bl-card")).nativeElement.className).toContain("error");
     });
 
     it("should be of warning type when changed", () => {
         testComponent.type = "warning";
         fixture.detectChanges();
         expect(component.type).toBe("warning");
-        expect(de.query(By.css("mat-card")).nativeElement.className).toContain("warning");
+        expect(de.query(By.css("bl-card")).nativeElement.className).toContain("warning");
     });
 
     describe("When there is details", () => {

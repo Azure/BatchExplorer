@@ -28,7 +28,7 @@ function boundMethod(target, key, descriptor) {
                 return fn;
             }
 
-            let boundFn = fn.bind(this);
+            const boundFn = fn.bind(this);
             definingProperty = true;
             Object.defineProperty(this, key, {
                 configurable: true,

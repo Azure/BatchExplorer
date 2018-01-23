@@ -68,7 +68,7 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
         }
         const columns = this.columns.toArray();
         const obj = {};
-        for (let column of columns) {
+        for (const column of columns) {
             obj[column.name] = "";
         }
         this.items.push(this.formBuilder.group(obj));
@@ -83,7 +83,7 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
         this.items.controls = [];
 
         if (value) {
-            for (let val of value) {
+            for (const val of value) {
                 this.items.push(this.formBuilder.group(val));
             }
         } else {
@@ -114,7 +114,7 @@ export class EditableTableComponent implements ControlValueAccessor, Validator, 
     }
 
     private _isEmpty(obj: any) {
-        for (let value of ObjectUtils.values(obj)) {
+        for (const value of ObjectUtils.values(obj)) {
             if (value) {
                 return false;
             }

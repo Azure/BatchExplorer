@@ -86,7 +86,7 @@ describe("ApplicationListComponent", () => {
 
             expect(component.displayedApplications.size).toEqual(0);
 
-            let property = fixture.debugElement.query(By.css("bl-no-item"));
+            const property = fixture.debugElement.query(By.css("bl-no-item"));
             expect(property.nativeElement.textContent).toContain("Current filter returned no applications");
         });
     });

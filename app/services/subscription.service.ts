@@ -133,7 +133,7 @@ export class SubscriptionService {
             return subscriptions;
         }
         return List(subscriptions.filter((subscription) => {
-            for (let ignoredPattern of ignoredPatterns) {
+            for (const ignoredPattern of ignoredPatterns) {
                 if (StringUtils.matchWildcard(subscription.displayName, ignoredPattern, false)) {
                     return false;
                 }

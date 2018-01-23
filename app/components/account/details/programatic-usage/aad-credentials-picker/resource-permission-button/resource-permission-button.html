@@ -1,0 +1,19 @@
+<bl-button type="wide" [color]="color" [matMenuTriggerFor]="pickRoleMenu" [disabled]="loading">
+    <ng-container *ngIf="loading">
+        <i class="fa fa-spinner fa-spin"></i> Loading
+    </ng-container>
+    <ng-container *ngIf="!loading">
+        {{currentRole?.properties.roleName || "None"}}
+    </ng-container>
+</bl-button>
+
+<mat-menu #pickRoleMenu="matMenu">
+    <button mat-menu-item (click)="changeRole(role)" *ngFor="let role of availableRoles;trackBy: trackRole">
+        Give <span class="highlight">{{role.properties.roleName}}</span> role
+    </button>
+    <button mat-menu-item (click)="changeRole(null)">
+        <span class="danger">
+            <i class="fa fa-warning"></i> Remove access
+        </span>
+    </button>
+</mat-menu>

@@ -129,7 +129,7 @@ export class VmSizeService {
             return null;
         }
         return List<VmSize>(sizes.filter((size) => {
-            for (let wildcard of excludePatterns) {
+            for (const wildcard of excludePatterns) {
                 if (StringUtils.matchWildcard(size.name, wildcard)) {
                     return false;
                 }

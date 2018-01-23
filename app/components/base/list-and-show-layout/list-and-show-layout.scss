@@ -64,9 +64,7 @@ bl-list-and-show-layout {
             transition:width 100ms;
             width: $listview-width;
             height: $contentview-height;
-            background-color: $listview-background;
-            // overflow: hidden; // [Tim] removed for the breadcrumb expand
-            box-shadow: 1px 1px 5px 0 #d5d5d5;
+            background-color: $card-background;
             z-index: 1;
 
             > .left-pane {

@@ -28,7 +28,7 @@ export interface CreateJobModel {
 }
 
 export function createJobFormToJsonData(formData: CreateJobModel): JobCreateDto {
-    let data: any = {
+    const data: any = {
         id: formData.id,
         displayName: formData.displayName,
         priority: formData.priority,

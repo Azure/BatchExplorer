@@ -97,7 +97,7 @@ export class PoolService extends ServiceBase {
      * This will start the delete process
      */
     public delete(poolId: string, options: any = {}): Observable<any> {
-        let observable = this.callBatchClient((client) => client.pool.delete(poolId, options));
+        const observable = this.callBatchClient((client) => client.pool.delete(poolId, options));
         observable.subscribe({
             error: (error) => {
                 log.error("Error deleting pool: " + poolId, Object.assign({}, error));

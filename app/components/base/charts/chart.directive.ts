@@ -172,7 +172,7 @@ export class ChartDirective implements OnDestroy, OnChanges, OnInit {
             (datasets && datasets.length)) {
             datasets = (this.datasets || datasets)
                 .map((elm: number, index: number) => {
-                    let newElm: any = Object.assign({}, elm);
+                    const newElm: any = Object.assign({}, elm);
                     if (this.colors && this.colors.length) {
                         Object.assign(newElm, this.colors[index]);
                     } else {

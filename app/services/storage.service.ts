@@ -321,7 +321,7 @@ export class StorageService {
      * within it are later deleted during garbage collection.
      */
     public deleteContainer(container: string, options: any = {}): Observable<any> {
-        let observable = this._callStorageClient((client) => client.deleteContainer(container, options));
+        const observable = this._callStorageClient((client) => client.deleteContainer(container, options));
         observable.subscribe({
             error: (error) => {
                 log.error("Error deleting container: " + container, Object.assign({}, error));

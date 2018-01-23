@@ -6,8 +6,8 @@ import {
 import { Observable } from "rxjs";
 
 import { ServerError, Subscription } from "app/models";
-import { Constants } from "app/utils";
 import { AccessToken } from "client/core/aad/access-token";
+import { Constants } from "common";
 import { AdalService } from "./adal";
 
 const apiVersionParams = "api-version";
@@ -122,7 +122,6 @@ export class AzureHttpService {
         if (!uri.includes(apiVersionParams)) {
             options.search.set(apiVersionParams, this.apiVersion(uri));
         }
-
         return options;
     }
 

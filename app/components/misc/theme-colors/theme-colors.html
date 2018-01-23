@@ -1,0 +1,13 @@
+<div class="header">
+    <h1>Theme colors</h1>
+</div>
+<div class="color-list">
+    <table>
+        <tr class="color-item" *ngFor="let color of colors;trackBy: trackColor">
+            <td class="key">{{color.key}}</td>
+            <td class="color" [style.background-color]="color.value"  [style.color]="color.text">
+                {{color.value}}
+            </td>
+        </tr>
+    </table>
+</div>

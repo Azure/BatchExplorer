@@ -83,6 +83,8 @@ export class MainNavigationComponent implements OnInit {
             new ContextMenuItem({ label: "Report a bug or feature request", click: () => this._openGithubIssues() }),
             new ContextMenuItem({ label: "About", click: () => this._showAboutPage() }),
             new ContextMenuSeparator(),
+            new ContextMenuItem({ label: "View theme colors", click: () => this._gotoThemeColors() }),
+            new ContextMenuSeparator(),
             new ContextMenuItem({ label: "Logout", click: () => this._logout() }),
         ];
 
@@ -99,6 +101,10 @@ export class MainNavigationComponent implements OnInit {
 
     private _goToSettings() {
         this.router.navigate(["/settings"]);
+    }
+
+    private _gotoThemeColors() {
+        this.router.navigate(["/theme/colors"]);
     }
 
     private _openThirdPartyNotices() {

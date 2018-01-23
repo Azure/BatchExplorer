@@ -1,5 +1,5 @@
 import { Type } from "@angular/core";
-import { RequestOptions, Response } from "@angular/http";
+import { RequestOptions, Response, URLSearchParams } from "@angular/http";
 import { Observable } from "rxjs";
 
 import { ArmHttpService } from "../../arm-http.service";
@@ -54,10 +54,9 @@ export class ArmListGetter<TEntity, TParams> extends ListGetter<TEntity, TParams
             search.set("maxResults", options.maxResults.toString());
         }
 
-        for (let key of Object.keys(options.attributes)) {
+        for (const key of Object.keys(options.attributes)) {
             search.set(key, options.attributes[key]);
         }
-
         return new RequestOptions({
             search,
         });

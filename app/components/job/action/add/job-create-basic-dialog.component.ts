@@ -82,9 +82,9 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
                 if (!this.virtualMachineConfiguration || !this.virtualMachineConfiguration.containerConfiguration) {
                     // Reset job manager, preperation and release task container settings because pool id is changed
                     // because user might change a container-pool to a non-container pool or vice versa
-                    let jobManagerTask = this.form.controls.jobManagerTask.value;
-                    let jobPreparationTask = this.form.controls.jobPreparationTask.value;
-                    let jobReleaseTask = this.form.controls.jobReleaseTask.value;
+                    const jobManagerTask = this.form.controls.jobManagerTask.value;
+                    const jobPreparationTask = this.form.controls.jobPreparationTask.value;
+                    const jobReleaseTask = this.form.controls.jobReleaseTask.value;
                     if (jobManagerTask) {
                         jobManagerTask.containerSettings = null;
                         this.form.controls.jobManagerTask.patchValue(jobManagerTask);
@@ -143,7 +143,7 @@ export class JobCreateBasicDialogComponent extends DynamicForm<Job, JobCreateDto
 
     public resetJobPreparationTask() {
         this.showJobReleaseTask = false;
-        let jobReleaseTask = this.form.controls.jobReleaseTask;
+        const jobReleaseTask = this.form.controls.jobReleaseTask;
         jobReleaseTask.setValue(null);
     }
 

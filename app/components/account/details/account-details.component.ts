@@ -10,9 +10,9 @@ import {
 } from "app/services";
 import { EntityView, ListView } from "app/services/core";
 
+import { ProgramaticUsageComponent } from "app/components/account/details/programatic-usage";
 import { DialogService } from "app/components/base/dialogs";
 import "./account-details.scss";
-import { BatchAccountKeysDialogComponent } from "./keys-dialog";
 
 @Component({
     selector: "bl-account-details",
@@ -89,7 +89,7 @@ export class AccountDetailsComponent implements OnInit, OnDestroy {
 
     @autobind()
     public showKeys() {
-        const ref = this.dialogService.open(BatchAccountKeysDialogComponent);
+        const ref = this.dialogService.open(ProgramaticUsageComponent);
         ref.componentInstance.accountId = this.accountId;
     }
 

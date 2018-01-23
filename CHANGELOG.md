@@ -1,3 +1,26 @@
+# 0.12.0
+[All items](https://github.com/Azure/BatchLabs/milestone/14?closed=1)
+
+### Feature:
+
+* Data view should show all blob container not just file group [\#1006](https://github.com/Azure/BatchLabs/issues/1006)
+* Rbac permission support. Disable action in batchlabs if user doesn't have write permission [\#1000](https://github.com/Azure/BatchLabs/issues/1000)
+* Make app single instance [\#998](https://github.com/Azure/BatchLabs/issues/998)
+* Stop prompting aad login window when refresh token are still valid [\#990](https://github.com/Azure/BatchLabs/issues/990)
+* Enable AOT compilation to improve loading time [\#986](https://github.com/Azure/BatchLabs/issues/986)
+* Cache batch accounts to improve initial loading time [\#982](https://github.com/Azure/BatchLabs/issues/982)
+* Provide sample code to get started with shared key credentials entered [\#980](https://github.com/Azure/BatchLabs/issues/980)
+* Account credentials access [\#970](https://github.com/Azure/BatchLabs/issues/970)
+* Support for inbound endpoints [\#965](https://github.com/Azure/BatchLabs/issues/965)
+* Make a open component in a new window  [\#74](https://github.com/Azure/BatchLabs/issues/74)
+* Update the theming system to use json instead of scss [\#1012](https://github.com/Azure/BatchLabs/issues/1012)
+
+### Other:
+
+* Implement a new promise base communication from renderer to main process [\#1004](https://github.com/Azure/BatchLabs/issues/1004)
+* Add code coverage [\#987](https://github.com/Azure/BatchLabs/issues/987)
+* Extract AAD logic to be outside of the angular service into the node environment [\#963](https://github.com/Azure/BatchLabs/issues/963)
+
 # 0.11.0
 [All items](https://github.com/Azure/BatchLabs/milestone/12?closed=1)
 

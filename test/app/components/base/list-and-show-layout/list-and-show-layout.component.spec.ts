@@ -41,7 +41,7 @@ describe("ListAndShowLayout", () => {
         activatedRouteSpy = {
             queryParams: new BehaviorSubject({}),
         };
-        let breadcrumbServiceSpy = {
+        const breadcrumbServiceSpy = {
             crumbs: new BehaviorSubject([]),
         };
         TestBed.configureTestingModule({

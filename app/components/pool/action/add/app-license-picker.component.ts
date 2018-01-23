@@ -102,7 +102,7 @@ export class AppLicensePickerComponent implements ControlValueAccessor, OnInit, 
     }
 
     public viewEula(license: ApplicationLicense) {
-        let config = new MatDialogConfig();
+        const config = new MatDialogConfig();
         config.viewContainerRef = this.viewContainerRef;
         const dialogRef = this.dialog.open(LicenseEulaDialogComponent, config);
         dialogRef.componentInstance.license = license;

@@ -1,0 +1,29 @@
+@import "app/styles/variables";
+
+bl-create-new-aad-app {
+    .header {
+        padding: 10px;
+        display: flex;
+        h1 {
+            margin-left: 10px;
+        }
+    }
+
+    > .form-container {
+        padding: 10px;
+        input.app-name, bl-aad-app-secret-picker {
+            margin: 10px;
+        }
+    }
+
+    .submit {
+        padding: 10px;
+        display: flex;
+        align-items: center;
+
+        > .create-status {
+            margin-left: 10px;
+            color: $secondary-text;
+        }
+    }
+}

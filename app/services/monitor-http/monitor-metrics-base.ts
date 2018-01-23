@@ -119,7 +119,7 @@ export class MonitorMetricsBase implements MonitorMetrics {
      * Function that returns RequestOptions which are sent to armService
      */
     public getRequestOptions(): RequestOptions {
-        let search = new URLSearchParams();
+        const search = new URLSearchParams();
         search.set(MonitorChartMetricsParams.Timespan, this._timeSpanParam);
         search.set(MonitorChartMetricsParams.Interval, this._intervalParam);
         search.set(MonitorChartMetricsParams.Metric, this._metricsParam);
