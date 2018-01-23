@@ -18,6 +18,15 @@ bl-vtab-group {
             &:hover {
                 background: $athens-grey;
             }
+
+            &:focus {
+                outline: none;
+                background: $main-background;
+            }
+
+            &.active {
+                border-right: 2px solid $primary-color;
+            }
         }
     }
 
