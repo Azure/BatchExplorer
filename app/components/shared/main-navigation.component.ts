@@ -21,8 +21,6 @@ export class MainNavigationComponent implements OnInit {
     public selectedAccountAlias: string = "";
     public currentUserName: string = "";
     public update: any;
-    public showSecondary = false;
-    public jobCategoryDefaultOrder = true;
 
     private _autoUpdater: AppUpdater;
     private _showNotification = false;
@@ -97,36 +95,6 @@ export class MainNavigationComponent implements OnInit {
             items.unshift(new ContextMenuItem({ label: "Check for updates", click: () => this._checkForUpdates() }));
         }
         this.contextMenuService.openMenu(new ContextMenu(items));
-    }
-
-    public toggleJobCategory() {
-        this.showSecondary = !this.showSecondary;
-    }
-
-    public setJobCategoryMenuItem(id: string) {
-        if (this.jobCategoryDefaultOrder !== (id === "job")) {
-            this.jobCategoryDefaultOrder = !this.jobCategoryDefaultOrder;
-            this.showSecondary = false;
-        }
-    }
-
-    public get menuSelection() {
-        const jobSelection = {
-            id: "job",
-            label: "Jobs",
-            icon: "fa-tasks",
-            routerLink: "/jobs",
-        };
-        const jobScheduleSelection = {
-            id: "jobschedule",
-            label: "Job schedules",
-            icon: "fa-calendar",
-            routerLink: "/jobschedules",
-        };
-        return {
-            primary: jobSelection,
-            secondary: jobScheduleSelection,
-        };
     }
 
     private _goToSettings() {

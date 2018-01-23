@@ -4,49 +4,15 @@
             <i class="fa fa-th fa-lg"></i><div class="label">Dash</div>
         </a>
     </li>
-    <li (mouseenter)="toggleJobCategory()" (mouseleave)="toggleJobCategory()">
-        <ng-container *ngIf="jobCategoryDefaultOrder">
-            <a  *blHiddenIfNoAccount
-                [routerLink]="menuSelection.primary.routerLink"
-                routerLinkActive="active"
-                (click)="setJobCategoryMenuItem(menuSelection.primary.id)"
-                [title]="menuSelection.primary.label">
-                <i class="fa fa-lg" [ngClass]="menuSelection.primary.icon"></i>
-                <div class="label">{{ menuSelection.primary.label }}</div>
-            </a>
-        </ng-container>
-        <ng-container *ngIf="!jobCategoryDefaultOrder">
-            <a  *blHiddenIfNoAccount
-                [routerLink]="menuSelection.secondary.routerLink"
-                routerLinkActive="active"
-                (click)="setJobCategoryMenuItem(menuSelection.secondary.id)"
-                [title]="menuSelection.secondary.label">
-                <i class="fa fa-lg" [ngClass]="menuSelection.secondary.icon"></i>
-                <div class="label">{{ menuSelection.secondary.label }}</div>
-            </a>
-        </ng-container>
-        <div *ngIf="showSecondary" class="menu-items">
-            <ng-container *ngIf="jobCategoryDefaultOrder">
-                <a  *blHiddenIfNoAccount
-                    [routerLink]="menuSelection.secondary.routerLink"
-                    routerLinkActive="active"
-                    [title]="menuSelection.secondary.label"
-                    (click)="setJobCategoryMenuItem(menuSelection.secondary.id)">
-                    <i class="fa fa-calendar" [ngClass]="menuSelection.secondary.icon"></i>
-                    <div class="label">{{ menuSelection.secondary.label }}</div>
-                </a>
-            </ng-container>
-            <ng-container *ngIf="!jobCategoryDefaultOrder">
-                <a  *blHiddenIfNoAccount
-                    [routerLink]="menuSelection.primary.routerLink"
-                    routerLinkActive="active"
-                    [title]="menuSelection.primary.label"
-                    (click)="setJobCategoryMenuItem(menuSelection.primary.id)">
-                    <i class="fa fa-calendar" [ngClass]="menuSelection.primary.icon"></i>
-                    <div class="label">{{ menuSelection.primary.label }}</div>
-                </a>
-            </ng-container>
-        </div>
+    <li>
+        <a *blHiddenIfNoAccount routerLink="/jobs" routerLinkActive="active">
+            <i class="fa fa-tasks fa-lg"></i><div class="label">Jobs</div>
+        </a>
+    </li>
+    <li>
+        <a *blHiddenIfNoAccount routerLink="/jobschedules" routerLinkActive="active" title="Job schedules">
+            <i class="fa fa-calendar fa-lg"></i><div class="label">Schedules</div>
+        </a>
     </li>
     <li>
         <a *blHiddenIfNoAccount routerLink="/pools" routerLinkActive="active">
